@@ -60,9 +60,9 @@ public class OpenAttachmentCommand extends FolderCommand {
     Object tempMessageUid;
 
     /**
-     * Constructor for OpenAttachmentCommand.
-     * @param references
-     */
+ * Constructor for OpenAttachmentCommand.
+ * @param references
+ */
     public OpenAttachmentCommand(DefaultCommandReference[] references) {
         super(references);
 
@@ -71,8 +71,8 @@ public class OpenAttachmentCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         MimeHeader header = part.getHeader();
 
@@ -100,9 +100,10 @@ public class OpenAttachmentCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Folder folder = (Folder) r[0].getFolder();
         Object[] uids = r[0].getUids();
@@ -136,16 +137,18 @@ public class OpenAttachmentCommand extends FolderCommand {
                 InputStream bodyStream = part.getInputStream();
                 int encoding = header.getContentTransferEncoding();
 
-                switch( encoding ) {
-                    case MimeHeader.QUOTED_PRINTABLE : {
-                        bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-                        break;
-                    } 
-                    
-                    case MimeHeader.BASE64 : {
-                        bodyStream = new Base64DecoderInputStream(bodyStream);
-                        break;
-                    }
+                switch (encoding) {
+                case MimeHeader.QUOTED_PRINTABLE: {
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+
+                    break;
+                }
+
+                case MimeHeader.BASE64: {
+                    bodyStream = new Base64DecoderInputStream(bodyStream);
+
+                    break;
+                }
                 }
 
                 // *20031019, karlpeder* Closing output stream after copying
@@ -159,14 +162,14 @@ public class OpenAttachmentCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#undo(Worker)
-     */
+ * @see org.columba.core.command.Command#undo(Worker)
+ */
     public void undo(Worker worker) throws Exception {
     }
 
     /**
-     * @see org.columba.core.command.Command#redo(Worker)
-     */
+ * @see org.columba.core.command.Command#redo(Worker)
+ */
     public void redo(Worker worker) throws Exception {
     }
 }

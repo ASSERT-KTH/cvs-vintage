@@ -13,13 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.menu;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.MenuBarGenerator;
 
 import org.columba.mail.util.MailResourceLoader;
+
 
 /**
  * @author frd
@@ -29,16 +29,16 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ComposerMenuBarGenerator extends MenuBarGenerator {
     /**
-     * @param frameMediator
-     * @param path
-     */
+ * @param frameMediator
+ * @param path
+ */
     public ComposerMenuBarGenerator(FrameMediator frameController, String path) {
         super(frameController, path);
     }
 
     /* (non-Javadoc)
-             * @see org.columba.core.gui.menu.AbstractMenuGenerator#getString(java.lang.String, java.lang.String, java.lang.String)
-             */
+         * @see org.columba.core.gui.menu.AbstractMenuGenerator#getString(java.lang.String, java.lang.String, java.lang.String)
+         */
     public String getString(String sPath, String sName, String sID) {
         return MailResourceLoader.getString(sPath, sName, sID);
     }

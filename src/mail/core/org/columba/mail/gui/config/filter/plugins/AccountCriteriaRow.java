@@ -15,21 +15,22 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import org.columba.core.plugin.AbstractPluginHandler;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.main.MailInterface;
+
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
 
 /**
  * @author Erik Mattsson
  */
 public class AccountCriteriaRow extends DefaultCriteriaRow {
-
     private JComboBox accountComboBox;
     private JComboBox matchComboBox;
 
@@ -38,7 +39,8 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
      * @param criteriaList the list containing criterias.
      * @param c the criteria for this filter.
      */
-    public AccountCriteriaRow(AbstractPluginHandler pluginHandler, CriteriaList criteriaList, FilterCriteria c) {
+    public AccountCriteriaRow(AbstractPluginHandler pluginHandler,
+        CriteriaList criteriaList, FilterCriteria c) {
         super(pluginHandler, criteriaList, c);
     }
 
@@ -51,8 +53,10 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
         matchComboBox.addItem("is not");
 
         accountComboBox = new JComboBox();
+
         AccountList accountList = MailInterface.config.getAccountList();
         int size = accountList.count();
+
         for (int i = 0; i < size; i++) {
             accountComboBox.addItem(new AccountComboBoxItem(accountList.get(i)));
         }
@@ -63,19 +67,22 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
 
     /** {@inheritDoc} */
     public void updateComponents(boolean b) {
-
         super.updateComponents(b);
 
         if (b) {
             matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
             int criteriaAccountUid = criteria.getInteger("account.uid", -1);
+
             if (criteriaAccountUid != -1) {
                 ComboBoxModel model = accountComboBox.getModel();
+
                 for (int i = 0; i < model.getSize(); i++) {
                     AccountComboBoxItem item = (AccountComboBoxItem) model.getElementAt(i);
+
                     if (item.getAccountID() == criteriaAccountUid) {
                         accountComboBox.setSelectedIndex(i);
+
                         break;
                     }
                 }
@@ -94,6 +101,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
      */
     private class AccountComboBoxItem {
         private AccountItem accountItem;
+
         /**
          * Creates a combobox item that wraps the specified account item.
          * @param item the item.

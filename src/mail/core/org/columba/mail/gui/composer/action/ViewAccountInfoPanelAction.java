@@ -13,16 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 
 import org.columba.mail.gui.composer.ComposerView;
 
 import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd

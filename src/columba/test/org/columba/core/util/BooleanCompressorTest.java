@@ -24,9 +24,9 @@ public class BooleanCompressorTest extends TestCase {
     };
 
     /**
-     * Constructor for BooleanCompressorTest.
-     * @param arg0
-     */
+ * Constructor for BooleanCompressorTest.
+ * @param arg0
+ */
     public BooleanCompressorTest(String arg0) {
         super(arg0);
     }

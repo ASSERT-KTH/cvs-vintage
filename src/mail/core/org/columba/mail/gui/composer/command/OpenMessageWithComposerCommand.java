@@ -17,21 +17,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.main.MailInterface;
+
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -43,9 +41,13 @@ import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.TempSourceFactory;
 import org.columba.ristretto.parser.MessageParser;
 
+import java.util.Iterator;
+import java.util.List;
+
+
 /**
  * Open message in composer.
- * 
+ *
  * @author fdietz
  */
 public class OpenMessageWithComposerCommand extends FolderCommand {
@@ -53,11 +55,11 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
     protected ComposerModel model;
 
     /**
-	 * Constructor for OpenMessageInComposerCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
+         * Constructor for OpenMessageInComposerCommand.
+         *
+         * @param frameMediator
+         * @param references
+         */
     public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -74,40 +76,35 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
         controller.updateComponents(true);
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder =
-            (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
         //TODO keep track of progress here
-        Source tempSource =
-            TempSourceFactory.createTempSource(
-                folder.getMessageSourceStream(uids[0]),
-                -1,
-                null);
+        Source tempSource = TempSourceFactory.createTempSource(folder.getMessageSourceStream(
+                    uids[0]), -1, null);
 
         Message message = MessageParser.parse(tempSource);
 
         initHeader(message);
 
         // select the account this mail was received from
-        Integer accountUid =
-            (Integer) folder.getAttribute(uids[0], "columba.accountuid");
-        AccountItem accountItem =
-            MessageBuilderHelper.getAccountItem(accountUid);
+        Integer accountUid = (Integer) folder.getAttribute(uids[0],
+                "columba.accountuid");
+        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
         model.setAccountItem(accountItem);
 
-        XmlElement html =
-            MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
-                "/options/html");
+        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+                                              .getRoot().getElement("/options/html");
 
-        boolean preferHtml =
-            Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
+        boolean preferHtml = Boolean.valueOf(html.getAttribute("prefer"))
+                                    .booleanValue();
 
         initBody(message, preferHtml);
     }
@@ -125,16 +122,13 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
         }
 
         if (bodyPart != null) {
-            if (bodyPart
-                .getHeader()
-                .getMimeType()
-                .getSubtype()
-                .equals("html")) {
+            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
                 // html
                 model.setHtml(true);
             } else {
                 model.setHtml(false);
             }
+
             model.setBodyText(bodyPart.getBody().toString());
         }
 
@@ -145,6 +139,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
         Header header = message.getHeader();
 
         BasicHeader rfcHeader = new BasicHeader(header);
+
         // set subject
         model.setSubject(rfcHeader.getSubject());
 
@@ -162,24 +157,19 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
             MimePart bodyParent = bodyPart.getParent();
 
             if (bodyParent != null) {
-                if (bodyParent
-                    .getHeader()
-                    .getMimeType()
-                    .getSubtype()
-                    .equals("alternative")) {
+                if (bodyParent.getHeader().getMimeType().getSubtype().equals("alternative")) {
                     List bodyParts = bodyParent.getChilds();
                     displayedMimeParts.removeAll(bodyParts);
                 } else {
                     displayedMimeParts.remove(bodyPart);
                 }
             }
-            
+
             Iterator it = displayedMimeParts.iterator();
-            while( it.hasNext() ) {
-                model.addMimePart( (StreamableMimePart) it.next()); 
+
+            while (it.hasNext()) {
+                model.addMimePart((StreamableMimePart) it.next());
             }
         }
-
     }
-
 }

@@ -15,6 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.toolbar.ToolBar;
+import org.columba.core.gui.util.LabelWithMnemonic;
+
+import org.columba.mail.gui.composer.html.HtmlToolbar;
+import org.columba.mail.gui.composer.menu.ComposerMenu;
+import org.columba.mail.gui.composer.util.IdentityInfoPanel;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -25,21 +42,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.menu.Menu;
-import org.columba.core.gui.toolbar.ToolBar;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.gui.composer.html.HtmlToolbar;
-import org.columba.mail.gui.composer.menu.ComposerMenu;
-import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-import org.columba.mail.util.MailResourceLoader;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author frd
@@ -47,249 +49,241 @@ import com.jgoodies.forms.layout.FormLayout;
  * view for message composer dialog
  */
 public class ComposerView extends AbstractFrameView {
-	public static final String ACCOUNTINFOPANEL= "accountinfopanel";
-	private JSplitPane rightSplitPane;
+    public static final String ACCOUNTINFOPANEL = "accountinfopanel";
+    private JSplitPane rightSplitPane;
 
-	/** Editor viewer resides in this panel */
-	private JPanel editorPanel;
+    /** Editor viewer resides in this panel */
+    private JPanel editorPanel;
 
-	public ComposerView(FrameMediator ctrl) {
-		super(ctrl);
-		setTitle(MailResourceLoader.getString("dialog", "composer", "composerview_title")); //$NON-NLS-1$
+    public ComposerView(FrameMediator ctrl) {
+        super(ctrl);
+        setTitle(MailResourceLoader.getString("dialog", "composer",
+                "composerview_title")); //$NON-NLS-1$
 
-		Container contentPane;
+        Container contentPane;
 
-		contentPane= getContentPane();
+        contentPane = getContentPane();
 
-		ComposerController controller= (ComposerController) frameController;
+        ComposerController controller = (ComposerController) frameController;
 
-		if (isAccountInfoPanelVisible()) {
-			toolbarPane.add(controller.getIdentityInfoPanel());
-		}
+        if (isAccountInfoPanelVisible()) {
+            toolbarPane.add(controller.getIdentityInfoPanel());
+        }
 
-		JScrollPane attachmentScrollPane=
-			new JScrollPane(controller.getAttachmentController().view);
-		//attachmentScrollPane.setBorder(null);
-		attachmentScrollPane.setBorder(
-			BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        JScrollPane attachmentScrollPane = new JScrollPane(controller.getAttachmentController().view);
 
-		rightSplitPane= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		//rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        //attachmentScrollPane.setBorder(null);
+        attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
+                1));
 
-		JScrollPane hs=
-			new JScrollPane(controller.getHeaderController().getView());
-		hs.getViewport().setBackground(Color.white);
-		hs.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		hs.setPreferredSize(new Dimension(200, 100));
-		
-		rightSplitPane.add(hs, JSplitPane.LEFT);
+        rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-		rightSplitPane.add(attachmentScrollPane, JSplitPane.RIGHT);
-		rightSplitPane.setDividerSize(5);
-		rightSplitPane.setDividerLocation(400);
+        //rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        JScrollPane hs = new JScrollPane(controller.getHeaderController()
+                                                   .getView());
+        hs.getViewport().setBackground(Color.white);
+        hs.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        hs.setPreferredSize(new Dimension(200, 100));
 
-		JPanel topPanel= new JPanel();
-		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
+        rightSplitPane.add(hs, JSplitPane.LEFT);
 
-		LabelWithMnemonic subjectLabel=
-			new LabelWithMnemonic(
-				MailResourceLoader.getString("dialog", "composer", "subject"));
+        rightSplitPane.add(attachmentScrollPane, JSplitPane.RIGHT);
+        rightSplitPane.setDividerSize(5);
+        rightSplitPane.setDividerLocation(400);
 
-		LabelWithMnemonic smtpLabel=
-			new LabelWithMnemonic(
-				MailResourceLoader.getString("dialog", "composer", "identity"));
+        JPanel topPanel = new JPanel();
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
-		LabelWithMnemonic priorityLabel=
-			new LabelWithMnemonic(
-				MailResourceLoader.getString("dialog", "composer", "priority"));
+        LabelWithMnemonic subjectLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "composer", "subject"));
 
-		// Create a FormLayout instance. 
-		FormLayout layout=
-			new FormLayout("max(20dlu;pref), 3dlu, fill:default:grow, 2dlu",
+        LabelWithMnemonic smtpLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "composer", "identity"));
 
-			// 2 columns
-	"fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
-		// 3 row
+        LabelWithMnemonic priorityLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "composer", "priority"));
 
-		PanelBuilder builder= new PanelBuilder(topPanel, layout);
-		CellConstraints cc= new CellConstraints();
+        // Create a FormLayout instance. 
+        FormLayout layout = new FormLayout("max(20dlu;pref), 3dlu, fill:default:grow, 2dlu",
+                
+            // 2 columns
+            "fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
 
-		layout.setColumnGroups(new int[][] { { 1 }
-		});
+        // 3 row
+        PanelBuilder builder = new PanelBuilder(topPanel, layout);
+        CellConstraints cc = new CellConstraints();
 
-		layout.setRowGroups(new int[][] { { 1, 5, 7 }
-		});
+        layout.setColumnGroups(new int[][] {
+                { 1 }
+            });
 
-		builder.add(smtpLabel, cc.xy(1, 1));
+        layout.setRowGroups(new int[][] {
+                { 1, 5, 7 }
+            });
 
-		JPanel smtpPanel= new JPanel();
-		FormLayout l=
-			new FormLayout(
-				"default, 3dlu, right:default:grow, 3dlu, right:default",
-				"fill:default:grow");
-		PanelBuilder b= new PanelBuilder(smtpPanel, l);
+        builder.add(smtpLabel, cc.xy(1, 1));
 
-		CellConstraints c= new CellConstraints();
-		b.add(controller.getAccountController().view, c.xy(1, 1));
-		b.add(priorityLabel, c.xy(3, 1));
-		b.add(controller.getPriorityController().view, c.xy(5, 1));
+        JPanel smtpPanel = new JPanel();
+        FormLayout l = new FormLayout("default, 3dlu, right:default:grow, 3dlu, right:default",
+                "fill:default:grow");
+        PanelBuilder b = new PanelBuilder(smtpPanel, l);
 
-		builder.add(smtpPanel, cc.xy(3, 1));
+        CellConstraints c = new CellConstraints();
+        b.add(controller.getAccountController().view, c.xy(1, 1));
+        b.add(priorityLabel, c.xy(3, 1));
+        b.add(controller.getPriorityController().view, c.xy(5, 1));
 
-		builder.add(rightSplitPane, cc.xywh(1, 3, 3, 1));
+        builder.add(smtpPanel, cc.xy(3, 1));
 
-		builder.add(subjectLabel, cc.xy(1, 5));
+        builder.add(rightSplitPane, cc.xywh(1, 3, 3, 1));
 
-		builder.add(controller.getSubjectController().view, cc.xy(3, 5));
+        builder.add(subjectLabel, cc.xy(1, 5));
 
-		// add JPanel with useful HTML related actions.
-		HtmlToolbar htmlToolbar= new HtmlToolbar(controller, builder);
+        builder.add(controller.getSubjectController().view, cc.xy(3, 5));
 
-		editorPanel= new JPanel();
-		editorPanel.setBorder(null);
-		editorPanel.setLayout(new BorderLayout());
+        // add JPanel with useful HTML related actions.
+        HtmlToolbar htmlToolbar = new HtmlToolbar(controller, builder);
 
-		// *20030907, karlpeder* getViewUIComponent returns view
-		//            already encapsulated in a scroll pane.
-		//JScrollPane scrollPane =
-		//	new JScrollPane(controller.getEditorController().view);
-		//editorPanel.add(scrollPane, BorderLayout.CENTER);
-		editorPanel.add(controller.getEditorController().getViewUIComponent());
+        editorPanel = new JPanel();
+        editorPanel.setBorder(null);
+        editorPanel.setLayout(new BorderLayout());
 
-		JPanel centerPanel= new JPanel();
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		centerPanel.setLayout(new BorderLayout());
+        // *20030907, karlpeder* getViewUIComponent returns view
+        //            already encapsulated in a scroll pane.
+        //JScrollPane scrollPane =
+        //	new JScrollPane(controller.getEditorController().view);
+        //editorPanel.add(scrollPane, BorderLayout.CENTER);
+        editorPanel.add(controller.getEditorController().getViewUIComponent());
 
-		centerPanel.add(topPanel, BorderLayout.NORTH);
-		centerPanel.add(editorPanel, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        centerPanel.setLayout(new BorderLayout());
 
-		/*
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		
-		mainPanel.add(rightSplitPane, BorderLayout.NORTH);
-		mainPanel.add(centerPanel, BorderLayout.CENTER);
-		*/
-		contentPane.add(centerPanel, BorderLayout.CENTER);
+        centerPanel.add(topPanel, BorderLayout.NORTH);
+        centerPanel.add(editorPanel, BorderLayout.CENTER);
 
-		pack();
-	}
+        /*
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
 
-	/**
-	 * Returns a reference to the panel, that holds the editor view.
-	 * This is used by the ComposerController when adding a listener
-	 * to that panel.
-	 */
-	protected JPanel getEditorPanel() {
-		return editorPanel;
-	}
+        mainPanel.add(rightSplitPane, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        */
+        contentPane.add(centerPanel, BorderLayout.CENTER);
 
-	/**
-	 * Used to update the panel, that holds the editor viewer. This is
-	 * necessary e.g. if the ComposerModel is changed to hold another
-	 * message type (text / html), which the previous editor can not
-	 * handle. If so a new editor controller is created, and thereby
-	 * a new view.
-	 */
-	public void setNewEditorView() {
-		// get reference to composer controller
-		ComposerController controller= (ComposerController) frameController;
+        pack();
+    }
 
-		// update panel
-		editorPanel.removeAll();
-		editorPanel.add(controller.getEditorController().getViewUIComponent());
-		editorPanel.validate();
-	}
+    /**
+     * Returns a reference to the panel, that holds the editor view.
+     * This is used by the ComposerController when adding a listener
+     * to that panel.
+     */
+    protected JPanel getEditorPanel() {
+        return editorPanel;
+    }
 
-	public void setRightDividerLocation(int i) {
-		rightSplitPane.setDividerLocation(i);
-	}
+    /**
+     * Used to update the panel, that holds the editor viewer. This is
+     * necessary e.g. if the ComposerModel is changed to hold another
+     * message type (text / html), which the previous editor can not
+     * handle. If so a new editor controller is created, and thereby
+     * a new view.
+     */
+    public void setNewEditorView() {
+        // get reference to composer controller
+        ComposerController controller = (ComposerController) frameController;
 
-	public int getRightDividerLocation() {
-		return rightSplitPane.getDividerLocation();
-	}
+        // update panel
+        editorPanel.removeAll();
+        editorPanel.add(controller.getEditorController().getViewUIComponent());
+        editorPanel.validate();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
-	 */
-	protected Menu createMenu(FrameMediator controller) {
-		Menu menu=
-			new ComposerMenu("org/columba/core/action/menu.xml", controller);
-		menu.extendMenuFromFile("org/columba/mail/action/composer_menu.xml");
+    public void setRightDividerLocation(int i) {
+        rightSplitPane.setDividerLocation(i);
+    }
 
-		return menu;
-	}
+    public int getRightDividerLocation() {
+        return rightSplitPane.getDividerLocation();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
-	 */
-	protected ToolBar createToolbar(FrameMediator controller) {
-		return new ToolBar(
-			MailInterface.config.get("composer_toolbar").getElement("toolbar"),
-			controller);
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+     */
+    protected Menu createMenu(FrameMediator controller) {
+        Menu menu = new ComposerMenu("org/columba/core/action/menu.xml",
+                controller);
+        menu.extendMenuFromFile("org/columba/mail/action/composer_menu.xml");
 
-	public IdentityInfoPanel getAccountInfoPanel() {
-		ComposerController controller= (ComposerController) frameController;
+        return menu;
+    }
 
-		return controller.getIdentityInfoPanel();
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+     */
+    protected ToolBar createToolbar(FrameMediator controller) {
+        return new ToolBar(MailInterface.config.get("composer_toolbar")
+                                               .getElement("toolbar"),
+            controller);
+    }
 
-	/* (non-Javadoc)
-	         * @see org.columba.core.gui.frame.AbstractFrameView#showToolbar()
-	         */
-	public void showToolbar() {
-		boolean b= isToolbarVisible();
+    public IdentityInfoPanel getAccountInfoPanel() {
+        ComposerController controller = (ComposerController) frameController;
 
-		if (toolbar == null) {
-			return;
-		}
+        return controller.getIdentityInfoPanel();
+    }
 
-		if (b) {
-			toolbarPane.remove(toolbar);
-			((AbstractFrameController) frameController).enableToolbar(
-				MAIN_TOOLBAR,
-				false);
-		} else {
-			if (isAccountInfoPanelVisible()) {
-				toolbarPane.removeAll();
-				toolbarPane.add(toolbar);
-				toolbarPane.add(getAccountInfoPanel());
-			} else {
-				toolbarPane.add(toolbar);
-			}
+    /* (non-Javadoc)
+             * @see org.columba.core.gui.frame.AbstractFrameView#showToolbar()
+             */
+    public void showToolbar() {
+        boolean b = isToolbarVisible();
 
-			((AbstractFrameController) frameController).enableToolbar(
-				MAIN_TOOLBAR,
-				true);
-		}
+        if (toolbar == null) {
+            return;
+        }
 
-		validate();
-		repaint();
-	}
+        if (b) {
+            toolbarPane.remove(toolbar);
+            ((AbstractFrameController) frameController).enableToolbar(MAIN_TOOLBAR,
+                false);
+        } else {
+            if (isAccountInfoPanelVisible()) {
+                toolbarPane.removeAll();
+                toolbarPane.add(toolbar);
+                toolbarPane.add(getAccountInfoPanel());
+            } else {
+                toolbarPane.add(toolbar);
+            }
 
-	public void showAccountInfoPanel() {
-		boolean b= isAccountInfoPanelVisible();
+            ((AbstractFrameController) frameController).enableToolbar(MAIN_TOOLBAR,
+                true);
+        }
 
-		if (b) {
-			toolbarPane.remove(getAccountInfoPanel());
-			((AbstractFrameController) frameController).enableToolbar(
-				ACCOUNTINFOPANEL,
-				false);
-		} else {
-			toolbarPane.add(getAccountInfoPanel());
+        validate();
+        repaint();
+    }
 
-			((AbstractFrameController) frameController).enableToolbar(
-				ACCOUNTINFOPANEL,
-				true);
-		}
+    public void showAccountInfoPanel() {
+        boolean b = isAccountInfoPanelVisible();
 
-		validate();
-		repaint();
-	}
+        if (b) {
+            toolbarPane.remove(getAccountInfoPanel());
+            ((AbstractFrameController) frameController).enableToolbar(ACCOUNTINFOPANEL,
+                false);
+        } else {
+            toolbarPane.add(getAccountInfoPanel());
 
-	public boolean isAccountInfoPanelVisible() {
-		return ((AbstractFrameController) frameController).isToolbarEnabled(
-			ACCOUNTINFOPANEL);
-	}
+            ((AbstractFrameController) frameController).enableToolbar(ACCOUNTINFOPANEL,
+                true);
+        }
+
+        validate();
+        repaint();
+    }
+
+    public boolean isAccountInfoPanelVisible() {
+        return ((AbstractFrameController) frameController).isToolbarEnabled(ACCOUNTINFOPANEL);
+    }
 }

@@ -36,7 +36,8 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class OpenAction extends AbstractColumbaAction implements SelectionListener {
+public class OpenAction extends AbstractColumbaAction
+    implements SelectionListener {
     public OpenAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe", "attachmentopen"));
@@ -56,8 +57,8 @@ public class OpenAction extends AbstractColumbaAction implements SelectionListen
     }
 
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent evt) {
         MainInterface.processor.addOp(new OpenAttachmentCommand(
                 getFrameMediator().getSelectionManager()
@@ -65,8 +66,8 @@ public class OpenAction extends AbstractColumbaAction implements SelectionListen
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
-     */
+ * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
+ */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((AttachmentSelectionChangedEvent) e).getAddress() != null) {
             setEnabled(true);

@@ -20,7 +20,6 @@ import org.columba.addressbook.main.AddressbookInterface;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
@@ -56,12 +55,13 @@ public class AddressbookAction extends AbstractColumbaAction {
     }
 
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent evt) {
         ComposerController composerController = ((ComposerController) getFrameMediator());
 
-        composerController.getHeaderController().getView().cleanupHeaderItemList();
+        composerController.getHeaderController().getView()
+                          .cleanupHeaderItemList();
 
         SelectAddressDialog dialog = new SelectAddressDialog(composerController.getView(),
                 composerController.getHeaderController().getHeaderItemLists());

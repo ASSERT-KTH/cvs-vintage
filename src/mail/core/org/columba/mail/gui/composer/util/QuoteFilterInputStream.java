@@ -15,28 +15,25 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.util;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class QuoteFilterInputStream extends FilterInputStream {
 
+public class QuoteFilterInputStream extends FilterInputStream {
     private static final int QUOTE = 0;
     private static final int BODY = 1;
     private static final int BODYSTART = 2;
-
     private byte[] quotePrefix;
     private int mode;
     private int quotePos;
-
     private int preRead;
 
     /**
-	 * @param arg0
-	 */
+     * @param arg0
+     */
     public QuoteFilterInputStream(InputStream arg0, String prefix)
         throws IOException {
         super(arg0);
@@ -44,10 +41,10 @@ public class QuoteFilterInputStream extends FilterInputStream {
         quotePrefix = prefix.getBytes();
 
         preRead = arg0.read();
+
         if (preRead == -1) {
             mode = BODYSTART;
         } else {
-
             // First print a quote
             mode = QUOTE;
             quotePos = 0;
@@ -55,51 +52,52 @@ public class QuoteFilterInputStream extends FilterInputStream {
     }
 
     /**
-	 * @param arg0
-	 */
+     * @param arg0
+     */
     public QuoteFilterInputStream(InputStream arg0) throws IOException {
         this(arg0, "> ");
     }
 
     /*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.InputStream#read()
-	 */
+     * (non-Javadoc)
+     * 
+     * @see java.io.InputStream#read()
+     */
     public int read() throws IOException {
         int result = -1;
 
         switch (mode) {
-            case QUOTE :
-                {
-                    if (quotePos < quotePrefix.length) {
-                        result = (int) quotePrefix[quotePos++];
-                    } else {
-                        // reset
-                        mode = BODY;
-                        quotePos = 0;
-                        result = preRead;
-                    }
-                    break;
-                }
+        case QUOTE: {
+            if (quotePos < quotePrefix.length) {
+                result = (int) quotePrefix[quotePos++];
+            } else {
+                // reset
+                mode = BODY;
+                quotePos = 0;
+                result = preRead;
+            }
 
-            case BODYSTART :
-                {
-                    mode = BODY;
-                    result = preRead;
-                    break;
-                }
-            case BODY :
-                {
-                    result = in.read();
-                    break;
-                }
+            break;
         }
 
-        
+        case BODYSTART: {
+            mode = BODY;
+            result = preRead;
+
+            break;
+        }
+
+        case BODY: {
+            result = in.read();
+
+            break;
+        }
+        }
+
         // Do we have to insert a quoteprefix?
         if (result == '\n') {
             preRead = in.read();
+
             if (preRead == -1) {
                 mode = BODYSTART;
             } else {
@@ -111,14 +109,16 @@ public class QuoteFilterInputStream extends FilterInputStream {
     }
 
     /*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.InputStream#read(byte[], int, int)
-	 */
+     * (non-Javadoc)
+     * 
+     * @see java.io.InputStream#read(byte[], int, int)
+     */
     public int read(byte[] arg0, int arg1, int arg2) throws IOException {
         int next;
+
         for (int i = 0; i < arg2; i++) {
             next = read();
+
             if (next == -1) {
                 if (i == 0) {
                     return -1;
@@ -126,9 +126,10 @@ public class QuoteFilterInputStream extends FilterInputStream {
                     return i;
                 }
             }
+
             arg0[arg1 + i] = (byte) next;
         }
+
         return arg2;
     }
-
 }

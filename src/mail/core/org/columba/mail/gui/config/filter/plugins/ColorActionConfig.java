@@ -35,9 +35,9 @@ public class ColorActionConfig extends DefaultActionRow {
     private ColorComboBox colorsComboBox;
 
     /**
-     * @param list the action list (?)
-     * @param action the action to configure.
-     */
+ * @param list the action list (?)
+ * @param action the action to configure.
+ */
     public ColorActionConfig(ActionList list, FilterAction action) {
         super(list, action);
     }

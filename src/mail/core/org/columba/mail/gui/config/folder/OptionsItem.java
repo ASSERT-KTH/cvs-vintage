@@ -15,58 +15,54 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.folder;
 
+import org.columba.core.config.DefaultItem;
+import org.columba.core.xml.XmlElement;
+
+import org.frapuccino.checkablelist.CheckableItem;
+
 import javax.swing.Icon;
 
-import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.checkablelist.CheckableItem;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author fdietz
  */
 public class OptionsItem implements CheckableItem {
-
     private String name;
     private boolean selected;
     private XmlElement element;
-    
+
     public OptionsItem(XmlElement element) {
         this.element = element;
-       
-        
     }
+
     public void setSelected(boolean b) {
         element.addAttribute("overwrite", Boolean.toString(b));
-
     }
 
     /**
-     * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
-     */
+ * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
+ */
     public boolean isSelected() {
         DefaultItem item = new DefaultItem(element);
-        
+
         return item.getBoolean("overwrite", false);
     }
 
     /**
-     * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
-     */
+ * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
+ */
     public Icon getIcon() {
-
         return null;
     }
 
-  
     public String toString() {
         return element.getName();
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public XmlElement getElement() {
         return element;
     }
-
 }

@@ -15,31 +15,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.command;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.charset.Charset;
-
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
-import org.columba.core.io.StreamUtils;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
+
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
+
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
+
 
 /**
  * Reply to mailinglist.
@@ -49,12 +36,11 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdizet
  */
 public class ReplyToMailingListCommand extends ReplyCommand {
-    protected final String[] headerfields =
-    new String[] {
-			   "Subject", "From", "To", "Reply-To", "Message-ID",
-			   "In-Reply-To", "References", "X-Beenthere", "X-BeenThere"
-    };
-    
+    protected final String[] headerfields = new String[] {
+            "Subject", "From", "To", "Reply-To", "Message-ID", "In-Reply-To",
+            "References", "X-Beenthere", "X-BeenThere"
+        };
+
     /**
      * Constructor for ReplyToMailingListCommand.
      *
@@ -65,38 +51,42 @@ public class ReplyToMailingListCommand extends ReplyCommand {
         super(references);
     }
 
-    protected void initHeader(Folder folder, Object[] uids) throws Exception {
+    protected void initHeader(Folder folder, Object[] uids)
+        throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
         BasicHeader rfcHeader = new BasicHeader(header);
+
         // set subject
-        model.setSubject(
-                MessageBuilderHelper.createReplySubject(rfcHeader.getSubject()));
+        model.setSubject(MessageBuilderHelper.createReplySubject(
+                rfcHeader.getSubject()));
 
         // Use reply-to field if given, else use from
         Address to = rfcHeader.getBeenThere();
-        if( to == null ) {
+
+        if (to == null) {
             Address[] replyTo = rfcHeader.getReplyTo();
-            if( replyTo.length > 0)
+
+            if (replyTo.length > 0) {
                 to = replyTo[0];
+            }
         }
-        
-        if( to == null ) {
+
+        if (to == null) {
             to = rfcHeader.getFrom();
         }
-        
+
         MessageBuilderHelper.addAddressesToAddressbook(new Address[] { to });
         model.setTo(new Address[] { to });
-        
+
         // create In-Reply-To:, References: headerfields
         MessageBuilderHelper.createMailingListHeaderItems(header, model);
 
         // select the account this mail was received from
-        Integer accountUid =
-        (Integer) folder.getAttribute(uids[0], "columba.accountuid");
-        AccountItem accountItem =
-        MessageBuilderHelper.getAccountItem(accountUid);
+        Integer accountUid = (Integer) folder.getAttribute(uids[0],
+                "columba.accountuid");
+        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
         model.setAccountItem(accountItem);
     }
 }

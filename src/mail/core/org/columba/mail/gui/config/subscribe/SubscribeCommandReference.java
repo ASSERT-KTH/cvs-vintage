@@ -13,62 +13,62 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.subscribe;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 
+
 public class SubscribeCommandReference extends FolderCommandReference {
-    
     private SubscribeDialog dialog;
     private String mailbox;
 
     /**
-     * @param folder
-     */
-    public SubscribeCommandReference(FolderTreeNode folder, SubscribeDialog dialog) {
+ * @param folder
+ */
+    public SubscribeCommandReference(FolderTreeNode folder,
+        SubscribeDialog dialog) {
         super(folder);
-        
+
         this.dialog = dialog;
     }
 
     /**
-     * @param folder
-     */
-    public SubscribeCommandReference(FolderTreeNode folder, SubscribeDialog dialog, String mailbox) {
+ * @param folder
+ */
+    public SubscribeCommandReference(FolderTreeNode folder,
+        SubscribeDialog dialog, String mailbox) {
         super(folder);
-        
+
         this.dialog = dialog;
         this.mailbox = mailbox;
     }
-    
+
     /**
-     * @return Returns the dialog.
-     */
+ * @return Returns the dialog.
+ */
     public SubscribeDialog getDialog() {
         return dialog;
     }
 
     /**
-     * @param dialog The dialog to set.
-     */
+ * @param dialog The dialog to set.
+ */
     public void setDialog(SubscribeDialog dialog) {
         this.dialog = dialog;
     }
 
     /**
-     * @return Returns the mailbox.
-     */
+ * @return Returns the mailbox.
+ */
     public String getMailbox() {
         return mailbox;
     }
 
     /**
-     * @param mailbox The mailbox to set.
-     */
+ * @param mailbox The mailbox to set.
+ */
     public void setMailbox(String mailbox) {
         this.mailbox = mailbox;
     }
-
 }

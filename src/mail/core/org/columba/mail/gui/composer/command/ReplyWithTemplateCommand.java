@@ -15,58 +15,48 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.command;
+
+import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.StreamUtils;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.gui.config.template.ChooseTemplateDialog;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.message.HeaderList;
+
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.nio.charset.Charset;
-
-import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.io.StreamUtils;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.composer.MessageBuilderHelper;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
-import org.columba.mail.gui.config.template.ChooseTemplateDialog;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.message.HeaderList;
-import org.columba.ristretto.message.Address;
-import org.columba.ristretto.message.BasicHeader;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  * Opens a dialog to ask the user which template to use
- * 
+ *
  * @author fdietz
  */
 public class ReplyWithTemplateCommand extends ReplyCommand {
     /**
-	 * @param references
-	 */
+         * @param references
+         */
     public ReplyWithTemplateCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // create composer model
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder =
-            (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
@@ -77,9 +67,8 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
         // get mimeparts
         MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-        XmlElement html =
-            MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
-                "/options/html");
+        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+                                              .getRoot().getElement("/options/html");
 
         // Which Bodypart shall be shown? (html/plain)
         MimePart bodyPart = null;
@@ -120,6 +109,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
         ChooseTemplateDialog d = new ChooseTemplateDialog(list);
 
         Object uid = null;
+
         if (d.isResult()) {
             // user pressed OK
             uid = d.getUid();
@@ -140,8 +130,8 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
             mp = tree.getFirstTextPart("text");
         }
 
-        InputStream bodyStream =
-            templateFolder.getMimePartBodyStream(uid, mp.getAddress());
+        InputStream bodyStream = templateFolder.getMimePartBodyStream(uid,
+                mp.getAddress());
 
         return StreamUtils.readInString(bodyStream).toString();
     }

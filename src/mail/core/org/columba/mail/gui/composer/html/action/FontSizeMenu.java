@@ -39,9 +39,9 @@ public class FontSizeMenu extends IMenu {
     ButtonGroup group;
 
     /**
-     * @param controller
-     * @param caption
-     */
+ * @param controller
+ * @param caption
+ */
     public FontSizeMenu(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "composer",

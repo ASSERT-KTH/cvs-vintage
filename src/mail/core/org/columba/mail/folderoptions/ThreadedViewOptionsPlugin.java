@@ -31,17 +31,17 @@ import org.columba.mail.gui.table.TableController;
  */
 public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
-     * Constructor
-     * 
-     * @param mediator      mail framemediator
-     */
+ * Constructor
+ * 
+ * @param mediator      mail framemediator
+ */
     public ThreadedViewOptionsPlugin(MailFrameMediator mediator) {
         super("threadedview", "ThreadedViewOptions", mediator);
     }
 
     /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
-     */
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+ */
     public void saveOptionsToXml(Folder folder) {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
@@ -53,8 +53,8 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
-     */
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+ */
     public void loadOptionsFromXml(Folder folder) {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
@@ -62,26 +62,24 @@ public class ThreadedViewOptionsPlugin extends AbstractFolderOptionsPlugin {
         boolean enableThreadedView = item.getBoolean("enabled", false);
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
-        
+
         // enable threaded-view in threaded-table-model
         tableController.getTableModelThreadedView().setEnabled(enableThreadedView);
-        
+
         // enable threaded-view mode in table model
         tableController.getHeaderTableModel().enableThreadedView(enableThreadedView);
-        
+
         // enable custom renderer of view
         tableController.getView().enableThreadedView(enableThreadedView);
     }
 
     /**
-       * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-       */
+   * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+   */
     public XmlElement createDefaultElement(boolean global) {
         XmlElement parent = super.createDefaultElement(global);
         parent.addAttribute("enabled", "false");
 
         return parent;
     }
-	
-
 }

@@ -17,6 +17,7 @@ package org.columba.core.util;
 
 import junit.framework.TestCase;
 
+
 /**
  * Tests for the StopWatch class.
  * Note that this test relies heavily on time and should not be run at the same time
@@ -25,11 +26,10 @@ import junit.framework.TestCase;
  * @author redsolo
  */
 public class StopWatchTest extends TestCase {
-
     /**
-     * Tests to start the StopWatch and then stop it.
-     * @throws InterruptedException thrown if a <code>Thread.sleep()</code> fail.
-     */
+ * Tests to start the StopWatch and then stop it.
+ * @throws InterruptedException thrown if a <code>Thread.sleep()</code> fail.
+ */
     public void testStop() throws InterruptedException {
         StopWatch watch = new StopWatch();
         StopWatch watch2 = new StopWatch();
@@ -45,9 +45,9 @@ public class StopWatchTest extends TestCase {
     }
 
     /**
-     * Tests to restarts the StopWatch and then stop it.
-     * @throws InterruptedException thrown if a <code>Thread.sleep()</code> fail.
-     */
+ * Tests to restarts the StopWatch and then stop it.
+ * @throws InterruptedException thrown if a <code>Thread.sleep()</code> fail.
+ */
     public void testStart() throws InterruptedException {
         StopWatch watch = new StopWatch();
         StopWatch watch2 = new StopWatch();
@@ -65,9 +65,9 @@ public class StopWatchTest extends TestCase {
     }
 
     /**
-     * Test to start the timer and stop it, and see that it returns a valid time.
-     * @throws InterruptedException thrown if the sleep was interrupted.
-     */
+ * Test to start the timer and stop it, and see that it returns a valid time.
+ * @throws InterruptedException thrown if the sleep was interrupted.
+ */
     public void testTiming() throws InterruptedException {
         StopWatch watch = new StopWatch();
 
@@ -75,7 +75,8 @@ public class StopWatchTest extends TestCase {
         watch.stop();
 
         if (watch.getTiming() < 50) {
-            fail("Stopwatch returned too small value. expected < 50 but was <" + watch.getTiming() + ">");
+            fail("Stopwatch returned too small value. expected < 50 but was <" +
+                watch.getTiming() + ">");
         }
     }
 }

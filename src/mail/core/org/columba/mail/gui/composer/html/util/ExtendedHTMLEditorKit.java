@@ -44,12 +44,12 @@ import javax.swing.text.html.StyleSheet;
   */
 public class ExtendedHTMLEditorKit extends HTMLEditorKit {
     /** Constructor
-      */
+  */
     public ExtendedHTMLEditorKit() {
     }
 
     /** Method for returning a ViewFactory which handles the image rendering.
-      */
+  */
     public ViewFactory getViewFactory() {
         return new HTMLFactoryExtended();
     }
@@ -71,18 +71,18 @@ public class ExtendedHTMLEditorKit extends HTMLEditorKit {
     /* Inner Classes --------------------------------------------- */
 
     /** Class that replaces the default ViewFactory and supports
-      * the proper rendering of both URL-based and local images.
-      */
+  * the proper rendering of both URL-based and local images.
+  */
     public static class HTMLFactoryExtended extends HTMLFactory
         implements ViewFactory {
         /** Constructor
-          */
+  */
         public HTMLFactoryExtended() {
         }
 
         /** Method to handle IMG tags and
-          * invoke the image loader.
-          */
+  * invoke the image loader.
+  */
         public View create(Element elem) {
             Object obj = elem.getAttributes().getAttribute(StyleConstants.NameAttribute);
 

@@ -98,19 +98,19 @@ class FilterListDataModel extends AbstractTableModel {
     }
 
     /**
-     * Returns the filter at the specified row/index.
-     * @param row the row.
-     * @return a Filter;
-     */
+ * Returns the filter at the specified row/index.
+ * @param row the row.
+ * @return a Filter;
+ */
     public Filter getFilter(int row) {
         return filterList.get(row);
     }
 
     /**
-     * Inserts the filter into the filter list at the end of the filter list.
-     * @param newFilter the filter to insert at the end.         *
-     * @throws IndexOutOfBoundsException if the index is out of range.
-     */
+ * Inserts the filter into the filter list at the end of the filter list.
+ * @param newFilter the filter to insert at the end.         *
+ * @throws IndexOutOfBoundsException if the index is out of range.
+ */
     public void addFilter(Filter newFilter) throws IndexOutOfBoundsException {
         int row = filterList.count();
         filterList.add(newFilter);
@@ -118,20 +118,20 @@ class FilterListDataModel extends AbstractTableModel {
     }
 
     /**
-     * Inserts the filter into the filter list at the specified index.
-     * Filters that are at a position below the index (higher) is moved down.
-     * @param newFilter the filter to insert.
-     * @param index the positiong in the list to add the filter too.
-     */
+ * Inserts the filter into the filter list at the specified index.
+ * Filters that are at a position below the index (higher) is moved down.
+ * @param newFilter the filter to insert.
+ * @param index the positiong in the list to add the filter too.
+ */
     public void insertFilter(Filter newFilter, int index) {
         filterList.insert(newFilter, index);
         fireTableRowsInserted(index, index);
     }
 
     /**
-     * Removes the filter from the filter list.
-     * @param filter the filter to remove.
-     */
+ * Removes the filter from the filter list.
+ * @param filter the filter to remove.
+ */
     public void removeFilter(Filter filter) {
         filterList.remove(filter);
         fireTableDataChanged();

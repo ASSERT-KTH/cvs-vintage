@@ -13,12 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.mail.gui.composer.text;
 
-import org.columba.core.charset.*;
-import org.columba.core.main.MainInterface;
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
 import org.columba.core.gui.util.FontProperties;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.util.UndoDocument;
@@ -33,6 +33,7 @@ import java.util.Observer;
 
 import javax.swing.JTextPane;
 
+
 /**
  * @author frd
  *
@@ -41,7 +42,8 @@ import javax.swing.JTextPane;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class TextEditorView extends JTextPane implements Observer, CharsetListener {
+public class TextEditorView extends JTextPane implements Observer,
+    CharsetListener {
     private TextEditorController controller;
     private UndoDocument message;
 
@@ -87,12 +89,14 @@ public class TextEditorView extends JTextPane implements Observer, CharsetListen
         Font font = FontProperties.getTextFont();
         setFont(font);
     }
-    
+
     public void charsetChanged(CharsetEvent e) {
         Charset charset = e.getCharset();
+
         if (charset == null) {
             charset = Charset.forName(System.getProperty("file.encoding"));
         }
+
         setContentType("text/plain; charset=\"" + charset.name() + "\"");
     }
 }

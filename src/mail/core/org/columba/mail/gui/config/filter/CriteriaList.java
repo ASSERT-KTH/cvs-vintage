@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter;
 
 import org.columba.core.gui.util.ImageLoader;
@@ -47,6 +46,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
 
 public class CriteriaList extends JPanel implements ActionListener {
     private Filter filter;

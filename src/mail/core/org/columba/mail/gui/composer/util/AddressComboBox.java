@@ -15,14 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.mail.gui.composer.HeaderView;
+import org.columba.mail.util.AddressCollector;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.columba.mail.gui.composer.HeaderView;
-import org.columba.mail.util.AddressCollector;
 
 /**
  * Combox for entering email address. This widget is aware of 
@@ -31,57 +32,54 @@ import org.columba.mail.util.AddressCollector;
  * @author fdietz
  */
 public class AddressComboBox extends JComboBox implements KeyListener {
+    private HeaderView table;
 
-	private HeaderView table;
+    public AddressComboBox(HeaderView table) {
+        super();
 
-	public AddressComboBox(HeaderView table) {
-		super();
+        this.table = table;
 
-		this.table= table;
+        setEditable(true);
 
-		setEditable(true);
+        Object[] completions = AddressCollector.getAddresses();
 
-		Object[] completions= AddressCollector.getAddresses();
+        new AutoCompleter(this, table, completions);
 
-		new AutoCompleter(this, table, completions);
-	
-		setRenderer(new AddressComboBoxRenderer());
-		//getTextField().addKeyListener(this);
-	}
+        setRenderer(new AddressComboBoxRenderer());
 
-	private JTextField getTextField() {
-		return ((JTextField) getEditor().getEditorComponent());
-	}
+        //getTextField().addKeyListener(this);
+    }
 
-	/******************* Key Listener **************************/
+    private JTextField getTextField() {
+        return ((JTextField) getEditor().getEditorComponent());
+    }
 
-	public void keyTyped(KeyEvent e) {
-		System.out.println("typed..");
-		char ch= e.getKeyChar();
+    /******************* Key Listener **************************/
+    public void keyTyped(KeyEvent e) {
+        System.out.println("typed..");
 
-		if (ch == KeyEvent.VK_BACK_SPACE) {
-			int length= getTextField().getText().length();
+        char ch = e.getKeyChar();
 
-			if (length == 0) {
+        if (ch == KeyEvent.VK_BACK_SPACE) {
+            int length = getTextField().getText().length();
 
-				table.removeEditingRow();
+            if (length == 0) {
+                table.removeEditingRow();
 
-				int row= this.table.getSelectedRow();
-				if (table.editCellAt(row, 1)) {
-					table.focusToTextField();
-				}
+                int row = this.table.getSelectedRow();
 
-			}
-		}
-	}
+                if (table.editCellAt(row, 1)) {
+                    table.focusToTextField();
+                }
+            }
+        }
+    }
 
-	public void keyPressed(KeyEvent e) {
-		System.out.println("pressed..");
-		
-	}
+    public void keyPressed(KeyEvent e) {
+        System.out.println("pressed..");
+    }
 
-	public void keyReleased(KeyEvent e) {
-		System.out.println("released..");
-		
-	}
+    public void keyReleased(KeyEvent e) {
+        System.out.println("released..");
+    }
 }

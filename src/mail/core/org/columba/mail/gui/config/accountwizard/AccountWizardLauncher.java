@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountwizard;
 
 import net.javaprog.ui.wizard.DataModel;
@@ -29,6 +28,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.mail.util.MailResourceLoader;
 
 import javax.help.CSH;
+
 
 public class AccountWizardLauncher {
     public AccountWizardLauncher() {
@@ -58,7 +58,8 @@ public class AccountWizardLauncher {
                 MailResourceLoader.getString("dialog", "accountwizard", "title"),
                 ImageLoader.getSmallImageIcon("stock_preferences.png"));
         CSH.setHelpIDString(wizard, "getting_started_1");
-        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpManager().getHelpBroker());
+        JavaHelpSupport.enableHelp(wizard,
+            HelpManager.getHelpManager().getHelpBroker());
         wizard.pack();
         wizard.setLocationRelativeTo(null);
         wizard.setVisible(true);

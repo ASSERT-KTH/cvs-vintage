@@ -33,22 +33,22 @@ public class AttachmentSelectionChangedEvent extends SelectionChangedEvent {
     }
 
     /**
-     * @return Integer[]
-     */
+ * @return Integer[]
+ */
     public Integer[] getAddress() {
         return address;
     }
 
     /**
-     * @return Folder
-     */
+ * @return Folder
+ */
     public Folder getFolder() {
         return folder;
     }
 
     /**
-     * @return Object
-     */
+ * @return Object
+ */
     public Object getMessageUid() {
         return messageUid;
     }

@@ -13,17 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.frame;
 
-import java.nio.charset.Charset;
-
-import javax.swing.event.EventListenerList;
-
-import org.columba.core.charset.*;
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.xml.XmlElement;
@@ -32,6 +28,12 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.message.MessageController;
+import org.columba.mail.gui.messageframe.MessageFrameController;
+
+import java.nio.charset.Charset;
+
+import javax.swing.event.EventListenerList;
+
 
 /**
  *
@@ -59,16 +61,15 @@ import org.columba.mail.gui.message.MessageController;
 public abstract class AbstractMailFrameController
     extends AbstractFrameController implements MailFrameMediator,
         MessageViewOwner, AttachmentViewOwner, CharsetOwnerInterface {
-    
     private ToolBar toolBar;
     public MessageController messageController;
     public AttachmentController attachmentController;
     private FolderOptionsController folderOptionsController;
     protected EventListenerList listenerList = new EventListenerList();
-    
+
     // needs to be private so that subclasses won't forget calling fireCharsetChanged
     private Charset charset;
-    
+
     public AbstractMailFrameController(String id, ViewItem viewItem) {
         super(id, viewItem);
     }
@@ -140,7 +141,7 @@ public abstract class AbstractMailFrameController
         attachmentController = new AttachmentController(this);
 
         messageController = new MessageController(this, attachmentController);
-        
+
         folderOptionsController = new FolderOptionsController(this);
     }
 
@@ -151,31 +152,31 @@ public abstract class AbstractMailFrameController
     public AttachmentController getAttachmentController() {
         return attachmentController;
     }
-    
+
     /**
-     * @see org.columba.mail.gui.frame.MailFrameMediator#getFolderOptionsController()
-     */
+ * @see org.columba.mail.gui.frame.MailFrameMediator#getFolderOptionsController()
+ */
     public FolderOptionsController getFolderOptionsController() {
-       return folderOptionsController;
+        return folderOptionsController;
     }
 
     public void setCharset(Charset charset) {
         this.charset = charset;
         fireCharsetChanged(new CharsetEvent(this, charset));
     }
-    
+
     public void removeCharsetListener(CharsetListener l) {
         listenerList.remove(CharsetListener.class, l);
     }
-    
+
     public Charset getCharset() {
         return charset;
     }
-    
+
     public void addCharsetListener(CharsetListener l) {
         listenerList.add(CharsetListener.class, l);
     }
-    
+
     protected void fireCharsetChanged(CharsetEvent e) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();

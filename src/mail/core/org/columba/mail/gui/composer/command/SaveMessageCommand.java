@@ -20,6 +20,7 @@ package org.columba.mail.gui.composer.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -31,6 +32,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
+
 import org.columba.ristretto.message.HeaderInterface;
 
 
@@ -46,11 +48,11 @@ public class SaveMessageCommand extends FolderCommand {
     protected HeaderInterface[] headerList = new HeaderInterface[1];
 
     /**
-     * Constructor for SaveMessageCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for SaveMessageCommand.
+ *
+ * @param frameMediator
+ * @param references
+ */
     public SaveMessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -66,9 +68,10 @@ public class SaveMessageCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
 
         ComposerController composerController = r[0].getComposerController();
@@ -83,6 +86,7 @@ public class SaveMessageCommand extends FolderCommand {
 
         folder = (Folder) r[0].getFolder();
 
-        folder.addMessage(message.getSourceStream(), message.getHeader().getAttributes());        
+        folder.addMessage(message.getSourceStream(),
+            message.getHeader().getAttributes());
     }
 }

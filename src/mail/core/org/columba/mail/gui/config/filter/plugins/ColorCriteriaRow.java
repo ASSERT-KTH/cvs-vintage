@@ -15,15 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import org.columba.core.gui.util.ColorComboBox;
+import org.columba.core.gui.util.ColorItem;
+import org.columba.core.plugin.AbstractPluginHandler;
+
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
+
 import java.awt.Color;
 
 import javax.swing.JComboBox;
 
-import org.columba.core.gui.util.ColorComboBox;
-import org.columba.core.gui.util.ColorItem;
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
 
 /**
  * A criteria row for Color filter.
@@ -33,17 +35,17 @@ import org.columba.mail.gui.config.filter.CriteriaList;
  * @author redsolo
  */
 public class ColorCriteriaRow extends DefaultCriteriaRow {
-
     private ColorComboBox colorComboBox;
     private JComboBox matchComboBox;
 
     /**
-     * A criteria row for the color filter.
-     * @param pluginHandler a plugin handler
-     * @param criteriaList the criteria list
-     * @param c the filter criteria to load/save data
-     */
-    public ColorCriteriaRow(AbstractPluginHandler pluginHandler, CriteriaList criteriaList, FilterCriteria c) {
+ * A criteria row for the color filter.
+ * @param pluginHandler a plugin handler
+ * @param criteriaList the criteria list
+ * @param c the filter criteria to load/save data
+ */
+    public ColorCriteriaRow(AbstractPluginHandler pluginHandler,
+        CriteriaList criteriaList, FilterCriteria c) {
         super(pluginHandler, criteriaList, c);
     }
 
@@ -69,7 +71,8 @@ public class ColorCriteriaRow extends DefaultCriteriaRow {
             matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
             colorComboBox.setSelectedColor(criteria.getPattern());
-            colorComboBox.setCustomColor(criteria.getInteger("rgb", Color.black.getRGB()));
+            colorComboBox.setCustomColor(criteria.getInteger("rgb",
+                    Color.black.getRGB()));
         } else {
             criteria.setCriteria((String) matchComboBox.getSelectedItem());
 

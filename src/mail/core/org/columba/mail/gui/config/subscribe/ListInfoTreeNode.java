@@ -13,48 +13,48 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.subscribe;
+
+import org.columba.core.gui.util.ImageLoader;
+
+import org.frappucino.checkabletree.CheckableItemImpl;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.columba.core.gui.checkabletree.CheckableItemImpl;
-import org.columba.core.gui.util.ImageLoader;
 
 public class ListInfoTreeNode extends CheckableItemImpl {
-    protected final static ImageIcon collapsedIcon =
-            ImageLoader.getSmallImageIcon("folder-closed.png");
-    protected final static ImageIcon expandedIcon =
-            ImageLoader.getSmallImageIcon("folder-open.png");
-    
+    protected final static ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
+            "folder-closed.png");
+    protected final static ImageIcon expandedIcon = ImageLoader.getSmallImageIcon(
+            "folder-open.png");
     private String mailbox;
-    
-    /**
-     * 
-     */
-    public ListInfoTreeNode(String name ,String mailbox) {
-        super(name);
-        this.mailbox = mailbox;
-     }
 
     /**
-     * @return Returns the mailbox.
-     */
+ * 
+ */
+    public ListInfoTreeNode(String name, String mailbox) {
+        super(name);
+        this.mailbox = mailbox;
+    }
+
+    /**
+ * @return Returns the mailbox.
+ */
     public String getMailbox() {
         return mailbox;
     }
 
     /**
-     * @param mailbox The mailbox to set.
-     */
+ * @param mailbox The mailbox to set.
+ */
     public void setMailbox(String mailbox) {
         this.mailbox = mailbox;
     }
 
     /**
-     * @see org.columba.core.gui.checkabletree.CheckableItem#getIcon()
-     */
+ * @see org.columba.core.gui.checkabletree.CheckableItem#getIcon()
+ */
     public Icon getIcon() {
         return collapsedIcon;
     }

@@ -89,19 +89,19 @@ public class AttachmentController implements KeyListener, FocusOwner,
     }
 
     /**
-     * Synchronizes model and view.
-     * @param b                If true, model data is transferred to the view.
-     *                                 If false, view data is saved in the model.
-     */
+ * Synchronizes model and view.
+ * @param b                If true, model data is transferred to the view.
+ *                                 If false, view data is saved in the model.
+ */
     public void updateComponents(boolean b) {
         if (b) {
             // transfer attachments from model to view
 
             /*
-             * clear existing attachments from the view
-             * *20031105, karlpeder* Added to avoid dupplicating
-             * attachments when switching btw. html and plain text.
-             */
+ * clear existing attachments from the view
+ * *20031105, karlpeder* Added to avoid dupplicating
+ * attachments when switching btw. html and plain text.
+ */
             view.clear();
 
             // add attachments (mimeparts) from model to the view
@@ -201,15 +201,15 @@ public class AttachmentController implements KeyListener, FocusOwner,
     /********************** FocusOwner implementation *******************/
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#copy()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#copy()
+ */
     public void copy() {
         // attachment controller doesn't support copy-operation
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#cut()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#cut()
+ */
     public void cut() {
         if (view.count() > 0) {
             removeSelected();
@@ -217,8 +217,8 @@ public class AttachmentController implements KeyListener, FocusOwner,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#delete()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#delete()
+ */
     public void delete() {
         if (view.count() > 0) {
             removeSelected();
@@ -226,23 +226,23 @@ public class AttachmentController implements KeyListener, FocusOwner,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+ */
     public JComponent getComponent() {
         return view;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+ */
     public boolean isCopyActionEnabled() {
         // attachment controller doesn't support copy actions
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+ */
     public boolean isCutActionEnabled() {
         if (view.getSelectedValues().length > 0) {
             return true;
@@ -252,8 +252,8 @@ public class AttachmentController implements KeyListener, FocusOwner,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+ */
     public boolean isDeleteActionEnabled() {
         if (view.getSelectedValues().length > 0) {
             return true;
@@ -263,16 +263,16 @@ public class AttachmentController implements KeyListener, FocusOwner,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+ */
     public boolean isPasteActionEnabled() {
         // attachment controller doesn't support paste actions
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+ */
     public boolean isSelectAllActionEnabled() {
         if (view.count() > 0) {
             return true;
@@ -282,45 +282,45 @@ public class AttachmentController implements KeyListener, FocusOwner,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#paste()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#paste()
+ */
     public void paste() {
         // attachment controller doesn't support paste actions
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+ */
     public boolean isRedoActionEnabled() {
         // attachment controller doesn't support redo operation
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+ */
     public boolean isUndoActionEnabled() {
         // attachment controller doesn't support undo operation
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#redo()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#redo()
+ */
     public void redo() {
         // attachment controller doesn't support redo operation
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+ */
     public void selectAll() {
         view.setSelectionInterval(0, view.count() - 1);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#undo()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#undo()
+ */
     public void undo() {
         // attachment controller doesn't support undo operation
     }
@@ -328,8 +328,8 @@ public class AttachmentController implements KeyListener, FocusOwner,
     /********************* ListSelectionListener interface ***********************/
 
     /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-     */
+ * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+ */
     public void valueChanged(ListSelectionEvent arg0) {
         MainInterface.focusManager.updateActions();
     }

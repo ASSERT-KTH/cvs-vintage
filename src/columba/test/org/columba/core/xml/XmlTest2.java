@@ -28,10 +28,10 @@ import junit.framework.TestCase;
  */
 public class XmlTest2 extends TestCase {
     public void testEscapeText() {
-        String source = "Heinz Müller <heinz@mail.com>";
+        String source = "Heinz M?ller <heinz@mail.com>";
 
         String dest = TextUtils.escapeText(source);
 
-        Assert.assertEquals(dest, "Heinz Müller &lt;heinz@mail.com&gt;");
+        Assert.assertEquals(dest, "Heinz M?ller &lt;heinz@mail.com&gt;");
     }
 }

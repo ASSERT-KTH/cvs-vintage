@@ -49,10 +49,10 @@ public class AttachmentView extends JList implements ListDataListener {
     private DefaultListModel listModel;
 
     /**
-     * Default constructor. Sets up the view and stores a
-     * reference to the controller for later use.
-     * @param controller        Reference to the controller of this view
-     */
+ * Default constructor. Sets up the view and stores a
+ * reference to the controller for later use.
+ * @param controller        Reference to the controller of this view
+ */
     public AttachmentView(AttachmentController controller) {
         super();
 
@@ -66,81 +66,81 @@ public class AttachmentView extends JList implements ListDataListener {
     }
 
     /**
-     * Installs the attachment controller as listener
-     * @param c        Controller of this view
-     */
+ * Installs the attachment controller as listener
+ * @param c        Controller of this view
+ */
     public void installListener(AttachmentController c) {
         listModel.addListDataListener(this);
         addKeyListener(c);
     }
 
     /**
-     * Adds a popup listener
-     * @param a        Listener to add
-     */
+ * Adds a popup listener
+ * @param a        Listener to add
+ */
     public void addPopupListener(MouseAdapter a) {
         addMouseListener(a);
     }
 
     /**
-     * Adds an attachment to be displayed in the view
-     * @param mp        Attachment to add
-     */
+ * Adds an attachment to be displayed in the view
+ * @param mp        Attachment to add
+ */
     public void add(MimePart mp) {
         listModel.addElement(mp);
     }
 
     /**
-     * Remove attachment from the view by index
-     * @param index        Index of attachment to remove (zero based)
-     */
+ * Remove attachment from the view by index
+ * @param index        Index of attachment to remove (zero based)
+ */
     public void remove(int index) {
         listModel.remove(index);
     }
 
     /**
-     * Remove attachment from the view
-     * @param mp        Attachment to remove
-     */
+ * Remove attachment from the view
+ * @param mp        Attachment to remove
+ */
     public void remove(MimePart mp) {
         listModel.removeElement(mp);
     }
 
     /**
-     * Clears the view, i.e. removes all attachments.
-     */
+ * Clears the view, i.e. removes all attachments.
+ */
     public void clear() {
         listModel.clear();
     }
 
     /**
-     * Gets an attachment from the view by index
-     * @param index        Index of attachment (zero based)
-     * @return                The specified attachment
-     */
+ * Gets an attachment from the view by index
+ * @param index        Index of attachment (zero based)
+ * @return                The specified attachment
+ */
     public MimePart get(int index) {
         return (MimePart) listModel.get(index);
     }
 
     /**
-     * Gets number of attachments currently displayed in the view
-     */
+ * Gets number of attachments currently displayed in the view
+ */
     public int count() {
         return listModel.size();
     }
 
     /**
-     * Returns the index of an attachment
-     * @param mp        Attachment to get index of
-     * @return                Index of attachment in the list
-     */
+ * Returns the index of an attachment
+ * @param mp        Attachment to get index of
+ * @return                Index of attachment in the list
+ */
     public int indexOf(MimePart mp) {
         return listModel.indexOf(mp);
     }
 
     /**
-     * TODO: Add javadoc comment
-     */
+ * TODO: Add javadoc comment
+ */
     public void fixSelection(int x, int y) {
         int index = locationToIndex(new Point(x, y));
 

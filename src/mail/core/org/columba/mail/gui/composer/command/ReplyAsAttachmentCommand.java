@@ -15,23 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.composer.MessageBuilderHelper;
-import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.ristretto.message.Address;
-import org.columba.ristretto.message.BasicHeader;
-import org.columba.ristretto.message.Header;
+
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeType;
+
 
 /**
  * Reply to message, while keeping the original message as attachment. In
@@ -40,36 +36,36 @@ import org.columba.ristretto.message.MimeType;
  * @author fdietz
  */
 public class ReplyAsAttachmentCommand extends ReplyCommand {
-
     /**
-	 * Constructor for ReplyCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
+     * Constructor for ReplyCommand.
+     * 
+     * @param frameMediator
+     * @param references
+     */
     public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // create composer model
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder =
-        (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
         // setup to, references and account
         initHeader(folder, uids);
-        
+
         // initialize MimeHeader as RFC822-compliant-message
         MimeHeader mimeHeader = new MimeHeader();
         mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
         // add mimepart to model
-        model.addMimePart(new InputStreamMimePart(mimeHeader, folder.getMessageSourceStream(uids[0])));
+        model.addMimePart(new InputStreamMimePart(mimeHeader,
+                folder.getMessageSourceStream(uids[0])));
     }
 }

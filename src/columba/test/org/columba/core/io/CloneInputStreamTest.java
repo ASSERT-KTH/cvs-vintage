@@ -131,8 +131,8 @@ public class CloneInputStreamTest extends TestCase {
     }
 
     /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
+ * @see junit.framework.TestCase#setUp()
+ */
     protected void setUp() throws Exception {
         super.setUp();
 

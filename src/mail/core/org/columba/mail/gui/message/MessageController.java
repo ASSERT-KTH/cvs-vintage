@@ -13,17 +13,40 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.message;
+
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.util.URLController;
+import org.columba.mail.message.ColumbaHeader;
+
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
 
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import java.io.InputStream;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -39,32 +62,12 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
-import org.columba.core.charset.CharsetEvent;
-import org.columba.core.charset.CharsetListener;
-import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.util.URLController;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * this class shows the messagebody
  */
 public class MessageController implements HyperlinkListener, MouseListener,
     CharsetListener, FocusOwner, CaretListener {
-    
     private Folder folder;
     private Object uid;
     private MessageMenu menu;
@@ -104,8 +107,8 @@ public class MessageController implements HyperlinkListener, MouseListener,
     }
 
     /**
-    * return the PopupMenu for the message viewer
-    */
+* return the PopupMenu for the message viewer
+*/
     public JPopupMenu getPopupMenu() {
         return menu;
     }
@@ -137,13 +140,13 @@ public class MessageController implements HyperlinkListener, MouseListener,
         }
 
         // Which Charset shall we use ?
-        Charset charset = ((CharsetOwnerInterface)getFrameController()).getCharset();
+        Charset charset = ((CharsetOwnerInterface) getFrameController()).getCharset();
 
         if (charset == null) {
             String charsetName = bodyPart.getHeader().getContentParameter("charset");
-            
+
             // There is no charset info -> the default system charset is used
-            if(charsetName != null ) {
+            if (charsetName != null) {
                 charset = Charset.forName(charsetName);
 
                 ((CharsetOwnerInterface) getFrameController()).setCharset(charset);
@@ -158,25 +161,28 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
         int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
-        switch( encoding ) {
-            case MimeHeader.QUOTED_PRINTABLE : {
-                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-                    break;
-                } 
-                
-               case MimeHeader.BASE64 : {
-                       bodyStream = new Base64DecoderInputStream(bodyStream);
-                       break;
-                   }
+        switch (encoding) {
+        case MimeHeader.QUOTED_PRINTABLE: {
+            bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+
+            break;
         }
-        
+
+        case MimeHeader.BASE64: {
+            bodyStream = new Base64DecoderInputStream(bodyStream);
+
+            break;
+        }
+        }
+
         if (charset == null) {
             charset = Charset.forName(System.getProperty("file.encoding"));
         }
 
         bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+
         boolean hasAttachments = header.hasAttachments().booleanValue();
-        
+
         attachmentController.setMimePartTree(mimePartTree);
 
         getView().setDoc(header, bodyStream, htmlViewer, hasAttachments);
@@ -266,23 +272,24 @@ public class MessageController implements HyperlinkListener, MouseListener,
         // -> this has to happen in the awt-event dispatcher thread
         SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    getPopupMenu().show(event.getComponent(), event.getX(), event.getY());
+                    getPopupMenu().show(event.getComponent(), event.getX(),
+                        event.getY());
                 }
             });
     }
 
     /********************* context menu *******************************************/
     /**
-     * Returns the mailFrameController.
-     * @return MailFrameController
-     */
+ * Returns the mailFrameController.
+ * @return MailFrameController
+ */
     public FrameMediator getFrameController() {
         return abstractFrameController;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
-     */
+ * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
+ */
     public void charsetChanged(CharsetEvent e) {
         MainInterface.processor.addOp(new ViewMessageCommand(
                 getFrameController(),
@@ -292,36 +299,36 @@ public class MessageController implements HyperlinkListener, MouseListener,
     /******************* FocusOwner interface ***********************/
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#copy()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#copy()
+ */
     public void copy() {
         view.bodyTextViewer.copy();
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#cut()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#cut()
+ */
     public void cut() {
         // not supported
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#delete()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#delete()
+ */
     public void delete() {
         // not supported
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+ */
     public JComponent getComponent() {
         return view.bodyTextViewer;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+ */
     public boolean isCopyActionEnabled() {
         if (view.bodyTextViewer.getSelectedText() == null) {
             return false;
@@ -335,76 +342,76 @@ public class MessageController implements HyperlinkListener, MouseListener,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+ */
     public boolean isCutActionEnabled() {
         // action not support
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+ */
     public boolean isDeleteActionEnabled() {
         // action not supported
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+ */
     public boolean isPasteActionEnabled() {
         // action not supported
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+ */
     public boolean isRedoActionEnabled() {
         // action not supported
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+ */
     public boolean isSelectAllActionEnabled() {
         return true;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+ */
     public boolean isUndoActionEnabled() {
         // action not supported
         return false;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#paste()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#paste()
+ */
     public void paste() {
         // action not supported
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#redo()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#redo()
+ */
     public void redo() {
         // action not supported
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+ */
     public void selectAll() {
         view.bodyTextViewer.selectAll();
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.focus.FocusOwner#undo()
-     */
+ * @see org.columba.core.gui.focus.FocusOwner#undo()
+ */
     public void undo() {
         // TODO Auto-generated method stub
     }
@@ -412,15 +419,15 @@ public class MessageController implements HyperlinkListener, MouseListener,
     /************************** CaretUpdateListener interface *****************/
 
     /* (non-Javadoc)
-     * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
-     */
+ * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
+ */
     public void caretUpdate(CaretEvent arg0) {
         MainInterface.focusManager.updateActions();
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public URLObservable getUrlObservable() {
         return urlObservable;
     }

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.account;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -35,6 +34,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 
 public class SecurityPanel extends DefaultPanel implements ActionListener {
     private JLabel idLabel;
@@ -117,111 +117,111 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
         //      TODO: reactivate when feature is supported
 
         /*
-        builder.append(alwaysEncryptCheckBox, 3);
-        builder.nextLine();
-        */
+builder.append(alwaysEncryptCheckBox, 3);
+builder.nextLine();
+*/
         /*
-        setLayout(new BorderLayout());
-        add(builder.getPanel(), BorderLayout.CENTER);
-        */
+setLayout(new BorderLayout());
+add(builder.getPanel(), BorderLayout.CENTER);
+*/
         /*
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+GridBagLayout layout = new GridBagLayout();
+GridBagConstraints c = new GridBagConstraints();
 
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+setLayout(new BorderLayout());
+setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        JPanel mainMiddle = new JPanel();
-        mainMiddle.setLayout(new BorderLayout());
+JPanel mainMiddle = new JPanel();
+mainMiddle.setLayout(new BorderLayout());
 
-        JPanel middle = new JPanel();
-        middle.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), MailResourceLoader.getString("dialog", "account", "pgp_options"))); //$NON-NLS-1$
-        middle.setLayout(new BorderLayout());
+JPanel middle = new JPanel();
+middle.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), MailResourceLoader.getString("dialog", "account", "pgp_options"))); //$NON-NLS-1$
+middle.setLayout(new BorderLayout());
 
-        JPanel enablePanel = new JPanel();
-        enablePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
-        enablePanel.setLayout(new BoxLayout(enablePanel, BoxLayout.X_AXIS));
+JPanel enablePanel = new JPanel();
+enablePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+enablePanel.setLayout(new BoxLayout(enablePanel, BoxLayout.X_AXIS));
 
-        enablePanel.add(enableCheckBox);
-        enablePanel.add(Box.createHorizontalGlue());
-        layout = new GridBagLayout();
-        c = new GridBagConstraints();
-        c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.gridx = 0;
-        c.weightx = 1.0;
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(enablePanel, c);
-        add(enablePanel, BorderLayout.NORTH);
+enablePanel.add(enableCheckBox);
+enablePanel.add(Box.createHorizontalGlue());
+layout = new GridBagLayout();
+c = new GridBagConstraints();
+c = new GridBagConstraints();
+c.gridwidth = GridBagConstraints.REMAINDER;
+c.gridx = 0;
+c.weightx = 1.0;
+c.anchor = GridBagConstraints.WEST;
+layout.setConstraints(enablePanel, c);
+add(enablePanel, BorderLayout.NORTH);
 
-        JPanel innerPanel = new JPanel();
-        innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        innerPanel.setLayout(new BorderLayout());
+JPanel innerPanel = new JPanel();
+innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+innerPanel.setLayout(new BorderLayout());
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(0, 1, 50, 5));
-        leftPanel.add(idLabel);
-        leftPanel.add(typeLabel);
-        leftPanel.add(pathLabel);
+JPanel leftPanel = new JPanel();
+leftPanel.setLayout(new GridLayout(0, 1, 50, 5));
+leftPanel.add(idLabel);
+leftPanel.add(typeLabel);
+leftPanel.add(pathLabel);
 
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new GridLayout(0, 1, 50, 5));
-        rightPanel.add(idTextField);
-        rightPanel.add(typeComboBox);
+JPanel rightPanel = new JPanel();
+rightPanel.setLayout(new GridLayout(0, 1, 50, 5));
+rightPanel.add(idTextField);
+rightPanel.add(typeComboBox);
 
-        rightPanel.add(pathButton);
+rightPanel.add(pathButton);
 
-        innerPanel.add(leftPanel, BorderLayout.CENTER);
-        innerPanel.add(rightPanel, BorderLayout.EAST);
+innerPanel.add(leftPanel, BorderLayout.CENTER);
+innerPanel.add(rightPanel, BorderLayout.EAST);
 
-        middle.add(innerPanel, BorderLayout.NORTH);
+middle.add(innerPanel, BorderLayout.NORTH);
 
-        JPanel alwaysPanel = new JPanel();
-        alwaysPanel.setLayout(new BoxLayout(alwaysPanel, BoxLayout.Y_AXIS));
-        alwaysPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+JPanel alwaysPanel = new JPanel();
+alwaysPanel.setLayout(new BoxLayout(alwaysPanel, BoxLayout.Y_AXIS));
+alwaysPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        JPanel alwaysSignPanel = new JPanel();
-        alwaysSignPanel.setBorder(
-                BorderFactory.createEmptyBorder(0, 10, 0, 10));
-        alwaysSignPanel.setLayout(
-                new BoxLayout(alwaysSignPanel, BoxLayout.X_AXIS));
+JPanel alwaysSignPanel = new JPanel();
+alwaysSignPanel.setBorder(
+        BorderFactory.createEmptyBorder(0, 10, 0, 10));
+alwaysSignPanel.setLayout(
+        new BoxLayout(alwaysSignPanel, BoxLayout.X_AXIS));
 
-        alwaysSignPanel.add(alwaysSignCheckBox);
-        alwaysSignPanel.add(Box.createHorizontalGlue());
-        layout = new GridBagLayout();
-        c = new GridBagConstraints();
-        c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.gridx = 0;
-        c.weightx = 1.0;
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(alwaysSignPanel, c);
-        alwaysPanel.add(alwaysSignPanel);
+alwaysSignPanel.add(alwaysSignCheckBox);
+alwaysSignPanel.add(Box.createHorizontalGlue());
+layout = new GridBagLayout();
+c = new GridBagConstraints();
+c = new GridBagConstraints();
+c.gridwidth = GridBagConstraints.REMAINDER;
+c.gridx = 0;
+c.weightx = 1.0;
+c.anchor = GridBagConstraints.WEST;
+layout.setConstraints(alwaysSignPanel, c);
+alwaysPanel.add(alwaysSignPanel);
 
-        JPanel alwaysEncryptPanel = new JPanel();
-        alwaysEncryptPanel.setBorder(
-                BorderFactory.createEmptyBorder(0, 10, 0, 10));
-        alwaysEncryptPanel.setLayout(
-                new BoxLayout(alwaysEncryptPanel, BoxLayout.X_AXIS));
+JPanel alwaysEncryptPanel = new JPanel();
+alwaysEncryptPanel.setBorder(
+        BorderFactory.createEmptyBorder(0, 10, 0, 10));
+alwaysEncryptPanel.setLayout(
+        new BoxLayout(alwaysEncryptPanel, BoxLayout.X_AXIS));
 
-        alwaysEncryptPanel.add(alwaysEncryptCheckBox);
-        alwaysEncryptPanel.add(Box.createHorizontalGlue());
-        layout = new GridBagLayout();
-        c = new GridBagConstraints();
-        c = new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.gridx = 0;
-        c.weightx = 1.0;
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(alwaysEncryptPanel, c);
-        alwaysPanel.add(alwaysEncryptPanel);
+alwaysEncryptPanel.add(alwaysEncryptCheckBox);
+alwaysEncryptPanel.add(Box.createHorizontalGlue());
+layout = new GridBagLayout();
+c = new GridBagConstraints();
+c = new GridBagConstraints();
+c.gridwidth = GridBagConstraints.REMAINDER;
+c.gridx = 0;
+c.weightx = 1.0;
+c.anchor = GridBagConstraints.WEST;
+layout.setConstraints(alwaysEncryptPanel, c);
+alwaysPanel.add(alwaysEncryptPanel);
 
-        middle.add(alwaysPanel, BorderLayout.CENTER);
+middle.add(alwaysPanel, BorderLayout.CENTER);
 
-        mainMiddle.add(middle, BorderLayout.NORTH);
+mainMiddle.add(middle, BorderLayout.NORTH);
 
-        add(mainMiddle, BorderLayout.CENTER);
-        */
+add(mainMiddle, BorderLayout.CENTER);
+*/
     }
 
     protected void initComponents() {
@@ -319,26 +319,26 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
         boolean result = true;
 
         /*
-        String name = getAccountName();
-        String address = getAddress();
+String name = getAccountName();
+String address = getAddress();
 
-        if ( name.length() == 0 )
-        {
-            result = false;
-            JOptionPane.showMessageDialog( MainInterface.mainFrame,
-                                           "You have to enter a name for this account!");
-        }
-        else if ( address.length() == 0 )
-        {
-            result = false;
-            JOptionPane.showMessageDialog( MainInterface.mainFrame,
-                                           "You have to enter your address!");
-        }
-        else
-        {
-            result = true;
-        }
-        */
+if ( name.length() == 0 )
+{
+    result = false;
+    JOptionPane.showMessageDialog( MainInterface.mainFrame,
+                                   "You have to enter a name for this account!");
+}
+else if ( address.length() == 0 )
+{
+    result = false;
+    JOptionPane.showMessageDialog( MainInterface.mainFrame,
+                                   "You have to enter your address!");
+}
+else
+{
+    result = true;
+}
+*/
         return result;
     }
 }

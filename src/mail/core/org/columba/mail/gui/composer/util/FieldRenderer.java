@@ -15,41 +15,36 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+
 import java.awt.Component;
 
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.addressbook.folder.HeaderItem;
 
 /**
  * Renderer using a combobox.
  */
 public class FieldRenderer extends JComboBox implements TableCellRenderer {
-	public FieldRenderer() {
-		super();
+    public FieldRenderer() {
+        super();
 
-		addItem("To");
-		addItem("Cc");
-		addItem("Bcc");
+        addItem("To");
+        addItem("Cc");
+        addItem("Bcc");
 
-		setOpaque(true);
-	}
+        setOpaque(true);
+    }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object object,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+    public Component getTableCellRendererComponent(JTable table, Object object,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        HeaderItem item = (HeaderItem) object;
+        String field = (String) item.get("field");
 
-		HeaderItem item= (HeaderItem) object;
-		String field= (String) item.get("field");
+        setSelectedItem(field);
 
-		setSelectedItem(field);
-
-		return this;
-	}
+        return this;
+    }
 }

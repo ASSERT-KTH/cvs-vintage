@@ -17,16 +17,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment;
 
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
 import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
 import org.columba.mail.gui.attachment.util.IconPanel;
+
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.message.StreamableMimePart;
+
+import java.util.List;
+
+import javax.swing.ImageIcon;
+
 
 /**
  * @author freddy
@@ -44,8 +46,7 @@ public class AttachmentView extends IconPanel {
     }
 
     public StreamableMimePart getSelectedMimePart() {
-        return (StreamableMimePart) model.getDisplayedMimeParts().get(
-            getSelected());
+        return (StreamableMimePart) model.getDisplayedMimeParts().get(getSelected());
     }
 
     public boolean setMimePartTree(MimeTree collection) {
@@ -62,8 +63,7 @@ public class AttachmentView extends IconPanel {
 
         // Display resulting MimeParts
         for (int i = 0; i < displayedMimeParts.size(); i++) {
-            StreamableMimePart mp =
-                (StreamableMimePart) displayedMimeParts.get(i);
+            StreamableMimePart mp = (StreamableMimePart) displayedMimeParts.get(i);
 
             MimeHeader header = mp.getHeader();
             MimeType type = header.getMimeType();
@@ -72,7 +72,6 @@ public class AttachmentView extends IconPanel {
             contentSubtype = type.getSubtype();
 
             //Get Text for Icon
-
             if (header.getFileName() != null) {
                 text = header.getFileName();
             } else {
@@ -80,14 +79,16 @@ public class AttachmentView extends IconPanel {
             }
 
             //Get Tooltip for Icon
-
             StringBuffer tooltip = new StringBuffer();
             tooltip.append("<html><body>");
+
             if (header.getFileName() != null) {
                 tooltip.append(header.getFileName());
                 tooltip.append(" - ");
             }
+
             tooltip.append("<i>");
+
             if (header.getContentDescription() != null) {
                 tooltip.append(header.getContentDescription());
             } else {
@@ -95,19 +96,18 @@ public class AttachmentView extends IconPanel {
                 tooltip.append("/");
                 tooltip.append(contentSubtype);
             }
+
             tooltip.append("</i></body></html>");
 
             ImageIcon icon = null;
 
-            icon =
-                AttachmentImageIconLoader.getImageIcon(
-                    type.getType(),
+            icon = AttachmentImageIconLoader.getImageIcon(type.getType(),
                     type.getSubtype());
-
 
             add(icon, text, tooltip.toString());
             output = true;
         }
+
         return output;
     }
 }

@@ -32,22 +32,22 @@ public class OneSizeLabelFactory {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public int getMaxWidth() {
         return maxWidth;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public Dimension getPreferredSize() {
         return preferredSize;
     }
 
     /**
-     * @param i
-     */
+ * @param i
+ */
     public void setMaxWidth(int width) {
         if (width < preferredSize.width) {
             preferredSize.width = width;
@@ -57,8 +57,8 @@ public class OneSizeLabelFactory {
     }
 
     /**
-     * @param dimension
-     */
+ * @param dimension
+ */
     public void setPreferredSize(Dimension dimension) {
         preferredSize = dimension;
 

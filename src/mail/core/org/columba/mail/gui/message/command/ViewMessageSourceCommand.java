@@ -51,18 +51,18 @@ public class ViewMessageSourceCommand extends FolderCommand {
     protected File tempFile;
 
     /**
-     * Constructor for ViewMessageSourceCommand.
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for ViewMessageSourceCommand.
+ * @param frameMediator
+ * @param references
+ */
     public ViewMessageSourceCommand(FrameMediator frameMediator,
         DefaultCommandReference[] references) {
         super(frameMediator, references);
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         MimeTypeViewer viewer = new MimeTypeViewer();
         MimeHeader header = new MimeHeader();
@@ -70,9 +70,10 @@ public class ViewMessageSourceCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
 
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();

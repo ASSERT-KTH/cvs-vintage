@@ -20,22 +20,22 @@ public class URLObservable extends Observable {
     URL url;
 
     /**
-     *
-     */
+ *
+ */
     public URLObservable() {
         super();
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public URL getUrl() {
         return url;
     }
 
     /**
-     * @param url
-     */
+ * @param url
+ */
     public void setUrl(URL url) {
         this.url = url;
 

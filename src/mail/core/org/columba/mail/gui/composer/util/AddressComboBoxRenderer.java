@@ -35,8 +35,10 @@ import javax.swing.ListCellRenderer;
  * @author fdietz
  */
 public class AddressComboBoxRenderer extends JLabel implements ListCellRenderer {
-    private ImageIcon contactIcon = ImageLoader.getSmallImageIcon("contact_small.png");
-    private ImageIcon groupIcon = ImageLoader.getSmallImageIcon("group_small.png");
+    private ImageIcon contactIcon = ImageLoader.getSmallImageIcon(
+            "contact_small.png");
+    private ImageIcon groupIcon = ImageLoader.getSmallImageIcon(
+            "group_small.png");
 
     public AddressComboBoxRenderer() {
         setOpaque(true);
@@ -59,9 +61,7 @@ public class AddressComboBoxRenderer extends JLabel implements ListCellRenderer 
             setToolTipText("");
             setText((String) value);
             setIcon(null);
-
         } else {
-
             setText(item.toString());
 
             if (item.isContact()) {
@@ -69,8 +69,8 @@ public class AddressComboBoxRenderer extends JLabel implements ListCellRenderer 
 
                 StringBuffer buf = new StringBuffer();
                 buf.append("<html><body>&nbsp;Name: " + convert(displayname));
-                buf.append("<br>&nbsp;eMail: "
-                    + convert((String) item.get("email;internet")));
+                buf.append("<br>&nbsp;eMail: " +
+                    convert((String) item.get("email;internet")));
                 buf.append("</body></html>");
                 setToolTipText(buf.toString());
 

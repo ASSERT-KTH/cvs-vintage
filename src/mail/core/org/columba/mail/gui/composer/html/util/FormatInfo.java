@@ -41,12 +41,12 @@ public class FormatInfo {
     private boolean textSelected;
 
     /**
-     * Default constructor
-     *
-     * @param        doc                Html document used by editor
-     * @param        pos                Current caret position
-     * @param        select        True if some text is currently selected
-     */
+ * Default constructor
+ *
+ * @param        doc                Html document used by editor
+ * @param        pos                Current caret position
+ * @param        select        True if some text is currently selected
+ */
     public FormatInfo(ExtendedHTMLDocument doc, int pos, boolean select) {
         htmlDoc = doc;
         caretPos = pos;
@@ -54,33 +54,33 @@ public class FormatInfo {
     }
 
     /**
-     * Private utility to return the character attributes
-     * at the current caret position.
-     * NB: To get the right attributes, caret position - 1 is used!!!
-     */
+ * Private utility to return the character attributes
+ * at the current caret position.
+ * NB: To get the right attributes, caret position - 1 is used!!!
+ */
     private AttributeSet getCharAttr() {
         return htmlDoc.getCharacterElement(caretPos - 1).getAttributes();
     }
 
     /**
-     * Private utility to return the paragraph attributes at the current
-     * caret position
-     */
+ * Private utility to return the paragraph attributes at the current
+ * caret position
+ */
     private AttributeSet getParagraphAttr() {
         return htmlDoc.getParagraphElement(caretPos).getAttributes();
     }
 
     /**
-     * Returns true if some text is currently selected in the editor
-     */
+ * Returns true if some text is currently selected in the editor
+ */
     public boolean isTextSelected() {
         return textSelected;
     }
 
     /**
-     * Convenience method to determine whether current text is bold
-     * @return        true if text is bold
-     */
+ * Convenience method to determine whether current text is bold
+ * @return        true if text is bold
+ */
     public boolean isBold() {
         if (StyleConstants.isBold(getCharAttr())) {
             return true;
@@ -90,9 +90,9 @@ public class FormatInfo {
     }
 
     /**
-     * Convenience method to determine whether current text is italic
-     * @return        true if text is italic
-     */
+ * Convenience method to determine whether current text is italic
+ * @return        true if text is italic
+ */
     public boolean isItalic() {
         if (StyleConstants.isItalic(getCharAttr())) {
             return true;
@@ -102,9 +102,9 @@ public class FormatInfo {
     }
 
     /**
-     * Convenience method to determine whether current text is underlined
-     * @return        true if text is underlined
-     */
+ * Convenience method to determine whether current text is underlined
+ * @return        true if text is underlined
+ */
     public boolean isUnderline() {
         if (StyleConstants.isUnderline(getCharAttr())) {
             return true;
@@ -114,9 +114,9 @@ public class FormatInfo {
     }
 
     /**
-     * Convenience method to determine whether current text is striked out
-     * @return        true if text is striked out
-     */
+ * Convenience method to determine whether current text is striked out
+ * @return        true if text is striked out
+ */
     public boolean isStrikeout() {
         if (StyleConstants.isStrikeThrough(getCharAttr())) {
             return true;
@@ -126,10 +126,10 @@ public class FormatInfo {
     }
 
     /**
-     * Convenience method to determine whether current text is "tele typer",
-     * i.e. formattet as type written text.
-     * @return        true if text is tele typer
-     */
+ * Convenience method to determine whether current text is "tele typer",
+ * i.e. formattet as type written text.
+ * @return        true if text is tele typer
+ */
     public boolean isTeleTyper() {
         // get current attributes
         Enumeration enum = getCharAttr().getAttributeNames();
@@ -150,79 +150,79 @@ public class FormatInfo {
     }
 
     /**
-     * Convenience method to determine whether current text is formattet
-     * as heading 1 (H1)
-     * @return        true if text is formattet as heading 1
-     */
+ * Convenience method to determine whether current text is formattet
+ * as heading 1 (H1)
+ * @return        true if text is formattet as heading 1
+ */
     public boolean isHeading1() {
         return checkIfTagIsParent(HTML.Tag.H1);
     }
 
     /**
-     * Convenience method to determine whether current text is formattet
-     * as heading 2 (H2)
-     * @return        true if text is formattet as heading 2
-     */
+ * Convenience method to determine whether current text is formattet
+ * as heading 2 (H2)
+ * @return        true if text is formattet as heading 2
+ */
     public boolean isHeading2() {
         return checkIfTagIsParent(HTML.Tag.H2);
     }
 
     /**
-     * Convenience method to determine whether current text is formattet
-     * as heading 3 (H3)
-     * @return        true if text is formattet as heading 3
-     */
+ * Convenience method to determine whether current text is formattet
+ * as heading 3 (H3)
+ * @return        true if text is formattet as heading 3
+ */
     public boolean isHeading3() {
         return checkIfTagIsParent(HTML.Tag.H3);
     }
 
     /**
-     * Convenience method to determine whether current text is formattet
-     * as "preformattet" (pre tag)
-     * @return        true if text is preformattet
-     */
+ * Convenience method to determine whether current text is formattet
+ * as "preformattet" (pre tag)
+ * @return        true if text is preformattet
+ */
     public boolean isPreformattet() {
         return checkIfTagIsParent(HTML.Tag.PRE);
     }
 
     /**
-     * Convenience method to determine whether current text is formattet
-     * as "address" (address tag)
-     * @return        true if text is formattet as adress
-     */
+ * Convenience method to determine whether current text is formattet
+ * as "address" (address tag)
+ * @return        true if text is formattet as adress
+ */
     public boolean isAddress() {
         return checkIfTagIsParent(HTML.Tag.ADDRESS);
     }
 
     /**
-     * Checks whether the current alignment is left-aligned
-     * @return        true if text is left-aligned
-     */
+ * Checks whether the current alignment is left-aligned
+ * @return        true if text is left-aligned
+ */
     public boolean isAlignLeft() {
         return checkAlignment("left");
     }
 
     /**
-     * Checks whether the current alignment is centered
-     * @return        true if text is centered
-     */
+ * Checks whether the current alignment is centered
+ * @return        true if text is centered
+ */
     public boolean isAlignCenter() {
         return checkAlignment("center");
     }
 
     /**
-     * Checks whether the current alignment is right-aligned
-     * @return        true if text is right-aligned
-     */
+ * Checks whether the current alignment is right-aligned
+ * @return        true if text is right-aligned
+ */
     public boolean isAlignRight() {
         return checkAlignment("right");
     }
 
     /**
-     * Private utility to check alignment
-     * @param align                Alignment to check for ("left", "center" or "right")
-     * @return                        true if the specified alignment exist
-     */
+ * Private utility to check alignment
+ * @param align                Alignment to check for ("left", "center" or "right")
+ * @return                        true if the specified alignment exist
+ */
     private boolean checkAlignment(String align) {
         AttributeSet attr = getParagraphAttr();
         Enumeration enum = attr.getAttributeNames();
@@ -243,14 +243,14 @@ public class FormatInfo {
     }
 
     /**
-     * Private utility to check whether a given tag is found
-     * as parent at the current caret position.
-     * <br>
-     * This is used to check for a given paragraph format
-     *
-     * @param        tag                Tag to search for
-     * @return        true if the tag is found as parent
-     */
+ * Private utility to check whether a given tag is found
+ * as parent at the current caret position.
+ * <br>
+ * This is used to check for a given paragraph format
+ *
+ * @param        tag                Tag to search for
+ * @return        true if the tag is found as parent
+ */
     private boolean checkIfTagIsParent(HTML.Tag tag) {
         Element e = htmlDoc.getParagraphElement(caretPos);
         String current = e.getName();

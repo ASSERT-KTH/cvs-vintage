@@ -17,14 +17,35 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
+import com.jgoodies.forms.layout.FormLayout;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.ListTools;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
+import org.columba.ristretto.auth.AuthenticationFactory;
+import org.columba.ristretto.smtp.SMTPException;
+import org.columba.ristretto.smtp.SMTPProtocol;
+
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.io.IOException;
+
 import java.net.InetAddress;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,29 +63,14 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.ListTools;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.auth.AuthenticationFactory;
-import org.columba.ristretto.smtp.SMTPException;
-import org.columba.ristretto.smtp.SMTPProtocol;
-
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author freddy
  * @version
  */
-public class OutgoingServerPanel
-    extends DefaultPanel
-    implements ActionListener {
+public class OutgoingServerPanel extends DefaultPanel implements ActionListener {
+    private static final Pattern authModeTokenizePattern = Pattern.compile(
+            "([^;]+);?");
     private JLabel hostLabel;
     private JTextField hostTextField;
     private JLabel portLabel;
@@ -85,8 +91,6 @@ public class OutgoingServerPanel
     private SmtpItem item;
     private AccountItem accountItem;
     private JButton checkAuthMethods;
-    private static final Pattern authModeTokenizePattern =
-        Pattern.compile("([^;]+);?");
 
     public OutgoingServerPanel(AccountItem accountItem) {
         super();
@@ -142,12 +146,12 @@ public class OutgoingServerPanel
                 authenticationComboBox.setEnabled(false);
             }
 
-            defaultAccountCheckBox.setEnabled(
-                MailInterface.config.getAccountList().getDefaultAccountUid()
-                    != accountItem.getInteger("uid"));
+            defaultAccountCheckBox.setEnabled(MailInterface.config.getAccountList()
+                                                                  .getDefaultAccountUid() != accountItem.getInteger(
+                    "uid"));
 
-            if (defaultAccountCheckBox.isEnabled()
-                && defaultAccountCheckBox.isSelected()) {
+            if (defaultAccountCheckBox.isEnabled() &&
+                    defaultAccountCheckBox.isSelected()) {
                 showDefaultAccountWarning();
             } else {
                 layoutComponents();
@@ -167,32 +171,26 @@ public class OutgoingServerPanel
             item.set("enable_ssl", secureCheckBox.isSelected());
 
             if (needAuthCheckBox.isSelected()) {
-                if( authenticationComboBox.getSelectedIndex() == 0 ) {
-                    item.set("login_method", "DEFAULT");                 
+                if (authenticationComboBox.getSelectedIndex() == 0) {
+                    item.set("login_method", "DEFAULT");
                 } else {
-                    String loginMethod =
-                        (String) authenticationComboBox.getSelectedItem();
+                    String loginMethod = (String) authenticationComboBox.getSelectedItem();
                     item.set("login_method", loginMethod);
                 }
-                
             } else {
                 item.set("login_method", "NONE"); //$NON-NLS-1$
             }
 
-            item.set(
-                "use_default_account",
-                defaultAccountCheckBox.isSelected());
+            item.set("use_default_account", defaultAccountCheckBox.isSelected());
         }
     }
 
     protected void layoutComponents() {
         //		Create a FormLayout instance.
-        FormLayout layout =
-            new FormLayout(
-                "10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
-
+        FormLayout layout = new FormLayout("10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
+                
             // 2 columns
-    ""); // rows are added dynamically (no need to define them here)
+            ""); // rows are added dynamically (no need to define them here)
 
         JPanel topPanel = new JPanel();
         DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
@@ -207,8 +205,8 @@ public class OutgoingServerPanel
         builder.append(defaultAccountCheckBox, 5);
         builder.nextLine();
 
-        builder.appendSeparator(
-            MailResourceLoader.getString("dialog", "account", "configuration"));
+        builder.appendSeparator(MailResourceLoader.getString("dialog",
+                "account", "configuration"));
         builder.nextLine();
 
         builder.append(hostLabel, 2);
@@ -219,8 +217,8 @@ public class OutgoingServerPanel
         builder.append(portTextField);
         builder.nextLine();
 
-        builder.appendSeparator(
-            MailResourceLoader.getString("dialog", "account", "security"));
+        builder.appendSeparator(MailResourceLoader.getString("dialog",
+                "account", "security"));
         builder.nextLine();
 
         builder.append(needAuthCheckBox, 4);
@@ -229,12 +227,10 @@ public class OutgoingServerPanel
         builder.setLeadingColumnOffset(2);
 
         JPanel panel = new JPanel();
-        FormLayout l =
-            new FormLayout(
-                "max(80dlu;default), 3dlu, fill:max(50dlu;default), 2dlu, left:max(50dlu;default)",
-
+        FormLayout l = new FormLayout("max(80dlu;default), 3dlu, fill:max(50dlu;default), 2dlu, left:max(50dlu;default)",
+                
             // 2 columns
-    ""); // rows are added dynamically (no need to define them here)
+            ""); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
@@ -245,14 +241,14 @@ public class OutgoingServerPanel
         builder.nextLine();
 
         /*
-         * JPanel panel2 = new JPanel(); l = new FormLayout("max(100;default),
-         * 3dlu, left:max(50dlu;default)", // 2 columns ""); // rows are added
-         * dynamically (no need to define them here) // create a form builder b =
-         * new DefaultFormBuilder(panel2, l); b.append(loginLabel,
-         * loginTextField);
-         *
-         * builder.append(panel2, 3); builder.nextLine();
-         */
+ * JPanel panel2 = new JPanel(); l = new FormLayout("max(100;default),
+ * 3dlu, left:max(50dlu;default)", // 2 columns ""); // rows are added
+ * dynamically (no need to define them here) // create a form builder b =
+ * new DefaultFormBuilder(panel2, l); b.append(loginLabel,
+ * loginTextField);
+ *
+ * builder.append(panel2, 3); builder.nextLine();
+ */
         //builder.setLeadingColumnOffset(1);
         builder.append(storePasswordCheckBox, 3);
         builder.nextLine();
@@ -282,12 +278,8 @@ public class OutgoingServerPanel
         mainConstraints.weighty = 1.0;
         mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
-        JLabel label =
-            new JLabel(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "account",
-                    "using_default_account_settings"));
+        JLabel label = new JLabel(MailResourceLoader.getString("dialog",
+                    "account", "using_default_account_settings"));
         Font newFont = label.getFont().deriveFont(Font.BOLD);
         label.setFont(newFont);
         mainLayout.setConstraints(label, mainConstraints);
@@ -295,95 +287,74 @@ public class OutgoingServerPanel
     }
 
     protected void initComponents() {
-        defaultAccountCheckBox =
-            new CheckBoxWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "account",
-                    "use_default_account_settings"));
+        defaultAccountCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "use_default_account_settings"));
 
         //defaultAccountCheckBox.setEnabled(false);
         defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
         defaultAccountCheckBox.addActionListener(this);
 
-        hostLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "host")); //$NON-NLS-1$
+        hostLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "host")); //$NON-NLS-1$
 
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
-        portLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "port")); //$NON-NLS-1$
+        portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "port")); //$NON-NLS-1$
 
         portTextField = new JTextField();
         portLabel.setLabelFor(portTextField);
 
-        needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
+        needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
 
         needAuthCheckBox.setActionCommand("AUTH"); //$NON-NLS-1$
         needAuthCheckBox.addActionListener(this);
 
-        storePasswordCheckBox =
-            new CheckBoxWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "account",
-                    "store_password_in_configuration_file"));
+        storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "store_password_in_configuration_file"));
 
-        secureCheckBox =
-            new CheckBoxWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "account",
-                    "use_SSL_for_secure_connection"));
+        secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "use_SSL_for_secure_connection"));
 
-        authenticationLabel =
-            new LabelWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "account",
-                    "authentication_type"));
+        authenticationLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "authentication_type"));
 
-		authenticationComboBox = new JComboBox();
-		authenticationLabel.setLabelFor(authenticationComboBox);
+        authenticationComboBox = new JComboBox();
+        authenticationLabel.setLabelFor(authenticationComboBox);
 
         updateAuthenticationComboBox();
 
-        checkAuthMethods =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "account",
-                    "authentication_checkout_methods"));
+        checkAuthMethods = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "authentication_checkout_methods"));
         checkAuthMethods.setActionCommand("CHECK_AUTHMETHODS");
         checkAuthMethods.addActionListener(this);
 
         //authenticationComboBox.addActionListener(this);
         authenticationLabel.setLabelFor(authenticationComboBox);
 
-        loginLabel =
-            new LabelWithMnemonic(
-                MailResourceLoader.getString("dialog", "account", "login"));
+        loginLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "login"));
 
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
     }
 
     /**
-     * 
-     */
+ * 
+ */
     private void updateAuthenticationComboBox() {
         authenticationComboBox.removeAllItems();
-        
-		authenticationComboBox.addItem(
-            MailResourceLoader.getString(
-                "dialog",
-                "account",
-                "authentication_securest"));
 
-		if (accountItem.isPopAccount()) {
-			authenticationComboBox.addItem("POP before SMTP");
-		}
+        authenticationComboBox.addItem(MailResourceLoader.getString("dialog",
+                "account", "authentication_securest"));
 
-        String authMethods =
-            accountItem.get("smtpserver", "authentication_methods");
+        if (accountItem.isPopAccount()) {
+            authenticationComboBox.addItem("POP before SMTP");
+        }
+
+        String authMethods = accountItem.get("smtpserver",
+                "authentication_methods");
 
         // Add previously fetch authentication modes
         if (authMethods != null) {
@@ -393,16 +364,16 @@ public class OutgoingServerPanel
                 authenticationComboBox.addItem(matcher.group(1));
             }
         }
-        
-        authenticationComboBox.setSelectedItem(accountItem.get("smtpserver", "login_method"));
+
+        authenticationComboBox.setSelectedItem(accountItem.get("smtpserver",
+                "login_method"));
     }
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
         if (e.getSource().equals(authenticationComboBox)) {
-            String selection =
-                (String) authenticationComboBox.getSelectedItem();
+            String selection = (String) authenticationComboBox.getSelectedItem();
 
             loginLabel.setEnabled(true);
             loginTextField.setEnabled(true);
@@ -417,50 +388,51 @@ public class OutgoingServerPanel
             }
 
             revalidate();
-        } else 
-            if (action.equals("AUTH")) {
-                if (needAuthCheckBox.isSelected()) {
-                    loginLabel.setEnabled(true);
-                    loginTextField.setEnabled(true);
-                    storePasswordCheckBox.setEnabled(true);
-                    authenticationLabel.setEnabled(true);
-                    authenticationComboBox.setEnabled(true);
-					checkAuthMethods.setEnabled(true);
-                } else {
-                    loginLabel.setEnabled(false);
-                    loginTextField.setEnabled(false);
-                    storePasswordCheckBox.setEnabled(false);
-                    authenticationLabel.setEnabled(false);
-                    authenticationComboBox.setEnabled(false);
-					checkAuthMethods.setEnabled(false);
-                }
-            
-        } else if ( action.equals("CHECK_AUTHMETHODS")) {
-			getAuthMechanisms();
+        } else if (action.equals("AUTH")) {
+            if (needAuthCheckBox.isSelected()) {
+                loginLabel.setEnabled(true);
+                loginTextField.setEnabled(true);
+                storePasswordCheckBox.setEnabled(true);
+                authenticationLabel.setEnabled(true);
+                authenticationComboBox.setEnabled(true);
+                checkAuthMethods.setEnabled(true);
+            } else {
+                loginLabel.setEnabled(false);
+                loginTextField.setEnabled(false);
+                storePasswordCheckBox.setEnabled(false);
+                authenticationLabel.setEnabled(false);
+                authenticationComboBox.setEnabled(false);
+                checkAuthMethods.setEnabled(false);
+            }
+        } else if (action.equals("CHECK_AUTHMETHODS")) {
+            getAuthMechanisms();
         }
     }
-    
+
     private void getAuthMechanisms() {
         {
             List list = new LinkedList();
 
             try {
                 list = getAuthSMTP();
-                ColumbaLogger.log.info("Server supported AUTH types: " +list.toString());
-                
+                ColumbaLogger.log.info("Server supported AUTH types: " +
+                    list.toString());
+
                 // If the server doesn't support an AUTH -> POP before SMTP is only choice
-                ListTools.intersect_astable(list, AuthenticationFactory.getInstance().getSupportedMechanisms());                
+                ListTools.intersect_astable(list,
+                    AuthenticationFactory.getInstance().getSupportedMechanisms());
             } catch (IOException e1) {
                 String name = e1.getClass().getName();
-                JOptionPane.showMessageDialog(
-                    null,
-                    e1.getLocalizedMessage(),
+                JOptionPane.showMessageDialog(null, e1.getLocalizedMessage(),
                     name.substring(name.lastIndexOf(".")),
                     JOptionPane.ERROR_MESSAGE);
             } catch (SMTPException e1) {
-                ColumbaLogger.log.severe("Server does not support the CAPA command");                
-               // Let the user choose
-                list = AuthenticationFactory.getInstance().getSupportedMechanisms();
+                ColumbaLogger.log.severe(
+                    "Server does not support the CAPA command");
+
+                // Let the user choose
+                list = AuthenticationFactory.getInstance()
+                                            .getSupportedMechanisms();
             }
 
             // Save the authentication modes
@@ -474,61 +446,56 @@ public class OutgoingServerPanel
                     authMethods.append(it.next());
                 }
 
-                accountItem.set(
-                    "smtpserver",
-                    "authentication_methods",
+                accountItem.set("smtpserver", "authentication_methods",
                     authMethods.toString());
             } else {
-                accountItem.set(
-                        "smtpserver",
-                        "authentication_methods",
-                        "");                
+                accountItem.set("smtpserver", "authentication_methods", "");
             }
 
             updateAuthenticationComboBox();
         }
     }
-    
+
     /**
-      * @return
-      */
-     private List getAuthSMTP() throws IOException, SMTPException {
-             List result = new LinkedList();
-             SMTPProtocol protocol =
-                     new SMTPProtocol(
-                             accountItem.get("smtpserver", "host"),
-                             accountItem.getInteger("smtpserver", "port"));
+  * @return
+  */
+    private List getAuthSMTP() throws IOException, SMTPException {
+        List result = new LinkedList();
+        SMTPProtocol protocol = new SMTPProtocol(accountItem.get("smtpserver",
+                    "host"), accountItem.getInteger("smtpserver", "port"));
 
-             protocol.openPort();
-             String[] capas = protocol.ehlo(InetAddress.getLocalHost());
-             
-             ColumbaLogger.log.info("Server CAPAs: " +Arrays.asList(capas).toString());
-             
-             for (int i = 0; i < capas.length; i++) {
-                     if (capas[i].startsWith("AUTH")) {
-                             result = parseAuthCapas(capas[i]);
-                     }
-             }
+        protocol.openPort();
 
-             return result;
-     }
+        String[] capas = protocol.ehlo(InetAddress.getLocalHost());
 
-     /**
-      * @param string
-      * @return
-      */
-     private List parseAuthCapas(String string) {
-             Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
-             tokenizer.find();
+        ColumbaLogger.log.info("Server CAPAs: " +
+            Arrays.asList(capas).toString());
 
-             List mechanisms = new LinkedList();
+        for (int i = 0; i < capas.length; i++) {
+            if (capas[i].startsWith("AUTH")) {
+                result = parseAuthCapas(capas[i]);
+            }
+        }
 
-             while (tokenizer.find()) {
-                     mechanisms.add(tokenizer.group());
-             }
+        return result;
+    }
 
-             return mechanisms;
-     }
+    /**
+ * @param string
+ * @return
+ */
+    private List parseAuthCapas(String string) {
+        Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
+        tokenizer.find();
+
+        List mechanisms = new LinkedList();
+
+        while (tokenizer.find()) {
+            mechanisms.add(tokenizer.group());
+        }
+
+        return mechanisms;
+    }
 
     public boolean isFinished() {
         boolean result = false;
@@ -536,14 +503,18 @@ public class OutgoingServerPanel
         boolean esmtp = isESmtp();
 
         if (host.length() == 0) {
-            JOptionPane.showMessageDialog(null, MailResourceLoader.getString("dialog", "account", "You_have_to_enter_a_host_name")); //$NON-NLS-1$
+            JOptionPane.showMessageDialog(null,
+                MailResourceLoader.getString("dialog", "account",
+                    "You_have_to_enter_a_host_name")); //$NON-NLS-1$
 
             return false;
         } else if (esmtp == true) {
             String login = getLogin();
 
             if (login.length() == 0) {
-                JOptionPane.showMessageDialog(null, MailResourceLoader.getString("dialog", "account", "You_have_to_enter_a_login_name")); //$NON-NLS-1$
+                JOptionPane.showMessageDialog(null,
+                    MailResourceLoader.getString("dialog", "account",
+                        "You_have_to_enter_a_login_name")); //$NON-NLS-1$
 
                 return false;
             }

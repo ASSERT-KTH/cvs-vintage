@@ -88,12 +88,12 @@ public class DefaultActionRow implements PluginInterface {
         String[] names = pluginHandler.getPluginIdList();
 
         /*
-        for ( int i=0; i<names.length; i++ )
-        {
-                String userVisibleName;
-                transformationTable.put( userVisibleName, names[i]);
-        }
-        */
+for ( int i=0; i<names.length; i++ )
+{
+        String userVisibleName;
+        transformationTable.put( userVisibleName, names[i]);
+}
+*/
         actionComboBox = new JComboBox(names);
         actionComboBox.setRenderer(new ActionComboBoxRenderer());
 
@@ -117,17 +117,17 @@ public class DefaultActionRow implements PluginInterface {
     }
 
     /**
-     * Returns the filterAction.
-     * @return FilterAction
-     */
+ * Returns the filterAction.
+ * @return FilterAction
+ */
     public FilterAction getFilterAction() {
         return filterAction;
     }
 
     /**
-     * Sets the filterAction.
-     * @param filterAction The filterAction to set
-     */
+ * Sets the filterAction.
+ * @param filterAction The filterAction to set
+ */
     public void setFilterAction(FilterAction filterAction) {
         this.filterAction = filterAction;
     }

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.pop3preprocessor;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -22,7 +21,6 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -34,9 +32,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -132,7 +127,7 @@ public class ChooseFilterDialog extends JDialog implements ListSelectionListener
         getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
+
         HelpManager.getHelpManager().enableHelpOnButton(helpButton,
             "organising_and_managing_your_email_3");
         HelpManager.getHelpManager().enableHelpKey(getRootPane(),
@@ -150,8 +145,8 @@ public class ChooseFilterDialog extends JDialog implements ListSelectionListener
     }
 
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent arg0) {
         String action = arg0.getActionCommand();
 
@@ -165,8 +160,8 @@ public class ChooseFilterDialog extends JDialog implements ListSelectionListener
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public boolean isSuccess() {
         return success;
     }

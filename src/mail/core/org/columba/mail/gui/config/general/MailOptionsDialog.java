@@ -13,8 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.general;
+
+import com.jgoodies.forms.layout.FormLayout;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,18 +50,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.help.HelpManager;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
-import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Mail General Options Dialog
@@ -142,7 +143,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             preferHtmlCheckBox.setSelected(preferhtml);
 
             XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
-                                                   .getRoot().getElement("/options");
+                                                             .getRoot()
+                                                             .getElement("/options");
             XmlElement subject = composerOptions.getElement("subject");
 
             if (subject == null) {
@@ -241,7 +243,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             }
 
             XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
-                                                   .getRoot().getElement("/options");
+                                                             .getRoot()
+                                                             .getElement("/options");
 
             XmlElement subject = composerOptions.getElement("subject");
 
@@ -289,8 +292,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
     protected void initComponents() {
         // general
-        markCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog",
-                    "general", "mark_messages_read"));
+        markCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "general", "mark_messages_read"));
 
         markSpinner = new JSpinner();
         markSpinner.setModel(new SpinnerNumberModel(1, 0, 99, 1));
@@ -318,8 +321,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
         sendHtmlMultipartCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "send_html_multipart"));
 
-        forwardLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog",
-                    "general", "forward_as"));
+        forwardLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "general", "forward_as"));
 
         String[] items = {
             MailResourceLoader.getString("dialog", "general",
@@ -345,9 +348,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba_7");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "configuring_columba_7");
-        
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "configuring_columba_7");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "configuring_columba_7");
     }
 
     protected void layoutComponents() {

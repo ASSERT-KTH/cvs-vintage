@@ -24,8 +24,8 @@ class OneSizeLabel extends JLabel {
     private OneSizeLabelFactory factory;
 
     /**
-     * @param arg0
-     */
+ * @param arg0
+ */
     public OneSizeLabel(OneSizeLabelFactory factory, String arg0) {
         super(arg0);
         this.factory = factory;
@@ -33,8 +33,8 @@ class OneSizeLabel extends JLabel {
     }
 
     /* (non-Javadoc)
-     * @see java.awt.Component#getPreferredSize()
-     */
+ * @see java.awt.Component#getPreferredSize()
+ */
     public Dimension getPreferredSize() {
         return factory.getPreferredSize();
     }
@@ -52,8 +52,8 @@ class OneSizeLabel extends JLabel {
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.JComponent#setPreferredSize(java.awt.Dimension)
-     */
+ * @see javax.swing.JComponent#setPreferredSize(java.awt.Dimension)
+ */
     public void setPreferredSize(Dimension arg0) {
         factory.setPreferredSize(arg0);
     }

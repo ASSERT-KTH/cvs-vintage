@@ -74,7 +74,7 @@ public class SendLaterAction extends AbstractColumbaAction {
         SaveMessageCommand c = new SaveMessageCommand(r);
 
         MainInterface.processor.addOp(c);
-        
+
         composerController.close();
     }
 }

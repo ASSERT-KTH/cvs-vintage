@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.menu;
 
 import org.columba.core.gui.frame.FrameMediator;
@@ -24,6 +23,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
+
 /**
  * @author frd
  *
@@ -32,9 +32,9 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
  */
 public class ComposerMenu extends Menu {
     /**
-     * @param xmlRoot
-     * @param frameMediator
-     */
+ * @param xmlRoot
+ * @param frameMediator
+ */
     public ComposerMenu(String xmlRoot, FrameMediator frameController) {
         super(xmlRoot, frameController);
 

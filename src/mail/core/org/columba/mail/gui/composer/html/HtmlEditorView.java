@@ -16,13 +16,13 @@
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
-
 package org.columba.mail.gui.composer.html;
 
-import org.columba.core.charset.*;
-import org.columba.core.main.MainInterface;
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLDocument;
@@ -54,14 +54,14 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTML;
 
+
 /**
  * View part of controller-view frame work for composing html messages
  *
  * @author Karl Peder Olesen (karlpeder)
  */
-public class HtmlEditorView extends JTextPane
-    implements KeyListener, Observer, CharsetListener {
-    
+public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
+    CharsetListener {
     /** Reference to the controller of this view */
     private HtmlEditorController controller;
 
@@ -162,9 +162,11 @@ public class HtmlEditorView extends JTextPane
     /** Sets the charset to use */
     public void charsetChanged(CharsetEvent e) {
         Charset charset = e.getCharset();
+
         if (charset == null) {
             charset = Charset.forName(System.getProperty("file.encoding"));
         }
+
         setContentType("text/html; charset=\"" + charset.name() + "\"");
     }
 
@@ -410,9 +412,11 @@ public class HtmlEditorView extends JTextPane
             htmlKit.insertHTML(htmlDoc, caretPos, "<br>", 0, 0, HTML.Tag.BR);
             this.setCaretPosition(caretPos + 1);
         } catch (BadLocationException e) {
-            ColumbaLogger.log.severe("Error inserting br tag: " + e.getMessage());
+            ColumbaLogger.log.severe("Error inserting br tag: " +
+                e.getMessage());
         } catch (IOException e) {
-            ColumbaLogger.log.severe("Error inserting br tag: " + e.getMessage());
+            ColumbaLogger.log.severe("Error inserting br tag: " +
+                e.getMessage());
         }
     }
 

@@ -13,45 +13,45 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.subscribe;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IMAPStore;
+
 
 public class SubscribeFolderCommand extends Command {
     private IMAPRootFolder root;
     private IMAPStore store;
-    
+
     /**
-     * @param references
-     */
+ * @param references
+ */
     public SubscribeFolderCommand(SubscribeCommandReference reference) {
         super(new SubscribeCommandReference[] { reference });
     }
-    
+
     /* (non-Javadoc)
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        SubscribeCommandReference subscribeReference = (SubscribeCommandReference)getReferences()[0];
+ * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
+        SubscribeCommandReference subscribeReference = (SubscribeCommandReference) getReferences()[0];
         root = (IMAPRootFolder) subscribeReference.getFolder();
-        
+
         store = root.getStore();
-        
+
         store.subscribeFolder(subscribeReference.getMailbox());
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
-        SubscribeDialog dialog = ((SubscribeCommandReference)getReferences()[0]).getDialog();
-        
-        dialog.subscribeDone();       
-    }
+        SubscribeDialog dialog = ((SubscribeCommandReference) getReferences()[0]).getDialog();
 
+        dialog.subscribeDone();
+    }
 }

@@ -15,19 +15,22 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.io.TempFileStore;
+
+import org.columba.mail.gui.composer.AbstractEditorController;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.util.MailResourceLoader;
+
+import org.columba.ristretto.message.MimeHeader;
+
 import java.awt.Font;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
 import javax.swing.JOptionPane;
-
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.io.TempFileStore;
-import org.columba.mail.gui.composer.AbstractEditorController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.MimeHeader;
 
 
 public class ExternalEditor {
@@ -35,18 +38,18 @@ public class ExternalEditor {
 
     public ExternalEditor() {
     }
-     // END public ExternalEditor()
 
+    // END public ExternalEditor()
     public ExternalEditor(String EditorCommand) {
     }
-     // END public ExternalEditor(String EditorCommand)
 
+    // END public ExternalEditor(String EditorCommand)
     public boolean startExternalEditor(AbstractEditorController EditCtrl) {
         /*
-         * *20030906, karlpeder* Method signature changed to take
-         * an AbstractEditorController (instead of an TextEditorView) as
-         * parameter since the view is no longer directly available
-         */
+ * *20030906, karlpeder* Method signature changed to take
+ * an AbstractEditorController (instead of an TextEditorView) as
+ * parameter since the view is no longer directly available
+ */
         MimeHeader myHeader = new MimeHeader("text", "plain");
         MimeTypeViewer viewer = new MimeTypeViewer();
         File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
@@ -86,10 +89,10 @@ public class ExternalEditor {
         System.out.println("Setting Font to REALLY BIG!!! :-)");
 
         /*
-        // Why doesn't this work???
-        EditView.setFont(
-                new Font(Config.getOptionsConfig().getThemeItem().getTextFontName(), Font.BOLD, 30));
-        */
+// Why doesn't this work???
+EditView.setFont(
+        new Font(Config.getOptionsConfig().getThemeItem().getTextFontName(), Font.BOLD, 30));
+*/
         Font font = FontProperties.getTextFont();
         font = font.deriveFont(30);
 
@@ -158,6 +161,9 @@ public class ExternalEditor {
 
         return true;
     }
-     // END public boolean startExternalEditor()
+
+    // END public boolean startExternalEditor()
 }
- // END public class ExternalEditor
+
+
+// END public class ExternalEditor

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.html;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -29,11 +28,11 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.action.FontSizeMenu;
 import org.columba.mail.gui.composer.html.action.ParagraphMenu;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -47,6 +46,7 @@ import java.util.Observer;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.text.html.HTML;
+
 
 /**
  * JPanel with useful HTML related actions.
@@ -86,7 +86,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
 
         // register for changes to editor type (text / html)
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         if (htmlElement == null) {
@@ -112,15 +112,15 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         }
 
         // init components
-        LabelWithMnemonic paraLabel = new LabelWithMnemonic(
-                MailResourceLoader.getString("dialog", "composer", "style"));
+        LabelWithMnemonic paraLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "composer", "style"));
         paragraphComboBox = new JComboBox(ParagraphMenu.STYLES);
         paragraphComboBox.setActionCommand("PARA");
         paragraphComboBox.addActionListener(this);
         paragraphComboBox.setFocusable(false);
 
-        LabelWithMnemonic sizeLabel = new LabelWithMnemonic(
-                MailResourceLoader.getString("dialog", "composer", "size"));
+        LabelWithMnemonic sizeLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "composer", "size"));
         sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
         sizeComboBox.setActionCommand("SIZE");
         sizeComboBox.addActionListener(this);
@@ -129,7 +129,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
 
         // set initial enabled state of combo boxes
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
         String s = htmlElement.getAttribute("enable", "false");
         boolean enableHtml = Boolean.valueOf(s).booleanValue();
@@ -138,28 +138,21 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         // TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
         sizeComboBox.setEnabled(false);
 
-        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("BoldFormatAction",
-                getFrameController()));
-        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("ItalicFormatAction",
-                getFrameController()));
-        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("UnderlineFormatAction",
-                getFrameController()));
-        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("StrikeoutFormatAction",
-                getFrameController()));
+        ToggleToolbarButton boldFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "BoldFormatAction", getFrameController()));
+        ToggleToolbarButton italicFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "ItalicFormatAction", getFrameController()));
+        ToggleToolbarButton underlineFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "UnderlineFormatAction", getFrameController()));
+        ToggleToolbarButton strikeoutFormatButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "StrikeoutFormatAction", getFrameController()));
 
-        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("LeftJustifyAction",
-                getFrameController()));
-        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("CenterJustifyAction",
-                getFrameController()));
-        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton(
-                (AbstractSelectableAction)handler.getAction("RightJustifyAction",
-                getFrameController()));
+        ToggleToolbarButton leftJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "LeftJustifyAction", getFrameController()));
+        ToggleToolbarButton centerJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "CenterJustifyAction", getFrameController()));
+        ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
+                    "RightJustifyAction", getFrameController()));
 
         builder.add(paraLabel, cc.xy(1, 7));
 

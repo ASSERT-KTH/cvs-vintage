@@ -22,7 +22,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.config.columns.ColumnConfigDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
@@ -36,16 +35,16 @@ import java.awt.event.ActionEvent;
  */
 public class ColumnDialogAction extends AbstractColumbaAction {
     /**
-     * @param frameMediator
-     * @param name
-     */
+ * @param frameMediator
+ * @param name
+ */
     public ColumnDialogAction(FrameMediator frameMediator) {
         super(frameMediator, "Configure Columns...");
     }
 
     /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent arg0) {
         FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
 
@@ -58,7 +57,8 @@ public class ColumnDialogAction extends AbstractColumbaAction {
 
             // check if we should use the folder-based configuration
             // or the global table configuration
-            XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController().getConfigNode((Folder) folder,
+            XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
+                                  .getConfigNode((Folder) folder,
                     "ColumnOptions");
 
             new ColumnConfigDialog((MailFrameMediator) getFrameMediator(),

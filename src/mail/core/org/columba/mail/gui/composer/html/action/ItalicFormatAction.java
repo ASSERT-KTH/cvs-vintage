@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.html.action;
 
 import org.columba.core.action.AbstractSelectableAction;
@@ -24,10 +23,10 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -40,13 +39,14 @@ import java.util.Observer;
 
 import javax.swing.KeyStroke;
 
+
 /**
  * Format selected text as italic "<i>"
  *
  * @author fdietz
  */
-public class ItalicFormatAction extends AbstractSelectableAction implements Observer,
-    ContainerListener {
+public class ItalicFormatAction extends AbstractSelectableAction
+    implements Observer, ContainerListener {
     /**
      * @param frameMediator
      * @param name
@@ -77,7 +77,7 @@ public class ItalicFormatAction extends AbstractSelectableAction implements Obse
 
         // register for changes to editor type (text / html)
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         if (htmlElement == null) {

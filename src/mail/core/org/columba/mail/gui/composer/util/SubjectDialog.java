@@ -80,9 +80,9 @@ public class SubjectDialog implements ActionListener {
         centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         /*
-        TitledBorder etched = javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Login ");
-        centerPanel.setBorder( etched );
-        */
+TitledBorder etched = javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Login ");
+centerPanel.setBorder( etched );
+*/
         JPanel panel = new JPanel();
 
         panel.setLayout(new BorderLayout());
@@ -106,11 +106,11 @@ public class SubjectDialog implements ActionListener {
         centerPanel.add(panel, BorderLayout.NORTH);
 
         /*
-        JPanel panel = new JPanel();
-        panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
-        panel.add( hostLabel );
-        centerPanel.add( panel );
-        */
+JPanel panel = new JPanel();
+panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+panel.add( hostLabel );
+centerPanel.add( panel );
+*/
         //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
         //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
         dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
@@ -132,14 +132,14 @@ public class SubjectDialog implements ActionListener {
         dialog.getRootPane().setDefaultButton(buttons[0]);
 
         /*
-        java.awt.Dimension dim = new Dimension(300, 200);
+java.awt.Dimension dim = new Dimension(300, 200);
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        dialog.setLocation(
-                screenSize.width / 2 - dim.width / 2,
-                screenSize.height / 2 - dim.height / 2);
-        */
+dialog.setLocation(
+        screenSize.width / 2 - dim.width / 2,
+        screenSize.height / 2 - dim.height / 2);
+*/
         dialog.setLocationRelativeTo(null);
         dialog.show();
     }

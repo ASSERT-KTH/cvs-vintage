@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountlist;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -25,7 +24,6 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
@@ -59,6 +57,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 
 public class ConfigFrame implements ActionListener,
     ListSelectionListener //, TreeSelectionListener
@@ -262,8 +261,10 @@ public class ConfigFrame implements ActionListener,
         dialog.getRootPane().setDefaultButton(closeButton);
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba");
-        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(), "configuring_columba");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "configuring_columba");
+        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(),
+            "configuring_columba");
     }
 
     public void valueChanged(ListSelectionEvent e) {
@@ -331,12 +332,7 @@ public class ConfigFrame implements ActionListener,
             AccountItem item = accountList.remove(index);
 
             if (item.isPopAccount()) {
-            	
                 MailInterface.popServerCollection.removePopServer(item.getUid());
-                
-                 
-                 
-                 
             } else {
                 FolderTreeNode folder = (FolderTreeNode) MailInterface.treeModel.getImapFolder(item.getUid());
 
@@ -348,12 +344,12 @@ public class ConfigFrame implements ActionListener,
                     ex.printStackTrace();
                 }
             }
-            
+
             // remove mail-checking stuff
-			MailInterface.mailCheckingManager.remove(item.getUid());
-			
-			// notify all observers
-			MailInterface.mailCheckingManager.update();
+            MailInterface.mailCheckingManager.remove(item.getUid());
+
+            // notify all observers
+            MailInterface.mailCheckingManager.update();
 
             removeButton.setEnabled(false);
             editButton.setEnabled(false);

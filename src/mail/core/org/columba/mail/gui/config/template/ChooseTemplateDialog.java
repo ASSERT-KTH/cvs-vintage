@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.template;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -46,6 +45,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 
 /**
  * Asks the user to choose a template from a list.
@@ -102,8 +102,10 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "template_dialog");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "template_dialog");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "template_dialog");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "template_dialog");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -171,22 +173,22 @@ public class ChooseTemplateDialog extends JDialog implements ActionListener,
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public boolean isResult() {
         return result;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public Object getUid() {
         return uid;
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-     */
+ * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+ */
     public void valueChanged(ListSelectionEvent ev) {
         Object selection = list.getSelectedValue();
 

@@ -20,11 +20,11 @@ import javax.swing.JPanel;
 
 public class DefaultPanel extends JPanel {
     /**
-     * model->view
-     * view->model
-     *
-     * @param b
-     */
+ * model->view
+ * view->model
+ *
+ * @param b
+ */
     protected void updateComponents(boolean b) {
         if (b) {
         } else {
@@ -32,18 +32,18 @@ public class DefaultPanel extends JPanel {
     }
 
     /**
-     *
-     * Initialize all widgets
-     *
-     */
+ *
+ * Initialize all widgets
+ *
+ */
     protected void initComponents() {
     }
 
     /**
-     * Check if user entered valid data
-     *
-     * @return                true, if data was entered correctly, false otherwise
-     */
+ * Check if user entered valid data
+ *
+ * @return                true, if data was entered correctly, false otherwise
+ */
     public boolean isFinished() {
         return false;
     }

@@ -15,73 +15,70 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
-import java.awt.event.ActionEvent;
-import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
-
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
+
+import java.awt.event.ActionEvent;
+
+import java.net.URL;
+
+import java.util.Observable;
+import java.util.Observer;
+
 
 /**
  * Compose message using selected address.
  *
  * @author fdietz
  */
-public class ComposeMessageAction
-	extends AbstractColumbaAction
-	implements Observer {
-	URL url= null;
+public class ComposeMessageAction extends AbstractColumbaAction
+    implements Observer {
+    URL url = null;
 
-	/**
-	 *
-	 */
-	public ComposeMessageAction(FrameMediator controller) {
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"viewer_compose"));
+    /**
+ *
+ */
+    public ComposeMessageAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe", "viewer_compose"));
 
-		setEnabled(false);
+        setEnabled(false);
 
-		//		listen for URL changes
-		((AbstractMailFrameController) controller)
-			.messageController
-			.getUrlObservable()
-			.addObserver(this);
-	}
+        //		listen for URL changes
+        ((AbstractMailFrameController) controller).messageController.getUrlObservable()
+                                                                    .addObserver(this);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		URLController c= new URLController();
-		c.compose(url.getFile());
-	}
+    /* (non-Javadoc)
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
+    public void actionPerformed(ActionEvent evt) {
+        URLController c = new URLController();
+        c.compose(url.getFile());
+    }
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		URLObservable o= (URLObservable) arg0;
+    /* (non-Javadoc)
+ * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+ */
+    public void update(Observable arg0, Object arg1) {
+        URLObservable o = (URLObservable) arg0;
 
-		// only enable this action, if this is a mailto: URL
-		url= o.getUrl();
+        // only enable this action, if this is a mailto: URL
+        url = o.getUrl();
 
-		if (url == null) {
-			setEnabled(false);
-		} else {
-			if (url.getProtocol().equalsIgnoreCase("mailto")) {
-				setEnabled(true);
-			} else {
-				setEnabled(false);
-			}
-		}
-	}
+        if (url == null) {
+            setEnabled(false);
+        } else {
+            if (url.getProtocol().equalsIgnoreCase("mailto")) {
+                setEnabled(true);
+            } else {
+                setEnabled(false);
+            }
+        }
+    }
 }

@@ -35,7 +35,8 @@ public class DocumentParser {
     private final static Pattern[] smilyPattern = {
         Pattern.compile("\\s:-\\)"), Pattern.compile("\\s:-\\("),
         Pattern.compile("\\s:-\\|"), Pattern.compile("\\s;-\\)"),
-        Pattern.compile("\\s:cry:"), Pattern.compile("\\s:o"), Pattern.compile("\\s8\\)"),
+        Pattern.compile("\\s:cry:"), Pattern.compile("\\s:o"),
+        Pattern.compile("\\s8\\)"),
     };
     private static final Pattern markQuotingsPattern = Pattern.compile("(^(&nbsp;)*&gt;[^\\n]*)|\\n((&nbsp;)*&gt;[^\\n]*)",
             Pattern.CASE_INSENSITIVE);
@@ -44,10 +45,10 @@ public class DocumentParser {
     }
 
     /*
-     *
-     * make quotes font-color darkgray
-     *
-     */
+ *
+ * make quotes font-color darkgray
+ *
+ */
     public static String markQuotings(String input) throws Exception {
         Matcher matcher = markQuotingsPattern.matcher(input);
 
@@ -59,7 +60,8 @@ public class DocumentParser {
 
         for (int i = 0; i < smilyPattern.length; i++) {
             matcher = smilyPattern[i].matcher(input);
-            input = matcher.replaceAll("&nbsp<IMG SRC=\"" + smilyImage[i] + "\">");
+            input = matcher.replaceAll("&nbsp<IMG SRC=\"" + smilyImage[i] +
+                    "\">");
         }
 
         return input;

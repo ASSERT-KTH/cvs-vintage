@@ -101,7 +101,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
                     "attach_signature"));
 
             defaultAccountCheckBox.setSelected(MailInterface.config.getAccountList()
-                                                         .getDefaultAccountUid() == accountItem.getInteger(
+                                                                   .getDefaultAccountUid() == accountItem.getInteger(
                     "uid"));
         } else {
             if (nameTextField.getText() != null) {

@@ -19,9 +19,9 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -48,7 +48,7 @@ public class InsertBreakAction extends AbstractColumbaAction implements Observer
 
         // register for changes to editor type (text / html)
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         if (htmlElement == null) {

@@ -33,20 +33,18 @@ public class UndoManagerTest extends TestCase {
     private DefaultCommandReference[] nullReferences;
 
     /**
-     * Constructor for UndoManagerTest.
-     * @param arg0
-     */
+ * Constructor for UndoManagerTest.
+ * @param arg0
+ */
     public UndoManagerTest(String arg0) {
         super(arg0);
     }
 
     /**
-     * @see TestCase#setUp()
-     */
+ * @see TestCase#setUp()
+ */
     protected void setUp() throws Exception {
         super.setUp();
-
-        
 
         processor = new DefaultProcessor();
         undoManager = processor.getUndoManager();
@@ -56,18 +54,18 @@ public class UndoManagerTest extends TestCase {
     }
 
     /**
-     * @see TestCase#tearDown()
-     */
+ * @see TestCase#tearDown()
+ */
     protected void tearDown() throws Exception {
         super.tearDown();
         processor = null;
     }
 
     /**
-     * Method testAddToUndo_TimeStampOrdering.
-     * Tests if the Commands are sorted in respect to
-     * increasing TimeStamps.
-     */
+ * Method testAddToUndo_TimeStampOrdering.
+ * Tests if the Commands are sorted in respect to
+ * increasing TimeStamps.
+ */
     public void testAddToUndo_TimeStampOrdering() {
         Command command1 = new TestUndoCommand(null, nullReferences);
         command1.setTimeStamp(0);
@@ -170,7 +168,8 @@ class TestUndoCommand extends Command {
     public void updateGUI() {
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
     }
 
     public void undo(Worker worker) throws Exception {
@@ -190,6 +189,7 @@ class TestNoChangeCommand extends Command {
     public void updateGUI() {
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
     }
 }

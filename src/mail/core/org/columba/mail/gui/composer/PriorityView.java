@@ -93,13 +93,13 @@ public class PriorityView extends JComboBox {
                 setIcon(image1);
             }
             /*
-            else if ( p.equals("High") )
-              setIcon( image2 );
-            */
+else if ( p.equals("High") )
+  setIcon( image2 );
+*/
             /*
-            else if ( p.equals("Low") )
-                setIcon( image3 );
-             */
+else if ( p.equals("Low") )
+    setIcon( image3 );
+ */
             else if (p.equals("Lowest")) {
                 setIcon(image4);
             } else {

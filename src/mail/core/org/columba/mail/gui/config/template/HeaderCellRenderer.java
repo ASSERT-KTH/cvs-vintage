@@ -6,13 +6,13 @@
  */
 package org.columba.mail.gui.config.template;
 
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 
 
 /**
@@ -25,16 +25,16 @@ public class HeaderCellRenderer extends DefaultListCellRenderer {
     HeaderList list;
 
     /**
-     *
-     */
+ *
+ */
     public HeaderCellRenderer(HeaderList list) {
         super();
         this.list = list;
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-     */
+ * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+ */
     public Component getListCellRendererComponent(JList arg0, Object arg1,
         int arg2, boolean arg3, boolean arg4) {
         super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);

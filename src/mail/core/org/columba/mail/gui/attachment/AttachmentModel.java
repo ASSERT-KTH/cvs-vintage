@@ -25,6 +25,7 @@ import org.columba.ristretto.message.StreamableMimePart;
 
 import java.util.List;
 
+
 /**
  * @author freddy
  * 
@@ -58,20 +59,20 @@ public class AttachmentModel {
     }
 
     /**
-     * Returns the collection.
-     * 
-     * @return MimePartTree
-     */
+ * Returns the collection.
+ * 
+ * @return MimePartTree
+ */
     public MimeTree getCollection() {
         return collection;
     }
 
     /**
-     * Sets the collection.
-     * 
-     * @param collection
-     *            The collection to set
-     */
+ * Sets the collection.
+ * 
+ * @param collection
+ *            The collection to set
+ */
     public void setCollection(MimeTree collection) {
         this.collection = collection;
 
@@ -79,18 +80,14 @@ public class AttachmentModel {
         displayedMimeParts = collection.getAllLeafs();
 
         // Remove the BodyPart(s) if any
-        StreamableMimePart bodyPart =
-            (StreamableMimePart) collection.getFirstTextPart("plain");
+        StreamableMimePart bodyPart = (StreamableMimePart) collection.getFirstTextPart(
+                "plain");
 
         if (bodyPart != null) {
             MimePart bodyParent = bodyPart.getParent();
 
             if (bodyParent != null) {
-                if (bodyParent
-                    .getHeader()
-                    .getMimeType()
-                    .getSubtype()
-                    .equals("alternative")) {
+                if (bodyParent.getHeader().getMimeType().getSubtype().equals("alternative")) {
                     List bodyParts = bodyParent.getChilds();
                     displayedMimeParts.removeAll(bodyParts);
                 } else {
@@ -103,20 +100,20 @@ public class AttachmentModel {
     }
 
     /**
-     * Returns the displayedMimeParts.
-     * 
-     * @return List
-     */
+ * Returns the displayedMimeParts.
+ * 
+ * @return List
+ */
     public List getDisplayedMimeParts() {
         return displayedMimeParts;
     }
 
     /**
-     * Sets the displayedMimeParts.
-     * 
-     * @param displayedMimeParts
-     *            The displayedMimeParts to set
-     */
+ * Sets the displayedMimeParts.
+ * 
+ * @param displayedMimeParts
+ *            The displayedMimeParts to set
+ */
     public void setDisplayedMimeParts(List displayedMimeParts) {
         this.displayedMimeParts = displayedMimeParts;
     }

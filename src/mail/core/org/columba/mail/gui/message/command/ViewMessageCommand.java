@@ -61,11 +61,9 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.MessageParser;
 import org.columba.ristretto.parser.ParserException;
 import org.waffel.jscf.JSCFConnection;
-import org.waffel.jscf.JSCFDriverManager;
 import org.waffel.jscf.JSCFException;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
-import org.waffel.jscf.gpg.GPGDriver;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)

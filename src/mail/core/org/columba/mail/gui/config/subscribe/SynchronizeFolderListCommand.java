@@ -13,8 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.subscribe;
+
+import org.columba.core.command.Command;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.util.ListTools;
+
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.imap.IMAPStore;
+
+import org.columba.ristretto.imap.ListInfo;
+
+import org.frappucino.checkabletree.CheckableItemImpl;
 
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -28,118 +38,116 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
-import org.columba.core.command.Command;
-import org.columba.core.command.Worker;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.checkabletree.CheckableItemImpl;
-import org.columba.core.util.ListTools;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.imap.IMAPStore;
-import org.columba.ristretto.imap.ListInfo;
 
 public class SynchronizeFolderListCommand extends Command {
-
     private Pattern delimiterPattern;
     private IMAPRootFolder root;
     private IMAPStore store;
-    
     private TreeNode node;
     private String delimiter;
-    
+
     /**
-     * @param references
-     */
+ * @param references
+ */
     public SynchronizeFolderListCommand(SubscribeCommandReference reference) {
         super(new SubscribeCommandReference[] { reference });
     }
-    
+
     /* (non-Javadoc)
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        root = (IMAPRootFolder) ((SubscribeCommandReference)getReferences()[0]).getFolder();
-        
+ * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
+        root = (IMAPRootFolder) ((SubscribeCommandReference) getReferences()[0]).getFolder();
+
         store = root.getStore();
-        
+
         node = createTreeStructure();
     }
 
     private TreeNode createTreeStructure() throws Exception {
-        ListInfo[] list = store.list("","*");
-        ListInfo[] lsub = store.lsub("","*");
-        
+        ListInfo[] list = store.list("", "*");
+        ListInfo[] lsub = store.lsub("", "*");
+
         // Create list of unsubscribed folders
         List subscribedFolders = Arrays.asList(lsub);
-        List unsubscribedFolders = new LinkedList( Arrays.asList(list));
+        List unsubscribedFolders = new LinkedList(Arrays.asList(list));
         ListTools.substract(unsubscribedFolders, subscribedFolders);
-        
+
         // Now we have the subscribed folders in subscribedFolders
         // and the unsubscribed folders in unsubscribedFolders
-
         // Next step: Create a treestructure
         DefaultMutableTreeNode root = new CheckableItemImpl();
 
         // Initialize the Pattern
-        String pattern = "([^\\" + list[0].getDelimiter() + "]+)\\" + list[0].getDelimiter()+"?";
+        String pattern = "([^\\" + list[0].getDelimiter() + "]+)\\" +
+            list[0].getDelimiter() + "?";
         delimiterPattern = Pattern.compile(pattern);
         delimiter = list[0].getDelimiter();
-        
+
         Iterator it = subscribedFolders.iterator();
+
         while (it.hasNext()) {
             ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
             node.setSelected(true);
         }
-        
+
         it = unsubscribedFolders.iterator();
+
         while (it.hasNext()) {
             ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
             node.setSelected(false);
         }
-        
+
         return root;
     }
-    
-    private ListInfoTreeNode insertTreeNode(ListInfo listInfo, DefaultMutableTreeNode parent) {
+
+    private ListInfoTreeNode insertTreeNode(ListInfo listInfo,
+        DefaultMutableTreeNode parent) {
         Matcher matcher = delimiterPattern.matcher(listInfo.getName());
-        DefaultMutableTreeNode actParent = parent;        
+        DefaultMutableTreeNode actParent = parent;
         StringBuffer mailboxName = new StringBuffer();
-        
+
         matcher.find();
         mailboxName.append(matcher.group(1));
-        actParent = ensureChild(matcher.group(1),mailboxName.toString(), actParent);
-        
+        actParent = ensureChild(matcher.group(1), mailboxName.toString(),
+                actParent);
+
         while (matcher.find()) {
             mailboxName.append(delimiter);
             mailboxName.append(matcher.group(1));
-            actParent = ensureChild(matcher.group(1),mailboxName.toString(), actParent);            
+            actParent = ensureChild(matcher.group(1), mailboxName.toString(),
+                    actParent);
         }
-        
+
         return (ListInfoTreeNode) actParent;
     }
-    
-    private DefaultMutableTreeNode ensureChild(String name, String mailbox, DefaultMutableTreeNode parent) {
+
+    private DefaultMutableTreeNode ensureChild(String name, String mailbox,
+        DefaultMutableTreeNode parent) {
         Enumeration children = parent.children();
         ListInfoTreeNode node;
-        
+
         while (children.hasMoreElements()) {
             node = (ListInfoTreeNode) children.nextElement();
+
             if (node.toString().equals(name)) {
                 return node;
             }
         }
-        
+
         node = new ListInfoTreeNode(name, mailbox);
         parent.add(node);
-        
+
         return node;
     }
-    
+
     /* (non-Javadoc)
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
-        SubscribeDialog dialog = ((SubscribeCommandReference)getReferences()[0]).getDialog();
-        
-        dialog.syncFolderListDone( new DefaultTreeModel(node));       
+        SubscribeDialog dialog = ((SubscribeCommandReference) getReferences()[0]).getDialog();
+
+        dialog.syncFolderListDone(new DefaultTreeModel(node));
     }
 }

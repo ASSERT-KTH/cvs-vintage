@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.mailboximport;
 
 import net.javaprog.ui.wizard.DataLookup;
@@ -34,6 +33,7 @@ import org.columba.mail.plugin.ImportPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
 import javax.help.CSH;
+
 
 public class ImportWizardLauncher {
     public ImportWizardLauncher() {
@@ -71,7 +71,8 @@ public class ImportWizardLauncher {
                 MailResourceLoader.getString("dialog", "mailboximport", "title"),
                 ImageLoader.getSmallImageIcon("stock_convert.png"));
         CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
-        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpManager().getHelpBroker());
+        JavaHelpSupport.enableHelp(wizard,
+            HelpManager.getHelpManager().getHelpBroker());
         wizard.pack();
         wizard.setLocationRelativeTo(null);
         wizard.setVisible(true);

@@ -15,13 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+
 import java.awt.Component;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 
-import org.columba.addressbook.folder.HeaderItem;
 
 /**
  * 
@@ -29,33 +30,25 @@ import org.columba.addressbook.folder.HeaderItem;
  * @author fdietz
  */
 public class FieldEditor extends DefaultCellEditor {
+    /**
+ * @param arg0
+ */
+    public FieldEditor(JComboBox arg0) {
+        super(arg0);
+    }
 
-	/**
-	 * @param arg0
-	 */
-	public FieldEditor(JComboBox arg0) {
-		super(arg0);
+    /**
+ * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+ */
+    public Component getTableCellEditorComponent(JTable arg0, Object value,
+        boolean arg2, int arg3, int arg4) {
+        super.getTableCellEditorComponent(arg0, value, arg2, arg3, arg4);
 
-	}
+        HeaderItem item = (HeaderItem) value;
+        String s = (String) item.get("field");
 
-	/**
-	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
-	 */
-	public Component getTableCellEditorComponent(
-		JTable arg0,
-		Object value,
-		boolean arg2,
-		int arg3,
-		int arg4) {
+        ((JComboBox) editorComponent).setSelectedItem(s);
 
-		super.getTableCellEditorComponent(arg0, value, arg2, arg3, arg4);
-
-		HeaderItem item= (HeaderItem) value;
-		String s= (String) item.get("field");
-
-		((JComboBox) editorComponent).setSelectedItem(s);
-
-		return editorComponent;
-	}
-
+        return editorComponent;
+    }
 }

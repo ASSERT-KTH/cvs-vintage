@@ -15,8 +15,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.account;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.help.HelpManager;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -31,15 +41,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.help.HelpManager;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
 
 public class AccountDialog implements ActionListener {
     private JDialog dialog;
@@ -125,7 +126,8 @@ public class AccountDialog implements ActionListener {
         dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(), "configuring_columba");
+        HelpManager.getHelpManager().enableHelpKey(dialog.getRootPane(),
+            "configuring_columba");
     }
 
     protected JPanel createButtonPanel() {
@@ -154,7 +156,8 @@ public class AccountDialog implements ActionListener {
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "configuring_columba");
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
@@ -168,12 +171,12 @@ public class AccountDialog implements ActionListener {
     }
 
     /**
-     * Check if user entered valid data in all panels
-     * <p>
-     * Note, that we also select the panel.
-     *
-     * @return true, if data is valid. false, otherwise
-     */
+ * Check if user entered valid data in all panels
+ * <p>
+ * Note, that we also select the panel.
+ *
+ * @return true, if data is valid. false, otherwise
+ */
     protected boolean isFinished() {
         boolean result = identityPanel.isFinished();
 
@@ -222,7 +225,6 @@ public class AccountDialog implements ActionListener {
 
             if (accountItem.isPopAccount()) {
                 int uid = accountItem.getUid();
-               
             } else {
                 // update tree label
                 int uid = accountItem.getUid();
@@ -230,9 +232,10 @@ public class AccountDialog implements ActionListener {
                 IMAPRootFolder folder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(uid);
                 folder.updateConfiguration();
             }
-            
+
             // restart timer 
             MailInterface.mailCheckingManager.restartTimer(accountItem.getUid());
+
             // notify all observers
             MailInterface.mailCheckingManager.update();
 

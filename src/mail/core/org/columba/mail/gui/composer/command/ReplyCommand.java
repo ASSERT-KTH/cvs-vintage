@@ -15,32 +15,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.command;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.charset.Charset;
-import java.text.DateFormat;
-
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.parser.text.HtmlParser;
-import org.columba.mail.util.MailResourceLoader;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.parser.text.HtmlParser;
+import org.columba.mail.util.MailResourceLoader;
+
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.AddressListRenderer;
 import org.columba.ristretto.message.BasicHeader;
@@ -48,6 +42,14 @@ import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.nio.charset.Charset;
+
+import java.text.DateFormat;
+
 
 /**
  * Reply to message.
@@ -57,26 +59,19 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdietz
  */
 public class ReplyCommand extends FolderCommand {
-    protected final String[] headerfields =
-        new String[] {
-            "Subject",
-			"Date",
-            "From",
-            "To",
-            "Reply-To",
-            "Message-ID",
-            "In-Reply-To",
-            "References" };
-
+    protected final String[] headerfields = new String[] {
+            "Subject", "Date", "From", "To", "Reply-To", "Message-ID",
+            "In-Reply-To", "References"
+        };
     protected ComposerController controller;
     protected ComposerModel model;
 
     /**
-	 * Constructor for ReplyCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
+     * Constructor for ReplyCommand.
+     * 
+     * @param frameMediator
+     * @param references
+     */
     public ReplyCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -93,13 +88,13 @@ public class ReplyCommand extends FolderCommand {
         controller.updateComponents(true);
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // create composer model
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder =
-        (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
@@ -110,9 +105,8 @@ public class ReplyCommand extends FolderCommand {
         // get mimeparts
         MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-        XmlElement html =
-        MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
-        "/options/html");
+        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+                                              .getRoot().getElement("/options/html");
 
         // Which Bodypart shall be shown? (html/plain)
         MimePart bodyPart = null;
@@ -134,13 +128,14 @@ public class ReplyCommand extends FolderCommand {
 
             // debug output
             ColumbaLogger.log.info("Quoted body text:\n" + quotedBodyText);
-            
+
             model.setBodyText(quotedBodyText);
         }
     }
-    
+
     protected void initMimeHeader(MimePart bodyPart) {
         MimeHeader bodyHeader = bodyPart.getHeader();
+
         if (bodyHeader.getMimeType().getSubtype().equals("html")) {
             model.setHtml(true);
         } else {
@@ -149,26 +144,30 @@ public class ReplyCommand extends FolderCommand {
 
         // Select the charset of the original message
         String charset = bodyHeader.getContentParameter("charset");
+
         if (charset != null) {
             model.setCharset(Charset.forName(charset));
         }
     }
 
-    protected void initHeader(Folder folder, Object[] uids) throws Exception {
+    protected void initHeader(Folder folder, Object[] uids)
+        throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
         BasicHeader rfcHeader = new BasicHeader(header);
+
         // set subject
-        model.setSubject(
-                MessageBuilderHelper.createReplySubject(rfcHeader.getSubject()));
+        model.setSubject(MessageBuilderHelper.createReplySubject(
+                rfcHeader.getSubject()));
 
         // Use reply-to field if given, else use from
         Address[] to = rfcHeader.getReplyTo();
+
         if (to.length == 0) {
-            to = new Address[] { rfcHeader.getFrom()};
+            to = new Address[] { rfcHeader.getFrom() };
         }
-        
+
         // Add addresses to the addressbook
         MessageBuilderHelper.addAddressesToAddressbook(to);
         model.setTo(to);
@@ -177,69 +176,62 @@ public class ReplyCommand extends FolderCommand {
         MessageBuilderHelper.createMailingListHeaderItems(header, model);
 
         // select the account this mail was received from
-        Integer accountUid =
-        (Integer) folder.getAttribute(uids[0], "columba.accountuid");
-        AccountItem accountItem =
-        MessageBuilderHelper.getAccountItem(accountUid);
+        Integer accountUid = (Integer) folder.getAttribute(uids[0],
+                "columba.accountuid");
+        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
         model.setAccountItem(accountItem);
     }
-    
-    protected String createQuotedBody(
-            Folder folder,
-			Object[] uids,
-			Integer[] address)
-    throws IOException, Exception {
 
-        InputStream  bodyStream = folder.getMimePartBodyStream(uids[0], address);
+    protected String createQuotedBody(Folder folder, Object[] uids,
+        Integer[] address) throws IOException, Exception {
+        InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
         // Quote original message - different methods for text and html 
-        if( model.isHtml() ) {
+        if (model.isHtml()) {
             // Html: Insertion of text before and after original message
-        	
-        	// get necessary headerfields
-        	BasicHeader rfcHeader = new BasicHeader(
-        			folder.getHeaderFields(uids[0], headerfields));
-        	String subject = rfcHeader.getSubject();
-        	String date = DateFormat.getDateTimeInstance(
-        			DateFormat.LONG, DateFormat.MEDIUM).
-					format(rfcHeader.getDate());
-        	String from = AddressListRenderer.renderToHTMLWithLinks(
-        			new Address[] { rfcHeader.getFrom() }).toString();
-        	String to = AddressListRenderer.renderToHTMLWithLinks(
-        			rfcHeader.getTo()).toString();
+            // get necessary headerfields
+            BasicHeader rfcHeader = new BasicHeader(folder.getHeaderFields(
+                        uids[0], headerfields));
+            String subject = rfcHeader.getSubject();
+            String date = DateFormat.getDateTimeInstance(DateFormat.LONG,
+                    DateFormat.MEDIUM).format(rfcHeader.getDate());
+            String from = AddressListRenderer.renderToHTMLWithLinks(new Address[] {
+                        rfcHeader.getFrom()
+                    }).toString();
+            String to = AddressListRenderer.renderToHTMLWithLinks(rfcHeader.getTo())
+                                           .toString();
 
-        	// build "quoted" message
-        	StringBuffer buf = new StringBuffer();
-			buf.append("<html><body><p>");
-			buf.append(MailResourceLoader.getString(
-					"dialog", "composer", "original_message_start"));
-			buf.append("<br>" + 
-					MailResourceLoader.getString("header", "header", "subject") + 
-					": " + subject);
-			buf.append("<br>" + 
-					MailResourceLoader.getString("header", "header", "date") +
-					": " + date);
-			buf.append("<br>" +
-					MailResourceLoader.getString("header", "header", "from") +
-					": " + from);
-			buf.append("<br>" +
-					MailResourceLoader.getString("header", "header", "to") + 
-					": " + to);
-			buf.append("</p>");
-			buf.append(HtmlParser.removeComments(	// comments are not displayed correctly in composer
-					HtmlParser.getHtmlBody(
-						StreamUtils.readInString(bodyStream).toString())));
-			buf.append("<p>");
-			buf.append(MailResourceLoader.getString(
-					"dialog", "composer", "original_message_end"));
-			buf.append("</p></body></html>");
+            // build "quoted" message
+            StringBuffer buf = new StringBuffer();
+            buf.append("<html><body><p>");
+            buf.append(MailResourceLoader.getString("dialog", "composer",
+                    "original_message_start"));
+            buf.append("<br>" +
+                MailResourceLoader.getString("header", "header", "subject") +
+                ": " + subject);
+            buf.append("<br>" +
+                MailResourceLoader.getString("header", "header", "date") +
+                ": " + date);
+            buf.append("<br>" +
+                MailResourceLoader.getString("header", "header", "from") +
+                ": " + from);
+            buf.append("<br>" +
+                MailResourceLoader.getString("header", "header", "to") + ": " +
+                to);
+            buf.append("</p>");
+            buf.append(HtmlParser.removeComments( // comments are not displayed correctly in composer
+                    HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
+                                                      .toString())));
+            buf.append("<p>");
+            buf.append(MailResourceLoader.getString("dialog", "composer",
+                    "original_message_end"));
+            buf.append("</p></body></html>");
 
-			return buf.toString();
-        	
+            return buf.toString();
         } else {
-        	// Text: Addition of > before each line
-            return StreamUtils.readInString(new QuoteFilterInputStream(bodyStream)).toString();            
+            // Text: Addition of > before each line
+            return StreamUtils.readInString(new QuoteFilterInputStream(
+                    bodyStream)).toString();
         }
     }
-    
 }

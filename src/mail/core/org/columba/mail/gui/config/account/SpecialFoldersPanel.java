@@ -19,7 +19,6 @@ import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
@@ -117,7 +116,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
                     "use_default_account"));
 
             defaultAccountCheckBox.setEnabled(MailInterface.config.getAccountList()
-                                                        .getDefaultAccountUid() == accountItem.getInteger(
+                                                                  .getDefaultAccountUid() == accountItem.getInteger(
                     "uid"));
 
             if (defaultAccountCheckBox.isEnabled() &&

@@ -20,6 +20,7 @@ import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
@@ -29,90 +30,84 @@ import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
 
+
 class AccountCreator implements WizardModelListener {
-	protected DataModel data;
+    protected DataModel data;
 
-	public AccountCreator(DataModel data) {
-		this.data= data;
-	}
+    public AccountCreator(DataModel data) {
+        this.data = data;
+    }
 
-	public void wizardFinished(WizardModelEvent e) {
-		String type= (String) data.getData("IncomingServer.type");
-		AccountItem account=
-			MailInterface.config.getAccountList().addEmptyAccount(type.toLowerCase());
+    public void wizardFinished(WizardModelEvent e) {
+        String type = (String) data.getData("IncomingServer.type");
+        AccountItem account = MailInterface.config.getAccountList()
+                                                  .addEmptyAccount(type.toLowerCase());
 
-		if (account == null) {
-			//this should not happen, the templates seem to be missing
-			throw new RuntimeException("Account templates missing!");
-		}
+        if (account == null) {
+            //this should not happen, the templates seem to be missing
+            throw new RuntimeException("Account templates missing!");
+        }
 
-		account.setName((String) data.getData("Identity.accountName"));
+        account.setName((String) data.getData("Identity.accountName"));
 
-		IdentityItem identity= account.getIdentityItem();
-		identity.set("name", (String) data.getData("Identity.name"));
-		identity.set("address", (String) data.getData("Identity.address"));
+        IdentityItem identity = account.getIdentityItem();
+        identity.set("name", (String) data.getData("Identity.name"));
+        identity.set("address", (String) data.getData("Identity.address"));
 
-		if (type.equals("POP3")) {
-			PopItem pop= account.getPopItem();
-			pop.set("host", (String) data.getData("IncomingServer.host"));
-			pop.set("user", (String) data.getData("IncomingServer.login"));
-			MailInterface.popServerCollection.add(account);
+        if (type.equals("POP3")) {
+            PopItem pop = account.getPopItem();
+            pop.set("host", (String) data.getData("IncomingServer.host"));
+            pop.set("user", (String) data.getData("IncomingServer.login"));
+            MailInterface.popServerCollection.add(account);
+        } else {
+            ImapItem imap = account.getImapItem();
+            imap.set("host", (String) data.getData("IncomingServer.host"));
+            imap.set("user", (String) data.getData("IncomingServer.login"));
 
-		} else {
-			ImapItem imap= account.getImapItem();
-			imap.set("host", (String) data.getData("IncomingServer.host"));
-			imap.set("user", (String) data.getData("IncomingServer.login"));
+            // TODO: All this code for creating a new IMAPRootFolder should
+            //       be moved to a FolderFactory
+            //       -> this way "path" would be handled in the factory, too
+            // parent directory for mail folders
+            // for example: ".columba/mail/"
+            String path = MainInterface.config.getConfigDirectory() + "/mail/";
 
-			// TODO: All this code for creating a new IMAPRootFolder should
-			//       be moved to a FolderFactory
-			//       -> this way "path" would be handled in the factory, too
-			
-			// parent directory for mail folders
-	        // for example: ".columba/mail/"
-	        String path = MainInterface.config.getConfigDirectory() + "/mail/";  
-	        
-			IMAPRootFolder parentFolder= new IMAPRootFolder(account, path);
-			((FolderTreeNode) MailInterface.treeModel.getRoot()).add(
-				parentFolder);
-			((FolderTreeNode) MailInterface.treeModel.getRoot())
-				.getNode()
-				.addElement(
-				parentFolder.getNode());
+            IMAPRootFolder parentFolder = new IMAPRootFolder(account, path);
+            ((FolderTreeNode) MailInterface.treeModel.getRoot()).add(parentFolder);
+            ((FolderTreeNode) MailInterface.treeModel.getRoot()).getNode()
+             .addElement(parentFolder.getNode());
 
-			MailInterface.treeModel.nodeStructureChanged(
-				parentFolder.getParent());
+            MailInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
 
-			try {
-				FolderTreeNode inbox= new IMAPFolder("INBOX", "IMAPFolder", path);
-				parentFolder.add(inbox);
-				parentFolder.getNode().addElement(inbox.getNode());
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-		
-		// add account to mail-checking manager
-		MailInterface.mailCheckingManager.add(account);
+            try {
+                FolderTreeNode inbox = new IMAPFolder("INBOX", "IMAPFolder",
+                        path);
+                parentFolder.add(inbox);
+                parentFolder.getNode().addElement(inbox.getNode());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
-		// notify all observers
-		MailInterface.mailCheckingManager.update();
+        // add account to mail-checking manager
+        MailInterface.mailCheckingManager.add(account);
 
-		account.getSmtpItem().set(
-			"host",
-			(String) data.getData("OutgoingServer.host"));
+        // notify all observers
+        MailInterface.mailCheckingManager.update();
 
-		// generally we can just use the same login for both servers
-		account.getSmtpItem().set(
-			"user",
-			(String) data.getData("IncomingServer.login"));
-	}
+        account.getSmtpItem().set("host",
+            (String) data.getData("OutgoingServer.host"));
 
-	public void stepShown(WizardModelEvent e) {
-	}
+        // generally we can just use the same login for both servers
+        account.getSmtpItem().set("user",
+            (String) data.getData("IncomingServer.login"));
+    }
 
-	public void wizardCanceled(WizardModelEvent e) {
-	}
+    public void stepShown(WizardModelEvent e) {
+    }
 
-	public void wizardModelChanged(WizardModelEvent e) {
-	}
+    public void wizardCanceled(WizardModelEvent e) {
+    }
+
+    public void wizardModelChanged(WizardModelEvent e) {
+    }
 }

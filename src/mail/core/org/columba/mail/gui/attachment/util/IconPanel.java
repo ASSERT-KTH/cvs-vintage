@@ -22,6 +22,7 @@ import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -57,13 +58,13 @@ public class IconPanel extends JPanel implements MouseListener {
         selectionListener = new ArrayList();
 
         labelFactory = new OneSizeLabelFactory(150);
-        
+
         setToolTipText("oh gott!");
     }
 
     /* (non-Javadoc)
-     * @see java.awt.Component#getPreferredSize()
-     */
+ * @see java.awt.Component#getPreferredSize()
+ */
     public Dimension getPreferredSize() {
         Dimension dim = new Dimension(super.getWidth(), 0);
 
@@ -103,12 +104,10 @@ public class IconPanel extends JPanel implements MouseListener {
         super.add(icon);
     }
 
-    
-    
     public void add(Icon image, String text, String tooltip) {
         ClickableIcon icon = new ClickableIcon(labelFactory, image, text, count);
         icon.setMyToolTip(tooltip);
-        
+
         preferredIconSize = icon.getPreferredSize();
         addItem(icon);
         count++;
@@ -255,41 +254,42 @@ public class IconPanel extends JPanel implements MouseListener {
             ((IconPanelSelectionListener) selectionListener.get(i)).selectionChanged(newSelection);
         }
     }
+
     /**
-     * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-     */
+ * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+ */
     public void mouseClicked(MouseEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-     */
+ * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+ */
     public void mouseEntered(MouseEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-     */
+ * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+ */
     public void mouseExited(MouseEvent arg0) {
     }
 
     /**
-     * @see javax.swing.JComponent#getToolTipText(java.awt.event.MouseEvent)
-     */
+ * @see javax.swing.JComponent#getToolTipText(java.awt.event.MouseEvent)
+ */
     public String getToolTipText(MouseEvent arg0) {
         // Don't ask me why we have to do it like that
         // but with this it works. I tried to call setToolTipText
         // for every single ClickableIcon but after that
         // one can't select a icon anymore since no
         // mouseevent will ever reach the IconPanel. [tstich]
-        
         Object clicked = getComponentAt(arg0.getPoint());
-        if( clicked instanceof ClickableIcon ) {
+
+        if (clicked instanceof ClickableIcon) {
             return ((ClickableIcon) clicked).getMyToolTip();
         }
+
         return null;
     }
-
 }
 
 
@@ -302,7 +302,6 @@ class ClickableIcon extends JComponent {
     private Color background;
     private JLabel icon;
     private JLabel label;
-    
     private String myToolTip;
 
     public ClickableIcon(OneSizeLabelFactory factory, Icon image, String text,
@@ -354,17 +353,16 @@ class ClickableIcon extends JComponent {
     }
 
     /**
-     * @return Returns the myToolTip.
-     */
+ * @return Returns the myToolTip.
+ */
     public String getMyToolTip() {
         return myToolTip;
     }
 
     /**
-     * @param myToolTip The myToolTip to set.
-     */
+ * @param myToolTip The myToolTip to set.
+ */
     public void setMyToolTip(String myToolTip) {
         this.myToolTip = myToolTip;
     }
-
 }

@@ -17,9 +17,11 @@ package org.columba.mail.folderoptions;
 
 import org.columba.core.plugin.PluginInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+
 
 /**
  * Folder options plugin abstract class.
@@ -42,151 +44,149 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * @author fdietz
  */
 public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
-	/**
-	 * mail frame mediator
-	 */
-	private MailFrameMediator mediator;
+    /**
+ * mail frame mediator
+ */
+    private MailFrameMediator mediator;
 
-	/**
-	 * name of configuration node
-	 */
-	private String name;
+    /**
+ * name of configuration node
+ */
+    private String name;
 
-	/**
-	 * ID of plugin
-	 */
-	private String pluginId;
+    /**
+ * ID of plugin
+ */
+    private String pluginId;
 
-	/**
-	 * Constructor
-	 *
-	 * @param name      name of plugin
-	 * @param pluginId	id of plugin used by plugin handler
-	 * @param mediator  mail frame mediator
-	 */
-	public AbstractFolderOptionsPlugin(
-		String name,
-		String pluginId,
-		MailFrameMediator mediator) {
-		this.name= name;
-		this.pluginId= pluginId;
-		this.mediator= mediator;
-	}
+    /**
+ * Constructor
+ *
+ * @param name      name of plugin
+ * @param pluginId        id of plugin used by plugin handler
+ * @param mediator  mail frame mediator
+ */
+    public AbstractFolderOptionsPlugin(String name, String pluginId,
+        MailFrameMediator mediator) {
+        this.name = name;
+        this.pluginId = pluginId;
+        this.mediator = mediator;
+    }
 
-	/**
-	* Save configuration of this plugin.
-	* <p>
-	*
-	* Following a simple example of a toolbar configuration:<br>
-	*
-	* <pre>
-	* <toolbar enabled="true" show_icon="true" show_text="false">
-	*  <button name="Cut"/>
-	*  <button name="Copy"/>
-	*  <button name="Paste"/>
-	*  <button name="Delete"/>
-	* </toolbar>
-	* </pre>
-	*
-	* @param folder     selected folder
-	*/
-	public abstract void saveOptionsToXml(Folder folder);
+    /**
+* Save configuration of this plugin.
+* <p>
+*
+* Following a simple example of a toolbar configuration:<br>
+*
+* <pre>
+* <toolbar enabled="true" show_icon="true" show_text="false">
+*  <button name="Cut"/>
+*  <button name="Copy"/>
+*  <button name="Paste"/>
+*  <button name="Delete"/>
+* </toolbar>
+* </pre>
+*
+* @param folder     selected folder
+*/
+    public abstract void saveOptionsToXml(Folder folder);
 
-	/**
-	 * Load options of this plugin.
-	 *
-	 * @param folder       selected folder
-	 */
-	public abstract void loadOptionsFromXml(Folder folder);
-	
-	/**
-	 * Get frame mediator
-	 *
-	 * @return      frame mediator
-	 */
-	public MailFrameMediator getMediator() {
-		return mediator;
-	}
+    /**
+ * Load options of this plugin.
+ *
+ * @param folder       selected folder
+ */
+    public abstract void loadOptionsFromXml(Folder folder);
 
-	/**
-	 * Get configuration node.
-	 * <p>
-	 * Determine if this should be applied globally or
-	 * on a per-folder basis.
-	 * <p>
-	 * This way, plugins don't have to know, if they work
-	 * on global or local options.
-	 * <p>
-	 * Example for the sorting plugin configuration node. This is
-	 * how it can be found in options.xml and tree.xml:<br>
-	 * <pre>
-	 *  <sorting column="Date" order="true" />
-	 * </pre>
-	 *
-	 * @param folder        currently selected folder
-	 * @return              xml node
-	 */
-	public XmlElement getConfigNode(Folder folder) {
+    /**
+ * Get frame mediator
+ *
+ * @return      frame mediator
+ */
+    public MailFrameMediator getMediator() {
+        return mediator;
+    }
 
-		// global option
-		if ( folder == null ) return FolderItem.getGlobalOptions().getElement(getName());
-		
-		// use folder specific options
-		XmlElement parent= folder.getFolderItem().getFolderOptions();
+    /**
+ * Get configuration node.
+ * <p>
+ * Determine if this should be applied globally or
+ * on a per-folder basis.
+ * <p>
+ * This way, plugins don't have to know, if they work
+ * on global or local options.
+ * <p>
+ * Example for the sorting plugin configuration node. This is
+ * how it can be found in options.xml and tree.xml:<br>
+ * <pre>
+ *  <sorting column="Date" order="true" />
+ * </pre>
+ *
+ * @param folder        currently selected folder
+ * @return              xml node
+ */
+    public XmlElement getConfigNode(Folder folder) {
+        // global option
+        if (folder == null) {
+            return FolderItem.getGlobalOptions().getElement(getName());
+        }
 
-		XmlElement child= parent.getElement(getName());
+        // use folder specific options
+        XmlElement parent = folder.getFolderItem().getFolderOptions();
 
-		if (child == null) {
-			child= createDefaultElement(false);
-			parent.addElement(child);
-		}
+        XmlElement child = parent.getElement(getName());
 
-		//      check if this folder is overwriting global options
-		if (child.getAttribute("overwrite").equals("true")) {
-			// use folder-based options
-			return child;
-		} else {
-			// use global options
-			parent= FolderItem.getGlobalOptions();
-			child= parent.getElement(getName());
+        if (child == null) {
+            child = createDefaultElement(false);
+            parent.addElement(child);
+        }
 
-			if (child == null) {
-				child= createDefaultElement(true);
-				parent.addElement(child);
-			}
+        //      check if this folder is overwriting global options
+        if (child.getAttribute("overwrite").equals("true")) {
+            // use folder-based options
+            return child;
+        } else {
+            // use global options
+            parent = FolderItem.getGlobalOptions();
+            child = parent.getElement(getName());
 
-			return child;
-		}
+            if (child == null) {
+                child = createDefaultElement(true);
+                parent.addElement(child);
+            }
 
-	}
+            return child;
+        }
+    }
 
-	/**
-	 * Create default node.
-	 * <p>
-	 * Overwrite this method to add plugin-specific information
-	 * to the parent node.
-	 * <p>
-	 * @param  global       true, if this is a global options. False, otherwise
-	 *
-	 * @return              xml node
-	 */
-	public XmlElement createDefaultElement(boolean global) {
-		XmlElement parent= new XmlElement(getName());
+    /**
+ * Create default node.
+ * <p>
+ * Overwrite this method to add plugin-specific information
+ * to the parent node.
+ * <p>
+ * @param  global       true, if this is a global options. False, otherwise
+ *
+ * @return              xml node
+ */
+    public XmlElement createDefaultElement(boolean global) {
+        XmlElement parent = new XmlElement(getName());
 
-		// only local options have overwrite attribute
-		if (!global) {
-			parent.addAttribute("overwrite", "false");
-		}
+        // only local options have overwrite attribute
+        if (!global) {
+            parent.addAttribute("overwrite", "false");
+        }
 
-		return parent;
-	}
+        return parent;
+    }
 
-	/**
-	 * Get name of configuration node
-	 *
-	 * @return     config name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+ * Get name of configuration node
+ *
+ * @return     config name
+ */
+    public String getName() {
+        return name;
+    }
 }

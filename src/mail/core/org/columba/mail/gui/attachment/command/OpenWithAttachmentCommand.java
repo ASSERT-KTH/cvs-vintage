@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+
 /**
  * @author freddy
  * 
@@ -57,8 +58,8 @@ public class OpenWithAttachmentCommand extends FolderCommand {
     }
 
     /**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
+     * @see org.columba.core.command.Command#updateGUI()
+     */
     public void updateGUI() throws Exception {
         MimeHeader header = part.getHeader();
 
@@ -67,9 +68,10 @@ public class OpenWithAttachmentCommand extends FolderCommand {
     }
 
     /**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-    public void execute(WorkerStatusController worker) throws Exception {
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Folder folder = (Folder) r[0].getFolder();
         Object[] uids = r[0].getUids();
@@ -96,18 +98,17 @@ public class OpenWithAttachmentCommand extends FolderCommand {
             int encoding = header.getContentTransferEncoding();
 
             switch (encoding) {
-                case MimeHeader.QUOTED_PRINTABLE :
-                    {
-                        bodyStream =
-                            new QuotedPrintableDecoderInputStream(bodyStream);
-                        break;
-                    }
+            case MimeHeader.QUOTED_PRINTABLE: {
+                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
 
-                case MimeHeader.BASE64 :
-                    {
-                        bodyStream = new Base64DecoderInputStream(bodyStream);
-                        break;
-                    }
+                break;
+            }
+
+            case MimeHeader.BASE64: {
+                bodyStream = new Base64DecoderInputStream(bodyStream);
+
+                break;
+            }
             }
 
             // *20031019, karlpeder* Closing output stream after copying

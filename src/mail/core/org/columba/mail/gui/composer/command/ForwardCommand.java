@@ -18,19 +18,21 @@
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
+
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeType;
+
 
 /**
  * Forward message as attachment.
@@ -42,11 +44,11 @@ public class ForwardCommand extends FolderCommand {
     protected ComposerModel model;
 
     /**
-	 * Constructor for ForwardCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
+     * Constructor for ForwardCommand.
+     * 
+     * @param frameMediator
+     * @param references
+     */
     public ForwardCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -63,24 +65,23 @@ public class ForwardCommand extends FolderCommand {
         controller.updateComponents(true);
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get selected folder
-        Folder folder =
-            (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
         // get headerfields
-        Header header =
-            folder.getHeaderFields(uids[0], new String[] { "Subject" });
+        Header header = folder.getHeaderFields(uids[0],
+                new String[] { "Subject" });
 
         // create composer model
         model = new ComposerModel();
 
         // set subject
-        model.setSubject(
-            MessageBuilderHelper.createForwardSubject(
+        model.setSubject(MessageBuilderHelper.createForwardSubject(
                 new BasicHeader(header).getSubject()));
 
         // initialize MimeHeader as RFC822-compliant-message
@@ -88,9 +89,7 @@ public class ForwardCommand extends FolderCommand {
         mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
         // add mimepart to model
-        model.addMimePart(
-            new InputStreamMimePart(
-                mimeHeader,
+        model.addMimePart(new InputStreamMimePart(mimeHeader,
                 folder.getMessageSourceStream(uids[0])));
     }
 }

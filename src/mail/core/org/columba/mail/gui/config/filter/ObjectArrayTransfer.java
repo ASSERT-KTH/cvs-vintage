@@ -37,17 +37,17 @@ public class ObjectArrayTransfer implements Transferable {
     private Object[] objectArray;
 
     /**
-     * Creates an object array transfer from the specified source.
-     * @param comp source component.
-     * @param arr the object array.
-     */
+ * Creates an object array transfer from the specified source.
+ * @param comp source component.
+ * @param arr the object array.
+ */
     public ObjectArrayTransfer(JComponent comp, Object[] arr) {
         source = comp;
         objectArray = arr;
     }
 
     /** {@inheritDoc}
-     * @return this object (ObjectArrayTransfer) */
+ * @return this object (ObjectArrayTransfer) */
     public Object getTransferData(DataFlavor flavor)
         throws UnsupportedFlavorException, IOException {
         if (!isDataFlavorSupported(flavor)) {
@@ -68,17 +68,17 @@ public class ObjectArrayTransfer implements Transferable {
     }
 
     /**
-     * Returns the source of this transfer.
-     * @return the source of this transfer.
-     */
+ * Returns the source of this transfer.
+ * @return the source of this transfer.
+ */
     public JComponent getSource() {
         return source;
     }
 
     /**
-     * Returns the object array.
-     * @return the object array.
-     */
+ * Returns the object array.
+ * @return the object array.
+ */
     public Object[] getData() {
         return objectArray;
     }

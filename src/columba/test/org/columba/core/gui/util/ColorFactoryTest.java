@@ -13,8 +13,8 @@ import java.awt.Color;
  */
 public class ColorFactoryTest extends TestCase {
     /*
-     * Test for getColor()
-     */
+ * Test for getColor()
+ */
     public void testGetColor() {
         ColorFactory.clear();
 

@@ -28,9 +28,9 @@ public class FilterTransferHandler extends TransferHandler {
     private JComponent transferSource;
 
     /**
-     * Creates a FilterTransferHandler.
-     * @param src the source component.
-     */
+ * Creates a FilterTransferHandler.
+ * @param src the source component.
+ */
     public FilterTransferHandler(JComponent src) {
         transferSource = src;
     }
@@ -116,14 +116,14 @@ public class FilterTransferHandler extends TransferHandler {
     }
 
     /**
-     * Returns the source actions that the specified component can handle.
-     * If the source component is the same as the specified component, then there
-     * should only be possible to move the filter not copy it.
-     * {@inheritDoc} */
+ * Returns the source actions that the specified component can handle.
+ * If the source component is the same as the specified component, then there
+ * should only be possible to move the filter not copy it.
+ * {@inheritDoc} */
     public int getSourceActions(JComponent c) {
         /*if ( c == transferSource )
-                return MOVE;
-        */
+        return MOVE;
+*/
         if (canHandleImport(c)) {
             return COPY_OR_MOVE;
         } else {
@@ -184,32 +184,32 @@ public class FilterTransferHandler extends TransferHandler {
     }
 
     /**
-     * Returns true if this handler can import data from the specified component.
-     * @param component the component that is exporting the data.
-     * @return true if this handler can import data from the specified component.
-     */
+ * Returns true if this handler can import data from the specified component.
+ * @param component the component that is exporting the data.
+ * @return true if this handler can import data from the specified component.
+ */
     private boolean canHandleImport(JComponent component) {
         return ((component instanceof FilterListTable) ||
         (component instanceof JScrollPane));
     }
 
     /**
-     * Returns true if this handler can export data to the specified component.
-     * @param component the component that is importing the data.
-     * @return true if this handler can export data to the specified component.
-     */
+ * Returns true if this handler can export data to the specified component.
+ * @param component the component that is importing the data.
+ * @return true if this handler can export data to the specified component.
+ */
     private boolean canHandleExport(JComponent component) {
         return (component instanceof FilterListTable);
     }
 
     /**
-     * Returns the <code>FilterListTable</code> from the component.
-     * This is a utility method to simplify the retrieving of a FilterListTable.
-     * Since the table and the JScollPane is a valid importer, then we need a
-     * method that returns the table when adding filters to it.
-     * @param comp a JComponent that either is a <code>JScrollPane</code> or a <code>FilterListTable</code>
-     * @return a FilterListTable; or null if the component doesnt contain a <code>FilterListTable</code>.
-     */
+ * Returns the <code>FilterListTable</code> from the component.
+ * This is a utility method to simplify the retrieving of a FilterListTable.
+ * Since the table and the JScollPane is a valid importer, then we need a
+ * method that returns the table when adding filters to it.
+ * @param comp a JComponent that either is a <code>JScrollPane</code> or a <code>FilterListTable</code>
+ * @return a FilterListTable; or null if the component doesnt contain a <code>FilterListTable</code>.
+ */
     private FilterListTable getFilterListTable(JComponent comp) {
         Component tableComponent = null;
 

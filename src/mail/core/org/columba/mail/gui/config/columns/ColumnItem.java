@@ -15,8 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.columns;
 
-import org.columba.core.gui.checkablelist.CheckableItem;
 import org.columba.core.xml.XmlElement;
+
+import org.frapuccino.checkablelist.CheckableItem;
 
 import javax.swing.Icon;
 
@@ -36,8 +37,8 @@ public class ColumnItem implements CheckableItem {
     }
 
     /**
-     * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
-     */
+ * @see org.columba.core.gui.checkablelist.CheckableItem#isSelected()
+ */
     public boolean isSelected() {
         boolean b = Boolean.valueOf(element.getAttribute("enabled"))
                            .booleanValue();
@@ -46,8 +47,8 @@ public class ColumnItem implements CheckableItem {
     }
 
     /**
-      * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
-      */
+  * @see org.columba.core.gui.checkablelist.CheckableItem#getIcon()
+  */
     public Icon getIcon() {
         return null;
     }
@@ -57,8 +58,8 @@ public class ColumnItem implements CheckableItem {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public XmlElement getElement() {
         return element;
     }

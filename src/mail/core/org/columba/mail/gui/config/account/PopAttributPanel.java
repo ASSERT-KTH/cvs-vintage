@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.account;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -21,7 +20,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
@@ -35,6 +33,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 
 /**
  *
@@ -82,11 +81,11 @@ public class PopAttributPanel implements ActionListener {
     }
 
     /*
-    public String getDestinationFolder()
-    {
-        return destinationTextField.getText();
-    }
-    */
+public String getDestinationFolder()
+{
+    return destinationTextField.getText();
+}
+*/
     public void updateComponents(boolean b) {
         //mailCheckDialog.updateComponents(b);
         if (b) {
@@ -101,11 +100,10 @@ public class PopAttributPanel implements ActionListener {
 
             limitMessageDownloadTextField.setText(item.get("download_limit"));
 
-			/*
-            enablePreProcessingFilterCheckBox.setSelected(item.getBoolean(
-                    "enable_pop3preprocessingfilter", false));
-            */
-            
+            /*
+enablePreProcessingFilterCheckBox.setSelected(item.getBoolean(
+"enable_pop3preprocessingfilter", false));
+*/
         } else {
             item.set("leave_messages_on_server",
                 leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
@@ -117,10 +115,10 @@ public class PopAttributPanel implements ActionListener {
             item.set("enable_download_limit",
                 limitMessageDownloadCheckBox.isSelected());
 
-			/*
-            item.set("enable_pop3preprocessingfilter",
-                enablePreProcessingFilterCheckBox.isSelected());
-            */
+            /*
+item.set("enable_pop3preprocessingfilter",
+enablePreProcessingFilterCheckBox.isSelected());
+*/
         }
     }
 
@@ -146,22 +144,23 @@ public class PopAttributPanel implements ActionListener {
         b.append(limitMessageDownloadCheckBox, limitMessageDownloadTextField);
 
         builder.append(panel, 4);
+
         /*
-        builder.nextLine();
+builder.nextLine();
 
-        JPanel panel2 = new JPanel();
-        l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)", 
-            // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+JPanel panel2 = new JPanel();
+l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)", 
+    // 2 columns
+    ""); // rows are added dynamically (no need to define them here)
 
-        // create a form builder
-        b = new DefaultFormBuilder(panel2, l);
-        b.append(enablePreProcessingFilterCheckBox,
-            configurePreProcessingFilterButton);
+// create a form builder
+b = new DefaultFormBuilder(panel2, l);
+b.append(enablePreProcessingFilterCheckBox,
+    configurePreProcessingFilterButton);
 
-        builder.append(panel2, 4);
-        builder.nextLine();
-        */
+builder.append(panel2, 4);
+builder.nextLine();
+*/
     }
 
     protected void initComponents() {
@@ -182,160 +181,160 @@ public class PopAttributPanel implements ActionListener {
         excludeCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "exclude_from_fetch_all"));
 
-		/*
-        enablePreProcessingFilterCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "enable_pop3_preprocessing"));
+        /*
+enablePreProcessingFilterCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+    "dialog", "account", "enable_pop3_preprocessing"));
 
-        configurePreProcessingFilterButton = new JButton(MailResourceLoader.getString(
-                    "dialog", "account", "configure"));
-        configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
-        configurePreProcessingFilterButton.addActionListener(this);
-        */
+configurePreProcessingFilterButton = new JButton(MailResourceLoader.getString(
+    "dialog", "account", "configure"));
+configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
+configurePreProcessingFilterButton.addActionListener(this);
+*/
     }
 
     /*
-    private void initComponents_old() {
+private void initComponents_old() {
 
-            GridBagLayout layout = new GridBagLayout();
-            GridBagConstraints c = new GridBagConstraints();
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
 
-            setLayout(layout);
+        setLayout(layout);
 
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-            c.gridx = 0;
-            c.weightx = 1.0;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.gridwidth = GridBagConstraints.REMAINDER;
-            layout.setConstraints(panel, c);
-            add(panel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        c.gridx = 0;
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        layout.setConstraints(panel, c);
+        add(panel);
 
-            leaveOnServerCheckBox =
-                    new JCheckBox(
-                            MailResourceLoader.getString(
-                                    "dialog",
-                                    "account",
-                                    "leave_messages_on_server"));
-            leaveOnServerCheckBox.setMnemonic(
-                    MailResourceLoader.getMnemonic(
-                            "dialog",
-                            "account",
-                            "leave_messages_on_server"));
-            //$NON-NLS-1$
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.weightx = 1.0;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.gridwidth = GridBagConstraints.REMAINDER;
-            layout.setConstraints(leaveOnServerCheckBox, c);
-            add(leaveOnServerCheckBox);
+        leaveOnServerCheckBox =
+                new JCheckBox(
+                        MailResourceLoader.getString(
+                                "dialog",
+                                "account",
+                                "leave_messages_on_server"));
+        leaveOnServerCheckBox.setMnemonic(
+                MailResourceLoader.getMnemonic(
+                        "dialog",
+                        "account",
+                        "leave_messages_on_server"));
+        //$NON-NLS-1$
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        layout.setConstraints(leaveOnServerCheckBox, c);
+        add(leaveOnServerCheckBox);
 
-            JPanel limitMessageDownloadPanel = new JPanel();
-            limitMessageDownloadPanel.setLayout(
-                    new BoxLayout(limitMessageDownloadPanel, BoxLayout.X_AXIS));
-            c.gridx = 0;
-            c.weightx = 1.0;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.gridwidth = GridBagConstraints.REMAINDER;
-            layout.setConstraints(limitMessageDownloadPanel, c);
-            add(limitMessageDownloadPanel);
+        JPanel limitMessageDownloadPanel = new JPanel();
+        limitMessageDownloadPanel.setLayout(
+                new BoxLayout(limitMessageDownloadPanel, BoxLayout.X_AXIS));
+        c.gridx = 0;
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        layout.setConstraints(limitMessageDownloadPanel, c);
+        add(limitMessageDownloadPanel);
 
-            limitMessageDownloadCheckBox =
-                    new JCheckBox(
-                            MailResourceLoader.getString(
-                                    "dialog",
-                                    "account",
-                                    "limit_message_download_to"));
-            limitMessageDownloadCheckBox.setMnemonic(
-                    MailResourceLoader.getMnemonic(
-                            "dialog",
-                            "account",
-                            "limit_message_download_to"));
-            limitMessageDownloadCheckBox.setActionCommand("LIMIT_MESSAGE_DOWNLOAD");
-            limitMessageDownloadCheckBox.addActionListener(this);
-            limitMessageDownloadPanel.add(limitMessageDownloadCheckBox);
-            limitMessageDownloadPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        limitMessageDownloadCheckBox =
+                new JCheckBox(
+                        MailResourceLoader.getString(
+                                "dialog",
+                                "account",
+                                "limit_message_download_to"));
+        limitMessageDownloadCheckBox.setMnemonic(
+                MailResourceLoader.getMnemonic(
+                        "dialog",
+                        "account",
+                        "limit_message_download_to"));
+        limitMessageDownloadCheckBox.setActionCommand("LIMIT_MESSAGE_DOWNLOAD");
+        limitMessageDownloadCheckBox.addActionListener(this);
+        limitMessageDownloadPanel.add(limitMessageDownloadCheckBox);
+        limitMessageDownloadPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-            limitMessageDownloadTextField = new JTextField(5);
-            limitMessageDownloadPanel.add(limitMessageDownloadTextField);
-            limitMessageDownloadPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        limitMessageDownloadTextField = new JTextField(5);
+        limitMessageDownloadPanel.add(limitMessageDownloadTextField);
+        limitMessageDownloadPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-            limitMessageDownloadLabel2 =
-                    new JLabel(
-                            MailResourceLoader.getString(
-                                    "dialog",
-                                    "account",
-                                    "KB_per_message"));
-            //$NON-NLS-1$
-            limitMessageDownloadPanel.add(limitMessageDownloadLabel2);
+        limitMessageDownloadLabel2 =
+                new JLabel(
+                        MailResourceLoader.getString(
+                                "dialog",
+                                "account",
+                                "KB_per_message"));
+        //$NON-NLS-1$
+        limitMessageDownloadPanel.add(limitMessageDownloadLabel2);
 
-            excludeCheckBox =
-                    new JCheckBox(
-                            MailResourceLoader.getString(
-                                    "dialog",
-                                    "account",
-                                    "exclude_from_fetch_all"));
-            excludeCheckBox.setMnemonic(
-                    MailResourceLoader.getMnemonic(
-                            "dialog",
-                            "account",
-                            "exclude_from_fetch_all"));
-            //$NON-NLS-1$
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.weightx = 1.0;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.gridwidth = GridBagConstraints.REMAINDER;
-            layout.setConstraints(excludeCheckBox, c);
-            add(excludeCheckBox);
+        excludeCheckBox =
+                new JCheckBox(
+                        MailResourceLoader.getString(
+                                "dialog",
+                                "account",
+                                "exclude_from_fetch_all"));
+        excludeCheckBox.setMnemonic(
+                MailResourceLoader.getMnemonic(
+                        "dialog",
+                        "account",
+                        "exclude_from_fetch_all"));
+        //$NON-NLS-1$
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        layout.setConstraints(excludeCheckBox, c);
+        add(excludeCheckBox);
 
-            enablePreProcessingFilterCheckBox =
-                    new JCheckBox(
-                            MailResourceLoader.getString(
-                                    "dialog",
-                                    "account",
-                                    "enable_pop3_preprocessing"));
+        enablePreProcessingFilterCheckBox =
+                new JCheckBox(
+                        MailResourceLoader.getString(
+                                "dialog",
+                                "account",
+                                "enable_pop3_preprocessing"));
 
 
-            JPanel filterPanel = new JPanel();
-            filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
 
-            filterPanel.add(enablePreProcessingFilterCheckBox);
+        filterPanel.add(enablePreProcessingFilterCheckBox);
 
-            filterPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        filterPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-            configurePreProcessingFilterButton =
-                    new JButton(
-                            MailResourceLoader.getString("dialog", "account", "configure"));
-            configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
-            configurePreProcessingFilterButton.addActionListener(this);
+        configurePreProcessingFilterButton =
+                new JButton(
+                        MailResourceLoader.getString("dialog", "account", "configure"));
+        configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
+        configurePreProcessingFilterButton.addActionListener(this);
 
-            filterPanel.add(configurePreProcessingFilterButton);
+        filterPanel.add(configurePreProcessingFilterButton);
 
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.weightx = 1.0;
-            c.anchor = GridBagConstraints.NORTHWEST;
-            c.gridwidth = GridBagConstraints.REMAINDER;
-            layout.setConstraints(filterPanel, c);
-            add(filterPanel);
-    }
-    */
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.weightx = 1.0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        layout.setConstraints(filterPanel, c);
+        add(filterPanel);
+}
+*/
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
         if (action.equals("CONFIGURE_FILTER")) {
-        	/*
-            XmlElement list = item.getElement("pop3preprocessingfilterlist");
+            /*
+XmlElement list = item.getElement("pop3preprocessingfilterlist");
 
-            if (list == null) {
-                list = new XmlElement("pop3preprocessingfilterlist");
-                item.getRoot().addElement(list);
-            }
+if (list == null) {
+list = new XmlElement("pop3preprocessingfilterlist");
+item.getRoot().addElement(list);
+}
 
-            new org.columba.mail.gui.config.pop3preprocessor.ConfigFrame(dialog,
-                list);
-            */
+new org.columba.mail.gui.config.pop3preprocessor.ConfigFrame(dialog,
+list);
+*/
         } else if (action.equals("LIMIT_MESSAGE_DOWNLOAD")) {
             limitMessageDownloadTextField.setEnabled(limitMessageDownloadCheckBox.isSelected());
         }

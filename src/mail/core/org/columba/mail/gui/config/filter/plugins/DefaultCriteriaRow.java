@@ -39,9 +39,9 @@ public class DefaultCriteriaRow implements PluginInterface {
     protected JComboBox conditionComboBox;
 
     /*
-    private JComboBox matchComboBox;
-    private JTextField textField;
-    */
+private JComboBox matchComboBox;
+private JTextField textField;
+*/
     protected JButton removeButton;
 
     //protected Vector conditionList;
@@ -58,21 +58,21 @@ public class DefaultCriteriaRow implements PluginInterface {
         this.criteriaList = criteriaList;
 
         /*
-        conditionList = new Vector();
+conditionList = new Vector();
 
-        conditionList.add("Subject");
-        conditionList.add("From");
-        conditionList.add("To");
-        conditionList.add("Cc");
-        conditionList.add("Bcc");
-        conditionList.add("To or Cc");
-        conditionList.add("Custom Headerfield");
-        conditionList.add("Body");
-        conditionList.add("Date");
-        conditionList.add("Flags");
-        conditionList.add("Priority");
-        conditionList.add("Size");
-        */
+conditionList.add("Subject");
+conditionList.add("From");
+conditionList.add("To");
+conditionList.add("Cc");
+conditionList.add("Bcc");
+conditionList.add("To or Cc");
+conditionList.add("Custom Headerfield");
+conditionList.add("Body");
+conditionList.add("Date");
+conditionList.add("Flags");
+conditionList.add("Priority");
+conditionList.add("Size");
+*/
         panel = new JPanel();
 
         initComponents();
@@ -107,12 +107,12 @@ public class DefaultCriteriaRow implements PluginInterface {
         conditionComboBox.setRenderer(new CriteriaComboBoxRenderer());
 
         /*
-        for (int i = 0; i < conditionList.size(); i++) {
-                String name = (String) conditionList.get(i);
+for (int i = 0; i < conditionList.size(); i++) {
+        String name = (String) conditionList.get(i);
 
-                conditionComboBox.addItem(name);
-        }
-        */
+        conditionComboBox.addItem(name);
+}
+*/
         //c.fill = GridBagConstraints.HORIZONTAL;
         c.fill = GridBagConstraints.VERTICAL;
         c.weightx = 1.0;
@@ -139,25 +139,25 @@ public class DefaultCriteriaRow implements PluginInterface {
     }
 
     /**
-     * Returns the criteria.
-     * @return FilterCriteria
-     */
+ * Returns the criteria.
+ * @return FilterCriteria
+ */
     public FilterCriteria getCriteria() {
         return criteria;
     }
 
     /**
-     * Returns the pluginHandler.
-     * @return AbstractPluginHandler
-     */
+ * Returns the pluginHandler.
+ * @return AbstractPluginHandler
+ */
     public AbstractPluginHandler getPluginHandler() {
         return pluginHandler;
     }
 
     /**
-     * Sets the pluginHandler.
-     * @param pluginHandler The pluginHandler to set
-     */
+ * Sets the pluginHandler.
+ * @param pluginHandler The pluginHandler to set
+ */
     public void setPluginHandler(AbstractPluginHandler pluginHandler) {
         this.pluginHandler = pluginHandler;
     }

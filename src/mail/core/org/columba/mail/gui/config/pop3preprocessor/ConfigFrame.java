@@ -13,12 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.pop3preprocessor;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -53,6 +51,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 
 public class ConfigFrame extends JDialog implements ListSelectionListener,
     ActionListener {
@@ -284,6 +283,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
+
         //TODO: enable help for button and root pane
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);

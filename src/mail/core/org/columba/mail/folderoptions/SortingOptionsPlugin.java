@@ -23,6 +23,7 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 
+
 /**
  * Handles sorting state, including sorting order, which can
  * be ascending or descending and the actual column.
@@ -30,67 +31,63 @@ import org.columba.mail.gui.table.TableController;
  * @author fdietz
  */
 public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
+    /**
+ * Constructor
+ * 
+ * @param mediator      mail framemediator
+ */
+    public SortingOptionsPlugin(MailFrameMediator mediator) {
+        super("sorting", "SortingOptions", mediator);
+    }
 
-	/**
-	 * Constructor
-	 * 
-	 * @param mediator      mail framemediator
-	 */
-	public SortingOptionsPlugin(MailFrameMediator mediator) {
-		super("sorting", "SortingOptions", mediator);
-	}
+    /**
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.core.xml.XmlElement)
+ */
+    public void loadOptionsFromXml(Folder folder) {
+        XmlElement sorting = getConfigNode(folder);
+        DefaultItem item = new DefaultItem(sorting);
 
-	/**
-	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.core.xml.XmlElement)
-	 */
-	public void loadOptionsFromXml(Folder folder) {
-		XmlElement sorting= getConfigNode(folder);
-		DefaultItem item= new DefaultItem(sorting);
+        String column = item.get("column");
 
-		String column= item.get("column");
+        if (column == null) {
+            column = "Date";
+        }
 
-		if (column == null) {
-			column= "Date";
-		}
+        boolean order = item.getBoolean("order", true);
 
-		boolean order= item.getBoolean("order", true);
+        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
 
-		TableController tableController=
-			((TableViewOwner) getMediator()).getTableController();
+        tableController.getTableModelSorter().setSortingColumn(column);
+        tableController.getTableModelSorter().setSortingOrder(order);
 
-		tableController.getTableModelSorter().setSortingColumn(column);
-		tableController.getTableModelSorter().setSortingOrder(order);
-		
-		tableController.getTableModelSorter().getSortingStateObservable().setSortingState(column, order);
-	}
+        tableController.getTableModelSorter().getSortingStateObservable()
+                       .setSortingState(column, order);
+    }
 
-	/**
-	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml()
-	 */
-	public void saveOptionsToXml(Folder folder) {
-		XmlElement sorting= getConfigNode(folder);
-		DefaultItem item= new DefaultItem(sorting);
+    /**
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml()
+ */
+    public void saveOptionsToXml(Folder folder) {
+        XmlElement sorting = getConfigNode(folder);
+        DefaultItem item = new DefaultItem(sorting);
 
-		TableController tableController=
-			((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
 
-		String column= tableController.getTableModelSorter().getSortingColumn();
-		boolean order= tableController.getTableModelSorter().getSortingOrder();
+        String column = tableController.getTableModelSorter().getSortingColumn();
+        boolean order = tableController.getTableModelSorter().getSortingOrder();
 
-		sorting.addAttribute("column", column);
-		sorting.addAttribute("order", Boolean.toString(order));
-	}
+        sorting.addAttribute("column", column);
+        sorting.addAttribute("order", Boolean.toString(order));
+    }
 
-	/**
-	 * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-	 */
-	public XmlElement createDefaultElement(boolean global) {
-		XmlElement sorting= super.createDefaultElement(global);
-		sorting.addAttribute("column", "Date");
-		sorting.addAttribute("order", "true");
+    /**
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+ */
+    public XmlElement createDefaultElement(boolean global) {
+        XmlElement sorting = super.createDefaultElement(global);
+        sorting.addAttribute("column", "Date");
+        sorting.addAttribute("order", "true");
 
-		return sorting;
-	}
-
-
+        return sorting;
+    }
 }

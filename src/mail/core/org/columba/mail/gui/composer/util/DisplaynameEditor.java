@@ -15,10 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+
+import org.columba.mail.gui.composer.HeaderView;
+
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+
 import java.util.EventObject;
 
 import javax.swing.JTable;
@@ -28,8 +33,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.TableCellEditor;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.mail.gui.composer.HeaderView;
 
 /**
  * @author frd
@@ -39,134 +42,121 @@ import org.columba.mail.gui.composer.HeaderView;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class DisplaynameEditor
-	extends AddressComboBox
-	implements TableCellEditor, KeyListener {
-		private HeaderView table;
-	private HeaderItem selection;
-	private  EventListenerList listenerList= new EventListenerList();
-	private  ChangeEvent changeEvent= new ChangeEvent(this);
-	boolean editing= false;
+public class DisplaynameEditor extends AddressComboBox
+    implements TableCellEditor, KeyListener {
+    private HeaderView table;
+    private HeaderItem selection;
+    private EventListenerList listenerList = new EventListenerList();
+    private ChangeEvent changeEvent = new ChangeEvent(this);
+    boolean editing = false;
 
-	public DisplaynameEditor(HeaderView table) {
-		super(table);
-		this.table= table;
+    public DisplaynameEditor(HeaderView table) {
+        super(table);
+        this.table = table;
 
-		getEditor().getEditorComponent().addKeyListener(this);
-	}
+        getEditor().getEditorComponent().addKeyListener(this);
+    }
 
-	public void addCellEditorListener(CellEditorListener listener) {
-		listenerList.add(CellEditorListener.class, listener);
-	}
+    public void addCellEditorListener(CellEditorListener listener) {
+        listenerList.add(CellEditorListener.class, listener);
+    }
 
-	public void removeCellEditorListener(CellEditorListener listener) {
-		listenerList.remove(CellEditorListener.class, listener);
-	}
+    public void removeCellEditorListener(CellEditorListener listener) {
+        listenerList.remove(CellEditorListener.class, listener);
+    }
 
-	protected void fireEditingStopped() {
-		CellEditorListener listener;
-		Object[] listeners= listenerList.getListenerList();
+    protected void fireEditingStopped() {
+        CellEditorListener listener;
+        Object[] listeners = listenerList.getListenerList();
 
-		for (int i= 0; i < listeners.length; i++) {
-			if (listeners[i] == CellEditorListener.class) {
-				listener= (CellEditorListener) listeners[i + 1];
-				listener.editingStopped(changeEvent);
-			}
-		}
-	}
+        for (int i = 0; i < listeners.length; i++) {
+            if (listeners[i] == CellEditorListener.class) {
+                listener = (CellEditorListener) listeners[i + 1];
+                listener.editingStopped(changeEvent);
+            }
+        }
+    }
 
-	protected void fireEditingCanceled() {
-		CellEditorListener listener;
-		Object[] listeners= listenerList.getListenerList();
+    protected void fireEditingCanceled() {
+        CellEditorListener listener;
+        Object[] listeners = listenerList.getListenerList();
 
-		for (int i= 0; i < listeners.length; i++) {
-			if (listeners[i] == CellEditorListener.class) {
-				listener= (CellEditorListener) listeners[i + 1];
-				listener.editingCanceled(changeEvent);
-			}
-		}
-	}
+        for (int i = 0; i < listeners.length; i++) {
+            if (listeners[i] == CellEditorListener.class) {
+                listener = (CellEditorListener) listeners[i + 1];
+                listener.editingCanceled(changeEvent);
+            }
+        }
+    }
 
-	public void cancelCellEditing() {
-		fireEditingCanceled();
-	}
+    public void cancelCellEditing() {
+        fireEditingCanceled();
+    }
 
-	public boolean stopCellEditing() {
-		fireEditingStopped();
+    public boolean stopCellEditing() {
+        fireEditingStopped();
 
-		return true;
-	}
+        return true;
+    }
 
-	public boolean isCellEditable(EventObject event) {
+    public boolean isCellEditable(EventObject event) {
+        if (event instanceof MouseEvent) {
+            return ((MouseEvent) event).getClickCount() >= 1;
+        }
 
-		if (event instanceof MouseEvent) {
-			return ((MouseEvent) event).getClickCount() >= 1;
-		}
+        return true;
+    }
 
-		return true;
-	}
+    public boolean shouldSelectCell(EventObject event) {
+        return true;
+    }
 
-	public boolean shouldSelectCell(EventObject event) {
-		return true;
-	}
+    public Object getCellEditorValue() {
+        return ((JTextField) getEditor().getEditorComponent()).getText();
+    }
 
-	public Object getCellEditorValue() {
-		return ((JTextField) getEditor().getEditorComponent()).getText();
-	}
+    public Component getTableCellEditorComponent(JTable table, Object value,
+        boolean isSelected, int row, int column) {
+        selection = (HeaderItem) value;
 
-	public Component getTableCellEditorComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		int row,
-		int column) {
-		selection= (HeaderItem) value;
+        setSelectedItem(selection.get("displayname"));
 
-		setSelectedItem(selection.get("displayname"));
+        return this;
+    }
 
-		return this;
-	}
+    /******************* Key Listener **************************/
+    public void keyTyped(KeyEvent e) {
+        char ch = e.getKeyChar();
 
-	/******************* Key Listener **************************/
-	public void keyTyped(KeyEvent e) {
-		char ch= e.getKeyChar();
+        if (ch == KeyEvent.VK_BACK_SPACE) {
+            int length = ((JTextField) getEditor().getEditorComponent()).getText()
+                          .length();
 
-		if (ch == KeyEvent.VK_BACK_SPACE) {
-			int length=
-				((JTextField) getEditor().getEditorComponent())
-					.getText()
-					.length();
+            if (length == 0) {
+                e.consume();
 
-			if (length == 0) {
+                int row = this.table.getSelectedRow() - 1;
+                table.removeEditingRow();
 
-				e.consume();
-				
-				int row= this.table.getSelectedRow()-1;
-				table.removeEditingRow();
+                /*
+        if (table.editCellAt(row, 1)) {
+                table.focusToTextField();
+        }
+        */
+            }
+        }
 
-			/*
-				if (table.editCellAt(row, 1)) {
-					table.focusToTextField();
-				}
-				*/
+        if (ch == KeyEvent.VK_ENTER) {
+            fireEditingStopped();
 
-			}
-			
-			
-		}
+            table.appendRow();
+        }
+    }
 
-		if (ch == KeyEvent.VK_ENTER) {
-			fireEditingStopped();
+    public void keyPressed(KeyEvent e) {
+    }
 
-			table.appendRow();
-		}
-	}
-
-	public void keyPressed(KeyEvent e) {
-	}
-
-	public void keyReleased(KeyEvent e) {
-		char ch= e.getKeyChar();
-
-	}
+    public void keyReleased(KeyEvent e) {
+        char ch = e.getKeyChar();
+    }
 }

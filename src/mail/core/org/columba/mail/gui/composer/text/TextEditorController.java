@@ -13,10 +13,8 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.text;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -25,8 +23,6 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.UndoDocument;
 
 import java.awt.Font;
-
-import java.nio.charset.Charset;
 
 import java.util.Observable;
 import java.util.Observer;

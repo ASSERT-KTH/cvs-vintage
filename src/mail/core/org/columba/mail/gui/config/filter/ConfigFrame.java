@@ -13,16 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -59,8 +56,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -70,6 +67,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+
 
 /**
  * JDialog that displays Filter actions for one message folder.
@@ -166,42 +164,42 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
         getContentPane().add(mainPanel);
 
         addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "add_filter"));
+                    "dialog", "filter", "add_filter"));
         addButton.setActionCommand("ADD");
         addButton.addActionListener(this);
 
         removeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "remove_filter"));
+                    "dialog", "filter", "remove_filter"));
         removeButton.setActionCommand("REMOVE");
         removeButton.setEnabled(false);
         removeButton.addActionListener(this);
 
         editButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "edit_filter"));
+                    "dialog", "filter", "edit_filter"));
         editButton.setActionCommand("EDIT");
         editButton.setEnabled(false);
         editButton.addActionListener(this);
 
         moveupButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "moveup"));
+                    "dialog", "filter", "moveup"));
         moveupButton.setActionCommand("MOVEUP");
         moveupButton.setEnabled(false);
         moveupButton.addActionListener(this);
 
         movedownButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "movedown"));
+                    "dialog", "filter", "movedown"));
         movedownButton.setActionCommand("MOVEDOWN");
         movedownButton.setEnabled(false);
         movedownButton.addActionListener(this);
 
         importButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "import"));
+                    "dialog", "filter", "import"));
         importButton.setActionCommand("IMPORT");
         importButton.setEnabled(true);
         importButton.addActionListener(this);
 
         exportButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-					"dialog", "filter", "export"));
+                    "dialog", "filter", "export"));
         exportButton.setActionCommand("EXPORT");
         exportButton.setEnabled(false);
         exportButton.addActionListener(this);
@@ -456,7 +454,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
             listView.setRowSelection(selectedRows);
         } else if (action.equals("EXPORT")) {
-               exportFilterList();
+            exportFilterList();
         } else if (action.equals("IMPORT")) {
             importFilterList();
         }
@@ -525,14 +523,17 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
                         filterList.addAll(newFilterList);
                         listView.update();
                     } else {
-                        JOptionPane.showMessageDialog(this, "Could not import filters from the selected file. Make sure it"
-                            + " contains Columba filters.", "Error while importing filters",
+                        JOptionPane.showMessageDialog(this,
+                            "Could not import filters from the selected file. Make sure it" +
+                            " contains Columba filters.",
+                            "Error while importing filters",
                             JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Could not parse the selected file. Make sure it"
-                        + " is an XML file containing Columba filters.", "Error while parsing file",
-                        JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                        "Could not parse the selected file. Make sure it" +
+                        " is an XML file containing Columba filters.",
+                        "Error while parsing file", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (MalformedURLException mue) {
                 DialogFacade.showExceptionDialog(mue);
@@ -576,15 +577,16 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
      * @author redsolo
      */
     private class XmlFileFilter extends FileFilter {
-
         /** {@inheritDoc} */
         public boolean accept(File f) {
             boolean fileIsOk = false;
+
             if (f.isDirectory()) {
                 fileIsOk = true;
             } else {
                 fileIsOk = f.getName().toLowerCase().endsWith("xml");
             }
+
             return fileIsOk;
         }
 

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.frame;
 
 import org.columba.core.config.ViewItem;
@@ -38,6 +37,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+
 /**
  *
  *  Mail frame controller which contains a tree, table and a message
@@ -55,8 +55,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
     public FolderInfoPanel folderInfoPanel;
 
     /**
-     * @param viewItem
-     */
+ * @param viewItem
+ */
     public ThreePaneMailFrameController(ViewItem viewItem) {
         super("ThreePaneMail", viewItem);
 
@@ -141,9 +141,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
                 attachmentController.getView()));
 
         /*
-        treeController.getTreeSelectionManager().registerSelectionListener(""
-                tableController.getTableSelectionManager());
-        */
+treeController.getTreeSelectionManager().registerSelectionListener(""
+        tableController.getTableSelectionManager());
+*/
         tableController.createPopupMenu();
         treeController.createPopupMenu();
         messageController.createPopupMenu();
@@ -151,22 +151,22 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
-     */
+ * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
+ */
     public boolean hasTable() {
         return true;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.frame.ViewHeaderListInterface#getTableController()
-     */
+ * @see org.columba.mail.gui.frame.ViewHeaderListInterface#getTableController()
+ */
     public TableController getTableController() {
         return tableController;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.frame.TreeOwner#getTreeController()
-     */
+ * @see org.columba.mail.gui.frame.TreeOwner#getTreeController()
+ */
     public TreeController getTreeController() {
         return treeController;
     }

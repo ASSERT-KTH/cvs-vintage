@@ -13,8 +13,8 @@ import junit.framework.TestCase;
  */
 public class XmlElementTest extends TestCase {
     /*
-     * Test for boolean equals(Object)
-     */
+ * Test for boolean equals(Object)
+ */
     public void testEquals() {
         XmlElement xml1 = new XmlElement();
         XmlElement xml2 = new XmlElement();
@@ -48,8 +48,8 @@ public class XmlElementTest extends TestCase {
     }
 
     /*
-     * Test for boolean equals(Object)
-     */
+ * Test for boolean equals(Object)
+ */
     public void testEquals2() {
         XmlElement xml1 = new XmlElement();
         XmlElement xml2 = new XmlElement();
@@ -63,8 +63,8 @@ public class XmlElementTest extends TestCase {
     }
 
     /*
-     * Test for boolean not equals(Object)
-     */
+ * Test for boolean not equals(Object)
+ */
     public void testNotEqualsObject() {
         XmlElement xml1 = new XmlElement();
         XmlElement xml2 = new XmlElement();
@@ -76,8 +76,8 @@ public class XmlElementTest extends TestCase {
     }
 
     /*
-     * Test for hashCode()
-     */
+ * Test for hashCode()
+ */
     public void testHashcode() {
         XmlElement xml1 = new XmlElement();
         XmlElement xml2 = new XmlElement();
@@ -90,8 +90,8 @@ public class XmlElementTest extends TestCase {
     }
 
     /*
-     * Test for clone()
-     */
+ * Test for clone()
+ */
     public void testClone() {
         XmlElement xml1 = new XmlElement("a Name");
         XmlElement xml2 = (XmlElement) xml1.clone();
@@ -144,8 +144,8 @@ public class XmlElementTest extends TestCase {
     }
 
     /*
-     * Test for XmlElement(String,String)
-     */
+ * Test for XmlElement(String,String)
+ */
     public void testConstructorStrStr() {
         XmlElement xml = new XmlElement("a Name", "a Data");
         xml.addAttribute("key", "values");

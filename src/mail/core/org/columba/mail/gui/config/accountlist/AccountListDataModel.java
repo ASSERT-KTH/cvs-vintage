@@ -55,10 +55,10 @@ class AccountListDataModel extends AbstractTableModel {
 
         if (col == 0) {
             /*
-            String description = item.getName();
-            if ( description == null ) return "";
-            return description;
-            */
+String description = item.getName();
+if ( description == null ) return "";
+return description;
+*/
             return item;
         } else {
             return item.isPopAccount() ? "POP3" : "IMAP4";
@@ -74,12 +74,12 @@ class AccountListDataModel extends AbstractTableModel {
     }
 
     /*
-    public boolean isCellEditable(int row, int col)
-    {
-        if ( col == 1 )
-           return true;
-        else
-           return false;
-    }
-    */
+public boolean isCellEditable(int row, int col)
+{
+    if ( col == 1 )
+       return true;
+    else
+       return false;
+}
+*/
 }

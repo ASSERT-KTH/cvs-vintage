@@ -13,38 +13,36 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.export;
 
-import javax.swing.tree.TreeNode;
-
-import org.columba.core.gui.checkabletree.CheckableItemImpl;
 import org.columba.mail.folder.FolderTreeNode;
+
+import org.frappucino.checkabletree.CheckableItemImpl;
+
 
 /**
  * @author fdietz
  */
 public class CheckableTreeNode extends CheckableItemImpl {
-
     private FolderTreeNode node;
-    
+
     /**
-     * 
-     */
+ * 
+ */
     public CheckableTreeNode(String name) {
         super(name);
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public FolderTreeNode getNode() {
         return node;
     }
 
     /**
-     * @param node
-     */
+ * @param node
+ */
     public void setNode(FolderTreeNode node) {
         this.node = node;
     }

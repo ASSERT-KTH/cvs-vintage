@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter;
 
 import org.columba.core.gui.util.ImageLoader;
@@ -48,6 +47,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
 
 public class ActionList extends JPanel implements ActionListener {
     private Filter filter;
@@ -158,13 +158,13 @@ public class ActionList extends JPanel implements ActionListener {
                         args);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                
+
                 // this probably means that the configuration 
                 // is wrong
                 // -> change this to a sane default value
                 action.setAction("Mark Message");
                 action.setMarkVariant("read");
-                row=null;
+                row = null;
             }
 
             if (row == null) {

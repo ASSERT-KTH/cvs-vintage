@@ -36,40 +36,40 @@ public class ListToolsTest extends TestCase {
     Random random;
 
     /**
-     * Constructor for ListToolsTest.
-     * @param arg0
-     */
+ * Constructor for ListToolsTest.
+ * @param arg0
+ */
     public ListToolsTest(String arg0) {
         super(arg0);
     }
 
     public void testIntersect() {
         /*
-        LinkedList testList = new LinkedList(listFull_I);
+LinkedList testList = new LinkedList(listFull_I);
 
-        ListTools.intersect(testList,listFull_I);
-        assertTrue(testList.equals(listFull_I));
+ListTools.intersect(testList,listFull_I);
+assertTrue(testList.equals(listFull_I));
 
-        testList = new LinkedList(listFull_I);
+testList = new LinkedList(listFull_I);
 
-        ListTools.intersect(testList,new LinkedList());
-        assertTrue(testList.size()==0);
+ListTools.intersect(testList,new LinkedList());
+assertTrue(testList.size()==0);
 
-        testList = new LinkedList(listFull_I);
+testList = new LinkedList(listFull_I);
 
-        ListTools.intersect(testList,listPart1_I);
-        assertTrue(testList.equals(listPart1_I));
+ListTools.intersect(testList,listPart1_I);
+assertTrue(testList.equals(listPart1_I));
 
-        testList = new LinkedList(listFull_I);
+testList = new LinkedList(listFull_I);
 
-        ListTools.intersect(testList,listPart2_I);
-        assertTrue(testList.equals(listPart2_I));
+ListTools.intersect(testList,listPart2_I);
+assertTrue(testList.equals(listPart2_I));
 
-        testList = new LinkedList(listPart1_I);
+testList = new LinkedList(listPart1_I);
 
-        ListTools.intersect(testList,listPart2_I);
-        assertTrue(testList.size()==0);
-        */
+ListTools.intersect(testList,listPart2_I);
+assertTrue(testList.size()==0);
+*/
     }
 
     public void testSubstract() {
@@ -122,8 +122,8 @@ public class ListToolsTest extends TestCase {
     }
 
     /**
-     * @see junit.framework.TestCase#setUp()
-     */
+ * @see junit.framework.TestCase#setUp()
+ */
     protected void setUp() throws Exception {
         random = new Random();
 

@@ -47,13 +47,13 @@ public class SubjectView extends CTextField {
 
     private class FocusEventHandler extends FocusAdapter {
         /**
-         * Used to clear the subject field if the user clicks in it for
-         * the first time and the text contained in it is the default emtpy
-         * subject test.
-         *
-         * @param evt The focus event fired when the focus was gained by this
-         * component.
-         */
+ * Used to clear the subject field if the user clicks in it for
+ * the first time and the text contained in it is the default emtpy
+ * subject test.
+ *
+ * @param evt The focus event fired when the focus was gained by this
+ * component.
+ */
         public void focusGained(FocusEvent evt) {
             if (SubjectView.this.getText().equals(MailResourceLoader.getString(
                             "dialog", "composer", "composer_no_subject"))) {

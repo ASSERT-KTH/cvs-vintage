@@ -18,7 +18,6 @@ package org.columba.core.command;
 import junit.framework.TestCase;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 
 import java.util.List;
 
@@ -31,16 +30,16 @@ public class DefaultProcessorTest extends TestCase {
     private DefaultProcessor processor;
 
     /**
-     * Constructor for DefaultProcessorTest.
-     * @param arg0
-     */
+ * Constructor for DefaultProcessorTest.
+ * @param arg0
+ */
     public DefaultProcessorTest(String arg0) {
         super(arg0);
     }
 
     /**
-     * @see TestCase#setUp()
-     */
+ * @see TestCase#setUp()
+ */
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -48,8 +47,8 @@ public class DefaultProcessorTest extends TestCase {
     }
 
     /**
-     * @see TestCase#tearDown()
-     */
+ * @see TestCase#tearDown()
+ */
     protected void tearDown() throws Exception {
         super.tearDown();
     }
@@ -128,6 +127,7 @@ class TestCommand extends Command {
     public void updateGUI() {
     }
 
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
     }
 }

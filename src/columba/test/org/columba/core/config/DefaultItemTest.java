@@ -15,8 +15,8 @@ import org.columba.core.xml.XmlElement;
  */
 public class DefaultItemTest extends TestCase {
     /*
-     * Test for int hashCode().
-     */
+ * Test for int hashCode().
+ */
     public void testHashCode() {
         DefaultItem item = new DefaultItem(new XmlElement());
         item.set("boolean", false);
@@ -34,8 +34,8 @@ public class DefaultItemTest extends TestCase {
     }
 
     /*
-     * Test for boolean equals(Object)
-     */
+ * Test for boolean equals(Object)
+ */
     public void testEqualsObject() {
         DefaultItem item = new DefaultItem(new XmlElement());
         item.set("boolean", false);
@@ -62,8 +62,8 @@ public class DefaultItemTest extends TestCase {
     }
 
     /*
-     * Test for clone()
-     */
+ * Test for clone()
+ */
     public void testClone() {
         DefaultItem item1 = new DefaultItem(new XmlElement("EL"));
         DefaultItem item2 = (DefaultItem) item1.clone();

@@ -35,16 +35,16 @@ import java.util.Vector;
  */
 public class TableUpdater {
     /**
-     * Listeners list
-     */
+ * Listeners list
+ */
     protected static List list = new Vector();
 
     /**
-     * Notify all tables that the table model has changed.
-     *
-     * @param ev                        event
-     * @throws Exception
-     */
+ * Notify all tables that the table model has changed.
+ *
+ * @param ev                        event
+ * @throws Exception
+ */
     public static void tableChanged(TableModelChangedEvent ev)
         throws Exception {
         for (Iterator it = list.iterator(); it.hasNext();) {
@@ -54,10 +54,10 @@ public class TableUpdater {
     }
 
     /**
-     * Add listener.
-     *
-     * @param frameMediator                frame controller with table component
-     */
+ * Add listener.
+ *
+ * @param frameMediator                frame controller with table component
+ */
     public static void add(TableViewOwner frameController) {
         list.add(frameController);
     }

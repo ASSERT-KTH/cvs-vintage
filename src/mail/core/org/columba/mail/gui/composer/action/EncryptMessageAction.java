@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
 
 import org.columba.core.action.AbstractSelectableAction;
@@ -25,6 +24,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd

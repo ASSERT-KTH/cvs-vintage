@@ -15,16 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.util.ResourceBundle;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JViewport;
-
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
@@ -33,6 +23,7 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.UIFSplitPane;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.composer.HeaderView;
@@ -44,6 +35,17 @@ import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.main.MailInterface;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+
+import java.util.ResourceBundle;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JViewport;
+
+
 /**
  *
  * Mail specific extensions to the AbstractFrameView
@@ -52,276 +54,267 @@ import org.columba.mail.main.MailInterface;
  * @author fdietz
  */
 public class MailFrameView extends AbstractFrameView {
-	public static final String FOLDERINFOPANEL= "folderinfopanel";
+    public static final String FOLDERINFOPANEL = "folderinfopanel";
 
-	//private StatusBar statusBar;
-	public JSplitPane mainSplitPane;
-	public JSplitPane rightSplitPane;
-	private FolderInfoPanel folderInfoPanel;
-	public ResourceBundle guiLabels;
-	private JPanel tablePanel;
-	FilterToolbar filterToolbar;
-	HeaderView header;
+    //private StatusBar statusBar;
+    public JSplitPane mainSplitPane;
+    public JSplitPane rightSplitPane;
+    private FolderInfoPanel folderInfoPanel;
+    public ResourceBundle guiLabels;
+    private JPanel tablePanel;
+    FilterToolbar filterToolbar;
+    HeaderView header;
 
-	public MailFrameView(FrameMediator frameController) {
-		super(frameController);
+    public MailFrameView(FrameMediator frameController) {
+        super(frameController);
 
-		//MainInterface.mainFrame = this;
-		//changeToolbars();
-		//MainInterface.frameModel.register(this);
-	}
+        //MainInterface.mainFrame = this;
+        //changeToolbars();
+        //MainInterface.frameModel.register(this);
+    }
 
-	/*
-	public void showAttachmentViewer() {
-	        rightSplitPane.showAttachmentViewer();
-	}
-	
-	public void hideAttachmentViewer() {
-	        rightSplitPane.hideAttachmentViewer();
-	}
-	*/
-	public void setFolderInfoPanel(FolderInfoPanel f) {
-		this.folderInfoPanel= f;
-	}
+    /*
+public void showAttachmentViewer() {
+        rightSplitPane.showAttachmentViewer();
+}
 
-	/**
-	 * Initialize every controller.
-	 *
-	 * This method is really ugly and should be cleaned up.
-	 *
-	 * @param tree
-	 * @param table
-	 * @param filterToolbar
-	 * @param message
-	 * @param statusBar
-	 */
-	public void init(
-		TreeView tree,
-		TableView table,
-		FilterToolbar filterToolbar,
-		MessageView message,
-		StatusBar statusBar) {
-		this.filterToolbar= filterToolbar;
-		
-		//mainSplitPane= new JSplitPane();
-		mainSplitPane= new UIFSplitPane();
-		//mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		this.getContentPane().add(mainSplitPane, BorderLayout.CENTER);
+public void hideAttachmentViewer() {
+        rightSplitPane.hideAttachmentViewer();
+}
+*/
+    public void setFolderInfoPanel(FolderInfoPanel f) {
+        this.folderInfoPanel = f;
+    }
 
-		mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+    /**
+ * Initialize every controller.
+ *
+ * This method is really ugly and should be cleaned up.
+ *
+ * @param tree
+ * @param table
+ * @param filterToolbar
+ * @param message
+ * @param statusBar
+ */
+    public void init(TreeView tree, TableView table,
+        FilterToolbar filterToolbar, MessageView message, StatusBar statusBar) {
+        this.filterToolbar = filterToolbar;
 
-		JScrollPane treeScrollPane= new JScrollPane(tree);
-		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
+        //mainSplitPane= new JSplitPane();
+        mainSplitPane = new UIFSplitPane();
 
-		JPanel messagePanel= new JPanel();
-		messagePanel.setLayout(new BorderLayout());
-		messagePanel.add(message, BorderLayout.CENTER);
+        //mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        this.getContentPane().add(mainSplitPane, BorderLayout.CENTER);
 
-		tablePanel= new JPanel();
-		tablePanel.setLayout(new BorderLayout());
+        mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
-		ViewItem viewItem= getFrameController().getViewItem();
+        JScrollPane treeScrollPane = new JScrollPane(tree);
 
-		//if (viewItem.getBoolean("toolbars", "filter", true) == true)
-		tablePanel.add(filterToolbar, BorderLayout.NORTH);
+        //treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
 
-		JScrollPane tableScrollPane= new JScrollPane(table);
-		tableScrollPane.setHorizontalScrollBarPolicy(
-			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//tableScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		tableScrollPane.getViewport().setScrollMode(
-			JViewport.BACKINGSTORE_SCROLL_MODE);
+        JPanel messagePanel = new JPanel();
+        messagePanel.setLayout(new BorderLayout());
+        messagePanel.add(message, BorderLayout.CENTER);
 
-		tableScrollPane.getViewport().setBackground(Color.white);
-		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
-		//rightSplitPane= new JSplitPane();
-		rightSplitPane= new UIFSplitPane();
-		//rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		rightSplitPane.add(tablePanel, JSplitPane.LEFT);
-		rightSplitPane.add(messagePanel, JSplitPane.RIGHT);
+        tablePanel = new JPanel();
+        tablePanel.setLayout(new BorderLayout());
 
-		mainSplitPane.add(rightSplitPane, JSplitPane.RIGHT);
+        ViewItem viewItem = getFrameController().getViewItem();
 
-		// same as menu
-		if (((AbstractFrameController) frameController)
-			.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL)
-			== true) {
-			toolbarPane.add(folderInfoPanel);
-		}
+        //if (viewItem.getBoolean("toolbars", "filter", true) == true)
+        tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
-		int count= MailInterface.config.getAccountList().count();
+        JScrollPane tableScrollPane = new JScrollPane(table);
+        tableScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		if (count == 0) {
-			pack();
-			rightSplitPane.setDividerLocation(150);
-		} else {
-			mainSplitPane.setDividerLocation(
-				viewItem.getInteger("splitpanes", "main"));
+        //tableScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tableScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 
-			rightSplitPane.setDividerLocation(
-				viewItem.getInteger("splitpanes", "header"));
-		}
-	}
+        tableScrollPane.getViewport().setBackground(Color.white);
+        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 
-	public void setToolBar(ToolBar toolBar) {
-		this.toolbar= toolBar;
-	}
+        //rightSplitPane= new JSplitPane();
+        rightSplitPane = new UIFSplitPane();
 
-	/*
-	public void hideToolbar(boolean b) {
-	        toolbarPane.remove(toolbar);
-	
-	        validate();
-	        repaint();
-	
-	}
-	
-	public void hideFolderInfo(boolean b) {
-	
-	        toolbarPane.remove(folderInfoPanel);
-	        validate();
-	        repaint();
-	
-	}
-	
-	public void showFolderInfo(boolean b) {
-	
-	        if (b) {
-	                toolbarPane.removeAll();
-	                toolbarPane.add(toolbar);
-	                toolbarPane.add(folderInfoPanel);
-	
-	                validate();
-	                repaint();
-	        } else {
-	
-	                toolbarPane.add(folderInfoPanel);
-	
-	                validate();
-	                repaint();
-	        }
-	
-	}
-	*/
-	public void showFilterToolbar() {
-		tablePanel.add(filterToolbar, BorderLayout.NORTH);
-		tablePanel.validate();
-		repaint();
-	}
+        //rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        rightSplitPane.add(tablePanel, JSplitPane.LEFT);
+        rightSplitPane.add(messagePanel, JSplitPane.RIGHT);
 
-	public void hideFilterToolbar() {
-		tablePanel.remove(filterToolbar);
-		tablePanel.validate();
-		repaint();
-	}
+        mainSplitPane.add(rightSplitPane, JSplitPane.RIGHT);
 
-	public void saveWindowPosition() {
-		super.saveWindowPosition();
+        // same as menu
+        if (((AbstractFrameController) frameController).isToolbarEnabled(
+                    MailFrameView.FOLDERINFOPANEL) == true) {
+            toolbarPane.add(folderInfoPanel);
+        }
 
-		ViewItem viewItem= frameController.getViewItem();
+        int count = MailInterface.config.getAccountList().count();
 
-		// splitpanes
-		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
-		viewItem.set(
-			"splitpanes",
-			"header",
-			rightSplitPane.getDividerLocation());
+        if (count == 0) {
+            pack();
+            rightSplitPane.setDividerLocation(150);
+        } else {
+            mainSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+                    "main"));
 
-		FolderCommandReference[] r=
-			((MailFrameMediator) getFrameController()).getTreeSelection();
-		if (r.length > 0) {
-			FolderTreeNode folder=r[0].getFolder();
-			// folder-based configuration
-			((MailFrameMediator) frameController)
-				.getFolderOptionsController()
-				.saveGlobalSettings(folder);
-		}
-	}
+            rightSplitPane.setDividerLocation(viewItem.getInteger(
+                    "splitpanes", "header"));
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
-	 */
-	protected Menu createMenu(FrameMediator controller) {
-		Menu menu=
-			new MailMenu(
-				"org/columba/core/action/menu.xml",
-				"org/columba/mail/action/menu.xml",
-				controller);
+    public void setToolBar(ToolBar toolBar) {
+        this.toolbar = toolBar;
+    }
 
-		return menu;
-	}
+    /*
+public void hideToolbar(boolean b) {
+        toolbarPane.remove(toolbar);
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
-	 */
-	protected ToolBar createToolbar(FrameMediator controller) {
-		return new ToolBar(
-			MailInterface.config.get("main_toolbar").getElement("toolbar"),
-			controller);
-	}
+        validate();
+        repaint();
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameView#showToolbar()
-	 */
-	public void showToolbar() {
-		boolean b= isToolbarVisible();
+}
 
-		if (toolbar == null) {
-			return;
-		}
+public void hideFolderInfo(boolean b) {
 
-		if (b) {
-			toolbarPane.remove(toolbar);
-			frameController.enableToolbar(MAIN_TOOLBAR, false);
-		} else {
-			if (isFolderInfoPanelVisible()) {
-				toolbarPane.removeAll();
-				toolbarPane.add(toolbar);
-				toolbarPane.add(getFolderInfoPanel());
-			} else {
-				toolbarPane.add(toolbar);
-			}
+        toolbarPane.remove(folderInfoPanel);
+        validate();
+        repaint();
 
-			frameController.enableToolbar(MAIN_TOOLBAR, true);
-		}
+}
 
-		validate();
-		repaint();
-	}
+public void showFolderInfo(boolean b) {
 
-	public void showFolderInfoPanel() {
-		boolean b= isFolderInfoPanelVisible();
+        if (b) {
+                toolbarPane.removeAll();
+                toolbarPane.add(toolbar);
+                toolbarPane.add(folderInfoPanel);
 
-		if (b) {
-			toolbarPane.remove(getFolderInfoPanel());
-			frameController.enableToolbar(FOLDERINFOPANEL, false);
-		} else {
-			toolbarPane.add(getFolderInfoPanel());
+                validate();
+                repaint();
+        } else {
 
-			frameController.enableToolbar(FOLDERINFOPANEL, true);
-		}
+                toolbarPane.add(folderInfoPanel);
 
-		validate();
-		repaint();
-	}
+                validate();
+                repaint();
+        }
 
-	public boolean isFolderInfoPanelVisible() {
-		return frameController.isToolbarEnabled(FOLDERINFOPANEL);
-	}
+}
+*/
+    public void showFilterToolbar() {
+        tablePanel.add(filterToolbar, BorderLayout.NORTH);
+        tablePanel.validate();
+        repaint();
+    }
 
-	/**
-	 * @return
-	 */
-	public FilterToolbar getFilterToolbar() {
-		return filterToolbar;
-	}
+    public void hideFilterToolbar() {
+        tablePanel.remove(filterToolbar);
+        tablePanel.validate();
+        repaint();
+    }
 
-	/**
-	 * @return
-	 */
-	public FolderInfoPanel getFolderInfoPanel() {
-		return folderInfoPanel;
-	}
+    public void saveWindowPosition() {
+        super.saveWindowPosition();
+
+        ViewItem viewItem = frameController.getViewItem();
+
+        // splitpanes
+        viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
+        viewItem.set("splitpanes", "header", rightSplitPane.getDividerLocation());
+
+        FolderCommandReference[] r = ((MailFrameMediator) getFrameController()).getTreeSelection();
+
+        if (r.length > 0) {
+            FolderTreeNode folder = r[0].getFolder();
+
+            // folder-based configuration
+            ((MailFrameMediator) frameController).getFolderOptionsController()
+             .saveGlobalSettings(folder);
+        }
+    }
+
+    /* (non-Javadoc)
+ * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+ */
+    protected Menu createMenu(FrameMediator controller) {
+        Menu menu = new MailMenu("org/columba/core/action/menu.xml",
+                "org/columba/mail/action/menu.xml", controller);
+
+        return menu;
+    }
+
+    /* (non-Javadoc)
+ * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+ */
+    protected ToolBar createToolbar(FrameMediator controller) {
+        return new ToolBar(MailInterface.config.get("main_toolbar").getElement("toolbar"),
+            controller);
+    }
+
+    /* (non-Javadoc)
+ * @see org.columba.core.gui.frame.AbstractFrameView#showToolbar()
+ */
+    public void showToolbar() {
+        boolean b = isToolbarVisible();
+
+        if (toolbar == null) {
+            return;
+        }
+
+        if (b) {
+            toolbarPane.remove(toolbar);
+            frameController.enableToolbar(MAIN_TOOLBAR, false);
+        } else {
+            if (isFolderInfoPanelVisible()) {
+                toolbarPane.removeAll();
+                toolbarPane.add(toolbar);
+                toolbarPane.add(getFolderInfoPanel());
+            } else {
+                toolbarPane.add(toolbar);
+            }
+
+            frameController.enableToolbar(MAIN_TOOLBAR, true);
+        }
+
+        validate();
+        repaint();
+    }
+
+    public void showFolderInfoPanel() {
+        boolean b = isFolderInfoPanelVisible();
+
+        if (b) {
+            toolbarPane.remove(getFolderInfoPanel());
+            frameController.enableToolbar(FOLDERINFOPANEL, false);
+        } else {
+            toolbarPane.add(getFolderInfoPanel());
+
+            frameController.enableToolbar(FOLDERINFOPANEL, true);
+        }
+
+        validate();
+        repaint();
+    }
+
+    public boolean isFolderInfoPanelVisible() {
+        return frameController.isToolbarEnabled(FOLDERINFOPANEL);
+    }
+
+    /**
+ * @return
+ */
+    public FilterToolbar getFilterToolbar() {
+        return filterToolbar;
+    }
+
+    /**
+ * @return
+ */
+    public FolderInfoPanel getFolderInfoPanel() {
+        return folderInfoPanel;
+    }
 }

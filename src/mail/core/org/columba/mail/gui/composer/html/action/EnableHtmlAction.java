@@ -13,12 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.html.action;
 
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.main.MailInterface;
@@ -29,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+
 /**
  * CheckBox menu item for switching between HTML and text messages.
  * <br>
@@ -37,7 +36,8 @@ import java.util.Observer;
  *
  * @author fdietz, Karl Peder Olesen
  */
-public class EnableHtmlAction extends AbstractSelectableAction implements Observer {
+public class EnableHtmlAction extends AbstractSelectableAction
+    implements Observer {
     /**
      * @param frameMediator
      * @param name
@@ -46,10 +46,10 @@ public class EnableHtmlAction extends AbstractSelectableAction implements Observ
         super(frameMediator,
             MailResourceLoader.getString("menu", "composer",
                 "menu_format_enable_html"));
-        
+
         // enable/disable menuitem, based on configuration text/html state
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         //	create default element if not available
@@ -84,7 +84,7 @@ public class EnableHtmlAction extends AbstractSelectableAction implements Observ
      */
     public void actionPerformed(ActionEvent evt) {
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         //	create default element if not available

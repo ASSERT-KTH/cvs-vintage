@@ -17,6 +17,7 @@ package org.columba.mail.gui.frame;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionListener;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folderoptions.FolderOptionsController;
 
@@ -44,6 +45,6 @@ public interface MailFrameMediator extends FrameMediator {
     public void registerTreeSelectionListener(SelectionListener l);
 
     public void registerAttachmentSelectionListener(SelectionListener l);
-    
+
     public FolderOptionsController getFolderOptionsController();
 }

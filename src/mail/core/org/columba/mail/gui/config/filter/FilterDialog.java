@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -47,6 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+
 
 public class FilterDialog implements ActionListener {
     private JDialog dialog;
@@ -191,7 +191,6 @@ public class FilterDialog implements ActionListener {
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-
         // associate with JavaHelp
         HelpManager.getHelpManager().enableHelpOnButton(helpButton,
             "organizing_and_managing_your_email_3");
@@ -257,11 +256,11 @@ public class FilterDialog implements ActionListener {
     }
 
     /**
-     * Returns if the dialog was cancelled or not.
-     * The dialog is cancelled if the user presses the <code>Cancel</code> button
-     * or presses the <code>Escape</code> key.
-     * @return true if the user pressed the cancel button or escape; false otherwise.
-     */
+ * Returns if the dialog was cancelled or not.
+ * The dialog is cancelled if the user presses the <code>Cancel</code> button
+ * or presses the <code>Escape</code> key.
+ * @return true if the user pressed the cancel button or escape; false otherwise.
+ */
     public boolean wasCancelled() {
         return dialogWasCancelled;
     }

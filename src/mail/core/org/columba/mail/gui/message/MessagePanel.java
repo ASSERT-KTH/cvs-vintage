@@ -36,16 +36,16 @@ import javax.swing.Scrollable;
  */
 public class MessagePanel extends JPanel implements Scrollable {
     /**
-     * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
-     */
+ * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
+ */
     public Dimension getPreferredScrollableViewportSize() {
         return getPreferredSize();
     }
 
     /**
-     * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle,
-     *      int, int)
-     */
+ * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle,
+ *      int, int)
+ */
     public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
         Font textFont = FontProperties.getTextFont();
 
@@ -53,9 +53,9 @@ public class MessagePanel extends JPanel implements Scrollable {
     }
 
     /**
-     * @see javax.swing.Scrollable#getScrollableBlockIncrement(java.awt.Rectangle,
-     *      int, int)
-     */
+ * @see javax.swing.Scrollable#getScrollableBlockIncrement(java.awt.Rectangle,
+ *      int, int)
+ */
     public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
         Font textFont = FontProperties.getTextFont();
 
@@ -63,15 +63,15 @@ public class MessagePanel extends JPanel implements Scrollable {
     }
 
     /**
-     * @see javax.swing.Scrollable#getScrollableTracksViewportWidth()
-     */
+ * @see javax.swing.Scrollable#getScrollableTracksViewportWidth()
+ */
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
 
     /**
-     * @see javax.swing.Scrollable#getScrollableTracksViewportHeight()
-     */
+ * @see javax.swing.Scrollable#getScrollableTracksViewportHeight()
+ */
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }

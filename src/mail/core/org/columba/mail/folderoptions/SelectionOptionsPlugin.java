@@ -39,18 +39,17 @@ import org.columba.mail.gui.table.TableView;
  * @author fdietz, waffel
  */
 public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
-    
     /**
-     * Constructor
-     * @param mediator  mail frame mediator
-     */
+ * Constructor
+ * @param mediator  mail frame mediator
+ */
     public SelectionOptionsPlugin(MailFrameMediator mediator) {
         super("selection", "SelectionOptions", mediator);
     }
 
     /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
-     */
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+ */
     public void saveOptionsToXml(Folder folder) {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
@@ -59,8 +58,8 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
-     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
-     */
+ * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+ */
     public void loadOptionsFromXml(Folder folder) {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
@@ -105,7 +104,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             }
 
             FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(folder, new Object[] {uid});
+            refNew[0] = new FolderCommandReference(folder, new Object[] { uid });
 
             // view the message under the new node
             MainInterface.processor.addOp(new ViewMessageCommand(
@@ -113,7 +112,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         } else {
             // if a lastSelection for this folder is set
             // getting the last selected uid
-            Object[] lastSelUids = {folder.getLastSelection()};
+            Object[] lastSelUids = { folder.getLastSelection() };
 
             // no messages in this folder
             if (lastSelUids[0] == null) {
@@ -159,15 +158,12 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
-       * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-       */
+   * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+   */
     public XmlElement createDefaultElement(boolean global) {
         XmlElement parent = super.createDefaultElement(global);
         parent.addAttribute("remember_last_selection", "true");
 
         return parent;
     }
-    
-
-
 }

@@ -13,12 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.export;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.checkabletree.*;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
@@ -26,9 +24,11 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.ExportFolderCommand;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
+
+import org.frappucino.checkabletree.CheckableItem;
+import org.frappucino.checkabletree.CheckableTree;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -45,15 +45,28 @@ import java.awt.event.MouseEvent;
 
 import java.io.File;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
-import java.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.*;
 
 /**
  * ExportDialog lets you select a number of folders for exporting
@@ -66,10 +79,9 @@ public class ExportDialog extends JDialog implements ActionListener {
     private JTree tree;
 
     public ExportDialog() {
-        super((JFrame)null, MailResourceLoader.getString(
-                "dialog",
-                "export",
-                "dialog_title"), false);
+        super((JFrame) null,
+            MailResourceLoader.getString("dialog", "export", "dialog_title"),
+            false);
 
         initComponents();
 
@@ -97,22 +109,16 @@ public class ExportDialog extends JDialog implements ActionListener {
         getContentPane().add(mainPanel);
 
         exportButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                "dialog",
-                "export",
-                "export"));
+                    "dialog", "export", "export"));
         exportButton.setActionCommand("EXPORT");
         exportButton.addActionListener(this);
 
-        ButtonWithMnemonic selectAllButton = new ButtonWithMnemonic(
-            MailResourceLoader.getString(
-                "dialog",
-                "export",
-                "select_all"));
+        ButtonWithMnemonic selectAllButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "export", "select_all"));
         selectAllButton.setActionCommand("SELECTALL");
         selectAllButton.addActionListener(this);
 
-        FolderTreeNode parent =
-            (FolderTreeNode) MailInterface.treeModel.getRoot();
+        FolderTreeNode parent = (FolderTreeNode) MailInterface.treeModel.getRoot();
         CheckableTreeNode root = new CheckableTreeNode(parent.getName());
         root.setNode(parent);
         createChildNodes(root, parent);
@@ -120,8 +126,7 @@ public class ExportDialog extends JDialog implements ActionListener {
         tree = new CheckableTree(root);
         tree.setRootVisible(false);
 
-        tree.getSelectionModel().setSelectionMode(
-            TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addMouseListener(new NodeSelectionListener(tree));
         tree.expandRow(0);
         tree.expandRow(1);
@@ -129,10 +134,8 @@ public class ExportDialog extends JDialog implements ActionListener {
         GridBagLayout gridBagLayout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
 
-        mainPanel.add(new JLabel(MailResourceLoader.getString(
-                "dialog",
-                "export",
-                "info")), BorderLayout.NORTH);
+        mainPanel.add(new JLabel(MailResourceLoader.getString("dialog",
+                    "export", "info")), BorderLayout.NORTH);
 
         gridBagLayout = new GridBagLayout();
         c = new GridBagConstraints();
@@ -176,43 +179,41 @@ public class ExportDialog extends JDialog implements ActionListener {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString("global", "close"));
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString("global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(
-            this,
-            "CLOSE",
+        getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
+
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "organising_and_managing_your_email_5");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "organising_and_managing_your_email_5");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "organising_and_managing_your_email_5");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "organising_and_managing_your_email_5");
     }
 
     private void getTreeNodeIteration(TreeNode parent, List l) {
         l.add(parent);
-        
-        for ( int i=0; i<parent.getChildCount(); i++) {
+
+        for (int i = 0; i < parent.getChildCount(); i++) {
             l.add(parent.getChildAt(i));
-            getTreeNodeIteration((TreeNode)parent.getChildAt(i), l);
+            getTreeNodeIteration((TreeNode) parent.getChildAt(i), l);
         }
     }
-    
+
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
@@ -220,13 +221,15 @@ public class ExportDialog extends JDialog implements ActionListener {
             setVisible(false);
         } else if (action.equals("SELECTALL")) {
             List list = new LinkedList();
-            getTreeNodeIteration((TreeNode)tree.getModel().getRoot(), list);
+            getTreeNodeIteration((TreeNode) tree.getModel().getRoot(), list);
+
             Iterator iterator = list.iterator();
             CheckableTreeNode node;
+
             while (iterator.hasNext()) {
-                node = (CheckableTreeNode)iterator.next();
+                node = (CheckableTreeNode) iterator.next();
                 node.setSelected(true);
-                ((DefaultTreeModel)tree.getModel()).nodeChanged(node);
+                ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
             }
         } else if (action.equals("EXPORT")) {
             File destFile = null;
@@ -249,12 +252,11 @@ public class ExportDialog extends JDialog implements ActionListener {
             setVisible(false);
 
             // get list of all folders
-       
             List list = new LinkedList();
             getTreeNodeIteration((TreeNode) tree.getModel().getRoot(), list);
 
             Iterator it = list.iterator();
-            
+
             Vector v = new Vector();
 
             // get list of all selected folders
@@ -272,7 +274,7 @@ public class ExportDialog extends JDialog implements ActionListener {
             FolderCommandReference[] r = new FolderCommandReference[v.size()];
 
             for (int i = 0; i < v.size(); i++) {
-                FolderTreeNode node = (FolderTreeNode) ((CheckableTreeNode)v.get(i)).getNode();
+                FolderTreeNode node = (FolderTreeNode) ((CheckableTreeNode) v.get(i)).getNode();
 
                 r[i] = new FolderCommandReference(node);
                 r[i].setDestFile(destFile);
@@ -298,8 +300,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 
             //TreePath  path = tree.getSelectionPath();
             if (path != null) {
-                CheckableItem node =
-                    (CheckableItem) path.getLastPathComponent();
+                CheckableItem node = (CheckableItem) path.getLastPathComponent();
 
                 node.setSelected(!node.isSelected());
 

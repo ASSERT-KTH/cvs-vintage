@@ -54,11 +54,11 @@ public class HeaderCriteriaRow extends DefaultCriteriaRow {
         matchComboBox.addItem("contains not");
 
         /*
-        matchComboBox.addItem("is");
-        matchComboBox.addItem("is not");
-        matchComboBox.addItem("begins with");
-        matchComboBox.addItem("ends with");
-        */
+matchComboBox.addItem("is");
+matchComboBox.addItem("is not");
+matchComboBox.addItem("begins with");
+matchComboBox.addItem("ends with");
+*/
         addComponent(matchComboBox);
 
         textField = new JTextField("header", 10);

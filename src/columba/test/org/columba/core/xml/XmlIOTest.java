@@ -15,9 +15,9 @@ import java.io.IOException;
  */
 public class XmlIOTest extends TestCase {
     /**
-     * Test for writing a Xml Element that has been passed in the constructor XmlIO(XmlElement).
-     * @throws IOException thrown if the test fails.
-     */
+ * Test for writing a Xml Element that has been passed in the constructor XmlIO(XmlElement).
+ * @throws IOException thrown if the test fails.
+ */
     public void testXmlElement() throws IOException {
         // Setup the XML that is to be written
         XmlElement expected = new XmlElement("big_name");
@@ -44,8 +44,8 @@ public class XmlIOTest extends TestCase {
     }
 
     /**
-     * Test the load(InputStream) method.
-     */
+ * Test the load(InputStream) method.
+ */
     public void testReadInputStream() {
         String expected = "<xml attr=\"one\" secAttr=\"two\"><child name=\"other\"/></xml>";
         XmlIO xmlIO = new XmlIO();

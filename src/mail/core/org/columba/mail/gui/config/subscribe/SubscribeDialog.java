@@ -15,41 +15,57 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.subscribe;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-
-import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.ExpandVetoException;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.command.Command;
-import org.columba.core.gui.checkabletree.CheckableTree;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.util.MailResourceLoader;
 
+import org.frappucino.checkabletree.CheckableTree;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
+
+
 /**
  * Subscribe dialog used by IMAP accounts.
  * 
  * @author fdietz
  */
-public class SubscribeDialog extends JDialog
-    implements ActionListener, TreeSelectionListener {
-    
+public class SubscribeDialog extends JDialog implements ActionListener,
+    TreeSelectionListener {
     private JButton subscribeButton;
     private JButton syncButton;
     private JButton unsubscribeButton;
@@ -57,16 +73,13 @@ public class SubscribeDialog extends JDialog
     private ListInfoTreeNode selection;
     private IMAPRootFolder root;
     private DefaultTreeModel treeModel;
-    
+
     public SubscribeDialog(IMAPRootFolder rootFolder) {
         setModal(true);
-        setTitle(
-            MailResourceLoader.getString(
-                "dialog",
-                "subscribe",
+        setTitle(MailResourceLoader.getString("dialog", "subscribe",
                 "dialog_title"));
         root = rootFolder;
-        
+
         initComponents();
         pack();
         setLocationRelativeTo(null);
@@ -78,68 +91,51 @@ public class SubscribeDialog extends JDialog
 
     private void syncFolderList() {
         setEnabled(false);
-        Command c =
-            new SynchronizeFolderListCommand(
-                new SubscribeCommandReference(root, this));
+
+        Command c = new SynchronizeFolderListCommand(new SubscribeCommandReference(
+                    root, this));
         MainInterface.processor.addOp(c);
     }
 
     private void subscribe() {
         setEnabled(false);
 
-        Command c =
-            new SubscribeFolderCommand(
-                new SubscribeCommandReference(
-                    root,
-                    this,
-                    selection.getMailbox()));
+        Command c = new SubscribeFolderCommand(new SubscribeCommandReference(
+                    root, this, selection.getMailbox()));
         MainInterface.processor.addOp(c);
     }
 
     private void unsubscribe() {
         setEnabled(false);
 
-        Command c =
-            new UnsubscribeFolderCommand(
-                new SubscribeCommandReference(
-                    root,
-                    this,
-                    selection.getMailbox()));
+        Command c = new UnsubscribeFolderCommand(new SubscribeCommandReference(
+                    root, this, selection.getMailbox()));
         MainInterface.processor.addOp(c);
     }
-       
+
     /**
-     * Inits the GUI components.
-     */
+ * Inits the GUI components.
+ */
     private void initComponents() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         getContentPane().add(mainPanel);
 
-        subscribeButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "subscribe",
-                    "subscribe"));
+        subscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "subscribe", "subscribe"));
         subscribeButton.setActionCommand("SUBSCRIBE");
         subscribeButton.addActionListener(this);
         subscribeButton.setEnabled(false);
 
-        syncButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString("dialog", "subscribe", "sync"));
+        syncButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "subscribe", "sync"));
         syncButton.setActionCommand("SYNC");
         syncButton.setEnabled(false);
         syncButton.addActionListener(this);
 
-        unsubscribeButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString(
-                    "dialog",
-                    "subscribe",
-                    "unsubscribe"));
+        unsubscribeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "subscribe", "unsubscribe"));
         unsubscribeButton.setActionCommand("UNSUBSCRIBE");
         unsubscribeButton.setEnabled(false);
         unsubscribeButton.addActionListener(this);
@@ -215,23 +211,19 @@ public class SubscribeDialog extends JDialog
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString("global", "close"));
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton =
-            new ButtonWithMnemonic(
-                MailResourceLoader.getString("global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(
-            this,
-            "CLOSE",
+        getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
 
@@ -257,20 +249,20 @@ public class SubscribeDialog extends JDialog
     }
 
     private void syncAndExit() {
-        
         setEnabled(false);
-        Command c =
-        new FetchSubFolderListCommand(
-                new FolderCommandReference[] { new FolderCommandReference(root) });
+
+        Command c = new FetchSubFolderListCommand(new FolderCommandReference[] {
+                    new FolderCommandReference(root)
+                });
         MainInterface.processor.addOp(c);
-        
+
         setVisible(false);
     }
 
     /** ********************** TreeSelectionListener ******************** */
     /**
-	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-	 */
+     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+     */
     public void valueChanged(TreeSelectionEvent arg0) {
         selection = (ListInfoTreeNode) arg0.getPath().getLastPathComponent();
 
@@ -278,8 +270,8 @@ public class SubscribeDialog extends JDialog
     }
 
     /**
-	 *  
-	 */
+     *  
+     */
     private void updateButtons() {
         if (selection != null) {
             subscribeButton.setEnabled(!selection.isSelected());
@@ -288,21 +280,21 @@ public class SubscribeDialog extends JDialog
             subscribeButton.setEnabled(false);
             unsubscribeButton.setEnabled(false);
         }
-        
+
         syncButton.setEnabled(true);
         tree.setEnabled(true);
     }
 
     /**
-	 * @param model
-	 */
+     * @param model
+     */
     public void syncFolderListDone(DefaultTreeModel model) {
         tree.setModel(model);
         tree.expandRow(0);
         tree.expandRow(1);
-        
+
         treeModel = model;
-        
+
         updateButtons();
     }
 
@@ -315,22 +307,22 @@ public class SubscribeDialog extends JDialog
     }
 
     /**
-	 *  
-	 */
+     *  
+     */
     public void subscribeDone() {
         selection.setSelected(true);
         treeModel.nodeChanged(selection);
-               
+
         updateButtons();
     }
 
     /**
-     *  
-     */
+ *  
+ */
     public void unsubscribeDone() {
         selection.setSelected(false);
         treeModel.nodeChanged(selection);
-        
+
         updateButtons();
     }
 }
