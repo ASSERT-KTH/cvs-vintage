@@ -27,7 +27,8 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.2 $
  */
 public class JawsEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -47,7 +48,26 @@ public class JawsEnterpriseBeans
    public String getDataSource() { return dataSource; }
    
    public void setTypeMapping(String tm) { String old = typeMapping; typeMapping = tm; firePropertyChange("TypeMapping", old, typeMapping); }
-   public String getTypeMapping() { return typeMapping; }
+   
+   /*
+    * getTypeMapping()
+    * 
+    * If no type mapping is specified (no jaws.xml file provided) we use the default
+    * Hypersonic default database settings
+    *
+    */
+    public String getTypeMapping() {
+	    
+		if (!typeMapping.equals("")) {
+			
+			// We have a specified typeMapping either from XML or default
+			return typeMapping;
+		}
+		else {
+			 
+			return "Hypersonic SQL";
+		}
+	}
    
    public com.dreambean.ejx.ejb.Entity addEntity()
       throws IOException, ClassNotFoundException
@@ -70,6 +90,7 @@ public class JawsEnterpriseBeans
    public void importXml(Element elt)
       throws Exception
    {
+	   
       if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
       {
          NodeList nl = elt.getChildNodes();
@@ -96,7 +117,7 @@ public class JawsEnterpriseBeans
                setDataSource(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } else if (name.equals("type-mapping"))
             {
-               setTypeMapping(n.hasChildNodes() ? XMLManager.getString(n) : "");
+			   setTypeMapping(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } 
          }
       } else

@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JawsFileManager
    extends BeanContextServicesSupport
@@ -93,6 +93,7 @@ public class JawsFileManager
          InputStream jawsXml = getClass().getResourceAsStream("defaultjaws.xml");
          if (jawsXml != null)
          {
+		
             in = new BufferedReader(new InputStreamReader(jawsXml));
             doc = xm.load(in);
             in.close();
@@ -116,6 +117,7 @@ public class JawsFileManager
          
       } else if (file.getFile().endsWith(".jar")) // JAR file
       {
+		  
          // Load EJB-JAR XML
          InputStream ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
          if (ejbXml == null)
@@ -162,10 +164,10 @@ public class JawsFileManager
          ejbXml.close();
          ejbJar.importXml(doc.getDocumentElement());
          
-         // Load jBoss XML
+         // Load jaws XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jaws.xml");
          if (jbossXml == null)
-         {
+         { 
             // We want to use this file, but it doesn't contain the XML file yet (i.e. it's a JAR without the jboss.xml file)
             // Load default jBoss XML
             jbossXml = getClass().getResourceAsStream("defaultjaws.xml");
@@ -174,6 +176,7 @@ public class JawsFileManager
                // No default found
                return ejbJar;
             }
+			
             in = new BufferedReader(new InputStreamReader(jbossXml));
             doc = xm.load(in);
             in.close();

@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class JawsEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
@@ -67,7 +67,7 @@ public class JawsEjbJar
    public void importXml(Element elt)
         throws Exception
    {
-      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JAWS_DOCUMENT))
+	  if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JAWS_DOCUMENT))
       {
          NodeList nl = elt.getChildNodes();
          for (int i = 0; i < nl.getLength(); i++)
@@ -80,12 +80,12 @@ public class JawsEjbJar
                eb.importXml((Element)n);
             } else if (name.equals("type-mappings"))
             {
-               tm.importXml((Element)n);
+	           tm.importXml((Element)n);
             }
          }
       } else
       {
-         super.importXml(elt);
+		   super.importXml(elt);
          remove(ad);
       }
    }
