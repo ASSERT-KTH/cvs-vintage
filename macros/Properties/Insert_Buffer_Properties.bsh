@@ -22,7 +22,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Insert_Buffer_Properties.bsh,v 1.1 2003/11/12 00:24:11 spestov Exp $
+ * $Id: Insert_Buffer_Properties.bsh,v 1.2 2003/11/15 21:09:20 spestov Exp $
  */
 
 import java.awt.BorderLayout;
@@ -48,6 +48,7 @@ BufferLocalPropertiesDialog(View view){
 	props = new Hashtable();
 	props.put("mode","");
 	props.put("indentSize","int");
+	props.put("tabSize","int");
 	props.put("noTabs","bool");
 	props.put("indentOnTab","bool");
 	props.put("indentOnEnter","bool");

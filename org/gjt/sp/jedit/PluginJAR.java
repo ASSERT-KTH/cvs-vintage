@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.38 2003/11/02 21:16:37 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.39 2003/11/15 21:09:20 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -905,19 +905,21 @@ public class PluginJAR
 			}
 			else
 			{
-				if(actions != null)
-				{
-					String label = jEdit.getProperty(
-						"plugin." + cache.pluginClass
-						+ ".name");
-					actions.setLabel(jEdit.getProperty(
-						"action-set.plugin",
-						new String[] { label }));
-				}
+				String label = jEdit.getProperty(
+					"plugin." + cache.pluginClass
+					+ ".name");
+				actions.setLabel(jEdit.getProperty(
+					"action-set.plugin",
+					new String[] { label }));
 				plugin = new EditPlugin.Deferred(
 					cache.pluginClass);
 				plugin.jar = (EditPlugin.JAR)this;
 			}
+		}
+		else
+		{
+			Log.log(Log.WARNING,this,getPath() + " has an actions.xml but no plugin core class");
+			actions.setLabel("MISSING PLUGIN CORE CLASS");
 		}
 	} //}}}
 
@@ -999,7 +1001,7 @@ public class PluginJAR
 				+ className + ".version");
 			if(_label == null || version == null)
 			{
-				Log.log(Log.NOTICE,this,"Ignoring: "
+				Log.log(Log.WARNING,this,"Ignoring: "
 					+ className);
 			}
 			else

@@ -137,7 +137,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.23 2003/05/26 19:59:19 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.24 2003/11/15 21:09:20 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -211,6 +211,7 @@ public class ActionSet
 	 */
 	public void setLabel(String label)
 	{
+		System.err.println(this + " set label " + label);
 		this.label = label;
 	} //}}}
 
