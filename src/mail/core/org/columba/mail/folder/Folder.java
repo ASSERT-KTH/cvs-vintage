@@ -41,9 +41,30 @@ import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
 /**
- *    Abstract Basic Folder class. Is subclasses by every folder
- *    class containing messages and therefore offering methods
- *    to alter the mailbox
+ *   
+ * Abstract Basic Folder class. It is subclassed by every folder
+ * class containing messages and therefore offering methods
+ * to alter the mailbox.
+ * <p>
+ * Folders are plugins and therefore dynamically created. This should
+ * make it easy to write new folders in the future.
+ * <p>
+ * To make it very easy to add new local mailbox formats, we added a
+ * slightly more complex class hierachy in <class>org.columba.mail.folder</class>,
+ * <class>org.columba.mail.folder.headercache</class>. An implementation 
+ * example can be found in <class>org.columba.mail.folder.mh</class>.
+ * <p>
+ * Please note, that you only need to implement <class>DataStorageInstance</class>
+ * which should be trivial in most cases. Then create a class extending
+ * <class>CachedFolder</class> and plug your datastorage in this folder
+ * in overwriting getDataStorageInstance() method.
+ * <p>
+ * Last, don't forget to register your folder plugin:<p>
+ * Add your folder to org.columba.mail.plugin.folder.xml. This way you create
+ * an association of the folder name and the class which gets loaded.
+ * <p> 
+ * Edit your tree.xml file and replace the MH mailbox implementation with
+ * yours.
  *
  * @author       freddy
  * @created      19. Juni 2001
@@ -107,11 +128,34 @@ public abstract class Folder extends FolderTreeNode {
 		
 		loadMessageFolderInfo();
 	}
+	
+	
+	/**
+	 * Constructor for creating temporary-folders or other types
+	 * which work only in memory and aren't visible in the <class>
+	 * TreeView</class>
+	 * 
+	 * @param name Name of the folder
+	 */
+	public Folder(String name) {
+		super(null);
+
+		children = new Vector();
+
+		init();
+
+		String dir = ConfigPath.getConfigDirectory() + "/mail/" + name;
+		if (DiskIO.ensureDirectory(dir))
+			directoryFile = new File(dir);
+
+	}
 
 	
 	
 	/**
-	 * Show Filter Editing Dialog
+	 * Show Filter Editing Dialog.
+	 * <p>
+	 * 
 	 * 
 	 * @param frameController		the framecontroller which acts as parent
 	 * 
@@ -172,25 +216,7 @@ public abstract class Folder extends FolderTreeNode {
 		return null;
 	}
 	
-	/**
-	 * Constructor for creating temporary-folders or other types
-	 * which work only in memory and aren't visible in the <class>
-	 * TreeView</class>
-	 * 
-	 * @param name Name of the folder
-	 */
-	public Folder(String name) {
-		super(null);
 
-		children = new Vector();
-
-		init();
-
-		String dir = ConfigPath.getConfigDirectory() + "/mail/" + name;
-		if (DiskIO.ensureDirectory(dir))
-			directoryFile = new File(dir);
-
-	}
 
 	/**
 	 * Do some initialization work both constructors share
