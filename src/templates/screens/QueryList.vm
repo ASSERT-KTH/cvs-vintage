@@ -10,7 +10,7 @@ $page.setTitle("Stored query list")
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-	<td><a href="$link.setPage("AdvancedQuery.vm")" title="view advanced query">Avanced query</a></td>
+	<td><a href="$link.setPage("AdvancedQuery.vm")" title="view advanced query">Advanced query</a></td>
 	<td><a href="$link.setPage("Search.vm")" title="view custom search">Custom</a></td>
 	<th>Saved queries</th>
 </tr>
