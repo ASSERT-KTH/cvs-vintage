@@ -41,7 +41,7 @@ import org.jboss.proxy.InvocationHandler;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class DataSourceImpl
    extends ServiceMBeanSupport
@@ -113,8 +113,7 @@ public class DataSourceImpl
 //DEBUG         log.log("Connection pool for "+url+" removed from JNDI");
       } catch (NamingException e)
       {
-         log.error("Could not unbind connection pool "+jndiName);
-         log.exception(e);
+			// Ignore
       }
    }
    

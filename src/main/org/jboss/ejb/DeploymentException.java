@@ -10,7 +10,7 @@ package org.jboss.ejb;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class DeploymentException
    extends Exception
@@ -38,5 +38,5 @@ public class DeploymentException
    // Public --------------------------------------------------------
    public Exception getCause() { return cause; }
    
-   public String toString() { return super.toString()+", Cause:"+cause; }
+   public String toString() { return cause == null ? super.toString() : super.toString()+", Cause:"+cause; }
 }

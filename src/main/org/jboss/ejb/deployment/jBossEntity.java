@@ -29,9 +29,9 @@ import com.dreambean.ejx.Util;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class Entity
+public class jBossEntity
    extends com.dreambean.ejx.ejb.Entity
-   implements EnterpriseBean
+   implements jBossEnterpriseBean
 {
    // Constants -----------------------------------------------------
     
@@ -52,21 +52,20 @@ public class Entity
    
    public ContainerConfiguration getContainerConfiguration() 
    { 
-      EnterpriseBeans eb = (EnterpriseBeans)getBeanContext();
-      EjbJar jar = (EjbJar)eb.getBeanContext();
+      jBossEjbJar jar = (jBossEjbJar)getBeanContext().getBeanContext();
       return jar.getContainerConfigurations().getContainerConfiguration(configurationName);
    }
    
    public com.dreambean.ejx.ejb.ResourceReference addResourceReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.ResourceReference");
+      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.jBossResourceReference");
    }
    
    public com.dreambean.ejx.ejb.EjbReference addEjbReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.EjbReference)instantiateChild("org.jboss.ejb.deployment.EjbReference");
+      return (com.dreambean.ejx.ejb.EjbReference)instantiateChild("org.jboss.ejb.deployment.jBossEjbReference");
    }
    
    // XmlExternalizable implementation ------------------------------
@@ -130,7 +129,7 @@ public class Entity
                Iterator enum = getEjbReferences();
                while(enum.hasNext())
                {
-                  EjbReference ref = (EjbReference)enum.next();
+                  jBossEjbReference ref = (jBossEjbReference)enum.next();
                   if (ref.getName().equals(resName))
                   {
                      ref.importXml((Element)n);

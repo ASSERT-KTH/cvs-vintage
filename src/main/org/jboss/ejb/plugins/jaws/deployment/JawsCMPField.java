@@ -24,7 +24,7 @@ import com.dreambean.ejx.xml.*;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class CMPField
+public class JawsCMPField
    extends com.dreambean.ejx.ejb.CMPField
    implements PropertyChangeListener
 {
@@ -40,7 +40,7 @@ public class CMPField
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   public CMPField()
+   public JawsCMPField()
    {
       addPropertyChangeListener(this);
    }
@@ -81,9 +81,9 @@ public class CMPField
    
    public void importXml(Element elt)
    {
-      ((EnterpriseBeans)getBeanContext().getBeanContext()).addPropertyChangeListener("TypeMapping", this);
+      ((JawsEnterpriseBeans)getBeanContext().getBeanContext()).addPropertyChangeListener("TypeMapping", this);
       
-      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(EjbJar.JAWS_DOCUMENT))
+      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
       {
          NodeList nl = elt.getChildNodes();
          for (int i = 0; i < nl.getLength(); i++)
@@ -123,14 +123,14 @@ public class CMPField
          try
          {
             ClassLoader cl = ((JawsFileManager)getBeanContext().getBeanContext().getBeanContext().getBeanContext()).getClassLoader();
-            Class clazz = cl.loadClass(((Entity)getBeanContext()).getEjbClass());
+            Class clazz = cl.loadClass(((JawsEntity)getBeanContext()).getEjbClass());
             java.lang.reflect.Field type = clazz.getField(getFieldName());
             
-            String sql = ((EjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((EnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (Entity)getBeanContext());
+            String sql = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
             if (sql != null)
                setSqlType(sql);
                
-            String jdbc = ((EjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((EnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (Entity)getBeanContext());
+            String jdbc = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
             if (jdbc != null)
                setJdbcType(jdbc);
             

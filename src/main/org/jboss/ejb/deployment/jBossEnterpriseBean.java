@@ -29,7 +29,7 @@ import com.dreambean.ejx.Util;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public interface EnterpriseBean
+public interface jBossEnterpriseBean
    extends com.dreambean.ejx.ejb.EnterpriseBean
 {
    // Constants -----------------------------------------------------

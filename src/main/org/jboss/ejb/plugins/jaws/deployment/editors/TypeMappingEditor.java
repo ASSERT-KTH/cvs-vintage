@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.jaws.deployment.*;
  *      
  *   @see DDEditor
  *   @author $Author: oberg $
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class TypeMappingEditor
    extends TagsEditor
@@ -44,8 +44,8 @@ public class TypeMappingEditor
    {
       try
       {
-         EnterpriseBeans eb = (EnterpriseBeans)((BeanContextServices)bcc.getBeanContext()).getService(bcc, bcc, EnterpriseBeans.class, null, bcc);
-         EjbJar jar = (EjbJar)eb.getBeanContext();
+         JawsEnterpriseBeans eb = (JawsEnterpriseBeans)((BeanContextServices)bcc.getBeanContext()).getService(bcc, bcc, JawsEnterpriseBeans.class, null, bcc);
+         JawsEjbJar jar = (JawsEjbJar)eb.getBeanContext();
          Iterator enum = jar.getTypeMappings().iterator();
          Vector v = new Vector();
          while (enum.hasNext())
@@ -72,8 +72,8 @@ public class TypeMappingEditor
          // Add listener
          try
          {
-            EnterpriseBeans eb = (EnterpriseBeans)((BeanContextServices)getBeanContext()).getService(this, this, EnterpriseBeans.class, null, this);
-            EjbJar jar = (EjbJar)eb.getBeanContext().getBeanContext();
+            JawsEnterpriseBeans eb = (JawsEnterpriseBeans)((BeanContextServices)getBeanContext()).getService(this, this, JawsEnterpriseBeans.class, null, this);
+            JawsEjbJar jar = (JawsEjbJar)eb.getBeanContext().getBeanContext();
             jar.getTypeMappings().addBeanContextMembershipListener(new BeanContextMembershipListener()
             {
                public void childrenAdded(BeanContextMembershipEvent bcme)

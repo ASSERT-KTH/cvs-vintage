@@ -27,9 +27,9 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.1 $
  */
-public class EjbJar
+public class jBossEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
 {
    // Constants -----------------------------------------------------
@@ -42,7 +42,7 @@ public class EjbJar
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
-   public EjbJar()
+   public jBossEjbJar()
    {
       super();
       
@@ -105,7 +105,7 @@ public class EjbJar
    // Protected -----------------------------------------------------
    protected void createEnterpriseBeans()
    {
-      eb = new EnterpriseBeans();
+      eb = new jBossEnterpriseBeans();
       add(eb);
    }
    

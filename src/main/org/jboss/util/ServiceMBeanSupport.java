@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -107,8 +107,9 @@ public abstract class ServiceMBeanSupport
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
+		name = getObjectName(server, name);
       start();
-      return getObjectName(server, name);
+      return name;
    }
    
    public void postRegister(java.lang.Boolean registrationDone)

@@ -24,9 +24,9 @@ import com.dreambean.ejx.xml.*;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class Session
+public class jBossSession
    extends com.dreambean.ejx.ejb.Session
-   implements EnterpriseBean
+   implements jBossEnterpriseBean
 {
    // Constants -----------------------------------------------------
     
@@ -47,21 +47,20 @@ public class Session
    
    public ContainerConfiguration getContainerConfiguration() 
    { 
-      EnterpriseBeans eb = (EnterpriseBeans)getBeanContext();
-      EjbJar jar = (EjbJar)eb.getBeanContext();
+      jBossEjbJar jar = (jBossEjbJar)getBeanContext().getBeanContext();
       return jar.getContainerConfigurations().getContainerConfiguration(configurationName);
    }
 
    public com.dreambean.ejx.ejb.ResourceReference addResourceReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.ResourceReference");
+      return (com.dreambean.ejx.ejb.ResourceReference)instantiateChild("org.jboss.ejb.deployment.jBossResourceReference");
    }
    
    public com.dreambean.ejx.ejb.EjbReference addEjbReference()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.EjbReference)instantiateChild("org.jboss.ejb.deployment.EjbReference");
+      return (com.dreambean.ejx.ejb.EjbReference)instantiateChild("org.jboss.ejb.deployment.jBossEjbReference");
    }
    
    // XmlExternalizable implementation ------------------------------
@@ -125,7 +124,7 @@ public class Session
                Iterator enum = getEjbReferences();
                while(enum.hasNext())
                {
-                  EjbReference ref = (EjbReference)enum.next();
+                  jBossEjbReference ref = (jBossEjbReference)enum.next();
                   if (ref.getName().equals(resName))
                   {
                      ref.importXml((Element)n);

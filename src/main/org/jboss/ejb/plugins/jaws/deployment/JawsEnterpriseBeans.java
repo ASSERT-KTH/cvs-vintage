@@ -4,7 +4,7 @@
  * Distributable under GPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.ejb.deployment;
+package org.jboss.ejb.plugins.jaws.deployment;
 
 import java.awt.*;
 import java.beans.*;
@@ -29,51 +29,40 @@ import com.dreambean.ejx.Util;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class EnterpriseBeans
+public class JawsEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   boolean secure = true;
+   String dataSource = "";
+   String typeMapping = "";
     
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
-   public void setSecure(boolean s) { secure = s; }
-   public boolean isSecure() { return secure; }
+   public void setDataSource(String ds) { dataSource = ds; }
+   public String getDataSource() { return dataSource; }
+   
+   public void setTypeMapping(String tm) { String old = typeMapping; typeMapping = tm; firePropertyChange("TypeMapping", old, typeMapping); }
+   public String getTypeMapping() { return typeMapping; }
    
    public com.dreambean.ejx.ejb.Entity addEntity()
       throws IOException, ClassNotFoundException
    {
-      return (com.dreambean.ejx.ejb.Entity)instantiateChild("org.jboss.ejb.deployment.Entity");
-   }
-
-   public com.dreambean.ejx.ejb.Session addSession()
-      throws IOException, ClassNotFoundException
-   {
-      return (com.dreambean.ejx.ejb.Session)instantiateChild("org.jboss.ejb.deployment.Session");
+      return (com.dreambean.ejx.ejb.Entity)instantiateChild("org.jboss.ejb.plugins.jaws.deployment.JawsEntity");
    }
    
-	public void addJndiPrefix(String prefix)
-	{
-		Iterator enum = super.iterator();
-		while(enum.hasNext())
-		{
-			EnterpriseBean bean = (EnterpriseBean)enum.next();
-			bean.setJndiName(prefix + bean.getJndiName());
-		}
-	}
-
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
       throws Exception
    {
       Element enterprisebeans = super.exportXml(doc);
       
-      XMLManager.addElement(enterprisebeans,"secure",new Boolean(isSecure()).toString());
+      XMLManager.addElement(enterprisebeans,"datasource",dataSource);
+      XMLManager.addElement(enterprisebeans,"type-mapping",getTypeMapping());
       
       return enterprisebeans;
    }
@@ -81,7 +70,7 @@ public class EnterpriseBeans
    public void importXml(Element elt)
       throws Exception
    {
-      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(EjbJar.JBOSS_DOCUMENT))
+      if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
       {
          NodeList nl = elt.getChildNodes();
          for (int i = 0; i < nl.getLength(); i++)
@@ -95,35 +84,42 @@ public class EnterpriseBeans
                {
                   NodeList enl = ((Element)n).getElementsByTagName("ejb-name");
                   String ejbName = XMLManager.getString(enl.item(0));
-                  
-                  Entity bean = (Entity)getEjb(ejbName);
+                  JawsEntity bean = (JawsEntity)getEjb(ejbName);
                   bean.importXml((Element)n);
                } catch (IllegalArgumentException e)
                {
-                  e.printStackTrace();
+//                  e.printStackTrace();
                   // Does not exist anymore...
                }
-            } else if (name.equals("session"))
+            } else if (name.equals("datasource"))
             {
-               try
-               {
-                  NodeList enl = ((Element)n).getElementsByTagName("ejb-name");
-                  String ejbName = XMLManager.getString(enl.item(0));
-                  Session bean = (Session)getEjb(ejbName);
-                  bean.importXml((Element)n);
-               } catch (IllegalArgumentException e)
-               {
-                  e.printStackTrace();
-                  // Does not exist anymore...
-               }
-            } else if (name.equals("secure"))
+               setDataSource(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("type-mapping"))
             {
-               setSecure(new Boolean(XMLManager.getString(n)).booleanValue());
+               setTypeMapping(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } 
          }
       } else
       {
          super.importXml(elt);
+         
+         // Remove BMP beans
+         Iterator enum = getEntities();
+         while(enum.hasNext())
+         {
+            JawsEntity entity = (JawsEntity)enum.next();
+            if (entity.getPersistenceType().equals("Bean"))
+            {
+               remove(entity);
+            }
+         }
+         
+         // Remove session beans
+         enum = getSessions();
+         while(enum.hasNext())
+         {
+            remove(enum.next());
+         }
       }
    }
     

@@ -62,10 +62,11 @@ import org.jboss.logging.Log;
 import com.dreambean.ejx.ejb.EjbReference;
 import org.jboss.ejb.plugins.jaws.deployment.JawsFileManager;
 import org.jboss.ejb.plugins.jaws.deployment.JawsFileManagerFactory;
-import org.jboss.ejb.plugins.jaws.deployment.EjbJar;
-import org.jboss.ejb.plugins.jaws.deployment.EnterpriseBeans;
-import org.jboss.ejb.plugins.jaws.deployment.Entity;
-import org.jboss.ejb.plugins.jaws.deployment.CMPField;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEjbJar;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEnterpriseBeans;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEjbReference;
+import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;
+import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
 import org.jboss.ejb.plugins.jaws.deployment.Finder;
 
 /**
@@ -78,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -109,7 +110,7 @@ public class JAWSPersistenceManager
    boolean compoundKey;
    Class primaryKeyClass;
    
-   Entity entity;
+   JawsEntity entity;
    String dbName;
    
    String createSql;
@@ -125,6 +126,9 @@ public class JAWSPersistenceManager
    
    DataSource ds;
    String url;
+	
+	boolean readOnly;
+	long readOnlyTimeOut;
    
    // Static --------------------------------------------------------
    
@@ -151,14 +155,14 @@ public class JAWSPersistenceManager
       beanCtx.add(jfm);
       
       // Load XML
-      EjbJar jar = jfm.load(container.getApplication().getURL());
+      JawsEjbJar jar = jfm.load(container.getApplication().getURL());
       
       // Extract meta-info
-      entity = (Entity)jar.getEnterpriseBeans().getEjb(container.getMetaData().getEjbName());
+      entity = (JawsEntity)jar.getEnterpriseBeans().getEjb(container.getMetaData().getEjbName());
       Iterator fields = entity.getCMPFields();
       while (fields.hasNext())
       {
-         CMPField field = (CMPField)fields.next();
+         JawsCMPField field = (JawsCMPField)fields.next();
          CMPFields.add(field);
          cmpFields.add(container.getBeanClass().getField(field.getFieldName()));
          // Identify JDBC-type
@@ -171,6 +175,10 @@ public class JAWSPersistenceManager
          }
       }
       
+		// Read-only?
+		readOnly = entity.getReadOnly();
+		readOnlyTimeOut = entity.getTimeOut();
+		
       // Identify pk
       pkColumnList = "";
       pkColumnWhereList = "";
@@ -188,7 +196,7 @@ public class JAWSPersistenceManager
             pkFields.add(field);
             for (int j = 0; j < CMPFields.size(); j++)
             {
-               CMPField cmpField = (CMPField)CMPFields.get(j);
+               JawsCMPField cmpField = (JawsCMPField)CMPFields.get(j);
                if (cmpField.getFieldName().equals(field.getName()))
                {
                   pkColumnList += ((i == 0)?"":",") + cmpField.getColumnName();
@@ -208,7 +216,7 @@ public class JAWSPersistenceManager
          pkFields.add(container.getBeanClass().getField(entity.getPrimaryKeyField()));
          for (int j = 0; j < CMPFields.size(); j++)
          {
-            CMPField cmpField = (CMPField)CMPFields.get(j);
+            JawsCMPField cmpField = (JawsCMPField)CMPFields.get(j);
             if (cmpField.getFieldName().equals(entity.getPrimaryKeyField()))
             {
                pkColumnList = cmpField.getColumnName();
@@ -235,10 +243,10 @@ public class JAWSPersistenceManager
       throws Exception
    {
       // Find datasource
-      url = ((EnterpriseBeans)entity.getBeanContext()).getDataSource();
+      url = ((JawsEnterpriseBeans)entity.getBeanContext()).getDataSource();
       if (!url.startsWith("jdbc:"))
       {
-         ds = (DataSource)new InitialContext().lookup(((EnterpriseBeans)entity.getBeanContext()).getDataSource());
+         ds = (DataSource)new InitialContext().lookup(((JawsEnterpriseBeans)entity.getBeanContext()).getDataSource());
       }
       
       // Create table if necessary
@@ -361,7 +369,7 @@ public class JAWSPersistenceManager
             for (int i = 0; i < cmpFields.size(); i++)
             {
                Field field = (Field)cmpFields.get(i);
-               CMPField cmpField = (CMPField)CMPFields.get(i);
+               JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);
                if (cmpField.getJdbcType().equals("REF"))
                {
                   idx = setParameter(stmt,idx,((Integer)jdbcTypes.get(i)).intValue(), field.get(ctx.getInstance()),refIdx++);
@@ -384,7 +392,15 @@ public class JAWSPersistenceManager
          }
          
          // Store state to be able to do tuned updates
-         ctx.setPersistenceContext(getState(ctx));
+			PersistenceContext pCtx = new PersistenceContext();
+			
+			// If read-only, set last read to now
+			if (readOnly) pCtx.lastRead = System.currentTimeMillis();
+			
+			// Save initial state for tuned updates
+			pCtx.state = getState(ctx);
+			
+         ctx.setPersistenceContext(pCtx);
          
          // Invoke postCreate
          postCreateMethod.invoke(ctx.getInstance(), args);
@@ -464,7 +480,7 @@ public class JAWSPersistenceManager
                
                for (int i = 0; i < CMPFields.size(); i++)
                {
-                  CMPField cmpField = (CMPField)CMPFields.get(i);
+                  JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);
                   
                   // Find field
                   if (cmpFieldName.equals(cmpField.getFieldName().toLowerCase()))
@@ -475,7 +491,7 @@ public class JAWSPersistenceManager
                         String sql = "SELECT "+pkColumnList+" FROM "+entity.getTableName()+ " WHERE ";
                         
                         // TODO: Fix this.. I mean it's already been computed once.. 
-                        CMPField[] cmpFields = getPkColumns(cmpField);
+                        JawsCMPField[] cmpFields = getPkColumns(cmpField);
                         for (int j = 0; j < cmpFields.length; j++)
                         {
                            sql += (j==0?"":" AND ") + cmpField.getColumnName()+"_"+cmpFields[j].getColumnName()+"=?";
@@ -561,11 +577,24 @@ public class JAWSPersistenceManager
       {
          throw new ServerException("Activation failed", e);
       }
+		
+		// Set new persistence context
+		ctx.setPersistenceContext(new PersistenceContext());
    }
    
    public void loadEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
+		// Check read only
+		if (readOnly)
+		{
+			PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();
+			
+			// Timeout has expired for this entity?
+			if ((pCtx.lastRead + readOnlyTimeOut) > System.currentTimeMillis())
+				return; // State is still "up to date"
+		}
+	
       Connection con = null;
       PreparedStatement stmt = null;
       ResultSet rs = null;
@@ -606,12 +635,12 @@ public class JAWSPersistenceManager
          int refIdx = 0;
          for (int i = 0; i < CMPFields.size(); i++)
          {
-            CMPField cmpField = (CMPField)CMPFields.get(i);
+            JawsCMPField cmpField = (JawsCMPField)CMPFields.get(i);
             if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
             {
                // Create pk
-               CMPField[] pkFields = (CMPField[])ejbRefs.get(refIdx++);
-               Entity referencedEntity = (Entity)pkFields[0].getBeanContext();
+               JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx++);
+               JawsEntity referencedEntity = (JawsEntity)pkFields[0].getBeanContext();
                Object pk;
                if (referencedEntity.getPrimaryKeyField().equals(""))
                {
@@ -664,7 +693,8 @@ public class JAWSPersistenceManager
          }
          
          // Store state to be able to do tuned updates
-         ctx.setPersistenceContext(getState(ctx));
+			PersistenceContext pCtx = (PersistenceContext)ctx.getPersistenceContext();
+			if (readOnly) pCtx.lastRead = System.currentTimeMillis();
          
          // Call ejbLoad on bean instance
          ejbLoad.invoke(ctx.getInstance(), new Object[0]);
@@ -684,6 +714,10 @@ public class JAWSPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
+		// Check for read-only
+		if (readOnly)
+			return;
+	
       Connection con = null;
       PreparedStatement stmt = null;
       try
@@ -705,10 +739,10 @@ public class JAWSPersistenceManager
             {
                if (!currentState[i].equals(oldState[i]))
                {
-                  CMPField[] pkFields = (CMPField[])ejbRefs.get(refIdx);
+                  JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
                   for (int j = 0; j < pkFields.length; j++)
                   {
-                     updateSql += (dirty?",":"") + ((CMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
+                     updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
                      dirty = true;
                   }
                   dirtyField[i] = true;
@@ -718,7 +752,7 @@ public class JAWSPersistenceManager
             {
                if (!currentState[i].equals(oldState[i]))
                {
-                  updateSql += (dirty?",":"") + ((CMPField)CMPFields.get(i)).getColumnName()+"=?";
+                  updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";
                   dirty = true;
                   dirtyField[i] = true;
                }
@@ -741,7 +775,7 @@ public class JAWSPersistenceManager
          refIdx = 0;
          for (int i = 0;i < dirtyFields.size(); i++)
          {
-            if (((CMPField)CMPFields.get(i)).getJdbcType().equals("REF"))
+            if (((JawsCMPField)CMPFields.get(i)).getJdbcType().equals("REF"))
             {
                if (dirtyField[i])
                {
@@ -871,15 +905,15 @@ public class JAWSPersistenceManager
       {
          if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
          {
-            CMPField[] pkFields = (CMPField[])ejbRefs.get(refIdx);
+            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
             for (int j = 0; j < pkFields.length; j++)
             {
-               createSql += (i==0 && j==0?"":",") + ((CMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+" "+pkFields[j].getSqlType();
+               createSql += (i==0 && j==0?"":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+" "+pkFields[j].getSqlType();
             }
             refIdx++;
          } else
          {
-            CMPField field = (CMPField)CMPFields.get(i);
+            JawsCMPField field = (JawsCMPField)CMPFields.get(i);
             createSql += (i==0?"":",") + field.getColumnName()+" "+field.getSqlType();
          }
       }
@@ -897,16 +931,16 @@ public class JAWSPersistenceManager
       {
          if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
          {
-            CMPField[] pkFields = (CMPField[])ejbRefs.get(refIdx);
+            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
             for (int j = 0; j < pkFields.length; j++)
             {
-               fieldSql += (fieldSql.equals("") ? "":",") + ((CMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();
+               fieldSql += (fieldSql.equals("") ? "":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();
                valueSql += (valueSql.equals("") ? "?":",?");
             }
             refIdx++;
          } else
          {
-            CMPField field = (CMPField)CMPFields.get(i);
+            JawsCMPField field = (JawsCMPField)CMPFields.get(i);
             fieldSql += (fieldSql.equals("") ? "":",") + field.getColumnName();
             valueSql += (valueSql.equals("") ? "?":",?");
          }
@@ -922,15 +956,15 @@ public class JAWSPersistenceManager
       {
          if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
          {
-            CMPField[] pkFields = (CMPField[])ejbRefs.get(refIdx);
+            JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
             for (int j = 0; j < pkFields.length; j++)
             {
-               selectSql += (i==0 && j==0?"":",") + ((CMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();
+               selectSql += (i==0 && j==0?"":",") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName();
             }
             refIdx++;
          } else
          {
-            CMPField field = (CMPField)CMPFields.get(i);
+            JawsCMPField field = (JawsCMPField)CMPFields.get(i);
             selectSql += (i==0?"":",") + field.getColumnName();
          }
       }
@@ -990,19 +1024,19 @@ public class JAWSPersistenceManager
       }
    }
    
-   private CMPField[] getPkColumns(CMPField field)
+   private JawsCMPField[] getPkColumns(JawsCMPField field)
       throws RemoteException
    {
       // Find reference
-      Iterator enum = ((Entity)field.getBeanContext()).getEjbReferences();
+      Iterator enum = ((JawsEntity)field.getBeanContext()).getEjbReferences();
       while (enum.hasNext())
       {
-         EjbReference ref = (EjbReference)enum.next();
+         JawsEjbReference ref = (JawsEjbReference)enum.next();
          if (ref.getName().equals(field.getSqlType()))
          {
             // Find referenced entity
-            EnterpriseBeans eb = (EnterpriseBeans)field.getBeanContext().getBeanContext();
-            Entity referencedEntity = (Entity)eb.getEjb(ref.getLink());
+            JawsEnterpriseBeans eb = (JawsEnterpriseBeans)field.getBeanContext().getBeanContext();
+            JawsEntity referencedEntity = (JawsEntity)eb.getEjb(ref.getLink());
             // Extract pk
             String pk = referencedEntity.getPrimaryKeyField();
             if (pk.equals(""))
@@ -1019,12 +1053,12 @@ public class JAWSPersistenceManager
                      Iterator fieldEnum = referencedEntity.getCMPFields();
                      while (fieldEnum.hasNext())
                      {
-                        CMPField pkField = (CMPField)fieldEnum.next();
+                        JawsCMPField pkField = (JawsCMPField)fieldEnum.next();
                         if (pkField.getFieldName().equals(pkFields[i].getName()))
                            result.add(pkField);
                      }
                   }
-                  return (CMPField[])result.toArray(new CMPField[0]);
+                  return (JawsCMPField[])result.toArray(new JawsCMPField[0]);
                } catch (ClassNotFoundException e)
                {
                   throw new ServerException("Could not load pk class of referenced entity",e);
@@ -1035,11 +1069,11 @@ public class JAWSPersistenceManager
                Iterator fieldEnum = referencedEntity.getCMPFields();
                while (fieldEnum.hasNext())
                {
-                  CMPField pkField = (CMPField)fieldEnum.next();
+                  JawsCMPField pkField = (JawsCMPField)fieldEnum.next();
                   if (pkField.getFieldName().equals(pk))
-                     return new CMPField[] { pkField };
+                     return new JawsCMPField[] { pkField };
                }
-               return new CMPField[0];
+               return new JawsCMPField[0];
             }
          }
       }
@@ -1185,7 +1219,7 @@ public class JAWSPersistenceManager
             case Types.REF:
             {
                // EJB-reference
-               CMPField[] pkInfo = (CMPField[])ejbRefs.get(refIdx);
+               JawsCMPField[] pkInfo = (JawsCMPField[])ejbRefs.get(refIdx);
                Object pk = null;
                try
                {
@@ -1195,7 +1229,7 @@ public class JAWSPersistenceManager
                   throw new SQLException("Could not extract primary key from EJB reference:"+e);
                }
                
-               if (!((Entity)pkInfo[0].getBeanContext()).getPrimaryKeyField().equals(""))
+               if (!((JawsEntity)pkInfo[0].getBeanContext()).getPrimaryKeyField().equals(""))
                {
                   // Primitive key
                   setParameter(stmt,idx,getJDBCType(pkInfo[0].getJdbcType()), pk, refIdx);
@@ -1309,5 +1343,11 @@ public class JAWSPersistenceManager
             
          return obj;
       }
+   }
+	
+   static class PersistenceContext
+   {
+		Object[] state;
+		long lastRead = -1;
    }
 }

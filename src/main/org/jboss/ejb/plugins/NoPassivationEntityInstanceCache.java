@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Stack;
 import java.util.Collections;
 
-import javax.ejb.SessionBean;
 import javax.transaction.SystemException;
 
 import org.jboss.ejb.Container;
@@ -31,7 +30,7 @@ import org.jboss.ejb.deployment.Entity;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class NoPassivationEntityInstanceCache
    implements InstanceCache
@@ -70,7 +69,6 @@ public class NoPassivationEntityInstanceCache
    public void start()
       throws Exception
    {
-      isReentrant = ((Entity)con.getMetaData()).getReentrant().equals("True");
    }
    
    public void stop()

@@ -24,7 +24,7 @@ import javax.management.loading.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class Main
    implements Runnable
@@ -60,7 +60,10 @@ public class Main
       final Main main = new Main();
       
       if (args.length > 0)
-         main.confName = args[0];
+      {
+	      main.confName = args[0];
+	      System.out.println("Configuration:"+main.confName);
+      }
       
       // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(new PrivilegedAction()
@@ -113,6 +116,8 @@ public class Main
          // Read additional configuration
          if (confName != null)
          {
+				System.out.println("Load configuration:"+confName);
+				
             mletConf = getClass().getClassLoader().getResource(confName);
             
             if (mletConf == null)

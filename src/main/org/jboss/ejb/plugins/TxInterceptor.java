@@ -16,6 +16,7 @@ import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.RollbackException;
+import javax.transaction.TransactionRequiredException;
 import javax.transaction.SystemException;
 
 import javax.ejb.EJBException;
@@ -28,7 +29,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class TxInterceptor
    extends AbstractInterceptor
@@ -43,6 +44,7 @@ public class TxInterceptor
     
    // Attributes ----------------------------------------------------
    private TransactionManager tm;
+	private HashMap methodTx = new HashMap();
    
    // Static --------------------------------------------------------
 
@@ -51,6 +53,17 @@ public class TxInterceptor
    // Public --------------------------------------------------------
 
    // Interceptor implementation --------------------------------------
+	public void init()
+		throws Exception
+	{
+		// Store TM reference locally
+		tm = getContainer().getTransactionManager();
+	
+		// Find out method->tx-type mappings from meta-info
+//		EnterpriseBean eb = getContainer.getMetaData();
+//		eb.getBeanContext()
+	}
+	
    public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
       throws Exception
    {
@@ -76,7 +89,7 @@ public class TxInterceptor
       {
          case TX_NOT_SUPPORTED:
          {
-//            System.out.println("TX_NOT_SUPPORTED");
+            Logger.debug("TX_NOT_SUPPORTED");
             if (current.getStatus() != Status.STATUS_NO_TRANSACTION)
             {
                // Suspend tx
@@ -155,18 +168,80 @@ public class TxInterceptor
          
          case TX_SUPPORTS:
          {
+	         Logger.debug("TX_SUPPORTS");
+	         Transaction tx = current;
+	         
+				// This mode doesn't really do anything
+				// If tx started -> do nothing
+				// If tx not started -> do nothing
+				
+	         // Continue invocation
+            return getNext().invoke(id, method, args, ctx);
          }
          
          case TX_REQUIRES_NEW:
          {
+	         Logger.debug("TX_REQUIRES_NEW");
+	         
+            // Always begin new tx
+            Logger.debug("Begin tx");
+            getContainer().getTransactionManager().begin();
+	         
+	         // Continue invocation
+	         try
+	         {
+	            return getNext().invoke(id, method, args, ctx);
+	         } catch (RemoteException e)
+	         {
+	        		getContainer().getTransactionManager().rollback();
+	            throw e;
+	         } catch (RuntimeException e)
+	         {
+         		getContainer().getTransactionManager().rollback();
+	            throw new ServerException("Exception occurred", e);
+	         } catch (Error e)
+	         {
+         		getContainer().getTransactionManager().rollback();
+	            throw new ServerException("Exception occurred:"+e.getMessage());
+	         } finally
+	         {
+	            if (tm.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+	            {
+	               tm.rollback();
+	            }
+	            else
+	            {
+	         		// Commit tx
+	         		// This will happen if
+	         		// a) everything goes well
+	         		// b) app. exception was thrown
+	               tm.commit();
+	            }
+	         }
          }
          
          case TX_MANDATORY:
          {
+	         Logger.debug("TX_MANDATORY");
+	         if (current.getStatus() == Status.STATUS_NO_TRANSACTION)
+	         {
+					throw new TransactionRequiredException();
+	         } else
+	         {
+	            return getNext().invoke(id, method, args, ctx);
+	         }
          }
          
          case TX_NEVER:
          {
+	         Logger.debug("TX_NEVER");
+	         if (current.getStatus() == Status.STATUS_ACTIVE)
+	         {
+	         	throw new RemoteException("Transaction not allowed");
+	         } else
+	         {
+	            return getNext().invoke(id, method, args, ctx);
+	         }
          }
       }
       

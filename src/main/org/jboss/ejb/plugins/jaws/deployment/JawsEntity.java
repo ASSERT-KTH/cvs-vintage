@@ -30,7 +30,7 @@ import com.dreambean.ejx.ejb.EjbReference;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class Entity
+public class JawsEntity
    extends com.dreambean.ejx.ejb.Entity
 {
    // Constants -----------------------------------------------------
@@ -40,6 +40,8 @@ public class Entity
    boolean createTable = true;
    boolean removeTable = false;
    boolean tunedUpdates = true;
+	boolean readOnly = false;
+	int timeOut = 5*60; // 5 minute timeout on read-only state
 
    Container c;
    
@@ -60,10 +62,16 @@ public class Entity
    public void setTunedUpdates(boolean t) { tunedUpdates = t; }
    public boolean getTunedUpdates() { return tunedUpdates; }
    
+   public void setReadOnly(boolean t) { readOnly = t; }
+   public boolean getReadOnly() { return readOnly; }
+	
+   public void setTimeOut(int t) { timeOut = t; }
+   public int getTimeOut() { return timeOut; }
+	
    public com.dreambean.ejx.ejb.CMPField addCMPField()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.CMPField)instantiateChild("org.jboss.ejb.plugins.jaws.deployment.CMPField");
+      return (com.dreambean.ejx.ejb.CMPField)instantiateChild("org.jboss.ejb.plugins.jaws.deployment.JawsCMPField");
    }
    
    public Finder addFinder()
@@ -87,7 +95,7 @@ public class Entity
           
           try
           {
-             c.add(new GenericPropertySheet(this, CMPField.class), "CMP mappings");
+             c.add(new GenericPropertySheet(this, JawsCMPField.class), "CMP mappings");
           } catch (Exception e) {}
           
           try
@@ -109,6 +117,8 @@ public class Entity
       XMLManager.addElement(entity,"create-table",new Boolean(getCreateTable()).toString());
       XMLManager.addElement(entity,"remove-table",new Boolean(getRemoveTable()).toString());
       XMLManager.addElement(entity,"tuned-updates",new Boolean(getTunedUpdates()).toString());
+      XMLManager.addElement(entity,"read-only",new Boolean(getReadOnly()).toString());
+      XMLManager.addElement(entity,"time-out",new Integer(getTimeOut()).toString());
       
       for (Iterator enum = getCMPFields(); enum.hasNext();)
       {
@@ -126,7 +136,7 @@ public class Entity
    public void importXml(Element elt)
       throws Exception
    {
-   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(EjbJar.JAWS_DOCUMENT))
+   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
    	{
 	      NodeList nl = elt.getChildNodes();
 	      for (int i = 0; i < nl.getLength(); i++)
@@ -146,6 +156,12 @@ public class Entity
             } else if (name.equals("tuned-updates"))
             {
                setTunedUpdates(new Boolean(n.hasChildNodes() ? XMLManager.getString(n) : "").booleanValue());
+            } else if (name.equals("read-only"))
+            {
+               setReadOnly(new Boolean(n.hasChildNodes() ? XMLManager.getString(n) : "").booleanValue());
+            } else if (name.equals("time-out"))
+            {
+               setTimeOut(new Integer(n.hasChildNodes() ? XMLManager.getString(n) : "").intValue());
             } else if (name.equals("cmp-field"))
             {
                NodeList rnl = ((Element)n).getElementsByTagName("field-name");
@@ -153,7 +169,7 @@ public class Entity
                Iterator enum = getCMPFields();
                while(enum.hasNext())
                {
-                  CMPField field = (CMPField)enum.next();
+                  JawsCMPField field = (JawsCMPField)enum.next();
                   if (field.getFieldName().equals(fieldName))
                   {
                      field.importXml((Element)n);
@@ -175,7 +191,7 @@ public class Entity
          while(enum.hasNext())
          {
             Object child = enum.next();
-            if (child instanceof CMPField || child instanceof EjbReference)
+            if (child instanceof JawsCMPField || child instanceof JawsEjbReference)
                continue;
                
             remove(child);

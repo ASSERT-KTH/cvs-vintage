@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration
@@ -65,7 +65,7 @@ public class ClassPathExtension
             int found = 0;
             for (int i = 0; i < files.length; i++)
             {
-               if (files[i].endsWith(".jar"))
+               if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
                {
                   URL file = new File(dir, files[i]).getCanonicalFile().toURL();
                   log.log("Added library:"+file);

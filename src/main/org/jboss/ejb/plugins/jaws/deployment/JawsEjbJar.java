@@ -29,7 +29,7 @@ import com.dreambean.ejx.Util;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class EjbJar
+public class JawsEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
 {
    // Constants -----------------------------------------------------
@@ -41,7 +41,7 @@ public class EjbJar
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
-   public EjbJar()
+   public JawsEjbJar()
    {
       super();
       
@@ -54,7 +54,7 @@ public class EjbJar
    
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
-   	throws Exception
+        throws Exception
    {
       Element ejbjar = doc.createElement(JAWS_DOCUMENT);
 
@@ -65,7 +65,7 @@ public class EjbJar
    }
    
    public void importXml(Element elt)
-   	throws Exception
+        throws Exception
    {
       if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JAWS_DOCUMENT))
       {
@@ -95,7 +95,7 @@ public class EjbJar
    // Protected -----------------------------------------------------
    protected void createEnterpriseBeans()
    {
-      eb = new EnterpriseBeans();
+      eb = new JawsEnterpriseBeans();
       add(eb);
    }
    

@@ -27,11 +27,11 @@ import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 import javax.transaction.TransactionManager;
 
-import org.jboss.ejb.deployment.EnterpriseBean;
+import org.jboss.ejb.deployment.jBossEnterpriseBean;
 import com.dreambean.ejx.ejb.EnvironmentEntry;
-import org.jboss.ejb.deployment.EjbJar;
-import org.jboss.ejb.deployment.EjbReference;
-import org.jboss.ejb.deployment.ResourceReference;
+import org.jboss.ejb.deployment.jBossEjbJar;
+import org.jboss.ejb.deployment.jBossEjbReference;
+import org.jboss.ejb.deployment.jBossResourceReference;
 import org.jboss.ejb.deployment.ResourceManagers;
 import org.jboss.ejb.deployment.ResourceManager;
 import org.jboss.ejb.deployment.JDBCResource;
@@ -47,7 +47,7 @@ import org.jnp.server.NamingServer;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public abstract class Container
 {
@@ -56,7 +56,7 @@ public abstract class Container
    // Attributes ----------------------------------------------------
    protected Application application;
    protected ClassLoader classLoader;
-   protected EnterpriseBean metaData;
+   protected jBossEnterpriseBean metaData;
    protected InstancePool instancePool;
    protected ContainerInvoker containerInvoker;
    protected TransactionManager transactionManager;
@@ -92,7 +92,7 @@ public abstract class Container
       this.classLoader = cl; 
    }
    
-   public void setMetaData(EnterpriseBean metaData) 
+   public void setMetaData(jBossEnterpriseBean metaData) 
    { 
       this.metaData = metaData; 
    }
@@ -136,7 +136,7 @@ public abstract class Container
    }
    
    public ClassLoader getClassLoader(ClassLoader cl) { return classLoader; }
-   public EnterpriseBean getMetaData() { return metaData; }
+   public jBossEnterpriseBean getMetaData() { return metaData; }
    public ContainerInvoker getContainerInvoker() { return containerInvoker; }
    public InstancePool getInstancePool() { return instancePool; }
    public Interceptor getInterceptor() { return interceptor; }
@@ -334,7 +334,7 @@ public abstract class Container
 	         Iterator enum = getMetaData().getEjbReferences();
 	         while(enum.hasNext())
 	         {
-	            EjbReference ref = (EjbReference)enum.next();
+	            jBossEjbReference ref = (jBossEjbReference)enum.next();
 	            
 	            Name n = ctx.getNameParser("").parse(ref.getLink());
 	            ContainerInvoker ci = getContainerInvoker();
@@ -357,10 +357,10 @@ public abstract class Container
 	      // Bind resource references
 	      {
 	         Iterator enum = getMetaData().getResourceReferences();
-	         ResourceManagers rms = ((EjbJar)getMetaData().getBeanContext().getBeanContext()).getResourceManagers();
+	         ResourceManagers rms = ((jBossEjbJar)getMetaData().getBeanContext().getBeanContext()).getResourceManagers();
 	         while(enum.hasNext())
 	         {
-	            ResourceReference ref = (ResourceReference)enum.next();
+	            jBossResourceReference ref = (jBossResourceReference)enum.next();
 	            
 	            ResourceManager rm = rms.getResourceManager(ref.getResourceName());
 	            

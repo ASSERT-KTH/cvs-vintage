@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Mapping
    extends BeanContextServicesSupport
@@ -89,7 +89,7 @@ public class Mapping
    public void importXml(Element elt)
       throws Exception
    {
-   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(EjbJar.JAWS_DOCUMENT))
+   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
    	{
 	      NodeList nl = elt.getChildNodes();
 	      for (int i = 0; i < nl.getLength(); i++)

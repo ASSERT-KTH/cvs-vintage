@@ -1,19 +1,19 @@
 <bean 
-  class="org.jboss.ejb.deployment.Entity"
-  displayname="Entity"
+  class="org.jboss.ejb.deployment.jBossSession"
+  displayname="Session"
   iconcolor16="/images/bean.gif">
   
   <property 
     name="DisplayName" class="java.lang.String" expert="true"
     displayname="Display name" readonly="true"/>
-    
+
   <property 
     name="EjbName" class="java.lang.String" 
     displayname="EJB name" readonly="true"/>
     
   <property 
-    name="PersistenceType" class="java.lang.String" expert="true"
-    displayname="Persistence type" readonly="true"/>
+    name="SessionType" class="java.lang.String" 
+    displayname="Session type" readonly="true"/>
     
   <property 
     name="JndiName" class="java.lang.String" 

@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class JawsFileManager
    extends BeanContextServicesSupport
@@ -43,7 +43,7 @@ public class JawsFileManager
    File file;
    Component comp;
    
-   EjbJar ejbJar;
+   JawsEjbJar ejbJar;
    
    JawsFileManagerFactory fact;
    
@@ -58,12 +58,12 @@ public class JawsFileManager
    }
    
    // Public --------------------------------------------------------
-   public EjbJar getEjbJar()
+   public JawsEjbJar getEjbJar()
    {
       return ejbJar;
    }
 
-   public EjbJar load(URL file)
+   public JawsEjbJar load(URL file)
       throws Exception
    {
       // Create classloader
@@ -77,7 +77,7 @@ public class JawsFileManager
          
       Document doc;
       
-      ejbJar = new EjbJar();
+      ejbJar = new JawsEjbJar();
       add(ejbJar);
 
       // XML file
@@ -199,7 +199,7 @@ public class JawsFileManager
    
    public void createNew()
    {
-      ejbJar = new EjbJar();
+      ejbJar = new JawsEjbJar();
       add(ejbJar);
       
       // Load default Jaws XML

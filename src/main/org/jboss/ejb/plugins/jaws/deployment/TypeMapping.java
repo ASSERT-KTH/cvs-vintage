@@ -32,7 +32,7 @@ import com.dreambean.ejx.ejb.EjbReference;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class TypeMapping
    extends BeanContextServicesSupport
@@ -60,7 +60,7 @@ public class TypeMapping
       return name.equals("") ? "Type mapping" : name;
    }
    
-   public String getSqlTypeForJavaType(Class type, Entity entity)
+   public String getSqlTypeForJavaType(Class type, JawsEntity entity)
    {
       String name = type.getName();
       
@@ -111,7 +111,7 @@ public class TypeMapping
       return objectType;
    }
    
-   public String getJdbcTypeForJavaType(Class type, Entity entity)
+   public String getJdbcTypeForJavaType(Class type, JawsEntity entity)
    {
       String name = type.getName();
       
@@ -202,7 +202,7 @@ public class TypeMapping
    public void importXml(Element elt)
       throws Exception
    {
-   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(EjbJar.JAWS_DOCUMENT))
+   	if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
    	{
 	      NodeList nl = elt.getChildNodes();
 	      for (int i = 0; i < nl.getLength(); i++)

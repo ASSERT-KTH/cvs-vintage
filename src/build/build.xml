@@ -29,7 +29,7 @@
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
     
-    <property name="classpath" value="${build.classes.dir};${lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${lib.dir}/jmxri.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar"/>
+    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar"/>
     <property name="packages" value="org.jboss,org.jboss.ejb,org.jboss.util,org.jboss.tm,org.jboss.logging,org.jboss.jdbc,org.jboss.naming,org.jboss.web"/>
 
     <property name="build.compiler" value="classic"/>
@@ -42,7 +42,7 @@
   <target name="prepare" depends="init">
     <mkdir dir="${build.dir}"/>
   </target>
-
+  
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
@@ -54,18 +54,42 @@
            debug="on"
            deprecation="off"
            optimize="off"
-           excludes="**/tomcat/**,**/activation/**"
+           excludes="**/tomcat/**,**/activation/**,**/*BeanInfo.java"
     />
     
+    <rmic base="${build.classes.dir}" 
+          classname="org.jboss.jmx.server.JMXAdaptorImpl" 
+          stubVersion="1.2"
+			 classpath="${classpath}"/>  
+			 
     <rmic base="${build.classes.dir}" 
           classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker" 
           stubVersion="1.2"/>  
   </target>
 
   <!-- =================================================================== -->
+  <!-- Create the EJX plugin BeanInfo classes                              -->
+  <!-- =================================================================== -->
+  <target name="xmlbeans" depends="compile">
+    <xmlbean destdir="${src.dir}"
+             srcdir="${etc.dir}/beaninfo"
+             includes="**"
+    />
+    <javac srcdir="${src.dir}"
+           destdir="${build.classes.dir}"
+           classpath="${classpath}"
+           debug="on"
+           deprecation="off"
+           optimize="off"
+			  includes="**/*BeanInfo.java"
+           excludes="**/tomcat/**,**/activation/**"
+    />
+  </target>
+  
+  <!-- =================================================================== -->
   <!-- Creates the jar archives                                            -->
   <!-- =================================================================== -->
-  <target name="jar" depends="compile">
+  <target name="jar" depends="xmlbeans">
     <copydir src="${src.resources}" dest="${build.classes.dir}"/>
      
     <mkdir dir="${build.bin.dir}"/>
@@ -88,15 +112,17 @@
          manifest="${etc.dir}/jboss-client.mf"
          includes="org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**"
     />
-  </target>
-
-  <!-- =================================================================== -->
-  <!-- Create the EJX plugin BeanInfo classes                              -->
-  <!-- =================================================================== -->
-  <target name="xmlbeans" depends="compile">
-    <xmlbean destdir="${build.classes.dir}"
-             srcdir="${etc.dir}/beaninfo"
-             includes="**"
+	 
+    <jar jarfile="${build.bin.dir}/deploy.jar"
+         basedir="${build.classes.dir}"
+         manifest="${etc.dir}/deploy.mf"
+         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
+    />
+	 
+    <jar jarfile="${build.bin.dir}/stop.jar"
+         basedir="${build.classes.dir}"
+         manifest="${etc.dir}/stop.mf"
+         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
     />
   </target>
   

@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import javax.ejb.EJBHome;
@@ -18,16 +19,20 @@ import javax.ejb.SessionContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
+	implements java.io.Serializable
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
    EJBObject ejbObject;
-   boolean invoked = false;
+   Object cacheCtx;
+   Object persistenceCtx;
+	
+	SessionContext ctx;
     
    // Static --------------------------------------------------------
    
@@ -36,27 +41,47 @@ public class StatefulSessionEnterpriseContext
       throws RemoteException
    {
       super(instance, con);
-      ((SessionBean)instance).setSessionContext(new StatefulSessionContextImpl());
+		ctx = new StatefulSessionContextImpl();
+      ((SessionBean)instance).setSessionContext(ctx);
    }
    
    // Public --------------------------------------------------------
    public void discard()
       throws RemoteException
    {
-//      ((SessionBean)instance).unsetEntityContext();
+		// Do nothing
    }
    
    public void setEJBObject(EJBObject eo) { ejbObject = eo; }
    public EJBObject getEJBObject() { return ejbObject; }
    
-   public void setInvoked(boolean invoked) { this.invoked = invoked; }
-   public boolean isInvoked() { return invoked; }
+   public void setPersistenceContext(Object ctx) { this.persistenceCtx = ctx; }
+   public Object getPersistenceContext() { return persistenceCtx; }
+   
+   public void setCacheContext(Object ctx) { this.cacheCtx = ctx; }
+   public Object getCacheContext() { return cacheCtx; }
+	
+	public SessionContext getSessionContext()
+	{
+		return ctx;
+	}
 
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
     
    // Private -------------------------------------------------------
+   private void writeObject(java.io.ObjectOutputStream out)
+      throws IOException, ClassNotFoundException
+   {
+		// No state
+   }
+	
+   private void readObject(java.io.ObjectInputStream in)
+      throws IOException, ClassNotFoundException
+   {
+		// No state
+   }
 
    // Inner classes -------------------------------------------------
    protected class StatefulSessionContextImpl

@@ -1,8 +1,6 @@
 /*
- * jBoss, the OpenSource EJB server
- *
- * Distributable under GPL license.
- * See terms of license at gnu.org.
+ * Copyright 1999 by dreamBean Software,
+ * All rights reserved.
  */
 package org.jboss.ejb.deployment;
 
@@ -24,13 +22,13 @@ import com.dreambean.ejx.xml.*;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class EjbReference
-   extends com.dreambean.ejx.ejb.EjbReference
+public class jBossResourceReference
+   extends com.dreambean.ejx.ejb.ResourceReference
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   String jndiName = "";
+   String resourceName = "";
 
    Customizer c;
    // Static --------------------------------------------------------
@@ -38,16 +36,16 @@ public class EjbReference
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
-   public void setJndiName(String n) { jndiName = n; }
-   public String getJndiName() { return jndiName; }
+   public void setResourceName(String n) { resourceName = n; }
+   public String getResourceName() { return resourceName; }
 
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
    {
-      Element entity = doc.createElement("ejb-ref");
-      XMLManager.addElement(entity,"ejb-ref-name",getName());
+      Element entity = doc.createElement("resource-ref");
+      XMLManager.addElement(entity,"res-ref-name",getName());
       
-      XMLManager.addElement(entity,"jndi-name",getJndiName());
+      XMLManager.addElement(entity,"resource-name",getResourceName());
       
       return entity;
    }
@@ -62,20 +60,21 @@ public class EjbReference
             Node n = nl.item(i);
             String name = n.getNodeName();
             
-            if (name.equals("jndi-name"))
+            if (name.equals("resource-name"))
             {
-               setJndiName(n.hasChildNodes() ? XMLManager.getString(n) : "");
+               setResourceName(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } 
          }
       } else // EJB-JAR XML
       {
          super.importXml(elt);
+			setResourceName(getName());
       }
    }
    
    public String toString()
    {
-      return (getName().equals("")) ? "EJB reference" : getName();
+      return (getName().equals("")) ? "Resource reference" : getName();
    }
     
    // Package protected ---------------------------------------------

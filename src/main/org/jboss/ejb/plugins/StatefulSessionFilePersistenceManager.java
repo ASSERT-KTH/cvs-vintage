@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
@@ -53,7 +54,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -89,9 +90,19 @@ public class StatefulSessionFilePersistenceManager
       ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
       
       String ejbName = con.getMetaData().getEjbName();
-      dir = new File(getClass().getResource("/db/sessions/db.properties").getFile()).getParentFile();
+      dir = new File(getClass().getResource("db.properties").getFile()).getParentFile();
       dir = new File(dir, ejbName);
+		
+		System.out.println("Storing sessions for "+ejbName+" in:"+dir);
       dir.mkdirs();
+		
+		// Clear dir of old files
+		File[] sessions = dir.listFiles();
+		for (int i = 0; i < sessions.length; i++)
+		{
+			sessions[i].delete();
+		}
+		System.out.println(sessions.length + " old sessions removed");
    }
    
    public void start()
@@ -118,11 +129,6 @@ public class StatefulSessionFilePersistenceManager
          // Call ejbCreate
          createMethod.invoke(ctx.getInstance(), args);
          
-/*         // Check exist
-         if (getFile(id).exists())
-            throw new DuplicateKeyException("Already exists:"+id);
-*/
-
          // Set id
          ctx.setId(nextId());
          
@@ -147,9 +153,18 @@ public class StatefulSessionFilePersistenceManager
    public void activateSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException
    {
-      // Call bean
-      try
-      {
+		try
+		{
+			// Load state
+			ObjectInputStream in = new SessionObjectInputStream(ctx, new FileInputStream(new File(dir, ctx.getId()+".ser")));
+			
+			Field[] fields = ctx.getInstance().getClass().getFields();
+			
+			for (int i = 0; i < fields.length; i++)
+				if (!Modifier.isTransient(fields[i].getModifiers()))
+					fields[i].set(ctx.getInstance(), in.readObject());
+			
+	      // Call bean
          ejbActivate.invoke(ctx.getInstance(), new Object[0]);
       } catch (Exception e)
       {
@@ -160,14 +175,25 @@ public class StatefulSessionFilePersistenceManager
    public void passivateSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException
    {
-      // Call bean
       try
       {
+	      // Call bean
          ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Passivation failed", e);
-      }
+		
+		   // Store state
+		   ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(new File(dir, ctx.getId()+".ser")));
+			
+			Field[] fields = ctx.getInstance().getClass().getFields();
+			
+			for (int i = 0; i < fields.length; i++)
+				if (!Modifier.isTransient(fields[i].getModifiers()))
+					out.writeObject(fields[i].get(ctx.getInstance()));
+			
+			out.close();	
+	   } catch (Exception e)
+	   {
+	      throw new ServerException("Passivation failed", e);
+	   }
    }
       
    public void removeSession(StatefulSessionEnterpriseContext ctx)
@@ -196,43 +222,4 @@ public class StatefulSessionFilePersistenceManager
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
-   static class CMPObjectOutputStream
-      extends ObjectOutputStream
-   {
-      public CMPObjectOutputStream(OutputStream out)
-         throws IOException
-      {
-         super(out);
-         enableReplaceObject(true);
-      }
-      
-      protected Object replaceObject(Object obj)
-         throws IOException
-      {
-         if (obj instanceof EJBObject)
-            return ((EJBObject)obj).getHandle();
-            
-         return obj;
-      }
-   }
-   
-   static class CMPObjectInputStream
-      extends ObjectInputStream
-   {
-      public CMPObjectInputStream(InputStream in)
-         throws IOException
-      {
-         super(in);
-         enableResolveObject(true);
-      }
-      
-      protected Object resolveObject(Object obj)
-         throws IOException
-      {
-         if (obj instanceof Handle)
-            return ((Handle)obj).getEJBObject();
-            
-         return obj;
-      }
-   }
 }

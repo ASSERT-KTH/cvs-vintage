@@ -1,5 +1,5 @@
 <bean 
-  class="org.jboss.ejb.plugins.jaws.deployment.CMPField"
+  class="org.jboss.ejb.plugins.jaws.deployment.JawsCMPField"
   displayname="Container managed field"
   iconcolor16="/images/database.gif">
   
