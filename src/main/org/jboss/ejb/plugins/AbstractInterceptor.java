@@ -11,13 +11,14 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
+import org.w3c.dom.Element;
 
 /**
  * An abstract base class for container interceptors.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -39,6 +40,12 @@ public abstract class AbstractInterceptor
 
    // Interceptor implementation ------------------------------------
    
+   public void setConfiguration(Element config) 
+   { 
+      // complete 
+   }
+
+
    public abstract void setContainer(Container container);
    
    public abstract Container getContainer();
