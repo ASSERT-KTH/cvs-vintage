@@ -1,6 +1,6 @@
 /**
  * JOnAS: Java(TM) Open Application Server
- * Copyright (C) 1999 Bull S.A.
+ * Copyright (C) 1999-2005 Bull S.A.
  * Contact: jonas-team@objectweb.org
  *
  * This library is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: javaURLContextFactory.java,v 1.4 2005/03/10 16:50:22 benoitf Exp $
+ * $Id: javaURLContextFactory.java,v 1.5 2005/03/15 17:54:52 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -53,8 +53,9 @@ public class javaURLContextFactory implements ObjectFactory {
      *         to be tried.
      */
     public Object getObjectInstance(Object url, Name name, Context ctx, Hashtable env) throws Exception {
-
-        TraceCarol.debugJndiCarol("url=" + url);
+        if (TraceCarol.isDebugjndiEncCarol()) {
+            TraceCarol.debugjndiEncCarol("url = '" + url + "'.");
+        }
 
         if (url == null) {
             // All naming operations with "java:..." comes here
@@ -64,11 +65,15 @@ public class javaURLContextFactory implements ObjectFactory {
         }
         if (url instanceof String) {
             // Don't know what to do here
-            TraceCarol.debugJndiCarol("javaURLContextFactory.getObjectInstance(" + url + ")");
+            if (TraceCarol.isDebugjndiEncCarol()) {
+                TraceCarol.debugjndiEncCarol("javaURLContextFactory.getObjectInstance(" + url + ")");
+            }
             return null;
         } else if (url instanceof String[]) {
             // Don't know what to do here
-            TraceCarol.debugJndiCarol("javaURLContextFactory.getObjectInstance(String[])");
+            if (TraceCarol.isDebugjndiEncCarol()) {
+                TraceCarol.debugjndiEncCarol("javaURLContextFactory.getObjectInstance(String[])");
+            }
             return null;
         } else {
             // invalid argument

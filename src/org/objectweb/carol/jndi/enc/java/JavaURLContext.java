@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JavaURLContext.java,v 1.1 2005/03/10 16:50:22 benoitf Exp $
+ * $Id: JavaURLContext.java,v 1.2 2005/03/15 17:54:52 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -36,9 +36,6 @@ import javax.naming.NamingException;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 
-import org.objectweb.util.monolog.api.BasicLevel;
-import org.objectweb.util.monolog.api.Logger;
-
 /**
  * Context implementation for the "java:" namespace. <br>
  * Package must be named .../java (See Initial Context) <br>
@@ -49,6 +46,8 @@ import org.objectweb.util.monolog.api.Logger;
  * @author Florent Benoit
  */
 public class JavaURLContext implements Context {
+
+
 
     /**
      * Url prefix, ie : java:
@@ -69,11 +68,6 @@ public class JavaURLContext implements Context {
      * Naming Context associated with the thread
      */
     private static ThreadLocal threadContext = new ThreadLocal();
-
-    /**
-     * Logger
-     */
-    private Logger logger = TraceCarol.getJndiCarolLogger();
 
     /**
      * Constructor
@@ -97,7 +91,7 @@ public class JavaURLContext implements Context {
 
         // We suppose that all names must be prefixed as this
         if (!name.startsWith(URL_PREFIX)) {
-            logger.log(BasicLevel.ERROR, "relative name! :" + name);
+            TraceCarol.error("relative name! :" + name);
             throw new NameNotFoundException("Invalid name:" + name);
         }
         if (name.endsWith("/")) {
@@ -119,7 +113,7 @@ public class JavaURLContext implements Context {
         if (name.get(0).equals(URL_PREFIX)) {
             return (name.getSuffix(1));
         } else {
-            logger.log(BasicLevel.ERROR, "relative name! :" + name);
+            TraceCarol.error("relative name! :" + name);
             throw new NameNotFoundException("Invalid name:" + name);
         }
     }

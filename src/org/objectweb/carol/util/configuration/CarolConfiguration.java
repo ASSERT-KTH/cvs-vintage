@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolConfiguration.java,v 1.19 2005/03/11 13:57:13 benoitf Exp $
+ * $Id: CarolConfiguration.java,v 1.20 2005/03/15 17:54:52 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -41,8 +41,6 @@ import java.util.TreeMap;
 import javax.naming.Context;
 
 import org.objectweb.carol.jndi.ns.NameServiceManager;
-
-import org.objectweb.util.monolog.api.LoggerFactory;
 
 /**
  * Interface <code> CarolConfiguration </code> for Carol environment You must
@@ -138,18 +136,6 @@ public class CarolConfiguration {
     }
 
     /**
-     * init the Carol configuration, A server can call this static method for
-     * instantiate the carol communication layer
-     * @param lf the logger factory
-     * @throws RMIConfigurationException if method fails
-     */
-    public static void init(LoggerFactory lf) throws RMIConfigurationException {
-        // init Trace
-        TraceCarol.configure(lf);
-        new CarolConfiguration();
-    }
-
-    /**
      * Constructor Read the communication context
      * @throws RMIConfigurationException if method fails
      */
@@ -194,6 +180,10 @@ public class CarolConfiguration {
      *         configuration loading
      */
     public static void loadCarolConfiguration() throws RMIConfigurationException {
+
+        // configure loggers
+        TraceCarol.configure();
+
         // load the configuration files
         try {
 

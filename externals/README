@@ -1,10 +1,11 @@
-# ObjectWeb components :
+# ObjectWeb components (required for jeremie protocol only)
 jeremie.tag		JEREMIE_4_2_1
 jonathan.tag	JONATHAN_CORE_4_1
 kilim.tag       KILIM_1_1_3
 monolog.tag		MONOLOG_1_8_2
 
 # others :
+Jakarta commons logging 1.0.4
 JGroups		    2.2.7
 Junit			3.8.1
 nanoXML 		2.2.1

@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: carol_double.xml,v 1.22 2005/03/10 10:08:21 benoitf Exp $
+ - $Id: carol_double.xml,v 1.23 2005/03/15 17:54:52 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -56,7 +56,7 @@
             value="-Djava.security.policy=${test.ext}/java.policy" />
   <property name="test.client.jvmarg1" value="${test.client.jvm.xtra1}" />
   <property name="test.client.jvmarg2" value="${test.client.jvm.xtra2}" />
-  <property name="trace.properties.file.name" value="trace.properties" />
+  <property name="trace.properties.file.name" value="commons-logging.properties" />
   <property name="basic.server.exit.stamp"
             location="${build}/build/BasicServerExit.stamp" />
 
