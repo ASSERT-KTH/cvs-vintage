@@ -118,7 +118,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.34 2002/02/17 19:16:57 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.35 2002/02/18 21:19:04 maartenc Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1758,7 +1758,7 @@ try{
             IssueType issueType = rmit1.getIssueType();
                 
             // set attribute group defaults
-            List attributeGroups = getAttributeGroups(issueType);
+            List attributeGroups = parentModule.getAttributeGroups(issueType);
             for (int j=0; j<attributeGroups.size(); j++)
             {
                 ag1 = (AttributeGroup)attributeGroups.get(j);
