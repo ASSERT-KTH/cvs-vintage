@@ -114,42 +114,11 @@
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity","asc"))
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
-#macro (userSort $shortName $longName)
-     #if ($sortColumn.equals($shortName))
-        #if ($sortPolarity.equals("desc"))
-          #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
-        #else
-          #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
-        #end $longName
-     #else
-        #set ($sortLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
-        <a href="$sortLink">$longName</a>
-     #end
-#end
 
 ## PAGINATION
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-
-#macro (paginate $resultsPerPage $pageNum $sortColumn $sortPolarity)
- <p class="paginate">
-  #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
-
- #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $pagLink.setPathInfo("pageNum", "$scarabR.PrevPage"))
-  <a href="$prevLink">&laquo; previous</a> |
- #end
-  #set ($pagLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
- $pageNum of $scarabR.NbrPages
- #if ($scarabR.NextPage != 0)
-      #set ($nextLink = $pagLink.setPathInfo("pageNum", "$scarabR.NextPage"))
-  | <a href="$nextLink">next &raquo;</a>
- #end
- </p> 
-#end
 
 ## USER SEARCH
 
@@ -193,8 +162,8 @@
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
 	<th nowrap="nowrap">$l10n.Select</th>
-	<th>#userSort ("username" "$l10n.Username")</th>
-    <th>#userSort ("name" "$l10n.FullName")</th>
+	<th>#userSort ("username" "$l10n.Username" "AssignIssue.vm")</th>
+    <th>#userSort ("name" "$l10n.FullName" "AssignIssue.vm")</th>
 	<th>$l10n.Association</th>
 	</tr>
    #foreach ($user in $searchResults)
