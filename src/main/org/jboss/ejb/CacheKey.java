@@ -7,6 +7,10 @@
 package org.jboss.ejb;
 
 import java.io.Externalizable;
+import java.io.ObjectOutput;
+import java.io.ObjectInput;
+import java.io.IOException;
+
 import java.rmi.MarshalledObject;
 
 import org.apache.log4j.Category;
@@ -25,134 +29,130 @@ import org.apache.log4j.Category;
  * 
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class CacheKey
-    implements Externalizable
+   implements Externalizable
 {
-    // Constants -----------------------------------------------------
+   // Constants -----------------------------------------------------
     
-    // Attributes ----------------------------------------------------
+   // Attributes ----------------------------------------------------
 
-    /**
-     * The database primaryKey.
-     * 
-     * This primaryKey is used by:
-     *
-     * org.jboss.ejb.plugins.EntityInstanceCache.setKey() - to set the EntityEnterpriseContext id
-     * org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy.invoke():
-     * - implementing Entity.toString() --> cacheKey.getId().toString()
-     * - implementing Entity.hashCode() --> cacheKey.getId().hashCode()
-     * - etc...
-     * org.jboss.ejb.plugins.local.BaseLocalContainerInvoker.EntityProxy.getId()
-     */
-    protected Object id;
+   /**
+    * The database primaryKey.
+    * 
+    * This primaryKey is used by:
+    *
+    * org.jboss.ejb.plugins.EntityInstanceCache.setKey() - to set the EntityEnterpriseContext id
+    * org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy.invoke():
+    * - implementing Entity.toString() --> cacheKey.getId().toString()
+    * - implementing Entity.hashCode() --> cacheKey.getId().hashCode()
+    * - etc...
+    * org.jboss.ejb.plugins.local.BaseLocalContainerInvoker.EntityProxy.getId()
+    */
+   protected Object id;
    
-    public Object getId()
-    {
-	return id;
-    }
+   public Object getId()
+   {
+      return id;
+   }
      
-    /** The Marshalled Object representing the key */
-    protected MarshalledObject mo;
+   /** The Marshalled Object representing the key */
+   protected MarshalledObject mo;
     
-    /** The Marshalled Object's hashcode */
-    protected int hashCode;
+   /** The Marshalled Object's hashcode */
+   protected int hashCode;
     
-    // Static --------------------------------------------------------  
+   // Static --------------------------------------------------------  
     
-    // Public --------------------------------------------------------
+   // Public --------------------------------------------------------
     
-    public CacheKey() {
-       // For externalization only
-    }
+   public CacheKey() {
+      // For externalization only
+   }
 
-    public CacheKey(Object id) {
-        // why does this throw an error and not an IllegalArgumentException ?
-	if (id == null) throw new Error("id may not be null");
+   public CacheKey(Object id) {
+      // why does this throw an error and not an IllegalArgumentException ?
+      if (id == null) throw new Error("id may not be null");
          
-	this.id = null;
+      this.id = null;
         
-	try {
-	    // Equals rely on the MarshalledObject itself
-	    mo =  new MarshalledObject(id);
-	    // Make a copy of the id to enforce copy semantics and 
-	    // allow reuse of the original primary key
-	    this.id = mo.get();
-	    // Precompute the hashCode (speed)
-	    hashCode = mo.hashCode();
-    	}
-	catch (Exception e) {
-           //
-           // should probably throw a nested exception here, but
-           // for now instead of printStackTrace, lets log it
-           //
-           Category log = Category.getInstance(this.getClass());
-           log.error("failed to initialize", e);
-        }
-    }
+      try {
+         // Equals rely on the MarshalledObject itself
+         mo =  new MarshalledObject(id);
+         // Make a copy of the id to enforce copy semantics and 
+         // allow reuse of the original primary key
+         this.id = mo.get();
+         // Precompute the hashCode (speed)
+         hashCode = mo.hashCode();
+      }
+      catch (Exception e) {
+         //
+         // should probably throw a nested exception here, but
+         // for now instead of printStackTrace, lets log it
+         //
+         Category log = Category.getInstance(this.getClass());
+         log.error("failed to initialize", e);
+      }
+   }
     
-    // Z implementation ----------------------------------------------
+   // Z implementation ----------------------------------------------
     
-    // Package protected ---------------------------------------------
+   // Package protected ---------------------------------------------
     
-    // Protected -----------------------------------------------------
+   // Protected -----------------------------------------------------
     
-    // Private -------------------------------------------------------
+   // Private -------------------------------------------------------
     
-    public void writeExternal(java.io.ObjectOutput out)
-	throws java.io.IOException
-    {
-        out.writeObject(id);
-	out.writeObject(mo);
-       	out.writeInt(hashCode);
-    }
+   public void writeExternal(ObjectOutput out)
+      throws IOException
+   {
+      out.writeObject(id);
+      out.writeObject(mo);
+      out.writeInt(hashCode);
+   }
    
-    public void readExternal(java.io.ObjectInput in)
-	throws java.io.IOException, ClassNotFoundException
-    {
-        id = in.readObject();
-	mo = (MarshalledObject) in.readObject();
-        hashCode = in.readInt();
-    }
+   public void readExternal(ObjectInput in)
+      throws IOException, ClassNotFoundException
+   {
+      id = in.readObject();
+      mo = (MarshalledObject) in.readObject();
+      hashCode = in.readInt();
+   }
 
-    // HashCode and Equals over write --------------------------------
+   // HashCode and Equals over write --------------------------------
     
-    /**
-     * these should be overwritten by extending Cache key
-     * since they define what the cache does in the first place
-     */
-    public int hashCode() {
-        
-        // we default to the pK id
-        return hashCode;
-    }
+   /**
+    * these should be overwritten by extending Cache key
+    * since they define what the cache does in the first place
+    */
+   public int hashCode() {
+      // we default to the pK id
+      return hashCode;
+   }
     
-    /**
-     * equals()
-     *
-     * We base the equals on the equality of the underlying key
-     * in this fashion we make sure that we cannot have duplicate 
-     * hashes in the maps. 
-     * The fast way (and right way) to do this implementation 
-     * is with a incremented cachekey.  It is more complex but worth
-     * the effort this is a FIXME (MF)
-     * The following implementation is fool-proof
-     */
-    public boolean equals(Object object) {
-        
-        if (object instanceof CacheKey) {
-            
-            return (mo.equals(((CacheKey) object).mo));
-        }
-        return false;
-    }
+   /**
+    * equals()
+    *
+    * We base the equals on the equality of the underlying key
+    * in this fashion we make sure that we cannot have duplicate 
+    * hashes in the maps. 
+    * The fast way (and right way) to do this implementation 
+    * is with a incremented cachekey.  It is more complex but worth
+    * the effort this is a FIXME (MF)
+    * The following implementation is fool-proof
+    */
+   public boolean equals(Object object) {
+      if (object instanceof CacheKey) {
+         return (mo.equals(((CacheKey) object).mo));
+      }
+      return false;
+   }
 	
-    public String toString()
-    {
-	return id.toString();
-    }
+   public String toString()
+   {
+      return id.toString();
+   }
     
-    // Inner classes -------------------------------------------------
+   // Inner classes -------------------------------------------------
 }
-
