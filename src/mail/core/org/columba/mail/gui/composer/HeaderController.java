@@ -1,0 +1,351 @@
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Library General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package org.columba.mail.gui.composer;
+
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Vector;
+
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.table.AddressbookTableModel;
+import org.columba.addressbook.gui.util.HeaderItemDNDManager;
+import org.columba.addressbook.parser.AddressParser;
+import org.columba.mail.util.MailResourceLoader;
+
+/**
+ * @author frd
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public class HeaderController
+	implements TableModelListener, KeyListener, DropTargetListener {
+	ComposerModel model;
+	HeaderView view;
+
+	DropTarget dropTarget = null;
+	DropTarget dropTarget2 = null;
+
+	boolean acceptDrop = true;
+
+	public HeaderController(ComposerModel model) {
+		this.model = model;
+
+		view = new HeaderView(model);
+
+		view.getTable().addKeyListener(this);
+
+		dropTarget = new DropTarget(view.getTable(), this);
+		dropTarget2 = new DropTarget(view, this);
+
+	}
+
+	public boolean checkState() {
+		int count = view.getTable().getRowCount();
+
+		for (int i = 0; i < count; i++) {
+			HeaderItem item = getAddressbookTableModel().getHeaderItem(i);
+			if (isValid(item))
+				return true;
+		}
+
+		System.out.println("no recipient");
+		NotifyDialog dialog = new NotifyDialog();
+		dialog.showDialog(MailResourceLoader.getString("menu","mainframe","composer_no_recipients_found")); //$NON-NLS-1$
+
+		return false;
+	}
+
+	protected boolean isValid(HeaderItem headerItem) {
+		if (headerItem.isContact()) {
+			String address = (String) headerItem.get("email;internet");
+			if (AddressParser.isValid(address))
+				return true;
+
+			address = (String) headerItem.get("displayname");
+			if (AddressParser.isValid(address))
+				return true;
+		} else
+			return true;
+
+		return false;
+	}
+
+	public AddressbookTableModel getAddressbookTableModel() {
+		return view.getAddressbookTableModel();
+	}
+
+	public void installListener() {
+		//view.table.getModel().addTableModelListener(this);
+	}
+
+	public void appendRow() {
+		view.getTable().appendRow();
+		
+	}
+
+	public void cleanupHeaderItemList() {
+		view.getTable().cleanupHeaderItemList();
+	}
+
+	protected void addVectorToTable(Vector v, int index) {
+		for (int i = 0; i < v.size(); i++) {
+			try {
+				HeaderItem item = (HeaderItem) v.get(i);
+				String field = (String) item.get("field");
+
+				if (field == null) {
+					String str = "";
+					if (index == 0)
+						str = "To";
+					else if (index == 1)
+						str = "Cc";
+					else if (index == 2)
+						str = "Bcc";
+
+					item.add("field", str);
+				}
+
+				view.getAddressbookTableModel().addItem(item);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public void updateComponents(boolean b) {
+		if (b == true) {
+
+			view.getAddressbookTableModel().setHeaderList(null);
+
+			Vector v = model.getToList();
+			addVectorToTable(v, 0);
+
+			v = model.getCcList();
+			addVectorToTable(v, 1);
+
+			v = model.getBccList();
+			addVectorToTable(v, 2);
+
+			appendRow();
+		} else {
+			Vector to = model.getToList();
+			to.clear();
+			Vector cc = model.getCcList();
+			cc.clear();
+			Vector bcc = model.getBccList();
+			bcc.clear();
+
+			for (int i = 0; i < view.table.getRowCount(); i++) {
+				HeaderItem item =
+					(HeaderItem) view.getAddressbookTableModel().getHeaderItem(
+						i);
+				String field = (String) item.get("field");
+
+				if (field == null) {
+					item.add("field", "To");
+					to.add(item);
+					continue;
+				}
+
+				if (field.equals("To")) {
+					to.add(item);
+				} else if (field.equals("Cc")) {
+					cc.add(item);
+				} else if (field.equals("Bcc")) {
+					bcc.add(item);
+				}
+			}
+		}
+	}
+
+	public HeaderItemList[] getHeaderItemLists() {
+		HeaderItemList[] lists = new HeaderItemList[3];
+		lists[0] = new HeaderItemList();
+		lists[1] = new HeaderItemList();
+		lists[2] = new HeaderItemList();
+		for (int i = 0; i < view.table.getRowCount(); i++) {
+			HeaderItem item =
+				(HeaderItem) view.getAddressbookTableModel().getHeaderItem(i);
+			String field = (String) item.get("field");
+
+			if (field == null) {
+				item.add("field", "To");
+				lists[0].add(item);
+				continue;
+			}
+
+			if (field.equals("To")) {
+				lists[0].add(item);
+			} else if (field.equals("Cc")) {
+				lists[1].add(item);
+			} else if (field.equals("Bcc")) {
+				lists[2].add(item);
+			}
+		}
+
+		return lists;
+	}
+
+	public void setHeaderItemLists(HeaderItemList[] lists) {
+		model.setToList(lists[0].getVector());
+
+		model.setCcList(lists[1].getVector());
+
+		model.setBccList(lists[2].getVector());
+
+		updateComponents(true);
+	}
+
+	public void tableChanged(TableModelEvent e) {
+
+		/*
+		int row = e.getFirstRow();
+		int column = e.getColumn();
+		String columnName = model.getColumnName(column);
+		Object data = model.getValueAt(row, column);
+		*/
+
+		model.getToList().clear();
+		model.getCcList().clear();
+		model.getBccList().clear();
+
+		for (int i = 0; i < view.table.getRowCount(); i++) {
+			HeaderItem item =
+				(HeaderItem) view.getAddressbookTableModel().getHeaderItem(i);
+			String field = (String) item.get("field");
+
+			if (field.equals("To")) {
+				model.getToList().add(item);
+			} else if (field.equals("Cc")) {
+				model.getCcList().add(item);
+			} else if (field.equals("Bcc")) {
+				model.getBccList().add(item);
+			}
+		}
+
+	}
+
+	public void removeSelected() {
+		view.removeSelected();
+	}
+
+	/****************** Key Listener ****************************/
+
+	public void keyPressed(KeyEvent k) {
+		switch (k.getKeyCode()) {
+			case (KeyEvent.VK_DELETE) :
+				{
+					if (view.count() > 1)
+						removeSelected();
+					break;
+				}
+		}
+	}
+
+	public void keyReleased(KeyEvent k) {
+	}
+
+	public void keyTyped(KeyEvent k) {
+	}
+
+	/***************************** DND *****************************/
+
+	public void dragEnter(DropTargetDragEvent event) {
+
+		// debug messages for diagnostics
+
+		if (acceptDrop == true)
+			event.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+		else
+			event.acceptDrag(DnDConstants.ACTION_COPY);
+	}
+
+	public void dragExit(DropTargetEvent event) {
+
+	}
+
+	public void dragOver(DropTargetDragEvent event) {
+
+	}
+
+	public void drop(DropTargetDropEvent event) {
+		if (acceptDrop == false) {
+			event.rejectDrop();
+
+			//clearSelection();
+
+			return;
+		}
+
+		Transferable transferable = event.getTransferable();
+
+		System.out.println("dropping contact");
+
+		HeaderItem[] items =
+			HeaderItemDNDManager.getInstance().getHeaderItemList();
+
+		//view.requestFocus();
+		int row = view.getTable().getEditingRow();
+		int column = view.getTable().getEditingColumn();
+		System.out.println("row=" + row + " column=" + column);
+
+		if ((row == -1) || (column == -1)) {
+		} else {
+			view.getTable().getCellEditor(row, column).stopCellEditing();
+			view.getTable().clearSelection();
+			view.getTable().requestFocus();
+		}
+
+		cleanupHeaderItemList();
+
+		for (int i = 0; i < items.length; i++) {
+			try {
+				HeaderItem item = (HeaderItem) items[i].clone();
+
+				item.add("field", "To");
+				System.out.println(
+					"add dnd contact:" + (String) item.get("displayname"));
+				getAddressbookTableModel().addItem(item);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		event.getDropTargetContext().dropComplete(true);
+
+		view.getTable().appendRow();
+
+	}
+
+	public void dropActionChanged(DropTargetDragEvent event) {
+	}
+
+}

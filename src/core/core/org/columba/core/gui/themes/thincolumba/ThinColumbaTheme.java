@@ -1,0 +1,166 @@
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Library General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package org.columba.core.gui.themes.thincolumba;
+
+import javax.swing.plaf.*;
+import javax.swing.plaf.basic.*;
+import javax.swing.plaf.metal.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+
+import org.columba.mail.message.*;
+import org.columba.core.config.*;
+import org.columba.core.gui.themes.*;
+import org.columba.core.gui.util.*;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.config.*;
+
+public class ThinColumbaTheme extends DefaultCTheme
+{
+
+	private final ColorUIResource secondary1 = new ColorUIResource(148, 148, 148);
+	private final ColorUIResource secondary2 = new ColorUIResource(160, 160, 160);
+	private final ColorUIResource secondary3 = new ColorUIResource(213, 213, 213);
+
+	private final ColorUIResource primary1 = new ColorUIResource(148, 148, 148);
+	private final ColorUIResource primary2 = new ColorUIResource(148, 148, 148);
+	private final ColorUIResource primary3 = new ColorUIResource(148, 148, 148);
+
+	private final ColorUIResource foreground;
+	private final ColorUIResource background;
+
+	public ThinColumbaTheme(ThemeItem item)
+	{
+		super(item);
+
+		foreground = new ColorUIResource(item.getForeground());
+
+		background = new ColorUIResource(item.getBackground());
+		// mainFont = mFont;
+		// messageFont = eFont;
+	}
+
+	// menu border, labels
+	protected ColorUIResource getPrimary1()
+	{
+		return primary1;
+	}
+
+	protected ColorUIResource getPrimary2()
+	{
+		return primary2;
+	}
+
+	protected ColorUIResource getPrimary3()
+	{
+		return primary3;
+	}
+
+	protected ColorUIResource getSecondary1()
+	{
+		return secondary1;
+	}
+	protected ColorUIResource getSecondary2()
+	{
+		return secondary2;
+	}
+	protected ColorUIResource getSecondary3()
+	{
+		return secondary3;
+	}
+
+	public String getName()
+	{
+		return "Thin Columba";
+	}
+
+	public void addCustomEntriesToTable(UIDefaults table)
+	{
+
+		table.put("Tree.selectionBackground", background);
+		table.put("Table.selectionBackground", background);
+		table.put("TextField.selectionBackground", background);
+		table.put("TextArea.selectionBackground", background);
+		table.put("List.selectionBackground", background);
+
+		table.put("Tree.selectionForeground", foreground);
+		table.put("Table.selectionForeground", foreground);
+		table.put("TextField.selectionForeground", foreground);
+		table.put("TextArea.selectionForeground", foreground);
+		table.put("List.selectionForeground", foreground);
+
+		/*
+		table.put( "SeparatorUI","org.columba.core.gui.themes.thincolumba.ThinColumbaSeparatorUI");
+		*/
+		
+		/*
+		table.put("Separator", new ThinColumbaSeparator() );
+		*/
+		table.put(
+			"SplitPaneUI",
+			"org.columba.core.gui.themes.thincolumba.ThinColumbaSplitPaneUI");
+
+		
+		table.put(
+			"ScrollBarUI",
+			"org.columba.core.gui.themes.thincolumba.ThinColumbaScrollBarUI");
+		
+		
+		table.put(
+			"TreeUI",
+			"org.columba.core.gui.themes.thincolumba.ThinColumbaTreeUI");
+
+		table.put("MenuBar.border", new ThinColumbaMenuBarBorder());
+
+		table.put("ToolBar.border", new ThinColumbaToolBarBorder());
+		
+		//table.put("MenuItemUI","org.columba.core.gui.themes.thincolumba.ThinColumbaMenuItemUI");
+		
+		
+		table.put("Menu.selectionBackground", new ColorUIResource(235, 235, 235));
+		table.put("MenuItem.selectionBackground", new ColorUIResource(235, 235, 235));
+		table.put(
+			"CheckBoxMenuItem.selectionBackground",
+			new ColorUIResource(235, 235, 235));
+		table.put(
+			"RadioButtonMenuItem.selectionBackground",
+			new ColorUIResource(235, 235, 235));
+
+		table.put("ToolTip.background", new ColorUIResource(255, 255, 255));
+
+		
+		table.put("ScrollBar.width", new Integer(15));
+		table.put("ScrollBar.allowsAbsolutePositioning", Boolean.FALSE);
+		
+		
+		table.put("SplitPane.dividerSize", new Integer(5));
+		table.put("SplitPane.border", null);
+
+		table.put("Label.foreground", table.get("textText"));
+
+		table.put("ScrollBar.minimumThumbSize", new java.awt.Dimension(15, 15));
+
+		table.put("HeaderView.border", new ThinColumbaMessageHeaderBorder());
+
+		
+
+		table.put("ComboBox.listBackground", new ColorUIResource(255,255,255) );
+
+		
+
+	}
+
+}

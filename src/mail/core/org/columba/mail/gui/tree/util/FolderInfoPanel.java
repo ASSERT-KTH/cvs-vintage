@@ -1,0 +1,242 @@
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Library General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package org.columba.mail.gui.tree.util;
+
+import java.awt.*;
+import java.awt.dnd.*;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.tree.*;
+import javax.swing.event.*;
+import javax.swing.border.*;
+
+import org.columba.core.gui.util.*;
+import org.columba.main.*;
+import org.columba.mail.config.*;
+import org.columba.mail.util.*;
+import org.columba.mail.folder.*;
+import org.columba.mail.gui.util.*;
+
+public class FolderInfoPanel extends CInfoPanel
+{
+	private JLabel leftLabel,readLabel,unreadLabel,recentLabel;
+	private JPanel rightPanel;
+
+	private ImageIcon image1,image2,image3,image4,image5,image6;
+
+	private MessageFolderInfo info;
+	private FolderItem item;
+
+	public void initComponents()
+	{
+		super.initComponents();
+
+		image1 = ImageLoader.getImageIcon("folder.png");
+		image2 = ImageLoader.getImageIcon("localhost.png");
+		image3 = ImageLoader.getImageIcon("remotehost.png");
+		image4 = ImageLoader.getImageIcon("virtualfolder.png");
+
+		image5 = ImageLoader.getImageIcon("mail-read.png");
+		image6 = ImageLoader.getImageIcon("mail-new.png");
+
+		leftLabel = new JLabel("Total: Unseen:");
+		leftLabel.setForeground(Color.white);
+		leftLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		leftLabel.setFont(font);
+		leftLabel.setIconTextGap(10);
+		leftLabel.setIcon(image1);
+		leftLabel.setText("Folder");
+		//gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+		gridbagConstraints.gridx = 0;
+		gridbagConstraints.weightx = 0.0;
+		gridbagConstraints.anchor = GridBagConstraints.WEST;
+
+		gridbagLayout.setConstraints(leftLabel, gridbagConstraints);
+		panel.add(leftLabel);
+
+		Component box = Box.createHorizontalGlue();
+		gridbagConstraints.gridx = 1;
+		gridbagConstraints.weightx = 1.0;
+		gridbagConstraints.fill = GridBagConstraints.HORIZONTAL;
+		gridbagLayout.setConstraints(box, gridbagConstraints);
+		panel.add(box);
+
+		/*
+		rightLabel = new JLabel("Total: Unseen:");
+		rightLabel.setForeground( Color.white );
+		rightLabel.setBorder( BorderFactory.createEmptyBorder( 2,2,2,2 ) );
+		rightLabel.setFont( font );
+		rightLabel.setIconTextGap( 10 );
+		//rightLabel.setIcon(image1);
+		rightLabel.setText("Folder");
+		*/
+
+		//gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		gridbagConstraints.gridx = 2;
+		gridbagConstraints.weightx = 0.0;
+		gridbagConstraints.fill = GridBagConstraints.NONE;
+		//gridbagConstraints.insets = new Insets(0, 0, 0, 20);
+		gridbagConstraints.anchor = GridBagConstraints.EAST;
+
+		GridBagLayout layout = new GridBagLayout();
+		rightPanel = new JPanel();
+		rightPanel.setLayout(layout);
+		rightPanel.setOpaque(false);
+		gridbagLayout.setConstraints(rightPanel, gridbagConstraints);
+		panel.add(rightPanel);
+
+		readLabel = new JLabel();
+		//readLabel.setIcon(image5);
+		readLabel.setFont(font);
+		readLabel.setForeground(Color.white);
+		readLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		//readLabel.setIconTextGap(10);
+		//readLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		unreadLabel = new JLabel();
+		//unreadLabel.setIcon(image6);
+		unreadLabel.setFont(font);
+		unreadLabel.setForeground(Color.white);
+		unreadLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		//unreadLabel.setIconTextGap(10);
+		//unreadLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		recentLabel = new JLabel();
+		recentLabel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		recentLabel.setFont(font);
+		recentLabel.setForeground(Color.white);
+		recentLabel.setIconTextGap(10);
+
+		gridbagConstraints = new GridBagConstraints();
+		gridbagConstraints.gridx = 0;
+		gridbagConstraints.weightx = 0.0;
+		gridbagConstraints.anchor = GridBagConstraints.SOUTH;
+		gridbagConstraints.insets = new Insets(0,0,0,0);
+		/*
+		JLabel label = new JLabel();
+		label.setIcon( image5 );
+		label.setVerticalAlignment(SwingConstants.BOTTOM);
+		layout.setConstraints( label, gridbagConstraints );
+		rightPanel.add( label );
+		*/
+
+		gridbagConstraints.gridx = 0;
+		gridbagConstraints.insets = new Insets(0,0,0,0);
+		gridbagConstraints.anchor = GridBagConstraints.WEST;
+		layout.setConstraints(readLabel, gridbagConstraints);
+		rightPanel.add(readLabel);
+
+		/*
+		label = new JLabel();
+		label.setIcon( image6 );
+		label.setVerticalAlignment(SwingConstants.BOTTOM);
+		gridbagConstraints.gridx = 2;
+		gridbagConstraints.insets = new Insets(0,0,0,0);
+		gridbagConstraints.anchor = GridBagConstraints.SOUTH;
+		layout.setConstraints( label, gridbagConstraints );
+		rightPanel.add( label );
+		*/
+
+		gridbagConstraints.gridx = 1;
+		gridbagConstraints.insets = new Insets(0,0,0,0);
+		gridbagConstraints.anchor = GridBagConstraints.WEST;
+		layout.setConstraints(unreadLabel, gridbagConstraints);
+		rightPanel.add(unreadLabel);
+
+		gridbagConstraints.gridx = 2;
+		gridbagConstraints.insets = new Insets(0,0,0,0);
+		layout.setConstraints(recentLabel, gridbagConstraints);
+		rightPanel.add(recentLabel);
+	}
+
+	public void resetRenderer()
+	{
+		initComponents();
+	}
+
+	public void update()
+	{
+		if (item == null) return;
+
+		int uid = item.getUid();
+
+		int total = info.getExists();
+		int unread = info.getUnseen();
+		int recent = info.getRecent();
+
+		String name = item.getName();
+		String type = item.getType();
+
+		boolean noInfo = false;
+
+		if (type.equals("virtual"))
+		{
+			leftLabel.setIcon(image4);
+		}
+		else if ((type.equals("imaproot")) && (item.isMessageFolder() == false))
+		{
+			leftLabel.setIcon(image3);
+			noInfo = true;
+		}
+		else if (item.getAccessRights().equals("system"))
+		{
+			if (name.equals(MailResourceLoader.getString("tree", "localfolders")))
+			{
+				noInfo = true;
+				leftLabel.setIcon(image2);
+			}
+			else
+			{
+				leftLabel.setIcon(image1);
+			}
+		}
+		else
+		{
+			leftLabel.setIcon(image1);
+		}
+
+		if (noInfo)
+		{
+			leftLabel.setText(name);
+		}
+		else
+		{
+			leftLabel.setText(name + " ( total: " + total + " )");
+			unreadLabel.setText(" unread: " + unread);
+			readLabel.setText(" read: " + (total - unread) + "  ");
+
+			if (recent > 0)
+			{
+				recentLabel.setText(" recent: "+recent);
+
+				//recentLabel.setText(" (" + recent + ")");
+			}
+			else
+			{
+				recentLabel.setText("");
+			}
+		}
+	}
+
+	public void set(FolderItem item, MessageFolderInfo info)
+	{
+		this.item = item;
+		this.info = info;
+
+		update();
+	}
+}

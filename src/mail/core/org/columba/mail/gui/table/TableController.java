@@ -1,0 +1,514 @@
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Library General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package org.columba.mail.gui.table;
+
+import javax.swing.JPopupMenu;
+import javax.swing.table.TableColumn;
+
+import org.columba.core.config.HeaderTableItem;
+import org.columba.core.gui.util.CScrollPane;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.SwingWorker;
+import org.columba.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.action.FilterActionListener;
+import org.columba.mail.gui.table.action.HeaderItemActionListener;
+import org.columba.mail.gui.table.action.HeaderTableActionListener;
+import org.columba.mail.gui.table.action.HeaderTableDnd;
+import org.columba.mail.gui.table.action.HeaderTableFocusListener;
+import org.columba.mail.gui.table.action.HeaderTableMouseListener;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
+import org.columba.mail.gui.table.menu.HeaderTableMenu;
+import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.tree.FolderSelectionListener;
+import org.columba.mail.message.HeaderList;
+
+/**
+ * This class shows the messageheaderlist
+ *
+ *
+ * @version 0.9.1
+ * @author Frederik
+ */
+
+public class TableController
+	implements  FolderSelectionListener {
+
+	private HeaderTableMenu menu;
+
+	private TableView headerTable;
+	private HeaderTableModel headerTableModel;
+
+	public CScrollPane scrollPane;
+	private SwingWorker worker;
+	private Folder folder;
+	private HeaderList headerList;
+
+	private FilterToolbar filterToolbar;
+
+	private HeaderTableActionListener headerTableActionListener;
+
+	private MessageNode[] messageNodes;
+
+	private MessageNode node;
+	private MessageNode oldNode;
+
+	private Object[] selection;
+
+	private HeaderTableMouseListener headerTableMouseListener;
+	private HeaderTableDnd headerTableDnd;
+	private HeaderTableFocusListener headerTableFocusListener;
+	private HeaderItemActionListener headerItemActionListener;
+	private FilterActionListener filterActionListener;
+
+	private HeaderTableItem headerTableItem;
+
+	private boolean folderChanged = false;
+
+	private int counter = 1;
+
+	//protected SelectionManager selectionManager;
+	protected TableView view;
+	protected HeaderTableActionListener actionListener;
+
+	protected TableSelectionManager tableSelectionManager;
+
+	protected MailFrameController mailFrameController;
+
+	protected Object[] newUidList;
+
+	public TableController(MailFrameController mailFrameController) {
+
+		this.mailFrameController = mailFrameController;
+
+		//setLayout(new BorderLayout());
+
+		headerTableItem =
+			(HeaderTableItem) MailConfig
+				.getMainFrameOptionsConfig()
+				.getHeaderTableItem()
+				.clone();
+		headerTableItem.removeEnabledItem();
+
+		headerTableModel = new HeaderTableModel(headerTableItem);
+
+		view = new TableView(headerTableModel);
+
+		tableSelectionManager = new TableSelectionManager();
+		tableSelectionManager.addFolderSelectionListener(this);
+
+		actionListener = new HeaderTableActionListener(this);
+
+		menu = new HeaderTableMenu(this);
+
+		//headerTableDnd = new HeaderTableDnd(view);
+
+		headerTableMouseListener = new HeaderTableMouseListener(this);
+		view.addMouseListener(headerTableMouseListener);
+
+		/*
+		headerTableFocusListener = new HeaderTableFocusListener();
+		view.addFocusListener(headerTableFocusListener);
+		*/
+
+		headerItemActionListener =
+			new HeaderItemActionListener(this, headerTableItem);
+		filterActionListener = new FilterActionListener(this);
+
+		
+		/*
+		headerTableActionListener = new HeaderTableActionListener(this);
+		
+		
+		
+		initRenderer();
+		
+		
+		
+		headerTable.addTreeSelectionListener(this);
+		
+		
+		
+		scrollPane = new CScrollPane(headerTable.getTable());
+		scrollPane.getViewport().setBackground(Color.white);
+		//scrollPane.setPreferredSize( new java.awt.Dimension(300,200) );
+		
+		add(scrollPane, BorderLayout.CENTER);
+		
+		filterToolbar = new FilterToolbar(this);
+		//filterToolbar.setAlignmentX(1);
+		if (MailConfig.getMainFrameOptionsConfig().getWindowItem().isShowFilterToolbar() == true)
+		{
+			add(filterToolbar, BorderLayout.NORTH);
+			try
+			{
+				getTableModelFilteredView().setDataFiltering(true);
+			}
+			catch ( Exception ex )
+			{
+			}
+		}
+		
+		//MainInterface.focusManager.registerComponent( new HeaderTableFocusOwner(this) );
+		*/
+	}
+
+	public TableView getView() {
+
+		return view;
+	}
+
+	/*
+	public void setSelectionManager(SelectionManager manager) {
+		this.selectionManager = manager;
+	
+		selectionManager.addFolderSelectionListener(this);
+	}
+	*/
+
+	public void folderSelectionChanged(FolderTreeNode newFolder) {
+
+		ColumbaLogger.log.debug("selection=" + newFolder);
+
+		if (newFolder instanceof Folder) {
+			MainInterface.processor.addOp(
+				new ViewHeaderListCommand(
+					mailFrameController,
+					getTableSelectionManager().getSelection()));
+			
+		}
+	}
+
+	public HeaderTableMouseListener getHeaderTableMouseListener() {
+		return headerTableMouseListener;
+	}
+
+	public boolean hasFocus() {
+		return headerTableFocusListener.hasFocus();
+	}
+
+	/**
+	 * return FilterToolbar
+	 */
+
+	public FilterToolbar getFilterToolbar() {
+		return filterToolbar;
+	}
+
+	/**
+	 * return HeaderTableItem
+	 */
+	public HeaderTableItem getHeaderTableItem() {
+		return headerTableItem;
+	}
+
+	/**
+	 * set the render for each column
+	 */
+
+	/**
+	 * return a Dialog wich is used by the copy/move message operation
+	 * to get the destination folder
+	 */
+
+	/*
+	public org.columba.modules.mail.gui.tree.util.SelectFolderDialog getSelectFolderDialog()
+	{
+		return MainInterface.treeViewer.getSelectFolderDialog();
+	}
+	*/
+	/**
+	 * show the filter toolbar
+	 */
+
+	/*
+	public void showToolbar()
+	{
+		add(filterToolbar, BorderLayout.NORTH);
+		TableModelFilteredView model = getTableModelFilteredView();
+		try
+		{
+			model.setDataFiltering(true);
+		}
+		catch ( Exception ex )
+		{
+		}
+	
+		getHeaderTableModel().update();
+	
+		validate();
+		repaint();
+	}
+	*/
+	/**
+	 * hide the filter toolbar
+	 */
+
+	/*
+	public void hideToolbar()
+	{
+		remove(filterToolbar);
+		TableModelFilteredView model = getTableModelFilteredView();
+		try
+		{
+			model.setDataFiltering(false);
+		}
+		catch ( Exception ex )
+		{
+		}
+	
+		validate();
+		repaint();
+	}
+	*/
+	/**
+	 * return the ActionListener
+	 *
+	 */
+	public HeaderTableActionListener getActionListener() {
+		return actionListener;
+	}
+
+	/**
+	 * save the column state:
+	 *  - position
+	 *  - size
+	 *  - appearance
+	 * of every column
+	 */
+
+	
+	public void saveColumnConfig()
+	{
+		HeaderTableItem v = (HeaderTableItem) MailConfig.getMainFrameOptionsConfig().getHeaderTableItem().clone();
+		v.removeEnabledItem();
+	
+		for (int i = 0; i < v.count(); i++)
+		{
+			String c = (String) v.getName(i);
+			TableColumn tc = getView().getColumn(c);
+	
+			v.setSize(i, tc.getWidth());
+	
+			try
+			{
+				int index = getView().getColumnModel().getColumnIndex(c);
+				v.setPosition(i, index);
+			}
+			catch (IllegalArgumentException ex)
+			{
+				ex.printStackTrace();
+			}
+	
+		}
+	
+	}
+	
+
+	/**
+	 * set folder to show
+	 */
+	public void setFolder(Folder f) {
+		this.folder = f;
+	}
+
+	/**
+	 * return currently showed folder
+	 */
+	public Folder getFolder() {
+		return folder;
+	}
+
+	/**
+	 * return an array of all selected message uids
+	 */
+	/*
+	public Object[] getUids()
+	{
+		MessageNode[] nodes = getHeaderTable().getSelectedNodes();
+	
+		Object[] uids = new Object[nodes.length];
+	
+		for (int i = 0; i < nodes.length; i++)
+		{
+			uids[i] = nodes[i].getUid();
+		}
+	
+		return uids;
+	
+	}
+	*/
+	/**
+	 * return HeaderTable widget which does all the dirty work
+	 */
+	public TableView getHeaderTable() {
+		return headerTable;
+	}
+
+	/**
+	 * return the Model which contains a HeaderList
+	 */
+	public HeaderTableModel getHeaderTableModel() {
+		return headerTableModel;
+
+	}
+
+	/*
+	public void backupSelection()
+	{
+		if ( messageNodes != null )
+			getHeaderTable().setSelection( messageNodes );
+	}
+	*/
+
+	public void clearMessageNodeList() {
+		messageNodes = null;
+	}
+
+	/**
+	 * return ActionListener for the headeritem sorting
+	 */
+	public HeaderItemActionListener getHeaderItemActionListener() {
+		return headerItemActionListener;
+	}
+
+	/**
+	 * return ActionListener for FilterToolbar
+	 */
+	public FilterActionListener getFilterActionListener() {
+		return filterActionListener;
+	}
+
+	/**
+	 * show the message in the messageviewer
+	 */
+
+	public void showMessage() {
+		
+
+		MessageNode[] nodes = getView().getSelectedNodes();
+		if (nodes == null)
+		{
+			return;
+		}
+		
+		getActionListener().changeMessageActions();
+		
+		if ( nodes.length == 0 ) return;
+
+		newUidList = new Object[nodes.length];
+		for (int i = 0; i < nodes.length; i++) {
+			newUidList[i] = nodes[i].getUid();
+			System.out.println("node="+newUidList[i]);
+		}
+		
+		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
+
+		
+		
+	}
+
+	/**
+	 * return the PopupMenu for the table
+	 */
+	public JPopupMenu getPopupMenu() {
+		return menu.getPopupMenu();
+	}
+
+	/************************** actions ********************************/
+
+	/**
+	 * create the PopupMenu
+	 */
+
+	/**
+	 * MouseListener sorts table when clicking on a column header
+	 */
+
+	
+
+	// method is called when folder data changed
+	// the method updates the model
+
+	public void tableChanged(TableChangedEvent event) throws Exception {
+
+		Folder folder = event.getSrcFolder();
+
+		if (folder == null) {
+			if (event.getEventType() == TableChangedEvent.UPDATE)
+				getHeaderTableModel().update();
+
+			return;
+		}
+
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getTableSelectionManager()
+				.getSelection();
+		Folder srcFolder = (Folder) r[0].getFolder();
+
+		if (!folder.equals(srcFolder))
+			return;
+		//System.out.println("headertableviewer->folderChanged");
+
+		switch (event.getEventType()) {
+			case TableChangedEvent.UPDATE :
+				{
+					getHeaderTableModel().update();
+
+					break;
+				}
+			case TableChangedEvent.ADD :
+				{
+					getHeaderTableModel().addHeaderList(event.getHeaderList());
+
+					break;
+				}
+			case TableChangedEvent.REMOVE :
+				{
+					getHeaderTableModel().removeHeaderList(event.getUids());
+					break;
+				}
+			case TableChangedEvent.MARK :
+				{
+					getHeaderTableModel().markHeader(
+						event.getUids(),
+						event.getMarkVariant());
+					break;
+				}
+		}
+	
+	}
+
+	/**
+	 * Returns the tableSelectionManager.
+	 * @return TableSelectionManager
+	 */
+	public TableSelectionManager getTableSelectionManager() {
+		return tableSelectionManager;
+	}
+
+	/**
+	 * Returns the mailFrameController.
+	 * @return MailFrameController
+	 */
+	public MailFrameController getMailFrameController() {
+		return mailFrameController;
+	}
+
+}

@@ -1,0 +1,75 @@
+package org.columba.mail.gui.table;
+
+import java.util.Vector;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.tree.FolderSelectionListener;
+import org.columba.mail.gui.tree.TreeSelectionManager;
+
+/**
+ * @author freddy
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public class TableSelectionManager extends TreeSelectionManager implements FolderSelectionListener{
+
+	protected Object[] uids;
+
+	
+	protected Vector messageListenerList;
+	
+	/**
+	 * Constructor for TableSelectionManager.
+	 */
+	public TableSelectionManager() {
+		super();
+		messageListenerList = new Vector();
+	}
+	
+	public void addMessageSelectionListener(MessageSelectionListener listener) {
+		messageListenerList.add(listener);
+	}
+
+	
+
+	public void fireMessageSelectionEvent(
+		Object[] oldUidList,
+		Object[] newUidList) {
+		uids = newUidList;
+
+		for (int i = 0; i < messageListenerList.size(); i++) {
+			MessageSelectionListener l =
+				(MessageSelectionListener) messageListenerList.get(i);
+			l.messageSelectionChanged(uids);
+		}
+	}
+	
+	public Object[] getUids() {
+		return uids;
+	}
+	
+	public DefaultCommandReference[] getSelection()
+	{
+		FolderCommandReference[] references = new FolderCommandReference[1];
+		references[0] = new FolderCommandReference((Folder) getFolder(), uids);
+
+		return references;
+	}
+	
+	public void folderSelectionChanged( FolderTreeNode treeNode )
+	{
+		ColumbaLogger.log.debug("new folder selection:"+treeNode.toString());
+		
+		fireFolderSelectionEvent( folder, treeNode );
+		
+		folder = treeNode;
+	}
+
+}

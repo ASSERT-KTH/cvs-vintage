@@ -1,0 +1,440 @@
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Library General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package org.columba.mail.gui.table;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.MissingResourceException;
+import java.util.Vector;
+
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.tree.TreePath;
+
+import org.columba.core.config.HeaderTableItem;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.treetable.JTreeTable;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.table.action.ColumbaBasicTableUI;
+import org.columba.mail.gui.table.util.BooleanHeaderRenderer;
+import org.columba.mail.gui.table.util.BooleanRenderer;
+import org.columba.mail.gui.table.util.CommonHeaderRenderer;
+import org.columba.mail.gui.table.util.DateHeaderRenderer;
+import org.columba.mail.gui.table.util.FlaggedRenderer;
+import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.mail.gui.table.util.PriorityRenderer;
+import org.columba.mail.gui.table.util.StatusRenderer;
+import org.columba.mail.gui.table.util.SubjectTreeCellRenderer;
+import org.columba.mail.gui.table.util.TableModelFilteredView;
+import org.columba.mail.gui.table.util.TableModelThreadedView;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
+
+/**
+ * This widget is a mix between a JTable and a JTree
+ * ( we need the JTree for the Threaded viewing of mailing lists )
+ *
+ * @version 0.9.1
+ * @author Frederik
+ */
+public class TableView extends JTreeTable {
+
+	protected HeaderTableModel headerTableModel;
+
+	private int selectedRow = 0;
+	private int update = 0;
+
+	//private ListSelectionModel listSelectionModel;
+
+	private String column;
+
+	//private JTreeTable table;
+
+	private Vector tableModelPlugins;
+
+	protected TableModelFilteredView tableModelFilteredView;
+	protected HeaderTableModelSorter tableModelSorter;
+	protected TableModelThreadedView tableModelThreadedView;
+
+	protected HeaderList headerList;
+
+	public TableView(HeaderTableModel headerTableModel) {
+		super(headerTableModel);
+
+		this.headerTableModel = headerTableModel;
+
+		tableModelFilteredView = new TableModelFilteredView(headerTableModel);
+
+		tableModelSorter = new HeaderTableModelSorter(headerTableModel);
+		tableModelSorter.setWindowItem(
+			MailConfig.getMainFrameOptionsConfig().getWindowItem());
+
+		tableModelThreadedView = new TableModelThreadedView(headerTableModel);
+
+		//table = new JTreeTable( headerTableModel );
+
+		setUI(new ColumbaBasicTableUI());
+
+		headerTableModel.registerPlugin(tableModelFilteredView);
+		headerTableModel.registerPlugin(tableModelThreadedView);
+		headerTableModel.registerPlugin(tableModelSorter);
+
+		try {
+			initRenderer(false);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		addMouseListenerToHeaderInTable();
+
+	}
+
+	protected void addMouseListenerToHeaderInTable() {
+		final JTable tableView = this;
+
+		tableView.setColumnSelectionAllowed(false);
+
+		MouseAdapter listMouseListener = new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				TableColumnModel columnModel = tableView.getColumnModel();
+				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+				int column = tableView.convertColumnIndexToModel(viewColumn);
+
+				if (e.getClickCount() == 1 && column != -1) {
+					getTableModelSorter().setSortingColumn(column);
+					headerTableModel.update();
+					/*
+					MainInterface.mainFrame.getMenu().updateSortMenu();
+					*/
+				}
+			}
+		};
+
+		JTableHeader th = tableView.getTableHeader();
+		th.addMouseListener(listMouseListener);
+	}
+
+	public void enableThreadedView(boolean b) {
+
+		if (b == true) {
+			//tree.setRootVisible(true);
+
+			TableColumn tc = null;
+			try {
+				tc = getColumn("Subject");
+				tc.setCellRenderer(null);
+
+			} catch (Exception ex) {
+				System.out.println(
+					"headerTable->registerRenderer: " + ex.getMessage());
+			}
+
+			setTreeCellRenderer(new SubjectTreeCellRenderer(getTree()));
+
+			
+		} else {
+			//tree.setRootVisible(false);
+
+			setTreeCellRenderer(null);
+			TableColumn tc = null;
+			try {
+				tc = getColumn("Subject");
+				tc.setCellRenderer(new HeaderTableCommonRenderer(getTree()));
+
+			} catch (Exception ex) {
+				System.out.println(
+					"headerTable->registerRenderer: " + ex.getMessage());
+			}
+		}
+
+	}
+
+	/**
+	 * sets the header, which is going to be viewed
+	 *
+	 * @param f a <code>Folder</code>
+	 * @see Folder
+	 */
+
+	protected void initRenderer(boolean b) throws Exception {
+
+		HeaderTableItem v =
+			(HeaderTableItem) MailConfig
+				.getMainFrameOptionsConfig()
+				.getHeaderTableItem()
+				.clone();
+		v.removeEnabledItem();
+
+		for (int i = 0; i < v.count(); i++) {
+			String name = v.getName(i);
+			int size = v.getSize(i);
+			int position = v.getPosition(i);
+
+			if (name.equalsIgnoreCase("size")) {
+				registerRenderer(
+					"Size",
+					new HeaderTableSizeRenderer(getTree()),
+					new CommonHeaderRenderer(
+						name,
+						MailResourceLoader.getString("header", "size"),
+						getTableModelSorter()),
+					size,
+					false,
+					position);
+			} else if (name.equalsIgnoreCase("Status")) {
+
+				registerRenderer(
+					"Status",
+					new StatusRenderer(),
+					new BooleanHeaderRenderer(
+						true,
+						name,
+						getTableModelSorter()),
+					23,
+					true,
+					position);
+			} else if (name.equalsIgnoreCase("Flagged")) {
+				registerRenderer(
+					"Flagged",
+					new FlaggedRenderer(),
+					new BooleanHeaderRenderer(
+						true,
+						name,
+						getTableModelSorter()),
+					23,
+					true,
+					position);
+			} else if (name.equalsIgnoreCase("Attachment")) {
+				registerRenderer(
+					"Attachment",
+					new BooleanRenderer(
+						true,
+						ImageLoader.getSmallImageIcon("attachment.png")),
+					new BooleanHeaderRenderer(
+						true,
+						name,
+						getTableModelSorter()),
+					23,
+					true,
+					position);
+			} else if (name.equalsIgnoreCase("Date")) {
+				registerRenderer(
+					"Date",
+					new HeaderTableDateRenderer(getTree(), true),
+					new DateHeaderRenderer(
+						name,
+						MailResourceLoader.getString("header", "date"),
+						getTableModelSorter()),
+					size,
+					false,
+					position);
+
+			} else if (name.equalsIgnoreCase("Priority")) {
+				registerRenderer(
+					"Priority",
+					new PriorityRenderer(true),
+					new BooleanHeaderRenderer(
+						true,
+						name,
+						getTableModelSorter()),
+					23,
+					true,
+					position);
+
+			} else if (name.equalsIgnoreCase("Subject")) {
+
+				registerRenderer(
+					"Subject",
+					new HeaderTableCommonRenderer(getTree()),
+					new CommonHeaderRenderer(
+						name,
+						MailResourceLoader.getString("header", "subject"),
+						getTableModelSorter()),
+					size,
+					false,
+					position);
+			} else {
+				String str = new String();
+				try {
+					str =
+						MailResourceLoader.getString(
+							"header",
+							name.toLowerCase());
+
+				} catch (MissingResourceException ex) {
+					System.out.println(ex.getMessage());
+
+				}
+
+				if (str.length() == 0)
+					registerRenderer(
+						name,
+						new HeaderTableCommonRenderer(getTree()),
+						new CommonHeaderRenderer(
+							name,
+							name,
+							getTableModelSorter()),
+						size,
+						false,
+						position);
+
+				else
+					registerRenderer(
+						name,
+						new HeaderTableCommonRenderer(getTree()),
+						new CommonHeaderRenderer(
+							name,
+							str,
+							getTableModelSorter()),
+						size,
+						false,
+						position);
+
+			}
+		}
+
+	}
+
+	public void registerRenderer(
+		String name,
+		TableCellRenderer cell,
+		TableCellRenderer header,
+		int size,
+		boolean lockSize,
+		int position) {
+		TableColumn tc = null;
+
+		try {
+			tc = getColumn(name);
+		} catch (Exception ex) {
+			System.out.println(
+				"headerTable->registerRenderer: " + ex.getMessage());
+		}
+
+		if (tc == null)
+			return;
+
+		if (cell != null)
+			tc.setCellRenderer(cell);
+
+		if (header != null)
+			tc.setHeaderRenderer(header);
+
+		if (lockSize) {
+			tc.setMaxWidth(size);
+			tc.setMinWidth(size);
+		} else
+			tc.setPreferredWidth(size);
+
+		try {
+			int index = getColumnModel().getColumnIndex(name);
+			getColumnModel().moveColumn(index, position);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void registerRenderer(
+		String name,
+		TableCellRenderer cell,
+		TableCellRenderer header,
+		int size,
+		boolean lockSize) {
+		TableColumn tc = null;
+
+		try {
+			tc = getColumn(name);
+		} catch (Exception ex) {
+			System.out.println(
+				"headerTable->registerRenderer: " + ex.getMessage());
+		}
+
+		if (tc == null)
+			return;
+
+		if (cell != null)
+			tc.setCellRenderer(cell);
+
+		if (header != null)
+			tc.setHeaderRenderer(header);
+
+		if (lockSize) {
+			tc.setMaxWidth(size);
+			tc.setMinWidth(size);
+		} else
+			tc.setPreferredWidth(size);
+
+	}
+
+	/**
+	 * return the table model sorter
+	 */
+	public HeaderTableModelSorter getTableModelSorter() {
+		return tableModelSorter;
+	}
+
+	/**
+	 * return the threaded view model
+	 */
+	public TableModelThreadedView getTableModelThreadedView() {
+		return tableModelThreadedView;
+	}
+
+	/**
+	 * return the filtered view model
+	 */
+	public TableModelFilteredView getTableModelFilteredView() {
+		return tableModelFilteredView;
+	}
+
+	public MessageNode getSelectedNode() {
+
+		MessageNode node =
+			(MessageNode) getTree().getLastSelectedPathComponent();
+
+		return node;
+	}
+
+	/*
+	public int getSelectedRowCount()
+	{
+	    int[] rows = table.getSelectedRows();
+	
+		if ( rows == null ) return 0;
+		
+	    return rows.length;
+	}
+	*/
+	public MessageNode[] getSelectedNodes() {
+
+		int[] rows = null;
+		MessageNode[] nodes = null;
+
+		rows = getSelectedRows();
+		nodes = new MessageNode[rows.length];
+
+		for (int i = 0; i < rows.length; i++) {
+			TreePath treePath = getTree().getPathForRow(rows[i]);
+			nodes[i] = (MessageNode) treePath.getLastPathComponent();
+
+		}
+
+		return nodes;
+	}
+
+}

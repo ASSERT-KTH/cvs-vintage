@@ -1,0 +1,275 @@
+package org.columba.mail.imap.protocol;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * @author freddy
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
+public class IMAPInputStream extends BufferedInputStream {
+
+	private static final int increment = 256;
+
+	// buffer for data 
+	private byte[] buffer = null;
+
+	// buffer size
+	private int sz = 0;
+
+	// position
+	private int idx = 0;
+
+	/**
+	 * @see java.io.FilterInputStream#FilterInputStream(InputStream)
+	 */
+	/**
+	 * Constructor.
+	 */
+	public IMAPInputStream(InputStream in) {
+		super(in, 2 * 1024);
+	}
+
+	/**
+	 * Method readResponse.
+	 * @return String
+	 * @throws IOException
+	 */
+	/**
+	 * Read a Response from the InputStream.
+	 * @return ByteArray that contains the Response
+	 */
+	public String readResponse() throws IOException {
+		buffer = new byte[128];
+		idx = 0;
+		sz = 128;
+
+		readResponseString();
+
+		return toString(buffer, 0, idx);
+	}
+
+	/**
+	 * Method toString.
+	 * 
+	 * convert byte[] to String
+	 * 
+	 * @param b			byte[] array
+	 * @param start		start index
+	 * @param end		end index
+	 * @return String   String 
+	 */
+	public static String toString(byte[] b, int start, int end) {
+		int size = end - start;
+		char[] chars = new char[size];
+
+		for (int i = 0, j = start; i < size;)
+			chars[i++] = (char) b[j++];
+
+		return new String(chars);
+	}
+
+	/**
+	 * Method read.
+	 * 
+	 * read data from the inputstream and move it to
+	 * global byte[] buffer.
+	 * 
+	 * 
+	 * @throws IOException
+	 * 
+	 */
+	private void readResponseString() throws IOException {
+
+		int b = 0;
+		boolean lineHasCRLF = false;
+
+		// read line from inputstream which is ended by CRLF
+		while (!lineHasCRLF
+			&& ((b = (pos >= count) ? read() : (buf[pos++] & 0xff)) != -1)) {
+
+			if (b == '\n') {
+				if ((idx > 0) && (buffer[idx - 1] == '\r'))
+					lineHasCRLF = true;
+			}
+			if (idx >= sz)
+				growBuffer(increment);
+			buffer[idx++] = (byte) b;
+
+			/*
+			switch (b) {
+				case '\n' :
+					if ((idx > 0) && buffer[idx - 1] == '\r')
+						lineHasCRLF = true;
+				default :
+					if (idx >= sz)
+						growBuffer(increment);
+					buffer[idx++] = (byte) b;
+			}
+			*/
+
+		}
+
+		// failure while reading next byte from inputstream
+		if (b == -1)
+			throw new IOException();
+
+		// see if we find a literal
+		//
+		// example:
+		//
+		// SERVER:* 147 FETCH (UID 149 BODY[2] {2750}
+		if (idx >= 5 && buffer[idx - 3] == '}') {
+			int i;
+
+			// search for '{'
+			for (i = idx - 4; i >= 0; i--)
+				if (buffer[i] == '{')
+					break;
+
+			// no left curl found
+			if (i < 0)
+				return;
+
+			int count = 0;
+
+			// found a literal {2750}
+			// -> read count = 2750
+			try {
+				count = parseInt(buffer, i + 1, idx - 3);
+			} catch (NumberFormatException e) {
+				return;
+			}
+
+			// read 'count' bytes
+			//  in our example this is 2750
+			if (count > 0) {
+				// space left in buffer
+				int avail = sz - idx;
+
+				// we need to grow the buffer
+				if (count > avail) {
+					if (increment > count - avail)
+						growBuffer(increment);
+					else
+						growBuffer(count - avail);
+				}
+
+				/*
+				growBuffer(
+					increment > count - avail ? increment : count - avail);
+				*/
+
+				// read all pending bytes from inputstream
+				int actual;
+				while (count > 0) {
+					actual = read(buffer, idx, count);
+					count -= actual;
+					idx += actual;
+				}
+			}
+
+			// we don't stop until we find CRLF 
+			readResponseString();
+		}
+		return;
+	}
+
+	/**
+	 * Method growBuffer.
+	 * 
+	 * make buffer bigger by increment
+	 * 
+	 * @param ii	int
+	 */
+	private void growBuffer(int i) {
+		byte[] nbuf = new byte[sz + i];
+		if (buffer != null)
+			System.arraycopy(buffer, 0, nbuf, 0, idx);
+		buffer = nbuf;
+		sz += i;
+	}
+
+	/**
+	 * Method parseInt.
+	 * @param b
+	 * @param start
+	 * @param end
+	 * @return int
+	 * @throws NumberFormatException
+	 */
+	/**
+	 * Convert the bytes within the specified range of the given byte 
+	 * array into a signed integer in the given radix . The range extends 
+	 * from <code>start</code> till, but not including <code>end</code>. <p>
+	 *
+	 * Based on java.lang.Integer.parseInt()
+	 */
+	public static int parseInt(byte[] b, int start, int end)
+		throws NumberFormatException {
+
+		int radix = 10;
+
+		if (b == null)
+			throw new NumberFormatException("null");
+
+		int result = 0;
+		boolean negative = false;
+		int i = start;
+		int limit;
+		int multmin;
+		int digit;
+
+		if (end > start) {
+			if (b[i] == '-') {
+				negative = true;
+				limit = Integer.MIN_VALUE;
+				i++;
+			} else {
+				limit = -Integer.MAX_VALUE;
+			}
+			multmin = limit / radix;
+			if (i < end) {
+				digit = Character.digit((char) b[i++], radix);
+				if (digit < 0) {
+					throw new NumberFormatException(
+						"illegal number: " + toString(b, start, end));
+				} else {
+					result = -digit;
+				}
+			}
+			while (i < end) {
+				// Accumulating negatively avoids surprises near MAX_VALUE
+				digit = Character.digit((char) b[i++], radix);
+				if (digit < 0) {
+					throw new NumberFormatException("illegal number");
+				}
+				if (result < multmin) {
+					throw new NumberFormatException("illegal number");
+				}
+				result *= radix;
+				if (result < limit + digit) {
+					throw new NumberFormatException("illegal number");
+				}
+				result -= digit;
+			}
+		} else {
+			throw new NumberFormatException("illegal number");
+		}
+		if (negative) {
+			if (i > start + 1) {
+				return result;
+			} else { /* Only got "-" */
+				throw new NumberFormatException("illegal number");
+			}
+		} else {
+			return -result;
+		}
+	}
+
+}

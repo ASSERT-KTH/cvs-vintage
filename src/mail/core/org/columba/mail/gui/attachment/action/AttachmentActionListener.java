@@ -1,0 +1,198 @@
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Library General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+package org.columba.mail.gui.attachment.action;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+
+import org.columba.core.command.Command;
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.main.MainInterface;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.action.BasicAction;
+import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.attachment.command.*;
+import org.columba.mail.message.MimePart;
+import org.columba.mail.util.MailResourceLoader;
+
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2001
+ * Company:
+ * @author
+ * @version 1.0
+ */
+
+public class AttachmentActionListener implements ActionListener {
+	private AttachmentController attachmentController;
+
+	public BasicAction saveAsAction;
+	public BasicAction openAction;
+	public BasicAction openWithAction;
+	public BasicAction viewHeaderAction;
+
+	public AttachmentActionListener(AttachmentController attachmentController) {
+		this.attachmentController = attachmentController;
+
+		initActions();
+	}
+
+	public void initActions() {
+
+			openAction = new BasicAction(MailResourceLoader.getString("menu", "mainframe", "attachmentopen"), //$NON-NLS-1$
+		MailResourceLoader.getString("menu", "mainframe", "attachmentopen_tooltip"), //$NON-NLS-1$
+		"OPEN", //$NON-NLS-1$
+		ImageLoader.getSmallImageIcon("stock_open.png"), //$NON-NLS-1$
+		ImageLoader.getImageIcon("stock_open.png"), //$NON-NLS-1$
+	0, null);
+
+		openAction.addActionListener(this);
+
+			openWithAction = new BasicAction(MailResourceLoader.getString("menu", "mainframe", "attachmentopen_with"), //$NON-NLS-1$
+		MailResourceLoader.getString("menu", "mainframe", "attachmentopen_with_tooltip"), //$NON-NLS-1$
+		"OPEN_WITH", //$NON-NLS-1$
+	null, null, 0, null);
+
+		openWithAction.addActionListener(this);
+
+			saveAsAction = new BasicAction(MailResourceLoader.getString("menu", "mainframe", "attachmentsaveas"), //$NON-NLS-1$
+		MailResourceLoader.getString("menu", "mainframe", "attachmentsaveas_tooltip"), //$NON-NLS-1$
+		"SAVE_AS", //$NON-NLS-1$
+		ImageLoader.getSmallImageIcon("stock_save_as-16.png"), //$NON-NLS-1$
+		ImageLoader.getImageIcon("stock_save_as.png"), //$NON-NLS-1$
+	0, null);
+
+		saveAsAction.addActionListener(this);
+
+			viewHeaderAction = new BasicAction(MailResourceLoader.getString("menu", "mainframe", "attachmentview_mimeheader"), //$NON-NLS-1$
+		MailResourceLoader.getString("menu", "mainframe", "attachmentview_mimeheader_tooltip"), //$NON-NLS-1$
+		"VIEW_HEADER", //$NON-NLS-1$
+	null, null, 0, null);
+
+		viewHeaderAction.addActionListener(this);
+	}
+
+	protected int[] getSelection() {
+		return attachmentController.getView().getSelection();
+	}
+
+	protected Folder getFolder() {
+		return attachmentController.getView().getModel().getFolder();
+	}
+
+	protected Object getUid() {
+		return attachmentController.getView().getModel().getUid();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+
+		if (e.getActionCommand().equals("SAVE_AS")) //$NON-NLS-1$
+			{
+
+			int[] selection = getSelection();
+
+			LinkedList list =
+				attachmentController.getModel().getDisplayedMimeParts();
+
+			for (int i = 0; i < selection.length; i++) {
+				Integer[] address = new Integer[selection.length];
+
+				MimePart mimePart = (MimePart) list.get(selection[i]);
+				address = mimePart.getAddress();
+
+				attachmentController
+					.getAttachmentSelectionManager()
+					.fireAttachmentSelectionEvent(null, address);
+
+				DefaultCommandReference[] commandReference =
+					attachmentController
+						.getAttachmentSelectionManager()
+						.getSelection();
+
+				MainInterface.processor.addOp(
+					new SaveAttachmentCommand(
+						attachmentController.getFrameController(),
+						commandReference));
+			}
+
+		} else if (e.getActionCommand().equals("OPEN_WITH")) //$NON-NLS-1$
+			{
+
+			int[] selection = getSelection();
+
+			LinkedList list =
+				attachmentController.getModel().getDisplayedMimeParts();
+
+			for (int i = 0; i < selection.length; i++) {
+				Integer[] address = new Integer[selection.length];
+
+				MimePart mimePart = (MimePart) list.get(selection[i]);
+				address = mimePart.getAddress();
+
+				attachmentController
+					.getAttachmentSelectionManager()
+					.fireAttachmentSelectionEvent(null, address);
+
+				DefaultCommandReference[] commandReference =
+					attachmentController
+						.getAttachmentSelectionManager()
+						.getSelection();
+
+				MainInterface.processor.addOp(
+					new OpenWithAttachmentCommand(
+						attachmentController.getFrameController(),
+						commandReference));
+			}
+
+		} else if (e.getActionCommand().equals("OPEN")) //$NON-NLS-1$
+			{
+			int[] selection = getSelection();
+
+			LinkedList list =
+				attachmentController.getModel().getDisplayedMimeParts();
+
+			for (int i = 0; i < selection.length; i++) {
+				Integer[] address = new Integer[selection.length];
+
+				MimePart mimePart = (MimePart) list.get(selection[i]);
+				address = mimePart.getAddress();
+
+				attachmentController
+					.getAttachmentSelectionManager()
+					.fireAttachmentSelectionEvent(null, address);
+
+				DefaultCommandReference[] commandReference =
+					attachmentController
+						.getAttachmentSelectionManager()
+						.getSelection();
+
+				MainInterface.processor.addOp(
+					new OpenAttachmentCommand(
+						attachmentController.getFrameController(),
+						commandReference));
+			}
+
+		} else if (e.getActionCommand().equals("VIEW_HEADER")) //$NON-NLS-1$
+			{
+			int[] selection = getSelection();
+
+		}
+
+	}
+
+}

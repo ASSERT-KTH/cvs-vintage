@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+  <tree>
+    <folder>
+      <name>Local Addressbooks</name>
+      <type>system</type>
+      <accessrights>system</accessrights>
+      <uid>100</uid>
+     <folder>
+	<name>Personal Addressbook</name>
+        <accessrights>user</accessrights>
+	<type>addressbook</type>
+        <uid>101</uid>
+     </folder>   
+     <folder>
+	<name>Collected Addresses</name> 
+	<type>addressbook</type> 
+        <accessrights>system</accessrights>
+	<uid>102</uid> 
+      </folder> 
+    </folder>
+    <folder>
+      <name>Remote Addressbooks</name>
+      <type>system</type>
+      <accessrights>system</accessrights>
+      <uid>200</uid>
+    </folder>
+  </tree> 
+
+
+
+
+
+
+

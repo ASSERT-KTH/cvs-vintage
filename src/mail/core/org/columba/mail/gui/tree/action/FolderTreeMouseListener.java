@@ -1,0 +1,96 @@
+package org.columba.mail.gui.tree.action;
+
+import org.columba.mail.gui.tree.*;
+
+
+import javax.swing.*;
+import javax.swing.tree.*;
+import java.awt.event.*;
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2001
+ * Company:
+ * @author
+ * @version 1.0
+ */
+
+public class FolderTreeMouseListener extends MouseAdapter
+{
+    private TreeController treeController;
+
+    public FolderTreeMouseListener( TreeController t )
+    {
+        this.treeController = t;
+    }
+
+    protected JPopupMenu getPopupMenu()
+    {
+        return treeController.getPopupMenu();
+    }
+
+	// Use PopUpTrigger in both mousePressed and mouseReleasedMethods due to
+	// different handling of *nix and windows
+
+    public void mousePressed(MouseEvent e)
+    {
+         if ( e.isPopupTrigger() )
+            {
+                java.awt.Point point = e.getPoint();
+                TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
+
+                treeController.getView().clearSelection();
+                treeController.getView().addSelectionPath( path );
+
+                treeController.getActionListener().changeActions();
+
+
+                getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+            }
+
+    }
+
+    public void mouseReleased(MouseEvent e)
+    {
+         if ( e.isPopupTrigger() )
+            {
+                java.awt.Point point = e.getPoint();
+                TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
+
+                treeController.getView().clearSelection();
+                treeController.getView().addSelectionPath( path );
+
+                treeController.getActionListener().changeActions();
+
+
+                getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+            }
+    }
+
+    public void mouseClicked(MouseEvent e)
+    {
+    	treeController.selectFolder();
+    	/*
+        if ( e.getClickCount() == 1 )
+        {
+            treeController.selectFolder();
+        }
+        else if ( e.getClickCount() == 2 )
+        {
+            treeController.expandImapRootFolder();
+        }
+        */
+
+    }
+
+    /*
+    private void maybeShowPopup(MouseEvent e)
+    {
+        if (e.isPopupTrigger())
+        {
+            getPopupMenu().show(e.getComponent(),
+                       e.getX(), e.getY());
+        }
+    }
+    */
+}

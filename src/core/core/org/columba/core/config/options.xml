@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+
+
+<options>
+ <gui>
+  <mainfont> 
+   <name>Default</name> 
+   <size>12</size> 
+  </mainfont> 
+  <textfont> 
+   <name>Default</name> 
+   <size>12</size> 
+  </textfont> 
+  <theme>2</theme>
+  <markasreaddelay>2</markasreaddelay>   
+ </gui>
+ <mimetypes> 
+    <mimetype> 
+      <type>multipart</type> 
+      <parser>MimeMultipartParser</parser>      
+    </mimetype> 
+  </mimetypes> 
+</options>
+
