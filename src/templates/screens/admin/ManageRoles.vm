@@ -1,0 +1,58 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: ManageRoles.vm,v 1.1 2001/11/28 19:20:42 dr Exp $
+*#
+
+<div id="manageRoles" class="app">
+
+<h2>Role Administration</h2>
+
+<h3>Role List</h3>
+
+<form action="admin%2CManageRoles.vm" method="post">
+  <input type="hidden" name="action" value="admin.ManageRoles">
+
+<table cellspacing="0" cellpadding="2">
+<tr>
+  <th>Select</th>
+  <th>Role</th>
+</tr>
+
+#foreach ($role in $scarabG.Roles)
+#indexedRows ($velocityCount)
+  <td align="center">
+    <input type="radio" name="name" value="$role.Name">
+  </td>
+  <td>
+    $role.Name
+  </td>
+  <!--
+  <td>
+      <a href="$link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify")">Details</a> &nbsp;
+      <a href="$link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","delete")">Remove</a>
+  </td>
+  -->
+
+</tr>
+#end
+</table>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+   <input type="submit" name="eventSubmit_doGotoeditrole" value="Edit Role" />
+   <!--
+   <input type="submit" name="eventSubmit_doGotodeleterole" value="Delete Role" />
+   &nbsp;&nbsp;&nbsp;
+   <input type="submit" name="eventSubmit_doGotoaddrole" value="Add New Role" />
+   -->
+  </td>
+ </tr>
+</table>
+</div>
+
+</form>
+
+</div>
+
