@@ -1,6 +1,6 @@
-$Id: readme,v 1.8 1999/12/21 12:34:30 rubys Exp $
+$Id: readme,v 1.9 2000/01/17 12:25:33 rubys Exp $
 	
-Tomcat 3.0
+Tomcat 3.1M1
 
 All classes are written exclusively in the Java(tm) Programming
 Language and may be used with and JRE 1.1 conformant system,
@@ -24,10 +24,10 @@ JDK. You must also have the "java" program available in your path (set
 using the PATH environment variable). More information can be found at
 http://java.sun.com/products/jdk.
 
-If you are using JDK 1.2, tools.jar (which can be found in
-/path/to/jdk1.2/lib/tools.jar) needs to be in your
-CLASSPATH. tools.jar contains "javac" which is used by the JSP engine
-to compile the servlets generated from .jsp's.
+In order to use the JSP engine, you will need to include the code for
+"javac" in your CLASSPATH.  For JDK 1.2, this can be found in 
+/path/to/jdk1.2/lib/tools.jar.  For JDK 1.1, this can be found in 
+/path/to/jdk1.1/lib/classes.zip
 
 There is a Unix based Korn Shell Script and a Windows based Batch File
 provided in the installation directory. To start up the server on Unix:
@@ -77,5 +77,12 @@ this limitation:
 	Click on OK
 	Start the server
 
+For debugging other errors, it is sometimes more convenient to run Tomcat
+in the same foreground window (startup will run Tomcat as a detached process
+on Unix and in a separate window on Windows).  To disable this, start
+Tomcat via:
+
+    Unix: 		% tomcat.sh run
+    Windows: 		> tomcat run
 
 
