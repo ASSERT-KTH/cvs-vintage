@@ -55,19 +55,19 @@
            debug="on"
            deprecation="off"
            optimize="off"
-	   includes="org/**"
+       includes="org/**"
            excludes="**/activation/**, **/*BeanInfo.java"
     />
 
     <rmic base="${build.classes.dir}"
           classname="org.jboss.jmx.server.JMXAdaptorImpl"
           stubVersion="1.2"
-			 classpath="${classpath}"/>
+          classpath="${classpath}"/>
 
     <rmic base="${build.classes.dir}"
           classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker"
           stubVersion="1.2"
-			 classpath="${classpath}"/>
+          classpath="${classpath}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -84,7 +84,7 @@
            debug="on"
            deprecation="off"
            optimize="off"
-			  includes="**/*BeanInfo.java"
+           includes="**/*BeanInfo.java"
     />
   </target>
 
@@ -113,7 +113,7 @@
     <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
-         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class"
+         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/util/FastKey.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class"
     />
 
     <jar jarfile="${build.dir}/client/deploy.jar"
