@@ -235,7 +235,7 @@ $l10n.NoMoreIssueTypes
     </td>
     <td>$rmit.Module.Name</td>
     <td>$rmit.IssueType.Name</td>
-    <td>$rmit.IssueType.Description</td>
+    <td>$rmit.DisplayDescription</td>
   </tr>
 #end
 </table>  

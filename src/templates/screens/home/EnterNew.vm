@@ -45,7 +45,7 @@
 <!-- commenting out until functionality is added
       <td><input type="checkbox" /></td>
 -->
-      <td>$issueType.Description</td>
+      <td>$rmit.DisplayDescription</td>
     </tr>        
 #end   
              
