@@ -69,55 +69,50 @@
 
 <h3>Template Attributes</h3>
 
-<div class="axial">
 #set ($attrValues = $currentTemplate.ModuleAttributeValuesMap)
 #foreach ($attrgroup in $module.getAttributeGroups($issueType))
   #if (!$attrgroup.Attributes.isEmpty())
-    <table cellpadding="3" cellspacing="2" border="0">
     <h4>$attrgroup.Name</h4>
-  #foreach ($att in $attrgroup.Attributes)
-    #set ($rma = $module.getRModuleAttribute($att, $issueType))
-    #if ($rma.Active)
-      #set ($attVal = $attrValues.get($att.getName().toUpperCase()))
- <tr>
- <th>
-  #if ($attVal.Attribute.AttributeType.ValidationKey)
-    #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
-    #set ($field = "OptionId")
-  #elseif ($attVal.Attribute.AttributeType.Name == "string")
-    #set ($field = "Value")
-  #end
-  $attVal.RModuleAttribute.DisplayValue
- </th>
- <td>
-    #if ($attVal.Attribute.isOptionAttribute())
-      #attrValueLeafSelect ($attVal $field "" false)
-   #else
-     #attrValueErrorMsg($attVal "Value")
-     #if ($attVal.Attribute.AttributeType.Name == "long-string")
-        #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
-     #else
-        <input name= "$attrInput.Value.Key"
-            value="$!attrInput.Value" size="45" type="text" />
-     #end
-   #end
- </td>
- </tr>
+    <div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
+    #foreach ($att in $attrgroup.Attributes)
+      #set ($rma = $module.getRModuleAttribute($att, $issueType))
+      #if ($rma.Active)
+        #set ($attVal = $attrValues.get($att.getName().toUpperCase()))
+        <tr>
+        <th>
+        #if ($attVal.Attribute.AttributeType.ValidationKey)
+          #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+          #set ($field = "OptionId")
+        #elseif ($attVal.Attribute.AttributeType.Name == "string")
+          #set ($field = "Value")
+        #end
+        $attVal.RModuleAttribute.DisplayValue
+        </th>
+        <td>
+        #if ($attVal.Attribute.isOptionAttribute())
+          #attrValueLeafSelect ($attVal $field "" false)
+        #else
+          #attrValueErrorMsg($attVal "Value")
+          #if ($attVal.Attribute.AttributeType.Name == "long-string")
+            #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
+          #else
+            <input name= "$attrInput.Value.Key"
+              value="$!attrInput.Value" size="45" type="text" />
+          #end
+        #end
+        </td>
+        </tr>
       #end
     #end
-</table>
+    </table>
+    </div>
   #end
 #end
-</div>
-
-
-<div class="functnbar3">
-</div>
 
 #SaveTemplateBar("2")
 
 $intake.declareGroups()
-
 </form>
 </div>
