@@ -30,11 +30,14 @@ package org.objectweb.carol.util.configuration;
 //java import 
 import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.TreeMap;
 import java.util.Iterator;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
+import java.util.ResourceBundle;
+import java.util.Locale;
 import java.io.*;
 
 //javax import 
@@ -409,49 +412,88 @@ public class CarolConfiguration {
     }
 
     /**
-     * get defaults properties from file
-     * @return Properties default properties
-    */
-    private static Properties getDefaultsProperties() throws Exception {
-	Properties defaultsProps = null;
+     * load a properties file from a classloader
+     * @param String properties file name (without '.properties')
+     * @param Classloader
+     * @return Properties file (null if there is no prperties)
+     */
+    private static Properties loadPropertiesFile(String fName, ClassLoader cl) throws Exception {
+	Properties result=null;
 	// load the defaults configuration file
-	InputStream defaultsFileInputStream  =  Thread.currentThread().getContextClassLoader().getSystemResourceAsStream(DEFAULTS_FILE_NAME); 
-	if (defaultsFileInputStream != null) {
-	    defaultsProps = new Properties();
-	    defaultsProps.load(defaultsFileInputStream);
-	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("Default carol file used is " +DEFAULTS_FILE_NAME+" in " 
-				      +Thread.currentThread().getContextClassLoader().getSystemResource(DEFAULTS_FILE_NAME).getPath());
+	InputStream fInputStream=cl.getSystemResourceAsStream(fName+".properties");	
+	if (fInputStream == null) {
+	    // resource not found direcly, search in the jars
+	    ResourceBundle rb = ResourceBundle.getBundle(fName, Locale.getDefault(),cl);
+	    if (rb.getKeys().hasMoreElements()) {
+		String key;
+		result = new Properties();
+		for (Enumeration e = rb.getKeys() ; e.hasMoreElements() ;) {
+		    key=(String)e.nextElement();
+		    result.setProperty(key, rb.getString(key)); 
+		}
+		if (TraceCarol.isDebugCarol()) {
+		    TraceCarol.debugCarol("Carol file used is " +fName+".properties in a jar file");
+		} 
 	    }
 	} else {
+	    result = new Properties();	    
+	    result.load(fInputStream);
 	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("No "+DEFAULTS_FILE_NAME+" file found");
+		TraceCarol.debugCarol("Carol file used is " +fName+".properties in " 
+				      +cl.getSystemResource(fName+".properties").getPath());
+	    } 
+	}
+	if (result == null) {
+	    if (TraceCarol.isDebugCarol()) {
+		TraceCarol.debugCarol("No "+fName+".properties file found");
 	    }
 	}
-	return defaultsProps;
+	return result;
     }
+
+    /**
+     * find a properties file from a classloader
+     * @param String properties file name (without '.properties')
+     * @param Classloader
+     * @return String the location of this properties 
+     */
+    private static String findPropertiesFile(String fName, ClassLoader cl) throws Exception {
+	String result="";
+	// load the defaults configuration file
+	InputStream fInputStream=cl.getSystemResourceAsStream(fName+".properties");	
+	if (fInputStream == null) {
+	    // resource not found direcly, search in the jars
+	    ResourceBundle rb = ResourceBundle.getBundle(fName, Locale.getDefault(),cl);
+	    if (rb.getKeys().hasMoreElements()) {
+		result="Carol file used is " +fName+".properties in a jar file";
+	    }
+	} else {
+	    result="Carol file used is " +fName+".properties in "+cl.getSystemResource(fName+".properties").getPath();	  
+	}
+	if (result == null) {
+	    if (TraceCarol.isDebugCarol()) {
+		TraceCarol.debugCarol("No "+fName+".properties file found");
+	    }
+	}
+	return result;
+    }
+
+    /**
+     * get defaults properties from file
+     * @return Properties default properties
+     */
+    private static Properties getDefaultsProperties() throws Exception {
+	return loadPropertiesFile("carol-defaults", Thread.currentThread().getContextClassLoader()); 
+    }
+
+
 
     /**
      * get carol properties from file
      * @return Properties carol properties
     */
     private static Properties getCarolProperties() throws Exception {
-	Properties carolProps=null;
-	// load the defaults configuration file
-	InputStream carolFileInputStream  =  Thread.currentThread().getContextClassLoader().getSystemResourceAsStream(CAROL_FILE_NAME); 
-	if (carolFileInputStream != null) {
-	    carolProps= new Properties();
-	    carolProps.load(carolFileInputStream);
-	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("Carol file used is " +CAROL_FILE_NAME+" in " 
-				      +Thread.currentThread().getContextClassLoader().getSystemResource(CAROL_FILE_NAME).getPath());
-	    }
-	} else {
-	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("No "+CAROL_FILE_NAME+" file found");
-	    }
-	}
-	return carolProps;
+	return loadPropertiesFile("carol", Thread.currentThread().getContextClassLoader()); 	
     }
 
     /**
@@ -459,22 +501,7 @@ public class CarolConfiguration {
      * @return Properties default properties
     */
     private static Properties getJndiProperties() throws Exception {
-	Properties jndiProps=null;
-	// load the jndi configuration file
-	InputStream jndiFileInputStream  =  Thread.currentThread().getContextClassLoader().getSystemResourceAsStream(JNDI_FILE_NAME); 
-	if (jndiFileInputStream != null) {
-	    jndiProps= new Properties();
-	    jndiProps.load(jndiFileInputStream);
-	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("Jndi file used is " +JNDI_FILE_NAME+" in " 
-				      +Thread.currentThread().getContextClassLoader().getSystemResource(JNDI_FILE_NAME).getPath());
-	    }
-	} else {
-	    if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("No "+JNDI_FILE_NAME+" file found");
-	    }
-	}
-	return jndiProps;
+	return loadPropertiesFile("jndi", Thread.currentThread().getContextClassLoader());
     }
 
     /**
@@ -503,37 +530,9 @@ public class CarolConfiguration {
 	Properties jProps=null;
 
 	try {
-
-	    InputStream defaultsFileInputStream  =  Thread.currentThread().getContextClassLoader().getSystemResourceAsStream(DEFAULTS_FILE_NAME); 
-	    if (defaultsFileInputStream != null) {
-		dProps= new Properties();
-		dProps.load(defaultsFileInputStream);
-		result+="Defaults file used is " +DEFAULTS_FILE_NAME+" in " 
-		    +Thread.currentThread().getContextClassLoader().getSystemResource(DEFAULTS_FILE_NAME).getPath()+"\n";
-	    } else {
-		result+="ERROR: No "+DEFAULTS_FILE_NAME+" file found\n";
-	    }
-
-	    InputStream jndiFileInputStream  =  Thread.currentThread().getContextClassLoader().getSystemResourceAsStream(JNDI_FILE_NAME); 
-	    if (jndiFileInputStream != null) {
-		jProps= new Properties();
-		jProps.load(jndiFileInputStream);
-		result+="Jndi file used is " +JNDI_FILE_NAME+" in " 
-		    +Thread.currentThread().getContextClassLoader().getSystemResource(JNDI_FILE_NAME).getPath()+"\n";
-	    } else {
-		result+="No "+JNDI_FILE_NAME+" file found\n";
-	    }
-
-	    InputStream carolFileInputStream  =  Thread.currentThread().getContextClassLoader().getSystemResourceAsStream(CAROL_FILE_NAME); 
-	    if (carolFileInputStream != null) {
-		cProps= new Properties();
-		cProps.load(carolFileInputStream);
-		result+="Carol file used is " +CAROL_FILE_NAME+" in " 
-		    +Thread.currentThread().getContextClassLoader().getSystemResource(CAROL_FILE_NAME).getPath()+"\n";
-	    } else {
-		result+="No "+CAROL_FILE_NAME+" file found\n";
-	    }
-
+	    result=loadPropertiesFile("carol-defaults", Thread.currentThread().getContextClassLoader())+"\n";
+	    result=loadPropertiesFile("carol", Thread.currentThread().getContextClassLoader())+"\n";
+	    result=loadPropertiesFile("jndi", Thread.currentThread().getContextClassLoader())+"\n";
 	} catch (Exception e) {
 	    result+="There is a problem with the configuration loading:" + e;
 	}
