@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.225 2004/12/16 16:13:35 mvw Exp $
+// $Id: ModelFacade.java,v 1.226 2004/12/21 19:32:54 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2941,6 +2941,21 @@ public class ModelFacade {
 	return illegalArgumentCollection(handle);
     }
 
+
+    /**
+     * Get the modelelement that were commented.
+     *
+     * @param handle the comment that we are getting the model elemets of
+     * @return the modelelements (or null)
+     */
+    public static Collection getAnnotatedElements(Object handle) {
+        if (handle instanceof MComment) {
+            return ((MComment) handle).getAnnotatedElements();
+        }
+        return illegalArgumentCollection(handle);
+    }
+
+    
     /**
      * Get the communication connection of an message.
      *
@@ -6312,6 +6327,22 @@ public class ModelFacade {
 	illegalArgument(handle);
     }
 
+    /**
+     * Sets the list of annotated elements of the given comment.
+     *
+     * @param handle the given comment
+     * @param elems the list of annotated modelelements
+     */
+    public static void setAnnotatedElements(Object handle, Collection elems) {
+        if (handle instanceof MComment
+            && elems instanceof List) {
+            ((MComment) handle).setAnnotatedElements((List) elems);
+            return;
+        }
+        illegalArgument(handle);
+    }
+
+    
     /**
      * Sets the aggregation of some model element.
      *
