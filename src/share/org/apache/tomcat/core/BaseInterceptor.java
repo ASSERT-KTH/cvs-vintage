@@ -472,7 +472,15 @@ public class BaseInterceptor
 	throws TomcatException
     {
     }
+    /** Reload notification - called whenever a full reload is done.
+	This can be used to serialize sessions, log the event,
+	clone any resource that was class-loader dependent.
 
+     */
+    public void copyContext(Request req, Context oldC, Context newC)
+	throws  TomcatException
+    {
+    }
     // -------------------- Container ( or Location ) hooks ---------------
     
     /** Notify that certain properties are defined for a URL pattern.
