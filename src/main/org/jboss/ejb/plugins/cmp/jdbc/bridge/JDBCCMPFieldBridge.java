@@ -33,12 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * <p><b>2002/08/27: loubyansky</b>
- * <ol>
- *   <li>added getPrimaryKeyClass()</li>
- * </ol>
- *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
 
@@ -47,11 +42,6 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
     * @return the java class type of this field
     */
    public Class getFieldType();
-
-   /**
-    * Gets the primary key class
-    */
-   public Class getPrimaryKeyClass();
 
    /**
     * Gets the field of the primary key object in which the value of this 
