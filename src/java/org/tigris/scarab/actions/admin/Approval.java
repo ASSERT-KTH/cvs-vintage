@@ -59,13 +59,13 @@ import org.apache.turbine.ParameterParser;
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
-import org.tigris.scarab.om.IssueTemplate;
-import org.tigris.scarab.om.IssueTemplatePeer;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.tools.Email;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.5 2001/09/21 19:00:36 elicia Exp $
+    @version $Id: Approval.java,v 1.6 2001/09/28 01:27:36 elicia Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -149,7 +149,7 @@ public class Approval extends TemplateAction
             else if (key.startsWith("template_id_"))
             {
                String templateId = key.substring(12);
-               IssueTemplate template = (IssueTemplate) IssueTemplatePeer
+               Issue issue = (Issue) IssuePeer
                                      .retrieveByPK(new NumberKey(templateId));
 
                action = params.getString("template_action_" + templateId);
@@ -159,13 +159,13 @@ public class Approval extends TemplateAction
                toUser = (ScarabUser) ScarabUserImplPeer
                                      .retrieveByPK(new NumberKey(userId));
                artifact = "issue entry template";
-               artifactName = template.getName();
+               artifactName = issue.getTemplateInfo().getName();
 
                if (action.equals("reject"))
                {
                    try
                    {
-                       template.approve(user, false);
+                       issue.approve(user, false);
                    }
                    catch(ScarabException e)
                    {
@@ -177,7 +177,7 @@ public class Approval extends TemplateAction
                {
                    try
                    {
-                       template.approve(user, true);
+                       issue.approve(user, true);
                    }
                    catch(ScarabException e)
                    {

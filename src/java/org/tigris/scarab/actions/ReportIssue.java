@@ -67,6 +67,7 @@ import org.apache.fulcrum.intake.model.Field;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
@@ -86,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.44 2001/09/07 00:35:38 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.45 2001/09/28 01:27:36 elicia Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -125,6 +126,7 @@ public class ReportIssue extends TemplateAction
         while ( iter.hasNext() ) 
         {
             aval = (AttributeValue)avMap.get(iter.next());
+
             
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
             if ( group != null ) 
@@ -303,6 +305,7 @@ public class ReportIssue extends TemplateAction
                 aval = (AttributeValue)avMap.get(i.next());
                 Group group = 
                     intake.get("AttributeValue", aval.getQueryKey(),false);
+
                 if ( group != null ) 
                 {
 //                    System.out.println("Parameters: "+data.getParameters());
@@ -324,7 +327,8 @@ public class ReportIssue extends TemplateAction
                     aval = (AttributeValue)avMap.get(i.next());
                     aval.startTransaction(transaction);
                 }
-
+                
+                issue.setTypeId(IssueType.ISSUE__PK);
                 issue.save();
                 user.setReportingIssue(null);
 

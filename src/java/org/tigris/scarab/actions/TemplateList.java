@@ -47,8 +47,10 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.List;
+import java.util.Iterator;
 
 // Turbine Stuff 
+import org.apache.commons.util.SequencedHashtable;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
@@ -61,17 +63,23 @@ import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTemplateInfo;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.om.IssueTemplate;
-import org.tigris.scarab.om.IssueTemplatePeer;
 
 
 /**
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.4 2001/09/25 07:24:37 elicia Exp $
+    @version $Id: TemplateList.java,v 1.5 2001/09/28 01:27:36 elicia Exp $
 */
 public class TemplateList extends TemplateAction
 {
@@ -83,38 +91,75 @@ public class TemplateList extends TemplateAction
     /**
         Saves template.
     */
-    public void doSavetemplate( RunData data, TemplateContext context )
+    public void doSubmit( RunData data, TemplateContext context )
          throws Exception
     {        
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
-
+        
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarab = (ScarabRequestTool)context
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        IssueTemplate issueTemplate = scarab.getIssueTemplate();
-        Group templateGroup = intake.get("IssueTemplate", 
-                                      scarab.getIssueTemplate().getQueryKey() );
+        Issue issue = null;
 
-        Field name = templateGroup.get("Name");
+        String id = data.getParameters().getString("issue_id");
+        //if there is an issue id, this is an edit; otherwise create new issue
+        if (id == null)
+        {
+            issue = user.getReportingIssue(scarabR.getCurrentModule());
+        } 
+        else
+        {
+            issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        }
+
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+        AttributeValue aval = null;
+        Group group = null;
+        
+        IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
+        Group infoGroup = intake.get("IssueTemplateInfo", 
+                                    info.getQueryKey() );
+
+        Field name = infoGroup.get("Name");
         name.setRequired(true);
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid() ) 
         {
-            templateGroup.setProperties(issueTemplate);
-            issueTemplate.setUserId(user.getUserId());
-            issueTemplate.saveAndSendEmail(user, scarab.getCurrentModule(), 
-                                           new ContextAdapter(context));
+            // Save transaction record
+            Transaction transaction = new Transaction();
+            transaction.create(TransactionTypePeer.CREATE_ISSUE__PK, user, null);
+
+            Iterator iter = avMap.iterator();
+            while (iter.hasNext()) 
+            {
+                aval = (AttributeValue)avMap.get(iter.next());
+                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                if ( group != null ) 
+                {
+                    group.setProperties(aval);
+                    aval.startTransaction(transaction);
+                }                
+            }
+
+            issue.save();
+
+            // Save template info
+            infoGroup.setProperties(info);
+            info.setIssueId(issue.getIssueId());
+            info.saveAndSendEmail(user, scarabR.getCurrentModule(),
+                new ContextAdapter(context));
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE);
             setTarget(data, template);            
-        }
+        } 
         else
         {
             data.setMessage(ERROR_MESSAGE);
         }
     }
+
 
     public void doDeletetemplates( RunData data, TemplateContext context )
         throws Exception
@@ -130,12 +175,22 @@ public class TemplateList extends TemplateAction
             if (key.startsWith("delete_"))
             {
                templateId = key.substring(7);
-               IssueTemplate issueTemplate = (IssueTemplate) IssueTemplatePeer
-                                     .retrieveByPK(new NumberKey(templateId));
-               issueTemplate.setDeleted(true);
-               issueTemplate.save();
+               Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(templateId));
+               try
+               {
+                   issue.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
             }
         } 
      } 
 
+    public void doCreatenew( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, "SaveTemplate.vm");            
+    }
 }
