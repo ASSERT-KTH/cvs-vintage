@@ -15,6 +15,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui;
 
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.list.AddressbookDNDListView;
+import org.columba.addressbook.gui.list.AddressbookListModel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+
+import org.columba.core.gui.util.CTabbedPane;
+
+import org.columba.mail.gui.composer.ComposerController;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,6 +31,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -33,13 +43,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.list.AddressbookDNDListView;
-import org.columba.addressbook.gui.list.AddressbookListModel;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.CTabbedPane;
-import org.columba.mail.gui.composer.ComposerController;
 
 
 /**
@@ -67,8 +70,8 @@ public class AddressbookPanel extends JPanel implements ActionListener,
         books[1] = 102;
 
         /*
-        list = composerInterface.composerHeader.getListModels();
-        */
+list = composerInterface.composerHeader.getListModels();
+*/
         init();
     }
 
@@ -82,8 +85,10 @@ public class AddressbookPanel extends JPanel implements ActionListener,
 
         add(pane, BorderLayout.CENTER);
 
-        pane.add(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "personal_addressbook"), new JPanel()); //$NON-NLS-1$
-        pane.add(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "collected_addresses"), new JPanel()); //$NON-NLS-1$
+        pane.add(AddressbookResourceLoader.getString("dialog",
+                "addressbookpanel", "personal_addressbook"), new JPanel()); //$NON-NLS-1$
+        pane.add(AddressbookResourceLoader.getString("dialog",
+                "addressbookpanel", "collected_addresses"), new JPanel()); //$NON-NLS-1$
     }
 
     public JPanel createPanel(int uid) {
@@ -105,13 +110,16 @@ public class AddressbookPanel extends JPanel implements ActionListener,
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new GridLayout(1, 3, 5, 5));
 
-        toButton = new JButton(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "to")); //$NON-NLS-1$
+        toButton = new JButton(AddressbookResourceLoader.getString("dialog",
+                    "addressbookpanel", "to")); //$NON-NLS-1$
         toButton.setActionCommand("TO"); //$NON-NLS-1$
         toButton.addActionListener(this);
-        ccButton = new JButton(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "cc")); //$NON-NLS-1$
+        ccButton = new JButton(AddressbookResourceLoader.getString("dialog",
+                    "addressbookpanel", "cc")); //$NON-NLS-1$
         ccButton.setActionCommand("CC"); //$NON-NLS-1$
         ccButton.addActionListener(this);
-        bccButton = new JButton(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "bcc")); //$NON-NLS-1$
+        bccButton = new JButton(AddressbookResourceLoader.getString("dialog",
+                    "addressbookpanel", "bcc")); //$NON-NLS-1$
         bccButton.setActionCommand("BCC"); //$NON-NLS-1$
         bccButton.addActionListener(this);
         labelPanel.add(toButton);
@@ -126,7 +134,8 @@ public class AddressbookPanel extends JPanel implements ActionListener,
 
         GridBagConstraints c = new GridBagConstraints();
 
-        JLabel containsLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "contains")); //$NON-NLS-1$
+        JLabel containsLabel = new JLabel(AddressbookResourceLoader.getString(
+                    "dialog", "addressbookpanel", "contains")); //$NON-NLS-1$
         containsLabel.setEnabled(false);
 
         JTextField textField = new JTextField();
@@ -156,12 +165,12 @@ public class AddressbookPanel extends JPanel implements ActionListener,
         // TODO : addressbookInterface doesn't exist anymore (use AddressbookController instead)
 
         /*
-        Folder folder =
-                (Folder) MainInterface.addressbookInterface.treeModel.getFolder(uid);
+Folder folder =
+        (Folder) MainInterface.addressbookInterface.treeModel.getFolder(uid);
 
 
-        setHeaderList(folder.getHeaderItemList());
-        */
+setHeaderList(folder.getHeaderItemList());
+*/
         return panel;
     }
 
@@ -175,96 +184,96 @@ public class AddressbookPanel extends JPanel implements ActionListener,
         String action = ev.getActionCommand();
 
         /*
-        if (action.equals("CHOOSE"))
+if (action.equals("CHOOSE"))
+{
+        SelectAddressbookFolderDialog dialog =
+                MainInterface
+                        .addressbookInterface
+                        .tree
+                        .getSelectAddressbookFolderDialog();
+
+        Folder selectedFolder = dialog.getSelectedFolder();
+        HeaderItemList list = selectedFolder.getHeaderItemList();
+        setHeaderList(list);
+
+        chooseButton.setText(selectedFolder.getName());
+}
+else if (action.equals("TO"))
+{
+        int[] array = addressbook.getSelectedIndices();
+        ListModel model = addressbook.getModel();
+        HeaderItem item;
+
+        composerInterface.headerController.cleanupHeaderItemList();
+
+        for (int j = 0; j < array.length; j++)
         {
-                SelectAddressbookFolderDialog dialog =
-                        MainInterface
-                                .addressbookInterface
-                                .tree
-                                .getSelectAddressbookFolderDialog();
+                item = (HeaderItem) model.getElementAt(array[j]);
+                HeaderItem item2 = (HeaderItem) item.clone();
+                item2.add("field","To");
 
-                Folder selectedFolder = dialog.getSelectedFolder();
-                HeaderItemList list = selectedFolder.getHeaderItemList();
-                setHeaderList(list);
-
-                chooseButton.setText(selectedFolder.getName());
-        }
-        else if (action.equals("TO"))
-        {
-                int[] array = addressbook.getSelectedIndices();
-                ListModel model = addressbook.getModel();
-                HeaderItem item;
-
-                composerInterface.headerController.cleanupHeaderItemList();
-
-                for (int j = 0; j < array.length; j++)
+                try
                 {
-                        item = (HeaderItem) model.getElementAt(array[j]);
-                        HeaderItem item2 = (HeaderItem) item.clone();
-                        item2.add("field","To");
-
-                        try
-                        {
-                                composerInterface.headerController.getAddressbookTableModel().addItem(item2);
-                        }
-                        catch ( Exception ex )
-                        {
-                                ex.printStackTrace();
-                        }
+                        composerInterface.headerController.getAddressbookTableModel().addItem(item2);
+                }
+                catch ( Exception ex )
+                {
+                        ex.printStackTrace();
                 }
         }
-        else if (action.equals("CC"))
+}
+else if (action.equals("CC"))
+{
+        int[] array = addressbook.getSelectedIndices();
+        ListModel model = addressbook.getModel();
+        HeaderItem item;
+
+        composerInterface.headerController.cleanupHeaderItemList();
+
+        for (int j = 0; j < array.length; j++)
         {
-                int[] array = addressbook.getSelectedIndices();
-                ListModel model = addressbook.getModel();
-                HeaderItem item;
+                item = (HeaderItem) model.getElementAt(array[j]);
 
-                composerInterface.headerController.cleanupHeaderItemList();
+                HeaderItem item2 = (HeaderItem) item.clone();
+                item2.add("field","Cc");
 
-                for (int j = 0; j < array.length; j++)
+                try
                 {
-                        item = (HeaderItem) model.getElementAt(array[j]);
-
-                        HeaderItem item2 = (HeaderItem) item.clone();
-                        item2.add("field","Cc");
-
-                        try
-                        {
-                                composerInterface.headerController.getAddressbookTableModel().addItem(item2);
-                        }
-                        catch ( Exception ex )
-                        {
-                                ex.printStackTrace();
-                        }
+                        composerInterface.headerController.getAddressbookTableModel().addItem(item2);
+                }
+                catch ( Exception ex )
+                {
+                        ex.printStackTrace();
                 }
         }
-        else if (action.equals("BCC"))
+}
+else if (action.equals("BCC"))
+{
+        int[] array = addressbook.getSelectedIndices();
+        ListModel model = addressbook.getModel();
+        HeaderItem item;
+
+
+        composerInterface.headerController.cleanupHeaderItemList();
+
+        for (int j = 0; j < array.length; j++)
         {
-                int[] array = addressbook.getSelectedIndices();
-                ListModel model = addressbook.getModel();
-                HeaderItem item;
+                item = (HeaderItem) model.getElementAt(array[j]);
 
+                HeaderItem item2 = (HeaderItem) item.clone();
+                item2.add("field","Bcc");
 
-                composerInterface.headerController.cleanupHeaderItemList();
-
-                for (int j = 0; j < array.length; j++)
+                try
                 {
-                        item = (HeaderItem) model.getElementAt(array[j]);
-
-                        HeaderItem item2 = (HeaderItem) item.clone();
-                        item2.add("field","Bcc");
-
-                        try
-                        {
-                                composerInterface.headerController.getAddressbookTableModel().addItem(item2);
-                        }
-                        catch ( Exception ex )
-                        {
-                                ex.printStackTrace();
-                        }
+                        composerInterface.headerController.getAddressbookTableModel().addItem(item2);
+                }
+                catch ( Exception ex )
+                {
+                        ex.printStackTrace();
                 }
         }
-        */
+}
+*/
     }
 
     public void stateChanged(ChangeEvent e) {
