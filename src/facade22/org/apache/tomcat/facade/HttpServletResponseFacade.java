@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.19 2001/03/07 21:29:38 larryi Exp $
+ * $Revision: 1.19 $
+ * $Date: 2001/03/07 21:29:38 $
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -135,8 +139,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
      */
     public String encodeRedirectURL(String location) {
 	if (isEncodeable(toAbsolute(location)))
-	    return (toEncoded(location,
-			      response.getRequest().getRequestedSessionId()));
+	    return (toEncoded(location, response.getRequest().getSession(false)));
 	else
 	    return (location);
     }
@@ -150,8 +153,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 
     public String encodeURL(String url) {
 	if (isEncodeable(toAbsolute(url)))
-	    return (toEncoded(url,
-			      response.getRequest().getSessionId()));
+	    return (toEncoded(url, response.getRequest().getSession(false)));
 	else
 	    return (url);
     }
@@ -330,15 +332,16 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	if (location.startsWith("#"))
 	    return (false);
 
-	// Are we in a valid session that is not using cookies?
+        // Are we in a valid session that is not using cookies?
 	Request request = response.getRequest();
-	HttpServletRequestFacade reqF=(HttpServletRequestFacade)request.
-	    getFacade();
-	
-	if (!reqF.isRequestedSessionIdValid() )
-	    return (false);
-	if ( reqF.isRequestedSessionIdFromCookie() )
-	    return (false);
+	ServerSession session = request.getSession(false);
+	if(session == null || !session.isValid())
+	    return false;
+	// If the session is new, encode the URL
+	if(!session.getTimeStamp().isNew() &&
+		((HttpServletRequestFacade)request.getFacade()).
+			isRequestedSessionIdFromCookie())
+	    return false;
 
 	// Is this a valid absolute URL?
 	URL url = null;
@@ -415,13 +418,14 @@ final class HttpServletResponseFacade  implements HttpServletResponse
      * suitably encoded.
      *
      * @param url URL to be encoded with the session id
-     * @param sessionId Session id to be included in the encoded URL
+     * @param session Session whose id is to be included in the encoded URL
      */
-    private String toEncoded(String url, String sessionId) {
+    private String toEncoded(String url, ServerSession session) {
 
-	if ((url == null) || (sessionId == null))
+	if ((url == null) || (session == null))
 	    return (url);
 
+	String sessionId = session.getId().toString();
 	String path = null;
 	String query = null;
 	int question = url.indexOf("?");
