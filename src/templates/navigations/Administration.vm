@@ -16,11 +16,7 @@
 #end
 
 #if ($link.isAllowed("admin,Approval.vm"))
-  #if ($adminMenu.equals("2"))
-    <div><small><strong>Approve</strong></small></div>
-  #else
-    <div><small>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</small></div>
-  #end
+  <div><small>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</small></div>
 #end
 
 
