@@ -18,6 +18,7 @@
             
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
+    <property name="src.i18n.dir" value="${src.dir}/i18n"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
     <property name="src.resources.dir" value="${src.dir}/resources"/>
@@ -25,6 +26,7 @@
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
+    
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
 
     <property name="build.webapps" value="${build.dir}/webapps"/>
@@ -143,6 +145,15 @@
                 <exclude name="**/*Lucene*.java"/>
             </fileset>
         </copy>
+
+        <!-- copy l18n stuff into classpath -->
+        <mkdir dir="${build.dest.scarab}"/>
+        <copy todir="${build.dest.scarab}" filtering="no">
+            <fileset dir="${src.i18n.dir}">
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+
         <!-- add Lucene code to source directory -->
         <antcall target="copy-lucene"/>
         

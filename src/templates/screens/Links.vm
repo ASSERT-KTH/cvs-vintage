@@ -1,7 +1,7 @@
 <div id="links" class="app">
 $page.setTitle("Scarab Links")
 
-<h2>Scarab Links</h2>
+<h2>$l10n.SCARAB_LINKS</h2>
 
 <h3>Site Pages</h3>
 <ul>
