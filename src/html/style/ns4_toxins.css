@@ -22,7 +22,7 @@ a:active, a:hover {
 #globalnav { 
 	color: white;
 	padding: 1em;
-	background: #369 url(/scarab/csi/images/logo.gif) no-repeat left;
+	background: #369 url(/scarab/images/logo.gif) no-repeat left;
 	}
 #globalnav p {
 	padding-left: 125px;
@@ -40,7 +40,7 @@ a:active, a:hover {
 	padding: 1em;
 	}
 #featurenav {
-	background: #e7e7c6 url(/scarab/csi/images/bug.gif) no-repeat left;
+	background: #e7e7c6 url(/scarab/images/bug.gif) no-repeat left;
 	}
 #featurenav p {
 	margin: 0;
