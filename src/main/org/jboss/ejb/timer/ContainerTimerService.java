@@ -27,7 +27,7 @@ import org.jboss.mx.util.SerializationHelper;
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  **/
 public class ContainerTimerService
     implements TimerService
@@ -146,7 +146,7 @@ public class ContainerTimerService
     *
     * @param pId Id of the timer to be removed
     *
-    * @see javax.ejb.TimerService#cancel
+    * @see javax.ejb.Timer#cancel
     **/
    protected void cancel( Integer pId ) {
       mLog.debug( "cancel(), cancel timer: " + pId );
@@ -163,17 +163,21 @@ public class ContainerTimerService
      * @param pId Timer Id
      * @param pNextEvent Date of the Next event or null if a single time timer
      */
-   public void handleTimedEvent( Integer pId, Date pNextEvent ) {
-       ContainerTimer lTimer = (ContainerTimer) mTimerList.get( pId );
-       lTimer.setNextTimeout( pNextEvent );
-       if( lTimer != null ) {
-           mLog.debug( "handleTimedEvent(), this: " + this
-              + ", call timer: " + lTimer
-              + ", container: " + mContainer );
-           mContainer.handleEjbTimeout( lTimer );
-          if (lTimer.isSingleAction()) lTimer.cancel();
+    public void handleTimedEvent(Integer pId, Date pNextEvent)
+    {
+       ContainerTimer lTimer = (ContainerTimer) mTimerList.get(pId);
+       if (lTimer != null)
+       {
+          mLog.debug("handleTimedEvent(), this: " + this
+                  + ", call timer: " + lTimer
+                  + ", container: " + mContainer);
+          mContainer.handleEjbTimeout(lTimer);
+          if (lTimer.isSingleAction())
+             lTimer.cancel();
+          else
+             lTimer.setNextTimeout(pNextEvent);
        }
-   }
+    }
    
    /**
     * Stops this Timer Service by removing all its timers
