@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * URL VFS.
  * @author Slava Pestov
- * @version $Id: UrlVFS.java,v 1.3 2001/11/30 11:40:16 spestov Exp $
+ * @version $Id: UrlVFS.java,v 1.4 2002/02/05 22:14:05 spestov Exp $
  */
 public class UrlVFS extends VFS
 {
@@ -71,7 +71,7 @@ public class UrlVFS extends VFS
 		{
 			Log.log(Log.ERROR,this,mu);
 			String[] args = { mu.getMessage() };
-			VFSManager.error(comp,path,"badurl",args);
+			VFSManager.error(comp,path,"ioerror.badurl",args);
 			return null;
 		}
 	} //}}}
@@ -89,7 +89,7 @@ public class UrlVFS extends VFS
 		{
 			Log.log(Log.ERROR,this,mu);
 			String[] args = { mu.getMessage() };
-			VFSManager.error(comp,path,"badurl",args);
+			VFSManager.error(comp,path,"ioerror.badurl",args);
 			return null;
 		}
 	} //}}}

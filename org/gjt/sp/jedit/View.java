@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.13 2002/02/05 06:28:09 spestov Exp $
+ * @version $Id: View.java,v 1.14 2002/02/05 22:14:04 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -788,6 +788,11 @@ public class View extends JFrame implements EBComponent
 
 		getContentPane().add(BorderLayout.SOUTH,status = new StatusBar(this));
 
+		setJMenuBar(GUIUtilities.loadMenuBar("view.mbar"));
+
+		inputHandler = new DefaultInputHandler(this,(DefaultInputHandler)
+			jEdit.getInputHandler());
+
 		Component comp = restoreSplitConfig(buffer,splitConfig);
 		dockableWindowManager.add(comp);
 
@@ -795,11 +800,6 @@ public class View extends JFrame implements EBComponent
 		status.updateMiscStatus();
 
 		EditBus.addToBus(this);
-
-		setJMenuBar(GUIUtilities.loadMenuBar("view.mbar"));
-
-		inputHandler = new DefaultInputHandler(this,(DefaultInputHandler)
-			jEdit.getInputHandler());
 
 		propertiesChanged();
 

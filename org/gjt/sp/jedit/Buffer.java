@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.63 2002/02/05 06:28:09 spestov Exp $
+ * @version $Id: Buffer.java,v 1.64 2002/02/05 22:14:04 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -226,6 +226,11 @@ public class Buffer implements EBComponent
 						contentMgr.insert(0,seg.toString());
 
 						contentInserted(0,seg.count,endOffsets);
+					}
+					catch(OutOfMemoryError oom)
+					{
+						Log.log(Log.ERROR,this,oom);
+						VFSManager.error(view,path,"out-of-memory-error",null);
 					}
 					finally
 					{
