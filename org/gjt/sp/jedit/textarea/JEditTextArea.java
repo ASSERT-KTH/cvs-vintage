@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.98 2002/02/26 06:31:42 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.99 2002/02/27 05:05:33 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4837,7 +4837,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ Instance variables
 	Segment lineSegment;
 	MouseHandler mouseHandler;
-	ChunkCache chunkCache;
+	public ChunkCache chunkCache;
 
 	int maxHorizontalScrollWidth;
 
