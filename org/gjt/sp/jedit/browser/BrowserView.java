@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.68 2003/05/10 02:47:59 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.69 2003/05/16 21:16:27 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -214,7 +214,7 @@ class BrowserView extends JPanel
 	{
 		String browserDir = browser.getDirectory();
 
-		if(path.equals(browserDir))
+		if(VFSBrowser.pathsEqual(path,browserDir))
 		{
 			saveExpansionState();
 			loadDirectory(null,path);

@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.10 2003/04/30 05:28:54 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.11 2003/05/16 21:16:27 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -209,23 +209,13 @@ class VFSFileNameField extends HistoryTextField
 		}
 		else
 		{
-			if(pathsEqual(parent,browser.getDirectory()))
+			if(VFSBrowser.pathsEqual(parent,browser.getDirectory()))
 				newText = name;
 			else
 				newText = path;
 		}
 
 		setText(newText);
-	} //}}}
-
-	//{{{ pathsEqual() method
-	private boolean pathsEqual(String p1, String p2)
-	{
-		if(p1.endsWith("/") || p1.endsWith(File.separator))
-			p1 = p1.substring(0,p1.length() - 1);
-		if(p2.endsWith("/") || p2.endsWith(File.separator))
-			p2 = p2.substring(0,p2.length() - 2);
-		return p1.equals(p2);
 	} //}}}
 
 	//{{{ goToParent() method
