@@ -21,7 +21,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeSelect.vm" />
-<input type="hidden" name="lastTemplate" value="admin,ArtifactTypeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 
 <div class="functnbar">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;

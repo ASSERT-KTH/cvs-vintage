@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.8 2002/02/19 21:20:37 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.9 2002/02/19 22:16:13 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -272,7 +272,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         // If they came from the manage module page,
         // Add the attribute and return there.
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String lastTemplate = data.getParameters().getString("lastTemplate");
+        String lastTemplate = getLastTemplate(data);
         Attribute attribute = scarabR.getAttribute();
         if (lastTemplate != null && !lastTemplate.equals("global")
             && attribute.getAttributeId() != null)

@@ -7,7 +7,7 @@
 <form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.ManageArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
-<input type="hidden" name="lastTemplate" value="module" />
+<input type="hidden" name=""$scarabG.Constant.LAST_TEMPLATE"" value="module" />
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())

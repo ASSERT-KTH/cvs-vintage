@@ -21,7 +21,7 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeSelect.vm" />
 <input type="hidden" name="groupId" value="$groupId" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
-<input type="hidden" name="lastTemplate" value="admin,AttributeGroupEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,AttributeGroupEdit.vm" />
 
 <div class="functnbar">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;

@@ -72,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.7 2002/02/19 21:19:56 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.8 2002/02/19 22:16:13 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -105,7 +105,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 }
                 if (navCount > 5)
                 {
-                   data.setMessage("You cannot select more than 5 issue types "
+                   data.setMessage("You cannot select more than 5 Issue types "
                                    + "to appear in the left hand navigation.");
                    return;
                 }

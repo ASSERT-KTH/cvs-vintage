@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.9 2002/02/19 21:20:37 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.10 2002/02/19 22:16:13 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -79,7 +79,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         IssueType issueType = new IssueType();
         Group group = intake.get("IssueType", issueType.getQueryKey());
-        String lastTemplate = data.getParameters().getString("lastTemplate");
+        String lastTemplate = getLastTemplate(data);
 
         if ( intake.isAllValid() ) 
         {

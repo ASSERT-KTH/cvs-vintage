@@ -1,6 +1,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
-#set ($lastTemplate = $data.Parameters.getString("lastTemplate", ""))
+#set ($lastTemplate = $data.Parameters.getString("$scarabG.Constant.LAST_TEMPLATE", ""))
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
@@ -25,11 +25,11 @@ On this screen, one can modify system wide Attribute information.
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
 #end
 #if (!$lastTemplate.equals(""))
-  <input type="hidden" name="lastTemplate" value="$lastTemplate" />
+  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="$lastTemplate" />
 #end
 
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
-<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")"  //>
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")" />
 
 <div class="functnbar">
 #if ($createNew.equals("false"))
