@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.21 2004/09/18 09:34:45 mvw Exp $
+// $Id: TabToDo.java,v 1.22 2004/09/18 12:42:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,8 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
     // static variables
     private static int numHushes = 0;
 
-    private static UMLAction actionNewToDoItem = Actions.NewToDoItem;
-    private static UMLAction actionResolve = Actions.Resolve;
+    private static UMLAction actionNewToDoItem = Actions.newToDoItem;
+    private static UMLAction actionResolve = Actions.resolve;
     private static UMLAction actionEmailExpert = Actions.emailExpert;
     //public static UMLAction _actionMoreInfo = Actions.MoreInfo;
     private static UMLAction actionSnooze = Actions.snooze;

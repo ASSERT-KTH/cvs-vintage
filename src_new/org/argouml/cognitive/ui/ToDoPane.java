@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.36 2004/09/05 13:18:08 mvw Exp $
+// $Id: ToDoPane.java,v 1.37 2004/09/18 12:42:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,7 @@ import org.tigris.gef.ui.ToolBar;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.36 2004/09/05 13:18:08 mvw Exp $
+ * $Id: ToDoPane.java,v 1.37 2004/09/18 12:42:52 mvw Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -157,7 +157,7 @@ public class ToDoPane extends JPanel
         
         perspectives = new Vector();
         
-        flatView = Actions.FlatToDo;
+        flatView = Actions.flatToDo;
         countLabel = new JLabel(formatCountLabel(999));
         
         toolbar.add(combo);
