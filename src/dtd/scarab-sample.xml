@@ -49,7 +49,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS101 had attribute Status set to New
+                        Status set to New
                     </description>
                 </activity>
                 <activity>
@@ -59,7 +59,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS101 had attribute Priority set to High
+                        Priority set to High
                     </description>
                 </activity>
             </transaction>
@@ -75,7 +75,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS101 had attribute Priority set to Low
+                        Priority set to Low
                     </description>
                 </activity>
                 <activity>
@@ -86,7 +86,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS101 had attribute Status set to unconfirmed
+                        Status set to unconfirmed
                     </description>
                 </activity>
             </transaction>
@@ -104,7 +104,12 @@ ID_CODE, not the primary key column.
             <attachment>
                 <name>My cool file</name>
                 <type>ATTACHMENT</type>
-                <path>file://server/path/to/file.txt</path>
+		    
+                <!-- 
+                Use the path relative to the scarab.attachments.repository
+                property in Scarab.properties.
+                -->
+                <path>relative/path/to/file.txt</path>
                 <data></data>
                 <mimetype>text/plain</mimetype>
                 <created-date format="yyyy-MM-dd">2001-01-01</created-date>
@@ -126,7 +131,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS203 had attribute Status set to Closed
+                        Status set to Closed
                     </description>
                 </activity>
                 <activity>
@@ -136,7 +141,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS203 had attribute Resolution set to Fixed
+                        Resolution set to Fixed
                     </description>
                 </activity>
             </transaction>
@@ -158,7 +163,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS304 had attribute Status set to Closed
+                        Status set to Closed
                     </description>
                 </activity>
                 <activity>
@@ -168,7 +173,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS304 had attribute Resolution set to Fixed
+                        Resolution set to Fixed
                     </description>
                 </activity>
             </transaction>
@@ -195,7 +200,7 @@ ID_CODE, not the primary key column.
                         <type>combo-box</type>
                     </attribute>
                     <description>
-                        Issue TBNS405 had attribute Status set to Closed
+                        Status set to Closed
                     </description>
                 </activity>
             </transaction>
