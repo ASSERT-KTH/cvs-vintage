@@ -305,8 +305,7 @@
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      <th>
-     <img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-     <img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+     &nbsp;
      </th>
      <th>Link</th>
      <th>Link description</th>
@@ -374,19 +373,41 @@
 
 
 <h3>Comments</h3>
-<div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-             <tr>
-       <th>Enter comment</th>
-       <td>
-                <textarea rows="2" cols="60" name ="atchcommentKeydas"></textarea>
-                <input type="hidden" name="atchcommentKeyn" value="comment" />
-       </td>
-     </tr>
-      </table>
-</div>
-    <div class="functnbar3">
-     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />
+
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+<th nowrap="nowrap"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" />
+     Date
+     </th>
+     <th><a href="#">Author</a></th>
+     <th>Comment</th>
+   </tr>
+
+
+         <tr class="a">
+     <td>xx/xx/200X</td>
+          <td>
+     <a href="#">Jane Smith</a>
+          </td>
+     <td>
+<textarea rows="10" cols="60" name ="atchcommentKeydas">This is sample data. If it were a real comment, this information would be useful to others in determining what people's thoughts are on the progress of the issue. This field should be editable to certain folks who want to go in and change what they said; just in case they want to make themselves sound smarter, or perhaps more informed... It's sort of like an opportunity to rewrite history! Exciting, no? 
+
+One important GUI behavior to remember; when a user adds a new comment instance and does not enter any information into the textarea, this instance should not be saved...</textarea></td>
+   </tr>
+    <tr class="b">
+     <td>xx/xx/200X</td>
+          <td>
+     <a href="#">John Wang</a>
+          </td>
+          <td>
+
+<textarea rows="10" cols="60" name ="atchcommentKeydas">This is sample data. If it were a real comment, this information would be useful to others in determining what people's thoughts are on the progress of the issue. This field should be editable to certain folks who want to go in and change what they said; just in case they want to make themselves sound smarter, or perhaps more informed... It's sort of like an opportunity to rewrite history! Exciting, no?</textarea>
+
+</td>
+   </tr>
+  </table>
+<div class="functnbar3">
+     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;<input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
 </div>
     
 
