@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -93,12 +93,100 @@ public class StatefulSessionContainer
    }
    
    // Container implementation --------------------------------------
+   public void init()
+      throws Exception
+   {
+   	  // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+      
+   	  // Call default init
+      super.init();
+      
+      // Init container invoker
+      containerInvoker.init();
+	  
+	  // Init instance cache
+      instanceCache.init();
+		
+      // Init persistence
+      persistenceManager.init();
+   	
+      setupBeanMapping();
+      setupHomeMapping();
+      
+      // Reset classloader  
+      Thread.currentThread().setContextClassLoader(oldCl);
+   }
+   
    public void start()
       throws Exception
    {
+	  // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+      
+	  // Call default start
       super.start();
-      setupBeanMapping();
-      setupHomeMapping();
+      
+      // Start container invoker
+      containerInvoker.start();
+      
+      // Start instance cache
+      instanceCache.start();
+      
+      // Start persistence
+      persistenceManager.start();
+      
+		// Reset classloader
+      Thread.currentThread().setContextClassLoader(oldCl);
+     // super.start();
+     // setupBeanMapping();
+     // setupHomeMapping();
+   }
+   
+	public void stop() {
+		
+		// Associate thread with classloader
+      	ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      	Thread.currentThread().setContextClassLoader(getClassLoader());
+		
+		// Call default stop
+       	super.stop();
+		
+	   	// Stop container invoker
+	   	containerInvoker.stop();
+	   
+	   	// Stop instance cache
+	   	instanceCache.stop();
+	   
+	   	// Stop persistence
+	   	persistenceManager.stop();
+	   
+	   	// Reset classloader
+	   	Thread.currentThread().setContextClassLoader(oldCl);
+   }
+   
+    public void destroy()
+   {
+	   // Associate thread with classloader
+	   ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+	   Thread.currentThread().setContextClassLoader(getClassLoader());
+	   
+	   // Call default destroy
+	   super.destroy();
+	   
+	   // Destroy container invoker
+	   containerInvoker.destroy();
+	   
+	   // Destroy instance cache
+	   instanceCache.destroy();
+	   
+	   // Destroy persistence
+	   persistenceManager.destroy();
+	   
+	   // Reset classloader
+	   Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public Object invokeHome(Method method, Object[] args)
