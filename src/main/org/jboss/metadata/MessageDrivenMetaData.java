@@ -12,6 +12,7 @@ import javax.jms.Session;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import org.jboss.invocation.InvocationType;
 import org.jboss.deployment.DeploymentException;
 
 /**
@@ -31,7 +32,7 @@ import org.jboss.deployment.DeploymentException;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class MessageDrivenMetaData
 extends BeanMetaData
@@ -159,7 +160,7 @@ extends BeanMetaData
             // The MessageDrivenContainer needs this too!!
             //
             Class[] sig = {};
-            if (super.getMethodTransactionType("onMessage", sig, true) == MetaData.TX_REQUIRED)
+            if (super.getMethodTransactionType("onMessage", sig, null) == MetaData.TX_REQUIRED)
             {
                methodTransactionType = TX_REQUIRED;
             }
@@ -181,7 +182,7 @@ extends BeanMetaData
     * which we might cache.
     */
    public byte getMethodTransactionType(String methodName, Class[] params,
-      boolean remote)
+      InvocationType iface)
    {
       // An MDB may only ever have on method
       return getMethodTransactionType();

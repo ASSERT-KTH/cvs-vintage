@@ -7,8 +7,6 @@
 
 package org.jboss.metadata;
 
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.invocation.InvocationType;
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NobodyPrincipal;
 import org.jboss.security.SimplePrincipal;
@@ -30,20 +29,10 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.40 $
- *
- *  <p><b>Revisions:</b><br>
- *  <p><b>2001/10/16: billb</b>
- *  <ol>
- *   <li>Added clustering tags
- *  </ol>
- *  <p><b>2001/12/30: billb</b>
- *  <ol>
- *   <li>made home and bean invokers pluggable
- *  </ol>
+ * @version $Revision: 1.41 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -199,7 +188,8 @@ public abstract class BeanMetaData
    public String getJndiName()
    { 
       // jndiName may be set in jboss.xml
-      if (jndiName == null) {
+      if (jndiName == null)
+      {
          jndiName = ejbName;
       }
       return jndiName;
@@ -209,8 +199,10 @@ public abstract class BeanMetaData
     * Gets the JNDI name under with the local home interface should be bound.
     * The default is local/<ejbName>
     */
-   public String getLocalJndiName() { 
-      if (localJndiName == null) {
+   public String getLocalJndiName()
+   { 
+      if (localJndiName == null)
+      {
          localJndiName = "local/" + ejbName;
       }
       return localJndiName;
@@ -218,7 +210,8 @@ public abstract class BeanMetaData
 	
    public String getConfigurationName()
    {
-      if (configurationName == null) {
+      if (configurationName == null)
+      {
          configurationName = getDefaultConfigurationName();
       }
       return configurationName;
@@ -226,8 +219,10 @@ public abstract class BeanMetaData
 
    public ConfigurationMetaData getContainerConfiguration()
    {
-      if (configuration == null) {
-         configuration = application.getConfigurationMetaDataByName(getConfigurationName());
+      if (configuration == null)
+      {
+         String configName = getConfigurationName();
+         configuration = application.getConfigurationMetaDataByName(configName);
       }
       return configuration;
    }
@@ -268,19 +263,21 @@ public abstract class BeanMetaData
    }
 
    public byte getMethodTransactionType(String methodName, Class[] params,
-                                        boolean remote)
+                                        InvocationType iface)
    {
       // default value
       byte result = TX_UNKNOWN;
 
       Iterator iterator = getTransactionMethods();
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          MethodMetaData m = (MethodMetaData)iterator.next();
-         if (m.patternMatches(methodName, params, remote)) {
+         if (m.patternMatches(methodName, params, iface))
+         {
             result = m.getTransactionType();
-				
             // if it is an exact match, break, if it is the wildcard continue to look for a finer match
-            if (!"*".equals(m.getMethodName())) break;
+            if ( m.getMethodName().equals("*") == false )
+               break;
          }
       }
 
@@ -338,14 +335,16 @@ public abstract class BeanMetaData
     *  @see org.jboss.ejb.Container#getMethodPermissions(Method, boolean)
     */
    public Set getMethodPermissions(String methodName, Class[] params,
-                                   boolean remote)
+                                   InvocationType iface)
    {
       Set result = new HashSet();
       // First check the excluded method list as this takes priority over all other assignments
       Iterator iterator = getExcludedMethods();
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          MethodMetaData m = (MethodMetaData) iterator.next();
-         if (m.patternMatches(methodName, params, remote)) {
+         if (m.patternMatches(methodName, params, iface))
+         {
             /* No one is allowed to execute this method so add a role that
                fails to equate to any Principal or Principal name and return.
                We don't return null to differentiate between an explicit
@@ -358,14 +357,17 @@ public abstract class BeanMetaData
 
       // Check the permissioned methods list
       iterator = getPermissionMethods();
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          MethodMetaData m = (MethodMetaData) iterator.next();
-         if (m.patternMatches(methodName, params, remote)) {
+         if (m.patternMatches(methodName, params, iface))
+         {
             /* If this is an unchecked method anyone can access it so
                set the result set to a role that equates to any Principal or
                Principal name and return.
             */
-            if (m.isUnchecked()) {
+            if (m.isUnchecked())
+            {
                result.clear();
                result.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
                break;
@@ -374,7 +376,8 @@ public abstract class BeanMetaData
             else
             {
                Iterator rolesIterator = m.getRoles().iterator();
-               while (rolesIterator.hasNext()) {
+               while (rolesIterator.hasNext())
+               {
                   String roleName = (String) rolesIterator.next();
                   result.add(new SimplePrincipal(roleName));
                }
@@ -387,7 +390,7 @@ public abstract class BeanMetaData
          result = null;
       return result;
    }
-   
+
    // Cluster configuration methods
    //
    public boolean isClustered() { return this.clustered; }
@@ -401,7 +404,8 @@ public abstract class BeanMetaData
 
       // set the classes
       // Not for MessageDriven
-      if (isMessageDriven() == false) {
+      if (isMessageDriven() == false)
+      {
          homeClass = getElementContent(getOptionalChild(element, "home"));
          remoteClass = getElementContent(getOptionalChild(element, "remote"));
          localHomeClass = getElementContent(getOptionalChild(element, "local-home"));
@@ -412,7 +416,8 @@ public abstract class BeanMetaData
       // set the environment entries
       Iterator iterator = getChildrenByTagName(element, "env-entry");
 		
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element envEntry = (Element)iterator.next();
 
          EnvEntryMetaData envEntryMetaData = new EnvEntryMetaData();
@@ -424,7 +429,8 @@ public abstract class BeanMetaData
       // set the ejb references
       iterator = getChildrenByTagName(element, "ejb-ref");
 		
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element ejbRef = (Element) iterator.next();
 		    
          EjbRefMetaData ejbRefMetaData = new EjbRefMetaData();
@@ -436,7 +442,8 @@ public abstract class BeanMetaData
       // set the ejb local references
       iterator = getChildrenByTagName(element, "ejb-local-ref");
 		
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element ejbLocalRef = (Element) iterator.next();
 		    
          EjbLocalRefMetaData ejbLocalRefMetaData = new EjbLocalRefMetaData();
@@ -449,7 +456,8 @@ public abstract class BeanMetaData
       // set the security roles references
       iterator = getChildrenByTagName(element, "security-role-ref");
 		
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element secRoleRef = (Element) iterator.next();
 			
          SecurityRoleRefMetaData securityRoleRefMetaData = new SecurityRoleRefMetaData();
@@ -460,7 +468,8 @@ public abstract class BeanMetaData
 
       // The security-identity element
       Element securityIdentityElement = getOptionalChild(element, "security-identity");
-      if (securityIdentityElement != null) {
+      if (securityIdentityElement != null)
+      {
          securityIdentity = new SecurityIdentityMetaData();
          securityIdentity.importEjbJarXml(securityIdentityElement);
       }
@@ -468,7 +477,8 @@ public abstract class BeanMetaData
       // set the resource references
       iterator = getChildrenByTagName(element, "resource-ref");
 		
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element resourceRef = (Element) iterator.next();
 
          ResourceRefMetaData resourceRefMetaData = new ResourceRefMetaData();
@@ -479,7 +489,8 @@ public abstract class BeanMetaData
 
       // Parse the resource-env-ref elements
       iterator = getChildrenByTagName(element, "resource-env-ref");
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element resourceRef = (Element) iterator.next();	
          ResourceEnvRefMetaData refMetaData = new ResourceEnvRefMetaData();
          refMetaData.importEjbJarXml(resourceRef);
@@ -499,8 +510,10 @@ public abstract class BeanMetaData
 
       // set the configuration (optional)
       configurationName = getElementContent(getOptionalChild(element, "configuration-name"));
-      if (configurationName != null && getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null) {
-         throw new DeploymentException("configuration '" + configurationName + "' not found in standardjboss.xml or jboss.xml");
+      if (configurationName != null && getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null)
+      {
+         throw new DeploymentException("configuration '" + configurationName
+            + "' not found in standardjboss.xml or jboss.xml");
       }
 
       // Get the security proxy
@@ -513,32 +526,40 @@ public abstract class BeanMetaData
          String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
          ResourceRefMetaData resourceRefMetaData = (ResourceRefMetaData)resourceReferences.get(resRefName);
             
-         if (resourceRefMetaData == null) {
-            throw new DeploymentException("resource-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
+         if (resourceRefMetaData == null)
+         {
+            throw new DeploymentException("resource-ref " + resRefName
+               + " found in jboss.xml but not in ejb-jar.xml");
          }
          resourceRefMetaData.importJbossXml(resourceRef);
       }
 
       // Set the resource-env-ref deployed jndi names
       iterator = getChildrenByTagName(element, "resource-env-ref");
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element resourceRef = (Element) iterator.next();	
          String resRefName = getElementContent(getUniqueChild(resourceRef, "resource-env-ref-name"));
          ResourceEnvRefMetaData refMetaData = (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
-         if (refMetaData == null) {
-            throw new DeploymentException("resource-env-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
+         if (refMetaData == null)
+         {
+            throw new DeploymentException("resource-env-ref " + resRefName
+               + " found in jboss.xml but not in ejb-jar.xml");
          }
          refMetaData.importJbossXml(resourceRef);
       }
 
       // set the external ejb-references (optional)
       iterator = getChildrenByTagName(element, "ejb-ref");
-      while (iterator.hasNext()) {
+      while (iterator.hasNext())
+      {
          Element ejbRef = (Element)iterator.next();
          String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
          EjbRefMetaData ejbRefMetaData = getEjbRefByName(ejbRefName);
-         if (ejbRefMetaData == null) {
-            throw new DeploymentException("ejb-ref " + ejbRefName + " found in jboss.xml but not in ejb-jar.xml");
+         if (ejbRefMetaData == null)
+         {
+            throw new DeploymentException("ejb-ref " + ejbRefName
+               + " found in jboss.xml but not in ejb-jar.xml");
          }
          ejbRefMetaData.importJbossXml(ejbRef);
       }
@@ -578,12 +599,15 @@ public abstract class BeanMetaData
 
             // set the external ejb-references (optional)
             Iterator ejbrefiterator = getChildrenByTagName(node, "ejb-ref");
-            while (ejbrefiterator.hasNext()) {
+            while (ejbrefiterator.hasNext())
+            {
                Element ejbRef = (Element)ejbrefiterator.next();
                String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
                EjbRefMetaData ejbRefMetaData = getEjbRefByName(ejbRefName);
-               if (ejbRefMetaData == null) {
-                  throw new DeploymentException("ejb-ref " + ejbRefName + " found in jboss.xml but not in ejb-jar.xml");
+               if (ejbRefMetaData == null)
+               {
+                  throw new DeploymentException("ejb-ref " + ejbRefName
+                     + " found in jboss.xml but not in ejb-jar.xml");
                }
                ejbRefMetaData.importJbossXml(invokerBindingName, ejbRef);
             }
@@ -591,19 +615,16 @@ public abstract class BeanMetaData
       }
 
       // Determine if the bean is to be deployed in the cluster (more advanced config will be added in the future)
-      //
       String clusteredElt = getElementContent(getOptionalChild(element, "clustered"), (clustered? "True" : "False"));
       clustered = clusteredElt.equalsIgnoreCase ("True");
-
 
       Element clusterConfigElement = getOptionalChild(element, "cluster-config");
       this.clusterConfig = new ClusterConfigMetaData();
       clusterConfig.init(this);
       if (clusterConfigElement != null)
       {
-	 clusterConfig.importJbossXml(clusterConfigElement);
+         clusterConfig.importJbossXml(clusterConfigElement);
       }
-
 
       //Get depends object names
       for (Iterator dependsElements = getChildrenByTagName(element, "depends"); dependsElements.hasNext();)
