@@ -52,21 +52,20 @@ import java.text.SimpleDateFormat;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.modules.Module;
 
 // Scarab Stuff
-import org.apache.turbine.modules.Module;
 import org.tigris.scarab.screens.Default;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * Sends XML Export settings contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportSettings.java,v 1.2 2002/06/11 01:55:38 jon Exp $
+ * @version $Id: ViewXMLExportSettings.java,v 1.3 2002/09/18 00:17:13 jon Exp $
  */
 public class ViewXMLExportSettings extends Default
 {
-    private static final String format = "yyyy-MM-dd HH:mm:ss";
-
     /**
      * builds up the context for display of variables on the page.
      */
@@ -108,12 +107,12 @@ public class ViewXMLExportSettings extends Default
             context.put ("includeUsers", Boolean.FALSE);
         }
         
-        context.put ("renderedFromScreen", Boolean.TRUE);
-        context.put("sdf", new SimpleDateFormat(format));
+        context.put("renderedFromScreen", Boolean.TRUE);
+        context.put("sdf", new SimpleDateFormat(ScarabConstants.DATE_FORMAT));
         String result = 
             Module.handleRequest (context, "macros/XMLExportSettingsMacro.vm");
         data.getOut().write(result);
-        context.remove ("renderedFromScreen");
+        context.remove("renderedFromScreen");
 
         // we already sent the response, there is no target to render
         data.setTarget(null);
