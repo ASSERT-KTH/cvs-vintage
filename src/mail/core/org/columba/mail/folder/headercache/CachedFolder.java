@@ -16,6 +16,8 @@
 package org.columba.mail.folder.headercache;
 
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
@@ -313,14 +315,19 @@ public abstract class CachedFolder extends LocalFolder {
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
 
 		int count = getCachedHeaderList(worker).count();
-		Object[] uids = new Object[count];
+		//Object[] uids = new Object[count];
+		List list = new Vector(count);
 		int i = 0;
 		for (Enumeration e = getCachedHeaderList(worker).keys();
 			e.hasMoreElements();
 			) {
-			uids[i++] = e.nextElement();
+			//uids[i++] = e.nextElement();
+			list.add( e.nextElement() );
 		}
 
+		Object[] uids = new Object[list.size()];
+		((Vector)list).copyInto(uids);
+		
 		return uids;
 	}
 
