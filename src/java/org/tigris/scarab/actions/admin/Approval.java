@@ -82,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.36 2003/04/21 18:07:06 elicia Exp $
+ * @version $Id: Approval.java,v 1.37 2003/04/30 01:09:30 jon Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -203,9 +203,7 @@ public class Approval extends RequireLoginFirstAction
             {
                 // send email
                 EmailContext ectx = new EmailContext();
-                //ectx.setLinkTool((ScarabLink)context.get("link"));
                 ectx.setUser(user);
-                //ectx.setModule(module);
                 // add specific data to context for email template
                 ectx.put("artifactIndex", artifact);
                 ectx.put("artifactName", artifactName);
