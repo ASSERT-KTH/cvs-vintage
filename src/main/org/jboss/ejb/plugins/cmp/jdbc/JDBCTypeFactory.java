@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCTypeFactory {
    // the type mapping to use with the specified database
@@ -209,7 +209,7 @@ public class JDBCTypeFactory {
       ArrayList properties = new ArrayList();
       
       Class javaType = propertyMetaData.getPropertyType();      
-      if(!complexTypes.containsKey(javaType)) {
+      if(!valueClassesByType.containsKey(javaType)) {
          
          // this property is a simple type
          // which makes this the end of the line for recursion
