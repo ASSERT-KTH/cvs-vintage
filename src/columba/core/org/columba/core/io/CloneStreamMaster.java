@@ -16,12 +16,14 @@
 
 package org.columba.core.io;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +34,20 @@ import java.util.List;
  */
 public class CloneStreamMaster {
 
+	private static final int MAXINMEMORY = 51200;
+
 	private InputStream master;
 	private int[] streampos;
 	private int masterpos;
 	private int nextId;
 	private List streamList;
 	private File tempFile;
-	private FileOutputStream tempOut;
+	private OutputStream tempOut;
 	private static int uid = 0;
 	private byte[] copyBuffer;
 	private int openClones;
 	
+	private boolean usesTempFile;
 	
 	/**
 	 * Constructs a CloneStreamMaster. Note that the master must NOT be read from after
@@ -57,10 +62,19 @@ public class CloneStreamMaster {
 		
 		streamList = new ArrayList(2);
 		
-		tempFile = File.createTempFile("columba-stream-clone" + (uid++), ".tmp");
-		// make sure file is deleted automatically when closing VM
-		tempFile.deleteOnExit();
-		tempOut = new FileOutputStream( tempFile );
+		// decide if stream should be buffer in ram or on disk
+		if( master.available() > MAXINMEMORY ) { 
+			tempFile = File.createTempFile("columba-stream-clone" + (uid++), ".tmp");
+			// make sure file is deleted automatically when closing VM
+			tempFile.deleteOnExit();
+			tempOut = new FileOutputStream( tempFile );
+
+			usesTempFile = true;
+		} else {
+			tempOut = new ByteArrayOutputStream(master.available());
+
+			usesTempFile = false;
+		}
 		
 		copyBuffer = new byte[8000];
 
@@ -79,12 +93,16 @@ public class CloneStreamMaster {
 			System.arraycopy(oldpos,0,streampos,0,oldpos.length);
 		}
 		
+		if( usesTempFile ) {
 		try {
 			// add a new inputstream to read from
 			streamList.add(new FileInputStream(tempFile));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			// only if tempfile was corrupted
+		}
+		} else {
+			streamList.add(new ByteArrayInputStream(((ByteArrayOutputStream)tempOut).getBuffer()));
 		}
 		
 		openClones++;
@@ -98,7 +116,7 @@ public class CloneStreamMaster {
 		}
 		
 		streampos[id]++;
-		return ((FileInputStream)streamList.get(id)).read();
+		return ((InputStream)streamList.get(id)).read();
 	}
 	
 	public int read(int id, byte[] out, int offset, int length ) throws IOException {
@@ -110,7 +128,7 @@ public class CloneStreamMaster {
 		}
 		
 		streampos[id] += length;
-		return ((FileInputStream)streamList.get(id)).read(out,offset,length);
+		return ((InputStream)streamList.get(id)).read(out,offset,length);
 	}
 	
 	private int bufferNextBlock() throws IOException {
@@ -134,8 +152,11 @@ public class CloneStreamMaster {
 	 */
 	protected void finalize() throws Throwable {
 		super.finalize();
-		// Delete the tempfile immedietly
-		tempFile.delete();
+
+		if( usesTempFile ) {
+			// Delete the tempfile immedietly
+			tempFile.delete();
+		}
 	}
 
 }
