@@ -44,7 +44,11 @@
 		<menuitem imenu="FontSizeMenu" />
 		<separator />
 		<menuitem imenu="ParagraphMenu" />
-		<menuitem imenu="JustifyMenu" />
+		<menu name="menu_format_justification">
+			<menuitem checkboxaction="LeftJustifyAction" />
+			<menuitem checkboxaction="CenterJustifyAction" />
+			<menuitem checkboxaction="RightJustifyAction" />
+		</menu>
 		<separator />
 		<menuitem action="InsertBreakAction" />
 	</menu>

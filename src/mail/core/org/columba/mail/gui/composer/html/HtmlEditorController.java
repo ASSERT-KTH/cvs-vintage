@@ -35,6 +35,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.ChangedCharSetException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.html.HTML;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -128,6 +129,34 @@ public class HtmlEditorController
 		view.toggleTeleTyper();
 	}
 
+	/**
+	 * Sets alignment in the view to left, center or right
+	 * @param	align	One of StyleConstants.ALIGN_LEFT,
+	 * 					StyleConstants.ALIGN_CENTER or 
+	 * 					StyleConstants.ALIGN_RIGHT
+	 */
+	public void setAlignment(int align) {
+		view.setTextAlignment(align);
+
+		/*
+		 * notify observers about format change - this is necessary to
+		 * update the state of alignment buttons / menues
+		 * (same notification as made in caretUpdate
+		 */		
+
+		boolean textSelected = false;
+		String  text = view.getSelectedText();
+		if (text == null) {
+			textSelected = false;
+		} else if (text.length() > 0) {
+			textSelected = true;
+		}
+		int pos = view.getCaretPosition();
+		setChanged();
+		notifyObservers(new FormatInfo(
+				view.getHtmlDoc(), pos, textSelected));
+	}
+	
 	/**
 	 * Sets paragraph format for selected paragraphs or current
 	 * paragraph if no text is selected
@@ -440,15 +469,13 @@ public class HtmlEditorController
 			textSelected = true;
 		}
 		
-		// get attributes, i.e. formatting information
+		// get current caret position
 		int pos = e.getDot();
 		
 		// notify observers (typically formatting actions).
 		setChanged();
 		notifyObservers(new FormatInfo(
 				view.getHtmlDoc(), pos, textSelected));
-
-
 
 	}
 

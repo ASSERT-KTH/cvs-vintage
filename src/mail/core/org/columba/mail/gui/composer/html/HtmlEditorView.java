@@ -186,7 +186,7 @@ public class HtmlEditorView extends JTextPane
 		// set format on current selection and input attributes
 		setCharacterFormat(sas);
 	}
-
+	
 	/**
 	 * Toggles tele typer (aka typewritten) on/off
 	 */
@@ -206,38 +206,45 @@ public class HtmlEditorView extends JTextPane
 			}
 		}
 		
-		/*
-		 * Addition and removal of formatting needs to be done more or less
-		 * manually since no helper methods exist on StyleConstants - to bad...
-		 */
-
 		// define attribute set with the tele typer attribute
 		SimpleAttributeSet sas = new SimpleAttributeSet();
 		sas.addAttribute(HTML.Tag.TT, new SimpleAttributeSet());
 
 		if (isTeleTyper) {
-			// remove formatting from "input attributes"
-			inputAttr.removeAttributes(sas);
-			
-			// remove formatting from current selection if any
-			int selStart  = getSelectionStart();
-			int selEnd    = getSelectionEnd();
-			
-			for (int i=selStart; i<selEnd; i++) {
-				// need to remove formatting char by char to keep 
-				// other existing formats (bold, italic etc.)
-				SimpleAttributeSet attr =
-						new SimpleAttributeSet(
-							htmlDoc.getCharacterElement(i).getAttributes());
-				attr.removeAttributes(sas);
-				htmlDoc.setCharacterAttributes(i, 1, attr, true);
-			}
-			
+			// remove formatting from "input attributes" and current selection
+			removeCharacterFormat(sas);
+		
 		} else {
 			// set format on current selection and input attributes
 			setCharacterFormat(sas);
-		}
 
+		}
+	}
+
+	/**
+	 * Private utility for removing character format from current selection
+	 * and from the input attributes, which defines the format of text typed
+	 * at the current caret position
+	 * @param attr		Attributeset containing the format to remove
+	 */
+	private void removeCharacterFormat(AttributeSet attr) {
+		// remove formatting from "input attributes"
+		MutableAttributeSet inputAttr = htmlKit.getInputAttributes();
+		inputAttr.removeAttributes(attr);
+			
+		// remove formatting from current selection if any
+		int selStart  = getSelectionStart();
+		int selEnd    = getSelectionEnd();
+			
+		for (int i=selStart; i<selEnd; i++) {
+			// need to remove formatting char by char to keep 
+			// other existing formats (bold, italic etc.)
+			SimpleAttributeSet currentAttr =
+					new SimpleAttributeSet(
+						htmlDoc.getCharacterElement(i).getAttributes());
+			currentAttr.removeAttributes(attr);
+			htmlDoc.setCharacterAttributes(i, 1, currentAttr, true);
+		}
 	}
 
 	/**
@@ -265,6 +272,59 @@ public class HtmlEditorView extends JTextPane
 	}
 	
 	/**
+	 * Private utility for setting paragraph format on current selection
+	 * from an attribute set
+	 * 
+	 * @param attr		Attributeset containing the format to set
+	 */
+	private void setParagraphFormat(AttributeSet attr) {
+		// get information on current selection
+		int selStart  = getSelectionStart();
+		int selEnd    = getSelectionEnd();
+		int selLength = selEnd - selStart;
+
+		// set the format
+		htmlDoc.setParagraphAttributes(selStart, selLength, attr, false);
+	}
+
+	/**
+	 * Sets alignment of the current paragraph to left, center or right.
+	 * @param	align	The alignment; one of: StyleConstants.ALIGN_LEFT,
+	 * 					StyleConstants.ALIGN_CENTER, StyleConstants.ALIGN_RIGHT
+	 */
+	public void setTextAlignment(int align) {
+		
+		// check if alignment is supported
+		boolean supported;
+		switch (align) {
+			case StyleConstants.ALIGN_LEFT:
+				supported = true;
+				break;
+			case StyleConstants.ALIGN_CENTER:
+				supported = true;
+				break;
+			case StyleConstants.ALIGN_RIGHT:
+				supported = true;
+				break;
+			default:
+				supported = false;
+				break;
+		}
+		if (!supported) {
+			ColumbaLogger.log.error("Alignment not set - alignment=" +
+					align + " not supported");
+			return;
+		}
+		
+		// define attribute set corresponding to the requested format
+		MutableAttributeSet attr = new SimpleAttributeSet();
+		StyleConstants.setAlignment(attr, align);
+
+		// set alignment
+	    setParagraphFormat(attr);
+	}
+
+	/**
 	 * Sets format of selected paragraphs or current paragraph
 	 * when no text is selected.
 	 * <br>
@@ -289,14 +349,8 @@ public class HtmlEditorView extends JTextPane
 		MutableAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(StyleConstants.NameAttribute, formatTag);
 	
-		// get information on current selection
-		int selStart  = getSelectionStart();
-		int selEnd    = getSelectionEnd();
-		int selLength = selEnd - selStart;
-
 		// set the format
-		htmlDoc.setParagraphAttributes(selStart, selLength, attr, false);		
-
+		setParagraphFormat(attr);
 	}
 
 	/** 

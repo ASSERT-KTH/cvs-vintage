@@ -62,10 +62,17 @@ public class FormatInfo {
 	 * NB: To get the right attributes, caret position - 1 is used!!! 
 	 */
 	private AttributeSet getCharAttr() {
-		return htmlDoc.
-				getCharacterElement(caretPos - 1).
-						getAttributes();
+		return htmlDoc.getCharacterElement(caretPos - 1).getAttributes();
 	}
+	
+	/**
+	 * Private utility to return the paragraph attributes at the current
+	 * caret position
+	 */
+	private AttributeSet getParagraphAttr() {
+		return htmlDoc.getParagraphElement(caretPos).getAttributes();
+	}
+	
 	/**
 	 * Returns true if some text is currently selected in the editor
 	 */
@@ -187,6 +194,51 @@ public class FormatInfo {
 		return checkIfTagIsParent(HTML.Tag.ADDRESS);
 	}
 	
+	/**
+	 * Checks whether the current alignment is left-aligned
+	 * @return	true if text is left-aligned
+	 */
+	public boolean isAlignLeft() {
+		return checkAlignment("left");
+	}
+	
+	/**
+	 * Checks whether the current alignment is centered
+	 * @return	true if text is centered
+	 */
+	public boolean isAlignCenter() {
+		return checkAlignment("center");
+	}
+
+	/**
+	 * Checks whether the current alignment is right-aligned
+	 * @return	true if text is right-aligned
+	 */
+	public boolean isAlignRight() {
+		return checkAlignment("right");
+	}
+
+	/**
+	 * Private utility to check alignment
+	 * @param align		Alignment to check for ("left", "center" or "right")
+	 * @return			true if the specified alignment exist
+	 */
+	private boolean checkAlignment(String align) {
+		AttributeSet attr = getParagraphAttr();
+		Enumeration enum = attr.getAttributeNames();
+		while (enum.hasMoreElements()) {
+			Object name = enum.nextElement();
+			if (name.toString().equals("text-align")) {
+				// alignment found
+				if (attr.getAttribute(name).toString().equals(align)) {
+					return true;
+				}
+			}
+		}
+		// not found
+		return false;
+	}
+
 	/**
 	 * Private utility to check whether a given tag is found 
 	 * as parent at the current caret position.
