@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.45 $" />  
+     <property name="revision" value="$Revision: 1.46 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -1281,6 +1281,7 @@ mod_webapp into mod_jk )
       <gtest description="This URL should return 403 Forbidden"
            request="GET /%252e%252e/%252e%252e/%00.jsp HTTP/1.0"
            returnCode="${http.protocol} 40" 
+           unless="not.standalone"
       />
 
       <gtest description="This URL should return 403 Forbidden"
