@@ -102,7 +102,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.48 2002/05/24 04:32:59 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.49 2002/06/06 21:18:51 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -198,7 +198,8 @@ public class AssignIssue extends BaseModifyIssue
                         alreadyAssigned = true;
                         if (!attrId.equals(oldAttVal.getAttributeId().toString()))
                         {
-                            switchUser(context, assignee, user, oldAttVal.getAttribute(), 
+                            switchUser(context, assignee, user, 
+                                       oldAttVal.getAttribute(), 
                                        attribute, oldAttVal, reason);
                         }
                     }
@@ -206,16 +207,16 @@ public class AssignIssue extends BaseModifyIssue
                 // if user was not already assigned, assigned them
                 if (!alreadyAssigned)
                 {
+                    String attrDisplayName = issue.getModule()
+                       .getRModuleAttribute(attribute, issue.getIssueType())
+                       .getDisplayValue();
                     othersAction = ("User " + user.getUserName() 
                               + " has added user " 
                               + assignee.getUserName() + " to " 
-                              + attribute.getName() + ".");
+                              + attrDisplayName + ".");
                     userAction = ("You have been added to " 
-                                   + attribute.getName() + ".");
+                                   + attrDisplayName + ".");
                     issue.assignUser(assignee, user, othersAction, attribute, reason);
-                    // add assignee to the List so they appear on the
-                    // template which follows this action
-                    //assignees.add(attVal);
                     // Notification email
                     if (!notify(context, issue, assignee, 
                                 userAction, othersAction))
@@ -266,22 +267,31 @@ public class AssignIssue extends BaseModifyIssue
         // Create attachments and email notification text
         // For assigned user, and for other associated users
         Attribute attribute = attVal.getAttribute();
+        Issue issue = attVal.getIssue();
+        String attrDisplayName = issue.getModule()
+             .getRModuleAttribute(attribute, issue.getIssueType())
+             .getDisplayValue();
         StringBuffer buf1 = new StringBuffer("You have been "
                                              + "removed from ");
-        buf1.append(attribute.getName()).append(".");
+        buf1.append(attrDisplayName).append(".");
         String userAction = buf1.toString();
          
         StringBuffer buf2 = new StringBuffer("User " );
         buf2.append(assigner.getUserName() + " deleted user ");
         buf2.append(assignee.getUserName()).append(" from ");
-        buf2.append(attribute.getName());
+        buf2.append(attrDisplayName);
         String othersAction = buf2.toString();
-        Attachment attachment = new Attachment();
-        attachment.setName(othersAction);
-        attachment.setDataAsString(reason);
-        attachment.setTextFields(assigner, attVal.getIssue(), 
-                                 Attachment.MODIFICATION__PK);
-        attachment.save();
+ 
+        Attachment attachment = null;
+        if (!reason.equals(""))
+        {
+            attachment = new Attachment();
+            attachment.setDataAsString(reason);
+            attachment.setName("comment");
+            attachment.setTextFields(assigner, attVal.getIssue(), 
+                                     Attachment.MODIFICATION__PK);
+            attachment.save();
+        }
 
         // Save transaction record
         Transaction transaction = new Transaction();
@@ -294,13 +304,12 @@ public class AssignIssue extends BaseModifyIssue
         Activity activity = new Activity();
         activity.create(attVal.getIssue(), attVal.getAttribute(),
                         othersAction, transaction, 0, 0, null, 
-                       null, null, null, "", "");
+                        null, null, null, "", "");
 
         // remove the user from the List and reset the 
         // index, so the next AttributeValue is not skipped
         attVal.setDeleted(true);
         attVal.save();
-        //attVal.getIssue().getAttributeValues(attribute).remove(attVal);
 
         if (!notify(context, attVal.getIssue(), assignee, 
                     userAction, othersAction))
@@ -322,25 +331,37 @@ public class AssignIssue extends BaseModifyIssue
 
         // Create attachments and email notification text
         // For assigned user, and for other associated users
-        Attachment attachment = new Attachment();
+        Attachment attachment = null;
+        String oldAttrDisplayName = issue.getModule()
+             .getRModuleAttribute(oldAttribute, issue.getIssueType())
+             .getDisplayValue();
+        String newAttrDisplayName = issue.getModule()
+             .getRModuleAttribute(newAttribute, issue.getIssueType())
+             .getDisplayValue();
         StringBuffer buf1 = new StringBuffer("You have been "
                + "switched from attribute ");
-        buf1.append(oldAttribute.getName()).append(" to ");
-        buf1.append(newAttribute.getName()).append(".");
+        buf1.append(oldAttrDisplayName).append(" to ");
+        buf1.append(newAttrDisplayName).append(".");
         String userAction = buf1.toString();
 
         StringBuffer buf2 = new StringBuffer();
         buf2.append("User " + assigner.getUserName());
         buf2.append(" has switched user ");
         buf2.append(assignee.getUserName()).append(" from ");
-        buf2.append(oldAttribute.getName()).append(" to ");
-        buf2.append(newAttribute.getName() + ".");
+        buf2.append(oldAttrDisplayName).append(" to ");
+        buf2.append(newAttrDisplayName + ".");
         String othersAction = buf2.toString();
-        attachment.setName(othersAction);
-        attachment.setDataAsString(reason);
-        attachment.setTextFields(assigner, issue, 
-                                 Attachment.MODIFICATION__PK);
-        attachment.save();
+
+        if (!reason.equals(""))
+        {
+            // Save attachment if reason has been provided
+            attachment = new Attachment();
+            attachment.setName("comment");
+            attachment.setDataAsString(reason);
+            attachment.setTextFields(assigner, issue, 
+                                     Attachment.MODIFICATION__PK);
+            attachment.save();
+        }
 
         // Save transaction record
         Transaction transaction = new Transaction();
@@ -348,12 +369,6 @@ public class AssignIssue extends BaseModifyIssue
                            .EDIT_ISSUE__PK, 
                            assigner, attachment);
         attVal.startTransaction(transaction);
-
-        // Save activity record
-        Activity activity = new Activity();
-        activity.create(issue, newAttribute, othersAction, 
-                        transaction, 0, 0, null, null, null, 
-                        null, "", "");
 
         // Save assignee value
         attVal.setAttributeId(newAttribute.getAttributeId());
