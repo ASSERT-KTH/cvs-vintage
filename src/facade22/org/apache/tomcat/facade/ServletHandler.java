@@ -97,7 +97,11 @@ public final class ServletHandler extends Handler {
      * serve requests. If the handler is not in this state a 500 error
      * should be reported. ( customize - may be 404 )
      * To ADDED by calling destroy()
+     * To DISABLED if permanent UnavailableException in service()
      * FROM ADDED by calling init()
+     *
+     * Note: Once this state is reached, only UnavailableExceptions are
+     * stored in errorException.
      */
     public static final int STATE_READY=3;
 
@@ -445,21 +449,12 @@ public final class ServletHandler extends Handler {
 
 
 	// if unavailable
-	if( ! checkAvailable() ) {
-	    // if error still present
-	    Exception ex=getErrorException();
-	    if( ex!=null ) {
-		// save error state on request and response
-		saveError( req, res, ex );
-	    }
-	    // if we have an error on this request
-	    if ( req.isExceptionPresent()) {
-		// if in included, defer handling to higher level
-		if ( res.isIncluded() )
-		    return;
-		// otherwise handle error
-		contextM.handleError( req, res, getErrorException());
-	    }
+	if( ! checkAvailable( req, res ) ) {
+	    // if in included, defer handling to higher level
+	    if ( res.isIncluded() )
+		return;
+	    // otherwise handle error
+	    contextM.handleError( req, res, req.getErrorException());
 	    return; // we can't handle it
 	}
 
@@ -519,9 +514,12 @@ public final class ServletHandler extends Handler {
 	setErrorException( ex );
     }
 
-    /** Check if error exception is present and if so, has the error
-	expired.  Sets error on request and response if un-expired
-	error found.
+    /** Check if unavailable timer is present and if so, has the
+	unavailable time expired.  Two versions are needed.  The
+	first is used in init() handling which is itself synchronized.
+	The second is used in service() handling after initialization
+	is successful.  It needs its own synchronization since
+	multiple requests could try to expire the unavailable error.
      */
     private boolean checkAvailable() {
 	if( unavailableTime == -1 )
@@ -537,6 +535,38 @@ public final class ServletHandler extends Handler {
 			" unavailable time expired, trying again ");
 	    return true;
 	}
+	// still unavailable
+	return false;
+    }
+
+    private boolean checkAvailable( Request req, Response res ) {
+	if( unavailableTime == -1 )
+	    return true;
+
+	// save a copy of current UnavailableException
+	Exception ex = getErrorException();	
+	// if permanent exception this code isn't called
+	long moreTime = unavailableTime - System.currentTimeMillis();
+	// if timer expired
+	if ( moreTime < 0) {
+	    synchronized(this) {
+		// if another request hasn't expired the error
+		if ( unavailableTime != -1 ) {
+		    // disable the error - it expired
+		    setErrorException(null);
+		    unavailableTime=-1;
+		    log(getName() +
+			" unavailable time expired, trying again ");
+		}
+		return true;
+	    }
+	}
+	// get seconds remaining with minimum of 1 second
+	int secs=1;
+	if( moreTime > 0 )
+	    secs = (int)((moreTime + 999) / 1000);
+	// save error state on request and response
+	saveError( req, res, new UnavailableException(ex.getMessage(), secs) );
 	// still unavailable
 	return false;
     }
