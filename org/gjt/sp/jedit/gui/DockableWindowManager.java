@@ -102,7 +102,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.93 2004/02/04 00:07:22 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.94 2004/02/22 20:00:52 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -820,6 +820,11 @@ public class DockableWindowManager extends JPanel implements EBComponent
 	//{{{ getDockableWindow() method
 	/**
 	 * Returns the specified dockable window.
+	 *
+	 * Note that this method
+	 * will return null if the dockable has not been added yet.
+	 * Make sure you call {@link #addDockableWindow(String)} first.
+	 *
 	 * @param name The name of the dockable window
 	 * @since jEdit 4.1pre2
 	 */
@@ -830,8 +835,15 @@ public class DockableWindowManager extends JPanel implements EBComponent
 
 	//{{{ getDockable() method
 	/**
-	 * Returns the specified dockable window. For historical reasons, this
+	 * Returns the specified dockable window.
+	 *
+	 * Note that this method
+	 * will return null if the dockable has not been added yet.
+	 * Make sure you call {@link #addDockableWindow(String)} first.
+	 *
+	 * For historical reasons, this
 	 * does the same thing as {@link #getDockableWindow(String)}.
+	 *
 	 * @param name The name of the dockable window
 	 * @since jEdit 4.0pre1
 	 */

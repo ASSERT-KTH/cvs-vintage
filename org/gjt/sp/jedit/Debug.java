@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.27 2003/12/27 05:13:54 spestov Exp $
+ * @version $Id: Debug.java,v 1.28 2004/02/22 20:00:52 spestov Exp $
  */
 public class Debug
 {
@@ -142,4 +142,9 @@ public class Debug
 	 * Printing debug.
 	 */
 	public static boolean PRINT_DEBUG = false;
+
+	/**
+	 * Create new search dialogs instead of reusing instances.
+	 */
+	public static boolean DISABLE_SEARCH_DIALOG_POOL = false;
 }

@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.211 2004/02/04 00:07:21 spestov Exp $
+ * @version $Id: Buffer.java,v 1.212 2004/02/22 20:00:51 spestov Exp $
  */
 public class Buffer
 {
@@ -2632,9 +2632,9 @@ loop:		for(int i = 0; i < seg.count; i++)
 			{
 				int openBracketIndex = TextUtilities.findMatchingBracket(
 					this,lineIndex,closeBracketIndex);
-				int openLineIndex = getLineOfOffset(openBracketIndex);
 				if(openBracketIndex != -1)
 				{
+					int openLineIndex = getLineOfOffset(openBracketIndex);
 					String openLine = getLineText(openLineIndex);
 					if (getLineParenWeight(openLineIndex) < 0)
 					{
