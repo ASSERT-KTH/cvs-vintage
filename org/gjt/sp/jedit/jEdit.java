@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.25 2001/12/01 05:48:47 spestov Exp $
+ * @version $Id: jEdit.java,v 1.26 2001/12/01 06:18:53 spestov Exp $
  */
 public class jEdit
 {
@@ -2370,7 +2370,7 @@ public class jEdit
 
 			// give it an empty token marker to avoid problems
 			TokenMarker marker = new TokenMarker();
-			marker.addRuleSet("MAIN",new ParserRuleSet());
+			marker.addRuleSet("MAIN",new ParserRuleSet(mode));
 			mode.setTokenMarker(marker);
 		}
 	} //}}}
