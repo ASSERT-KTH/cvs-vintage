@@ -437,30 +437,34 @@ public class JspInterceptor extends BaseInterceptor {
 	// quick test to see if we need to worry about params
 	// ( preserve lazy eval for parameters )
 	boolean pre_compile=false;
+	boolean do_compile=true;
 	int i=(qString==null) ? -1: qString.indexOf( "jsp_precompile" );
 	if( i>= 0 ) {
 	    // Probably we are in the problem case. 
+	    pre_compile=true;
 	    req.parameters().handleQueryParameters();
 	    String p=req.parameters().getParameter( "jsp_precompile");
-	    if( p==null || p.equalsIgnoreCase("true")) {
-		pre_compile=true;
+	    if( "false".equalsIgnoreCase(p) ) {
+		do_compile=false;
+	    } else  if( p!=null && ! p.equalsIgnoreCase("true") ) {
+		req.setAttribute("javax.servlet.error.message",
+				 "Invalid value to jsp_precompile");
+		return 500;
 	    }
 	}
 	
 	// Each .jsp file is compiled to a servlet, and will
 	// have a dependency to check if it's expired
+	// if the jspfile is older than the class - we're ok
+        // this happens if the .jsp file was compiled in a previous
+	// run of tomcat.
 	Dependency dep= handler.getServletInfo().getDependency();
-	if( dep!=null && ! dep.isExpired() ) {
-	    // if the jspfile is older than the class - we're ok
-	    // this happens if the .jsp file was compiled in a previous
-	    // run of tomcat.
-	    return 0;
+	if( (dep==null ||  dep.isExpired()) && do_compile ) {
+	    // we need to compile... ( or find previous .class )
+	    JasperLiaison liasion=new JasperLiaison(getLog(), debug);
+	    liasion.processJspFile(req, jspFile, handler, args);
 	}
-
-	// we need to compile... ( or find previous .class )
-	JasperLiaison liasion=new JasperLiaison(getLog(), debug);
-	liasion.processJspFile(req, jspFile, handler, args);
-
+	
 	if( pre_compile ) {
 	    // we may have compiled the page ( if needed ), but
 	    // we can't execute it. The handler will just
@@ -468,7 +472,8 @@ public class JspInterceptor extends BaseInterceptor {
 
 	    // Future: detail information about compile results
 	    // and if indeed we had to do something or not
-	    req.setHandler(  ctx.
+	    Context ctxr = req.getContext();
+	    req.setHandler(  ctxr.
 			     getServletByName( "tomcat.jspPrecompileHandler"));
 	}
 	
