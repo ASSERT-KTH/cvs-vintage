@@ -24,7 +24,7 @@
 // File: UMLClassifierComboBoxModel.java
 // Classes: UMLClassifierComboBoxModel
 // Original Author: 
-// $Id: UMLClassifierComboBoxModel.java,v 1.5 2002/04/25 15:04:15 jeremybennett Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.6 2002/08/19 10:48:08 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up and
 // mods made following bug fixing in UMLComboBoxModel. getModel() and
@@ -116,7 +116,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 	    
 	    if(afterEntry != null) afterEntry.checkCollision(currentStr,null);		   
 	    
-	    fireContentsChanged(this,0,getSet().size());		  
+	   	// fireContentsChanged(this,0,getSet().size());	  
 
 	//
 	//   get current value
@@ -134,6 +134,7 @@ public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
 			    
 	    }
 	}
+	 fireContentsChanged(this,0,getSet().size());	
     }
 
 

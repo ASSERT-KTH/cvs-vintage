@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.12 2002/07/15 15:12:13 kataka Exp $
+// $Id: UMLComboBoxModel.java,v 1.13 2002/08/19 10:48:08 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up,
 // whilst tracking bug. _model eliminated, since it seems to have no use (it is
@@ -1059,7 +1059,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         // now, because this triggers even when we just show the combo for
         // the first time on selection.
 
-        Project p = ProjectBrowser.TheInstance.getProject();
+        //Project p = ProjectBrowser.TheInstance.getProject();
         //p.setNeedsSave(true);
     }
 
