@@ -103,6 +103,7 @@ public class JspInterceptor extends BaseInterceptor {
     
     Properties args=new Properties(); // args for jasper
     boolean useJspServlet=false; 
+    boolean useWebAppCL=false;
     String jspServletCN=JSP_SERVLET;
     String runtimePackage;
     
@@ -243,6 +244,14 @@ public class JspInterceptor extends BaseInterceptor {
     public void setRuntimePackage(String rp ) {
 	runtimePackage=rp;
     }
+
+    /** Compile using the web application classloader.  This
+        was added as part of dealing a problem with
+        tools.jar on some HP-UX systems.
+     */
+    public void setUseWebAppCL(boolean b) {
+        useWebAppCL=b;
+    }
     
     // -------------------- Hooks --------------------
 
@@ -279,7 +288,8 @@ public class JspInterceptor extends BaseInterceptor {
 	    }
 	}
 
-        if( !ctx.isTrusted() ) {
+        if( (useJspServlet && !ctx.isTrusted())
+                || useWebAppCL ) {
             try {
                 File f=new File( cm.getInstallDir(),
                                  "lib/container/jasper.jar" );
@@ -287,33 +297,28 @@ public class JspInterceptor extends BaseInterceptor {
                                  f.getAbsolutePath().replace('\\','/') );
                 ctx.addClassPath( url );
                 if( debug > 9 ) log( "Added to classpath: " + url );
+
+                f=new File( System.getProperty( "java.home" ) +
+                                 "/../lib/tools.jar");
+                if( ! f.exists() ) {
+                    // On some systems java.home gets set to the root of jdk.
+                    // That's a bug, but we can work around and be nice.
+                    f=new File( System.getProperty( "java.home" ) +
+                                     "/lib/tools.jar");
+                    if( ! f.exists() ) {
+                        log("Tools.jar not found " +
+                            System.getProperty( "java.home" ));
+                    } else {
+                        log("Detected wrong java.home value " +
+                            System.getProperty( "java.home" ));
+                    }
+                }
+                url=new URL( "file", "" , f.getAbsolutePath() );
+                ctx.addClassPath( url );
+                if( debug > 9 ) log( "Added to classpath: " + url );
 	    } catch( MalformedURLException ex ) {
                 ex.printStackTrace();
             }
-        }
-
-        // Add tools.jar in any case
-        try {
-            File f=new File( System.getProperty( "java.home" ) +
-                             "/../lib/tools.jar");
-            if( ! f.exists() ) {
-                // On some systems java.home gets set to the root of jdk.
-                // That's a bug, but we can work around and be nice.
-                f=new File( System.getProperty( "java.home" ) +
-                                 "/lib/tools.jar");
-                if( ! f.exists() ) {
-                    log("Tools.jar not found " +
-                        System.getProperty( "java.home" ));
-                } else {
-                    log("Detected wrong java.home value " +
-                        System.getProperty( "java.home" ));
-                }
-            }
-            URL url=new URL( "file", "" , f.getAbsolutePath() );
-            ctx.addClassPath( url );
-            if( debug > 9 ) log( "Added to classpath: " + url );
-        } catch( MalformedURLException ex ) {
-            ex.printStackTrace();
         }
     }
 
@@ -361,12 +366,14 @@ public class JspInterceptor extends BaseInterceptor {
 	    ctx.addServlet( new JspPrecompileH());
 	}
 
-        //Extra test/warnings for tools.jar
-        try {
-            ctx.getClassLoader().loadClass( "sun.tools.javac.Main" );
-            if( debug>0) log( "Found javac in context init");
-        } catch( ClassNotFoundException ex ) {
-            if( debug>0) log( "javac not found in context init");
+        if( useWebAppCL ) {
+            //Extra test/warnings for tools.jar
+            try {
+                ctx.getClassLoader().loadClass( "sun.tools.javac.Main" );
+                if( debug>0) log( "Found javac in context init");
+            } catch( ClassNotFoundException ex ) {
+                if( debug>0) log( "javac not found in context init");
+            }
         }
     }
 
@@ -494,7 +501,8 @@ public class JspInterceptor extends BaseInterceptor {
 	Dependency dep= handler.getServletInfo().getDependency();
 	if( (dep==null ||  dep.isExpired()) && do_compile ) {
 	    // we need to compile... ( or find previous .class )
-	    JasperLiaison liasion=new JasperLiaison(getLog(), debug);
+	    JasperLiaison liasion=new JasperLiaison(getLog(), debug,
+                        useWebAppCL);
 	    liasion.processJspFile(req, jspFile, handler, args);
 	}
 	
@@ -596,10 +604,12 @@ class JspPrecompileH extends Handler {
 final class JasperLiaison {
     Log log;
     final int debug;
+    boolean useWebAppCL;
     
-    JasperLiaison( Log log, int debug ) {
+    JasperLiaison( Log log, int debug, boolean useWebAppCL ) {
 	this.log=log;
 	this.debug=debug;
+        this.useWebAppCL=useWebAppCL;
     }
     
     /** Generate mangled names, check for previous versions,
@@ -693,21 +703,23 @@ final class JasperLiaison {
             ClassLoader savedContextCL= containerCCL( ctx.getContextManager()
                                                   .getContainerLoader() );
 
-            try {
-                ctx.getClassLoader().loadClass( "sun.tools.javac.Main" );
-                if(debug>0) log.log( "Found javac using context loader");
-            } catch( ClassNotFoundException ex ) {
-                if(debug>0) log.log( "javac not found using context loader");
-            }
+            if( useWebAppCL ) {
+                try {
+                    ctx.getClassLoader().loadClass( "sun.tools.javac.Main" );
+                    if(debug>0) log.log( "Found javac using context loader");
+                } catch( ClassNotFoundException ex ) {
+                    if(debug>0) log.log( "javac not found using context loader");
+                }
 
-            try {
-                ctx.getContextManager().getContainerLoader().
-                    loadClass( "sun.tools.javac.Main" );
-                if( debug > 0 )
-                    log.log( "Found javac using container loader");
-            } catch( ClassNotFoundException ex ) {
-                if( debug > 0 )
-                    log.log( "javac not found using container loader");
+                try {
+                    ctx.getContextManager().getContainerLoader().
+                        loadClass( "sun.tools.javac.Main" );
+                    if( debug > 0 )
+                        log.log( "Found javac using container loader");
+                } catch( ClassNotFoundException ex ) {
+                    if( debug > 0 )
+                        log.log( "javac not found using container loader");
+                }
             }
 
 	    try {
@@ -817,7 +829,7 @@ final class JasperLiaison {
         javac.setClasspath( cp );
 	javac.setOutputDir(ctxt.getOutputDir());
 
-        if( javac instanceof SunJavaCompiler ) {
+        if( javac instanceof SunJavaCompiler && useWebAppCL ) {
             ClassLoader cl=req.getContext().getClassLoader();
             ((SunJavaCompiler)javac).setLoader( cl );
         }
