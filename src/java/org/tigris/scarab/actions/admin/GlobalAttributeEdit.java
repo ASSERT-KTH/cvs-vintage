@@ -70,12 +70,13 @@ import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.cache.ScarabCache;  
 
 /**
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.13 2002/03/11 22:51:12 jon Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.14 2002/03/13 22:52:20 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -297,6 +298,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                        .addRModuleAttribute(scarabR.getIssueType(), attribute);
             }
             data.setMessage("The attribute has been added.");
+            ScarabCache.clear();
             cancelBackTo( data, context, lastTemplate);
         }
         else
