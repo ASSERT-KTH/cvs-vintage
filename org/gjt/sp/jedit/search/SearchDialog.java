@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.20 2002/03/28 04:08:42 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.21 2002/04/07 11:44:14 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -183,6 +183,8 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
 			searchSubDirectories.setSelected(true);
 		}
+
+		directory.addCurrentToHistory();
 
 		keepDialog.setSelected(jEdit.getBooleanProperty(
 			"search.keepDialog.toggle"));
