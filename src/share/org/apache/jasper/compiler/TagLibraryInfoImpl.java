@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.11 2000/02/13 06:25:24 akv Exp $
- * $Revision: 1.11 $
- * $Date: 2000/02/13 06:25:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.12 2000/02/29 15:43:42 rubys Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/02/29 15:43:42 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -64,6 +64,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -133,6 +134,23 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         return sw.toString();
     }
     
+	// XXX FIXME
+	// resolveRelativeUri and/or getResourceAsStream don't seem to properly
+	// handle relative paths when dealing when home and getDocBase are set
+	// the following is a workaround until these problems are resolved.
+	private InputStream getResourceAsStream(String uri) 
+		throws FileNotFoundException 
+    {
+		if (uri.indexOf(":") > 0) {
+	        // may be fully qualified (Windows) or may be a URL.  Let
+			// getResourceAsStream deal with it.
+	        return ctxt.getResourceAsStream(uri);
+		} else {
+			// assume it translates to a real file, and use getRealPath
+			return new FileInputStream(ctxt.getRealPath(uri));
+		}
+    }
+
     TagLibraryInfoImpl(JspCompilationContext ctxt, String prefix, String uriIn) 
         throws IOException, JasperException
     {
@@ -148,7 +166,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 
 	if (!uriIn.endsWith("jar")) {
 	    // Parse web.xml.
-	    InputStream is = ctxt.getResourceAsStream(WEBAPP_INF);
+	    InputStream is = getResourceAsStream(WEBAPP_INF);
 	    
 	    if (is != null) {
 	    
@@ -200,7 +218,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    }
 	    //else {
 	    //relativeURL = true;
-	    in = ctxt.getResourceAsStream(uri);
+	    in = getResourceAsStream(uri);
 	    //}
 	    
 	    if (in == null)
@@ -218,7 +236,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 		in = url.openStream();
 	    } else {
 		relativeURL = true;
-		in = ctxt.getResourceAsStream(uriIn);
+		in = getResourceAsStream(uriIn);
 	    }
 	    
 	    zin = new ZipInputStream(in);
@@ -244,7 +262,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 				  Logger.DEBUG);
 	    
 		if (relativeURL)
-		    copy(ctxt.getResourceAsStream(uri),
+		    copy(getResourceAsStream(uri),
 			 jarFileName);
 		else
 		    copy(url.openStream(), jarFileName);
