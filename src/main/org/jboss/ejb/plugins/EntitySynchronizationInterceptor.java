@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -186,20 +186,18 @@ public class EntitySynchronizationInterceptor
       try
       {
          ctxContainer = (EntityContainer) ctx.getContainer();
-         // associate the entity bean with the transaction so that
-         // we can do things like synchronizeEntitiesWithinTransaction
-         ctxContainer.getApplication().getTxEntityMap().associate(tx, ctx);
-   
          // We want to be notified when the transaction commits
          tx.registerSynchronization(synch);
+   
+         // associate the entity bean with the transaction so that
+         // we can do things like synchronizeEntitiesWithinTransaction
+         // do this after registerSynchronization, just in case there was an exception
+         ctxContainer.getTxEntityMap().associate(tx, ctx);
    
          ctx.hasTxSynchronization(true);
       }
       catch (RollbackException e)
       {
-         //Indicates that the transaction is already marked for rollback
-         ctxContainer.getApplication().getTxEntityMap().disassociate(tx, ctx);
-   
          // The state in the instance is to be discarded, we force a reload of state
          synchronized (ctx)
          {ctx.setValid(false);}
@@ -210,8 +208,6 @@ public class EntitySynchronizationInterceptor
       }
       catch (Exception e)
       {
-         if( ctxContainer != null )
-            ctxContainer.getApplication().getTxEntityMap().disassociate(tx, ctx);
          // If anything goes wrong with the association remove the ctx-tx association
          clearContextTx("Exception", ctx, tx, trace);
          throw new EJBException(e);
@@ -516,8 +512,6 @@ public class EntitySynchronizationInterceptor
             }
             finally
             {
-               // finish the transaction association
-               container.getApplication().getTxEntityMap().disassociate(tx, ctx);
                if( trace )
                   log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
                // The context is no longer synchronized on the TX
