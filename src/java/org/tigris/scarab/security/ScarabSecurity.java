@@ -46,7 +46,7 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
-
+import java.util.List;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
 
@@ -55,7 +55,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.9 2001/08/29 23:53:39 elicia Exp $
+ * @version $Id: ScarabSecurity.java,v 1.10 2001/09/06 20:57:42 elicia Exp $
 */
 public interface ScarabSecurity
 {
@@ -120,6 +120,8 @@ public interface ScarabSecurity
      * @return a <code>ModuleEntity[]</code> value
      */
     public ModuleEntity[] getModules(ScarabUser user, String[] permissions);
+
+    public List getRoles(ScarabUser user, ModuleEntity module) throws Exception;
 }    
 
 

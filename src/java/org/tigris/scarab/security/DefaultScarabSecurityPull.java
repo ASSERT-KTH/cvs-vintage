@@ -46,6 +46,8 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+
 // Turbine
 import org.apache.fulcrum.pool.InitableRecyclable;
 import org.apache.turbine.services.pull.ApplicationTool;
@@ -63,7 +65,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * extends this class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurityPull.java,v 1.6 2001/08/28 02:55:56 jon Exp $
+ * @version $Id: DefaultScarabSecurityPull.java,v 1.7 2001/09/06 20:57:42 elicia Exp $
 */
 public class DefaultScarabSecurityPull
     implements ScarabSecurityPull, InitableRecyclable, ApplicationTool
@@ -262,5 +264,11 @@ public class DefaultScarabSecurityPull
     {
         return disposed;
     }
-}
 
+    public List getRoles(ScarabUser user, ModuleEntity module)
+        throws Exception
+    {        
+        return null;
+    }
+
+}

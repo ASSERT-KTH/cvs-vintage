@@ -46,6 +46,8 @@ package org.tigris.scarab.security;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+
 // Turbine
 import org.apache.fulcrum.pool.InitableRecyclable;
 import org.apache.turbine.services.pull.ApplicationTool;
@@ -60,7 +62,7 @@ import org.tigris.scarab.om.ScarabUser;
  * external implementation of security should be specified.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefaultScarabSecurity.java,v 1.10 2001/08/13 20:38:18 jmcnally Exp $
+ * @version $Id: DefaultScarabSecurity.java,v 1.11 2001/09/06 20:57:42 elicia Exp $
 */
 public class DefaultScarabSecurity 
     implements ScarabSecurity
@@ -128,5 +130,12 @@ public class DefaultScarabSecurity
     {        
         return null;
     }
+
+    public List getRoles(ScarabUser user, ModuleEntity module)
+        throws Exception
+    {        
+        return null;
+    }
+
 }
 

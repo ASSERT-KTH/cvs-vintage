@@ -47,6 +47,7 @@ package org.tigris.scarab.security;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
 
 // Turbine
 import org.apache.torque.util.Criteria;
@@ -62,6 +63,8 @@ import org.apache.fulcrum.security.impl.db.entity
     .TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.impl.db.entity
     .TurbineRolePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineRolePeer;
 
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.ScarabUser;
@@ -72,7 +75,7 @@ import org.tigris.scarab.om.ScarabModulePeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.15 2001/08/14 23:41:59 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.16 2001/09/06 20:57:42 elicia Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -203,5 +206,18 @@ public class TurbineDBScarabSecurity
             Log.error("An exception prevented retrieving any modules", e);
         }
         return modules;
+    }
+
+    public List getRoles(ScarabUser user, ModuleEntity module)
+         throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.setDistinct();
+        crit.add(TurbineUserGroupRolePeer.USER_ID, user.getUserId());
+        crit.add(TurbineUserGroupRolePeer.GROUP_ID, module.getModuleId());
+        crit.addJoin(TurbineRolePeer.ROLE_ID, 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+        List roles = TurbineRolePeer.doSelect(crit);
+        return roles;
     }
 }
