@@ -135,6 +135,23 @@ public interface SchedulerMBean
    public void setSchedulePeriod( long pPeriod );
    
    /**
+   * @return Date (and time) of the first scheduled call. Value is in milliseconds since 1/1/1970.
+   *         If date is in the past when the schedule is added to the Timer then the schedule will
+   *         started immediately
+   **/
+   public long getInitialStartDate();
+   
+   /**
+   * Sets the first scheduled call. If in the past when the scheduler gets setup it will start
+   * immediately.
+   *
+   * @param pStartDate Date in milliseconds since 1/1/1970 for the first initial call. Anything
+   *                   less than zero means 1/1/1970. Any date less than now means the schedule
+   *                   will be started immediately.
+   **/
+   public void setInitialStartDate( long pStartDate );
+   
+   /**
     * @return Number of scheduled calls initially. If -1 then there is not limit.
     **/
    public long getInitialRepetitions();
@@ -165,5 +182,14 @@ public interface SchedulerMBean
     * @return True if any attributes are changed but the Schedule is not restarted yet.
     **/
    public boolean isRestartPending();
+   
+   /**
+   * Set the scheduler to start when MBean started or not. Note that this method only
+   * affects when the {@link #startService startService()} gets called (normally at
+   * startup time.
+   *
+   * @param pStartAtStartup True if Schedule has to be started at startup time
+   **/
+   public void setStartAtStartup( boolean pStartAtStartup );
 
 }

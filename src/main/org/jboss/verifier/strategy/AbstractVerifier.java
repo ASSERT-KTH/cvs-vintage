@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.22 2001/10/29 13:24:32 negaton Exp $
+ * $Id: AbstractVerifier.java,v 1.23 2001/11/02 06:07:48 schaefera Exp $
  */
 
 // standard imports
@@ -61,8 +61,16 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author 	<a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  *
- * @version $Revision: 1.22 $
+ * <p><b>Revisions:</b></p>
+ * <p><b>20011101: Andy</b>
+ * <ul>
+ * <li>Changed the throwRemoteException() method to check accordingly to the RMI spec.</li>
+ * </ul>
+ * </p>
+ *
+ * @version $Revision: 1.23 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -179,10 +187,15 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
         Class[] exception = method.getExceptionTypes();
 
-        for (int i = 0; i < exception.length; ++i)
-            if (java.rmi.RemoteException.class.isAssignableFrom(exception[i]))
-                return true;
-
+        for (int i = 0; i < exception.length; ++i) {
+// Not true see bug report #434739
+//            if (java.rmi.RemoteException.class.isAssignableFrom(exception[i]))
+// According to the RMI spec. a remote interface must throw an RemoteException
+// or any of its super classes therefore the check must be done vice versa
+           if( exception[ i ].isAssignableFrom( java.rmi.RemoteException.class ) ) {
+              return true;
+           }
+        }
         return false;
     }
 

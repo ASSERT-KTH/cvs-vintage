@@ -36,10 +36,16 @@ import org.jboss.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
-* Scheduler Instance to allow clients to run this as a
-* scheduling service for any Schedulable instances.
+* Scheduler Instance to allow clients to run this as a scheduling service for
+* any Schedulable instances.
+* <br>
+* ATTENTION: The scheduler instance only allows to run one schedule at a time.
+* Therefore when you want to run two schedules create to instances with this
+* MBean. Suggested Object Name for the MBean are:<br>
+* JBOSS-SYSTEM:service=Scheduler,schedule=<you schedule name><br>
+* This way you should not run into a name conflict.
 *
-* @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
 * @author Cameron (camtabor)
 *
 * <p><b>Revisions:</b></p>
@@ -49,6 +55,13 @@ import org.jboss.system.ServiceMBeanSupport;
 * <li>Created a SchedulerNotificationFilter so that each Scheduler only
 *     get its notifications</li>
 * <li>Stop was broken because removeNotification( Integer ) was broken</li>
+* </ul>
+* </p>
+* <p><b>20011026 Andy:</b>
+* <ul>
+* <li>Move the SchedulerNotificationFilter to become an internal class
+*     and renamed to NotificationFilter</li>
+* <li>MBean is not bind/unbind to JNDI server anymore</li>
 * </ul>
 * </p>
 **/
@@ -128,11 +141,11 @@ public class Scheduler
       long pNumberOfRepetitions
    ) {
       mName = pName;
-      mStartOnStart = true;
+      setStartAtStartup( true );
       setSchedulableClass( pSchedulableClass );
       setSchedulableArguments( pInitArguments );
       setSchedulableArgumentTypes( pInitTypes );
-      mStartDate = new Date( pInitialStartDate );
+      setInitialStartDate( pInitialStartDate );
       setSchedulePeriod( pSchedulePeriod );
       setInitialRepetitions( pNumberOfRepetitions );
    }
@@ -281,7 +294,7 @@ public class Scheduler
             getServer().addNotificationListener(
                mTimer,
                new Listener( mSchedulable ),
-               new SchedulerNotificationFilter(new Integer(mActualSchedule)),
+               new Scheduler.NotificationFilter( new Integer( mActualSchedule ) ),
                // No object handback necessary
                null
             );
@@ -464,6 +477,14 @@ public class Scheduler
       mSchedulePeriod = pPeriod;
       mIsRestartPending = true;
    }
+   
+   public long getInitialStartDate() {
+      return mStartDate.getTime();
+   }
+   
+   public void setInitialStartDate( long pStartDate ) {
+      mStartDate = new Date( ( pStartDate > 0 ? pStartDate : 0 ) );
+   }
 
    public long getInitialRepetitions() {
       return mInitialRepetitions;
@@ -488,6 +509,10 @@ public class Scheduler
    public boolean isRestartPending() {
       return mIsRestartPending;
    }
+   
+   public void setStartAtStartup( boolean pStartAtStartup ) {
+      mStartOnStart = pStartAtStartup;
+   }
 
    // -------------------------------------------------------------------------
    // Methods
@@ -500,15 +525,6 @@ public class Scheduler
       throws MalformedObjectNameException
    {
       return pName;
-   }
-
-   public String getJNDIName() {
-      if( mName != null ) {
-         return JMX_NAME + ":" + mName;
-      }
-      else {
-         return JMX_NAME;
-      }
    }
 
    public String getName() {
@@ -527,87 +543,34 @@ public class Scheduler
    protected void startService()
         throws Exception
    {
-      bind( this );
       try {
          // Create Timer MBean if need be
-
-           mTimer = new ObjectName( "DefaultDomain", "service", "Timer");
-           if ( !getServer().isRegistered(mTimer)){
-             getServer().createMBean( "javax.management.timer.Timer", mTimer );
-             // Now start the Timer
-             getServer().invoke(
-                mTimer,
-                "start",
-                new Object[] {},
-                new String[] {}
-             );
+         
+         mTimer = new ObjectName( "DefaultDomain", "service", "Timer");
+         if( !getServer().isRegistered( mTimer ) ) {
+            getServer().createMBean( "javax.management.timer.Timer", mTimer );
+            // Now start the Timer
+            getServer().invoke(
+               mTimer,
+               "start",
+               new Object[] {},
+               new String[] {}
+            );
          }
       }
       catch( Exception e ) {
          e.printStackTrace();
       }
+
       if( mStartOnStart ) {
          startSchedule();
       }
    }
 
    protected void stopService() {
-      try {
-         unbind();
-      }
-      catch( Exception e ) {
-         log.error("Failed to unbind", e );
-      }
+      // Stop the schedule right now !!
+      stopSchedule( true );
    }
-
-   // -------------------------------------------------------------------------
-   // Helper methods to bind/unbind the Management class
-   // -------------------------------------------------------------------------
-
-    private void bind( Scheduler pScheduler )
-      throws
-         NamingException
-   {
-        Context lContext = new InitialContext();
-        String lJNDIName = getJNDIName();
-
-        // Ah ! JBoss Server isn't serializable, so we use a helper class
-        NonSerializableFactory.bind( lJNDIName, pScheduler );
-
-      //AS Don't ask me what I am doing here
-        Name lName = lContext.getNameParser("").parse( lJNDIName );
-        while( lName.size() > 1 ) {
-            String lContextName = lName.get( 0 );
-            try {
-                lContext = (Context) lContext.lookup(lContextName);
-            }
-            catch( NameNotFoundException e )    {
-                lContext = lContext.createSubcontext(lContextName);
-            }
-            lName = lName.getSuffix( 1 );
-        }
-
-        // The helper class NonSerializableFactory uses address type nns, we go on to
-        // use the helper class to bind the javax.mail.Session object in JNDI
-        StringRefAddr lAddress = new StringRefAddr( "nns", lJNDIName );
-        Reference lReference = new Reference(
-         Scheduler.class.getName(),
-         lAddress,
-         NonSerializableFactory.class.getName(),
-         null
-      );
-        lContext.bind( lName.get( 0 ), lReference );
-
-        log.info( "JBoss Scheduler Service '" + getJNDIName() + "' bound to " + lJNDIName );
-    }
-
-    private void unbind() throws NamingException {
-      String lJNDIName = getJNDIName();
-
-      new InitialContext().unbind( lJNDIName );
-      NonSerializableFactory.unbind( lJNDIName );
-      log.info("JBoss Scheduler service '" + lJNDIName + "' removed from JNDI" );
-    }
 
    // -------------------------------------------------------------------------
    // Inner Classes
@@ -702,6 +665,33 @@ public class Scheduler
    }
 
    /**
+    * Filter to ensure that each Scheduler only gets notified when it is supposed to.
+    */
+   private static class NotificationFilter implements javax.management.NotificationFilter {
+   
+      private Integer mId;
+   
+      /**
+       * Create a Filter.
+       * @param id the Scheduler id
+       */
+      public NotificationFilter( Integer pId ){
+         mId = pId;
+      }
+   
+      /**
+       * Determine if the notification should be sent to this Scheduler
+       */
+      public boolean isNotificationEnabled( Notification pNotification ) {
+         if( pNotification instanceof TimerNotification ) {
+            TimerNotification lTimerNotification = (TimerNotification) pNotification;
+            return lTimerNotification.getNotificationID().equals( mId );
+         }
+         return false;
+      }
+   }
+
+   /**
     * A test class for a Schedulable Class
     **/
    public static class SchedulableExample
@@ -731,34 +721,4 @@ public class Scheduler
             ", test, name: " + mName + ", value: " + mValue );
       }
    }
-}
-
-/**
- * Filter to ensure that each Scheduler only gets notified when it is supposed to.
- */
-class SchedulerNotificationFilter implements javax.management.NotificationFilter{
-
-   private Integer mId;
-
-   /**
-    * Create a Filter.
-    * @param id the Scheduler id
-    */
-   public SchedulerNotificationFilter(Integer id){
-     mId = id;
-   }
-
-   /**
-    * Determine if the notification should be sent to this Scheduler
-    */
-   public boolean isNotificationEnabled(Notification notification){
-     if (notification instanceof javax.management.timer.TimerNotification){
-       TimerNotification timerNotification = (TimerNotification) notification;
-       if (timerNotification.getNotificationID().equals(mId)){
-         return true;
-       }
-     }
-     return false;
-   }
-
 }

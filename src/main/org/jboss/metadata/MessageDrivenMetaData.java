@@ -20,7 +20,17 @@ import org.jboss.ejb.DeploymentException;
  * 
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
- * @version $Revision: 1.14 $
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ *
+ * <p><b>Revisions:</b></p>
+ * <p><b>20011031: Andy</b>
+ * <ul>
+ * <li>Ensured that the <message-selector> value in the descriptor does not
+ *     be compromised by leading and trailing spaces as well as line-breaks</li>
+ * </ul>
+ * </p>
+ *
+ * @version $Revision: 1.15 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -174,6 +184,37 @@ public class MessageDrivenMetaData
       super.importEjbJarXml(element);
 
       messageSelector = getOptionalChildContent(element, "message-selector");
+      if( messageSelector != null ) {
+         //AS Check for Carriage Returns, remove them and trim the selector
+         int i = -1;
+         // Note this only works this way because the search and replace are distinct
+         while( ( i = messageSelector.indexOf( "\r\n" ) ) >= 0 ) {
+            // Replace \r\n by a space
+            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
+                              " " +
+                              ( i >= messageSelector.length() - 2 ? "" : messageSelector.substring( i + 2 ) );
+         }
+         i = -1;
+         while( ( i = messageSelector.indexOf( "\r" ) ) >= 0 ) {
+            // Replace \r by a space
+            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
+                              " " +
+                              ( i >= messageSelector.length() - 1 ? "" : messageSelector.substring( i + 1 ) );
+         }
+         i = -1;
+         while( ( i = messageSelector.indexOf( "\n" ) ) >= 0 ) {
+            // Replace \n by a space
+            messageSelector = ( i == 0 ? "" : messageSelector.substring( 0, i ) ) +
+                              " " +
+                              ( i >= messageSelector.length() - 1 ? "" : messageSelector.substring( i + 1 ) );
+         }
+         // Finally trim it. This is here because only carriage returns and linefeeds are transformed
+         // to spaces
+         messageSelector = messageSelector.trim();
+         if( "".equals( messageSelector ) ) {
+            messageSelector = null;
+         }
+      }
 
       // destination is optional
       Element destination =
