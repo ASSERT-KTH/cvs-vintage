@@ -19,223 +19,213 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.columba.core.io.DiskIO;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.StreamThread;
 import org.columba.mail.config.PGPItem;
 
+public abstract class DefaultUtil {
+	protected StreamThread outputStream = null;
+	protected StreamThread errorStream = null;
 
-public abstract class DefaultUtil
-{
-    protected StreamThread outputStream = null;
-    protected StreamThread errorStream = null;
-
-    protected File outputFile;
-    protected File inputFile;
+	protected File outputFile;
+	protected File inputFile;
 
 	protected String outputString;
 
-    protected Process executeCommand( String cmd ) throws Exception
-    {
-        Process p = Runtime.getRuntime().exec( cmd );
+	protected Process executeCommand(String cmd) throws Exception {
+		Process p = Runtime.getRuntime().exec(cmd);
 
-        return p;
-    }
-
-    protected abstract String parse( String str );
-
-    // error gets parsed
-    public String getErrorString()
-    {
-        String str = parse( errorStream.getBuffer() );
-        return str;
-    }
-
-    public String getOutputString()
-    {
-        String str = outputStream.getBuffer();
-        return str;
-    }
-
-    public String getResult()
-    {
-    	return outputString;
-    }
-
-	protected abstract String getRawCommandString( int type );
-
-
-    protected String getCommandString(int type, PGPItem item)
-    {
-    	String rawCmd = getRawCommandString( type );
-		StringBuffer command = new StringBuffer(item.getPath());
-		command.append( " " );
-
-    	int varStartIndex = rawCmd.indexOf("%");
-    	int varEndIndex = -1;
-   		String varName;
-    	
-    	while( varStartIndex != -1 ) {
-    		command.append( rawCmd.substring(varEndIndex+1,varStartIndex) );
-    		varEndIndex = rawCmd.indexOf("%",varStartIndex+1);
-    		
-    		varName = rawCmd.substring(varStartIndex +1, varEndIndex);
-    				
-    		command.append(getValue( varName, item ));
-    		
-    		varStartIndex = rawCmd.indexOf("%",varEndIndex+1);
-    	}
-    	
-    	command.append( rawCmd.substring(varEndIndex+1));
-    	
-        return command.toString();
-    }
-
-	private String getValue( String name, PGPItem item ) {
-		
-		if( name.equals("user") ) {
-			return item.getId();	
-		}
-		if( name.equals("input_file") ) {
-			return inputFile.toString();	
-		}
-		if( name.equals("output_file") ) {
-			return outputFile.toString();	
-		}
-		
-		return null;	
+		return p;
 	}
 
-    protected void sendToStdin( Process p, String passphrase ) throws Exception
-    {
-        PrintWriter out = new PrintWriter( p.getOutputStream() );
-        out.println( passphrase );
-        out.flush();
-        out.close();
-    }
-	
+	protected abstract String parse(String str);
+
+	// error gets parsed
+	public String getErrorString() {
+		String str = parse(errorStream.getBuffer());
+		return str;
+	}
+
+	public String getOutputString() {
+		String str = outputStream.getBuffer();
+		return str;
+	}
+
+	public String getResult() {
+		return outputString;
+	}
+
+	protected abstract String getRawCommandString(int type);
+
+	protected String getCommandString(int type, PGPItem item) {
+		String rawCmd = getRawCommandString(type);
+		StringBuffer command = new StringBuffer(item.getPath());
+		command.append(" ");
+
+		int varStartIndex = rawCmd.indexOf("%");
+		int varEndIndex = -1;
+		String varName;
+
+		while (varStartIndex != -1) {
+			command.append(rawCmd.substring(varEndIndex + 1, varStartIndex));
+			varEndIndex = rawCmd.indexOf("%", varStartIndex + 1);
+
+			varName = rawCmd.substring(varStartIndex + 1, varEndIndex);
+
+			command.append(getValue(varName, item));
+
+			varStartIndex = rawCmd.indexOf("%", varEndIndex + 1);
+		}
+
+		command.append(rawCmd.substring(varEndIndex + 1));
+
+		return command.toString();
+	}
+
+	private String getValue(String name, PGPItem item) {
+
+		if (name.equals("user")) {
+			return item.getId();
+		}
+		if (name.equals("input_file")) {
+			return inputFile.toString();
+		}
+		if (name.equals("output_file")) {
+			return outputFile.toString();
+		}
+
+		return null;
+	}
+
+	protected void sendToStdin(Process p, String passphrase) throws Exception {
+		PrintWriter out = new PrintWriter(p.getOutputStream());
+		out.println(passphrase);
+		out.flush();
+		out.close();
+	}
+
 	/*
-    public int decrypt( String path, String pgpMessage, String passphrase ) throws Exception
-    {
-        int exitVal = -1;
-
-        Process p = executeCommand( getCommandString(PGPController.DECRYPT_ACTION) );
-
-        errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-        outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-
-        sendPassphrase( p, passphrase );
-
-        errorStream.start();
-        outputStream.start();
-
-        exitVal = p.waitFor();
-
-        System.out.println("exitvalue: "+ exitVal );
-
-        // wait for stream threads to die
-        outputStream.join();
-        errorStream.join();
-
-        return exitVal;
-    }
-
-    public int verify( String path, String pgpMessage, String signatureString, String passphrase ) throws Exception
-    {
-        int exitVal = -1;
-
-        Process p = executeCommand( getCommandString(PGPController.VERIFY_ACTION) );
-
-        errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-        outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-
-        sendPassphrase( p, passphrase );
-
-        errorStream.start();
-        outputStream.start();
-
-        exitVal = p.waitFor();
-
-        System.out.println("exitvalue: "+ exitVal );
-
-        // wait for stream threads to die
-        outputStream.join();
-        errorStream.join();
-
-        return exitVal;
-    }
+	  public int decrypt( String path, String pgpMessage, String passphrase ) throws Exception
+	  {
+	      int exitVal = -1;
+	
+	      Process p = executeCommand( getCommandString(PGPController.DECRYPT_ACTION) );
+	
+	      errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+	      outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+	
+	      sendPassphrase( p, passphrase );
+	
+	      errorStream.start();
+	      outputStream.start();
+	
+	      exitVal = p.waitFor();
+	
+	      System.out.println("exitvalue: "+ exitVal );
+	
+	      // wait for stream threads to die
+	      outputStream.join();
+	      errorStream.join();
+	
+	      return exitVal;
+	  }
+	
+	  public int verify( String path, String pgpMessage, String signatureString, String passphrase ) throws Exception
+	  {
+	      int exitVal = -1;
+	
+	      Process p = executeCommand( getCommandString(PGPController.VERIFY_ACTION) );
+	
+	      errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+	      outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+	
+	      sendPassphrase( p, passphrase );
+	
+	      errorStream.start();
+	      outputStream.start();
+	
+	      exitVal = p.waitFor();
+	
+	      System.out.println("exitvalue: "+ exitVal );
+	
+	      // wait for stream threads to die
+	      outputStream.join();
+	      errorStream.join();
+	
+	      return exitVal;
+	  }
 	
 	*/
 
 	private File createTempFile(String contents) {
 		try {
-			File tempFile1 = File.createTempFile("columba"+System.currentTimeMillis(),null);
+			File tempFile1 = File.createTempFile("columba" + System.currentTimeMillis(), null);
 			tempFile1.deleteOnExit();
-			DiskIO.saveStringInFile( tempFile1, contents );
-			
+			DiskIO.saveStringInFile(tempFile1, contents);
+
 			return tempFile1;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
-    public int sign(PGPItem item, String input ) throws Exception
-    {
-        int exitVal = -1;
+	public int sign(PGPItem item, String input) throws Exception {
+		int exitVal = -1;
 
 		//System.out.println( getCommandString(PGPController.SIGN_ACTION, item) );
 
-        Process p = executeCommand( getCommandString(PGPController.SIGN_ACTION, item) );
+		Process p = executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
+		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
 
-        errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-        outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+		sendToStdin(p, item.getPassphrase());
 
-        sendToStdin( p, input );
+		sendToStdin(p, input);
 
-        sendToStdin( p, item.getPassphrase() );
+		errorStream.start();
+		outputStream.start();
 
-        errorStream.start();
-        outputStream.start();
+		exitVal = p.waitFor();
 
-        exitVal = p.waitFor();
+		// wait for stream threads to die
+		outputStream.join();
+		errorStream.join();
 
-        // wait for stream threads to die
-        outputStream.join();
-        errorStream.join();
-			
 		outputString = outputStream.getBuffer();
 
-        return exitVal;
-    }
+		return exitVal;
+	}
 
 	/*
-    public int encrypt( String path, String pgpMessage, String passphrase, boolean signValue,  Vector recipient, String id ) throws Exception
-    {
-        int exitVal = -1;
+	  public int encrypt( String path, String pgpMessage, String passphrase, boolean signValue,  Vector recipient, String id ) throws Exception
+	  {
+	      int exitVal = -1;
+	
+	      Process p = executeCommand( getCommandString(PGPController.ENCRYPT_ACTION) );
+	
+	      errorStream = new StreamThread(p.getErrorStream(), "ERROR");
+	      outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+	
+	      if ( signValue == true )
+	      {
+	          sendPassphrase( p, passphrase );
+	      }
+	
+	      errorStream.start();
+	      outputStream.start();
+	
+	      exitVal = p.waitFor();
+	
+	      System.out.println("exitvalue: "+ exitVal );
+	
+	      // wait for stream threads to die
+	      outputStream.join();
+	      errorStream.join();
+	
+	      return exitVal;
+	  }
+	*/
 
-        Process p = executeCommand( getCommandString(PGPController.ENCRYPT_ACTION) );
-
-        errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-        outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
-
-        if ( signValue == true )
-        {
-            sendPassphrase( p, passphrase );
-        }
-
-        errorStream.start();
-        outputStream.start();
-
-        exitVal = p.waitFor();
-
-        System.out.println("exitvalue: "+ exitVal );
-
-        // wait for stream threads to die
-        outputStream.join();
-        errorStream.join();
-
-        return exitVal;
-    }
-	*/    
-    
 }
