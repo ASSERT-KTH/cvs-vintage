@@ -233,7 +233,7 @@ $page.setTitle("Enter issue")
   <option value="AssignIssue.vm">Assign issue</option>
 #end
 <option value="ViewIssue.vm">View this issue</option>
-<option value="Index.vm">Go to Start page</option>
+<option value="Index.vm">Return to issue types index</option>
 </select></td>
 </tr>
 </table>
