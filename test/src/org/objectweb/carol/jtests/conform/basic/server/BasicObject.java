@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: BasicObject.java,v 1.4 2005/02/11 11:02:51 benoitf Exp $
+ * $Id: BasicObject.java,v 1.5 2005/02/14 10:24:55 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.server;
@@ -48,8 +48,9 @@ public class BasicObject extends PortableRemoteObject implements BasicObjectItf 
     /**
      * Basic method
      * @return String "string"
+     * @throws RemoteException if rmi call fails
      */
-    public String getString() {
+    public String getString() throws RemoteException {
         return "string";
     }
 
