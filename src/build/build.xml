@@ -253,7 +253,7 @@
     <jar jarfile="${build.dir}/client/connector.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/connector.mf"
-         includes="org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service.class,org/jboss/util/ServiceMBean*.class,org/jboss/logging/Log.class,org/jboss/logging/Log$$*.class,test/jboss/jmx/TestClient*.class"
+         includes="org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service.class,org/jboss/util/ServiceMBean*.class,org/jboss/logging/Log.class,org/jboss/logging/Log$$*.class,org/jboss/logging/LogToCategory.class,test/jboss/jmx/TestClient*.class"
     />
 
     <mkdir dir="${build.dir}/deploy/lib"/>
