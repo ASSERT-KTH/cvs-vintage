@@ -24,8 +24,8 @@ $page.setTitle("Custom Search")
 #set ($search = $scarabR.Search)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($issueType = $scarabR.CurrentIssueType)
-#set ($searchTextAttributes = $search.getQuickSearchTextAttributeValues($issueType))
-#set ($searchValues = $search.getQuickSearchOptionAttributeValues($issueType))
+#set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
+#set ($searchValues = $search.QuickSearchOptionAttributeValues)
 #if ($searchTextAttributes.size() != 0)
 <h3>Text search</h3>
 
