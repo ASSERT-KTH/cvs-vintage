@@ -73,9 +73,10 @@ $renderer.render("navigations", $data, $template, "Default.vm")
   <tr>
    <td nowrap="nowrap">
     <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
-        <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
-     #set ($privateQueries = $scarabR.CurrentModule.getPrivateQueries($data.User, $scarabR.CurrentIssueType))
-     #set ($globalQueries = $module.getGlobalQueries($scarabR.CurrentIssueType))
+     #set ($module = $scarabR.CurrentModule)
+     #set ($issuetype = $scarabR.CurrentIssueType)
+     #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
+     #set ($globalQueries = $module.getGlobalQueries($issuetype))
      #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
         <select name="queryId">
        #foreach ($query in $privateQueries)
@@ -89,7 +90,8 @@ $renderer.render("navigations", $data, $template, "Default.vm")
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
      #end
         <input type="text" name="id" size="15" maxlength="255" />&#160;
-        <input type="submit" name="Submit" value="Query" />&#160;
+        <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+        <input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&#160;
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
      <small>
       <a href="$link.setPage("AdvancedQuery.vm")">Advanced</a>&#160;|&#160;
