@@ -21,15 +21,8 @@ package org.columba.mail.parser.text;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.regex.Pattern;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Substitution;
-import org.apache.oro.text.regex.Util;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
@@ -42,6 +35,49 @@ import org.columba.core.logging.ColumbaLogger;
  *
  */
 public class HtmlParser {
+
+	private static final Pattern breakToNLPattern =
+		Pattern.compile("\\<[/]?br\\>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern pToDoubleNLPattern =
+		Pattern.compile("\\</p\\>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern stripTagsPattern =
+		Pattern.compile("\\<(.|\\n)*?\\>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern emailPattern =
+		Pattern.compile("([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})");
+		
+	private static String urls = "(http|https|ftp)";
+	private static String letters = "\\w";
+	private static String gunk = "/#~:;.?+=&@!\\-%";
+	private static String punc = ".:?\\-";
+	private static String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";		
+
+	/**
+	 *
+	 *  
+	 * \\b  				start at word boundary
+	 * (					begin $1
+	 * urls:				url can be (http:, https:, ftp:) 
+	 * [any]+?				followed by one or more of any valid character
+	 * 						(be conservative - take only what you need)
+	 * )					end of $1
+	 * (?=					look-ahead non-consumptive assertion
+	 * [punc]*				either 0 or more punctuation
+	 * [^any]				  followed by a non-url char
+	 * |					or else
+	 * $					  then end of the string
+	 * )
+	 */	
+	private static final Pattern urlPattern =
+		Pattern.compile("\\b"
+	+ "("
+	+ urls
+	+ ":["
+	+ any
+	+ "]+?)(?=["
+	+ punc
+	+ "]*[^"
+	+ any
+	+ "]|$)");
 
 	/**
 	 * Strips html tags. The method used is very simple:
@@ -56,55 +92,27 @@ public class HtmlParser {
 	 * 			(moved from org.columba.mail.gui.message.util.DocumentParser) 
 	 */
 	public static String stripHtmlTags(String s, boolean breakToNl) {
-		
+
 		// TODO: The stripping of html tags adds far too much whitespace and extra lines
 		//       ... especially when the original html is indented and
 		//       p tags are placed on separate lines...
-		
+
 		// TODO: Headings (h1, h2, h3) needs to be handled the same way as p tags
-		 
+
 		// initial check of input:
 		if (s == null)
 			return null;
-		
-		PatternMatcher matcher   = new Perl5Matcher();
-		PatternCompiler compiler = new Perl5Compiler();
-		Pattern pattern;
-		String pat;
-		
-		try {
-			if (breakToNl) {
-				// replace <br> and </br> with newline
-				pat = "\\<[/]?br\\>";
-				pattern = compiler.compile(
-						pat,
-						Perl5Compiler.CASE_INSENSITIVE_MASK);
-				s = Util.substitute(matcher, pattern,
-						new Perl5Substitution("\n"), s, 
-						Util.SUBSTITUTE_ALL);
-				// replace </p> with double newline
-				pat = "\\</p\\>";
-				pattern = compiler.compile(
-						pat,
-						Perl5Compiler.CASE_INSENSITIVE_MASK);
-				s = Util.substitute(matcher, pattern,
-						new Perl5Substitution("\n\n"), s, 
-						Util.SUBSTITUTE_ALL);
-			}
-			
-			// strip tags
-			pat = "\\<(.|\\n)*?\\>";
-			pattern = compiler.compile(
-					pat,
-					Perl5Compiler.CASE_INSENSITIVE_MASK);
-			s = Util.substitute(matcher, pattern,
-					new Perl5Substitution(""), s, 
-					Util.SUBSTITUTE_ALL);
 
-		} catch (MalformedPatternException e) {
-			ColumbaLogger.log.error("Error stripping html tags", e);
-			return null;	// error
+		if (breakToNl) {
+			// replace <br> and </br> with newline
+			s = breakToNLPattern.matcher(s).replaceAll("\n");
+
+			// replace </p> with double newline
+			s = pToDoubleNLPattern.matcher(s).replaceAll("\n\n");
 		}
+
+		// strip tags
+		s = stripTagsPattern.matcher(s).replaceAll("");
 
 		return s;
 
@@ -124,13 +132,13 @@ public class HtmlParser {
 	 * 			(moved from org.columba.mail.gui.message.util.DocumentParser)
 	 */
 	public static String restoreSpecialCharacters(String s) {
-		
+
 		// TODO: Handling of special char codes ala &#230; needs to be handled
-		
+
 		// initial check of input:
 		if (s == null)
 			return null;
-		
+
 		StringBuffer sb = new StringBuffer(s.length());
 		StringReader sr = new StringReader(s);
 		BufferedReader br = new BufferedReader(sr);
@@ -143,7 +151,7 @@ public class HtmlParser {
 				while (pos < ss.length()) {
 					char c = ss.charAt(pos);
 					if (c == '&') {
-						if 		  (ss.substring(pos).startsWith("&lt;")) {
+						if (ss.substring(pos).startsWith("&lt;")) {
 							sb.append('<');
 							pos = pos + 4;
 						} else if (ss.substring(pos).startsWith("&gt;")) {
@@ -155,8 +163,9 @@ public class HtmlParser {
 						} else if (ss.substring(pos).startsWith("&quot;")) {
 							sb.append('"');
 							pos = pos + 6;
-						} else if (ss.substring(pos).startsWith(
-									"&nbsp;&nbsp;&nbsp;&nbsp;")) {
+						} else if (
+							ss.substring(pos).startsWith(
+								"&nbsp;&nbsp;&nbsp;&nbsp;")) {
 							sb.append('\t');
 							pos = pos + 24;
 						} else if (ss.substring(pos).startsWith("&nbsp;")) {
@@ -177,7 +186,7 @@ public class HtmlParser {
 
 		} catch (Exception e) {
 			ColumbaLogger.log.error("Error restoring special characters", e);
-			return null;	// error
+			return null; // error
 		}
 
 		return sb.toString();
@@ -226,8 +235,7 @@ public class HtmlParser {
 	 * @return	Text converted to html
 	 * @author	Karl Peder Olesen (karlpeder), 20030916
 	 */
-	public static String textToHtml(
-			String text, String title, String css) {
+	public static String textToHtml(String text, String title, String css) {
 
 		// convert special characters
 		String html = HtmlParser.substituteSpecialCharacters(text);
@@ -252,7 +260,7 @@ public class HtmlParser {
 		buf.append("</head><body><p>");
 		buf.append(html);
 		buf.append("</p></body></html>");
-		
+
 		return buf.toString();
 	}
 
@@ -302,7 +310,7 @@ public class HtmlParser {
 							break;
 						case ' ' :
 							//sb.append("&nbsp;");
-							if        (ss.substring(i).startsWith("    ")) {
+							if (ss.substring(i).startsWith("    ")) {
 								sb.append("&nbsp; ");
 								i = i + 2;
 							} else if (ss.substring(i).startsWith("   ")) {
@@ -334,15 +342,14 @@ public class HtmlParser {
 			}
 
 		} catch (Exception e) {
-			ColumbaLogger.log.error(
-					"Error substituting special characters", e);
-			return null;	// error
+			ColumbaLogger.log.error("Error substituting special characters", e);
+			return null; // error
 		}
 
 		return sb.toString();
 
 	}
-	
+
 	/**	
 	 * 
 	 * substitute special characters like:
@@ -388,7 +395,7 @@ public class HtmlParser {
 							i++;
 							break;
 						case ' ' :
-							if        (ss.substring(i).startsWith("    ")) {
+							if (ss.substring(i).startsWith("    ")) {
 								sb.append("&nbsp; ");
 								i = i + 2;
 							} else if (ss.substring(i).startsWith("   ")) {
@@ -420,9 +427,8 @@ public class HtmlParser {
 			}
 
 		} catch (Exception e) {
-			ColumbaLogger.log.error(
-					"Error substituting special characters", e);
-			return null;	// error
+			ColumbaLogger.log.error("Error substituting special characters", e);
+			return null; // error
 		}
 
 		return sb.toString();
@@ -478,41 +484,7 @@ public class HtmlParser {
 	 */
 	public static String substituteEmailAddress(String s) {
 
-		PatternMatcher addressMatcher   = new Perl5Matcher();
-		PatternCompiler addressCompiler = new Perl5Compiler();
-		Pattern addressPattern;
-
-		//String pattern = "\\b(([\\w|.|\\-|_]*)@([\\w|.|\\-|_]*)(.)([a-zA-Z]{2,}))";
-
-		// contributed by Paul Nicholls
-		//  -> corrects inclusion of trailing full-stops
-		//  -> works for numerical ip addresses, too
-		String pattern = "([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})";
-
-		try {
-			addressCompiler = new Perl5Compiler();
-			addressPattern =
-				addressCompiler.compile(
-					pattern,
-					Perl5Compiler.CASE_INSENSITIVE_MASK);
-	
-			addressMatcher = new Perl5Matcher();
-	
-			String result =
-				Util.substitute(
-					addressMatcher,
-					addressPattern,
-					new Perl5Substitution("<A HREF=mailto:$1>$1</A>"),
-					s,
-					Util.SUBSTITUTE_ALL);
-	
-			return result;
-		} catch (MalformedPatternException e) {
-			ColumbaLogger.log.error(
-					"Error transforming email-adresses to links", e);
-			return null;	// error
-		}
-
+		return emailPattern.matcher(s).replaceAll("<A HREF=mailto:$1>$1</A>");
 	}
 
 	/**
@@ -524,8 +496,8 @@ public class HtmlParser {
 	 * 			(null on error)
 	 */
 	public static String substituteURL(String s) {
-
-		PatternMatcher urlMatcher   = new Perl5Matcher();
+		/*
+		PatternMatcher urlMatcher = new Perl5Matcher();
 		PatternCompiler urlCompiler = new Perl5Compiler();
 		Pattern urlPattern;
 
@@ -534,23 +506,8 @@ public class HtmlParser {
 		String gunk = "/#~:;.?+=&@!\\-%";
 		String punc = ".:?\\-";
 		String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";
-
-		/**
-		 *
-		 *  
-		 * \\b  				start at word boundary
-		 * (					begin $1
-		 * urls:				url can be (http:, https:, ftp:) 
-		 * [any]+?				followed by one or more of any valid character
-		 * 						(be conservative - take only what you need)
-		 * )					end of $1
-		 * (?=					look-ahead non-consumptive assertion
-		 * [punc]*				either 0 or more punctuation
-		 * [^any]				  followed by a non-url char
-		 * |					or else
-		 * $					  then end of the string
-		 * )
-		 */
+*/
+		/*
 		String pattern =
 			"\\b"
 				+ "("
@@ -562,14 +519,16 @@ public class HtmlParser {
 				+ "]*[^"
 				+ any
 				+ "]|$)";
-		
+
 		try {
 			urlCompiler = new Perl5Compiler();
 			urlPattern =
-				urlCompiler.compile(pattern, Perl5Compiler.CASE_INSENSITIVE_MASK);
-	
+				urlCompiler.compile(
+					pattern,
+					Perl5Compiler.CASE_INSENSITIVE_MASK);
+
 			urlMatcher = new Perl5Matcher();
-	
+
 			String result =
 				Util.substitute(
 					urlMatcher,
@@ -577,13 +536,14 @@ public class HtmlParser {
 					new Perl5Substitution("<A HREF=$1>$1</A>"),
 					s,
 					Util.SUBSTITUTE_ALL);
-	
+
 			return result;
 		} catch (MalformedPatternException e) {
-			ColumbaLogger.log.error(
-					"Error transforming urls to links", e);
-			return null;	// error
+			ColumbaLogger.log.error("Error transforming urls to links", e);
+			return null; // error
 		}
+		*/
+		return urlPattern.matcher(s).replaceAll("<A HREF=$1>$1</A>");
 	}
 
 }

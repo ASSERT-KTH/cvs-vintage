@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -53,8 +54,8 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.LocalMimePart;
@@ -108,7 +109,7 @@ public class LuceneSearchEngine
 
 		MainInterface.shutdownManager.register(this);
 
-		analyzer = new CAnalyzer();
+		analyzer = new StandardAnalyzer();
 
 		try {
 			initRAMDir();

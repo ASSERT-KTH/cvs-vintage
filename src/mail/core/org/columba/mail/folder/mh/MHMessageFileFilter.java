@@ -17,12 +17,8 @@ package org.columba.mail.folder.mh;
 
 import java.io.File;
 import java.io.FileFilter;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author timo
@@ -34,34 +30,29 @@ import org.apache.oro.text.regex.Perl5Matcher;
  */
 public class MHMessageFileFilter implements FileFilter {
 	
-	private static final String fileRegexp = "[0-9]+"; 
+	private static final Pattern filePattern = Pattern.compile("[0-9]+");
+	private Matcher matcher; 
 	
 	protected static MHMessageFileFilter myInstance;
-	
-	Pattern filePattern;
-	PatternMatcher matcher;
 	
 	public static MHMessageFileFilter getInstance() {
 		if( myInstance == null)
 			myInstance = new MHMessageFileFilter();
-			
+		
+		
 		return myInstance;
 	}
 	
 	protected MHMessageFileFilter() {
-		try {
-			filePattern = new Perl5Compiler().compile(fileRegexp);
-		} catch (MalformedPatternException e) {
-			e.printStackTrace();
-		}
-		matcher = new Perl5Matcher();
+		matcher = filePattern.matcher("");		
 	}
 	
 	/**
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */
 	public boolean accept(File arg0) {
-		return (arg0.isFile()) && matcher.matches(arg0.getName(), filePattern);
+		matcher.reset(arg0.getName());
+		return (arg0.isFile()) && matcher.matches();
 	}
 
 }
