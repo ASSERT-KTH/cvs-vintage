@@ -15,14 +15,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.messageframe;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
@@ -31,13 +32,10 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.view.AbstractMessageFrameView;
 import org.columba.mail.main.MailInterface;
 
-
 /**
- *
  *  Mail frame controller which contains a message viewer only.
  *
  *  @author fdietz
- *
  */
 public class MessageFrameController extends AbstractMailFrameController {
     FolderCommandReference[] treeReference;
@@ -115,8 +113,7 @@ public class MessageFrameController extends AbstractMailFrameController {
             handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.core.view");
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
+            throw new RuntimeException(ex);
         }
 
         // get view using the plugin handler found above
@@ -133,11 +130,8 @@ public class MessageFrameController extends AbstractMailFrameController {
         view.setFolderInfoPanel(folderInfoPanel);
         */
         view.init(messageController.getView(), statusBar);
-
         view.getFrame().pack();
-
         view.getFrame().setVisible(true);
-
         return view;
     }
 
