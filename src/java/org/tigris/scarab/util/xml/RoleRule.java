@@ -46,6 +46,9 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import org.apache.fulcrum.security.entity.Role;
+import org.apache.fulcrum.security.TurbineSecurity;
+
 /**
  * Handler for the xpath "scarab/module/user/role".
  *
@@ -68,13 +71,36 @@ public class RoleRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        if (text != null && 
+        super.doInsertionOrValidationAtBody(text);
+    }
+
+    protected void doValidationAtBody(String value)
+        throws Exception
+    {
+        if (value != null && 
             !UserRule.isUserInUserList(getImportBean()) && 
-            text.length() > 0)
+            value.length() > 0)
         {
-            getImportBean().getRoleList().add(text);
+            // try to get the role.
+            try
+            {
+                Role role = TurbineSecurity.getRole(value);
+            }
+            catch (Exception e)
+            {
+                throw new Exception ("The role: '" + value + 
+                    "' , could not be found. Please manually create it " +
+                    "before continuing.");
+            }
+
+            getImportBean().getRoleList().add(value);
             log().debug("(" + getImportBean().getState() + 
-                ") found role: " + text);
+                ") found role: " + value);
         }
+    }
+
+    protected void doInsertionAtBody(String value)
+        throws Exception
+    {
     }
 }
