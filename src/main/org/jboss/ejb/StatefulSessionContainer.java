@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.23 $
+ *   @version $Revision: 1.24 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -179,7 +179,8 @@ public class StatefulSessionContainer
      setupHomeMapping();
       
      // Init container invoker
-     containerInvoker.init();
+     if (containerInvoker != null)
+      containerInvoker.init();
       
       // Init instance cache
      instanceCache.init();
@@ -214,7 +215,8 @@ public class StatefulSessionContainer
       super.start();
       
       // Start container invoker
-      containerInvoker.start();
+      if (containerInvoker != null)
+         containerInvoker.start();
       
       // Start instance cache
       instanceCache.start();
@@ -248,7 +250,8 @@ public class StatefulSessionContainer
         super.stop();
 
         // Stop container invoker
-        containerInvoker.stop();
+        if (containerInvoker != null)
+            containerInvoker.stop();
 
         // Stop instance cache
         instanceCache.stop();
@@ -284,7 +287,8 @@ public class StatefulSessionContainer
        super.destroy();
        
        // Destroy container invoker
-       containerInvoker.destroy();
+       if (containerInvoker != null)
+            containerInvoker.destroy();
        
        // Destroy instance cache
        instanceCache.destroy();
@@ -360,7 +364,8 @@ public class StatefulSessionContainer
    public EJBHome getEJBHome(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
-       
+      if (containerInvoker == null)
+         throw new java.lang.IllegalStateException();
       return containerInvoker.getEJBHome();
    }
    
@@ -386,6 +391,9 @@ public class StatefulSessionContainer
         throws java.rmi.RemoteException  {
           
         // All we need is an EJBObject for this Id, the first argument is the Id
+      if (containerInvoker == null)
+         throw new java.lang.IllegalStateException();
+           
         return containerInvoker.getStatefulSessionEJBObject(mi.getArguments()[0]);        
     
     }
@@ -405,6 +413,9 @@ public class StatefulSessionContainer
    public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
     throws java.rmi.RemoteException
    {
+      if (containerInvoker == null)
+         throw new java.lang.IllegalStateException();
+      
        return getContainerInvoker().getEJBMetaData();
    }
    

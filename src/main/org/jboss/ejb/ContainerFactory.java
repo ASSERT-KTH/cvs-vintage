@@ -82,7 +82,7 @@ import org.jboss.mgt.Module;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.70 $
+*   @version $Revision: 1.71 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -627,7 +627,8 @@ public class ContainerFactory
     StatelessSessionContainer container = new StatelessSessionContainer();
     int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
-    container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+    if (bean.getHome() != null)
+      container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
     
     //AS Test the exposure of the Container through a MBean
@@ -646,7 +647,8 @@ public class ContainerFactory
     StatefulSessionContainer container = new StatefulSessionContainer();
     int transType = ((SessionMetaData)bean).isContainerManagedTx() ? ContainerInterceptors.CMT : ContainerInterceptors.BMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
-    container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+    if (bean.getHome() != null)
+      container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstanceCache( createInstanceCache( conf, m_beanCacheJMSMonitoring, cl ) );
     // No real instance pool, use the shadow class
     container.setInstancePool( new StatefulSessionInstancePool() );
@@ -669,7 +671,8 @@ public class ContainerFactory
     EntityContainer container = new EntityContainer();
     int transType = ContainerInterceptors.CMT;
     initializeContainer( container, conf, bean, transType, cl, localCl );
-    container.setContainerInvoker( createContainerInvoker( conf, cl ) );
+    if (bean.getHome() != null)
+      container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstanceCache( createInstanceCache( conf, m_beanCacheJMSMonitoring, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
 

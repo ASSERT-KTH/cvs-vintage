@@ -37,7 +37,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.37 $
+*   @version $Revision: 1.38 $
 */
 public class EntityContainer
 extends Container
@@ -193,7 +193,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
       instancePool.init();
 
       // Init container invoker
-      containerInvoker.init();
+      if (containerInvoker != null)
+         containerInvoker.init();
 
       // Init instance cache
       instanceCache.init();
@@ -225,7 +226,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
       super.start();
 
       // Start container invoker
-      containerInvoker.start();
+      if (containerInvoker != null)
+         containerInvoker.start();
 
       // Start instance cache
       instanceCache.start();
@@ -258,6 +260,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       super.stop();
 
       // Stop container invoker
+      if (containerInvoker != null)
       containerInvoker.stop();
 
       // Stop instance cache
@@ -291,7 +294,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
       super.destroy();
 
       // Destroy container invoker
-      containerInvoker.destroy();
+      if (containerInvoker != null)
+         containerInvoker.destroy();
 
       // Destroy instance cache
       instanceCache.destroy();
@@ -360,6 +364,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
    public EJBHome getEJBHome(MethodInvocation mi)
    throws java.rmi.RemoteException
    {
+      if (containerInvoker == null)
+         throw new java.lang.IllegalStateException();
       return containerInvoker.getEJBHome();
    }
 

@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.17 $
+*   @version $Revision: 1.18 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -152,7 +152,8 @@ public class StatelessSessionContainer
         instancePool.init();
         
         // Init container invoker
-        containerInvoker.init();        
+        if (containerInvoker != null)
+            containerInvoker.init();        
         
         // Initialize the interceptor by calling the chain
         Interceptor in = interceptor;
@@ -178,7 +179,8 @@ public class StatelessSessionContainer
         super.start();
         
         // Start container invoker
-        containerInvoker.start();
+        if (containerInvoker != null)
+            containerInvoker.start();
         
         // Start the instance pool
         instancePool.start();
@@ -205,7 +207,8 @@ public class StatelessSessionContainer
         super.stop();
         
         // Stop container invoker
-        containerInvoker.stop();
+        if (containerInvoker != null)
+            containerInvoker.stop();
         
         // Stop the instance pool
         instancePool.stop();
@@ -232,7 +235,8 @@ public class StatelessSessionContainer
         super.destroy();
         
         // Destroy container invoker
-        containerInvoker.destroy();
+        if (containerInvoker != null)
+            containerInvoker.destroy();
         
         // Destroy the pool
         instancePool.destroy();
@@ -297,6 +301,9 @@ public class StatelessSessionContainer
     public EJBHome getEJBHome(MethodInvocation mi)
         throws java.rmi.RemoteException
     {
+      if (containerInvoker == null)
+         throw new java.lang.IllegalStateException();
+       
         return containerInvoker.getEJBHome();
     }
     
@@ -310,6 +317,9 @@ public class StatelessSessionContainer
     public EJBObject createHome()
         throws java.rmi.RemoteException, CreateException
     {
+      if (containerInvoker == null)
+         throw new java.lang.IllegalStateException();
+       
         Object obj = containerInvoker.getStatelessSessionEJBObject();
         return (EJBObject)obj;
     }
