@@ -126,7 +126,7 @@ public class JavaModelManager implements IResourceChangeListener, ISaveParticipa
 			developmentContext.setCurrentState(state);
 		}
 	};
-	public static boolean VERBOSE = true;
+	public static boolean VERBOSE = false;
 
 	/**
 	 * Line separator to use throughout the JavaModel for any source edit operation
@@ -227,6 +227,9 @@ public void doneSaving(ISaveContext context){
 			try {
 				while (deltas.hasMoreElements()) {
 					IJavaElementDelta delta= (IJavaElementDelta) deltas.nextElement();
+					if (DeltaProcessor.VERBOSE){
+						System.out.println("FIRING Delta ("+ Thread.currentThread()+"):"+ delta);
+					}
 					ElementChangedEvent event= new ElementChangedEvent(delta);
 					// Clone the listeners since they could remove themselves when told about the event 
 					// (eg. a type hierarchy becomes invalid (and thus it removes itself) when the type is removed
