@@ -82,7 +82,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.79 $
+* @version $Revision: 1.80 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -632,37 +632,8 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
                {
                   ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
                   
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                   if( trace )
-                     log.trace("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
-               }
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
-               {
-                  if( trace )
-                  {
-                     // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                     log.trace("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
-                     log.trace("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
-                  }
-                  
-                  // TEMP FIXME HACK This makes user transactions on the server work until
-                  // local invocations stop going through Marshalled Invocation
-                  Transaction hack = mi.getTransaction();
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  //Serialize deserialize
-                  mi = (Invocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
-                  
-                  // TEMP FIXME HACK This makes user transactions on the server work until
-                  // local invocations stop going through Marshalled Invocation
-                  mi.setTransaction(hack);
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  return new MarshalledObject(invoke(mi));
+                     log.trace("METHOD REMOTE INVOKE "+mi.getObjectName()+"||"+mi.getMethod().getName()+"||");
                }
                
                value= invoke(mi);
@@ -681,39 +652,8 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
                   
                   ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
                   
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                   if( trace )
-                     log.trace("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-               
-               }
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
-               {
-                  
-                  if( trace )
-                  {
-                     // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                     log.trace("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-                     log.trace("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
-                  }
-
-                  // TEMP FIXME HACK This makes user transactions on the server work until
-                  // local invocations stop going through Marshalled Invocation
-                  Transaction hack = mi.getTransaction();
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  //Serialize deserialize
-                  mi = (MarshalledInvocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
-                  
-                  // TEMP FIXME HACK This makes user transactions on the server work until
-                  // local invocations stop going through Marshalled Invocation
-                  mi.setTransaction(hack);
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  return new MarshalledObject(invokeHome(mi));
+                     log.trace("METHOD HOME INVOKE "+mi.getObjectName()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
                
                }
                
