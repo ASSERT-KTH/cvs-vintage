@@ -70,7 +70,11 @@ public class ColumbaViewer extends AbstractViewer {
 			boolean save = false;
 			viewer = promptForViewer(header);
 		}
-
+		// in case of cancel in the ChooseViewer
+		if (viewer == null) {
+		  return null;
+		}
+		
 		Process p = execProcess(tempFile, viewer);
 		if ( p == null ) {
 			viewer = promptForViewer(header);
