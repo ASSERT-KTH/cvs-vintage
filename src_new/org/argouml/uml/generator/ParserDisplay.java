@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.40 2002/10/08 20:04:33 kataka Exp $
+// $Id: ParserDisplay.java,v 1.41 2002/10/10 11:36:20 kataka Exp $
 
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
@@ -2298,7 +2298,7 @@ addBases:
 	args = new Vector();
     }
 
-    if (_cat.getPriority().equals(Priority.DEBUG)) {
+    if (_cat.getPriority() != null && _cat.getPriority().equals(Priority.DEBUG)) {
         StringBuffer buf = new StringBuffer();
         buf.append("ParseMessage: " + s + "\n");
         buf.append("Message: ");
