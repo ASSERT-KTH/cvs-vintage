@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.2 1999/10/12 08:30:46 gonzo Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/12 08:30:46 $
  *
  * ====================================================================
  *
@@ -96,7 +96,8 @@ public class URLUtil {
 	//        construct file uri by prepending the
 	//        working directory
 
-	if (s.indexOf(":/") > -1) {
+	if (s.indexOf("://") > -1 ||
+            s.indexOf("file:") > -1 ) {
 	    resolve = new URL(s);
 	} else if (url != null) {
 	    resolve = new URL(url, s);
