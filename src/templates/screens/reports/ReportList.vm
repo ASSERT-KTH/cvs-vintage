@@ -4,12 +4,10 @@
 <input type="hidden" name="action" value="GenerateReport" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="reports,Step1.vm" />
 
-<div class="functnbar">
-   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div> 
 
 ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
+<h3>Saved reports</h3>
 
 <div>
 Click on "Availability" to execute report.
@@ -18,9 +16,9 @@ Click on "Availability" to execute report.
 #if ($reports.size() > 0 )
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">&nbsp;</th>
-<th>Report name</th>
-<th>Report descr</a></th>
+<th nowrap="nowrap">Select</th>
+<th>Name</th>
+<th>Description</a></th>
 <th>Availability</a></th>
 <th>Author</a></th>
 </tr>
@@ -40,9 +38,7 @@ Click on "Availability" to execute report.
 
 </table>
 #else
- <p><strong class="alert">There are no saved reports.
- Please go to $link.setPage("reports,Step1.vm").setLabel("New report")
- to create a new saved report.</strong></p>
+ <p><strong class="alert">There are no saved reports.</strong></p>
 #end
 
 <div class="functnbar3">
@@ -54,9 +50,7 @@ Click on "Availability" to execute report.
 
 ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
-<div class="functnbar2">
-   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div> </div>
+</div>
 
 $intake.declareGroups()
 </form>
