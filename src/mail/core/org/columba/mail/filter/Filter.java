@@ -84,7 +84,7 @@ public class Filter extends DefaultItem {
      * @return boolean        true if enabled
      */
     public boolean getEnabled() {
-        return getBoolean("enabled");
+        return getBoolean("enabled", true);
     }
 
     /**
