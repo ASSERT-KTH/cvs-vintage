@@ -174,12 +174,20 @@ public class MailFrameController extends FrameController {
 	 */
 	protected void init() {
 		treeController = new TreeController(this, MainInterface.treeModel);
+		// moved this into TreeController constructor, because
+		// its needed to create the context-menu 
+		/*
 		selectionManager.addSelectionHandler(
 			new TreeSelectionHandler(treeController.getView()));
-
+		*/
+		
 		tableController = new TableController(this);
+		// moved this into TableController constructor, because
+	    // its needed to create the context-menu
+	    /* 
 		selectionManager.addSelectionHandler(
 			new TableSelectionHandler(tableController.getView()));
+		*/
 
 		attachmentController = new AttachmentController(this);
 

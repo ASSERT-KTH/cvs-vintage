@@ -174,25 +174,29 @@ public class Main {
 
 				MainInterface.pluginManager.registerHandler(
 					new MenuPluginHandler("org.columba.core.menu"));
+					
 
-				MainInterface.pluginManager.initPlugins();
-
-				
 
 				MainInterface.shutdownManager = new ShutdownManager();
 
 				MainInterface.shutdownManager.register(new SaveConfigPlugin());
 
-				frame.advance();
-				
 				addressbook.initPlugins();
 				mail.initPlugins();
+								
+				MainInterface.pluginManager.initPlugins();
 
+				
+
+							
 				frame.advance();
 				
 				MainInterface.frameModelManager = new FrameModelManager();
 				
 				addressbook.initGui();
+				
+				frame.advance();
+				
 				mail.initGui();
 
 				// if no view is open 

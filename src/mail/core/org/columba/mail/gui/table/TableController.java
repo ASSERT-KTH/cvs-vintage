@@ -117,6 +117,8 @@ public class TableController
 		view = new TableView(headerTableModel);
 
 		tableSelectionManager = new TableSelectionManager();
+		
+		mailFrameController.getSelectionManager().addSelectionHandler( new TableSelectionHandler(view));
 		//tableSelectionManager.addFolderSelectionListener(this);
 
 		tableChangedListenerList = new Vector();
@@ -125,8 +127,7 @@ public class TableController
 
 		//menu = new HeaderTableMenu(this);
 
-		// TODO
-		//menu = new TableMenu( mailFrameController );
+		menu = new TableMenu( mailFrameController );
 		
 		headerTableDnd = new HeaderTableDnd(view);
 

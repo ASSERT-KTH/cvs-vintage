@@ -128,7 +128,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 				menu.addSeparator();
 
 			} else if (name.equals("menu")) {
-				menu.add(createMenu(next));
+				menu.add(createSubMenu(next));
 			}
 		}
 

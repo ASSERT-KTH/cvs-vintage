@@ -26,11 +26,22 @@ public class ContextMenu extends JPopupMenu {
 	public ContextMenu(FrameController frameController, String path) {
 		super();
 
-		menuGenerator = new PopupMenuGenerator(frameController, path);
+		menuGenerator = createPopupMenuGeneratorInstance(path, frameController);
+		
 		menuGenerator.createPopupMenu(this);
 
 		
 	}
+	
+	public PopupMenuGenerator createPopupMenuGeneratorInstance(
+			String xmlRoot,
+			FrameController frameController) {
+			if (menuGenerator == null) {
+				menuGenerator = new PopupMenuGenerator(frameController, xmlRoot);
+			}
+
+			return menuGenerator;
+		}
 
 	public void extendMenuFromFile(String path) {
 		menuGenerator.extendMenuFromFile(path);

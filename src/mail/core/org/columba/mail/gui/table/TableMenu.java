@@ -7,8 +7,8 @@
 package org.columba.mail.gui.table;
 
 import org.columba.core.gui.frame.FrameController;
-import org.columba.core.gui.menu.ContextMenu;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.menu.MailContextMenu;
 
 /**
  * @author frd
@@ -16,10 +16,10 @@ import org.columba.core.xml.XmlElement;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class TableMenu extends ContextMenu {
+public class TableMenu extends MailContextMenu {
 
 	//protected PopupMenuGenerator menuGenerator;
-	protected FrameController frameController;
+	//protected FrameController frameController;
 
 	/**
 	 * 

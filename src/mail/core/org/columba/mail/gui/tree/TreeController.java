@@ -32,6 +32,7 @@ import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
+import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.tree.selection.TreeSelectionManager;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
@@ -84,7 +85,8 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		actionListener = new FolderTreeActionListener(this);
 
 		treeSelectionManager = new TreeSelectionManager();
-
+		
+		mailFrameController.getSelectionManager().addSelectionHandler(new TreeSelectionHandler(view));
 		//view.addTreeSelectionListener(this);
 
 		//folderTreeActionListener = new FolderTreeActionListener(this);
