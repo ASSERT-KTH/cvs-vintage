@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -153,8 +153,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
                (
                   method != null &&
                   container.getBeanMetaData().isMethodReadOnly(method.getName())
-               )
-            );
+                  )
+               );
 
       }
    }
@@ -284,85 +284,76 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    protected boolean waitForTx(Transaction miTx, boolean trace) throws Exception
    {
       boolean wasScheduled = false;
-      boolean addedWaiting = false;
-      try
+      // Do we have a running transaction with the context?
+      // We loop here until either until success or until transaction timeout
+      // If we get out of the loop successfully, we can successfully
+      // set the transaction on this puppy.
+      while (this.tx != null &&
+             // And are we trying to enter with another transaction?
+             !this.tx.equals(miTx))
       {
-	 // Do we have a running transaction with the context?
-	 // We loop here until either until success or until transaction timeout
-	 // If we get out of the loop successfully, we can successfully
-	 // set the transaction on this puppy.
-	 while (this.tx != null &&
-		// And are we trying to enter with another transaction?
-		!this.tx.equals(miTx))
-	 {
-	    // For deadlock detection.
-	    // miTx is waiting for this.tx to finish so put it
-	    // in the waiting table and do deadlock detection.
-	    if (miTx != null && !addedWaiting)
-	    {
-	       synchronized (waiting)
-	       {
-		  waiting.put(miTx, this.tx);
-		  addedWaiting = true;
-	       }
-	    }
-            deadlockDetection(miTx);
-	    wasScheduled = true;
-	    // That's no good, only one transaction per context
-	    // Let's put the thread to sleep the transaction demarcation will wake them up
-	    if( trace ) log.trace("Transactional contention on context"+id);
+         // For deadlock detection.
+         // miTx is waiting for this.tx to finish so put it
+         // in the waiting table and do deadlock detection.
+         if (miTx != null)
+         {
+            synchronized (waiting)
+            {
+               waiting.put(miTx, this.tx);
+            }
+         }
+         deadlockDetection(miTx);
+         wasScheduled = true;
+         // That's no good, only one transaction per context
+         // Let's put the thread to sleep the transaction demarcation will wake them up
+         if( trace ) log.trace("Transactional contention on context"+id);
 	    
-	    TxLock txLock = getTxLock(miTx);
+         TxLock txLock = getTxLock(miTx);
 	    
-	    if( trace ) log.trace("Begin wait on Tx="+this.tx);
+         if( trace ) log.trace("Begin wait on Tx="+this.tx);
 	    
-	    // And lock the threads on the lock corresponding to the Tx in MI
-	    synchronized(txLock)
-	    {
-	       releaseSync(); 
-	       try
-	       {
-		  txLock.wait(txTimeout);
-	       } catch (InterruptedException ignored) {}
-	    } // end synchronized(txLock)
+         // And lock the threads on the lock corresponding to the Tx in MI
+         synchronized(txLock)
+         {
+            releaseSync(); 
+            try
+            {
+               txLock.wait(txTimeout);
+            } catch (InterruptedException ignored) {}
+         } // end synchronized(txLock)
 	    
-	    this.sync();
+         this.sync();
 	    
-	    if( trace ) log.trace("End wait on TxLock="+this.tx);
-	    if (isTxExpired(miTx))
-	    {
-	       log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
-			 // +" On method: " + mi.getMethod().getName()
-			 // +" txWaitQueue size: " + txWaitQueue.size()
-			 );
-	       if (txLock.isQueued)
-	       {
-		  // Remove the TxLock from the queue because this thread is exiting.
-		  // Don't worry about notifying other threads that share the same transaction.
-		  // They will timeout and throw the below RuntimeException
-		  txLocks.remove(txLock);
-		  txWaitQueue.remove(txLock);
-	       }
-	       else if (this.tx != null && tx.equals(miTx))
-	       {
-		  // We're not qu
-		  nextTransaction();
-	       }
-	       throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-	    }
-	 } // end while(tx!=miTx)
-      }
-      finally
-      {
-	 // miTx is now long waiting for a tx to finish so remove it from the waiting table.
-	 if (miTx != null && addedWaiting)
-	 {
-	    synchronized (waiting)
-	    {
-	       waiting.remove(miTx);
-	    }
-	 }
-      }
+         if( trace ) log.trace("End wait on TxLock="+this.tx);
+         if (isTxExpired(miTx))
+         {
+            log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
+                      // +" On method: " + mi.getMethod().getName()
+                      // +" txWaitQueue size: " + txWaitQueue.size()
+                      );
+            if (txLock.isQueued)
+            {
+               // Remove the TxLock from the queue because this thread is exiting.
+               // Don't worry about notifying other threads that share the same transaction.
+               // They will timeout and throw the below RuntimeException
+               txLocks.remove(txLock);
+               txWaitQueue.remove(txLock);
+            }
+            else if (this.tx != null && tx.equals(miTx))
+            {
+               // We're not qu
+               nextTransaction();
+            }
+            if (miTx != null)
+            {
+               synchronized (waiting)
+               {
+                  waiting.remove(miTx);
+               }
+            }
+            throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
+         }
+      } // end while(tx!=miTx)
 
       // If we get here, this means that we have the txlock
       this.tx = miTx;
@@ -439,6 +430,13 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          thelock.isQueued = false;
          // The new transaction is the next one, important to set it up to avoid race with 
          // new incoming calls
+         if (thelock.tx != null)
+         {
+            synchronized (waiting)
+            {
+               waiting.remove(thelock.tx);
+            }
+         }
          this.tx = thelock.tx;
          //         log.debug(Thread.currentThread()+" handing off to "+lock.threadName);
          synchronized(thelock) 
@@ -498,7 +496,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          throw new IllegalStateException("removing bean lock and it has tx set!");
       }
       /*      else if (refs == 0)
-         log.debug(Thread.currentThread() + " removing lock!");
+              log.debug(Thread.currentThread() + " removing lock!");
       */
    }
 
