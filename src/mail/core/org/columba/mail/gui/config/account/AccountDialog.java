@@ -58,8 +58,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 	private SpecialFoldersPanel specialFoldersPanel;
 	private ReceiveOptionsPanel receiveOptionsPanel;
 
-	private JButton okButton, cancelButton, helpButton;
-
 	//private PanelChooser panelChooser;
 
 	private JPanel selected = null;
@@ -86,14 +84,12 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
 
-		incomingServerPanel =
-			new IncomingServerPanel(dialog, accountItem, receiveOptionsPanel);
+		incomingServerPanel = new IncomingServerPanel(dialog, accountItem,
+                                receiveOptionsPanel);
 
 		outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
-		specialFoldersPanel =
-			new SpecialFoldersPanel(
-				accountItem,
+		specialFoldersPanel = new SpecialFoldersPanel(accountItem,
 				accountItem.getSpecialFoldersItem());
 
 		securityPanel = new SecurityPanel(accountItem.getPGPItem());
@@ -105,7 +101,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
 		CTabbedPane tp = new CTabbedPane();
 		tp.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
@@ -115,8 +110,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		identityPanel = new IdentityPanel( accountItem, identityItem);
 		*/
 
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "identity"),
+		tp.add(MailResourceLoader.getString(
+                                        "dialog",
+                                        "account",
+                                        "identity"),
 			identityPanel);
 		//$NON-NLS-1$
 
@@ -127,8 +124,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			incomingServerPanel =
 				new IncomingServerPanel( accountItem, popItem);
 			*/
-			tp.add(
-				MailResourceLoader.getString(
+			tp.add(MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"incomingserverpop3"),
@@ -140,8 +136,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			incomingServerPanel =
 				new IncomingServerPanel( accountItem, imapItem);
 				*/
-			tp.add(
-				MailResourceLoader.getString(
+			tp.add(MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"incomingserverimap"),
@@ -155,8 +150,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		/*
 		outgoingServerPanel = new OutgoingServerPanel( smtpItem);
 		*/
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "outgoingserver"),
+		tp.add(MailResourceLoader.getString(
+                                        "dialog",
+                                        "account",
+                                        "outgoingserver"),
 			outgoingServerPanel);
 		//$NON-NLS-1$
 
@@ -166,16 +163,20 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 				accountItem,
 				accountItem.getSpecialFoldersItem());
 		*/
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "specialfolders"),
+		tp.add(MailResourceLoader.getString(
+                                        "dialog",
+                                        "account",
+                                        "specialfolders"),
 			specialFoldersPanel);
 		//$NON-NLS-1$
 
 		/*
 		securityPanel = new SecurityPanel( accountItem.getPGPItem());
 		*/
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "security"),
+		tp.add(MailResourceLoader.getString(
+                                        "dialog",
+                                        "account",
+                                        "security"),
 			securityPanel);
 		//$NON-NLS-1$
 
@@ -221,19 +222,19 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
+		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		JButton okButton = new JButton(MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		//$NON-NLS-1$ //$NON-NLS-2$
