@@ -25,7 +25,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.8 2002/09/11 20:32:12 linus Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.9 2002/09/12 09:51:26 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration;
 import org.argouml.model.uml.UmlFactory;
@@ -255,15 +255,7 @@ implements MutableGraphModel, MElementListener, VetoableChangeListener {
       		return gen;
       	}
       }
-      /*else if (edgeClass == MGeneralization.class &&
-		((fromPort instanceof MActor && toPort instanceof MActor) ||
-		 (fromPort instanceof MUseCase && toPort instanceof MUseCase))) {
-	    MGeneralization gen = UmlFactory.getFactory().getCore().createGeneralization((MClassifier) fromPort,
-						(MClassifier) toPort);
-	    gen.addStereotype(MStereotype.EXTENDS);
-	    addEdge(gen);
-	    return gen;
-      }*/
+      
       else {
 	    System.out.println("Incorrect edge");
 	    return null;

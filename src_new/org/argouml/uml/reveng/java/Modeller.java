@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.34 2002/09/12 08:18:28 kataka Exp $
+// $Id: Modeller.java,v 1.35 2002/09/12 09:51:27 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -631,21 +631,11 @@ public class Modeller
     {
 	String name = parent.getName() + "<-" + child.getName();
 	MGeneralization mGeneralization = null;
-	Collection generalizations = child.getGeneralizations();
-	for(Iterator i = generalizations.iterator(); i.hasNext(); ) {
-	    mGeneralization = (MGeneralization)i.next();
-	    if (parent == mGeneralization.getParent()) {
-		// This is the existing generalization we were looking
-		// for.
-		break;
-            }
-	    else {
-		mGeneralization = null;
-	    }
-	}
+	mGeneralization = CoreHelper.getHelper().getGeneralization(child, parent);
+	
 
 	if(mGeneralization == null) {
-	    mGeneralization = UmlFactory.getFactory().getCore().createGeneralization();
+	    mGeneralization = CoreFactory.getFactory().buildGeneralization(child, parent);
 	    mGeneralization.setName(name);
 	}
 	return mGeneralization;
