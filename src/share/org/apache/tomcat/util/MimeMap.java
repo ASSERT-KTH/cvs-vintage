@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeMap.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeMap.java,v 1.2 2000/02/10 22:28:24 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/10 22:28:24 $
  *
  * ====================================================================
  *
@@ -95,19 +95,33 @@ public class MimeMap implements FileNameMap {
     public void removeContentType(String extn) {
         map.remove(extn.toLowerCase());
     }
-    
-    public String getContentTypeFor(String fileName) {
+
+    /** Get extension of file, without fragment id
+     */
+    public static String getExtension( String fileName ) {
         // play it safe and get rid of any fragment id
         // that might be there
-        int i = fileName.lastIndexOf('#');
+	int length=fileName.length();
+	
+        int newEnd = fileName.lastIndexOf('#');
+	if( newEnd== -1 ) newEnd=length;
+	// Instead of creating a new string.
+	//         if (i != -1) {
+	//             fileName = fileName.substring(0, i);
+	//         }
+        int i = fileName.lastIndexOf('.', newEnd );
         if (i != -1) {
-            fileName = fileName.substring(0, i);
+             return  fileName.substring(i + 1, newEnd );
+        } else {
+            // no extension, no content type
+            return null;
         }
-        i = fileName.lastIndexOf('.');
-        if (i != -1) {
-            String extn = fileName.substring(i + 1, fileName.length());
-            String type = getContentType(extn.toLowerCase());
-            return type;
+    }
+    
+    public String getContentTypeFor(String fileName) {
+	String extn=getExtension( fileName );
+        if (extn!=null) {
+            return getContentType(extn.toLowerCase());
         } else {
             // no extension, no content type
             return null;

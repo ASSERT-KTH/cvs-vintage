@@ -154,6 +154,9 @@ public class Context {
     // Env entries
     Hashtable envEntryTypes=new Hashtable();
     Hashtable envEntryValues=new Hashtable();
+
+    // Maps specified in web.xml ( String url -> ServletWrapper  )
+    private Hashtable mappings = new Hashtable();
     
     // Maps specified in web.xml ( String->ServletWrapper )
     private Hashtable prefixMappedServlets = new Hashtable();
@@ -554,6 +557,10 @@ public class Context {
 	return welcomeFiles.elements();
     }
 
+    /** @deprecated It is used as a hack to allow web.xml override default
+	 welcome files.
+	 Tomcat will first load the "default" web.xml and then this file.
+    */
     public void removeWelcomeFiles() {
 	if( ! this.welcomeFiles.isEmpty() )
 	    this.welcomeFiles.removeAllElements();
@@ -646,6 +653,8 @@ public class Context {
         attributes.remove(name);
     }
     
+    /** @deprecated - use getDocBase and URLUtil if you need it as URL
+     */
     public URL getDocumentBase() {
 	if( documentBase == null ) {
 	    if( docBase != null)
@@ -658,6 +667,8 @@ public class Context {
         return documentBase;
     }
 
+    /** @deprecated - use setDocBase
+     */
     public void setDocumentBase(URL s) {
 	// Used only by startup, will be removed
         this.documentBase=s;
@@ -692,7 +703,7 @@ public class Context {
         this.sessionTimeOut = sessionTimeOut;
     }
     
-    public MimeMap getMimeMap() {
+    public FileNameMap getMimeMap() {
         return mimeTypes;
     }
 
@@ -821,6 +832,59 @@ public class Context {
 	}
     }
 
+    
+    /**
+     * Maps a named servlet to a particular path or extension.
+     * If the named servlet is unregistered, it will be added
+     * and subsequently mapped.
+     *
+     * Note that the order of resolution to handle a request is:
+     *
+     *    exact mapped servlet (eg /catalog)
+     *    prefix mapped servlets (eg /foo/bar/*)
+     *    extension mapped servlets (eg *jsp)
+     *    default servlet
+     *
+     */
+    public void addServletMapping(String servletName, String path) {
+        ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
+
+	if (sw == null) {
+	    log("Servlet not registered " + servletName );
+	    return;
+	    // or throw an exception !
+	}
+	mappings.put( path, sw );
+    }
+
+    public Enumeration getServletMappings() {
+	return mappings.keys();
+    }
+
+    public ServletWrapper getServletMapping( String path ) {
+	return mappings.get(path);
+    }
+
+    public void removeMapping( String path ) {
+	log( "Removing " + path + " -> " + mappings.get(path) );
+	mappings.remove( path );
+    }
+    
+    public void removeMappingsFor( ServletWrapper sw ) {
+	Enumeration enum = mappings.keys();
+	
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+
+	    if (mappings.get(key).equals(sw)) {
+		log( "Removing " + key + " -> " + sw );
+		mappings.remove(key);
+	    }
+	}
+    }
+    
+    // -------------------- deprecated code
+    
     // XXX only one mapping, the mapper should do it's own optimizations
     /**
      * Maps a named servlet to a particular path or extension.
@@ -1002,52 +1066,6 @@ public class Context {
     public ServletLoader getServletLoader() {
 	return servletL;
     }
-
-//     /** @deprecated
-//      */
-//     public void setLoader(ServletClassLoader loader ) {
-// 	this.servletLoader=loader;
-//     }
-
-//     /** @deprecated
-//      */
-//     public ServletClassLoader getLoader() {
-// 	return servletLoader;
-//     }
-
-//     public Enumeration getClassPaths() {
-//         return this.classPaths.elements();
-//     }
-
-//     public void addClassPath(String path) {
-//         this.classPaths.addElement(path);
-//     }
-
-//     public Enumeration getLibPaths() {
-//         return this.libPaths.elements();
-//     }
-
-//     public void addLibPath(String path) {
-//         this.libPaths.addElement(path);
-//     }
-
-//     // XXX XXX XXX ugly, need rewrite ( servletLoader will call getClassPaths and getLibPaths
-//     // and will concatenate the "file" part of them ).
-//     /** Returns the classpath as a string
-//      */
-//     public String getClassPath() {
-//         String cp = this.classPath.trim();
-//         String servletLoaderClassPath =
-//             this.getLoader().getClassPath();
-
-//         if (servletLoaderClassPath != null &&
-//             servletLoaderClassPath.trim().length() > 0) {
-//             cp += ((cp.length() > 0) ? File.pathSeparator : "") +
-//                 servletLoaderClassPath;
-//         }
-
-//         return cp;
-//     }
 
     /* -------------------- Utils  -------------------- */
     public void setDebug( int level ) {

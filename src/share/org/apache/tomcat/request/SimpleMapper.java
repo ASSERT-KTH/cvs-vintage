@@ -339,6 +339,5 @@ public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor
 	return ctx;
     }
 
-
 }
     

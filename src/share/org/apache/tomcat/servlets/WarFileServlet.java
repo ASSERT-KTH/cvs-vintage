@@ -79,7 +79,7 @@ public class WarFileServlet extends HttpServlet {
     private ServletContextFacade facade;
     private String servletInfo = "DefaultServlet";
     private Context context;
-    private MimeMap mimeTypes;
+    private FileNameMap  mimeTypes;
     private String datePattern = "EEE, dd MMM yyyyy HH:mm z";
     private DateFormat dateFormat = new SimpleDateFormat(datePattern);
     

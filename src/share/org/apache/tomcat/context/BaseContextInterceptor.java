@@ -133,6 +133,26 @@ public class BaseContextInterceptor implements ContextInterceptor {
 	return 0;
     }
 
+    /** Servlet Init  notification
+     */
+    public int preServletInit( Context ctx, ServletWrapper sw ) {
+	return 0;
+    }
+
     
+    public int postServletInit( Context ctx, ServletWrapper sw ) {
+	return 0;
+    }
+
+    /** Servlet Destroy  notification
+     */
+    public int preServletDestroy( Context ctx, ServletWrapper sw ) {
+	return 0;
+    }
+
+    
+    public int postServletDestroy( Context ctx, ServletWrapper sw ) {
+	return 0;
+    }
     
 }

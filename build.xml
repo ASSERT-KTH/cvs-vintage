@@ -46,6 +46,8 @@
   <target name="tomcat" depends="prepare">
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
            classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
+    <javac srcdir="src/j2ee" destdir="${tomcat.build}/classes"
+           classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
     <rmic base="${tomcat.build}/classes"
           class="org.apache.tomcat.shell.AdminImpl"/>
   </target>

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.4 2000/02/09 20:36:10 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/09 20:36:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.5 2000/02/10 22:28:22 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/10 22:28:22 $
  *
  * ====================================================================
  *
@@ -85,7 +85,6 @@ public interface ContextInterceptor {
      */
     public int engineShutdown(ContextManager cm);
 
-
     /** Called when a context is added to a CM
      */
     public int addContext( ContextManager cm, Context ctx );
@@ -94,7 +93,6 @@ public interface ContextInterceptor {
      */
     public int removeContext( ContextManager cm, Context ctx );
 
-    
     /** Notification when a context is initialized
      */
     public int contextInit(Context ctx);
@@ -120,4 +118,16 @@ public interface ContextInterceptor {
      */
     public int removeMapping( Context ctx, String path );
 
+    /** Servlet Init  notification
+     */
+    public int preServletInit( Context ctx, ServletWrapper sw );
+    
+    public int postServletInit( Context ctx, ServletWrapper sw );
+
+
+    /** Servlet Destroy  notification
+     */
+    public int preServletDestroy( Context ctx, ServletWrapper sw );
+    
+    public int postServletDestroy( Context ctx, ServletWrapper sw );
 }
