@@ -30,12 +30,9 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.composer.html.HtmlToolbar;
 import org.columba.mail.gui.composer.menu.ComposerMenu;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.view.AbstractComposerView;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -66,6 +63,8 @@ public class ComposerView extends AbstractFrameView implements
 
 	private JPanel centerPanel = new FormDebugPanel();
 
+	private JPanel topPanel;
+	
 	public ComposerView(FrameMediator ctrl) {
 		super(ctrl);
 		setTitle(MailResourceLoader.getString("dialog", "composer",
@@ -84,6 +83,8 @@ public class ComposerView extends AbstractFrameView implements
 
 		layoutComponents();
 
+		showAttachmentPanel();
+		
 		pack();
 
 	}
@@ -108,14 +109,7 @@ public class ComposerView extends AbstractFrameView implements
 
 		centerPanel.removeAll();
 
-		JScrollPane attachmentScrollPane = new JScrollPane(controller
-				.getAttachmentController().getView());
-		attachmentScrollPane
-				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
-				1));
-
-		JPanel topPanel = new JPanel();
+		topPanel = new JPanel();
 		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
 		// Create a FormLayout instance.
@@ -175,17 +169,26 @@ public class ComposerView extends AbstractFrameView implements
 
 		centerPanel.add(topPanel, BorderLayout.NORTH);
 
+		JScrollPane attachmentScrollPane = new JScrollPane(controller
+				.getAttachmentController().getView());
+		attachmentScrollPane
+				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
+				1));
+
 		attachmentSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				editorPanel, attachmentScrollPane);
 		attachmentSplitPane.setDividerLocation(0.80);
 		attachmentSplitPane.setBorder(null);
-	
-		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);	
-		
-		XmlElement viewElement = MailInterface.config.get("composer_options").getElement("/options/gui/view");
+
+		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
+
+		XmlElement viewElement = MailInterface.config.get("composer_options")
+				.getElement("/options/gui/view");
 		ViewItem viewItem = new ViewItem(viewElement);
 		int pos = viewItem.getInteger("splitpanes", "attachment", 200);
 		attachmentSplitPane.setDividerLocation(pos);
+
 	}
 
 	/**
@@ -269,6 +272,59 @@ public class ComposerView extends AbstractFrameView implements
 		repaint();
 	}
 
+	/**
+	 * Show attachment panel 
+	 * <p>
+	 * Asks the ComposerModel if message contains attachments. If so,
+	 * show the attachment panel.
+	 * Otherwise, hide the attachment panel.
+	 */
+	public void showAttachmentPanel() {
+		ComposerController mediator = (ComposerController) getViewController();
+	
+		// remove all components from container
+		centerPanel.removeAll();
+		
+		// re-add all top components like recipient editor/subject editor
+		centerPanel.add(topPanel, BorderLayout.NORTH);
+		
+		// if message contains attachments
+		if (mediator.getAttachmentController().getView().count() > 0) {
+			// create scrollapen
+			JScrollPane attachmentScrollPane = new JScrollPane(mediator
+					.getAttachmentController().getView());
+			attachmentScrollPane
+					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1,
+					1, 1, 1));
+			// create splitpane containing the bodytext editor and the
+			// attachment panel
+			attachmentSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+					editorPanel, attachmentScrollPane);
+			attachmentSplitPane.setDividerLocation(0.80);
+			attachmentSplitPane.setBorder(null);
+
+			// add splitpane to the center
+			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
+
+			// set splitpane position based on configuration settings
+			XmlElement viewElement = MailInterface.config.get(
+					"composer_options").getElement("/options/gui/view");
+			ViewItem viewItem = new ViewItem(viewElement);
+			// default value is 200 pixel
+			int pos = viewItem.getInteger("splitpanes", "attachment", 200);
+			attachmentSplitPane.setDividerLocation(pos);
+		} else {
+			// no attachments
+			// -> only show bodytext editor
+			centerPanel.add(editorPanel, BorderLayout.CENTER);
+		}
+		
+		// re-paint composer-view
+		validate();
+		repaint();
+	}
+
 	public void showAccountInfoPanel() {
 		boolean b = isAccountInfoPanelVisible();
 
@@ -291,21 +347,25 @@ public class ComposerView extends AbstractFrameView implements
 		return ((FrameMediator) frameController)
 				.isToolbarEnabled(ACCOUNTINFOPANEL);
 	}
+
 	/**
 	 * @return Returns the attachmentSplitPane.
 	 */
 	public JSplitPane getAttachmentSplitPane() {
 		return attachmentSplitPane;
 	}
-	
-	public void savePositions() {
-        super.savePositions();
 
-        XmlElement viewElement = MailInterface.config.get("composer_options").getElement("/options/gui/view");
+	public void savePositions() {
+		super.savePositions();
+
+		XmlElement viewElement = MailInterface.config.get("composer_options")
+				.getElement("/options/gui/view");
 		ViewItem viewItem = new ViewItem(viewElement);
 
-        // splitpanes
-        viewItem.set("splitpanes", "attachment", attachmentSplitPane.getDividerLocation());
- 
-    }
+		// splitpanes
+		if (attachmentSplitPane != null)
+			viewItem.set("splitpanes", "attachment", attachmentSplitPane
+					.getDividerLocation());
+
+	}
 }

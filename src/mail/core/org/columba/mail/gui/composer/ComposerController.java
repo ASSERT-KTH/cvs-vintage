@@ -127,6 +127,9 @@ public class ComposerController extends AbstractFrameController implements
 		attachmentController.updateComponents(b);
 		headerController.updateComponents(b);
 
+		// show attachment panel if necessary
+		if ( b)
+		((ComposerView) getView()).showAttachmentPanel();
 	}
 
 	/**
