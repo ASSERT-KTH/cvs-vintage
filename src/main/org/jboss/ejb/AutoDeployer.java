@@ -40,7 +40,7 @@ import org.jboss.deployment.J2eeDeployerMBean;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -89,7 +89,7 @@ public class AutoDeployer
          String url = urls.nextToken();
 
          // Check if directory
-         File urlFile = new File(url);
+         File urlFile = new File(url.startsWith ("file:") ? url.substring (5) : url);
          if (urlFile.exists() && urlFile.isDirectory())
          {
             File metaFile = new File(urlFile, "META-INF"+File.separator+"ejb-jar.xml");
