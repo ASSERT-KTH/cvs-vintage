@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.19 2003/10/31 15:24:50 jjones Exp $
+// $Id: UMLAction.java,v 1.20 2004/02/22 13:42:46 d00mst Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,8 @@ public class UMLAction extends AbstractAction {
     public static boolean HAS_ICON = true;
     public static boolean NO_ICON = false;
 
+    private String iconName;
+
     public UMLAction(String name) {
         this(name, true, HAS_ICON);
     }
@@ -57,17 +59,7 @@ public class UMLAction extends AbstractAction {
     public UMLAction(String name, boolean global, boolean hasIcon) {
         super(Translator.localize(name));
         if (hasIcon) {
-            Icon icon =
-                ResourceLoaderWrapper
-		.getResourceLoaderWrapper()
-		.lookupIconResource(
-				    Translator.getImageBinding(name),
-				    Translator.localize(name));
-            if (icon != null)
-                putValue(Action.SMALL_ICON, icon);
-            else {
-                cat.debug("icon not found: " + name);
-            }
+	    iconName = name;
         }
         putValue(
 		 Action.SHORT_DESCRIPTION,
@@ -76,6 +68,24 @@ public class UMLAction extends AbstractAction {
             Actions.addAction(this);
         // Jaap B. 17-6-2003 added next line to make sure every action is in the right enable condition on creation.
         setEnabled(shouldBeEnabled());
+    }
+
+    public Object getValue(String key) {
+	if (iconName != null && Action.SMALL_ICON.equals(key)) {
+	    Icon icon =
+		ResourceLoaderWrapper
+		.getResourceLoaderWrapper()
+		.lookupIconResource(Translator.getImageBinding(iconName),
+				    Translator.localize(iconName)
+				    );
+	    if (icon != null)
+		putValue(Action.SMALL_ICON, icon);
+	    else {
+		cat.debug("icon not found: " + iconName);
+	    }
+	    iconName = null;
+	}
+	return super.getValue(key);
     }
 
     /** Perform the work the action is supposed to do.*/
