@@ -195,7 +195,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 
 		if( transport != null && (
 					  "INTEGRAL".equals( transport ) ||
-					  "CONFIDENTAIL".equals( transport ))) {
+					  "CONFIDENTIAL".equals( transport ))) {
 		    // check if SSL is used
 		    log( "ACCESS: SSL required " + req );
 		}
