@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  *
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public final class JDBCCMPFieldMetaData
 {
@@ -98,6 +98,27 @@ public final class JDBCCMPFieldMetaData
 
    /** Fully qualified class name of implementation of CMPFieldStateFactory */
    private final String stateFactory;
+
+   private static byte readCheckDirtyAfterGet(Element element, byte defaultValue) throws DeploymentException
+   {
+      byte checkDirtyAfterGet;
+      String dirtyAfterGetStr = MetaData.getOptionalChildContent(element, "check-dirty-after-get");
+      if(dirtyAfterGetStr == null)
+      {
+         checkDirtyAfterGet = defaultValue;
+      }
+      else
+      {
+         checkDirtyAfterGet = (Boolean.valueOf(dirtyAfterGetStr).booleanValue() ?
+            CHECK_DIRTY_AFTER_GET_TRUE : CHECK_DIRTY_AFTER_GET_FALSE);
+      }
+      return checkDirtyAfterGet;
+   }
+
+   public static byte readCheckDirtyAfterGet(Element element) throws DeploymentException
+   {
+      return readCheckDirtyAfterGet(element, CHECK_DIRTY_AFTER_GET_NOT_PRESENT);
+   }
 
    /**
     * This constructor is added especially for unknown primary key field
@@ -368,16 +389,7 @@ public final class JDBCCMPFieldMetaData
 
       relationTableField = defaultValues.isRelationTableField();
 
-      String dirtyAfterGetStr = MetaData.getOptionalChildContent(element, "check-dirty-after-get");
-      if(dirtyAfterGetStr == null)
-      {
-         checkDirtyAfterGet = defaultValues.getCheckDirtyAfterGet();
-      }
-      else
-      {
-         checkDirtyAfterGet = (Boolean.valueOf(dirtyAfterGetStr).booleanValue() ?
-            CHECK_DIRTY_AFTER_GET_TRUE : CHECK_DIRTY_AFTER_GET_FALSE);
-      }
+      checkDirtyAfterGet = readCheckDirtyAfterGet(element, defaultValues.getCheckDirtyAfterGet());
 
       String stateFactoryStr = MetaData.getOptionalChildContent(element, "state-factory");
       if(stateFactoryStr == null)

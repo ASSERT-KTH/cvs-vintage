@@ -35,7 +35,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCTypeFactory
 {
@@ -188,10 +188,23 @@ public final class JDBCTypeFactory
    // Static
    //
 
-   public static final CMPFieldStateFactory getCMPFieldStateFactory(String implClassName, Class clazz)
+   public static final CMPFieldStateFactory getCMPFieldStateFactory(JDBCTypeFactory factory,
+                                                                    String implClassName,
+                                                                    Class clazz)
       throws DeploymentException
    {
       CMPFieldStateFactory stateFactory;
+
+      // if the state factory is not provided on the field level use the one from the user type mapping if any
+      if(implClassName == null)
+      {
+         JDBCUserTypeMappingMetaData userMapping = (JDBCUserTypeMappingMetaData)factory.userTypeMappings.get(clazz.getName());
+         if(userMapping != null)
+         {
+            implClassName = userMapping.getStateFactory();
+         }
+      }
+
       if(implClassName != null)
       {
          try
@@ -235,12 +248,22 @@ public final class JDBCTypeFactory
       return stateFactory;
    }
 
-   public static final boolean checkDirtyAfterGet(byte checkDirtyAfterGet, Class fieldType)
+   public static final boolean checkDirtyAfterGet(JDBCTypeFactory factory, byte checkDirtyAfterGet, Class fieldType)
    {
       boolean result;
       if(checkDirtyAfterGet == JDBCCMPFieldMetaData.CHECK_DIRTY_AFTER_GET_NOT_PRESENT)
       {
-         result = !isDefaultImmutable(fieldType);
+         JDBCUserTypeMappingMetaData userMapping = (JDBCUserTypeMappingMetaData)factory.
+            userTypeMappings.get(fieldType.getName());
+         if(userMapping != null &&
+            userMapping.checkDirtyAfterGet() != JDBCCMPFieldMetaData.CHECK_DIRTY_AFTER_GET_NOT_PRESENT)
+         {
+            result = userMapping.checkDirtyAfterGet() == JDBCCMPFieldMetaData.CHECK_DIRTY_AFTER_GET_TRUE;
+         }
+         else
+         {
+            result = !isDefaultImmutable(fieldType);
+         }
       }
       else
       {

@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  *
  * <p><b>Revisions:</b>
  *
@@ -105,8 +105,13 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       else
          tableIndex = -1;
 
-      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(metadata.getStateFactory(), fieldType);
-      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(metadata.getCheckDirtyAfterGet(), fieldType);
+      final JDBCTypeFactory typeFactory = manager.getJDBCTypeFactory();
+      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(
+         typeFactory, metadata.getStateFactory(), fieldType
+      );
+      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(
+         typeFactory, metadata.getCheckDirtyAfterGet(), fieldType
+      );
 
       this.log = createLogger(manager, fieldName);
    }

@@ -24,6 +24,10 @@ public class JDBCUserTypeMappingMetaData
    private final String mappedType;
    /** Fully qualified Java type name of Mapper implementation */
    private final String mapper;
+   /** Check a field of this type for dirty state after the getter: null, true or false (can be overriden on the field level) */
+   private final byte checkDirtyAfterGet;
+   /** CMP field state factory class that should be used for fields of this type unless overriden on the field level */
+   private final String stateFactory;
 
    public JDBCUserTypeMappingMetaData(Element userMappingEl)
       throws DeploymentException
@@ -31,6 +35,8 @@ public class JDBCUserTypeMappingMetaData
       javaType = MetaData.getUniqueChildContent(userMappingEl, "java-type");
       mappedType = MetaData.getUniqueChildContent(userMappingEl, "mapped-type");
       mapper = MetaData.getUniqueChildContent(userMappingEl, "mapper");
+      checkDirtyAfterGet = JDBCCMPFieldMetaData.readCheckDirtyAfterGet(userMappingEl);
+      stateFactory = MetaData.getOptionalChildContent(userMappingEl, "state-factory");
    }
 
    public String getJavaType()
@@ -46,5 +52,15 @@ public class JDBCUserTypeMappingMetaData
    public String getMapper()
    {
       return mapper;
+   }
+
+   public byte checkDirtyAfterGet()
+   {
+      return checkDirtyAfterGet;
+   }
+
+   public String getStateFactory()
+   {
+      return stateFactory;
    }
 }
