@@ -101,7 +101,7 @@ import javax.servlet.http.*;
  * @author costin@dnt.ro
  */
 final class RequestDispatcherImpl implements RequestDispatcher {
-    static final boolean debug=true;
+    static final boolean debug=false;
     // Use the strings from core
     private static StringManager sm = StringManager.
 	getManager("org.apache.tomcat.resources");
