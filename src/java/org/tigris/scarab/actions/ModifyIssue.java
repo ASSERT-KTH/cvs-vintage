@@ -76,7 +76,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.13 2001/07/19 21:30:06 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.14 2001/07/27 23:57:21 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -483,6 +483,20 @@ System.out.println("all valid");
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, nextTemplate);            
+    }
+
+    /**
+        Redirects to AssignIssue page.
+    */
+    public void doEditassignees(RunData data, TemplateContext context)
+         throws Exception
+    {        
+        String id = data.getParameters().getString("id");
+        data.getParameters().add("intake-grp", "issue"); 
+        data.getParameters().add("issue", "_0"); 
+        data.getParameters().add("issue_0id", id);
+        data.getParameters().add("issue_id", id);
+        setTarget(data, "AssignIssue.vm");            
     }
 
 
