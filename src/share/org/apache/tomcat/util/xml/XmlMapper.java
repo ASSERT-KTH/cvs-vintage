@@ -195,6 +195,14 @@ public class XmlMapper
 	System.out.println("XmlMapper: " + msg);
     }
 
+    static boolean jaxp=false;
+    static {
+	try {
+	    Class.forName( "javax.xml.parsers.SAXParserFactory" );
+	    jaxp=true;
+	} catch(Throwable ex ) {
+	}
+    }
     /** read an XML file, construct and return the object hierarchy
      */
     public Object readXml(File xmlFile, Object root)
@@ -205,25 +213,25 @@ public class XmlMapper
 	    this.root=root;
 	    st.push( root );
 	}
-	SAXParser parser=null;
 	try {
-	    try {
+	    if( jaxp ) {
+		SAXParser parser=null;
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(false);
 		factory.setValidating(validating);
 		parser = factory.newSAXParser();
 		parser.parse(xmlFile, this);
-	    } catch (javax.xml.parsers.FactoryConfigurationError jaxpE ) {
+	    } else {
 		org.xml.sax.Parser saxparser=null;
 		if(System.getProperty("org.xml.sax.parser") != null )
 		    saxparser=ParserFactory.makeParser();
 		else
-		    saxparser=ParserFactory.makeParser("com.sun.xml.parser.Parser");
+		    saxparser=ParserFactory.
+			makeParser("com.sun.xml.parser.Parser");
 
 		saxparser.setDocumentHandler( this );
 		saxparser.setEntityResolver( this );
 		saxparser.setDTDHandler( this );
-		if( debug > 0 ) log("No jaxp, defaulting to old xml style " + xmlFile);
 		saxparser.parse(new InputSource( new FileReader( xmlFile)));
 	    }
 

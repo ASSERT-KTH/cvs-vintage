@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.16 2000/06/13 00:32:27 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/06/13 00:32:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.17 2000/06/26 18:51:49 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/06/26 18:51:49 $
  *
  * ====================================================================
  * 
@@ -174,6 +174,15 @@ public class JspUtil {
 	return tld;
     }
 
+    static boolean jaxp=false;
+    static {
+	try {
+	    Class.forName( "javax.xml.parsers.SAXParserFactory" );
+	    jaxp=true;
+	} catch(Throwable ex ) {
+	}
+    }
+
     // Parses the XML document contained in the InputStream.
     // Will try first to use JAXP, if that fails revert to old method.
     // This will go away soon - but it's required if you want to use tomcat
@@ -181,36 +190,53 @@ public class JspUtil {
     public static Document parseXMLDoc(InputStream in, String dtdResource, 
     					  String dtdId) throws JasperException 
     {
-	try {
+	if( jaxp ) 
 	    return parseXMLDocJaxp(in, dtdResource, dtdId );
-	} catch (Throwable pcfe) {
-	    //	    System.out.println("JspUtil: error in jaxp " + pcfe);
-	}
-
-	return parseXMLDocOld( in, dtdResource, dtdId);
+	else 
+	    return parseXMLDocOld( in, dtdResource, dtdId);
     }
 
     // Parses the XML document contained in the InputStream.
     public static Document parseXMLDocJaxp(InputStream in, String dtdResource, 
 					   String dtdId)
-	throws ParserConfigurationException, IOException, SAXException
+	throws JasperException
     {
-	Document tld;
-	DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-	docFactory.setValidating(true);
-	docFactory.setNamespaceAware(true);
-	DocumentBuilder builder = docFactory.newDocumentBuilder();
-	
-	/***
-	 * These lines make sure that we have an internal catalog entry for 
-	 * the taglib.dtdfile; this is so that jasper can run standalone 
-	 * without running out to the net to pick up the taglib.dtd file.
-	 */
-	MyEntityResolver resolver =
-	    new MyEntityResolver(dtdId, dtdResource);
-	builder.setEntityResolver(resolver);
-	tld = builder.parse(in);
-	return tld;
+	try {
+	    Document tld;
+	    DocumentBuilderFactory docFactory = DocumentBuilderFactory.
+		newInstance();
+	    docFactory.setValidating(true);
+	    docFactory.setNamespaceAware(true);
+	    DocumentBuilder builder = docFactory.newDocumentBuilder();
+	    
+	    /***
+	     * These lines make sure that we have an internal catalog entry for
+	     * the taglib.dtdfile; this is so that jasper can run standalone 
+	     * without running out to the net to pick up the taglib.dtd file.
+	     */
+	    MyEntityResolver resolver =
+		new MyEntityResolver(dtdId, dtdResource);
+	    builder.setEntityResolver(resolver);
+	    tld = builder.parse(in);
+	    return tld;
+	} catch( ParserConfigurationException ex ) {
+            throw new JasperException(Constants.
+				      getString("jsp.error.parse.error.in.TLD",
+						new Object[] {
+						    ex.getMessage()
+						}));
+	} catch ( SAXException sx ) {
+            throw new JasperException(Constants.
+				      getString("jsp.error.parse.error.in.TLD",
+						new Object[] {
+						    sx.getMessage()
+						}));
+        } catch (IOException io) {
+            throw new JasperException(Constants.
+				      getString("jsp.error.unable.to.open.TLD",
+						new Object[] {
+						    io.getMessage() }));
+	}
     }
 
     public static void checkAttributes (String typeOfTag, Hashtable attrs,
