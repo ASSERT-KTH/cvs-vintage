@@ -1,9 +1,9 @@
-$Id: readme,v 1.7 2000/04/08 00:43:06 craigmcc Exp $
+$Id: readme,v 1.8 2000/04/18 01:42:52 craigmcc Exp $
         
-                           Release Notes for
-                           =================
-                        TOMCAT Version 3.1beta1
-                        =======================
+                           Release Notes for:
+                           ==================
+                           TOMCAT Version 3.1
+                           ==================
 
 
 0.  TABLE OF CONTENTS:
@@ -153,3 +153,18 @@ A workaround is to ask for a RequestDispatcher on the complete context-
 relative path of the file you wish to have displayed, such as
 "/subdir/index.html".
 
+5.4 Automatic Servlet Reloading
+
+Tomcat 3.1 includes a new feature whereby you can ask it to automatically
+reload servlet classes (loaded from either the WEB-INF/classes directory
+or a JAR file in the WEB-INF/lib directory) that have been changed.  This
+feature is experimental, and may not be completely functional.  In particular,
+changes to classes other than the servlet you are requesting do not trigger
+class reloads -- you will need to restart Tomcat to reflect changes in those
+classes.
+
+Reloading is enabled by including a reloadable="true" attribute on the
+<Context> element in the "conf/server.xml" file.  Note that automatic
+reload support is not recommended for production applications because of
+its experimental nature, and the extra overhead required to perform the
+necessary checks on every request.
