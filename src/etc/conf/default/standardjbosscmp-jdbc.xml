@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.75 2004/03/25 21:54:30 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.76 2004/04/05 12:43:57 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -40,7 +40,7 @@
       </unknown-pk>
 
       <entity-command name="default"/>
-
+      <ql-compiler>org.jboss.ejb.plugins.cmp.jdbc.JDBCEJBQLCompiler</ql-compiler>
    </defaults>
 
    <type-mappings>
