@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -361,7 +361,7 @@ public class EntitySynchronizationInterceptor
 							   cache.release(ctx);
 							} catch (Exception e)
 							{
-							   Logger.exception(e);
+							   Logger.debug(e);
 							}
 							break;
 						
@@ -377,7 +377,7 @@ public class EntitySynchronizationInterceptor
 							   cache.release(ctx);
 							} catch (Exception e)
 							{
-							   Logger.exception(e);
+							   Logger.debug(e);
 							}
 							break;
 							
@@ -396,7 +396,7 @@ public class EntitySynchronizationInterceptor
 							
 						} catch (Exception e)
 						{
-						   Logger.exception(e);
+						   Logger.debug(e);
 						}
 						break;
 					}
