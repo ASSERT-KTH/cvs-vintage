@@ -35,9 +35,9 @@
 <select name="mod_issuetype">
 <option>$l10n.SelectModuleIssueType</option>
  #foreach ($module in $moduleList)
-    <option>module $module.Name</option>
+    <option>$l10n.Module $module.Name</option>
     #foreach ($issueType in $module.IssueTypes)
-       <option value="${module.ModuleId}_${issueType.IssueTypeId}">--artifact type $issueType.Name</option>
+       <option value="${module.ModuleId}_${issueType.IssueTypeId}">--$l10n.IssueType $issueType.Name</option>
     #end
  #end
 </td>
