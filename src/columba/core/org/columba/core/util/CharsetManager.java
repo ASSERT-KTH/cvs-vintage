@@ -155,7 +155,9 @@ public class CharsetManager implements ActionListener {
 	}
 
 	private int getCharsetId(String name) {
-		int charsetId = -1;
+		// default should be 0
+		// -> charsets[0] == "auto"
+		int charsetId = 0;
 
 		for (int i = 0; i < charsets.length; i++) {
 			if (charsets[i].equalsIgnoreCase(name)) {
