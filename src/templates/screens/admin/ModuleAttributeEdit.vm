@@ -88,9 +88,9 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 </tr>
 #foreach ($rmo in $rmos)
     #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
-    #set ($rio = "")
+    #set ($rio = false)
     #set ($rio = $issueType.getRIssueTypeOption($rmo.AttributeOption))
-    #set ($locked = ($issueType.Locked) || ($ria.Locked) || (!$rio.equals("") && $rio.Locked))
+    #set ($locked = ($issueType.Locked) || ($ria.Locked) || ($rio && $rio.Locked))
     #indexedRows($velocityCount)
     #if (!$issueType.Locked && !$ria.Locked) <td><input type="checkbox" name="delete_$rmo.OptionId" #if ($locked) disabled="disabled"#end ></td>#end
      <td>
