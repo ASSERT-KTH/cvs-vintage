@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.10 2004/02/24 08:28:18 linus Exp $
+// $Id: TestCoreFactory.java,v 1.11 2004/08/25 23:49:28 bobtarling Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,17 +232,9 @@ public class TestCoreFactory extends TestCase {
 	MModel model = ModelManagementFactory.getFactory().createModel();
 	MClass class1 = CoreFactory.getFactory().buildClass(model);
 	MAssociation assoc1 =
-	    CoreFactory.getFactory().buildAssociation(
-						      class1,
-						      true,
-						      class1,
-						      true);
+        CoreFactory.getFactory().buildAssociation(class1, class1);
 	MAssociation assoc2 =
-	    CoreFactory.getFactory().buildAssociation(
-						      class1,
-						      true,
-						      class1,
-						      true);
+	    CoreFactory.getFactory().buildAssociation(class1, class1);
 	WeakReference class1wr = new WeakReference(class1);
 	WeakReference assoc1wr = new WeakReference(assoc1);
 	WeakReference assoc2wr = new WeakReference(assoc2);
