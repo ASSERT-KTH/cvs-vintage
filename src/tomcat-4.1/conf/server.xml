@@ -187,11 +187,11 @@
              directory.  -->
 
         <!-- Tomcat Root Context -->
-        <Context path="" docBase="@SCARAB_CONTEXT@" debug="0" reloadable="true">
+        <Context path="" docBase="@SCARAB_CONTEXT@" debug="0" reloadable="@SCARAB_WEBAPP_RELOADABLE@">
            <Logger className="org.apache.catalina.logger.FileLogger"
                      prefix="@SCARAB_CONTEXT@_log." suffix=".txt"
                   timestamp="true"/>
-           <Loader checkInterval="1"
+           <Loader checkInterval="@SCARAB_WEBAPP_CHECK_INTERVAL@"
                 className="org.apache.catalina.loader.WebappLoader"/>
            <Manager debug="99"/>
         </Context>

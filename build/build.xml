@@ -104,6 +104,8 @@
             <fileset dir="${tomcat.dist.dir}/common"/>
         </copy>
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <filter token="SCARAB_WEBAPP_RELOADABLE" value="${scarab.webapp.reloadable}"/>
+        <filter token="SCARAB_WEBAPP_CHECK_INTERVAL" value="${scarab.webapp.checkInterval}"/>
         <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
         <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
         <filter token="TOMCAT_PROXY_NAME" value="${scarab.tomcat.proxy.name}"/>
