@@ -1,6 +1,6 @@
 
 /*
- * $Id: Test1.java,v 1.1 1999/10/09 00:20:57 duncan Exp $
+ * $Id: Test1.java,v 1.2 1999/10/14 23:48:53 akv Exp $
  */
 
 /**
@@ -9,10 +9,10 @@
 
 package tests.etc;
 
-import com.sun.moo.Testable;
-import com.sun.moo.TestResult;
+import org.apache.tools.moo.TestableBase;
+import org.apache.tools.moo.TestResult;
 
-public class Test1 implements Testable {
+public class Test1 extends TestableBase {
 
     public String getDescription() {
         return "Test1";

@@ -1,6 +1,6 @@
 
 /*
- * $Id: Get.java,v 1.1 1999/10/09 00:20:57 duncan Exp $
+ * $Id: Get.java,v 1.2 1999/10/14 23:49:01 akv Exp $
  */
 
 /**
@@ -12,9 +12,9 @@
 
 package tests.request;
 
-import com.sun.moo.Testable;
-import com.sun.moo.TestResult;
-import com.sun.moo.SocketHelper;
+import org.apache.tools.moo.TestableBase;
+import org.apache.tools.moo.TestResult;
+import org.apache.tools.moo.SocketHelper;
 import java.net.URL;
 import java.net.Socket;
 import java.io.OutputStreamWriter;
@@ -34,7 +34,7 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.io.UnsupportedEncodingException;
 
-public class Get implements Testable {
+public class Get extends TestableBase {
 
     public String getDescription() {
         return "Method GET Test";

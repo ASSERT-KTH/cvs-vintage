@@ -1,15 +1,15 @@
-/* $Id: IncludeMismatch1.java,v 1.1 1999/10/09 00:20:57 duncan Exp $
+/* $Id: IncludeMismatch1.java,v 1.2 1999/10/14 23:48:49 akv Exp $
  */
 package tests.dispatch;
 
 import java.io.*;
 import java.net.*;
 
-import com.sun.moo.Testable;
-import com.sun.moo.TestResult;
-import com.sun.moo.URLHelper;
+import org.apache.tools.moo.TestableBase;
+import org.apache.tools.moo.TestResult;
+import org.apache.tools.moo.URLHelper;
 
-public class IncludeMismatch1 implements Testable {
+public class IncludeMismatch1 extends TestableBase {
 
     public String getDescription() {
         return "IncludeMismatch1 Test";

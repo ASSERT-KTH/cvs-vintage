@@ -1,6 +1,6 @@
 
 /*
- * $Id: Post.java,v 1.1 1999/10/09 00:20:57 duncan Exp $
+ * $Id: Post.java,v 1.2 1999/10/14 23:49:01 akv Exp $
  */
 
 /**
@@ -11,15 +11,15 @@
 
 package tests.request;
 
-import com.sun.moo.Testable;
-import com.sun.moo.TestResult;
-import com.sun.moo.SocketHelper;
+import org.apache.tools.moo.TestableBase;
+import org.apache.tools.moo.TestResult;
+import org.apache.tools.moo.SocketHelper;
 import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class Post implements Testable {
+public class Post extends TestableBase {
 
     public String getDescription() {
         return "Method POST Test";

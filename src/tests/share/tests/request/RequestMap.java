@@ -1,6 +1,6 @@
 
 /*
- * $Id: RequestMap.java,v 1.1 1999/10/09 00:20:57 duncan Exp $
+ * $Id: RequestMap.java,v 1.2 1999/10/14 23:49:02 akv Exp $
  */
 
 /**
@@ -11,9 +11,9 @@
 
 package tests.request;
 
-import com.sun.moo.Testable;
-import com.sun.moo.TestResult;
-import com.sun.moo.SocketHelper;
+import org.apache.tools.moo.TestableBase;
+import org.apache.tools.moo.TestResult;
+import org.apache.tools.moo.SocketHelper;
 import java.net.URL;
 import java.net.Socket;
 import java.io.OutputStreamWriter;
@@ -33,7 +33,7 @@ import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.io.UnsupportedEncodingException;
 
-public class RequestMap implements Testable {
+public class RequestMap extends TestableBase {
     private Socket s = null;
     private PrintWriter pw = null;
     private BufferedWriter bw = null;
