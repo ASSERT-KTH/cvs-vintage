@@ -1,0 +1,32 @@
+<org.apache.turbine.pipeline.TurbinePipeline>
+  <!-- Identical to scarab-pipeline.xml except for DetermineCharsetValve22 -->
+  <valves>
+
+    <org.tigris.scarab.pipeline.TimingInfoValve/>
+    <org.tigris.scarab.pipeline.DetermineCharsetValve22/>
+
+    <!-- reset the cache in the event an exception prevented it at the end -->
+    <org.tigris.scarab.pipeline.ResetCacheValve/>
+    <org.tigris.scarab.pipeline.SetInfoMessageValve/>
+
+    <!-- the following is a copy of conf/turbine-classic-pipeline -->
+    <org.apache.turbine.pipeline.DetermineActionValve/>
+    <org.tigris.scarab.pipeline.DetermineTargetValve/>
+    <org.apache.turbine.pipeline.DefaultSessionTimeoutValve/>
+    <org.apache.turbine.pipeline.DefaultLoginValve/>
+    <org.apache.turbine.pipeline.DefaultSessionValidationValve/>
+    <!-- This one valve is in addition to the standard pipeline -->
+    <org.tigris.scarab.pipeline.FreshenUserValve/>
+    <org.tigris.scarab.pipeline.SetLocaleValve/>
+    <org.apache.turbine.pipeline.DefaultACLCreationValve/>
+    <org.apache.turbine.pipeline.DefaultActionValve/>
+    <org.apache.turbine.pipeline.RunModulesValve/>
+    <org.apache.turbine.pipeline.DirectTargetValve/>
+    <org.apache.turbine.pipeline.CleanUpValve/>
+
+    <!-- reset the cache as soon as we are done with the pipeline -->
+    <org.tigris.scarab.pipeline.ResetCacheValve/>
+    <org.tigris.scarab.pipeline.TimingInfoValve/>
+
+  </valves>
+</org.apache.turbine.pipeline.TurbinePipeline>
