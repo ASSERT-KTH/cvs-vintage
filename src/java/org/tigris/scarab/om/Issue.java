@@ -1107,19 +1107,6 @@ public class Issue
             setIdCount(getNextIssueId(dbCon.getConnection()));
         }
         super.save(dbCon);
-
-        // Save any files added to the issue
-        List files = getAttachments();
-        for (int k = 0; k < files.size(); k++)
-        {
-            Attachment attachment = (Attachment)files.get(k);
-            FileItem file = attachment.getFile();
-            if (file != null 
-                && file.getSize() > 0)
-            {
-                attachment.save();    
-            }
-        }
     }
 
 
