@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle.java
 // Classes: UMLCognitiveResourceBundle
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle.java,v 1.7 2002/10/30 10:06:17 mkl Exp $
+// $Id: UMLCognitiveResourceBundle.java,v 1.8 2003/01/18 11:25:08 mkl Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -574,9 +574,9 @@ public class UMLCognitiveResourceBundle extends ListResourceBundle {
         { "CrUnconventionalPackName_desc" ,
                 "Normally package names are written in all lower case with periods used to indicate \"nested\" packages.  The name '<ocl>self</ocl>' is unconventional because it is not all lower case with periods.\n\nFollowing good naming conventions help to improve the understandability and maintainability of the design. \n\nTo fix this, use the \"Next>\" button, or manually select <ocl>self</ocl> and use the Properties tab to give it a different name." },
         { "CrClassMustBeAbstract_head" ,
-                "Class Must be Abstract" },
+                "Class <ocl>self</ocl> must be abstract" },
         { "CrClassMustBeAbstract_desc" ,
-                "Classes that include or inherit abstract methods from base classes or interfaces must be marked Abstract.\n\nDeciding which classes are abstract or concrete is a key part of class hierarchy design.\n\nTo fix this, use the \"Next>\" button, or manually select the class and use the properties tab to add the Abstract keyword, or manually implement each abstract operation that is inherited from a base class or interface." },
+                "Classes that include or inherit abstract methods from base classes or interfaces must be marked abstract.\n\nDeciding which classes are abstract or concrete is a key part of class hierarchy design.\n\nTo fix this, use the \"Next>\" button, or manually select the class and use the properties tab to add the Abstract keyword, or manually implement each abstract operation that is inherited from a base class or interface." },
         { "CrReservedName_head" ,
                 "Change <ocl>self</ocl> to a Non-Reserved Word" },
         { "CrReservedName_desc" ,
