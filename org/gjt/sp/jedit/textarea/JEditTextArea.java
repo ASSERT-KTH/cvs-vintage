@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.33 2001/11/23 09:28:33 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.34 2001/11/24 09:45:13 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1304,7 +1304,7 @@ forward_scan:		do
 		selectFold(caretLine);
 	} //}}}
 
-	//{{{ selectFoldAt() method
+	//{{{ selectFold() method
 	/**
 	 * Selects the fold that contains the specified line number.
 	 * @param line The line number
@@ -1322,21 +1322,35 @@ forward_scan:		do
 
 			line++;
 
-			while(line < buffer.getLineCount()
-				&& buffer.getFoldLevel(line) > foldLevel)
-				line++;
+			while(buffer.getFoldLevel(line) > foldLevel)
+			{
+				if(line == buffer.getLineCount() - 1)
+					break;
+				else
+					line++;
+			}
 			end = line;
 		}
 		else
 		{
 			start = line;
 			int foldLevel = buffer.getFoldLevel(line);
-			while(start >= 0 && buffer.getFoldLevel(start) >= foldLevel)
-				start--;
+			while(buffer.getFoldLevel(start) >= foldLevel)
+			{
+				if(start == 0)
+					break;
+				else
+					start--;
+			}
+
 			end = line;
-			while(end < buffer.getLineCount()
-				&& buffer.getFoldLevel(end) >= foldLevel)
-				end++;
+			while(buffer.getFoldLevel(end) >= foldLevel)
+			{
+				if(end == buffer.getLineCount() - 1)
+					break;
+				else
+					end++;
+			}
 		}
 
 		int newCaret = getLineEndOffset(end) - 1;

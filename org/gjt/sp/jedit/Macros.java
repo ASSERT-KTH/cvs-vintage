@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.7 2001/10/25 07:35:24 spestov Exp $
+ * @version $Id: Macros.java,v 1.8 2001/11/24 09:45:13 spestov Exp $
  */
 public class Macros
 {
@@ -108,6 +108,25 @@ public class Macros
 		return (String)JOptionPane.showInputDialog(comp,prompt,
 			jEdit.getProperty("macro-input.title"),
 			JOptionPane.QUESTION_MESSAGE,null,null,defaultValue);
+	} //}}}
+
+	//{{{ confirm() method
+	/**
+	 * Utility method that can be used to ask for confirmation in a macro.
+	 * @param comp The component to show the dialog on behalf of, this
+	 * will usually be a view instance
+	 * @param prompt The prompt string
+	 * @param buttons The buttons to display - for example,
+	 * JOptionPane.YES_NO_CANCEL_OPTION
+	 * @since jEdit 4.0pre2
+	 */
+	public static int confirm(Component comp, String prompt, int buttons)
+	{
+		GUIUtilities.hideSplashScreen();
+
+		return JOptionPane.showConfirmDialog(comp,prompt,
+			jEdit.getProperty("macro-confirm.title"),buttons,
+			JOptionPane.QUESTION_MESSAGE);
 	} //}}}
 
 	//{{{ confirm() method
@@ -504,7 +523,8 @@ public class Macros
 				Vector submenu = new Vector();
 				submenu.addElement(fileName.replace('_',' '));
 				loadMacros(submenu,path + fileName + '/',file);
-				vector.addElement(submenu);
+				if(submenu.size() != 1)
+					vector.addElement(submenu);
 			}
 		}
 	} //}}}
