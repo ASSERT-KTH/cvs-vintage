@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.5 2004/06/05 04:23:16 kscr Exp $
+// $Id: GeneratorPHP4.java,v 1.6 2004/06/07 03:40:02 kscr Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -318,6 +318,8 @@ public class GeneratorPHP4
             if (ModelFacade.CLASSIFIER_SCOPEKIND.equals(ownerScope)) {
                 sAttribute += "static ";
             }
+        } else {
+            sAttribute += "var ";
         }
 
         sAttribute += "$" + NameGenerator.generate(modelElement,
