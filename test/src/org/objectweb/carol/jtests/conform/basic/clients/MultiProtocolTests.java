@@ -87,44 +87,32 @@ public class MultiProtocolTests extends TestCase {
     /**
      * Setup Method
      */
-    public void setUp() {
+    public void setUp() throws Exception {
+        org.objectweb.carol.util.configuration.CarolConfiguration.init();
 
-        try {
+        ic = new InitialContext();
 
-            org.objectweb.carol.util.configuration.CarolConfiguration.init();
+        // set the object name
+        basicName = "basicname";
+        basicMultiName = "basicmultiname";
+        basicRefName = "basicrefname";
 
-            ic = new InitialContext();
-
-            // set the object name
-            basicName = "basicname";
-            basicMultiName = "basicmultiname";
-            basicRefName = "basicrefname";
-
-            // lookup to the remote objects
-            ba = (BasicObjectItf) PortableRemoteObject.narrow(ic.lookup(basicName), BasicObjectItf.class);
-            bma = (BasicMultiObjectItf) PortableRemoteObject.narrow(ic.lookup(basicMultiName),
-                    BasicMultiObjectItf.class);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("SetUp() Fail" + e);
-        }
-
+        // lookup to the remote objects
+        ba = (BasicObjectItf) PortableRemoteObject.narrow(ic.lookup(basicName), BasicObjectItf.class);
+        bma = (BasicMultiObjectItf) PortableRemoteObject.narrow(ic.lookup(basicMultiName),
+                                                                BasicMultiObjectItf.class);
     }
 
     /**
      * tearDown method
      */
-    public void tearDown() {
-        try {
-            basicName = null;
-            basicMultiName = null;
-            ba = null;
-            bma = null;
-            super.tearDown();
-        } catch (Exception e) {
-            fail("tearDown() Fail" + e);
-        }
+    public void tearDown() throws Exception {
+        basicName = null;
+        basicMultiName = null;
+        ba = null;
+        bma = null;
+        ic.close();
+        super.tearDown();
     }
 
     /**

@@ -27,9 +27,16 @@
  */
 package org.objectweb.carol.jtests.conform.basic.server;
 
-//tmp import
+import org.objectweb.carol.util.configuration.RMIConfigurationException;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.io.IOException;
+import java.util.Arrays;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 /**
  * Class <code>BasicServer</code> is a Server for Junit tests Test The
@@ -52,73 +59,84 @@ public class BasicServer {
      */
     private static String basicObjectRefName = "basicrefname";
 
-    /**
-     * Initial Contexts
-     */
-    private static Context ic = null;
+    private Context ic;
+    private BasicObjectItf ba;
+    private BasicMultiObjectItf bma;
+    private BasicObjectRef bref;
+    private final int port;
+    private boolean startedSuccessfully;
 
     /**
-     * TheBasicObject
-     */
-    private static BasicObjectItf ba = null;
-
-    /**
-     * TheBasicMultiObject
-     */
-    private static BasicMultiObjectItf bma = null;
-
-    /**
-     * TheBasicObjectRef
-     */
-    private static BasicObjectRef bref = null;
-
-    /**
-     * Main method This method bind all the name in the registry
+     * This method binds all the names in the registry.
      */
     public static void main(String[] args) {
-        start();
+        if (args.length != 1) {
+            throw new IllegalArgumentException
+                ("expected the port number, but got: " +
+                 Arrays.asList(args));
+        }
+        new BasicServer(Integer.parseInt(args[0])).advertiseReadiness();
     }
 
-    public static void start() {
-        try {
+    private BasicServer(int port) {
+        this.port = port;
+        startedSuccessfully = true;
 
+        try {
             org.objectweb.carol.util.configuration.CarolConfiguration.init();
+        } catch (RMIConfigurationException ex) {
+            System.err.println("carol is misconfigured");
+            ex.printStackTrace();
+            startedSuccessfully = false;
+        }
 
-            // create, export and bind TheBasicObject an the BasicMultiObject
-            // (wich call the BasicObject)
-            ba = new BasicObject();
-            bma = new BasicMultiObject();
-            bref = new BasicObjectRef("string");
-
-            // get the IntialContext
-            ic = new InitialContext();
-
-            // multi rebind
-            ic.rebind(basicObjectName, ba);
-            ic.rebind(basicMultiObjectName, bma);
-            ic.rebind(basicObjectRefName, bref);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Server can't start :" + e);
+        if (startedSuccessfully) {
+            try {
+                ba = new BasicObject();
+                bma = new BasicMultiObject();
+                bref = new BasicObjectRef("string");
+            } catch (Exception ex) {
+                System.err.println("error creating basic objects");
+                ex.printStackTrace();
+                startedSuccessfully = false;
+            }
+        }
+        if (startedSuccessfully) {
+            try {
+                ic = new InitialContext();
+                ic.rebind(basicObjectName, ba);
+                ic.rebind(basicMultiObjectName, bma);
+                ic.rebind(basicObjectRefName, bref);
+            } catch (NamingException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
-    public static void stop() {
-        try {
-            // get the IntialContext
-            ic = new InitialContext();
 
-            // multi rebind
-            ic.unbind(basicObjectName);
-            ic.unbind(basicMultiObjectName);
-            ic.unbind(basicObjectRefName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Server can't start :" + e);
+    /**
+     * Advertise readiness to the external world by binding to the specified TCP
+     * port.
+     *
+     * <p>The purpose of this method is to indicate to Ant's <wait> task that
+     * this BasicServer has registered all the necessary objects in the registry
+     * and it is ok for the clients to start making remote calls. </p>
+     **/
+    private void advertiseReadiness() {
+        ServerSocket serverSocket;
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException ex) {
+            throw new RuntimeException("Couldn't bind to " + port);
         }
 
-        // for the moment
-        System.exit(0);
+        while (true) {
+            try {
+                Socket socket = serverSocket.accept();
+                socket.close();
+            } catch (IOException ex) {
+                throw new RuntimeException("Error accepting a connection", ex);
+            }
+        }
     }
 }

@@ -63,6 +63,7 @@
       <property name="server.properties.file.name" value="jeremie_carol.properties"/>
       <property name="name.server.class.name1" value="${jrmi.registry}"/>
       <property name="name.server.option1" value="2001"/>
+      <property name="name.server.port1"   value="2001"/>
       <property name="test.name"          value="jeremie"/>
     </ant>
   </target>
@@ -74,6 +75,7 @@
       <property name="server.properties.file.name" value="iiop_carol.properties"/>
       <property name="name.server.class.name1" value="${transient.name.server}"/>
       <property name="name.server.option1" value="-ORBInitialPort 2000"/>
+      <property name="name.server.port1"   value="2000"/>
       <property name="test.name"          value="suniiop"/>
     </ant>
   </target> 
@@ -87,6 +89,7 @@
       <property name="server.properties.file.name" value="jrmp_carol.properties"/>
       <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
+      <property name="name.server.port1"   value="1099"/>
       <property name="test.name"          value="sunjrmp1.1"/>
     </ant>
   </target>
@@ -98,6 +101,7 @@
       <property name="server.properties.file.name" value="jrmp_carol.properties"/>
       <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
+      <property name="name.server.port1"   value="1099"/>
       <property name="test.name"          value="sunjrmp1.2"/>
     </ant>
   </target> 
@@ -153,8 +157,10 @@
       <property name="server.properties.file.name" value="multisunjeremie_carol.properties"/>
       <property name="name.server.class.name1" value="${jrmi.registry}"/>
       <property name="name.server.option1" value="2001"/>
+      <property name="name.server.port1"   value="2001"/>
       <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
+      <property name="name.server.port2"   value="2000"/>
       <property name="test.name"            value="multi_suniiop_jeremie"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.jvm.xtra2" value=""/>
@@ -170,8 +176,10 @@
       <property name="server.properties.file.name" value="multisun_carol.properties"/>
       <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
+      <property name="name.server.port1"   value="1099"/>
       <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
+      <property name="name.server.port2"   value="2000"/>
       <property name="test.name"            value="multi_suniiop_sunjrmp1.1"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.jvm.xtra2" value=""/>
@@ -187,8 +195,10 @@
       <property name="server.properties.file.name" value="multisun_carol.properties"/>
       <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
+      <property name="name.server.port1"   value="1099"/>
       <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
+      <property name="name.server.port2"   value="2000"/>
       <property name="test.name"            value="multi_suniiop_sunjrmp1.2"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
@@ -204,8 +214,10 @@
       <property name="server.properties.file.name" value="multisun2_carol.properties"/>
       <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
+      <property name="name.server.port1"   value="1099"/>
       <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
+      <property name="name.server.port2"   value="2000"/>
       <property name="test.name"            value="multi_sunjrmp1.1_suniiop"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>
@@ -221,8 +233,10 @@
       <property name="server.properties.file.name" value="multisun2_carol.properties"/>
       <property name="name.server.class.name1" value="${manageable.registry}"/>
       <property name="name.server.option1" value="1099"/>
+      <property name="name.server.port1"   value="1099"/>
       <property name="name.server.class.name2" value="${transient.name.server}"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
+      <property name="name.server.port2"   value="2000"/>
       <property name="test.name"            value="multi_sunjrmp1.2_suniiop"/>
       <property name="test.client.jvm.xtra1" value=""/>
       <property name="test.client.jvm.xtra2" value="${orb.initializer.class}"/>

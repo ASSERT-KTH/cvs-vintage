@@ -217,8 +217,8 @@
     <antcall target="config"/>
   </target>
 
-  <target name="build.test" depends="dist" description="Make a test distribution (carol jar is needed)">
-    <ant antfile="${test}/build.xml" dir="${test}" target="dist"/>
+  <target name="build.test" depends="jar,config" description="Make a test distribution (carol jar is needed)">
+    <ant antfile="${test}/build.xml" dir="${test}" target="build.test"/>
   </target>
 
   <target name="run.tests" depends="build.test" description="Run Test the carol distribution">

@@ -32,6 +32,7 @@
   <property name="test.client.jvmarg1"            value="${test.client.jvm.xtra1}"/>
   <property name="test.client.jvmarg2"            value="${test.client.jvm.xtra2}"/>
   <property name="trace.properties.file.name"     value="trace.properties"/>
+  <property name="basic.server.exit.stamp"     location="${build}/build/BasicServerExit.stamp"/>
 
   <path id="test.client.classpath1"> 
     <fileset dir="${carol.dist}/lib">
@@ -116,7 +117,6 @@
    ======================================================================
   -->
 
-
   <target name="all">
     <antcall  target="rebuild.tmp.dirs"/>
     <antcall  target="launch.test"/>
@@ -151,41 +151,98 @@
           tofile="${test.tmp.client2}/carol.properties" />
   </target>
 
-  <target name="_runtests">
-    <sleep seconds="10"/>
-    <mkdir dir="${_report.dir}"/>
+  <target name="process.stopper">
+      <java
+         classname="org.objectweb.carol.jtests.conform.util.ProcessStopper"
+         classpath="${build}/build/classes">
+
+	<arg value="${process.runner.tcp.port}"/>
+      </java>
+  </target>
+
+  <target name="process.runner">
+      <java
+         classname="org.objectweb.carol.jtests.conform.util.ProcessRunner"
+         fork="true">
+
+        <jvmarg value="-Dprocess.runner.tcp.port=${process.runner.tcp.port}"/>
+        <jvmarg value="-Dprocess.runner.exit.stamp=${process.runner.exit.stamp}"/>
+        <jvmarg line="${process.runner.jvm.args}"/>
+
+        <arg value="${process.runner.target.class}"/>
+        <arg line="${process.runner.target.args}"/>
+
+        <classpath refid="${process.runner.target.classpath}"/>
+      </java>
+  </target>
+
+
+  <target name="runtests1">
+    <waitfor maxwait="1000" maxwaitunit="second" checkevery="200">
+      <socket server="localhost" port="10101"/>
+    </waitfor>
+
+    <mkdir dir="${parallel.report.dir1}"/>
     <junit printsummary="yes" 
       haltonfailure="no"
       haltonerror="no"
       fork="yes" >
-      <classpath refid="${_test.client.classpath}" />
+      <classpath refid="test.client.classpath1" />
       <formatter type="xml"/>
-      <batchtest fork="yes" todir="${_report.dir}">
+      <batchtest fork="yes" todir="${parallel.report.dir1}">
         <fileset dir="${test.src}">
           <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
         </fileset>
       </batchtest>
     </junit>
+
+    <antcall target="process.stopper">
+      <param name="process.runner.tcp.port" value="30303"/>
+    </antcall>
+    <antcall target="maybe.stop.nameserver1"/>
+  </target>
+
+  <target name="maybe.runtests2" if="stub.jar.name2">
+    <waitfor maxwait="1000" maxwaitunit="second" checkevery="200">
+      <socket server="localhost" port="10101"/>
+    </waitfor>
+
+    <mkdir dir="${parallel.report.dir2}"/>
+    <junit printsummary="yes" 
+      haltonfailure="no"
+      haltonerror="no"
+      fork="yes" >
+      <classpath refid="test.client.classpath2" />
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${parallel.report.dir2}">
+        <fileset dir="${test.src}">
+          <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+
+    <antcall target="maybe.stop.nameserver2"/>
   </target>
 
   <target name="start.server">
-    <sleep seconds="3"/>
-    <java
-      classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer"
-      fork="true"
-      timeout="20000">
+    <antcall target="maybe.wait.for.ns1"/>
+    <antcall target="maybe.wait.for.ns2"/>
 
-      <jvmarg line="${test.multi.jvmargs}"/>
-      <classpath refid="test.server.classpath"/>
-    </java>
+    <antcall target="process.runner">
+      <param name="process.runner.tcp.port" value="30303"/>
+      <param name="process.runner.exit.stamp" value="${basic.server.exit.stamp}"/>
+      <param name="process.runner.target.class"
+             value="org.objectweb.carol.jtests.conform.basic.server.BasicServer"/>
+      <param name="process.runner.target.args" value="10101"/>
+      <param name="process.runner.jvm.args" value="${test.multi.jvmargs}"/>
+      <param name="process.runner.target.classpath" value="test.server.classpath"/>
+    </antcall>
   </target>
 
-  <target name="reports" if="is.jvm.1.4" >
+  <target name="report1">
     <antcall target="report">
       <param name="_report.dir" value="${parallel.report.dir1}"/>
     </antcall>
-
-    <antcall target="maybe.report2"/>
   </target>
 
   <!-- Only generate this report, if there has been a second junit process -->
@@ -211,25 +268,18 @@
       <equals  arg1="${ant.java.version}" arg2="1.4"/>
     </condition>
 
-    <parallel>
-      <!-- maybe start nameservers -->
-      <antcall target="start.nameserver1"/>
-      <antcall target="start.nameserver2"/>
+    <parallel failonany="true">
+      <antcall target="maybe.start.nameserver1"/>
+      <antcall target="maybe.start.nameserver2"/>
 
       <antcall target="start.server"/>
 
-      <antcall target="_runtests">
-        <param name="_report.dir" value="${parallel.report.dir1}"/>
-        <param name="_test.client.classpath" value="test.client.classpath1"/>
-      </antcall>
-
-      <antcall target="_runtests">
-        <param name="_report.dir" value="${parallel.report.dir2}"/>
-        <param name="_test.client.classpath" value="test.client.classpath2"/>
-      </antcall>
+      <antcall target="runtests1"/>
+      <antcall target="maybe.runtests2"/>
     </parallel>
 
-    <antcall  target="reports"/>
+    <antcall target="report1"/>
+    <antcall target="maybe.report2"/>
   </target> 
 
 
@@ -241,7 +291,7 @@
   <target name="_rebuild.tmp.registry.dirs"
     depends="_rebuild.tmp.registry.dir1,_rebuild.tmp.registry.dir2"/>
 
-  <target name="_rebuild.tmp.registry.dir1" if="test.tmp.registry1">
+  <target name="_rebuild.tmp.registry.dir1">
     <delete dir="${test.tmp.registry1}"/>
     <mkdir dir="${test.tmp.registry1}"/>
   </target>
@@ -251,20 +301,63 @@
     <mkdir dir="${test.tmp.registry2}"/>
   </target>
 
-  <target name="start.nameserver1" if="name.server.class.name1">
-    <java classname="${name.server.class.name1}" fork="true" timeout="30000">
-      <jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
-      <arg line="${name.server.option1}"/>	
-      <classpath refid="test.name.server.classpath1"/>
-    </java>
+  <target name="maybe.start.nameserver1" if="name.server.class.name1">
+    <antcall target="process.runner">
+      <param name="process.runner.tcp.port" value="20201"/>
+      <param name="process.runner.exit.stamp" value=""/>
+      <param name="process.runner.target.class"
+             value="${name.server.class.name1}"/>
+      <param name="process.runner.target.args" value="${name.server.option1}"/>
+      <param name="process.runner.jvm.args"
+             value="-Djava.security.policy=${test.ext}/java.policy"/>
+      <param name="process.runner.target.classpath" value="test.name.server.classpath1"/>
+    </antcall>
   </target>
 
-  <target name="start.nameserver2" if="name.server.class.name2">
-    <java classname="${name.server.class.name2}" fork="true" timeout="30000">
-      <jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
-      <arg line="${name.server.option2}"/>	
-      <classpath refid="test.name.server.classpath2"/>
-    </java>
+  <target name="maybe.start.nameserver2" if="name.server.class.name2">
+
+    <antcall target="process.runner">
+      <param name="process.runner.tcp.port" value="20202"/>
+      <param name="process.runner.exit.stamp" value=""/>
+      <param name="process.runner.target.class"
+             value="${name.server.class.name2}"/>
+      <param name="process.runner.target.args" value="${name.server.option2}"/>
+      <param name="process.runner.jvm.args"
+             value="-Djava.security.policy=${test.ext}/java.policy"/>
+      <param name="process.runner.target.classpath" value="test.name.server.classpath2"/>
+    </antcall>
+  </target>
+
+  <target name="maybe.wait.for.ns1" if="name.server.port1">
+    <waitfor maxwait="3" maxwaitunit="second" checkevery="200">
+      <socket server="localhost" port="${name.server.port1}"/>
+    </waitfor>
+  </target>
+
+  <target name="maybe.wait.for.ns2" if="name.server.port2">
+    <waitfor maxwait="3" maxwaitunit="second" checkevery="200">
+      <socket server="localhost" port="${name.server.port2}"/>
+    </waitfor>
+  </target>
+
+  <target name="maybe.stop.nameserver1" if="name.server.port1">
+    <waitfor maxwait="2" maxwaitunit="second" checkevery="200">
+      <available file="${basic.server.exit.stamp}"/>
+    </waitfor>
+
+    <antcall target="process.stopper">
+      <param name="process.runner.tcp.port" value="20201"/>
+    </antcall>
+  </target>
+
+  <target name="maybe.stop.nameserver2" if="name.server.port2">
+    <waitfor maxwait="2" maxwaitunit="second" checkevery="200">
+      <available file="${basic.server.exit.stamp}"/>
+    </waitfor>
+
+    <antcall target="process.stopper">
+      <param name="process.runner.tcp.port" value="20202"/>
+    </antcall>
   </target>
 
 </project>

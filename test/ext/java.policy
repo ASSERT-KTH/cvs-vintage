@@ -3,6 +3,9 @@ grant {
   permission java.net.SocketPermission "*:1024-65535", "accept, connect, listen, resolve";
   permission java.net.SocketPermission "*:80", "connect,resolve";
   permission java.io.FilePermission "<<ALL FILES>>", "read, execute";
+  // See org.objectweb.carol.jtests.conform.util.ProcessRunner
+  permission java.io.FilePermission "${process.runner.exit.stamp}", "write,delete";
+
   permission java.io.SerializablePermission "enableSubstitution";
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
   permission java.util.PropertyPermission "*", "read, write";
