@@ -22,9 +22,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.ejb.FinderResults;
 
 /**
  * JDBCLoadEntityCommand loads the data for an instance from the table.
@@ -40,7 +40,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -75,17 +75,19 @@ public class JDBCLoadEntityCommand {
       // load any preloaded fields into the context
       readAheadCache.load(ctx);
       
+      // get the finder results associated with this context, if it exists
+      ReadAheadCache.EntityReadAheadInfo info = 
+         readAheadCache.getEntityReadAheadInfo(ctx.getId());
+
       // determine the fields to load
-      List loadFields = getLoadFields(requiredField, ctx);
+      List loadFields = getLoadFields(requiredField, info.getReadAhead(), ctx);
 
       // if no there are not load fields return
       if(loadFields.size() == 0) {
          return;
       }
 
-      // get the finder results associated with this context, if it exists
-      ReadAheadCache.EntityReadAheadInfo info = 
-         readAheadCache.getEntityReadAheadInfo(ctx.getId());
+      // get the keys to load
       List loadKeys = info.getLoadKeys();
 
       // generate the sql
@@ -234,15 +236,26 @@ public class JDBCLoadEntityCommand {
 
    private List getLoadFields(
          JDBCCMPFieldBridge requiredField,
+         JDBCReadAheadMetaData readahead,
          EntityEnterpriseContext ctx) {
 
       // get the load fields
       ArrayList loadFields = new ArrayList(entity.getFields().size());
       if(requiredField == null) {
-         if(log.isTraceEnabled()) {
-            log.trace("Default eager-load for entity");
+
+         if(readahead != null && !readahead.isNone()) {
+            if(log.isTraceEnabled()) {
+               log.trace("Eager-load for entity: readahead=" +  readahead);
+            }
+            loadFields.addAll(
+                  entity.getLoadGroup(readahead.getEagerLoadGroup()));
+         } else {
+            if(log.isTraceEnabled()) {
+               log.trace("Default eager-load for entity: readahead=" +
+                     readahead);
+            }
+            loadFields.addAll(entity.getEagerLoadFields());
          }
-         loadFields.addAll(entity.getEagerLoadFields());
       } else {
          loadFields.add(requiredField);
          for(Iterator groups = entity.getLazyLoadGroups(); groups.hasNext();) {
