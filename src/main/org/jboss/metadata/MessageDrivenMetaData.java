@@ -6,6 +6,7 @@
  */
 package org.jboss.metadata;
 
+import java.util.HashMap;
 import javax.jms.Session;
 
 import org.w3c.dom.Element;
@@ -30,7 +31,7 @@ import org.jboss.deployment.DeploymentException;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class MessageDrivenMetaData
 extends BeanMetaData
@@ -43,7 +44,8 @@ extends BeanMetaData
    public static final byte DURABLE_SUBSCRIPTION = 0;
    public static final byte NON_DURABLE_SUBSCRIPTION = 1;
    public static final byte TX_UNSET = 9;
-   
+   public static final String DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING = "message-driven-bean";
+
    // Attributes ----------------------------------------------------
    
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
@@ -307,6 +309,12 @@ extends BeanMetaData
       subscriptionId = getOptionalChildContent(element,"mdb-subscription-id");
    }
    
+   public void defaultInvokerBindings()   
+   {   
+     this.invokerBindings = new HashMap();   
+     this.invokerBindings.put(DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING, getJndiName());
+   } 
+
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
