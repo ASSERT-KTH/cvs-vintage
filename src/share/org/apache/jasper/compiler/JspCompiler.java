@@ -259,13 +259,26 @@ public class JspCompiler extends Compiler implements Mangler {
 	
 	// Fix for invalid characters. If you think of more add to the list.
 	StringBuffer modifiedClassName = new StringBuffer();
+	char c='/';
+	if( Character.isDigit( className.charAt( 0 )  )) {
+	    className="_" +className;
+	}
 	for (int i = 0; i < className.length(); i++) {
-	    if (Character.isLetterOrDigit(className.charAt(i)) == true)
+	    char prev=c;
+	    c=className.charAt(i);
+	    // workaround for common "//" problem. Alternative
+	    // would be to encode the dot.
+	    if( prev=='/' && c=='/' ) {
+		continue;
+	    }
+	    
+	    if (Character.isLetterOrDigit(c) == true ||
+		c=='_' ||
+		c=='/' )
 		modifiedClassName.append(className.substring(i,i+1));
 	    else
 		modifiedClassName.append(mangleChar(className.charAt(i)));
 	}
-	
 	return modifiedClassName.toString();
     }
 
