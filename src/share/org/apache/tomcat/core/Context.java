@@ -979,7 +979,7 @@ public final class Context implements LogAware {
 
     // temp. properties until reloading is separated.
     public final  boolean shouldReload() {
-	if( dependM != null )
+	if( !reload && dependM != null )
 	    return dependM.shouldReload();
 	return reload;
     }
