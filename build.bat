@@ -6,7 +6,7 @@ REM  This is the main entry point for the build system.
 REM
 REM  ======================================================================
 REM
-REM $Id: build.bat,v 1.6 2002/10/03 11:34:53 user57 Exp $
+REM $Id: build.bat,v 1.7 2002/10/05 01:10:16 user57 Exp $
 REM
 REM Authors:
 REM     Jason Dillon <jason@planet57.com>
@@ -65,7 +65,7 @@ shift
 goto setupArgs
 :doneSetupArgs
 
-for %%j in (%SUBFOLDERS%) do call :testIfExists %%j\%SUBDIR%\bin\ant.bat %OTHER_ARGS%
+for %%j in (%SUBFOLDERS%) do call :testIfExists %%j\%SUBDIR%\bin\ant.bat -logger org.apache.tools.ant.NoBannerLogger %OTHER_ARGS%
 
 goto :EOF
 
