@@ -1,4 +1,4 @@
-<project name="TestRun" default="main" init="init">
+<project name="TestRun" default="main">
    <!-- To test tomcat standalone, type:
           bin/tomcat.sh ant -f conf/test-tomcat.xml client
         
