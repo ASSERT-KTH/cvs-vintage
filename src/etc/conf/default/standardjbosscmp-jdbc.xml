@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.30 2002/06/06 05:28:42 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.31 2002/06/09 19:09:25 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -41,6 +41,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Boolean</java-type>
             <jdbc-type>BIT</jdbc-type>
@@ -117,6 +120,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Boolean</java-type>
             <jdbc-type>BIT</jdbc-type>
@@ -200,6 +206,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>30</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 || ?2)</function-sql>
@@ -323,6 +332,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>30</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 || ?2)</function-sql>
@@ -450,6 +462,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>30</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 || ?2)</function-sql>
@@ -572,6 +587,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Boolean</java-type>
             <jdbc-type>BIT</jdbc-type>
@@ -651,6 +669,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>TRUE</true-mapping>
+         <false-mapping>FALSE</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 || ?2)</function-sql>
@@ -770,6 +791,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 || ?2)</function-sql>
@@ -889,6 +913,8 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>(1=1)</true-mapping>
+         <false-mapping>(1=0)</false-mapping>
 
          <function-mapping>
             <function-name>concat</function-name>
@@ -994,6 +1020,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Character</java-type>
             <jdbc-type>CHAR</jdbc-type>
@@ -1055,6 +1084,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Character</java-type>
             <jdbc-type>CHAR</jdbc-type>
@@ -1126,6 +1158,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>false</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>concat(?1, ?2)</function-sql>
@@ -1244,6 +1279,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 + ?2)</function-sql>
@@ -1363,6 +1401,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <function-mapping>
             <function-name>concat</function-name>
             <function-sql>(?1 + ?2)</function-sql>
@@ -1496,6 +1537,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Character</java-type>
             <jdbc-type>CHAR</jdbc-type>
@@ -1574,6 +1618,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.lang.Integer</java-type>
             <jdbc-type>INTEGER</jdbc-type>
@@ -1650,6 +1697,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping>
             <java-type>java.math.BigDecimal</java-type>
             <jdbc-type>LONGVARCHAR</jdbc-type>
@@ -1732,6 +1782,9 @@
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
          <subquery-supported>true</subquery-supported>
+         <true-mapping>1</true-mapping>
+         <false-mapping>0</false-mapping>
+
          <mapping> 
             <java-type>java.lang.Character</java-type> 
             <jdbc-type>CHAR</jdbc-type> 
