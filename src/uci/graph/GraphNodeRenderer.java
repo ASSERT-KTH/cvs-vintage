@@ -27,9 +27,12 @@
 // File: GraphNodeRenderer.java
 // Interfaces: GraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphNodeRenderer.java,v 1.1 1998/02/05 04:03:44 jrobbins Exp $
+// $Id: GraphNodeRenderer.java,v 1.2 1998/02/12 02:28:04 jrobbins Exp $
 
 package uci.graph;
+
+import uci.gef.FigNode;
+import uci.gef.Layer;
 
 /** An interface for FigNode factories. Similiar in concept to the
  *  Swing class TreeCellRenderer.

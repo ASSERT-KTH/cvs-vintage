@@ -27,9 +27,12 @@
 // File: GraphEdgeRenderer.java
 // Interfaces: GraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphEdgeRenderer.java,v 1.1 1998/02/05 04:03:41 jrobbins Exp $
+// $Id: GraphEdgeRenderer.java,v 1.2 1998/02/12 02:27:58 jrobbins Exp $
 
 package uci.graph;
+
+import uci.gef.FigEdge;
+import uci.gef.Layer;
 
 /** An interface for FigEdge factories. Similiar in concept to the
  *  Swing class TreeCellRenderer.

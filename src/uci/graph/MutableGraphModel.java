@@ -27,9 +27,11 @@
 // File: MutableGraphModel.java
 // Interfaces: MutableGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphModel.java,v 1.1 1998/02/05 04:03:46 jrobbins Exp $
+// $Id: MutableGraphModel.java,v 1.2 1998/02/12 02:28:07 jrobbins Exp $
 
 package uci.graph;
+
+import java.util.*;
 
 /** This interface provides a facade to a net-level
  *  representation. Similiar in concept to the Swing class TreeModel.

@@ -27,22 +27,24 @@
 // File: DefaultGraphEdgeRenderer.java
 // Classes: DefaultGraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphEdgeRenderer.java,v 1.1 1998/02/05 04:03:39 jrobbins Exp $
+// $Id: DefaultGraphEdgeRenderer.java,v 1.2 1998/02/12 02:27:49 jrobbins Exp $
 
 package uci.graph;
 
-import uci.gef.*;
+import uci.gef.NetEdge;
+import uci.gef.FigEdge;
+import uci.gef.Layer;
 
 /** An interface for FigEdge factories. Similiar in concept to the
  *  Swing class TreeCellRenderer.
  *
  * @see uci.graph.demo.TranscriptionRenderer */
 
-public interface DefaultGraphEdgeRenderer {
+public class DefaultGraphEdgeRenderer {
   /** Return a Fig that can be used to represent the given Edge */
   public FigEdge getFigEdgeFor(GraphModel graph, Layer lay, Object edge) {
     if (edge instanceof NetEdge)
-      return ((NetEdge)Edge).presentationFor(lay);
+      return ((NetEdge)edge).presentationFor(lay);
     return null;
   }
 
