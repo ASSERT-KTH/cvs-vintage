@@ -27,7 +27,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.2 1998/07/02 02:57:28 jrobbins Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.3 1998/07/03 21:00:19 abonner Exp $
 
 
 package uci.uml.visual;
@@ -59,6 +59,16 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 
   protected static Action _actionUseCase = 
   new CmdCreateNode(UseCase.class, "UseCase");
+
+  protected static Action _actionAssoc =
+  new CmdSetMode(ModeCreateEdge.class,
+		 "edgeClass", Association.class,
+		 "Association");
+
+  protected static Action _actionGeneralize =
+  new CmdSetMode(ModeCreateEdge.class,
+		 "edgeClass", Generalization.class,
+		 "Generalization");
 
   // other icons?
 
@@ -117,6 +127,8 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 
     _toolBar.add(_actionActor);
     _toolBar.add(_actionUseCase);
+    _toolBar.add(_actionAssoc);
+    _toolBar.add(_actionGeneralize);
     // other actions
     _toolBar.addSeparator();
 

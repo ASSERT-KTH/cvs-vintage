@@ -27,7 +27,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.5 1998/07/02 02:57:26 jrobbins Exp $
+// $Id: UMLClassDiagram.java,v 1.6 1998/07/03 21:00:18 abonner Exp $
 
 
 package uci.uml.visual;
@@ -59,6 +59,11 @@ public class UMLClassDiagram extends UMLDiagram {
 
   protected static Action _actionInterface =
   new CmdCreateNode(Interface.class, "Interface");
+
+  protected static Action _actionDepend =
+  new CmdSetMode(ModeCreateEdge.class,
+		 "edgeClass", Dependency.class,
+		 "Dependency");
 
   protected static Action _actionAssoc =
   new CmdSetMode(ModeCreateEdge.class,
@@ -121,6 +126,7 @@ public class UMLClassDiagram extends UMLDiagram {
 
     _toolBar.add(_actionClass);
     _toolBar.add(_actionAssoc);
+    _toolBar.add(_actionDepend);
     _toolBar.add(_actionGeneralize);
     _toolBar.addSeparator();
 
