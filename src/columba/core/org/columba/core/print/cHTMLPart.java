@@ -98,7 +98,7 @@ public class cHTMLPart extends cPrintObject {
     /**
      * Prints the contents of this HTML print object using the supplied 
      * Graphics2D object.
-     * @param	Used for rendering (i.e. printing) this HTML print object
+     * @param	g	Used for rendering (i.e. printing) this HTML print object
      * @see org.columba.core.print.cPrintObject#print(java.awt.Graphics2D)
      */
     public void print(Graphics2D g) {
@@ -119,9 +119,11 @@ public class cHTMLPart extends cPrintObject {
 		 */
 		
 		// set size of mPane according to the available width
+		// and fetch root view
 		
 		mPane.setSize((int) width, Integer.MAX_VALUE);
 		mPane.validate();
+		View rootView = mPane.getUI().getRootView(mPane);
 
 		// set clipping for the graphics object
 		Shape oldClip = g.getClip();
@@ -130,16 +132,59 @@ public class cHTMLPart extends cPrintObject {
 				  (int) width, (int) height);
 
 		// translate g to line up with origin of print area (trans 1)
-		Point2D.Double trans = new Point2D.Double(origin.getX().getPoints(),
-				origin.getY().getPoints() - mStartY.getPoints());
+		Point2D.Double trans = new Point2D.Double(
+								g.getClipBounds().getX(),
+								g.getClipBounds().getY());
 		g.translate(trans.getX(), trans.getY());
 				
-		// paint the jTextPane container, i.e. print the contents
-		mPane.paint(g);
+		// set allocation (defines print area together with the clipping
+		// and translation made above), and print...
+		Rectangle allocation = new Rectangle(
+						0,
+						(int) -mStartY.getPoints(),
+						(int) mPane.getMinimumSize().getWidth(),
+						(int) mPane.getPreferredSize().getHeight());
+		printView(g, rootView, allocation, height);
 		
 		// translate graphics object back to original position and reset clip
 		g.translate(-trans.getX(), -trans.getY());
 		g.setClip(oldClip);
+	}
+
+
+	/**
+	 * Private utility to print a view (called from the print method).<br>
+	 * The traversal through views and their children is the same as in
+	 * calcBreakHeightForView.
+	 * 
+	 * @param	g				Graphics object to print on
+	 * @param	view			The View object to operate on
+	 * @param	allocation		Allocation for the view (where to render)
+	 * @param	maxHeight		Views starting after maxHeight is not printed
+	 */
+	private void printView(Graphics2D g, View view, 
+					Shape allocation, double maxHeight) {
+		if (view.getViewCount() > 0) {
+			// child views exist - operate recursively on these
+			Shape childAllocation;
+			View childView;
+			for (int i = 0; i < view.getViewCount(); i++) {
+				childAllocation = view.getChildAllocation(i,allocation);
+				if (childAllocation != null) {
+					childView = view.getView(i);
+					// handle child view by recursive call
+					printView(g, childView, childAllocation, maxHeight);
+				}
+			}
+		}
+		else {
+			// no childs - we have a leaf view (i.e. with contents)
+			double viewStartY = allocation.getBounds().getY();
+			if ((viewStartY >= 0) && (viewStartY < maxHeight)) {
+				// view starts on page - print it
+				view.paint(g, allocation);
+			}
+		}
 	}
 
 

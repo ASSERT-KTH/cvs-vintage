@@ -167,8 +167,6 @@ public class PrintMessageCommand extends FolderCommand {
 		/*
 		 * *20030604, karlpeder* Fixed minor flaws to be able to print
 		 * text messages. Further more added support for html messages.
-		 * Though the support for html printing is somewhat experimental:
-		 * TODO: For many html messages, the content is not printed correctly!!!
 		 */
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
@@ -328,8 +326,6 @@ public class PrintMessageCommand extends FolderCommand {
 	 */
 	private cPrintObject getHTMLBodyPrintObject(MimePart bodyPart) {
 
-		ColumbaLogger.log.info("HTML message - print support is EXPERIMENTAL!!!");
-
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
 		
@@ -344,6 +340,7 @@ public class PrintMessageCommand extends FolderCommand {
 			DiskIO.saveStringInFile(tempFile, validated);
 			URL url = tempFile.toURL();
 			cHTMLPart htmlBody = new cHTMLPart();
+			htmlBody.setTopMargin(new cCmUnit(1.0));
 			htmlBody.setHTML(url);
 			return htmlBody;
 		}
