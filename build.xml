@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.169 2004/07/28 07:17:18 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.170 2004/08/06 01:57:48 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -74,8 +74,6 @@
     &libraries;
     <!-- The combined library classpath -->
     <path id="library.classpath">
-      <path refid="sun.jaas.classpath"/>
-      <path refid="sun.jsse.classpath"/>
       <path refid="sun.servlet.classpath"/>
       <path refid="apache.axis.classpath"/>
       <path refid="apache.crimson.classpath"/>
