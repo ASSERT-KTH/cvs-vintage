@@ -19,7 +19,7 @@
 // File: SampleEdge.java
 // Classes: SampleEdge
 // Original Author: ics125b spring 1996
-// $Id: SampleEdge.java,v 1.1 1998/01/26 22:19:27 jrobbins Exp $
+// $Id: SampleEdge.java,v 1.2 1998/03/09 22:11:40 abonner Exp $
 
 package uci.gef.demo;
 
@@ -36,7 +36,9 @@ public class SampleEdge extends NetEdge {
   public SampleEdge() { } /* needs-more-work */
 
   public FigEdge makePresentation(Layer lay) {
-    return new FigEdgeLine();
+    FigEdge foo = new FigEdgeLine();
+    foo.setSourceArrowHead(new ArrowHeadTriangle());
+    return foo;
   }
 
 } /* end class SampleEdge */
