@@ -70,13 +70,14 @@ import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache;  
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.13 2002/05/30 21:21:24 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.14 2002/08/08 01:55:24 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -143,6 +144,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo.delete(user);
                    rmos.remove(rmo);
+                   ScarabCache.clear();
                }
                catch (Exception e)
                {
@@ -156,6 +158,9 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo2.delete(user);
                    rmos.remove(rmo);
+                   WorkflowFactory.getInstance().deleteWorkflowsForOption(
+                                                 rmo2.getAttributeOption(), 
+                                                  module, issueType);
                    data.setMessage(DEFAULT_MSG);  
                }
                catch (Exception e)
@@ -198,5 +203,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             data.setMessage(DEFAULT_MSG);  
         }
     }
+
+
 
 }
