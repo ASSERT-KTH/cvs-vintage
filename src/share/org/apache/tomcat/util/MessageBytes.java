@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.4 2000/05/24 17:19:54 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/24 17:19:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.5 2000/05/24 18:57:10 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/24 18:57:10 $
  *
  * ====================================================================
  *
@@ -74,8 +74,7 @@ import org.apache.tomcat.core.Constants;
  * @author dac@eng.sun.com
  * @author James Todd [gonzo@eng.sun.com]
  */
-
-public class MessageBytes extends Ascii {
+public class MessageBytes {
 
     private StringManager sm =
         StringManager.getManager("org.apache.tomcat.util");
@@ -171,67 +170,11 @@ public class MessageBytes extends Ascii {
     }
 
     /**
-     * Returns the message bytes as a String object.
-     */
-    public String toString() {
-        if (null == bytes) {
-            return null;
-        }
-
-        try {
-            return new String(bytes, offset, length, Constants.DEFAULT_CHAR_ENCODING);
-        } catch (java.io.UnsupportedEncodingException e) {
-            return null;        // could return something - but why?
-        }
-    }
-
-    /**
      * Returns the message bytes parsed as an unsigned integer.
      * @exception NumberFormatException if the integer format was invalid
      */
     public int toInteger() throws NumberFormatException {
-	return parseInt(bytes, offset, length);
-    }
-
-    /**
-     * Compares the message bytes to the specified String object.
-     * @param s the String to compare
-     * @return true if the comparison succeeded, false otherwise
-     */
-    public boolean equals(String s) {
-	byte[] b = bytes;
-	int len = length;
-	if (b == null || len != s.length()) {
-	    return false;
-	}
-	int off = offset;
-	for (int i = 0; i < len; i++) {
-	    if (b[off++] != s.charAt(i)) {
-		return false;
-	    }
-	}
-	return true;
-    }
-
-    /**
-     * Compares the message bytes to the specified String object. Case is
-     * ignored in the comparison.
-     * @param s the String to compare
-     * @return true if the comparison succeeded, false otherwise
-     */
-    public boolean equalsIgnoreCase(String s) {
-	byte[] b = bytes;
-	int len = length;
-	if (b == null || len != s.length()) {
-	    return false;
-	}
-	int off = offset;
-	for (int i = 0; i < len; i++) {
-	    if (toLower(b[off++]) != toLower((byte)s.charAt(i))) {
-		return false;
-	    }
-	}
-	return true;
+	return Ascii.parseInt(bytes, offset, length);
     }
 
     /**
@@ -270,7 +213,82 @@ public class MessageBytes extends Ascii {
 	}
 	int off1 = offset;
 	while (len-- > 0) {
-	    if (toLower(b[off++]) != toLower(b1[off1++])) {
+	    if (Ascii.toLower(b[off++]) != Ascii.toLower(b1[off1++])) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
+    /**
+     * Writes the message bytes to the specified output stream.
+     * @param out the output stream
+     * @exception IOException if an I/O error has occurred
+     */
+    public void write(OutputStream out) throws IOException {
+	if (bytes != null) {
+	    out.write(bytes, offset, length);
+	}
+    }
+
+    /**
+     * Returns the length of the message bytes.
+     */
+    public int length() {
+	return bytes != null ? length : 0;
+    }
+
+    // --------------------
+    /**
+     * Returns the message bytes as a String object.
+     */
+    public String toString() {
+        if (null == bytes) {
+            return null;
+        }
+
+        try {
+            return new String(bytes, offset, length, Constants.DEFAULT_CHAR_ENCODING);
+        } catch (java.io.UnsupportedEncodingException e) {
+            return null;        // could return something - but why?
+        }
+    }
+
+    /**
+     * Compares the message bytes to the specified String object.
+     * @param s the String to compare
+     * @return true if the comparison succeeded, false otherwise
+     */
+    public boolean equals(String s) {
+	byte[] b = bytes;
+	int len = length;
+	if (b == null || len != s.length()) {
+	    return false;
+	}
+	int off = offset;
+	for (int i = 0; i < len; i++) {
+	    if (b[off++] != s.charAt(i)) {
+		return false;
+	    }
+	}
+	return true;
+    }
+
+    /**
+     * Compares the message bytes to the specified String object. Case is
+     * ignored in the comparison.
+     * @param s the String to compare
+     * @return true if the comparison succeeded, false otherwise
+     */
+    public boolean equalsIgnoreCase(String s) {
+	byte[] b = bytes;
+	int len = length;
+	if (b == null || len != s.length()) {
+	    return false;
+	}
+	int off = offset;
+	for (int i = 0; i < len; i++) {
+	    if (Ascii.toLower(b[off++]) != Ascii.toLower((byte)s.charAt(i))) {
 		return false;
 	    }
 	}
@@ -296,21 +314,4 @@ public class MessageBytes extends Ascii {
 	return true;
     }
 
-    /**
-     * Writes the message bytes to the specified output stream.
-     * @param out the output stream
-     * @exception IOException if an I/O error has occurred
-     */
-    public void write(OutputStream out) throws IOException {
-	if (bytes != null) {
-	    out.write(bytes, offset, length);
-	}
-    }
-
-    /**
-     * Returns the length of the message bytes.
-     */
-    public int length() {
-	return bytes != null ? length : 0;
-    }
 }

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.4 2000/05/24 18:57:10 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/24 18:57:10 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -70,66 +66,82 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 
 /**
- * This class is used to represent a string in an HTTP message.
+ * This class is used to represent a char region in an HTTP message.
  *
- * @author dac@eng.sun.com
+ * @author Costin Manolache costin@eng.sun.com
  */
-public class MessageString {
-    /**
-     * The message String.
-     */
-    protected String str;
+public final class MessageChars {
+    // cache for toString conversions
+    String str;
+    
+    /** The message chars.  */
+    char[] chars;
+
+    /** The start offset  */
+    int offset;
+
+    /** The length */
+    int length;
 
     /**
      * Creates a new, uninitialized message string.
      */
-    public MessageString() {
+    public MessageChars() {
     }
 
     /**
-     * Creates a new message string with the specified String object.
-     * @param s the String
+     * Creates a new message string with the specified chars
+     * @param b the chars
+     * @param off the offset
+     * @param len the length
      */
-    public MessageString(String s) {
-	str = s;
+    public MessageChars(char[] c, int off, int len) {
+	setChars( c, off, len );
     }
 
     /**
      * Resets the message string to an uninitialized state.
      */
     public void reset() {
+	chars=null;
 	str = null;
+	length=0;
     }
 
     /**
-     * Sets the message string to the specified String.
-     * @param s the String
+     * Sets the message string to the specified bytes.
+     * @param b the bytes
+     * @param off the offset of the bytes
+     * @param len the length of the bytes
      */
-    public void setString(String s) {
-	str = s;
+    public void setChars(char[] b, int off, int len) {
+	chars=b;
+	this.offset=off;
+	this.length=len;
+	str = null;
     }
 
     /**
      * Returns true if the message string is set.
      */
     public boolean isSet() {
-	return str != null;
+	return  chars != null;
     }
 
     public int getChars( char buf[], int buf_off )
     {
-	if (str != null) {
-	    int length = str.length();
-	    str.getChars( 0, length, buf, buf_off);
-	    return length;
-	}
-	return 0;
+	System.arraycopy(chars, offset, buf, buf_off, length);
+	return length;
+	
     }
     
     /**
      * Returns the message string as a String object.
      */
     public String toString() {
+	if( str != null )
+	    return str;
+	str=new String( chars, offset, length);
 	return str;
     }
 
@@ -138,7 +150,8 @@ public class MessageString {
      * @exception NumberFormatException if the integer format was invalid
      */
     public int toInteger() throws NumberFormatException {
-	return str != null ? Integer.parseInt(str) : -1;
+	toString(); // str will be updated
+	return Integer.parseInt(str);
     }
 
     /**
@@ -147,7 +160,8 @@ public class MessageString {
      * @return true if the comparison succeeded, false otherwise
      */
     public boolean equals(String s) {
-	return str != null ? str.equals(s) : null==s;
+	toString();
+	return  str.equals(s);
     }
 
     /**
@@ -157,6 +171,7 @@ public class MessageString {
      * @return true if the comparison succeeded, false otherwise
      */
     public boolean equalsIgnoreCase(String s) {
+	toString();
 	return  str.equalsIgnoreCase(s);
     }
 
@@ -164,6 +179,6 @@ public class MessageString {
      * Returns the length of the message string.
      */
     public int length() {
-	return str != null ? str.length() : 0;
+	return  length;
     }
 }

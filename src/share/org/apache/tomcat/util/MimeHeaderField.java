@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.8 2000/05/24 17:19:55 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/05/24 17:19:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.9 2000/05/24 18:57:10 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/05/24 18:57:10 $
  *
  * ====================================================================
  *
@@ -91,35 +91,35 @@ public class MimeHeaderField {
     /**
      * The header field name.
      */
+    protected final MessageBytes nameB = new MessageBytes();
+    protected final MessageChars nameC = new MessageChars();
     protected final MessageString name = new MessageString();
 
     /**
      * The header field value.
      */
+    protected final MessageBytes valueB = new MessageBytes();
+    protected final MessageChars valueC = new MessageChars();
     protected final MessageString value = new MessageString();
 
-    /**
-     * The header field integer value.
-     */
+    /** The header field integer value. */
     protected int intValue;
 
-    /**
-     * The header field Date value.
-     */
+    /** The header field Date value.   */
     protected Date dateValue = null;
 
-    StringBuffer sb=null;
-    // Will be used to conver date value - _never_ call toString()
-    
     /**
      * The header field value type.
      */
     protected int type = T_NULL;
-
+    protected int nameType=T_NULL;
+    
     protected static final int T_NULL = 0;
     protected static final int T_STR  = 1;
     protected static final int T_INT  = 2;
     protected static final int T_DATE = 3;
+    protected static final int T_BYTES = 4;
+    protected static final int T_CHARS = 5;
 
     /**
      * Creates a new, uninitialized header field.
@@ -133,19 +133,30 @@ public class MimeHeaderField {
     public void reset() {
 	name.reset();
 	value.reset();
+	nameB.reset();
+	valueB.reset();
+	nameC.reset();
+	valueC.reset();
 	type = T_NULL;
+	nameType = T_NULL;
     }
 
-    public int getType() {
-	return type;
-    }
-    
     /**
      * Sets the header field name to the specified string.
      * @param s the header field name String
      */
     public void setName(String s) {
+	nameType = T_STR;
 	name.setString(s);
+    }
+
+    /**
+     * Sets the header field name to the specified string.
+     * @param s the header field name String
+     */
+    public void setName(char c[], int off, int len ) {
+	nameType = T_CHARS;
+	nameC.setChars(c, off, len);
     }
 
     /**
@@ -155,8 +166,41 @@ public class MimeHeaderField {
      * @param len the length of the bytes
      */
     public void setName(byte[] b, int off, int len) {
-	name.setBytes(b, off, len);
+	nameType = T_BYTES;
+	nameB.setBytes(b, off, len);
     }
+
+    public int getNameType() {
+	return nameType;
+    }
+    
+    /**
+     * Returns the header field name as a String.
+     * @ deprecated - no encoding support
+     */
+    public String getName() {
+	switch (nameType) {
+	case T_STR:
+	    return name.toString();
+	case T_CHARS:
+	    return nameC.toString(); 
+	case T_BYTES:
+	    return nameB.toString(); // XXX encoding
+	default:
+	    return null;
+	}
+    }
+
+    public MessageBytes getNameBytes() {
+	return nameB;
+    }
+
+    public MessageChars getNameChars() {
+	return nameC;
+    }
+
+    // -------------------- Value --------------------
+
 
     /**
      * Sets the header field value to the specified string.
@@ -174,8 +218,13 @@ public class MimeHeaderField {
      * @param len the length of the bytes
      */
     public void setValue(byte[] b, int off, int len) {
-	value.setBytes(b, off, len);
-	type = T_STR;
+	valueB.setBytes(b, off, len);
+	type = T_BYTES;
+    }
+
+    public void setValue(char[] b, int off, int len) {
+	valueC.setChars(b, off, len);
+	type = T_CHARS;
     }
 
     /**
@@ -200,14 +249,8 @@ public class MimeHeaderField {
     }
 
     /**
-     * Returns the header field name as a String.
-     */
-    public String getName() {
-	return name.toString();
-    }
-
-    /**
      * Returns the header field value as a String, or null if not set.
+     * @deprecated No encoding support
      */
     public String getValue() {
 	switch (type) {
@@ -217,17 +260,21 @@ public class MimeHeaderField {
 	    return String.valueOf(intValue);
 	case T_DATE:
 	    return formatDate(dateValue);
+	case T_CHARS:
+	    return valueC.toString(); 
+	case T_BYTES:
+	    return valueB.toString(); // XXX encoding
 	default:
 	    return null;
 	}
     }
 
-    public MessageString getNameMessageString() {
-	return name;
+    public MessageBytes getValueBytes() {
+	return valueB;
     }
 
-    public MessageString getValueMessageString() {
-	return value;
+    public MessageChars getValueChars() {
+	return valueC;
     }
 
     /**
@@ -242,6 +289,10 @@ public class MimeHeaderField {
 	    return intValue;
 	case T_STR:
 	    return value.toInteger();
+	case T_CHARS:
+	    return valueC.toInteger();
+	case T_BYTES:
+	    return valueB.toInteger();
 	default:
             String msg = sm.getString("mimeHeaderField.int.nfe");
 
@@ -263,13 +314,27 @@ public class MimeHeaderField {
 	    return dateValue.getTime();
 	case T_STR:
 	    return parseDate( value );
+	case T_CHARS:
+	    return parseDate( value.toString() );
+	case T_BYTES:
+	    return parseDate( valueB.toString() ); // XXX Encoding
 	}
 	String msg = sm.getString("mimeHeaderField.date.iae");
 	throw new IllegalArgumentException(msg);
     }
+
+    public int getValueType() {
+	return type;
+    }
     
     String formatDate( Date value ) {
 	return DateTool.rfc1123Format.format(value);
+    }
+
+    long parseDate( String s ) {
+	// XXX inefficient
+	value.setString( s );
+	return parseDate( value );
     }
 
     long parseDate( MessageString value ) {
@@ -300,29 +365,16 @@ public class MimeHeaderField {
      * @param s the string to compare
      */
     public boolean nameEquals(String s) {
-	return name.equalsIgnoreCase(s);
+	switch (type) {
+	case T_STR:
+	    return name.equalsIgnoreCase(s);
+	case T_CHARS:
+	    return nameC.equalsIgnoreCase(s);
+	case T_BYTES:
+	    return Ascii.equalsIgnoreCase( s, nameB );
+	default:
+	    return false;
+	}
     }
 
-    /**
-     * Returns true if the header field has the specified name. Character
-     * case is ignored in the comparison.
-     * @param b the bytes to compare
-     * @param off the start offset of the bytes
-     * @param len the length of the bytes
-     */
-    public boolean nameEquals(byte[] b, int off, int len) {
-	return name.equalsIgnoreCase(b, off, len);
-    }
-
-    /**
-     * Returns a string representation of the header field.
-     */
-    public String toString() {
-	StringBuffer sb = new StringBuffer();
-
-	sb.append(name.toString());
-	sb.append(": ");
-	sb.append( getValue() );
-	return sb.toString();
-    }
 }
