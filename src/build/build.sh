@@ -1,9 +1,10 @@
 #! /bin/sh
 
-# $Id: build.sh,v 1.1 2000/05/15 09:24:38 oberg Exp $
+# $Id: build.sh,v 1.2 2000/12/07 20:05:33 tobias Exp $
 
 TARGET_CLASSPATH=../../lib/ant.jar:\
-../../lib/xml.jar:\
+../../lib/jaxp.jar:\
+../../lib/parser.jar:\
 ../../lib/xmlbeans.jar:\
 ../../build/classes:\
 ../../lib/javac.jar
