@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * Files changed on disk dialog.
  *
  * @author Slava Pestov
- * @version $Id: FilesChangedDialog.java,v 1.10 2004/05/06 20:37:19 spestov Exp $
+ * @version $Id: FilesChangedDialog.java,v 1.11 2004/06/28 06:45:27 spestov Exp $
  */
 public class FilesChangedDialog extends EnhancedDialog
 {
@@ -179,7 +179,7 @@ public class FilesChangedDialog extends EnhancedDialog
 
 		pack();
 		setLocationRelativeTo(view);
-		show();
+		setVisible(true);
 	} //}}}
 
 	//{{{ ok() method

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.37 2004/02/04 00:07:22 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.38 2004/06/28 06:45:27 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -346,7 +346,7 @@ public abstract class OptionsDialog extends EnhancedDialog
 		// in case saved geometry is too small
 		updateSize();
 
-		show();
+		setVisible(true);
 	} //}}}
 
 	//{{{ selectPane() method

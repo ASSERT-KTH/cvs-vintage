@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Right-click context menu editor.
  * @author Slava Pestov
- * @version $Id: ContextOptionPane.java,v 1.10 2003/10/11 02:21:37 spestov Exp $
+ * @version $Id: ContextOptionPane.java,v 1.11 2004/06/28 06:45:27 spestov Exp $
  */
 public class ContextOptionPane extends AbstractOptionPane
 {
@@ -310,7 +310,7 @@ class ContextAddDialog extends EnhancedDialog
 
 		pack();
 		setLocationRelativeTo(GUIUtilities.getParentDialog(comp));
-		show();
+		setVisible(true);
 	}
 
 	public void ok()

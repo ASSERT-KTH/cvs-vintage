@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * You can get and set the currently selected color using
  * {@link #getSelectedColor()} and {@link #setSelectedColor(Color)}.
  * @author Slava Pestov
- * @version $Id: ColorWellButton.java,v 1.6 2003/02/07 21:57:35 spestov Exp $
+ * @version $Id: ColorWellButton.java,v 1.7 2004/06/28 06:45:27 spestov Exp $
  */
 public class ColorWellButton extends JButton
 {
@@ -120,7 +120,7 @@ public class ColorWellButton extends JButton
 					true);
 			}
 			dialog.pack();
-			dialog.show();
+			dialog.setVisible(true);
 		}
 	} //}}}
 

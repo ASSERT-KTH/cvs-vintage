@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * jEdit's searchable help viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.13 2004/05/29 01:55:25 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.14 2004/06/28 06:45:27 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -149,7 +149,7 @@ public class HelpViewer extends JFrame implements EBComponent
 
 		EditBus.addToBus(this);
 
-		show();
+		setVisible(true);
 
 		SwingUtilities.invokeLater(new Runnable()
 		{

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * A font chooser widget.
  * @author Slava Pestov
- * @version $Id: FontSelector.java,v 1.7 2003/11/26 01:04:33 spestov Exp $
+ * @version $Id: FontSelector.java,v 1.8 2004/06/28 06:45:27 spestov Exp $
  */
 public class FontSelector extends JButton
 {
@@ -362,7 +362,7 @@ class FontSelectorDialog extends EnhancedDialog
 
 		pack();
 		setLocationRelativeTo(getParent());
-		show();
+		setVisible(true);
 	} //}}}
 
 	//{{{ getFontList() method

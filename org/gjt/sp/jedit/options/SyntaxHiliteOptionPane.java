@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: SyntaxHiliteOptionPane.java,v 1.8 2003/06/19 01:28:07 spestov Exp $
+ * @version $Id: SyntaxHiliteOptionPane.java,v 1.9 2004/06/28 06:45:27 spestov Exp $
  */
 public class SyntaxHiliteOptionPane extends AbstractOptionPane
 {
@@ -350,7 +350,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		setLocationRelativeTo(GUIUtilities.getParentDialog(comp));
 
 		setResizable(false);
-		show();
+		setVisible(true);
 	} //}}}
 
 	//{{{ actionPerformed() method

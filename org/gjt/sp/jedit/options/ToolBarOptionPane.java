@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.13 2003/12/15 19:44:57 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.14 2004/06/28 06:45:27 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -551,7 +551,7 @@ class ToolBarEditDialog extends EnhancedDialog
 
 		pack();
 		setLocationRelativeTo(GUIUtilities.getParentDialog(comp));
-		show();
+		setVisible(true);
 	} //}}}
 
 	//{{{ ok() method
