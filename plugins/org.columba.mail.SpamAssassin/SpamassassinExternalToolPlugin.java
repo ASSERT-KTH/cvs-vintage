@@ -14,6 +14,8 @@
 //
 //All Rights Reserved.
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.util.OSInfo;
@@ -27,18 +29,22 @@ public class SpamassassinExternalToolPlugin
 	File defaultLinux = new File("/usr/bin/spamassassin");
 	File defaultLocalLinux = new File("/usr/local/bin/spamassassin");
 
+	protected static URL websiteURL;
+
+		static {
+			try {
+				websiteURL = new URL("http://www.spamassassin.org/");
+			} catch (MalformedURLException mue) {
+			} //does not happen
+		}
+		
 	public String getDescription() {
 
-		return "";
+		return "<html><body><p>spamassassin - mail filter to identify spam using text analysis</p></body></html>";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.externaltools.AbstractExternalToolsPlugin#getWebsite()
-	 */
-	public String getWebsite() {
-		return "http://www.spamassassin.org";
+	public URL getWebsite() {
+		return websiteURL;
 	}
 
 	public File locate() {
