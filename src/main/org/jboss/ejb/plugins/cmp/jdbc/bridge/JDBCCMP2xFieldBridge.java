@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -190,16 +190,24 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       // update current value
       if(cmpFieldIAmMappedTo != null && cmpFieldIAmMappedTo.isPrimaryKeyMember())
       {
-         if(value != null && fieldState.isValueChanged(value))
+         // if this field shares the column with the primary key field and new value
+         // changes the primary key then we are in an illegal state.
+         if(value != null)
          {
-            throw new IllegalStateException(
-               "New value [" + value + "] of a foreign key field "
-               + getFieldName()
-               + " changed the value of a primary key field "
-               + cmpFieldIAmMappedTo.getFieldName()
-               + "[" + fieldState.value + "]");
+            if(fieldState.isLoaded() && fieldState.isValueChanged(value))
+            {
+               throw new IllegalStateException(
+                  "New value [" + value + "] of a foreign key field "
+                  + getFieldName()
+                  + " changed the value of a primary key field "
+                  + cmpFieldIAmMappedTo.getFieldName()
+                  + "[" + fieldState.value + "]");
+            }
+            else
+            {
+               fieldState.setValue(value);
+            }
          }
-         // else value is not null and equals to the previous value -> nothing to do
       }
       else
       {
