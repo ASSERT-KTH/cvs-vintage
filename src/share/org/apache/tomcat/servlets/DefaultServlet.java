@@ -456,14 +456,7 @@ public class DefaultServlet extends HttpServlet {
 	String[] fileNames = file.list();
         String docBase = "";
 
-        if (context.getDocumentBase().getProtocol().equalsIgnoreCase("war") &&
-	    context.isWARExpanded()) {
-	    String s = context.getWARDir().getAbsolutePath();
-
-	    docBase = FileUtil.patch(s);
-	} else {
-	    docBase = context.getDocumentBase().getFile();
-	}
+	docBase = context.getDocBase();
 
         if (! docBase.endsWith("/")) {
             docBase += "/";
