@@ -6,8 +6,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.3 2002/02/09 15:45:19 mikesr Exp $
-$Revision: 1.3 $
+$Id: jboss_3_0.dtd,v 1.4 2002/02/14 20:04:55 mikesr Exp $
+$Revision: 1.4 $
 
 Overview of the architecture of jboss.xml
 
@@ -508,14 +508,6 @@ Overview of the architecture of jboss.xml
   Used in: container-configurations
 -->
 <!ELEMENT container-configuration (container-name, call-logging?, container-invoker?, container-interceptors?, instance-pool?, instance-cache?, persistence-manager?, transaction-manager?, locking-policy?, container-invoker-conf?, container-cache-conf?, container-pool-conf?, commit-option?, optiond-refresh-rate?, (security-domain | (role-mapping-manager, authentication-module))?)>
-
-<!--
-  The configuration-class attribute is used to indicate the
-  implementation class that will be loaded for this configuration.
-  This usually indicates what type of bean the configuration
-  applies to.
--->
-<!ATTLIST container-configuration configuration-class CDATA #IMPLIED>
 
 <!--
   The container-name element gives the name of the configuration being
