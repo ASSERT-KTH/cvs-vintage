@@ -24,17 +24,17 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: carol_double.xml,v 1.21 2005/02/16 14:43:28 benoitf Exp $
+ - $Id: carol_double.xml,v 1.22 2005/03/10 10:08:21 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
-<project name="carol.tests" default="all" >
+<project name="carol.tests" default="all">
   <!--
    - Compilation directive for testing a basic server with carol over sun jrmp
-   - this test create 5 jvm (name server 1, name sever 2,  server 1, server 1, junit-client 1, junit client 2) 
-   - for carol multi rmi unit testing 
+   - this test create 5 jvm (name server 1, name sever 2,  server 1, server 1, junit-client 1, junit client 2)
+   - for carol multi rmi unit testing
    -
-   - to call this projecrt set the properties : 
+   - to call this projecrt set the properties :
    -                      stub.jar.name1, stub.jar.name2,
    -                      client.properties.file.name1,  client.properties.file.name2,
    -                      server.properties.file.name,
@@ -44,67 +44,69 @@
    -->
 
   <!-- test result location -->
-  <property name="report.dir"  value="${test.dist.results}/${test.name}"/>
-  <property name="parallel.report.dir1"  value="${report.dir}/parallel1"/>
-  <property name="parallel.report.dir2"  value="${report.dir}/parallel2"/>
+  <property name="report.dir" value="${test.dist.results}/${test.name}" />
+  <property name="parallel.report.dir1" value="${report.dir}/parallel1" />
+  <property name="parallel.report.dir2" value="${report.dir}/parallel2" />
 
   <!-- test tmp location -->
-  <property name="test.tmp.client1"               value="${test.tmp}/client/1"/>
-  <property name="test.tmp.client2"               value="${test.tmp}/client/2"/>
-  <property name="test.tmp.server"                value="${test.tmp}/server"/>
-  <property name="test.multi.jvmargs"             value="-Djava.security.policy=${test.ext}/java.policy"/>
-  <property name="test.client.jvmarg1"            value="${test.client.jvm.xtra1}"/>
-  <property name="test.client.jvmarg2"            value="${test.client.jvm.xtra2}"/>
-  <property name="trace.properties.file.name"     value="trace.properties"/>
-  <property name="basic.server.exit.stamp"     location="${build}/build/BasicServerExit.stamp"/>
+  <property name="test.tmp.client1" value="${test.tmp}/client/1" />
+  <property name="test.tmp.client2" value="${test.tmp}/client/2" />
+  <property name="test.tmp.server" value="${test.tmp}/server" />
+  <property name="test.multi.jvmargs"
+            value="-Djava.security.policy=${test.ext}/java.policy" />
+  <property name="test.client.jvmarg1" value="${test.client.jvm.xtra1}" />
+  <property name="test.client.jvmarg2" value="${test.client.jvm.xtra2}" />
+  <property name="trace.properties.file.name" value="trace.properties" />
+  <property name="basic.server.exit.stamp"
+            location="${build}/build/BasicServerExit.stamp" />
 
   <condition property="n.concurrent.clients" value="2">
-    <isset property="stub.jar.name2"/>
+    <isset property="stub.jar.name2" />
   </condition>
 
-  <property name="n.concurrent.clients" value="1"/>
+  <property name="n.concurrent.clients" value="1" />
 
-  <path id="test.client.classpath1"> 
+  <path id="test.client.classpath1">
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset>  
+      <include name="**/*.jar" />
+    </fileset>
     <fileset dir="${test.dist.lib}">
-      <include name="**/carol_test.jar"/>
-      <include name="**/${stub.jar.name1}"/>
-    </fileset>  
+      <include name="**/carol_test.jar" />
+      <include name="**/${stub.jar.name1}" />
+    </fileset>
     <fileset dir="${externals}">
-      <include name="**/*.jar"/>
-    </fileset>  
-    <pathelement location="${test.tmp.client1}"/>
+      <include name="**/*.jar" />
+    </fileset>
+    <pathelement location="${test.tmp.client1}" />
   </path>
 
-  <path id="test.client.classpath2"> 
+  <path id="test.client.classpath2">
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset>  
-    <fileset dir="${test.dist.lib}">
-      <include name="**/carol_test.jar"/>
-      <include name="**/${stub.jar.name2}"/>
-    </fileset> 
-    <fileset dir="${externals}">
-      <include name="**/*.jar"/>
+      <include name="**/*.jar" />
     </fileset>
-    <pathelement location="${test.tmp.client2}"/>
+    <fileset dir="${test.dist.lib}">
+      <include name="**/carol_test.jar" />
+      <include name="**/${stub.jar.name2}" />
+    </fileset>
+    <fileset dir="${externals}">
+      <include name="**/*.jar" />
+    </fileset>
+    <pathelement location="${test.tmp.client2}" />
   </path>
 
   <path id="test.server.classpath">
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset> 
+      <include name="**/*.jar" />
+    </fileset>
     <fileset dir="${test.dist.lib}">
-      <include name="**/carol_test.jar"/>
-      <include name="**/${stub.jar.name1}"/>  
-      <include name="**/${stub.jar.name2}"/>   
-    </fileset> 
+      <include name="**/carol_test.jar" />
+      <include name="**/${stub.jar.name1}" />
+      <include name="**/${stub.jar.name2}" />
+    </fileset>
     <fileset dir="${externals}">
-      <include name="**/*.jar"/>
-    </fileset> 
-    <pathelement location="${test.tmp.server}"/>
+      <include name="**/*.jar" />
+    </fileset>
+    <pathelement location="${test.tmp.server}" />
   </path>
 
 
@@ -113,33 +115,33 @@
    BEGIN properties and paths needed by those tests that use the registry
    ======================================================================
   -->
-  <property name="test.tmp.registry1"             value="${test.tmp}/registry/1"/>
-  <property name="test.tmp.registry2"             value="${test.tmp}/registry/2"/>
+  <property name="test.tmp.registry1" value="${test.tmp}/registry/1" />
+  <property name="test.tmp.registry2" value="${test.tmp}/registry/2" />
 
   <path id="test.name.server.classpath1">
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
+      <include name="**/*.jar" />
     </fileset>
     <fileset dir="${externals}">
-      <include name="**/*.jar"/>
-    </fileset>  
+      <include name="**/*.jar" />
+    </fileset>
     <fileset dir="${test.dist.lib}">
-      <include name="**/carol_test.jar"/>
-      <include name="**/${stub.jar.name1}"/>      
-    </fileset> 
+      <include name="**/carol_test.jar" />
+      <include name="**/${stub.jar.name1}" />
+    </fileset>
   </path>
 
   <path id="test.name.server.classpath2">
     <fileset dir="${externals}">
-      <include name="**/*.jar"/>
+      <include name="**/*.jar" />
     </fileset>
     <fileset dir="${carol.dist}/lib">
-      <include name="**/*.jar"/>
-    </fileset> 
+      <include name="**/*.jar" />
+    </fileset>
     <fileset dir="${test.dist.lib}">
-      <include name="**/carol_test.jar"/>
-      <include name="**/${stub.jar.name2}"/>      
-    </fileset> 
+      <include name="**/carol_test.jar" />
+      <include name="**/${stub.jar.name2}" />
+    </fileset>
   </path>
   <!--
    ======================================================================
@@ -148,78 +150,76 @@
   -->
 
   <target name="all">
-    <antcall  target="rebuild.tmp.dirs"/>
-    <antcall  target="launch.test"/>
+    <antcall target="rebuild.tmp.dirs" />
+    <antcall target="launch.test" />
   </target>
 
   <!-- launching directories purge and creation -->
   <target name="rebuild.tmp.dirs" depends="_rebuild.tmp.registry.dirs">
-    <delete dir="${test.tmp.server}"/>
-    <mkdir dir="${test.tmp.server}"/>
+    <delete dir="${test.tmp.server}" />
+    <mkdir dir="${test.tmp.server}" />
 
-    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
-    <copy file="${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" />  
- 
-    <antcall target="_rebuild.tmp.dir1"/>
-    <antcall target="_rebuild.tmp.dir2"/>
+    <copy file="${test.ext}/${trace.properties.file.name}"
+          tofile="${test.tmp.server}/trace.properties" />
+    <copy file="${server.properties.file.name}"
+          tofile="${test.tmp.server}/carol.properties" />
+
+    <antcall target="_rebuild.tmp.dir1" />
+    <antcall target="_rebuild.tmp.dir2" />
   </target>
 
   <target name="_rebuild.tmp.dir1">
-    <delete dir="${test.tmp.client1}"/>
-    <mkdir dir="${test.tmp.client1}"/>  
+    <delete dir="${test.tmp.client1}" />
+    <mkdir dir="${test.tmp.client1}" />
 
     <copy file="${client.properties.file.name1}"
           tofile="${test.tmp.client1}/carol.properties" />
   </target>
 
   <target name="_rebuild.tmp.dir2" if="client.properties.file.name2">
-    <delete dir="${test.tmp.client2}"/>
-    <mkdir dir="${test.tmp.client2}"/>  
+    <delete dir="${test.tmp.client2}" />
+    <mkdir dir="${test.tmp.client2}" />
 
     <copy file="${client.properties.file.name2}"
           tofile="${test.tmp.client2}/carol.properties" />
   </target>
 
   <target name="process.stopper">
-      <java
-         classname="org.objectweb.carol.jtests.conform.util.ProcessStopper"
-         classpath="${build}/build/classes">
+    <java classname="org.objectweb.carol.jtests.conform.util.ProcessStopper"
+          classpath="${build}/build/classes">
 
-	<arg value="${process.runner.tcp.port}"/>
-      </java>
+      <arg value="${process.runner.tcp.port}" />
+    </java>
   </target>
 
   <target name="process.runner">
-      <java
-         classname="org.objectweb.carol.jtests.conform.util.ProcessRunner"
-         fork="true">
+    <java classname="org.objectweb.carol.jtests.conform.util.ProcessRunner"
+          fork="true">
 
-        <jvmarg value="-Dprocess.runner.tcp.port=${process.runner.tcp.port}"/>
-        <jvmarg value="-Dprocess.runner.exit.stamp=${process.runner.exit.stamp}"/>
-        <jvmarg value="-Dprocess.runner.n.shutdowns=${process.runner.n.shutdowns}"/>
-        <jvmarg line="${process.runner.jvm.args}"/>
+      <jvmarg value="-Dprocess.runner.tcp.port=${process.runner.tcp.port}" />
+      <jvmarg value="-Dprocess.runner.exit.stamp=${process.runner.exit.stamp}" />
+      <jvmarg value="-Dprocess.runner.n.shutdowns=${process.runner.n.shutdowns}" />
+      <jvmarg line="${process.runner.jvm.args}" />
 
-        <arg value="${process.runner.target.class}"/>
-        <arg line="${process.runner.target.args}"/>
+      <arg value="${process.runner.target.class}" />
+      <arg line="${process.runner.target.args}" />
 
-        <classpath refid="${process.runner.target.classpath}"/>
-      </java>
+      <classpath refid="${process.runner.target.classpath}" />
+    </java>
   </target>
 
 
   <target name="runtests1">
     <waitfor maxwait="1000" maxwaitunit="second" checkevery="200">
-      <socket server="localhost" port="10101"/>
+      <socket server="localhost" port="10101" />
     </waitfor>
 
-    <mkdir dir="${parallel.report.dir1}"/>
-    <property name="test.mode" value="parallel1"/>
-    <junit printsummary="yes" 
-      haltonfailure="no"
-      haltonerror="no"
-      fork="yes" >
+    <mkdir dir="${parallel.report.dir1}" />
+    <property name="test.mode" value="parallel1" />
+    <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="yes">
       <classpath refid="test.client.classpath1" />
-      <formatter classname="org.objectweb.carol.ant.JunitFormatter" extension=".xml"/>
+      <formatter classname="org.objectweb.carol.ant.JunitFormatter"
+                 extension=".xml" />
       <batchtest fork="yes" todir="${parallel.report.dir1}">
         <fileset dir="${test.src}">
           <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
@@ -228,24 +228,22 @@
     </junit>
 
     <antcall target="process.stopper">
-      <param name="process.runner.tcp.port" value="30303"/>
+      <param name="process.runner.tcp.port" value="30303" />
     </antcall>
-    <antcall target="maybe.stop.nameserver1"/>
+    <antcall target="maybe.stop.nameserver1" />
   </target>
 
   <target name="maybe.runtests2" if="stub.jar.name2">
     <waitfor maxwait="1000" maxwaitunit="second" checkevery="200">
-      <socket server="localhost" port="10101"/>
+      <socket server="localhost" port="10101" />
     </waitfor>
 
-    <property name="test.mode" value="parallel2"/>
-    <mkdir dir="${parallel.report.dir2}"/>
-    <junit printsummary="yes" 
-      haltonfailure="no"
-      haltonerror="no"
-      fork="yes" >
+    <property name="test.mode" value="parallel2" />
+    <mkdir dir="${parallel.report.dir2}" />
+    <junit printsummary="yes" haltonfailure="no" haltonerror="no" fork="yes">
       <classpath refid="test.client.classpath2" />
-      <formatter classname="org.objectweb.carol.ant.JunitFormatter" extension=".xml"/>
+      <formatter classname="org.objectweb.carol.ant.JunitFormatter"
+                 extension=".xml" />
       <batchtest fork="yes" todir="${parallel.report.dir2}">
         <fileset dir="${test.src}">
           <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
@@ -254,38 +252,41 @@
     </junit>
 
     <antcall target="process.stopper">
-      <param name="process.runner.tcp.port" value="30303"/>
+      <param name="process.runner.tcp.port" value="30303" />
     </antcall>
-    <antcall target="maybe.stop.nameserver2"/>
+    <antcall target="maybe.stop.nameserver2" />
   </target>
 
   <target name="start.server">
-    <antcall target="maybe.wait.for.ns1"/>
-    <antcall target="maybe.wait.for.ns2"/>
+    <antcall target="maybe.wait.for.ns1" />
+    <antcall target="maybe.wait.for.ns2" />
 
     <antcall target="process.runner">
-      <param name="process.runner.tcp.port" value="30303"/>
-      <param name="process.runner.exit.stamp" value="${basic.server.exit.stamp}"/>
-      <param name="process.runner.n.shutdowns" value="${n.concurrent.clients}"/>
+      <param name="process.runner.tcp.port" value="30303" />
+      <param name="process.runner.exit.stamp"
+             value="${basic.server.exit.stamp}" />
+      <param name="process.runner.n.shutdowns"
+             value="${n.concurrent.clients}" />
       <param name="process.runner.target.class"
-             value="org.objectweb.carol.jtests.conform.basic.server.BasicServer"/>
-      <param name="process.runner.target.args" value="10101"/>
-      <param name="process.runner.jvm.args" value="${test.multi.jvmargs}"/>
-      <param name="process.runner.target.classpath" value="test.server.classpath"/>
+             value="org.objectweb.carol.jtests.conform.basic.server.BasicServer" />
+      <param name="process.runner.target.args" value="10101" />
+      <param name="process.runner.jvm.args" value="${test.multi.jvmargs}" />
+      <param name="process.runner.target.classpath"
+             value="test.server.classpath" />
     </antcall>
   </target>
 
   <target name="launch.test">
     <parallel failonany="true">
-      <antcall target="maybe.start.nameserver1"/>
-      <antcall target="maybe.start.nameserver2"/>
+      <antcall target="maybe.start.nameserver1" />
+      <antcall target="maybe.start.nameserver2" />
 
-      <antcall target="start.server"/>
+      <antcall target="start.server" />
 
-      <antcall target="runtests1"/>
-      <antcall target="maybe.runtests2"/>
+      <antcall target="runtests1" />
+      <antcall target="maybe.runtests2" />
     </parallel>
-  </target> 
+  </target>
 
 
   <!--
@@ -294,76 +295,78 @@
   -->
 
   <target name="_rebuild.tmp.registry.dirs"
-    depends="_rebuild.tmp.registry.dir1,_rebuild.tmp.registry.dir2"/>
+          depends="_rebuild.tmp.registry.dir1,_rebuild.tmp.registry.dir2" />
 
   <target name="_rebuild.tmp.registry.dir1">
-    <delete dir="${test.tmp.registry1}"/>
-    <mkdir dir="${test.tmp.registry1}"/>
+    <delete dir="${test.tmp.registry1}" />
+    <mkdir dir="${test.tmp.registry1}" />
   </target>
 
   <target name="_rebuild.tmp.registry.dir2" if="test.tmp.registry2">
-    <delete dir="${test.tmp.registry2}"/>
-    <mkdir dir="${test.tmp.registry2}"/>
+    <delete dir="${test.tmp.registry2}" />
+    <mkdir dir="${test.tmp.registry2}" />
   </target>
 
   <target name="maybe.start.nameserver1" if="name.server.class.name1">
     <antcall target="process.runner">
-      <param name="process.runner.tcp.port" value="20201"/>
-      <param name="process.runner.exit.stamp" value=""/>
-      <param name="process.runner.n.shutdowns" value="1"/>
+      <param name="process.runner.tcp.port" value="20201" />
+      <param name="process.runner.exit.stamp" value="" />
+      <param name="process.runner.n.shutdowns" value="1" />
       <param name="process.runner.target.class"
-             value="${name.server.class.name1}"/>
-      <param name="process.runner.target.args" value="${name.server.option1}"/>
+             value="${name.server.class.name1}" />
+      <param name="process.runner.target.args" value="${name.server.option1}" />
       <param name="process.runner.jvm.args"
-             value="-Djava.security.policy=${test.ext}/java.policy"/>
-      <param name="process.runner.target.classpath" value="test.name.server.classpath1"/>
+             value="-Djava.security.policy=${test.ext}/java.policy" />
+      <param name="process.runner.target.classpath"
+             value="test.name.server.classpath1" />
     </antcall>
   </target>
 
   <target name="maybe.start.nameserver2" if="name.server.class.name2">
 
     <antcall target="process.runner">
-      <param name="process.runner.tcp.port" value="20202"/>
-      <param name="process.runner.exit.stamp" value=""/>
-      <param name="process.runner.n.shutdowns" value="1"/>
+      <param name="process.runner.tcp.port" value="20202" />
+      <param name="process.runner.exit.stamp" value="" />
+      <param name="process.runner.n.shutdowns" value="1" />
       <param name="process.runner.target.class"
-             value="${name.server.class.name2}"/>
-      <param name="process.runner.target.args" value="${name.server.option2}"/>
+             value="${name.server.class.name2}" />
+      <param name="process.runner.target.args" value="${name.server.option2}" />
       <param name="process.runner.jvm.args"
-             value="-Djava.security.policy=${test.ext}/java.policy"/>
-      <param name="process.runner.target.classpath" value="test.name.server.classpath2"/>
+             value="-Djava.security.policy=${test.ext}/java.policy" />
+      <param name="process.runner.target.classpath"
+             value="test.name.server.classpath2" />
     </antcall>
   </target>
 
   <target name="maybe.wait.for.ns1" if="name.server.port1">
     <waitfor maxwait="3" maxwaitunit="second" checkevery="200">
-      <socket server="localhost" port="${name.server.port1}"/>
+      <socket server="localhost" port="${name.server.port1}" />
     </waitfor>
   </target>
 
   <target name="maybe.wait.for.ns2" if="name.server.port2">
     <waitfor maxwait="3" maxwaitunit="second" checkevery="200">
-      <socket server="localhost" port="${name.server.port2}"/>
+      <socket server="localhost" port="${name.server.port2}" />
     </waitfor>
   </target>
 
   <target name="maybe.stop.nameserver1" if="name.server.port1">
     <waitfor maxwait="2" maxwaitunit="second" checkevery="200">
-      <available file="${basic.server.exit.stamp}"/>
+      <available file="${basic.server.exit.stamp}" />
     </waitfor>
 
     <antcall target="process.stopper">
-      <param name="process.runner.tcp.port" value="20201"/>
+      <param name="process.runner.tcp.port" value="20201" />
     </antcall>
   </target>
 
   <target name="maybe.stop.nameserver2" if="name.server.port2">
     <waitfor maxwait="2" maxwaitunit="second" checkevery="200">
-      <available file="${basic.server.exit.stamp}"/>
+      <available file="${basic.server.exit.stamp}" />
     </waitfor>
 
     <antcall target="process.stopper">
-      <param name="process.runner.tcp.port" value="20202"/>
+      <param name="process.runner.tcp.port" value="20202" />
     </antcall>
   </target>
 
