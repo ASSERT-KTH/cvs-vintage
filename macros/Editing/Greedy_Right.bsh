@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Right.bsh,v 1.1 2004/05/06 19:53:37 orutherfurd Exp $
+ * $Id: Greedy_Right.bsh,v 1.2 2004/05/19 22:10:35 orutherfurd Exp $
  */
 
 /**
@@ -53,14 +53,16 @@ void greedyRight(View view, boolean onlyFullTabs)
 			else
 			{
 				int toTabStop = (((col+tabSize)-1) % tabSize) + 1;
-				int count = 1;
-				for(int i=1; i < toTabStop; i++)
+				String chunk = "";
+				if((caret + toTabStop) <= buffer.getLength())
+					chunk = buffer.getText(caret,toTabStop);
+				int count = 0;
+				for(int i=0; i < chunk.length(); i++)
 				{
-					int pos = caret+i+1;
-					if(pos > buffer.getLength())
+					if(' ' != chunk.charAt(i))
+					{
 						break;
-					if(!" ".equals(buffer.getText(caret+i,1)))
-						break;
+					}
 					count += 1;
 				}
 

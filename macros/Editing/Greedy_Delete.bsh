@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2004 Ollie Rutherfurd <oliver@jedit.org>
  *
- * $Id: Greedy_Delete.bsh,v 1.1 2004/05/06 19:53:37 orutherfurd Exp $
+ * $Id: Greedy_Delete.bsh,v 1.2 2004/05/19 22:10:35 orutherfurd Exp $
  */
 
 /**
@@ -53,8 +53,8 @@ void greedyDelete(View view, boolean onlyFullTabs)
 				// don't wrap to next line
 				if(caret+toTabStop > lineEnd)
 					textArea.delete();
-				int count = 1;
-				for(int i=1; i < toTabStop; i++)
+				int count = 0;
+				for(int i=0; i < toTabStop; i++)
 				{
 					if(!" ".equals(buffer.getText(caret+i,1)))
 						break;
