@@ -89,7 +89,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.171 2003/06/09 20:12:32 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.172 2003/06/26 22:51:53 dlr Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -582,6 +582,9 @@ public class ReportIssue extends RequireLoginFirstAction
                     {
                         scarabR.setAlertMessage(
                            l10n.get("NoTextInCommentTextArea"));
+                        searchAndSetTemplate(data, context, 0, MAX_RESULTS,
+                                             issue, "entry,Wizard2.vm");
+                        return;
                     }
                 }
             }
