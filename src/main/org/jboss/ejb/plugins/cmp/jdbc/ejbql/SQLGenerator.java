@@ -31,7 +31,8 @@ public class SQLGenerator {
       String fromClause = getFromClause();
       String whereClause = getWhereClause(userWhereClause);
       
-      StringBuffer buf = new StringBuffer(selectClause.length()+fromClause.length()+whereClause.length()+2);
+      StringBuffer buf = new StringBuffer(
+            selectClause.length()+fromClause.length()+whereClause.length()+2);
       buf.append(selectClause);
       buf.append(" ");
       buf.append(fromClause);
@@ -54,7 +55,8 @@ public class SQLGenerator {
          buf.append("DISTINCT ");
       }
       
-      PathElement selectPathElement = idManager.getExistingPathElement(selectPath);
+      PathElement selectPathElement = 
+            idManager.getExistingPathElement(selectPath);
       if(selectPathElement instanceof AbstractSchema) {
          AbstractSchema schema = (AbstractSchema)selectPathElement;
          buf.append(getSelectClause(schema, readAhead));
@@ -66,8 +68,9 @@ public class SQLGenerator {
          buf.append(getSelectClause(cmpField));
       } else {
          // should never happen
-         throw new IllegalStateException("Path element is instance of unknown type: " +
-               "selectPath=" + selectPath + " selectPathElement=" + selectPathElement);
+         throw new IllegalStateException("Path element is instance of " +
+               "unknown type: selectPath=" + selectPath + 
+               " selectPathElement=" + selectPathElement);
       }      
       return buf.toString();
    }
@@ -111,7 +114,8 @@ public class SQLGenerator {
 
    private String getSelectClause(CMPField cmpField) {
       String identifier = idManager.getTableAlias(cmpField.getParent());
-      return SQLUtil.getColumnNamesClause(cmpField.getCMPFieldBridge(), identifier);
+      return SQLUtil.getColumnNamesClause(
+            cmpField.getCMPFieldBridge(), identifier);
    }
 
 
@@ -120,10 +124,11 @@ public class SQLGenerator {
 
       buf.append("FROM ");
 
-      for(Iterator i = idManager.getUniqueEntityPathElements().iterator(); i.hasNext(); ) {
-         EntityPathElement pathElement = (EntityPathElement)i.next();
+      for(Iterator iter = idManager.getUniqueEntityPathElements().iterator(); 
+            iter.hasNext(); ) {
+         EntityPathElement pathElement = (EntityPathElement)iter.next();
          buf.append(getTableDeclarations(pathElement));
-         if(i.hasNext()) {
+         if(iter.hasNext()) {
             buf.append(", ");
          }
       }
@@ -140,7 +145,8 @@ public class SQLGenerator {
 
       if(pathElement instanceof CMRField) {
          CMRField cmrField = (CMRField)pathElement;
-         JDBCRelationMetaData relationMetaData = cmrField.getCMRFieldBridge().getMetaData().getRelationMetaData();
+         JDBCRelationMetaData relationMetaData = 
+               cmrField.getCMRFieldBridge().getMetaData().getRelationMetaData();
          if(relationMetaData.isTableMappingStyle()) {
             buf.append(", ");
             buf.append(relationMetaData.getTableName());
@@ -239,18 +245,20 @@ public class SQLGenerator {
       } else {
          String relationAlias = idManager.getRelationTableAlias(cmrField);
 
-         JDBCCMPFieldBridge fkField;
-         JDBCCMPFieldBridge pkField;
+         JDBCCMPFieldBridge parentField;
+         JDBCCMPFieldBridge relationField;
+         JDBCCMPFieldBridge childField;
 
-         // parent has the foreign keys
+         // parent to relation table join
          List parentFields = cmrFieldBridge.getTableKeyFields();
          for(Iterator iter = parentFields.iterator(); iter.hasNext(); ) {
 
-            fkField = (JDBCCMPFieldBridge)iter.next();
-            pkField = parent.getCMPFieldBridge(fkField.getFieldName());
+            relationField = (JDBCCMPFieldBridge)iter.next();
+            parentField = parent.getCMPFieldBridge(
+                  relationField.getFieldName());
 
             buf.append(SQLUtil.getJoinClause(
-                     pkField, parentAlias, fkField, relationAlias));
+                     parentField, parentAlias, relationField, relationAlias));
 
             if(iter.hasNext()) {
                buf.append(" AND ");
@@ -260,14 +268,15 @@ public class SQLGenerator {
          buf.append(" AND ");
 
          // parent has the foreign keys
-         List childFields = cmrFieldBridge.getTableKeyFields();
+         List childFields = relatedCMRFieldBridge.getTableKeyFields();
          for(Iterator iter = childFields.iterator(); iter.hasNext(); ) {
 
-            fkField = (JDBCCMPFieldBridge)iter.next();
-            pkField = relatedEntity.getCMPFieldByName(fkField.getFieldName());
+            relationField = (JDBCCMPFieldBridge)iter.next();
+            childField = relatedEntity.getCMPFieldByName(
+                  relationField.getFieldName());
 
             buf.append(SQLUtil.getJoinClause(
-                     pkField, childAlias, fkField, relationAlias));
+                     childField, childAlias, relationField, relationAlias));
 
             if(iter.hasNext()) {
                buf.append(" AND ");
