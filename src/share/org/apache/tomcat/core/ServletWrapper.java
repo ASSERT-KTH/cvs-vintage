@@ -120,7 +120,7 @@ public class ServletWrapper extends Handler {
     }
 
     public String toString() {
-	return name + "(" + servletClassName + "/" + path);
+	return name + "(" + servletClassName + "/" + path + ")";
     }
     
     // -------------------- Servlet specific properties 
