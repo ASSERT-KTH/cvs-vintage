@@ -181,12 +181,26 @@ public class Matcher {
         if( client != null ) {
             Project project = client.getProject();
             if( project != null ) {
-                if( ifProp != null && project.getProperty(ifProp) == null)
+                if( ifProp != null && project.getProperty(ifProp) == null) {
                     // skip if "if" property is not set
+                    result = true;
                     return true;
-                if( unlessProp != null && project.getProperty(unlessProp) != null )
-                    // skip if "unless" property is set
-                    return true;
+                }
+                // Allow a comma separated list of properties for "unless"
+                // so after using a sequence of properties, each in an "if",
+                // you can include the list in an "unless" to implement the
+                // default.
+                if( unlessProp != null) {
+                    StringTokenizer st = new StringTokenizer(unlessProp,",");
+                    while( st.hasMoreElements() ) {
+                        String prop = (String)st.nextElement();
+                        if( project.getProperty(prop) != null ) {
+                            // skip if an "unless" property is set
+                            result = true;
+                            return true;
+                        }
+                    }
+                }
             }
         }
         return false;
