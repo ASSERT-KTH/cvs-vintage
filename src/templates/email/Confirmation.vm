@@ -9,7 +9,7 @@ $l10n.format("YourConfirmation", $scarabR.User.Confirmed)
 
 $l10n.ToConfirmYourAccount
 
-    $link.setPage("Confirm.vm").addPathInfo("Confirm", $scarabR.User.Confirmed).addPathInfo("UserName",$scarabR.User.UserName)
+    $link.setPage("Confirm.vm").addPathInfo("Confirm", $scarabR.User.Confirmed).addPathInfo("UserName",$scarabR.User.UserName).setRelative(false).overrideSecurity()
 
 
 $l10n.Thanks
