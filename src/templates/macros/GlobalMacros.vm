@@ -434,7 +434,7 @@
  #foreach ($prevNextId in $data.Parameters.getStrings("issueList"))
     #set ($dummy = $prevLink.addPathInfo("issueList", $prevNextId))
  #end
-  <a href="$prevLink">&laquo; previous</a> |
+  <a href="$prevLink">&laquo; $l10n.Previous</a> |
  #end
 $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #set ($nextIssue=$scarabR.NextIssue)
@@ -443,7 +443,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  #foreach ($prevNextId in $data.Parameters.getStrings("issueList"))
     #set ($dummy = $nextLink.addPathInfo("issueList", $prevNextId))
  #end
-  | <a href="$nextLink">&raquo; next</a>
+  | <a href="$nextLink">$l10n.Next &raquo;</a>
  #end
  </p>
 #end
