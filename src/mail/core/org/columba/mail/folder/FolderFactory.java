@@ -16,7 +16,6 @@
 
 package org.columba.mail.folder;
 
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
@@ -35,7 +34,6 @@ import java.util.regex.Pattern;
  * Factory for creating subfolders.
  * Implemented as a singelton. Use {@link #getInstance()}.
  *
- *
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class FolderFactory {
@@ -49,39 +47,36 @@ public class FolderFactory {
     // for example: ".columba/mail/"
     private String path = MailInterface.config.getConfigDirectory().getPath();
 
-    protected FolderFactory() {
+    protected FolderFactory() throws PluginHandlerNotFoundException {
         // Get the handler
-        try {
-            handler = (FolderPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.mail.folder");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
-
+        handler = (FolderPluginHandler) MainInterface.pluginManager.getHandler(
+                "org.columba.mail.folder");
         // Get the parentNode
         folderlistElement = handler.getParent();
     }
 
     /**
- * Singleton - pattern
- *
- * @return the instance of the factory
- */
+     * Singleton - pattern
+     *
+     * @return the instance of the factory
+     */
     public static FolderFactory getInstance() {
         if (instance == null) {
-            instance = new FolderFactory();
+            try {
+                instance = new FolderFactory();
+            } catch (PluginHandlerNotFoundException phnfe) {
+                throw new RuntimeException(phnfe);
+            }
         }
-
         return instance;
     }
 
     /**
- * Gets a list of all possible child foldertypes.
- *
- * @param parent
- * @return a list that contains Strings of foldertypes
- */
+     * Gets a list of all possible child foldertypes.
+     *
+     * @param parent
+     * @return a list that contains Strings of foldertypes
+     */
     public List getPossibleChilds(AbstractFolder parent) {
         List list = new LinkedList();
 
@@ -114,19 +109,18 @@ public class FolderFactory {
     }
 
     /**
- * Creates the default child for the given parent.
- *
- * @param parent the parent folder
- * @return the childfolder
- * @throws Exception
- */
+     * Creates the default child for the given parent.
+     *
+     * @param parent the parent folder
+     * @return the childfolder
+     * @throws Exception
+     */
     public AbstractFolder createDefaultChild(AbstractFolder parent, String name)
         throws Exception {
         List possibleChilds = getPossibleChilds(parent);
 
         if (possibleChilds.size() > 0) {
             String childType = (String) possibleChilds.get(0);
-
             return createChild(parent, name, childType);
         } else {
             return null;
@@ -134,13 +128,13 @@ public class FolderFactory {
     }
 
     /**
- * Creates a subfolder for the given folder with the given type.
- *
- * @param parent the parentfolder
- * @param childType the type of the child (e.g. CachedMHFolder )
- * @return the childfolder
- * @throws Exception
- */
+     * Creates a subfolder for the given folder with the given type.
+     *
+     * @param parent the parentfolder
+     * @param childType the type of the child (e.g. CachedMHFolder )
+     * @return the childfolder
+     * @throws Exception
+     */
     public AbstractFolder createChild(AbstractFolder parent, String name,
         String childType) throws Exception {
         AbstractFolder child = (AbstractFolder) handler.getPlugin(childType,
@@ -148,21 +142,17 @@ public class FolderFactory {
 
         // Add child to parent
         parent.addSubfolder(child);
-
         return child;
     }
 
     private String getGroup(String parentType) {
         Iterator it = folderlistElement.getElements().iterator();
-
         while (it.hasNext()) {
             XmlElement next = (XmlElement) it.next();
-
             if (next.getAttribute("name").equals(parentType)) {
                 return next.getAttribute("group");
             }
         }
-
         return null;
     }
 }
