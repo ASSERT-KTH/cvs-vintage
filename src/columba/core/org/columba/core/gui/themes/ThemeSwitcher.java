@@ -32,7 +32,8 @@ import org.columba.core.xml.XmlElement;
 public class ThemeSwitcher {
 	public static void setTheme() {
 		// get configuration
-		XmlElement themeConfig = Config.get("options").getElement("/options/gui/theme");
+		XmlElement themeConfig =
+			Config.get("options").getElement("/options/gui/theme");
 
 		try {
 			// get plugin-handler
@@ -41,9 +42,8 @@ public class ThemeSwitcher {
 					"org.columba.core.theme");
 			// if no theme available -> set ThinColumba as default
 			String pluginName = themeConfig.getAttribute("name", "ThinColumba");
-			if ( pluginName == null )
-			{
-				themeConfig.addAttribute("name","ThinColumba");
+			if (pluginName == null) {
+				themeConfig.addAttribute("name", "ThinColumba");
 				pluginName = "ThinColumba";
 			}
 
@@ -57,7 +57,7 @@ public class ThemeSwitcher {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			
+
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(ex);
 
@@ -73,7 +73,15 @@ public class ThemeSwitcher {
 	}
 
 	public static void updateFrame(JFrame frame) {
-		SwingUtilities.updateComponentTreeUI(frame);
+		final JFrame f = frame;
+
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				SwingUtilities.updateComponentTreeUI(f);
+			}
+		});
+
 	}
 
 	public static void setFonts(GuiItem item) {
