@@ -59,7 +59,7 @@ import org.tigris.scarab.screens.Default;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.2 2002/10/24 22:59:29 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.3 2003/05/03 01:43:29 dlr Exp $
  */
 public class ModuleAttributeEdit extends Default
 {
@@ -67,7 +67,7 @@ public class ModuleAttributeEdit extends Default
                               ScarabLocalizationTool l10n,
                               RunData data, TemplateContext context)
         throws Exception 
-   {
+    {
            return l10n.format("EditModuleAttribute", 
                               scarabR.getAttribute().getName());
     }
