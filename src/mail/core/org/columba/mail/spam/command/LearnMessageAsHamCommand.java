@@ -13,12 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.spam.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommand;
@@ -32,11 +32,11 @@ import org.columba.ristretto.message.Header;
 import org.macchiato.Message;
 
 import java.io.InputStream;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
 
 /**
  * Learn selected messages as ham.
@@ -56,8 +56,7 @@ public class LearnMessageAsHamCommand extends FolderCommand {
     /**
  * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
  */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // use wrapper class for easier handling of references array
         adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
 
@@ -73,18 +72,24 @@ public class LearnMessageAsHamCommand extends FolderCommand {
             MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
 
             //	update status message
-            if ( uids.length> 1) {
-            worker.setDisplayText("Training messages...");
-            worker.setProgressBarMaximum(uids.length);
+            if (uids.length > 1) {
+                //TODO: i18n
+                worker.setDisplayText("Training messages...");
+                worker.setProgressBarMaximum(uids.length);
             }
 
+            InputStream istream = null;
             for (int j = 0; j < uids.length; j++) {
+                if (worker.cancelled()) {
+                    break;
+                }
+                
                 try {
                     // register for status events
                     ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
                     // get inputstream of message body
-                    InputStream istream = CommandHelper.getBodyPart(srcFolder,
+                    istream = CommandHelper.getBodyPart(srcFolder,
                             uids[j]);
 
                     // get headers
@@ -92,31 +97,28 @@ public class LearnMessageAsHamCommand extends FolderCommand {
                             Message.HEADERFIELDS);
 
                     // put headers in list
-                    Enumeration enum = h.getKeys();
+                    Enumeration e = h.getKeys();
                     List list = new ArrayList();
 
-                    while (enum.hasMoreElements()) {
-                        String key = (String) enum.nextElement();
+                    while (e.hasMoreElements()) {
+                        String key = (String) e.nextElement();
                         list.add(h.get(key));
                     }
 
                     //train message as ham
                     SpamController.getInstance().trainMessageAsHam(istream, list);
 
-                    if ( uids.length> 1)
+                    if (uids.length > 1) {
                         worker.setProgressBarValue(j);
-
-                    if (worker.cancelled()) {
-                        break;
                     }
-
-                    istream.close();
                 } catch (Exception e) {
-                    new ExceptionDialog(e);
-
                     if (MainInterface.DEBUG) {
                         e.printStackTrace();
                     }
+                } finally {
+                    try {
+                        istream.close();
+                    } catch (IOException ioe) {}
                 }
             }
         }
