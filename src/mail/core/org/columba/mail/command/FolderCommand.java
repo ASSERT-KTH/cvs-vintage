@@ -21,12 +21,9 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.folder.Folder;
 
 /**
- * @author freddy
+ * Adds an array of folder references  
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz, tstich
  */
 public abstract class FolderCommand extends Command {
 
