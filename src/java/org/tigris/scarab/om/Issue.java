@@ -842,7 +842,7 @@ public class Issue
      */
     public List getAssociatedUsers() throws Exception
     {
-        List result = new ArrayList();
+        List result = null;
         Object obj = ScarabCache.get(this, GET_ASSOCIATED_USERS); 
         if ( obj == null ) 
         {        
@@ -861,6 +861,7 @@ public class Issue
                 }
             }
             
+            result = new ArrayList();
             if (!attributeIdList.isEmpty())
             {
                 Criteria crit = new Criteria()
