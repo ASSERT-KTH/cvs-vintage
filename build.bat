@@ -8,7 +8,7 @@ REM  the correct version is being used with the correct configuration.
 REM
 REM  ======================================================================
 REM
-REM $Id: build.bat,v 1.1 2001/08/27 23:51:35 user57 Exp $
+REM $Id: build.bat,v 1.2 2001/09/01 15:50:33 slaboure Exp $
 REM
 REM Authors:
 REM     Jason Dillon <jason@planet57.com>
@@ -16,12 +16,17 @@ REM     Sacha Labourey  <sacha.labourey@cogito-info.ch>
 REM
 
 REM ******************************************************
+REM Ignore the ANT_HOME variable: we want to use *our*
+REM ANT version and associated JARs.
+REM ******************************************************
 REM Ignore the users classpath, cause it might mess
 REM things up
 REM ******************************************************
 
-set CLASSPATH=
+SETLOCAL
 
+set CLASSPATH=
+set ANT_HOME=
 
 REM ******************************************************
 REM - "for" loops have been unrolled for compatibility
