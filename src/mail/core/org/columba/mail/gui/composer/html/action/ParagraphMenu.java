@@ -196,7 +196,7 @@ public class ParagraphMenu extends IMenu implements Observer, ActionListener,
      */
     public void componentAdded(ContainerEvent e) {
         LOG.info("Re-registering as observer on editor controller");
-        ((ComposerController) getController()).getEditorController()
+        ((ComposerController) getFrameMediator()).getEditorController()
             .addObserver(this);
     }
 

@@ -38,6 +38,8 @@
 		<menuitem imenu="SortMessagesMenu"/>	
 		<menuitem imenu="SortFoldersMenu"/>		
 		<separator/>
+		<menuitem imenu="HeadersMenu"/>
+		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>
 		

@@ -26,6 +26,7 @@
  <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
  <action name="CharacterEncodingMenu" class="org.columba.mail.gui.charset.CharacterEncodingSubMenu"/>
  <action name="ColumnDialog" class="org.columba.mail.gui.action.ColumnDialogAction"/>
+ <action name="HeadersMenu" class="org.columba.mail.gui.message.action.HeadersMenu"/>
  
  <!-- message menu -->
  <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>

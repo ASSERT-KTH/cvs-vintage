@@ -123,7 +123,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
         }
 
         if (comparator != null) {
-            TreeViewOwner mediator = (TreeViewOwner) getController();
+            TreeViewOwner mediator = (TreeViewOwner) getFrameMediator();
             mediator.getTreeController().getView().setFolderComparator(comparator);
             mediator.getTreeController().getView().setSortingEnabled(true);
         }
@@ -174,7 +174,7 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
-        TreeViewOwner mediator = (TreeViewOwner) getController();
+        TreeViewOwner mediator = (TreeViewOwner) getFrameMediator();
 
         if (action.equals(UNSORTED_ACTION)) {
 

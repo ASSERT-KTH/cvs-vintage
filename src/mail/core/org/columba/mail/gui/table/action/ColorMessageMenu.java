@@ -89,7 +89,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 		String action = e.getActionCommand();
 
 		// get current message list selection
-		FolderCommandReference r = ((MailFrameMediator) getController())
+		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
 		if (action.equals("NONE")) {

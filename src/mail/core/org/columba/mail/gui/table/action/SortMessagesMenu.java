@@ -59,7 +59,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
         ((MailFrameMediator) controller).registerTreeSelectionListener(this);
 
         // register as Observer
-        TableViewOwner table = (TableViewOwner) getController();
+        TableViewOwner table = (TableViewOwner) getFrameMediator();
         observable = table.getTableController().getTableModelSorter()
                           .getSortingStateObservable();
         observable.addObserver(this);
@@ -70,9 +70,9 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
     protected void createSubMenu() {
         removeAll();
 
-        TableViewOwner table = (TableViewOwner) getController();
+        TableViewOwner table = (TableViewOwner) getFrameMediator();
 
-        XmlElement columns = ((MailFrameMediator) getController()).getFolderOptionsController()
+        XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
                               .getConfigNode(selectedFolder, "ColumnOptions");
 
         Vector v = new Vector();
@@ -133,7 +133,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
-        TableViewOwner table = (TableViewOwner) getController();
+        TableViewOwner table = (TableViewOwner) getFrameMediator();
 
         if (action.equals("Ascending")) {
             table.getTableController().getTableModelSorter().setSortingOrder(true);
@@ -203,7 +203,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
 
             createSubMenu();
 
-            XmlElement xmlElement = ((MailFrameMediator) getController()).getFolderOptionsController()
+            XmlElement xmlElement = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
                                      .getConfigNode(selectedFolder,
                     "SortingOptions");
 
