@@ -1,11 +1,15 @@
 #set ($createNew = $data.Parameters.New)
 #set ($canEdit = "false")
 
+#set ($moduleId = $data.Parameters.getString("moduleid"))
+#if (!$moduleId)
+   #set ($createNew = "true")
+#end
+
 #if ($createNew && $createNew.equals("true"))
   $page.setTitle("New Module") 
 #else
   $page.setTitle("Modify Module") 
-  #set ($moduleId = $data.Parameters.getString("moduleid"))
   #set ($editModule = $scarabR.getModule($moduleId))
   #set ($canEdit = $security.hasPermission("Module | Edit", $editModule))
 #end
@@ -46,11 +50,12 @@
 #set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="true" /> 
 #else
-#set ($moduleGroup = $intake.Module.mapTo($editModule))
+#set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="false" /> 
-<input type="hidden" name="$moduleGroup.Id.Key" value="$moduleGroup.Id.Value" /> 
+<input type="hidden" name="$moduleGroup.Id.Key" value="$moduleId" /> 
 #end
 
+#set ($moduleGroup = $intake.Module.mapTo($editModule))
 #if ( !$moduleGroup.get("Id").isValid())
 <p><strong class="alert">$moduleGroup.get("Id").Message</strong></p>
 #end
