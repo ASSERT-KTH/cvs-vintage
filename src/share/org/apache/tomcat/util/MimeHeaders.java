@@ -354,6 +354,7 @@ class ValuesEnumerator implements Enumeration {
     String name;
 
     ValuesEnumerator(MimeHeaders headers, String name) {
+        this.name=name;
 	this.headers=headers;
 	pos=0;
 	size = headers.size();
