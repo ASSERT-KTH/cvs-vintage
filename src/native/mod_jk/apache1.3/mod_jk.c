@@ -515,7 +515,7 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->headers_values   = NULL;
     s->num_headers      = 0;
     if(r->headers_in && ap_table_elts(r->headers_in)) {
-        BOOL need_content_length_header = (s->content_length == 0);
+        int need_content_length_header = (s->content_length == 0) ? JK_TRUE : JK_FALSE;
         array_header *t = ap_table_elts(r->headers_in);        
         if(t && t->nelts) {
             int i;
@@ -536,7 +536,7 @@ static int init_ws_service(apache_private_data_t *private_data,
                 }
                 if(need_content_length_header &&
                         !strncmp(s->headers_values[i],"content-length",14)) {
-                    need_content_length_header = FALSE;
+                    need_content_length_header = JK_FALSE;
                 }
             }
             /* Add a content-length = 0 header if needed. 
