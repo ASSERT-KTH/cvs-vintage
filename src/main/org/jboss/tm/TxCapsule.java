@@ -46,7 +46,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -95,7 +95,7 @@ class TxCapsule implements TimeoutTarget
       transaction = new TransactionImpl(tm, hashCode, xid);
       this.tm = tm;
    }
- 
+
    // Public --------------------------------------------------------
 
    /**
@@ -169,7 +169,7 @@ class TxCapsule implements TimeoutTarget
 
    /**
     *  Return the transaction encapsulated here.
-    */    
+    */
    Transaction getTransaction() {
       return transaction;
    }
@@ -235,7 +235,7 @@ class TxCapsule implements TimeoutTarget
                // Two phase commit
 
                if (!prepareResources()) {
-                  boolean commitDecision = 
+                  boolean commitDecision =
                           status == Status.STATUS_PREPARED &&
                           (heuristicCode == HEUR_NONE ||
                            heuristicCode == XAException.XA_HEURCOM);
@@ -564,19 +564,19 @@ class TxCapsule implements TimeoutTarget
 
    // A list of synchronizations to call back on commit (before and after)
    private ArrayList sync = new ArrayList();
-   
+
    // A list of the XARessources to 2phi commit (prepare and commit)
    private ArrayList resources = new ArrayList();
 
    // Suspended XAResources are in this set
    private Set suspendedResources = new HashSet();
 
-   private Xid xid; // XA legacy 
+   private Xid xid; // XA legacy
    private int status; // status code
    private int heuristicCode = HEUR_NONE; // heuristics status
    private long start;
    private Timeout timeout;
-   
+
    // The public face of the capsule a JTA implementation
    private Transaction transaction;
 
@@ -815,7 +815,7 @@ class TxCapsule implements TimeoutTarget
          // Abort prepare on state change.
          if (status != Status.STATUS_PREPARING)
             return false;
-   
+
          XAResource resource = (XAResource)resources.get(i);
 
          try {
@@ -876,7 +876,7 @@ class TxCapsule implements TimeoutTarget
          // Abort commit on state change.
          if (status != Status.STATUS_COMMITTING)
             return;
-   
+
          XAResource resource = (XAResource)resources.get(i);
 
          try {
@@ -901,7 +901,7 @@ class TxCapsule implements TimeoutTarget
          }
       }
 
-      if (status != Status.STATUS_COMMITTING)
+      if (status == Status.STATUS_COMMITTING)
          status = Status.STATUS_COMMITTED;
    }
 
