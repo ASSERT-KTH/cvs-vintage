@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.122 2003/02/15 19:52:05 spestov Exp $
+ * @version $Id: Buffer.java,v 1.123 2003/02/15 22:17:56 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2840,6 +2840,11 @@ loop:		for(int i = 0; i < seg.count; i++)
 	public void invalidateCachedFoldLevels()
 	{
 		offsetMgr.lineInfoChangedFrom(0);
+		for(int i = 0; i < inUseFVMs.length; i++)
+		{
+			if(inUseFVMs[i] != null)
+				inUseFVMs[i]._invalidate(0);
+		}
 	} //}}}
 
 	//{{{ getFoldLevel() method

@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.30 2003/02/11 03:02:29 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.31 2003/02/15 22:17:55 spestov Exp $
  */
 public class BeanShell
 {
@@ -693,7 +693,7 @@ public class BeanShell
 				new String[] { t.toString() });
 		}
 		else
-			new BeanShellErrorDialog(view,t.toString());
+			new BeanShellErrorDialog(view,t);
 	} //}}}
 
 	//{{{ createInterpreter() method
