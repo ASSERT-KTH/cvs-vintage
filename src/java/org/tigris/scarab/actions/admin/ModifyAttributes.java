@@ -69,15 +69,22 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.1 2001/04/06 22:12:41 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.2 2001/04/09 00:07:49 jon Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
     /**
-        This manages clicking the Modify button
-    */
+     * On the admin,attribute-show.vm page, when you click the button,
+     * this will get the right Attribute from the database and put it into
+     * the $scarabR tool.
+     */
     public void doSelectattribute( RunData data, Context context ) throws Exception
     {
+        String template = data.getParameters()
+            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
         try
         {
             IntakeTool intake = (IntakeTool)context
@@ -97,14 +104,115 @@ public class ModifyAttributes extends VelocityAction
                     Attribute attr = Attribute.getInstance(sk);
                     ((ScarabRequestTool)srt).setAttribute(attr);
                 }
+
+                setTemplate(data, nextTemplate);
             }
         }
         catch (Exception e)
         {
+            setTemplate(data, template);
             // display the error message
             data.setMessage(e.getMessage());
         }
     }
+
+    /**
+     * If someone wants to edit the attributes, handle the clicking
+     * of the button.
+     */
+    public void doModifyattributeoptions( RunData data, Context context )
+        throws Exception
+    {
+        String template = data.getParameters()
+            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        if ( intake.isAllValid() )
+        {
+	        Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+	        String attributeID = attribute.get("Id").toString();
+
+	        ApplicationTool srt = TurbinePull.getTool(context, 
+	            ScarabConstants.SCARAB_REQUEST_TOOL);
+	        if (srt != null)
+	        {
+	            StringKey sk = new StringKey();
+	            sk.setValue(attributeID);
+	            Attribute attr = Attribute.getInstance(sk);
+	            ((ScarabRequestTool)srt).setAttribute(attr);
+	        }
+        }
+        setTemplate(data, nextTemplate);
+    }
+
+    /**
+     * Used on AttributeEditOptions.vm to change the name of an existing
+     * AttributeOption or add a new one if the name doesn't already exist.
+     */
+    public void doAddmodifyattributeoption( RunData data, Context context )
+        throws Exception
+    {
+        String template = data.getParameters()
+            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        setTemplate(data, nextTemplate);
+    }
+    
+    /**
+     * Used on AttributeEditOptions.vm to change the name of an existing
+     * AttributeOption or add a new one if the name doesn't already exist.
+     */
+    public void doDeleteattributeoption( RunData data, Context context )
+        throws Exception
+    {
+        String template = data.getParameters()
+            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        setTemplate(data, nextTemplate);
+    }
+
+    /**
+     * Used on AttributeEditOptions.vm to select an attribute option
+     * to work on.
+     */
+    public void doSelectattributeoption( RunData data, Context context )
+        throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        if ( intake.isAllValid() )
+        {
+            
+        }
+    }
+
+
+    /**
+     * Manages clicking of the AllDone button
+     */
+    public void doAlldone( RunData data, Context context ) throws Exception
+    {
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE );
+
+        setTemplate(data, nextTemplate);
+    }
+    
     /**
         This manages clicking the cancel button
     */
@@ -112,6 +220,7 @@ public class ModifyAttributes extends VelocityAction
     {
         data.setMessage("Changes were not saved!");
     }
+    
     /**
         does nothing.
     */

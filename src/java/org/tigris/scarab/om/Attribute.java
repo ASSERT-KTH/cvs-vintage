@@ -25,7 +25,6 @@ import org.tigris.scarab.util.*;
   * You should add additional methods to this class to meet the
   * application requirements.  This class will only be generated as
   * long as it does not already exist in the output directory.
-
   */
 public class Attribute 
     extends BaseAttribute
@@ -39,7 +38,9 @@ public class Attribute
             .append(className).append(keyString).toString();
     }
 
-
+    /**
+     * Return an instance of Attribute based on the passed in attribute id
+     */
     public static Attribute getInstance(ObjectKey attId) 
         throws Exception
     {
@@ -70,6 +71,17 @@ public class Attribute
             tgcs.addObject(key, new CachedObject(attribute));
         } 
         return attribute;
+    }
+    
+    /**
+     * Little method to return a Vector of all Attribute Type's.
+     * It is here for convenience with regards to needing this
+     * functionality from within a Template.
+     */
+    public static Vector getAllAttributeTypes()
+        throws Exception
+    {
+        return AttributeTypePeer.doSelect(new Criteria());
     }
 }
 
