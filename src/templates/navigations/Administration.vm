@@ -30,7 +30,7 @@
   <div>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</div>
 #end
 
-#if ($allowMAT || $allowMM || $link.isAllowed("admin,XMLExportSelect.vm"))
+#if ($allowMAT || $allowMM || $link.isAllowed("admin,XMLExportIssues.vm"))
   #if ($adminMenu.equals("3"))
     <div><strong>Modules</strong>
     $renderer.render("navigations", "ModuleAdmin.vm")

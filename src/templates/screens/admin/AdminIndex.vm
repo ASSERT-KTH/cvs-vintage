@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.22 2002/05/24 03:26:12 jmcnally Exp $
+@version $Id: AdminIndex.vm,v 1.23 2002/06/10 22:57:38 jon Exp $
 *#
 
 <div id="adminIndex" class="app">
@@ -25,7 +25,7 @@
 </ul>
 #end
 
-#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,XMLExportSelect.vm"))
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,XMLExportIssues.vm"))
 <h3>Modules</h3>
 <ul>
 #if ($link.isAllowed("admin,ManageArtifactTypes.vm"))
@@ -34,8 +34,8 @@
 #if ($link.isAllowed("admin,ManageModules.vm"))
  <li>$link.setPage("admin,ManageModules.vm").setLabel("Manage modules")</li>
 #end
-#if ($link.isAllowed("admin,XMLExportSelect.vm"))
- <li>$link.setPage("admin,XMLExportSelect.vm").setLabel("XML export")</li>
+#if ($link.isAllowed("admin,XMLExportIssues.vm"))
+ <li>$link.setPage("admin,XMLExportIssues.vm").setLabel("XML export")</li>
 #end
 </ul>
 #end
