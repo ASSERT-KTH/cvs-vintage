@@ -1,4 +1,4 @@
-// $Id: PluggableMenu.java,v 1.10 2004/10/18 14:02:09 mkl Exp $
+// $Id: PluggableMenu.java,v 1.11 2004/10/20 08:23:12 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.api;
-import javax.swing.*;
+import javax.swing.JMenuItem;
 
 /**
  * An interface which identifies an ArgoUML plug-in to the menu.
@@ -46,31 +46,31 @@ public interface PluggableMenu extends Pluggable {
 
     /** Key looked for in ProjectBrowser for File Import submenu.
      */
-    static String KEY_FILE_IMPORT = "File:Import";
+    String KEY_FILE_IMPORT = "File:Import";
 
     /** Key looked for in ProjectBrowser for View menu.
      */
-    static String KEY_VIEW = "View";
+    String KEY_VIEW = "View";
 
     /** Key looked for in ProjectBrowser for Create Diagram menu.
      */
-    static String KEY_CREATE_DIAGRAMS = "Create Diagrams";
+    String KEY_CREATE_DIAGRAMS = "Create Diagrams";
 
     /** Key looked for in ProjectBrowser for Arrange menu.
      */
-    static String KEY_ARRANGE = "Arrange";
+    String KEY_ARRANGE = "Arrange";
 
     /** Key looked for in ProjectBrowser for Generate menu.
      */
-    static String KEY_GENERATE = "Generate";
+    String KEY_GENERATE = "Generate";
 
     /** Key looked for in ProjectBrowser for Tools menu.
      */
-    static String KEY_TOOLS = "Tools";
+    String KEY_TOOLS = "Tools";
 
     /** Key looked for in ProjectBrowser for Help menu.
      */
-    static String KEY_HELP = "Help";
+    String KEY_HELP = "Help";
 
 
     /**

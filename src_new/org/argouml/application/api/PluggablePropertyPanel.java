@@ -1,4 +1,4 @@
-// $Id: PluggablePropertyPanel.java,v 1.7 2004/10/18 14:02:09 mkl Exp $
+// $Id: PluggablePropertyPanel.java,v 1.8 2004/10/20 08:23:12 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.application.api;
 
-import org.argouml.uml.ui.*;
+import org.argouml.uml.ui.PropPanel;
 
 /**  An interface which identifies an ArgoUML plug-in property panel.
  *   Plug-ins are replacements or additions to standard Argo classes.

@@ -1,4 +1,4 @@
-// $Id: PluggableDiagram.java,v 1.5 2004/10/18 14:02:09 mkl Exp $
+// $Id: PluggableDiagram.java,v 1.6 2004/10/20 08:23:12 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.api;
-import javax.swing.*;
+import javax.swing.JMenuItem;
 
 /**  An module interface which identifies an ArgoUML plug-in used
  *   as a diagram type.

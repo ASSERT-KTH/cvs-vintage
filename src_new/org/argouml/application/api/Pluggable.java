@@ -1,4 +1,4 @@
-// $Id: Pluggable.java,v 1.9 2004/10/18 14:02:09 mkl Exp $
+// $Id: Pluggable.java,v 1.10 2004/10/20 08:23:11 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,13 +51,13 @@ package org.argouml.application.api;
 public interface Pluggable extends ArgoModule {
 
     /** Constant required in plugin manifest. */
-    static final String PLUGIN_TITLE = "ArgoUML Dynamic Load Module";
+    String PLUGIN_TITLE = "ArgoUML Dynamic Load Module";
 
     /** Constant required in plugin manifest. */
-    static final String PLUGIN_VENDOR = "University of California";
+    String PLUGIN_VENDOR = "University of California";
 
     /** Constant required in plugin manifest. */
-    static final String PLUGIN_PREFIX = 
+    String PLUGIN_PREFIX = 
 	"org.argouml.application.api.Pluggable";
 
     /** A function which allows a plug-in to decide if it is available
