@@ -13,7 +13,7 @@ import javax.naming.NamingException;
  *   
  *      
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
 {
@@ -22,12 +22,31 @@ public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
     
     // Public --------------------------------------------------------
 
-    /** Set the jndi name under which the external context is bound.
+    /** Get the jndi name under which the external context is bound.
     */
     public String getJndiName();
     /** Set the jndi name under which the external context is bound.
     */
     public void setJndiName(String jndiName);
+
+    /** Get the class name of the InitialContext implementation to
+	use. Should be one of:
+	javax.naming.InitialContext
+	javax.naming.directory.InitialDirContext
+	javax.naming.ldap.InitialLdapContext
+    @return the classname of the InitialContext to use 
+     */
+    public String getInitialContext();
+
+    /** Set the class name of the InitialContext implementation to
+	use. Should be one of:
+	javax.naming.InitialContext
+	javax.naming.directory.InitialDirContext
+	javax.naming.ldap.InitialLdapContext
+	The default is javax.naming.InitialContex.
+     @param contextClass, the classname of the InitialContext to use
+    */
+    public void setInitialContext(String contextClass) throws ClassNotFoundException;
 
     /** Set the jndi.properties information for the external InitialContext.
     This is either a URL string or a classpath resource name. Examples:

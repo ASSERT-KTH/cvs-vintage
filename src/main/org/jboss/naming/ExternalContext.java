@@ -8,7 +8,9 @@ package org.jboss.naming;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.util.Hashtable;
 import java.util.Properties;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -19,6 +21,7 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
+import javax.naming.ldap.Control;
 
 import org.jnp.server.Main;
 
@@ -31,7 +34,7 @@ InitialContext as a Reference to a nonserializable object.
 @see org.jboss.naming.NonSerializableFactory
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
  */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
@@ -39,6 +42,7 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
 
     // Attributes ----------------------------------------------------
     private String jndiName;
+    private Class contextClass = javax.naming.InitialContext.class;
     private Properties contextProps;
 
     // Static --------------------------------------------------------
@@ -65,6 +69,32 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
     public void setJndiName(String jndiName)
     {
        this.jndiName = jndiName;
+    }
+
+    /** Get the class name of the InitialContext implementation to
+	use. Should be one of:
+	javax.naming.InitialContext
+	javax.naming.directory.InitialDirContext
+	javax.naming.ldap.InitialLdapContext
+    @return the classname of the InitialContext to use
+    */
+    public String getInitialContext()
+    {
+	return contextClass.getName();
+    }
+
+    /** Set the class name of the InitialContext implementation to
+	use. Should be one of:
+	javax.naming.InitialContext
+	javax.naming.directory.InitialDirContext
+	javax.naming.ldap.InitialLdapContext
+	The default is javax.naming.InitialContex.
+    @param contextClass, the classname of the InitialContext to use
+    */
+    public void setInitialContext(String className) throws ClassNotFoundException
+    {
+	ClassLoader loader = Thread.currentThread().getContextClassLoader();
+	contextClass = loader.loadClass(className);
     }
 
     public void setProperties(String contextPropsURL) throws IOException
@@ -118,8 +148,22 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
     public void startService()
       throws Exception
     {
+	Class[] types = {Hashtable.class};
+	Class[] ldapTypes = {Hashtable.class, Control[].class};
+	Context ctx = null;
+	try
+	{
+	    Constructor ctor = contextClass.getConstructor(types);
+	    Object[] args = {contextProps};
+	    ctx = (Context) ctor.newInstance(args);
+	}
+	catch(NoSuchMethodException e)
+	{ // Try the ldap constructor
+	    Constructor ctor = contextClass.getConstructor(ldapTypes);
+	    Object[] args = {contextProps, null};
+	    ctx = (Context) ctor.newInstance(args);
+	}    
         Context rootCtx = (Context) new InitialContext();
-        InitialContext ctx = new InitialContext(contextProps);
         log.debug("ctx="+ctx+", env="+ctx.getEnvironment());
         // Get the parent context into which we are to bind
         Name fullName = rootCtx.getNameParser("").parse(jndiName);
