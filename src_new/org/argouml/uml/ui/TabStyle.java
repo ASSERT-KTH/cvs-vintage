@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.6 2002/12/31 04:43:40 mkl Exp $
+// $Id: TabStyle.java,v 1.7 2003/03/28 21:10:51 alexb Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -122,9 +122,13 @@ implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
 
   ////////////////////////////////////////////////////////////////
   // accessors
-  public void setTarget(Fig t) {
+  public void setTarget(Object t) {
     if (_target != null) _target.removePropertyChangeListener(this);
-    _target = t;
+    
+    if( !(t instanceof Fig))
+        return;
+    
+    _target = (Fig)t;
     if (_target != null) _target.addPropertyChangeListener(this);
     if (_lastPanel != null) remove(_lastPanel);
     if (t == null) {
@@ -199,9 +203,31 @@ implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {
   protected String getAlternativeClassBaseName() {
     return _alternativeBase; }
 
-  public Fig getTarget() { return _target; }
+  public Object getTarget() { return _target; }
 
-  public boolean shouldBeEnabled() { return _shouldBeEnabled; }
+  public boolean shouldBeEnabled(Object target) {
+  
+    if (target == null) {
+      _shouldBeEnabled = false;
+      return _shouldBeEnabled;
+    }
+    
+    _shouldBeEnabled = true;
+    _stylePanel = null;
+    Class targetClass = target.getClass();
+    while (targetClass != null && _stylePanel == null) {
+      _stylePanel = findPanelFor(targetClass);
+      targetClass = targetClass.getSuperclass();
+    }
+    if (_stylePanel != null) {
+      _shouldBeEnabled = true;
+    }
+    else {
+      _shouldBeEnabled = false;
+    }
+    
+    return _shouldBeEnabled;
+  }
 
 
   ////////////////////////////////////////////////////////////////

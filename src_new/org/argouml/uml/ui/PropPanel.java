@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.43 2003/01/04 16:48:38 kataka Exp $
+// $Id: PropPanel.java,v 1.44 2003/03/28 21:10:51 alexb Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -453,8 +453,13 @@ abstract public class PropPanel extends TabSpawnable implements TabModelTarget, 
         SwingUtilities.invokeLater(new UMLChangeDispatch(this, 0));
     }
 
-    public boolean shouldBeEnabled() {
-        return (_modelElement != null);
+    public boolean shouldBeEnabled(Object target) {
+
+        if (target instanceof MModelElement) {
+                return true;
+        }
+        else
+            return false;
     }
 
     public void propertySet(MElementEvent mee) {
