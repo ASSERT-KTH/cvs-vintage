@@ -1,4 +1,4 @@
-// $Id: ZoomSliderButton.java,v 1.7 2004/05/20 11:12:21 linus Exp $
+// $Id: ZoomSliderButton.java,v 1.8 2004/07/20 01:49:55 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,9 +131,9 @@ public class ZoomSliderButton extends PopupButton {
         int sliderBaseWidth = _slider.getPreferredSize().width;
         _slider.setPaintLabels(true);
         
-        for (Enumeration enum = _slider.getLabelTable().elements(); 
-            enum.hasMoreElements();) {
-            ((Component) enum.nextElement()).setFont(LABEL_FONT);
+        for (Enumeration components = _slider.getLabelTable().elements();
+             components.hasMoreElements();) {
+            ((Component) components.nextElement()).setFont(LABEL_FONT);
         }
         
         _slider.setToolTipText(Translator.localize(BUNDLE, 

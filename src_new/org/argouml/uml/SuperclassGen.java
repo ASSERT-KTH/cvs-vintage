@@ -1,5 +1,5 @@
-// $Id: SuperclassGen.java,v 1.7 2004/03/25 22:30:01 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: SuperclassGen.java,v 1.8 2004/07/20 01:49:55 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,11 +39,11 @@ public class SuperclassGen implements ChildGenerator {
 	Vector res = new Vector();
 
 	Object/*MGeneralizableElement*/ ge = o;
-	Collection gens = ModelFacade.getGeneralizations(ge);
-	if (gens == null) return res.elements();
-	Iterator enum = gens.iterator();
-	while (enum.hasNext()) {
-	    Object/*MGeneralization*/ g = enum.next();
+	Collection generalizations = ModelFacade.getGeneralizations(ge);
+	if (generalizations == null) return res.elements();
+	Iterator gens = generalizations.iterator();
+	while (gens.hasNext()) {
+	    Object/*MGeneralization*/ g = gens.next();
 	    res.add(ModelFacade.getParent(g));
 	}
 	return res.elements();
