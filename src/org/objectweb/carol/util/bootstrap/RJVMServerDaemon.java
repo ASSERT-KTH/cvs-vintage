@@ -435,6 +435,78 @@ public class RJVMServerDaemon extends PortableRemoteObject implements RJVMServer
 	return jvmConfigurations;
     }
 
+   /**
+     * get the rjvm OutputStream
+     * @param id the jvm id
+     * @throws RJVMException if
+     * - the id doen'st existe
+     */
+    public String getOutputStream(String id) throws RJVMException, RemoteException {
+	try {
+	    Process p = (Process)jvmProcesses.get(id);
+	    if (p!=null) {
+		// get the Err and Out stream of the process
+		InputStream pOutputStream = p.getInputStream();
+		byte [] b;
+		b = new byte[pOutputStream.available()];
+		pOutputStream.read(b);
+		return new String(b);
+	    } else {
+		throw new RJVMException ("JVM with id: "+id+ "doens'nt exist");
+	    }
+	} catch (Exception e) {
+	    throw new RJVMException (e);
+	}
+    }
+
+   /**
+     * get the rjvm ErrorStream
+     * @param id the jvm id
+     * @throws RJVMException if
+     * - the id doen'st existe
+     */
+    public String getErrorStream(String id) throws RJVMException, RemoteException {
+	try {
+	    Process p = (Process)jvmProcesses.get(id);
+	    if (p!=null) {
+		// get the Err and Out stream of the process
+		InputStream pErrorStream = p.getErrorStream();
+		byte [] b;
+		b = new byte[pErrorStream.available()];
+		pErrorStream.read(b);
+		return new String(b);
+	    } else {
+		throw new RJVMException ("JVM with id: "+id+ "doens'nt exist");
+	    }
+	} catch (Exception e) {
+	    throw new RJVMException (e);
+	}
+    }
+
+    /**
+     * send a String to the rjvm inputStream
+     * @param s String to send to the InputStream
+     * @param id the jvm id
+     * @throws RJVMException if
+     * - the id doen'st existe
+     */
+    public void sendInputStream(String id, String s) throws  RJVMException, RemoteException {
+	try {
+	    Process p = (Process)jvmProcesses.get(id);
+	    if (p!=null) {
+		// get the In stream of the process
+		OutputStream pInStream = p.getOutputStream();
+		pInStream.write(s.getBytes());		
+		pInStream.flush();
+	    } else {
+		throw new RJVMException ("JVM with id: "+id+ "doens'nt exist");
+	    }
+	} catch (Exception e) {
+	    throw new RJVMException (e);
+	}	
+    }
+
+
     /**
      * Stop this server
      */

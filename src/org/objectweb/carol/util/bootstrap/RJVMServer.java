@@ -111,9 +111,36 @@ public interface RJVMServer extends Remote {
      */
     public Hashtable getAllRJVMID() throws RemoteException;   
 
+     /**
+     * get the rjvm ErrorStream
+     * @param id the jvm id
+     * @throws RJVMException if
+     * - the id doen'st existe
+     */
+    public String getErrorStream(String id) throws RJVMException, RemoteException;
+
+   /**
+     * get the rjvm OutputStream
+     * @param id the jvm id
+     * @throws RJVMException if
+     * - the id doen'st existe
+     */
+    public String getOutputStream(String id) throws RJVMException, RemoteException;
+
+    /**
+     * send a String to the rjvm inputStream
+     * @param s String to send to the InputStream
+     * @param id the jvm id
+     * @throws RJVMException if
+     * - the id doen'st existe
+     */
+    public void sendInputStream(String id, String s) throws RJVMException, RemoteException;
+
+
     /**
      * Stop this server
      */
-     public void stop() throws RemoteException;   
+     public void stop() throws RemoteException;
+
 
 }

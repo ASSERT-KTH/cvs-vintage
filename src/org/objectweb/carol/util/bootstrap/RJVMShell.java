@@ -168,16 +168,16 @@ public class RJVMShell {
 
     public static void startCommandLine(String line) {	
 	try {
-	    if ((line.startsWith("help")) || (line.startsWith("?"))){
+	    if ((line.trim().startsWith("help")) || (line.trim().startsWith("?"))){
 		printHelpJVM();
-	    } else if (line.equalsIgnoreCase("list")) {
+	    } else if (line.trim().equalsIgnoreCase("list")) {
 		
 		//list function 
 		for (Enumeration e = rjvmServer.getAllRJVMID().keys()  ; e.hasMoreElements() ;) {
 		    System.out.println((String)e.nextElement());
 		}
 		
-	    } else if (line.startsWith("conf")) {
+	    } else if (line.trim().startsWith("conf")) {
 		
 		//conf function
 		StringTokenizer st = new StringTokenizer(line);
@@ -191,51 +191,51 @@ public class RJVMShell {
 		    System.out.println("The jvm "+jvmName+" is launch in directory: " + rjvmConf.getCommandDirectory());
 		    System.out.println("The jvm "+jvmName+" is launch with the command: java " + rjvmConf.getCommandString()); 
 		}
-	    } else if (line.equalsIgnoreCase("killall")) {
+	    } else if (line.trim().equalsIgnoreCase("killall")) {
 		
 		//kill all function
 		rjvmServer.killAllRJVM();
 		
-	    } else if (line.startsWith("kill")) {
+	    } else if (line.trim().startsWith("kill")) {
 		
 		// kill function
 		StringTokenizer st = new StringTokenizer(line);
 		if (st.countTokens() < 2) {
 		    System.out.println("the kill function take a jvm_name parametter:");
-		    System.out.println("conf <jvm_name>");
+		    System.out.println("kill <jvm_name>");
 		} else { 
 		    st.nextToken(); // kill command
 		    String jvmName = st.nextToken();
 		    rjvmServer.killRJVM(jvmName);
 		}
 		
-	    } else if (line.startsWith("ping")) {
+	    } else if (line.trim().startsWith("ping")) {
 		
 		// ping function
 		StringTokenizer st = new StringTokenizer(line);
 		if (st.countTokens() < 2) {
 		    System.out.println("the ping function take a jvm_name parametter:");
-		    System.out.println("conf <jvm_name>");
+		    System.out.println("ping <jvm_name>");
 		} else { 
 		    st.nextToken(); //ping function
 		    String jvmName = st.nextToken();
 		    System.out.println(""+rjvmServer.pingRJVM(jvmName));
 		}
 		
-	    } else if (line.startsWith("exitv")) {
+	    } else if (line.trim().startsWith("exitv")) {
 		
 		// exitv function
 		StringTokenizer st = new StringTokenizer(line);
 		if (st.countTokens() < 2) {
 		    System.out.println("the exitv function take a jvm_name parametter:");
-		    System.out.println("conf <jvm_name>");
+		    System.out.println("exitv <jvm_name>");
 		} else { 
 		    st.nextToken(); //exitv function
 		    String jvmName = st.nextToken();
 		    System.out.println(""+rjvmServer.getRJVMExitValue(jvmName));
 		}
 		
-	    } else if (line.startsWith("java")) {
+	    } else if (line.trim().startsWith("java")) {
 		
 		StringTokenizer st = new StringTokenizer(line);
 		st.nextToken();
@@ -245,8 +245,104 @@ public class RJVMShell {
 		}
 		System.out.println("jvm name: " + rjvmServer.startRJVM(new RJVMConfiguration(jvmLine)));
 		
+	    } else if (line.trim().startsWith("errput")) {
+		
+		// ping function
+		StringTokenizer st = new StringTokenizer(line);
+		if (st.countTokens() < 2) {
+		    System.out.println("the errput function take a jvm_name parametter:");
+		    System.out.println("err <jvm_name>");
+		} else { 
+		    st.nextToken(); //ping function
+		    String jvmName = st.nextToken();
+		    System.out.println("make ^C or kill the jvm for stop this process");
+		    while (true) {
+			try {
+			    Thread.sleep(3000);
+			    String es = rjvmServer.getErrorStream(jvmName);
+			    if (es.trim().length()!=0) {	
+				System.out.println(es);
+			    }
+
+			    System.out.println(rjvmServer.getErrorStream(jvmName));
+			} catch (Exception e) {
+			    System.out.println ("JVM connection killed");
+			}
+		    }
+		}
+		
+	    } else if (line.trim().startsWith("output")) {
+		
+		// ping function
+		StringTokenizer st = new StringTokenizer(line);
+		if (st.countTokens() < 2) {
+		    System.out.println("the out function take a jvm_name parametter:");
+		    System.out.println("output <jvm_name>");
+		} else { 
+		    st.nextToken(); //ping function
+		    String jvmName = st.nextToken();
+		    System.out.println("make ^C or kill the jvm for stop this process");
+		    while (true) {
+			try {
+			    Thread.sleep(3000);	
+			    String os = rjvmServer.getOutputStream(jvmName);
+			    if (os.trim().length()!=0) {
+				System.out.println(os);
+			    }
+			} catch (Exception e) {
+			    System.out.println ("JVM connection killed");
+			}
+		    }
+		}
+		
+	    } else if (line.trim().startsWith("errout")) {
+		
+		// ping function
+		StringTokenizer st = new StringTokenizer(line);
+		if (st.countTokens() < 2) {
+		    System.out.println("the errout function take a jvm_name parametter:");
+		    System.out.println("errout <jvm_name>");
+		} else { 
+		    st.nextToken(); //ping function
+		    String jvmName = st.nextToken();
+		    System.out.println("make ^C or kill the jvm for stop this process");
+		    while (true) {
+			try {
+			    Thread.sleep(3000);
+			    String os = rjvmServer.getOutputStream(jvmName);
+			    String es = rjvmServer.getErrorStream(jvmName);
+			    if ((os.trim().length()!=0)||(es.trim().length()!=0)) {
+				System.out.println("Output stream of "+ jvmName +" :");			    
+				System.out.println("-------------------------------");
+				System.out.println(os);
+				System.out.println("Error stream of "+ jvmName +" :");			    
+				System.out.println("-------------------------------");
+				System.out.println(es);
+			    }
+			} catch (Exception e) {
+			    System.out.println ("JVM connection killed");
+			}
+		    }
+		}
+		
+	    } else if (line.trim().startsWith("input")) {
+		StringTokenizer st = new StringTokenizer(line);
+		if (st.countTokens() < 3) {
+		    System.out.println("the input function take a jvm_name and line parametter:");
+		    System.out.println("input <jvm_name> <line>");
+		} else {
+		    st.nextToken(); //in command
+		    String jvmName=st.nextToken();
+		    String jvmLine="";
+		    while (st.hasMoreTokens()) {
+			jvmLine+= " " + st.nextToken();
+		    }
+		    rjvmServer.sendInputStream(jvmName, jvmLine + "\n");
+		    System.out.println(jvmLine + " sended to " + jvmName);
+		}
 	    } else {
-		System.out.println("Unreconized function");
+		System.out.println("Unreconized function:" + line);
+		printHelpJVM();
 	    }	
 	} catch(Exception e){
 	    System.err.println(e);
@@ -256,13 +352,17 @@ public class RJVMShell {
     
     public static void printHelpJVM() {
 	System.out.println("RJVM shell commands:");
-	System.out.println("help or ?              -> print this help");
-	System.out.println("list                   -> list jvm names");	
-	System.out.println("conf  <jvm name>       -> list <jvm name> configuration");	
-	System.out.println("ping  <jvm name>       -> true if the jvm is alive");	
-	System.out.println("exitv <jvm name>       -> exit value of the jvm (-1) if the jvm is alive");		
-	System.out.println("killall                -> kill all jvm");	
-	System.out.println("kill  <jvm name>       -> kill the jvm <jvm name>");	
-	System.out.println("java  <cmd>            -> the java command");		  
+	System.out.println("help or ?                  -> print this help");
+	System.out.println("list                       -> list jvm names");	
+	System.out.println("conf   <jvm name>          -> list <jvm name> configuration");	
+	System.out.println("ping   <jvm name>          -> true if the jvm is alive");	
+	System.out.println("exitv  <jvm name>          -> exit value of the jvm (-1) if the jvm is alive");		
+	System.out.println("killall                    -> kill all jvm");	
+	System.out.println("kill   <jvm name>          -> kill the jvm <jvm name>");	
+	System.out.println("java   <cmd>               -> the java command");	
+	System.out.println("output <jvm name>          -> get output stream of the jvm every 3 seconds");
+	System.out.println("errput <jvm name>          -> get error stream of the jvm every 3 seconds");
+	System.out.println("errout <jvm name>          -> get error and output stream of the jvm every 3 seconds");
+	System.out.println("input  <jvm name> <string> -> send a string to the input stream of a jvm");		  
     }
 }
