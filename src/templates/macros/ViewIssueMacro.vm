@@ -586,6 +586,10 @@ $l10n.NoDependencies
        #if ($act.Transaction.Attachment.DataAsString)
          $act.Transaction.Attachment.DataAsString
        #else Not provided. #end
+     #elseif ($act.Attachment)
+       #if ($act.Attachment.DataAsString)
+         $act.Attachment.DataAsString
+       #else Not provided. #end     
      #elseif ($act.Transaction.TransactionType.Name.equals("Create Issue"))
            $l10n.InitialEntry
      #end
