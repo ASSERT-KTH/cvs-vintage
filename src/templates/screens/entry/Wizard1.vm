@@ -17,23 +17,7 @@ $page.setTitle("Enter New Issue")
 
 <div class="axial">
     <table cellpadding="3" cellspacing="2" border="1">
-#* 
-<!-- Summary is not required here, but is in the ReportIssue Action for now.
-     Eventually, that should be optional as well. We can just not do the dedup
-     search if Summary is not a present attribute for this module.
-     
-        <tr>
-            <th>
-            #set ( $attrValue = $attrValues.get("SUMMARY") )
-            #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-            #attrValueErrorMsg( $attrValue "Value" )<br/>
-            Summary:</th>
-            <td>
-<textarea name="$attrInput.Value.Key" rows="4" cols="40">$!attrInput.Value</textarea>
-                <p>A short description of the issue.</p>
-            </td>
-        </tr> -->
-*#
+
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
   #if ($attVal.isDedupeAttribute())
