@@ -54,28 +54,40 @@ public class ForwardAction
 
 	public ForwardAction(AbstractFrameController frameController) {
 		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_forward"));
-					
+			frameController,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_forward"));
+
 		// tooltip text
 		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_forward_tooltip"));
-					
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_forward_tooltip"));
+
 		// action command
 		setActionCommand("FORWARD");
-		
+
 		// icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("forward_small.png"));
-		
+
 		// icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("forward.png"));
-		
+
 		// shortcut key
 		setAcceleratorKey(
-				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
-				
+			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+
+		// toolbar text is usually a bit shorter
+		setToolBarText(
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_forward_toolbar"));
+		enableToolBarText(true);
+
 		setEnabled(false);
 		(
 			(
@@ -94,7 +106,7 @@ public class ForwardAction
 
 		// listen for configuration changes
 		forward.addObserver(this);
-		
+
 		forwardStyle = forward.getAttribute("style", "attachment");
 
 	}

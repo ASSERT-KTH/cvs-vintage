@@ -82,6 +82,7 @@ public class SaveMessageCommand extends FolderCommand {
 
 		// we can't use this addMessage-method here
 		// -> IMAP only supports sending sources
+		
 		//Object uid = folder.addMessage(message, worker);
 		
 		Object uid = folder.addMessage(message.getStringSource());

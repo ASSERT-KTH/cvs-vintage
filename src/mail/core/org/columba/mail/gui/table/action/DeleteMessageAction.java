@@ -55,7 +55,7 @@ public class DeleteMessageAction
 					"menu", "mainframe", "menu_message_delete"));
 					
 		// toolbar text
-		setToolBarName(
+		setToolBarText(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_delete_toolbar"));
 		

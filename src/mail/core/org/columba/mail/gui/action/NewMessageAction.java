@@ -34,7 +34,7 @@ public class NewMessageAction extends FrameAction {
 		super(controller, 
 				MailResourceLoader.getString(
 						"menu", "mainframe", "menu_message_new"));
-		setToolBarName(
+		setToolBarText(
 				MailResourceLoader.getString(
 						"menu", "mainframe", "menu_message_new_toolbar"));
 		setTooltipText(

@@ -49,7 +49,7 @@ public class CopyMessageAction
 					"menu", "mainframe", "menu_message_copy"));
 		
 		// toolbar text
-		setToolBarName(
+		setToolBarText(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_copy_toolbar"));
 		

@@ -33,9 +33,10 @@ public class AttachFileAction extends FrameAction {
 					"menu", "composer", "menu_message_attachFile_tooltip"));
 		
 		// toolbar text
-		setToolBarName(
+		setToolBarText(
 				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_attachFile"));
+					"menu", "composer", "menu_message_attachFile_toolbar"));
+		enableToolBarText(true);
 		
 		// action command
 		setActionCommand("ATTACH");

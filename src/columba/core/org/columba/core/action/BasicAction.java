@@ -194,7 +194,7 @@ public class BasicAction extends JAbstractAction {
 	 * 
 	 * @param s		new toolbar name
 	 */
-	public void setToolBarName( String s) 
+	public void setToolBarText( String s) 
 	{
 		TOOLBAR_NAME = s;
 	}
@@ -330,6 +330,13 @@ public class BasicAction extends JAbstractAction {
 	 */
 	public void setTopicID(String string) {
 		topicID = string;
+	}
+
+	/**
+	 * @param showToolbarText
+	 */
+	public void setShowToolBarText(boolean showToolbarText) {
+		this.showToolbarText = showToolbarText;
 	}
 
 }

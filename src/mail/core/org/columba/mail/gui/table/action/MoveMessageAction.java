@@ -49,7 +49,7 @@ public class MoveMessageAction
 					"menu", "mainframe", "menu_message_move"));
 		
 		// toolbar text
-		setToolBarName(
+		setToolBarText(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_move_toolbar"));
 		

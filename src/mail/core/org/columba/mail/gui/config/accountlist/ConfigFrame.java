@@ -119,11 +119,11 @@ public class ConfigFrame
 			"CLOSE",
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
-                dialog.getRootPane().registerKeyboardAction(
-                        this,
-                        "HELP",
-                        KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-                        JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"HELP",
+			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
@@ -163,13 +163,13 @@ public class ConfigFrame
 		addButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "addacount"));
 			*/
-			
+
 		//addButton.setIcon( ImageLoader.getImageIcon("stock_add_16.png") );
 		addButton.setActionCommand("ADD"); //$NON-NLS-1$
 		addButton.addActionListener(this);
 
 		removeButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
-		
+
 		/*
 		removeButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
@@ -177,7 +177,7 @@ public class ConfigFrame
 				"account",
 				"removeacount"));
 				*/
-				
+
 		removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
 		//removeButton.setIcon( ImageLoader.getImageIcon("stock_remove_16.png") );
 		removeButton.setEnabled(false);
@@ -191,7 +191,7 @@ public class ConfigFrame
 				"account",
 				"editsettings"));
 				*/
-				
+
 		editButton.setActionCommand("EDIT"); //$NON-NLS-1$
 		//editButton.setIcon( ImageLoader.getImageIcon("stock_properties_16.png") );
 		editButton.setEnabled(false);
@@ -266,15 +266,15 @@ public class ConfigFrame
 		gridBagLayout.setConstraints(strut1, c);
 		eastPanel.add(strut1);
 
-		gridBagLayout.setConstraints(removeButton, c);
-		eastPanel.add(removeButton);
+		gridBagLayout.setConstraints(editButton, c);
+		eastPanel.add(editButton);
 
 		Component strut = Box.createRigidArea(new Dimension(30, 5));
 		gridBagLayout.setConstraints(strut, c);
 		eastPanel.add(strut);
 
-		gridBagLayout.setConstraints(editButton, c);
-		eastPanel.add(editButton);
+		gridBagLayout.setConstraints(removeButton, c);
+		eastPanel.add(removeButton);
 
 		strut = Box.createRigidArea(new Dimension(30, 20));
 		gridBagLayout.setConstraints(strut, c);
@@ -313,11 +313,11 @@ public class ConfigFrame
 		buttonPanel.add(closeButton);
 		ButtonWithMnemonic helpButton =
 			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));		
+				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
-		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");		
+		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
 		buttonPanel.add(helpButton);
-		
+
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		dialog.getRootPane().setDefaultButton(closeButton);
@@ -376,11 +376,13 @@ public class ConfigFrame
 					item.getUid());
 
 			} else {
-				Folder folder = (Folder) MainInterface.treeModel.getImapFolder(
+				Folder folder =
+					(Folder) MainInterface.treeModel.getImapFolder(
 						item.getUid());
 				try {
 
-					FolderTreeNode parentFolder = (FolderTreeNode) folder.getParent();
+					FolderTreeNode parentFolder =
+						(FolderTreeNode) folder.getParent();
 					folder.removeFolder();
 					MainInterface.treeModel.nodeStructureChanged(parentFolder);
 				} catch (Exception ex) {
@@ -396,6 +398,6 @@ public class ConfigFrame
 			{
 			showAccountDialog();
 			listView.update();
-		} 
+		}
 	}
 }

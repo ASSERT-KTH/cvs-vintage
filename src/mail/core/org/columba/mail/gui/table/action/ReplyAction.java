@@ -43,40 +43,54 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 
 	public ReplyAction(AbstractFrameController frameController) {
 		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_reply"));
-		
+			frameController,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_reply"));
+
 		// tooltip text
 		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_reply_tooltip"));
-		
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_reply_tooltip"));
+
+		// toolbar text is usually a bit shorter
+		setToolBarText(
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_reply_toolbar"));
+
+		enableToolBarText(true);
+
 		// action command
 		setActionCommand("REPLY");
-		
+
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("reply_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("reply.png"));
-		
+
 		// shortcut key
 		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
-					KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		(
+			(
+				AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(
 			this);
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameController())
+				.getTableSelection();
 		MainInterface.processor.addOp(new ReplyCommand(r));
 	}
 

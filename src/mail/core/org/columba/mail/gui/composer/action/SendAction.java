@@ -51,10 +51,11 @@ public class SendAction extends FrameAction {
 					"menu", "composer", "menu_file_send_tooltip"));
 
 		// toolbar text
-		setToolBarName(
+		setToolBarText(
 				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_send"));
-
+					"menu", "composer", "menu_file_send_toolbar"));
+		enableToolBarText(true);
+		
 		// action command
 		setActionCommand("SEND");
 		

@@ -131,15 +131,16 @@ public class ConfigFrame
 
 		addButton =
 			new ButtonWithMnemonic(
-				MailResourceLoader.getString(
-					"dialog", "filter", "add_filter"));
+				MailResourceLoader.getString("dialog", "filter", "add_filter"));
 		addButton.setActionCommand("ADD");
 		addButton.addActionListener(this);
 
 		removeButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog", "filter", "remove_filter"));
+					"dialog",
+					"filter",
+					"remove_filter"));
 		removeButton.setActionCommand("REMOVE");
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
@@ -147,7 +148,9 @@ public class ConfigFrame
 		editButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
-					"dialog", "filter", "edit_filter"));
+					"dialog",
+					"filter",
+					"edit_filter"));
 		editButton.setActionCommand("EDIT");
 		editButton.setEnabled(false);
 		editButton.addActionListener(this);
@@ -222,15 +225,15 @@ public class ConfigFrame
 		gridBagLayout.setConstraints(strut1, c);
 		eastPanel.add(strut1);
 
-		gridBagLayout.setConstraints(removeButton, c);
-		eastPanel.add(removeButton);
+		gridBagLayout.setConstraints(editButton, c);
+		eastPanel.add(editButton);
 
 		Component strut = Box.createRigidArea(new Dimension(30, 5));
 		gridBagLayout.setConstraints(strut, c);
 		eastPanel.add(strut);
 
-		gridBagLayout.setConstraints(editButton, c);
-		eastPanel.add(editButton);
+		gridBagLayout.setConstraints(removeButton, c);
+		eastPanel.add(removeButton);
 
 		strut = Box.createRigidArea(new Dimension(30, 20));
 		gridBagLayout.setConstraints(strut, c);
@@ -299,7 +302,8 @@ public class ConfigFrame
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic helpButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
 		// associate with JavaHelp
 		HelpManager.enableHelpOnButton(

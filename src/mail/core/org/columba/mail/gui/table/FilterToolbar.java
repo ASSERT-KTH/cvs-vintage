@@ -31,7 +31,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.ToolbarToggleButton;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
@@ -171,46 +173,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		layout.setConstraints(attachmentButton, c);
 		add(attachmentButton);
 
-		//addSeparator();
-		//addSeparator();
-
-		//addSeparator();
-
-		/*
-		//HeaderTableItem list = MainInterface.config.getOptionsConfig().getHeaderTableItem();
-		HeaderTableItem list = tableController.getHeaderTableItem();
-		comboBox = new JComboBox();
-		comboBox.setToolTipText( GlobalResourceLoader.getString("menu","mainframe","filtertoolbar_header") );
-		String name;
-		
-		for (int i = 0; i < list.count(); i++)
-		{
-			name = list.getName(i);
-			boolean enabled = list.getEnabled(i);
-		
-			if (enabled == false)
-				continue;
-		
-			if (!(name.equalsIgnoreCase("status")
-				|| name.equalsIgnoreCase("attachment")
-				|| name.equalsIgnoreCase("flagged")
-				|| name.equalsIgnoreCase("priority")
-				|| name.equalsIgnoreCase("date")
-				|| name.equalsIgnoreCase("size")))
-				comboBox.addItem(name);
-		
-		}
-		
-		//comboBox.setMaximumSize(new java.awt.Dimension(100, 25));
-		comboBox.setSelectedIndex(0);
-		comboBox.addActionListener(this);
-		comboBox.setActionCommand("COMBO");
-		
-		
-		*/
-
 		JLabel label =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -222,6 +186,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		//addSeparator();
 
 		textField = new JTextField();
+		label.setLabelFor(textField);
 		textField.addActionListener(this);
 		textField.setActionCommand("TEXTFIELD");
 		textField.addFocusListener(new FocusListener() {
@@ -248,7 +213,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		//addSeparator();
 
 		clearButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
@@ -270,7 +235,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(clearButton);
 
 		advancedButton =
-			new JButton(
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
