@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.47 2002/08/01 01:13:33 slaboure Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.48 2002/08/06 04:06:49 chirino Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -191,6 +191,77 @@
                   <TimeToLive>0</TimeToLive>
                 </DLQConfig>
             </MDBConfig>
+       </proxy-factory-config>
+     </invoker-proxy-binding>
+
+     <!-- the trunk invoker bindings -->
+     <invoker-proxy-binding>
+       <name>entity-trunk-invoker</name>
+       <invoker-mbean>jboss:service=invoker,type=trunk</invoker-mbean>
+       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
+       <proxy-factory-config>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.EntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+           <list-entity>
+             <interceptor>org.jboss.proxy.ejb.ListEntityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </list-entity>
+	 </client-interceptors>
+       </proxy-factory-config>
+     </invoker-proxy-binding>     
+     <invoker-proxy-binding>
+       <name>stateless-trunk-invoker</name>
+       <invoker-mbean>jboss:service=invoker,type=trunk</invoker-mbean>
+       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
+       <proxy-factory-config>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatelessSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
+       </proxy-factory-config>
+     </invoker-proxy-binding>          
+     <invoker-proxy-binding>
+       <name>stateful-trunk-invoker</name>
+       <invoker-mbean>jboss:service=invoker,type=trunk</invoker-mbean>
+       <proxy-factory>org.jboss.proxy.ejb.ProxyFactory</proxy-factory>
+       <proxy-factory-config>
+	 <client-interceptors>
+           <home>
+             <interceptor>org.jboss.proxy.ejb.HomeInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </home>
+           <bean>
+             <interceptor>org.jboss.proxy.ejb.StatefulSessionInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.SecurityInterceptor</interceptor>
+             <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+             <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+           </bean>
+	 </client-interceptors>
        </proxy-factory-config>
      </invoker-proxy-binding>
    </invoker-proxy-bindings>
