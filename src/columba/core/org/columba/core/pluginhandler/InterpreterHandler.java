@@ -15,12 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.util.Hashtable;
+
+import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginLoader;
 import org.columba.core.scripting.AbstractInterpreter;
 import org.columba.core.xml.XmlElement;
-
-import java.util.Hashtable;
 
 
 /**
@@ -67,7 +68,8 @@ public class InterpreterHandler extends AbstractPluginHandler {
                         "main_class"), pluginManager.getPluginType(id),
                     pluginManager.getJarFile(id), null));
         } catch (Exception e) {
-            e.printStackTrace();
+        	if ( MainInterface.DEBUG )
+        		e.printStackTrace();
         }
     }
 }
