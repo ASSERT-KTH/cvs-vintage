@@ -21,7 +21,8 @@ import javax.ejb.SessionBean;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *	@version $Revision: 1.3 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -30,7 +31,8 @@ public class StatelessSessionEnterpriseContext
     
    // Attributes ----------------------------------------------------
    EJBObject ejbObject;
-    
+   SessionContext ctx;
+   
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -38,7 +40,9 @@ public class StatelessSessionEnterpriseContext
       throws RemoteException
    {
       super(instance, con);
-      ((SessionBean)instance).setSessionContext(new SessionContextImpl());
+      ctx = new SessionContextImpl();
+	  
+	  ((SessionBean)instance).setSessionContext(ctx);
       
       try
       {
@@ -56,6 +60,10 @@ public class StatelessSessionEnterpriseContext
    // Public --------------------------------------------------------
    public void setEJBObject(EJBObject eo) { ejbObject = eo; }
    public EJBObject getEJBObject() { return ejbObject; }
+   
+   public SessionContext getSessionContext() {
+	   return ctx;
+   }
 
    // EnterpriseContext overrides -----------------------------------
    public void discard()
