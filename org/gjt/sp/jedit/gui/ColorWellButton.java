@@ -27,6 +27,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 import org.gjt.sp.jedit.jEdit;
+import org.gjt.sp.jedit.OperatingSystem;
 //}}}
 
 /**
@@ -35,7 +36,7 @@ import org.gjt.sp.jedit.jEdit;
  * You can get and set the currently selected color using
  * <code>getSelectedColor()</code> and <code>setSelectedColor().
  * @author Slava Pestov
- * @version $Id: ColorWellButton.java,v 1.1 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: ColorWellButton.java,v 1.2 2002/05/30 10:17:45 spestov Exp $
  */
 public class ColorWellButton extends JButton
 {
@@ -43,10 +44,12 @@ public class ColorWellButton extends JButton
 	public ColorWellButton(Color color)
 	{
 		setIcon(new ColorWell(color));
-
-		setMargin(new Insets(1,1,1,1));
-
+		setMargin(new Insets(2,2,2,2));
 		addActionListener(new ActionHandler());
+
+		// according to krisk this looks better on OS X...
+		if(OperatingSystem.isMacOSLF())
+			putClientProperty("JButton.buttonType","toolbar");
 	} //}}}
 
 	//{{{ getSelectedColor() method
@@ -74,12 +77,12 @@ public class ColorWellButton extends JButton
 
 		public int getIconWidth()
 		{
-			return 28;
+			return 25;
 		}
 
 		public int getIconHeight()
 		{
-			return 14;
+			return 13;
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y)
@@ -89,6 +92,8 @@ public class ColorWellButton extends JButton
 
 			g.setColor(color);
 			g.fillRect(x,y,getIconWidth(),getIconHeight());
+			g.setColor(color.darker());
+			g.drawRect(x,y,getIconWidth()-1,getIconHeight()-1);
 		}
 	} //}}}
 

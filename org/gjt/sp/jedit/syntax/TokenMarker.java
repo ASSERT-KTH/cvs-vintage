@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.30 2002/05/27 00:06:34 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.31 2002/05/30 10:17:45 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -232,14 +232,17 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 					context);
 				lastOffset = pos + 1;
 			}
-			else if(keywords != null)
+			else
 			{
-				String noWordSep2 = keywords.getNonAlphaNumericChars();
+				String noWordSep2 = (keywords == null
+					? "" : keywords.getNonAlphaNumericChars());
 
 				if(!Character.isLetterOrDigit(ch)
 					&& noWordSep.indexOf(ch) == -1
 					&& noWordSep2.indexOf(ch) == -1)
 				{
+					handleSoftSpan();
+
 					markKeyword(true);
 	
 					tokenHandler.handleToken(
