@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.30 2005/02/19 23:22:43 mvw Exp $
+// $Id: WizStep.java,v 1.31 2005/03/01 19:47:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -179,23 +179,25 @@ public class WizStep extends JPanel
      * Enable/Disable the buttons.
      */
     public void enableButtons() {
-	if (target == null) {
-	    backButton.setEnabled(false);
-	    nextButton.setEnabled(false);
-	    finishButton.setEnabled(false);
-	    helpButton.setEnabled(false);
-	}
-	else if (target instanceof ToDoItem) {
-	    ToDoItem tdi = (ToDoItem) target;
-	    Wizard w = getWizard();
-	    backButton.setEnabled(w != null ? w.canGoBack() : false);
-	    nextButton.setEnabled(w != null ? w.canGoNext() : false);
-	    finishButton.setEnabled(w != null ? w.canFinish() : false);
-	    helpButton.setEnabled(true);
-	}
-	else {
-	    return;
-	}
+        if (target == null) {
+            backButton.setEnabled(false);
+            nextButton.setEnabled(false);
+            finishButton.setEnabled(false);
+            helpButton.setEnabled(false);
+        } else if (target instanceof ToDoItem) {
+            ToDoItem tdi = (ToDoItem) target;
+            Wizard w = getWizard();
+            backButton.setEnabled(w != null ? w.canGoBack() : false);
+            nextButton.setEnabled(w != null ? w.canGoNext() : false);
+            finishButton.setEnabled(w != null ? w.canFinish() : false);
+
+            if (tdi.getMoreInfoURL() == null || "".equals(tdi.getMoreInfoURL())) {
+                helpButton.setEnabled(false);
+            } else
+                helpButton.setEnabled(true);
+        } else {
+            return;
+        }
     }
 
     /**
