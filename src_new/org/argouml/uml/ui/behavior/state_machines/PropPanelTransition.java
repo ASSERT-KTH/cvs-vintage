@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +26,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.7 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelTransition.java,v 1.8 2002/08/04 17:44:21 thierrylach Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -41,9 +41,10 @@ import ru.novosoft.uml.behavior.common_behavior.*;
 import ru.novosoft.uml.MFactory;
 
 import org.argouml.application.api.*;
+import org.argouml.kernel.Project;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.ui.foundation.core.*;
 import org.argouml.uml.ui.*;
-import org.argouml.kernel.Project;
 import org.argouml.ui.ProjectBrowser;
 
 public class PropPanelTransition extends PropPanelModelElement {
@@ -229,7 +230,7 @@ public class PropPanelTransition extends PropPanelModelElement {
         MAction effect = null;
         Object target = getTarget();
         if(target instanceof MTransition) {
-            effect = new MCallActionImpl();
+            effect = UmlFactory.getFactory().getCommonBehavior().createCallAction();
             effect.setName("anon");
             ((MTransition) target).setEffect(effect);
         }

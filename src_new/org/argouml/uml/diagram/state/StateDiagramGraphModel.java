@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,13 +24,15 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.3 2001/04/02 14:28:40 5heyden Exp $
+// $Id: StateDiagramGraphModel.java,v 1.4 2002/08/04 17:44:19 thierrylach Exp $
 
 package org.argouml.uml.diagram.state;
+import org.argouml.model.uml.UmlFactory;
 
 import java.util.*;
 import java.beans.*;
 
+import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
@@ -284,7 +286,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
 	return null;
 
     if (edgeClass == MTransitionImpl.class) {
-      MTransition tr = new MTransitionImpl();
+      MTransition tr = UmlFactory.getFactory().getStateMachines().createTransition();
       // _namespace.addOwnedElement(tr);
 	  _machine.addTransition(tr);
       tr.setSource(fromSV);

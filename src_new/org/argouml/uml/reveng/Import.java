@@ -1,4 +1,4 @@
-// Copyright (c) 1996-01 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,6 +29,7 @@ import org.argouml.uml.reveng.java.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.static_structure.layout.*;
 import org.tigris.gef.base.*;
+import ru.novosoft.uml.*;
 import ru.novosoft.uml.model_management.*;
 
 import javax.swing.*;
@@ -40,8 +41,8 @@ import java.util.*;
  *
  * Supports recursive search in folder for all .java classes.
  *
- * $Revision: 1.7 $
- * $Date: 2001/12/15 19:59:16 $
+ * $Revision: 1.8 $
+ * $Date: 2002/08/04 17:44:20 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */

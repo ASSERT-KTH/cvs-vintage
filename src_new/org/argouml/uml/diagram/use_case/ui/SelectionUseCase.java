@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +24,7 @@
 // File: SelectionUseCase.java
 // Classes: SelectionUseCase
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionUseCase.java,v 1.2 2001/07/19 12:08:20 1sturm Exp $
+// $Id: SelectionUseCase.java,v 1.3 2002/08/04 17:44:20 thierrylach Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -33,6 +33,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.Icon;
 
+import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.behavior.use_cases.*;
@@ -42,6 +43,7 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 import org.tigris.gef.util.*;
 
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.*;
 
 public class SelectionUseCase extends SelectionWButtons {
@@ -184,9 +186,9 @@ public class SelectionUseCase extends SelectionWButtons {
     super.buttonClicked(buttonCode);
     MClassifier newNode = null;
     if (buttonCode == 10 || buttonCode == 11)
-      newNode = new MUseCaseImpl();
+      newNode = UmlFactory.getFactory().getUseCases().createUseCase();
     else
-      newNode = new MActorImpl();
+      newNode = UmlFactory.getFactory().getUseCases().createActor();
 
     FigUseCase fc = (FigUseCase) _content;
     MUseCase cls = (MUseCase) fc.getOwner();

@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.5 2002/03/12 14:43:58 linus Exp $
+// $Id: OuterClassifierContext.java,v 1.6 2002/08/04 17:44:20 thierrylach Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -23,6 +23,9 @@
 
 package org.argouml.uml.reveng.java;
 
+import org.argouml.model.uml.UmlFactory;
+
+import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
 
@@ -85,7 +88,7 @@ class OuterClassifierContext extends Context
 				      namePrefix + name);
 		}		    
 		if(classifier.isInterface()) {
-		    mInterface = new MInterfaceImpl();
+		    mInterface = UmlFactory.getFactory().getCore().createInterface();
 		    mInterface.setName(name);
 		    mInterface.setNamespace(mClassifier);
 		}
@@ -135,10 +138,10 @@ class OuterClassifierContext extends Context
 				      namePrefix + name);
 		}		    
 		if(classifier.isInterface()) {
-		    iClassifier = new MInterfaceImpl();
+		    iClassifier = UmlFactory.getFactory().getCore().createInterface();
 		}
 		else {
-		    iClassifier = new MClassImpl();
+		    iClassifier = UmlFactory.getFactory().getCore().createClass();
 		}
 		iClassifier.setName(name);
 		iClassifier.setNamespace(mClassifier);
@@ -153,4 +156,4 @@ class OuterClassifierContext extends Context
 	return iClassifier;
     }
 }
-	
+

@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +24,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.2 2002/05/03 19:17:04 jeremybennett Exp $
+// $Id: FigExtend.java,v 1.3 2002/08/04 17:44:20 thierrylach Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -37,7 +37,9 @@ import java.beans.*;
 
 import org.argouml.application.api.*;
 import org.argouml.uml.diagram.ui.*;
+import org.argouml.model.uml.UmlFactory;
 
+import ru.novosoft.uml.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.*;
@@ -68,8 +70,7 @@ public class FigExtend extends FigEdgeModelElement {
      *   the label for the extend relationship.</p>
      */
 
-    private static final MStereotype _EXTEND_LABEL = new MStereotypeImpl();
-
+    private static final MStereotype _EXTEND_LABEL = UmlFactory.getFactory().getExtensionMechanisms().createStereotype();
 
     ///////////////////////////////////////////////////////////////////////////
     //

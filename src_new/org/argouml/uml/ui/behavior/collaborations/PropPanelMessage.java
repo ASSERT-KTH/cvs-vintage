@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +26,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.7 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelMessage.java,v 1.8 2002/08/04 17:44:21 thierrylach Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 

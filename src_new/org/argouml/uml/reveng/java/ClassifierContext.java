@@ -1,4 +1,4 @@
-// $Id: ClassifierContext.java,v 1.3 2001/05/31 16:55:32 marcus Exp $
+// $Id: ClassifierContext.java,v 1.4 2002/08/04 17:44:20 thierrylach Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -22,6 +22,8 @@
 */
 
 package org.argouml.uml.reveng.java;
+
+import org.argouml.model.uml.UmlFactory;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
@@ -90,4 +92,4 @@ class ClassifierContext extends Context
 	}	    
     }
 }
-	
+

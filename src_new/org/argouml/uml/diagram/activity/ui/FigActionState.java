@@ -24,7 +24,6 @@
 // File: FigActionState.java
 // Classes: FigActionState
 // Original Author: ics 125b silverbullet team
-// $Id: FigActionState.java,v 1.2 2002/08/02 10:53:42 mkl Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 

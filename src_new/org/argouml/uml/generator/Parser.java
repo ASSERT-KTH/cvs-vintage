@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,13 +24,15 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.4 2002/05/03 19:17:07 jeremybennett Exp $
+// $Id: Parser.java,v 1.5 2002/08/04 17:44:20 thierrylach Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
 
 
 package org.argouml.uml.generator;
+
+import org.argouml.model.uml.UmlFactory;
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
@@ -64,7 +66,7 @@ public abstract class Parser {
 
 
   public MExpression parseExpression(String s) {
-    return new MExpression("Java", s);
+    return UmlFactory.getFactory().getDataTypes().createExpression("Java", s);
   }
 
   public String parseName(String s) {

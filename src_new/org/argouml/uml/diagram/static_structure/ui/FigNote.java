@@ -1,4 +1,4 @@
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +24,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: a_rueckert@gmx.net
-// $Id: FigNote.java,v 1.2 2001/11/03 02:27:50 psager Exp $
+// $Id: FigNote.java,v 1.3 2002/08/04 17:44:20 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -34,8 +34,8 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-
 import ru.novosoft.uml.foundation.core.*;
+
 import ru.novosoft.uml.*;
 import ru.novosoft.uml.behavior.state_machines.*;
 
@@ -49,6 +49,7 @@ import org.argouml.uml.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.state.*;
 import org.argouml.uml.diagram.state.ui.*;
+import org.argouml.model.uml.UmlFactory;
 
 
 /** 
@@ -167,7 +168,7 @@ public class FigNote extends FigNode implements VetoableChangeListener, DelayedV
      */
     public FigNote(MModelElement element) {
 	this();                                     // Construct the figure.
-	MComment node = new MCommentImpl();         // Create a new MComment node.
+	MComment node = UmlFactory.getFactory().getCore().createComment();         // Create a new Comment node.
 	setOwner(node);                             // Set it as the owner of the figure.
 	element.addComment(node);                   // Tell the annotated element, that it has a comment now.
 

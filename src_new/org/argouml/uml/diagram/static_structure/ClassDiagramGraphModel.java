@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.5 2002/03/13 04:32:36 mkl Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.6 2002/08/04 17:44:19 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -39,6 +39,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 import org.tigris.gef.graph.*;
 
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.MMUtil;
 
 /** This class defines a bridge between the UML meta-model
@@ -435,7 +436,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
           MInterface toIntf = (MInterface) toPort;
 
           if (edgeClass == MGeneralizationImpl.class) {
-              MGeneralization gen = new MGeneralizationImpl();
+              MGeneralization gen = UmlFactory.getFactory().getCore().createGeneralization();
               gen.setChild(fromIntf);
               gen.setParent(toIntf);
               addEdge(gen);
@@ -443,7 +444,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
           }
           else if (edgeClass == MDependencyImpl.class) {
               //nsuml: using Binding
-              MDependency dep = new MDependencyImpl();
+              MDependency dep = UmlFactory.getFactory().getCore().createDependency();
               dep.addSupplier(fromIntf);
               dep.addClient(toIntf);
               addEdge(dep);
@@ -464,10 +465,10 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
           MInstance fromInst = (MInstance) fromPort;
           MInstance toInst = (MInstance) toPort;
           if (edgeClass == MLinkImpl.class) {
-              MLink link = new MLinkImpl();
-              MLinkEnd le0 = new MLinkEndImpl();
+              MLink link = UmlFactory.getFactory().getCommonBehavior().createLink();
+              MLinkEnd le0 = UmlFactory.getFactory().getCommonBehavior().createLinkEnd();
               le0.setInstance(fromInst);
-              MLinkEnd le1 = new MLinkEndImpl();
+              MLinkEnd le1 = UmlFactory.getFactory().getCommonBehavior().createLinkEnd();
               le1.setInstance(toInst);
               link.addConnection(le0);
               link.addConnection(le1);
