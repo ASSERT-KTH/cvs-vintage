@@ -68,35 +68,35 @@ public class GlobalResourceLoader {
 	protected static ClassLoader classLoader;
 	protected static Hashtable htBundles = new Hashtable(80);
 	protected static ResourceBundle globalBundle;
-	protected static Locale locale;
 	protected static final String FIX_ME = "FIX ME!";
 	private static final String GLOBAL_BUNDLE_PATH =
 		"org.columba.core.i18n.global.global";
 
 	static {
 		try {
-			// get character encoding configuration
-			XmlElement language =
+			XmlElement locale =
 				Config.get("options").getElement("/options/locale");
 
 			// no configuration available, create default config
-			if (language == null) {
-				// create new language xml treenode
-				language = new XmlElement("locale");
-				language.addAttribute("language", "English");
+			if (locale == null) {
+				// create new locale xml treenode
+				locale = new XmlElement("locale");
+				locale.addAttribute("language", "en");
 				Config.get("options").getElement("/options").addElement(
-					language);
+					locale);
 
 			}
 			
-			String localeName = language.getAttribute("language");
-			locale = new Locale(localeName, localeName);
+			String language = locale.getAttribute("language");
+                        String country = locale.getAttribute("country", "");
+                        String variant = locale.getAttribute("variant", "");
+			Locale.setDefault(new Locale(language, country, variant));
 			
 			initClassLoader();
 			globalBundle =
 				ResourceBundle.getBundle(
 					GLOBAL_BUNDLE_PATH,
-					locale,
+					Locale.getDefault(),
 					classLoader);
 		} catch (MissingResourceException mre) {
 			throw new RuntimeException("Global resource bundle not found, Columba cannot start.");
@@ -138,7 +138,7 @@ public class GlobalResourceLoader {
 	}
 
 	protected static void initClassLoader() {
-		String name = "langpack_" + locale.getCountry() + ".jar";
+		String name = "langpack_" + Locale.getDefault().toString() + ".jar";
 		File langpack = new File(ConfigPath.getConfigDirectory(), name);
 		if (!langpack.exists() || !langpack.isFile()) {
 			langpack = new File(".", name);

@@ -63,19 +63,10 @@ public class GeneralPanel extends JPanel implements ActionListener {
 			Locale[] available = GlobalResourceLoader.getAvailableLocales();
 			codepageComboBox.setModel(new DefaultComboBoxModel(available));
 
-			XmlElement language =
-				Config.get("options").getElement("/options/locale");
-
-			// create Locale from configuration
-			String name = language.getAttribute("language");
-			Locale locale = new Locale(name);
-			if ( locale == null ) locale = new Locale("English");
-			
 			// select Locale in ComboBox
 			for (int i = 0; i < available.length; i++) {
-				if (available[i].equals(locale)) {
+				if (available[i].equals(Locale.getDefault())) {
 					codepageComboBox.setSelectedIndex(i);
-
 					break;
 				}
 			}
@@ -160,13 +151,14 @@ public class GeneralPanel extends JPanel implements ActionListener {
 			}
 			
 			// get language configuration
-			XmlElement language =
+			XmlElement locale =
 							Config.get("options").getElement("/options/locale");
 							
 			// set language config based on selected item
-			Locale locale = (Locale) codepageComboBox.getSelectedItem();
-			language.addAttribute("language",locale.getCountry());
-
+			Locale l = (Locale) codepageComboBox.getSelectedItem();
+			locale.addAttribute("language", l.getLanguage());
+                        locale.addAttribute("country", l.getCountry());
+                        locale.addAttribute("variant", l.getVariant());
 		}
 	}
 
