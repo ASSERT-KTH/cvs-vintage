@@ -1,8 +1,8 @@
 $page.setTitle("Issue Template")
         
-#set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm"))
+#set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
-#set ( $issueId = $data.Parameters.getString("issue_id"))
+#set ($issueId = $data.Parameters.getString("issue_id"))
 
 #if ($issueId)
    #set ($issue = $scarabR.Issue)
