@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.23 2004/11/05 16:15:18 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.24 2005/01/07 00:06:07 reverbel Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -270,7 +270,7 @@ and other configuration options to use for the various EJB proxies.
 <!ELEMENT proxy-factory-config (client-interceptors?, endpoint-interceptors? , web-class-loader? ,
 activation-config?, JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
 KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? , 
-jnp-context?)>
+jnp-context? , interface-repository-supported?)>
 
 <!--
   The jndi name of the jms provider adapter in the java:/ namespace.
@@ -376,6 +376,12 @@ jnp-context?)>
   Used in: proxy-factory-config for IORFactory
 -->
 <!ELEMENT jnp-context (#PCDATA)>
+<!--
+  Whether a deployed ejb has its own CORBA interface repository or not
+
+  Used in: proxy-factory-config for IORFactory
+-->
+<!ELEMENT interface-repository-supported (#PCDATA)>
 
 <!--
   The enterprise-beans element contains additional information about

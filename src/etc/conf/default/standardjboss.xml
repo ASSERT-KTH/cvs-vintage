@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.89 2004/11/30 20:16:16 starksm Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.90 2005/01/07 00:06:14 reverbel Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -299,6 +299,7 @@
         <poa>per-servant</poa>
         <register-ejbs-in-jnp-context>true</register-ejbs-in-jnp-context>
         <jnp-context>iiop</jnp-context>
+        <interface-repository-supported>false</interface-repository-supported>
       </proxy-factory-config>
     </invoker-proxy-binding>
 
