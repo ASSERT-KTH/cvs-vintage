@@ -26,6 +26,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -299,6 +301,7 @@ public class ConfigFrame
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		listView = new FilterListTable(filterList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
+		listView.addMouseListener(new MouseTableListener());
 		JScrollPane scrollPane = new JScrollPane(listView);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 		scrollPane.getViewport().setBackground(Color.white);
@@ -423,14 +426,7 @@ public class ConfigFrame
 			listView.update();
 
 		} else if (action.equals("EDIT")) {
-			Filter oldFilter = getSelected();
-			Filter newFilter = (Filter) oldFilter.clone();
-			if (showFilterDialog(newFilter)) {
-				int index = listView.getSelectedRow();
-				filterList.insert(newFilter, index);
-				filterList.remove(index+1);
-				listView.update(index);
-			}
+			editSelectedFilter();
 			
 		} else if (action.equals("MOVEUP")) {
 			int[] selectedRows = listView.getSelectedRows();
@@ -450,4 +446,30 @@ public class ConfigFrame
 			listView.setRowSelection(selectedRows);
 		}
 	}
+	
+	/**
+	 * Opens the filter edit dialog for the selected filter.
+	 */
+	private void editSelectedFilter() {
+		Filter oldFilter = getSelected();
+		Filter newFilter = (Filter) oldFilter.clone();
+		if (showFilterDialog(newFilter)) {
+			int index = listView.getSelectedRow();
+			filterList.insert(newFilter, index);
+			filterList.remove(index+1);
+			listView.update(index);
+		}
+	}
+	
+	/**
+	 * Mouse adapter that listens for double clicks on a filter in the filter table.
+	 */
+	private class MouseTableListener extends MouseAdapter {		 
+		/** {@inheritDoc} */
+		public void mouseClicked(MouseEvent e) {
+			if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() >= 2)) {
+				editSelectedFilter();
+			}
+		}
+	}	
 }
