@@ -79,7 +79,7 @@ $page.setTitle("Enter issue")
      #if ( $attVal.isRequired() )
         *
      #end
-     $attVal.getRModuleAttribute($issueType).DisplayValue
+     $attVal.RModuleAttribute.DisplayValue
    </th>
    <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
