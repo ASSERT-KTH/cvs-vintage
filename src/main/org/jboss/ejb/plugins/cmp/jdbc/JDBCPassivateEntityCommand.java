@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.PassivateEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 
 /**
@@ -18,10 +17,10 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
  
-public class JDBCPassivateEntityCommand implements PassivateEntityCommand {
+public class JDBCPassivateEntityCommand {
    private JDBCEntityBridge entity;
 
    public JDBCPassivateEntityCommand(JDBCStoreManager manager) {

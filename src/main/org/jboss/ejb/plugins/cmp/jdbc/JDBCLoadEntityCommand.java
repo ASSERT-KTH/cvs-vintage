@@ -15,7 +15,6 @@ import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.LoadEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
@@ -33,9 +32,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public class JDBCLoadEntityCommand implements LoadEntityCommand {
+public class JDBCLoadEntityCommand {
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;
    private Logger log;

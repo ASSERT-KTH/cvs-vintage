@@ -26,8 +26,8 @@ import org.jboss.ejb.LocalContainerInvoker;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.EntityInstanceCache;
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
@@ -47,18 +47,18 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
    
    /** tells the related continer to retrieve the id of the related entity */
-   protected static final Method GET_RELATED_ID;
+   private static final Method GET_RELATED_ID;
    /** tells the related continer to add an id to its list related entities */
-   protected static final Method ADD_RELATION;
+   private static final Method ADD_RELATION;
    /** tells the related continer to remove an id from its list related 
     * entities */
-   protected static final Method REMOVE_RELATION;
+   private static final Method REMOVE_RELATION;
    
    // set the message method objects
    static {
@@ -90,72 +90,72 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * The entity bridge to which this cmr field belongs.
     */
-   protected JDBCEntityBridge entity;
+   private JDBCEntityBridge entity;
    
    /**
     * The manager of this entity.
     */
-   protected JDBCStoreManager manager;
+   private JDBCStoreManager manager;
    
    /**
     * Metadata of the relationship role that this field represents.
     */
-   protected JDBCRelationshipRoleMetaData metadata;
+   private JDBCRelationshipRoleMetaData metadata;
    
    /**
     * Does this cmr field have foreign keys.
     */
-   protected boolean hasForeignKey;
+   private boolean hasForeignKey;
    
    /**
     * The key fields that this entity maintains in the relation table.
     */
-   protected JDBCCMPFieldBridge[] tableKeyFields;
+   private JDBCCMPFieldBridge[] tableKeyFields;
    
    /**
     * Foreign key fields of this entity (i.e., related entities pk fields)
     */
-   protected JDBCCMPFieldBridge[] foreignKeyFields;
+   private JDBCCMPFieldBridge[] foreignKeyFields;
 
    /**
     * The related entity's container.
     */
-   protected EntityContainer relatedContainer;
+   private EntityContainer relatedContainer;
    
    /**
     * The related entity's entity cache.
     */
-   protected EntityCache relatedCache;
+   private EntityCache relatedCache;
    
    /**
     * The related entity's jdbc store manager
     */
-   protected JDBCStoreManager relatedManager;
+   private JDBCStoreManager relatedManager;
    
    /**
     * The related entity's local container invoker.
     */
-   protected LocalContainerInvoker relatedInvoker;
+   private LocalContainerInvoker relatedInvoker;
    
    /**
     * The related entity.
     */
-   protected JDBCEntityBridge relatedEntity;
+   private JDBCEntityBridge relatedEntity;
    
    /**
     * The related entity's cmr field for this relationship.
     */
-   protected JDBCCMRFieldBridge relatedCMRField;
+   private JDBCCMRFieldBridge relatedCMRField;
    
    /**
     * The related entity's local home interface.
     */
-   protected Class relatedLocalInterface;
+   private Class relatedLocalInterface;
 
    /**
     * da log.
     */
-   protected Logger log;
+   private Logger log;
    
    /**
     * Creates a cmr field for the entity based on the metadata.
@@ -289,7 +289,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Initialize this half of the relation with data from the related
     * cmr field. See initRelatedData().
     */
-   protected void initRelatedData(JDBCEntityBridge relatedEntity) 
+   private void initRelatedData(JDBCEntityBridge relatedEntity) 
          throws DeploymentException {
 
       this.relatedEntity = relatedEntity;
@@ -557,7 +557,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Invokes the getRelatedId on the related CMR field via the container
     * invocation interceptor chain.
     */
-   protected Object invokeGetRelatedId(Transaction tx, Object myId) {
+   private Object invokeGetRelatedId(Transaction tx, Object myId) {
       try {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
@@ -582,7 +582,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Invokes the addRelation on the related CMR field via the container
     * invocation interceptor chain.
     */
-   protected void invokeAddRelation(
+   private void invokeAddRelation(
          Transaction tx, Object myId, Object relatedId) {
 
       try {
@@ -609,7 +609,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
     * Invokes the removeRelation on the related CMR field via the container
     * invocation interceptor chain.
     */
-   protected void invokeRemoveRelation(
+   private void invokeRemoveRelation(
          Transaction tx, Object myId, Object relatedId) {
 
       try {
@@ -717,7 +717,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * loads the collection of related ids
     */
-   protected void load(EntityEnterpriseContext myCtx) {
+   private void load(EntityEnterpriseContext myCtx) {
       FieldState fieldState = getFieldState(myCtx);
       if(fieldState != null) {
          return;
@@ -760,7 +760,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * Sets the foreign key field value.
     */
-   protected void setForeignKey(
+   private void setForeignKey(
          EntityEnterpriseContext myCtx, Object foreignKey) {
 
       if(!hasForeignKey()) {
@@ -804,39 +804,32 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * Gets the field state object from the persistence context.
     */
-   protected FieldState getFieldState(EntityEnterpriseContext ctx) {
-      Map fieldStates = getPersistenceContext(ctx).fieldState;
-      FieldState fieldState = (FieldState)fieldStates.get(this);
-      return fieldState;
+   private FieldState getFieldState(EntityEnterpriseContext ctx) {
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      return (FieldState)jdbcCtx.get(this);
    }
 
    /**
     * Sets the field state object in the persistence context.
     */
-   protected void setFieldState(
+   private void setFieldState(
          EntityEnterpriseContext ctx, FieldState fieldState) {
 
-      Map fieldStates = getPersistenceContext(ctx).fieldState;
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
       
       // invalidate current field state
-      FieldState currentFieldState = (FieldState)fieldStates.get(this);
+      FieldState currentFieldState = (FieldState)jdbcCtx.get(this);
       if(currentFieldState != null) {
          currentFieldState.invalidate();
       }
       
       if(fieldState == null) {
-         fieldStates.remove(this);
+         jdbcCtx.remove(this);
       } else {
-         fieldStates.put(this, fieldState);
+         jdbcCtx.put(this, fieldState);
       }
    }
 
-   private CMPStoreManager.PersistenceContext getPersistenceContext(
-         EntityEnterpriseContext ctx) {
-
-      return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
-   }
-      
    private class FieldState {
       EntityEnterpriseContext ctx;
       private Set[] setHandle = new Set[1];

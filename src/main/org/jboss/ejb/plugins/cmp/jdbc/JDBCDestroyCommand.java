@@ -7,8 +7,6 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import org.jboss.ejb.plugins.cmp.DestroyCommand;
-
 /**
  * JDBCDestroyCommand does nothing.
  *
@@ -17,9 +15,9 @@ import org.jboss.ejb.plugins.cmp.DestroyCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
-public class JDBCDestroyCommand implements DestroyCommand {
+public class JDBCDestroyCommand {
    public JDBCDestroyCommand(JDBCStoreManager manager) {
    }
    

@@ -14,7 +14,6 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import org.jboss.ejb.plugins.cmp.StopCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
@@ -28,9 +27,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-public class JDBCStopCommand implements StopCommand {
+public class JDBCStopCommand {
 
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import javax.sql.DataSource;
 import javax.ejb.EJBException;
 
-import org.jboss.ejb.plugins.cmp.StartCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -33,9 +32,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public class JDBCStartCommand implements StartCommand {
+public class JDBCStartCommand {
 
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;

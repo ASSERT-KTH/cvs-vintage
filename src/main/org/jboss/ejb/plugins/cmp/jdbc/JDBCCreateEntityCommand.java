@@ -17,7 +17,6 @@ import javax.ejb.DuplicateKeyException;
 import javax.sql.DataSource;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.CreateEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
@@ -32,9 +31,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
-public class JDBCCreateEntityCommand implements CreateEntityCommand {
+public class JDBCCreateEntityCommand {
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;
    private Logger log;

@@ -23,8 +23,7 @@ import javax.naming.NamingException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
-
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
@@ -52,7 +51,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -410,12 +409,12 @@ public class JDBCEntityBridge implements EntityBridge {
          }
       }
 
-      ctx.setPersistenceContext(new CMPStoreManager.PersistenceContext());
+      ctx.setPersistenceContext(new JDBCContext());
    }
 
    /**
-   * This is only called in commit option B
-   */
+    * This is only called in commit option B
+    */
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {
       for(int i=0; i<cmpFields.length; i++) {
          cmpFields[i].resetPersistenceContext(ctx);
@@ -548,17 +547,12 @@ public class JDBCEntityBridge implements EntityBridge {
       }
    }
 
-   private CMPStoreManager.PersistenceContext getPersistenceContext(
-         EntityEnterpriseContext ctx) {
-      return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
-   }
-      
    public EntityState getEntityState(EntityEnterpriseContext ctx) {
-      Map state = getPersistenceContext(ctx).fieldState;
-      EntityState entityState = (EntityState)state.get(this);
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      EntityState entityState = (EntityState)jdbcCtx.get(this);
       if(entityState == null) {
          entityState = new EntityState();
-         state.put(this, entityState);
+         jdbcCtx.put(this, entityState);
       }
       return entityState;
    }

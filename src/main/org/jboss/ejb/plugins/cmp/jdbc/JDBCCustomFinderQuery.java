@@ -18,7 +18,6 @@ import java.util.Enumeration;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
 import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
 
@@ -31,9 +30,9 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public class JDBCCustomFinderQuery implements JDBCQueryCommand {
+public class JDBCCustomFinderQuery {
    private Logger log;
 
    /**

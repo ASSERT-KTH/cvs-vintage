@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.ActivateEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 
 /**
@@ -20,10 +19,10 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
  
-public class JDBCActivateEntityCommand implements ActivateEntityCommand {
+public class JDBCActivateEntityCommand {
    private JDBCEntityBridge entity;
    
    public JDBCActivateEntityCommand(JDBCStoreManager manager) {

@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.StoreEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
@@ -28,9 +27,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
-public class JDBCStoreEntityCommand implements StoreEntityCommand {
+public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;
    private Logger log;

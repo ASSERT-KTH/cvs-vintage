@@ -14,7 +14,6 @@ import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.FindEntityCommand;
 
 /**
  * JDBCFindEntityCommand finds a single entity, by deligating to 
@@ -25,9 +24,9 @@ import org.jboss.ejb.plugins.cmp.FindEntityCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
-public class JDBCFindEntityCommand implements FindEntityCommand {
+public class JDBCFindEntityCommand {
    private JDBCStoreManager manager;
    
    public JDBCFindEntityCommand(JDBCStoreManager manager) {

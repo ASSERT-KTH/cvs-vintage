@@ -17,7 +17,6 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.RemoveException;
 import javax.sql.DataSource;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.cmp.RemoveEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
@@ -30,9 +29,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public class JDBCRemoveEntityCommand implements RemoveEntityCommand {
+public class JDBCRemoveEntityCommand {
    
    private JDBCStoreManager manager;
    private JDBCEntityBridge entity;

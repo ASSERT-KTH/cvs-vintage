@@ -14,7 +14,7 @@ import javax.ejb.EJBException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
@@ -32,9 +32,10 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
+
    public JDBCCMP2xFieldBridge(
          JDBCStoreManager manager,
          JDBCCMPFieldMetaData metadata) throws DeploymentException {
@@ -78,9 +79,9 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       fieldState.value = value;
    }
    
-  /**
-   * Has the value of this field changes since the last time clean was called.
-   */
+   /**
+    * Has the value of this field changes since the last time clean was called.
+    */
    public boolean isDirty(EntityEnterpriseContext ctx) {
       // read only and primary key fields are never dirty
       if(isReadOnly() || isPrimaryKeyMember()) {
@@ -91,9 +92,9 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
    
    /**
-   * Mark this field as clean. Saves the current state in context, so it 
-   * can be compared when isDirty is called.
-   */
+    * Mark this field as clean. Saves the current state in context, so it 
+    * can be compared when isDirty is called.
+    */
    public void setClean(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
       fieldState.isDirty = false;
@@ -106,8 +107,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
    
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {
       if(isReadTimedOut(ctx)) {
-         Map fieldStates = ((CMPStoreManager.PersistenceContext)ctx.getPersistenceContext()).fieldState;
-         fieldStates.put(this, new FieldState());
+         JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+         jdbcCtx.put(this, new FieldState());
       }
    }
    
@@ -122,17 +123,12 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       return true;
    }
 
-   private CMPStoreManager.PersistenceContext getPersistenceContext(
-         EntityEnterpriseContext ctx) {
-      return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
-   }
-      
    public FieldState getFieldState(EntityEnterpriseContext ctx) {
-      Map fieldStates = getPersistenceContext(ctx).fieldState;
-      FieldState fieldState = (FieldState)fieldStates.get(this);
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      FieldState fieldState = (FieldState)jdbcCtx.get(this);
       if(fieldState == null) {
          fieldState = new FieldState();
-         fieldStates.put(this, fieldState);
+         jdbcCtx.put(this, fieldState);
       }
       return fieldState;
    }

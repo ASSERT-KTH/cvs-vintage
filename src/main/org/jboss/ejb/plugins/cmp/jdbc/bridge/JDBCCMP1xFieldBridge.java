@@ -16,7 +16,7 @@ import javax.ejb.EJBException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
@@ -35,19 +35,24 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
-   protected Field field;
+   private Field field;
     
-   public JDBCCMP1xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {
+   public JDBCCMP1xFieldBridge(
+         JDBCStoreManager manager,
+         JDBCCMPFieldMetaData metadata) throws DeploymentException {
+
       super(manager, metadata);
 
       try {
-         field = manager.getMetaData().getEntityClass().getField(getFieldName());
+         field = manager.getMetaData().getEntityClass().getField(
+               getFieldName());
       } catch(NoSuchFieldException e) {
          // Non recoverable internal exception
-         throw new DeploymentException("No field named '" + getFieldName() + "' found in entity class.");
+         throw new DeploymentException("No field named '" + getFieldName() + 
+               "' found in entity class.");
       }
    }
 
@@ -56,7 +61,8 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
          return field.get(ctx.getInstance());
       } catch(Exception e) {
          // Non recoverable internal exception
-         throw new EJBException("Internal error getting instance field " + getFieldName() + ": " + e);
+         throw new EJBException("Internal error getting instance field " +
+               getFieldName() + ": " + e);
       }
    }
    
@@ -65,7 +71,8 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
          field.set(ctx.getInstance(), value);
       } catch(Exception e) {
          // Non recoverable internal exception
-         throw new EJBException("Internal error setting instance field " + getFieldName() + ": " + e);
+         throw new EJBException("Internal error setting instance field " + 
+               getFieldName() + ": " + e);
       }
    }
    
@@ -84,7 +91,8 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    
    /**
    * Mark this field as clean.
-   * Saves the current state in context, so it can be compared when isDirty is called.
+   * Saves the current state in context, so it can be compared when 
+   * isDirty is called.
    */
    public void setClean(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
@@ -98,7 +106,8 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
    public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
       if(isReadOnly()) {
-         long readInterval = System.currentTimeMillis() - getFieldState(ctx).lastRead; 
+         long readInterval = System.currentTimeMillis() - 
+               getFieldState(ctx).lastRead; 
          return readInterval > metadata.getReadTimeOut();
       }
       
@@ -108,17 +117,17 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    
    public void resetPersistenceContext(EntityEnterpriseContext ctx) {
       if(isReadTimedOut(ctx)) {
-         Map fieldStates = ((CMPStoreManager.PersistenceContext)ctx.getPersistenceContext()).fieldState;
-         fieldStates.put(this, new FieldState());
+         JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+         jdbcCtx.put(this, new FieldState());
       }
    }
 
    private FieldState getFieldState(EntityEnterpriseContext ctx) {
-      Map fieldStates = ((CMPStoreManager.PersistenceContext)ctx.getPersistenceContext()).fieldState;
-      FieldState fieldState = (FieldState)fieldStates.get(this);
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      FieldState fieldState = (FieldState)jdbcCtx.get(this);
       if(fieldState == null) {
          fieldState = new FieldState();
-         fieldStates.put(this, fieldState);
+         jdbcCtx.put(this, fieldState);
       }
       return fieldState;
    }
