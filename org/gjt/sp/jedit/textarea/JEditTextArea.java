@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.148 2002/09/08 21:03:11 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.149 2002/10/02 20:04:31 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4361,6 +4361,13 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			buffer.removeTrailingWhiteSpace(getSelectedLines());
 		}
+	} //}}}
+
+	//{{{ insertEnterAndIndent() method
+	public void insertEnterAndIndent()
+	{
+		setSelectedText("\n");
+		buffer.indentLine(caretLine,true,false);
 	} //}}}
 
 	//{{{ indentSelectedLines() method
