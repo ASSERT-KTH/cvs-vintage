@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.43 2002/05/18 22:52:52 reverbel Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.44 2002/06/05 14:36:56 slaboure Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -196,7 +196,7 @@
    </invoker-proxy-bindings>
 
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
-   
+
    <container-configurations>
 
       <container-configuration>
@@ -370,6 +370,7 @@
 	 <call-logging>false</call-logging>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <!-- CMT -->
 	    <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
