@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -115,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.101 2003/06/20 21:28:10 elicia Exp $
+ * @version $Id: IssueSearch.java,v 1.102 2003/06/24 23:52:12 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -231,6 +232,17 @@ public class IssueSearch
      * request)!
      */
     private Connection conn;
+    /**
+     * The statement that will be used by the connection to obtain the
+     * ResultSet for the query.  Statements should be closed when no longer
+     * needed and closing a Statement will release any associated ResultSets
+     * for a compliant jdbc driver.
+     */
+    private Statement stmt;
+    /**
+     * used to track how long we hold the connection
+     */
+    private long connectionStartTime;
 
     private SimpleDateFormat formatter;
 
@@ -1948,11 +1960,65 @@ public class IssueSearch
             {
                 sql.append(WHERE).append(where);
             }
+            String countSql = sql.toString();
             
-            List records = BasePeer.executeQuery(sql.toString());
-            count = ((Record)records.get(0)).getValue(1).asInt();
+            Connection con = conn;
+            Statement stmt = null;
+            try
+            {
+                if (con == null) 
+                {
+                    con = Torque.getConnection();
+                }
+                long startTime = System.currentTimeMillis();
+                stmt = conn.createStatement();
+                ResultSet resultSet = stmt.executeQuery(countSql);
+                if (resultSet.next()) 
+                {
+                    count = resultSet.getInt(1);
+                }
+                logTime(countSql, System.currentTimeMillis() - startTime, 
+                        50L, 500L);
+            }
+            finally
+            {
+                if (stmt != null) 
+                {
+                    stmt.close();
+                }                
+                if (conn == null && con != null) 
+                {
+                    con.close();
+                }
+            }
         }
         return count;
+    }
+
+    private static final String LOGGER = "org.apache.torque";
+    private void logTime(String message, long time, 
+                         long infoLimit, long warnLimit)
+    {
+        if (time > warnLimit) 
+        {
+            Log.get(LOGGER).warn(message + "\nTime = " + time + " ms");
+        }
+        else if (time > infoLimit) 
+        {
+            Logger log = Log.get(LOGGER);
+            if (log.isInfoEnabled()) 
+            {
+                log.info(message + "\nTime = " + time + " ms");                
+            }
+        }
+        else
+        {
+            Logger log = Log.get(LOGGER);
+            if (log.isDebugEnabled()) 
+            {
+                log.info(message + "\nTime = " + time + " ms");
+            }
+        }        
     }
 
 
@@ -2077,38 +2143,51 @@ public class IssueSearch
             // add pk sort so that rows can be combined easily
             sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
         }
-        
-        Logger torqueLog = Log.get("org.apache.torque");
-        if (torqueLog.isDebugEnabled()) 
-        {
-            torqueLog.debug("Search sql: " + sb.toString());
-        }
+        String searchSql = sb.toString();
                 
         // return a List of QueryResult objects
-        ResultSet resultSet = null;
+        List result = null;
         try
         {
-            // ASSUMPTION: When our connection is closed, it should
-            // release its associated resources (e.g. Statement,
-            // ResultSet).  This is standard practice for any robust
-            // JDBC driver.
             if (conn == null)
             {
                 conn = Torque.getConnection();
+                connectionStartTime = System.currentTimeMillis();
             }
 
-            // Get a bi-directionally scrollable ResultSet, necessary
-            // for random access by QueryResultList.
-            resultSet = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                             ResultSet.CONCUR_READ_ONLY)
-                .executeQuery(sb.toString());
+            // The code currently always calls getIssueCount() after we run this
+            // query.  We can avoid having to use 2 connections by calling it
+            // now using 'conn'.  It leaves the possibility of running the two
+            // queries within a transaction as well.  We also use the result 
+            // here to avoid the more complex query if there are no results.
+            int count = getIssueCount();
+            if (count > 0) 
+            {
+                long queryStartTime = System.currentTimeMillis();
+                // Get a bi-directionally scrollable ResultSet, necessary
+                // for random access by QueryResultList.
+                stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                                            ResultSet.CONCUR_READ_ONLY);
+                ResultSet resultSet = stmt.executeQuery(searchSql);
+                logTime(searchSql + 
+                    "\nTime to only execute the query, not return the results.",
+                    System.currentTimeMillis() - queryStartTime, 
+                    50L, 500L);
+                result = new QueryResultList(this, resultSet, valueListSize);
+            }
+            else 
+            {
+                result = Collections.EMPTY_LIST;
+            }
         }
         catch (SQLException e)
         {
             close();
+            Log.get(LOGGER).warn("Search sql:\n" + searchSql + 
+                "\nresulted in an exception: " + e.getMessage());
             throw e;
         }
-        return new QueryResultList(this, resultSet, valueListSize);
+        return result;
     }
 
     /**
@@ -2170,8 +2249,19 @@ public class IssueSearch
     protected void finalize()
         throws Throwable
     {
-        close();
-        super.finalize();
+        try
+        {
+            if (conn != null) 
+            {
+                Log.get(LOGGER)
+                    .warn("Closing connection in " + this + " finalizer");
+            }
+        }
+        finally
+        {
+            close();
+            super.finalize();
+        }
     }
 
     /**
@@ -2186,17 +2276,40 @@ public class IssueSearch
             // connection is released to avoid leaks.
             try
             {
-                Logger torqueLog = Log.get("org.apache.torque");
-                if (torqueLog.isDebugEnabled())
+                Logger log = Log.get(LOGGER);
+                if (log.isDebugEnabled())
                 {
-                    torqueLog.debug("Releasing issue search database " +
-                                    "connection");
+                    log.debug("Releasing issue search database connection");
                 }
             }
             finally
             {
+                try 
+                {
+                    if (this.stmt != null) 
+                    {
+                        this.stmt.close();
+                        this.stmt = null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        Log.get(LOGGER).warn(
+                            "Unable to close jdbc Statement", e);
+                    }
+                    catch (Exception ignore)
+                    {
+                    }
+                }
+                
                 Torque.closeConnection(this.conn);
                 this.conn = null;
+                logTime(this + 
+                        " released database connection which was held for:",
+                        System.currentTimeMillis() - connectionStartTime, 
+                        5000L, 30000L);
             }
         }
     }
