@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.51 2002/10/31 06:37:46 scoy Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.52 2002/10/31 23:38:01 scoy Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1499,7 +1499,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>substring</function-name>
-            <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
+            <function-sql>substring(?1, ?2, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>lcase</function-name>
@@ -1625,7 +1625,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>substring</function-name>
-            <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
+            <function-sql>substring(?1, ?2, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>lcase</function-name>
