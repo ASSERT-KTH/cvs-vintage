@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.2 2003/09/29 18:51:52 alexb Exp $
+// $Id: ExplorerPopup.java,v 1.3 2003/10/05 08:21:28 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,10 +138,6 @@ public class ExplorerPopup extends JPopupMenu{
             }
             if (ModelFacade.isAPackage(selectedItem) || ModelFacade.isAModel(selectedItem)) {
                 this.add(ActionAddPackage.SINGLETON);
-            }
-            if (selectedItem != null) {
-                this.add(new ActionGoToDetails(
-                menuLocalize("action.properties")));
             }
         }
     }
