@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * @author frd
@@ -23,7 +23,7 @@ public class TableUpdater {
 	protected static List list = new Vector();
 
 	
-	public static void tableChanged(TableChangedEvent ev) throws Exception {
+	public static void tableChanged(TableModelChangedEvent ev) throws Exception {
 		for (Iterator it = list.iterator(); it.hasNext();) {
 						AbstractMailFrameController frame = (AbstractMailFrameController) it.next();
 		// for (Enumeration e = list.elements(); e.hasMoreElements();) {

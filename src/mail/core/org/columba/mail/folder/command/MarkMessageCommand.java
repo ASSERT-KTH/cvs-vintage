@@ -26,7 +26,7 @@ import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * Mark selected messages with specific variant.
@@ -66,12 +66,12 @@ public class MarkMessageCommand extends FolderCommand {
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-		TableChangedEvent ev;
+		TableModelChangedEvent ev;
 		for (int i = 0; i < r.length; i++) {
 
 			ev =
-				new TableChangedEvent(
-					TableChangedEvent.MARK,
+				new TableModelChangedEvent(
+					TableModelChangedEvent.MARK,
 					r[i].getFolder(),
 					r[i].getUids(),
 					r[i].getMarkVariant());
@@ -85,8 +85,8 @@ public class MarkMessageCommand extends FolderCommand {
 		if (u != null) {
 
 			ev =
-				new TableChangedEvent(
-					TableChangedEvent.MARK,
+				new TableModelChangedEvent(
+					TableModelChangedEvent.MARK,
 					u.getFolder(),
 					u.getUids(),
 					u.getMarkVariant());

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.table;
+package org.columba.mail.gui.table.model;
 
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.message.HeaderList;
@@ -26,7 +26,7 @@ import org.columba.mail.message.HeaderList;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class TableChangedEvent {
+public class TableModelChangedEvent {
 
 	public final static int UPDATE = 0;
 	public final static int SET = 1;
@@ -43,17 +43,17 @@ public class TableChangedEvent {
 	/**
 	 * Constructor for TableChangedEvent.
 	 */
-	public TableChangedEvent(int eventType) {
+	public TableModelChangedEvent(int eventType) {
 		this.eventType = eventType;
 	}
 
-	public TableChangedEvent(int eventType, FolderTreeNode srcFolder) {
+	public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder) {
 		this.eventType = eventType;
 		this.srcFolder = srcFolder;
 
 	}
 
-	public TableChangedEvent(
+	public TableModelChangedEvent(
 		int eventType,
 		FolderTreeNode srcFolder,
 		Object[] uids) {
@@ -62,7 +62,7 @@ public class TableChangedEvent {
 		this.uids = uids;
 	}
 
-	public TableChangedEvent(
+	public TableModelChangedEvent(
 		int eventType,
 		FolderTreeNode srcFolder,
 		HeaderList headerList) {
@@ -71,7 +71,7 @@ public class TableChangedEvent {
 		this.headerList = headerList;
 	}
 
-	public TableChangedEvent(
+	public TableModelChangedEvent(
 		int eventType,
 		FolderTreeNode srcFolder,
 		Object[] uids,

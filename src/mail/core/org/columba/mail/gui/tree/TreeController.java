@@ -32,7 +32,6 @@ import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.dnd.MessageTransferHandler;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
-import org.columba.mail.gui.tree.selection.TreeSelectionManager;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**
@@ -52,8 +51,6 @@ public class TreeController implements TreeWillExpandListener {
 
 	private FolderTreeMouseListener mouseListener;
 
-	protected TreeSelectionManager treeSelectionManager;
-
 	private FolderTreeNode selectedFolder;
 
 	private TreeModel model;
@@ -72,8 +69,6 @@ public class TreeController implements TreeWillExpandListener {
 		this.mailFrameController = mailFrameController;
 
 		view = new TreeView(mailFrameController, model);
-
-		treeSelectionManager = new TreeSelectionManager();
 
 		view.addTreeWillExpandListener(this);
 
@@ -134,7 +129,8 @@ public class TreeController implements TreeWillExpandListener {
 		MainInterface.processor.addOp(
 			new ViewHeaderListCommand(
 				getMailFrameController(),
-				treeSelectionManager.getSelection()));
+				getMailFrameController().getTreeSelection()));
+
 	}
 
 	public void createPopupMenu() {
@@ -148,14 +144,6 @@ public class TreeController implements TreeWillExpandListener {
 
 	public FolderTreeNode getSelected() {
 		return selectedFolder;
-	}
-
-	/**
-	 * Returns the treeSelectionManager.
-	 * @return TreeSelectionManager
-	 */
-	public TreeSelectionManager getTreeSelectionManager() {
-		return treeSelectionManager;
 	}
 
 	/**

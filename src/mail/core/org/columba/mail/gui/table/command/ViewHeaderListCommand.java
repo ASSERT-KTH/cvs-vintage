@@ -55,6 +55,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	 */
 	public void updateGUI() throws Exception {
 
+		// notify table selection handler 
 		(
 			(TableSelectionHandler) frameController
 				.getSelectionManager()
@@ -62,6 +63,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 				"mail.table")).setFolder(
 			folder);
 
+		// this should be called from TableController instead
 		((TableOwnerInterface) frameController).getTableController().showHeaderList(folder, headerList);
 
 		MainInterface.treeModel.nodeChanged(folder);
@@ -75,9 +77,9 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		folder = (Folder) r[0].getFolder();
-//		register for status events
-		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
-		
+		//		register for status events
+		 ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+
 		FolderItem item = folder.getFolderItem();
 		if (item.get("type").equals("IMAPFolder")) {
 			boolean applyFilter =

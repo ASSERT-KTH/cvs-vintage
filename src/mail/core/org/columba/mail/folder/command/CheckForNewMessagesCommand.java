@@ -31,7 +31,7 @@ import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * 
@@ -126,8 +126,8 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 	 */
 	public void updateGUI() throws Exception {
 		// send update event to table
-		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
+		TableModelChangedEvent ev =
+			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, inboxFolder);
         if(needGUIUpdate){
           // Update summary table
 		  TableUpdater.tableChanged(ev);

@@ -17,7 +17,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.HeaderInterface;
 
@@ -90,9 +90,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
 	 */
 	public void updateGUI() throws Exception {
 		// update table viewer
-		TableChangedEvent ev =
-			new TableChangedEvent(
-				TableChangedEvent.UPDATE,
+		TableModelChangedEvent ev =
+			new TableModelChangedEvent(
+				TableModelChangedEvent.UPDATE,
 				inboxFolder);
 
 		TableUpdater.tableChanged(ev);

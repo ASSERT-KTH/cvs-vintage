@@ -23,7 +23,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.HeaderInterface;
 
@@ -50,8 +50,8 @@ public class AddMessageCommand extends Command {
 	public void updateGUI() throws Exception {
 		//MailFrameController frame = (MailFrameController) frameController;
 
-		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
+		TableModelChangedEvent ev =
+			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, folder);
 
 		//frame.tableController.tableChanged(ev);
 		

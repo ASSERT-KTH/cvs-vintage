@@ -56,43 +56,7 @@ public class ThreePaneMailFrameController
 	}
 
 	protected void initActions() {
-		/*
-		tableController.getView().getInputMap().put(
-			KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK),
-			"COPY");
-		tableController.getView().getActionMap().put(
-			"COPY",
-			new CopyAction(this));
 
-		tableController.getView().getInputMap().put(
-			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK),
-			"CUT");
-		tableController.getView().getActionMap().put(
-			"CUT",
-			new CutAction(this));
-
-		tableController.getView().getInputMap().put(
-			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
-			"PASTE");
-		tableController.getView().getActionMap().put(
-			"PASTE",
-			new PasteAction(this));
-
-		tableController.getView().getInputMap().put(
-			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
-			"DELETE");
-		tableController.getView().getActionMap().put(
-			"DELETE",
-			new DeleteAction(this));
-
-		treeController.getView().getInputMap().put(
-			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
-			"PASTE");
-		treeController.getView().getActionMap().put(
-			"PASTE",
-			new PasteAction(this));
-		*/
-		
 		tableController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
 			"UP");
@@ -105,7 +69,10 @@ public class ThreePaneMailFrameController
 		DownAction downAction = new DownAction(this);
 		tableController.getView().getActionMap().put("DOWN", downAction);
 		//register the markasread timer as selection listener
-		tableController.getMailFrameController().registerTableSelectionListener(tableController.getMarkAsReadTimer());
+		tableController
+			.getMailFrameController()
+			.registerTableSelectionListener(
+			tableController.getMarkAsReadTimer());
 	}
 
 	public AbstractFrameView createView() {
@@ -148,14 +115,23 @@ public class ThreePaneMailFrameController
 
 		new DialogStore((MailFrameView) view);
 
-		getSelectionManager().addSelectionHandler(
-			new TableSelectionHandler(tableController.getView()));
+		// create selection handlers
+		TableSelectionHandler tableHandler =
+			new TableSelectionHandler(tableController.getView());
+		getSelectionManager().addSelectionHandler(tableHandler);
 
-		getSelectionManager().addSelectionHandler(
-			new TreeSelectionHandler(treeController.getView()));
+		TreeSelectionHandler treeHandler =
+			new TreeSelectionHandler(treeController.getView());
+		getSelectionManager().addSelectionHandler(treeHandler);
+
 		getSelectionManager().addSelectionHandler(
 			new AttachmentSelectionHandler(attachmentController.getView()));
 
+		/*
+		treeController.getTreeSelectionManager().registerSelectionListener(""
+			tableController.getTableSelectionManager());
+		*/
+		
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
 		attachmentController.createPopupMenu();

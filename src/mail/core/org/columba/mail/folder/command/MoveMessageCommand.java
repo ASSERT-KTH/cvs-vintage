@@ -24,7 +24,7 @@ import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * Move selected messages from source to destination folder.
@@ -56,12 +56,12 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-		TableChangedEvent ev;
+		TableModelChangedEvent ev;
 		for (int i = 0; i < r.length; i++) {
 
 			ev =
-				new TableChangedEvent(
-					TableChangedEvent.REMOVE,
+				new TableModelChangedEvent(
+					TableModelChangedEvent.REMOVE,
 					r[i].getFolder(),
 					r[i].getUids());
 
@@ -73,7 +73,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 		FolderCommandReference u = adapter.getUpdateReferences();
 		if (u != null) {
 
-			ev = new TableChangedEvent(TableChangedEvent.REMOVE, u.getFolder(), u.getUids());
+			ev = new TableModelChangedEvent(TableModelChangedEvent.REMOVE, u.getFolder(), u.getUids());
 
 			TableUpdater.tableChanged(ev);
 

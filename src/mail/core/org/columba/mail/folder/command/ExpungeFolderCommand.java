@@ -24,7 +24,7 @@ import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * Expunge folder.
@@ -53,10 +53,10 @@ public class ExpungeFolderCommand extends FolderCommand {
 
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-		TableChangedEvent ev;
+		TableModelChangedEvent ev;
 		for (int i = 0; i < r.length; i++) {
 
-			ev = new TableChangedEvent( TableChangedEvent.UPDATE );
+			ev = new TableModelChangedEvent( TableModelChangedEvent.UPDATE );
 			/*
 			ev =
 				new TableChangedEvent(
@@ -72,7 +72,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 
 		FolderCommandReference u = adapter.getUpdateReferences();
 		if (u != null) {
-			ev = new TableChangedEvent( TableChangedEvent.UPDATE );
+			ev = new TableModelChangedEvent( TableModelChangedEvent.UPDATE );
 			/*
 			ev =
 				new TableChangedEvent(

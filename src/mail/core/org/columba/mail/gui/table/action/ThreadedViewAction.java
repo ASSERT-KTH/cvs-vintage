@@ -33,8 +33,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableOwnerInterface;
-import org.columba.mail.gui.table.TableChangeListener;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -47,7 +46,7 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ThreadedViewAction
 	extends CheckBoxAction
-	implements TableChangeListener, SelectionListener {
+	implements SelectionListener {
 
 	/**
 	 * Constructor for ThreadedViewAction.
@@ -86,10 +85,10 @@ public class ThreadedViewAction
 		setEnabled(true);
 	}
 
-	public void tableChanged(TableChangedEvent e) {
+	public void tableChanged(TableModelChangedEvent e) {
 		ColumbaLogger.log.info("event=" + e);
 
-		if (e.getEventType() == TableChangedEvent.UPDATE) {
+		if (e.getEventType() == TableModelChangedEvent.UPDATE) {
 			FolderCommandReference[] r =
 				(FolderCommandReference[])
 					((AbstractMailFrameController) frameController)

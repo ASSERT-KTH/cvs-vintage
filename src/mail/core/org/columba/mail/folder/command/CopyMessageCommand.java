@@ -26,7 +26,7 @@ import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
-import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * Copy a set of messages from a source to a destination
@@ -56,8 +56,8 @@ public class CopyMessageCommand extends FolderCommand {
 
 	public void updateGUI() throws Exception {
 
-		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
+		TableModelChangedEvent ev =
+			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, destFolder);
 
 		TableUpdater.tableChanged(ev);
 
