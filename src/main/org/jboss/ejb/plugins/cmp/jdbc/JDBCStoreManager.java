@@ -54,7 +54,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCStoreManager extends CMPStoreManager {
    /**
@@ -214,7 +214,6 @@ public class JDBCStoreManager extends CMPStoreManager {
          }
       }
       if (!done) {
-System.out.println("loadField");
          loadFieldCommand.execute(fieldsToLoad, ctx);
       }
    }
@@ -264,14 +263,15 @@ System.out.println("loadField");
          results = (FinderResults) readAheadCache.get(new Long(key.getListId()));
          if (results != null) {
             try {
-System.out.println("readAhead");
                readAheadCommand.execute(fieldsToLoad, results, key.getIndex(),
                                         Math.min(results.size(), key.getIndex() + readAheadLimit));
                fieldsToLoad = fillFromPreloaded(fields, ctx);
-               if (fieldsToLoad != null) {
+               if (fieldsToLoad == null) {
+                  success = true;
+               } else {
                   log.warn("Didn't read ahead field '" + fieldsToLoad[0].getMetaData().getFieldName() + "'");
+                  success = false;
                }
-               success = true;
             } catch (RemoteException ex) {
                log.warn("Read ahead failed", ex);
             }
@@ -419,6 +419,7 @@ System.out.println("readAhead");
 
       preloadKey = new PreloadKey(trans, entityKey, field.getMetaData().getFieldName());
       fieldValue = preloadedData.remove(preloadKey);
+      log.debug("Getting Preload " + preloadKey + " " + field.getMetaData().getFieldName() + " " + fieldValue);
       found = (fieldValue != null);
       if (fieldValue == NULL_VALUE) { // due to this trick we avoid synchronization on preloadedData
          fieldValue = null;
