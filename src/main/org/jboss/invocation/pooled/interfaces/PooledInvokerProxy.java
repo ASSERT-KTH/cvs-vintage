@@ -40,7 +40,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
  * request.
  *
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class PooledInvokerProxy
    implements Invoker, Externalizable
@@ -291,7 +291,7 @@ public class PooledInvokerProxy
    /**
     * ???
     *
-    * @todo: MOVE TO TRANSACTION
+    * @todo MOVE TO TRANSACTION
     *  
     * @return the transaction propagation context of the transaction
     *         associated with the current thread.
