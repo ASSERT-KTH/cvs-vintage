@@ -80,7 +80,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.12 2001/11/28 18:46:50 dr Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.13 2001/11/28 20:15:07 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -121,19 +121,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return constant;
     }
-    
-    /**
-     * This is used to get the format for a date
-     * right now, it returns "M/d/yy". In the future, we 
-     * can write code to return the correct date based on
-     * Localization needs.
-     */
-    public String getDateFormat()
-    {
-        return ("M/d/yy");
-    }
 
-    
     /**
      * holds the Scarab permission constants.  It will be available to 
      * the template system as $scarabG..PERMISSION_NAME.
