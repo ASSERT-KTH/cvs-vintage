@@ -19,6 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityCommandMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
 import org.jboss.ejb.plugins.cmp.jdbc2.schema.Schema;
@@ -28,7 +29,6 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.tm.TransactionLocal;
 
-import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
 import javax.ejb.EJBException;
 import javax.ejb.CreateException;
@@ -40,12 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
-import java.sql.SQLException;
 
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.9 $</tt>
+ * @version <tt>$Revision: 1.10 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -65,6 +64,7 @@ public class JDBCStoreManager2
 
    private InstanceFactory instanceFactory;
    private QueryFactory queryFactory;
+   private CreateCommand createCmd;
    private JDBCStartCommand startCmd;
    private JDBCStopCommand stop;
 
@@ -278,6 +278,7 @@ public class JDBCStoreManager2
    public Object createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws CreateException
    {
+      /*
       Object pk;
       PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
       if(ctx.getId() == null)
@@ -314,6 +315,8 @@ public class JDBCStoreManager2
          pk = ctx.getId();
       }
       return pk;
+      */
+      return createCmd.execute(m, args, ctx);
    }
 
    public Object postCreateEntity(Method m, Object[] args, EntityEnterpriseContext ctx) throws CreateException
@@ -432,6 +435,31 @@ public class JDBCStoreManager2
 
       startCmd = new JDBCStartCommand(this);
       startCmd.execute();
+
+      final JDBCEntityCommandMetaData entityCommand = getMetaData().getEntityCommand();
+      if(entityCommand == null || "default".equals(entityCommand.getCommandName()))
+      {
+         createCmd = new ApplicationPkCreateCommand();
+      }
+      else
+      {
+         final Class cmdClass = entityCommand.getCommandClass();
+         if(cmdClass == null)
+         {
+            throw new DeploymentException("entity-command class name is not specified for entity " + entityBridge.getEntityName());
+         }
+
+         try
+         {
+            createCmd = (CreateCommand) cmdClass.newInstance();
+         }
+         catch(ClassCastException cce)
+         {
+            throw new DeploymentException("Entity command " + cmdClass + " does not implement " + CreateCommand.class);
+         }
+      }
+
+      createCmd.init(this);
    }
 
    private JDBCEntityMetaData loadJDBCEntityMetaData()
