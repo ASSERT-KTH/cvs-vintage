@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.16 2001/12/02 07:34:51 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.17 2001/12/03 10:52:27 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -549,7 +549,7 @@ public class BrowserView extends JPanel
 					doTypeSelect(typeSelectBuffer.toString());
 
 					timer.stop();
-					timer.setInitialDelay(500);
+					timer.setInitialDelay(750);
 					timer.setRepeats(false);
 					timer.start();
 					break;

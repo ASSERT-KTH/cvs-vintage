@@ -19,12 +19,13 @@
 
 package org.gjt.sp.jedit.search;
 
+import gnu.regexp.CharIndexed;
 import javax.swing.text.Segment;
 
 /**
  * An abstract interface for matching strings.
  * @author Slava Pestov
- * @version $Id: SearchMatcher.java,v 1.2 2001/10/05 08:55:14 spestov Exp $
+ * @version $Id: SearchMatcher.java,v 1.3 2001/12/03 10:52:27 spestov Exp $
  */
 public interface SearchMatcher
 {
@@ -38,9 +39,9 @@ public interface SearchMatcher
 	 * @return an array where the first element is the start offset
 	 * of the match, and the second element is the end offset of
 	 * the match
-	 * @since jEdit 4.0pre1
+	 * @since jEdit 4.0pre3
 	 */
-	int[] nextMatch(Segment text, boolean start, boolean end);
+	int[] nextMatch(CharIndexed text, boolean start, boolean end);
 
 	/**
 	 * Returns the specified text, with any substitution specified

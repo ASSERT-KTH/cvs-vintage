@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.44 2001/12/03 01:17:46 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.45 2001/12/03 10:52:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3637,7 +3637,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 	{
 		int line = -1;
 		int level = buffer.getFoldLevel(caretLine);
-		for(int i = caretLine; i >= 0; i--)
+		for(int i = caretLine - 1; i >= 0; i--)
 		{
 			if(buffer.getFoldLevel(i) < level)
 			{
@@ -3659,7 +3659,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 		if(!multi)
 			selectNone();
 
-		moveCaretPosition(line);
+		moveCaretPosition(newCaret);
 		setMagicCaretPosition(magic);
 	} //}}}
 
@@ -3797,14 +3797,14 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 	{
 		int x = offsetToX(caretLine,caret - getLineStartOffset(caretLine));
 
-		foldVisibilityManager.expandFold(caretLine,fully);
-		int line = caretLine + 1;
-		while(!buffer.isFoldStart(line) && line < buffer.getLineCount())
-			line++;
+		int line = foldVisibilityManager.expandFold(caretLine,fully);
 
-		if(!multi)
-			selectNone();
-		moveCaretPosition(getLineStartOffset(line) + xToOffset(line,x));
+		if(line != -1)
+		{
+			if(!multi)
+				selectNone();
+			moveCaretPosition(getLineStartOffset(line) + xToOffset(line,x));
+		}
 	} //}}}
 
 	//{{{ selectFold() method
