@@ -4,7 +4,7 @@ $page.setTitle("Create artifact type")
 #set ($issueType = $scarabR.IssueType)
 #set ($group = $intake.IssueType.mapTo($issueType))
 
-#macro (ArtifactTypeCreateBar $var)
+#macro (ArtifactTypeCreateBar)
 <div class="functnbar">
       <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
@@ -18,7 +18,7 @@ $page.setTitle("Create artifact type")
 <form method="get" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 
-#ArtifactTypeCreateBar("")
+#ArtifactTypeCreateBar()
 
 <h3>Artifact type details</h3>
 <div class="axial">
@@ -35,11 +35,7 @@ $page.setTitle("Create artifact type")
   </table>
 </div>
 
-<div class="functnbar3">
-      <input type="submit" value="save" name="eventSubmit_doSave" />&#160;
-</div>
-
-#ArtifactTypeCreateBar("2")
+#ArtifactTypeCreateBar()
 
 $intake.declareGroups()
 </form>
