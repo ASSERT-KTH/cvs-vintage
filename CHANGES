@@ -1,3 +1,43 @@
+Columba v1.0 RC1-test3
+
+New features:
+- profile management (see http://blog.frederikdietz.de for more info)
+- added error dialog with "show more details" button
+- replace filter/filteractions combobox with menu, showing 
+  the user all available items without the need to scroll
+- added jniwrapper (kindly provided by jniwrapper.com)
+- added win32 trayicon support with context-menu
+- added win32 mimetype lookup (Hana Giat)
+
+Fixed bugs:
+- #968740, can't choose folder in filter dialog
+- addressbook group dialog didn't show up 
+- fixed classcast exception in addressbook, actions are enabled/disabled correctly 
+  again
+- #966413: mimetype viewer doesn't remember apps
+- refactored ConnectionStateImpl to singleton pattern, receiveAndSend action 
+  wasn't sending messages fixed, automatically go in online state if user 
+  sends or receives messages explicitly, don't automatically check for new 
+  messages if in offline state
+- fixed class-cast exception, when tree is not sorted
+- fixed exception on plugin loading failure. Only show error dialog once.
+- fixed tablemodel update notification in MarkFolderAsReadCommand.updateGUI()
+- #964416 and #964415: both selection handling bugs
+- fixed incoming spam filter bug, using less threads leads to increased performance
+- added more-failsafe handling of loading/saving header-cache
+- added jniwrapper support, trayicon for win32
+- moved independent classes to core, deleted independent directory
+- #926690, Foreward Message with Attachement failes
+- #956286, Date/time is not displayed correctly for my date settings
+- fixed dialog parent frame reference for many dialogs
+- #956288, recent mailfolderinfo wasn't updated when deleting message
+- #958066 character encoding when editing mails is lost
+- #956280 Create filter based on subject throws an NPE
+- #958078 POP3 header-cache is saved too often
+- #933636 make message visible after changin sorting order
+
+
+
 Columba v1.0 RC1-test2
 
 New features:
