@@ -60,7 +60,7 @@ import java.io.Writer;
  * of a property file by use of a template file.
  *
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
- * @version $Id: PropertyFileGenerator.java,v 1.1 2004/11/06 12:38:12 dabbous Exp $
+ * @version $Id: PropertyFileGenerator.java,v 1.2 2004/11/06 15:25:34 dabbous Exp $
  */
 
 public class PropertyFileGenerator
@@ -204,6 +204,19 @@ public class PropertyFileGenerator
                     if(newValue == null)
                     {
                         newValue = "";
+                    }
+                    
+                    if(newValue.equals(""))
+                    {
+                        // this is a temporary hack.
+                        // I need this for convenience at the moment [HD]
+                        // it will be removed when the setup wizzard is running
+                        name += "." + props.getProperty("scarab.database.type","");
+                        newValue = props.getProperty(name,"");
+                        if(!newValue.equals(""))
+                        {
+                            newValue="${"+name+"}";
+                        }
                     }
 
                     if (newValue.equals(value))

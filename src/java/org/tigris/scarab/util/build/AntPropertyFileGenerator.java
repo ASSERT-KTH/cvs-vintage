@@ -57,7 +57,7 @@ import org.apache.tools.ant.Task;
  * of a property file by use of a template file.
  *
  * @author <a href="mailto:dabbous@saxess.com">Hussayn Dabbous</a>
- * @version $Id: AntPropertyFileGenerator.java,v 1.1 2004/11/06 12:38:12 dabbous Exp $
+ * @version $Id: AntPropertyFileGenerator.java,v 1.2 2004/11/06 15:25:34 dabbous Exp $
  */
 
 public class AntPropertyFileGenerator extends Task implements PropertyGetter
@@ -152,9 +152,17 @@ public class AntPropertyFileGenerator extends Task implements PropertyGetter
      */
     public Object getProperty(String name, Object def)
     {
+        String result = null;
+
         String value = (String) def;
-        String newValue = (value.startsWith("$"))?
-                value : getProject().getProperty(name);
-        return newValue;
+        if (value==null || !value.startsWith("$"))
+        {
+            result = getProject().getProperty(name);
+        }
+        if(result == null)
+        {
+            result = value;
+        }
+        return result;
     }
 }
