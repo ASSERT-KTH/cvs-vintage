@@ -8,7 +8,6 @@
 	 <menuitem action="RemoveFolder"/>
 	 <separator/>
 	 <menuitem action="ExpungeFolder"/>
-	 <menuitem action="MarkFolderAsRead"/>
 	 <!--
 	 <menuitem action="EmptyFolder"/>
 	 -->
