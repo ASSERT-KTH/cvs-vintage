@@ -40,6 +40,15 @@ public class MITListManager
         return list;
     }
 
+    /**
+     * An issue has an associated Module and IssueType, this method takes
+     * a list of issues and creates an MITList from these associations.
+     *
+     * @param issues a <code>List</code> value
+     * @param user a <code>ScarabUser</code> value
+     * @return a <code>MITList</code> value
+     * @exception TorqueException if an error occurs
+     */
     public static MITList getInstanceFromIssueList(List issues, 
                                                    ScarabUser user)
         throws TorqueException
