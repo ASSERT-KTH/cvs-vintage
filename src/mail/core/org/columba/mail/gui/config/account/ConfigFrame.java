@@ -16,15 +16,7 @@
 
 package org.columba.mail.gui.config.account;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -33,27 +25,17 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.Compatibility;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
@@ -122,12 +104,6 @@ public class ConfigFrame
 		config = MainInterface.config;
 		accountList = MailConfig.getAccountList();
 
-		dialog.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				dialog.setVisible(false);
-			}
-		});
-
 		initComponents();
 		dialog.getRootPane().registerKeyboardAction(
 			this,
@@ -135,12 +111,7 @@ public class ConfigFrame
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
-		//		for jdk1.3 compatibility, this is called dynamically
-		Compatibility.simpleSetterInvoke(
-			dialog,
-			"setLocationRelativeTo",
-			Component.class,
-			null);
+                dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
 	}
 
@@ -410,27 +381,6 @@ public class ConfigFrame
 					new URL("http://columba.sourceforge.net/phpwiki/index.php/Configure%20Columba"));
 			} catch (MalformedURLException mue) {
 			}
-		}
-	}
-
-	public class WizardTopBorder extends AbstractBorder {
-		protected Insets borderInsets = new Insets(2, 0, 0, 0);
-
-		public void paintBorder(
-			Component c,
-			Graphics g,
-			int x,
-			int y,
-			int w,
-			int h) {
-			g.setColor(UIManager.getColor("Button.darkShadow"));
-			g.drawLine(x, y, x + w - 1, y);
-			g.setColor(Color.white);
-			g.drawLine(x, y + 1, x + w - 1, y + 1);
-		}
-
-		public Insets getBorderInsets(Component c) {
-			return borderInsets;
 		}
 	}
 }
