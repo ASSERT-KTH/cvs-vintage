@@ -31,7 +31,7 @@ public class FilterRule extends DefaultItem {
 	private Vector list;
 
 	// condition: match all (AND) = 0, match any (OR) = 1
-	private AdapterNode conditionNode;
+	//private AdapterNode conditionNode;
 
 	public FilterRule(XmlElement root) {
 		super(root);
