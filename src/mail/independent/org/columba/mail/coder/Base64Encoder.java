@@ -30,6 +30,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 
+import org.columba.core.command.WorkerStatusController;
+
 
 public class Base64Encoder extends Encoder {
 
@@ -123,7 +125,7 @@ public class Base64Encoder extends Encoder {
 		return new String( outBytes, "US-ASCII" );	
 	}
 
-	public void encode( InputStream in, OutputStream out ) throws IOException {		
+	public void encode( InputStream in, OutputStream out, WorkerStatusController workerStatusController ) throws IOException {		
 		BufferedInputStream bufferedIn = new BufferedInputStream( in );
 		BufferedOutputStream bufferedOut = new BufferedOutputStream( out );
 		
@@ -134,6 +136,7 @@ public class Base64Encoder extends Encoder {
 		int read = bufferedIn.read( inBytes );
 		int block;
 		int bCount = 0;
+		int progressCounter = read;
 		
 		while( read == 3 ) {
             outBytes[0] = table[(byte)(0x03F & (inBytes[0]>>2))];
@@ -150,6 +153,11 @@ public class Base64Encoder extends Encoder {
             }
 
             read = bufferedIn.read( inBytes );
+            progressCounter += read;
+            if( progressCounter > 1024 ) {
+            	progressCounter %= 1024;
+            	workerStatusController.incProgressBarValue();
+            }
 		}
 		
 		if( read > 0 ) {

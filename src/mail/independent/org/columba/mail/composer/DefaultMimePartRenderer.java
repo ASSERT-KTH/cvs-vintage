@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Encoder;
 import org.columba.mail.message.ComposerAttachment;
@@ -43,7 +44,7 @@ public class DefaultMimePartRenderer extends MimePartRenderer {
 	/**
 	 * @see AbstractMimePartRenderer#render(MimePart)
 	 */
-	public String render(MimePart part) {
+	public String render(MimePart part, WorkerStatusController workerStatusController) {
 		StringBuffer result = new StringBuffer();
 		MimeHeader header = part.getHeader();
 
@@ -67,13 +68,14 @@ public class DefaultMimePartRenderer extends MimePartRenderer {
 				
 				try {
 					input = new FileInputStream( attachment.getFileAttachment() );
+					workerStatusController.setProgressBarMaximum((int)(attachment.getFileAttachment().length() / 1024));
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 					return result.toString();
 				}
 
 				try {
-					encoder.encode( input, output );					
+					encoder.encode( input, output, workerStatusController );					
 					result.append( output.toString("US-ASCII"));
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -1,5 +1,7 @@
 package org.columba.mail.smtp;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
@@ -49,25 +51,33 @@ public class SendMessageCommand extends FolderCommand {
 			(Folder) MainInterface.treeModel.getFolder(
 				Integer.parseInt(item.getSpecialFoldersItem().getSent()));
 		SendableMessage message =
-			composerController.composerInterface.messageComposer.compose();
+			composerController.composerInterface.messageComposer.compose(worker);
 
 		SMTPServer server = new SMTPServer(item);
 		boolean open = server.openConnection();
 
 		if (open) {
-			server.sendMessage(message);
-
-			server.closeConnection();
 			
-			composerController.hideComposerWindow();
+			try {
+				server.sendMessage(message, worker);
 
-			FolderCommandReference[] ref = new FolderCommandReference[1];
-			ref[0] = new FolderCommandReference(sentFolder);
-			ref[0].setMessage(message);
+				composerController.hideComposerWindow();
 
-			AddMessageCommand c = new AddMessageCommand(frameController, ref);
+				FolderCommandReference[] ref = new FolderCommandReference[1];
+				ref[0] = new FolderCommandReference(sentFolder);
+				ref[0].setMessage(message);
 
-			MainInterface.processor.addOp(c);
+				AddMessageCommand c = new AddMessageCommand(frameController, ref);
+
+				MainInterface.processor.addOp(c);
+
+				server.closeConnection();
+			} catch (SMTPException e ) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Error while sending", JOptionPane.ERROR_MESSAGE);
+			} catch (Exception e ) {
+				e.printStackTrace();	
+			}
+			
 
 		}
 

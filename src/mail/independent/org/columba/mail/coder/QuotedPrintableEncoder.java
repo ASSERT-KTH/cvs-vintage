@@ -114,7 +114,7 @@ public class QuotedPrintableEncoder extends Encoder {
 		return output.toString();
 	}
 
-	public void encode( InputStream in, OutputStream out ) throws IOException
+	public void encode( InputStream in, OutputStream out, int workerStatusController ) throws IOException
 	{
 		BufferedInputStream bufferedIn = new BufferedInputStream( in );
 		BufferedOutputStream bufferedOut = new BufferedOutputStream( out );

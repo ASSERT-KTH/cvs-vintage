@@ -1,5 +1,6 @@
 package org.columba.mail.composer.mimepartrenderers;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Encoder;
 import org.columba.mail.composer.MimePartRenderer;
@@ -29,7 +30,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 	/**
 	 * @see org.columba.modules.mail.composer.MimePartRenderer#render(MimePart)
 	 */
-	public String render(MimePart part) {
+	public String render(MimePart part, WorkerStatusController workerStatusController) {
 
 		StringBuffer result = new StringBuffer();
 		MimeHeader header = part.getHeader();
@@ -57,7 +58,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 		// First render mail
 		String protectedBodyPart =
 			MimeTreeRenderer.getInstance().renderMimePart(
-				(MimePart) part.getChild(0));
+				(MimePart) part.getChild(0), workerStatusController);
 
 		// Next create Signature		
 		PgpMimePart pgpMimePart = (PgpMimePart) part;
@@ -86,7 +87,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 		// Signature
 		result
 			.append(
-				MimeTreeRenderer.getInstance().renderMimePart( signature ));
+				MimeTreeRenderer.getInstance().renderMimePart( signature, workerStatusController ));
 
 		result.append("\n--");
 		result.append(boundary);

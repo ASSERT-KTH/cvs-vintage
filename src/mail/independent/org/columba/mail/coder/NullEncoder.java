@@ -40,7 +40,7 @@ public class NullEncoder extends Encoder {
     	return input;
     }
     
-    public void encode( InputStream in, OutputStream out ) throws IOException {
+    public void encode( InputStream in, OutputStream out, int workerStatusController ) throws IOException {
     	byte[] buffer = new byte[1024];
     	int read;
     	

@@ -1,5 +1,6 @@
 package org.columba.mail.composer.mimepartrenderers;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Encoder;
 import org.columba.mail.composer.MimePartRenderer;
@@ -28,7 +29,7 @@ public class MultipartRenderer extends MimePartRenderer {
 	/**
 	 * @see org.columba.modules.mail.composer.MimePartRenderer#render(MimePart)
 	 */
-	public String render(MimePart part) {
+	public String render(MimePart part, WorkerStatusController workerStatusController) {
 		StringBuffer result = new StringBuffer();
 		MimeHeader header = part.getHeader();
 		String boundary = createUniqueBoundary();
@@ -51,7 +52,7 @@ public class MultipartRenderer extends MimePartRenderer {
 			result.append( boundary );
 			result.append( "\n" );
 			
-			result.append( MimeTreeRenderer.getInstance().renderMimePart( (MimePart) part.getChild(i) ) );
+			result.append( MimeTreeRenderer.getInstance().renderMimePart( (MimePart) part.getChild(i) , workerStatusController) );
 		}
 		
 		result.append( "\n--" );

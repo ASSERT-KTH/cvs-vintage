@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.columba.core.command.WorkerStatusController;
+
 public abstract class Encoder implements Cloneable
 {
     protected String coding;
@@ -41,7 +43,7 @@ public abstract class Encoder implements Cloneable
 		return null;		
 	}
 
-	public void encode( InputStream in, OutputStream out ) throws IOException
+	public void encode( InputStream in, OutputStream out, WorkerStatusController workerStatusController ) throws IOException
 	{
 	}
 

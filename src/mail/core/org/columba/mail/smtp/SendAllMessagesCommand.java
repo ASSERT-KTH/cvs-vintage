@@ -2,6 +2,8 @@ package org.columba.mail.smtp;
 
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
@@ -93,10 +95,14 @@ public class SendAllMessagesCommand extends FolderCommand {
 			}
 
 			if (open) {
-				smtpServer.sendMessage(message);
+				try {
+					smtpServer.sendMessage(message, worker);
 
-				sentList.add(message.getHeader().get("columba.uid") );
-
+					sentList.add(message.getHeader().get("columba.uid") );
+				}
+				catch( SMTPException e ) {
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error while sending", JOptionPane.ERROR_MESSAGE);					
+				}
 			}
 		}
 

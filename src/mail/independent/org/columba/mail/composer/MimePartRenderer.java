@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
@@ -36,7 +37,7 @@ public abstract class MimePartRenderer {
 
 	public abstract String getRegisterString();
 
-	public abstract String render(MimePart part);
+	public abstract String render(MimePart part, WorkerStatusController workerStatusController);
 
 	protected void appendHeader(StringBuffer result, MimeHeader header) {
 		result.append("Content-Type:  ");

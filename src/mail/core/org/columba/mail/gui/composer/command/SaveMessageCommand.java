@@ -62,7 +62,7 @@ public class SaveMessageCommand extends FolderCommand {
 		AccountItem item = composerController.getModel().getAccountItem();
 
 		SendableMessage message =
-			composerController.composerInterface.messageComposer.compose();
+			composerController.composerInterface.messageComposer.compose(worker);
 
 		folder = (Folder) r[0].getFolder();
 

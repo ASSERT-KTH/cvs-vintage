@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import org.columba.addressbook.parser.ListParser;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.EncodedWordEncoder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
@@ -247,8 +248,10 @@ public class MessageComposer {
 		return bodyPart;
 	}
 
-	public SendableMessage compose() {
+	public SendableMessage compose(WorkerStatusController workerStatusController) {
 		this.accountUid = model.getAccountItem().getUid();
+
+		workerStatusController.setDisplayText("Composing Message...");
 
 		MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
 		SendableMessage message = new SendableMessage();
@@ -293,7 +296,7 @@ public class MessageComposer {
 
 		composedMessage.append(header.getHeader());
 
-		composedMessage.append(renderer.renderMimePart(root));
+		composedMessage.append(renderer.renderMimePart(root, workerStatusController));
 
 		message.setSource( composedMessage.toString());
 

@@ -17,6 +17,7 @@ package org.columba.mail.composer;
 import java.lang.reflect.Array;
 import java.util.Hashtable;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
@@ -56,14 +57,14 @@ public class MimeTreeRenderer {
 		return myInstance;	
 	}
 	
-	public String render( MimePartTree tree ) {
-		return renderMimePart( tree.getRootMimeNode() );
+	public String render( MimePartTree tree, WorkerStatusController workerStatusController ) {
+		return renderMimePart( tree.getRootMimeNode(), workerStatusController );
 	}
 	
-	public String renderMimePart( MimePart part ) {		
+	public String renderMimePart( MimePart part, WorkerStatusController workerStatusController ) {		
 		MimePartRenderer renderer = getRenderer( part.getHeader() );
 		
-		return renderer.render(part);	
+		return renderer.render(part, workerStatusController);	
 	}
 	
 	private MimePartRenderer getRenderer( MimeHeader input ) {

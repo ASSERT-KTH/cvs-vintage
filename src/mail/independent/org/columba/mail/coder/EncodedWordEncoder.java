@@ -34,7 +34,7 @@ public class EncodedWordEncoder extends Encoder {
         coding = new String("encoded-word");        
     }
     
-	public String encode( String input, String charset ) throws UnsupportedEncodingException 
+	public String encode( String input, String charset) throws UnsupportedEncodingException 
 	{	
 		// If Charset is US-ASCII we don not need EncodedWords!
 		if( charset.toLowerCase().equals( "us-ascii" ) ) return input;

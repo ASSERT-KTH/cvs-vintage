@@ -3,6 +3,7 @@ package org.columba.mail.smtp;
 import java.net.UnknownHostException;
 
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
@@ -295,23 +296,12 @@ public class SMTPServer {
 		}
 	}
 
-	public Object sendMessage(SendableMessage message) {
-		try {
-			smtpProtocol.setupMessage(
-				AddressParser.normalizeAddress(fromAddress),
-				message.getRecipients());
+	public void sendMessage(SendableMessage message, WorkerStatusController workerStatusController) throws Exception {
+		smtpProtocol.setupMessage(
+			AddressParser.normalizeAddress(fromAddress),
+			message.getRecipients());
 
-			smtpProtocol.sendMessage(message.getSource());
-
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(e);
-
-		}
-		
-		return message.getHeader().get("columba.uid");
+		smtpProtocol.sendMessage(message.getSource(), workerStatusController);
 	}
 
 }

@@ -23,6 +23,7 @@ import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
 import org.columba.main.MainInterface;
@@ -224,11 +225,16 @@ public class SMTPProtocol {
 		}
 	}
 
-	public void sendMessage(String message) throws Exception {
+	public void sendMessage(String message, WorkerStatusController workerStatusController) throws Exception {
 		BufferedReader messageReader =
 			new BufferedReader(new StringReader(message));
 		String line;
 
+		int progressCounter = 0;
+
+		workerStatusController.setDisplayText("Sending Message...");
+		workerStatusController.setProgressBarMaximum(message.length()/1024);
+		
 		out.writeBytes("DATA\r\n");
 		out.flush();
 
@@ -237,6 +243,11 @@ public class SMTPProtocol {
 		line = messageReader.readLine();
 
 		while (line != null) {
+			progressCounter += line.length();
+			if( progressCounter > 1024 ) { 
+				workerStatusController.incProgressBarValue();
+				progressCounter %= 1024;
+			}
 
 			if (line.equals("."))
 				line = new String(" .");

@@ -714,7 +714,7 @@ public class ComposerActionListener implements ActionListener {
 			SendMessageCommand c = new SendMessageCommand(composerInterface.frameController, r);
 			
 			MainInterface.processor.addOp(c);
-			
+
 			return;
 			
 		}
