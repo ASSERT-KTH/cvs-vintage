@@ -74,7 +74,9 @@ public class ComposerModel {
 	 * TODO: see if we can replace the matching code with Ristretto stuff
 	 *  
 	 */
-	private static final String emailRegExp = "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
+	private static final String emailRegExp = "[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,}"; 
+
+         //original:  "^[a-zA-Z0-9]+@[a-zA-Z0-9\\.\\-]+\\.[a-zA-Z]{2,4}+$";
 
 	private static final Pattern emailPattern = Pattern.compile(emailRegExp);
 
