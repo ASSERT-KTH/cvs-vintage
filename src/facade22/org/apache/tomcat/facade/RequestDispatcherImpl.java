@@ -222,12 +222,18 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// set the context - no need to fire context parsing again
 	realRequest.setContext( context );
-
+	
 	realRequest.requestURI().setString( context.getPath() + path );
+	// # 3162
+	realRequest.unparsedURI().recycle();
+	//realRequest.query().recycle();
+	realRequest.servletPath().recycle();
+	realRequest.pathInfo().recycle();
 
 	// merge query string as specified in specs - before, it may affect
 	// the way the request is handled by special interceptors
 	if( queryString != null ) {
+	    realRequest.queryString().setString(queryString);
 	    // Append queryString to the request parameters -
 	    // the original request is changed.
 	    realRequest.parameters().processParameters( queryString ); 
