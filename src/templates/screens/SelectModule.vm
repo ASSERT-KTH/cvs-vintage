@@ -1,7 +1,9 @@
 $page.setTitle("Select Module")
 
 #set ($userModules = $data.User.Modules)
-#set ($currentModule = $scarabR.CurrentModule)
+#if ($scarabR.CurrentModule)
+  #set ($currentModule = $scarabR.CurrentModule)
+#end
 <div id="selectmodule" class="app">
 
 <h2>$page.Title</h2>
