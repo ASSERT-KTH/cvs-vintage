@@ -55,12 +55,10 @@ public class GPGPlugin extends AbstractExternalToolsPlugin {
 		 * gpg binary.
 		 */
 		if (OSInfo.isLinux() || OSInfo.isSolaris()) {
-			if (OSInfo.isLinux() || OSInfo.isSolaris()) {
-				if (defaultLinux.exists())
-					return defaultLinux;
-				else if (defaultLocalLinux.exists())
-					return defaultLocalLinux;
-			}
+			if (defaultLinux.exists())
+				return defaultLinux;
+			else if (defaultLocalLinux.exists())
+				return defaultLocalLinux;
 		}
 
 		/* RIYAD: The Prefs API cannot be used to read the Window's registry,
