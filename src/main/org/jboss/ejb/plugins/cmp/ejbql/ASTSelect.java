@@ -11,9 +11,8 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * This abstract syntax node represents a select clause.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
-public class ASTRangeVariableDeclaration extends SimpleNode {
 public class ASTSelect extends SimpleNode {
    public boolean distinct;
 
