@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  * and JDBCConnectionFactory.
  * @see org.jboss.minerva.pools.ObjectPool
  * @see org.jboss.minerva.factories.JDBCConnectionFactory
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCPoolDataSource implements DataSource, Referenceable, ObjectFactory {
@@ -86,6 +86,7 @@ public class JDBCPoolDataSource implements DataSource, Referenceable, ObjectFact
     public void setJDBCURL(String url) {factory.setConnectURL(url);}
     public String getJDBCURL() {return factory.getConnectURL();}
     public void setJDBCProperties(Properties props) {factory.setConnectProperties(props);}
+    public void setProperties(String props) {setJDBCProperties(parseProperties(props));}
     public Properties getJDBCProperties() {return factory.getConnectProperties();}
     public void setJDBCUser(String user) {factory.setUser(user);}
     public String getJDBCUser() {return factory.getUser();}
@@ -204,6 +205,35 @@ public class JDBCPoolDataSource implements DataSource, Referenceable, ObjectFact
      */
     public void setLoginTimeout(int timeout) throws java.sql.SQLException {
         this.timeout = timeout;
+    }
+
+    /**
+     * This method is used for parsing JDBCProperties
+     */
+    private static Properties parseProperties(String string) {
+        Properties props = new Properties();
+        if(string == null || string.length() == 0) return props;
+        int lastPos = -1;
+        int pos = string.indexOf(";");
+        while(pos > -1) {
+            addProperty(props, string.substring(lastPos+1, pos));
+            lastPos = pos;
+            pos = string.indexOf(";", lastPos+1);
+        }
+        addProperty(props, string.substring(lastPos+1));
+        return props;
+    }
+
+    /**
+     * This method is used for parsing JDBCProperties
+     */
+    private static void addProperty(Properties props, String property) {
+        int pos = property.indexOf("=");
+        if(pos < 0) {
+            System.err.println("Unable to parse property '"+property+"' - please use 'name=value'");
+            return;
+        }
+        props.setProperty(property.substring(0, pos), property.substring(pos+1));
     }
 
     // Referenceable implementation ----------------------------------
