@@ -29,6 +29,9 @@
      <java class="org.apache.tools.moo.RunTest"  args="tests.request.Post" />
      <java class="org.apache.tools.moo.RunTest"  args="tests.request.RequestMap" />
 
+     <!-- Note: if you modify entries below, please update 
+          src/tests/share/tests/jsp/jsp.properties.  -->
+
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 1" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 2" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 3" />
@@ -85,7 +88,6 @@
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 55" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 56" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 57" />
-     <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 58" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 59" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 60" />
      <java class="org.apache.tools.moo.RunTest" args="tests.jsp.Jsp -key 61" />
