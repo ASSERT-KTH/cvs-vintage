@@ -38,7 +38,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -113,8 +113,12 @@ public class AutoDeployer
                   log.warning(e.toString());
                }
             }
-         } else if (urlFile.exists()) // It's a file (.jar)
+         } else if (urlFile.exists()) // It's a file
          {
+               // Check if it's a JAR or zip
+               if (!(url.endsWith(".jar") || url.endsWith(".zip")))
+                  continue; // Was not a JAR or zip - skip it...
+               
                try
                {
                   watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
@@ -123,8 +127,12 @@ public class AutoDeployer
                {
                   log.warning("Cannot auto-deploy "+urlFile);
                }
-         } else // It's a real URL (probably http:) pointing to a JAR
+         } else // It's a real URL (probably http:)
          {
+            // Check if it's a JAR or zip
+            if (!(url.endsWith(".jar") || url.endsWith(".zip")))
+               continue; // Was not a JAR or zip - skip it...
+               
             try
             {
                watchedURLs.add(new Deployment(new URL(url)));
@@ -158,6 +166,11 @@ public class AutoDeployer
                for (int idx = 0; idx < files.length; idx++)
                {
                   URL fileUrl = files[idx].toURL();
+                  
+                  // Check if it's a JAR or zip
+                  if (!(fileUrl.getFile().endsWith(".jar") || fileUrl.getFile().endsWith(".zip")))
+                     continue; // Was not a JAR or zip - skip it...
+                     
                   if (deployedURLs.get(fileUrl) == null)
                   {
 							// This file has not been seen before
