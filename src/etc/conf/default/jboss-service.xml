@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.28 2002/02/15 08:11:01 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.29 2002/02/16 03:52:52 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -140,35 +140,6 @@
   <mbean code="org.jboss.monitor.BeanCacheMonitor" 
          name="jboss.jmx:name=BeanCacheMonitor"/>
   -->
-
-
-  <!-- ==================================================================== -->
-  <!-- Scheduler Service                                                    -->
-  <!-- ==================================================================== -->
-
-  <!-- Uncomment this to enable Scheduling with Schedulable class - ->
-  <mbean code="org.jboss.util.Scheduler" name="jboss:service=Scheduler">
-    <attribute name="StartAtStartup">true</attribute>
-    <attribute name="SchedulableClass">org.jboss.util.Scheduler$SchedulableExample</attribute>
-    <attribute name="SchedulableArguments">Schedulabe Test,12345</attribute>
-    <attribute name="SchedulableArgumentTypes">java.lang.String,int</attribute>
-    <attribute name="InitialStartDate">0</attribute>
-    <attribute name="SchedulePeriod">10000</attribute>
-    <attribute name="InitialRepetitions">-1</attribute>
-  </mbean>
-  <!- - -->
-  <!-- Uncomment this to enable Scheduling with Schedulable MBean - ->
-  <mbean code="org.jboss.util.SchedulableExample" name="jboss:type=example,name=schedulable">
-  </mbean>
-  <mbean code="org.jboss.util.Scheduler" name="jboss:service=Scheduler">
-    <attribute name="StartAtStartup">true</attribute>
-    <attribute name="SchedulableMBean">jboss:type=example,name=schedulable</attribute>
-    <attribute name="SchedulableMBeanMethod">hit( NOTIFICATION, DATE, REPETITIONS, SCHEDULER_NAME, java.lang.String )</attribute>
-    <attribute name="InitialStartDate">NOW</attribute>
-    <attribute name="SchedulePeriod">10000</attribute>
-    <attribute name="InitialRepetitions">10</attribute>
-  </mbean>
-  <!- - -->
 
   <!-- Uncomment this and set up according to manual to add Castor JDO service
   <mbean code="org.jboss.jdo.castor.CastorJDOImpl"
