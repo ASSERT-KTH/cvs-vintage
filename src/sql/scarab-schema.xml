@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.113 2002/10/14 16:40:11 thierrylach Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.114 2002/10/14 23:02:34 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1603,6 +1603,15 @@
         type="INTEGER"/>
     <column name="NAME" required="true" type="VARCHAR" size="255"/>
     <column name="VALUE" required="true" type="VARCHAR" size="255"/>
+    <!--
+       Module id can be null, if the parameter is not module related.
+       Module id can be 0, if it is to be a default if a given module
+       does not have a more specific value
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"/>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
 
     <unique>
         <unique-column name="NAME"/>
