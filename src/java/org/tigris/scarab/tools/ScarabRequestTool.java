@@ -1609,7 +1609,7 @@ e.printStackTrace();
         // query.getValue() begins with a &
         link = link + "?queryId=" + query.getQueryId()
             + "&refine=true"
-            + "&action=Search&eventSubmit_doGotoEditQuery=foo" 
+            + "&action=Search&eventSubmit_doPreparequery=foo"
             + query.getValue();
 
         Long listId = query.getListId();

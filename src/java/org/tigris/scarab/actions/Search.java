@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.135 2003/06/16 23:44:52 elicia Exp $
+ * @version $Id: Search.java,v 1.136 2003/07/31 03:26:43 kmaples Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -361,11 +361,22 @@ public class Search extends RequireLoginFirstAction
         return success;
     }
 
-    public void doGotoeditquery(RunData data, TemplateContext context)
+    public void doPreparequery(RunData data, TemplateContext context)
          throws Exception
     {        
         ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
         getScarabRequestTool(context).resetSelectedUsers();
+        /* TODO! It would be better if the query could be viewed or
+           edited without having to pass the query data via request parameters
+           as would be done with the code below, but it caused a few bugs like
+           losing users and maybe the mitlist, so revisit this later.
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        Query query = scarabR.getQuery();
+        user.setMostRecentQuery(query.getValue());
+        user.setCurrentMITList(query.getMITList());
+        scarabR.resetSelectedUsers();
+        */
     }
 
     /**

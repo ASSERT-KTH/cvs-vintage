@@ -59,7 +59,7 @@
   <input type="submit" name="eventSubmit_doEditqueryinfo" value="$l10n.Save" />&#160; 
 </div>
 
-#advancedQuery()
+#advancedQuery(true)
 
 #if ($currentQuery.QueryType.Name.equals("All users"))
 

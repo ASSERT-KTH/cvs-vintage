@@ -9,7 +9,7 @@
 <input type="hidden" name="pageNum" value="1" />
 
 #advancedQueryFunctionBar("functnbar")
-#advancedQuery()
+#advancedQuery(true)
 #advancedQueryFunctionBar("functnbar2")
 
 $intake.declareGroups()

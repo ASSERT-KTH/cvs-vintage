@@ -7,7 +7,7 @@
 </div>
 #end
 
-#macro( advancedQuery )
+#macro( advancedQuery $includeButtons)
 #if (!$refine)
     #set ($refine = $data.Parameters.getString("refine", ""))
 #end
@@ -29,7 +29,7 @@
 ## we only show the edit link, if we are editing a saved query.
 ## It is easier to have the user use the back button if they are just creating
 ## a new query, otherwise we need to keep track of a lot of info. 
-#set ($showButton = ($user.CurrentMITList.isModifiable() && $queryId))
+#set ($showButton = ($user.CurrentMITList.isModifiable() && $queryId && $includeButtons))
 #showMITList($l10n.SelectedIssueTypes $user $showButton)
 
 <h3>$l10n.IssueIDQuery</h3>
@@ -133,6 +133,7 @@ $l10n.From:&#160;<input type="text" size="20"
  #end
 #end
 
+#if ($includeButtons)
 ## Add user to search list
  #indexedRows2($loopVar) 
 #if ($userList && !$userList.isEmpty())
@@ -151,7 +152,10 @@ $l10n.From:&#160;<input type="text" size="20"
     </select>
   </td>
 </tr>
+#end
 </table> 
+
+#if ($includeButtons)
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew" name="eventSubmit_doAdduserbyusername" />&nbsp;
 #if ($userList && !$userList.isEmpty())
@@ -159,6 +163,7 @@ $l10n.From:&#160;<input type="text" size="20"
 #end
 <input type="submit" value="$l10n.EditList" name="eventSubmit_doGotoeditlist" />
 </div>
+#end
 
 ## COMMENT QUERY
 <div>
@@ -196,7 +201,9 @@ $l10n.From:&#160;<input type="text" size="20"
     #end
 #end
      </select>
+#if ($includeButtons)
      <input name="eventSubmit_doRefresh" value="$l10n.UpdateOptions" type="submit" />
+#end
  </td>
 </tr>
 <tr>
