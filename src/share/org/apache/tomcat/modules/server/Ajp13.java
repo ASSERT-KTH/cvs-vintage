@@ -107,6 +107,14 @@ public class Ajp13
     public static final byte JK_AJP13_FORWARD_REQUEST   = 2;
     public static final byte JK_AJP13_SHUTDOWN          = 7;
 	
+    // Error code for Ajp13
+    public static final int  JK_AJP13_BAD_HEADER        = -100;
+    public static final int  JK_AJP13_NO_HEADER         = -101;
+    public static final int  JK_AJP13_COMM_CLOSED       = -102;
+    public static final int  JK_AJP13_COMM_BROKEN       = -103;
+    public static final int  JK_AJP13_BAD_BODY          = -104;
+    public static final int  JK_AJP13_INCOMPLETE_BODY   = -105;
+
     // Prefix codes for message types from container to server
     public static final byte JK_AJP13_SEND_BODY_CHUNK   = 3;
     public static final byte JK_AJP13_SEND_HEADERS      = 4;
@@ -186,13 +194,14 @@ public class Ajp13
 
     OutputStream out;
     InputStream in;
+    int dL=0;
 
     // Buffer used of output body and headers
     OutputBuffer headersWriter=new OutputBuffer(MAX_PACKET_SIZE);
     Ajp13Packet outBuf = new Ajp13Packet( headersWriter );
     // Buffer used for input body
     Ajp13Packet inBuf  = new Ajp13Packet( MAX_PACKET_SIZE );
-    // Boffer used for request head ( and headers )
+    // Buffer used for request head ( and headers )
     Ajp13Packet hBuf=new Ajp13Packet( MAX_PACKET_SIZE );
 
     // Holds incoming reads of request body data (*not* header data)
@@ -254,9 +263,10 @@ public class Ajp13
 	// XXX The return values are awful.
 
 	int err = receive(hBuf);
-	if(err < 0) {
+
+    // if any error, just drop the ajp13 connection
+	if (err < 0) 
 	    return 500;
-	}
 	
 	int type = (int)hBuf.getByte();
 	switch(type) {
@@ -674,6 +684,47 @@ public class Ajp13
     // ========= Internal Packet-Handling Methods =================
 
     /**
+     * Read N bytes from the InputStream, and ensure we got them all
+     * Under heavy load we could experience many fragmented packets
+     * just read Unix Network Programming to recall that a call to
+     * read didn't ensure you got all the data you want
+     *
+     * from read() Linux manual
+     *
+     * On success, the number of bytes read is returned (zero indicates end of file), 
+     * and the file position is advanced by this number.
+     * It is not an error if this number is smaller than the number of bytes requested; 
+     * this may happen for example because fewer bytes
+     * are actually available right now (maybe because we were close to end-of-file, 
+     * or because we are reading from a pipe, or  from  a
+     * terminal),  or  because  read()  was interrupted by a signal.  
+     * On error, -1 is returned, and errno is set appropriately. In this
+     * case it is left unspecified whether the file position (if any) changes.
+     *
+     **/
+    private int readN(InputStream in, byte[] b, int offset, int len) throws IOException {
+        int pos = 0;
+        int got;
+
+        while(pos < len) {
+            got = in.read(b, pos + offset, len - pos);
+
+            if (dL > 10) d("read got # " + got);
+
+            // connection just closed by remote
+            if (got == 0)
+                return JK_AJP13_COMM_CLOSED;
+
+            // connection dropped by remote
+            if (got < 0)
+                return JK_AJP13_COMM_BROKEN;
+
+            pos += got;
+        }
+        return pos;
+     }
+       
+    /**
      * Read in a packet from the web server and store it in the passed-in
      * <CODE>Ajp13Packet</CODE> object.
      *
@@ -690,26 +741,40 @@ public class Ajp13
 	// returned -- should probably return true/false instead.
 	byte b[] = msg.getBuff();
 	
-	int rd = in.read( b, 0, H_SIZE );
-	if(rd <= 0) {
-	    return rd;
-	}
-	
+	int rd = readN(in, b, 0, H_SIZE );
+
+    // XXX - connection closed (JK_AJP13_COMM_CLOSED)
+    //     - connection broken (JK_AJP13_COMM_BROKEN)
+    //
+    if(rd < 0) {
+        // if (rd != JK_AJP13_COMM_CLOSED)
+        //    d("can't read header: " + rd);
+         return rd;
+    }
+        
 	int len = msg.checkIn();
-	
+
+    // XXX - check if we received a non AJP13 packet
+    if (len < 0) {
+        return JK_AJP13_BAD_HEADER;
+    }
+
 	// XXX check if enough space - it's assert()-ed !!!
 
  	int total_read = 0;
-  	while (total_read < len) {
-	    rd = in.read( b, 4 + total_read, len - total_read);
-            if (rd == -1) {
- 		System.out.println( "Incomplete read, deal with it " + len + " " + rd);
-                break;
-		// XXX log
-		// XXX Return an error code?
-	    }
-     	    total_read += rd;
-	}
+ 
+    total_read = readN(in, b, H_SIZE, len);
+
+    if (total_read < 0) {
+        d("can't read body, waited #" + len);
+        return JK_AJP13_BAD_BODY;
+    }
+
+    if (total_read != len) {
+        d( "incomplete read, waited #" + len + " got only " + total_read);
+        return JK_AJP13_INCOMPLETE_BODY; 
+    }
+
 	if( dL>0 ) msg.dump("Ajp13.receive() " + rd + " " + len );
 	return total_read;
     }
@@ -744,7 +809,10 @@ public class Ajp13
 	}
     }
 
-    private static final int dL=0;
+    public void setDebug(int i) {
+        dL = i;
+    }
+
     private void d(String s ) {
 	System.err.println( "Ajp13: " + s );
     }
