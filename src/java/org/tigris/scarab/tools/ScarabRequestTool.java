@@ -501,7 +501,7 @@ try{
      *
      * @return a <code>Issue</code> value
      */
-    public Issue getSearch()
+    public IssueSearch getSearch()
         throws Exception
     {
         IssueSearch search = new IssueSearch();
