@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContextWrapperFactory.java,v 1.3 2005/03/10 10:05:01 benoitf Exp $
+ * $Id: JacORBIIOPContextWrapperFactory.java,v 1.4 2005/03/14 10:48:17 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -35,6 +35,7 @@ import org.omg.PortableServer.POA;
 
 import org.objectweb.carol.jndi.ns.JacORBCosNaming;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.csiv2.SasComponent;
 
 /**
@@ -104,8 +105,8 @@ public class JacORBIIOPContextWrapperFactory extends AbsInitialContextFactory im
             orb = JacORBCosNaming.getOrb();
         }
 
-        if (!orbStarted) {
-            // Start ORB if it was not run.
+        if (!orbStarted && System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
+            // Start ORB if it was not run and if we are in server mode
             new Thread(new Runnable() {
 
                 public void run() {
