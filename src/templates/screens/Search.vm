@@ -10,6 +10,7 @@
         <form action="$link.setPage("Search.vm")" method="get">
         <input type="hidden" name="nextTemplate" value="IssueList.vm" />
         <input type="hidden" name="action" value="Search" />
+        <input type="hidden" name="searchType" value="custom" />
 
        <p class="functnbar">
         <input type="submit" name="eventSubmit_doSearch" 
