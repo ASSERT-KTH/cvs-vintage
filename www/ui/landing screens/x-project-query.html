@@ -1,0 +1,802 @@
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+    "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+<html>
+ <head>
+  <title>x-project query sample</title>
+<!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
+
+  <meta http-equiv="Content-type" content="text/html" />
+
+  <style type="text/css">
+  @import "http://style.tigris.org/nonav/css/tigris.css";
+  </style>
+
+  <script type="text/javascript">
+if (document.layers) { document.writeln('<link rel="stylesheet" type="text/css" href="http://style.tigris.org/nonav/css/ns4_only.css")" media="screen" />')
+}</script>
+  <link rel="stylesheet" type="text/css" href="http://style.tigris.org/nonav/css/print.css" media="print" />
+   </head>
+<body marginwidth="0" marginheight="0" class="composite">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Index.vm"><img src="../csi/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+         <div>
+    Logged in: <strong class="username">Jane Smith</strong>
+   </div>
+            
+   <div>
+        <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a>
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
+
+<div id="breadcrumbs">
+<table border="0" cellspacing="0" cellpadding="4" width="100%">
+ <tr>
+  <td>
+<small><strong>Current Module:&nbsp;<a href="#">Turbine</a>&nbsp;&gt;&nbsp;<a href="#">Source</a></strong></small>
+ </td><td><div id="search" align="right"><form action="http://www.sc-dev4.sp.collab.net:9966/servlets/Search" method="get"> Site search: <input type="hidden" name="resultsPerPage" value="40" /> <input type="text" name="query" size="10" /> <input type="submit" name="Button" value="Go" /></form></div></td></tr></table></div>
+
+<table border="0" cellspacing="0" cellpadding="8" width="100%" id="main">
+ <tr valign="top">
+  <td id="leftcol" width="20%">
+  <div id="navcolumn">
+
+    <div class="focus"><strong><a href="#">Select module</a></strong></div>
+
+
+            <div class="focus"><strong>
+    <a href="#">Select issue type</a>
+    </strong>
+    
+
+          <div><strong>Defect</strong>
+        <div><a href="#">Enter new</a></div>
+        <div><a href="#">Saved queries</a></div>
+    <div><a href="#">Template list</a></div>
+    <div><a href="#">Reports</a></div>
+    </div>
+            <div><a href="#">Patch</a></div>
+            <div><a href="#">Task</a></div>
+            <div><a href="#">Feature</a></div>
+            <div><a href="#">Enhancement</a></div>
+  
+
+    </div>
+  
+      
+</div>
+
+
+
+  </div>
+<div id="helptext">
+<table border="0" cellspacing="0" cellpadding="3" width="100%">
+<tr>
+<th>How do I...?</th>
+</tr>
+<tr>
+<td>
+  
+
+ 
+<div>    <a href="#" onclick="return launch(this.href, 1)" title="Note: may open in new window">Get help with Scarab?</a>
+</div>
+ 
+<div>    <a href="#" onclick="return launch(this.href, 1)" title="Note: may open in new window">Enter and manage issues?</a>
+</div>
+ 
+<div>    <a href="#" onclick="return launch(this.href, 1)" title="Note: may open in new window">Search for issues?</a>
+</div>
+ 
+<div>    <a href="#" title="Note: may open in new window">Find out more about using Scarab?</a>
+</div>
+ 
+<div>    <a href="#" title="Note: may open in new window">Get to the FAQ?</a>
+</div>
+
+ 
+<div>    <a href="#" title="Note: may open in new window">Find out about Scarab terminology?</a>
+</div>
+
+
+
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td width="100%">
+ <!-- Scarab - App -->
+
+<div id="bodycol">
+
+<div id="topmodule">
+
+
+  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post"><input type="text" name="id" size="15" maxlength="255" /><input type="hidden" name="nextTemplate" value="ViewIssue.vm" />&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<select class="select">
+        <option>Select query</option>
+        <option>---------------</option>
+        <option>Advanced</option>
+        <option>Custom</option>
+        <option>Most recent</option>
+        <option>---------------</option>
+        <option>Saved queries (personal)</option>
+        <option>&nbsp;&nbsp;My issues</option>
+        <option>Saved queries (project)</option>
+        <option>&nbsp;&nbsp;Dev issues</option>
+        <option>&nbsp;&nbsp;QA issues</option>
+        </select>&nbsp;<input type="submit" value="go" /></form></td>
+  </tr>
+  </table>
+</div>
+    <!-- Scarab - App -->
+
+	<div class="app" id="divselect_type">
+		<h2>Issue tracking: <span class="lastchild">X-project query</span></h2>
+
+      
+<div class="functnbar">
+ <input type="submit" value="Submit" />&#160;<input type="submit" value="Clear form" />
+</div>
+		
+		<h3>Issue types selected for this query</h3>
+		<div class="colbar">
+		<div>Alpha&gt;Milestone 2 defect</div>
+		<div>Alpha&gt;Milestone 2 defect</div>
+		<div>Beta&gt;Milestone 1 defect</div>
+		<div>Gamma&gt;Patch</div>
+		</div>
+
+		<h3>Search the scarab knowledge base</h3>
+
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">issue ID# range (numbers only)</th>
+			<td>from:&#160;<input type="text" size="20" value="" />&#160;&#160;to:&#160;<input type="text" size="20" value="" /></td>
+			</tr>
+			
+			<tr>
+			<th width="120">issue creation date range</th>
+         <td><dl><div>from:</div>
+
+<dd><select>
+<option>Jan</option>
+<option>Feb</option>
+<option>Mar</option>
+<option>Apr</option>
+<option>May</option>
+<option>Jun</option>
+<option>Jul</option>
+<option>Aug</option>
+<option>Sep</option>
+<option>Oct</option>
+<option>Nov</option>
+<option>Dec</option>
+</select>&#160;<select>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+</select>&#160;<select>
+<option>1999</option>
+<option>2000</option>
+<option>2001</option>
+<option>2002</option>
+<option>2003</option>
+</select> - <select>
+<option>01:00</option>
+<option>02:00</option>
+<option>03:00</option>
+<option>04:00</option>
+<option>05:00</option>
+<option>06:00</option>
+<option>07:00</option>
+<option>08:00</option>
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>12:00</option>
+<option>13:00</option>
+<option>14:00</option>
+<option>15:00</option>
+<option>16:00</option>
+<option>17:00</option>
+<option>18:00</option>
+<option>19:00</option>
+<option>20:00</option>
+<option>21:00</option>
+<option>22:00</option>
+<option>23:00</option>
+<option>24:00</option></select></dd>
+
+        
+<div>to:</div>
+<dd><input type="radio" name="x">&#160;Current date/time</dd>
+<dd><input type="radio" name="x">&#160;<select>
+<option>Jan</option>
+<option>Feb</option>
+<option>Mar</option>
+<option>Apr</option>
+<option>May</option>
+<option>Jun</option>
+<option>Jul</option>
+<option>Aug</option>
+<option>Sep</option>
+<option>Oct</option>
+<option>Nov</option>
+<option>Dec</option>
+</select>&#160;<select>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+</select>&#160;<select>
+<option>1999</option>
+<option>2000</option>
+<option>2001</option>
+<option>2002</option>
+<option>2003</option>
+</select> - <select>
+<option>01:00</option>
+<option>02:00</option>
+<option>03:00</option>
+<option>04:00</option>
+<option>05:00</option>
+<option>06:00</option>
+<option>07:00</option>
+<option>08:00</option>
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>12:00</option>
+<option>13:00</option>
+<option>14:00</option>
+<option>15:00</option>
+<option>16:00</option>
+<option>17:00</option>
+<option>18:00</option>
+<option>19:00</option>
+<option>20:00</option>
+<option>21:00</option>
+<option>22:00</option>
+<option>23:00</option>
+<option>24:00</option></select></dd></dl>
+</td>			</tr>
+
+</table>			
+</div>			
+		<h3>Common attributes / options</h3>
+
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">summary</th>
+			<td><input type="text" size="25" value="" /></td>
+			</tr>
+			
+			<tr>
+			<th width="120">description</th>
+			<td><textarea rows="4" cols="40">
+			</textarea></td>
+			</tr>
+			
+			<tr>
+			<th width="120">version</th>
+			<td><select multiple size="5">
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">platform</th>
+			<td><select multiple size="5">
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">os</th>
+			<td><select multiple size="5">
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">found during</th>
+			<td><select multiple size="5">
+			<option>
+			normal use
+			</option>
+			<option>
+			QA
+			</option>
+			<option>
+			Beta
+			</option>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			</table>
+		</div>
+
+
+
+		<h3>Personel association query</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Association</th>
+		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><strong>Alan Smith</strong></td>
+		<td><a href="#">asmith@test.net</a></td>
+		<td><select name="#"
+   size=""><option value="">Committed by:</option><option value="">Assign to:</option>
+            <option value="18">CC:</option></select></td>
+  		</tr>
+		
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><strong>Barbara Skoppke</strong></td>
+		<td><a href="#">bs@test.net</a></td>
+		<td><select name="#"
+   size=""><option value="">Committed by:</option><option value="">Assign to:</option>
+            <option value="18">CC:</option></select></td>
+		</tr>
+		
+		<tr class="a">
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td><input type="text" name="" value="" /></td>
+		<td><select name="#"
+   size=""><option value="">Committed by:</option><option value="">Assign to:</option>
+            <option value="18">CC:</option></select></td>
+		</tr>
+	     
+   </table>  
+
+<div class="functnbar3">
+    <input type="submit" value="Add new" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Delete selected" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
+</div>
+
+
+     <h3>Dependency query</h3>
+	<div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <tr>
+         <th width="120">Dependency relationship</th>
+
+         <td><select multiple size="5">
+          <option>
+           Issues that have blocking dependencies
+          </option>
+          
+          <option>
+           Issues that have non-blocking dependencies
+          </option>
+          
+          <option>
+           Issues that are blocking dependencies
+          </option>
+          
+          <option>
+           Issues that are non-blocking dependencies
+          </option>          
+          
+          <option>
+           Issues that are duplicates
+          </option>
+          </td>
+        </tr> 
+        
+       </table>
+      </div>
+  
+     <h3>State change query</h3>
+	<div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <tr>
+         <th width="120">attribute</th>
+
+         <td><select>
+          <option>
+           state
+          </option>
+          
+          <option>
+           priority
+          </option>
+
+          <option>
+           operating sys
+          </option>
+
+          <option>
+          etc
+          </option>
+
+         </select>&nbsp;<input type="submit" name="" value="update options" />
+
+          </td>
+        </tr>  
+        
+        <tr>
+         <th width="120">state change</th>
+
+         <td><select>
+          <option>
+          Option X
+          </option>
+
+          <option>
+          Option Y
+          </option>
+
+          <option>
+          Option Z
+          </option>
+
+         </select> to <select>
+          <option>
+          Option X
+          </option>
+
+          <option>
+          Option Y
+          </option>
+
+          <option>
+          Option Z
+          </option>
+
+         </select>
+
+          </td>
+        </tr>  
+        
+        <tr>
+         <th width="120">date range</th>
+
+         <td><dl><div>from:</div>
+
+<dd><select>
+<option>Jan</option>
+<option>Feb</option>
+<option>Mar</option>
+<option>Apr</option>
+<option>May</option>
+<option>Jun</option>
+<option>Jul</option>
+<option>Aug</option>
+<option>Sep</option>
+<option>Oct</option>
+<option>Nov</option>
+<option>Dec</option>
+</select>&#160;<select>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+</select>&#160;<select>
+<option>1999</option>
+<option>2000</option>
+<option>2001</option>
+<option>2002</option>
+<option>2003</option>
+</select> - <select>
+<option>01:00</option>
+<option>02:00</option>
+<option>03:00</option>
+<option>04:00</option>
+<option>05:00</option>
+<option>06:00</option>
+<option>07:00</option>
+<option>08:00</option>
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>12:00</option>
+<option>13:00</option>
+<option>14:00</option>
+<option>15:00</option>
+<option>16:00</option>
+<option>17:00</option>
+<option>18:00</option>
+<option>19:00</option>
+<option>20:00</option>
+<option>21:00</option>
+<option>22:00</option>
+<option>23:00</option>
+<option>24:00</option></select></dd>
+
+        
+<div>to:</div>
+<dd><input type="radio" name="x">&#160;Current date</dd>
+<dd><input type="radio" name="x">&#160;<select>
+<option>Jan</option>
+<option>Feb</option>
+<option>Mar</option>
+<option>Apr</option>
+<option>May</option>
+<option>Jun</option>
+<option>Jul</option>
+<option>Aug</option>
+<option>Sep</option>
+<option>Oct</option>
+<option>Nov</option>
+<option>Dec</option>
+</select>&#160;<select>
+<option>01</option>
+<option>02</option>
+<option>03</option>
+<option>04</option>
+<option>05</option>
+<option>06</option>
+<option>07</option>
+<option>08</option>
+<option>09</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+</select>&#160;<select>
+<option>1999</option>
+<option>2000</option>
+<option>2001</option>
+<option>2002</option>
+<option>2003</option>
+</select> - <select>
+<option>01:00</option>
+<option>02:00</option>
+<option>03:00</option>
+<option>04:00</option>
+<option>05:00</option>
+<option>06:00</option>
+<option>07:00</option>
+<option>08:00</option>
+<option>09:00</option>
+<option>10:00</option>
+<option>11:00</option>
+<option>12:00</option>
+<option>13:00</option>
+<option>14:00</option>
+<option>15:00</option>
+<option>16:00</option>
+<option>17:00</option>
+<option>18:00</option>
+<option>19:00</option>
+<option>20:00</option>
+<option>21:00</option>
+<option>22:00</option>
+<option>23:00</option>
+<option>24:00</option></select></dd></dl>
+</td>        </tr>
+
+       </table>
+      </div>
+
+
+		<h3>Comments query</h3>
+
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			
+			<tr>
+			<th width="120">Enter query string</th>
+			<td><textarea rows="4" cols="40">
+			</textarea></td>
+			</tr>
+			</table>
+
+		</div>			
+		<h3>Search results view prefs</h3>
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">sort by</th>
+			<td><select>
+			<option>
+			attriute X
+			</option>
+			<option>
+			attriute Y
+			</option>
+			<option>
+			attriute Z
+			</option>
+			</select>&nbsp;<select>
+			<option>
+			ascending
+			</option>
+			<option>
+			descending
+			</option>
+			</select></td>
+			</tr>
+			<tr>
+			<th width="120">issues per page</th>
+			<td><input type="radio" name="foo" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100</td>
+			</tr>
+			</table>
+		</div>
+
+		<div class="functnbar2"><input type="submit" value="Submit" />&#160;<input type="submit" value="Clear form" /></div>
+	</div>
+
+
+ 	</div>
+</div>
+	<!-- Scarab - App -->
+
+<!-- Structural Elements -->
+</td>
+
+</tr>
+</table>
+<!-- Structural Elements -->
+
+	<!-- SourceCast -->
+	<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
+
+    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
+
+</td></tr>
+</table>
+</div>
+
+ </body>
+</html>
