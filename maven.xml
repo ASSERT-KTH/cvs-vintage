@@ -208,14 +208,23 @@
     <goal
         name="scarab:update-properties"
         description="update the scarab project.properties">
-  
-        ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')} 
+ 
+        ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')}
+ 
         <ant:style  
              in="xdocs/scarab_properties.xml"
              out="project.properties"
              style="project.xsl">
              <outputproperty name="method" value="text"/>
         </ant:style> 
+
+        <ant:style  
+             in="xdocs/scarab_properties.xml"
+             out="minimal.properties"
+             style="minimal.xsl">
+             <outputproperty name="method" value="text"/>
+        </ant:style> 
+
     </goal>
 
     <!-- ===================================================== -->

@@ -56,7 +56,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.2 2004/12/22 22:39:34 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.3 2004/12/23 13:37:16 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -72,6 +72,52 @@
      runtime. The out of the box runtime is currently based on 
      hypersonic.   
   </details>
+
+  <basic-details>
+     
+               _________ B U I L D   S Y S T E M ___.    
+              /   _____/ ____ _____ ____________ \_ |__  
+              \_____  \_/ ___\\__  \\_  __ \__  \ | __ \ 
+              /        \  \___ / __ \|  | \// __ \| \_\ \
+             /_______  /\___  &gt;____  /__|  (____  /___  /
+                     \/     \/     \/           \/    \/ 
+    
+             ----------------------------------------------
+                 M I N I M A L  -  P R O P E R T Y  S E T
+             ----------------------------------------------
+    
+              &gt;&gt;&gt;&gt; CAUTION: DO NOT MODIFY THIS FILE. &lt;&lt;&lt;&lt;
+
+
+     This file contains the minimal set of properties which MUST
+     be configured according to your individual environment.
+     As starting point you can copy one of the two files below to 
+     your individual $SCARAB_ROOT/build.properties file:
+    
+        minimal.properties   this file (minimal modification set) 
+        project.properties             (full modification set)
+    
+     Using the minimal.properties as a starting point makes life
+     much easier for the first time Scarab administrator.
+    
+     Please refer to the file
+    
+         $SCARAB_HOME/project.properties 
+    
+     for more specific informations about the full available set
+     of properties.
+    
+     QUICK instruction:
+     ==================
+     Step 1: Choose your database type and ensure your database environment
+     is fully installed and available. Then browse through this file
+     and exchange every occurance of "hypersonic" with the database type
+     of your choice. Of course if your database choice is already "hypersonic"
+     just skip this first step.
+    
+     Step 2: Browse again through this file and adjust all other properties
+     to your individual environmental situation.
+  </basic-details>
 
   <section name="DATABASE">
     <details>
@@ -263,7 +309,7 @@
           other user-specified properties. I guess this goes hand-in-hand with
           'scarab.database.jdbc.driver'.
         </comment>
-        <type>?</type>
+        <type>Runtime</type>
          <customization modification="required">basic</customization>
         <file/>
       </property>
@@ -274,7 +320,7 @@
         <comment> 
           JDBC URL to use when creating and seeding the database.
         </comment>
-        <type>Build</type>
+        <type>Runtime</type>
          <customization modification="required">basic</customization>
         <file/>
       </property>
@@ -294,7 +340,7 @@
           I don't know whether Torque needs building with the database
           name or not. If not, this can just be a runtime property.
         </comment>
-        <type>Build/Runtime</type>
+        <type>Runtime</type>
          <customization modification="optional">basic</customization>
         <file/>
         <details> 
@@ -338,7 +384,7 @@
         <default>${scarab.database.type}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+         <customization modification="optional">advanced</customization>
         <file/>
         <details>
           [FIXME] add documentation, what is this ?
@@ -384,7 +430,7 @@
           ones for several databases, but users should have the option to supply
           their own.
         </comment>
-        <type>Build/Runtime</type>
+        <type>Runtime</type>
          <customization modification="optional">basic</customization>
         <file/>
       </property>
@@ -412,7 +458,7 @@
         <default>4</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+         <customization modification="optional">advanced</customization>
         <file/>
         <details>
           Default length for the Module code. The module code is prepended
@@ -496,7 +542,7 @@
       <default>Scarab Account Password</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="recommended">basic</customization>
+       <customization modification="recommended">advanced</customization>
       <file/>
       <details>
         The Email subject for emails containing 
@@ -516,7 +562,7 @@
         <default>${scarab.email.default.fromName}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -524,7 +570,7 @@
         <default>${scarab.email.register.fromName}@${scarab.email.domain}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -532,7 +578,7 @@
         <default>${scarab.email.default.fromName}@${scarab.email.domain}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -546,7 +592,7 @@
           didn't like it.
         </comment>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -554,7 +600,7 @@
         <default>${scarab.email.register.fromName}@${scarab.email.domain}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -562,7 +608,7 @@
         <default>${scarab.email.register.fromName}@${scarab.email.domain}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -570,7 +616,7 @@
         <default>${scarab.email.default.fromName}@${scarab.email.domain}</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="required">basic</customization>
+         <customization modification="required">advanced</customization>
         <file/>
       </property>
       <property>
@@ -578,7 +624,7 @@
         <default/>
         <comment/>
         <type>Runtime</type>
-         <customization modification="optional">advanced</customization>
+         <customization modification="optional">basic</customization>
         <file/>
         <details>
           Per default every user request for a role configured in
@@ -700,7 +746,7 @@
           name is configured in server.xml. Maybe just allow the user
           to configure the context name via server.xml directly?
         </comment>
-        <type>Build</type>
+        <type>Runtime</type>
          <customization modification="optional">basic</customization>
         <file/>
       </property>
@@ -711,7 +757,7 @@
           Drop this? Most people seem to have problems when this is
           set to something other than /scarab/issues anyway.
         </comment>
-        <type>Build</type>
+        <type>Runtime</type>
          <customization modification="optional">advanced</customization>
         <file/>
         <details>
@@ -782,7 +828,7 @@
         <default/>
         <comment/>
         <type>Runtime</type>
-         <customization modification="optional">advanced</customization>
+         <customization modification="optional">basic</customization>
         <file/>
       </property>
 
@@ -791,7 +837,7 @@
         <default/>
         <comment/>
         <type>Runtime</type>
-         <customization modification="optional">advanced</customization>
+         <customization modification="optional">basic</customization>
         <file/>
       </property>
 
@@ -800,7 +846,7 @@
         <default>true</default>
         <comment/>
         <type>Runtime</type>
-         <customization modification="optional">advanced</customization>
+         <customization modification="optional">basic</customization>
         <file/>
         <details>
           This property controls, whether the administrator 
@@ -830,7 +876,7 @@
       <name>custom.properties.tmpl</name>
       <default>${root.dir}/project.properties</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
       <details>
@@ -847,7 +893,7 @@
         <name>default.custom.properties</name>
         <default>WEB-INF/conf/defaultCustom.properties</default>
         <comment/>
-        <type>Runtime</type>
+        <type>Build</type>
          <customization modification="optional">advanced</customization>
         <file/>
       </property>
@@ -855,7 +901,7 @@
         <name>custom.properties</name>
         <default>WEB-INF/conf/custom.properties</default>
         <comment/>
-        <type>Runtime</type>
+        <type>Build</type>
          <customization modification="optional">advanced</customization>
         <file/>
       </property>
@@ -888,7 +934,7 @@
       <name>torque.project</name>
       <default>${project}</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -952,7 +998,7 @@
       <name>torque.doc.format</name>
       <default>anakia</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -960,7 +1006,7 @@
       <name>torque.targetPackage</name>
       <default>org.tigris.scarab.om</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -968,7 +1014,7 @@
       <name>torque.schema.om.includes</name>
       <default>${torque.project}-schema.xml</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -976,7 +1022,7 @@
       <name>torque.schema.om.excludes</name>
       <default/>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -992,7 +1038,7 @@
       <name>torque.addGetByNameMethod</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1000,7 +1046,7 @@
       <name>torque.addTimeStamp</name>
       <default>false</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1008,32 +1054,32 @@
       <name>torque.addIntakeRetrievable</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>torque.overloadKeySetters</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>torque.useManagers</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>torque.runOnlyOnSchemaChange</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
       <details>
          standard torque properties
@@ -1044,8 +1090,8 @@
       <name>torque.generateDeprecated</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1068,7 +1114,7 @@
       <name>torque.doc.dir</name>
       <default>${maven.gen.docs}/databases</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1076,7 +1122,7 @@
       <name>torque.java.dir</name>
       <default>${root.dir}/src/java</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
       <details>
@@ -1088,7 +1134,7 @@
       <name>torque.schema.dir</name>
       <default>${root.dir}/src/schema</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1096,7 +1142,7 @@
       <name>torque.javadoc.dir</name>
       <default>${torque.output.dir}/javadoc</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1136,7 +1182,7 @@
       <name>torque.addSaveMethod</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1144,7 +1190,7 @@
       <name>torque.addGetByNameMethod</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1152,7 +1198,7 @@
       <name>torque.complexObjectModel</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1160,7 +1206,7 @@
       <name>torque.saveException</name>
       <default>Exception</default>
       <comment/>
-      <type>Runtime</type>
+      <type>Build</type>
        <customization modification="optional">advanced</customization>
       <file/>
     </property>
@@ -1247,40 +1293,40 @@
       <name>scarab.tomcat.http.port</name>
       <default>8080</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>scarab.tomcat.shutdown.port</name>
       <default>8005</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>scarab.webapp.reloadable</name>
       <default>true</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>scarab.webapp.checkInterval</name>
       <default>2</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>scarab.welcome.file</name>
       <default>index.html</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1288,23 +1334,23 @@
       <default>157286400</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>scarab.tomcat.proxy.name</name>
       <default/>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
       <name>scarab.tomcat.proxy.port</name>
       <default/>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
   </section>
@@ -1321,7 +1367,7 @@
       <default>${scarab.database.adapter}</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1329,7 +1375,7 @@
       <default>${scarab.database.pool.validationQuery}</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1337,7 +1383,7 @@
       <default>${scarab.database.jdbc.driver}</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1345,7 +1391,7 @@
       <default>${scarab.database.url}</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1353,7 +1399,7 @@
       <default>${scarab.database.username}</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -1361,7 +1407,7 @@
       <default>${scarab.database.password}</default>
       <comment/>
       <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
   </section>
@@ -2150,7 +2196,7 @@
         Name of the project ("Scarab" for the standard distribution).
       </comment>
       <type>Build</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -2158,7 +2204,7 @@
       <default>1.0-b20-dev</default>
       <comment>Project version.</comment>
       <type>Build</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -2168,7 +2214,7 @@
         Name of the project, used for???.
       </comment>
       <type>Build</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <property>
@@ -2176,7 +2222,7 @@
       <default>2000-2004</default>
       <comment>Year, possibly used for copyright message.</comment>
       <type>Build</type>
-       <customization modification="optional">basic</customization>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
     <group name="directory">
@@ -2189,80 +2235,80 @@
         <name>build.dir</name>
         <default>${root.dir}/target</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>build.project</name>
         <default>${build.dir}/scarab</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>build.project.webinf</name>
         <default>${build.project}/WEB-INF</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>build.project.webinf.lib</name>
         <default>${build.project}/WEB-INF/lib</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>build.sql.scarab</name>
         <default>${build.project.webinf}/sql</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>build.src.scarab</name>
         <default>${build.project.webinf}/src</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>build.dest.scarab</name>
         <default>${build.project.webinf}/classes</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>deploy.dir</name>
         <default>${build.dir}</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>deploy.project</name>
         <default>${deploy.dir}/scarab</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>scarab.torque.schemas</name>
         <default>scarab-schema.xml</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
         <details>
           The list of Torque-format schemas used by Scarab.  
@@ -2275,32 +2321,32 @@
         <name>repository.dir</name>
         <default>${root.dir}/www/repository</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>lib.dir</name>
         <default>${root.dir}/lib</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>src.dir</name>
         <default>${root.dir}/src</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>extensions.dir</name>
         <default>${root.dir}/extensions</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
     </group>
@@ -2316,8 +2362,8 @@
       </details>
       <default>${scarab.user.username}</default>
       <comment/>
-      <type>Runtime</type>
-       <customization modification="optional">basic</customization>
+      <type>Build</type>
+       <customization modification="optional">advanced</customization>
       <file/>
     </property>
 
@@ -2330,24 +2376,24 @@
         <name>scarab.scarabgen.home</name>
         <default>../scarab-gen</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>scarab.docs.head</name>
         <default>${scarab.scarabgen.home}/www/head</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>scarab.docbook.enable</name>
         <default>true</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
     </group>
@@ -2361,64 +2407,64 @@
         <name>maven.multiproject.type</name>
         <default>war</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>maven.repo.remote</name>
         <default>http://www.ibiblio.org/maven/,http://scarab.tigris.org/repository,http://maven-plugins.sourceforge.net/maven, http://www.apache.org/dist/java-repository/</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>maven.docbook.src</name>
         <default>www/book</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>statcvs.exclude</name>
         <default>www/**/*.*</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>statcvs.include</name>
         <default>src/**/*.*</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>statcvs.verbose</name>
         <default>false</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>statcvs.history</name>
         <default>false</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>statcvs.log.options</name>
         <default>-d 2004-01-01&lt;</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
     </group>
@@ -2432,16 +2478,16 @@
         <name>maven.eclipse.output.dir</name>
         <default>src/webapp/WEB-INF/classes</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>maven.eclipse.classpath.include</name>
         <default>src/conf/conf,src/conf/classes</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
     </group>
@@ -2456,24 +2502,24 @@
         <name>maven.junit.fork</name>
         <default>true</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>maven.junit.usefile</name>
         <default>true</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
       <property>
         <name>maven.test.failure.ignore</name>
         <default>true</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
     </group>
@@ -2488,8 +2534,8 @@
         <name>maven.javadoc.useexternalfile</name>
         <default>true</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2497,8 +2543,8 @@
         <name>maven.pmd.excludes</name>
         <default>**/om/**</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2506,8 +2552,8 @@
         <name>maven.pmd.includes</name>
         <default>**/tigris/**</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2515,8 +2561,8 @@
         <name>maven.simian.excludes</name>
         <default>**/om/**</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2524,8 +2570,8 @@
         <name>maven.simian.includes</name>
         <default>**/tigris/**</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2533,8 +2579,8 @@
         <name>maven.findbugs.excludes</name>
         <default>**/om/**</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2542,8 +2588,8 @@
         <name>maven.findbugs.includes</name>
         <default>**/tigris/**</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2551,8 +2597,8 @@
         <name>maven.checkstyle.format</name>
         <default>turbine</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
       </property>
 
@@ -2560,8 +2606,8 @@
         <name>maven.xdoc.version</name>
         <default>${pom.currentVersion}</default>
         <comment/>
-        <type>Runtime</type>
-         <customization modification="optional">basic</customization>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
         <file/>
         <details>
           display the date on the site
@@ -2574,7 +2620,7 @@
         <name>maven.dist.bin.assembly.dir</name>
         <default>${root.dir}/target/dist</default>
         <comment/>
-        <type>Runtime</type>
+        <type>Build</type>
          <customization modification="optional">advanced</customization>
         <file/>
         <details>
