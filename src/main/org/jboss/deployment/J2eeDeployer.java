@@ -55,7 +55,7 @@ import org.jboss.management.j2ee.J2EEApplication;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class J2eeDeployer
 extends ServiceMBeanSupport
@@ -457,7 +457,8 @@ implements J2eeDeployerMBean
          String[] jarUrls = new String[ tmp.size() ];
          tmp.toArray( jarUrls );
          // Call the ContainerFactory that is loaded in the JMX server
-         if (log.isDebugEnabled()) {
+         if (log.isDebugEnabled())
+         {
             log.debug("about to invoke deploy on jardeployer:" + jarDeployer);
          }
          server.invoke(jarDeployer, "deploy",
@@ -530,21 +531,24 @@ implements J2eeDeployerMBean
       }
       catch (MBeanException e)
       {
-         log.error("Starting "+moduleName+" failed!", e);
+         Exception ex = e.getTargetException();
+         log.error("Starting "+moduleName+" failed!", ex);
          throw new J2eeDeploymentException("Error while starting "+moduleName+": "
-            + e.getTargetException().getMessage(), e.getTargetException());
+            + ex.getMessage(), ex);
       }
       catch (RuntimeErrorException e)
       {
-         log.error("Starting "+moduleName+" failed!", e);
+         Throwable ex = e.getTargetError();
+         log.error("Starting "+moduleName+" failed!", ex);
          throw new J2eeDeploymentException("Error while starting "+moduleName+": "
-            + e.getTargetError().getMessage(), e.getTargetError());
+            + ex.getMessage(), ex);
       }
       catch (RuntimeMBeanException e)
       {
-         log.error("Starting "+moduleName+" failed!", e);
+         Exception ex = e.getTargetException();
+         log.error("Starting "+moduleName+" failed!", ex);
          throw new J2eeDeploymentException("Error while starting "+moduleName+": "
-            + e.getTargetException().getMessage(), e.getTargetException());
+            + ex.getMessage(), ex);
       }
       catch (JMException e)
       {
@@ -656,7 +660,7 @@ implements J2eeDeployerMBean
       }
       catch (MBeanException _mbe)
       {
-         log.error("Unable to stop module " + moduleName + ": " + _mbe.getTargetException().getMessage());
+         log.error("Unable to stop module " + moduleName, _mbe.getTargetException());
          error.append("Unable to stop module " + moduleName + ": " + _mbe.getTargetException().getMessage());
          error.append("/n");
       }
