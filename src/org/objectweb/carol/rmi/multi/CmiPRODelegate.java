@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CmiPRODelegate.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: CmiPRODelegate.java,v 1.3 2005/03/11 13:59:24 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
 
-// rmi import
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -80,7 +79,7 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException if the connection fail
      */
     public void connect(Remote target, Remote source) throws RemoteException {
-        // do nothing
+        rmi.connect(target, source);
     }
 
     /**
@@ -92,11 +91,7 @@ public class CmiPRODelegate implements PortableRemoteObjectDelegate {
      *            newClass cast
      */
     public Object narrow(Object obj, Class newClass) throws ClassCastException {
-        if (newClass.isAssignableFrom(obj.getClass())) {
-            return obj;
-        } else {
-            throw new ClassCastException("Can't cast " + obj.getClass().getName() + " in " + newClass.getName());
-        }
+        return rmi.narrow(obj, newClass);
     }
 
     /**
