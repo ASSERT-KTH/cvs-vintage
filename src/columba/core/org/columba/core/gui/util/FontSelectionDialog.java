@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -43,31 +44,27 @@ import org.columba.core.util.GlobalResourceLoader;
 
 public class FontSelectionDialog implements ActionListener, ListSelectionListener
 {
-    public static final String CMD_OK = "OK";
-    public static final String CMD_CANCEL = "CANCEL";
+    public static final int APPROVE_OPTION = 1;
+    public static final int CANCEL_OPTION = 0;
     private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
     
     private JDialog dialog;
 
-    JList fontList;
-    JList styleList;
-    JList sizeList;
-    JTextField preview;
-    JTextField fontName;
-    JTextField styleName;
-    JTextField sizeName;
-    JLabel fontLabel;
-    JLabel sizeLabel;
-    JLabel styleLabel;
-    JLabel previewLabel;
+    protected JList fontList, styleList, sizeList;
+    protected JTextField preview, fontName, styleName, sizeName;
+    protected JLabel fontLabel, sizeLabel, styleLabel, previewLabel;
+    protected JButton okButton, cancelButton;
 
-    Font font;
-    int status;
+    protected Font font;
+    protected int status;
 
 
     public FontSelectionDialog( Font f )
     {
-        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "font", "title"));
+        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(
+                RESOURCE_BUNDLE_PATH,
+                "font",
+                "title"));
 
         font = f;
 
@@ -181,9 +178,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
 
           // 6. Line with Buttons
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+        okButton = new ButtonWithMnemonic(
         		GlobalResourceLoader.getString("global", "global", "ok"));
-        okButton.setActionCommand(CMD_OK);
         okButton.addActionListener( this );
 
         c.weightx = 1.0;
@@ -196,9 +192,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         gridbag.setConstraints( okButton, c );
         dialog.getContentPane().add( okButton );
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+        cancelButton = new ButtonWithMnemonic(
         		GlobalResourceLoader.getString("global", "global", "cancel"));
-        cancelButton.setActionCommand(CMD_CANCEL);
         cancelButton.addActionListener( this );
 
         c.weightx = 1.0;
@@ -220,7 +215,9 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         }
 
         dialog.getRootPane().setDefaultButton(okButton);
-        dialog.getRootPane().registerKeyboardAction(this, CMD_CANCEL, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        dialog.getRootPane().registerKeyboardAction(this,
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
 
@@ -228,12 +225,8 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
     {
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         //String envfonts[] = gEnv.getAvailableFontFamilyNames();
-	String envfonts[] = gEnv.getAvailableFontFamilyNames( java.util.Locale.getDefault() );
-        List vector = new Vector();
-        for ( int i = 1; i < envfonts.length; i++ ) {
-            vector.add(envfonts[i]);
-        }
-        fontList = new JList( (Vector) vector );
+	String envfonts[] = gEnv.getAvailableFontFamilyNames( Locale.getDefault() );
+        fontList = new JList( envfonts );
         fontList.setSelectedIndex(0);
 
         styleList = new JList(  new Object[]{
@@ -244,11 +237,13 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
                               });
         styleList.setSelectedIndex(0);
 
-        sizeList = new JList(
-            new Object[]{ "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"}
-            );
+        //fill sizes string array with numbers from 7 to 18
+        Object[] sizes = new String[12];
+        for (int i = 7; i < 19; i++) {
+            sizes[i - 7] = Integer.toString(i);
+        }
+        sizeList = new JList(sizes);
         sizeList.setSelectedIndex(0);
-
 
         preview = new JTextField("abcdefgh ABCDEFGH");
         preview.setHorizontalAlignment( JTextField.CENTER );
@@ -279,27 +274,22 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
 
     public void actionPerformed( ActionEvent e )
     {
-        String command = e.getActionCommand();
+        Object source = e.getSource();
 
-        if( CMD_OK.equals(command) ){
-            status = 0;
-            dialog.dispose();
-        } else if( CMD_CANCEL.equals(command) ) {
-            status = 1;
-            dialog.dispose();
+        if (source == okButton){
+            status = APPROVE_OPTION;
+        } else if(source == cancelButton) {
+            status = CANCEL_OPTION;
         }
+        dialog.dispose();
     }
 
-    public void showDialog()
+    public int showDialog()
     {
         dialog.setVisible(true);
-    }
-
-    public int getStatus()
-    {
         return status;
     }
-
+    
     public Font getSelectedFont()
     {
         return font;
