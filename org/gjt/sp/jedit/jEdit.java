@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.164 2003/05/11 23:17:51 spestov Exp $
+ * @version $Id: jEdit.java,v 1.165 2003/05/22 18:48:41 spestov Exp $
  */
 public class jEdit
 {
@@ -1093,6 +1093,9 @@ public class jEdit
 		}
 		else
 		{
+			jar.uninit(false);
+			jars.removeElement(jar);
+
 			// buffers retain a reference to the fold handler in
 			// question... and the easiest way to handle fold
 			// handler unloading is this...
@@ -1108,9 +1111,6 @@ public class jEdit
 				}
 				buffer = buffer.getNext();
 			}
-
-			jar.uninit(false);
-			jars.removeElement(jar);
 		}
 
 		EditBus.send(new PluginUpdate(jar,PluginUpdate.UNLOADED));
