@@ -140,13 +140,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
-	try {
-	    return (Remote)JUnicastRemoteObject.exportObject(obj, sis, cis);
-	} catch (java.rmi.server.ExportException e) {
-	    return obj;
-	} catch (RemoteException re) {
-	    throw new NoSuchObjectException(re.toString());
-	}
+	return (Remote)JUnicastRemoteObject.toStub(obj);
     }
 
     /**
