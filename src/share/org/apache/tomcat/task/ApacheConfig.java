@@ -116,11 +116,19 @@ public class ApacheConfig  { // implements XXX
 	    pw.println();
 
 	    // Set up contexts 
-	    
-	    Enumeration enum = cm.getContextNames();
+	    // XXX deal with Virtual host configuration !!!!
+	    Enumeration enum = cm.getContexts();
 	    while (enum.hasMoreElements()) {
-		String path=(String)enum.nextElement();
-		Context context = cm.getContext(path);
+		Context context = (Context)enum.nextElement();
+		String path=context.getPath();
+		String vhost=context.getHost();
+
+		if( vhost != null ) {
+		    // Generate Apache VirtualHost section for this host
+		    // You'll have to do it manually right now
+		    // XXX 
+		    continue;
+		} 
 		if( path.length() > 1) {
 
 		    // It's not the root context

@@ -80,10 +80,31 @@ import org.apache.tomcat.task.Expand;
  */
 public class AutoSetup extends BaseInterceptor {
     int debug=0;
+    Hashtable definedContexts=new Hashtable();
     
     public AutoSetup() {
     }
 
+    /** Take note of the added contexts.
+     *  We can enhance the auto-setup for virtual hosts too,
+     *  but it's up to this class how it deals with that and
+     *  existing contexts. 
+     */
+    public void addContext(ContextManager cm, Context ctx)
+	throws TomcatException
+    {
+	if( ctx.getHost()== null ) {
+	    // this is a context that goes into the default server
+	    // we care only about the root context for autosetup
+	    // until we define a pattern for automatic vhost setup.
+	    definedContexts.put( ctx.getPath(), ctx );
+	}
+    }
+    
+    /** This will add all contexts to the default host.
+     *	We need a mechanism ( or convention ) to configure
+     *  virtual hosts too
+     */
     public void engineInit(ContextManager cm) throws TomcatException {
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
@@ -135,7 +156,7 @@ public class AutoSetup extends BaseInterceptor {
 	    if( path.equals("/ROOT") )
 		path="";
 	    
-	    if( cm.getContext(path) == null ) {
+	    if(  definedContexts.get(path) == null ) {
 		// if no explicit set up
 		Context ctx=new Context();
 		ctx.setContextManager( cm );
@@ -144,10 +165,10 @@ public class AutoSetup extends BaseInterceptor {
 		// don't assume HOME==TOMCAT_HOME
 		File f=new File( webappD, name);
 		ctx.setDocBase( f.getAbsolutePath() );
-		ctx.log("Automatic context load docBase=\"" + ctx.getDocBase() + "\"");
+		if( debug > 0 ) cm.log("AutoSetup " + ctx.toString());
 		cm.addContext(ctx);
 	    } else {
-		//System.out.println("Already set up: " + path + " " + cm.getContext(path));
+		//System.out.println("Already set up: " + path + " " + definedContexts.get(path));
 	    }
 	}
     }

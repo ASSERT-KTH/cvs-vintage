@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.12 2000/04/18 23:04:29 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/04/18 23:04:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.13 2000/04/25 17:54:13 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/04/25 17:54:13 $
  *
  * ====================================================================
  *
@@ -82,8 +82,7 @@ import javax.servlet.http.*;
 public class HttpServletResponseFacade
     implements HttpServletResponse
 {
-
-    private StringManager sm =
+    private static StringManager sm =
         StringManager.getManager(Constants.Package);
     private Response response;
 

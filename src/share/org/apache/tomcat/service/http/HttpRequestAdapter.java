@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.10 2000/04/21 20:45:07 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/04/21 20:45:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.11 2000/04/25 17:54:26 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/04/25 17:54:26 $
  *
  * ====================================================================
  *
@@ -147,7 +147,7 @@ public class HttpRequestAdapter extends RequestImpl {
 
     public String getServerName() {
 	if(serverName!=null) return serverName;
-
+	
 	// XXX Move to interceptor!!!
 	String hostHeader = this.getHeader("host");
 	if (hostHeader != null) {
@@ -177,12 +177,13 @@ public class HttpRequestAdapter extends RequestImpl {
 	return socket.getInetAddress().getHostName();
     }    
     
-    public void processRequestLine(Response response, byte bug[], int start, int count)
+    public void processRequestLine(Response response, byte buf[], int start, int count)
 	throws IOException
     {
 
 	String line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
         String buffer = line.trim();
+
 	int firstDelim = buffer.indexOf(' ');
 	int lastDelim = buffer.lastIndexOf(' ');
 	// default - set it to HTTP/0.9 or null if we can parse the request

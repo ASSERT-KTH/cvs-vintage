@@ -273,7 +273,11 @@ public class DefaultCMSetter extends BaseInterceptor {
 	StringBuffer sb=new StringBuffer();
 	sb.append(cm.getWorkDir());
 	sb.append(File.separator);
-	sb.append(cm.getHostName() );
+	String host=ctx.getHost();
+	if( host==null ) 
+	    sb.append(cm.getHostName() );
+	else
+	    sb.append( host );
 	sb.append("_").append(cm.getPort());
 	sb.append(URLEncoder.encode( ctx.getPath() ));
 	

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.7 2000/02/16 17:13:24 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/16 17:13:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.8 2000/04/25 17:54:26 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/04/25 17:54:26 $
  *
  * ====================================================================
  *
@@ -94,7 +94,7 @@ public class HttpResponseAdapter extends  ResponseImpl {
     }
 
     public void recycle() {
-	sout=null;
+	super.recycle();
 	statusSB.setLength(0);
 	headersSB.setLength(0);
     }

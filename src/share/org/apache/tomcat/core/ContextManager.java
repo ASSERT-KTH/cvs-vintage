@@ -100,8 +100,13 @@ public class ContextManager {
     /**
      * The set of Contexts associated with this ContextManager,
      * keyed by context paths.
+     * @deprecated - the server shouldn't make any assumptions about
+     *  the key.
      */
     private Hashtable contexts = new Hashtable();
+    /** Contexts managed by this server
+     */
+    private Vector contextsV=new Vector();
 
     public static final String DEFAULT_HOSTNAME="localhost";
     public static final int DEFAULT_PORT=8080;
@@ -175,17 +180,26 @@ public class ContextManager {
     
     /**
      * Get the names of all the contexts in this server.
+     * @deprecated Path is not "unique key".
      */
     public Enumeration getContextNames() {
         return contexts.keys();
     }
 
+    /** Return the list of contexts managed by this server
+     */
+    public Enumeration getContexts() {
+	return contextsV.elements();
+    }
+    
     /** Init() is called after the context manager is set up
      *  and configured. 
      */
     public void init()  throws TomcatException {
 	String cp=System.getProperty( "java.class.path");
-	log( "Starting tomcat install=\"" + getTomcatHome() + "\" home=\"" + home + "\" classPath=\"" + cp + "\"");
+	log( "Tomcat install = " + getTomcatHome());
+	log( "Tomcat home = " + home);
+	if(debug>0 ) log( "Tomcat classpath = " +  cp );
 	//	long time=System.currentTimeMillis();
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -193,16 +207,16 @@ public class ContextManager {
 	}
 	
     	// init contexts
-	Enumeration enum = getContextNames();
+	Enumeration enum = getContexts();
 	Context context=null;
 	while (enum.hasMoreElements()) {
-	    context = getContext((String)enum.nextElement());
+	    context = (Context)enum.nextElement();
 	    try {
 		initContext( context );
 	    } catch (TomcatException ex ) {
 		if( context!=null ) {
 		    log( "ERROR initializing " + context.toString() );
-		    removeContext( context.getPath() );	    
+		    removeContext( context  );	    
 		    Throwable ex1=ex.getRootCause();
 		    if( ex1!=null ) ex.printStackTrace();
 		}
@@ -273,8 +287,13 @@ public class ContextManager {
      * no such context.
      *
      * @param name Name of the requested context
+     * @deprecated Use an external iterator to find the context that
+     *  matches your conditions.
+     *
      */
     public Context getContext(String name) {
+	// System.out.println("Using deprecated getContext");
+	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	return (Context)contexts.get(name);
     }
     
@@ -287,31 +306,36 @@ public class ContextManager {
 	// Make sure context knows about its manager.
 	ctx.setContextManager( this );
 
-	// it will replace existing context - it's better than  IllegalStateException.
-	String path=ctx.getPath();
-	if( getContext( path ) != null ) {
-	    if(debug>0) log("Warning: replacing context for " + path);
-	    removeContext(path);
-	}
+	// If the context already exist - the interceptors need
+	// to deal with that ( either replace or throw an exception ).
+
+	// The mapping alghoritm may use more than path and host -
+	// if not now, then in future.
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContext( this, ctx );
 	}
-	
-	ctx.log("Adding context path=\"" +  ctx.getPath() + "\"  docBase=\"" + ctx.getDocBase() + "\"");
 
-	contexts.put( path, ctx );
+	String vhost=ctx.getHost();
+	log("Adding context " +  ctx.toString());
+
+	// XXX temporary workaround for the old SimpleMapper -
+	// This code will be removed as soon as the new mapper is stable.
+	if( vhost ==null ) // the old mapper will support only "default" server
+	    contexts.put( ctx.getPath(), ctx );
+	contextsV.addElement( ctx );
     }
     
     /**
      * Shut down and removes a context from service.
      *
      * @param name Name of the Context to be removed
+     * @deprecated Use removeContext( Context ).
      */
     public void removeContext(String name) throws TomcatException {
 	Context context = (Context)contexts.get(name);
-	log( "Removing context path=\"" + context.getPath() + "\" ");
+	log( "Removing context " + context.toString());
 
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
@@ -324,6 +348,22 @@ public class ContextManager {
 	}
     }
 
+    /** Shut down and removes a context from service
+     */
+    public void removeContext( Context context ) throws TomcatException {
+	if( context==null ) return;
+	
+	log( "Removing context " + context.toString());
+
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeContext( this, context );
+	}
+
+	shutdownContext( context );
+	contextsV.removeElement(context);
+    }
+    
     public void addContainer( Container container )
     	throws TomcatException
     {
@@ -764,7 +804,10 @@ public class ContextManager {
 	}
 
 	if( debug >4 ) log("createRequest " + origPath + " " + urlPath  );
-	return createRequest( urlPath );
+	Request req= createRequest( urlPath );
+	String host=ctx.getHost();
+	if( host != null) req.setServerName( host );
+	return req;
     }
 
     /** Create a new sub-request, deal with query string

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeMap.java,v 1.2 2000/02/10 22:28:24 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/10 22:28:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeMap.java,v 1.3 2000/04/25 17:54:33 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/04/25 17:54:33 $
  *
  * ====================================================================
  *
@@ -121,7 +121,7 @@ public class MimeMap implements FileNameMap {
     public String getContentTypeFor(String fileName) {
 	String extn=getExtension( fileName );
         if (extn!=null) {
-            return getContentType(extn.toLowerCase());
+            return getContentType(extn);
         } else {
             // no extension, no content type
             return null;

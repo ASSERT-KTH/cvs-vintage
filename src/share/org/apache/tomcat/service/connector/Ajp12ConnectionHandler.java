@@ -164,7 +164,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    }
 
 	    contextM.service( reqA, resA );
-	    resA.finish();
+	    //resA.finish(); // is part of contextM !
 	    socket.close();
 	} catch (Exception e) {
             // XXX
@@ -496,9 +496,11 @@ class AJP12ResponseAdapter extends HttpResponseAdapter {
     /** Override setStatus
      */
     protected void sendStatus( int status, String message)  throws IOException {
+	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	statusSB.setLength(0);
 	statusSB.append("Status: " ).append( status ).append(" ").append(message).append("\r\n");
 	sout.write(statusSB.toString().getBytes());
+	statusSB.setLength(0);
     }
 }
 

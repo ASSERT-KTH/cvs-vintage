@@ -147,6 +147,8 @@ public class Context {
     int debug=0;
     // are servlets allowed to access internal objects? 
     boolean trusted=false;
+    String vhost=null;
+    Vector vhostAliases=new Vector();
     
     public Context() {
 	//	System.out.println("New Context ");
@@ -629,7 +631,7 @@ public class Context {
 	if( msg.startsWith( "<l:" ))
 	    contextM.doLog( msg, t );
 	else
-	    contextM.doLog("Context log: path=\"" + path  + "\" " + msg, t);
+	    contextM.doLog(this.toString() + " " + msg, t);
     }
 
     boolean firstLog = true;
@@ -656,7 +658,7 @@ public class Context {
     }
 
     public String toString() {
-	return "Ctx(" + path + "," + getDocBase() + ")";
+	return "Ctx( " + (vhost==null ? "" : vhost + ":" )  +  path +  " )";
     }
 
     // -------------------- Facade methods --------------------
@@ -763,6 +765,7 @@ public class Context {
 	}
 	// absolute path
 	Request lr=contextM.createRequest( path );
+	if( vhost != null ) lr.setServerName( vhost );
 	getContextManager().processRequest(lr);
         return lr.getContext();
     }
@@ -1036,4 +1039,29 @@ public class Context {
 	return trusted;
     }
 
+    /** Make this context visible as part of a virtual host
+     */
+    public void setHost( String h ) {
+	vhost=h;
+    }
+
+    /** Return the virtual host name, or null if we are in the
+	default context
+    */
+    public String getHost() {
+	return vhost;
+    }
+    
+    /** Virtual host support - this context will be part of 
+     *  a virtual host with the specified name. You should
+     *  set all the aliases. XXX Not implemented
+     */
+    public void addHostAlias( String alias ) {
+	vhostAliases.addElement( alias );
+    }
+
+    public Enumeration getHostAliases() {
+	return vhostAliases.elements();
+    }
+    
 }

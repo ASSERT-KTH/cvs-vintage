@@ -106,6 +106,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     int debug=0;
     ContextManager cm;
     Mappings map;
+    Hashtable vhostMaps=new Hashtable();
     int ctExtMapNote=-1;
     boolean mapCacheEnabled=false;
     
@@ -190,7 +191,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
      */
     public void addContext( ContextManager cm, Context ctx ) throws TomcatException
     {
-	if(debug>0) log( "Adding to maps " + ctx);
 	// find all the mappings that are declared in context,
 	// and register them.
 	
@@ -198,8 +198,19 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	// we have pre-set mappings - not very common 
 	// or tested. Normal operation is to set up tomcat
 	// and the interceptors and then add the contexts.
+	String vhost=ctx.getHost();
+	if( vhost == null ) {
+	    map.prefixMappedServlets.put( ctx.getPath(), ctx.getContainer());
+        }  else {
+	    Mappings vmap=(Mappings)vhostMaps.get( vhost );
+	    if( vmap == null ) {
+		vmap=new Mappings();
+		vhostMaps.put( vhost, vmap );
+	    }
+	    vmap.prefixMappedServlets.put( ctx.getPath(), ctx.getContainer());
+	}
 
-	map.prefixMappedServlets.put( ctx.getPath(), ctx.getContainer());
+	if(debug>0) log( "SM: default map " + vhost +":" + ctx.getPath() + " -> " + ctx.getContainer() );
 	
 	Enumeration ctE=ctx.getContainers();
 	while( ctE.hasMoreElements() ) {
@@ -239,20 +250,24 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	throws TomcatException
     {
 	Context ctx=ct.getContext();
+	String vhost=ctx.getHost();
 	String path=ct.getPath();
 	String ctxP=ctx.getPath();
 
-	// 	if( ct.getHandler() != null )
-	// 	    mtable=contextPaths;
+	Mappings myMap;
+	if( vhost==null )
+	    myMap=map; // global contexs
+	else
+	    myMap=(Mappings)vhostMaps.get( vhost );
+	// assert myMap!= null ( we just added the context, so the map is there
 
-	if(debug>0) log("SM: Add mapping/container " + path + " " + ctx.getDebug() + " " + ctxP + " " +
-			    ct.getHandler() + " " + ct.getRoles());
-
+	String vhostS=( vhost==null )? "": vhost;
+	
 	switch( ct.getMapType() ) {
 	case Container.PREFIX_MAP:
 	    // cut /* !
-	    map.prefixMappedServlets.put( ctxP + path.substring( 0, path.length()-2 ), ct);
-	    if( debug>0 ) log("SM: Adding Prefix Map " + ctxP + path + " -> " + ct + " " );
+	    myMap.prefixMappedServlets.put( ctxP + path.substring( 0, path.length()-2 ), ct);
+	    if( debug>0 ) log("SM: prefix map " + vhostS + ":" +  ctxP + path + " -> " + ct + " " );
 	    break;
 	case Container.EXTENSION_MAP:
 	    // Add it per/defaultContainer - as spec require ( it may also be
@@ -268,11 +283,11 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    }
 	    // add it to the Container local maps
 	    eM.put( path.substring( 1 ), ct );
-	    if(debug>0) log( "Add Extension Map " + ctxP + "/" + path + " " + ct + " " );
+	    if(debug>0) log( "SM: extension map " + ctxP + "/" + path + " " + ct + " " );
 	    break;
 	case Container.PATH_MAP:
-	    map.prefixMappedServlets.put( ctxP + path, ct);
-	    if( debug>0 ) log("SM: Adding Exact Map " + ctxP + path + " -> " + ct + " " );
+	    myMap.prefixMappedServlets.put( ctxP + path, ct);
+	    if( debug>0 ) log("SM: exact map " + vhostS + ":" + ctxP + path + " -> " + ct + " " );
 	    break;
 	}
     }
@@ -308,6 +323,13 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    path=path.substring(0, foundAt);  
 	}
 
+	String host=req.getServerName();
+	cm.log("Host = " + host);
+
+	// try to find a vhost with this name
+	Mappings myMap=(Mappings)vhostMaps.get( host );
+	if( myMap==null ) myMap = map; // default server
+	
 	try {
 
 	Context ctx = null;
@@ -316,7 +338,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	boolean cached=false;
 	
 	if( mapCacheEnabled ) {
-	    container=(Container)getCachedResult( path );
+	    container=(Container)getCachedResult( host + ":" + path );//XXX remove strings!
 	    if( container != null ) {
 		cached=true;
 		if(debug>0) log( "CM: cache hit " + path);
@@ -324,7 +346,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	}
 	
 	if( ! cached )
-	    container=(Container)map.getLongestPrefixMatch(  path );
+	    container=(Container)myMap.getLongestPrefixMatch(  path );
 	
 	if( container == null ) throw new RuntimeException( "Assertion failed - container==null");
 	if( container.getHandler() == null ) throw new RuntimeException( "Assertion failed - container.handler==null");
@@ -354,7 +376,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	}
 	
 	if( mapCacheEnabled && ! cached ) {
-	    addCachedResult( path, container );
+	    addCachedResult( host + ":" + path, container );//XXX remove strings!
 	}
 	    
 	if(debug>0) log("SM: After mapping " + req + " " + req.getWrapper());
@@ -411,6 +433,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	String ctxP=ctx.getPath();
 	String path = req.getPathInfo(); // we haven't matched any prefix,
 	// we check path Info
+	if( path == null ) return null;
 	String extension=StringUtil.getExtension( path );
 
 	if(debug>0) cm.log("SM: Extension match " + ctxP +  " " + path + " " + extension );
@@ -515,7 +538,7 @@ class Mappings {
 	//if( s.endsWith( "/" ))
 	//  s=removeLast(s);
 	
-	while (s.length() > 0) {
+	while (s.length() >= 0) {
 	    //if(debug>8) context.log( "Prefix: " + s  );
 	    container = (Container)prefixMappedServlets.get(s);
 	    

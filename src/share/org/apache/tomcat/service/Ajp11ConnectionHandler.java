@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.16 2000/02/17 07:52:21 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/02/17 07:52:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.17 2000/04/25 17:54:20 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/04/25 17:54:20 $
  *
  * ====================================================================
  *
@@ -165,7 +165,7 @@ class AJPRequestAdapter extends RequestImpl {
 
 	Hashtable env_vars=new Hashtable();
 
-	Ajp11.readAJPData(sin, env_vars, headers);
+	readAJPData(sin, env_vars);
 	
 	// equiv of readRequestLine ( firsts line of the Request )
 	method= (String)env_vars.get("REQUEST_METHOD");
@@ -213,16 +213,13 @@ class AJPRequestAdapter extends RequestImpl {
 	//moreRequests = false;	
     }    
 
-}
-
-
-class Ajp11 {
+    // Ajp11 protocol implementation 
     public static final int CH_REQUEST_DATA=1;
 
     // UTF8 is a strict superset of ASCII.
     final static String CHARSET = "UTF8";
 
-    public static void readAJPData(InputStream in, Hashtable env_vars, MimeHeaders headers ) throws IOException {
+    void readAJPData(InputStream in, Hashtable env_vars ) throws IOException {
 	byte id = 0;
         int index = 0;
         String token1 = null;

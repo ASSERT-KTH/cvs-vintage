@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.21 2000/04/21 20:45:07 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2000/04/21 20:45:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.22 2000/04/25 17:54:25 costin Exp $
+ * $Revision: 1.22 $
+ * $Date: 2000/04/25 17:54:25 $
  *
  * ====================================================================
  *
@@ -92,14 +92,14 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	this.contextM=contextM;
     }
 
-    public Object[] init( ) {
-	Object thData[]=new Object[2];
+    public Object[] init() {
+	Object thData[]=new Object[3];
 	HttpRequestAdapter reqA=new HttpRequestAdapter();
 	HttpResponseAdapter resA=new HttpResponseAdapter();
 	contextM.initRequest( reqA, resA );
 	thData[0]=reqA;
 	thData[1]=resA;
-	
+	thData[2]=null;
 	return  thData;
     }
 
@@ -131,6 +131,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 		resA=(HttpResponseAdapter)thData[1];
 		if( reqA!=null ) reqA.recycle();
 		if( resA!=null ) resA.recycle();
+		//		System.out.println("Request ID " + thData[2]);
 	    }
 	    if( reqA==null || resA==null ) {
 		reqA=new HttpRequestAdapter();

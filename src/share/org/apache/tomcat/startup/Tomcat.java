@@ -10,6 +10,7 @@ import java.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
+import org.xml.sax.*;
 
 // Used to stop tomcat
 import org.apache.tomcat.service.TcpEndpointConnector;
@@ -59,10 +60,51 @@ public class Tomcat {
 	xh.addRule( "ContextManager/RequestInterceptor", xh.addChild( "addRequestInterceptor",
 								      "org.apache.tomcat.core.RequestInterceptor" ) );
 
+	// Default host
  	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
 	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
 	xh.addRule( "ContextManager/Context", xh.setProperties() );
 	xh.addRule( "ContextManager/Context", xh.addChild( "addContext", null ) );
+
+	// Virtual host support.
+	// Push a host object on the stack
+ 	xh.addRule( "ContextManager/Host", new XmlAction() {
+		public void start( SaxContext ctx) throws Exception {
+		    Stack st=ctx.getObjectStack();
+		    // get attributes 
+		    int top=ctx.getTagCount()-1;
+		    AttributeList attributes = ctx.getAttributeList( top );
+
+		    // get CM
+		    ContextManager cm=(ContextManager)st.peek();
+
+		    // construct virtual host config helper
+		    HostConfig hc=new HostConfig(cm);
+
+		    // set the host name
+		    hc.setName( attributes.getValue("name")); 
+		    st.push( hc );
+		}
+		public void cleanup( SaxContext ctx) {
+		    Stack st=ctx.getObjectStack();
+		    Object o=st.pop();
+		}
+	    });
+	xh.addRule( "ContextManager/Host", xh.setProperties());
+	
+ 	xh.addRule( "ContextManager/Host/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
+	xh.addRule( "ContextManager/Host/Context", xh.setProperties() );
+	xh.addRule( "ContextManager/Host/Context", new XmlAction() {
+		public void end( SaxContext ctx) throws Exception {
+		    Stack st=ctx.getObjectStack();
+		    
+		    Context tcCtx=(Context)st.pop(); // get the Context
+		    HostConfig hc=(HostConfig)st.peek();
+		    st.push( tcCtx ); // put back the context, to be cleaned up corectly
+
+		    hc.addContext( tcCtx );
+		}
+	    });
 
     }
 
@@ -255,3 +297,27 @@ public class Tomcat {
 
 }
 
+
+class HostConfig {
+    ContextManager cm;
+    String hostName;
+    
+    public HostConfig(ContextManager cm) {
+	this.cm=cm;
+    }
+
+    public void setName( String name ) {
+	hostName=name;
+    }
+    
+    public void addContext( Context ctx ) {
+	try {
+	    ctx.setContextManager( cm );
+	    ctx.setHost( hostName );
+	    cm.addContext( ctx );
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	}
+    }
+}
+    

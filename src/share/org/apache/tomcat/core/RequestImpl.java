@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.29 2000/04/21 20:45:03 costin Exp $
- * $Revision: 1.29 $
- * $Date: 2000/04/21 20:45:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.30 2000/04/25 17:54:14 costin Exp $
+ * $Revision: 1.30 $
+ * $Date: 2000/04/25 17:54:14 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ public class RequestImpl  implements Request {
     protected String queryString;
 
    //  RequestAdapterImpl Hints
-    protected String serverName;
+    protected String serverName=null;
     protected Vector cookies = new Vector();
 
     protected String contextPath;
@@ -610,7 +610,7 @@ public class RequestImpl  implements Request {
 	queryString=null;
 	protocol="HTTP/1.0";
 	headers.clear(); // XXX use recycle pattern
-	serverName="localhost";
+	serverName=null;
 	serverPort=8080;
 	pathTranslated=null;
 	pathInfo=null;

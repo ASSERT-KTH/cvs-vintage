@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.2 2000/03/20 19:34:10 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/03/20 19:34:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.3 2000/04/25 17:54:21 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/04/25 17:54:21 $
  *
  * ====================================================================
  *
@@ -169,7 +169,10 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
 	}
 	ep.setConnectionHandler( con );
 	ep.startEndpoint();
-	System.out.println("Starting tcp endpoint on " + port + " with " + con.getClass().getName());
+	String classN=con.getClass().getName();
+	int lidot=classN.lastIndexOf( "." );
+	if( lidot >0 ) classN=classN.substring( lidot + 1 );
+	System.out.println("Starting " + classN + " on " + port);
     }
 
     public void stop() throws Exception {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.22 2000/04/21 20:45:03 costin Exp $
- * $Revision: 1.22 $
- * $Date: 2000/04/21 20:45:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.23 2000/04/25 17:54:15 costin Exp $
+ * $Revision: 1.23 $
+ * $Date: 2000/04/25 17:54:15 $
  *
  * ====================================================================
  *
@@ -149,13 +149,13 @@ public class ResponseImpl implements Response {
     }
 
     public void recycle() {
-	userCookies.removeAllElements();
+	userCookies.removeAllElements(); // XXX reuse !!!
 	contentType = Constants.DEFAULT_CONTENT_TYPE;
+	contentLanguage = null;
         locale = new Locale(Constants.LOCALE_DEFAULT, "");
 	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
-	headers.clear();
 	usingWriter = false;
 	usingStream = false;
 	sessionId=null;
@@ -166,6 +166,13 @@ public class ResponseImpl implements Response {
 	// adapter
 	body.setLength(0);
 	if( out != null ) out.recycle();
+
+
+	out.recycle(); //=new BufferedServletOutputStream();
+	//	out.setResponse(this);
+
+	headers.clear();
+	//headers = new MimeHeaders();
     }
 
     public void finish() throws IOException {
@@ -487,5 +494,5 @@ public class ResponseImpl implements Response {
     public static String getMessage( int status ) {
 	return sm.getString("sc."+ status);
     }
-    
+
 }
