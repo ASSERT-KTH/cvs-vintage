@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.26 2003/09/08 01:24:11 spestov Exp $
+ * @version $Id: Java14.java,v 1.27 2003/09/10 02:23:12 spestov Exp $
  */
 public class Java14
 {
@@ -273,6 +273,7 @@ public class Java14
 				/* otherwise just insert the text */
 				else
 					textArea.getBuffer().insert(caret,str);
+				textArea.scrollToCaret(true);
 			}
 			catch(Exception e)
 			{

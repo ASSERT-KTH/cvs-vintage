@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.14 2003/05/29 02:46:49 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.15 2003/09/10 02:23:12 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -196,7 +196,7 @@ public class FileRootsVFS extends VFS
 				isFloppy = path.startsWith("A:") || path.startsWith("B:");
 
 			// so an empty cd drive is not reported as a file
-			if(isDrive != null)
+			if(isDrive != null && !isFloppy)
 			{
 				try
 				{
@@ -212,7 +212,9 @@ public class FileRootsVFS extends VFS
 			else
 				isDirectory = file.isDirectory();
 
-			if(isFloppy || isDirectory)
+			if(isFloppy)
+				type = VFS.DirectoryEntry.FILESYSTEM;
+			else if(isDirectory)
 			{
 				type = VFS.DirectoryEntry.FILESYSTEM;
 
