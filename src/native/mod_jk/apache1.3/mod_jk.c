@@ -55,7 +55,9 @@
 
 /***************************************************************************
  * Description: Apache 1.3 plugin for Jakarta/Tomcat                       *
+ *              See ../common/jk_service.h for general mod_jk info         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
+ *              Dan Milstein <danmil@shore.net>                            *
  * Version:     $ $                                                        *
  ***************************************************************************/
 
@@ -100,13 +102,18 @@
 #define NULL_FOR_EMPTY(x)   ((x && !strlen(x)) ? NULL : x) 
 
 /*
- * If you are not using SSL, comment out the following
- * line. It will make apache run faster.
+ * If you are not using SSL, comment out the following line. It will make
+ * apache run faster.  
+ *
+ * Personally, I (DM), think this may be a lie.
  */
 #define ADD_SSL_INFO    
 
 module MODULE_VAR_EXPORT jk_module;
 
+/*
+ * Configuration object for the mod_jk module.
+ */
 typedef struct {
     char *log_file;
     int  log_level;
@@ -135,12 +142,28 @@ typedef struct {
     server_rec *s;
 } jk_server_conf_t;
 
+
+/*
+ * The "private", or subclass portion of the web server service class for
+ * Apache 1.3.  An instance of this class is created for each request
+ * handled.  See jk_service.h for details about the ws_service object in
+ * general.  
+ */
 struct apache_private_data {
-    jk_pool_t p;
+    /* 
+     * For memory management for this request.  Aliased to be identical to
+     * the pool in the superclass (jk_ws_service).  
+     */
+    jk_pool_t p;    
     
-    int response_started;
+    /* True iff response headers have been returned to client */
+    int response_started;  
+
+    /* True iff request body data has been read from Apache */
     int read_body_started;
-    request_rec *r;
+
+    /* Apache request structure */
+    request_rec *r; 
 };
 typedef struct apache_private_data apache_private_data_t;
 
@@ -163,10 +186,18 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
                               unsigned l);
 
 
-/* ========================================================================= */
-/* JK Service step callbacks                                                 */
-/* ========================================================================= */
+/* ====================================================================== */
+/* JK Service step callbacks                                              */
+/* ====================================================================== */
 
+
+/*
+ * Send the HTTP response headers back to the browser.
+ *
+ * Think of this function as a method of the apache1.3-specific subclass of
+ * the jk_ws_service class.  Think of the *s param as a "this" or "self"
+ * pointer.  
+ */
 static int JK_METHOD ws_start_response(jk_ws_service_t *s,
                                        int status,
                                        const char *reason,
@@ -176,14 +207,16 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
 {
     if(s && s->ws_private) {
         unsigned h;
+
+        /* Obtain a subclass-specific "this" pointer */
         apache_private_data_t *p = s->ws_private;
         request_rec *r = p->r;
         
         if(!reason) {
             reason = "";
         }
-	    r->status = status;
-	    r->status_line = ap_psprintf(r->pool, "%d %s", status, reason);
+        r->status = status;
+        r->status_line = ap_psprintf(r->pool, "%d %s", status, reason);
 
         for(h = 0 ; h < num_of_headers ; h++) {
             if(!strcasecmp(header_names[h], "Content-type")) {
@@ -191,20 +224,20 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
                 ap_content_type_tolower(tmp);
                 r->content_type = tmp;
             } else if(!strcasecmp(header_names[h], "Location")) {
-	            ap_table_set(r->headers_out, header_names[h], header_values[h]);
-	        } else if(!strcasecmp(header_names[h], "Content-Length")) {
-	            ap_table_set(r->headers_out, header_names[h], header_values[h]);
-	        } else if(!strcasecmp(header_names[h], "Transfer-Encoding")) {
-	            ap_table_set(r->headers_out, header_names[h], header_values[h]);
+                ap_table_set(r->headers_out, header_names[h], header_values[h]);
+            } else if(!strcasecmp(header_names[h], "Content-Length")) {
+                ap_table_set(r->headers_out, header_names[h], header_values[h]);
+            } else if(!strcasecmp(header_names[h], "Transfer-Encoding")) {
+                ap_table_set(r->headers_out, header_names[h], header_values[h]);
             } else if(!strcasecmp(header_names[h], "Last-Modified")) {
-	            /*
-	             * If the script gave us a Last-Modified header, we can't just
-	             * pass it on blindly because of restrictions on future values.
-	             */
-	            ap_update_mtime(r, ap_parseHTTPdate(header_values[h]));
-	            ap_set_last_modified(r);
-	        } else {	            
-	            ap_table_add(r->headers_out, header_names[h], header_values[h]);
+                /*
+                 * If the script gave us a Last-Modified header, we can't just
+                 * pass it on blindly because of restrictions on future values.
+                 */
+                ap_update_mtime(r, ap_parseHTTPdate(header_values[h]));
+                ap_set_last_modified(r);
+            } else {                
+                ap_table_add(r->headers_out, header_names[h], header_values[h]);
             }
         }
 
@@ -216,12 +249,21 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
     return JK_FALSE;
 }
 
+/*
+ * Read a chunk of the request body into a buffer.  Attempt to read len
+ * bytes into the buffer.  Write the number of bytes actually read into
+ * actually_read.  
+ *
+ * Think of this function as a method of the apache1.3-specific subclass of
+ * the jk_ws_service class.  Think of the *s param as a "this" or "self"
+ * pointer.  
+ */
 static int JK_METHOD ws_read(jk_ws_service_t *s,
                              void *b,
-                             unsigned l,
-                             unsigned *a)
+                             unsigned len,
+                             unsigned *actually_read)
 {
-    if(s && s->ws_private && b && a) {
+    if(s && s->ws_private && b && actually_read) {
         apache_private_data_t *p = s->ws_private;
         if(!p->read_body_started) {
             if(!ap_setup_client_block(p->r, REQUEST_CHUNKED_DECHUNK)) {
@@ -232,24 +274,35 @@ static int JK_METHOD ws_read(jk_ws_service_t *s,
         }
 
         if(p->read_body_started) {
-            *a = ap_get_client_block(p->r, b, l);
+            *actually_read = ap_get_client_block(p->r, b, len);
             return JK_TRUE;
         }
     }
     return JK_FALSE;
 }
 
+/*
+ * Write a chunk of response data back to the browser.  If the headers
+ * haven't yet been sent over, send over default header values (Status =
+ * 200, basically).
+ *
+ * Write len bytes from buffer b.
+ *
+ * Think of this function as a method of the apache1.3-specific subclass of
+ * the jk_ws_service class.  Think of the *s param as a "this" or "self"
+ * pointer.  
+ */
 static int JK_METHOD ws_write(jk_ws_service_t *s,
                               const void *b,
-                              unsigned l)
+                              unsigned len)
 {
     if(s && s->ws_private && b) {
         apache_private_data_t *p = s->ws_private;
 
-        if(l) {
+        if(len) {
             BUFF *bf = p->r->connection->client;
             char *buf = (char *)b;
-            int w = (int)l;
+            int w = (int)len;
             int r = 0;
 
             if(!p->response_started) {
@@ -258,13 +311,15 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
                 }
             }
 
-            while(l && !p->r->connection->aborted) {
-                w = ap_bwrite(p->r->connection->client, &buf[r], l);
+            while(len && !p->r->connection->aborted) {
+                w = ap_bwrite(p->r->connection->client, &buf[r], len);
                 if (w > 0) {
-                    ap_reset_timeout(p->r); /* reset timeout after successful write */
+                    /* reset timeout after successful write */
+                    ap_reset_timeout(p->r); 
                     r += w;
-                    l -= w;
+                    len -= w;
                 } else if (w < 0) {
+                    /* Error writing data -- abort */
                     if(!p->r->connection->aborted) {
                         ap_bsetflag(p->r->connection->client, B_EOUT, 1);
                         p->r->connection->aborted = 1;
@@ -285,12 +340,11 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
     return JK_FALSE;
 }
 
-/* ========================================================================= */
-/* Utility functions                                                         */
-/* ========================================================================= */
+/* ====================================================================== */
+/* Utility functions                                                      */
+/* ====================================================================== */
 
-/* ========================================================================= */
-/* Log something to JServ log file then exit */
+/* Log something to JK log file then exit */
 static void jk_error_exit(const char *file, 
                           int line, 
                           int level, 
@@ -311,6 +365,7 @@ static void jk_error_exit(const char *file,
     exit(1);
 }
 
+/* Return the content length associated with an Apache request structure */
 static int get_content_length(request_rec *r)
 {
     if(r->clength > 0) {
@@ -329,13 +384,33 @@ static int get_content_length(request_rec *r)
     return 0;
 }
 
+/*
+ * Set up an instance of a ws_service object for a single request.  This
+ * particular instance will be of the Apache 1.3-specific subclass.  Copies
+ * all of the important request information from the Apache request object
+ * into the jk_ws_service_t object.
+ *
+ * Params 
+ *
+ * private_data: The subclass-specific data structure, already initialized
+ * (with a pointer to the Apache request_rec structure, among other things)
+ *
+ * s: The base class object.
+ *
+ * conf: Configuration information
+ *  
+ * Called from jk_handler().  See jk_service.h for explanations of what most
+ * of these fields mean.  
+ */
 static int init_ws_service(apache_private_data_t *private_data,
                            jk_ws_service_t *s,
                            jk_server_conf_t *conf)
 {
     request_rec *r      = private_data->r;
     char *ssl_temp      = NULL;
-    s->jvm_route        = NULL;
+    s->jvm_route        = NULL; /* Used for sticky session routing */
+    
+    /* Copy in function pointers (which are really methods) */
     s->start_response   = ws_start_response;
     s->read             = ws_read;
     s->write            = ws_write;
@@ -346,14 +421,14 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->protocol     = r->protocol;
     s->remote_host  = (char *)ap_get_remote_host(r->connection,
                                                  r->per_dir_config,
-										         REMOTE_HOST);
+                                                 REMOTE_HOST);
 
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
 
     s->remote_addr  = NULL_FOR_EMPTY(r->connection->remote_ip);
     /* Wrong:    s->server_name  = (char *)ap_get_server_name( r ); */
     s->server_name= (char *)(r->hostname ? r->hostname : 
-			     r->server->server_hostname);
+                 r->server->server_hostname);
     
     
     s->server_port= htons( r->connection->local_addr.sin_port );
@@ -361,19 +436,19 @@ static int init_ws_service(apache_private_data_t *private_data,
 
     
     /*    Winners:  htons( r->connection->local_addr.sin_port )
-	            	  (r->hostname ? r->hostname : 
-			                 r->server->server_hostname),
+                      (r->hostname ? r->hostname : 
+                             r->server->server_hostname),
     */
     /* printf( "Port %u %u %u %s %s %s %d %d \n", 
-	    ap_get_server_port( r ), 
-	    htons( r->connection->local_addr.sin_port ),
-	    ntohs( r->connection->local_addr.sin_port ),
-	    ap_get_server_name( r ),
-	    (r->hostname ? r->hostname : r->server->server_hostname),
-	    r->hostname,
-	    r->connection->base_server->port,
-	    r->server->port
-	    );
+        ap_get_server_port( r ), 
+        htons( r->connection->local_addr.sin_port ),
+        ntohs( r->connection->local_addr.sin_port ),
+        ap_get_server_name( r ),
+        (r->hostname ? r->hostname : r->server->server_hostname),
+        r->hostname,
+        r->connection->base_server->port,
+        r->server->port
+        );
     */
     s->server_software = (char *)ap_get_server_version();
 
@@ -399,7 +474,7 @@ static int init_ws_service(apache_private_data_t *private_data,
                 s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, 
                                                        conf->certs_indicator);
                 if(s->ssl_cert) {
-    	            s->ssl_cert_len = strlen(s->ssl_cert);
+                    s->ssl_cert_len = strlen(s->ssl_cert);
                 }
                 s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, 
                                                        conf->cipher_indicator);
@@ -456,9 +531,16 @@ static int init_ws_service(apache_private_data_t *private_data,
     return JK_TRUE;
 }
 
-/* ========================================================================= */
-/* The JK module command processors                                          */
-/* ========================================================================= */
+/*
+ * The JK module command processors
+ *
+ * The below are all installed so that Apache calls them while it is
+ * processing its config files.  This allows configuration info to be
+ * copied into a jk_server_conf_t object, which is then used for request
+ * filtering/processing.  
+ *
+ * See jk_cmds definition below for explanations of these options.
+ */
 
 static const char *jk_set_mountcopy(cmd_parms *cmd, 
                                     void *dummy, 
@@ -492,7 +574,7 @@ static const char *jk_mount_context(cmd_parms *cmd,
     return NULL;
 }
 
-static const char *jk_set_wroker_file(cmd_parms *cmd, 
+static const char *jk_set_worker_file(cmd_parms *cmd, 
                                       void *dummy, 
                                       char *worker_file)
 {
@@ -625,7 +707,7 @@ static const command_rec jk_cmds[] =
      * This file defines the different workers used by apache to redirect 
      * servlet requests.
      */
-    {"JkWorkersFile", jk_set_wroker_file, NULL, RSRC_CONF, TAKE1,
+    {"JkWorkersFile", jk_set_worker_file, NULL, RSRC_CONF, TAKE1,
      "the name of a worker file for the Jakarta servlet containers"},
     /*
      * JkMount mounts a url prefix to a worker (the worker need to be
@@ -676,11 +758,16 @@ static const command_rec jk_cmds[] =
     {NULL}
 };
 
-/* ========================================================================= */
-/* The JK module handlers                                                    */
-/* ========================================================================= */
+/* ====================================================================== */
+/* The JK module handlers                                                 */
+/* ====================================================================== */
+
+/*
+ * Called to handle a single request.
+ */ 
 static int jk_handler(request_rec *r)
 {   
+    /* Retrieve the worker name stored by jk_translate() */
     const char *worker_name = ap_table_get(r->notes, JK_WORKER_ID);
 
     if(r->proxyreq) {
@@ -719,21 +806,25 @@ static int jk_handler(request_rec *r)
                                       &is_recoverable_error);
                 
                     if (s.content_read < s.content_length) {
-			/* Toss all further characters left to read fm client */
-			char *buff = ap_palloc(r->pool, 2048);
-			if (buff != NULL) {
-			    int rd;
-			    while ((rd = ap_get_client_block(r, buff, 2048)) > 0) {
-				s.content_read += rd;
-			    }
-			}
-		    }
+                        /*
+                         * If the servlet engine didn't consume all of the
+                         * request data, consume and discard all further
+                         * characters left to read from client 
+                         */
+                        char *buff = ap_palloc(r->pool, 2048);
+                        if (buff != NULL) {
+                            int rd;
+                            while ((rd = ap_get_client_block(r, buff, 2048)) > 0) {
+                                s.content_read += rd;
+                            }
+                        }
+                    }
                     end->done(&end, l);
                 }
             }
 
             if(rc) {
-                return OK;	/* NOT r->status, even if it has changed. */
+                return OK;  /* NOT r->status, even if it has changed. */
             }
         }
     }
@@ -741,6 +832,9 @@ static int jk_handler(request_rec *r)
     return HTTP_INTERNAL_SERVER_ERROR;
 }
 
+/*
+ * Create a default config object.
+ */
 static void *create_jk_config(ap_pool *p, server_rec *s)
 {
     jk_server_conf_t *c =
@@ -867,6 +961,7 @@ static void jk_init(server_rec *s, ap_pool *p)
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
+    /* Open up log file */
     if(conf->log_file && conf->log_level >= 0) {
         if(!jk_open_file_logger(&(conf->log), 
                                 conf->log_file, 
@@ -877,6 +972,7 @@ static void jk_init(server_rec *s, ap_pool *p)
         }
     }
     
+    /* Create mapping from uri's to workers, and start up all the workers */
     if(!uri_worker_map_alloc(&(conf->uw_map), conf->uri_to_context, conf->log)) {
         jk_error_exit(APLOG_MARK, 
                       APLOG_EMERG, 
@@ -887,19 +983,20 @@ static void jk_init(server_rec *s, ap_pool *p)
 
     if(map_alloc(&init_map)) {
         if(map_read_properties(init_map, conf->worker_file)) {
-
+            
 #if MODULE_MAGIC_NUMBER >= 19980527
-    			/* Tell apache we're here */
-    			ap_add_version_component("mod_jk");
+            /* Tell apache we're here */
+            ap_add_version_component("mod_jk");
 #endif
-
-                if(wc_open(init_map, conf->log)) {
-		    map_free(&init_map);  /* we don't need this any more so free it */
-                    return;
-                }            
+            
+            if(wc_open(init_map, conf->log)) {
+                /* we don't need this any more so free it */
+                map_free(&init_map);
+                return;
+            }            
         }
     }
-
+    
     jk_error_exit(APLOG_MARK, 
                   APLOG_EMERG, 
                   s, 
@@ -907,6 +1004,11 @@ static void jk_init(server_rec *s, ap_pool *p)
                   "Error while opening the workers");
 }
 
+/*
+ * Perform uri to worker mapping, and store the name of the relevant worker
+ * in the notes fields of the request_rec object passed in.  This will then
+ * get picked up in jk_handler().
+ */
 static int jk_translate(request_rec *r)
 {    
     if(!r->proxyreq) {        
