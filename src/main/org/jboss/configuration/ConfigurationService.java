@@ -19,17 +19,19 @@ import javax.management.*;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;
-import com.sun.xml.tree.*;
+import javax.xml.parsers.*;
+
 
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.util.XmlHelper;
 
 /**
  *   <description>
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -157,8 +159,9 @@ public class ConfigurationService
    {
         Writer out = new StringWriter();
 
-        // Create new ProjectX XML doc
-        XmlDocument doc = new XmlDocument();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
 
         Element serverElement = doc.createElement("server");
 
@@ -201,7 +204,8 @@ public class ConfigurationService
         doc.appendChild(serverElement);
 
         // Write configuration
-        doc.write(out, "UTF-8");
+        XmlHelper.write(out, doc);
+
         out.close();
 
         // Return configuration
@@ -249,14 +253,14 @@ public class ConfigurationService
 
        // Parse XML
        Document userConf;
-       XmlDocumentBuilder xdb = new XmlDocumentBuilder();
-       Parser parser = new com.sun.xml.parser.Parser();
-       xdb.setParser(parser);
+       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+       DocumentBuilder parser = factory.newDocumentBuilder();
+
 
        try
        {
-           parser.parse(new InputSource(new StringReader(cfg)));
-           userConf = xdb.getDocument();
+           userConf = parser.parse(new InputSource(new StringReader(cfg)));
+           //userConf = xdb.getDocument();
        }
        catch (SAXException se)
        {
@@ -276,14 +280,11 @@ public class ConfigurationService
 
           // Parse XML
           Document autoConf;
-          xdb = new XmlDocumentBuilder();
-          parser = new com.sun.xml.parser.Parser();
-          xdb.setParser(parser);
 
           try
           {
-              parser.parse(new InputSource(new StringReader(cfg)));
-              autoConf = xdb.getDocument();
+              autoConf = parser.parse(new InputSource(new StringReader(cfg)));
+              //autoConf = xdb.getDocument();
           }
           catch (SAXException se)
           {
