@@ -5,6 +5,7 @@
  *
  * Copyright (C) 1999, 2000, 2001, 2002 Slava Pestov
  * Portions copyright (C) 1999 mike dillon
+ * Portions copyright (C) 2002 Marco Hunsicker
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.16 2002/08/09 19:14:50 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.17 2002/08/10 20:05:31 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
