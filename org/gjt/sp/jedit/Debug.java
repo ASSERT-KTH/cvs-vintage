@@ -22,14 +22,12 @@
 
 package org.gjt.sp.jedit;
 
-import org.gjt.sp.jedit.Debug;
-
 /**
  * This class contains various debugging flags mainly useful for core
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.12 2003/06/16 02:40:20 spestov Exp $
+ * @version $Id: Debug.java,v 1.13 2003/06/16 03:04:44 spestov Exp $
  */
 public class Debug
 {
