@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.16 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.17 2003/02/18 22:03:19 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -319,8 +319,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			else if(actionCommand.equals("synchronize"))
 			{
 				Buffer buffer = browser.getView().getBuffer();
-				browser.setDirectory(buffer.getVFS().getParentOfPath(
-					buffer.getPath()));
+				browser.setDirectory(buffer.getDirectory());
 			}
 			else if(actionCommand.equals("new-file"))
 				browser.newFile();

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.33 2003/02/05 15:44:06 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.34 2003/02/18 22:03:20 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -164,8 +164,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		}
 		else
 		{
-			String path = MiscUtilities.getParentOfPath(
-				view.getBuffer().getPath());
+			String path = view.getBuffer().getDirectory();
 
 			if(path.endsWith("/") || path.endsWith(File.separator))
 				path = path.substring(0,path.length() - 1);

@@ -55,7 +55,7 @@ import java.awt.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.13 2003/02/08 20:13:27 spestov Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.14 2003/02/18 22:03:19 spestov Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its
@@ -96,7 +96,11 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	} //}}}
 
 	//{{{ init() method
-	public final void init()
+	/**
+	 * Do not override this method, override {@link #_init()} instead.
+	 */
+	// final in 4.2
+	public void init()
 	{
 		if(!initialized)
 		{
@@ -106,7 +110,11 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	} //}}}
 
 	//{{{ save() method
-	public final void save()
+	/**
+	 * Do not override this method, override {@link #_save()} instead.
+	 */
+	// final in 4.2
+	public void save()
 	{
 		if(initialized)
 			_save();

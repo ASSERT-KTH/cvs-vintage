@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.63 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.64 2003/02/18 22:03:19 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -288,8 +288,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 				if(view != null)
 				{
 					Buffer buffer = view.getBuffer();
-					path = buffer.getVFS().getParentOfPath(
-						buffer.getPath());
+					path = buffer.getDirectory();
 				}
 				else
 					path = userHome;
@@ -1186,8 +1185,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 			else if(source == synchronize)
 			{
 				Buffer buffer = view.getBuffer();
-				setDirectory(buffer.getVFS().getParentOfPath(
-					buffer.getPath()));
+				setDirectory(buffer.getDirectory());
 			}
 			else if(source == newFile)
 				newFile();

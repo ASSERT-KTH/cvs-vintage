@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.56 2003/02/09 05:16:57 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.57 2003/02/18 22:03:19 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -675,8 +675,7 @@ class BrowserView extends JPanel
 				case '-':
 					View view = browser.getView();
 					Buffer buffer = view.getBuffer();
-					browser.setDirectory(MiscUtilities.getParentOfPath(
-						buffer.getPath()));
+					browser.setDirectory(buffer.getDirectory());
 					break;
 				default:
 					typeSelectBuffer.append(evt.getKeyChar());
