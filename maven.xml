@@ -13,8 +13,7 @@
   <postGoal name="war:webapp"> 
     <j:set var="warWebappBuildDir"
         value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>
-  	<ant:echo message="maven.src.dir=${maven.src.dir}"/>
-  	<ant:echo message="warWebappBuildDir=${warWebappBuildDir}"/>
+  	<ant:echo message="Copying files to webapp ${warWebappBuildDir}"/>
     <ant:copy todir="${warWebappBuildDir}/WEB-INF/conf">
     	<ant:fileset dir="${maven.src.dir}/conf/conf"
           includes="**/*.*"/>
@@ -129,6 +128,7 @@
      <ant:delete dir="${warWebappBuildDir}/WEB-INF/lib"/>
      <ant:delete dir="${warWebappBuildDir}/WEB-INF/classes"/>
      <ant:delete dir="${warWebappBuildDir}/WEB-INF/conf"/>
+     <ant:delete dir="${warWebappBuildDir}/WEB-INF/sql"/>
 
      <attainGoal name="clean"/>
           
