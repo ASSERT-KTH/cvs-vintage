@@ -21,7 +21,7 @@ import javax.naming.spi.ObjectFactory;
  *  usage for standalone clients.
  *      
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 public class ClientUserTransactionObjectFactory
    implements ObjectFactory
@@ -30,14 +30,11 @@ public class ClientUserTransactionObjectFactory
                                    Context nameCtx, Hashtable environment)
       throws Exception
    {
-System.err.println("ClientUserTransactionServiceFactory.getObjectInstance() entered.");
       Reference ref = (Reference)obj;
  
       if (ref.getClassName().equals(ClientUserTransaction.class.getName())) {
-System.err.println("ClientUserTransactionServiceFactory.getObjectInstance() #1.");
          return ClientUserTransaction.getSingleton();
       }
-System.err.println("ClientUserTransactionServiceFactory.getObjectInstance() returning null.");
       return null;
    }
 }
