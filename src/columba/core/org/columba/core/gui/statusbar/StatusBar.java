@@ -116,7 +116,7 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
 
         taskPanel.add(taskButton, BorderLayout.CENTER);
 
-        leftMainPanel.add(taskPanel, BorderLayout.WEST);
+        //leftMainPanel.add(taskPanel, BorderLayout.WEST);
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BorderLayout());
         margin = new EmptyBorder(0, 10, 0, 10);
