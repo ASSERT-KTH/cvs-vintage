@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: org.apache.tomcat.startup.EmbededTomcat
+Class-Path: container/tomcat_util.jar common/tomcat_core.jar container/tomcat_modules.jar common/servlet.jar container/facade22.jar common/jasper-runtime.jar container/jaxp.jar container/parser.jar
+
+
