@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_editpane.xml,v 1.23 2005/01/07 13:20:23 linus Exp $ -->
+<!-- $Id: ref_editpane.xml,v 1.24 2005/02/21 22:16:57 mvw Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -1457,10 +1457,6 @@ graphic artifacts to diagrams.</para></listitem>
     <para>Earlier versions of &argouml; did implement a tabular representation,
       but the current release only supports a diagram representation, so this
       tab does not function.</para>
-
-    <para>In addition you can use &button1; double click on this tab to spawn a
-      copy of the current diagram (see <xref linkend="s2.ref.spawn"/> for more
-      details).</para>
   </sect1>
 
   <!-- The context sensitive pop-up menus -->
