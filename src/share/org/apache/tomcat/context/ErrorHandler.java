@@ -92,8 +92,6 @@ public final class ErrorHandler extends BaseInterceptor {
     public void addContext( ContextManager cm, Context ctx)
 	throws TomcatException
     {
-	if( ctx.getHost() == null && ctx.getPath().equals(""))
-	    rootContext = ctx;
     }
 
     /** Add default error handlers
@@ -101,6 +99,8 @@ public final class ErrorHandler extends BaseInterceptor {
     public void contextInit( Context ctx)
 	throws TomcatException
     {
+	if( ctx.getHost() == null && ctx.getPath().equals(""))
+	    rootContext = ctx;
 	ctx.addServlet( new ExceptionHandler());
 	ctx.addServlet( new StatusHandler());
 
@@ -206,6 +206,12 @@ public final class ErrorHandler extends BaseInterceptor {
 		ctx.log("Broken pipe in " + req, t, Logger.DEBUG);  // tuneme
 		return;
 	    }
+            if( "Connection reset by peer".equals(t.getMessage()))
+	    {
+		ctx.log("Connection reset by peer in " + req, t, Logger.DEBUG);  // tuneme
+		return;
+	    }
+
 	    ctx.log("IOException in " + req, t );
 	} else {
 	    ctx.log("Exception in " + req , t );
@@ -238,7 +244,10 @@ public final class ErrorHandler extends BaseInterceptor {
 	}
 
 	boolean isDefaultHandler = false;
-	if( errorLoop( ctx, req ) || errorServlet==null) {
+	if ( errorLoop( ctx, req ) ){
+                return;
+        }
+        if ( errorServlet==null) {
 	    errorServlet = ctx.getServletByName("tomcat.exceptionHandler");
 	    isDefaultHandler = true;
 	}
@@ -506,7 +515,7 @@ class RedirectHandler extends Handler {
 	    req.getAttribute("javax.servlet.error.message");
 	Context ctx=req.getContext();
 	
-	location = makeAbsolute(req, location);
+	//location = makeAbsolute(req, location);
 
 	if( debug>0) ctx.log("Redirect " + location + " " + req );
 
