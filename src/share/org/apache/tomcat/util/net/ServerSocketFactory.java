@@ -121,22 +121,20 @@ public abstract class ServerSocketFactory implements Cloneable {
     /**
      * Returns a copy of the environment's default socket factory.
      */
-    public static ServerSocketFactory getDefault () {
+    public static synchronized ServerSocketFactory getDefault () {
         //
         // optimize typical case:  no synch needed
         //
 
         if (theFactory == null) {
-            synchronized (ServerSocketFactory.class) {
-                //
-                // Different implementations of this method could
-                // work rather differently.  For example, driving
-                // this from a system property, or using a different
-                // implementation than JavaSoft's.
-                //
+            //
+            // Different implementations of this method could
+            // work rather differently.  For example, driving
+            // this from a system property, or using a different
+            // implementation than JavaSoft's.
+            //
 
-                theFactory = new DefaultServerSocketFactory ();
-            }
+            theFactory = new DefaultServerSocketFactory ();
         }
 
         try {
