@@ -1,3 +1,5 @@
+$page.setTitle("Scarab Links")
+
 <h3>Site Pages</h3>
 <ul>
 <li><a href="$link.setPage("Assign.vm")">Assign.vm</a>
