@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.31 2003/08/08 02:22:17 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.32 2003/08/09 05:26:48 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -201,7 +201,6 @@ public class KeyEventWorkaround
 					{
 					case '\n':
 					case '\t':
-					case ' ':
 						return null;
 					}
 				}

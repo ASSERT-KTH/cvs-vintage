@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.24 2003/08/04 03:19:13 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.25 2003/08/09 05:26:48 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -87,6 +87,13 @@ public class PositionManager
 			return;
 		}
 
+		int newGapOffset;
+		PosBottomHalf highest = root.findHighest(offset);
+		if(highest == null)
+			newGapOffset = 0;
+		else
+			newGapOffset = highest.getOffset() + 1;
+
 		if(gapWidth != 0)
 		{
 			if(gapOffset < offset)
@@ -95,7 +102,8 @@ public class PositionManager
 				root.contentInserted(offset,gapOffset,-gapWidth);
 		}
 
-		gapOffset = offset;
+		gapOffset = newGapOffset;
+
 		gapWidth += length;
 	} //}}}
 
@@ -448,6 +456,7 @@ public class PositionManager
 		} //}}}
 
 		//{{{ find() method
+		/* find node with pos == offset */
 		PosBottomHalf find(int offset)
 		{
 			if(getOffset() == offset)
@@ -465,6 +474,26 @@ public class PositionManager
 					return null;
 				else
 					return left.find(offset);
+			}
+		} //}}}
+
+		//{{{ findHighest() method
+		/* find node with highest pos <= offset */
+		PosBottomHalf findHighest(int offset)
+		{
+			if(getOffset() > offset)
+			{
+				if(left != null)
+					return left.findHighest(offset);
+				else
+					return null;
+			}
+			else
+			{
+				if(right != null && right.getOffset() <= offset)
+					return right.findHighest(offset);
+				else
+					return this;
 			}
 		} //}}}
 
