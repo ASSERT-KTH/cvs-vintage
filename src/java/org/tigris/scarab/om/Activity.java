@@ -64,9 +64,9 @@ import org.tigris.scarab.services.cache.ScarabCache;
 /**
  * This class manages Activity records.
  *
- * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.30 2002/06/20 18:13:37 jmcnally Exp $
+ * @version $Id: Activity.java,v 1.31 2002/06/20 22:03:13 jon Exp $
  */
 public class Activity 
     extends BaseActivity
