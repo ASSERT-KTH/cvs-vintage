@@ -20,7 +20,7 @@ import a.b.*;  // BAD
 *   @see <related>
 *   @author  <a href="mailto:{email}">{full name}</a>.
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 *   
 *   <p><b>Revisions:</b>
 *
@@ -36,7 +36,7 @@ import a.b.*;  // BAD
 */
 
 
-// DO NOT USE "TAB" TO INDENT CODE USE *2* SPACES FOR PORTABILITY AMONG EDITORS
+// DO NOT USE "TAB" TO INDENT CODE USE *3* SPACES FOR PORTABILITY AMONG EDITORS
 
 public class X
 extends Y
