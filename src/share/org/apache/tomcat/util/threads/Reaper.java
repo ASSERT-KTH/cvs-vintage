@@ -75,7 +75,12 @@ public class Reaper extends Thread {
 	this.setName("TomcatReaper");
     }
 
-    private int interval = 1000 * 60; //ms
+    public Reaper(String name) {
+	this.setDaemon(true);
+	this.setName(name);
+    }
+
+    private long interval = 1000 * 60; //ms
     
     // XXX TODO Allow per/callback interval, find next, etc
     // Right now the "interval" is used for all callbacks
@@ -89,6 +94,10 @@ public class Reaper extends Thread {
      */
     Object lock=new Object();
     static boolean running=true;
+
+    public void setDefaultInterval( long t ) {
+	interval=t;
+    }
     
     public int addCallback( ThreadPoolRunnable c, int interval ) {
 	synchronized( lock ) {
@@ -106,6 +115,11 @@ public class Reaper extends Thread {
 	}
     }
 
+    public void startReaper() {
+	running=true;
+	this.start();
+    }
+
     public void stopReaper() {
 	running=false;
 	this.notify();
@@ -118,7 +132,8 @@ public class Reaper extends Thread {
 	    } catch (InterruptedException ie) {
 		// sometimes will happen
 	    }
-	    
+
+	    if( !running) return;
 	    for( int i=0; i< count; i++ ) {
 		ThreadPoolRunnable callB=cbacks[i];
 		// it may be null if a callback is removed.

@@ -449,6 +449,9 @@ public class Request {
 	this.jvmRoute=jvmRoute;
     }
 
+    /** Session ID requested by client as a cookie or any other
+     *   method. It may be a valid ( and existing ) session or not.
+     */
     public String getRequestedSessionId() {
         return reqSessionId;
     }
@@ -457,6 +460,8 @@ public class Request {
 	this.reqSessionId = reqSessionId;
     }
 
+    /** Method used to determine requestedSessionId
+     */
     public String getSessionIdSource() {
 	return sessionIdSource;
     }
@@ -465,6 +470,8 @@ public class Request {
 	sessionIdSource=s;
     }
 
+    /** "Real" session Id, coresponding to an existing ServerSession
+     */
     public void setSessionId( String id ) {
 	if( ! response.isIncluded() ) sessionId=id;
     }

@@ -114,20 +114,6 @@ public final class ServerSession  implements  Serializable {
 	distributable=b;
     }
     
-
-//     // XXX XXX XXX
-//     public void setId(String id) {
-
-// 	if ((this.id != null) && (manager != null))
-// 	    manager.remove(this);
-
-// 	this.id = id;
-
-// 	if ((manager != null) )
-// 	    manager.add(this);
-
-//     }
-
     // --------------------
 
     /**

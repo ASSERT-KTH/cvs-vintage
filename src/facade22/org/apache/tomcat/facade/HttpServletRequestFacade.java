@@ -385,13 +385,14 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     // -------------------- Session --------------------
 
     public HttpSession getSession() {
-        return (HttpSession)request.getSession(true);
+	return getSession(true);
     }
 
     /** Create the Facade for session.
      */
     public HttpSession getSession(boolean create) {
 	ServerSession realSession = (ServerSession)request.getSession(create);
+
 	// No real session, return null
 	if( realSession == null ) {
 	    if( sessionFacade!= null) sessionFacade.recycle();
@@ -410,8 +411,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     public boolean isRequestedSessionIdValid() {
 	// so here we just assume that if we have a session it's,
 	// all good, else not.
-	HttpSession session = (HttpSession)request.getSession(false);
-	return (session != null);
+	return null != request.getSession(false);
     }
 
     /** Adapter - Request uses getSessionIdSource

@@ -56,8 +56,6 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-
-
 package org.apache.tomcat.session;
 
 import java.io.IOException;
@@ -68,6 +66,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
+
 
 /**
  * This is the adapter between tomcat and a StandardManager.
@@ -92,15 +91,11 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     public StandardSessionInterceptor() {
     }
 
-    // -------------------- Internal methods --------------------
-    private StandardManager getManager( Context ctx ) {
-	return (StandardManager)ctx.getContainer().getNote(manager_note);
-    }
+    // -------------------- Configuration properties --------------------
 
-    private void setManager( Context ctx, StandardManager sm ) {
-	ctx.getContainer().setNote( manager_note, sm );
-    }
-
+    
+    
+    
     // -------------------- Tomcat request events --------------------
     public void engineInit( ContextManager cm ) throws TomcatException {
 	// set-up a per/container note for StandardManager
@@ -110,13 +105,13 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 
     /**
      *  StandardManager will set the HttpSession if one is found.
-     *  
      */
     public int requestMap(Request request ) {
 	String sessionId = null;
 	Context ctx=request.getContext();
 	if( ctx==null ) {
-	    log( "Configuration error in StandardSessionInterceptor - no context " + request );
+	    log( "Configuration error in StandardSessionInterceptor " +
+		 " - no context " + request );
 	    return 0;
 	}
 
@@ -128,26 +123,28 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	    // multiple Session cookies (one for the root
 	    // context and one for the real context... or old session
 	    // cookie. We must check for validity in the current context.
-	    StandardManager sM = getManager( ctx );    
-	    HttpSession sess= sM.findSession( sessionId );
+	    ServerSessionManager sM = getManager( ctx );    
+	    ServerSession sess= sM.findSession( sessionId );
+	    //	    log("Try to find: " + sessionId );
 	    if(null != sess) {
-		//		log( "Found session");
+		sess.getTimeStamp().touch( System.currentTimeMillis() );
+		//log("Session found " + sessionId );
 		// set it only if nobody else did !
 		if( null == request.getSession( false ) ) {
 		    request.setSession( sess );
-		    request.setSessionId( sess.getId());
-		    //    log("Session set ");
+		    // XXX use MessageBytes!
+		    request.setSessionId( sessionId );
+		    //log("Session set " + sessionId );
 		}
 	    }
 	    return 0;
 	}
-	//	log( "No session ");
 	return 0;
     }
     
     public void reload( Request req, Context ctx ) {
 	ClassLoader newLoader = ctx.getClassLoader();
-	StandardManager sM = getManager( ctx );    
+	ServerSessionManager sM = getManager( ctx );    
 	sM.handleReload(req, newLoader);
 	if (req.getSession(false) != null) {
 	    // replace the current session in the current request
@@ -163,12 +160,13 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	Context ctx=request.getContext();
 	if( ctx==null ) return 0;
 	
-	StandardManager sM = getManager( ctx );    
+	ServerSessionManager sM = getManager( ctx );    
 
 	if( request.getSession( false ) != null )
 	    return 0; // somebody already set the session
-	HttpSession newS=sM.getNewSession();
+	ServerSession newS=sM.getNewSession();
 	request.setSession( newS );
+	request.setSessionId( newS.getId().toString());
 	return 0;
     }
 
@@ -178,14 +176,15 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
      *	sessions.
      */
     public int postService(  Request rrequest, Response response ) {
-	Context ctx=rrequest.getContext();
-	if( ctx==null ) return 0; 
+	// Not used, maybe add it back later if we need to
 
-	StandardManager sm= getManager( ctx );
-	HttpSession sess=(HttpSession)rrequest.getSession(false);
-	if( sess == null ) return 0;
-	
-	sm.release( sess );
+	// 	Context ctx=rrequest.getContext();
+	// 	if( ctx==null ) return 0; 
+
+	// 	ServerSessionManager sm= getManager( ctx );
+	// 	HttpSession sess=(HttpSession)rrequest.getSession(false);
+	// 	if( sess == null ) return 0;
+	//	sm.release( sess );
 	return 0;
     }
 
@@ -197,10 +196,10 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
      */
     public void contextInit(Context ctx) throws TomcatException {
 	// Defaults !!
-	StandardManager sm= getManager( ctx );
+	ServerSessionManager sm= getManager( ctx );
 	
 	if( sm == null ) {
-	    sm=new StandardManager();
+	    sm=new ServerSessionManager();
 	    setManager(ctx, sm);
 	}
 
@@ -223,7 +222,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	throws TomcatException
     {
 	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
-	StandardManager sm=getManager(ctx);
+	ServerSessionManager sm=getManager(ctx);
 	try {
 	    if( sm != null )
 		sm.stop();
@@ -231,4 +230,15 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	    throw new TomcatException( ex );
 	}
     }
+
+    // -------------------- Internal methods --------------------
+    private ServerSessionManager getManager( Context ctx ) {
+	return (ServerSessionManager)ctx.getContainer().getNote(manager_note);
+    }
+
+    private void setManager( Context ctx, Object sm ) {
+	ctx.getContainer().setNote( manager_note, sm );
+    }
+
+
 }

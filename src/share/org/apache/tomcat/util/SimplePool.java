@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SimplePool.java,v 1.3 2000/05/26 17:32:17 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/05/26 17:32:17 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -89,7 +85,14 @@ public final class SimplePool  {
     private int current=-1;
 
     Object lock;
+    public static final int DEFAULT_SIZE=16;
     
+    public SimplePool() {
+	this.max=DEFAULT_SIZE;
+	pool=new Object[max];
+	lock=new Object();
+    }
+
     public SimplePool(int max) {
 	this.max=max;
 	pool=new Object[max];
