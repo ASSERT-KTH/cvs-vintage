@@ -39,10 +39,7 @@ public class SendAllMessagesAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_file_sendunsentmessages"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_sendunsentmessages_toolbar"),
+			
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",

@@ -25,7 +25,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ReplyAsAttachment
+public class ReplyAsAttachmentAction
 	extends FrameAction
 	implements SelectionListener {
 
@@ -39,7 +39,7 @@ public class ReplyAsAttachment
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ReplyAsAttachment(AbstractFrameController frameController) {
+	public ReplyAsAttachmentAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
