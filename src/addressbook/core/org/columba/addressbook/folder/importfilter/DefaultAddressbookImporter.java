@@ -116,8 +116,8 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
                 NotifyDialog dialog = new NotifyDialog();
                 dialog.showDialog("Source File not found!");
             } else {
-                ExceptionDialog dialog = new ExceptionDialog();
-                dialog.showDialog(ex);
+                new ExceptionDialog(ex);
+                
             }
 
             NotifyDialog dialog = new NotifyDialog();

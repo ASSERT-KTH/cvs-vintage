@@ -151,8 +151,8 @@ public abstract class DefaultMailboxImporter {
                     NotifyDialog dialog = new NotifyDialog();
                     dialog.showDialog("Source File not found:");
                 } else {
-                    ExceptionDialog dialog = new ExceptionDialog();
-                    dialog.showDialog(ex);
+                    new ExceptionDialog(ex);
+                    
                 }
             }
         }

@@ -103,8 +103,8 @@ public class Worker extends SwingWorker implements WorkerStatusController {
             // Must create a ExceptionProcessor
             e.printStackTrace();
 
-            ExceptionDialog dialog = new ExceptionDialog();
-            dialog.showDialog(e);
+            new ExceptionDialog(e);
+            
         }
 
         returnLocks(operationMode);

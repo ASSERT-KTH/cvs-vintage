@@ -15,227 +15,200 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
-import org.columba.core.util.GlobalResourceLoader;
-
-import org.columba.mail.gui.util.URLController;
-
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.gui.util.URLController;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 public class ExceptionDialog implements ActionListener {
-    public static final String CMD_CLOSE = "CLOSE";
-    public static final String CMD_REPORT_BUG = "REPORT_BUG";
-    private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
-    private JDialog dialog;
-    private boolean bool = false;
-    private JTextField textField;
-    private String stackTrace;
+	public static final String CMD_CLOSE= "CLOSE";
+	public static final String CMD_REPORT_BUG= "REPORT_BUG";
+	private static final String RESOURCE_BUNDLE_PATH=
+		"org.columba.core.i18n.dialog";
+	private JDialog dialog;
+	private boolean bool= false;
 
-    public ExceptionDialog() {
-    }
+	private String stackTrace;
 
-    public void showDialog(final Throwable ex) {
-        JLabel topLabel = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "exception", "hint"),
-                ImageLoader.getImageIcon("stock_dialog_error_48.png"),
-                SwingConstants.LEFT);
+	private JLabel imageLabel;
 
-        JLabel label = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "exception", "message"));
+	private JLabel messageLabel;
+	private JTextArea messageTextArea;
 
-        /*
-        MultiLineLabel mlLabel = new MultiLineLabel( ex.getMessage() );
-        mlLabel.setLineWrap( true );
-        mlLabel.setWrapStyleWord( true );
-        mlLabel.setColumns(70);
-        mlLabel.setRows(3);
-        */
-        JTextArea textArea = new JTextArea(ex.getMessage(), 3, 50);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
+	private JLabel stacktraceLabel;
+	private JTextArea stacktraceTextArea;
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+	private ButtonWithMnemonic closeButton;
+	private ButtonWithMnemonic reportBugButton;
+	private Throwable ex;
 
-        JLabel label2 = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "exception", "stack_trace"));
-        JTextArea textArea2 = new JTextArea(10, 50);
-        StringWriter stringWriter = new StringWriter();
-        ex.printStackTrace(new PrintWriter(stringWriter));
-        stackTrace = stringWriter.toString();
-        textArea2.append(stringWriter.toString());
-        textArea2.setEditable(false);
+	public ExceptionDialog(Throwable ex) {
+		this.ex= ex;
 
-        JScrollPane scrollPane2 = new JScrollPane(textArea2);
+		initComponents();
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    "global", "global", "close"));
-        closeButton.setActionCommand(CMD_CLOSE);
-        closeButton.addActionListener(this);
+		layoutComponents();
 
-        ButtonWithMnemonic reportBugButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
+		dialog.show();
+	}
 
-        reportBugButton.setActionCommand(CMD_REPORT_BUG);
-        reportBugButton.addActionListener(this);
+	private JPanel createCenterPanel() {
+		FormLayout layout=
+			new FormLayout(
+				"fill:default:grow",
+				"default, 3dlu, default, 2dlu, fill:default, 3dlu, default, 2dlu, fill:default:grow");
 
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+		JPanel centerPanel= new JPanel(layout);
+		//centerPanel.setLayout(layout);
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		CellConstraints cc= new CellConstraints();
+		centerPanel.add(imageLabel, cc.xy(1, 1));
 
-        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "exception", "title"));
-        dialog.getContentPane().setLayout(layout);
-        dialog.getRootPane().setDefaultButton(closeButton);
+		centerPanel.add(messageLabel, cc.xy(1, 3));
+		centerPanel.add(new JScrollPane(messageTextArea), cc.xy(1, 5));
 
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 1;
-        c.weightx = 1;
-        c.insets = new Insets(10, 10, 0, 10);
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(topLabel, c);
+		centerPanel.add(stacktraceLabel, cc.xy(1, 7));
+		centerPanel.add(new JScrollPane(stacktraceTextArea), cc.xy(1, 9));
 
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = 1;
-        c.weightx = 1;
-        c.insets = new Insets(10, 10, 0, 10);
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(label, c);
+		return centerPanel;
+	}
 
-        c.gridx = 0;
-        c.gridy = 2;
-        c.gridwidth = 1;
-        c.weightx = 1;
-        c.insets = new Insets(0, 10, 10, 10);
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(scrollPane, c);
+	private void initComponents() {
+		imageLabel=
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"hint"),
+				ImageLoader.getImageIcon("stock_dialog_error_48.png"),
+				SwingConstants.LEFT);
 
-        c.gridx = 0;
-        c.gridy = 3;
-        c.gridwidth = 1;
-        c.weightx = 1;
-        c.insets = new Insets(10, 10, 0, 10);
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(label2, c);
+		messageLabel=
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"message"));
 
-        c.gridx = 0;
-        c.gridy = 4;
-        c.weightx = 1.0;
-        c.gridwidth = 1;
+		messageTextArea= new JTextArea(ex.getMessage());
+		messageTextArea.setLineWrap(true);
+		messageTextArea.setWrapStyleWord(true);
+		messageTextArea.setEditable(false);
 
-        //c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 10);
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(scrollPane2, c);
+		
 
-        JPanel panel = new JPanel();
-        panel.add(closeButton);
-        panel.add(reportBugButton);
+		stacktraceLabel=
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"stack_trace"));
+		stacktraceTextArea= new JTextArea();
+		//textArea2.setPreferredSize(new Dimension(300,200));
 
-        c.gridx = 0;
-        c.gridy = 5;
-        c.weightx = 1.0;
+		//textArea2.setRows(10);
+		StringWriter stringWriter= new StringWriter();
+		ex.printStackTrace(new PrintWriter(stringWriter));
+		stackTrace= stringWriter.toString();
+		stacktraceTextArea.append(stringWriter.toString());
+		stacktraceTextArea.setEditable(false);
 
-        //c.gridwidth = GridBagConstraints.REMAINDER;
-        c.gridwidth = 1;
-        c.insets = new Insets(10, 10, 10, 5);
-        c.anchor = GridBagConstraints.SOUTHEAST;
-        layout.setConstraints(panel, c);
 
-        /*
-        c.gridx=GridBagConstraints.REMAINDER;
-        c.gridy=4;
-        c.weightx = 1.0;
-        //c.gridwidth = 1;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10,10,10,10);
-        c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(buttons[1], c);
-        */
-        dialog.getContentPane().add(label);
-        dialog.getContentPane().add(scrollPane);
-        dialog.getContentPane().add(label2);
-        dialog.getContentPane().add(scrollPane2);
-        dialog.getContentPane().add(topLabel);
-        dialog.getContentPane().add(panel);
+		closeButton=
+			new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "close"));
+		closeButton.setActionCommand(CMD_CLOSE);
+		closeButton.addActionListener(this);
 
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.show();
-    }
+		reportBugButton=
+			new ButtonWithMnemonic(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"report_bug"));
 
-    public boolean success() {
-        return bool;
-    }
+		reportBugButton.setActionCommand(CMD_REPORT_BUG);
+		reportBugButton.addActionListener(this);
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
+	private void layoutComponents() {
 
-        if (CMD_CLOSE.equals(command)) {
-            bool = true;
+		dialog=
+			DialogStore.getDialog(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"title"));
 
-            dialog.dispose();
-        } else if (CMD_REPORT_BUG.equals(command)) {
-            bool = false;
+		dialog.getRootPane().setDefaultButton(closeButton);
 
-            URLController c = new URLController();
+		JPanel bottomPanel= new JPanel(new BorderLayout(0, 0));
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-            try {
-                c.open(new URL(
-                        "http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
-            } catch (MalformedURLException mue) {
-            }
+		JPanel buttonPanel= new JPanel(new GridLayout(1, 3, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-            /*
-            dialog.dispose();
+		buttonPanel.add(reportBugButton);
+		buttonPanel.add(closeButton);
 
-            ComposerFrame composer = new ComposerFrame();
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-            composer.setSubject("bug report:");
+		FormLayout layout=
+			new FormLayout("fill:default:grow", "fill:default:grow, default");
+		Container c= dialog.getContentPane();
+		c.setLayout(layout);
 
-            composer.setTo("columba-bugs@lists.sourceforge.net");
+		CellConstraints cc= new CellConstraints();
+		c.add(createCenterPanel(), cc.xy(1, 1));
+		c.add(bottomPanel, cc.xy(1, 2));
 
-            StringBuffer buf = new StringBuffer();
-            StringWriter stringWriter2 = new StringWriter();
-            exception.printStackTrace(
-                    new PrintWriter(stringWriter2));
-            String str = new String(stringWriter2.toString());
-            buf.append("\nTrace:\n");
-            buf.append(str);
-            buf.append("\n\n");
-            buf.append("Columba version: "
-                    + org.columba.core.main.MainInterface.version);
-            buf.append("\n");
-            buf.append("JDK version: "
-                            + System.getProperty("java.version"));
-            buf.append("\n");
-            buf.append("JDK vendor: " + System.getProperty("java.vendor"));
-            buf.append("\n");
-            buf.append("OS version: " + System.getProperty("os.name"));
+	}
 
-            composer.setBodyText(buf.toString());
+	public boolean success() {
+		return bool;
+	}
 
-            //dialog.dispose();
-            */
-        }
-    }
+	public void actionPerformed(ActionEvent e) {
+		String command= e.getActionCommand();
+
+		if (CMD_CLOSE.equals(command)) {
+			bool= true;
+
+			dialog.dispose();
+		} else if (CMD_REPORT_BUG.equals(command)) {
+			bool= false;
+
+			URLController c= new URLController();
+
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
+			} catch (MalformedURLException mue) {
+			}
+
+		}
+	}
 }

@@ -32,7 +32,7 @@ public class DialogFacade {
      * @param ex        Exception class
      */
     public static void showExceptionDialog(Exception ex) {
-        ExceptionDialog dialog = new ExceptionDialog();
-        dialog.showDialog(ex);
+        new ExceptionDialog(ex);
+        
     }
 }

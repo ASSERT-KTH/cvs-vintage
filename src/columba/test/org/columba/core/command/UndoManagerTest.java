@@ -46,7 +46,7 @@ public class UndoManagerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        new ColumbaLogger();
+        
 
         processor = new DefaultProcessor();
         undoManager = processor.getUndoManager();

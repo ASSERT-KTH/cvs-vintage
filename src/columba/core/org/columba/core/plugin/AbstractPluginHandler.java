@@ -190,8 +190,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
             return PluginLoader.loadExternalPlugin(className, type, pluginDir,
                 args);
         } catch (InvocationTargetException ex) {
-            ExceptionDialog d = new ExceptionDialog();
-            d.showDialog(ex.getTargetException());
+            new ExceptionDialog(ex.getTargetException());
+           
             ex.getTargetException().printStackTrace();
             throw ex;
         }
