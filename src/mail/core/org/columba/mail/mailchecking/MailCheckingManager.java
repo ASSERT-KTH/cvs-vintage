@@ -16,6 +16,7 @@
 package org.columba.mail.mailchecking;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.main.ConnectionStateImpl;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
@@ -128,6 +129,11 @@ public class MailCheckingManager extends Observable {
      *
      */
     public void checkAll() {
+		//  check if we are online
+		if (ConnectionStateImpl.getInstance().isOnline() == false) {
+			// offline -> go online
+			ConnectionStateImpl.getInstance().setOnline(true);
+		}
         Iterator it = list.iterator();
 
         // for each account that is enabled and in the fetchalllist

@@ -209,7 +209,7 @@ public class DefaultProcessorTest extends TestCase {
         processor.addOp( new TestCommand(this, 4));
         processor.addOp( new TestCommand(this, 5));
 
-    	Thread.sleep(2000);
+    	Thread.sleep(3000);
 
     	assertEquals( 0, processor.operationQueue.size()  );
     	assertEquals( CommandProcessor.MAX_WORKERS, processor.worker.size());

@@ -18,8 +18,11 @@ package org.columba.mail.smtp.command;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.Action;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
@@ -45,6 +48,8 @@ public class SendAllMessagesCommand extends FolderCommand {
 	protected SendListManager sendListManager = new SendListManager();
 	protected OutboxFolder outboxFolder;
 
+	private Action action;
+	
 	/**
 	 * Constructor for SendAllMessagesCommand.
 	 * 
@@ -52,9 +57,11 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @param frameMediator
 	 * @param references
 	 */
-	public SendAllMessagesCommand(FrameMediator frameMediator,
+	public SendAllMessagesCommand(Action action, FrameMediator frameMediator,
 			DefaultCommandReference[] references) {
 		super(frameMediator, references);
+		
+		this.action = action;
 	}
 
 	/**
@@ -166,5 +173,11 @@ public class SendAllMessagesCommand extends FolderCommand {
 		MoveMessageCommand c = new MoveMessageCommand(r);
 
 		MainInterface.processor.addOp(c);
+	}
+	/**
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
+	public void updateGUI() throws Exception {
+		if( action != null ) action.setEnabled(true);
 	}
 }

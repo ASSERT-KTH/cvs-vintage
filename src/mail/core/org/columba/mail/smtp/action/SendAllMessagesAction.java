@@ -64,8 +64,8 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
-    public void actionPerformed(ActionEvent evt) {
-   
+    public void actionPerformed(ActionEvent evt) {    	
+    	setEnabled(false);
     	// check if we are online
     	if ( ConnectionStateImpl.getInstance().isOnline() == false ) {
     		// offline -> go online
@@ -81,7 +81,7 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
         r[0] = new FolderCommandReference(folder);
 
         // start command
-        SendAllMessagesCommand c = new SendAllMessagesCommand(frameMediator, r);
+        SendAllMessagesCommand c = new SendAllMessagesCommand(this, frameMediator, r);
 
         MainInterface.processor.addOp(c);
     }

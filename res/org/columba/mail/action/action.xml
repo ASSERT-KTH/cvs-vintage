@@ -4,12 +4,12 @@
 <actionlist>
 
  <!-- file menu -->
- <action name="NewMessage" class="org.columba.mail.gui.action.NewMessageAction"/>
- <action name="ReceiveSend" class="org.columba.mail.gui.action.ReceiveSendAction"/>
- <action name="SendAll" class="org.columba.mail.smtp.action.SendAllMessagesAction"/>
- <action name="Receive" class="org.columba.mail.gui.action.ReceiveMessagesAction"/>
- <action name="ReceiveMenu" class="org.columba.mail.mailchecking.FetchMessageSubMenu"/>
- <action name="ManageServerMenu" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
+ <action name="NewMessage" singleton="true" class="org.columba.mail.gui.action.NewMessageAction"/>
+ <action name="ReceiveSend" singleton="true" class="org.columba.mail.gui.action.ReceiveSendAction"/>
+ <action name="SendAll" singleton="true" class="org.columba.mail.smtp.action.SendAllMessagesAction"/>
+ <action name="Receive" singleton="true" class="org.columba.mail.gui.action.ReceiveMessagesAction"/>
+ <action name="ReceiveMenu" singleton="true" class="org.columba.mail.mailchecking.FetchMessageSubMenu"/>
+ <action name="ManageServerMenu" singleton="true" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
  <action name="SaveMessageSourceAs" class="org.columba.mail.gui.table.action.SaveMessageSourceAsAction"/>
  
  <!-- edit menu -->

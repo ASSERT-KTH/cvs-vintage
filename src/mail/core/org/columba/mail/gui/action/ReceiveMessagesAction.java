@@ -24,7 +24,6 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.ConnectionStateImpl;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -42,13 +41,6 @@ public class ReceiveMessagesAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
-		//  check if we are online
-		if (ConnectionStateImpl.getInstance().isOnline() == false) {
-			// offline -> go online
-			ConnectionStateImpl.getInstance().setOnline(true);
-		}
-
 		MailInterface.mailCheckingManager.checkAll();
 	}
 }

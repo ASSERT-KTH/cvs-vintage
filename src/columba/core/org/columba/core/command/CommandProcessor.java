@@ -30,21 +30,17 @@ import org.columba.core.util.Mutex;
  * @author tstich
  */
 public class CommandProcessor implements Runnable {
-    /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.core.command");
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.command");
 
-	
 	public final static int MAX_WORKERS = 5;
 
 	List operationQueue;
 
 	List worker;
 
-	private Mutex operationMutex;
-
-	private Mutex workerMutex;
-
-	boolean workerAvailable;
+	private Mutex oneMutex;
 
 	private TaskManager taskManager;
 
@@ -67,8 +63,7 @@ public class CommandProcessor implements Runnable {
 			worker.add(new Worker(this));
 		}
 
-		operationMutex = new Mutex();
-		workerMutex = new Mutex();
+		oneMutex = new Mutex();
 
 		taskManager = new TaskManager();
 
@@ -97,11 +92,9 @@ public class CommandProcessor implements Runnable {
 	 * @param operationMode
 	 *            the mode in wich the command should be processed
 	 */
-	public synchronized void addOp(final Command op, final int operationMode) {
-		boolean needToRelease = false;
-
+	public void addOp(final Command op, final int operationMode) {
 		try {
-			operationMutex.lock();
+			oneMutex.lock();
 
 			int p = operationQueue.size() - 1;
 			OperationItem nextOp;
@@ -124,10 +117,10 @@ public class CommandProcessor implements Runnable {
 
 			operationQueue.add(p + 1, new OperationItem(op, operationMode));
 		} finally {
-			operationMutex.release();
+			oneMutex.release();
 		}
 
-		notify();
+		wakeUp();
 	}
 
 	/**
@@ -151,34 +144,28 @@ public class CommandProcessor implements Runnable {
 		OperationItem nextOp = null;
 		boolean needToRelease = false;
 
-		try {
-			operationMutex.lock();
+		for (int i = 0; i < operationQueue.size() && nextOp == null; i++) {
+			nextOp = (OperationItem) operationQueue.get(i);
 
-			for (int i = 0; i < operationQueue.size() && nextOp == null; i++) {
-				nextOp = (OperationItem) operationQueue.get(i);
+			if ((i != 0) && (nextOp.getOperation().isSynchronize())) {
+				nextOp = null;
 
-				if ((i != 0) && (nextOp.getOperation().isSynchronize())) {
+				// We have to process this command first
+				// -> break here!
+				break;
+			} else {
+				try {
+					if (!canBeProcessed(nextOp)) {
+						nextOp = null;
+					}
+				} catch (RuntimeException e) {
+					// Remove bogus Operation
+					operationQueue.remove(nextOp);
 					nextOp = null;
 
-					// We have to process this command first
-					// -> break here!
-					break;
-				} else {
-					try {
-						if (!canBeProcessed(nextOp)) {
-							nextOp = null;
-						}
-					} catch (RuntimeException e) {
-						// Remove bogus Operation
-						operationQueue.remove(nextOp);
-						nextOp  = null;
-						
-						LOG.warning("Operation failed: " + e.getMessage());
-					}
+					LOG.warning("Operation failed: " + e.getMessage());
 				}
 			}
-		} finally {
-			operationMutex.release();
 		}
 
 		return nextOp;
@@ -192,20 +179,19 @@ public class CommandProcessor implements Runnable {
 	 * @param w
 	 *            the worker himself
 	 */
-	public synchronized void operationFinished(final Command op, final Worker w) {
+	public void operationFinished(final Command op, final Worker w) {
 		boolean needToRelease = false;
 
-		// add the worker to the workerlist
 		try {
-			workerMutex.lock();
+			oneMutex.lock();
 
 			worker.add(w);
 		} finally {
-			workerMutex.release();
+			oneMutex.release();
 		}
 
 		// notify that a new worker is available
-		notify();
+		wakeUp();
 	}
 
 	/**
@@ -218,19 +204,10 @@ public class CommandProcessor implements Runnable {
 	 */
 	Worker getWorker(int priority) {
 		Worker result = null;
-		boolean needToRelease = false;
-
-		try {
-			workerMutex.lock();
-
-			if (worker.size() > 1) {
-				result = (Worker) worker.remove(0);
-			} else if (worker.size() > 0
-					&& priority >= Command.REALTIME_PRIORITY) {
-				result = (Worker) worker.remove(0);
-			}
-		} finally {
-			workerMutex.release();
+		if (worker.size() > 1) {
+			result = (Worker) worker.remove(0);
+		} else if (worker.size() > 0 && priority >= Command.REALTIME_PRIORITY) {
+			result = (Worker) worker.remove(0);
 		}
 
 		return result;
@@ -245,6 +222,10 @@ public class CommandProcessor implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private synchronized void wakeUp() {
+		notifyAll();
 	}
 
 	/**
@@ -273,28 +254,30 @@ public class CommandProcessor implements Runnable {
 	 */
 	boolean startOperation() {
 		boolean sleep = false;
-		
-		OperationItem opItem;
-		Worker worker;
-		opItem = nextOpItem();
-		if (opItem != null) {
-			worker = getWorker(opItem.getOperation().getPriority());
-			if (worker != null) {
-				operationMutex.lock();
-				operationQueue.remove(opItem);
-				operationMutex.release();
+		try {
+			oneMutex.lock();
+			OperationItem opItem;
+			Worker worker;
+			opItem = nextOpItem();
+			if (opItem != null) {
+				worker = getWorker(opItem.getOperation().getPriority());
+				if (worker != null) {
+					operationQueue.remove(opItem);
 
-				worker.process(opItem.getOperation(), opItem
-						.getOperationMode(), timeStamp++);
+					worker.process(opItem.getOperation(), opItem
+							.getOperationMode(), timeStamp++);
 
-				worker.register(taskManager);
+					worker.register(taskManager);
 
-				worker.start();
+					worker.start();
+				} else {
+					sleep = true;
+				}
 			} else {
 				sleep = true;
 			}
-		} else {
-			sleep = true;
+		} finally {
+			oneMutex.release();
 		}
 		return sleep;
 	}
