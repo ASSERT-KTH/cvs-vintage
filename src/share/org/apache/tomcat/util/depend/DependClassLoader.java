@@ -154,7 +154,7 @@ public class DependClassLoader extends ClassLoader {
     protected Class loadClassInternal1( String name, boolean resolve )
 	throws ClassNotFoundException
     {
-	if( debug>0) log( "loadClass() " + name + " " + resolve);
+	if( debug>9) log( "loadClass() " + name + " " + resolve);
 	// The class object that will be returned.
         Class c = null;
 
@@ -237,7 +237,7 @@ public class DependClassLoader extends ClassLoader {
 	File f=null;
 	if( "file".equals( res.getProtocol() )) {
 	    f=new File( res.getFile());
-	    if( debug > 0 ) log( "File dep "  +f );
+	    if( debug > 9 ) log( "File dep "  +f );
 	    if( ! f.exists()) f=null;
 	}
 	if( "jar".equals( res.getProtocol() )) {
@@ -252,7 +252,7 @@ public class DependClassLoader extends ClassLoader {
 	    if( fileN.startsWith( "/file:" ))
 		fileN=fileN.substring( 6 );
 	    f=new File(fileN);
-	    if( debug > 0 ) log( "Jar dep "  +f + " " + f.exists() );
+	    if( debug > 9 ) log( "Jar dep "  +f + " " + f.exists() );
 	    if( ! f.exists()) f=null;
 	}
 
