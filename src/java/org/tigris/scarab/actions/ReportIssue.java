@@ -90,7 +90,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.155 2002/12/19 21:06:08 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.156 2002/12/20 00:07:10 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -478,7 +478,10 @@ public class ReportIssue extends RequireLoginFirstAction
         ModifyIssue
             .addFileAttachment(issue, group, attachment, scarabR, data, intake);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        scarabR.setConfirmMessage(l10n.get("FileAdded"));
+        if (scarabR.getAlertMessage() == null)
+        {
+            scarabR.setConfirmMessage(l10n.get("FileAdded"));
+        }
 
         // set any attribute values that were entered before adding the file.
         setAttributeValues(issue, intake, context);
@@ -492,12 +495,13 @@ public class ReportIssue extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue reportingIssue = scarabR.getReportingIssue();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
         String attachmentIndex;
-        
+        boolean fileDeleted = false;
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
@@ -505,7 +509,16 @@ public class ReportIssue extends RequireLoginFirstAction
             {
                 attachmentIndex = key.substring(12);
                 reportingIssue.removeFile(attachmentIndex);
-            } 
+                fileDeleted = true;
+            }
+        }
+        if (fileDeleted)
+        {
+            scarabR.setConfirmMessage(l10n.get("FileDeleted"));
+        }
+        else
+        {
+            scarabR.setConfirmMessage(l10n.get("NoFilesChanged"));
         }
         // set any attribute values that were entered before adding the file.
         setAttributeValues(scarabR.getReportingIssue(), 
