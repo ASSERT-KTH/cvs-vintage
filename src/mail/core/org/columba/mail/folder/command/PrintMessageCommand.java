@@ -257,28 +257,24 @@ public class PrintMessageCommand extends FolderCommand {
 				MimePart mp = (MimePart) attachments.get(i);
 				String contentType = mp.getHeader().contentType;
 				String contentSubtype = mp.getHeader().contentSubtype;
-				String displayName;
+
 				if (mp.getHeader().getFileName() != null) {
-					displayName = mp.getHeader().getFileName();
-				} else {
-					displayName = "Unnamed (" + contentType + "/" + contentSubtype + ")";
+					// one line is added to the header for each attachment
+					// (which has a filename defined)
+					hKey = new cParagraph();
+					hKey.setText(MailResourceLoader.getString("header", attHeaderKey));
+					hKey.setFontStyle(Font.BOLD);
+	
+					hValue = new cParagraph();
+					hValue.setText(mp.getHeader().getFileName());
+					hValue.setLeftMargin(new cCmUnit(3.0));
+	
+					hLine = new cHGroup();
+					hLine.add(hKey);
+					hLine.add(hValue);
+	
+					messageDoc.appendPrintObject(hLine);
 				}
-
-				// one line is added to the header for each attachment
-				hKey = new cParagraph();
-				hKey.setText(MailResourceLoader.getString("header", attHeaderKey));
-				hKey.setFontStyle(Font.BOLD);
-
-				hValue = new cParagraph();
-				hValue.setText(displayName);
-				hValue.setLeftMargin(new cCmUnit(3.0));
-
-				hLine = new cHGroup();
-				hLine.add(hKey);
-				hLine.add(hValue);
-
-				messageDoc.appendPrintObject(hLine);
-
 			}
 
 			// Add body of message to print
