@@ -1,4 +1,4 @@
-// $Id: PropPanelCollaboration.java,v 1.23 2005/01/09 14:59:05 linus Exp $
+// $Id: PropPanelCollaboration.java,v 1.24 2005/02/09 19:18:25 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,12 @@ package org.argouml.uml.ui.behavior.collaborations;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
+import org.argouml.uml.ui.ActionNavigateContainerElement;
+import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelNamespace;
+import org.argouml.uml.ui.foundation.extension_mechanisms.ActionNewStereotype;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -84,6 +88,11 @@ public class PropPanelCollaboration extends PropPanelNamespace {
             new JScrollPane(constrainingList));
 
         // we do not add the owned-elements since they are not of real interest
-
+        
+        addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
+        addButton(new PropPanelButton2(new ActionNewStereotype(),
+                lookupIcon("Stereotype")));
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
+                lookupIcon("Delete")));;
     }
 }
