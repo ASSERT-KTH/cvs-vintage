@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.138 2003/03/01 20:49:33 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.139 2003/03/02 10:39:41 cooperfbi Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -80,6 +80,7 @@
       <path refid="junit.junit.classpath"/>
       <path refid="mysql.mysql.classpath"/>
       <path refid="gnu.regexp.classpath"/>
+      <path refid="informix.informix.classpath"/>
     </path>
 
     <!-- Configure modules -->

@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.54 2003/01/27 22:08:41 binaryfeed Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.55 2003/03/02 10:39:42 cooperfbi Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -2120,6 +2120,18 @@
       <!-- this command requires auto-increment element for unknown-pk -->
       <entity-command name="mysql-get-generated-keys"
                       class="org.jboss.ejb.plugins.cmp.jdbc.mysql.JDBCMySQLCreateCommand"/>
+
+      <!-- retrieves generated key of the record inserted into hsql db -->
+      <entity-command name="hsqldb-fetch-key"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.hsqldb.JDBCHsqldbCreateCommand"/>
+
+      <!-- retrieves generated key of the record inserted into sybase db -->
+      <entity-command name="sybase-fetch-key"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.sybase.JDBCSybaseCreateCommand"/>
+
+      <!-- retrieves serial value of the record inserted into informix db -->
+      <entity-command name="informix-serial"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.informix.JDBCInformixCreateCommand"/>
 
       <!-- uses key generator to fetch the next key value -->
       <entity-command name="key-generator"
