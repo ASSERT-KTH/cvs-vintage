@@ -135,7 +135,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
         return true;
       }
     };
-
+  private Rule colorRuleDelegate; 
   private final JScrollPane scrollTree;
   private final JToolBar toolbar = new JToolBar();
 
@@ -153,6 +153,23 @@ final class LoggerNameTreePanel extends JPanel implements Rule
     this.preferenceModel = preferenceModel;
 
     setLayout(new BorderLayout());
+
+    colorRuleDelegate = 
+        new AbstractRule()
+        {
+          public boolean evaluate(LoggingEvent e)
+          {
+            boolean isHidden = getHiddenSet().contains(e.getLoggerName());
+            String currentlySelectedLoggerName = getCurrentlySelectedLoggerName();
+
+            if (!isFocusOnSelected() && !isHidden && currentlySelectedLoggerName != null && !"".equals(currentlySelectedLoggerName))
+            {
+            	return (e.getLoggerName().startsWith(currentlySelectedLoggerName+".") || e.getLoggerName().endsWith(currentlySelectedLoggerName)) ;
+            }
+            return false;
+          }
+        };
+
 
     logTree =
     new JTree(logTreeModel)
@@ -344,6 +361,10 @@ final class LoggerNameTreePanel extends JPanel implements Rule
   public boolean evaluate(LoggingEvent e)
   {
     return ruleDelegate.evaluate(e);
+  }
+  
+  public Rule getLoggerColorRule() {
+  	return colorRuleDelegate;
   }
 
   /**
@@ -1086,7 +1107,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
    * DOCUMENT ME!
    *
    * @author $author$
-   * @version $Revision: 1.28 $, $Date: 2004/05/18 00:39:55 $
+   * @version $Revision: 1.29 $, $Date: 2004/07/02 05:49:27 $
    *
    * @author Paul Smith <psmith@apache.org>
         *
