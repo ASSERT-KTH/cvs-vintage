@@ -15,7 +15,7 @@
 <p class="alert">Group not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
 #else
 
-<form method="get" action="$link.setPage("admin,AttributeGroup.vm")">
+<form method="post" action="$link.setPage("admin,AttributeGroup.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm"/>
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm"/>
