@@ -16,17 +16,28 @@ import java.util.Map;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleurY@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface InfoMBean
 {
    String OBJECT_NAME = ":service=Info";
 
+   /** InetAddress.getLocalHost().getHostName();
+    */
    String getHostName();
-
+   /** Returns InetAddress.getLocalHost().getHostAddress();
+    */
    String getHostAddress();
-   
-   Map showProperties();
-   
-   String showThreads();
+   /** Return the total memory and free memory from Runtime
+    */
+   String listMemoryUsage();
+   /** Return a listing of the active threads and thread groups.
+    */
+   String listThreadDump();
+   /** Display the java.lang.Package info for the pkgName */
+   String displayPackageInfo(String pkgName);
+   /** Return a Map of System.getProperties() with a toString implementation
+    *that provides an html table of the key/value pairs
+    */
+   Map showProperties();   
 }
