@@ -112,7 +112,7 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTempaltes", $scar
                  #end
               #else
                #if ($templAttVal.Value)
-                 #templateAttrValueText ( $attVal $templAttVal "50")
+                 #templateAttrValueText ( $attVal "50" $templAttVal )
                #else
                  #attrValueText ( $attVal "50" )
                #end
