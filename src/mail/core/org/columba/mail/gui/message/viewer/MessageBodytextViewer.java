@@ -214,26 +214,33 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			bodyPart = mimePartTree.getFirstTextPart("plain");
 		}
 
-		// Shall we use the HTML-Viewer?
-		htmlMessage = bodyPart.getHeader().getMimeType().getSubtype().equals(
-				"html");
 
 		if (bodyPart == null) {
 			bodyStream = new ByteArrayInputStream("<No Message-Text>"
 					.getBytes());
 		} else {
+			// Shall we use the HTML-Viewer?
+			htmlMessage = bodyPart.getHeader().getMimeType().getSubtype().equals(
+					"html");
+
 			bodyStream = folder.getMimePartBodyStream(uid, bodyPart
 					.getAddress());
 		}
 
+		
+		
 		// Which Charset shall we use ?
 		Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 
 		// no charset specified -> automatic mode
 		// -> try to determine charset based on content parameter
 		if (charset == null) {
-			String charsetName = bodyPart.getHeader().getContentParameter(
-					"charset");
+			String charsetName = null;
+			
+			if( bodyPart != null ) {
+				bodyPart.getHeader().getContentParameter("charset");
+			}
+				
 
 			if (charsetName == null) {
 				// There is no charset info -> the default system charset is
@@ -256,7 +263,12 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 		}
 
-		int encoding = bodyPart.getHeader().getContentTransferEncoding();
+		// default encoding is plain
+		int encoding = MimeHeader.PLAIN; 
+			
+		if( bodyPart != null ) {
+			bodyPart.getHeader().getContentTransferEncoding();
+		}
 
 		switch (encoding) {
 		case MimeHeader.QUOTED_PRINTABLE: {
