@@ -62,14 +62,17 @@ import org.apache.fulcrum.intake.model.BooleanField;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
+import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -78,11 +81,71 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.18 2001/10/09 05:54:11 dlr Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.19 2001/10/16 00:29:31 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
 
+
+    /**
+     * Changes the properties of existing IssueTypes.
+     */
+    public synchronized void doManageissuetypes ( RunData data, 
+                                                  TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        List rmits = module.getRModuleIssueTypes();
+
+        if ( intake.isAllValid() )
+        {
+            for (int i=rmits.size()-1; i>=0; i--) 
+            {
+                RModuleIssueType rmit = (RModuleIssueType)rmits.get(i);
+                Group rmitGroup = intake.get("RModuleIssueType", 
+                                 rmit.getQueryKey(), false);
+                rmitGroup.setProperties(rmit);
+                rmit.save();
+            }
+
+        } 
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
+    }
+
+    /**
+     * This manages clicking the Add Attribute button.
+     * FIXME: this should be done with a form variable
+     */
+    public void doGotoartifactpage( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        setTarget(data, "admin,ArtifactTypeEdit.vm");            
+    }
+
+    /**
+     * This manages clicking the Add Issue Type button.
+     * FIXME: this should be done with a form variable
+     */
+    public void doGotoartifactselect( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        setTarget(data, "admin,ArtifactTypeSelect.vm");            
+    }
+
+    /**
+     * This manages clicking the Add Attribute button.
+     * FIXME: this should be done with a form variable
+     */
+    public void doGotoattributeselect( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        setTarget(data, "admin,AttributeSelect.vm");            
+    }
     /**
      * Creates default attribute groups.
      * Must create 2 groups, one for dedupe attributes, one for non-dedupe.
@@ -90,10 +153,16 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     public void doCreatedefaults ( RunData data, TemplateContext context )
         throws Exception
     {
-        doCreatenewgroup(data, context);
         AttributeGroup ag = doCreatenewgroup(data, context);
-        ag.setOrder(3);
+        ag.setOrder(1);
         ag.save();
+        AttributeGroup ag2 = doCreatenewgroup(data, context);
+        ag2.setOrder(3);
+        ag2.save();
+
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
     /**
@@ -107,25 +176,39 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        String issueTypeId = data.getParameters().getString("issueTypeId");
+        IssueType issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
       
-        List groups = module.getAttributeGroups(); 
+        List groups = issueType.getAttributeGroups(module);
 
         // Make default group name 'attribute group x' where x is size + 1
         ag.setName("attribute group " + Integer.toString(groups.size()+1));
         ag.setOrder(groups.size() +2);
         ag.setModuleId(module.getModuleId());
+        ag.setIssueTypeId(issueTypeId);
         ag.save();
         return ag;
     }
 
     /**
-     * This manages clicking the Add Attribute button.
-     * FIXME: this should be done with a form variable
+     * Selects issue type to add to module.
      */
-    public void doGotoselectpage( RunData data, TemplateContext context ) 
+    public void doSelectissuetype( RunData data, TemplateContext context )
         throws Exception
     {
-        setTarget(data, "admin,GlobalAttributeSelect.vm");            
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+
+        String issueTypeId = data.getParameters().getString("issueTypeId");
+
+        RModuleIssueType rmit = new RModuleIssueType();
+        rmit.setModuleId(scarabR.getCurrentModule().getModuleId());
+        rmit.setIssueTypeId(issueTypeId);
+        rmit.setActive(false);
+        rmit.setDisplay(false);
+        rmit.save();
+
+        setTarget(data, "admin,ManageArtifactTypes.vm");            
     }
 
     /**
@@ -135,17 +218,21 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
 
         String attributeId = data.getParameters().getString("attributeid");
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup group = (AttributeGroup) AttributeGroupPeer
                                .retrieveByPK(new NumberKey(groupId));
+        NumberKey issueTypeId = group.getIssueTypeId();
+        IssueType issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
 
         RModuleAttribute rma = new RModuleAttribute();
         rma.setModuleId(scarabR.getCurrentModule().getModuleId());
         rma.setAttributeId(attributeId);
-        rma.setDedupe(group.getOrder() < 
-            ((ScarabModule)scarabR.getCurrentModule()).getDedupeSequence());
+        rma.setIssueTypeId(group.getIssueTypeId());
+        rma.setDedupe(group.getOrder() < issueType.getDedupeSequence(module));
         rma.save();
 
         RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
@@ -155,6 +242,190 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         raag.save();
         data.getParameters().add("groupid", groupId);
         setTarget(data, "admin,AttributeGroup.vm");            
+    }
+
+    /**
+     * Changes the properties of existing Artifact types.
+     */
+    public synchronized void doModifyissuetype ( RunData data, 
+                                                 TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getIssueType();
+        boolean isNew = false;
+        if (issueType.getIssueTypeId() == null)
+        {
+            isNew = true;
+        }
+        List attGroups = issueType.getAttributeGroups(module);
+        List attributeGroups = issueType.getAttributeGroups(module);
+
+        boolean isValid = true;
+        boolean areThereDupes = false;
+        Field order1 = null;
+        Field order2 = null;
+
+        if (attributeGroups.size() > 0)
+        {
+            int dupeOrder = Integer.parseInt(data.getParameters()
+                                                 .getString("dupe_order"));
+            // Check for duplicate sequence numbers
+            for (int i=0; i<attributeGroups.size(); i++) 
+            {
+                AttributeGroup ag1 = (AttributeGroup)attributeGroups.get(i);
+                Group agGroup1 = intake.get("AttributeGroup", 
+                                 ag1.getQueryKey(), false);
+                order1 = agGroup1.get("Order");
+                if (order1.toString().equals(Integer.toString(dupeOrder)))
+                {
+                    areThereDupes = true;
+                    break;
+                }
+
+                for (int j=i-1; j>=0; j--) 
+                {
+                    AttributeGroup ag2 = (AttributeGroup)attributeGroups.get(j);
+                    Group agGroup2 = intake.get("AttributeGroup", 
+                                 ag2.getQueryKey(), false);
+                order2 = agGroup2.get("Order");
+
+                if (order1.toString().equals(order2.toString()))
+                {
+                    areThereDupes = true;
+                    break;
+                }
+            }
+        }
+        if (areThereDupes)
+        {
+           data.setMessage("Please do not enter duplicate "
+                            + " sequence numbers for attribute groups.");
+           isValid = false;
+        }
+  
+       // Check that duplicate check is not at the beginning or end.
+       if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
+       {
+           data.setMessage("The duplicate check cannot be at the beginning "
+                             + "or the end.");
+           isValid = false;
+       }
+       }
+       if ( intake.isAllValid() && isValid) 
+        {
+            // Set properties for issue type info
+            Group issueTypeGroup = intake.get("IssueType", 
+                                        issueType.getQueryKey(), false);
+            issueTypeGroup.setProperties(issueType);
+            issueType.save();
+
+            // If this is a new issue type, set mappings with module
+            if (isNew)
+            { 
+                RModuleIssueType rmit = new RModuleIssueType();
+                rmit.setModuleId(module.getModuleId());
+                rmit.setIssueTypeId(issueType.getIssueTypeId());
+                rmit.save();
+            }
+           
+          
+            // Set properties for attribute groups
+            for (int i=attributeGroups.size()-1; i>=0; i--) 
+            {
+                AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
+                Group agGroup = intake.get("AttributeGroup", 
+                                 attGroup.getQueryKey(), false);
+                agGroup.setProperties(attGroup);
+                attGroup.save();
+
+            }
+
+        } 
+        data.getParameters().add("issueTypeId", 
+                                 issueType.getIssueTypeId().toString());
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
+    }
+
+    /**
+     * Deletes an issue type from a module.
+     */
+    public void doDeletemoduleissuetype ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        ParameterParser params = data.getParameters();
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        Object[] keys = params.getKeys();
+        String key;
+        String issueTypeId;
+        Vector rmits = module.getRModuleIssueTypes();
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("delete_"))
+            {
+                if (rmits.size() - 1 < 1)
+                {
+                    data.setMessage("You cannot have fewer than one artifact group.");
+                    break;
+                }
+                else
+                {
+                    try
+                    {
+                        issueTypeId = key.substring(7);
+                        IssueType issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
+                        RModuleIssueType rmit = module
+                               .getRModuleIssueType(issueType);
+
+                        // delete attribute groups 
+                        List attGroups = issueType.getAttributeGroups(); 
+                        for (int j=0; j<attGroups.size(); j++)
+                        {
+                            // delete attribute-attribute group map
+                            AttributeGroup attGroup = (AttributeGroup)attGroups.get(j);
+                            List raags = attGroup.getRAttributeAttributeGroups();
+                            for (int k=0; k<raags.size(); k++)
+                            {
+                                RAttributeAttributeGroup raag = 
+                                    (RAttributeAttributeGroup)raags.get(k);
+                                raag.delete(user);
+                            }
+                  
+                            attGroup.delete(user);
+                        }
+                         
+                        List rmas = module.getRModuleAttributes(issueType);
+                        // delete module-attribute mappings
+                        for (int m=0; m<rmas.size(); m++)
+                        {
+                            RModuleAttribute rma = (RModuleAttribute)rmas.get(0);
+                            rma.delete(user);
+                        }
+
+                        // delete module-issue type mappings
+                        rmit.delete(user);
+
+                    }
+                    catch (Exception e)
+                    {
+                        data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                    }
+                }
+            }
+        }
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
     /**
@@ -201,6 +472,9 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             agGroup.setProperties(ag);
             ag.save();
         } 
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
 
@@ -216,7 +490,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         List rmas = (List)((Vector) module.getRModuleAttributes(false)).clone();
-        List attributeGroups = module.getAttributeGroups();
+        String issueTypeId = data.getParameters().getString("issueTypeId");
+        IssueType issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
+        List attributeGroups = issueType.getAttributeGroups(module);
 
         boolean isValid = true;
         boolean areThereDupes = false;
@@ -303,7 +580,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String groupId;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
-        List attributeGroups = module.getAttributeGroups();
+        String issueTypeId = data.getParameters().getString("issueTypeId");
+        IssueType issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
+        List attributeGroups = issueType.getAttributeGroups(module);
 
         for (int i =0; i<keys.length; i++)
         {
@@ -331,6 +611,9 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                 }
             }
         }
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
     /**
@@ -340,6 +623,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
         ModuleEntity module = scarabR.getCurrentModule();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
@@ -360,12 +644,12 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
                // Remove attribute - module mapping
                RModuleAttribute rma = module.getRModuleAttribute(attribute);
-               rma.delete();
+               rma.delete(user);
 
                // Remove attribute - group mapping
                RAttributeAttributeGroup raag = 
                    ag.getRAttributeAttributeGroup(attribute);
-               raag.delete();
+               raag.delete(user);
             }
         }        
         data.getParameters().add("groupid", groupId);
