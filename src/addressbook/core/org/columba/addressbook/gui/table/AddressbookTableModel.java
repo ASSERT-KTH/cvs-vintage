@@ -16,8 +16,8 @@
 
 package org.columba.addressbook.gui.table;
 
-import java.util.List;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;

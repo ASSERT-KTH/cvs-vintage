@@ -22,7 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
@@ -36,7 +36,6 @@ import org.columba.mail.message.MimePart;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.util.RFC822Date;
-import java.util.List;
 
 public class MessageComposer {
 	private ComposerModel model;

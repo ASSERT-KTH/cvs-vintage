@@ -15,7 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.event.TreeModelEvent;
@@ -25,8 +26,6 @@ import javax.swing.tree.TreePath;
 
 import org.columba.addressbook.config.AdapterNode;
 import org.w3c.dom.Document;
-import java.util.List;
-import java.util.Iterator;
 
 public class DomToTreeModelAdapter implements TreeModel 
 {

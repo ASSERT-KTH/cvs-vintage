@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -23,8 +24,6 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.SwingWorker;
-import java.util.List;
-import java.util.Iterator;
 
 public class Worker extends SwingWorker implements WorkerStatusController {
 	protected Command op;

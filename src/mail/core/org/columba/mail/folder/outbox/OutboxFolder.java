@@ -17,6 +17,7 @@ package org.columba.mail.folder.outbox;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
@@ -30,7 +31,6 @@ import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.Rfc822Parser;
-import java.util.List;
 
 public class OutboxFolder extends CachedMHFolder {
 

@@ -16,9 +16,10 @@
 
 package org.columba.addressbook.main;
 
-import org.columba.addressbook.folder.*;
+import java.util.Enumeration;
 
-import java.util.*;
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.folder.Folder;
 
 /**
  * @version 	1.0

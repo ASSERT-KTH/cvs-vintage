@@ -19,13 +19,11 @@ import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.Flags;
 import org.columba.mail.message.HeaderInterface;
-import java.util.List;
-import java.util.Iterator;
 
 public class TableModelSorter extends TableModelPlugin {
 

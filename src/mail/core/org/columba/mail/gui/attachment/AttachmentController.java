@@ -25,9 +25,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.util.IconPanel;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 

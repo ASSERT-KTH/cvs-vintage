@@ -24,6 +24,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -44,8 +46,6 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
-import java.util.List;
-import java.util.Iterator;
 
 public class CriteriaList extends JPanel implements ActionListener {
 

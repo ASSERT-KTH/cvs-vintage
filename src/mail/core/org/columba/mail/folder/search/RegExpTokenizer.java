@@ -18,8 +18,8 @@ package org.columba.mail.folder.search;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;

@@ -14,12 +14,12 @@ import org.columba.core.action.JAbstractAction;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableOwnerInterface;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.util.MessageNode;
-import org.columba.mail.folder.Folder;
 
 /**
  * @author waffel

@@ -25,7 +25,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
 /**

@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicTableUI;
+import javax.swing.plaf.basic.BasicTableUI.MouseInputHandler;
 
 public class ThinTableUI extends BasicTableUI {
 

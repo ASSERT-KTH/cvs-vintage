@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;

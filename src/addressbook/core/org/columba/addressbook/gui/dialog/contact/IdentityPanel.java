@@ -19,6 +19,7 @@ package org.columba.addressbook.gui.dialog.contact;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -29,7 +30,6 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-import java.util.List;
 
 public class IdentityPanel extends JPanel
 implements ActionListener

@@ -23,12 +23,11 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.table.util.MessageNode;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
 
 public class HeaderTableMouseListener extends MouseAdapter {
 	private TableController headerTableViewer;

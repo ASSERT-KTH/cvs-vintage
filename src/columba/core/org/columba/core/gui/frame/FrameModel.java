@@ -6,6 +6,8 @@
  */
 package org.columba.core.gui.frame;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.config.Config;
@@ -16,8 +18,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @author frd

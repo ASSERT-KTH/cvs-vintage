@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.config.AddressbookConfig;
@@ -31,8 +32,6 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * 

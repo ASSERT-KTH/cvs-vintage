@@ -16,11 +16,11 @@
 
 package org.columba.mail.gui.config.mailboximport;
 
+import java.io.File;
+
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
-
-import java.io.File;
 
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ImportFolderCommandReference;

@@ -18,21 +18,26 @@ package org.columba.mail.gui.config.mailboximport;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.mail.util.MailResourceLoader;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.wizard.WizardTextField;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.util.MailResourceLoader;
 
 class LocationStep extends AbstractStep implements ActionListener {
         protected File[] sourceFiles;

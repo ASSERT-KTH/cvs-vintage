@@ -16,19 +16,6 @@
 
 package org.columba.mail.parser.text;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.util.StringTokenizer;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Substitution;
-import org.apache.oro.text.regex.Util;
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  * @author frd

@@ -16,11 +16,11 @@
 
 package org.columba.core.gui.selection;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.command.DefaultCommandReference;
-import java.util.List;
-import java.util.Iterator;
 
 public abstract class SelectionHandler {
 

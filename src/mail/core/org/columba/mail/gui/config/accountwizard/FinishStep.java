@@ -16,12 +16,15 @@
 
 package org.columba.mail.gui.config.accountwizard;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+import net.javaprog.ui.wizard.AbstractStep;
 
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.mail.util.MailResourceLoader;
-
-import net.javaprog.ui.wizard.AbstractStep;
 
 class FinishStep extends AbstractStep {
 	public FinishStep() {

@@ -20,8 +20,8 @@ import org.columba.addressbook.gui.action.AddressbookActionListener;
 import org.columba.addressbook.gui.frame.AddressbookFrameView;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.TableView;
-import org.columba.addressbook.gui.tree.TreeView;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.gui.tree.TreeView;
 import org.columba.core.command.TaskManager;
 import org.columba.core.gui.statusbar.StatusBar;
 

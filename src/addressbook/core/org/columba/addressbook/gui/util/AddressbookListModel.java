@@ -16,8 +16,8 @@
 
 package org.columba.addressbook.gui.util;
 
-import java.util.Vector;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 

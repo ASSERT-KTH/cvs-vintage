@@ -22,6 +22,8 @@ import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
@@ -31,8 +33,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.event.MouseInputListener;
-import java.util.List;
-import java.util.Iterator;
 
 public class IconPanel extends JPanel implements MouseInputListener {
 	int count;

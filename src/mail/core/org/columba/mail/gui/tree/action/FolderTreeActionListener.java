@@ -25,6 +25,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.BasicAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
@@ -36,7 +37,6 @@ import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.gui.tree.util.EditFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class FolderTreeActionListener implements ActionListener {
 

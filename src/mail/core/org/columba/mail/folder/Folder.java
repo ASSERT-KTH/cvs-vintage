@@ -19,6 +19,7 @@
 package org.columba.mail.folder;
 
 import java.io.File;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JDialog;
@@ -39,7 +40,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import java.util.List;
 
 /**
  *    Abstract Basic Folder class. Is subclasses by every folder

@@ -28,7 +28,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.pop3.POP3ServerController;
-import org.columba.mail.pop3.command.*;
+import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ReceiveMessagesAction extends FrameAction {

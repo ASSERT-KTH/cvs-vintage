@@ -17,6 +17,7 @@
 package org.columba.addressbook.folder;
 
 import java.io.File;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
@@ -27,7 +28,6 @@ import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
-import java.util.List;
 
 public abstract class Folder extends AddressbookTreeNode {
 

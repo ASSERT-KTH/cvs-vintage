@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.ContactCard;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @version 	1.0

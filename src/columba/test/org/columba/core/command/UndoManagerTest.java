@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import java.util.Vector;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
-import java.util.List;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)

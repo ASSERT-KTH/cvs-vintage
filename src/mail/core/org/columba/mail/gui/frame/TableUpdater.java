@@ -6,12 +6,11 @@
  */
 package org.columba.mail.gui.frame;
 
-import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.mail.gui.table.TableChangedEvent;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @author frd

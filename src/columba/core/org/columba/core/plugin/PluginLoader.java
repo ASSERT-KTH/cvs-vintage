@@ -17,14 +17,13 @@ package org.columba.core.plugin;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.loader.ExternalClassLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.scripting.AbstractInterpreter;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @author freddy

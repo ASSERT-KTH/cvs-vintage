@@ -16,10 +16,13 @@
 
 package org.columba.mail.gui.config.accountwizard;
 
-import net.javaprog.ui.wizard.*;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultWizardModel;
+import net.javaprog.ui.wizard.Step;
+import net.javaprog.ui.wizard.Wizard;
+import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 

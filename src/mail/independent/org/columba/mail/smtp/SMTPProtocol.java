@@ -22,14 +22,13 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
-import java.util.List;
-import java.util.Iterator;
 
 public class SMTPProtocol {
 	public final static int SMTP = 0;

@@ -15,14 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.util.Mutex;
 import org.columba.core.util.SwingWorker.ThreadVar;
-import java.util.List;
-import java.util.Iterator;
 
 public class TaskManager {
 	private List workerList;

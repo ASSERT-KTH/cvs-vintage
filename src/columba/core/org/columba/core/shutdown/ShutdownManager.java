@@ -20,6 +20,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -30,8 +32,6 @@ import javax.swing.Timer;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @author freddy

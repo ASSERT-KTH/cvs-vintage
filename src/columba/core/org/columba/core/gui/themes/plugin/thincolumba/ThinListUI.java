@@ -20,6 +20,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.basic.BasicListUI;
+import javax.swing.plaf.basic.BasicListUI.MouseInputHandler;
 
 public class ThinListUI extends BasicListUI {
 

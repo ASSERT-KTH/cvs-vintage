@@ -26,7 +26,14 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;

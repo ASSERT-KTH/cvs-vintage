@@ -23,13 +23,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.Socket;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
-import java.util.List;
 
 /**
  *

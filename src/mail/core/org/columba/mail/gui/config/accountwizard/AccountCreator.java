@@ -17,12 +17,15 @@
 package org.columba.mail.gui.config.accountwizard;
 
 import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.WizardModelListener;
 import net.javaprog.ui.wizard.WizardModelEvent;
+import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.core.main.MainInterface;
-
-import org.columba.mail.config.*;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 
 class AccountCreator implements WizardModelListener {

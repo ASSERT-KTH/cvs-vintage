@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -34,7 +35,6 @@ import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
 import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
-import java.util.List;
 
 /**
  * @author freddy

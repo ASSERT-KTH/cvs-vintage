@@ -18,6 +18,7 @@ package org.columba.core.command;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.KeyStroke;
@@ -27,7 +28,6 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
-import java.util.List;
 
 public class UndoManager implements ActionListener, WorkerListChangeListener {
 

@@ -21,9 +21,9 @@ package org.columba.core.xml;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 /////////////////////////////////////////////////////////////////////////////
 //                                 CODE                                    //
 /////////////////////////////////////////////////////////////////////////////

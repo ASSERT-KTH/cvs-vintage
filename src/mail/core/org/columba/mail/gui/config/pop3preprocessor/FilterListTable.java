@@ -24,7 +24,6 @@ import javax.swing.table.TableColumn;
 import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.util.MailResourceLoader;
 
 class FilterListTable extends JTable {
 	private Config config;

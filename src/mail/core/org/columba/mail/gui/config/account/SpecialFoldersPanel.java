@@ -31,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -38,7 +39,6 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class SpecialFoldersPanel
 	extends DefaultPanel

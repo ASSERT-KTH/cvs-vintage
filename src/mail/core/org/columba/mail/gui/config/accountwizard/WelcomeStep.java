@@ -16,7 +16,10 @@
 
 package org.columba.mail.gui.config.accountwizard;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import net.javaprog.ui.wizard.AbstractStep;
 

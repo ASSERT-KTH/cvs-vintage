@@ -14,9 +14,9 @@
 
 package org.columba.core.xml;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.io.IOException;
 
 public class XmlTest {
 	public XmlTest() {}

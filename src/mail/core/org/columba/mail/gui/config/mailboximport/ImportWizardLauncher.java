@@ -16,7 +16,12 @@
 
 package org.columba.mail.gui.config.mailboximport;
 
-import net.javaprog.ui.wizard.*;
+import net.javaprog.ui.wizard.DataLookup;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultWizardModel;
+import net.javaprog.ui.wizard.Step;
+import net.javaprog.ui.wizard.Wizard;
+import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;

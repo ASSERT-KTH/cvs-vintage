@@ -16,8 +16,6 @@
 
 package org.columba.mail.message;
 
-import org.columba.mail.message.MimePart;
-
 import junit.framework.TestCase;
 
 /**

@@ -17,6 +17,7 @@ package org.columba.mail.folder.virtual;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -40,7 +41,6 @@ import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import java.util.List;
 
 public class VirtualFolder extends Folder {
 

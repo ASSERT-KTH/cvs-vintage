@@ -19,9 +19,9 @@
  */
 package org.columba.core.main;
 
-import org.columba.core.config.ConfigPath;
-
 import jargs.gnu.CmdLineParser;
+
+import org.columba.core.config.ConfigPath;
 
 /**
  * Pasring the commandline Arguments and setting states, that can be used from other components.

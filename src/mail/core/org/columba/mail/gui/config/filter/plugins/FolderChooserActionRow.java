@@ -20,12 +20,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
+import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.core.main.MainInterface;
 
 public class FolderChooserActionRow extends DefaultActionRow implements ActionListener {
 

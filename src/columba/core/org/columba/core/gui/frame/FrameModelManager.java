@@ -6,10 +6,10 @@
  */
 package org.columba.core.gui.frame;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.main.MainInterface;
-import java.util.List;
 
 /**
  * @author frd

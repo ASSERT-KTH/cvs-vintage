@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JViewport;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;

@@ -16,6 +16,7 @@
 package org.columba.mail.folder.search;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
@@ -26,7 +27,6 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.message.AbstractMessage;
-import java.util.List;
 
 /**
  * @author freddy

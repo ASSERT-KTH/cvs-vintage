@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
@@ -25,8 +27,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
-import java.util.List;
-import java.util.Iterator;
 
 public class POP3ServerCollection //implements ActionListener
 {

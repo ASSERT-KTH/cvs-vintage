@@ -19,11 +19,11 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

@@ -25,9 +25,9 @@ import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
-import java.util.Vector;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 public class cParagraph extends cPrintObject {
 

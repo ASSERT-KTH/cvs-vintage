@@ -20,12 +20,11 @@ import java.text.Collator;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
-import java.util.List;
 
 public class TableModelSorter extends TableModelPlugin
 {

@@ -27,7 +27,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;

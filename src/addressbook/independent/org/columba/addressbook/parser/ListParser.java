@@ -23,7 +23,6 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.folder.HeaderItem;
-import java.util.List;
 
 /**
  * @version 	1.0

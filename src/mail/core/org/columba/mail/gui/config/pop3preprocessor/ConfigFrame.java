@@ -16,17 +16,33 @@
 
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -35,7 +51,6 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;

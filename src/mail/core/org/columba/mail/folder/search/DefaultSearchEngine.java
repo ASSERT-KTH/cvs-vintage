@@ -16,13 +16,11 @@
 package org.columba.mail.folder.search;
 
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author freddy

@@ -16,12 +16,12 @@
 
 package org.columba.core.gui.menu;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
-import java.util.List;
-import java.util.Iterator;
 
 public class MenuPluginHandler extends AbstractPluginHandler {
 

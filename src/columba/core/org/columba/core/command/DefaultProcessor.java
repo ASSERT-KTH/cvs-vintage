@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
-import java.util.Iterator;
-import java.util.List;
 
 public class DefaultProcessor extends Thread {
 

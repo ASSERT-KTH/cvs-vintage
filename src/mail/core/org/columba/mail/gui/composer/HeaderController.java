@@ -26,7 +26,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;

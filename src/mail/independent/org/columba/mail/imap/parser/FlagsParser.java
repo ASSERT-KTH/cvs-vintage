@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.imap.parser;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.imap.IMAPResponse;
-import java.util.List;
 
 /**
  * @author freddy

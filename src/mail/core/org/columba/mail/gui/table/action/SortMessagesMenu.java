@@ -20,12 +20,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
-import org.columba.core.config.TableItem;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SortMessagesMenu extends IMenu implements ActionListener {

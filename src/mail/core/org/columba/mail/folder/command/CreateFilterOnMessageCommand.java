@@ -22,7 +22,6 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;

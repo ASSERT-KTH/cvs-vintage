@@ -17,7 +17,6 @@
 package org.columba.mail.gui.attachment;
 
 import java.util.List;
-import java.util.Vector;
 
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.MimePart;

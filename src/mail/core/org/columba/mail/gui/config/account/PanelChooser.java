@@ -17,6 +17,7 @@ package org.columba.mail.gui.config.account;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -31,7 +32,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
-import java.util.List;
 
 /**
  * @author frd

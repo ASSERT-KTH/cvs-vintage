@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.selection;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -22,8 +24,6 @@ import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @author freddy

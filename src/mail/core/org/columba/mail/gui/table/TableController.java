@@ -16,13 +16,10 @@
 
 package org.columba.mail.gui.table;
 
-import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
@@ -38,12 +35,12 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
 import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 
 /**
  * This class shows the messageheaderlist
@@ -487,10 +484,11 @@ public class TableController {
 			}
 		} else {
 			// if a lastSelection for this folder is set
-			// ColumbaLogger.log.info("lastSelection: "+folder.getLastSelection());
+			//ColumbaLogger.log.info("lastSelection: "+folder.getLastSelection());
 			// getting the last selected uid
 			Object[] lastSelUids = new Object[1];
 			lastSelUids[0] = folder.getLastSelection();
+			//ColumbaLogger.log.info("lastSelUid: "+lastSelUids[0]);
 			// selecting the message
 			setSelected(lastSelUids);
 			int selRow = getView().getSelectedRow();

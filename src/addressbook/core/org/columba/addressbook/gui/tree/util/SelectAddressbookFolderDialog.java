@@ -34,7 +34,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 
 import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.DialogStore;
 

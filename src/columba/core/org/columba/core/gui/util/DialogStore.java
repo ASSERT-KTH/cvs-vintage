@@ -16,8 +16,6 @@
 
 package org.columba.core.gui.util;
 
-import java.awt.Component;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 

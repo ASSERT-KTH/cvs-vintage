@@ -15,8 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
-import java.util.Vector;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * @author freddy

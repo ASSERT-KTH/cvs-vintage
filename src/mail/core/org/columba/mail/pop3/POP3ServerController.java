@@ -23,11 +23,12 @@ import javax.swing.Timer;
 
 import org.columba.core.action.BasicAction;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
-import org.columba.mail.pop3.command.*;
-import org.columba.core.main.MainInterface;
+import org.columba.mail.pop3.command.CheckForNewMessagesCommand;
+import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 
 /**
  * @author freddy

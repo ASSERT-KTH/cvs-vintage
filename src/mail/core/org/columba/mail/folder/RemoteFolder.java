@@ -18,7 +18,8 @@ package org.columba.mail.folder;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.search.*;
+import org.columba.mail.folder.search.AbstractSearchEngine;
+import org.columba.mail.folder.search.RemoteSearchEngine;
 
 public abstract class RemoteFolder extends Folder {
 

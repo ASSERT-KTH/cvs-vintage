@@ -22,10 +22,22 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.border.CompoundBorder;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.ListModel;
+import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
@@ -38,7 +50,6 @@ import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.main.MainInterface;
-import java.util.List;
 
 public class SelectAddressDialog extends JDialog implements ActionListener
 {

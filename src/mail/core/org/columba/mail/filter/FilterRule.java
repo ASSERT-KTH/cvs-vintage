@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.filter;
 
+import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-import java.util.List;
 
 public class FilterRule extends DefaultItem {
 

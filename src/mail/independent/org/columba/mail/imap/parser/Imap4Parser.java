@@ -16,6 +16,7 @@
 
 package org.columba.mail.imap.parser;
 
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -28,7 +29,6 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.Rfc822Parser;
-import java.util.List;
 
 public class Imap4Parser {
 

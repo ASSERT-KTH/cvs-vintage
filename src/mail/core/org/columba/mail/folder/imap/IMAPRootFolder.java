@@ -20,7 +20,7 @@ package org.columba.mail.folder.imap;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
@@ -48,7 +48,6 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
-import java.util.List;
 
 public class IMAPRootFolder extends Folder implements ActionListener {
 	protected final static ImageIcon imapRootIcon =

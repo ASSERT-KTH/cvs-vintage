@@ -22,13 +22,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 

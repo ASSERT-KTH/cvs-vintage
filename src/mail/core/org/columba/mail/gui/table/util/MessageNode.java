@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.util;
 
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.mail.message.HeaderInterface;
-import java.util.List;
 
 /**
  * Title:

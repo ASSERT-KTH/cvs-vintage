@@ -19,7 +19,6 @@ package org.columba.addressbook.gui.table.util;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
-import java.util.List;
 
 public class TableModelFilteredView extends TableModelPlugin
 {

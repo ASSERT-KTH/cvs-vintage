@@ -18,6 +18,8 @@ package org.columba.mail.gui.message;
 import java.awt.Font;
 import java.awt.Insets;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -30,11 +32,8 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.parser.text.HtmlParser;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  * @author freddy
