@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.2 1999/10/16 01:32:03 duncan Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/16 01:32:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InvokerServlet.java,v 1.3 1999/11/06 00:19:52 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/06 00:19:52 $
  *
  * ====================================================================
  *
@@ -181,17 +181,15 @@ public class InvokerServlet extends HttpServlet {
 
         // try the easy one -- lookup by name
         
-        //ServletWrapper wrapper = container.getServlet(servletName);
+        ServletWrapper wrapper = container.getServletByName(servletName);
 
-	LookupResult result = container.lookupServletByName(servletName);
-	
-        if (result == null) {
+        if (wrapper == null) {
             // try the more forceful approach
 
-            result = container.lookupServletAndLoadByName(servletName);
+            wrapper = container.getServletAndLoadByName(servletName);
         }
 
-        if (result == null) {
+        if (wrapper == null) {
             // we are out of luck
 
             doError(response);
@@ -238,7 +236,7 @@ public class InvokerServlet extends HttpServlet {
 	    }
 	}
 
-        result.getWrapper().handleRequest(requestfacade, responsefacade);
+        wrapper.handleRequest(requestfacade, responsefacade);
 
 	if (inInclude) {
 	    if (savedServletPath != null) {

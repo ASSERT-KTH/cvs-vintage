@@ -954,7 +954,7 @@ public class Context {
 
 	    while (e.hasMoreElements()) {
 		String servletName = (String)e.nextElement();
-		ServletsWrapper  result = container.getServletByName(servletName);
+		ServletWrapper  result = container.getServletByName(servletName);
 		
 		if(result==null)
 		    System.out.println("Warning: we try to load an undefined servlet " + servletName);

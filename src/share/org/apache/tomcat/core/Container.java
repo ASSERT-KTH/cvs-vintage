@@ -332,11 +332,11 @@ public class Container {
         return lookupResult;
     }
 
-    ServletWrapper lookupServlet(String servletName) {
+    ServletWrapper getServletByName(String servletName) {
 	return (ServletWrapper)servlets.get(servletName);
     }
 
-    LookupResult lookupServletAndLoadByName(String servletName) {
+    ServletWrapper getServletAndLoadByName(String servletName) {
 	// XXX
 	// make sure that we aren't tramping over ourselves!
 	ServletWrapper wrapper = new ServletWrapper(this);
@@ -345,9 +345,9 @@ public class Container {
 
 	servlets.put(servletName, wrapper);
 
-	return new LookupResult(wrapper, null, "");
+	return wrapper;
     }
-    
+
     ServletWrapper loadServlet(String servletClassName) {
         // XXX
         // check for duplicates!
