@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.49 2004/06/26 16:34:42 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.50 2004/06/28 16:52:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.49 2004/06/26 16:34:42 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.50 2004/06/28 16:52:56 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -57,7 +57,7 @@ import ru.novosoft.uml.MElementEvent;
  */
 public class UMLStateDiagram extends UMLDiagram {
     /** logger */
-    private static Logger cat = Logger.getLogger(UMLStateDiagram.class);
+    private static final Logger LOG = Logger.getLogger(UMLStateDiagram.class);
 
     /**
      * this diagram needs to be deleted when its statemachine is deleted.
@@ -151,7 +151,7 @@ public class UMLStateDiagram extends UMLDiagram {
                     ? 0
                     : ModelFacade.getBehaviors(namespace).size();
             name = diag_name + " " + (number++);
-            cat.info("UMLStateDiagram constructor: String name = " + name);
+            LOG.info("UMLStateDiagram constructor: String name = " + name);
             try {
                 setName(name);
             } catch (PropertyVetoException pve) { }
