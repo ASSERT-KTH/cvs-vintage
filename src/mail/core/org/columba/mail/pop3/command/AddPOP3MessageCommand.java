@@ -27,13 +27,13 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.RootFolder;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.ScoreMessageCommand;
 import org.columba.ristretto.io.SourceInputStream;
-import org.columba.ristretto.message.Flags;
 
 /**
  * After downloading the message from the POP3 server, its added to the Inbox
@@ -71,11 +71,12 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		Object uid = inboxFolder.addMessage(messageStream, message.getHeader()
 				.getAttributes(), message.getHeader().getFlags());
 		messageStream.close();
-		inboxFolder.getFlags(uid).set(Flags.RECENT);
-
-		// FIXME: this should happen automatically in MessageFolder, because
-		// of message flag RECENT changes
-		//inboxFolder.getMessageFolderInfo().incRecent();
+		
+		// mark message as recent
+		r.setFolder(inboxFolder);
+		r.setUids(new Object[]{uid});
+		r.setMarkVariant(MarkMessageCommand.MARK_AS_RECENT);
+		new MarkMessageCommand( r).execute(worker);
 
 		// apply spam filter
 		boolean messageWasMoved = applySpamFilter(uid, worker);

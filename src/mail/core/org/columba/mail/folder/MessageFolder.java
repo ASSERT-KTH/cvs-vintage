@@ -545,6 +545,23 @@ public abstract class MessageFolder extends AbstractFolder implements
 
 			break;
 		}
+		
+		case MarkMessageCommand.MARK_AS_RECENT: {
+			if (!flags.getRecent()) {
+				getMessageFolderInfo().incRecent();
+				updated = true;
+			}
+
+			break;
+		}
+		case MarkMessageCommand.MARK_AS_NOTRECENT: {
+			if (flags.getRecent()) {
+				getMessageFolderInfo().decRecent();
+				updated = true;
+			}
+
+			break;
+		}
 
 		}
 		
@@ -641,6 +658,16 @@ public abstract class MessageFolder extends AbstractFolder implements
 		}
 		case MarkMessageCommand.MARK_AS_NOTDRAFT: {
 			flags.setDraft(false);
+
+			break;
+		}
+		case MarkMessageCommand.MARK_AS_RECENT: {
+			flags.setRecent(true);
+
+			break;
+		}
+		case MarkMessageCommand.MARK_AS_NOTRECENT: {
+			flags.setRecent(false);
 
 			break;
 		}

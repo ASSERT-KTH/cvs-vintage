@@ -59,6 +59,10 @@ public class MarkMessageCommand extends FolderCommand {
 	public final static int MARK_AS_DRAFT = 6;
 
 	public final static int MARK_AS_NOTDRAFT = -6;
+	
+	public final static int MARK_AS_RECENT = 7;
+	
+	public final static int MARK_AS_NOTRECENT = -7;
 
 	private WorkerStatusController worker;
 
