@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.5 1999/10/20 11:23:46 akv Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/20 11:23:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.6 1999/11/01 20:50:46 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/11/01 20:50:46 $
  *
  * ====================================================================
  *
@@ -64,7 +64,6 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.server.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.deployment.*;
 import java.io.*;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Reaper.java,v 1.1 1999/10/09 00:30:15 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/Reaper.java,v 1.2 1999/11/01 20:50:47 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/01 20:50:47 $
  *
  * ====================================================================
  *
@@ -64,7 +64,6 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.server.*;
 import org.apache.tomcat.util.*;
 
 /**
