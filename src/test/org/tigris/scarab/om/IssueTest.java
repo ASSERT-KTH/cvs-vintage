@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.IssueType;
@@ -62,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.22 2003/02/06 18:20:38 jmcnally Exp $
+ * @version $Id: IssueTest.java,v 1.23 2003/02/26 18:05:56 dlr Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -217,7 +218,8 @@ public class IssueTest extends BaseTestCase
     private void testGetUsersToEmail() throws Exception
     {
         System.out.println ("testGetUsersToEmail()");
-        List users = getIssue0().getUsersToEmail(AttributePeer.EMAIL_TO);
+        Set users = getIssue0().getUsersToEmail(AttributePeer.EMAIL_TO,
+                                                getIssue0(), null);
         assertEquals(users.size(), 2);
     }
 

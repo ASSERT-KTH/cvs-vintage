@@ -98,7 +98,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.274 2003/02/26 01:20:40 jon Exp $
+ * @version $Id: Issue.java,v 1.275 2003/02/26 18:05:56 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1121,12 +1121,20 @@ public class Issue
     }
 
     /**
-     * Returns users assigned to user attributes that get emailed 
-     * When issue is modified. Plus creating user.
+     * Returns the users which should be notified when this issue is
+     * modified.  The set contains those users associated with user
+     * attributes for this issue, plus the creator of the issue.
+     *
+     * @param issue Usually a reference to this or a dependent issue.
      */
     public Set getUsersToEmail(String action, Issue issue, Set users)
         throws Exception
     {
+        if (users == null)
+        {
+            users = new HashSet(1);
+        }
+
         ScarabUser createdBy = issue.getCreatedBy();
         if (action.equals(AttributePeer.EMAIL_TO) && !users.contains(createdBy))
         {
@@ -1139,7 +1147,7 @@ public class Issue
             .add(AttributePeer.ACTION, action)
             .add(AttributeValuePeer.DELETED, 0);
         List userAttVals = AttributeValuePeer.doSelect(crit);
-        for (int i=0;i<userAttVals.size();i++)
+        for (int i = 0; i < userAttVals.size(); i++)
         {
             AttributeValue attVal = (AttributeValue)userAttVals.get(i);
             try
@@ -1152,7 +1160,7 @@ public class Issue
             }
             catch (Exception e)
             {
-                throw new Exception("Error in retrieving users.");
+                throw new Exception("Error retrieving users to email");
             }
         }
         return users;
@@ -1183,7 +1191,7 @@ public class Issue
             }
             catch (Exception e)
             {
-                log().error("Issue.getUsersToEmail(String): ", e);
+                log().error("Issue.getUsersToEmail(): ", e);
                 throw new Exception("Error in retrieving users.");
             }
             ScarabCache.put(result, this, GET_ALL_USERS_TO_EMAIL, action);
