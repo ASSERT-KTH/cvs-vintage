@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.134 2003/10/05 17:24:04 linus Exp $
+<!-- $Id: build.xml,v 1.135 2003/10/27 19:50:00 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -906,6 +906,36 @@ For details see http://www.clarkware.com/software/JDepend.html.
       <arg value="${argo.root.dir}/modules"/>
     </java>
   </target>
+
+  <target name="checkstyle-main">
+    <java classname="com.puppycrawl.tools.checkstyle.Main" failonerror="false" fork="true" maxmemory="32M">
+      <sysproperty key="checkstyle.header.file" value="${argo.tools.dir}/checkstyle/java.header"/>
+      <classpath>
+	<pathelement location="${checkstyle.jar.path}"/>
+	<pathelement location="${checkstyleindent.jar.path}"/>
+        <pathelement location="${xerces.jar.path}"/>
+      </classpath>
+      <arg value="-c"/>
+      <arg value="${argo.tools.dir}/checkstyle/checkstyle_argouml.xml"/>
+      <arg value="-r"/>
+      <arg value="${source.dir}"/>
+    </java>
+  </target>
+
+  <target name="checkstyle-i18n" depends="init"
+          description="Run checkstyle only on Internationalization">
+    <antcall target="checkstyle-main">
+      <param name="source.dir" value="${argo.src.dir}/org/argouml/i18n"/>
+    </antcall>
+  </target>
+
+  <target name="checkstyle-model" depends="init"
+          description="Run checkstyle only on the Model">
+    <antcall target="checkstyle-main">
+      <param name="source.dir" value="${argo.src.dir}/org/argouml/model"/>
+    </antcall>
+  </target>
+
 
   <!-- =================================================================== -->
   <!-- Removes generated files so that they are not checked by xenofarm.   -->
