@@ -7,6 +7,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
 
 // Local classes
 import org.tigris.scarab.om.map.*;
@@ -20,6 +21,8 @@ import org.tigris.scarab.services.cache.ScarabCache;
 public class IssueTypePeer 
     extends org.tigris.scarab.om.BaseIssueTypePeer
 {
+    public static NumberKey ROOT_KEY = new NumberKey("0");
+
     private static final String ISSUE_TYPE_PEER = 
         "IssueTypePeer";
     private static final String GET_ALL_ISSUE_TYPES = 

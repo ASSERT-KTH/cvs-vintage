@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.14 2002/04/13 02:39:33 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.15 2002/04/17 04:27:57 jmcnally Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -94,7 +94,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 if ( IssueTypePeer.isUnique(name, null) ) 
                 {
                     group.setProperties(issueType);
-                    issueType.setParentId(new NumberKey("0"));
+                    issueType.setParentId(IssueTypePeer.ROOT_KEY);
                     issueType.save();
                     
                     // Create template type.
