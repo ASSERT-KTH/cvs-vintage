@@ -27,6 +27,9 @@
 //
 //
 // $Log: XmlIO.java,v $
+// Revision 1.7  2003/03/28 14:43:04  javaprog
+// [intern] don't start variable names with capital letters
+//
 // Revision 1.6  2003/03/09 13:08:36  fdietz
 // [intern]import cleanups
 //
@@ -67,7 +70,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlIO extends DefaultHandler {
 	// List of sub-elements
-	Vector Elements;
+	Vector elements;
 	// Top level element (Used to hold everything else)
 	XmlElement rootElement;
 	// The current element you are working on
@@ -127,8 +130,8 @@ public class XmlIO extends DefaultHandler {
 
 	// Load a file. This is what starts things off.
 	public boolean load(URL inputURL) {
-		Elements = new Vector();
-		rootElement = new XmlElement("__CULUMBA_XML_TREE_TOP__");
+		elements = new Vector();
+		rootElement = new XmlElement("__COLUMBA_XML_TREE_TOP__");
 		currentElement = rootElement;
 
 		try {
@@ -149,7 +152,7 @@ public class XmlIO extends DefaultHandler {
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
-		} catch (org.xml.sax.SAXException ex) {
+		} catch (SAXException ex) {
 			// Error
 			ColumbaLogger.log.error(
 				"XML parse error while attempting to read XML file \n'"
@@ -157,7 +160,7 @@ public class XmlIO extends DefaultHandler {
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
-		} catch (java.io.IOException ex) {
+		} catch (IOException ex) {
 			ColumbaLogger.log.error(
 				"I/O error while attempting to read XML file \n'"
                 +inputURL+"'");
@@ -255,11 +258,11 @@ public class XmlIO extends DefaultHandler {
 	public void write(OutputStream out) throws IOException {
 		PrintWriter PW = new PrintWriter(out);
 		PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		if (rootElement.SubElements.size() > 0) {
-			for (int i = 0; i < rootElement.SubElements.size(); i++) {
+		if (rootElement.subElements.size() > 0) {
+			for (int i = 0; i < rootElement.subElements.size(); i++) {
 				_writeSubNode(
 					PW,
-					(XmlElement) rootElement.SubElements.get(i),
+					(XmlElement) rootElement.subElements.get(i),
 					0);
 			}
 		}
@@ -282,46 +285,46 @@ public class XmlIO extends DefaultHandler {
 		return orig;
 	}
 
-	private void _writeSubNode(PrintWriter out, XmlElement Element, int indent)
+	private void _writeSubNode(PrintWriter out, XmlElement element, int indent)
 		throws IOException {
 		_writeSpace(out, indent);
-		out.print("<" + Element.getName());
-		for (Enumeration e = Element.getAttributeNames();
+		out.print("<" + element.getName());
+		for (Enumeration e = element.getAttributeNames();
 			e.hasMoreElements();
 			) {
 			String K = (String) e.nextElement();
-			out.print(" " + K + "=\"" + _escapeText(Element.getAttribute(K))
+			out.print(" " + K + "=\"" + _escapeText(element.getAttribute(K))
                       + "\"");
 		}
 
 		out.print(">");
 
-		String Data = Element.getData();
+		String data = element.getData();
 
-		if (Data != null && !Data.equals("")) {
-			if (Data.length() > maxOneLineData) {
+		if (data != null && !data.equals("")) {
+			if (data.length() > maxOneLineData) {
 				out.println("");
 				_writeSpace(out, indent + writeIndent);
 			}
-			out.print(_escapeText(Data));
+			out.print(_escapeText(data));
 		}
-		Vector SubElements = Element.getElements();
+		Vector subElements = element.getElements();
 
-		if (SubElements.size() > 0) {
+		if (subElements.size() > 0) {
 			out.println("");
-			for (int i = 0; i < SubElements.size(); i++) {
+			for (int i = 0; i < subElements.size(); i++) {
 				_writeSubNode(
 					out,
-					(XmlElement) SubElements.get(i),
+					(XmlElement) subElements.get(i),
 					indent + writeIndent);
 			}
 			_writeSpace(out, indent);
 		}
-		if (Data.length() > maxOneLineData) {
+		if (data.length() > maxOneLineData) {
 			out.println("");
 			_writeSpace(out, indent);
 		}
-		out.println("</" + _escapeText(Element.getName()) + ">");
+		out.println("</" + _escapeText(element.getName()) + ">");
 	}
 
 	private void _writeSpace(PrintWriter out, int numSpaces)
