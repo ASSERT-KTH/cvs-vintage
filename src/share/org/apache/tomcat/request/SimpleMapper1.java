@@ -179,7 +179,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	String path=ct.getPath();
 	String ctxP=ctx.getPath();
 
-	if(ct.getHandler() == null ) {
+	if(ct.getRoles() != null || ct.getTransport() != null ) {
 	    // it was only a security map, no handler defined
 	    return;
 	}

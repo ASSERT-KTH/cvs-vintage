@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.30 2000/04/25 17:54:14 costin Exp $
- * $Revision: 1.30 $
- * $Date: 2000/04/25 17:54:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.31 2000/05/02 22:39:57 costin Exp $
+ * $Revision: 1.31 $
+ * $Date: 2000/05/02 22:39:57 $
  *
  * ====================================================================
  *
@@ -206,7 +206,7 @@ public class RequestImpl  implements Request {
 	    return serverName;
 	}
 	// default to localhost - and warn
-	System.out.println("No server name, defaulting to localhost");
+	//	System.out.println("No server name, defaulting to localhost");
 	serverName="localhost";
 	return serverName;
     }

@@ -138,6 +138,8 @@ public class Container implements Cloneable {
     /** Security constraints associated with this Container
      */
     String roles[]=null;
+
+    String methods[]=null;
     
     public Container() {
     }
@@ -253,6 +255,20 @@ public class Container implements Cloneable {
 	this.vhosts=vhosts;
     }
     
+    /** If not null, this container can only be accessed by users
+     *  in roles.
+     */
+    public String []getMethods() {
+	return methods;
+    }
+
+    /** If not null, this container can only be accessed by users
+	in roles.
+    */
+    public void setMethods( String m[] ) {
+	this.methods=m;
+    }
+
     // -------------------- Mapping RHS --------------------
     
     /** The handler for this container

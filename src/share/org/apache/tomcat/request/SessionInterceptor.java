@@ -233,7 +233,7 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
     	cookie.setMaxAge(-1);
         cookie.setPath(sessionPath);
     	cookie.setVersion(1);
-	
+
 	response.addHeader( CookieTools.getCookieHeaderName(cookie),
 			    CookieTools.getCookieHeaderValue(cookie));
     	cookie.setVersion(0);

@@ -191,6 +191,16 @@ public interface Request  {
 
     boolean isSecure() ;
 
+    // XXX It may be usefull to add few more fields - right now
+    // tomcat use notes, after everything is stable we can
+    // use typed methods
+    
+    /** This request has an auth constraint and requires one of
+     *  the roles.
+     */
+    // public String []getRequiredRoles();
+    // public void setRequiredRoles(String []);
+
 
     // -------------------- Session --------------------
     // Will be set by session interceptors
@@ -298,6 +308,12 @@ public interface Request  {
      */
     public void setMappedPath( String m ) ;
 
+    /** Add a per/request internal attribute.
+     *  We keep internal attributes in a separate space to prevent
+     *  servlets from accessing them. We also use indexed access for
+     *  speed ( as oposed to hashtable lookups ). Get an Id from ContextManager.
+     */
+    public void setNote( int pos, Object value );
 
-
+    public Object getNote( int pos );
 }

@@ -56,8 +56,11 @@
           -->
         <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper1" debug="0" />
 
+        <!-- Check if the request requires an authenticated role  -->
+        <RequestInterceptor className="org.apache.tomcat.request.AccessInterceptor" debug="0" />
+
         <!-- Check permissions -->
-        <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
+        <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" debug="0" />
 
         <!-- Set extra headers - like Date: and ServletEngine, plus version 0 cookies
              Most of this is not needed, but it was allways here. There are better 

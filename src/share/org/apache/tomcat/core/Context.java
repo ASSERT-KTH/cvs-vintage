@@ -536,6 +536,7 @@ public class Context {
 	    ct.setTransport( transport );
 	    ct.setRoles( roles );
 	    ct.setPath( path[i] );
+	    ct.setMethods( methods );
 
 	    // XXX check if exists, merge if true.
 	    constraints.put( path[i], ct );

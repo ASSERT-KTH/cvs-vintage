@@ -88,6 +88,9 @@ public class AccessInterceptor extends  BaseInterceptor  {
 
     // Security mapping note
     int secMapNote;
+
+    // Required roles attribute
+    int reqRolesNote;
     
     public AccessInterceptor() {
     }
@@ -112,11 +115,13 @@ public class AccessInterceptor extends  BaseInterceptor  {
      *  dynamic add/remove for this interceptor. 
      */
     public void setContextManager( ContextManager cm ) {
-	this.cm=cm;
+	super.setContextManager( cm );
 	
+	this.cm=cm;
 	// set-up a per/container note for maps
 	try {
 	    secMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE, "map.security");
+	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE, "required.roles");
 	} catch( TomcatException ex ) {
 	    ex.printStackTrace();
 	    throw new RuntimeException( "Invalid state ");
@@ -127,9 +132,8 @@ public class AccessInterceptor extends  BaseInterceptor  {
      */
     public void addContext( ContextManager cm, Context ctx ) throws TomcatException
     {
-	Hashtable sec=new Hashtable();
 	Container ct=ctx.getContainer();
-	ct.setNote( secMapNote, sec );
+	ct.setNote( secMapNote, new SecurityConstraints() );
     }
 
     /** Called when a context is removed from a CM - we must ask the mapper to
@@ -141,32 +145,26 @@ public class AccessInterceptor extends  BaseInterceptor  {
     }
     
 
-    /**
-     */
-    public void addContainer( Container ct )
-	throws TomcatException
-    {
-	Context ctx=ct.getContext();
-	String path=ct.getPath();
-	String ctxP=ctx.getPath();
-
-	if( ct.getRoles() != null ) {
-	    return; // XXX - right now we add either security or handler,
-	    // later we can use a more general/efficient aproach
-	}
-	
-	if(ct.getHandler() == null ) {
-	    // it was only a security map
-	    return;
-	}
-    }
-
     // XXX not implemented - will deal with that after everything else works.
     public void removeContainer( Container ct )
 	throws TomcatException
     {
     }
 
+    /**
+     */
+    public void addContainer( Container ct )
+	throws TomcatException
+    {
+	Context ctx=ct.getContext();
+	Container ctxCt=ctx.getContainer();
+	SecurityConstraints ctxSecurityC=(SecurityConstraints)ctxCt.getNote( secMapNote );
+	
+	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
+	    log( "ACCESS: Adding " + ctx.getHost() + " " + ctx.getPath() + " " + ct.getPath() );
+	    ctxSecurityC.addContainer( ct );
+	}
+    }
 
     /* -------------------- Request mapping -------------------- */
 
@@ -177,33 +175,84 @@ public class AccessInterceptor extends  BaseInterceptor  {
     public int authorize( Request req, Response response )
     {
 	Context ctx=req.getContext();
-
-	// first we check if this request _requires_ access control
-
-	// this could be optimized and part of the contextMap, to
-	// avoid double parsing and lookup - but in production mode
-	// both methods will be no-ops anyway ( the server has already done
-	// it ) - and in standalone mode it's not the biggest problem and
-	// we can optimize it later if needed.
+	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().getNote( secMapNote );
+	if( ctxSec.patterns==0 ) return 0; // fast exit
 	
-	String roles[]=req.getContainer().getRoles();
-	if( roles==null ) {
-	    return 0;
-	}
+	String reqURI = req.getRequestURI();
+	String ctxPath= ctx.getPath();
+	String path=reqURI.substring( ctxPath.length());
+	String method=req.getMethod();
 
+	log( "ACCESS: checking " + path );
+	
+	for( int i=0; i< ctxSec.patterns ; i++ ) {
+	    Container ct=ctxSec.securityPatterns[i];
+	    if( match( ct, path, method ) ) {
+		log( "ACCESS: matched " + ct.getPath() + " " + ct.getMethods() + " " +
+		     ct.getTransport() + " " + ct.getRoles());
+		String roles[]=ct.getRoles();
+		String transport=ct.getTransport();
+
+		if( transport != null && (
+					  "INTEGRAL".equals( transport ) ||
+					  "CONFIDENTAIL".equals( transport ))) {
+		    // check if SSL is used
+		    log( "ACCESS: SSL required " + req );
+		}
+
+		// roles will be checked by a different interceptor
+		req.setNote( reqRolesNote, roles );
+	    }
+	}
  	return 0;
     }
 
+    /** Find if a pattern is matched by a container
+     */
+    boolean match( Container ct, String path, String method ) {
+	String ctPath=ct.getPath();
+	int ctPathL=ctPath.length();
+	String ctMethods[]=ct.getMethods();
+	
+	if( ctMethods != null && ctMethods.length > 0 ) {
+	    boolean ok=false;
+	    for( int i=0; i< ctMethods.length; i++ ) {
+		if( method.equals( ctMethods[i] ) ) {
+		    ok=true;
+		    break;
+		}
+	    }
+	    if( ! ok ) return false; // no method matched
+	}
+
+	// either method is any or we matched the method
+	
+	switch( ct.getMapType() ) {
+	case Container.PREFIX_MAP:
+	    return path.startsWith( ctPath.substring(0, ctPathL - 2  ));
+	case Container.EXTENSION_MAP:
+	    return ctPath.substring( 1 ).equals( URLUtil.getExtension( path ));
+	case Container.PATH_MAP:
+	    return path.equals( ctPath );
+	}
+	return false;
+    }
     // -------------------- Implementation methods --------------------
-    
-    
 }
 
-class ResourceCollectionPattern {
-    String methods[];
-    String prefixPatterns[];
-    String extPatterns[];
-    String exactPatterns[];
+class SecurityConstraints {
+    Container []securityPatterns;
+    int patterns=0;
+    // implement re-sizeable array later
+    static final int MAX_CONSTRAINTS=30;
 
-    
+    public SecurityConstraints() {
+	securityPatterns=new Container[MAX_CONSTRAINTS];
+    }
+
+    // It's called in a single thread anyway
+    public synchronized void addContainer(Container ct) {
+	securityPatterns[ patterns ]= ct;
+	patterns++;
+    }
 }

@@ -81,10 +81,35 @@ import org.xml.sax.*;
 public class SecurityCheck extends  BaseInterceptor {
     MemoryRealm memoryRealm;
     int debug=0;
+    int reqRolesNote;
+    ContextManager cm;
     
     public SecurityCheck() {
     }
-	
+
+    void log( String s ) {
+	cm.log("SecurityCheck: " + s );
+    }
+
+    /** Set the context manager. To keep it simple we don't support
+     *  dynamic add/remove for this interceptor. 
+     */
+    public void setContextManager( ContextManager cm ) {
+	super.setContextManager( cm );
+
+	this.cm=cm;
+	// set-up a per/container note for maps
+	try {
+	    // XXX make the name a "global" static - after everything is stable!
+	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE, "required.roles");
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	    throw new RuntimeException( "Invalid state ");
+	}
+    }
+
+
+    
     public void contextInit( Context ctx)
 	throws TomcatException
     {
@@ -139,7 +164,7 @@ public class SecurityCheck extends  BaseInterceptor {
 	if( req.getRemoteUser() != null) return 0; // already authenticated
 
 	String authMethod=ctx.getAuthMethod();
-	//	if( ctx.getDebug() > 0 ) ctx.log( "Auth: " + authMethod );
+	//	if( debug > 0 ) ctx.log( "Auth: " + authMethod );
 	if( authMethod==null || "BASIC".equals(authMethod) ) {
 	    String authorization = req.getHeader("Authorization");
 	    // XXX we may have multiple headers ?
@@ -147,14 +172,14 @@ public class SecurityCheck extends  BaseInterceptor {
 		authorization = authorization.substring(6).trim();
 		String unencoded=base64Decode( authorization );
 		int colon = unencoded.indexOf(':');
-		if( ctx.getDebug() > 0 ) ctx.log( "BASIC auth " + authorization + " " + unencoded );
+		if( debug > 0 ) ctx.log( "BASIC auth " + authorization + " " + unencoded );
 		if (colon < 0)
 		    return 0;
 		String username = unencoded.substring(0, colon);
 		String password = unencoded.substring(colon + 1);
 		if( checkPassword( username, password ) ) {
 		    req.setRemoteUser( username );
-		    if( ctx.getDebug() > 0 ) ctx.log( "BASIC Auth:  " + username );
+		    if( debug > 0 ) ctx.log( "BASIC Auth:  " + username );
 		} else {
 		    // wrong password
 		    errorPage( req, response );
@@ -181,7 +206,7 @@ public class SecurityCheck extends  BaseInterceptor {
 		// it wasn't authenticated, maybe it's a new login 
 		String username=(String)session.getAttribute("j_username");
 		String password=(String)session.getAttribute("j_password");
-		if( ctx.getDebug() > 0 ) ctx.log( "Form Auth:  " + username + " " + password);
+		if( debug > 0 ) ctx.log( "Form Auth:  " + username + " " + password);
 		if( username!=null && checkPassword( username, password ) ) {
 		    req.setRemoteUser( username );
 		    Credential c=new Credential();
@@ -208,6 +233,7 @@ public class SecurityCheck extends  BaseInterceptor {
     public int authorize( Request req, Response response )
     {
 	Context ctx=req.getContext();
+	log( "Authorizing " + req );
 	// Set  default RequestSecurityProvider if not set
 	if (ctx.getRequestSecurityProvider() == null) {
 	    Hashtable roles = memoryRealm.getRoles();
@@ -216,13 +242,23 @@ public class SecurityCheck extends  BaseInterceptor {
 	    ctx.setRequestSecurityProvider(rsp);
 	}
 
+	// XXX 3.1 compatibility, will go away
 	String roles[]=req.getContainer().getRoles();
 	if( roles==null ) {
+	    roles=(String[]) req.getNote( reqRolesNote );
+	}
+	
+	if( roles==null ) {
+	    log( "No roles " + req );
 	    return 0;
 	}
-
+	
+	for( int i=0; i< roles.length; i++ ) {
+	    log( "Require " + roles[i]);
+	}
+	
 	String user=req.getRemoteUser();
-	if( ctx.getDebug() > 0 ) ctx.log( "Controled access for " + user + " " + req + " " + req.getContainer() );
+	if( debug > 0 ) log( "Controled access for " + user + " " + req + " " + req.getContainer() );
 	if( user!=null ) {
 	    for( int i=0; i< roles.length; i++ ) {
 		if( userInRole( user, roles[i] ) )
@@ -230,7 +266,7 @@ public class SecurityCheck extends  BaseInterceptor {
 	    }
 	}
 
-	if( ctx.getDebug() > 0 ) ctx.log( "Unauthorized " + user + " " + req.getContainer());
+	if( debug > 0 ) log( "Unauthorized " + user + " " + req.getContainer());
  	return HttpServletResponse.SC_UNAUTHORIZED;
 	// XXX check transport
     }
@@ -313,7 +349,7 @@ class MemoryRealm {
     }
     
     public void addUser(String name, String pass, String groups ) {
-	if( debug > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
+	if( ctx.getDebug() > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
 	passwords.put( name, pass );
 	groups += ",";
 	while (true) {

@@ -633,7 +633,10 @@ public class ContextManager {
     int authorize( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    int err = ((RequestInterceptor)requestInterceptors.elementAt(i)).authorize( req, res );
-	    if ( err != 0 ) return err;
+	    if ( err != 0 ) {
+		if( debug>0) log( "Authorize rezult " + err );
+		return err;
+	    }
 	}
 	return 0;
     }
