@@ -44,10 +44,7 @@ public class QuotedPrintableDecoder extends Decoder {
 		byte codeByte = 0;
 		int outPos = 0;
 		
-		//if( charset == null )
-			inBytes = input.getBytes("US-ASCII");
-		//else
-		//	inBytes = input.getBytes(charset);
+		inBytes = input.getBytes("US-ASCII");
 		
 		for( int i=0; i<input.length(); i++ ) {
 			

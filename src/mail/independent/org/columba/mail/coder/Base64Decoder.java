@@ -109,10 +109,7 @@ public class Base64Decoder extends Decoder {
 				clean.append(tokenizer.nextToken());
 			}
 			
-			if( charset == null ) 
-				inBytes = clean.toString().getBytes("US-ASCII");
-			else 
-				inBytes = clean.toString().getBytes(charset);
+			inBytes = clean.toString().getBytes("US-ASCII");
 
 		} else {
 			inBytes = input.getBytes("US-ASCII");

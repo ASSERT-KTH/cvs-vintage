@@ -31,7 +31,10 @@ public class NullDecoder extends Decoder {
 
     public String decode( String input, String charset) throws UnsupportedEncodingException {
     	if( charset != null ) {
-	    	return new String( input.getBytes(charset), charset );
+    		// I use ISO_8859_1 as a universal 8bit encoding to get the
+    		// right bytes out of the string, because US_ASCII would cut it down
+    		// to 7bit
+	    	return new String( input.getBytes("ISO_8859_1"), charset );
     	}
     	return input;
     }
