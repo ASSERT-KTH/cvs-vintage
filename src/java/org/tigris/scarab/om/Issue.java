@@ -691,10 +691,35 @@ public class Issue
 
 
     /**
+     * Determines whether the comments list is longer than
+     * The default limit.
+     */
+    public boolean isCommentsLong() throws Exception
+    {
+        return (getComments(true).size() > getCommentsLimit());
+    }
+
+    /**
+     * Gets default comments limit for this module-issue type.
+     */
+    private int getCommentsLimit() throws Exception
+    {
+        int limit=0;
+        try
+        {
+            limit = ((ScarabModule)getModule()).getRModuleIssueType(getIssueType())
+                    .getComments();
+        }
+        catch (Exception e)
+        {}
+        return limit;
+    }
+
+    /**
      * Returns a list of Attachment objects with type "Comment"
      * That are associated with this issue.
      */
-    public Vector getComments() throws Exception
+    public Vector getComments(boolean full) throws Exception
     {
         Criteria crit = new Criteria()
             .add(AttachmentPeer.ISSUE_ID, getIssueId())
@@ -703,7 +728,10 @@ public class Issue
             .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 
                                     Attachment.COMMENT__PK)
             .addAscendingOrderByColumn(AttachmentPeer.CREATED_DATE);
-
+        if (!full)
+        {
+            crit.setLimit(getCommentsLimit());
+        }
         return  AttachmentPeer.doSelect(crit);
     }
 
@@ -724,13 +752,19 @@ public class Issue
     }
 
     /**
-     * Gets default limit for this module-issue type.
+     * Gets default history limit for this module-issue type.
      */
-    private int getLimit() throws Exception
+    private int getHistoryLimit() throws Exception
     {
-        int limit=10;
-        limit = ((ScarabModule)getModule()).getRModuleIssueType(getIssueType())
-                .getHistory();
+        int limit=0;
+        try
+        {
+            limit = ((ScarabModule)getModule()).getRModuleIssueType(getIssueType())
+                    .getHistory();
+        }
+        catch (Exception e)
+        {}
+        
         return limit;
     }
         
@@ -740,7 +774,7 @@ public class Issue
      */
     public boolean isHistoryLong() throws Exception
     {
-        return isHistoryLong(getLimit());
+        return isHistoryLong(getHistoryLimit());
     }
 
     /**
@@ -757,7 +791,7 @@ public class Issue
      */
     public Vector getActivity() throws Exception  
     {
-        return getActivity(false, getLimit());
+        return getActivity(false, getHistoryLimit());
     }
 
     /**
@@ -770,13 +804,12 @@ public class Issue
 
     /**
      * Returns limited list of Activity objects associated with this Issue.
-     * If fullHistory is false, it limits it to 10 history items 
+     * If fullHistory is false, it limits it,
      * (this is the default)
      */
     public Vector getActivity(boolean fullHistory) throws Exception  
     {
-System.out.println(getLimit());
-        return getActivity(fullHistory, getLimit());
+        return getActivity(fullHistory, getHistoryLimit());
     }
 
     /**
