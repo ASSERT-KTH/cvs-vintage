@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.29 2005/02/20 17:49:58 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.30 2005/02/20 18:50:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,20 +55,9 @@ public class ProfileJava extends Profile {
 
     private static final Logger LOG = Logger.getLogger(ProfileJava.class);
 
-    private static ProfileJava instance = null;
-
-    /**
-     * @return the instance of this class
-     */
-    public static ProfileJava getInstance() {
-    	if (instance == null)
-    	    instance = new ProfileJava();
-    	return instance;
-    }
-
     private Object/*MModel*/ defaultModel;
 
-    private ProfileJava() {
+    public ProfileJava() {
         try {
             getProfileModel();
         } catch (ProfileException e) {
@@ -294,7 +283,7 @@ public class ProfileJava extends Profile {
      * @return the model object
      * @throws ProfileException if failed to load profile
      */
-    public static Object/*MModel*/ loadProfileModel() throws ProfileException {
+    public Object/*MModel*/ loadProfileModel() throws ProfileException {
         //
         //    get a file name for the default model
         //

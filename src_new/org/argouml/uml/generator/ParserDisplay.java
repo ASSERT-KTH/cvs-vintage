@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.156 2005/02/20 17:49:59 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.157 2005/02/20 18:50:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileException;
 import org.argouml.uml.ProfileJava;
 import org.argouml.util.MyTokenizer;
@@ -1711,8 +1712,9 @@ public class ParserDisplay extends Parser {
         }
 
         try {
-            stereo = recFindStereotype(obj, ProfileJava.getInstance()
-                    .getProfileModel(), name);
+            Project project = ProjectManager.getManager().getCurrentProject();
+            Profile profile = project.getProfile();
+            stereo = recFindStereotype(obj, profile.getProfileModel(), name);
         } catch (ProfileException e) {
             // TODO: How are we going to handle exceptions here?
             // I suspect the profile should be part of the project

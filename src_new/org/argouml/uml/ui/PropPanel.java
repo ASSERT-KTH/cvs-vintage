@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.107 2005/01/30 20:47:49 linus Exp $
+// $Id: PropPanel.java,v 1.108 2005/02/20 18:50:13 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,6 @@ public abstract class PropPanel
     // instance vars
     private Object target;
     private Object modelElement;
-    private static Profile profile;
 
     private ResourceBundle bundle = null;
 
@@ -301,10 +300,7 @@ public abstract class PropPanel
      * @see org.argouml.uml.ui.UMLUserInterfaceContainer#getProfile()
      */
     public Profile getProfile() {
-        if (profile == null) {
-            profile = ProfileJava.getInstance();
-        }
-        return profile;
+        return ProjectManager.getManager().getCurrentProject().getProfile();
     }
 
 //    /**
