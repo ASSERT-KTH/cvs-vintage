@@ -53,7 +53,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.2 $
+*  @version $Revision: 1.3 $
 */
 
 public class JRMPInvoker
@@ -84,8 +84,8 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    protected MBeanServer server;
    protected ObjectName serviceName;
    
-   private int state;
-   private int id = 0;
+   protected int state;
+   protected int id = 0;
    
    // Static --------------------------------------------------------
    
@@ -149,7 +149,7 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
       log.debug("Container Invoker Client SocketFactory='"+(clientSocketFactory == null ? "Default" : clientSocketFactory.toString())+"'");
       log.debug("Container Invoker Server SocketFactory='"+(serverSocketFactory == null ? "Default" : serverSocketFactory.toString())+"'");
       log.debug("Container Invoker Server SocketAddr='"+(serverAddress == null ? "Default" : serverAddress)+"'");
-      
+       
       log.info("created");
    }
    
