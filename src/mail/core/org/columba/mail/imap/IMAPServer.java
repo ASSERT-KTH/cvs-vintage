@@ -102,6 +102,7 @@ import org.columba.ristretto.parser.ParserException;
  */
 public class IMAPServer {
 
+	private static final int NOOP_INTERVAL = 30000;
 	private static final Logger LOG = Logger.getLogger("org.columba.mail.imap");
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -146,6 +147,8 @@ public class IMAPServer {
 
 	String[] capabilities;
 	
+	private long lastNoop;
+	
 	public IMAPServer(ImapItem item, IMAPRootFolder root) {
 		this.item = item;
 		this.imapRoot = root;
@@ -158,6 +161,8 @@ public class IMAPServer {
 
 		firstLogin = true;
 		usingSSL = false;
+		
+		lastNoop = System.currentTimeMillis();
 	}
 
 	/**
@@ -1487,7 +1492,10 @@ public class IMAPServer {
 	 */
 	public boolean isSelected(String path) throws IOException {
 		try {
-			if( protocol.getState() != IMAPProtocol.LOGOUT) protocol.noop();
+			if( protocol.getState() != IMAPProtocol.LOGOUT && (lastNoop - System.currentTimeMillis()) > NOOP_INTERVAL ) {
+				lastNoop = System.currentTimeMillis();
+				protocol.noop();
+			}
 		} catch (IMAPException e) {
 			// dont care
 		}
