@@ -1,4 +1,4 @@
-// $Id: TestLinkedHashMap.java,v 1.5 2004/09/26 20:45:30 mvw Exp $
+// $Id: TestLinkedHashMap.java,v 1.6 2004/10/21 19:25:23 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -458,7 +458,7 @@ public class TestLinkedHashMap extends TestCase {
         assertEquals(array.length , count);
     }
     
-    public void assertEntrySetAgainstArrays(Set entrySet, Object[] keyArray, 
+    private void assertEntrySetAgainstArrays(Set entrySet, Object[] keyArray, 
             Object[] valueArray) {
         // Check that the set returned by keySet() contains all the items in the
         // keys array

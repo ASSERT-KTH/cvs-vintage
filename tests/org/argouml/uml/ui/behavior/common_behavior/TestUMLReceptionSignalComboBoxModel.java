@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.11 2004/09/25 08:04:52 mvw Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.12 2004/10/21 19:25:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,6 +92,9 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Set up the test.
+     */
     public void testSetUp() {
         assertEquals(10, model.getSize());
         assertTrue(model.contains(signals[5]));

@@ -1,4 +1,4 @@
-// $Id: TestUMLClassifierRoleBaseListModel.java,v 1.6 2004/10/20 06:07:44 linus Exp $
+// $Id: TestUMLClassifierRoleBaseListModel.java,v 1.7 2004/10/21 19:25:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,14 +52,14 @@ public class TestUMLClassifierRoleBaseListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        elem = CollaborationsFactory.getFactory().createClassifierRole();
+        setElem(CollaborationsFactory.getFactory().createClassifierRole());
     }
 
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
-        model = new UMLClassifierRoleBaseListModel();
+        setModel(new UMLClassifierRoleBaseListModel());
     }
 
     /**
@@ -69,7 +69,7 @@ public class TestUMLClassifierRoleBaseListModel
         MClassifier[] bases = new MClassifier[10];
         for (int i = 0; i < bases.length; i++) {
             bases[i] = CoreFactory.getFactory().createClass();
-            ((MClassifierRole) elem).addBase(bases[i]);
+            ((MClassifierRole) getElem()).addBase(bases[i]);
         }
         return bases;
     }
@@ -79,7 +79,7 @@ public class TestUMLClassifierRoleBaseListModel
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MClassifierRole) elem).removeBase((MClassifier) elements[i]);
+            ((MClassifierRole) getElem()).removeBase((MClassifier) elements[i]);
         }
     }
 

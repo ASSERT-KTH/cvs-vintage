@@ -1,4 +1,4 @@
-// $Id: TestAll.java,v 1.5 2004/08/27 14:59:52 mvw Exp $
+// $Id: TestAll.java,v 1.6 2004/10/21 19:25:29 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +125,7 @@ public class TestAll extends TestCase {
 
     /**
      * @return the test
-     * @throws Throwable
+     * @throws Throwable any exception
      */
     public static Test suite()
 	throws Throwable {

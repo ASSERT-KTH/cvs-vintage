@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.9 2004/09/26 20:45:30 mvw Exp $
+// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.10 2004/10/21 19:25:27 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,6 +93,9 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
         assertTrue(list.getSize() == 0);
     }
     
+    /**
+     * Test getting an element when there is none.
+     */
     public void testNoElements() {
         try {
             list.getElementAt(0);

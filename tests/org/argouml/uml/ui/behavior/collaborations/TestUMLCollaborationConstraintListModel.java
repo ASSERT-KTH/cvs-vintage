@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationConstraintListModel.java,v 1.6 2004/10/20 06:07:44 linus Exp $
+// $Id: TestUMLCollaborationConstraintListModel.java,v 1.7 2004/10/21 19:25:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,14 +54,14 @@ public class TestUMLCollaborationConstraintListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        elem = CollaborationsFactory.getFactory().createCollaboration();
+        setElem(CollaborationsFactory.getFactory().createCollaboration());
     }
 
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
-        model = new UMLCollaborationConstrainingElementListModel();
+        setModel(new UMLCollaborationConstrainingElementListModel());
     }
 
     /**
@@ -71,7 +71,7 @@ public class TestUMLCollaborationConstraintListModel
         MConstraint[] constraints = new MConstraint[10];
         for (int i = 0; i < constraints.length; i++) {
             constraints[i] = CoreFactory.getFactory().createConstraint();
-            ((MCollaboration) elem).addConstrainingElement(constraints[i]);
+            ((MCollaboration) getElem()).addConstrainingElement(constraints[i]);
         }
         return constraints;
     }
@@ -81,7 +81,7 @@ public class TestUMLCollaborationConstraintListModel
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MCollaboration) elem).removeConstrainingElement(
+            ((MCollaboration) getElem()).removeConstrainingElement(
 	            (MModelElement) elements[i]);
         }
     }

@@ -1,4 +1,4 @@
-// $Id: TestUMLUseCaseExtendListModel.java,v 1.5 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLUseCaseExtendListModel.java,v 1.6 2004/10/21 19:25:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,14 +51,14 @@ public class TestUMLUseCaseExtendListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        elem = UseCasesFactory.getFactory().createUseCase();
+        setElem(UseCasesFactory.getFactory().createUseCase());
     }
 
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
      */
     protected void buildModel() {
-        model = new UMLUseCaseExtendListModel();
+        setModel(new UMLUseCaseExtendListModel());
     }
 
     /**
@@ -68,7 +68,7 @@ public class TestUMLUseCaseExtendListModel
         MExtend[] ext = new MExtend[10];
         for (int i = 0; i < 10; i++) {
             ext[i] = UseCasesFactory.getFactory().createExtend();
-            ((MUseCase) elem).addExtend(ext[i]);
+            ((MUseCase) getElem()).addExtend(ext[i]);
         }
         return ext;
     }
@@ -78,7 +78,7 @@ public class TestUMLUseCaseExtendListModel
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MUseCase) elem).removeExtend((MExtend) elements[i]);
+            ((MUseCase) getElem()).removeExtend((MExtend) elements[i]);
         }
     }
 

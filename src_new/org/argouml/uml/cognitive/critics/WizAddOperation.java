@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.7 2004/10/21 08:29:46 mkl Exp $
+// $Id: WizAddOperation.java,v 1.8 2004/10/21 19:25:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 
 /**

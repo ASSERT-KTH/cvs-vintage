@@ -1,4 +1,4 @@
-// $Id: FalseActionExit.java,v 1.1 2004/10/03 15:25:36 linus Exp $
+// $Id: FalseActionExit.java,v 1.2 2004/10/21 19:25:22 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,21 +46,21 @@ public class FalseActionExit extends ActionExit {
     }
 
     /**
-     * @return Returns the argument.
+     * @return returns the argument
      */
     public String getArgument() {
         return argument;
     }
 
     /**
-     * @return Returns the isExited.
+     * @return returns true if exited
      */
     public boolean isExited() {
         return isExited;
     }
 
     /**
-     * @return Returns the lastInvoked.
+     * @return returns the last invoked instance of this class
      */
     public static FalseActionExit getLast() {
         return lastInvoked;

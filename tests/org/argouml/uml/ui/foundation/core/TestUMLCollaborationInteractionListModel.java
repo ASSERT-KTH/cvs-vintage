@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationInteractionListModel.java,v 1.6 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestUMLCollaborationInteractionListModel.java,v 1.7 2004/10/21 19:25:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,14 +52,14 @@ public class TestUMLCollaborationInteractionListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        elem = CollaborationsFactory.getFactory().createCollaboration();
+        setElem(CollaborationsFactory.getFactory().createCollaboration());
     }
 
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
      */
     protected void buildModel() {
-        model = new UMLCollaborationInteractionListModel();
+        setModel(new UMLCollaborationInteractionListModel());
     }
 
     /**
@@ -69,7 +69,7 @@ public class TestUMLCollaborationInteractionListModel
         MInteraction[] inter = new MInteraction[10];
         for (int i = 0; i < 10; i++) {
             inter[i] = CollaborationsFactory.getFactory().createInteraction();
-            inter[i].setContext((MCollaboration) elem);
+            inter[i].setContext((MCollaboration) getElem());
         }
         return inter;
     }
@@ -79,7 +79,7 @@ public class TestUMLCollaborationInteractionListModel
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MCollaboration) elem).removeInteraction(
+            ((MCollaboration) getElem()).removeInteraction(
                     (MInteraction) elements[i]);
         }
     }

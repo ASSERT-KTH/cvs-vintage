@@ -1,4 +1,4 @@
-// $Id: GUITestCommandLineInterface.java,v 1.1 2004/10/03 15:25:36 linus Exp $
+// $Id: GUITestCommandLineInterface.java,v 1.2 2004/10/21 19:25:22 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,12 +24,11 @@
 
 package org.argouml.application.api;
 
+import junit.framework.TestCase;
 import org.argouml.util.CheckMain;
 
-import junit.framework.TestCase;
-
 /**
- * This is to test the CommandLineInterface functions.
+ * This is to test the CommandLineInterface functions.<p>
  *
  * Note that:<ul>
  * <li>We can't do the real ActionExit() here because that would exit
@@ -45,7 +44,7 @@ public class GUITestCommandLineInterface extends TestCase {
     /**
      * Constructor.
      *
-     * @param name The name of the test case.
+     * @param name the name of the test case
      */
     public GUITestCommandLineInterface(String name) {
         super(name);

@@ -1,4 +1,4 @@
-// $Id: TestMain.java,v 1.4 2004/08/27 14:59:46 mvw Exp $
+// $Id: TestMain.java,v 1.5 2004/10/21 19:25:27 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,10 @@
 package org.argouml.application;
 import junit.framework.*;
 
+/**
+ * This class does not do very much...
+ *
+ */
 public class TestMain extends TestCase {
     /**
      * The constructor.
@@ -47,11 +51,15 @@ public class TestMain extends TestCase {
      */
     private void compileTestStatics() {
 	Main.main(new String[10]);
-	Main.addPostLoadAction(new localTestMainRunnable());
+	Main.addPostLoadAction(new LocalTestMainRunnable());
     }
 }
 
-class localTestMainRunnable implements Runnable {
+/**
+ * Used by TestMain.compileTestStatics().
+ *
+ */
+class LocalTestMainRunnable implements Runnable {
     public void run() {
     }
 }

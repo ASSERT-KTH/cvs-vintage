@@ -1,4 +1,4 @@
-// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.7 2004/10/20 06:07:44 linus Exp $
+// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.8 2004/10/21 19:25:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,14 +56,14 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildElement()
      */
     protected void buildElement() {
-        elem = CollaborationsFactory.getFactory().createClassifierRole();
+        setElem(CollaborationsFactory.getFactory().createClassifierRole());
     }
 
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
-        model = new UMLClassifierRoleAvailableFeaturesListModel();
+        setModel(new UMLClassifierRoleAvailableFeaturesListModel());
     }
 
     /**
@@ -93,7 +93,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     protected void setUp() throws Exception {
         super.setUp();
         base = CoreFactory.getFactory().createClass();
-        CollaborationsHelper.getHelper().addBase(elem, base);
+        CollaborationsHelper.getHelper().addBase(getElem(), base);
     }
 
     /**

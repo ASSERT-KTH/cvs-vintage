@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.8 2004/09/25 08:04:51 mvw Exp $
+// $Id: TestParserDisplay.java,v 1.9 2004/10/21 19:25:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,14 +68,14 @@ public class TestParserDisplay extends TestCase {
      * Test ClassifierRoleObjectName.
      * TODO: Implement this test.
      */
-    public void TestClassifierRoleObjectName() {
+    public void testClassifierRoleObjectName() {
 	/* Not implemented in ParserDisplay */
     }
 
     /**
      * Test the name of the ClassifierRole.
      */
-    public void TestClassifierRoleName() {
+    public void testClassifierRoleName() {
 	MClassifierRole cr;
 
 	cr = UmlFactory.getFactory().getCollaborations().createClassifierRole();
@@ -89,7 +89,7 @@ public class TestParserDisplay extends TestCase {
     /**
      * Test the Base of the ClassifierRole.
      */
-    public void TestClassifierRoleBases() {
+    public void testClassifierRoleBases() {
 	MClassifierRole cr;
 	String res1[] = {
 	    "int"
@@ -113,7 +113,7 @@ public class TestParserDisplay extends TestCase {
     /**
      * Test if parsing a ClassifierRole throws exceptions.
      */
-    public void TestClassifierRoleThrows() {
+    public void testClassifierRoleThrows() {
 	MClassifierRole cr;
 
 	cr = UmlFactory.getFactory().getCollaborations().createClassifierRole();

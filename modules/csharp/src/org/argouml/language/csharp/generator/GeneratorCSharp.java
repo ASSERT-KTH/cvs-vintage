@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.14 2004/10/03 17:59:20 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.15 2004/10/21 19:25:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1328,7 +1328,7 @@ public class GeneratorCSharp extends Generator2
     }
 
 
-    public static final String ANY_RANGE = "0..*";
+    private static final String ANY_RANGE = "0..*";
     //public static final String ANY_RANGE = "*";
     // TODO: user preference between "*" and "0..*"
 

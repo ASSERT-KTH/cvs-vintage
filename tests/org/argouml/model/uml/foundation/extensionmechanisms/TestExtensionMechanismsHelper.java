@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.11 2004/09/25 08:04:52 mvw Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.12 2004/10/21 19:25:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,9 +49,11 @@ public class TestExtensionMechanismsHelper extends TestCase {
         super(arg0);
     }
     
+    /**
+     * This test does not work yet since there are problems with 
+     * isolating the project from the projectbrowser.
+     */
     public void testGetAllPossibleStereotypes1() {
-        // this test does not work yet since there are problems with
-        // isolating the project from the projectbrowser
         MNamespace ns = CoreFactory.getFactory().createNamespace();
         Object clazz = CoreFactory.getFactory().buildClass(ns);
         MStereotype stereo1 =
@@ -69,12 +71,18 @@ public class TestExtensionMechanismsHelper extends TestCase {
 		   col.contains(stereo2));
     }
     
+    /**
+     * Test if we can create modelelements with the names given.
+     */
     public void testGetMetaModelName() {
         CheckUMLModelHelper.metaModelNameCorrect(this,
 		ExtensionMechanismsFactory.getFactory(),
 		TestExtensionMechanismsFactory.getAllModelElements());
     }
     
+    /**
+     * Test if we can create a valid stereotype for all the modelelements.
+     */
     public void testIsValidStereoType() {
         CheckUMLModelHelper.isValidStereoType(this,
 		ExtensionMechanismsFactory.getFactory(),
