@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author Steve Coy
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public final class JDBCUtil
 {
@@ -61,7 +61,7 @@ public final class JDBCUtil
          {
             con.close();
          }
-         catch(SQLException e)
+         catch(Exception e)
          {
             log.error(SQL_ERROR, e);
          }
@@ -76,7 +76,7 @@ public final class JDBCUtil
          {
             rs.close();
          }
-         catch(SQLException e)
+         catch(Exception e)
          {
             log.error(SQL_ERROR, e);
          }
@@ -91,7 +91,7 @@ public final class JDBCUtil
          {
             statement.close();
          }
-         catch(SQLException e)
+         catch(Exception e)
          {
             log.error(SQL_ERROR, e);
          }
@@ -106,7 +106,7 @@ public final class JDBCUtil
          {
             in.close();
          }
-         catch(IOException e)
+         catch(Exception e)
          {
             log.error(SQL_ERROR, e);
          }
@@ -121,7 +121,7 @@ public final class JDBCUtil
          {
             out.close();
          }
-         catch(IOException e)
+         catch(Exception e)
          {
             log.error(SQL_ERROR, e);
          }
@@ -136,7 +136,7 @@ public final class JDBCUtil
          {
             reader.close();
          }
-         catch(IOException e)
+         catch(Exception e)
          {
             log.error(SQL_ERROR, e);
          }
