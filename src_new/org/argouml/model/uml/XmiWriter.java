@@ -1,4 +1,4 @@
-// $Id: XmiWriter.java,v 1.4 2005/01/14 02:09:48 bobtarling Exp $
+// $Id: XmiWriter.java,v 1.5 2005/01/23 18:20:46 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,6 +72,7 @@ public class XmiWriter {
                 throw new IncompleteXMIException();
             }
         } catch (Exception e) {
+            LOG.error("Exception thrown by the NSUML XMIWriter", e);
             throw new SAXException(e);
         } finally {
             logNotContainedElements();
