@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 /**
  * Creates objects to be used in an object pool.  This is a class instead of
  * an interface so you can ignore any of the methods you don't need.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public abstract class PoolObjectFactory {
@@ -33,8 +33,12 @@ public abstract class PoolObjectFactory {
      *    relationship.
      * @param log A writer you can use to log messages.  Use this in preference
      *    to System.xxx.println.
+     * @throws java.lang.IllegalArgumentException
+     *         Occurs when the pool is null.
      */
     public void poolStarted(ObjectPool pool, PrintWriter log) {
+        if(pool == null)
+            throw new IllegalArgumentException("Cannot start factory with null pool!");
     }
 
     /**
@@ -89,8 +93,12 @@ public abstract class PoolObjectFactory {
      * @param pool The pool that is closing.  You may decide to allow
      *    multiple pools you use your factory, or to restrict it to a one-to-one
      *    relationship.
+     * @throws java.lang.IllegalArgumentException
+     *         Occurs when the pool is null.
      */
     public void poolClosing(ObjectPool pool) {
+        if(pool == null)
+            throw new IllegalArgumentException("Cannot close factory with a null pool!");
     }
 
     /**
