@@ -115,6 +115,24 @@ public class Activity
                        String oldValue, String newValue)
          throws Exception
     {
+        create(issue, attribute, desc, transaction,
+               oldNumericValue, newNumericValue,
+               oldUserId, newUserId,
+               oldOptionId, newOptionId,
+               oldValue, newValue, null);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
+                       int oldNumericValue, int newNumericValue,
+                       NumberKey oldUserId, NumberKey newUserId,
+                       NumberKey oldOptionId, NumberKey newOptionId,
+                       String oldValue, String newValue, DBConnection dbCon)
+         throws Exception
+    {
             setIssue(issue);
             if (attribute == null)
             {
@@ -131,7 +149,14 @@ public class Activity
             setNewOptionId(newOptionId);
             setOldValue(oldValue);
             setNewValue(newValue);
-            save();
+            if (dbCon == null) 
+            {
+                save();   
+            }
+            else 
+            {
+                save(dbCon);
+            }
     }
 
     /**

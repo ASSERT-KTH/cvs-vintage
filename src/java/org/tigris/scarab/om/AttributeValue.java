@@ -703,7 +703,7 @@ public abstract class AttributeValue
                             oldNumericValue, getNumericValue(),
                             oldUserId, getUserId(),
                             oldOptionId, getOptionId(),
-                            oldValue , getValue());
+                            oldValue , getValue(), dbcon);
         }        
         super.save(dbcon);
         if ( chainedValue != null ) 
