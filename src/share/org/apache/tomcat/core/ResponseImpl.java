@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.19 2000/04/03 22:23:41 costin Exp $
- * $Revision: 1.19 $
- * $Date: 2000/04/03 22:23:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.20 2000/04/03 22:39:52 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/04/03 22:39:52 $
  *
  * ====================================================================
  *
@@ -323,12 +323,12 @@ public class ResponseImpl implements Response {
     }
 
     public void flushBuffer() throws IOException {
-	if( notIncluded) {
+	//	if( notIncluded) {
 	    if (usingWriter == true && writer != null)
 		writer.flush();
 	    
 	    out.reallyFlush();
-	} 
+	    //} 
     }
 
 
