@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.91 2003/08/30 23:58:45 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.92 2003/08/31 11:09:56 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1363,6 +1363,20 @@ public class ModelFacade {
      * @param assoc
      * @return association end
      */
+    public static Object getAssociation(Object end) {
+        
+        if(!isAAssociation(end))
+            throw new IllegalArgumentException("Unrecognized object " + end);
+        
+        return ((MAssociationEnd) end).getAssociation();
+    }
+    
+    /**
+     * Returns the association end between some classifier and some associaton.
+     * @param type
+     * @param assoc
+     * @return association end
+     */
     public static Object getAssociationEnd(Object type, Object assoc) {
         if (type == null
             || assoc == null
@@ -1851,6 +1865,20 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /**
+     * Returns the context of some given statemachine or the context
+     * of some given interaction
+     * @param handle the statemachine or the interaction
+     * @return the context of the statemachine or interaction or null
+     * if the statemachine or interaction doesn't have a context.
+     */
+    public static Collection getDeploymentLocations(Object handle) {
+        if (isAComponent(handle)) {
+            return ((MComponent) handle).getDeploymentLocations();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
     /** Get the dispatchaction of a stimulus.
      *
      * @param handle the stimulus that we are getting the dispatchaction of
@@ -2313,6 +2341,23 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /**
+     * Returns the upper bound of the multiplicity of the given handle (an
+     * associationend).
+     * @param handle
+     * @return int
+     */
+    public static int getLower(Object handle) {
+        if (isAAssociationEnd(handle)) {
+            int lower = 0;
+            MAssociationEnd end = (MAssociationEnd) handle;
+            if (end.getMultiplicity() != null)
+                lower = end.getMultiplicity().getLower();
+            return lower;
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+    
     /**
      * Returns the transitions belonging to the given handle. The handle can be
      * a statemachine or a composite state. If it's a statemachine the

@@ -1,5 +1,4 @@
-
-// $Id: CrConflictingComposites.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrConflictingComposites.java,v 1.7 2003/08/31 11:09:56 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +27,7 @@
 // File: CrConflictingComposites.java
 // Classes: CrConflictingComposites
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrConflictingComposites.java,v 1.7 2003/08/31 11:09:56 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,6 +37,8 @@ import java.util.List;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlHelper;
+
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -67,27 +68,18 @@ public class CrConflictingComposites extends CrUML {
 	int compositeCount = 0;
 	Iterator enum = conns.iterator();
 	while (enum.hasNext()) {
-	    MAssociationEnd myEnd = (MAssociationEnd) enum.next();
-	    if (MAggregationKind.COMPOSITE.equals(myEnd.getAggregation()))
+            Object myEnd = enum.next();
+	    if (UmlHelper.getHelper().getCore()
+                .equalsAggregationKind(myEnd,"composite"))
 		continue;
-	    MMultiplicity m = myEnd.getMultiplicity();
-	    if (m.getLower() == 0) continue;
-	    MAssociation asc = myEnd.getAssociation();
-	    if (asc != null && hasCompositeEnd(asc)) compositeCount++;
+	    if (ModelFacade.getLower(myEnd) == 0) continue;
+	    Object asc = ModelFacade.getAssociation(myEnd);
+	    if (asc != null &&
+                UmlHelper.getHelper().getCore().hasCompositeEnd(asc)){
+                    compositeCount++;
+            }
 	}
 	if (compositeCount > 1) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }
-
-    private final boolean hasCompositeEnd(MAssociation asc)
-    {
-	List ends = asc.getConnections();
-	for (Iterator iter = ends.iterator(); iter.hasNext();) {
-	    MAssociationEnd end = (MAssociationEnd) iter.next();
-	    if (end.getAggregation() == MAggregationKind.COMPOSITE)
-		return true;
-	};
-	return false;
-    };
-
 } /* end class CrConflictingComposites.java */

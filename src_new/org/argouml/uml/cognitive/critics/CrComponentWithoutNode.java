@@ -1,4 +1,4 @@
-// $Id: CrComponentWithoutNode.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrComponentWithoutNode.java,v 1.7 2003/08/31 11:09:56 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrComponentWithoutNode.java
 // Classes: CrComponentWithoutNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrComponentWithoutNode.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrComponentWithoutNode.java,v 1.7 2003/08/31 11:09:56 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,11 +35,9 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.diagram.deployment.ui.FigComponent;
 import org.argouml.uml.diagram.deployment.ui.FigMNode;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.argouml.model.ModelFacade;
+
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.foundation.core.MComponent;
-
-
-
 
 /**
  * A critic to detect when there are components that
@@ -106,11 +104,11 @@ public class CrComponentWithoutNode extends CrUML {
 		offs.addElement(fc);
 	    }
 	    else if (fc.getEnclosingFig() != null
-		     && ((((MComponent) fc.getOwner()).getDeploymentLocations()
+		     && (((ModelFacade.getDeploymentLocations(fc.getOwner())
 			  == null)
-			 || ((((MComponent)
-			       fc.getOwner()).getDeploymentLocations().size())
-			     == 0))) {
+			 || (((ModelFacade
+                                .getDeploymentLocations(fc.getOwner()).size())
+			     == 0))))) {
 		if (offs == null) {
 		    offs = new VectorSet();
 		    offs.addElement(dd);
