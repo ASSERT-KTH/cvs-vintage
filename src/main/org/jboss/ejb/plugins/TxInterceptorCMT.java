@@ -39,7 +39,7 @@ import java.util.Random;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.38 $
+ *  @version $Revision: 1.39 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -103,7 +103,7 @@ extends AbstractTxInterceptor
             if (deadlock != null)
             {
                if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_RETRIES) throw deadlock;
-               log.warn(deadlock.getMessage() + " retrying " + (i + 1));
+               log.debug(deadlock.getMessage() + " retrying " + (i + 1));
                Thread.sleep(random.nextInt(1 + i), random.nextInt(1000) + 10);
             }
             else
@@ -133,7 +133,7 @@ extends AbstractTxInterceptor
             if (deadlock != null)
             {
                if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_RETRIES) throw deadlock;
-               log.warn(deadlock.getMessage() + " retrying " + (i + 1));
+               log.debug(deadlock.getMessage() + " retrying " + (i + 1));
 
                Thread.sleep(random.nextInt(1 + i), random.nextInt(1000));
             }
