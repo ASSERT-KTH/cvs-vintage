@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <!-- $Id: serverxml.html,v 1.2 2001/08/27 02:19:10 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.3 2001/09/03 02:13:15 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="style.css">
@@ -84,7 +84,7 @@ server.xml file represent that instance.</p>
 <p>This is the main element in server.xml. It has a single child describing
 the tomcat configuration, ContextManager.</p>
 
-<h4 id="Examples">Examples</h4>
+<h4>Examples</h4>
 <pre>&lt;Server&gt;
    &lt;ContextManager &gt; 
       ... ( tomcat configuration )
@@ -95,7 +95,7 @@ the tomcat configuration, ContextManager.</p>
 
 <h3>ContextManager</h3>
 
-<h4 id="Descriptio">Description</h4>
+<h4>Description</h4>
 
 <p>This is the main tag, used to set generic Tomcat options. The following are
 some of the childen it supports:</p>
@@ -121,7 +121,7 @@ some of the childen it supports:</p>
 	  in ant.</dd>
 </dl>
 
-<h4 id="Parameters">Parameters</h4>
+<h4>Parameters</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr valign="top">
@@ -151,7 +151,7 @@ some of the childen it supports:</p>
   </tr>
 </table>
 
-<h4 id="Examples1">Examples</h4>
+<h4>Example(s)</h4>
 <pre>
 &lt;ContextManager install=&quot;/opt/tomcat&quot; workDir=&quot;/var/tomcat&quot; home=&quot;/var&quot; /&gt;
 </pre>
@@ -320,7 +320,7 @@ embedding system</p>
   </tr>
 </table>
 
-<h4>Examples</h4>
+<h4>Example(s)</h4>
 
 <pre>
 
@@ -357,6 +357,22 @@ embedding system</p>
 <h4>Description</h4>
 
 <p>Generate configuration file for mod_jk to be included in Apache's httpd.conf.</p>
+
+<p>For additional information on connecting Tomcat to Apache via mod_jk, see the
+<a href="mod_jk-howto.html">Working with mod_jk</a> document.</p>
+
+<p><b>Important Note:</b> The configuration files are not written as part of a
+normal startup of Tomcat.  To generate the configuration files on demand,
+append:
+<pre>    jkconf</pre>
+or
+<pre>    -jkconf</pre>
+to the startup command.  Tomcat will initialize sufficiently to write the
+configuration files and then exit. This may be done while Tomcat 3.3 is running.
+To generate the configuration files during normal startup, add:
+<pre>    jkconf=&quot;true&quot;</pre>
+to the <code>&lt;ContextManager ... &gt;</code> element in the
+<code>server.xml</code> file.</p>
 
 <h4>Parameters</h4>
 
@@ -431,7 +447,7 @@ embedding system</p>
   </tr>
 </table>
 
-<h4>Examples</h4>
+<h4>Example(s)</h4>
 
 <pre>
 &lt;ApacheConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; /&gt;
@@ -475,7 +491,7 @@ embedding system</p>
   </tr>
 </table>
 
-<h4>Examples</h4>
+<h4>Example(s)</h4>
 
 <pre>
 &lt;AutoDeploy source=&quot;webapps&quot; target=&quot;webapps&quot; /&gt;
@@ -541,7 +557,7 @@ embedding system</p>
   </tr>
 </table>
 
-<h4>Examples</h4>
+<h4>Example(s)</h4>
 
 <pre>
   &lt;AutoWebApp dir=&quot;webapps&quot; host=&quot;DEFAULT&quot; /&gt;
@@ -553,6 +569,45 @@ embedding system</p>
 <!-- ======================================== -->
 
 <h3><a name="ContextXmlReader">ContextXmlReader</a></h3>
+
+<p><b>Type:</b>Configuration</p>
+
+<h4>Description</h4>
+
+<p>This module is responsible for reading the XML files that specify contexts to
+be served by Tomcat.  You specify a single file to read.  However, in addition
+to that file, all other files in the same directory will be read that match the
+pattern &quot;<i>base</i>-*.xml&quot;, where <i>base</i> is the base name (i.e.
+no extension) of the file you specified.  Each file may configure one or more
+context.  Where the context matches a context automatically created by the
+<a href="#AutoWebApp">AutoWebApp</a> module, the configuration file will override
+the defaults context settings.</p>
+
+<p>For details on the syntax of the context configuration file, refer to the
+<a href="tomcat-ug.html">Tomcat 3.3 Users Guide</a>.</p>
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>config</td>
+    <td>Context configuration file to read.  It may configure one or more
+      contexts.</td>
+    <td>conf/server.xml</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+  &lt;ContextXmlReader config=&quot;conf/myapps.xml&quot; /&gt;
+</pre>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
@@ -573,6 +628,108 @@ embedding system</p>
 <!-- ======================================== -->
 
 <h3><a name="IISConfig">IISConfig</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>Generate configuration files for isapi_redirect.dll to be used for connecting
+IIS to Tomcat.  Two files will be generated, <code>iis_redirect.reg</code> and
+<code>uriworkermap.properties</code>. Both files will be written to
+<code>conf/auto</code> relative to TOMCAT_HOME.  The <code>iis_redirect.reg</code>
+contains the needed registry entries for the <code>iis_redirect.dll</code>.
+You may enter the settings into the registry by double-clicking on this file in
+Windows Explorer.  The <code>uriworkermap.properties</code> file will be read
+by the <code>isapi_redirect.dll</code> to get the mappings for determining
+which requests should be passed to Tomcat.</p>
+
+<p>For additional information on connecting Tomcat to IIS, see the
+<a href="tomcat-iis-howto.html">Tomcat IIS HowTo</a> document.</p>
+
+<p><b>Important Note:</b> The configuration files are not written as part of a
+normal startup of Tomcat.  To generate the configuration files on demand,
+append:
+<pre>    jkconf</pre>
+or
+<pre>    -jkconf</pre>
+to the startup command.  Tomcat will initialize, write the configuration files,
+and then shutdown. This may be done while Tomcat 3.3 is running. To generate
+the configuration files during normal startup, add:
+<pre>    jkconf=&quot;true&quot;</pre>
+to the <code>&lt;ContextManager ... &gt;</code> element in the
+<code>server.xml</code> file.</p>
+
+<h4>Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>configHome</td>
+    <td>Default parent directory for the following paths. Ignored whenever any
+      of the following paths is absolute.</td>
+    <td>TOMCAT_HOME</td>
+  </tr>
+  <tr valign="top">
+    <td>regConfig</td>
+    <td>Path to use for writing the registry settings configuration file.</td>
+    <td>conf/auto/iis_redirect.reg</td>
+  </tr>
+  <tr valign="top">
+    <td>uriConfig</td>
+    <td>Path to use for writing the URI worker map configuration file.</td>
+    <td>conf/auto/uriworkermap.properties</td>
+  </tr>
+  <tr valign="top">
+    <td>workersConfig</td>
+    <td>Path to workers configuration file.</td>
+    <td>conf/jk/workers.properties</td>
+  </tr>
+  <tr valign="top">
+    <td>jkLog</td>
+    <td>Path to log file to be used by <code>isapi_redirect.dll</code>.</td>
+    <td></td>
+  </tr>
+  <tr valign="top">
+    <td>jkDebug</td>
+    <td>JK Loglevel setting.  May be debug, info, error, or emerg.</td>
+    <td>emerg</td>
+  </tr>
+  <tr valign="top">
+    <td>jkProtocol</td>
+    <td>The desired protocal, "ajp12", "ajp13" or "inprocess".</td>
+    <td>Defaults to "ajp13" if an Ajp13Interceptor is in use, otherwise it
+      defaults to "ajp12".</td>
+  </tr>
+  <tr valign="top">
+    <td>forwardAll</td>
+    <td>If true, forward all requests to Tomcat. This helps insure that all the
+      behavior configured in the web.xml file functions correctly.  If false,
+      let IIS serve static resources. Warning: When false, some configuration
+      in the web.xml may not be duplicated in IIS.  Review the configuration
+      files to see the actual configuration being set in IIS.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>noRoot</td>
+    <td>If true, the root context is not mapped to Tomcat. If false and
+	  forwardAll is true, all requests to the root context are mapped to Tomcat.
+	  If false and forwardAll is false, only JSP and servlets requests to the
+	  root context are mapped to Tomcat. </td>
+    <td>true</td>
+  </tr>
+</table>
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;IISConfig forwardAll=&quot;true&quot; noRoot=&quot;false&quot; /&gt;
+</pre>
+
+<hr size="5">
 
 <!-- ======================================== -->
 
@@ -669,7 +826,7 @@ embedding system</p>
   </tr>
 </table>
 
-<h4>Examples</h4>
+<h4>Example(s)</h4>
 
 <pre>
 
