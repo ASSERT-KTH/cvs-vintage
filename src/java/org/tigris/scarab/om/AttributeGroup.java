@@ -195,7 +195,7 @@ public  class AttributeGroup
                                              raags.get(raags.size()-1);
             highest = raag.getOrder();
         }
-        return highest;
+        return highest + 1;
     }
        
     /**
