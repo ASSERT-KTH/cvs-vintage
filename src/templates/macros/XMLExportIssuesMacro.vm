@@ -1,3 +1,44 @@
+#macro (attachment $attachment)
+  #if ($attachment && $attachment.Class.Name != "java.lang.String")
+
+          <attachment>
+            <id>$attachment.AttachmentId</id>
+            <name>$attachment.Name</name>
+            <type>$attachment.AttachmentType.Name</type>
+            #set ($filePath = $attachment.FileName)
+            #if ($filePath && $filePath.length() > 0)
+
+            <filename>$filePath</filename>
+            #set ($filePath = "")
+          #else
+          #set ($fileData = $attachment.Data)
+            #if ($fileData && $fileData.length() > 0)
+
+            <data>$fileData</data>
+            #set ($fileData = "")
+            #end
+          #end
+        
+            <mimetype>$attachment.MimeType</mimetype>
+            <created-date>
+              <format>$scarabG.Constant.DATE_FORMAT</format>
+              <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attachment.CreatedDate)</timestamp>
+            </created-date>
+            <modified-date>
+              <format>$scarabG.Constant.DATE_FORMAT</format>
+              <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attachment.ModifiedDate)</timestamp>
+            </modified-date>
+            <created-by>$scarabR.getUser($attachment.CreatedBy).UserName</created-by>
+            #if ($attachment.ModifiedBy)
+
+            <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
+            #end
+
+            <deleted>$attachment.Deleted</deleted>
+          </attachment>
+  #end
+  #set ($attachment = "")
+#end
 #set ($module = $scarabR.CurrentModule)
 <?xml version="1.0" standalone="no"?>
 ##<!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
@@ -124,44 +165,3 @@
 #end
 
 </scarab-issues>
-#macro (attachment $attachment)
-  #if ($attachment && $attachment.Class.Name != "java.lang.String")
-
-          <attachment>
-            <id>$attachment.AttachmentId</id>
-            <name>$attachment.Name</name>
-            <type>$attachment.AttachmentType.Name</type>
-            #set ($filePath = $attachment.FileName)
-            #if ($filePath && $filePath.length() > 0)
-
-            <filename>$filePath</filename>
-            #set ($filePath = "")
-          #else
-          #set ($fileData = $attachment.Data)
-            #if ($fileData && $fileData.length() > 0)
-
-            <data>$fileData</data>
-            #set ($fileData = "")
-            #end
-          #end
-        
-            <mimetype>$attachment.MimeType</mimetype>
-            <created-date>
-              <format>$scarabG.Constant.DATE_FORMAT</format>
-              <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attachment.CreatedDate)</timestamp>
-            </created-date>
-            <modified-date>
-              <format>$scarabG.Constant.DATE_FORMAT</format>
-              <timestamp>$format.getDate($scarabG.Constant.DATE_FORMAT, $attachment.ModifiedDate)</timestamp>
-            </modified-date>
-            <created-by>$scarabR.getUser($attachment.CreatedBy).UserName</created-by>
-            #if ($attachment.ModifiedBy)
-
-            <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
-            #end
-
-            <deleted>$attachment.Deleted</deleted>
-          </attachment>
-  #end
-  #set ($attachment = "")
-#end
