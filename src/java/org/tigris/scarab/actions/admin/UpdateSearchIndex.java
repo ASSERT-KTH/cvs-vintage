@@ -59,6 +59,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.util.word.SearchFactory;
 import org.tigris.scarab.util.word.SearchIndex;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class allows an admin to update the search index. It performs
@@ -68,7 +69,7 @@ import org.tigris.scarab.util.word.SearchIndex;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.9 2002/12/20 21:53:01 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.10 2003/01/01 01:13:43 jmcnally Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
@@ -147,14 +148,14 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
         {
             try
             {
-                log().debug("Update index started!");
+                Log.get().info("Update index started!");
                 SearchIndex indexer = SearchFactory.getInstance();
                 indexer.updateIndex();
-                log().debug("Update index completed!");
+                Log.get().info("Update index completed!");
             }
             catch (Exception e)
             {
-                log().debug("Update index failed:", e);
+                Log.get().info("Update index failed:", e);
             }
         }
     }
