@@ -151,7 +151,7 @@ public class ToggleMarkCommand extends FolderCommand {
                 // train bayesian filter
                 if ((markVariant == MarkMessageCommand.MARK_AS_SPAM)
                         || (markVariant == MarkMessageCommand.MARK_AS_NOTSPAM)) {
-                    processSpamFilter(uids, srcFolder, markVariant);
+                    processSpamFilter(uids, srcFolder, -markVariant);
                 }
             }
 
