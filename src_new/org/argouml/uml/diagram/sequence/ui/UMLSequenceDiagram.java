@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.30 2003/10/29 22:41:27 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.31 2003/11/02 09:10:01 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.30 2003/10/29 22:41:27 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.31 2003/11/02 09:10:01 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -35,13 +35,7 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org
-    .argouml
-    .model
-    .uml
-    .behavioralelements
-    .collaborations
-    .CollaborationsFactory;
+import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsFactory;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.uml.diagram.sequence.SequenceDiagramGraphModel;
 import org.argouml.uml.diagram.ui.UMLDiagram;

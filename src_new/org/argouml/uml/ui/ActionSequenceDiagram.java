@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.24 2003/10/29 22:41:27 kataka Exp $
+// $Id: ActionSequenceDiagram.java,v 1.25 2003/11/02 09:10:01 kataka Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 
@@ -72,6 +73,7 @@ public class ActionSequenceDiagram extends UMLChangeAction {
         UMLSequenceDiagram diagram = new UMLSequenceDiagram(collaboration);
         ProjectManager.getManager().getCurrentProject().addMember(diagram);
         TargetManager.getInstance().setTarget(diagram);
+		ExplorerEventAdaptor.getInstance().modelElementChanged(owner);
     }
 
     /**

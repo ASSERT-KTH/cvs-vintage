@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.73 2003/09/21 11:07:04 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.74 2003/11/02 09:10:01 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -257,7 +257,7 @@ public class CoreHelper {
             }
         }
         return result;
-    }
+    }    
 
     /** This method returns all attributes of a given Classifier.
      *
