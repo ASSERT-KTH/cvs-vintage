@@ -166,7 +166,7 @@
       description="build stub and skeleton "
       unless="stub.already.compiled">
     <!-- for jeremie -->
-      <echo message="stub ${stub.jeremie.done}"/>
+      <echo message="Compiling stub for jeremie"/>
       <java classname="${compiler.jeremie}" fork="true" failonerror="true">
       <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
