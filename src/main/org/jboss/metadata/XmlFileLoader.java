@@ -20,8 +20,9 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.InputSource;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.deployment.JBossEntityResolver;
+import org.jboss.util.xml.JBossEntityResolver;
 import org.jboss.logging.Logger;
+import org.jboss.util.xml.JBossEntityResolver;
 
 /** XmlFileLoader class is used to read ejb-jar.xml, standardjboss.xml, jboss.xml
  * files, process them using DTDs and create ApplicationMetaData object for
@@ -34,7 +35,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */
 public class XmlFileLoader
 {
@@ -350,7 +351,7 @@ public class XmlFileLoader
     * Error is printed to output just if DTD was detected in the XML file.
     * If DTD was not found in XML file it is assumed that the EJB builder
     * doesn't want to use DTD validation. Validation may have been enabled via
-    * validateDTDs flag so we look to the hasDTD() function in the LocalResolver
+    * validateDTDs flag so we look to the isEntityResolved() function in the LocalResolver
     * and reject errors if DTD not used.
     **/
    private static class LocalErrorHandler implements ErrorHandler
@@ -369,7 +370,7 @@ public class XmlFileLoader
       
       public void error(SAXParseException exception)
       {
-         if ( localResolver.hasDTD() )
+         if ( localResolver.isEntityResolved() )
          {
             this.error = true;
             log.error("XmlFileLoader: File "
@@ -384,7 +385,7 @@ public class XmlFileLoader
 
       public void fatalError(SAXParseException exception)
       {
-         if ( localResolver.hasDTD() )
+         if ( localResolver.isEntityResolved() )
          {
             this.error = true;
             log.error("XmlFileLoader: File "
@@ -399,7 +400,7 @@ public class XmlFileLoader
       
       public void warning(SAXParseException exception)
       {
-         if ( localResolver.hasDTD() )
+         if ( localResolver.isEntityResolved() )
          {
             this.error = true;
             log.error("XmlFileLoader: File "
