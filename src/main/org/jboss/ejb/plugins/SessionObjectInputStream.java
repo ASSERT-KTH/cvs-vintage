@@ -20,26 +20,26 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
 /**
  * The SessionObjectInputStream is used to deserialize stateful session beans when they are activated
  *      
- *	@see org.jboss.ejb.plugins.SessionObjectOutputStream
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *	@version $Revision: 1.8 $
+ * @see org.jboss.ejb.plugins.SessionObjectOutputStream
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard berg</a>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.9 $
  */
 public class SessionObjectInputStream
-	extends ObjectInputStream
+   extends ObjectInputStream
 {
-	StatefulSessionEnterpriseContext ctx;
-   ClassLoader appCl;
+   private StatefulSessionEnterpriseContext ctx;
+   private ClassLoader appCl;
 
-	// Constructors -------------------------------------------------
-	public SessionObjectInputStream(StatefulSessionEnterpriseContext ctx, InputStream in)
+   // Constructors -------------------------------------------------
+   public SessionObjectInputStream(StatefulSessionEnterpriseContext ctx, InputStream in)
       throws IOException
    {
       super(in);
       enableResolveObject(true);
-		
-		this.ctx = ctx;
+      
+      this.ctx = ctx;
       
       // cache the application classloader
       appCl = Thread.currentThread().getContextClassLoader();
@@ -49,32 +49,48 @@ public class SessionObjectInputStream
    protected Object resolveObject(Object obj)
       throws IOException
    {
+      Object resolved = obj;
+
       // section 6.4.1 of the ejb1.1 specification states what must be taken care of 
       
       // ejb reference (remote interface) : resolve handle to EJB
       if (obj instanceof Handle)
-         return ((Handle)obj).getEJBObject();
+         resolved = ((Handle)obj).getEJBObject();
       
       // ejb reference (home interface) : resolve handle to EJB Home
       else if (obj instanceof HomeHandle)
-         return ((HomeHandle)obj).getEJBHome();
+         resolved = ((HomeHandle)obj).getEJBHome();
       
       // naming context: the jnp implementation of contexts is serializable, do nothing
 
-      else if (obj instanceof StatefulSessionBeanField) {
+      else if( obj instanceof HandleWrapper )
+      {
+         HandleWrapper wrapper = (HandleWrapper) obj;
+         try
+         {
+            resolved = wrapper.get();
+         }
+         catch(ClassNotFoundException e)
+         {
+            throw new IOException("Failed to find class: "+e.getMessage());
+         }
+      }
+
+      else if (obj instanceof StatefulSessionBeanField)
+      {
          byte type = ((StatefulSessionBeanField)obj).type; 
        
          // session context: recreate it
          if (type == StatefulSessionBeanField.SESSION_CONTEXT)          
-            return ctx.getSessionContext();
+            resolved = ctx.getSessionContext();
 
          // user transaction: restore it
          else if (type == StatefulSessionBeanField.USER_TRANSACTION) 
-            return ctx.getSessionContext().getUserTransaction();      
+            resolved = ctx.getSessionContext().getUserTransaction();      
       }
-      return obj;
+      return resolved;
    }
-   
+
    /** Override the ObjectInputStream implementation to use the application class loader
     */
    protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException
@@ -108,4 +124,6 @@ public class SessionObjectInputStream
        }
        return clazz;
    }
+
 }
+
