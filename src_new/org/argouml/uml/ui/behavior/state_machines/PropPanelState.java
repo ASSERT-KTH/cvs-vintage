@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.2 2000/09/21 05:48:48 carnold Exp $
+// $Id: PropPanelState.java,v 1.3 2000/09/29 07:43:25 carnold Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -56,15 +56,11 @@ public class PropPanelState extends PropPanel {
 
         addCaption(new JLabel("State Machine:"),2,0,0);
         JList stateList = new UMLList(new UMLReflectionListModel(this,"statemachine",false,"getStateMachine",null,null,null),true);
-        stateList.setBackground(getBackground());
-        stateList.setForeground(Color.blue);
-        addField(stateList,2,0,0);
+        addLinkField(stateList,2,0,0);
         
-        addCaption(new JLabel("Namespace:"),3,0,0);
+        addCaption(new JLabel("Namespace:"),3,0,1);
         JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
-        namespaceList.setBackground(getBackground());
-        namespaceList.setForeground(Color.blue);
-        addField(namespaceList,3,0,0);
+        addLinkField(namespaceList,3,0,0);
     
 
         addCaption(new JLabel("Incoming:"),0,1,0);

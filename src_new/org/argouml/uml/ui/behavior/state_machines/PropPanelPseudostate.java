@@ -26,7 +26,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.2 2000/09/21 05:48:48 carnold Exp $
+// $Id: PropPanelPseudostate.java,v 1.3 2000/09/29 07:43:25 carnold Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -88,7 +88,7 @@ public class PropPanelPseudostate extends PropPanel {
     addField(kindPanel,1,0,0);
     
 
-    addCaption(new JLabel("Namespace:"),2,0,0);
+    addCaption(new JLabel("Namespace:"),2,0,1);
     JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
     namespaceList.setBackground(getBackground());
     namespaceList.setForeground(Color.blue);
