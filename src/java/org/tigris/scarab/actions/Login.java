@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.20 2001/08/14 22:22:00 elicia Exp $
+    @version $Id: Login.java,v 1.21 2001/08/15 00:12:13 elicia Exp $
 */
 public class Login extends TemplateAction
 {
@@ -93,8 +93,6 @@ public class Login extends TemplateAction
                 .getString(ScarabConstants.NEXT_TEMPLATE, 
                 Turbine.getConfiguration()
                            .getString("template.homepage", "Start.vm") );
-            String id = data.getParameters().getString("id");
-            data.getParameters().add("id", id); 
             setTarget(data, template);
         }
         else 
