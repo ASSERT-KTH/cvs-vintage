@@ -1,4 +1,5 @@
 $page.setTitle("Select global attribute")
+hi
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
 #macro (AttributeSelectBar $val)
@@ -14,20 +15,21 @@ $page.setTitle("Select global attribute")
 #end
 
 <div class="app" id="globalAttributeSelect">
-
 <h2>$page.Title</h2>
 
 #set ($rmaGroup = $intake.RModuleAttribute.Default)
 #set ($agGroup = $intake.AttributeGroup.Default)
 #set ($attGroup = $intake.Attribute.Default)
-#set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
-#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($editIssueType))
+#set ($issueType = $scarabR.IssueType)
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType))
 
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="get">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="groupid" value="$data.Parameters.getString("groupid")" />
+<input type="hidden" name=$scarabG.Constant.CANCEL_TEMPLATE value="$data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE)">
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 
 #AttributeSelectBar("")

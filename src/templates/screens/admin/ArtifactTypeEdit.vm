@@ -1,11 +1,13 @@
-$page.setTitle("Attribute Editor")
-
-<div class="app" id="div2-1-4-0">
-<h2>Customize/create artifact type</h2>
 
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+
+$page.setTitle("Edit Artifact Type '$issueType.Name'")
+
+<div class="app" id="div2-1-4-0">
+
+<h2>$page.Title</h2>
 
 #if (!$issueTypeId)
 <p class="alert">Artifact type not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
@@ -16,13 +18,11 @@ $page.setTitle("Attribute Editor")
 
 
 <form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
+<input type="hidden" name=$scarabG.Constant.CANCEL_TEMPLATE value="$data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE)">
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 
-<div class="functnbar"><input type="submit" value="Done"  name="eventSubmit_doModifyissuetype" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
+<div class="functnbar"><input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
 
 <h3>Artifact type details</h3>
 <div class="axial">
@@ -39,18 +39,10 @@ $page.setTitle("Attribute Editor")
     </tr>
     <tr>
     <th>Artifact type desc</th>
-    <td><#textAreaMedium() name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
+    <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
     </tr>
     </table>
 </div>
-
-#if ($groups.isEmpty())
-   #if ($issueType.IssueTypeId)
-   ## NO GROUPS YET - user must push button to create default groups
-   <p><strong class="alert">This module has no groups. Please click to create default groups.</strong></p>
-   <p><input type="submit" value="Create default attribute groups" name="eventSubmit_doCreatedefaults" /></p>
-   #end
-#else
 
 <h3>Issue view display options</h3>
 
@@ -109,7 +101,7 @@ $page.setTitle("Attribute Editor")
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_group_$group.AttributeGroupId" /></td>
-  <td><a href="$link.setPage("admin,AttributeGroup.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId)">$group.Name</a></td>
+  <td><a href="$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId)">$group.Name</a></td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
   <td>
   #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
@@ -121,12 +113,11 @@ $page.setTitle("Attribute Editor")
 
 #end
 
-<div class="functnbar3"><input type="submit" value="add new"  name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" />&#160;<small>attribute group</small>&#160;
+<div class="functnbar3"><input type="submit" value="save"  name="eventSubmit_doSave" />&#160;<input type="submit" value="add new"  name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;<small>attribute group</small>&#160;
 </div>
 
-<div class="functnbar2"><input type="submit" value="Done"  name="eventSubmit_doModifyissuetype" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
+<div class="functnbar2"><input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
 
 $intake.declareGroups()
 </form>
 </div>
-#end

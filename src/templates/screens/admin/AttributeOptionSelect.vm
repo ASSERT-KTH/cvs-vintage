@@ -10,7 +10,7 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 <h2>$page.Title</h2>
 
 <form action="$link.setPage("admin,AttributeOptionSelect.vm")" method="get">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
 <input type="hidden" name="attributeId" value="$data.Parameters.getString("attributeId","").trim()" />
 <input type="hidden" name="att_0id" value="$data.Parameters.getString("attributeId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
@@ -43,10 +43,7 @@ associated with this attribute in this module.</strong></p>
 
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
-<th nowrap="nowrap">
-<img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-<img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
-</th>
+<th nowrap="nowrap" width="8%"></th>
 <th>Option name</th>
 </tr>
 

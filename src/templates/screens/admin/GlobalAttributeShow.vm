@@ -1,4 +1,4 @@
-$page.setTitle("Attribute show")
+$page.setTitle("Global Attributes")
 
 <div id="globalattributeshow" class="app">
 <h2>$page.Title</h2>
@@ -13,7 +13,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 
 <div class="functnbar">
-<input type="submit" value="Done" eventSubmit_doAlldone" />&#160;<input type="submit" value="Cancel" eventSubmit_doCancel" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 </div>       
 
 <h3>Attributes</h3>
@@ -40,7 +40,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
       #end
     #end
 </td>
-<td><a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">$attribute.Name</a></td>
+<td><a href="$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id")">$attribute.Name</a></td>
 <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
 #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
 <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
@@ -52,11 +52,11 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 $intake.declareGroups()
 
 <div class="functnbar3">
-<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="copy selected" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doDeleteselectedattributes" />&#160;<small>attribute</small>&#160;
+<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="copy selected" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doSave" />&#160;<small>attribute</small>&#160;
 </div>
 
 <div class="functnbar2">
-<input type="submit" value="Done" eventSubmit_doAlldone" />&#160;<input type="submit" value="Cancel" eventSubmit_doCancel" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 </div>       
 
 </form>

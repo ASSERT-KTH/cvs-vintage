@@ -7,7 +7,8 @@ $page.setTitle("Artifact Type Select")
 
 <form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
@@ -45,10 +46,7 @@ $page.setTitle("Artifact Type Select")
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">
-<img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" />&#160;
-<img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" />
-</th>
+<th nowrap="nowrap"></th>
 <th>Name</th>
 <th>Description</th>
 </tr>

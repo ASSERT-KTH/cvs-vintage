@@ -1,10 +1,12 @@
-$page.setTitle("Module Attribute/options editor")
 
-<div class="app" id="div3-0-2-0">
-<h2>$page.Title</h2>
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
+
+$page.setTitle("Edit Module Attribute '$attribute.Name'")
+
+<div class="app" id="div3-0-2-0">
+<h2>$page.Title</h2>
 
 #if (!$attType)
 <p class="alert">Attribute not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
@@ -18,15 +20,19 @@ On this screen, one can modify a module's Attribute information.
 
 
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="get">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
+<input type="hidden" name=$scarabG.Constant.CANCEL_TEMPLATE value="$data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE)">
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
-<input type="hidden" name="attributeid" value="$attribute.AttributeId" />
-<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")">
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
+<input type="hidden" name="attributeid" value="$attribute.AttributeId" />
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")">
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")">
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doModifyattributeoptions" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+#if ($attType.AttributeClass.Name.equals("select-one"))
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 <h3>Attribute Info</h3>
@@ -72,11 +78,7 @@ On this screen, one can modify a module's Attribute information.
 #datatitle ("Attribute Options")
 <table width="70%" border="1" cellspacing="2" cellpadding="2">
 <tr>
-#if ($maxNum > 0)
- <th>Deleted</th>
-#else
  <th>&#160;</th>
-#end
  <th>Parent attribute option</th>
  <th>Display Name</th>
  <th>Active</th>
@@ -101,16 +103,18 @@ On this screen, one can modify a module's Attribute information.
     </tr>
 #end
 </table>
-
 <div class="functnbar3">
-<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;<input type="submit" value="resort" />&#160;<small>attribute</small>&#160;
+<input type="submit" value="save" name="eventSubmit_doSave" />&#160;<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;
 </div>
 
+#end
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doModifyattributeoptions" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+#if ($attType.AttributeClass.Name.equals("select-one"))
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+#end
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
-#end 
 $intake.declareGroups()
 </form>
 </div>

@@ -1,0 +1,101 @@
+#set ($groupId = $data.Parameters.getString("groupid"))
+#set ($group = $scarabR.getAttributeGroup($groupId))
+#set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+
+#if ($group)
+  $page.setTitle("Edit attribute group '$group.Name'")
+#else
+  $page.setTitle("Add attribute group")
+#end
+
+<div class="app" id="div2-1-4-0">
+<h2>$page.Title</h2>
+
+#if (!$groupId)
+<p class="alert">Group not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a> to proceed.</p>
+#else
+
+<form method="post" action="$link.setPage("admin,AttributeGroupEdit.vm")">
+<input type="hidden" name="action" value="admin.AttributeGroupEdit">
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeSelect.vm" />
+<input type="hidden" name="groupId" value="$groupId" />
+<input type="hidden" name="issueTypeId" value="$issueTypeId" />
+
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
+
+<h3>Attribute group details</h3>
+
+#set ($agGroup = $intake.AttributeGroup.mapTo($group))
+<div class="axial">
+ <table border="0" cellspacing="2" cellpadding="3">
+ <tr>
+ <th>Group name</th>
+ <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
+ </tr>
+ <tr>
+ <th>Group desc</th>
+ <td>#textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
+ </tr>
+ </table>
+</div>
+
+#if (!$group.Attributes.isEmpty())
+<h3>Attributes in this group</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th></th>
+<th>Attribute name</th>
+<th>Per project name</th>
+<th>Active</th>
+<th>Required</th>
+<th>Quick search</th>
+<th>Sequence #</th>
+</tr>
+#foreach ($attribute in $group.Attributes)
+   #set ($rma = $scarabR.CurrentModule.getRModuleAttribute($attribute, $group.IssueType))
+   #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
+   #set ($raag = $group.getRAttributeAttributeGroup($attribute))
+   #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
+   #set ($maxNum = $group.Attributes.size())
+ #indexedRows($velocityCount)
+ <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
+ #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+ <td><a href="$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId)">$attribute.Name</a></td>
+ #else
+ <td>$attribute.Name</td>
+ #end
+ <td><input type="text" size="15" name="$rmaGroup.DisplayValue.Key"
+    #if ($rmaGroup.DisplayValue.toString().length() > 0)
+          value="$rmaGroup.DisplayValue" 
+    #else
+          value="$attribute.Name"
+    #end
+ /></td>
+ <td>#booleanCheckbox ($rmaGroup.Active)</td>
+ <td>#booleanCheckbox ($rmaGroup.Required)</td>
+ <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
+ <td>#numericSelect( "$raagGroup.Order.Key" 1 $maxNum $raagGroup.Order.Value 1 )</td>
+ </tr>
+ </td>
+ </tr>
+#end
+</table>
+
+#else
+  <h3>Attributes in this group</h3>
+  <p><strong class="alert">Click the Add button to add attributes to this group.</strong></p>
+#end
+
+<div class="functnbar3">
+<input type="submit" value="save" name="eventSubmit_doSave" />&#160;<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;
+</div>
+
+<div class="functnbar2">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
+
+$intake.declareGroups()
+</form>
+#end

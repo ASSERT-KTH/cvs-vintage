@@ -1,4 +1,4 @@
-$page.setTitle("Global Artifact Type Edit")
+$page.setTitle("Global Artifact Types")
 
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
@@ -12,7 +12,7 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 
 <div class="functnbar">
-<input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="Create New" name="eventSubmit_doGotoothertemplate" />
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
 <h3>Artifacts</h3>
@@ -29,13 +29,17 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($group.Deleted)</td>
 <td><input type="text" name="$group.Name.Key" value="$group.Name.Value"></td>
-<td><#textAreaMedium() name="$group.Description.Key">$!group.Description</textarea></td>
+<td>#textAreaMedium("$group.Description.Key" $group.Description)</td>
 </tr>
 #end
 </table>
 
+<div class="functnbar3">
+<input type="submit" value="save" name="eventSubmit_doSave" />&#160;<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doSave" />&#160;<small>artifact type(s)</small>
+</div>
+
 <div class="functnbar2">
-<input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="Create New" name="eventSubmit_doGotoothertemplate" />
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
 $intake.declareGroups()

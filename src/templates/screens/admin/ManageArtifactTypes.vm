@@ -3,8 +3,8 @@ $page.setTitle("Manage artifact types")
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 
 <form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name=$scarabG.Constant.NEXT_TEMPLATE value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name="action" value="admin.ManageArtifactTypes" />
+<input type="hidden" name=$scarabG.Constant.CANCEL_TEMPLATE value="$data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE)">
 <input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,ArtifactTypeSelect.vm" />
 
 <div class="app" id="div2-1-4-0">
@@ -12,7 +12,7 @@ $page.setTitle("Manage artifact types")
 <h2>$page.Title</h2>
 
 <div class="functnbar">
-<input type="submit" value="Save"  name="eventSubmit_doManageissuetypes" />&#160;<input type="submit" value="Cancel" />&#160;<small>changes</small>
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;<small>changes</small>
 </div>
 
 <h3>Artifact types</h3>
@@ -42,13 +42,13 @@ $page.setTitle("Manage artifact types")
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="add new"  name="eventSubmit_doGotoothertemplate"/>&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;<input type="submit" value="resort" />&#160;<small>artifact type(s)</small>		</div>
+<input type="submit" value="save"  name="eventSubmit_doSave"/>&#160;<input type="submit" value="add new"  name="eventSubmit_doGotoothertemplate"/>&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;<small>artifact type(s)</small>		</div>
 
 
 <p>* Maximum of five Artifact types in left hand navigation (first four selected will appear).</p>
 
 <div class="functnbar2">
-<input type="submit" value="Save"  name="eventSubmit_doManageissuetypes" />&#160;<input type="submit" value="Cancel" />&#160;<small>changes</small>
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;<small>changes</small>
 </div>
 
 $intake.declareGroups()

@@ -18,8 +18,6 @@ $page.setTitle("Create artifact type")
 <form method="get" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
-<input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 
 #ArtifactTypeCreateBar("")
 
@@ -33,7 +31,7 @@ $page.setTitle("Create artifact type")
     </tr>
     <tr>
     <th>Artifact type desc</th>
-    <td><#textAreaMedium() name="$group.Description.Key">$!group.Description.Value</textarea></td>
+    <td>#textAreaMedium("$group.Description.Key" $group.Description.Value)</td>
     </tr>
   </table>
 </div>

@@ -1,10 +1,16 @@
-$page.setTitle("Attribute/options editor")
-
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
 #set ($attgroup = $intake.Attribute.Default )
 #set ($atttgroup = $intake.AttributeType.Default )
+
+#if ($attribute.AttributeId)
+   #set ($createNew = "false")
+   $page.setTitle("Edit Global Attribute '$attribute.Name'")
+#else
+   #set ($createNew = "true")
+   $page.setTitle("Create New Global Attribute")
+#end
 
 <div class="app" id="div3-0-2-0">
 <h2>$page.Title</h2>
@@ -18,9 +24,19 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
 </p>
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
-<input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
+<input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
+#if ($createNew.equals("true"))
+   <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
+#else
+   <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId" />
+#end
+
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")"  //>
+
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
 
 <h3>Attribute Info</h3>
 
@@ -45,7 +61,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
  <tr>
   <th>Attribute description</th>
   <td>
-    <#textAreaMedium() name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
   </td>
  </tr>
@@ -71,17 +87,11 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
 </div>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit_doModifyattributedata" />
+   <input type="submit" value="save"  name="eventSubmit_doSaveattributedata" />
 </div>
 
-$intake.declareGroups()
-</form>
 
 #if ($attType.AttributeClass.Name.equals("select-one"))
-<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
-<input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
 #datatitle ("Attribute Options")
 #set ($pcaos = $attribute.ParentChildAttributeOptions)
 #set ($maxNum = $pcaos.size())
@@ -172,11 +182,15 @@ itself). Therefore, please use caution when creating new Attribute
 Options because you can quickly end up with a mess.</strong></p>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit_doAddormodifyattributeoptions" />
+<input type="submit" value="save"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="add new"  name="eventSubmit_doSaveoptions" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
-<div class="functnbar2">
 
-#end #* if select-one *#
+#end
+
+<div class="functnbar2">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
+
 $intake.declareGroups()
 </form>
 </div>
