@@ -24,7 +24,7 @@ import javax.management.loading.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class Main
    implements Runnable
@@ -53,7 +53,15 @@ public class Main
       System.getProperties().load(propertiesIn);
       
       // Set security
-      System.setProperty("java.security.policy",Main.class.getClassLoader().getResource("server.policy").getFile());
+      
+      String serverPolicy = Main.class.getClassLoader().getResource("server.policy").getFile();
+      
+      if ( serverPolicy == null ) {
+          
+          throw new IOException("server.policy missing");
+      }
+      
+      System.setProperty("java.security.policy", serverPolicy);
       System.setSecurityManager(new SecurityManager());
       
       // Create server
