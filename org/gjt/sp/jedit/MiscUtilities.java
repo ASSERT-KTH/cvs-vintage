@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.16 2002/02/12 10:17:53 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.17 2002/03/03 07:37:10 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -90,6 +90,14 @@ public class MiscUtilities
 			return path;
 		else
 		{
+			// have to handle these cases specially on windows.
+			if(OperatingSystem.isDOSDerived()
+				&& path.length() == 2
+				&& path.charAt(1) == ':')
+			{
+				return path;
+			}
+
 			File file = new File(path);
 			if(file.isAbsolute())
 			{

@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.24 2002/02/10 04:47:17 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.25 2002/03/03 07:37:11 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -841,6 +841,18 @@ public class FoldVisibilityManager
 		// JEditTextArea.getView() method?
 		GUIUtilities.getView(textArea).getStatus().setMessageAndClear(
 			jEdit.getProperty("view.status.narrow"));
+	} //}}}
+
+	//{{{ getScrollOverhang() method
+	/**
+	 * Dirty hack.
+	 */
+	int getScrollOverhang()
+	{
+		int visibleLines = textArea.getVisibleLines();
+		int firstPhysLine = virtualToPhysical(Math.max(0,
+			getVirtualLineCount() - visibleLines));
+		return offsetMgr.getScrollOverhang(firstPhysLine,visibleLines,index);
 	} //}}}
 
 	//{{{ Methods for Buffer class to call

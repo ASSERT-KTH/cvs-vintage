@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.31 2002/03/01 03:14:08 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.32 2002/03/03 07:37:10 spestov Exp $
  */
 public class ChunkCache
 {
@@ -608,6 +608,8 @@ public class ChunkCache
 			painter,textArea.softWrap
 			? textArea.wrapMargin
 			: 0.0f,out);
+
+		buffer._setScreenLineCount(physicalLine,Math.max(1,out.size()));
 	} //}}}
 
 	//{{{ updateChunksUpTo() method

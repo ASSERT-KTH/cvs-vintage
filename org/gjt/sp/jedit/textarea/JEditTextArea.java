@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.99 2002/02/27 05:05:33 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.100 2002/03/03 07:37:11 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -445,7 +445,10 @@ public class JEditTextArea extends JComponent
 				}
 			}
 
-			vertical.setValues(firstLine,visibleLines,0,lineCount);
+			vertical.setValues(firstLine,visibleLines,0,
+				(softWrap ? lineCount
+				+ foldVisibilityManager.getScrollOverhang()
+				: lineCount));
 			vertical.setUnitIncrement(2);
 			vertical.setBlockIncrement(visibleLines);
 		}

@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.18 2002/01/30 08:06:41 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.19 2002/03/03 07:37:10 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -70,11 +70,9 @@ public class FileVFS extends VFS
 	//{{{ constructPath() method
 	public String constructPath(String parent, String path)
 	{
-		// have to handle these cases specially on windows.
+		// have to handle this cas specially on windows.
 		if(OperatingSystem.isDOSDerived())
 		{
-			if(path.length() == 2 && path.charAt(1) == ':')
-				return path;
 			if(path.startsWith("\\"))
 				parent = parent.substring(0,2);
 		}
