@@ -1,44 +1,70 @@
-<!ELEMENT activities ( activity+ ) >
-<!ELEMENT activity ( id?, attribute?, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, dependency?, description, end-date?, attachment? ) >
-<!ELEMENT activity-set ( id, type, created-by, created-date, activities, attachment? ) >
-<!ELEMENT activity-sets ( activity-set+ ) >
-<!ELEMENT artifact-type ( #PCDATA ) >
-<!ELEMENT attachment ( id, name, type, (( filename, reconcile-path? )| data ), mimetype, created-date, modified-date?, created-by, modified-by?, deleted ) >
-<!ELEMENT attribute ( #PCDATA ) >
-<!ELEMENT child ( #PCDATA ) >
-<!ELEMENT code ( #PCDATA ) >
-<!ELEMENT created-by ( #PCDATA ) >
-<!ELEMENT created-date ( format, timestamp ) >
-<!ELEMENT data ( #PCDATA ) >
-<!ELEMENT deleted ( #PCDATA ) >
-<!ELEMENT dependency ( id, parent, child, type, deleted ) >
-<!ELEMENT description ( #PCDATA ) >
-<!ELEMENT domain ( #PCDATA ) >
-<!ELEMENT end-date ( format, timestamp ) >
-<!ELEMENT filename ( #PCDATA ) >
-<!ELEMENT format ( #PCDATA ) >
-<!ELEMENT id ( #PCDATA ) >
-<!ELEMENT import-type ( #PCDATA ) >
-<!ELEMENT issue ( id, artifact-type, activity-sets ) >
-<!ELEMENT issues ( issue+ ) >
-<!ELEMENT mimetype ( #PCDATA ) >
-<!ELEMENT modified-by ( #PCDATA ) >
-<!ELEMENT modified-date ( format, timestamp ) >
-<!ELEMENT module ( id, parent-id, name, owner, description, url, domain, code ) >
-<!ELEMENT name ( #PCDATA ) >
-<!ELEMENT old-numeric-value ( #PCDATA ) >
-<!ELEMENT new-numeric-value ( #PCDATA ) >
-<!ELEMENT old-user ( #PCDATA ) >
-<!ELEMENT new-user ( #PCDATA ) >
-<!ELEMENT old-option ( #PCDATA ) >
-<!ELEMENT new-option ( #PCDATA ) >
-<!ELEMENT old-value ( #PCDATA ) >
-<!ELEMENT new-value ( #PCDATA ) >
-<!ELEMENT owner ( #PCDATA ) >
-<!ELEMENT parent ( #PCDATA ) >
-<!ELEMENT parent-id ( #PCDATA ) >
-<!ELEMENT reconcile-path ( #PCDATA ) >
-<!ELEMENT scarab-issues ( import-type, module, issues+ ) >
-<!ELEMENT timestamp ( #PCDATA ) >
+<!-- General elements common to other elements: -->
+
 <!ELEMENT type ( #PCDATA ) >
-<!ELEMENT url ( #PCDATA ) >
+<!ELEMENT id ( #PCDATA ) >
+<!ELEMENT name ( #PCDATA ) >
+<!ELEMENT created-by ( #PCDATA ) >
+<!ELEMENT format ( #PCDATA ) >
+<!ELEMENT timestamp ( #PCDATA ) >
+<!ELEMENT description ( #PCDATA ) >
+
+<!-- General compound elements common to other elements: -->
+
+<!ELEMENT created-date ( format, timestamp ) >
+
+<!-- General compound structures: -->
+
+<!-- Attachments:                                                   -->
+<!-- These are used as comments, which are associated with an       -->
+<!-- 'activity-set', or urls/files, which are associated with an    -->
+<!-- 'activity'.  See http://scarab.tigris.org/recording-issues.txt -->
+
+<!ELEMENT attachment ( id, name, type, (( filename, reconcile-path? )| data ), 
+          mimetype, created-date, modified-date?, created-by, 
+          modified-by?, deleted ) >
+  <!ELEMENT filename ( #PCDATA ) >
+  <!ELEMENT reconcile-path ( #PCDATA ) >
+  <!ELEMENT data ( #PCDATA ) >
+  <!ELEMENT mimetype ( #PCDATA ) >
+  <!ELEMENT modified-by ( #PCDATA ) >
+  <!ELEMENT modified-date ( format, timestamp ) >
+
+<!-- General hierarchy of major elements: -->
+
+<!ELEMENT scarab-issues ( import-type, module, issues+ ) >
+  <!ELEMENT import-type ( #PCDATA ) >
+  <!ELEMENT module ( id, parent-id, name, owner, description, url, 
+                     domain, code ) >
+    <!ELEMENT parent-id ( #PCDATA ) >
+    <!ELEMENT owner ( #PCDATA ) >
+    <!ELEMENT url ( #PCDATA ) >
+    <!ELEMENT domain ( #PCDATA ) >
+    <!ELEMENT code ( #PCDATA ) >
+  <!ELEMENT issues ( issue+ ) >
+    <!ELEMENT issue ( id, artifact-type, activity-sets ) >
+      <!ELEMENT artifact-type ( #PCDATA ) >
+      <!ELEMENT activity-sets ( activity-set+ ) >
+        <!ELEMENT activity-set ( id, type, created-by, created-date, 
+                                 activities, attachment? ) >
+          <!ELEMENT activities ( activity+ ) >
+            <!ELEMENT activity ( id?, attribute?, old-numeric-value?, 
+                                 new-numeric-value?, old-user?, new-user?, 
+                                 old-option?, new-option?, old-value?, 
+                                 new-value?, dependency?, description, 
+                                 end-date?, attachment? ) >
+              <!ELEMENT attribute ( #PCDATA ) >
+              <!ELEMENT old-numeric-value ( #PCDATA ) >
+              <!ELEMENT new-numeric-value ( #PCDATA ) >
+              <!ELEMENT old-user ( #PCDATA ) >
+              <!ELEMENT new-user ( #PCDATA ) >
+              <!ELEMENT old-option ( #PCDATA ) >
+              <!ELEMENT new-option ( #PCDATA ) >
+              <!ELEMENT old-value ( #PCDATA ) >
+              <!ELEMENT new-value ( #PCDATA ) >
+              <!ELEMENT dependency ( id, parent, child, type, deleted ) >
+                <!ELEMENT parent ( #PCDATA ) >
+                <!ELEMENT child ( #PCDATA ) >
+                <!ELEMENT deleted ( #PCDATA ) >
+              <!ELEMENT end-date ( format, timestamp ) >
+          
+
