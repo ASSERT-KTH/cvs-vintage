@@ -81,7 +81,7 @@ public class StdServerSessionPool implements ServerSessionPool {
 
 
 		threadGroup = new ThreadGroup("ASF Session Pool Threads");
-		executor = new PooledExecutor(new BoundedBuffer(10), poolSize);
+		executor = new PooledExecutor(poolSize);
 		executor.setMinimumPoolSize(0);
 		executor.setKeepAliveTime(1000*30);
 		executor.waitWhenBlocked();
