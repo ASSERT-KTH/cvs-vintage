@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.7 2003/09/21 15:23:25 bobtarling Exp $
+// $Id: PropPanelSubsystem.java,v 1.8 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import org.argouml.uml.ui.foundation.core.*;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.model_management.MSubsystemImpl;
 
 /** A property panel for UML subsystems. */
 public class PropPanelSubsystem extends PropPanelPackage
@@ -60,7 +59,7 @@ public class PropPanelSubsystem extends PropPanelPackage
 
     public Class getClassForPanel() {
         // TODO Shouldn't refer to NSUML implementation class
-        return MSubsystemImpl.class;
+        return (Class)ModelFacade.SUBSYSTEM;
     }
 
     public String getModuleName() { return "PropPanelSubsystem"; }

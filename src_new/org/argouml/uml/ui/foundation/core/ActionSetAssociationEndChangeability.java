@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndChangeability.java,v 1.6 2003/10/12 08:55:25 linus Exp $
+// $Id: ActionSetAssociationEndChangeability.java,v 1.7 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,14 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-//import ru.novosoft.uml.foundation.data_types.MChangeableKind;
-
 /**
  * 
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
+ *
+ * @deprecated since 0.15.1, replace with 
+ *             org.argouml.uml.ui.foundation.core.ActionSetChangeability
+ *             remove in 0.15.2, alexb
  */
 public class ActionSetAssociationEndChangeability extends UMLChangeAction {
 

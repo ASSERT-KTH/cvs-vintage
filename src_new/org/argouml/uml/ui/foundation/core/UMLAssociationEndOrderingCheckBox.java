@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.4 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.5 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.4 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.5 2003/10/26 16:40:03 alexb Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
-
-import ru.novosoft.uml.foundation.data_types.MOrderingKind;
 
 /**
  * 
@@ -55,7 +53,7 @@ public class UMLAssociationEndOrderingCheckBox extends UMLCheckBox2 {
     public void buildModel() {
         if (getTarget() != null) {
             Object associationEnd = /*(MAssociationEnd)*/ getTarget();
-            setSelected(MOrderingKind.ORDERED.equals(ModelFacade.getOrdering(associationEnd)));
+            setSelected(ModelFacade.ORDERED_ORDERINGKIND.equals(ModelFacade.getOrdering(associationEnd)));
         }
     }
 }

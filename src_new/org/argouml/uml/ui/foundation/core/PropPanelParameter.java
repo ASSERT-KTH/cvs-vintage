@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.35 2003/09/21 14:11:12 bobtarling Exp $
+// $Id: PropPanelParameter.java,v 1.36 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,8 +44,6 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLRadioButton;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -83,19 +81,19 @@ public class PropPanelParameter extends PropPanelModelElement {
         JPanel kindPanel = new JPanel(new GridLayout2(0, 2, GridLayout2.ROWCOLPREFERRED));
         ButtonGroup kindGroup = new ButtonGroup();
 
-        UMLRadioButton inout = new UMLRadioButton("in/out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", MParameterDirectionKind.class, MParameterDirectionKind.INOUT, null));
+        UMLRadioButton inout = new UMLRadioButton("in/out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.INOUT_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(inout);
         kindPanel.add(inout);
 
-        UMLRadioButton in = new UMLRadioButton("in", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", MParameterDirectionKind.class, MParameterDirectionKind.IN, null));
+        UMLRadioButton in = new UMLRadioButton("in", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.IN_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(in);
         kindPanel.add(in);
 
-        UMLRadioButton out = new UMLRadioButton("out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", MParameterDirectionKind.class, MParameterDirectionKind.OUT, null));
+        UMLRadioButton out = new UMLRadioButton("out", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.OUT_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(out);
         kindPanel.add(out);
 
-        UMLRadioButton ret = new UMLRadioButton("return", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", MParameterDirectionKind.class, MParameterDirectionKind.RETURN, null));
+        UMLRadioButton ret = new UMLRadioButton("return", this, new UMLEnumerationBooleanProperty("kind", mclass, "getKind", "setKind", (Class)ModelFacade.PARAMETERDIRECTIONKIND, ModelFacade.RETURN_PARAMETERDIRECTIONKIND, null));
         kindGroup.add(ret);
         kindPanel.add(ret);
 

@@ -1,4 +1,4 @@
-// $Id: UMLIncludeListModel.java,v 1.14 2003/09/28 19:10:54 bobtarling Exp $
+// $Id: UMLIncludeListModel.java,v 1.15 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,8 +74,6 @@ import org.tigris.gef.graph.MutableGraphModel;
 import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
-
-
 /**
  * <p>A list model for the include relationship on use case property
  *   panels.</p>
@@ -160,7 +158,7 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
      * @param   the index of the desired element.
      *
      * @return  the element at that index if there is one, otherwise
-     *          <code>null</code>.
+     *          <code>null</code>. a Model Element
      */
 
     protected MModelElement getModelElementAt(int index) {

@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.6 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.5 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.6 2003/10/26 16:40:03 alexb Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
-
-//import ru.novosoft.uml.foundation.data_types.MScopeKind;
 
 /**
  * @author jaap.branderhorst@xs4all.nl

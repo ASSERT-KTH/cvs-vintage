@@ -1,5 +1,5 @@
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.6 2003/10/04 23:23:19 d00mst Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.7 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,14 +23,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.6 2003/10/04 23:23:19 d00mst Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.7 2003/10/26 16:40:02 alexb Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.argouml.model.ModelFacade;
-
-//import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 
 /**
  * A model for multiplicities. This model is instantiated with a few default

@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.5 2003/10/04 00:33:29 d00mst Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.6 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.5 2003/10/04 00:33:29 d00mst Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.6 2003/10/26 16:40:03 alexb Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -31,8 +31,6 @@ import java.util.Map;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
-
-//import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 
 /**
  * @author jaap.branderhorst@xs4all.nl
@@ -44,9 +42,9 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
     private static Map labelTextsAndActionCommands = new HashMap();
 
     static {
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-addonly"), ActionSetStructuralFeatureChangeability.ADDONLY_COMMAND);
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-changeable"), ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND);
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-frozen"), ActionSetStructuralFeatureChangeability.FROZEN_COMMAND);
+        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-addonly"), ActionSetChangeability.ADDONLY_COMMAND);
+        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-changeable"), ActionSetChangeability.CHANGEABLE_COMMAND);
+        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-frozen"), ActionSetChangeability.FROZEN_COMMAND);
     }
 
     /**
@@ -58,7 +56,7 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
      * @param horizontal
      */
     public UMLStructuralFeatureChangeabilityRadioButtonPanel(String title, boolean horizontal) {
-        super(title, labelTextsAndActionCommands, "visibility", ActionSetStructuralFeatureChangeability.SINGLETON, horizontal);
+        super(title, labelTextsAndActionCommands, "visibility", ActionSetChangeability.SINGLETON, horizontal);
     }
 
     /**
@@ -69,13 +67,13 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
             Object target = /*(MStructuralFeature)*/ getTarget();
             Object/*MChangeableKind*/ kind = ModelFacade.getChangeability(target);
             if (kind == null || kind.equals(ModelFacade.ADD_ONLY_CHANGEABLEKIND)) {
-                setSelected(ActionSetStructuralFeatureChangeability.ADDONLY_COMMAND);
+                setSelected(ActionSetChangeability.ADDONLY_COMMAND);
             } else if (kind.equals(ModelFacade.CHANGEABLE_CHANGEABLEKIND)) {
-                setSelected(ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND); 
+                setSelected(ActionSetChangeability.CHANGEABLE_COMMAND); 
             } else if (kind.equals(ModelFacade.FROZEN_CHANGEABLEKIND)) {
-                setSelected(ActionSetStructuralFeatureChangeability.FROZEN_COMMAND);
+                setSelected(ActionSetChangeability.FROZEN_COMMAND);
             } else {
-                setSelected(ActionSetStructuralFeatureChangeability.CHANGEABLE_COMMAND);
+                setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
             }
         }
     }

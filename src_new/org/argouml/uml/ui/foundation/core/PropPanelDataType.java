@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.33 2003/09/21 14:11:12 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.34 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
 import org.argouml.ui.targetmanager.TargetManager;
@@ -41,7 +42,6 @@ import org.argouml.uml.ui.UMLAttributesListModel;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.util.ConfigLoader;
-import ru.novosoft.uml.foundation.core.MClassifier;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -115,7 +115,7 @@ public class PropPanelDataType extends PropPanelClassifier {
                             }
                         }
                         if (!match) {
-                            stereo = ((MClassifier)classifier).getFactory().createStereotype();
+                            stereo = UmlFactory.getFactory().getExtensionMechanisms().createStereotype();//((MClassifier)classifier).getFactory().createStereotype();
                             ModelFacade.setName(stereo, "enumeration");
                             ModelFacade.addOwnedElement(model, stereo);
                         }

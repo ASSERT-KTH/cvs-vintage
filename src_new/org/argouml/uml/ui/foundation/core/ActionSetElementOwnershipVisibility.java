@@ -1,4 +1,4 @@
-// $Id: ActionSetElementOwnershipVisibility.java,v 1.8 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: ActionSetElementOwnershipVisibility.java,v 1.9 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.8 2003/09/17 23:26:45 bobtarling Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.9 2003/10/26 16:40:03 alexb Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -35,8 +35,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.UMLButtonGroup;
-
-import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 
 /**
  * @since Oct 12, 2002
@@ -69,14 +67,14 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
                 Object m = /*(MModelElement)*/ target;
                 String command = e.getActionCommand();
                 if (command.equals(PUBLIC_ACTION_COMMAND)) {
-                    ModelFacade.setVisibility(m, MVisibilityKind.PUBLIC);
+                    ModelFacade.setVisibility(m, ModelFacade.PUBLIC_VISIBILITYKIND);
                     
                 } else
 		    if (command.equals(PRIVATE_ACTION_COMMAND)) {
-			ModelFacade.setVisibility(m, MVisibilityKind.PRIVATE);
+			ModelFacade.setVisibility(m, ModelFacade.PRIVATE_VISIBILITYKIND);
 		    } else
 			if (command.equals(PROTECTED_ACTION_COMMAND)) {
-			    ModelFacade.setVisibility(m, MVisibilityKind.PROTECTED);
+			    ModelFacade.setVisibility(m, ModelFacade.PROTECTED_VISIBILITYKIND);
 			} else
 			    throw new IllegalArgumentException("Illegal action. Actioncommand was not correct. It was " + command);
             }

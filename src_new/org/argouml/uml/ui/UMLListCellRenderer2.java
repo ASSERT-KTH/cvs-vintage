@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.15 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.16 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.15 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLListCellRenderer2.java,v 1.16 2003/10/26 16:40:02 alexb Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
@@ -35,10 +35,6 @@ import javax.swing.JList;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
-
-//import ru.novosoft.uml.MBase;
-//import ru.novosoft.uml.foundation.core.MModelElement;
-
 
 /**
  * The default cell renderer for uml model elements. Used by UMLList2 and its

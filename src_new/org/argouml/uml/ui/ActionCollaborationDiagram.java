@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.26 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.27 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,11 +29,6 @@ import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHel
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-
-//import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-//import ru.novosoft.uml.foundation.core.MClassifier;
-//import ru.novosoft.uml.foundation.core.MNamespace;
-//import ru.novosoft.uml.model_management.MModel;
 
 /** Action to trigger creation of new collaboration diagram.
  *  @stereotype singleton

@@ -1,4 +1,4 @@
-// $Id: UMLEventParameterListModel.java,v 1.6 2003/09/28 19:10:54 bobtarling Exp $
+// $Id: UMLEventParameterListModel.java,v 1.7 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
-
-//import ru.novosoft.uml.behavior.state_machines.MEvent;
 
 /**
  * A list model for the parameters belonging to an event

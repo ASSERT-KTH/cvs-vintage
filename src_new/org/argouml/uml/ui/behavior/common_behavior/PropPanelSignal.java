@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.33 2003/09/21 14:11:13 bobtarling Exp $
+// $Id: PropPanelSignal.java,v 1.34 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 
@@ -46,8 +47,6 @@ import org.argouml.uml.ui.UMLModelElementListModel;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -92,7 +91,7 @@ public class PropPanelSignal extends PropPanelModelElement {
         if (ModelFacade.isASignal(target)) {
             Object ns = /*(MNamespace)*/ ModelFacade.getNamespace(target);
             if (ns != null) {
-                Object newSig = ((MNamespace)ns).getFactory().createSignal();
+                Object newSig = UmlFactory.getFactory().getCommonBehavior().createSignal();//((MNamespace)ns).getFactory().createSignal();
                 ModelFacade.addOwnedElement(ns, newSig);
                 TargetManager.getInstance().setTarget(newSig);
             }

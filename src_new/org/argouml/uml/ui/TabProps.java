@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.40 2003/10/04 08:53:27 alexb Exp $
+// $Id: TabProps.java,v 1.41 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,10 +77,6 @@ import org.argouml.uml.ui.foundation.core.PropPanelClass;
 import org.argouml.util.ConfigLoader;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
-
-import ru.novosoft.uml.behavior.state_machines.MStateImpl;
-import ru.novosoft.uml.behavior.use_cases.MUseCaseImpl;
-import ru.novosoft.uml.foundation.core.MClassImpl;
 
 /**
  * <p>
@@ -168,7 +164,7 @@ public class TabProps
      *  few seconds after the tool is launched. */
     protected void initPanels() {
 
-        _panels.put(MClassImpl.class, new PropPanelClass());
+        _panels.put((Class)ModelFacade.CLASS/*MClassImpl.class*/, new PropPanelClass());
         _panels.put(ArgoDiagram.class, new PropPanelDiagram());
 
         // Put all the diagram PropPanels here explicitly. They would eventually
@@ -189,10 +185,10 @@ public class TabProps
         _panels.put(FigText.class, new PropPanelString());
         // now a plugin
         // _panels.put(MModelImpl.class, new PropPanelModel());
-        _panels.put(MUseCaseImpl.class, new PropPanelUseCase());
+        _panels.put((Class)ModelFacade.USE_CASE/*MUseCaseImpl.class*/, new PropPanelUseCase());
         //important: MStateImpl corresponds to PropPanelSimpleState not to PropPanelState!!
         //otherwise, spawing will not ne successful!!
-        _panels.put(MStateImpl.class, new PropPanelSimpleState());       
+        _panels.put((Class)ModelFacade.STATE/*MStateImpl.class*/, new PropPanelSimpleState());       
     }
 
     /** Adds a property panel to the internal list. This allows a plugin to

@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementVisibility.java,v 1.5 2003/10/15 20:11:47 linus Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.6 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
-
-import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 
 /**
  * 
@@ -69,11 +67,11 @@ public class ActionSetModelElementVisibility extends UMLChangeAction {
                 Object m = /*(MModelElement)*/ target;
                 Object kind = null;
                 if (actionCommand.equals(PUBLIC_COMMAND)) {
-                    kind = MVisibilityKind.PUBLIC;
+                    kind = ModelFacade.PUBLIC_VISIBILITYKIND;
                 } else if (actionCommand.equals(PROTECTED_COMMAND)) {
-                    kind = MVisibilityKind.PROTECTED;
+                    kind = ModelFacade.PROTECTED_VISIBILITYKIND;
                 } else {
-                    kind = MVisibilityKind.PRIVATE;
+                    kind = ModelFacade.PRIVATE_VISIBILITYKIND;
                 }
                 ModelFacade.setVisibility(m, kind);
 

@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.13 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLComboBoxEntry.java,v 1.14 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,10 +30,7 @@ import java.lang.reflect.*;
 import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
-//import ru.novosoft.uml.foundation.core.MModelElement;
-//import ru.novosoft.uml.foundation.core.MNamespace;
+import org.argouml.model.uml.UmlFactory;
 
 public class UMLComboBoxEntry implements Comparable {
     private Object/*MModelElement*/ _element;
@@ -144,7 +141,7 @@ public class UMLComboBoxEntry implements Comparable {
                 }
             }
             if (ns == null) {
-                ns = ((MNamespace)targetParentNS).getFactory().createPackage();
+                ns = UmlFactory.getFactory().getModelManagement().createPackage();
                 ModelFacade.setName(ns, phantomName);
                 ModelFacade.addOwnedElement(targetParentNS, ns);
             }

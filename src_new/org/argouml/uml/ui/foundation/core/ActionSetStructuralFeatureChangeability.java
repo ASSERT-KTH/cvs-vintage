@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureChangeability.java,v 1.5 2003/10/15 20:11:47 linus Exp $
+// $Id: ActionSetStructuralFeatureChangeability.java,v 1.6 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,11 +33,13 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-import ru.novosoft.uml.foundation.data_types.MChangeableKind;
-
 /**
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 29, 2003
+ *
+ * @deprecated since 0.15.1, replace with 
+ *             org.argouml.uml.ui.foundation.core.ActionSetChangeability
+ *             remove in 0.15.2, alexb
  */
 public class ActionSetStructuralFeatureChangeability extends UMLChangeAction {
     public static final ActionSetStructuralFeatureChangeability SINGLETON = new ActionSetStructuralFeatureChangeability();
@@ -58,22 +60,23 @@ public class ActionSetStructuralFeatureChangeability extends UMLChangeAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-	super.actionPerformed(e);
-	if (e.getSource() instanceof JRadioButton) {
-	    JRadioButton source = (JRadioButton) e.getSource();
-	    String actionCommand = source.getActionCommand();
-	    Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
-	    if (org.argouml.model.ModelFacade.isAStructuralFeature(target)) {
-		Object m = /*(MStructuralFeature)*/ target;
-		MChangeableKind kind = null;
-		if (actionCommand.equals(ADDONLY_COMMAND)) {
-		    kind = MChangeableKind.ADD_ONLY;
-		} else if (actionCommand.equals(CHANGEABLE_COMMAND)) {
-		    kind = MChangeableKind.CHANGEABLE;
-		} else
-		    kind = MChangeableKind.FROZEN;
-		ModelFacade.setChangeability(m, kind);
-	    }
-	}
+        super.actionPerformed(e);
+        if (e.getSource() instanceof JRadioButton) {
+            JRadioButton source = (JRadioButton) e.getSource();
+            String actionCommand = source.getActionCommand();
+            Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
+            if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
+                Object m = /*(MAssociationEnd)*/ target;
+                Object/*MChangeableKind*/ kind = null;
+                if (actionCommand.equals(CHANGEABLE_COMMAND)) {
+                    kind = ModelFacade.CHANGEABLE_CHANGEABLEKIND;
+                } else if (actionCommand.equals(ADDONLY_COMMAND)) {
+                    kind = ModelFacade.ADD_ONLY_CHANGEABLEKIND;
+                } else {
+                    kind = ModelFacade.FROZEN_CHANGEABLEKIND;
+                }
+                ModelFacade.setChangeability(m, kind);
+            }
+        }
     }
 }

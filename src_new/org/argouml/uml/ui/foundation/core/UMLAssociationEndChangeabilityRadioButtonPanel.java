@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.4 2003/10/26 16:40:03 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.4 2003/10/26 16:40:03 alexb Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -31,8 +31,6 @@ import java.util.Map;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
-
-import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 
 /**
  * 
@@ -44,9 +42,9 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButt
     private static Map labelTextsAndActionCommands = new HashMap();
 
     static {
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-addonly"), ActionSetAssociationEndChangeability.ADDONLY_COMMAND);
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-changeable"), ActionSetAssociationEndChangeability.CHANGEABLE_COMMAND);
-        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-frozen"), ActionSetAssociationEndChangeability.FROZEN_COMMAND);
+        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-addonly"), ActionSetChangeability.ADDONLY_COMMAND);
+        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-changeable"), ActionSetChangeability.CHANGEABLE_COMMAND);
+        labelTextsAndActionCommands.put(Argo.localize("UMLMenu", "label.changeability-frozen"), ActionSetChangeability.FROZEN_COMMAND);
     }
 
     /**
@@ -58,7 +56,7 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButt
      * @param horizontal
      */
     public UMLAssociationEndChangeabilityRadioButtonPanel(String title, boolean horizontal) {
-        super(title, labelTextsAndActionCommands, "changeability", ActionSetAssociationEndChangeability.SINGLETON, horizontal);
+        super(title, labelTextsAndActionCommands, "changeability", ActionSetChangeability.SINGLETON, horizontal);
     }
 
     /**
@@ -68,16 +66,16 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButt
         if (getTarget() != null) {
             Object target = /*(MAssociationEnd)*/ getTarget();
             Object kind = ModelFacade.getChangeability(target);
-            if (kind == null || kind.equals(MChangeableKind.CHANGEABLE)) {
-                setSelected(ActionSetAssociationEndChangeability.CHANGEABLE_COMMAND);
+            if (kind == null || kind.equals(ActionSetChangeability.CHANGEABLE_COMMAND)) {
+                setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
             } else
-		if (kind.equals(MChangeableKind.ADD_ONLY)) {
-		    setSelected(ActionSetAssociationEndChangeability.ADDONLY_COMMAND); 
+		if (kind.equals(ActionSetChangeability.ADDONLY_COMMAND)) {
+		    setSelected(ActionSetChangeability.ADDONLY_COMMAND); 
 		} else
-		    if (kind.equals(MChangeableKind.FROZEN)) {
-			setSelected(ActionSetAssociationEndChangeability.FROZEN_COMMAND);
+		    if (kind.equals(ActionSetChangeability.FROZEN_COMMAND)) {
+			setSelected(ActionSetChangeability.FROZEN_COMMAND);
 		    } else
-			setSelected(ActionSetAssociationEndChangeability.CHANGEABLE_COMMAND);
+			setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
         }
     }
 }

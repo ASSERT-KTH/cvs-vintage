@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.27 2003/09/28 19:10:54 bobtarling Exp $
+// $Id: PropPanelExtend.java,v 1.28 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,9 +45,6 @@ import org.argouml.uml.ui.UMLExpressionModel;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-//import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
-
 
 /**
  * <p>Builds the property panel for an Extend relationship.</p>

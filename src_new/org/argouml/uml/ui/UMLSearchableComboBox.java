@@ -1,4 +1,4 @@
-// $Id: UMLSearchableComboBox.java,v 1.7 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLSearchableComboBox.java,v 1.8 2003/10/26 16:40:02 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLSearchableComboBox.java,v 1.7 2003/09/28 19:10:53 bobtarling Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.ComboBoxModel;
 import org.argouml.model.ModelFacade;
-
-//import ru.novosoft.uml.MBase;
-//import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * A searchable combobox. Searchable means that the user has only to type the
