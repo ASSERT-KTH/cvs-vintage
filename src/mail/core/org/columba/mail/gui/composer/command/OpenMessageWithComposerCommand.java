@@ -99,7 +99,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 
 		InputStream messageSourceStream = folder.getMessageSourceStream(uid);
 		Source tempSource = TempSourceFactory.createTempSource(
-				messageSourceStream, -1, null);
+				messageSourceStream, -1);
 		messageSourceStream.close();
 
 		Message message = MessageParser.parse(tempSource);

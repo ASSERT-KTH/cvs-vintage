@@ -157,9 +157,6 @@ public class SendMessageCommand extends FolderCommand {
 			throw e2;
 		}
 
-		// show interest on status information
-		((StatusObservableImpl) server.getObservable()).setWorker(worker);
-
 		// successfully connected and autenthenticated to SMTP server
 		try {
 			// display status message

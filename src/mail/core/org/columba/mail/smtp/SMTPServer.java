@@ -18,11 +18,20 @@
 
 package org.columba.mail.smtp;
 
-import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.StatusObservable;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
+import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.ProgressObservedInputStream;
+import org.columba.core.command.StatusObservable;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -33,26 +42,12 @@ import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 import org.columba.ristretto.pop3.POP3Exception;
-import org.columba.ristretto.progress.ProgressObserver;
 import org.columba.ristretto.smtp.SMTPException;
 import org.columba.ristretto.smtp.SMTPProtocol;
-
-import java.io.IOException;
-
-import java.net.InetAddress;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.JOptionPane;
 
 /**
  * 
@@ -157,9 +152,6 @@ public class SMTPServer {
 
         // initialise protocol layer
         protocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
-
-        // add observable
-        setObservable(new StatusObservableImpl());
 
         // Start login procedure
         protocol.openPort();
@@ -452,7 +444,7 @@ public class SMTPServer {
         }
 
         // now send message source
-        protocol.data(message.getSourceStream());
+        protocol.data(new ProgressObservedInputStream( message.getSourceStream(), workerStatusController));
     }
 
     /**
@@ -460,11 +452,6 @@ public class SMTPServer {
      */
     public StatusObservable getObservable() {
         return (StatusObservable) observer;
-    }
-
-    public void setObservable(ProgressObserver observable) {
-        observer = observable;
-        protocol.registerInterest(observable);
     }
 
     public String getName() {

@@ -16,7 +16,6 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import org.columba.ristretto.progress.ProgressObserver;
 
 
 /**
@@ -38,7 +37,7 @@ import org.columba.ristretto.progress.ProgressObserver;
  * 
  * @author fdietz
  */
-public class StatusObservableImpl implements StatusObservable, ProgressObserver {
+public class StatusObservableImpl implements StatusObservable {
     /**
  * encapsulated worker
  */
@@ -148,25 +147,4 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
         }
     }
 
-    /*
- * (non-Javadoc)
- * 
- * @see org.columba.ristretto.progress.ProgressObserver#maximumChanged(int)
- */
-    public void maximumChanged(int maximum) {
-        if (worker != null) {
-            worker.setProgressBarMaximum(maximum);
-        }
-    }
-
-    /*
- * (non-Javadoc)
- * 
- * @see org.columba.ristretto.progress.ProgressObserver#valueChanged(int)
- */
-    public void valueChanged(int value) {
-        if (worker != null) {
-            worker.setProgressBarValue(value);
-        }
-    }
 }
