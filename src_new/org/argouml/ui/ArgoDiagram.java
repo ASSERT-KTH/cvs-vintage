@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.22 2003/10/30 08:07:16 bobtarling Exp $
+// $Id: ArgoDiagram.java,v 1.23 2003/12/08 11:22:14 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,6 +163,10 @@ public class ArgoDiagram extends Diagram {
             return getGraphModel().getNodes();
         }
         return super.getNodes();
+    }
+    
+    public String toString() {
+        return "Diagram: " + _name;
     }
     
 
