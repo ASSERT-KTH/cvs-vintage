@@ -25,9 +25,9 @@
                <li><a href="#issueid">Searching by issue id</a></li>
               </ul>
              </li>
-            <li><a href="UserAdvancedQuery.vm">Advanced queries</a></li>
-            <li><a href="UserCustomQuery.vm">Custom queries</a></li>
-            <li><a href="UserSavedQuery.vm">Saved queries</a></li>
+            <li><a href="UserQueryAdvanced.vm">Advanced queries</a></li>
+            <li><a href="UserQueryCustom.vm">Custom queries</a></li>
+            <li><a href="UserQuerySaved.vm">Saved queries</a></li>
            </ul>
            </li>
           <li><a href="UserReports.vm">Reports</a></li>
@@ -39,7 +39,7 @@
     </ul>  
   </div>
   <h3><strong>Searching the database: overview</strong></h3>
-  <p>Query functionality includes defnining a very specific query, using a customized 
+  <p>Query functionality includes defining a very specific query, using a customized 
     query, using saved queries and accessing specific issue ids. You can also 
     use the <em>Issue List </em> to access the last query.</p>
   <ul>
@@ -76,7 +76,7 @@
   <p> For instance, jdoe is in the games (gam) project and wants to view an issue 
     from the interface (int) project. Jdoe can enter INT1 and click the <strong>Artifact 
     Id</strong> button to view the first issue in the Interface project. </p>
-  <p>If you do not have permssion to view issues in the target project you will 
+  <p>If you do not have permission to view issues in the target project you will 
     receive an error message. Likewise, if you enter an invalid project id or 
     issue number an error message will be generated.</p>
   <p><a href="#Top">Top</a> </p>
