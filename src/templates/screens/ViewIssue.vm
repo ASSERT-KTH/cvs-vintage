@@ -4,16 +4,14 @@
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 
 #set ($currentIssueModuleId = $currentIssue.ModuleId)
-#set ($currentModuleId = $scarabR.CurrentModule.ModuleId)
-#set ($currentModuleName = $scarabR.CurrentModule.Name)
-#if ($currentIssueModuleId != $currentModuleId)
+#set ($currentModule = $scarabR.CurrentModule)
+#set ($currentModuleId = $currentModule.ModuleId)
+#set ($currentModuleName = $currentModule.Name)
 
+#if ($currentIssueModuleId != $currentModuleId)
 <p><strong class="alert">
 The issue id, $currentIssueId, is not valid for the $currentModuleName Module	
 </strong></p>
-
-<p class="warn">
-</p>
 #else
 
 #if ($currentIssue)

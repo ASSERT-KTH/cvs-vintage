@@ -70,7 +70,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
            and TURBINE_PERMISSION.PERMISSION_NAME in (
                   "User | Edit Preferences",
                   "Issue | Attach",
-                  "Issue | Search")
+                  "Issue | Search",
+                  "Issue | View")
 ;
 
 #
@@ -120,7 +121,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
            and TURBINE_PERMISSION.PERMISSION_NAME in (
                 "Issue | Edit",
                 "Issue | Assign",
-                "Issue | Search")
+                "Issue | Search",
+                "Issue | View")
 ;
 
 #
