@@ -44,7 +44,6 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
@@ -100,9 +99,9 @@ public class MessageController implements HyperlinkListener, MouseListener,
         securityInformationController = new SecurityInformationController();
         headerController = new HeaderController();
 
-        //headerController.addHyperlinkListener(this);
+        ((HeaderView)headerController.getView()).getHeaderTextPane().addHyperlinkListener(this);
         bodytextViewer.addHyperlinkListener(this);
-        //headerController.addMouseListener(this);
+        ((HeaderView)headerController.getView()).getHeaderTextPane().addMouseListener(this);
         bodytextViewer.addMouseListener(this);
         bodytextViewer.addCaretListener(this);
 
