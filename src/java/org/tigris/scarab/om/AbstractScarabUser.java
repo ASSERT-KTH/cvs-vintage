@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.39 2002/07/12 18:28:20 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.40 2002/07/12 18:28:46 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
