@@ -54,20 +54,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
       #end
     #end
   </td>
-  <td>
-## FIXME: getUser() takes an Object param, not an int (the return type
-## of getCreatedBy()).  Post Beta milestone,
-## SCARAB_ATTRIBUTE.CREATED_BY needs to have its FK reference to
-## TURBINE_USER.USER_ID defined.
-
-#set ($creatorID = "$attribute.CreatedBy")
-#if ($creatorID == "0")
-    Default
-#else
-  #set ($creator = $scarabR.getUser($creatorID) )
-<a href="mailTo:$creator.Email">$creator.FirstName $creator.LastName</a>
-#end
-  </td>
+  <td>#attributeCreatedBy($attribute)</td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
   </tr>
   #end

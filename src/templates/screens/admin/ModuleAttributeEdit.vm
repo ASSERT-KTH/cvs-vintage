@@ -51,8 +51,7 @@ On this screen, one can modify a module's Attribute information.
  <tr>
   <th>Created by</th>
   <td>
-  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-  <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  #attributeCreatedBy($attribute)
   </td>
  </tr>
   #end

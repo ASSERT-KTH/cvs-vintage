@@ -70,10 +70,7 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
   #if ($attribute.CreatedDate)
  <tr>
   <th>Created by</th>
-  <td>
-  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-  <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
-  </td>
+  <td>#attributeCreatedBy($attribute)</td>
  </tr>
   #end
   #if ($attribute.CreatedDate)
