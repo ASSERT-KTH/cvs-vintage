@@ -15,6 +15,8 @@ import javax.ejb.EJBObject;
 import org.jboss.ejb.BeanLock;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
 /**
@@ -22,7 +24,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -164,5 +166,33 @@ public abstract class BeanLockSupport
       }
   
       return false;
+   }
+
+   // This following is for deadlock detection
+   protected static HashMap waiting = new HashMap();
+
+   public void deadlockDetection(Transaction miTx)
+   {
+      HashSet set = new HashSet();
+      set.add(miTx);
+      
+      Object checkTx = this.tx;
+      synchronized(waiting)
+      {
+	 while (checkTx != null)
+	 {
+	    Object waitingFor = waiting.get(checkTx);
+	    if (waitingFor != null)
+	    {
+	       if (set.contains(waitingFor))
+	       {
+		  log.error("Application deadlock detected: " + miTx + " has deadlock conditions");
+		  throw new RuntimeException("application deadlock detected");
+	       }
+	       set.add(waitingFor);
+	    }
+	    checkTx = waitingFor;
+	 }
+      }
    }
 }
