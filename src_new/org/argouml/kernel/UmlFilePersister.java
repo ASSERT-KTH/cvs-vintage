@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.8 2004/12/23 12:50:23 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.9 2004/12/23 16:44:31 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -211,52 +210,25 @@ public class UmlFilePersister extends AbstractFilePersister {
             ArgoParser parser = new ArgoParser();
             Project p = new Project(url);
             parser.readProject(p, inputStream);
-            inputStream.realClose();
-            
+            //inputStream.realClose();
+
             List memberList = parser.getMemberList();
             
             LOG.info(memberList.size() + " members");
             
-            HashMap instanceCountByType = new HashMap();
-            
+            MemberFilePersister persister = null;
             for (int i = 0; i < memberList.size(); ++i) {
-                String type = (String) memberList.get(i);
-                IntWrapper instanceCount =
-                    (IntWrapper) instanceCountByType.get(type);
-                if (instanceCount == null) {
-                    instanceCount = new IntWrapper();
-                }
-
-                // TODO this is currently slow, reoping the .uml file multiple
-                // times. Once the XmlInputStream has been amended to be
-                // "reopened" the commented lines should replace the
-                // instruction that preceeds them.
-                // reopen shall reopen the stream from where it was previously
-                // closed and search for the next named tag to start reading.
-                MemberFilePersister persister = null;
                 if (memberList.get(i).equals("pgml")) {
-                    inputStream =
-                        new XmlInputStream(url.openStream(),
-                                           "pgml",
-                                           instanceCount.getIntValue());
-                    persister = new DiagramMemberFilePersister(p, inputStream);
+                    persister = new DiagramMemberFilePersister();
                 } else if (memberList.get(i).equals("todo")) {
-                    inputStream =
-                        new XmlInputStream(url.openStream(), "todo");
-                    //inputStream.reopen("todo");
-                    persister = new TodoListMemberFilePersister(p, inputStream);
+                    persister = new TodoListMemberFilePersister();
                 } else if (memberList.get(i).equals("xmi")) {
-                    inputStream =
-                        new XmlInputStream(url.openStream(), "XMI");
-                    //inputStream.reopen("XMI");
-                    persister = new ModelMemberFilePersister(p, inputStream);
+                    persister = new ModelMemberFilePersister();
                 }
-                persister.load();
-                inputStream.realClose();
-                //the above line will go when reopen is available
-                instanceCount.increment();
-                instanceCountByType.put(type, instanceCount);
+                inputStream.reopen(persister.getMainTag());
+                persister.load(p, inputStream);
             }
+            inputStream.realClose();
             p.postLoad();
             return p;
         } catch (IOException e) {
@@ -265,18 +237,6 @@ public class UmlFilePersister extends AbstractFilePersister {
         } catch (SAXException e) {
             LOG.error("SAXException", e);
             throw new OpenException(e);
-        }
-    }
-    
-    private class IntWrapper {
-        private int intValue = 0;
-        
-        public void increment() {
-            ++intValue;
-        }
-        
-        public int getIntValue() {
-            return intValue;
         }
     }
 }

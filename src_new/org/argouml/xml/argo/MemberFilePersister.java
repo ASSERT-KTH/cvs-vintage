@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.5 2004/12/21 23:02:31 bobtarling Exp $
+// $Id: MemberFilePersister.java,v 1.6 2004/12/23 16:44:31 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,10 @@
 
 package org.argouml.xml.argo;
 
+import java.io.InputStream;
+
 import org.argouml.kernel.OpenException;
+import org.argouml.kernel.Project;
 
 /**
  * A base class file persister for project members.
@@ -35,14 +38,16 @@ public abstract class MemberFilePersister {
      * Load the member based on instance variables
      * which should have been setup in the constructor.
      *
-     * @throws SAXException on any parsing errors.
-     * @param instance the instance of the tag to load.
+     * @param project the project to persist
+     * @param inputStream the inputStream to parse to load the member.
+     * @throws OpenException on any parsing errors.
      */
-    public abstract void load() throws OpenException;
+    public abstract void load(Project project, InputStream inputStream)
+        throws OpenException;
     
     /**
      * Gets the tag name which is the root tag for this member.
      * @return tag name.
      */
-    public abstract String getTag();
+    public abstract String getMainTag();
 }
