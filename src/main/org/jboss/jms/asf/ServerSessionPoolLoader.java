@@ -30,7 +30,7 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.tm.XidFactoryMBean;
+import org.jboss.tm.XidFactory;
 
 /**
  * A loader for <tt>ServerSessionPools</tt>.
@@ -39,7 +39,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -144,7 +144,7 @@ public class ServerSessionPoolLoader
     */
    protected void startService() throws Exception
    {
-      XidFactoryMBean xidFactoryObj = (XidFactoryMBean)getServer().getAttribute(xidFactory, "Instance");
+      XidFactory xidFactoryObj = (XidFactory)getServer().getAttribute(xidFactory, "Instance");
 
       Class cls = Class.forName(poolFactoryClass);
       poolFactory = (ServerSessionPoolFactory)cls.newInstance();

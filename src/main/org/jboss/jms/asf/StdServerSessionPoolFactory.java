@@ -12,7 +12,7 @@ import javax.jms.JMSException;
 import javax.jms.MessageListener;
 
 import javax.jms.ServerSessionPool;
-import org.jboss.tm.XidFactoryMBean;
+import org.jboss.tm.XidFactory;
 
 /**
  * An implementation of ServerSessionPoolFactory. <p>
@@ -21,7 +21,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.8 $
+ * @version   $Revision: 1.9 $
  */
 public class StdServerSessionPoolFactory
        implements ServerSessionPoolFactory, Serializable
@@ -31,7 +31,7 @@ public class StdServerSessionPoolFactory
     */
    private String name;
 
-   private XidFactoryMBean xidFactory;
+   private XidFactory xidFactory;
 
    /**
     * Construct a <tt>StdServerSessionPoolFactory</tt> .
@@ -65,9 +65,9 @@ public class StdServerSessionPoolFactory
     * The <code>setXidFactory</code> method supplies the XidFactory that 
     * server sessions will use to get Xids to control local transactions.
     *
-    * @param xidFactory a <code>XidFactoryMBean</code> value
+    * @param xidFactory a <code>XidFactory</code> value
     */
-   public void setXidFactory(final XidFactoryMBean xidFactory)
+   public void setXidFactory(final XidFactory xidFactory)
    {
       this.xidFactory = xidFactory;
    }
@@ -76,9 +76,9 @@ public class StdServerSessionPoolFactory
     * The <code>getXidFactory</code> method returns the XidFactory that 
     * server sessions will use to get xids..
     *
-    * @return a <code>XidFactoryMBean</code> value
+    * @return a <code>XidFactory</code> value
     */
-   public XidFactoryMBean getXidFactory()
+   public XidFactory getXidFactory()
    {
       return xidFactory;
    }

@@ -33,12 +33,12 @@ import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 
 import org.jboss.logging.Logger;
 
-import org.jboss.tm.XidFactoryMBean;
+import org.jboss.tm.XidFactory;
 
 /**
  * Implementation of ServerSessionPool.
  *
- * @version <tt>$Revision: 1.20 $</tt>
+ * @version <tt>$Revision: 1.21 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -89,7 +89,7 @@ public class StdServerSessionPool
     */
    private int numServerSessions = 0;
 
-   private XidFactoryMBean xidFactory;
+   private XidFactory xidFactory;
 
    /**
     * Construct a <tt>StdServerSessionPool</tt> using the default pool size.
@@ -108,7 +108,7 @@ public class StdServerSessionPool
                                final boolean useLocalTX,
                                final MessageListener listener,
                                final int maxSession,
-                               final XidFactoryMBean xidFactory)
+                               final XidFactory xidFactory)
       throws JMSException
    {
       this.con = con;

@@ -21,7 +21,7 @@ import javax.transaction.xa.Xid;
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TransactionManagerService;
-import org.jboss.tm.XidFactoryMBean;
+import org.jboss.tm.XidFactory;
 
 /**
  * An implementation of ServerSession. <p>
@@ -31,7 +31,7 @@ import org.jboss.tm.XidFactoryMBean;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.14 $
+ * @version   $Revision: 1.15 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -73,7 +73,7 @@ public class StdServerSession
     */
    private MessageListener delegateListener;
 
-   private XidFactoryMBean xidFactory;
+   private XidFactory xidFactory;
    
    /**
     * Create a <tt>StdServerSession</tt> .
@@ -91,7 +91,7 @@ public class StdServerSession
                     final XASession xaSession,
                     final MessageListener delegateListener,
                     boolean useLocalTX,
-                    final XidFactoryMBean xidFactory)
+                    final XidFactory xidFactory)
       throws JMSException
    {
       // assert pool != null
