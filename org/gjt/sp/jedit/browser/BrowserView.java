@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.36 2002/05/19 04:32:33 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.37 2002/05/26 07:38:43 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -543,6 +543,10 @@ public class BrowserView extends JPanel
 				{
 					return;
 				}
+
+				// hack...
+				if(evt.isShiftDown() && evt.getKeyChar() == '\n')
+					return;
 
 				switch(evt.getKeyChar())
 				{

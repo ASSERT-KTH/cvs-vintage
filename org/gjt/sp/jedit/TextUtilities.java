@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.31 2002/05/21 08:44:56 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.32 2002/05/26 07:38:43 spestov Exp $
  */
 public class TextUtilities
 {
@@ -57,19 +57,15 @@ public class TextUtilities
 		if(offset == 0 && tokens.id == Token.END)
 			return tokens;
 
-		int tokenListOffset = 0;
 		for(;;)
 		{
 			if(tokens.id == Token.END)
 				throw new ArrayIndexOutOfBoundsException("offset > line length");
 
-			if(tokenListOffset + tokens.length > offset)
+			if(tokens.offset + tokens.length > offset)
 				return tokens;
 			else
-			{
-				tokenListOffset += tokens.length;
 				tokens = tokens.next;
-			}
 		}
 	} //}}}
 
@@ -136,7 +132,7 @@ public class TextUtilities
 					{
 						if(!haveTokens)
 						{
-							tokenHandler.reset();
+							tokenHandler.init();
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
@@ -147,7 +143,7 @@ public class TextUtilities
 					{
 						if(!haveTokens)
 						{
-							tokenHandler.reset();
+							tokenHandler.init();
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
@@ -184,7 +180,7 @@ public class TextUtilities
 					{
 						if(!haveTokens)
 						{
-							tokenHandler.reset();
+							tokenHandler.init();
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
@@ -195,7 +191,7 @@ public class TextUtilities
 					{
 						if(!haveTokens)
 						{
-							tokenHandler.reset();
+							tokenHandler.init();
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}

@@ -27,18 +27,20 @@ package org.gjt.sp.jedit.syntax;
  * Token markers send tokens to implementations of this interface.
  *
  * @author Slava Pestov
- * @version $Id: TokenHandler.java,v 1.2 2002/05/26 04:50:14 spestov Exp $
+ * @version $Id: TokenHandler.java,v 1.3 2002/05/26 07:38:43 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public interface TokenHandler
 {
 	/**
 	 * Called by the token marker when a syntax token has been parsed.
-	 * @param length The number of characters in the token
 	 * @param id The token type (one of the constants in the
 	 * <code>Token</code> class).
+	 * @param offset The start offset of the token
+	 * @param length The number of characters in the token
 	 * @param context The line context
 	 * @since jEdit 4.1pre1
 	 */
-	void handleToken(int length, byte id, TokenMarker.LineContext context);
+	public void handleToken(byte id, int offset, int length,
+		TokenMarker.LineContext context);
 }
