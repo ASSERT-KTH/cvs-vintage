@@ -20,7 +20,6 @@ import java.util.Vector;
 
 import org.columba.core.util.Mutex;
 
-
 /**
  * Scheduler for background threads
  * <p>
@@ -29,7 +28,7 @@ import org.columba.core.util.Mutex;
  *
  * @author tstich
  */
-public class DefaultProcessor extends Thread {
+public class DefaultCommandProcessor implements CommandProcessor, Runnable {
     private final static int MAX_WORKERS = 5;
     private List operationQueue;
     private List worker;
@@ -48,12 +47,11 @@ public class DefaultProcessor extends Thread {
 
     /**
      * Constructs a DefaultProcessor.
-     *
      */
-    public DefaultProcessor() {
+    public DefaultCommandProcessor() {
         operationQueue = new Vector(10);
 
-        worker = new Vector();
+        worker = new Vector(MAX_WORKERS);
 
         // Create the workers
         for (int i = 0; i < MAX_WORKERS; i++) {
@@ -69,6 +67,8 @@ public class DefaultProcessor extends Thread {
 
         undoManager = new UndoManager(this);
         timeStamp = 0;
+        
+        new Thread(this).start();
     }
 
     /**
@@ -280,7 +280,7 @@ public class DefaultProcessor extends Thread {
      * @return processor busy
      */
     public boolean isBusy() {
-        return isBusy();
+        return isBusy;
     }
 
     /**
@@ -300,9 +300,6 @@ public class DefaultProcessor extends Thread {
         return taskManager;
     }
 
-    /**
-     * @return
-     */
     /**
      * Returns the operationQueue. This method is for testing only!
      * @return Vector

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
@@ -23,7 +24,6 @@ import org.columba.core.util.SwingWorker;
 
 import java.util.List;
 import java.util.Vector;
-
 
 /**
  * Worker additionally sends status information updates to the {@link TaskManager}.
@@ -43,7 +43,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     private static final int CLEAR_DELAY = 500;
     protected Command op;
     protected int operationMode;
-    protected DefaultProcessor boss;
+    protected DefaultCommandProcessor boss;
     protected String displayText;
     protected int progressBarMax;
     protected int progressBarValue;
@@ -51,7 +51,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     protected List workerStatusChangeListeners;
     private int timeStamp;
 
-    public Worker(DefaultProcessor parent) {
+    public Worker(DefaultCommandProcessor parent) {
         super();
 
         this.boss = parent;

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -30,16 +31,15 @@ import java.util.Vector;
 
 import javax.swing.KeyStroke;
 
-
 public class UndoManager implements WorkerListChangeListener {
     protected List undoQueue;
     protected List redoQueue;
     public AbstractColumbaAction undoAction;
     public AbstractColumbaAction redoAction;
-    protected DefaultProcessor processor;
+    protected DefaultCommandProcessor processor;
     protected int runningTasks = 0;
 
-    public UndoManager(DefaultProcessor processor) {
+    public UndoManager(DefaultCommandProcessor processor) {
         undoQueue = new Vector();
         redoQueue = new Vector();
 

@@ -20,7 +20,7 @@ import java.io.File;
 
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.command.DefaultProcessor;
+import org.columba.core.command.DefaultCommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
@@ -83,8 +83,7 @@ public class Main {
         MainInterface.clipboardManager = new ClipboardManager();
         MainInterface.focusManager = new FocusManager();
 
-        MainInterface.processor = new DefaultProcessor();
-        MainInterface.processor.start();
+        MainInterface.processor = new DefaultCommandProcessor();
 
         MainInterface.pluginManager = new PluginManager();
 

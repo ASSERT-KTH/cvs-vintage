@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.util;
 
 import java.awt.BorderLayout;
@@ -32,14 +33,12 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultProcessor;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
-
 
 /**
  * Dialog shows progress while sending message.
@@ -64,9 +63,7 @@ public class SendMessageDialog extends JDialog
      * @throws java.awt.HeadlessException
      */
     public SendMessageDialog(WorkerStatusController worker) throws HeadlessException {
-        super(new JFrame(), false);
-
-        setTitle("Sending message...");
+        super(new JFrame(), "Sending message...", false);
 
         setWorker(worker);
 

@@ -17,7 +17,7 @@
 package org.columba.core.main;
 
 import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.command.DefaultProcessor;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
@@ -44,7 +44,7 @@ public class MainInterface {
     public static FrameModel frameModel;
 
     /** Scheduler */
-    public static DefaultProcessor processor;
+    public static CommandProcessor processor;
     public static PluginManager pluginManager;
 
     /**
