@@ -88,6 +88,8 @@ public class TrustedLoader extends BaseInterceptor {
     // -------------------- Properties --------------------
     
     // -------------------- Hooks --------------------
+    Vector allModules=new Vector();
+    
     /** Called when the server is configured - all base modules are added,
 	some contexts are added ( explicitely or by AutoDeploy/AutoAdd ).
 	No addContext callback has been called.
@@ -104,7 +106,6 @@ public class TrustedLoader extends BaseInterceptor {
 	throws TomcatException
     {
 	if( state!=ContextManager.STATE_CONFIG ) return;
-	Vector modV=new Vector();
 
 	Enumeration ctxsE= cm.getContexts();
 	while( ctxsE.hasMoreElements() ) {
@@ -131,19 +132,73 @@ public class TrustedLoader extends BaseInterceptor {
 	    loaderHelper.addContext( cm, context );
 	    loaderHelper.contextInit( context );
 
-	    modV=new Vector();
+	    Vector modV=new Vector();
 	    loadInterceptors( context, modules, modV );
 	    cm.setNote( "trustedLoader.currentContext", context );
+
 	    // Now add all modules to cm
 	    for( int i=0; i< modV.size(); i++ ) {
 		BaseInterceptor bi=(BaseInterceptor)modV.elementAt( i );
 		cm.addInterceptor( bi );
+		allModules.addElement( bi );
 	    }	
 	    cm.setNote(  "trustedLoader.currentContext", null );
+	    context.setClassLoader( null );
 	}
-
     }
 
+
+    public void contextInit( Context ctx )
+	throws TomcatException
+    {
+	// like a reload, the modules will be removed and added back
+	if( ! ctx.isTrusted() ) return;
+
+	File modules=getModuleFile( ctx );
+	if( modules==null ) return;
+
+	reInitModules( ctx, modules );
+    }
+
+    private  void reInitModules( Context ctx, File modules )
+	throws TomcatException
+    {
+	// remove modules
+	for( int i=0; i< allModules.size(); i++ ) {
+	    BaseInterceptor bi=(BaseInterceptor)allModules.elementAt( i );
+	    cm.removeInterceptor( bi );
+	}
+	
+
+	// The real loader is set. 
+	Vector modV=new Vector();
+	loadInterceptors( ctx, modules, modV );
+	cm.setNote( "trustedLoader.currentContext", ctx );
+
+	// Now add all modules to cm
+	for( int i=0; i< modV.size(); i++ ) {
+	    BaseInterceptor bi=(BaseInterceptor)modV.elementAt( i );
+	    cm.addInterceptor( bi );
+	}	
+	cm.setNote(  "trustedLoader.currentContext", null );
+    }
+
+    /** Again, remove and add back
+     */
+    public void reload( Request req, Context context) throws TomcatException {
+	if( ! context.isTrusted() ) return;
+
+	File modules=getModuleFile( context );
+	if( modules==null ) return;
+
+	if( debug > 0 )
+	    log( "Reload modules " + context.getPath() );
+
+	reInitModules( context , modules);
+    }
+
+
+    
     public void loadInterceptors( Context ctx, File modulesF, Vector modulesV )
 	throws TomcatException
     {
