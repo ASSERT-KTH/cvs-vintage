@@ -196,7 +196,10 @@ public class AccessLogInterceptor extends BaseInterceptor {
 			    c = logformat.charAt(i);
 			    switch (c) {
 			    case 'h':
-				fw.write(request.remoteHost().toString());
+				if( reqest.remoteHost().toString() != null )
+				    fw.write(request.remoteHost().toString());
+				else
+				    fw.write( "DEFAULT" );
 				break;
 			    case 'l':
 				fw.write('-');
@@ -284,5 +287,15 @@ public class AccessLogInterceptor extends BaseInterceptor {
 	    }
 	}
 	return 0;
+    }
+
+    public void engineShutdown(ContextManager cm) throws TomcatException {
+	// From: Mike Schrag <mschrag@cavtel.net> 
+	try {
+	    getFileWriter().flush();
+	    getFileWriter().close();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
     }
 }
