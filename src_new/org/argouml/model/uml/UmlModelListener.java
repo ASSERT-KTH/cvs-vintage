@@ -1,4 +1,4 @@
-// $Id: UmlModelListener.java,v 1.22 2004/12/13 18:51:07 mvw Exp $
+// $Id: UmlModelListener.java,v 1.23 2004/12/14 21:11:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,6 +99,12 @@ public class UmlModelListener implements PropertyChangeListener {
         Model.getPump().addModelEventListener(this, elm);
     }
     
+    /**
+     * For every ModelElement that has been deleted, we want to 
+     * remove its listener.
+     * 
+     * @param elm the UML modelelement that has been deleted
+     */
     public void deleteElement(Object elm) {
         Model.getPump().removeModelEventListener(this, elm);
     }

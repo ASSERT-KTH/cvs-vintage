@@ -1,4 +1,4 @@
-// $Id: XMLTokenTableBase.java,v 1.10 2004/09/23 20:53:10 mvw Exp $
+// $Id: XMLTokenTableBase.java,v 1.11 2004/12/14 21:11:23 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public abstract class XMLTokenTableBase {
 
     /**
      * @param s the string
-     * @param push 
+     * @param push true if the token is to be pushed
      * @return the token
      */
     public final int toToken(String s, boolean push) {

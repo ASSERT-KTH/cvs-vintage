@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.11 2004/12/13 18:51:07 mvw Exp $
+// $Id: CheckUMLModelHelper.java,v 1.12 2004/12/14 21:11:22 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,11 @@ import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.Model;
 import org.argouml.model.uml.AbstractUmlModelFactory;
 import org.argouml.model.uml.CoreFactory;
 import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.model.uml.UmlModelListener;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MClass;

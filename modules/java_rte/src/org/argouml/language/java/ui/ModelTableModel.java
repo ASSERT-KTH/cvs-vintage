@@ -1,4 +1,4 @@
-// $Id: ModelTableModel.java,v 1.8 2004/12/11 16:49:48 bobtarling Exp $
+// $Id: ModelTableModel.java,v 1.9 2004/12/14 21:11:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,12 +127,14 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
             }
             // ommit root package name; it's the model's root
             if (ModelFacade.getNamespace(parentNamespace) != null) {
-        	packagePath = ModelFacade.getName(parentNamespace) + "." + packagePath;
+        	packagePath = ModelFacade.getName(parentNamespace) + "." 
+        	    + packagePath;
             }
             parentNamespace = ModelFacade.getNamespace(parentNamespace);
         }
         if (codePath != null && codePath.length() > 0) {
-            return new Object [] {ModelFacade.getName(cls), type, packagePath, codePath};
+            return new Object [] {ModelFacade.getName(cls), type, packagePath, 
+                codePath };
         } else {
             return null;
         }

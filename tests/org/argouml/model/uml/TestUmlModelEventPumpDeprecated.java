@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPumpDeprecated.java,v 1.4 2004/12/13 18:51:06 mvw Exp $
+// $Id: TestUmlModelEventPumpDeprecated.java,v 1.5 2004/12/14 21:11:22 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.Model;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
