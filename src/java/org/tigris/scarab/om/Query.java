@@ -151,7 +151,7 @@ public class Query
                                      TemplateContext context )
         throws Exception
     {
-        // If it's a global query, user must have Item | Approve 
+        // If it's a module scoped query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
         boolean success = true;
         if (getScopeId().equals(Scope.PERSONAL__PK) 
@@ -272,8 +272,8 @@ public class Query
     }
 
     /**
-     * Checks permission and approves or rejects query. 
-     * If query is approved, query type set to "global", else set to "personal".
+     * Checks permission and approves or rejects query. If query
+     * is approved, query type set to "module", else set to "personal".
      */
     public void approve( ScarabUser user, boolean approved )
          throws Exception

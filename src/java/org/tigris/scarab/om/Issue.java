@@ -2048,8 +2048,8 @@ public class Issue
 
  
     /**
-     * Checks permission and approves or rejects issue template. 
-     * If template is approved, template type set to "global", else set to "personal".
+     * Checks permission and approves or rejects issue template. If template
+     * is approved, template type set to "module", else set to "personal".
      */
     public void approve( ScarabUser user, boolean approved )
          throws Exception, ScarabException

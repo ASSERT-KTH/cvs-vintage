@@ -85,7 +85,7 @@ public  class IssueTemplateInfo
     {
         Issue issue = (Issue) IssuePeer.retrieveByPK(getIssueId());
 
-        // If it's a global template, user must have Item | Approve 
+        // If it's a module template, user must have Item | Approve 
         //   permission, or its Approved field gets set to false
         if (getScopeId().equals(Scope.PERSONAL__PK))
         {
@@ -122,8 +122,8 @@ public  class IssueTemplateInfo
     }
 
     /*
-     * Checks permission and approves or rejects template.
-     * If template is approved,template type set to "global", else set to "personal".
+     * Checks permission and approves or rejects template. If template
+     * is approved,template type set to "module", else set to "personal".
      */
     public void approve( ScarabUser user, boolean approved )
          throws Exception
