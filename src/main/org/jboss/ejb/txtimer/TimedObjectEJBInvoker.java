@@ -6,16 +6,20 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: StatelessSessionBeanInvoker.java,v 1.1 2004/04/08 21:54:27 tdiesler Exp $
+// $Id: TimedObjectEJBInvoker.java,v 1.1 2004/04/09 22:45:26 tdiesler Exp $
 
-import org.jboss.ejb.StatelessSessionContainer;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
-import org.jboss.logging.Logger;
+import org.jboss.metadata.EntityMetaData;
 
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
 import java.lang.reflect.Method;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.io.Serializable;
 
 /**
  * Invokes the ejbTimeout method on the TimedObject with the given id.
@@ -23,15 +27,13 @@ import java.lang.reflect.Method;
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
  */
-public class StatelessSessionBeanInvoker implements TimedObjectInvoker
+public class TimedObjectEJBInvoker implements TimedObjectInvoker
 {
-   // provide logging
-   private static Logger log = Logger.getLogger(StatelessSessionBeanInvoker.class);
 
-   private StatelessSessionContainer container;
+   private Container container;
    private Method method;
 
-   public StatelessSessionBeanInvoker(StatelessSessionContainer container)
+   public TimedObjectEJBInvoker(Container container)
    {
       try
       {
@@ -46,16 +48,17 @@ public class StatelessSessionBeanInvoker implements TimedObjectInvoker
    /**
     * Invokes the ejbTimeout method on the TimedObject with the given id.
     *
-    * @param timedObjectId The id of the TimedObject
-    * @param timer         the Timer that is passed to ejbTimeout
+    * @param id The combined TimedObjectId
+    * @param timer The Timer that is passed to ejbTimeout
     */
-   public void invokeTimedObject(String timedObjectId, Timer timer) throws Exception
+   public void invokeTimedObject(TimedObjectId id, Timer timer)
+           throws Exception
    {
       ClassLoader cl = Thread.currentThread().getContextClassLoader();
       try
       {
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-         Invocation inv = new Invocation(null, method, new Object[]{timer}, null, null, null);
+         Invocation inv = new Invocation(id.getInstancePk(), method, new Object[]{timer}, null, null, null);
          inv.setType(InvocationType.LOCAL);
          container.invoke(inv);
       }

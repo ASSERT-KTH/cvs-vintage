@@ -29,7 +29,6 @@ import javax.management.ObjectName;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
-import org.jboss.ejb.txtimer.MessageDrivenBeanInvoker;
 import org.jboss.util.NullArgumentException;
 import org.jboss.metadata.MessageDrivenMetaData;
 
@@ -42,7 +41,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -127,12 +126,6 @@ public class MessageDrivenContainer
    {
       //throw new Error("HomeClass not valid for MessageDriven beans");
       return null;
-   }
-
-   /** Provide an appropriate bean invoker for this container */
-   public TimedObjectInvoker getTimedObjectInvoker()
-   {
-      return new MessageDrivenBeanInvoker(this);
    }
 
    public Class getRemoteClass()

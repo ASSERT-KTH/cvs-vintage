@@ -36,7 +36,7 @@ import org.jboss.monitor.StatisticsProvider;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.collection.SerializableEnumeration;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
-import org.jboss.ejb.txtimer.EntityBeanInvoker;
+import org.jboss.ejb.txtimer.TimedObjectEJBInvoker;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -51,7 +51,7 @@ import org.jboss.ejb.txtimer.EntityBeanInvoker;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.111 $
+ * @version $Revision: 1.112 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -228,12 +228,6 @@ public class EntityContainer
     */
    public Object createBeanClassInstance() throws Exception {
       return persistenceManager.createBeanClassInstance();
-   }
-
-   /** Provide an appropriate bean invoker for this container */
-   public TimedObjectInvoker getTimedObjectInvoker()
-   {
-      return new EntityBeanInvoker(this);
    }
 
    // Container implementation --------------------------------------

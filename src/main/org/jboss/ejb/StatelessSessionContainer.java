@@ -7,7 +7,6 @@
 
 package org.jboss.ejb;
 
-import org.jboss.ejb.txtimer.StatelessSessionBeanInvoker;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
 
@@ -31,7 +30,7 @@ import java.util.Map;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */
 public class StatelessSessionContainer
    extends SessionContainer
@@ -159,12 +158,6 @@ public class StatelessSessionContainer
       }
 
       homeMapping = map;
-   }
-
-   /** Provide an appropriate bean invoker for this container */
-   public TimedObjectInvoker getTimedObjectInvoker()
-   {
-      return new StatelessSessionBeanInvoker(this);
    }
 
    Interceptor createContainerInterceptor()

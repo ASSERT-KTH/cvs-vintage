@@ -15,6 +15,8 @@ import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.ejb.timer.ContainerTimerService;
 import org.jboss.ejb.txtimer.TimedObjectInvoker;
+import org.jboss.ejb.txtimer.TimedObjectEJBInvoker;
+import org.jboss.ejb.txtimer.TimedObjectId;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
@@ -79,9 +81,9 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.138 $
+ * @version $Revision: 1.139 $
  *
- * @jmx:mbean extends="org.jboss.system.ServiceMBean"
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public abstract class Container
         extends ServiceMBeanSupport
@@ -367,7 +369,7 @@ public abstract class Container
    /**
     * Gets the application deployment unit for this container. All the bean
     * containers within the same application unit share the same instance.
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public EjbModule getEjbModule()
    {
@@ -376,7 +378,7 @@ public abstract class Container
 
    /**
     * Gets the number of create invocations that have been made
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public long getCreateCount()
    {
@@ -385,7 +387,7 @@ public abstract class Container
 
    /**
     * Gets the number of remove invocations that have been made
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public long getRemoveCount()
    {
@@ -393,7 +395,7 @@ public abstract class Container
    }
 
    /** Gets the invocation statistics collection
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public InvocationStatistics getInvokeStats()
    {
@@ -471,7 +473,7 @@ public abstract class Container
    /**
     * Returns the metadata of this container.
     *
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     * @return metaData;
     */
    public BeanMetaData getBeanMetaData()
@@ -595,7 +597,7 @@ public abstract class Container
     *
     * @see javax.ejb.EJBContext#getTimerService
     *
-    * @jmx:managed-operation
+    * @jmx.managed-operation
     **/
    public TimerService getTimerService(Object pKey)
            throws IllegalStateException
@@ -611,17 +613,17 @@ public abstract class Container
          if (server.isRegistered(oname))
          {
             // Try to get an already existing TimerService
-            String timedObjectId = getJmxName().getCanonicalName() + (pKey != null ? "#" + pKey : "");
+            TimedObjectId timedObjectId = new TimedObjectId(getJmxName().getCanonicalName(), pKey);
             timerService = (TimerService) server.invoke(oname, "getTimerService",
-                    new Object[]{timedObjectId}, new String[]{"java.lang.String"});
+                    new Object[]{timedObjectId}, new String[]{TimedObjectId.class.getName()});
 
             // No, then create a TimerService
             if (timerService == null)
             {
-               TimedObjectInvoker timedObjectInvoker = getTimedObjectInvoker();
+               TimedObjectInvoker timedObjectInvoker = new TimedObjectEJBInvoker(this);
                timerService = (TimerService) server.invoke(oname, "createTimerService",
                        new Object[]{timedObjectId, timedObjectInvoker},
-                       new String[]{"java.lang.String", "org.jboss.ejb.txtimer.TimedObjectInvoker"});
+                       new String[]{TimedObjectId.class.getName(), TimedObjectInvoker.class.getName()});
             }
          }
 
@@ -646,9 +648,6 @@ public abstract class Container
       }
       return timerService;
    }
-
-   /** Overwrite to provide an appropriate bean invoker for this container */
-   public abstract TimedObjectInvoker getTimedObjectInvoker();
 
    /**
     * Stops all the timers created by beans of this container
@@ -761,7 +760,7 @@ public abstract class Container
     * The concrete container classes should override this method to introduce
     * implementation specific start behaviour.
     *
-    * @todo implement the service lifecycle methods in an xmbean interceptor so
+    * todo implement the service lifecycle methods in an xmbean interceptor so
     * non lifecycle managed ops are blocked when mbean is not started.
     *
     * @throws Exception    An exception that occured during start
@@ -845,7 +844,7 @@ public abstract class Container
    public abstract void addInterceptor(Interceptor in);
 
    /**
-    * @jmx:managed-operation
+    * @jmx.managed-operation
     *
     * @param mi
     * @return
