@@ -21,7 +21,7 @@ import org.jboss.ejb.InstancePool;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class MessageDrivenInstanceInterceptor
       extends AbstractInterceptor
@@ -58,6 +58,8 @@ public class MessageDrivenInstanceInterceptor
 
       try
       {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+
          // Invoke through interceptors
          return getNext().invoke(mi);
       }
@@ -78,6 +80,8 @@ public class MessageDrivenInstanceInterceptor
       }
       finally
       {
+         ctx.popInMethodFlag();
+         
          // Return context
          if (mi.getEnterpriseContext() != null)
          {
