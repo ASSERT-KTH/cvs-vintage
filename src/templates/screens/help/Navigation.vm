@@ -41,7 +41,7 @@
  $l10n.NavP8
   <h3><a name="forms" id="forms">$l10n.NavP9Head</a></h3>
   <p>$l10n.NavP9</p>
-  <p><strong>$l10n.Buttons</strong></p>
+  <p><strong>$l10n.Buttons1</strong></p>
   <p>$l10n.NavP10</p>
   <ul>
     <li> <strong>$l10n.Cancel</strong> $l10n.CancelDesc 
