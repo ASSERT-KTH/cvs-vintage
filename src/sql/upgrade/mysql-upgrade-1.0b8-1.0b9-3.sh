@@ -7,6 +7,8 @@ POPULATION_SCRIPT_DIR='../../../target/webapps/scarab/WEB-INF/sql'
 # execute the settings file
 if [ -f "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}" ] ; then
     . "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}"
+elif [ -f "../${DB_SETTINGS}" ] ; then
+    . "../${DB_SETTINGS}"
 else
     echo
     echo "Could not locate the dbsettings.props file."
