@@ -2,9 +2,7 @@
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
 
 #if ($currentIssue)
-    #set ($attrValues = $currentIssue.AttributeValuesMap)
-
-
+    #set ($attrValues = $currentIssue.AllAttributeValuesMap)
 
 <form name="IssueForm" method="post" action="$action" >
 
@@ -37,91 +35,64 @@
 
           <td class="b">#$currentIssue.UniqueId</td>
          </tr>
+#foreach ( $attKey in $attrValues )
+  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()) )
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
-#set($attVal =  $attrValues.get("RESOLUTION"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
 
+  #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+  #else
+        #set ( $field = "Value" )  
+  #end
+
+  #if ($attVal.Value && !$attVal.Attribute.Name.equals("Description") )
          <tr>
-          <td width="120" class="a"><strong>resolution:</strong></td>
-
-          <td class="b">$attrInput.Value </td>
-         </tr>
-
-#set($attVal =  $attrValues.get("PLATFORM"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-         <tr>
-          <td width="120" class="a"><strong>platform:</strong></td>
-
-          <td class="b">$attrInput.Value </td>
-         </tr>
-
-#set($attVal =  $attrValues.get("OPERATING SYSTEM"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-         <tr>
-          <td width="120" class="a"><strong>os:</strong></td>
-
-          <td class="b">$attrInput.Value</td>
-         </tr>
-
-<!-- what is this??
- <tr>
-          <td width="120" class="a"><strong>found during:</strong></td>
-
-          <td class="b">normal use, QA, Beta, etc</td>
-         </tr>
-
-         <tr>
-          <td width="120" class="a"><strong>issue type:</strong></td>
-
-          <td class="b">e.g. change requirements / bug / enhancement</td>
-         </tr>
--->
-#set($attVal =  $attrValues.get("FUNCTIONAL AREA"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-         <tr>
-          <td width="120" class="a"><strong>functional area:</strong></td>
-
-          <td class="b">$attrInput.Value</td>
-         </tr>
-
-#set($attVal =  $attrValues.get("SEVERITY"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-#set ( $field = "OptionId" )
-         <tr>
-          <td width="120" class="a"><strong>severity: $attrInput.Value</strong></td>
-
+          <td width="120" class="a">
+             <strong>$attVal.Attribute.Name:</strong>
+          </td> 
           <td class="b">
+
+    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+          #userSelectBox ($attVal "")
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
           #attrValueLeafSelect ($attVal $field "")
+    #else
+
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
+
+            <textarea name="$attrInput.Value.Key" cols="40" 
+               rows="5">$!attrInput.Value</textarea>
+        #else
+
+           <input name= "$attrInput.Value.Key"
+                value="$!attrInput.Value" size="20" type="text">
+
+        #end
+    #end
           </td>
          </tr>
+  #end
+#end
 
-#set($attVal =  $attrValues.get("PRIORITY"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-#set ( $field = "OptionId" )
          <tr>
-          <td width="120" class="a"><strong>priority: $attrInput.Value</strong></td>
-
-          <td class="b">
-          #attrValueLeafSelect ($attVal $field "")
-          </td>
+          <td width="120" class="a"><strong>assignee(s):</strong></td>
+          <td>
+           #foreach( $user in $currentIssue.AssignedTo)
+            #set ( $comma = "" )
+            #set ( $email = $currentIssue.AssignedTo.Email )
+            <td class="b">
+            $comma<a href="mailTo:$email">$email</a> 
+            #set ( $comma = "," )
+           #end
+           </td>
          </tr>
-
          <tr>
-          <td width="120" class="a"><strong>committed by:</strong></td>
-
-          #set ( $email = $currentIssue.ScarabUserRelatedByCreatedBy.Email )
-          <td class="b"><a href="mailTo:$email">$email</a></td>
-         </tr>
-
-         <tr>
-          <td width="120" class="a"><strong>assignee:</strong></td>
-
-          #set ( $email = $currentIssue.ScarabUserRelatedByAssignedTo.Email )
-          <td class="b">
-           <a href="mailTo:$email">$email</a> 
-
-           <p><input type="submit" value="edit assignees" class="button" /></p>
-          </td>
+           <td>
+           <input type="submit" value="edit assignees" class="button" /></td>
+           <td></td>
          </tr>
         </table>
        </div>
@@ -267,50 +238,28 @@
          </tr>
         </table>
        </div>
-
        <div class="listtable">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
+    #foreach($comment in $currentIssue.Comments)
          <tr>
-          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
-
-          <td class="b"><textarea rows="4" cols="40" class="text">
-           Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-          </textarea></td>
-         </tr>
-
-         <tr>
-          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
-
-          <td class="b"><textarea rows="4" cols="40" class="text">
-           Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-          </textarea></td>
-         </tr>
-
-         <tr>
-          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
-
-          <td class="b"><textarea rows="4" cols="40" class="text">
-           Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-          </textarea></td>
-         </tr>
-
-         <tr>
-          <td width="120" class="a"><strong>xx/xx/01 <a href="mailto:x@xxx.com">author</a></strong></td>
-
-          <td class="b">
-           <textarea rows="4" cols="40" class="text">
-            Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-           </textarea> 
-
-           <p><a href="#">view all comments (long form)</a></p>
+          <td width="120" class="a">
+           #if( $comment.ModifiedBy && $commentModifiedDate)
+            #set ( $email = $comment.ScarabUserRelatedByModifiedBy.Email )
+            <strong>$comment.ModifiedDate <a href="mailto:$email">$email</a></strong></td>
+           #end
           </td>
+
+          <td class="b"><textarea rows="2" cols="35" class="text">
+          $comment.DataAsString
+          </textarea></td>
          </tr>
+    #end
 
          <tr>
           <td width="120" class="a"><strong>add comment:</strong></td>
 
           <td class="b">
-           <textarea rows="4" cols="40" class="text">
+           <textarea rows="2" cols="35" class="text">
            </textarea>
 
            <p><input type="submit" value="submit comment" class="button" /></p>
@@ -339,13 +288,19 @@
           <th><strong>note:</strong></th>
          </tr>
 
+       #foreach( $activity in $currentIssue.Activity )
          <tr class="a">
-          <td width="120">xx/xx/2001</td>
+          <td width="120">
+            #if( $activity.Transaction)
+              $activity.Transaction.CreatedDate
+            #end
+          </td>
 
-          <td width="120">action descr. X</td>
+          <td width="120">changed $activity.Attribute.Name from $activity.OldAttributeOption.Name to $activity.NewAttributeOption.Name</td>
 
-          <td>note content X</td>
+          <td>$activity.Attachment.DataAsString</td>
          </tr>
+       #end
 
          <tr class="b">
           <td width="120">xx/xx/2001</td>
