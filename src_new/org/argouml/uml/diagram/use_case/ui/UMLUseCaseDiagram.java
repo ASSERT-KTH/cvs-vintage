@@ -24,7 +24,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.12 2002/11/23 22:04:44 kataka Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.13 2002/11/25 20:17:17 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -193,8 +193,11 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     }
     
     public UMLUseCaseDiagram(String name, MNamespace m) {
-        super(name, m);
-        setNamespace(m);
+        this(m);
+        try {
+            setName(name);
+        } catch(PropertyVetoException v) {
+        }
     }
 
     /**
