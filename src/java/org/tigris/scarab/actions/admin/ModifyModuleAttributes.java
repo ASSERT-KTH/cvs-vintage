@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.27 2001/10/17 20:00:19 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.28 2001/10/17 20:48:32 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -751,6 +751,16 @@ System.out.println(rmit);
     {
         data.setMessage("Changes were not saved!");
         setTarget(data, getCancelTemplate(data, 
+            "admin,ManageArtifactTypes.vm"));
+    }
+
+    /**
+     *   This manages clicking the back button
+     */
+    public void doBack( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getBackTemplate(data, 
             "admin,ManageArtifactTypes.vm"));
     }
     

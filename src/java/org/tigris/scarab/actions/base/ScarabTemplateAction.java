@@ -61,7 +61,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.5 2001/10/16 06:36:11 jon Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.6 2001/10/17 20:48:32 jon Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -138,7 +138,25 @@ public abstract class ScarabTemplateAction extends TemplateAction
         return data.getParameters()
                             .getString(ScarabConstants.CANCEL_TEMPLATE, defaultValue);
     }
-    
+
+    /**
+     * Returns the backTemplate to be executed. Otherwise returns null.
+     */
+    public String getBackTemplate(RunData data)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.BACK_TEMPLATE, null);
+    }
+
+    /**
+     * Returns the backTemplate to be executed. Otherwise returns defaultValue.
+     */
+    public String getBackTemplate(RunData data, String defaultValue)
+    {
+        return data.getParameters()
+                            .getString(ScarabConstants.BACK_TEMPLATE, defaultValue);
+    }
+
     /**
      * Require people to implement this method
      */
