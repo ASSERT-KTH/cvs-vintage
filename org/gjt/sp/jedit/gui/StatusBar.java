@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.7 2001/10/22 11:50:57 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.8 2001/10/25 07:35:24 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -350,15 +350,15 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 				JEditTextArea textArea = view.getTextArea();
 				Buffer buffer = view.getBuffer();
-				buffer.putProperty("folding",text);
+				buffer.setStringProperty("folding",text);
 				buffer.propertiesChanged();
 
-				Integer collapseFolds = (Integer)buffer.getProperty(
-					"collapseFolds");
-				if(collapseFolds != null && collapseFolds.intValue() != 0)
+				int collapseFolds = buffer.getIntegerProperty(
+					"collapseFolds",0);
+				if(collapseFolds != 0)
 				{
 					textArea.getFoldVisibilityManager()
-						.expandFolds(collapseFolds.intValue());
+						.expandFolds(collapseFolds);
 				}
 				else
 				{
