@@ -51,6 +51,7 @@ import java.util.Properties;
 
 import org.apache.turbine.Log;
 import org.apache.turbine.RunData;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
 
 /**
@@ -102,10 +103,6 @@ public class ScarabLocalizationTool
     public ScarabLocalizationTool()
     {
         super();
-
-        // FIXME: Remove this hard coding
-        properties = new Properties();
-        //properties.put(DEFAULT_SCOPE + '.' + TITLE_PROP, "DefaultTitle");
     }
 
     /**
@@ -117,28 +114,7 @@ public class ScarabLocalizationTool
      */
     public String getTitle()
     {
-        String title = null;
-
-        if (properties != null)
-        {
-            // $l10n.get($props.get($template, "title"))
-            // HELP: Not sure if values like "entry/Wizard1.vm.title"
-            // will be valid keys for Java .properties files...
-            String templateName = data.getTarget();
-            if (templateName == null)
-            {
-                templateName = DEFAULT_SCOPE;
-            }
-            String propName = templateName + '.' + TITLE_PROP;
-            String l10nKey = (String) properties.get(propName);
-            Log.debug("ScarabLocalizationTool: Property name '" + propName +
-                      "' -> localization key '" + l10nKey + '\'');
-            if (l10nKey != null)
-            {
-                title = get(l10nKey);
-            }
-        }
-
+        String title = getProperty(TITLE_PROP);
         if (title == null)
         {
             // Either the property name doesn't correspond to a
@@ -147,22 +123,60 @@ public class ScarabLocalizationTool
             // TODO: Supply a *localized* default.
             title = "Scarab";
         }
-
         return title;
     }
 
+    /**
+     * Gets the localized version of the value of
+     * <code>property</code>.
+     *
+     * @param property The name of the property whose value to
+     * retrieve.
+     */
+    protected String getProperty(String property)
+    {
+        String value = null;
+        if (properties != null)
+        {
+            // $l10n.get($props.get($template, "title"))
+
+            // HELP: Not sure if values like "entry/Wizard1.vm.title"
+            // will be valid keys for Java .properties files...
+            String templateName = data.getTarget();
+            if (templateName == null)
+            {
+                templateName = DEFAULT_SCOPE;
+            }
+            setPrefix(templateName + '.');
+
+            String propName = getPrefix(null) + property;
+            String l10nKey = (String) properties.get(propName);
+            Log.debug("ScarabLocalizationTool: Property name '" + propName +
+                      "' -> localization key '" + l10nKey + '\'');
+
+            if (l10nKey != null)
+            {
+                value = get(l10nKey);
+                Log.debug("ScarabLocalizationTool: Localized value is '" +
+                          value + '\'');
+            }
+        }
+        return value;
+    }
 
     // ---- ApplicationTool implementation  ----------------------------------
 
+    /**
+     * Sets the localization prefix to the name of the target for the
+     * current request plus dot (i.e. <code>Prefix.vm.</code>).
+     */
     public void init(Object runData)
     {
         super.init(runData);
         if (runData instanceof RunData)
         {
             data = (RunData) runData;
-            // TODO: Use Zope like property overlays (must implement
-            // them first in Turbine).
-            //properties = ;
+            properties = Turbine.getConfiguration();
         }
     }
 
