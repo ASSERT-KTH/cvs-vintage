@@ -1,0 +1,28 @@
+<tomcat-users>
+
+  <user name="duncan" password="32ba13f902749387"/>
+  <user name="craigmcc" password="234c199203df9448"/>
+  <user name="costin" password="659a033904033938"/>
+  <user name="brianb" password="a8c88c8a02192903"/>
+
+  <group name="pmc">
+    <user-member name="duncan"/>
+    <user-member name="craigmcc"/>
+  </group>
+
+  <group name="committer">
+    <user-member name="duncan"/>
+    <user-member name="craigmcc"/>
+    <user-member name="costin"/>
+  </group>
+
+  <role name="project-coordinator">
+    <group-member name="pmc"/>
+    <user-member name="brianb"/>
+  </role>
+
+  <role name="developer">
+    <anyone/>
+  </role>
+
+</tomcat-users>
