@@ -1,4 +1,4 @@
-// $Id: OperationsCompartmentContainer.java,v 1.2 2004/09/10 20:05:30 mvw Exp $
+// $Id: OperationsCompartmentContainer.java,v 1.3 2004/11/12 13:38:31 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.uml.diagram.ui;
 
+import org.tigris.gef.presentation.FigGroup;
+
 /**
  * An interface to be implemented by any Fig that contains
  * a FigOperationsCompartment.
@@ -34,11 +36,17 @@ public interface OperationsCompartmentContainer {
      * Determine if the operations compartment is visible.
      * @return true if the operations compartment is visible.
      */
-    public boolean isOperationsVisible();
+    boolean isOperationsVisible();
     
     /**
      * Set the visibility of the operations compartment.
      * @param visible the new visibility status.
      */
-    public void setOperationsVisible(boolean visible);
+    void setOperationsVisible(boolean visible);
+    
+    /**
+     * @return The vector of graphics for operations (if any). 
+     * First one is the rectangle for the entire operations box.
+     */
+    FigGroup getOperationsFig(); 
 }
