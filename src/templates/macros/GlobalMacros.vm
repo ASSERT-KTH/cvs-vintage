@@ -180,10 +180,10 @@
 	  #set ($assignedUser = $scarabR.getUser($assignee.UserId))
 	  <a href="mailto:$assignedUser.Email">$assignedUser.FirstName $assignedUser.LastName</a>$comma
 	#end
+  #end
     #if ($canEdit)
      &#160;<a href="$link.setPage("AssignIssue.vm").addPathInfo("$intake.Attribute.Default.Id.Key", $attribute.AttributeId)">Edit</a>
     #end
-  #end
 #end
 
 #macro (userSelectBox $attrValue $size $multiple)
