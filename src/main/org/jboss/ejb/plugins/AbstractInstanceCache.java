@@ -56,7 +56,8 @@ import org.jboss.monitor.MetricsConstants;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.7 $
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.8 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -592,13 +593,16 @@ public abstract class AbstractInstanceCache
 			Object key = getKey(bean);
 			if (m_passivationJobs.get(key) == null)
 			{
-				// Create the passivation job
-				PassivationJob job = new PassivationJob(bean)
+			        // (Bill Burke) We can't rely on the EnterpriseContext to provide PassivationJob
+			        // with a valid key because it may get freed to the InstancePool, then
+			        // reused before the PassivationJob executes.
+			        //
+				PassivationJob job = new PassivationJob(bean, key)
 				{
 					public void execute() throws Exception
 					{
-						EnterpriseContext ctx = getEnterpriseContext();
-						Object id = getKey(ctx);
+						EnterpriseContext ctx = this.getEnterpriseContext();
+						Object id = this.getKey();
 
 						if (id == null)
 						{
@@ -762,16 +766,27 @@ public abstract class AbstractInstanceCache
 abstract class PassivationJob implements Executable
 {
 	private EnterpriseContext m_context;
+	private Object m_key;
 	private boolean m_cancelled;
 	private boolean m_executed;
 
-	PassivationJob(EnterpriseContext ctx)
+	PassivationJob(EnterpriseContext ctx, Object key)
 	{
 		m_context = ctx;
+		m_key = key;
 	}
 
 	public abstract void execute() throws Exception;
 
+        /**
+	 * (Bill Burke) We can't rely on the EnterpriseContext to provide PassivationJob
+	 * with a valid key because it may get freed to the InstancePool, then
+	 * reused before the PassivationJob executes.
+	 */
+        final Object getKey()
+        {
+	    return m_key;
+	}
 	/**
 	 * Returns the EnterpriseContext associated with this passivation job,
 	 * so the bean that will be passivated.
