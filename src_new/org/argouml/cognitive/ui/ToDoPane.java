@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.30 2003/12/08 11:46:00 jhraigniac Exp $
+// $Id: ToDoPane.java,v 1.31 2003/12/14 23:13:38 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.30 2003/12/08 11:46:00 jhraigniac Exp $
+ * $Id: ToDoPane.java,v 1.31 2003/12/14 23:13:38 mkl Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -294,17 +294,21 @@ public class ToDoPane extends JPanel
         _tree.setSelectionPath(trPath);
     }
     
-    /** to be documented */
+    /** return whether the todo pane is currently in flat hierachy mode
+     */
     public boolean isFlat() { return _flat; }
-    /** to be documented */
-    public void setFlat(boolean b) { _flat = b; }
-    /** to be documented */
-    public void toggleFlat() {
-        _flat = !_flat;
+
+    /** set the todo pane in a spcecific hierachy mode. */
+    public void setFlat(boolean b) {
+        _flat = b;
         _flatButton.getModel().setPressed(_flat);
         if (_flat) _tree.setShowsRootHandles(false);
         else _tree.setShowsRootHandles(true);
         updateTree();
+    }
+    /** toggle the hierachy mode. */
+    public void toggleFlat() {
+        setFlat(!isFlat());
     }
     
     // ------------ ItemListener implementation ----------------------
@@ -325,7 +329,8 @@ public class ToDoPane extends JPanel
         //should register a listener
         Object sel = getSelectedObject();
         ProjectBrowser.getInstance().setToDoItem(sel);
-        
+        cat.debug("lastselection: " + _lastSel);
+	cat.debug("sel: " + sel);
         if (_lastSel instanceof ToDoItem) ((ToDoItem) _lastSel).deselect();
         if (sel instanceof ToDoItem) ((ToDoItem) sel).select();
         _lastSel = sel;
@@ -430,6 +435,8 @@ public class ToDoPane extends JPanel
             cat.debug("ToDoPane setting tree model");
             _curPerspective.setRoot(_root);
             _curPerspective.setFlat(_flat);
+            if (_flat) _tree.setShowsRootHandles(false);
+                else _tree.setShowsRootHandles(true);
             _tree.setModel(_curPerspective);
             _tree.setVisible(true); // blinks?
         }
@@ -456,9 +463,7 @@ public class ToDoPane extends JPanel
     }
     
     /** called when the user clicks once on an item in the tree.
-     *
-     * TODO: what should the difference be between a single
-     * and double click?
+     * myDoubleClick will invoke the action() on the ToDoItem.
      */
     public void myDoubleClick(int row, TreePath path) {
         _dblClicksInToDoPane++;
@@ -466,8 +471,6 @@ public class ToDoPane extends JPanel
         Object sel = getSelectedObject();
         if (sel instanceof ToDoItem) {
             ((ToDoItem) sel).action();
-            VectorSet offs = ((ToDoItem) sel).getOffenders();
-            ProjectBrowser.getInstance().jumpToDiagramShowing(offs);
         }
         
         //TODO: should fire its own event and ProjectBrowser
