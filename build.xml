@@ -403,7 +403,7 @@
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
   
-  <target name="dist-new" depends="dist">
+  <target name="dist-new">
     <mkdir dir="${tomcat.dist}/lib/shared"/>
     <mkdir dir="${tomcat.dist}/lib/common"/>
     <copy file ="${tomcat.dist}/lib/servlet.jar"
@@ -414,7 +414,7 @@
         todir="${tomcat.dist}/lib/shared" />
   </target>
 
-  <target name="new" depends="main">
+  <target name="new">
     <mkdir dir="${tomcat.build}/lib/shared"/>
     <mkdir dir="${tomcat.build}/lib/common"/>
     <copy file ="${tomcat.build}/lib/servlet.jar"
