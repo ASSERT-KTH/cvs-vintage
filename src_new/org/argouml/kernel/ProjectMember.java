@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.19 2004/01/29 07:41:37 linus Exp $
+// $Id: ProjectMember.java,v 1.20 2004/08/15 11:44:00 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,31 +126,13 @@ public abstract class ProjectMember {
     public abstract void load() throws IOException, org.xml.sax.SAXException;
 
     /**
-     * @deprecated As of 7 June 2003 (ArgoUml version 0.13.6).
-     *             Will be removed in future.
-     *             TODO: What is this method replaced by?
-     *		   TODO: This is still in use in 0.15.2.
-     *
-     * @param path
-     * @param overwrite
+     * Save the projectmember to the given writer.
      * @param writer
      * @throws Exception
      */
-    public abstract void save(String path, boolean overwrite, Writer writer)
-	throws Exception;
-  
-    /**
-     * Save the projectmember to the given writer. Not abstract since
-     * this would break the public API prematuraly.
-     * @param writer
-     * @throws Exception
-     */
-    public void save(Writer writer) throws Exception {
-      
-    }
+    public abstract void save(Writer writer) throws Exception;
 
     public void remove() {
-        
         _name = null;
         _project = null;
     }

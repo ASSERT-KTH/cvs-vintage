@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.22 2004/06/24 06:25:45 linus Exp $
+// $Id: ActionSaveProjectAs.java,v 1.23 2004/08/15 11:44:00 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,13 +29,13 @@ import java.io.File;
 import java.net.URL;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.AbstractFilePersister;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
-import org.argouml.util.FileFilters;
-import org.argouml.util.FileConstants;
 import org.argouml.util.osdep.OsUtil;
 
 /** Action to save project under name.
@@ -97,18 +97,26 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         String sChooserTitle =
 	    Translator.localize("Actions", "filechooser.save-as-project");
         chooser.setDialogTitle(sChooserTitle + " " + p.getName());
-        chooser.setFileFilter(FileFilters.CompressedFileFilter);
 
+        FileFilter allFiles = chooser.getFileFilter();
+        chooser.removeChoosableFileFilter(allFiles);
+        
+        chooser.addChoosableFileFilter(zargoPersister);
+        chooser.addChoosableFileFilter(argoPersister);
+        chooser.addChoosableFileFilter(xmiPersister);
+        chooser.setFileFilter(zargoPersister);
+        
         int retval = chooser.showSaveDialog(pb);
         if (retval == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
+            AbstractFilePersister filter = (AbstractFilePersister)chooser.getFileFilter();
             if (file != null) {
                 String name = file.getName();
-                if (!name.endsWith(FileConstants.COMPRESSED_FILE_EXT)) {
+                if (!name.endsWith("." + filter.getExtension())) {
                     file =
                         new File(
                             file.getParent(),
-                            name + FileConstants.COMPRESSED_FILE_EXT);
+                            name + "." + filter.getExtension());
                 }
             }
             return file;

@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.20 2004/07/23 17:53:54 linus Exp $
+// $Id: ProjectMemberDiagram.java,v 1.21 2004/08/15 11:44:01 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,17 +104,6 @@ public class ProjectMemberDiagram extends ProjectMember {
         setDiagram(d);
         getProject().addDiagram(d);
 
-    }
-
-    /**
-     * @deprecated since 0.l5.3 since the function in the
-     * interface is deprecated since 0.13.6.
-     * TODO: This is still used in 0.16.
-     */
-    public void save(String path, boolean overwrite, Writer writer) {
-        if (expander == null)
-            expander = new OCLExpander(TemplateReader.readFile(PGML_TEE));
-        expander.expand(writer, _diagram, "", "");
     }
 
     /**
