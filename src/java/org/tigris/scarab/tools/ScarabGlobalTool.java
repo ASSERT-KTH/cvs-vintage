@@ -51,6 +51,7 @@ import java.util.List;
 import org.apache.velocity.app.FieldMethodizer;
 
 import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.IssueTypePeer;
 
 import org.apache.torque.util.Criteria;
 
@@ -66,7 +67,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.5 2001/09/11 03:41:46 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.6 2001/10/17 20:02:56 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -125,4 +126,14 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return AttributePeer.getAllAttributes();
     }
+
+    /**
+     * gets a list of all Issue Types 
+     */
+    public List getAllIssueTypes()
+        throws Exception
+    {
+        return IssueTypePeer.getAllIssueTypes(true);
+    }
+
 }

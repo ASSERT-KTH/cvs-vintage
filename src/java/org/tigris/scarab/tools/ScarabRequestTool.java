@@ -941,14 +941,12 @@ try{
 
     /**
      * Get all scopes.
-     *
      */
     public List getScopes()
         throws Exception
     {
         return ScopePeer.getAllScopes();
     }
-
     /**
      * Get a new SearchIssue object. 
      *
