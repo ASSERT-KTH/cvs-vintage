@@ -42,19 +42,6 @@
 </scarab>
 #end
 
-#macro (xmlUser $module $user)
-#set ($roles = $securityAdmin.getACL($user).getRoles($module).getRolesArray())
-
-    <user>
-      <firstname>$user.FirstName</firstname>
-      <lastname>$user.LastName</lastname>
-      <email>$user.Email</email>
-      <username>$user.UserName</username>
-      #foreach ($role in $roles)
-<role>$role.Name</role>
-      #end</user>
-#end
-
 #macro (xmlModuleHeader $module)
 
   <module id="$module.ModuleId" parent="$module.ParentId">
@@ -64,10 +51,6 @@
     <url>$module.Url</url>
     <domain>$!module.Domain</domain>
     <code>$module.Code</code>
-
-  #foreach ($user in $module.getUsers($securityAdmin.getPermissionsAsStrings()))
-    #xmlUser($module $user)
-  #end
 #end
 
 #macro (xmlIssue $issue)
