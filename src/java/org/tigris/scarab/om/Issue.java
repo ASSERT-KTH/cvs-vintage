@@ -100,7 +100,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.328 2003/09/17 02:27:00 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.329 2003/09/18 11:50:43 parun Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2217,6 +2217,37 @@ public class Issue
             result = (IssueTemplateInfo)obj;
         }
         return result;
+    }
+
+    /**
+     *  Get Unset required attributes in destination module / issue type.
+     */
+    public List getUnsetRequiredAttrs(String newModuleId, String newIssueTypeId)
+        throws Exception
+    {
+        String issueTypeId = getIssueType().getIssueTypeId().toString();
+        String moduleId = getModule().getModuleId().toString();
+        List attrs = new ArrayList();
+        if (!issueTypeId.equals(newIssueTypeId)
+                    || !moduleId.equals(newModuleId))
+        {
+            Set requiredAttributes = DAFactory.getAttributeAccess()
+                .retrieveRequiredAttributeIDs(newModuleId, newIssueTypeId);
+
+            Map attrValues = getAttributeValuesMap();
+
+            for (Iterator i = requiredAttributes.iterator(); i.hasNext(); )
+            {
+                Attribute attr = AttributeManager
+                                    .getInstance(new Integer((String)i.next()));
+
+                if (!attrValues.containsKey(attr.getName().toUpperCase()))
+                {
+                    attrs.add(attr);
+                }
+            }
+        }
+        return attrs;
     }
 
     /**

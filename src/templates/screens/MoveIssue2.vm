@@ -20,6 +20,7 @@
 #set ($issue = $scarabR.getIssue($data.Parameters.getString("issue_ids")))
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
+#set ($unsetReqdAttrs = $issue.getUnsetRequiredAttrs("$newModuleId", "$newIssueTypeId"))
 #set ($isSingleIssueOp = $scarabG.sizeOfArray($issueList) == 1)
 
 #if ($isSingleIssueOp)
@@ -39,6 +40,9 @@
  #set ($actionText = "copy")
  #set ($booleanAction = false)
 #end
+#if (!$unsetReqdAttrs.isEmpty())
+  <p class="warningmark"><strong>$l10n.format("IssueCannotBeCopied", $l10n.Issue, $l10n.Module, $l10n.IssueType.toLowerCase())</strong></p>
+#end
 
 <form method="post" action="$link.setPage("MoveIssue2.vm")">
 <input type="hidden" name="action" value="MoveIssue" />
@@ -54,10 +58,12 @@
 <input type="hidden" name="$moveIssueGroup.Action.key" value="$selectAction" />
 
 <div class="functnbar">
-#if ($booleanAction)
+#if ($unsetReqdAttrs.isEmpty())
+ #if ($booleanAction)
   <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doSaveissue" />&#160;
-#else
+ #else
   <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doSaveissue" />&#160;
+ #end
 #end
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />
 </div>
@@ -71,6 +77,28 @@
 </tr>
 </table>
 </div>
+
+#if (!$unsetReqdAttrs.isEmpty())
+<h3>$l10n.format("AttributesThatReqdInDestinationIssueType", $l10n.Module, $l10n.IssueType.toLowerCase())</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>$l10n.Attribute</th>
+<th>$l10n.InputType</th>
+#foreach ($attr in $unsetReqdAttrs)
+  #indexedRows($velocityCount)
+  <td>
+     $attr.Name
+     #set ($displayValue = "")
+     #set ($displayValue = $newModule.getRModuleAttribute($attr, $newIssueType).getDisplayValue())
+     #if ($displayValue.length() > 0 && !$attr.Name.equals($displayValue))
+      ($displayValue)
+     #end
+  </td>
+<td>$attr.AttributeType.Name</td>
+</tr>
+#end
+</table>
+#else
 
 #if (!$matchingAttributes.isEmpty())
 <h3>$l10n.AttributesToBeCopied</h3>
@@ -150,12 +178,14 @@
 </tr>
 </table>
 </div>
-
+#end
 <div class="functnbar2">
-#if ($booleanAction)
+#if ($unsetReqdAttrs.isEmpty())
+ #if ($booleanAction)
   <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doSaveissue" />&#160;
-#else
+ #else
   <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doSaveissue" />&#160;
+ #end
 #end
   <input type="submit" value="$l10n.Cancel" name="eventSubmit_doBacktoone" />
 </div>
