@@ -61,6 +61,8 @@ import org.apache.turbine.util.pool.Recyclable;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ModulePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
@@ -104,6 +106,11 @@ public class ScarabRequestTool implements ScarabRequestScope,
     private Attachment attachment = null;
 
     /**
+     * A Depend object for use within the Scarab API.
+     */
+    private Depend depend = null;
+
+    /**
      * A ModuleEntity object for use within the Scarab API.
      */
     private ModuleEntity module = null;
@@ -141,6 +148,14 @@ public class ScarabRequestTool implements ScarabRequestScope,
     public void setAttribute (Attribute attribute)
     {
         this.attribute = attribute;
+    }
+
+    /**
+     * A Depend object for use within the Scarab API.
+     */
+    public void setDepend (Depend depend)
+    {
+        this.depend = depend;
     }
 
     private IntakeTool getIntakeTool()
@@ -223,6 +238,36 @@ try{
         }        
 }catch(Exception e){e.printStackTrace();}
         return attribute;
+ 
+   }
+
+    /**
+     * A Depend object for use within the Scarab API.
+     */
+    public Depend getDepend()
+     throws Exception
+    {
+        try
+        {
+            if (depend == null)
+            {
+                String dependId = getIntakeTool()
+                    .get("Depend", IntakeTool.DEFAULT_KEY).get("Id").toString();
+                if ( dependId == null || dependId.length() == 0 )
+                {
+                    depend = Depend.getInstance();
+                }
+                else 
+                {
+                    depend = DependPeer.retrieveByPK(new NumberKey(dependId));
+                }
+            }        
+        }        
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return depend;
  
    }
 
