@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.12 2003/09/07 18:02:19 bobtarling Exp $
+// $Id: Configuration.java,v 1.13 2003/09/16 20:07:59 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.application.api;
 import org.argouml.application.configuration.*;
 import java.io.*;
 import java.beans.*;
-import java.util.*;
 import java.net.*;
 import org.apache.log4j.*;
 import org.argouml.application.configuration.ConfigurationKeyImpl;

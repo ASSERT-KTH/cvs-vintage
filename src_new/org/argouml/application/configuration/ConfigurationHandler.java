@@ -1,4 +1,4 @@
-// $Id: ConfigurationHandler.java,v 1.9 2003/06/30 18:00:16 linus Exp $
+// $Id: ConfigurationHandler.java,v 1.10 2003/09/16 20:10:00 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,7 @@ package org.argouml.application.configuration;
 import org.argouml.application.api.*;
 import java.beans.*;
 import java.io.*;
-import java.util.*;
 import java.net.*;
-import org.apache.log4j.*;
 
 /**
  *   This class provides a user configuration based upon properties.

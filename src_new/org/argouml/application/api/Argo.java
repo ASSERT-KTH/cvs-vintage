@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.22 2003/09/11 05:28:19 thierrylach Exp $
+// $Id: Argo.java,v 1.23 2003/09/16 20:07:59 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,12 +28,14 @@ import java.util.ArrayList;
 
 import javax.swing.Icon;
 
-import org.apache.log4j.*;
-import org.apache.log4j.spi.*;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Hierarchy;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.spi.RootCategory;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.application.modules.ModuleLoader;
-
-import org.workingfrog.i18n.util.Translator;
 
 /**
  * The <code>Argo</code> class provides static methods and definitions
@@ -322,20 +324,20 @@ public class Argo
     }
 
     static {
-	// Create a separate hierarchy for the argo logger
-	Hierarchy hier = new Hierarchy(new RootCategory(Level.INFO));
-	// Set up the argo console logger in its own hierarchy
-	Logger cat = hier.getLogger(CONSOLE_LOG);
-	cat.addAppender(new ConsoleAppender(
-	    new PatternLayout(System.getProperty(ARGO_CONSOLE_PREFIX, "")
-			      + "%m%n"),
-	    ConsoleAppender.SYSTEM_OUT));
+		// Create a separate hierarchy for the argo logger
+		Hierarchy hier = new Hierarchy(new RootCategory(Level.INFO));
+		// Set up the argo console logger in its own hierarchy
+		Logger cat = hier.getLogger(CONSOLE_LOG);
+		cat.addAppender(new ConsoleAppender(
+			new PatternLayout(System.getProperty(ARGO_CONSOLE_PREFIX, "")
+					  + "%m%n"),
+			ConsoleAppender.SYSTEM_OUT));
 
-	if (System.getProperty(ARGO_CONSOLE_SUPPRESS) != null) {
-	    cat.getRoot().getLoggerRepository().setThreshold(Level.OFF);
-	}
+		if (System.getProperty(ARGO_CONSOLE_SUPPRESS) != null) {
+			Logger.getRoot().getLoggerRepository().setThreshold(Level.OFF);
+		}
 
-	// Set log here.  No going back.
-	log = cat;
+		// Set log here.  No going back.
+		log = cat;
     }
 }

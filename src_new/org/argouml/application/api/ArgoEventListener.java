@@ -1,4 +1,4 @@
-// $Id: ArgoEventListener.java,v 1.4 2003/06/29 23:53:41 linus Exp $
+// $Id: ArgoEventListener.java,v 1.5 2003/09/16 20:05:51 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.api;
-import org.argouml.application.events.*;
 import java.util.*;
 
 /** A tagging interface that all Argo event listener interfaces must extend.

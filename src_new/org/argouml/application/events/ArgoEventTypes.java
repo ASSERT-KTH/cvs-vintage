@@ -1,4 +1,4 @@
-// $Id: ArgoEventTypes.java,v 1.6 2003/06/30 18:00:16 linus Exp $
+// $Id: ArgoEventTypes.java,v 1.7 2003/09/16 20:10:45 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.events;
-import org.argouml.application.api.*;
-import java.util.*;
 
 /** Definitions of Argo Event types.
  *

@@ -1,4 +1,4 @@
-// $Id: ArgoEvent.java,v 1.4 2003/06/29 23:53:42 linus Exp $
+// $Id: ArgoEvent.java,v 1.5 2003/09/16 20:10:45 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.events;
-import org.argouml.application.api.*;
 import java.util.*;
 
 /** The root class from which all event state objects within Argo are derived. 

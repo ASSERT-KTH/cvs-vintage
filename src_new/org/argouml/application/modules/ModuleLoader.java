@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.14 2003/09/11 05:34:09 thierrylach Exp $
+// $Id: ModuleLoader.java,v 1.15 2003/09/16 20:12:09 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,8 +37,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.jar.*;
-import java.net.*;
-import org.apache.log4j.*;
 
 // Import the following classes fully qualified to ensure that
 // no one can short-circuit our intended inheritance.
