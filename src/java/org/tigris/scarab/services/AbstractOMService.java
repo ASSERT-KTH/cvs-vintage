@@ -72,7 +72,7 @@ import org.tigris.scarab.util.ScarabException;
  * instantiating OM's.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractOMService.java,v 1.5 2002/02/26 03:58:25 jmcnally Exp $
+ * @version $Id: AbstractOMService.java,v 1.6 2002/02/27 20:43:41 jmcnally Exp $
  */
 public abstract class AbstractOMService 
     extends BaseService 
@@ -178,7 +178,10 @@ public abstract class AbstractOMService
         if (om == null)
         {
             om = retrieveStoredOM(id);
-            cache.put(key, om);
+            if (fromCache) 
+            {
+                cache.put(key, om);                
+            }
         }
         
         return om;
@@ -276,6 +279,7 @@ public abstract class AbstractOMService
     public void setRegion(String  v) 
         throws InitializationException
     {
+        category.debug(this + " Setting region to: " + v);
         this.region = v;
         try 
         {
@@ -286,6 +290,12 @@ public abstract class AbstractOMService
             throw new InitializationException(
                 "Cache could not be initialized", e);
         }
+        if (cache == null) 
+        {
+            throw new InitializationException(
+                "Cache could not be initialized for region: " + v);            
+        }
+        
     }
     
 }
