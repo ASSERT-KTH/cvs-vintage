@@ -23,7 +23,7 @@ $page.setTitle("Select Module")
 
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $currentModule))
 #if ($canEdit)
-<form action="$link.setPage("admin,ModifyModule.vm")" method="post">
+<form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleid","$currentModule.ModuleId")" method="post">
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
