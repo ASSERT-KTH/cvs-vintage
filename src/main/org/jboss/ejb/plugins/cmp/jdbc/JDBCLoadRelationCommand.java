@@ -24,16 +24,16 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.ejb.FinderResults;
 
 /**
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -159,26 +159,23 @@ public class JDBCLoadRelationCommand {
          // set all of the preloaded values
          for(Iterator iter=resultsMap.keySet().iterator(); iter.hasNext();) {
             Object key = iter.next();
+
+            // get the results for this key
+            List results = (List)resultsMap.get(key);
+
+            // store the results list for readahead on-load
+            JDBCReadAheadMetaData readAhead = cmrField.getReadAhead();
+            relatedReadAheadCache.addFinderResults(results, readAhead);
+
+            // store the preloaded relationship (unless this is the realts we
+            // are actually after)
             if(!key.equals(pk)) {
-               readAheadCache.addPreloadData(
-                     key, cmrField, (List)resultsMap.get(key));
+               readAheadCache.addPreloadData(key, cmrField, results);
             }
          }
 
-         // get the real result list
-         List result = (List)resultsMap.get(pk);
-
-         // Convert the pk collection into finder results
-         FinderResults finderResults = new FinderResults(
-               result, cmrField.getReadAhead(), null, null);
-
-         // add results to the cache
-         if(!cmrField.getReadAhead().isNone()) {
-            relatedReadAheadCache.addFinderResult(finderResults);
-         }
-
-         // success
-         return result;
+         // success, return the results
+         return (List)resultsMap.get(pk); 
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
