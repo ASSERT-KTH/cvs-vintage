@@ -53,19 +53,12 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivitySetTest.java,v 1.5 2004/01/31 18:15:39 dep4b Exp $
+ * @version $Id: ActivitySetTest.java,v 1.6 2004/02/02 11:26:19 dep4b Exp $
  */
 public class ActivitySetTest extends BaseTestCase
 {
      private ActivitySet trans = null;
 
-
-    protected void runTest()
-            throws Throwable
-    {
-        testCreate();
-        testGetActivityList();
-    }
 
     public void testCreate() throws Exception
     {
@@ -98,7 +91,7 @@ public class ActivitySetTest extends BaseTestCase
 
     public void testGetActivityList() throws Exception
     {
-
+        testCreate();
         System.out.println("\ntestGetActivityList()");
         assertEquals(2, trans.getActivityList().size());
     }
