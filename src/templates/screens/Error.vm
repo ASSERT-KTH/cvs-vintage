@@ -1,0 +1,26 @@
+$page.setTitle("Scarab Error")
+
+<h2>Scarab Error</h2>
+
+<SPAN class="PlainText">
+#if( $data.getMessage() )
+    Message: $data.getMessage()
+#else
+    #if ( $stackTrace )
+        Stack Trace:
+        <pre>
+        $stackTrace
+        </pre>
+    #else
+        Sorry, there was no error message. :-( If there was one, it would have been shown 
+        here. Please believe me! 
+        <p>
+        Although, one common source of the error could be a result of not being able 
+        to find the requested template. Please try going back to the <a 
+        href="$link.setPage("Start.vm")">Start</a> screen and starting over.
+    #end
+#end
+</SPAN>
+<br>
+<br>
+
