@@ -222,7 +222,7 @@ public class WebXmlInterceptor {
 	    // XXX I have very little ideea about what it does !
 	    if (removeResource) {
 
-	        Enumeration levels = ctx.getInitLevles();
+	        Enumeration levels = ctx.getInitLevels();
 
 		while (levels.hasMoreElements()) {
 		    Integer level = (Integer)levels.nextElement();
