@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.17 2000/07/11 03:48:58 alex Exp $
- * $Revision: 1.17 $
- * $Date: 2000/07/11 03:48:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.18 2000/07/17 23:37:24 craigmcc Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/07/17 23:37:24 $
  *
  * ====================================================================
  *
@@ -371,6 +371,28 @@ public class HttpRequestAdapter extends RequestImpl {
 	} else {
 	    requestURI = new String( buf, startReq, qryIdx - startReq );
 	    queryString = new String( buf, qryIdx+1, endReq - qryIdx -1 );
+	}
+
+	// Perform URL decoding only if necessary
+	if ((requestURI != null) &&
+	    ((requestURI.indexOf('%') >= 0) || (requestURI.indexOf('+') >= 0))) {
+
+	    try {
+		requestURI = RequestUtil.URLDecode(requestURI);
+	    } catch (Exception e) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return;
+	    }
+	}
+	if ((queryString != null) &&
+	    ((queryString.indexOf('%') >= 0) || (queryString.indexOf('+') >= 0))) {
+
+	    try {
+		queryString = RequestUtil.URLDecode(queryString);
+	    } catch (Exception e) {
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return;
+	    }
 	}
 
 	//	loghelper.log("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
