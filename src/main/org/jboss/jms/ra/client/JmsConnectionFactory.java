@@ -19,18 +19,17 @@ package org.jboss.jms.ra.client;
 
 import javax.jms.TopicConnectionFactory;
 import javax.jms.QueueConnectionFactory;
+
 /**
  * JmsConnectionFactory.java
  *
+ * <p>Created: Thu Apr 26 17:01:35 2001
  *
- * Created: Thu Apr 26 17:01:35 2001
- *
- * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.2 $
+ * @author  <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version <pre>$Revision: 1.3 $</pre>
  */
-
 public interface JmsConnectionFactory 
-    extends TopicConnectionFactory, QueueConnectionFactory
+   extends TopicConnectionFactory, QueueConnectionFactory
 {
-    
-} // JmsConnectionFactory
+   // empty
+}

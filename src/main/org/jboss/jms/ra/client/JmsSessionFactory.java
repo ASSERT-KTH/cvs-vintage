@@ -15,23 +15,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package org.jboss.jms.ra.client;
 
 import javax.jms.TopicConnection;
 import javax.jms.QueueConnection;
 
 /**
- * <p>A marker interface to join topics and queues into one
-     factory.
-    </p>
+ * A marker interface to join topics and queues into one factory.
  *
+ * <p>Created: Thu Mar 29 15:37:21 2001
  *
- * Created: Thu Mar 29 15:37:21 2001
- *
- * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.2 $
+ * @author  <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version <pre>$Revision: 1.3 $</pre>
  */
-
-public interface JmsSessionFactory  extends TopicConnection,QueueConnection {
-} // JmsSessionFactory
+public interface JmsSessionFactory
+   extends TopicConnection, QueueConnection
+{
+   // empty
+}
