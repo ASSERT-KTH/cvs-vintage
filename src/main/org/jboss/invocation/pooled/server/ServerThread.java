@@ -11,17 +11,16 @@ package org.jboss.invocation.pooled.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.InterruptedIOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.Socket;
-import java.rmi.MarshalledObject;
-import org.jboss.invocation.Invocation;
-import org.jboss.logging.Logger;
 import java.util.LinkedList;
+
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.pooled.interfaces.OptimizedObjectInputStream;
+import org.jboss.invocation.pooled.interfaces.OptimizedObjectOutputStream;
+import org.jboss.logging.Logger;
 
 /**
  * This Thread object hold a single Socket connection to a client
@@ -38,6 +37,7 @@ import java.util.LinkedList;
  * done by the TrunkInvoker.
  *
  * @author    <a href="mailto:bill@jboss.org">Bill Burke</a>
+ * @version $Revision: 1.7 $
  */
 public class ServerThread extends Thread
 {
@@ -54,9 +54,16 @@ public class ServerThread extends Thread
    protected volatile boolean shutdown = false;
    protected static int id = 0;
 
-   public ServerThread(Socket socket, PooledInvoker invoker, LRUPool clientpool, LinkedList threadpool, int timeout) throws Exception
+   public static synchronized int nextID()
    {
-      super("PooledInvokerThread-" + id++);
+      int nextID = id ++;
+      return nextID;
+   }
+
+   public ServerThread(Socket socket, PooledInvoker invoker, LRUPool clientpool,
+      LinkedList threadpool, int timeout) throws Exception
+   {
+      super("PooledInvokerThread-" + socket.getInetAddress().getHostAddress()+"-"+nextID());
       this.socket = socket;
       this.invoker = invoker;
       this.clientpool = clientpool;
@@ -81,7 +88,7 @@ public class ServerThread extends Thread
          try
          {
             this.interrupt();
-            this.interrupted(); // clear
+            Thread.interrupted(); // clear
          }
          catch (Exception ignored) {}
       }
@@ -107,7 +114,7 @@ public class ServerThread extends Thread
          try
          {
             this.interrupt();
-            this.interrupted(); // clear
+            Thread.interrupted(); // clear
          }
          catch (Exception ignored) {}
       }
@@ -117,6 +124,8 @@ public class ServerThread extends Thread
    public synchronized void wakeup(Socket socket, int timeout) throws Exception
    {
       this.socket = socket;
+      String name = "PooledInvokerThread-" + socket.getInetAddress().getHostAddress()+"-"+nextID();
+      super.setName(name);
       socket.setSoTimeout(timeout);
       running = true;
       handlingResponse = true;
@@ -155,6 +164,7 @@ public class ServerThread extends Thread
                         clientpool.remove(this);
                         //System.out.println("adding myself to threadpool");
                         threadpool.add(this);
+                        Thread.interrupted(); // clear any interruption so that we can be pooled.
                         clientpool.notify();
                      }
                   }
@@ -200,12 +210,15 @@ public class ServerThread extends Thread
       Object response = null;
       try
       {
+          // Make absolutely sure thread interrupted is cleared.
+         boolean interrupted = Thread.interrupted();
          response = invoker.invoke(invocation);
       }
       catch (Exception ex)
       {
          response = ex;
       }
+      Thread.interrupted(); // clear interrupted state so we don't fail on socket writes
       out.writeObject(response);
       out.reset();
       // to make sure stream gets reset
@@ -227,9 +240,11 @@ public class ServerThread extends Thread
       handlingResponse = true;
       try
       {
-         out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+         BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
+         out = new OptimizedObjectOutputStream(bos);
          out.flush();
-         in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+         BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+         in = new OptimizedObjectInputStream(bis);
       }
       catch (Exception e)
       {
@@ -246,7 +261,6 @@ public class ServerThread extends Thread
          running = false;
       }
 
-      //System.out.println("****entering re-use loop");
       // Re-use loop
       while (running)
       {
@@ -255,22 +269,22 @@ public class ServerThread extends Thread
             acknowledge();
             processInvocation();
          }
-         catch (InterruptedIOException iex)
+         catch (InterruptedIOException e)
          {
-            //System.out.println("exception found!");
-            log.debug("socket timed out");
+            log.debug("socket timed out", e);
             running = false;
          }
-         catch (InterruptedException intr)
+         catch (InterruptedException e)
          {
-            log.debug("interrupted");
+            log.debug("interrupted", e);
          }
          catch (Exception ex)
          {
-            //System.out.println("exception found!");
-            //log.error("failed", ex);
+            log.debug("failed", ex);
             running = false;
          }
+         // clear any interruption so that thread can be pooled.
+         Thread.interrupted();
       }
       //System.out.println("finished loop:" + Thread.currentThread());
       // Ok, we've been shutdown.  Do appropriate cleanups.
