@@ -221,8 +221,15 @@ level using the authentication-module and role-mapping-manager elements.
       
       Used in: session, entity, message-driven
       -->
-<!ELEMENT resource-env-ref (res-ref-name , jndi-name)>
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
 
+<!-- 
+        The resource-env-ref-name element gives the "code name" of a resource. It is 
+        provided by the Bean Developper. See resource-managers for the actual
+        
+        Used in: resource-env-ref
+        -->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
 <!-- 
         The jndi-name element gives the deployed name of the reference. The 
         general form is 
@@ -252,7 +259,7 @@ level using the authentication-module and role-mapping-manager elements.
         provided by the Bean Developper. See resource-managers for the actual
         configuration of the resource.
         
-        Used in: resource-ref, resource-env-ref
+        Used in: resource-ref
         -->
 <!ELEMENT res-ref-name (#PCDATA)>
 
