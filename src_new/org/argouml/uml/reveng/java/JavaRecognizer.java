@@ -77,7 +77,7 @@ import antlr.collections.impl.ASTArray;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.11 2001/06/18 09:28:16 toby Exp $
+ * $Id: JavaRecognizer.java,v 1.12 2001/07/23 10:49:58 toby Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
