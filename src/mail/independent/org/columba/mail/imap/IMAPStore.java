@@ -23,17 +23,16 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.imap.parser.FlagsParser;
@@ -56,7 +55,6 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.DateParser;
-import java.util.List;
 
 /**
  * @author freddy
@@ -398,7 +396,7 @@ public class IMAPStore {
 
 			if (v.size() > 0) {
 				list = new ListInfo[v.size()];
-				((Vector)v).copyInto(list);
+				((Vector) v).copyInto(list);
 
 				return list;
 			}
@@ -893,20 +891,14 @@ public class IMAPStore {
 		worker.setProgressBarValue(0);
 		MessageSet set = new MessageSet(list.toArray());
 
-		TableItem items = MailConfig.getMainFrameOptionsConfig().getTableItem();
+		//	get list of used-defined headerfields
+		String[] headercacheList = CachedHeaderfieldOwner.getCachedHeaderfieldArray();
 		StringBuffer headerFields = new StringBuffer();
+		String name;
+		for (int j = 0; j < headercacheList.length; j++) {
 
-		for (int i = 0; i < items.count(); i++) {
-			HeaderItem headerItem = items.getHeaderItem(i);
-
-			String name = headerItem.get("name");
-			if ((!name.equals("Status"))
-				|| (!name.equals("Flagged"))
-				|| (!name.equals("Attachment"))
-				|| (!name.equals("Priority"))
-				|| (!name.equals("Size"))) {
-				headerFields.append(name + " ");
-			}
+			name = (String) headercacheList[j];
+			headerFields.append(name + " ");
 		}
 
 		boolean finished = false;
