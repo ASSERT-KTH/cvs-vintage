@@ -65,7 +65,7 @@ import org.tigris.scarab.util.comparators.StartsWithPredicate;
  * Action for the AppConfigurationSettings form
  *
  * @author <a href="mailto:epugh@opensourceconnections.com">Eric Pugh</a>
- * @version $Id: AppConfigurationSettings.java,v 1.2 2004/11/14 21:06:54 dep4b Exp $
+ * @version $Id: AppConfigurationSettings.java,v 1.3 2004/12/29 23:45:25 dabbous Exp $
  */
 public class AppConfigurationSettings 
     extends RequireLoginFirstAction
@@ -81,7 +81,7 @@ public class AppConfigurationSettings
         for (int i = 0;i<c.getNumberOfConfigurations();i++){
             if(c.getConfiguration(i) instanceof PropertiesConfiguration){
                 PropertiesConfiguration pc = (PropertiesConfiguration)c.getConfiguration(i);
-                if(pc.getFileName().endsWith("CustomSettings.properties")){
+                if(pc.getFileName().endsWith("custom.properties")){
                     customSettings = pc;
                     break;
                 }
@@ -89,7 +89,7 @@ public class AppConfigurationSettings
         }
  
         if (customSettings==null){
-            throw new Exception("CustomSettings.properties file was not defined in TurbineConfiguration.xml");
+            throw new Exception("custom.properties file was not defined in TurbineConfiguration.xml");
         }
                 
         for (Iterator i =
