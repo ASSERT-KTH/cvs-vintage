@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.15 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: Depend.java,v 1.16 2002/12/08 21:22:25 jon Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -76,6 +76,11 @@ public class Depend
      * A Module object which represents the default module.
      */
     private String observerUniqueId = null;
+
+    /**
+     * a user based comment about why this dependency is the way it is.
+     */
+    private String description = null;
 
     /**
      * A new Depend object
@@ -101,6 +106,47 @@ public class Depend
     public Module getDefaultModule()
     {
         return defaultModule;
+    }
+
+    /**
+     * Gets the description of the message given
+     * by the user for the reason for this dependency.
+     * Can be null. Saves the attachment to the database if
+     * there is data to be saved.
+     */
+    public Attachment getDescriptionAsAttachment(ScarabUser user, Issue issue)
+        throws Exception
+    {
+        if (description == null)
+        {
+            return null;
+        }
+        Attachment comment = AttachmentManager.getInstance();
+        comment.setTextFields(user, issue, Attachment.COMMENT__PK);
+        comment.setData(getDescription());
+        comment.setName("comment");
+        comment.save();
+        return comment;
+    }
+
+    /**
+     * Gets the description of the message given
+     * by the user for the reason for this dependency.
+     * Can be null.
+     */
+    public String getDescription()
+    {
+        return this.description;
+    }
+
+    /**
+     * Sets the description of the message given
+     * by the user for the reason for this dependency.
+     * Can be null.
+     */
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     /**
