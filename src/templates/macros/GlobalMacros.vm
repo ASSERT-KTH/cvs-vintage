@@ -4,9 +4,9 @@
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
   #set ($issueType = $attrValue.Issue.IssueType)
-  ## initialize in case the second #set has null RHS
-  #set ($values = "")
-  #set ($values = $attrInput.get($optionFieldName).Value)
+  ## Initialize $newValues in case the second #set has a null RHS.
+  #set ($newValues = '')
+  #set ($newValues = $attrInput.get($optionFieldName).Value)
 
 <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
@@ -16,24 +16,29 @@
   #if ($module.getLeafRModuleOptions($attr, $issueType))
   #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
     #set ($selected = false)
-    #set ($canMakeTransition = "true")
-    #if ($values && $values.toString().length() > 0)   
+    #set ($canMakeTransition = true)
+    #if ($newValues && $newValues.toString() != '')
        #if ($multiple.equals("true"))
-         #foreach ($value in $values)
+         #foreach ($value in $newValues)
             #if ($value.equals($option.OptionId))
                #set ($selected=true)
             #end
          #end
        #else
+         #if ($issue.isNew())
+           #set ($values = '0')
+         #else
+           #set ($values = $newValues)
+         #end
          #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $scarabR.Issue))
-         #if ($values.equals($option.OptionId))
+         #if ($newValues.equals($option.OptionId))
            #set ($selected=true)
           #end
        #end
     #else
          #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $scarabR.Issue))
     #end
-    #if ($canMakeTransition.toString().equals("true"))
+    #if ($canMakeTransition)
       <option value="$option.OptionId"#selected($selected)>
         $option.DisplayValue </option>
     #end
