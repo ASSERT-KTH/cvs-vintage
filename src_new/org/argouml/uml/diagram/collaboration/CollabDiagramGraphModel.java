@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.51 2005/02/05 13:52:29 mvw Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.52 2005/02/06 21:30:53 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,10 +39,11 @@ import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 /**
  * This class defines a bridge between the UML meta-model
  * representation of the design and the GraphModel interface used by
- * GEF.  This class handles only UML Use Case Digrams.
+ * GEF.  This class handles only UML Collaboration Diagrams.
  */
 public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     implements VetoableChangeListener {
+    
     private static final Logger LOG =
         Logger.getLogger(CollabDiagramGraphModel.class);
 
@@ -288,7 +289,8 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     }
 
 
-    /** Return true if the two given ports can be connected by a
+    /** 
+     * Return true if the two given ports can be connected by a
      * kind of edge to be determined by the ports.
      *
      * @see org.tigris.gef.graph.MutableGraphModel#canConnect(java.lang.Object,
