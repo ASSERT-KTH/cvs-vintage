@@ -10,7 +10,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Login.vm")">Login.vm</a></li>
 <li><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", 1)">ViewIssue.vm?id=1</a> </li>
 <li><a href="$link.setPage("Search.vm")">Custom Query</a></li>
-<li><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query (not working)</a></li>
+<li><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></li>
 <li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a></li>
 <li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue (one-step)</a></li>
 <li><a href="$link.setPage("secure,ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List</a></li>
