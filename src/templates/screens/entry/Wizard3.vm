@@ -215,12 +215,12 @@ $page.setTitle("Enter issue")
     <small>Any information that did not fit within one of the attributes shown
     above can be added here.</small>
 #else
-    #fieldErrorMsg($intakeAttachment.DataAsString)
+    #fieldErrorMsg($intakeAttachment.DataAsString "")
     <small><strong>Required</strong> Please supply a short description which will be
     useful for users receiving the new issue email.  Also any information that
     did not fit within one of the attributes shown above can be added here.</small>
 #end
-<br />
+
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
    </td>
  </tr>
