@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.8 2002/08/26 09:14:27 d00mst Exp $
+// $Id: FigClassifierRole.java,v 1.9 2002/09/03 15:03:12 kataka Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -46,6 +46,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.*;
 import ru.novosoft.uml.behavior.collaborations.*;
 
 import org.tigris.gef.presentation.*;
+import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.*;
 
 import org.argouml.application.api.*;
@@ -182,8 +183,9 @@ public class FigClassifierRole extends FigNodeModelElement {
      * @param node  The NSUML object to associate with this Fig.
      */
 
-    public FigClassifierRole(GraphModel gm, Object node) {
+    public FigClassifierRole(GraphModel gm, Layer lay, Object node) {
         this();
+        setLayer(lay);
         setOwner(node);
     }
 

@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.14 2002/08/19 14:17:11 kataka Exp $
+// $Id: UMLComboBoxModel.java,v 1.15 2002/09/03 15:03:12 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up,
 // whilst tracking bug. _model eliminated, since it seems to have no use (it is
@@ -594,7 +594,8 @@ public class UMLComboBoxModel extends AbstractListModel implements
         MModel        model   = element.getModel();
 
         if (model == null) {
-            Argo.log.error(this.getClass().toString() + "targetChanged() - " +
+        	// extra attempt
+            Argo.log.error(this.getClass().toString() + " targetChanged() - " +
                            "getModel() == null for " + 
                            target.getClass().toString());
             return;
