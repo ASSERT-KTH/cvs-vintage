@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.3 2000/02/14 04:59:43 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/14 04:59:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.4 2000/05/24 17:19:54 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/24 17:19:54 $
  *
  * ====================================================================
  *
@@ -191,22 +191,6 @@ public class MessageBytes extends Ascii {
      */
     public int toInteger() throws NumberFormatException {
 	return parseInt(bytes, offset, length);
-    }
-
-    /**
-     * Returns the message bytes parsed as a date.
-     * @param d the HttpDate object to use for parsing
-     * @exception IllegalArgumentException if the date format was invalid
-     */
-    public long toDate(HttpDate d) throws IllegalArgumentException {
-	if (bytes != null) {
-	    d.parse(bytes, offset, length);
-	    return d.getTime();
-	} else {
-            String msg = sm.getString("messageBytes.iae", bytes);
-
-	    throw new IllegalArgumentException(msg);
-	}
     }
 
     /**

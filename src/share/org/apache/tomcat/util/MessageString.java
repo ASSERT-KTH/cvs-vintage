@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.2 2000/05/23 20:58:26 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/23 20:58:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.3 2000/05/24 17:19:55 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/24 17:19:55 $
  *
  * ====================================================================
  *
@@ -173,20 +173,6 @@ public class MessageString extends MessageBytes {
      */
     public int toInteger() throws NumberFormatException {
 	return str != null ? Integer.parseInt(str) : super.toInteger();
-    }
-
-    /**
-     * Returns the message string parsed as a date.
-     * @param d the HttpDate object to use for parsing
-     * @exception IllegalArgumentException if the date format was invalid
-     */
-    public long toDate(HttpDate d) throws IllegalArgumentException {
-	if (str != null) {
-	    d.parse(str);
-	    return d.getTime();
-	} else {
-	    return super.toDate(d);
-	}
     }
 
     /**

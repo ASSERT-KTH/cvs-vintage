@@ -113,10 +113,8 @@ public interface Request  {
     //-------------------- "Computed" properties --------------------
     // ( directly derived from headers or request paths )
     public Cookie getCookie( int idx );
+
     public int getCookieCount();
-    /** Return the cookies
-     */
-    public Cookie[] getCookies() ;
 
     public int getContentLength() ;
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.6 2000/05/02 19:58:41 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/02 19:58:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.7 2000/05/24 17:19:53 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/24 17:19:53 $
  *
  * ====================================================================
  *
@@ -78,8 +78,6 @@ import javax.servlet.http.Cookie;
  */
 public class CookieTools {
 
-    static FieldPosition FieldPosition0=new FieldPosition(0);
-
     /** Return the header name to set the cookie, based on cookie
      *  version
      */
@@ -136,7 +134,9 @@ public class CookieTools {
 	if (cookie.getMaxAge() >= 0) {
 	    if (version == 0) {
 		buf.append (";Expires=");
-		HttpDate.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000) ,buf, FieldPosition0 );
+		DateTool.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000) ,buf,
+						new FieldPosition(0));
+
 	    } else {
 		buf.append (";Max-Age=");
 		buf.append (cookie.getMaxAge());

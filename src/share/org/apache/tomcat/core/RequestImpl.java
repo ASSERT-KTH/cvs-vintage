@@ -435,11 +435,11 @@ public class RequestImpl  implements Request {
     }
     
     public Cookie[] getCookies() {
-	int count=request.getCookieCount();
+	int count=getCookieCount();
 	Cookie[] cookieArray = new Cookie[ count ];
 
 	for (int i = 0; i < count; i ++) {
-	    cookieArray[i] = request.getCookie( i );
+	    cookieArray[i] = getCookie( i );
 	}
 
 	return cookieArray;

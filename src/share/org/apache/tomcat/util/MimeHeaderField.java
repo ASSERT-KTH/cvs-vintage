@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.7 2000/05/24 04:41:56 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/24 04:41:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.8 2000/05/24 17:19:55 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/24 17:19:55 $
  *
  * ====================================================================
  *
@@ -67,6 +67,8 @@ package org.apache.tomcat.util;
 import javax.servlet.*;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.*;
+import java.text.*;
 
 /**
  * This class is used to represent a MIME header field.
@@ -104,7 +106,7 @@ public class MimeHeaderField {
     /**
      * The header field Date value.
      */
-    protected final HttpDate dateValue = new HttpDate(0);
+    protected Date dateValue = null;
 
     StringBuffer sb=null;
     // Will be used to conver date value - _never_ call toString()
@@ -190,15 +192,10 @@ public class MimeHeaderField {
      * @param t the time in milliseconds since the epoch
      */
     public void setDateValue(long t) {
-	dateValue.setTime(t);
-	type = T_DATE;
-    }
-
-    /**
-     * Sets the header field date value to the current time.
-     */
-    public void setDateValue() {
-	dateValue.setTime();
+	if( dateValue==null)
+	    dateValue=new Date(t);
+	else
+	    dateValue.setTime(t);
 	type = T_DATE;
     }
 
@@ -219,7 +216,7 @@ public class MimeHeaderField {
 	case T_INT:
 	    return String.valueOf(intValue);
 	case T_DATE:
-	    return dateValue.toString();
+	    return formatDate(dateValue);
 	default:
 	    return null;
 	}
@@ -262,114 +259,39 @@ public class MimeHeaderField {
     {
 	switch (type) {
 	case T_DATE:
+	    if( dateValue==null) break;
 	    return dateValue.getTime();
 	case T_STR:
-	    return value.toDate(dateValue);
-	default:
-            String msg = sm.getString("mimeHeaderField.date.iae");
-
-	    throw new IllegalArgumentException(msg);
+	    return parseDate( value );
 	}
+	String msg = sm.getString("mimeHeaderField.date.iae");
+	throw new IllegalArgumentException(msg);
     }
-
-    /** 
-     * Place a byte representation of target into the byte array buf.
-     * @param target - the integer to convert.  Must be in the range [0..2^31].
-     * @return the number of bytes added to buf
-     */
-    private int intGetBytes(int target, byte buf[], int offset) {
-	int power = 1000000000;  // magnitude of highest digit we can handle
-	int this_digit;
-	int bytes_emitted = 0;
-
-	// special case target is zero
-	if (target == 0) {
-	    buf[offset] = charval[0];
-
-	    return (1);
-	}
-
-	// iterate until there are no more digits to emit
-	while (power > 0) {
-	    this_digit = target / power;
-
-	    if (this_digit != 0 || bytes_emitted > 0) {
-		// emit this digit
-		buf[offset + bytes_emitted++] = charval[this_digit];
-	    }
-
-	    target = target % power;
-	    power = power / 10;
-	}
-
-	return bytes_emitted;
-    }
-
-    /**
-     * Put the bytes for this header into buf starting at offset buf_offset.
-     * @return the length of what was added
-     */
-    public int getBytes(byte buf[], int buf_offset) {
-	int len;
-	int start_pt = buf_offset;
-
-	buf_offset += name.getBytes(buf, buf_offset);
-	buf[buf_offset++] = (byte) ':';
-	buf[buf_offset++] = (byte) ' ';
-
-	switch (type) {
-	case T_STR:
-	    buf_offset += value.getBytes(buf, buf_offset);
-	    break;
-	case T_INT:
-	    buf_offset += intGetBytes(intValue, buf, buf_offset);
-	    break;
-	case T_DATE:
-	    buf_offset += getBytes(dateValue, buf, buf_offset,
-					     DATELEN);
-	    break;
-	}
-
-	buf[buf_offset++] = (byte) '\r';
-	buf[buf_offset++] = (byte) '\n';
-
-	return buf_offset - start_pt;
-    }
-
     
-    private static final String DATESTR = "Sun, 06 Nov 1994 08:49:37 GMT";
-    private static final int DATELEN = DATESTR.length();
-    
-    private int getBytes(HttpDate dateValue, byte[] buf, int off, int len) {
-	String dateString = HttpDate.rfc1123Format.format(dateValue.getCalendar().getTime());
-	byte[] b = dateString.getBytes();
-	System.arraycopy(b, 0, buf, off, DATELEN);
-	return DATELEN;
-    }    
+    String formatDate( Date value ) {
+	return DateTool.rfc1123Format.format(value);
+    }
 
-    /**
-     * Writes this header field to the specified servlet output stream.
-     */
-    public void write(ServletOutputStream out)
-    throws IOException {
-	name.write(out);
-	out.print(": ");
+    long parseDate( MessageString value ) {
+	String dateString=value.toString();
+	Date date=null;
+        try {
+            date = DateTool.rfc1123Format.parse(dateString);
+	    return date.getTime();
+	} catch (ParseException e) { }
 
-	switch (type) {
-	case T_STR:
-	    value.write(out);
-	    out.println();
-	    break;
-	case T_INT:
-	    out.println(intValue);
-	    break;
-	case T_DATE:
-	    dateValue.write(out);
-	    out.println();
-	    break;
-	default:
-	    out.println();
-	}
+        try {
+	    date = DateTool.rfc1036Format.parse(dateString);
+	    return date.getTime();
+	} catch (ParseException e) { }
+	
+        try {
+            date = DateTool.asctimeFormat.parse(dateString);
+	    return date.getTime();
+        } catch (ParseException pe) {
+        }
+	String msg = sm.getString("httpDate.pe", dateString);
+	throw new IllegalArgumentException(msg);
     }
 
     /**
@@ -400,18 +322,7 @@ public class MimeHeaderField {
 
 	sb.append(name.toString());
 	sb.append(": ");
-
-	switch (type) {
-	case T_STR:
-	    sb.append(value.toString());
-	    break;
-	case T_INT:
-	    sb.append(intValue);
-	    break;
-	case T_DATE:
-	    sb.append(dateValue.toString());
-	    break;
-	}
+	sb.append( getValue() );
 	return sb.toString();
     }
 }

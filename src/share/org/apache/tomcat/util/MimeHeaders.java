@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.7 2000/05/24 04:41:57 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/24 04:41:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.8 2000/05/24 17:19:56 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/24 17:19:56 $
  *
  * ====================================================================
  *
@@ -282,18 +282,6 @@ public class MimeHeaders {
     }
 
     /**
-     * Creates a new header field whose value is the current date and time.
-     * @param name the header name
-     */
-    public void putDateHeader(String name) {
-	putHeader(name).setDateValue();
-    }
-
-    public void addDateHeader(String name) {
-        addHeader(name).setDateValue();
-    }
-
-    /**
      * Returns the string value of one of the headers with the
      * specified name.
      * @see getHeaders
@@ -430,18 +418,6 @@ public class MimeHeaders {
 	return find(name) != null;
     }
 
-    /**
-     * Writes out header fields to the specified servlet output stream.
-     * @param out the servlet output stream
-     * @exception IOException if an I/O error has occurred
-     */
-    public void write(ServletOutputStream out) throws IOException {
-	for (int i = 0; i < count; i++) {
-	    headers[i].write(out);
-	}
-
-	out.println();
-    }
 
     /**
      * Finds a header field given name.  If the header doesn't exist,
@@ -478,21 +454,6 @@ public class MimeHeaders {
 	mh.setValue(s);
     }
     
-    /** 
-     * Get the current header fields in the byte array buf.  The headers
-     * fields are placed starting at offset buf_offset.  
-     * @return the number of bytes written into buf.
-     */
-    public int getAll(byte buf[], int buf_offset) {
-	int start_pt = buf_offset;
-
-	for (int i = 0; i < count; i++) {
-	    buf_offset += headers[i].getBytes(buf, buf_offset);
-	}
-
-	return buf_offset - start_pt;
-    }
-
     
     /**
      * Returns a lengthly string representation of the current header fields.
