@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.17 2001/10/10 17:37:30 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.18 2001/10/19 03:18:44 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -95,6 +95,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
       <li><a href="#configuring_classes">Configuring Classes</a></li>
       <li><a href="#configuring_server">Configuring the Server</a></li>
     </ul>
+  </li>
   <li><a href="#container_types">Servlet Container Types</a></li>
 	<li><a href="#webapps">Deploying Web Applications</a></li>
 		<li><a href="#webapp">What is a Web Application?</a></li>
@@ -269,8 +270,7 @@ building it from source, but that isn't covered in this document.</p>
 
 <ul>
   <li><a href="http://jakarta.apache.org/site/binindex.html">Download</a> the
-    appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary archive file.</li>
-    <br><br>
+    appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary archive file.<br><br></li>
 
   <li>Expand the archive into some directory (say /usr/local or C:\). This
       should create a new subdirectory named
@@ -290,8 +290,7 @@ as shell or MS_DOS window.</p>
       
 <ul>
   <li>In a shell or DOS window, change to the
-      <code>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</code> directory.</li>
-      <br><br>
+      <code>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</code> directory.<br><br></li>
 
   <li>Set the environment variable JAVA_HOME to point to the root
       directory of your JDK hierarchy.  You may optionally add the Java
@@ -318,8 +317,7 @@ as shell or MS_DOS window.</p>
       	setenv PATH=$JAVA_HOME/bin:$PATH<br>
       	</big></tt>
       	</li>
-	</ol></li>
-    <br><br>
+	</ol><br><br></li>
 
   <li>You may optionally set the TOMCAT_HOME environment variable.  If
       the supplied shell/batch scripts are executed from
@@ -339,8 +337,7 @@ as shell or MS_DOS window.</p>
       <li>On UNIX (using tcsh) you should type: <br>
           <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
           </big></tt></li>
-    </ol></li>
-    <br><br>
+    </ol><br><br></li>
     
   <li><a name="out_of_env"></a>If you are using Win9x, you will need to deal
       with the potential <b>&quot;Out of environment space&quot;</b> problem, if you
@@ -540,7 +537,7 @@ variables, they support is described in the
 <code>org.apache.tomcat.startup.Main</code> class in a Java VM. This class
 and some classes it uses also accept arguments. To take advantage of the
 full capabilities of Tomcat, you will need to become familiar with these
-arguments as will. See <a href="main_args">Tomcat's Main class arguments</a>
+arguments as well. See <a href="#tomcat_task_args">Tomcat Task Arguments</a>
 for those details.</p>
 
 <h3><a name="tomcat_actions">tomcat.sh/tomcat.bat Actions</a></h3>
@@ -705,13 +702,13 @@ task as an argument.</p>
 
 <p>Customizing Tomcat will involve adding or modifying one or more files
 involved with Tomcat. The next section describes the
-<a href="directory_structure">directory structure</a> of Tomcat 3.3 to document
+<a href="#directory_structure">directory structure</a> of Tomcat 3.3 to document
 where files are found. Following that are sections document the two parts to
 Tomcat configuration.</p>
 
 <ul>
-  <li><a href="configuring_classes">Configuring classes</a></li>
-  <li><a href="configuring_server">Configuring the server</a></li>
+  <li><a href="#configuring_classes">Configuring classes</a></li>
+  <li><a href="#configuring_server">Configuring the server</a></li>
 </ul>
 
 <h3><a name="directory_structure">Tomcat Directory Structure</a></h3>
@@ -925,6 +922,16 @@ and <b>Apps Classloader</b>.  Entries found in an <code>org.apache.tomcat.common
 System property are added to the <b>Common Classloader</b> and entries found in
 an <code>org.apache.tomcat.apps.classpath</code> are added to the <b>Apps CLassloader</b>.</p>
 
+<p><b>Note:</b> In an instance of Tomcat 3.3 which is using
+<a href="serverxml.html#ReloadInterceptor">ReloadInterceptor</a> (the default),
+the <b>Webapp Classloader</b>, <b>Apps Classloader</b>, and <b>Common classloader</b>
+are &quot;wrapped&quot; into a single classloader.  This classloader will be an
+instance of <code>org.apache.tomcat.util.depend.DependClassLoader</code> or
+<code>org.apache.tomcat.util.depend.DependClassLoader12</code>, depending
+on which JDK you are using.  This classloader checks for updates when classes
+are loaded from the &quot;wrapped&quot; classloaders so that reloads can
+be triggered when needed.</p>
+
 <h3><a name="configuring_server">Configuring the Server</a></h3>
 
 <h4>Overview</h4>
@@ -994,27 +1001,27 @@ only the <code>&lt;Context&gt;</code> entries.</p>
 
 <h4>Default Tomcat Configuration</h4>
 
-<p><i>This section will describe the default configuration supplied with Tomcat 3.3</i></p>
+<p>The default <code>server.xml</code> contains the following configuration.</p>
 
 <table border="1">
   <tr><th>Module Entry</th><th>Status</th><th>Description</th></tr>
   <tr><td>&lt;<a href="serverxml.html#LoaderInterceptor11">LoaderInterceptor11</a>
     useApplicationLoader=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
+    <td>Constructs and sets the classloader for each context</td></tr>
   <tr><td>&lt;<a href="serverxml.html#TrustedLoader">TrustedLoader</a> /&gt;</td>
     <td>&nbsp;</td>
     <td>Provides special handling for &quot;trusted&quot; contexts which have
       a <code>interceptors.xml</code> file in their <code>WEB-INF</code>
       directory.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
-      name=&quot;tc_log&quot; timestamps="true"<br>
-	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel="INFORMATION"  /&gt;</td><td>&nbsp;</td>
+      name=&quot;tc_log&quot; timestamps=&quot;true&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel=&quot;INFORMATION&quot;  /&gt;</td><td>&nbsp;</td>
     <td>Sets up Tomcat's log output channel. In the absence of a <code>path</code>
       setting, output goes to <code>stderr</code>.</td></tr>
-  <tr><td>&lt;<a href="serverxml.html#LogEvents">LogEvents</a> enabled="false" /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LogEvents">LogEvents</a> enabled=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
+    <td>When enabled, logs when module methods are called.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#ContextXmlReader">ContextXmlReader</a>
-    config="conf/server.xml" /&gt;</td><td>&nbsp;</td>
+    config=&quot;conf/server.xml&quot; /&gt;</td><td>&nbsp;</td>
     <td>Reads context definitions from the <code>server.xml</code> file for
       backwards compatibility. This may be removed if you don't put
       context definitions in your <code>server.xml</code> file.</td></tr>
@@ -1082,7 +1089,8 @@ only the <code>&lt;Context&gt;</code> entries.</p>
       execution.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#InvokerInterceptor">InvokerInterceptor</a>
     /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
+    <td>Handles the &quot;/servlet/<i>class name</i>&quot; legacy method of
+      invoking servlets</td></tr>
   <tr><td>&lt;<a href="serverxml.html#JspInterceptor">JspInterceptor</a>
       keepGenerated=&quot;true&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;largeFile=&quot;false&quot;<br>
@@ -1110,7 +1118,7 @@ only the <code>&lt;Context&gt;</code> entries.</p>
       against data obtained from an XML file. Since this module appears outside
       of a Context definition, the user names and passwords in the specified
       file apply to all contexts.</td></tr>
-  <tr><td>&lt;JDBCRealm<br>
+  <tr><td>&lt;<a href="serverxml.html#JDBCRealm">JDBCRealm</a><br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;debug=&quot;99&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;driverName=&quot;sun.jdbc.odbc.JdbcOdbcDriver&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;connectionURL=&quot;jdbc:odbc:TOMCAT&quot;<br>
@@ -1118,55 +1126,207 @@ only the <code>&lt;Context&gt;</code> entries.</p>
 	  &nbsp;&nbsp;&nbsp;&nbsp;userCredCol=&quot;user_pass&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;userRoleTable=&quot;user_roles&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;roleNameCol=&quot;role_name&quot; /&gt;</td><td>Disabled</td>
-    <td>&nbsp;</td></tr>
+    <td>A replacement for SimpleRealm that reads usernames, passwords, and roles
+      from tables using JDBC.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#LoadOnStartupInterceptor">LoadOnStartupInterceptor</a>
     /&gt;</td><td>&nbsp;</td>
     <td>Pre-loads servlets indicated as &lt;load-on-startup&gt; in a web.xml
       file.</td></tr>
-  <tr><td>&lt;Servlet22Interceptor /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#Servlet22Interceptor">Servlet22Interceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>Handles miscellaneous tasks that help implement behavior related to the
+      Servlet 2.2 specification.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
      name=&quot;tag_pool_log&quot; timestamps=&quot;true&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;path=&quot;logs/tagpool-${yyyyMMdd}.log&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel=&quot;INFORMATION&quot; /&gt;</td><td>Disabled</td>
-    <td>&nbsp;</td></tr>
+    <td>Sets up the &quot;tag_pool_log&quot; log output channel.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#TagPoolManagerInterceptor">TagPoolManagerInterceptor</a>
     /&gt;</td><td>Disabled</td>
     <td>Manages a pool of custom tag libary tag objects.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#DecodeInterceptor">DecodeInterceptor</a>
     /&gt;</td><td>&nbsp;</td>
     <td>Handles the determination of the encoding of a request.</td></tr>
-  <tr><td>&lt;SessionId cookiesFirst=&quot;true&quot; noCookies=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#SessionId">SessionId</a>
+    cookiesFirst=&quot;true&quot; noCookies=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Handles associating sessions with requests and responses.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#ApacheConfig">ApacheConfig</a>
     noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
-    <td>Auto-generates a configuration file for use with <code>mod_jk</code>.</td></tr>
+    <td>Generates a configuration file for use with <code>mod_jk</code>.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#IISConfig">IISConfig</a>
     noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
-    <td>Auto-generates a configuration file for use with <code>isapi_redirect.dll</code>.</td></tr>
-  <tr><td>&lt;NSConfig noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
-  <tr><td>&lt;AccessLogInterceptor/&gt;</td><td>Disabled</td>
-    <td>&nbsp;</td></tr>
-  <tr><td>&lt;Http10Connector port=&quot;8080&quot;<br>
+    <td>Generates a configuration file for use with <code>isapi_redirect.dll</code>.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#NSConfig">NSConfig</a>
+    noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Generates a configuration file for use with <code>nsapi_redirect</code>.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#AccessLogInterceptor">AccessLogInterceptor</a>
+    /&gt;</td><td>Disabled</td>
+    <td>Writes a log file like Apache's AccessLog</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#Http10Connector">Http10Connector</a> port=&quot;8080&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;secure=&quot;false&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;maxThreads=&quot;100&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;maxSpareThreads=&quot;50&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;minSpareThreads=&quot;10&quot; /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
-  <tr><td>&lt;Http10Connector  port=&quot;8443&quot; secure=&quot;true&quot; /&gt;</td><td>Disabled</td>
-    <td>&nbsp;</td></tr>
-  <tr><td>&lt;JniConnector /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
-  <tr><td>&lt;Ajp12Connector	tomcatAuthentication=&quot;false&quot; port=&quot;8007&quot; /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
-  <tr><td>&lt;Ajp13Connector port=&quot;8009&quot; /&gt;</td><td>&nbsp;</td>
-    <td>&nbsp;</td></tr>
+    <td>Handles incomming HTTP requests.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#Http10Connector">Http10Connector</a>
+    port=&quot;8443&quot; secure=&quot;true&quot; /&gt;</td><td>Disabled</td>
+    <td>Handles incomming HTTPS requests.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#JniConnector">JniConnector</a> /&gt;</td><td>&nbsp;</td>
+    <td>Handles requests processed by Tomcat running in-process, provided
+      Tomcat was started in-process.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#Ajp12Connector">Ajp12Connector</a>
+    port=&quot;8007&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Handles Ajp12 protocol requests and Tomcat shutdown.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#Ajp13Connector">Ajp13Connector</a>
+    port=&quot;8009&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Handles Ajp13 protocol requests.</td></tr>
 </table>
 
 <h4>Tomcat Server Customization</h4>
 
-<p><i>This section will describe the most common customizations</i></p>
+<p>The following are some of the more common customization made to the
+<code>server.xml</code> file.</p>
+
+<ol>
+<li><a href="#cust_chgports">Change ports for Http, Https, and Web Server connectors</a></li>
+<li><a href="#cust_session">Speed up initial session creation for development</a></li>
+<li><a href="#cust_auth">Configure whether Tomcat or a web server does authentication</a></li>\
+<li><a href="#cust_dirlist">Turn off directory lisings</a></li>
+<li><a href="#cust_jikes">Use Jikes as the Java compiler</a></li>
+<li><a href="#cust_bind">Bind a connector to a single IP address</a></li>
+<li><a href="#cust_redeploy">Enable redeploying of WAR files</a></li>
+<li><a href="#cust_session">Disable cookie based sessions</a></li>
+</ol>
+
+<hr>
+
+<p>1. <a name="cust_chgports">Change ports for Http or Web Server connectors</a></p>
+
+<p>To change a port, search the <code>server.xml</code> file for the default
+value of the port and change it to the desired value.</p>
+
+<table border="1">
+  <tr><th>Connector</th><th>Default Port</th></tr>
+  <tr><td>Http</td><td>8080</td></tr>
+  <tr><td>Https</td><td>8443</td></tr>
+  <tr><td>Ajp12Connector</td><td>8007</td></tr>
+  <tr><td>Ajp13Connector</td><td>8009</td></tr>
+</table>
+<p>For example:</p>
+<pre>
+    &lt;Http10Connector port=&quot;80&quot; secure=&quot;false&quot;
+        maxThreads=&quot;100&quot; maxSpareThreads=&quot;50&quot; minSpareThreads=&quot;10&quot; /&gt;
+</pre>
+
+<hr>
+
+<p>2. <a name="cust_session">Speed up initial session creation for development</a></p>
+
+<p>The first request that requires a session can incur a delay when the
+<a href="serverxml.html#SessionIdGenerator">SessionIdGenerator</a> initializes
+the random number generator.  This delay can be relatively long when using
+the default <code>java.security.SecureRandom</code> class.  For development
+purposes, you can speed this up by switching to the <code>java.util.Random</code>
+class. For example:</p>
+<pre>
+    &lt;SessionIdGenerator randomClass=&quot;java.util.Random&quot; randomFile=&quot;/dev/urandom&quot; /&gt;
+</pre>
+<p>You should only use <code>java.util.Random</code> for development
+since the random sequence generated is predictable.</p>
+
+<hr>
+
+<p>3. <a name="cust_auth">Configure whether Tomcat or a web server does authentication</a></p>
+
+<p>When Tomcat is used with a web server, such as Apache, the default is to have
+Tomcat continue to handle authentication.  Any authenticated user specified in
+the request forwarded from the web server to Tomcat will be ignored.</p>
+
+<p>If you want Tomcat to make use of the authenticated user provided by
+the web server, add:</p>
+<pre>
+    tomcatAuthentication=&quot;false&quot;
+</pre>
+<p>to the <a href="serverxml.html#Ajp12Connector">Ajp12Connector</a> or
+<a href="serverxml.html#Ajp13Connector">Ajp13Connector</a> as appropriate.
+For example:</p>
+<pre>
+    &lt;Ajp13Connector port=&quot;8009&quot; tomcatAuthentication=&quot;false&quot; /&gt;
+</pre>
+
+<hr>
+
+<p>4. <a name="cust_dirlist">Turn off directory lisings</a></p>
+
+<p>To turn off directory listings, change the <code>listings</code> attribute of
+the <a href="serverxml.html#StaticInterceptor">StaticInterceptor</a> to
+<code>false</code>.  For example:</p>
+<pre>
+    &lt;StaticInterceptor listings=&quot;false&quot; /&gt;
+</pre>
+
+<hr>
+
+<p>5. <a name="cust_jikes">Use Jikes as the Java compiler</a></p>
+
+<p>To have Tomcat use Jikes as the Java compiler, add:</p>
+<pre>
+    javaCompiler=&quot;jikes&quot;
+</pre>
+<p>to the <a href="serverxml.html#JspInterceptor">JspInterceptor</a>. For example:</p>
+<pre>
+    &lt;JspInterceptor javaCompiler=&quot;jikes&quot; /&gt;
+</pre>
+
+<p>You may want to also set the <code>jikesClasspath</code> attribute to
+include any jars from the <code>jre/lib/ext</code> entensions directory, or any
+classes or jars not otherwise found in the <code>WEB-INF/classes</code> and
+<code>WEB-INF/lib</code> directories.</p>
+
+<p>If the Jikes executable isn't in your <code>PATH</code> environment
+variable, you will also need to set the <code>jspCompilerPath</code> attribute
+to the full path of the Jikes executable.</p>
+<hr>
+
+<p>6. <a name="cust_bind">Bind a connector to a single IP address</a></p>
+
+<p>By default, the <a href="serverxml.html#Ajp12Connector">Ajp12Connector</a>
+and <a href="serverxml.html#Ajp13Connector">Ajp13Connector</a> will accept
+connections from any IP address.  To bind the connector to a single IP address,
+add an <code>address</code> attribute specifying the desired IP address.
+For example:</p>
+<pre>
+    &lt;Ajp13Connector port=&quot;8009&quot; address=&quot;127.0.0.1&quot; /&gt;
+</pre>
+
+<hr>
+
+<p>7. <a name="cust_redeploy">Enable redeploying of WAR files</a></p>
+
+<p>The default behavior is to only deploy a WAR file if the target directory
+doesn't already exists.  To enable automatic redeployment of WAR files, add:</p>
+<pre>
+    redeploy=&quot;true&quot;
+</pre>
+<p>to the <a href="serverxml.html#AutoDeploy">AutoDeploy</a> with
+<code>source=&quot;webapps&quot;</code>. In addition to re-deploying WAR files
+at startup, because a <a href="serverxml.html#ReloadInterceptor">ReloadInterceptor</a>
+is part of the default configuration, WAR files will re-deploy and reload if
+updated while Tomcat is running.</p>
+
+<hr>
+
+<p>8. <a name="cust_session">Disable cookie based sessions</a></p>
+
+<p>To assist with testing a web application against browsers that have
+cookies disabled, you can disable the use of cookie bases sessions.  Change the
+<code>noCookies</code> attribute of the <a href="serverxml.html#SessionId">SessionId</a>
+module to <code>true</code>.  For example:</p>
+<pre>
+    &lt;SessionId cookiesFirst=&quot;true&quot; noCookies=&quot;true&quot; /&gt;
+</pre>
+
+<hr>
 
 <h4><a name="standard_contexts">Tomcat's Standard Contexts</a></h4>
 
@@ -1241,7 +1401,7 @@ only the <code>&lt;Context&gt;</code> entries.</p>
 
 <h2><a name="webapps">Deploying Web Applications</a></h2>
 
-<h3>What is a Web Application?</h3>
+<h3><a name="webapp">What is a Web Application?</a></h3>
 
 <p>[??? - move this section up above the Configuring Tomcat section? It's
 not clear whether we should teach about webapps before or after we
