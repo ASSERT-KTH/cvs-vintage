@@ -71,8 +71,7 @@
   <td class="b">
    #fieldErrorMsg($attgroup.Action "")
 		<select name="$attgroup.Action.Key" size="">
-   		<option value="">$l10n.Select ...</option>
-   		<option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>$l10n.None</option>
+   		<option value="none" #if (!$attgroup.Action.Value || $attgroup.Action.Value.equals("none")) selected="selected" #end>$l10n.None</option>
    		<option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>$l10n.To</option>
         <option value="cc" #if ($attgroup.Action.Value.equals("cc")) selected="selected" #end>$l10n.CC</option>
  </select></td>
