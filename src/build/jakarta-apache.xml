@@ -136,9 +136,10 @@
      <expand src="${nightly.dir}/${zip2tar.src}.zip" dest="${ws.dir}/tmp" />
      <exec dir="${ws.dir}/tmp"  command="tar cf ${zip2tar.src}.tar *" />
      <exec dir="${ws.dir}/tmp"  command="compress ${zip2tar.src}.tar "/>
+     <copyfile src="${ws.dir}/tmp/${zip2tar.src}.tar.Z" dest="${nightly.dir}/${zip2tar.src}.tar.Z" />
+     <exec dir="${ws.dir}/tmp"  command="rm ${ws.dir}/tmp/${zip2tar.src}.tar.Z" />
      <exec dir="${ws.dir}/tmp"  command="tar cf ${zip2tar.src}.tar *" />
      <exec dir="${ws.dir}/tmp"  command="bzip2 ${zip2tar.src}.tar "/>
-     <copyfile src="${ws.dir}/tmp/${zip2tar.src}.tar.Z" dest="${nightly.dir}/${zip2tar.src}.tar.Z" />
      <copyfile src="${ws.dir}/tmp/${zip2tar.src}.tar.bz2" dest="${nightly.dir}/${zip2tar.src}.tar.bz2" />
    </target>
 
