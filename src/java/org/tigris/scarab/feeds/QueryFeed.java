@@ -1,0 +1,337 @@
+
+package org.tigris.scarab.feeds;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.collections.SequencedHashMap;
+import org.apache.fulcrum.intake.Intake;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.parser.StringValueParser;
+import org.apache.torque.TorqueException;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListItem;
+import org.tigris.scarab.om.Query;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.IteratorWithSize;
+import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.IssueSearchFactory;
+import org.tigris.scarab.util.word.MaxConcurrentSearchException;
+
+import com.sun.syndication.feed.synd.SyndContent;
+import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndFeedImpl;
+import com.sun.syndication.io.FeedException;
+
+/**
+ * @author Eric Pugh
+ *  
+ */
+public class QueryFeed {
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
+    private Query query;
+    private ScarabUser user;
+
+    public QueryFeed(Query query, ScarabUser user) {
+        this.query = query;
+        this.user = user;
+    }
+
+    public SyndFeed getFeed() throws IOException, FeedException, TorqueException, Exception {
+        DateFormat dateParser = new SimpleDateFormat(DATE_FORMAT);
+
+        SyndFeed feed = new SyndFeedImpl();
+
+        MITList mitList = query.getMITList();
+        String currentQueryString = query.getValue();
+        IssueSearch search = getPopulatedSearch(currentQueryString,mitList,user);
+        IteratorWithSize queryResults = null;
+
+        // Do search
+
+        if (search == null) {
+            // an alert message should have been set while attempting
+            // to populate the search.
+            queryResults = IteratorWithSize.EMPTY;
+        } else {
+            queryResults = search.getQueryResults();
+
+        }
+
+        feed.setTitle(query.getName());
+        feed
+                .setLink("http://localhost:8080/scarab/issues/curmodule/3/tqk/0/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search&pagenum=1&intake-grp=attv&intake-grp=search&searchsp=asc&searchtype=advanced&attv=__11&attv=__3&attv=__12&attv=__1&attv=__4&attv=__7&attv=__8&searchscai=3&searchsctoi=0&resultsperpage=25&searchscfoi=0&curmitlistid=280");
+        feed.setDescription(query.getDescription());
+
+        List entries = new ArrayList();
+
+        List items = mitList.getExpandedMITListItems();
+        for (Iterator i = items.iterator(); i.hasNext();) {
+            SyndEntry entry;
+            SyndContent description;
+            MITListItem item = (MITListItem) i.next();
+
+            ScarabRequestTool scarabR = new ScarabRequestTool();
+            //scarabR.getIssueListIterator()
+            //$item.Module.Name
+            entry = new SyndEntryImpl();
+            entry.setTitle(item.getModule().getName());
+            entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome01");
+
+            description = new SyndContentImpl();
+            description.setType("text/plain");
+            description.setValue("Initial release of Rome");
+
+            entry.setDescription(description);
+            entries.add(entry);
+
+        }
+        SyndEntry entry;
+        SyndContent description;
+        /*
+         * 
+         * 
+         * entry = new SyndEntryImpl(); entry.setTitle("Rome v0.1");
+         * entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome01"); try {
+         * entry.setPublishedDate(dateParser.parse("2004-06-08")); } catch
+         * (ParseException ex) { // IT CANNOT HAPPEN WITH THIS SAMPLE }
+         * description = new SyndContentImpl();
+         * description.setType("text/plain"); description.setValue("Initial
+         * release of Rome"); entry.setDescription(description);
+         * entries.add(entry);
+         * 
+         * entry = new SyndEntryImpl(); entry.setTitle("Rome v0.2");
+         * entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome02"); try {
+         * entry.setPublishedDate(dateParser.parse("2004-06-16")); } catch
+         * (ParseException ex) { // IT CANNOT HAPPEN WITH THIS SAMPLE }
+         * description = new SyndContentImpl();
+         * description.setType("text/plain"); description .setValue("Bug fixes,
+         * minor API changes and some new features" + " <p> For details check
+         * the <a
+         * href=\"http://wiki.java.net/bin/view/Javawsxml/RomeChangesLog#RomeV02\">Changes
+         * Log for 0.2 </a> </p> "); entry.setDescription(description);
+         * entries.add(entry);
+         * 
+         * entry = new SyndEntryImpl(); entry.setTitle("Rome v0.3");
+         * entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome03"); try {
+         * entry.setPublishedDate(dateParser.parse("2004-07-27")); } catch
+         * (ParseException ex) { // IT CANNOT HAPPEN WITH THIS SAMPLE }
+         * description = new SyndContentImpl();
+         * description.setType("text/html"); description .setValue(" <p> Bug
+         * fixes, API changes, some new features and some Unit testing </p> " + "
+         * <p> For details check the <a
+         * href=\"http://wiki.java.net/bin/view/Javawsxml/RomeChangesLog#RomeV03\">Changes
+         * Log for 0.3 </a> </p> "); entry.setDescription(description);
+         * entries.add(entry);
+         */
+        entry = new SyndEntryImpl();
+        entry.setTitle("Rome v0.4");
+        entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome04");
+        try {
+            entry.setPublishedDate(dateParser.parse("2004-09-24"));
+        } catch (ParseException ex) {
+            // IT CANNOT HAPPEN WITH THIS SAMPLE
+        }
+        description = new SyndContentImpl();
+        description.setType("text/html");
+        description
+                .setValue("<p>Bug fixes, API changes, some new features, Unit testing completed</p>"
+                        + "<p>For details check the <a href=\"http://wiki.java.net/bin/view/Javawsxml/RomeChangesLog#RomeV04\">Changes Log for 0.4</a></p>");
+        entry.setDescription(description);
+        entries.add(entry);
+
+        feed.setEntries(entries);
+
+        return feed;
+    }
+
+    /**
+     * Get an IssueSearch object based on a query string. Copied from
+     * ScarabRequestTool
+     * 
+     * @return a <code>Issue</code> value
+     */
+    public IssueSearch getPopulatedSearch(String query, MITList mitList, ScarabUser searcher) throws Exception {
+        IssueSearch search = getNewSearch(mitList,searcher);
+        search.setIssueListAttributeColumns(getRModuleUserAttributes(searcher));
+
+        Intake intake = null;
+
+        if (query == null) {
+            throw new Exception("Query was null");
+        }
+
+        // If they have entered users to search on, add them to the search
+        StringValueParser parser = new StringValueParser();
+        parser.parse(query, '&', '=', true);
+        String[] userList = parser.getStrings("user_list");
+        if (userList != null && userList.length > 0) {
+            for (int i = 0; i < userList.length; i++) {
+                String userId = userList[i];
+                String[] attrIds = parser.getStrings("user_attr_" + userId);
+                if (attrIds != null) {
+                    for (int j = 0; j < attrIds.length; j++) {
+                        search.addUserCriteria(userId, attrIds[j]);
+                    }
+                }
+            }
+        }
+
+        // Set intake properties
+        /*
+         * boolean searchSuccess = true; Group searchGroup =
+         * intake.get("SearchIssue", search.getQueryKey());
+         * 
+         * Field minDate = searchGroup.get("MinDate"); if (minDate != null &&
+         * minDate.toString().length() > 0) { searchSuccess = checkDate(search,
+         * minDate.toString()); }
+         * 
+         * Field maxDate = searchGroup.get("MaxDate"); if (maxDate != null &&
+         * maxDate.toString().length() > 0) { searchSuccess = checkDate(search,
+         * maxDate.toString()); }
+         * 
+         * Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
+         * if (stateChangeFromDate != null &&
+         * stateChangeFromDate.toString().length() > 0) { searchSuccess =
+         * checkDate(search, stateChangeFromDate.toString()); }
+         * 
+         * Field stateChangeToDate = searchGroup.get("StateChangeToDate"); if
+         * (stateChangeToDate != null && stateChangeToDate.toString().length() >
+         * 0) { searchSuccess = checkDate(search, stateChangeToDate.toString()); }
+         * 
+         * if (!searchSuccess) { setAlertMessage(l10n.format("DateFormatPrompt",
+         * L10NKeySet.ShortDateDisplay)); return null; }
+         * 
+         * try { searchGroup.setProperties(search); } catch (Exception e) {
+         * setAlertMessage(l10n.getMessage(e)); return null; }
+         * 
+         * Integer oldOptionId = search.getStateChangeFromOptionId(); if
+         * (oldOptionId != null && oldOptionId.intValue() != 0 &&
+         * oldOptionId.equals(search.getStateChangeToOptionId())) {
+         * setAlertMessage(L10NKeySet.StateChangeOldEqualNew); return null; }
+         */
+        // Set attribute values to search on
+        SequencedHashMap avMap = search.getCommonAttributeValuesMap();
+        Iterator i = avMap.iterator();
+        while (i.hasNext()) {
+            AttributeValue aval = (AttributeValue) avMap.get(i.next());
+            Group group = intake.get("AttributeValue", aval.getQueryKey());
+            if (group != null) {
+                group.setProperties(aval);
+            }
+        }
+
+        // If user is sorting on an attribute, set sort criteria
+        // Do not use intake, since intake parsed from query is not the same
+        // As intake passed from the form
+        //    String sortColumn = data.getParameters().getString("sortColumn");
+        //      if (sortColumn != null && sortColumn.length() > 0 &&
+        // StringUtils.isNumeric(sortColumn)) {
+        //      search.setSortAttributeId(new Integer(sortColumn));
+        // }
+
+        //        String sortPolarity = data.getParameters().getString("sortPolarity");
+        //      if (sortPolarity != null && sortPolarity.length() > 0) {
+        //        search.setSortPolarity(sortPolarity);
+        //  }
+
+        return search;
+    }
+
+    /**
+     * Get a new IssueSearch object. Copied from ScarabRequestTool
+     * 
+     * @return a <code>Issue</code> value
+     */
+    public IssueSearch getNewSearch(MITList mitList, ScarabUser searcher) throws Exception,
+            MaxConcurrentSearchException {
+
+        IssueSearch issueSearch = IssueSearchFactory.INSTANCE.getInstance(mitList, searcher);
+        // issueSearch.setLocale(getLocalizationTool().getPrimaryLocale());
+
+        return issueSearch;
+    }
+    /**
+     * First attempts to get the RModuleUserAttributes from the user.
+     * If it is empty, then it will try to get the defaults from the module.
+     * If anything fails, it will return an empty list.
+     * 
+     * Ripped off of ScarabRequestTool
+     */
+    public List getRModuleUserAttributes(ScarabUser user)
+    {
+        List issueListColumns =null;
+        if (issueListColumns == null) 
+        {
+            try
+            {
+                //
+                // First check whether an MIT list is currently
+                // active and if so, whether it has attributes
+                // associated with it. 
+                //
+                MITList currentList = user.getCurrentMITList();
+                if (currentList != null)
+                {
+                    //
+                    // Here we fetch the collection of attributes
+                    // associated with the current MIT list.
+                    //
+                    issueListColumns =
+                        currentList.getCommonRModuleUserAttributes();
+                    
+                    //
+                    // If there are no attributes associated with
+                    // the list, and the list only contains a single
+                    // module and a single issue type, get the default
+                    // attributes for that combination of module and
+                    // issue type.
+                    //
+                    if (issueListColumns.isEmpty()
+                        && currentList.isSingleModuleIssueType())
+                    {
+                        issueListColumns = currentList.getModule()
+                            .getDefaultRModuleUserAttributes(
+                                currentList.getIssueType());
+                    }
+                }
+  /*  
+                if (issueListColumns == null)
+                {
+                    issueListColumns = user.getRModuleUserAttributes(module,
+                                                                     issueType);
+                    if (issueListColumns.isEmpty())
+                    {
+                        issueListColumns =
+                            module.getDefaultRModuleUserAttributes(issueType);
+                    }
+                }
+                initialIssueListColumnsSize = issueListColumns.size();
+                */
+            }
+            catch (Exception e)
+            {
+                Log.get().error("Could not get list attributes", e);
+            }
+        }
+        if (issueListColumns == null)
+        {
+            issueListColumns = Collections.EMPTY_LIST;
+        }
+        return issueListColumns;
+    }
+
+}

@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.153 2004/10/14 11:33:43 dep4b Exp $
+ * @version $Id: ScarabModule.java,v 1.154 2004/11/23 08:38:36 dep4b Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -134,8 +134,8 @@ public class ScarabModule
                     .getString(ScarabConstants.HTTP_DOMAIN);
                 if (domain == null)
                 {
-                    domain = Turbine.getConfiguration()
-                        .getString(ScarabConstants.HTTP_DOMAIN);
+                    domain = "";//Turbine.getConfiguration()
+                        //.getString(ScarabConstants.HTTP_DOMAIN);
                     if (domain == null || domain.trim().length() == 0) 
                     {
                         domain = "";

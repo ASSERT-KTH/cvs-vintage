@@ -62,6 +62,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.turbine.Turbine;
 import org.apache.torque.util.Criteria;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.fileupload.FileItem;
 
 import org.tigris.scarab.tools.localization.L10NKeySet;
@@ -84,7 +85,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.68 2004/11/04 20:35:27 dep4b Exp $
+ * @version $Id: Attachment.java,v 1.69 2004/11/23 08:38:36 dep4b Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -107,6 +108,7 @@ public class Attachment
      * from an html form.
      */
     private FileItem fileItem;
+    private static Configuration configuration;
     
     /**
      * Makes sure to only save the simple filename which is the part
@@ -372,8 +374,9 @@ public class Attachment
     {
         if (fileRepo == null) 
         {
-            String testPath = Turbine.getConfiguration()
+            String testPath = getConfiguration()
                 .getString(ScarabConstants.ATTACHMENTS_REPO_KEY);
+
             File testDir = new File(testPath);
             if (testDir.isAbsolute()) 
             {                
@@ -396,6 +399,16 @@ public class Attachment
             }
         }
         return fileRepo;
+    }
+
+    private static Configuration getConfiguration() {
+        if(configuration==null){
+            configuration = Turbine.getConfiguration();
+        }
+        return configuration;
+    }
+    protected static void setConfiguration(Configuration configuration){
+        Attachment.configuration = configuration;
     }
 
     public void copyFileTo(String path)

@@ -104,14 +104,23 @@
 
   <dependencies>
     <dependency>
-      <groupId>sandler</groupId>
-      <artifactId>sandler</artifactId>
-      <version>1.02</version>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>0.4</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>  
+    <dependency>
+      <groupId>jdom</groupId>
+      <artifactId>jdom</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>     
     <dependency>
       <groupId>servletapi</groupId>
       <artifactId>servletapi</artifactId>

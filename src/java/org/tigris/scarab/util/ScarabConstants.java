@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.65 2004/03/27 00:40:05 pledbrook Exp $
+ * @version $Id: ScarabConstants.java,v 1.66 2004/11/23 08:38:37 dep4b Exp $
  */
 public interface ScarabConstants
 {
@@ -259,11 +259,11 @@ public interface ScarabConstants
 
     Integer INTEGER_0 = new Integer(0);
 
-    int QUERY_MAX_FILTER_CRITERIA = 
-        Turbine.getConfiguration().getInt("scarab.query.max.filter_criteria", 10);
-
-    int QUERY_MAX_JOIN = 
-        Turbine.getConfiguration().getInt("scarab.query.max.join", 31);
+    //int QUERY_MAX_FILTER_CRITERIA = 
+    //    Turbine.getConfiguration().getInt("scarab.query.max.filter_criteria", 10);
+    int QUERY_MAX_FILTER_CRITERIA = 10;
+    int QUERY_MAX_JOIN = 31; 
+        //Turbine.getConfiguration().getInt("scarab.query.max.join", 31);
 
     /**
      * The maximum number of issues for batch view of detail.
