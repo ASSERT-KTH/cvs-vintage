@@ -85,6 +85,7 @@ public final class OutputBuffer extends Writer {
 
     static final int debug=0;
     int bytesWritten = 0;
+    boolean closed=false;
 
     /** The buffer
      */
@@ -120,6 +121,7 @@ public final class OutputBuffer extends Writer {
 	charsWritten=0;
 	ccount=0;
 	count=0;
+        closed=false;
     }
 
     // -------------------- Adding bytes to the buffer -------------------- 
@@ -131,8 +133,9 @@ public final class OutputBuffer extends Writer {
 	state=BYTE_STATE;
 	writeBytes( b, off, len );
     }
-    
+
     public void writeBytes(byte b[], int off, int len) throws IOException {
+        if( closed  ) return;
 	if( debug > 0 ) log("write(b,off,len)");
 	int avail=buf.length - count;
 
@@ -202,8 +205,8 @@ public final class OutputBuffer extends Writer {
     public char cbuf[];
     public int ccount;
     int charsWritten;
-    
-    
+
+
     public void write( int c ) throws IOException {
 	state=CHAR_STATE;
 	if( debug > 0 ) log("writeChar(b)");
@@ -217,7 +220,7 @@ public final class OutputBuffer extends Writer {
     public void write( char c[] ) throws IOException {
 	write( c, 0, c.length );
     }
-    
+
     public void write(char c[], int off, int len) throws IOException {
 	state=CHAR_STATE;
 	if( debug > 0 ) log("write(c,off,len)");
@@ -318,24 +321,25 @@ public final class OutputBuffer extends Writer {
 
     public void close() throws IOException {
       flush();
+      closed =true;
     }
 
   private boolean doFlush = false;
 
-  synchronized public void flush() throws IOException {
-    doFlush = true;
-    if( state==CHAR_STATE )
-      flushChars();
-    else if (state==BYTE_STATE)
-      flushBytes();
-    else if (state==INITIAL_STATE)
-      ;       // nothing written yet
-    doFlush = false;
-  }
-    
+    synchronized public void flush() throws IOException {
+        doFlush = true;
+        if( state==CHAR_STATE )
+            flushChars();
+        else if (state==BYTE_STATE)
+            flushBytes();
+        else if (state==INITIAL_STATE)
+            cm.doWrite( req, resp, null, 0, 0 );       // nothing written yet
+        doFlush = false;
+    }
+
     Hashtable encoders=new Hashtable();
     WriteConvertor conv;
-    
+
     void cWrite( char c[], int off, int len ) throws IOException {
 	if( debug > 0 ) log("cWrite(c,o,l) " + ccount);
 	if( !gotEnc ) setConverter();
@@ -389,6 +393,9 @@ public final class OutputBuffer extends Writer {
     public void reset() {
 	count=0;
 	bytesWritten=0;
+        ccount=0;
+        charsWritten=0;
+
     }
 
     public int getBufferSize() {

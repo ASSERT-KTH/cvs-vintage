@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.33 2000/08/29 03:44:21 costin Exp $
- * $Revision: 1.33 $
- * $Date: 2000/08/29 03:44:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.34 2000/08/31 18:05:53 nacho Exp $
+ * $Revision: 1.34 $
+ * $Date: 2000/08/31 18:05:53 $
  *
  * ====================================================================
  *
@@ -198,13 +198,7 @@ public class Response {
     }
 
     public void finish() throws IOException {
-	if (usingWriter && (writer != null)) {
-	    writer.flush();
-	    //writer.close();
-	}
-	oBuffer.flushChars();
-	oBuffer.flushBytes();
-
+        oBuffer.close();
 	request.getContextManager().doAfterBody(request, this);
     }
 
@@ -293,8 +287,12 @@ public class Response {
     public void setBufferSize(int size) throws IllegalStateException {
 	// Force the PrintWriter to flush the data to the OutputStream.
 	if (usingWriter == true && writer != null ) writer.flush();
-
-	if( oBuffer.getBytesWritten() >0  ) {
+        try{
+            oBuffer.flushChars();
+        }catch(IOException ex){
+                ;
+        }
+	if( oBuffer.getBytesWritten() >0) {
 	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
 	}
 	oBuffer.setBufferSize( size );
