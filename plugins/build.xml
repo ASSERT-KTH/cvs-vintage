@@ -9,13 +9,14 @@
 	</target>
 	
 	<target name="mail" description="Builds all mail plugins">
-		<ant target="release" inheritall="false" dir="./org.columba.mail.BounceAction"/>
+		<!-- TODO: BounceAction, EudoraMailFilter, SpamAssassin, ToOrCcFilter commented out till fixed -->
+		<!-- ant target="release" inheritall="false" dir="./org.columba.mail.BounceAction"/>
 		<ant target="release" inheritall="false" dir="./org.columba.mail.EudoraMailImportFilter"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.SpamAssassin"/>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.ToOrCcFilter"/ -->
 		<ant target="release" inheritall="false" dir="./org.columba.mail.MozillaMailImportFilter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.mail.PlaySoundFilterAction"/>
-		<ant target="release" inheritall="false" dir="./org.columba.mail.SpamAssassin"/>
-		<ant target="release" inheritall="false" dir="./org.columba.mail.ToOrCcFilter"/>
-	</target>
+			</target>
 	
 	<target name="core" description="Builds all core plugins">
 		<ant target="release" inheritall="false" dir="./org.columba.core.KunststoffLookAndFeel"/>
