@@ -76,7 +76,7 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
      */
     public static final String SYS_PROTOCOLS = "java.protocol.handler.pkgs";
     private String protocolString = null;
-    private Hashtable protocols = new Hashtable();
+    private Vector protocols = null;
     private Jdk11Compat jdk11Compat = Jdk11Compat.getJdkCompat();
 
     public StreamHandlerFactory() {
@@ -96,21 +96,28 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
     public  URLStreamHandler createURLStreamHandler(String protoS) {
 	if("jar".equalsIgnoreCase(protoS) || "file".equalsIgnoreCase(protoS) )
 	    return null;
-	if(protocolString != System.getProperty(SYS_PROTOCOLS))
-	    loadProtocols();
+	// The following is broken in a sandbox. 
+	// Maybe fix with privileged, but probably not. 
+	// LoadOnStartups have done their thing before we're set.
+	//if(protocolString != System.getProperty(SYS_PROTOCOLS))
+	//    loadProtocols();
 	ClassLoader acl = jdk11Compat.getContextClassLoader();
 	if(acl == null)
 	    acl = getClass().getClassLoader();
 	Class phldrC = null;
-	String phldrCN = (String)protocols.get(protoS);
-	if(phldrCN != null) {
-	    try {
-		phldrC = acl.loadClass(phldrCN);
-	    } catch(ClassNotFoundException cnfex){
+	if(protocols != null) {
+	    Enumeration e = protocols.elements();
+	    while(e.hasMoreElements()) {
+		String phldrPK = (String)e.nextElement();
+		try {
+		    phldrC = acl.loadClass(phldrPK+"."+protoS+".Handler");
+		    break;
+		} catch(ClassNotFoundException cnfex){
+		}
 	    }
 	}
 	if(phldrC == null){
-	    phldrCN = "sun.net.www.protocol." + protoS + ".Handler";
+	    String phldrCN = "sun.net.www.protocol." + protoS + ".Handler";
 	    try {
 		phldrC = acl.loadClass(phldrCN);
 	    } catch(ClassNotFoundException cnfex) {
@@ -135,19 +142,12 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
 	if(protocolString == System.getProperty(SYS_PROTOCOLS))	
 	    return;
 	String protocolS = System.getProperty(SYS_PROTOCOLS);
-	protocols.clear();
 	if(protocolS != null) {
+	    protocols = new Vector();
 	    StringTokenizer tok = new StringTokenizer(protocolS,"|");
 	    while(tok.hasMoreTokens()) {
 		String protStr = tok.nextToken();
-		int hpos = protStr.lastIndexOf(".Handler");
-		if(hpos >= 0) {
-		    protStr = protStr.substring(0,hpos);
-		    int npos = protStr.lastIndexOf('.');
-		    String prot = protStr.substring(hpos+1);
-		    String protC = protStr.substring(0,hpos);
-		    protocols.put(prot,protC);
-		}
+		protocols.addElement(protStr);
 	    }
 	}
 	protocolString = protocolS;
