@@ -99,7 +99,7 @@ public abstract class AttributeValue
         super.setAttribute(v);
     }
 
-    public abstract boolean isEquivalent(AttributeValue aval);
+    //public abstract boolean isEquivalent(AttributeValue aval);
 
     /* * Creates, initializes and returns a new Attribute.
      * @return new Attribute instance
