@@ -70,7 +70,6 @@ import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
-import org.tigris.scarab.util.EmailHandler;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -83,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.39 2003/05/29 19:38:25 thierrylach Exp $
+ * @version $Id: Approval.java,v 1.40 2003/05/29 19:46:04 thierrylach Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -223,7 +222,7 @@ public class Approval extends RequireLoginFirstAction
                 String template = Turbine.getConfiguration().
                     getString("scarab.email.approval.template",
                               "Approval.vm");
-                if (!EmailHandler.sendEmail(ectx, module, user, 
+                if (!Email.sendEmail(ectx, module, user, 
                                      module.getSystemEmail(), 
                                      toUser, template))
                 {
