@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.20 2002/03/10 05:55:06 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.21 2002/03/22 09:14:42 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -190,13 +190,24 @@ public class MiscUtilities
 	 */
 	public static String getFileName(String path)
 	{
-		if(isURL(path))
-		{
-			VFS vfs = VFSManager.getVFSForPath(path);
-			return vfs.getFileName(path);
-		}
+		return VFSManager.getVFSForPath(path).getFileName(path);
+	} //}}}
+
+	//{{{ getFileNameNoExtension() method
+	/**
+	 * Returns the last component of the specified path name without the
+	 * trailing extension (if there is one).
+	 * @param path The path name
+	 * @since jEdit 4.0pre8
+	 */
+	public static String getFileNameNoExtension(String path)
+	{
+		String name = getFileName(path);
+		int index = name.lastIndexOf('.');
+		if(index == -1)
+			return name;
 		else
-			return VFSManager.getFileVFS().getFileName(path);
+			return name.substring(0,index);
 	} //}}}
 
 	//{{{ getFileParent() method
