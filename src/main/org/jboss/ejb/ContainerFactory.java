@@ -67,7 +67,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version $Revision: 1.87 $
+* @version $Revision: 1.88 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -412,6 +412,7 @@ public class ContainerFactory
          Log.unsetLog();
       }
       // Inform the Data Collector that new/old EJBs were deployed
+/* AS Temporary not available
       try
       {
          getServer().invoke(new ObjectName( "Management", "service", "Collector" ),
@@ -424,6 +425,7 @@ public class ContainerFactory
       {
          Logger.exception(e);
       }
+*/
    }
 	
    private void deploy( Application app, URL url, ClassLoader cl )
