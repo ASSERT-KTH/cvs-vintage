@@ -20,9 +20,14 @@
 
 #if ($tab.equals("all"))
     <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as tabs</a></small></div>
+    #if ($scarabR.CurrentQuery)
+        #navigate()
+    #end
 #else
     <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as single screen</a></small></div>
-
+    #if ($scarabR.CurrentQuery)
+        #navigate()
+    #end
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
@@ -57,9 +62,6 @@
 </div>
 #end
 
-#if ($scarabR.CurrentQuery)
-    #navigate()
-#end
 
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
