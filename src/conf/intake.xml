@@ -359,7 +359,7 @@
         <required-message>Please select an option.</required-message>
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
-    <field name="TypeId" key="qti" type="NumberKey" >
+    <field name="ScopeId" key="sco" type="NumberKey" >
         <required-message>Please select an option.</required-message>
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
