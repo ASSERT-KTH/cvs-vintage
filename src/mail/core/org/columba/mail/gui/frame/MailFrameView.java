@@ -40,6 +40,13 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
 
+/**
+ * 
+ * Mail specific extensions to the AbstractFrameView
+ * 
+ *
+ * @author fdietz
+ */
 public class MailFrameView extends AbstractFrameView {
 
 	public static final String FOLDERINFOPANEL = "folderinfopanel";
@@ -81,6 +88,17 @@ public class MailFrameView extends AbstractFrameView {
 		this.folderInfoPanel = f;
 	}
 
+	/**
+	 * Initialize every controller.
+	 * 
+	 * This method is really ugly and should be cleaned up.
+	 *
+	 * @param tree
+	 * @param table
+	 * @param filterToolbar
+	 * @param message
+	 * @param statusBar
+	 */
 	public void init(
 		TreeView tree,
 		TableView table,

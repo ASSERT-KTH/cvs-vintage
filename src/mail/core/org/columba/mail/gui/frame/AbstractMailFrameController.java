@@ -29,12 +29,23 @@ import org.columba.mail.gui.frame.action.FrameActionListener;
 import org.columba.mail.gui.message.MessageController;
 
 /**
- * @author freddy
+ * 
+ * Abstract frame controller for all mail windows.
+ * 
+ * The ThreePane and the message frame use this as basis.
+ * 
+ * It adds all mail specific stuff every mail frame has
+ * in common.
+ * 
+ * So, please note that the only reason it exists is first of
+ * all to save code duplication.
+ * The other reason is that every action in Columba, needs to
+ * have a reference on a mail frame controller class.
+ * 
+ * So, changing this class will affect every action.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
+ * 
  */
 public abstract class AbstractMailFrameController
 	extends AbstractFrameController
