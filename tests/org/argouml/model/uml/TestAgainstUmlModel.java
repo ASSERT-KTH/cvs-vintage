@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.13 2005/01/31 21:41:49 linus Exp $
+// $Id: TestAgainstUmlModel.java,v 1.14 2005/02/05 19:18:50 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,9 +320,6 @@ public class TestAgainstUmlModel extends TestCase {
 
     /**
      * @return the test suite
-     * @throws SAXException when things go wrong with SAX
-     * @throws IOException when there's an IO error
-     * @throws ParserConfigurationException when the parser finds wrong syntax
      */
     public static Test suite() {
         TestSuite suite =
