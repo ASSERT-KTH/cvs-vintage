@@ -164,6 +164,30 @@ public class AutoWebApp extends BaseInterceptor {
     public void setReloadable( boolean b ) {
         reloadable=b;
     }
+
+    public void setHostChar( String c ) {
+        if ( c.length() > 0 ) {
+            hostSeparator = c.charAt(0);
+        } else {
+            hostSeparator = '\0';
+        }
+    }
+
+    public void setHostDotChar( String c ) {
+        if ( c.length() > 0 ) {
+            dotReplacement = c.charAt(0);
+        } else {
+            dotReplacement = '\0';
+        }
+    }
+
+    public void setPathSlashChar( String c ) {
+        if ( c.length() > 0 ) {
+            slashReplacement = c.charAt(0);
+        } else {
+            slashReplacement = '\0';
+        }
+    }
     
     //-------------------- Implementation --------------------
     
@@ -212,7 +236,7 @@ public class AutoWebApp extends BaseInterceptor {
 			int idx=name.indexOf( hostSeparator ); // may change
 			if( idx > 0 ) {
 			    appHost=name.substring( 0, idx );
-			    name=name.substring( idx );
+			    name=name.substring( idx + 1 );
 			}
 		    }
 		    if( appHost == null )
