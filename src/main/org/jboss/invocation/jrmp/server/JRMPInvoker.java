@@ -53,7 +53,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.4 $
+*  @version $Revision: 1.5 $
 */
 
 public class JRMPInvoker
@@ -433,7 +433,7 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    *  Import a transaction propagation context into the local VM, and
    *  return the corresponding <code>Transaction</code>.
    */
-   private Transaction importTPC(Object tpc)
+   protected Transaction importTPC(Object tpc)
    {
       if (tpc != null)
          return tpcImporter.importTransactionPropagationContext(tpc);

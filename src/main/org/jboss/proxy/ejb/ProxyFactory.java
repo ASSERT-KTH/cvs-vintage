@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
  * just implementing the Proxy generation calls. Separation of concern. 
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -63,19 +63,19 @@ public class ProxyFactory
    // Metadata for the proxies
    public EJBMetaData ejbMetaData ;
    
-   static Logger log = Logger.getLogger(ProxyFactory.class);
-   EJBHome home;
-   EJBObject statelessObject;
-   
+   protected static Logger log = Logger.getLogger(ProxyFactory.class);
+   protected EJBHome home;
+   protected EJBObject statelessObject;
+
    // The name of the bean being deployed
-   String jndiName;
+   protected String jndiName;
    
    // The name of the delegate invoker
-   Invoker homeInvoker;
-   Invoker beanInvoker;
+   protected Invoker homeInvoker;
+   protected Invoker beanInvoker;
    
    // A pointer to the container this proxy factory is dedicated to
-   Container container;
+   protected Container container;
    
    // Container plugin implementation -----------------------------------------
    
@@ -155,26 +155,26 @@ public class ProxyFactory
       if (log.isDebugEnabled())
          log.debug("Proxy Factory for "+jndiName+" initialized");
    }
-   
+
+   protected void initInvokers() throws Exception
+   {
+      ObjectName oname;
+      
+      // Get the local invoker
+      oname = new ObjectName(container.getBeanMetaData().getHomeInvoker());
+      homeInvoker = (Invoker)Registry.lookup(oname);
+      if (homeInvoker == null)
+	 throw new RuntimeException("homeInvoker is null: " + oname);
+      oname = new ObjectName(container.getBeanMetaData().getBeanInvoker());
+      beanInvoker = (Invoker)Registry.lookup(oname);
+      if (beanInvoker == null)
+	 throw new RuntimeException("beanInvoker is null: " + oname);
+   }
+
    public void start() throws Exception
    {
       try {
-         ObjectName oname;
-         
-         // Get the local invoker
-         oname = new ObjectName(container.getBeanMetaData().getHomeInvoker());
-         homeInvoker = (Invoker)Registry.lookup(oname);
-         if (homeInvoker == null)
-            throw new RuntimeException("homeInvoker is null: " + oname);
-         
-         oname = new ObjectName(container.getBeanMetaData().getBeanInvoker());
-         beanInvoker = (Invoker)Registry.lookup(oname);
-         if (beanInvoker == null)
-            throw new RuntimeException("beanInvoker is null: " + oname);
-            
-         // FIXME FIXME In the near future move to 
-         // invoker = (Invoker) Registry.lookup(new ObjectName(container.getInvokerType()));
-         
+	 initInvokers();
          // Create the EJBHome
          this.home = 
             (EJBHome)Proxy.newProxyInstance(
