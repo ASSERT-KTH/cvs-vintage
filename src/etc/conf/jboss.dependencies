@@ -54,6 +54,8 @@
     <dependency service="ClassPathExtension" required="true"/>
     <dependency service="TransactionManager" required="true"/>
     <dependency service="Configuration" required="true"/>
+    <dependency service="CastorJDO" required="false"/>
+    <dependency service="JaasSecurityManager" required="false"/>
   </service>
   <service name="CastorJDO">
     <dependency service="Naming" required="true"/>
@@ -67,6 +69,15 @@
   <service name="J2eeDeployer">
     <dependency service="EmbededTomcat" required="false"/>
     <dependency service="ContainerFactory" required="true"/>
+  </service>
+  <service name="JaasSecurityManager">
+    <dependency service="Naming" required="true"/>
+    <dependency service="XADataSource" required="false"/>
+    <dependency service="JDBCDataSource" required="false"/>
+    <dependency service="DataSource" required="false"/>
+    <dependency service="Logging" required="true"/>
+    <dependency service="ClassPathExtension" required="true"/>
+    <dependency service="Configuration" required="true"/>
   </service>
 
 </server>
