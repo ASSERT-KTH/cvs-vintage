@@ -1,4 +1,4 @@
-// $Id: ActionGotoDiagram.java,v 1.4 2004/10/18 17:26:39 mvw Exp $
+// $Id: ActionGotoDiagram.java,v 1.3 2004/10/18 17:24:22 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 
 import org.argouml.application.api.CommandLineInterface;
-import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDialog;
@@ -44,19 +43,10 @@ import org.tigris.gef.base.Diagram;
 ////////////////////////////////////////////////////////////////
 // items on view menu
 
-/**
- * This Action will display a dialogbox listing all diagrams.
- * Doubleclicking on any listed diagram selects it.
- *
- */
 public class ActionGotoDiagram 
 	extends UMLAction 
 	implements CommandLineInterface {
 
-    /**
-     * The constructor.
-     * 
-     */
     public ActionGotoDiagram() { super("action.goto-diagram", NO_ICON); }
 
     /**
