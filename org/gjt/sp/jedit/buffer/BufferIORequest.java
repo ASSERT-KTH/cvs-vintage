@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.3 2003/01/09 02:55:19 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.4 2003/01/11 19:46:40 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -651,7 +651,7 @@ public class BufferIORequest extends WorkRequest
 		{
 			try
 			{
-				vfs._saveComplete(session,buffer,view);
+				vfs._saveComplete(session,buffer,path,view);
 				vfs._endVFSSession(session,view);
 			}
 			catch(IOException io)
