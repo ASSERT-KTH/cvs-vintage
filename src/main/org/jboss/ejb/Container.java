@@ -14,9 +14,9 @@ import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.ejb.timer.ContainerTimerService;
-import org.jboss.ejb.txtimer.TimedObjectInvoker;
-import org.jboss.ejb.txtimer.TimedObjectEJBInvoker;
+import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
 import org.jboss.ejb.txtimer.TimedObjectId;
+import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
@@ -84,7 +84,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.140 $
+ * @version $Revision: 1.141 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -326,7 +326,7 @@ public abstract class Container
       }
       return factory;
    }
-   
+
    public void setProxyFactory(Object factory)
    {
       proxyFactoryTL.set(factory);
@@ -613,33 +613,26 @@ public abstract class Container
       TimerService timerService = null;
       try
       {
-         // Try the transactional EJBTimerServiceTx
+         // Try the Tx EJBTimerService first
          ObjectName oname = new ObjectName("jboss:service=EJBTimerServiceTx");
          if (server.isRegistered(oname))
          {
             // Try to get an already existing TimerService
             TimedObjectId timedObjectId = new TimedObjectId(getJmxName().getCanonicalName(), pKey);
-            timerService = (TimerService) server.invoke(oname, "getTimerService",
-                    new Object[]{timedObjectId}, new String[]{TimedObjectId.class.getName()});
-
-            // No, then create a TimerService
-            if (timerService == null)
-            {
-               TimedObjectInvoker timedObjectInvoker = new TimedObjectEJBInvoker(this);
-               timerService = (TimerService) server.invoke(oname, "createTimerService",
-                       new Object[]{timedObjectId, timedObjectInvoker},
-                       new String[]{TimedObjectId.class.getName(), TimedObjectInvoker.class.getName()});
-            }
+            TimedObjectInvoker timedObjectInvoker = new TimedObjectInvokerImpl(this, timedObjectId);
+            timerService = (TimerService) server.invoke(oname, "createTimerService",
+                    new Object[]{timedObjectId, timedObjectInvoker},
+                    new String[]{TimedObjectId.class.getName(), TimedObjectInvoker.class.getName()});
          }
 
          // Fall back to the non transactional EJBTimerService
          else
          {
+            oname = new ObjectName("jboss:service=EJBTimerService");
             timerService = (TimerService) timerServices.get((pKey == null ? "null" : pKey));
             if (timerService == null)
             {
-               timerService = (TimerService) server.invoke(new ObjectName("jboss:service=EJBTimerService"),
-                       "createTimerService",
+               timerService = (TimerService) server.invoke(oname, "createTimerService",
                        new Object[]{getJmxName().toString(), this, pKey},
                        new String[]{String.class.getName(), Container.class.getName(), Object.class.getName()});
                timerServices.put((pKey == null ? "null" : pKey),
@@ -649,22 +642,52 @@ public abstract class Container
       }
       catch (Exception e)
       {
-         throw new RuntimeException("Could not create timer service: " + e);
+         throw new EJBException("Could not create timer service", e);
       }
       return timerService;
    }
 
    /**
-    * Stops all the timers created by beans of this container
+    * Removes Timer Servic for this container
+    *
+    * @param pKey Bean id
+    * @throws IllegalStateException If the type of EJB is not allowed to use the timer service
+    *
+    * @jmx.managed-operation
     **/
-   public void stopTimers()
+   public void removeTimerService(Object pKey)
+           throws IllegalStateException
    {
-      Iterator i = timerServices.values().iterator();
-      while (i.hasNext())
+      if (this instanceof StatefulSessionContainer)
+         throw new IllegalStateException("Statefull Session Beans are not allowed to access the TimerService");
+
+      try
       {
-         TimerService timerService = (TimerService) i.next();
-         ((ContainerTimerService) timerService).stopService();
-         i.remove();
+         // Try EJBTimerServiceTx first
+         ObjectName oname = new ObjectName("jboss:service=EJBTimerServiceTx");
+         if (server.isRegistered(oname))
+         {
+            // Try to get an already existing TimerService
+            TimedObjectId timedObjectId = new TimedObjectId(getJmxName().getCanonicalName(), pKey);
+            server.invoke(oname, "removeTimerService",
+                    new Object[]{timedObjectId}, new String[]{TimedObjectId.class.getName()});
+         }
+
+         // Fall back to EJBTimerService
+         else
+         {
+            Iterator i = timerServices.values().iterator();
+            while (i.hasNext())
+            {
+               TimerService timerService = (TimerService) i.next();
+               ((ContainerTimerService) timerService).stopService();
+               i.remove();
+            }
+         }
+      }
+      catch (Exception e)
+      {
+         log.error("Could not remove timer service", e);
       }
    }
 
@@ -785,6 +808,7 @@ public abstract class Container
    protected void stopService() throws Exception
    {
       localProxyFactory.stop();
+      removeTimerService(null);
       teardownEnvironment();
    }
 
@@ -864,10 +888,10 @@ public abstract class Container
       Method m = null;
 
       Object type = null;
-
       try
       {
          currentThread.setContextClassLoader(this.classLoader);
+
          // Check against home, remote, localHome, local, getHome,
          // getRemote, getLocalHome, getLocal
          type = mi.getType();
@@ -892,8 +916,11 @@ public abstract class Container
                           mi.getMethod().getName() + "||");
                }
             }
+
             m = mi.getMethod();
-            return internalInvoke(mi);
+
+            Object obj = internalInvoke(mi);
+            return obj;
          }
          else if (type == InvocationType.HOME ||
                  type == InvocationType.LOCALHOME)
@@ -913,7 +940,9 @@ public abstract class Container
                }
             }
             m = mi.getMethod();
-            return internalInvokeHome(mi);
+
+            Object obj = internalInvokeHome(mi);
+            return obj;
          }
          else
          {
