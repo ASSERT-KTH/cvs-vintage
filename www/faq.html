@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.3 2002/08/01 15:53:26 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.4 2002/08/07 04:31:09 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -88,6 +88,13 @@ We recommend strongly that you make regular backups of your database by
 doing full dumps. That way, if something does go wrong, not only can you
 send us a copy of your database (if appropriate) but you can also revert
 to the previous state.
+</p>
+
+<p>
+We provide database upgrade scripts for each revision of Scarab. That 
+way you can be sure that if you start using Scarab now, you will be able
+to forward migrate your data when there are Scarab updates. Please see
+the upgrade instructions below for more information.
 </p>
 
 <p>
@@ -310,5 +317,30 @@ templates as you wish and just 'apply' them when you enter a new issue.
 A nice feature addition would be to have a setting on the template
 administration screen that denotes which one should be automatically
 applied.</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>What is the process for upgrading Scarab?</strong></p>
+
+<p>
+The CollabNet Scarab developers provide MySQL database upgrade scripts
+for each new version of Scarab. These scripts reside in the
+scarab/src/sql/upgrade directory. Some of these scripts are .sql files
+and some are unix shell .sh files. If you are using another database or 
+system, we welcome your contributions to port these files.
+</p>
+
+<p>
+If you have deployed Scarab with the default settings and are running
+out of the default target directory, then you should download the new
+version of Scarab, move the target directory into the new version of
+Scarab, cd into target/webapps/scarab/WEB-INF and backup and remove the
+following directories: classes, conf, lib, sql, src. You should be
+careful to not remove the indexes and attachments directories (if they
+exist). Once you have done that, you can build Scarab again following
+the directions in the README.txt file. You should take note to create a
+~/build.properties file which stores your changes to the Scarab settings
+so that when you build again, your settings remain intact.
+</p>
 
 <hr noshade="noshade" size="1" />
