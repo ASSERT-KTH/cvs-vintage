@@ -44,7 +44,7 @@ public class NumberState implements TokenizerState {
 		
 		// exponent part
 		readExponentPart(in, out);
-		
+
 		// exponent part
 		readSuffix(in, out);
 		
@@ -126,7 +126,7 @@ public class NumberState implements TokenizerState {
 	
 	private void readNumber(PushbackReader in, CharArrayWriter out, int radix) throws IOException {
 		// which the read character is a digit in the specified radix
-		int c = in.read(); 
+		int c = in.read();
 		while(Character.digit((char)c, radix) != -1) {
 			out.write(c);
 			c = in.read();
@@ -162,26 +162,12 @@ public class NumberState implements TokenizerState {
 		if(number.endsWith("d") || number.endsWith("D")) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
-	/**
-	 * This function is broken.  It does not support bit field style
-	 * integers and longs 0xffffffff
-	 */
-	private ExactNumericToken createExactNumericToken(String number) throws IOException {
-		// long suffix
-		if(number.endsWith("l") || number.endsWith("L")) {
-			// chop off the suffix
-			number = number.substring(0, number.length()-1);
-			System.out.println("decode long number ["+number+"]");
-			return new ExactNumericToken(Long.decode(number).longValue());
-		} else {
-			return new ExactNumericToken(Integer.decode(number.toUpperCase()).intValue());
-		}
-	}
-    private ExactNumericLiteral createExactNumericLiteral(String number) throws IOException {
+
+    private ExactNumericToken createExactNumericToken(String number) throws IOException {
         byte first; // first digit
 
         // long suffix
@@ -196,7 +182,7 @@ public class NumberState implements TokenizerState {
                     first = Byte.decode(number.substring(0, 3)).byteValue();
                     if (first >= 8) {
                         number = "0x" + (first - 8) + number.substring(3);
-                        return new ExactNumericLiteral(Long.decode(number).longValue() - Long.MAX_VALUE - 1);
+                        return new ExactNumericToken(Long.decode(number).longValue() - Long.MAX_VALUE - 1);
                     }
                 }
             } else if (number.startsWith("0")) {  // octal
@@ -205,14 +191,14 @@ public class NumberState implements TokenizerState {
                 if (number.length() == 23) {
                     if (number.charAt(1) == '1') {
                         number = "0" + number.substring(2);
-                        return new ExactNumericLiteral(Long.decode(number).longValue() - Long.MAX_VALUE - 1);
+                        return new ExactNumericToken(Long.decode(number).longValue() - Long.MAX_VALUE - 1);
                     }
                 }
             }
-            return new ExactNumericLiteral(Long.decode(number).longValue());
+            return new ExactNumericToken(Long.decode(number).longValue());
         } else {
             // integer hex and octal literals like 0xffffffff are handled by Long.decode()
-            return new ExactNumericLiteral(Long.decode(number).intValue());
+            return new ExactNumericToken(Long.decode(number).intValue());
         }
     }
 
@@ -222,8 +208,8 @@ public class NumberState implements TokenizerState {
 			// chop off the suffix
 			number = number.substring(0, number.length()-1);
 			return new ApproximateNumericToken(Float.parseFloat(number));
-		} 
-		
+		}
+
 		// ends with a d suffix, chop it off
 		if(number.endsWith("d") || number.endsWith("D")) {
 			number = number.substring(0, number.length()-1);
