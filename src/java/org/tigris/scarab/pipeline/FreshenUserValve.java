@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.pipeline;
 
 /* ================================================================
  * Copyright (c) 2001 Collab.Net.  All rights reserved.

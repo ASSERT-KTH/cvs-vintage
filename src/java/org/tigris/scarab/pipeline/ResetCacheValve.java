@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.pipeline;
 
 /* ================================================================
  * Copyright (c) 2001 Collab.Net.  All rights reserved.
@@ -46,53 +46,62 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Map;
-import java.util.HashMap;
 import java.io.IOException;
-import org.apache.turbine.Turbine;
 import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
 import org.apache.turbine.TurbineException;
 import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
-import org.tigris.scarab.util.Log;
+import org.apache.log4j.Category;
 
-public class DetermineTargetValve 
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.cache.ScarabCache;
+
+/**
+ * This valve resets the cache that is used by business objects to avoid
+ * multiple, duplicate db queries.  
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ */
+public class ResetCacheValve 
     extends AbstractValve
 {
+    private static final Category log = 
+        Category.getInstance( ResetCacheValve.class );
+        
+    private static final String KEY = 
+        ResetCacheValve.class.getName() + ".start";
+
+    private static final boolean DEBUG = false;
+    
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
     public void invoke( RunData data, ValveContext context )
         throws IOException, TurbineException
     {
-        ParameterParser parameters = data.getParameters();
-        if ( ! data.hasTarget() )
+        if (DEBUG)
         {
-            String target = parameters.getString("template");
-
-            if ( target != null )
+            // Covenient place to add some timing metrics
+            Long start = (Long)data.getRequest().getAttribute(KEY);
+            if (start == null) 
             {
-                data.setTarget(target);
-                Log.get().debug("Set target from request parameter");
-            }
-            else if (parameters.getString("id") != null)
-            {
-                data.setTarget("ViewIssue.vm");
+                data.getRequest()
+                    .setAttribute(KEY, new Long(System.currentTimeMillis()));
             }
             else
             {
-                data.setTarget( Turbine.getConfiguration().getString(
-                    Turbine.TEMPLATE_HOMEPAGE ) );
-                Log.get().debug("Set target using default value");
+                String s = "Action=" + data.getAction() + " and template=" + 
+                    data.getTarget() + " took: " + 
+                    (System.currentTimeMillis() - start.longValue()) + " ms";
+                log.debug(s);
+                System.out.println(s);
             }
         }
         
-        if ( Log.get().isDebugEnabled() )
-        {
-            Log.get().debug( "Target is now: " + data.getTarget() );
-        }
+        // clear the short-term cache
+        ScarabCache.clear();
 
         // Pass control to the next Valve in the Pipeline
         context.invokeNext( data );
