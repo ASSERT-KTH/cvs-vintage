@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.13 2003/12/09 09:34:55 lepekhine Exp $
+// $Id: ParseState.java,v 1.14 2004/05/01 10:06:47 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -204,10 +204,11 @@ class ParseState
        classifier in the model.
     */
     public void removeObsoleteFeatures()
-    {
-	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
-	    ModelFacade.removeFeature(classifier, i.next());
-	}
+	{
+    	if (obsoleteFeatures == null) return;
+    	for (Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
+    		ModelFacade.removeFeature(classifier, i.next());
+    	}
     }
 
     /**
@@ -215,13 +216,14 @@ class ParseState
        classifier in the model.
     */
     public void removeObsoleteInnerClasses()
-    {
-	for (Iterator i = obsoleteInnerClasses.iterator(); i.hasNext(); ) {
-	    Object element = i.next();
-	    if (ModelFacade.isAClassifier(element)) {
-                CoreFactory.getFactory().deleteClassifier(element);
-	    }
-	}
+	{
+    	if ( obsoleteInnerClasses == null) return;
+		for (Iterator i = obsoleteInnerClasses.iterator(); i.hasNext(); ) {
+			Object element = i.next();
+			if (ModelFacade.isAClassifier(element)) {
+				CoreFactory.getFactory().deleteClassifier(element);
+			}
+		}
     }
 
     /**
