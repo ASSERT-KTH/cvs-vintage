@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.27 2003/08/10 14:51:37 linus Exp $
+// $Id: FigPackage.java,v 1.28 2003/08/18 19:17:30 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.27 2003/08/10 14:51:37 linus Exp $
+// $Id: FigPackage.java,v 1.28 2003/08/18 19:17:30 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -118,11 +118,11 @@ public class FigPackage extends FigNodeModelElement {
 		    // Draw the shadow                
 		    if (_shadowSize > 0) {
 			for (int i = 0; i < _shadowSize; ++i) {
-			    Color shadow =
-				new Color(0.1f, 0.1f, 0.1f, 
-					  (0.5f
-					   * (((float) _shadowSize - i)
-					      / (float) _shadowSize)));
+                Color shadow = new Color(
+                    SHADOW_COLOR_VALUE, SHADOW_COLOR_VALUE, SHADOW_COLOR_VALUE, 
+                    SHADOW_COLOR_ALPHA
+                        * (((float) _shadowSize - i)
+                        / (float) _shadowSize));
 			    g.setColor(shadow);
 
 			    g.drawLine(
