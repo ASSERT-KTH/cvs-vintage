@@ -49,7 +49,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.106 $
+ * @version $Revision: 1.107 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -712,9 +712,9 @@ public class EntityContainer
    {
       if (ctx.getId() != null)
       {
-         if(getPersistenceManager().isModified(ctx)) {
-            getPersistenceManager().storeEntity(ctx);
-         }
+         // by the spec we have to call ejbStore at sync time even on clean instances
+         // but UPDATE will be issued only if there is changed data 
+         getPersistenceManager().storeEntity(ctx);
       }
    }
 

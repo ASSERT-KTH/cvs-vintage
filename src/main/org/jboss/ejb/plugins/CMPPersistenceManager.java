@@ -29,7 +29,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 /**
  * The CMP Persistence Manager implements the semantics of the CMP
  * EJB 1.1 call back specification.
- *
+ * <p/>
  * This Manager works with a "EntityPersistenceStore" that takes care of the
  * physical storing of instances (JAWS, JDBC O/R, FILE, Object).
  *
@@ -39,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -56,6 +56,7 @@ public class CMPPersistenceManager
    HashMap postCreateMethods = new HashMap();
    private int commitOption;
    private boolean insertAfterEjbPostCreate;
+   private boolean ejbStoreForClean;
 
    // Static --------------------------------------------------------
 
@@ -64,13 +65,18 @@ public class CMPPersistenceManager
    // Public --------------------------------------------------------
    public void setContainer(Container c)
    {
-      con = (EntityContainer)c;
-      if (store != null)
+      con = (EntityContainer) c;
+
+      if(store != null)
+      {
          store.setContainer(c);
-      if( con != null )
+      }
+
+      if(con != null)
       {
          ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
          commitOption = configuration.getCommitOption();
+         ejbStoreForClean = configuration.isEjbStoreForClean();
       }
    }
 
@@ -84,28 +90,28 @@ public class CMPPersistenceManager
 
    public void setPersistenceStore(EntityPersistenceStore store)
    {
-      this.store= store;
+      this.store = store;
 
       //Give it the container
-      if (con!= null) store.setContainer(con);
+      if(con != null) store.setContainer(con);
    }
 
    public void create()
       throws Exception
    {
-      if (con.getHomeClass() != null)
+      if(con.getHomeClass() != null)
       {
          Method[] methods = con.getHomeClass().getMethods();
-         createMethodCache( methods );
-      }
-      if (con.getLocalHomeClass() != null)
-      {
-         Method[] methods = con.getLocalHomeClass().getMethods();
-         createMethodCache( methods );
+         createMethodCache(methods);
       }
 
-      insertAfterEjbPostCreate = con.getBeanMetaData().
-         getContainerConfiguration().isInsertAfterEjbPostCreate();
+      if(con.getLocalHomeClass() != null)
+      {
+         Method[] methods = con.getLocalHomeClass().getMethods();
+         createMethodCache(methods);
+      }
+
+      insertAfterEjbPostCreate = con.getBeanMetaData().getContainerConfiguration().isInsertAfterEjbPostCreate();
 
       store.create();
    }
@@ -120,15 +126,15 @@ public class CMPPersistenceManager
       return store.createBeanClassInstance();
    }
 
-   private void createMethodCache( Method[] methods )
+   private void createMethodCache(Method[] methods)
       throws NoSuchMethodException
    {
       // Create cache of create methods
       Class beanClass = con.getBeanClass();
-      for (int i = 0; i < methods.length; i++)
+      for(int i = 0; i < methods.length; i++)
       {
          String name = methods[i].getName();
-         if (name.startsWith("create"))
+         if(name.startsWith("create"))
          {
             Class[] types = methods[i].getParameterTypes();
             try
@@ -136,12 +142,12 @@ public class CMPPersistenceManager
                String nameSuffix = name.substring(0, 1).toUpperCase() + name.substring(1);
                Method beanMethod = beanClass.getMethod("ejb" + nameSuffix, types);
                createMethods.put(methods[i], beanMethod);
-               beanMethod =  beanClass.getMethod("ejbPost" + nameSuffix, types);
+               beanMethod = beanClass.getMethod("ejbPost" + nameSuffix, types);
                postCreateMethods.put(methods[i], beanMethod);
             }
-            catch (NoSuchMethodException nsme)
+            catch(NoSuchMethodException nsme)
             {
-               throw new NoSuchMethodException("Can't find ejb[Post]Create in "+beanClass.getName());
+               throw new NoSuchMethodException("Can't find ejb[Post]Create in " + beanClass.getName());
             }
          }
       }
@@ -173,38 +179,39 @@ public class CMPPersistenceManager
       try
       {
          ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_CREATE);
-         Method createMethod = (Method)createMethods.get(m);
+         Method createMethod = (Method) createMethods.get(m);
          createMethod.invoke(ctx.getInstance(), args);
       }
-      catch (IllegalAccessException e)
+      catch(IllegalAccessException e)
       {
          // Throw this as a bean exception...(?)
          throw new EJBException(e);
       }
-      catch (InvocationTargetException ite)
+      catch(InvocationTargetException ite)
       {
          Throwable e = ite.getTargetException();
          if(e instanceof EJBException)
          {
             // Rethrow exception
-            throw (EJBException)e;
+            throw (EJBException) e;
          }
-         else if (e instanceof RuntimeException)
+         else if(e instanceof RuntimeException)
          {
             // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
+            throw new EJBException((Exception) e);
          }
          else if(e instanceof Exception)
          {
             // Remote, Create, or custom app. exception
-            throw (Exception)e;
+            throw (Exception) e;
          }
          else
          {
-            throw (Error)e;
+            throw (Error) e;
          }
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
 
@@ -225,17 +232,17 @@ public class CMPPersistenceManager
       ctx.setId(id);
 
       // Create a new CacheKey
-      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
+      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(id);
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
 
       // Create EJBObject
-      if (con.getProxyFactory() != null)
+      if(con.getProxyFactory() != null)
       {
          ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
       }
-      if (con.getLocalHomeClass() != null)
+      if(con.getLocalHomeClass() != null)
       {
          ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
@@ -252,40 +259,43 @@ public class CMPPersistenceManager
       {
          ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_POST_CREATE);
 
-         Method postCreateMethod = (Method)postCreateMethods.get(m);
+         Method postCreateMethod = (Method) postCreateMethods.get(m);
          postCreateMethod.invoke(ctx.getInstance(), args);
          if(insertAfterEjbPostCreate)
+         {
             store.createEntity(m, args, ctx);
+         }
       }
-      catch (IllegalAccessException e)
+      catch(IllegalAccessException e)
       {
          // Throw this as a bean exception...(?)
          throw new EJBException(e);
       }
-      catch (InvocationTargetException ite)
+      catch(InvocationTargetException ite)
       {
          Throwable e = ite.getTargetException();
-         if (e instanceof EJBException)
+         if(e instanceof EJBException)
          {
             // Rethrow exception
-            throw (EJBException)e;
+            throw (EJBException) e;
          }
-         else if (e instanceof RuntimeException)
+         else if(e instanceof RuntimeException)
          {
             // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
+            throw new EJBException((Exception) e);
          }
-         else if (e instanceof Exception)
+         else if(e instanceof Exception)
          {
             // Remote, Create, or custom app. exception
-            throw (Exception)e;
+            throw (Exception) e;
          }
          else
          {
-            throw (Error)e;
+            throw (Error) e;
          }
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
    }
@@ -301,7 +311,9 @@ public class CMPPersistenceManager
          if(finderMethod.getName().equals("findByPrimaryKey"))
          {
             if(args[0] == null)
+            {
                throw new IllegalArgumentException("findByPrimaryKey called with null argument.");
+            }
 
             if(commitOption != ConfigurationMetaData.B_COMMIT_OPTION
                && commitOption != ConfigurationMetaData.C_COMMIT_OPTION)
@@ -309,7 +321,7 @@ public class CMPPersistenceManager
                Object key = ctx.getCacheKey();
                if(key == null)
                {
-                  key = ((EntityCache)con.getInstanceCache()).createCacheKey(args[0]);
+                  key = ((EntityCache) con.getInstanceCache()).createCacheKey(args[0]);
                }
                if(con.getInstanceCache().isActive(key))
                {
@@ -318,7 +330,8 @@ public class CMPPersistenceManager
             }
          }
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
 
@@ -329,7 +342,9 @@ public class CMPPersistenceManager
       return ((EntityCache) con.getInstanceCache()).createCacheKey(id);
    }
 
-   /** find multiple entities */
+   /**
+    * find multiple entities
+    */
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws Exception
    {
@@ -362,17 +377,17 @@ public class CMPPersistenceManager
    {
       // Create a new CacheKey
       Object id = ctx.getId();
-      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
+      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey(id);
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
 
       // Create EJBObject
-      if (con.getProxyFactory() != null)
+      if(con.getProxyFactory() != null)
       {
          ctx.setEJBObject((EJBObject) con.getProxyFactory().getEntityEJBObject(cacheKey));
       }
-      if (con.getLocalHomeClass() != null)
+      if(con.getLocalHomeClass() != null)
       {
          ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
@@ -383,25 +398,26 @@ public class CMPPersistenceManager
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbActivate();
       }
-      catch (Exception e)
+      catch(Exception e)
       {
-         if (e instanceof RemoteException)
+         if(e instanceof RemoteException)
          {
             // Rethrow exception
-            throw (RemoteException)e;
+            throw (RemoteException) e;
          }
-         else if (e instanceof EJBException)
+         else if(e instanceof EJBException)
          {
             // Rethrow exception
-            throw (EJBException)e;
+            throw (EJBException) e;
          }
          else
          {
             // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
+            throw new EJBException((Exception) e);
          }
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
 
@@ -414,7 +430,6 @@ public class CMPPersistenceManager
    public void loadEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-
       //long lStart = System.currentTimeMillis();
       // Have the store load the fields of the instance
       store.loadEntity(ctx);
@@ -431,39 +446,45 @@ public class CMPPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-      try
+      boolean modified = false;
+
+      // if call-ejb-store-for-clean=true then invoke ejbStore first (the last chance to modify the instance)
+      if(ejbStoreForClean)
       {
-         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
-         EntityBean eb = (EntityBean) ctx.getInstance();
-         eb.ejbStore();
-      }
-      catch (Exception e)
-      {
-         if (e instanceof RemoteException)
+         invokeEjbStore(ctx);
+
+         try
          {
-            // Rethrow exception
-            throw (RemoteException)e;
+            modified = isModified(ctx);
          }
-         else if (e instanceof EJBException)
+         catch(Exception e)
          {
-            // Rethrow exception
-            throw (EJBException)e;
-         }
-         else
-         {
-            // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
+            throwRemoteException(e);
          }
       }
-      finally{
-         ctx.popInMethodFlag();
+      else
+      {
+         // else check whether the instance dirty and invoke ejbStore only if it is really dirty
+         try
+         {
+            modified = isModified(ctx);
+         }
+         catch(Exception e)
+         {
+            throwRemoteException(e);
+         }
+
+         if(modified)
+         {
+            invokeEjbStore(ctx);
+         }
       }
 
-      //long lStart = System.currentTimeMillis();
-      // Have the store deal with storing the fields of the instance
-      store.storeEntity(ctx);
-      //mStore.add( System.currentTimeMillis() - lStart );
-
+      // update the db only if the instance is dirty
+      if(modified)
+      {
+         store.storeEntity(ctx);
+      }
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)
@@ -475,31 +496,16 @@ public class CMPPersistenceManager
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbPassivate();
       }
-      catch (Exception e)
+      catch(Exception e)
       {
-         if (e instanceof RemoteException)
-         {
-            // Rethrow exception
-            throw (RemoteException)e;
-         }
-         else if (e instanceof EJBException)
-         {
-            // Rethrow exception
-            throw (EJBException)e;
-         }
-         else
-         {
-            // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
-         }
+         throwRemoteException(e);
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
 
-      //long lStart = System.currentTimeMillis();
       store.passivateEntity(ctx);
-      //mPassivation.add( System.currentTimeMillis() - lStart );
       ctx.setEJBObject(null);
       ctx.setEJBLocalObject(null);
    }
@@ -510,40 +516,27 @@ public class CMPPersistenceManager
       try
       {
          ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_REMOVE);
-
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbRemove();
       }
-      catch (Exception e)
+      catch(Exception e)
       {
-         if (e instanceof RemoveException)
+         if(e instanceof RemoveException)
          {
             // Rethrow exception
-            throw (RemoveException)e;
-         }
-         else if (e instanceof RemoteException)
-         {
-            // Rethrow exception
-            throw (RemoteException)e;
-         }
-         else if (e instanceof EJBException)
-         {
-            // Rethrow exception
-            throw (EJBException)e;
+            throw (RemoveException) e;
          }
          else
          {
-            // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
+            throwRemoteException(e);
          }
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
 
-      //long lStart = System.currentTimeMillis();
       store.removeEntity(ctx);
-      //mRemove.add();
    }
 
    protected void invokeLoad(EntityEnterpriseContext ctx) throws RemoteException
@@ -555,37 +548,54 @@ public class CMPPersistenceManager
          EntityBean eb = (EntityBean) ctx.getInstance();
          eb.ejbLoad();
       }
-      catch (Exception e)
+      catch(Exception e)
       {
-         if (e instanceof RemoteException)
-         {
-            // Rethrow exception
-            throw (RemoteException)e;
-         }
-         else if (e instanceof EJBException)
-         {
-            // Rethrow exception
-            throw (EJBException)e;
-         }
-         else
-         {
-            // Wrap runtime exceptions
-            throw new EJBException((Exception)e);
-         }
+         throwRemoteException(e);
       }
-      finally{
+      finally
+      {
          ctx.popInMethodFlag();
       }
    }
 
+   // Private
 
-   // Z implementation ----------------------------------------------
+   private void invokeEjbStore(EntityEnterpriseContext ctx)
+      throws RemoteException
+   {
+      try
+      {
+         ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_STORE);
+         EntityBean eb = (EntityBean) ctx.getInstance();
+         eb.ejbStore();
+      }
+      catch(Exception e)
+      {
+         throwRemoteException(e);
+      }
+      finally
+      {
+         ctx.popInMethodFlag();
+      }
+   }
 
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
+   private void throwRemoteException(Exception e)
+      throws RemoteException
+   {
+      if(e instanceof RemoteException)
+      {
+         // Rethrow exception
+         throw (RemoteException) e;
+      }
+      else if(e instanceof EJBException)
+      {
+         // Rethrow exception
+         throw (EJBException) e;
+      }
+      else
+      {
+         // Wrap runtime exceptions
+         throw new EJBException((Exception) e);
+      }
+   }
 }

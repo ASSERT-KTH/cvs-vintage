@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  *   @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- *   @version $Revision: 1.41 $
+ *   @version $Revision: 1.42 $
  */
 public class ConfigurationMetaData extends MetaData
 {
@@ -71,6 +71,8 @@ public class ConfigurationMetaData extends MetaData
    private Collection depends = new LinkedList();
    /** The cluster-config element info */
    private ClusterConfigMetaData clusterConfig = null;
+   /** By the spec ejbStore must be called even for clean instances. But not everyone agrees. */
+   private boolean ejbStoreForClean;
 
    // Static --------------------------------------------------------
 
@@ -152,6 +154,11 @@ public class ConfigurationMetaData extends MetaData
       return insertAfterEjbPostCreate;
    }
 
+   public boolean isEjbStoreForClean()
+   {
+      return this.ejbStoreForClean;
+   }
+
    public byte getCommitOption()
    {
       return commitOption;
@@ -186,6 +193,9 @@ public class ConfigurationMetaData extends MetaData
 
       // set insert-after-ejb-post-create
       insertAfterEjbPostCreate = Boolean.valueOf(getElementContent(getOptionalChild(element, "insert-after-ejb-post-create"), String.valueOf(insertAfterEjbPostCreate))).booleanValue();
+
+      // ejbStoreForClean
+      ejbStoreForClean = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-ejb-store-on-clean"), String.valueOf(ejbStoreForClean))).booleanValue();
 
       // set the instance pool
       instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);
