@@ -46,53 +46,86 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 
+import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.om.ScopePeer;
+import org.tigris.scarab.services.cache.ScarabCache;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * Used for running all of the tests at once.
+ * A Testing Suite for the om.Query class.
  *
- * @author <a href="mailto:tmcnerney@truis.com">Tim McNerney</a>
- * @version $Id: AllTest.java,v 1.7 2002/03/26 21:20:38 elicia Exp $
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: AttributeGroupTest.java,v 1.1 2002/03/26 21:20:38 elicia Exp $
  */
-public class AllTest extends BaseTestCase
+public class AttributeGroupTest extends BaseTestCase
 {
-    /**
-     * @param name    Name of Object
-     */
-    public AllTest(String name)
-    {
-        super(name);
-    }
-
-    public AllTest()
-    {
-        super("AllTest");
-    }
-
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite();
-        suite.addTest(AttributeTest.suite());
-        suite.addTest(AttributeOptionTest.suite());
-        suite.addTest(AttributeGroupTest.suite());
-        suite.addTest(IssueTest.suite());
-        suite.addTest(ScarabUserTest.suite());
-        suite.addTest(ScarabModuleTest.suite());
-        suite.addTest(QueryTest.suite());
-        suite.addTest(ActivityTest.suite());
-        suite.addTest(TransactionTest.suite());
-        return suite;
-    }
+    private AttributeGroup group = null;
+    private Attribute severity = null;
+    private Attribute desc = null;
 
     /**
-     * Main method needed to make a self runnable class
+     * Creates a new instance.
      *
-     * @param args This is required for main method
      */
-    public static void main(String[] args)
+    public AttributeGroupTest()
     {
-        junit.textui.TestRunner.run(new TestSuite(AllTest.class));
+        super("AttributeGroupTest");
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new AttributeGroupTest();
+    }
+
+    protected void runTest()
+            throws Throwable
+    {
+        severity = AttributeManager.getInstance(new NumberKey("9"));
+        desc = AttributeManager.getInstance(new NumberKey("1"));
+        group = AttributeGroupManager.getInstance(new NumberKey("131"));
+
+        testDeleteAttribute();
+        testAddAttribute();
+        testGetAttributes();
+        testGetRAttributeAttributeGroup();
+        testDelete();
+    }
+
+    private void testDeleteAttribute() throws Exception
+    {
+        System.out.println("\ntestDeleteAttribute()");
+        group.deleteAttribute(severity, getUser1());
+        group.deleteAttribute(desc, getUser1());
+    }
+
+    private void testAddAttribute() throws Exception
+    {
+        System.out.println("\ntestAddAttribute()");
+        group.addAttribute(severity);
+        group.addAttribute(desc);
+    }
+
+    private void testGetAttributes() throws Exception
+    {
+        System.out.println("\ntestGetAttributes()");
+        assertEquals(7, group.getAttributes().size());
+    }
+
+    private void testGetRAttributeAttributeGroup() throws Exception
+    {
+        System.out.println("\ntestGetRAttributeAttributeGroup()");
+        assertEquals("9", group.getRAttributeAttributeGroup(severity).getAttributeId().toString());
+    }
+
+    private void testDelete() throws Exception
+    {
+        System.out.println("\ntestDelete()");
+        group.delete(getUser1());
+        ScarabCache.clear();
+        assertEquals(1, getModule().getAttributeGroups(getDefaultIssueType()).size());
     }
 }
