@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.48 2002/03/22 04:06:23 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.49 2002/03/26 15:25:30 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -172,7 +172,7 @@ Bug No.  Description
 
 [F]      The facade classes in org.apache.tomcat.facade are now declared
          as public classes.  This allows their methods to be called
-	 using introspection from a web application.
+         using introspection from a web application.
 
 
 Server:
@@ -219,10 +219,10 @@ Bug No.  Description
          Previously, calling getReader() on a recycled facade on which
          getReader() was called, you would get the old reader rather than
          a new reader for the current request.
-         
+
 [F]      Fixed a bug in TrustedLoader with respect to reloading trusted
          modules when more than one is present.
-         
+
 [F]      Modified PoolTcpConnector checkSocketFactory() method to set the
          module's socketFactory when obtaining an SSL socket factory,
          instead of using a local variable.  This allows the PasswordPrompter
@@ -335,7 +335,7 @@ Bug No.  Description
 	 it easier to add options.
 
 [F]      conf/jk/uriworkermap.properties and conf/jk/obj.conf example files
-         wer updated to be more current.
+         were updated to be more current.
 
 4313     Bug in property substitution for server.xml and apps.xml files was
 [b1]     fixed.

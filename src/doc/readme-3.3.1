@@ -1,4 +1,4 @@
-$Id: readme-3.3.1,v 1.2 2002/03/01 01:32:06 larryi Exp $
+$Id: readme-3.3.1,v 1.3 2002/03/26 15:25:30 larryi Exp $
 
                            Release Notes for:
                            ===========================
@@ -147,6 +147,33 @@ Bug No.  Description
          modules.xml or server.xml isn't present.  Also, the port number is
          now shown when JVM_Bind exceptions occur.
 
+[F]      Ajp12Connector and Ajp13Connector now accepts ContextMananger
+         properties called ajpid12 and ajpid13, respectively.  This property
+         overrides the ajpidFile attribute of these modules, allowing the
+         ajpid file to be specified via command line arguments.  For
+         consistency, the same arguments are also accepted by the StopTomcat
+         task to specify the file and protocol to use for shutdown.
+
+[F]      The Ajp13Connector now accepts shutdownEnable in addition to
+         shutDownEnable at attributes that control if shutdown is enabled
+         via the Ajp13 protocol.  shutdownEnable was added since it uses
+         a more intuitive uppercase/lowercase spelling.
+         
+[F]      The PasswordPrompter add-on was refactored to use introspection
+         and accept customizable prompt specifications.  It can now set
+         additional passwords, such as the keystore password added to
+         Http10Connector and the "secret" for Ajp12Connector and
+         Ajp13Connector modules.  It can set other types of attributes
+         as well.
+
+[F]      Refactored the PasswordPrompter add-on module to be configurable
+         and to be able to perform prompting for context local modules.
+         Added a "readme" file to document its use.
+
+[F]      The facade classes in org.apache.tomcat.facade are now declared
+         as public classes.  This allows their methods to be called
+         using introspection from a web application.
+
 
 Server:
 
@@ -192,6 +219,18 @@ Bug No.  Description
          Previously, calling getReader() on a recycled facade on which
          getReader() was called, you would get the old reader rather than
          a new reader for the current request.
+
+[F]      Fixed a bug in TrustedLoader with respect to reloading trusted
+         modules when more than one is present.
+
+[F]      Modified PoolTcpConnector checkSocketFactory() method to set the
+         module's socketFactory when obtaining an SSL socket factory,
+         instead of using a local variable.  This allows the PasswordPrompter
+         add-on to set SSL socket attributes, such as the keystore and
+         certificate passwords.
+
+[F]      A couple of "off by 1" bugs were fixed in the CharChunk and
+         ByteChunk utility classes.
 
 1657     JSPs with tag names that contain '-' or '.' will now compile without
 [b1]     an "Invalid expression" error
@@ -262,6 +301,17 @@ Bug No.  Description
 6604     Fix a problem when using the AccessLog without a "Default Context" 
 [rc1]    defined.  
 
+6887	 Fix a problem locating an error-page when using virtual hosts.
+[F]
+
+
+Jasper:
+
+Bug No.  Description
+
+[F]      Fixed incorrect use of '\' in the servlet mappings written by JspC on
+         Windows systems.
+
 
 Configuration:
 
@@ -270,6 +320,22 @@ Bug No.  Description
 [b1]     Updated JSSEImplemention to support a separate keystorePass
          attribute as the keystore password.  It will default to the keypass
          attribute if not set.
+
+[F]      The conf/jk/wrapper.properties was improved.  The improvements
+         include putting quotes around the java command portion of the
+         wrapper.cmd_line property.  Also a wrapper.jvm.options property
+         was added to simplify specification of JVM arguments.
+
+[F]      PoolTcpConnector was modified to allow the PasswordPrompter add-on
+         module to successfully set connection attributes for secure
+         connections.
+
+[F]      conf/jk/wrapper.properties was updated to work with a spaces in the
+         JDK path and a wrapper.jvm.options property was added to make
+	 it easier to add options.
+
+[F]      conf/jk/uriworkermap.properties and conf/jk/obj.conf example files
+         were updated to be more current.
 
 4313     Bug in property substitution for server.xml and apps.xml files was
 [b1]     fixed.
@@ -304,6 +370,11 @@ Bug No.  Description
 Connectors:
 
 Bug No.  Description
+
+[b1]     A bug was fixed in isapi_redirect.dll where the query string would be
+         lost if the URI was shortened during normalization of the URI.  The
+         presence of escaped characters or character sequences such as "/../"
+         would cause this to happen.
 
 [b1]     A bug was fixed in isapi_redirect.dll where it would mistake an
          encoded '?' in the URI path as the query string delimitor.
@@ -351,3 +422,6 @@ Bug No.  Description
 
 [rc1]    Updated tomcat-ssl-howto.html to fix incorrect case for "clientauth"
          attribute.
+
+[F]      serverxml.html and tomcat-ug.html were updated to document the
+         new ajp12id and ajp13id startup and shutdown arguments.
