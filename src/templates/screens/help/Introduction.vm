@@ -26,8 +26,8 @@
     as the individual user. Each Scarab implementation can be configured directly 
     to the workflow processes of the project through the definition of issue types 
     and attributes. The user interface is designed to be accessible and constant: 
-    once you become familiar with the Scarab look and feel you will find learning 
-    new processes within the system quick to master.</p>
+    once you become familiar with the Scarab look and feel you will find 
+    new processes quick to master.</p>
   <p>Scarab provides a robust set of tools for issue management:</p>
 
 <ul>
