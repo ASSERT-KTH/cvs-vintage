@@ -12,6 +12,7 @@ import java.security.Identity;
 import java.security.Principal;
 import java.util.Properties;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
@@ -27,6 +28,7 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.logging.Logger;
+import org.jboss.metadata.SecurityRoleRefMetaData;
 
 /**
  *  The EnterpriseContext is used to associate EJB instances with metadata about it.
@@ -37,7 +39,8 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.26 $
+ *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
+ *  @version $Revision: 1.27 $
  */
 public abstract class EnterpriseContext
 {
@@ -267,8 +270,34 @@ public abstract class EnterpriseContext
        { 
          if (principal == null)
             return false;
+
+         // Map the role name used by Bean Provider to the security role
+         // link in the deployment descriptor. The EJB 1.1 spec requires
+         // the security role refs in the descriptor but for backward
+         // compability we're not enforcing this requirement.
+         //
+         // TODO (2.3): add a conditional check using jboss.xml <secure> element
+         //             which will throw an exception in case no matching
+         //             security ref is found.           
+         Iterator it = getContainer().getBeanMetaData().getSecurityRoleReferences();
+         boolean matchFound = false;
+         
+         while (it.hasNext()) {
+             SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData)it.next();
+             if (meta.getName().equals(id)) {
+                 id = meta.getLink();                 
+                 matchFound = true;
+                 
+                 break;
+             }
+         }
+
+         if (!matchFound)
+             Logger.warning("WARNING: no match found for security role " + id + " in the deployment descriptor.");
+             
          HashSet set = new HashSet();
          set.add( id );
+         
          return con.getRealmMapping().doesUserHaveRole( principal, set );
        }
    
