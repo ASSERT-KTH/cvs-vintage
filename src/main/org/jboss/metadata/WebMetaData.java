@@ -22,7 +22,7 @@ import org.jboss.deployment.DeploymentException;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -35,6 +35,11 @@ public class WebMetaData implements XmlLoadable
    /** The war context root as specified as the jboss-web.xml
     descriptor level. */
    private String contextRoot;
+   /** The server container virtual host the war should be deployed into
+    */
+   private String virtualHost;
+   /** The JNDI name of the security domain implementation
+    */
    private String securityDomain;
 
    public WebMetaData()
@@ -85,6 +90,10 @@ public class WebMetaData implements XmlLoadable
    {
       return contextRoot;
    }
+   public void setContextRoot(String contextRoot)
+   {
+      this.contextRoot = contextRoot;
+   }
 
    /** Return the optional security-domain jboss-web.xml element.
     @return The jndiName of the security manager implementation that is
@@ -96,7 +105,15 @@ public class WebMetaData implements XmlLoadable
    {
       return securityDomain;
    }
-   
+
+   /** The servlet container virtual host the war should be deployed into. If
+    null then the servlet container default host should be used.
+    */
+   public String getVirtualHost()
+   {
+      return virtualHost;
+   }
+
    public void importXml(Element element) throws Exception
    {
       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
@@ -178,7 +195,12 @@ public class WebMetaData implements XmlLoadable
       Element securityDomainElement = MetaData.getOptionalChild(jbossWeb, "security-domain");
       if( securityDomainElement != null )
          securityDomain = MetaData.getElementContent(securityDomainElement);
-      
+
+      // Parse the jboss-web/virtual-host element
+      Element virtualHostElement = MetaData.getOptionalChild(jbossWeb, "virtual-host");
+      if( virtualHostElement != null )
+         virtualHost = MetaData.getElementContent(virtualHostElement);
+
       // Parse the jboss-web/resource-ref elements
       Iterator iterator = MetaData.getChildrenByTagName(jbossWeb, "resource-ref");
       while( iterator.hasNext() )
