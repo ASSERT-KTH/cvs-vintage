@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.16 2005/01/20 23:20:32 linus Exp $
+// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.17 2005/01/21 21:18:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,7 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
      * Test setBase().
      */
     public void testSetBase() {
-        Model.getCollaborationsHelper().setBase(elem, bases[0]);
+        Model.getUseCasesHelper().setBase(elem, bases[0]);
         assertTrue(model.getSelectedItem() == bases[0]);
     }
 
@@ -100,7 +100,7 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
      * Test setBase() with null argument.
      */
     public void testSetBaseToNull() {
-        Model.getCollaborationsHelper().setBase(elem, null);
+        Model.getUseCasesHelper().setBase(elem, null);
         assertNull(model.getSelectedItem());
     }
 
