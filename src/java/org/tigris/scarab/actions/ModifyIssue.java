@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.143 2002/12/21 01:54:36 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.144 2002/12/29 19:41:03 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -804,40 +804,46 @@ public class ModifyIssue extends BaseModifyIssue
             List dependencies = issue.getAllDependencies();            
             for (int i=0; i< dependencies.size(); i++)
             {
-                Depend depend = (Depend)dependencies.get(i);
-                Group group = intake.get("Depend", depend.getQueryKey(), false);
+                Depend oldDepend = (Depend)dependencies.get(i);
+                Depend newDepend = DependManager.getInstance();
+                // copy oldDepend properties to newDepend
+                newDepend.setProperties(oldDepend);
+                Group group = intake.get("Depend", oldDepend.getQueryKey(), false);
 
-                DependType oldDependType = depend.getDependType();
+                DependType oldDependType = oldDepend.getDependType();
                 // set properties on the object
-                group.setProperties(depend);
-                DependType newDependType = depend.getDependType();
+                group.setProperties(newDepend);
+                DependType newDependType = newDepend.getDependType();
 
                 // set the description of the changes
-                depend.setDescription(reasonForChange);
+                newDepend.setDescription(reasonForChange);
 
                 // make the changes
-                if (depend.getDeleted() == true)
+                if (newDepend.getDeleted() == true)
                 {
                     try
                     {
                         activitySet = 
-                            issue.doDeleteDependency(activitySet, depend, user);
+                            issue.doDeleteDependency(activitySet, oldDepend, user);
                     }
-                    catch (Exception e)
+                    catch (ScarabException se)
                     {
                         // FIXME: l10n this
                         // it will error out if they attempt to delete
                         // a dep via a child dep.
-                        scarabR.setAlertMessage(e.getMessage());
-                        intake.remove(group);
-                        return;
+                        scarabR.setAlertMessage(se.getMessage());
+                    }
+                    catch (Exception e)
+                    {
+                        scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                        log().debug("Delete error: ", e);
                     }
                 }
                 else if (! oldDependType.equals(newDependType))
                 {
                     // make the changes
                     activitySet = 
-                        issue.doChangeDependencyType(activitySet, depend, 
+                        issue.doChangeDependencyType(activitySet, oldDepend, newDepend,
                                                      newDependType, oldDependType, user);
                 }
                 intake.remove(group);
@@ -847,6 +853,11 @@ public class ModifyIssue extends BaseModifyIssue
             if (activitySet != null)
             {
                 scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                
+                // FIXME: when we add a dep, we send email to both issues,
+                // but here we are not...should we? it almost seems like 
+                // to much email. We need someone to define this behavior
+                // better. (JSS)
                 sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
             }
             else // nothing changed
