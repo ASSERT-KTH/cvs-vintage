@@ -14,7 +14,6 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
    #set ($templ = $scarabR.IssueTemplate)
 #end
 
-temid= $templateId
 
 <h2>$page.Title</h2>
 
