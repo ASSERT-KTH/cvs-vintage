@@ -46,17 +46,30 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.io.Serializable;
+
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.entity.Permission;
+import org.apache.fulcrum.security.util.RoleSet;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.DataBackendException;
 import org.apache.fulcrum.security.util.UnknownEntityException;
 
+import org.apache.torque.util.Criteria;
+import org.apache.torque.TorqueException;
+
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.PendingGroupUserRolePeer;
+import org.tigris.scarab.om.PendingGroupUserRole;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /*
  import java.util.List;
@@ -85,9 +98,10 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.3 2002/01/18 22:26:13 jon Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.4 2002/04/16 15:56:29 jmcnally Exp $
  */
-public class SecurityAdminTool implements SecurityAdminScope
+public class SecurityAdminTool 
+    implements SecurityAdminScope, Serializable
 {
     public void init(Object data)
     {
@@ -159,6 +173,77 @@ public class SecurityAdminTool implements SecurityAdminScope
         return TurbineSecurity.getAllGroups().getGroupsArray();
     }
     
+
+    /** 
+     * Gets a list of all Groups in which the user does not have a current
+     * and has not already requested a role.
+     */
+    public List getNonMemberGroups(ScarabUser user) throws Exception
+    {
+        AccessControlList acl = getACL(user);
+        Group[] groups = TurbineSecurity.getAllGroups().getGroupsArray();
+        List nonmemberGroups = new LinkedList();
+        for (int i=0; i<groups.length; i++) 
+        {
+            if (!((Module)groups[i]).getModuleId().equals(Module.ROOT_ID)) 
+            {
+                RoleSet roleSet = acl.getRoles(groups[i]);
+                if (roleSet == null || roleSet.size() == 0) 
+                {
+                    boolean hasRole = false;
+                    // need to check for already requested roles
+                    Role[] roles = 
+                        TurbineSecurity.getAllRoles().getRolesArray();
+                    for (int j=0; j<roles.length; j++) 
+                    {
+                        if (hasRequestedRole(user, roles[j], groups[i])) 
+                        {
+                            hasRole = true;
+                            break;
+                        }
+                    }
+                    if (!hasRole) 
+                    {
+                        nonmemberGroups.add(groups[i]);   
+                    }                    
+                }   
+            }
+        }
+        return nonmemberGroups;
+    }
+    
+    private static String HAS_REQUESTED_ROLE = "hasRequestedRole";
+    public boolean hasRequestedRole(ScarabUser user, Role role, Group group)
+        throws TorqueException
+    {
+        List result = null;
+        Object obj = ScarabCache.get(this, HAS_REQUESTED_ROLE, user); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(PendingGroupUserRolePeer.USER_ID, user.getUserId());
+            result = PendingGroupUserRolePeer.doSelect(crit);
+            ScarabCache.put(result, this, HAS_REQUESTED_ROLE);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        boolean b = false;
+        Iterator iter = result.iterator();
+        while (iter.hasNext()) 
+        {
+            PendingGroupUserRole pmur = (PendingGroupUserRole)iter.next();
+            if (pmur.getRoleName().equals(role.getName())
+                && ((Module)group).getModuleId().equals(pmur.getGroupId())) 
+            {
+                b = true;
+                break;
+            }
+        }
+        return b;
+    }
+
     /** 
      * Gets a list of all Permissions
      */
@@ -175,6 +260,46 @@ public class SecurityAdminTool implements SecurityAdminScope
         return TurbineSecurity.getAllRoles().getRolesArray();
     }
     
+    /** 
+     * Gets a list of all Roles.
+     */
+    public List getNonRootRoles() throws Exception
+    {
+        List nonRootRoles = new LinkedList();
+        Role[] roles = TurbineSecurity.getAllRoles().getRolesArray();
+        for (int i=0; i<roles.length; i++) 
+        {
+            Role role = roles[i];
+            if (!role.getName().equals("Root") 
+                && !role.getName().equals("turbine_root")) 
+            {
+                nonRootRoles.add(role);
+            }
+        }
+        return nonRootRoles;
+    }
+   
+    
+    private static String GET_PENDING = "getPendingGroupUserRoles";
+    public List getPendingGroupUserRoles(Module module)
+        throws TorqueException
+    {
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_PENDING, module); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(PendingGroupUserRolePeer.GROUP_ID, module.getModuleId());
+            result = PendingGroupUserRolePeer.doSelect(crit);
+            ScarabCache.put(result, this, GET_PENDING);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
+    }
+ 
     /**
      * Gets an ACL object for a user
      */

@@ -77,4 +77,8 @@ has permissions to select a Module.
 </strong></p>
 #end
 
+<p>
+$link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Request roles") in modules which you are not
+currently associated.
+</p>
 </div>

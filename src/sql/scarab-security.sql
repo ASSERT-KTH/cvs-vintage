@@ -38,6 +38,12 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
     VALUES (13, 'Issue | View');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (14, 'Domain | Admin');
+/*
+ * User with this permission is allowed to approve roles requested by other
+ * users.
+ */
+INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
+    VALUES (15, 'User | Approve Roles');
 
 /*
  * Create an account for system administrator (also used for initial
@@ -157,6 +163,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
          from  TURBINE_ROLE, TURBINE_PERMISSION
          where TURBINE_ROLE.ROLE_NAME = 'Project Owner'
            and TURBINE_PERMISSION.PERMISSION_NAME in (
+                'User | Approve Roles',
                 'Module | Edit',
                 'Item | Approve',
                 'Item | Delete',

@@ -1,0 +1,80 @@
+<div id="approveroles" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Request roles</h3>
+
+<form method="post" action="$link.setPage("SelectModule.vm")">
+<input type="hidden" name="action" value="HandleRoleRequests" />
+<table>
+<tr>
+<td bgcolor="#000000">
+<table cellspacing="1" cellpadding="2">
+  <tr>
+    <td bgcolor="#ffffff">
+        <center>User</center>
+    </td>
+      
+    #foreach ($role in $securityAdmin.NonRootRoles)
+    <td bgcolor="#ffffff">
+        <b>$role.Name</b>
+    </td>
+    #end
+    <td bgcolor="#ffffff">
+        <b>Defer</b>
+    </td>
+    <td bgcolor="#ffffff">
+        <b>Deny</b>
+    </td>
+
+  </tr>
+
+  #set ($module = $scarabR.CurrentModule)
+  #foreach ($pending in $securityAdmin.getPendingGroupUserRoles($module))
+  #set ($user = $scarabR.getUser($pending.UserId)))
+  #indexedRows ($velocityCount)
+    <td bgcolor="#ffffff">
+        <a href="mailto:$user.Email">$user.UserName</a> - $user.Name
+    </td>
+
+    #foreach ($role in $securityAdmin.NonRootRoles)
+      #if ($securityAdmin.hasRequestedRole($user, $role, $module))
+        #set ($checked = "checked")
+      #else
+        #set ($checked = "")
+      #end
+    
+    <td>
+      <center>
+      <input type="radio" name="$user.UserName" value="$role.Name" $checked />
+      </center>
+    </td>
+    #end    
+    <td>
+      <center>
+      <input type="radio" name="$user.UserName" value="defer" />
+      </center>
+    </td>
+    <td>
+      <center>
+      <input type="radio" name="$user.UserName" value="deny" />
+      </center>
+    </td>
+
+  </tr>
+  #end
+    
+</table>
+
+</td>
+</tr>
+</table>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doApproveroles" 
+     value="Request Roles" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+</div>
+
+</form>
+</div>

@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.11 2002/02/17 17:54:06 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.12 2002/04/16 15:56:29 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -155,6 +155,13 @@ public class ScarabSecurity
     public static final String MODULE__ADD = 
         getService().getPermissionImpl("Module__Add");
 
+    /**
+     * User with this permission is allowed to approve roles requested
+     * by other users.
+     */
+    public static final String USER__APPROVE_ROLES = 
+        getService().getPermissionImpl("User__Approve_Roles");
+
     /** 
      * Specifies that a User is allowed to set up voting policies.
      */
@@ -204,6 +211,7 @@ public class ScarabSecurity
             addPerm(tmpPerms, ScarabSecurity.MODULE__EDIT);
             addPerm(tmpPerms, ScarabSecurity.MODULE__ADD);
             addPerm(tmpPerms, ScarabSecurity.USER__EDIT_PREFERENCES);
+            addPerm(tmpPerms, ScarabSecurity.USER__APPROVE_ROLES);
             addPerm(tmpPerms, ScarabSecurity.VOTE__MANAGE);
             allPermissions = tmpPerms;
         }
