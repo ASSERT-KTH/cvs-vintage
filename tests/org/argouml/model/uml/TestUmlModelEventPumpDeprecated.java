@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPumpDeprecated.java,v 1.2 2004/11/01 19:55:24 mvw Exp $
+// $Id: TestUmlModelEventPumpDeprecated.java,v 1.3 2004/12/13 13:28:00 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
@@ -133,7 +134,7 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        UmlFactory.getFactory().delete(elem);
+        if (elem != null) UmlFactory.getFactory().delete(elem);
         UmlModelEventPump.getPump().cleanUp();
         listener2 = null;
         listener = null;
@@ -227,13 +228,11 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
     public void testCreateDelete() {
         WeakReference ref = new WeakReference(elem);
         UmlFactory.getFactory().delete(elem);
+        Model.getPump().removeModelEventListener(
+                UmlModelListener.getInstance(), elem);
         elem = null;
         System.gc();
         assertNull(ref.get());
-        try {
-            setUp(); // to avoid NP's during teardown
-        } catch (Exception ex) {
-        }
     }
 
     /**
