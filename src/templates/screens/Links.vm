@@ -27,7 +27,7 @@ $page.setTitle("Scarab Links")
 <h3>Admin Pages</h3>
 <ul>
 <li>
- <a href="$link.setPage("admin,ArtifactTypeEdit.vm")">admin,ArtifactTypeEdit.vm</a>
+ <a href="$link.setPage("admin,ManageArtifactTypes.vm")">admin,ManageArtifactTypes.vm</a>
 </li>
 <li>
  <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
