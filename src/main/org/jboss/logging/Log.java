@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public abstract class Log
 {
@@ -75,15 +75,24 @@ public abstract class Log
    public static Log getLog()
    {
       Stack s = (Stack)currentLog.get();
-      return s == null ? defaultLog : (Log)s.peek();
+			if( s == null ) {
+				if( defaultLog == null ) {
+					defaultLog = createLog( "Default" );
+				}
+				return defaultLog;
+			}
+			else {
+				return (Log)s.peek();
+			}
    }
 	 
 	 public static Log createLog( Object pSource ) {
 		 Log lReturn;
 		try {
-			Class lLog = Class.forName( "org.jboss.logging.DefaultLog" );
+			Class lLog = Thread.currentThread().getContextClassLoader().loadClass( "org.jboss.logging.DefaultLog" );
+//AS			Class lLog = Class.forName( "org.jboss.logging.DefaultLog" );
 			lReturn = (Log) lLog.getConstructor( new Class[] { Object.class } ).newInstance(
-			new Object[] { pSource }
+				new Object[] { pSource }
 			);
 		}
 		catch( Exception e ) {

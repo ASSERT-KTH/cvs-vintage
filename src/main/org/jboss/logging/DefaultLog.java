@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class DefaultLog extends Log
 {
@@ -26,9 +26,6 @@ public class DefaultLog extends Log
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
-	 static {
-		 Log.defaultLog = new DefaultLog();
-	 }
    
    // Constructors --------------------------------------------------
    public DefaultLog()
