@@ -190,6 +190,9 @@ public class ServerXmlReader extends BaseInterceptor {
 	    if( "tomcat.home".equals( key ) ) {
 		return cm.getHome();
 	    }
+            if( "tomcat.install".equals( key ) ) {
+                return cm.getInstallDir();
+	    }
 	    // XXX add other "predefined" properties
 	    String s=cm.getProperty( key );
 	    if( s==null )
@@ -203,7 +206,26 @@ public class ServerXmlReader extends BaseInterceptor {
     {
 	CMPropertySource propS=new CMPropertySource( cm );
 	xh.setPropertySource( propS );
-	
+
+        // add the "correct" first-letter-capitalized version
+        xh.addRule( "ContextManager/Property", new XmlAction() {
+                public void start(SaxContext ctx ) throws Exception {
+                    AttributeList attributes = ctx.getCurrentAttributes();
+                    String name=attributes.getValue("name");
+                    String value=attributes.getValue("value");
+                    if( name==null || value==null ) return;
+                    XmlMapper xm=ctx.getMapper();
+
+                    ContextManager cm1=(ContextManager)ctx.currentObject();
+                    // replace ${foo} in value
+                    value=xm.replaceProperties( value );
+                    if( cm1.getDebug() > 0 )
+                        cm1.log("Setting " + name + "=" + value);
+                    cm1.setProperty( name, value );
+                }
+            });
+
+        // for backward compatibility, keep old version
 	xh.addRule( "ContextManager/property", new XmlAction() {
 		public void start(SaxContext ctx ) throws Exception {
 		    AttributeList attributes = ctx.getCurrentAttributes();
