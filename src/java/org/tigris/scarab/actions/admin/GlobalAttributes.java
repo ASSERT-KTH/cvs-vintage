@@ -68,7 +68,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.28 2003/02/12 19:23:05 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.29 2003/03/26 23:20:33 jon Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -106,7 +106,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
         getScarabRequestTool(context).setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
     }
 
-    public void doCopy(RunData data, TemplateContext context)
+    public synchronized void doCopy(RunData data, TemplateContext context)
         throws Exception
     {
         Object[] keys = data.getParameters().getKeys();
