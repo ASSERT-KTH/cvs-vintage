@@ -1,10 +1,11 @@
-<!-- $Id: schema.xml,v 1.3 2001/01/02 21:04:36 jon Exp $ -->
+<!-- $Id: schema.xml,v 1.4 2001/01/03 01:55:31 jmcnally Exp $ -->
 
+<app-data>
 <database>
 <!--
     History of changes made to the attributes of an issue.
 -->
-<table name="SCARAB_ACTIVITY" idmethod="none">
+<table name="SCARAB_ACTIVITY" idMethod="none">
     <!--
         Issue attribute of which has been modified.
     -->
@@ -39,7 +40,7 @@
 <!--
     Attachment is a piece of information associated with an issue.
 -->
-<table name="SCARAB_ATTACHMENT" idmethod="idbroker">
+<table name="SCARAB_ATTACHMENT" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -90,7 +91,7 @@
     <!--
         Flag, which marks that attachment has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -104,7 +105,7 @@
     Example: Comment
     Example: File
 -->
-<table name="SCARAB_ATTACHMENT_TYPE" idmethod="idbroker">
+<table name="SCARAB_ATTACHMENT_TYPE" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -120,7 +121,7 @@
     Example: Operating System
     Example: Severity
 -->
-<table name="SCARAB_ATTRIBUTE" idmethod="idbroker">
+<table name="SCARAB_ATTRIBUTE" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -136,7 +137,7 @@
     <!--
         Flag, which marks that attribute has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_TYPE">
         <reference local="ATTRIBUTE_TYPE_ID" foreign="ATTRIBUTE_TYPE_ID"/>
     </foreign-key>
@@ -146,7 +147,7 @@
     Example: Free form input
     Example: Select one from the list
 -->
-<table name="SCARAB_ATTRIBUTE_CLASS" idmethod="idbroker">
+<table name="SCARAB_ATTRIBUTE_CLASS" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -169,7 +170,7 @@
     Attribute option is possible value of an attribute of an issue.
     Example: DOS 3.1 (for attribute Operating System)
 -->
-<table name="SCARAB_ATTRIBUTE_OPTION" idmethod="idbroker">
+<table name="SCARAB_ATTRIBUTE_OPTION" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -199,7 +200,7 @@
     Example: Integer
     Example: String
 -->
-<table name="SCARAB_ATTRIBUTE_TYPE" idmethod="idbroker">
+<table name="SCARAB_ATTRIBUTE_TYPE" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -226,7 +227,7 @@
     Example: Issue is a duplicate of another issue.
     Example: Issue is blocking another issue.
 -->
-<table name="SCARAB_DEPEND" idmethod="none">
+<table name="SCARAB_DEPEND" idMethod="none">
     <!--
         Issue that other issue depends upon.
         Example: Issue that blocks.
@@ -246,7 +247,7 @@
     <!--
         Flag, which marks that dependency has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="OBSERVED_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -262,7 +263,7 @@
     Example: Duplicate
     Example: Block
 -->
-<table name="SCARAB_DEPEND_TYPE" idmethod="idbroker">
+<table name="SCARAB_DEPEND_TYPE" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -278,7 +279,7 @@
     Example: Particular defect
     Example: Particular inquiry
 -->
-<table name="SCARAB_ISSUE" idmethod="idbroker">
+<table name="SCARAB_ISSUE" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -306,7 +307,7 @@
     <!--
         Flag, which marks that issue has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
@@ -315,7 +316,7 @@
 <!--
     Actual attribute of the issue with its value.
 -->
-<table name="SCARAB_ISSUE_ATTRIBUTE_VALUE" idmethod="none">
+<table name="SCARAB_ISSUE_ATTRIBUTE_VALUE" idMethod="none">
     <!--
         Issue that attribute belongs to.
     -->
@@ -341,7 +342,7 @@
         so you do not need to perform (sometimes complex) processing each time you view the issue.
         It lets you get list of issues with their attributes with a single SQL statement.
         Examples of what would go into this fields for different kinds of attributes:
-         - For "free-form" attributes this would be the actual value (it's String 
+         - For "free-form" attributes this would be the actual value (it's String
             representation to be exact)
          - For "select-one" this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUEE.
             There will also be an apropriate value in OPTION_ID column which you should use to
@@ -351,15 +352,16 @@
             NUMERIC_VALUE computed as: round(sum(votes.numeric_value)/count(votes)). For "Tracking"
             attribute which is also considered a voted attribute this value is a list of login_IDs
             of users tracking the issue.
-         
+
          It is responsibility of Attribute's subclass which implements this ATTRIBUTE_TYPE to
          populate this field with an apropriate value.
+
     -->
     <column name="VALUE" required="false" type="VARCHAR" size="255"></column>
     <!--
         Flag, which marks that attribute has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -369,12 +371,15 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
+    <foreign-key foreignTable="VISITOR">
+        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
+    </foreign-key>
 </table>
 
 <!--
     Modification information for table.
 -->
-<table name="SCARAB_MODIFICATION" idmethod="idbroker">
+<table name="SCARAB_MODIFICATION" idMethod="idbroker">
     <!--
         Table.
     -->
@@ -406,7 +411,7 @@
     Usually corresponds to the software project.
     Example: Scarab
 -->
-<table name="SCARAB_MODULE" idmethod="idbroker">
+<table name="SCARAB_MODULE" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -439,13 +444,16 @@
     <!--
         Flag, which marks that module has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
+    <foreign-key foreignTable="SCARAB_MODULE">
+        <reference local="PARENT_ID" foreign="MODULE_ID"/>
+    </foreign-key>
 </table>
 
 <!--
     Attributes that are applicable to issues of the particular module.
 -->
-<table name="SCARAB_R_MODULE_ATTRIBUTE" idmethod="none">
+<table name="SCARAB_R_MODULE_ATTRIBUTE" idMethod="none">
     <!--
         Attribute.
     -->
@@ -457,7 +465,7 @@
     <!--
         Flag, which marks that module attribute has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
@@ -469,7 +477,7 @@
 <!--
     Person associated with the module.
 -->
-<table name="SCARAB_R_MODULE_VISITOR" idmethod="none">
+<table name="SCARAB_R_MODULE_VISITOR" idMethod="none">
     <!--
         Module.
     -->
@@ -481,16 +489,19 @@
     <!--
         Flag, which marks that association has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="VISITOR">
+        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
     </foreign-key>
 </table>
 
 <!--
     Person associated with the module.
 -->
-<table name="SCARAB_R_MODULE_VISITOR_ROLE" idmethod="none">
+<table name="SCARAB_R_MODULE_VISITOR_ROLE" idMethod="none">
     <!--
         Module.
     -->
@@ -506,7 +517,7 @@
     <!--
         Flag, which marks that association has been deleted.
     -->
-    <column name="DELETED" required="false" type="VARCHAR" size="1"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
     <foreign-key foreignTable="SCARAB_R_MODULE_VISITOR">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
         <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
@@ -517,7 +528,7 @@
     Transaction is a group of attribute modification that are performed 
     together.
 -->
-<table name="SCARAB_TRANSACTION" idmethod="idbroker">
+<table name="SCARAB_TRANSACTION" idMethod="idbroker">
     <!--
         Unique identifier.
     -->
@@ -535,7 +546,7 @@
 <!--
     Vote for the certain value of the attribute of an issue.
 -->
-<table name="SCARAB_ISSUE_ATTRIBUTE_VOTE" idmethod="none">
+<table name="SCARAB_ISSUE_ATTRIBUTE_VOTE" idMethod="none">
     <!--
         Issue.
     -->
@@ -559,6 +570,21 @@
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
+    <foreign-key foreignTable="VISITOR">
+        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
+    </foreign-key>
+</table>
+
+<!--
+    Dummy table for TURBINE_USER 
+-->
+<table name="VISITOR" idMethod="none">
+    <!--
+        Unique identifier.
+    -->
+    <column name="VISITOR_ID" primaryKey="true" required="true" type="INTEGER"></column>
 </table>
 
 </database>
+</app-data>
+
