@@ -50,20 +50,26 @@ package org.tigris.scarab.actions;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.ParameterParser;
 
 import org.apache.torque.om.NumberKey; 
 
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
+import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImpl;
+import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 
 /**
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.1 2001/09/08 01:18:07 elicia Exp $
+    @version $Id: QueryList.java,v 1.2 2001/09/19 22:54:46 elicia Exp $
 */
 public class QueryList extends TemplateAction
 {
@@ -78,14 +84,166 @@ public class QueryList extends TemplateAction
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
-            if (key.startsWith("delete_"))
+            if (key.startsWith("action_"))
             {
                queryId = key.substring(7);
                Query query = (Query) QueryPeer
                                      .retrieveByPK(new NumberKey(queryId));
-               query.setDeleted(true);
-               query.save();
+               try
+               {
+                   query.delete(user);
+                   query.save();
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
+
             }
         } 
      } 
+
+    public void doSubscribe( RunData data, TemplateContext context )
+        throws Exception
+    {
+        Object[] keys = data.getParameters().getKeys();
+        String key;
+        String queryId;
+        String frequencyId;
+        Query query;
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("action_"))
+            {
+               queryId = key.substring(7);
+               frequencyId = data.getParameters()
+                            .getString("frequency_" + queryId);
+               query = (Query) QueryPeer
+                                     .retrieveByPK(new NumberKey(queryId));
+               if (query.isUserSubscribed(user.getUserId()))
+               {
+                   data.setMessage("You are already subscribed " + 
+                                  "to query 'query.Name'.");               
+               }
+               else
+               {
+                   RQueryUser rqu = new RQueryUser();
+                   rqu.setUserId(user.getUserId());
+                   rqu.setQuery(query);
+                   rqu.setSubscriptionFrequency(frequencyId);
+                   rqu.save();
+               }
+
+            }
+        } 
+     } 
+
+    public void doUnsubscribe( RunData data, TemplateContext context )
+        throws Exception
+    {
+        Object[] keys = data.getParameters().getKeys();
+        String key;
+        String queryId;
+        Query query;
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("action_"))
+            {
+               queryId = key.substring(7);
+               query = (Query) QueryPeer
+                       .retrieveByPK(new NumberKey(queryId));
+               if (!query.isUserSubscribed(user.getUserId()))
+               {
+                   data.setMessage("You are not subscribed " +
+                                   "to query 'query.Name'.");               
+               }
+               else
+               {
+                   try
+                   {
+                       RQueryUser rqu = query
+                                 .getSubscription(user.getUserId());
+                       rqu.delete(user, (ScarabModule)scarabR.getCurrentModule());
+                   }
+                   catch (Exception e)
+                   {
+                       data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   }
+               }
+
+            }
+        } 
+     } 
+
+    public void doSavefrequencies( RunData data, TemplateContext context )
+        throws Exception
+    {
+        Object[] keys = data.getParameters().getKeys();
+        String key;
+        String queryId;
+        String frequencyId;
+        Query query;
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("frequency_"))
+            {
+               queryId = key.substring(10);
+               query = (Query) QueryPeer
+                      .retrieveByPK(new NumberKey(queryId));
+               frequencyId = data.getParameters()
+                            .getString(key);
+               if (query.isUserSubscribed(user.getUserId()))
+               {
+                   RQueryUser rqu = query
+                             .getSubscription(user.getUserId());
+                   rqu.setSubscriptionFrequency(frequencyId);
+                   rqu.save();
+               }
+            }
+        }
+    } 
+
+    public void doNewquery( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, "AdvancedQuery.vm");     
+    }
+        
+    public void doCopyquery( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ParameterParser pp = data.getParameters();
+        Object[] keys = pp.getKeys();
+        String key;
+        String queryId;
+        Query query;
+        Query newQuery = null;
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("action_"))
+            {
+               queryId = key.substring(7);
+               query = (Query) QueryPeer
+                      .retrieveByPK(new NumberKey(queryId));
+               newQuery = query.copy();
+               newQuery.setName(query.getName() + " (copy)");
+               newQuery.save();
+               break;
+             }
+         }
+     }
 }
