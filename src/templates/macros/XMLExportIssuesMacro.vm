@@ -1,4 +1,4 @@
-#if($renderedFromScreen) #XMLExportIssues($issueIdList) #end
+#if($renderedFromScreen)#XMLExportIssues($issueIdList)#end
 #macro (XMLExportIssues $issueIdList)
 #set ($module = $scarabR.CurrentModule)
 <?xml version="1.0" standalone="no"?>
