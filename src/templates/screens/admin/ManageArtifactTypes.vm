@@ -28,7 +28,7 @@
   #set ($pageNum = 1)
 #end
 
-#set ($rmits = $module.getRModuleIssueTypes($sortColumn, $sortPolarity, $resultsPerPage, $pageNum))
+#set ($rmits = $module.getRModuleIssueTypes($sortColumn, $sortPolarity))
 #set ($listSize = $rmits.size())
 
 #if ($rmits.size() > $resultsPerPage)
