@@ -354,7 +354,7 @@ public class HttpRequest {
 		authorization=h.getValue();
 	}
 	if( hostHeader == null && host!=null && ! "".equals(host)  ) {
-	    sb.append("Host: ").append( host ).append( CRLF );
+	    sb.append("Host: ").append( host ).append(':').append(port).append( CRLF );
 	}
 
 	// If we are in a POST and Parameters are specified -
