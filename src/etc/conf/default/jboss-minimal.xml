@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-minimal.xml,v 1.2 2002/06/01 01:39:46 starksm Exp $ -->
+<!-- $Id: jboss-minimal.xml,v 1.3 2002/06/01 02:12:27 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -18,8 +18,6 @@
    -->
   <!-- Load all content from the server lib -->
   <classpath codebase="lib" archives="*"/>
-  <!-- Load log4j.jar from the root lib -->
-  <classpath codebase="../../lib" archives="log4j.jar"/>
 
   <!-- ==================================================================== -->
   <!-- Log4j Initialization                                                 -->
