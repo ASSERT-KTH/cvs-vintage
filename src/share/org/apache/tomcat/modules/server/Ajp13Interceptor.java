@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.13 2001/09/12 21:35:46 nacho Exp $
- * $Revision: 1.13 $
- * $Date: 2001/09/12 21:35:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.14 2001/09/13 12:08:07 larryi Exp $
+ * $Revision: 1.14 $
+ * $Date: 2001/09/13 12:08:07 $
  *
  * ====================================================================
  *
@@ -262,7 +262,7 @@ class Ajp13Request extends Request
 	if( ajp13!=null) ajp13.recycle();
     }
 
-    private static final int dL=10;
+    private static final int dL=0;
     private void d(String s ) {
 	System.err.println( "Ajp13Request: " + s );
     }
