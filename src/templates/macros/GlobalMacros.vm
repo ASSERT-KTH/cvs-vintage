@@ -330,21 +330,23 @@
 #end
 
 #macro (paginate $resultsPerPage $pageNum )
+#*
 #if ($resultsPerPage == 0)
   #set ($resultsPerPage = 25)
 #end
 #if ($pageNum == 0)
   #set ($pageNum = 1)
 #end
+*#
 
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString())
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($scarabR.getCurrentTemplate()))
   <a href="$prevLink">&laquo;</a> previous |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage($template).toString())
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPage($scarabR.getCurrentTemplate()))
   | <a href="$nextLink">&raquo;</a> next
  #end
  </p>
