@@ -80,7 +80,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.35 2001/10/31 00:23:00 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.36 2001/11/01 02:12:37 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -307,6 +307,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         rma.setAttributeId(attributeId);
         rma.setIssueTypeId(issueType.getIssueTypeId());
         rma.setDedupe(group.getOrder() < issueType.getDedupeSequence(module));
+        rma.setOrder(module.getHighestSequence(issueType) + 1);
         rma.save();
 
         // add module-attribute mappings to template type

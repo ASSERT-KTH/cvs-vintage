@@ -96,7 +96,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.62 2001/11/01 00:55:38 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.63 2001/11/01 02:12:38 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -456,6 +456,25 @@ public class ScarabModule
                ((RModuleAttribute) moduleAttributes.get(i)).getAttribute();
         }
         return attributes;
+    }
+
+
+    /**
+     * gets highest sequence number for module-attribute map
+     * so that a new RModuleAttribute can be added at the end.
+     */
+    public int getHighestSequence(IssueType issueType)
+        throws Exception
+    {
+        List moduleAttributes = getRModuleAttributes(issueType);
+        int highest = 0;
+
+        for ( int i=0; i<moduleAttributes.size(); i++ )
+        {
+               highest = ((RModuleAttribute) moduleAttributes.get(i))
+                         .getOrder();
+        }
+        return highest;
     }
 
     /**
