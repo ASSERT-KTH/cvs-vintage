@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.104 2003/09/03 08:13:19 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.105 2003/09/03 14:30:12 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -119,6 +119,7 @@ import ru.novosoft.uml.foundation.data_types.MCallConcurrencyKind;
 import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 import ru.novosoft.uml.foundation.data_types.MExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
+import ru.novosoft.uml.foundation.data_types.MOrderingKind;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MProcedureExpression;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
@@ -2957,11 +2958,14 @@ public class ModelFacade {
             return me.getName();
         }
 
-        if (handle instanceof Diagram) {
-            Diagram d = (Diagram) handle;
+		if (handle instanceof Diagram) {
+			Diagram d = (Diagram) handle;
 
-            return d.getName();
-        }
+			return d.getName();
+		}
+		if (handle instanceof MOrderingKind) {
+			return ((MOrderingKind) handle).getName();
+		}
 
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
