@@ -13,6 +13,8 @@ public interface JDBCDataSourceLoaderMBean extends ServiceMBean {
    public static final String OBJECT_NAME = ":service=JDBCDataSource";
 
    // Public --------------------------------------------------------
+    public void setPoolName(String name);
+    public String getPoolName();
     public void setURL(String url);
     public String getURL();
     public void setJDBCUser(String userName);

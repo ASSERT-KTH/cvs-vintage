@@ -25,17 +25,28 @@ import org.jboss.logging.Logger;
 /**
  * Service that loads a JDBC 1 connection pool.  The constructors are called by
  * the JMX engine based on your MLET tags.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDataSourceLoaderMBean {
     private JDBCPoolDataSource source;
 
     public JDBCDataSourceLoader() {
+	source = new JDBCPoolDataSource();
     }
     public JDBCDataSourceLoader(String poolName) {
         source = new JDBCPoolDataSource();
         source.setPoolName(poolName);
+    }
+
+    public void setPoolName(String name)
+    {
+	source.setPoolName(name);
+    }
+
+    public String getPoolName()
+    {
+	return source.getPoolName();
     }
 
     public void setURL(String jdbcURL) {
@@ -52,7 +63,8 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
     }
 
     public String getProperties() {
-        return buildProperties(source.getJDBCProperties());
+	Properties props = source.getJDBCProperties();
+        return (props==null) ? null : buildProperties(props);
     }
 
     public void setJDBCUser(String userName) {
@@ -194,7 +206,7 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
         // Unbind from JNDI
         try {
             String name = source.getPoolName();
-            new InitialContext().unbind(name);
+            new InitialContext().unbind("java:/"+name);
             log.log("JDBC Connection pool "+name+" removed from JNDI");
             source.close();
             log.log("JDBC Connection pool "+name+" shut down");
@@ -209,9 +221,9 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
         source.initialize();
 
         // Bind in JNDI
-        bind(new InitialContext(), source.getPoolName(), source);
+        bind(new InitialContext(), "java:/" + source.getPoolName(), source);
 
-        log.log("JDBC Connection pool "+source.getPoolName()+" bound to "+source.getPoolName());
+        log.log("JDBC Connection pool "+source.getPoolName()+" bound to java:/"+source.getPoolName());
 
         // Test database
         source.getConnection().close();
