@@ -81,8 +81,12 @@ public class TestClient {
 			Collection lServers = (Collection) lLocalServer.invoke(
 				lFactoryInstance.getObjectName(),
 				"getServers",
-				null,
-				null
+				new String[] {
+					null
+				},
+				new String[] {
+					"java.lang.String"
+				}
 			);
 			Iterator i = lServers.iterator();
 			int lCount = 0;
@@ -90,7 +94,7 @@ public class TestClient {
 			lMessage.append( "List of all available servers on your net\n" );
 			lMessage.append( "=========================================\n" );
 			while( i.hasNext() ) {
-				lMessage.append( " - " + ( lCount++ ) + ". server is: " + i.next().toString() + "\n" );
+				lMessage.append( " - " + ( lCount++ ) + ". server is: " + i.next() + "\n" );
 			}
 			lMessage.append( "\n" );
 			lMessage.append( "3. Select your server by entering its number\n" );
@@ -103,7 +107,7 @@ public class TestClient {
 					break;
 				}
 			}
-			final String lServer = i.next().toString();
+			final String lServer = i.next() + "";
 			lMessage.setLength( 0 );
 			lMessage.append(
 				"\n" +
