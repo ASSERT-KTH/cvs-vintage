@@ -52,6 +52,9 @@ echo "Classpath:"
 echo "$CLASSPATH"
 echo ""
 
+# if jikes is stopped midstream, it leaves crap
+rm -f jikes*
+
 # deal with the dtd files specially because of bugs in Unix JDK 1.3 JVM's
 rm -rf ./org
 . ./cpdtd.sh
