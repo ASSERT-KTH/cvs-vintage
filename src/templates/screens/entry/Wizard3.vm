@@ -123,7 +123,6 @@ $page.setTitle("Enter issue")
    #foreach ($file in $reportingIssue.Attachments)
      #indexedRows($velocityCount)
      #if ($file.TypeId.toString().equals("1"))
-     <tr>
        <td>
          <input type="checkbox" name="file_delete_$velocityCount" />
        </td>
