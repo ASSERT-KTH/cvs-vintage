@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.31 $" />  
+     <property name="revision" value="$Revision: 1.32 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1113,7 +1113,7 @@ mod_webapp into mod_jk )
 
    </target>
 
-   <target name="security_chk">
+   <target name="security_chk" depends="init">
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp. HTTP/1.0"
            returnCode="${http.protocol} 404" 
@@ -1210,7 +1210,7 @@ mod_webapp into mod_jk )
       />
    </target>
 
-   <target name="writer">
+   <target name="writer" depends="init">
       <httpClient>
           <comment>Writer test, closing writer at end</comment>
           <httpRequest path="/test/servlet/CloseWriter" />
@@ -1219,7 +1219,7 @@ mod_webapp into mod_jk )
           <goldenMatch file="${gdir}/CloseWriter.txt"/>
       </httpClient>
       <httpClient>
-          <comment>Writer test,trying to catch reciclying issues</comment>
+          <comment>Writer test,trying to catch recycling issues</comment>
           <httpRequest path="/test/servlet/CloseWriter" />
           <httpStatusMatch match="200" />
           <headerMatch name="Content-Type" value="text/plain" />
@@ -1227,8 +1227,18 @@ mod_webapp into mod_jk )
       </httpClient>
    </target>
 
+   <target name="aaa" depends="init">
+      <httpClient>
+          <comment>Test for required authorization redirection response</comment>
+          <httpRequest path="/test/aaa/protected/index.jsp" />
+          <httpStatusMatch match="302" />
+          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <responseMatch match="This document has moved" />
+      </httpClient>
+   </target>
+
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk">
+   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk,aaa">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
