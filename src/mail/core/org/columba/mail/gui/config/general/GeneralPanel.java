@@ -59,15 +59,26 @@ public class GeneralPanel extends JPanel implements ActionListener {
 			String delay = markasread.getAttribute("delay", "2");
 
 			markTextField.setText(delay);
-                        
-                        Locale[] available = GlobalResourceLoader.getAvailableLocales();
-                        codepageComboBox.setModel(new DefaultComboBoxModel(available));
-                        for (int i=0; i<available.length; i++) {
-                                if (available[i].equals(Locale.getDefault())) {
-                                        codepageComboBox.setSelectedIndex(i);
-                                        break;
-                                }
-                        }
+
+			Locale[] available = GlobalResourceLoader.getAvailableLocales();
+			codepageComboBox.setModel(new DefaultComboBoxModel(available));
+
+			XmlElement language =
+				Config.get("options").getElement("/options/locale");
+
+			// create Locale from configuration
+			String name = language.getAttribute("language");
+			Locale locale = new Locale(name);
+			if ( locale == null ) locale = new Locale("English");
+			
+			// select Locale in ComboBox
+			for (int i = 0; i < available.length; i++) {
+				if (available[i].equals(locale)) {
+					codepageComboBox.setSelectedIndex(i);
+
+					break;
+				}
+			}
 
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
@@ -111,7 +122,6 @@ public class GeneralPanel extends JPanel implements ActionListener {
 				MailConfig.get("options").getElement("/options/markasread");
 
 			markasread.addAttribute("delay", markTextField.getText());
-			
 
 			XmlElement html =
 				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
@@ -137,11 +147,25 @@ public class GeneralPanel extends JPanel implements ActionListener {
 				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
 
 				if (state == 2)
-					item.set("toolbar", "text_position", Boolean.TRUE.toString());
+					item.set(
+						"toolbar",
+						"text_position",
+						Boolean.TRUE.toString());
 				else
-					item.set("toolbar", "text_position", Boolean.FALSE.toString());
+					item.set(
+						"toolbar",
+						"text_position",
+						Boolean.FALSE.toString());
 
 			}
+			
+			// get language configuration
+			XmlElement language =
+							Config.get("options").getElement("/options/locale");
+							
+			// set language config based on selected item
+			Locale locale = (Locale) codepageComboBox.getSelectedItem();
+			language.addAttribute("language",locale.getCountry());
 
 		}
 	}
@@ -152,39 +176,47 @@ public class GeneralPanel extends JPanel implements ActionListener {
 		JPanel markPanel = new JPanel();
 		markPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		markPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		markLabel1 = new JLabel(MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "mark_messages_read"));
+		markLabel1 =
+			new JLabel(
+				MailResourceLoader.getString(
+					"dialog",
+					"general",
+					"mark_messages_read"));
 		markPanel.add(markLabel1);
 		markTextField = new JTextField(3);
 		markPanel.add(markTextField);
-		markLabel2 = new JLabel(MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "seconds"));
+		markLabel2 =
+			new JLabel(
+				MailResourceLoader.getString("dialog", "general", "seconds"));
 		markPanel.add(markLabel2);
 		add(markPanel);
 		JPanel codepagePanel = new JPanel();
 		codepagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		codepagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		codepageLabel = new JLabel(MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "locale"));
+		codepageLabel =
+			new JLabel(
+				MailResourceLoader.getString("dialog", "general", "locale"));
 		codepagePanel.add(codepageLabel);
 		codepageComboBox = new JComboBox();
-                codepageComboBox.setRenderer(new DefaultListCellRenderer() {
-                        public Component getListCellRendererComponent(
-                                                JList list, Object value,
-                                                int index, boolean isSelected, boolean hasFocus) {
-                                
-                                JLabel label = (JLabel)super.getListCellRendererComponent(
-                                                list, value, index, isSelected, hasFocus);
-                                label.setText(((Locale)value).getDisplayName());
-                                return label;
-                        }
-                });
+		codepageComboBox.setRenderer(new DefaultListCellRenderer() {
+			public Component getListCellRendererComponent(
+				JList list,
+				Object value,
+				int index,
+				boolean isSelected,
+				boolean hasFocus) {
+
+				JLabel label =
+					(JLabel) super.getListCellRendererComponent(
+						list,
+						value,
+						index,
+						isSelected,
+						hasFocus);
+				label.setText(((Locale) value).getDisplayName());
+				return label;
+			}
+		});
 		codepageComboBox.setActionCommand("LOCALE");
 		codepageComboBox.addActionListener(this);
 		codepageLabel.setLabelFor(codepageComboBox);
@@ -194,36 +226,39 @@ public class GeneralPanel extends JPanel implements ActionListener {
 		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
 		emptyTrashCheckBox.setEnabled(false);
 		add(emptyTrashCheckBox);
-		preferHtmlCheckBox = new JCheckBox(MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "prefer_html"));
+		preferHtmlCheckBox =
+			new JCheckBox(
+				MailResourceLoader.getString(
+					"dialog",
+					"general",
+					"prefer_html"));
 		add(preferHtmlCheckBox);
 		JPanel toolbarPanel = new JPanel();
 		toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		toolbarPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		JLabel toolbarLabel = new JLabel(MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "toolbar"));
+		JLabel toolbarLabel =
+			new JLabel(
+				MailResourceLoader.getString("dialog", "general", "toolbar"));
 		toolbarPanel.add(toolbarLabel);
-		toolbarComboBox = new JComboBox(new String[] {
-                                MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "toolbar_icons"),
-                                MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "toolbar_text"),
-                                MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "toolbar_below"),
-                                MailResourceLoader.getString(
-                                        "dialog",
-                                        "general",
-                                        "toolbar_beside") });
+		toolbarComboBox =
+			new JComboBox(
+				new String[] {
+					MailResourceLoader.getString(
+						"dialog",
+						"general",
+						"toolbar_icons"),
+					MailResourceLoader.getString(
+						"dialog",
+						"general",
+						"toolbar_text"),
+					MailResourceLoader.getString(
+						"dialog",
+						"general",
+						"toolbar_below"),
+					MailResourceLoader.getString(
+						"dialog",
+						"general",
+						"toolbar_beside")});
 		toolbarLabel.setLabelFor(toolbarComboBox);
 		toolbarPanel.add(toolbarComboBox);
 		add(toolbarPanel);
@@ -234,9 +269,9 @@ public class GeneralPanel extends JPanel implements ActionListener {
 		String str = ev.getActionCommand();
 
 		if (str.equals("LOCALE")) {
-                        Locale.setDefault((Locale)codepageComboBox.getSelectedItem());
-                        GlobalResourceLoader.reload();
-                        //update GUI
+			Locale.setDefault((Locale) codepageComboBox.getSelectedItem());
+			GlobalResourceLoader.reload();
+			//update GUI
 		}
 	}
 }
