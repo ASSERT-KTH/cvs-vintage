@@ -35,7 +35,7 @@
     <property name="build.dest.scarab"
              value="${build.project.webinf}/classes"/>
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
-    <property name="javadoc.destdir" value="${build.project}/docs"/>
+    <property name="javadoc.destdir" value="${build.project}/api"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -623,7 +623,12 @@
           bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
         >
             <classpath refid="classpath"/>
-    </javadoc>
+            <classpath>
+                <fileset dir="${build.project.webinf.lib}">
+                    <include name="**/torque*.jar"/>
+                </fileset>
+            </classpath>
+        </javadoc>
     </target>
 
     <!-- ================================================================== -->
