@@ -4,7 +4,6 @@ import java.util.Vector;
 import org.apache.turbine.RunData;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
-import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.security.ScarabSecurity;
