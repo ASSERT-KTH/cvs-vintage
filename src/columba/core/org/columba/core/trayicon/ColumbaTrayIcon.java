@@ -16,6 +16,8 @@
 
 package org.columba.core.trayicon;
 
+import java.util.logging.Logger;
+
 import javax.swing.Icon;
 import javax.swing.JPopupMenu;
 
@@ -26,6 +28,7 @@ import org.columba.core.gui.action.OpenNewMailWindowAction;
 import org.columba.core.gui.action.ShowHelpAction;
 import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.Main;
 import org.columba.core.shutdown.ShutdownManager;
 import org.jdesktop.jdic.tray.SystemTray;
 import org.jdesktop.jdic.tray.TrayIcon;
@@ -36,52 +39,66 @@ import org.jdesktop.jdic.tray.TrayIcon;
  * @author Timo Stich <tstich@users.sourceforge.net>
  */
 public class ColumbaTrayIcon {
+
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.trayicon");
+
 	/**
 	 * Default icon for the TrayIcon.
 	 */
-	public static final Icon DEFAULT_ICON = ImageLoader.getImageIcon("trayicon.png");
+	public static final Icon DEFAULT_ICON = ImageLoader
+			.getImageIcon("trayicon.png");
 
 	private static ColumbaTrayIcon instance;
-	
-	private SystemTray tray;	
+
+	private SystemTray tray;
+
 	private TrayIcon trayIcon;
+
 	private JPopupMenu menu;
-	
+
 	protected ColumbaTrayIcon() {
-		tray = SystemTray.getDefaultSystemTray();
-		trayIcon = new TrayIcon(DEFAULT_ICON, "Columba");
-		trayIcon.setPopupMenu(getPopupMenu());
+		try {
+			tray = SystemTray.getDefaultSystemTray();
+			trayIcon = new TrayIcon(DEFAULT_ICON, "Columba");
+			trayIcon.setPopupMenu(getPopupMenu());
+		} catch (UnsatisfiedLinkError e) {
+			LOG.severe(e.getMessage());
+
+			if (Main.DEBUG)
+				e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * Gets the instance of the ColumbaTrayIcon.
 	 * 
 	 * @return singleton instance
 	 */
 	public static ColumbaTrayIcon getInstance() {
-		if( instance == null) {
+		if (instance == null) {
 			instance = new ColumbaTrayIcon();
 		}
-		
+
 		return instance;
 	}
-	
+
 	/**
 	 * Add the tray icon to the default system tray.
-	 *
+	 *  
 	 */
 	public void addToSystemTray() {
-		tray.addTrayIcon(trayIcon);
-		
+		if ( tray != null)
+			tray.addTrayIcon(trayIcon);
+
 		ShutdownManager.getShutdownManager().register(new Runnable() {
 			public void run() {
 				ColumbaTrayIcon.getInstance().removeFromSystemTray();
 			}
-			
+
 		});
 	}
 
-	
 	/**
 	 * Sets the tooltip of the tray icon.
 	 * 
@@ -90,7 +107,7 @@ public class ColumbaTrayIcon {
 	public void setTooltip(String tooltip) {
 		trayIcon.setToolTip(tooltip);
 	}
-	
+
 	/**
 	 * Sets the icon of the tray icon.
 	 * 
@@ -99,23 +116,23 @@ public class ColumbaTrayIcon {
 	public void setIcon(Icon icon) {
 		trayIcon.setIcon(icon);
 	}
-	
+
 	/**
 	 * Resets the icon to the default icon.
-	 * 
+	 *  
 	 */
 	public void resetIcon() {
 		trayIcon.setIcon(DEFAULT_ICON);
 	}
-	
+
 	/**
 	 * Removes the tray icon from the system tray.s
 	 */
 	public void removeFromSystemTray() {
-		tray.removeTrayIcon(trayIcon);
+		if ( tray != null )
+			tray.removeTrayIcon(trayIcon);
 	}
-	
-	
+
 	private JPopupMenu getPopupMenu() {
 		if (menu == null) {
 			menu = new JPopupMenu();
@@ -129,6 +146,5 @@ public class ColumbaTrayIcon {
 		}
 		return menu;
 	}
-	
-	
+
 }
