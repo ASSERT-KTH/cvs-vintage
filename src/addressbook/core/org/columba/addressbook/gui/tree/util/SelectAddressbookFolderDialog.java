@@ -27,6 +27,7 @@ import javax.swing.tree.TreeModel;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 public class SelectAddressbookFolderDialog
 	extends JDialog
@@ -48,19 +49,16 @@ public class SelectAddressbookFolderDialog
 
 	private Folder selectedFolder;
 
-	private JFrame frame;
-
 	private TreeModel model;
 
 	public SelectAddressbookFolderDialog(JFrame frame, TreeModel model)
 	{
-		super(frame, "Select Folder", true);
+		super(frame, AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"), true);
 
 		this.model = model;
 
 		//this.mainInterface = mainInterface;
 		//this.treeViewer = treeViewer;
-		this.frame = frame;
 
 		name = new String("name");
 
@@ -71,7 +69,7 @@ public class SelectAddressbookFolderDialog
 	{
 		buttons = new JButton[3];
 
-		JLabel label2 = new JLabel("Select Folder");
+		JLabel label2 = new JLabel(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"));
 
 		buttons[0] = new JButton("Cancel");
 		buttons[0].setActionCommand("CANCEL");
@@ -79,7 +77,7 @@ public class SelectAddressbookFolderDialog
 		buttons[1] = new JButton("Ok");
 		buttons[1].setEnabled(true);
 		buttons[1].setActionCommand("OK");
-		buttons[2] = new JButton("New Subfolder...");
+		buttons[2] = new JButton(AddressbookResourceLoader.getString("tree", "folderdialog", "new_subFolder"));
 		buttons[2].setActionCommand("NEW");
 		buttons[2].setEnabled(false);
 
@@ -100,9 +98,9 @@ public class SelectAddressbookFolderDialog
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(
-			javax.swing.BorderFactory.createTitledBorder(
-				javax.swing.BorderFactory.createEtchedBorder(),
-				" Choose Folder "));
+			BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(),
+				AddressbookResourceLoader.getString("tree", "folderdialog", "choose_folder")));
 		centerPanel.setLayout(new BorderLayout());
 
 		tree = new JTree(model);
