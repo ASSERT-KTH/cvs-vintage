@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.19 2001/10/20 20:58:01 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.20 2001/10/21 16:29:00 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -28,19 +28,19 @@
 <H1>Tomcat 3.3 User's Guide</H1>
 
 <p>This document is an introduction to the Tomcat 3.3 servlet
-	container. It should be enough for anyone to install,
-	configure, and deploy Tomcat 3.3, or later its later maintenance releases.
+    container. It should be enough for anyone to install,
+    configure and deploy Tomcat 3.3, or it's maintenance releases.
     As well, it answers many questions common to new users. If you have any
     comments or suggestions	about this document don't hesitate to send them to the
-	Tomcat <a	href="http://jakarta.apache.org/site/mail.html">mailing
-	lists</a>.</p>
+    Tomcat <a href="http://jakarta.apache.org/site/mail.html">mailing
+    lists</a>.</p>
     
 <p>Since Tomcat 3.3 is a reference implementation of the Servlet 2.2 and
-JSP 1.1 specification, would would be very benefitial to become familiar
-with these documents to better understand much of the behavior that Tomcat
-3.3 implements.  The Servlet 2.2 specifications may be obtained
+JSP 1.1 specification, it would be very beneficial to become familiar
+with these documents, to better understand much of the behavior that Tomcat
+3.3 implements.  The Servlet 2.2 specification may be obtained
 <a href="http://java.sun.com/products/servlet/download.html">here</a> and the
-JSP 1.1 specifications obtained
+JSP 1.1 specification obtained
 <a href="http://java.sun.com/products/jsp/download.html">here</a></p>
 
 <p>One of the features of Tomcat 3.3 is its upgradability via add-on modules
@@ -232,7 +232,7 @@ web servers, refer to the &quot;Tomcat Documentation&quot; given below.</p>
 
 <h2><a name="using_tomcat">Using Tomcat 3.3</a></h2>
 
-<p>A lot of effort has put into making Tomcat easy to use as well as flexible.
+<p>A lot of effort has been put into making Tomcat easy to use as well as flexible.
 It comes with a default configuration which should be a good starting point
 for most users.  Once you have Tomcat 3.3 up and running, there are many
 customizations from which you can choose.</p>
@@ -247,7 +247,7 @@ maintenance releases.</p>
 
 <h3><a name="install_tomcat">Installing Tomcat</a></h3>
 
-<p>This section deals will installing the Tomcat 3.3 binary archive available
+<p>This section deals with installing the Tomcat 3.3 binary archive available
 from the Jakarta Project.  It is also possible to install Tomcat 3.3 by
 building it from source, but that isn't covered in this document.</p>
 
@@ -261,17 +261,18 @@ building it from source, but that isn't covered in this document.</p>
       <code>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</code>. You may
       rename this directory if you wish.  Just remember to adjust
       the instructions that follow to use the new name.  If you are using
-      Linux, you can install the chosen RPM(s).</li>
+      Linux, RPMs may be installed with the command &quot;rpm -Uvh&quot;. Type
+      <strong>man rpm</strong> for more info.</li>
 </ul>
 
 <h3><a name="env_setup">Environment Setup</a></h3>
 
 <p>There are a number of different methods to start and stop Tomcat 3.3. There
 are differences in the environmental setup needed for these methods. This
-section addresses the environmental setup need to using the shell scripts
+section addresses the environmental setup needed for using the shell scripts
 and batch files provided to simplify starting and stopping Tomcat.  This
 section also assumes you will be manually starting and stopping Tomcat from
-as shell or MS-DOS window.</p>
+a shell or MS-DOS window.</p>
       
 <ul>
   <li>In a shell or DOS window, change to the
@@ -292,14 +293,14 @@ as shell or MS-DOS window.</p>
       	</li>
   	<li>Unix (bash/sh):<br>
       	<tt><big>
-      	JAVA_HOME=/user/local/java/jdk1.3.1; export JAVA_HOME<br>
+      	JAVA_HOME=/usr/local/java/jdk1.3.1; export JAVA_HOME<br>
       	PATH=$JAVA_HOME/bin:$PATH; export PATH<br>
       	</big></tt>
       	</li>
   	<li>Unix (tcsh):<br>
       	<tt><big>
-      	setenv JAVA_HOME=/user/local/java/jdk1.3.1<br>
-      	setenv PATH=$JAVA_HOME/bin:$PATH<br>
+      	setenv JAVA_HOME=/usr/local/java/jdk1.3.1<br>
+      	setenv PATH $JAVA_HOME/bin:$PATH<br>
       	</big></tt>
       	</li>
 	</ol><br><br></li>
@@ -320,14 +321,14 @@ as shell or MS-DOS window.</p>
           <tt><big>TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i> ; export TOMCAT_HOME
           </big></tt></li>
       <li>On UNIX (using tcsh) you should type: <br>
-          <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
+          <tt><big>setenv TOMCAT_HOME /usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
           </big></tt></li>
     </ol><br><br></li>
     
   <li><a name="out_of_env"></a>If you are using Win9x, you will need to deal
       with the potential <b>&quot;Out of environment space&quot;</b> problem, if you
       haven't already. In the standard installation of Win9x, the default
-      amount of environment space provided to MS-DOS windows is to small for
+      amount of environment space provided to MS-DOS windows is too small for
       Tomcat's batch files to run.  There are several ways to increase the
       size of the environment space.
       <br><br>      
@@ -366,7 +367,7 @@ as shell or MS-DOS window.</p>
 
 <p>Once you're sure they work, you may wish to set the environment
 variables in a configuration file: C:/AUTOEXEC.BAT for Windows, ~/.bash_profile
-or ~/.cshrc, etc.  Alternatively, you could customize Tomcats script or
+or ~/.cshrc, etc.  Alternatively, you could customize Tomcat's script or
 batch files to incorporate the environment settings.</p>
 	  
 <h3><a name="starting_tomcat">Starting Tomcat</a></h3>
@@ -404,7 +405,7 @@ a file.  Instead, Tomcat's log output goes <code>stderr</code>.  On Windows
 systems, you can switch to the MS-DOS window to see if this test has
 appeared.</p>
 
-<p>As you might guess from the above log text, default Tomcat 3.3 configuration
+<p>As you might guess from the above log text, the default Tomcat 3.3 configuration
 will service HTTP requests on port 8080.  If you start your browser and open
 <a href="http://localhost:8080/">http://localhost:8080/</a> you will see Tomcat
 3.3's Welcome page.</p>
@@ -470,7 +471,7 @@ these batch files to suit your needs.</p>
 <table border="1">
   <tr><th bgcolor="#c0c0c0">File</th><th bgcolor="#c0c0c0">Description</th></tr>
   <tr><td>cpappend.bat</td><td>This batch file is used by <code>tomcat.bat</code>
-    to build a classpath in a couple of <code>tomcat.bat's</code> other
+    to build a classpath in a couple of <code>tomcat.bat</code>'s other
     functions.  It is not executed during Tomcat start and stop functions.</td></tr>
   <tr><td>jspc.sh</td><td>Shell script to invoke JSPC on Unix based systems. It
     uses <code>tomcat.sh</code> with the &quot;jspc&quot; option to pre-translate
@@ -515,7 +516,7 @@ these batch files to suit your needs.</p>
 <p>You may have noted that <code>tomcat.sh</code> and <code>tomcat.bat</code>
 are the primary scripts. They are the scripts that actually perform the
 &quot;actions&quot;. The list of actions, as well as additional environment
-variables, they support is described in the
+variables they support, are described in the
 <a href="#tomcat_actions">next section</a>.</p>
 
 <p>Note that most actions involve starting the
@@ -563,16 +564,16 @@ modify your <code>tomcat.bat</code> to include it on the command line.</p>
     Java VM options may be specified in the TOMCAT_OPTS environment variable.</td></tr>
   <tr><td>env</td><td>Sets the TOMCAT_HOME and CLASSPATH environment variables
     to match Tomcat's runtime environment.  This is useful for compiling
-    servlets or other Java files for use within Tomcat. For best results, insure
+    servlets or other Java files for use within Tomcat. For best results, ensure
     TOMCAT_HOME is set to an absolute path.  If set to &quot;.&quot;
     or &quot;..&quot;, the CLASSPATH environment variable will be invalid if
     you leave the current directory.</td></tr>
   <tr><td>jspc</td><td>Pre-translates specified JSP pages to Java files.
     Java VM options may be specified in the JSPC_OPTS environment variable.</td></tr>
   <tr><td>estart</td><td>Starts Tomcat without reading the server.xml file.
-    Instead the set of modules make up the instance of Tomcat is created
-    internally by org.apache.tomcat.startup.EmbeddedTomcat. This command is
-    useful for testing customized versions of the EmbeddedTomcat class when
+    Instead, the set of modules making up the instance of Tomcat is created
+    internally by org.apache.tomcat.startup.EmbededTomcat. This command is
+    useful for testing customized versions of the EmbededTomcat class when
     trying to embed Tomcat in an application. Java VM options may be specified
     in the TOMCAT_OPTS environment variable.</td></tr>
 </table>
@@ -709,80 +710,80 @@ or more of these directories.</p>
     <th bgcolor="#c0c0c0" WIDTH="85%">Contents</th>
   </tr>
   <tr>
-    <td WIDTH="15%" align="center">bin</td>
+    <td WIDTH="15%" align="left">bin</td>
     <td WIDTH="85%"> Startup/shutdown scripts and other useful files.</td>
   </tr>
   <tr>
-    <td WIDTH="15%" align="center">conf</td>
+    <td WIDTH="15%" align="left">conf</td>
     <td WIDTH="85%"> <a href="#configuring_server">Configuration files</a>,
       including  modules.xml, server.xml, and a number of apps-<i>&lt;name&gt;</i>.xml.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">conf/auto</td>
+    <td width="15%" align="left">conf/auto</td>
     <td width="85%">Directory where auto-generated configuration files are
       written.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">conf/jk</td>
+    <td width="15%" align="left">conf/jk</td>
     <td width="85%">Directory containing mod_jk specific configuration files.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">conf/jserv</td>
+    <td width="15%" align="left">conf/jserv</td>
     <td width="85%">Directory containing mod_jserv specific configuration files.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">conf/users</td>
+    <td width="15%" align="left">conf/users</td>
     <td width="85%">Directory containing user name/password configuration files.
       These are used by the SimpleRealm module for authentication.</td>
   </tr>
   <tr>
-    <td WIDTH="15%" align="center">doc</td>
+    <td WIDTH="15%" align="left">doc</td>
     <td WIDTH="85%">Miscellaneous documents regarding Tomcat.</td>
   </tr>
   <tr>
-    <td WIDTH="15%" align="center">lib</td>
+    <td WIDTH="15%" align="left">lib</td>
     <td WIDTH="85%">Jar files that are used for starting and stopping Tomcat.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">lib/container</td>
+    <td width="15%" align="left">lib/container</td>
     <td width="85%">Jar files that make up the Tomcat server classes.  Any
       Jar file in this directory is automatically included in Tomcat's
       <b>Server Classloader</b>.  See 
       <a href="#configuring_classes">Configuring Classes</a>.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">lib/common</td>
+    <td width="15%" align="left">lib/common</td>
     <td width="85%">Jar files that contain classes shared between the Tomcat
       server and all web applications. Any Jar file in this directory is
       automatically included in Tomcat's <b>Common Classloader</b>.  See 
       <a href="#configuring_classes">Configuring Classes</a>.</td>
   </tr>
   <tr>
-      <td width="15%" align="center">lib/apps</td>
+      <td width="15%" align="left">lib/apps</td>
       <td width="85%">Jar files that contain classes shared between all web
         applications. Any Jar file in this directory is automatically included
         in Tomcat's <b>Apps Classloader</b>.  See 
         <a href="#configuring_classes">Configuring Classes</a>.</td>
   </tr>        
   <tr>
-    <td WIDTH="15%" align="center"><a name="logs_dir_defn">logs</a></td>
+    <td WIDTH="15%" align="left"><a name="logs_dir_defn">logs</a></td>
     <td WIDTH="85%"> This is where Tomcat places its log files by default.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">modules</td>
+    <td width="15%" align="left">modules</td>
     <td width="85%">Directory where &quot;add-on&quot; WARs are placed.</td>
   </tr>
   <tr>
-    <td width="15%" align="center">native</td>
+    <td width="15%" align="left">native</td>
     <td width="85%">Base directory for native source code.</td>
   </tr>
   <tr>
-    <td WIDTH="15%" align="center">src</td>
+    <td WIDTH="15%" align="left">src</td>
     <td WIDTH="85%">Currently empty.  Tomcat's source code isn't currently
      part of the binary distribution.</td>
   </tr>
   <tr>
-    <td WIDTH="15%" align="center">webapps</td>
+    <td WIDTH="15%" align="left">webapps</td>
     <td WIDTH="85%"> Sample web applications. Any .war files placed
       here will be automatically expanded.  See <a href="#deploy_war">Deploying WAR Files</a>.</td>
   </tr>
@@ -793,7 +794,7 @@ directories:</p>
 
 <table border="1" width="75%" VALIGN="center">
   <tr>
-    <td width="15%" align="center"> <a name="work_dir_defn"> work</a></td>
+    <td width="15%" align="left"> <a name="work_dir_defn"> work</a></td>
     <td width="85%"> Where Tomcat
          places intermediate files (such as compiled JSP files) during 
          its work. If you delete this directory while Tomcat is running 
@@ -801,7 +802,7 @@ directories:</p>
     </td>
   </tr>
   <tr>
-    <td width="15%" align="center">classes</td>
+    <td width="15%" align="left">classes</td>
     <td width="85%"> Any class that you add to this directory will 
          find its place in Tomcat's classpath.
     </td>
@@ -828,8 +829,9 @@ Tomcat 3.3 looks like this:</p>
       <tr><td class="clt_label">default contents:</td></tr>
       <tr>
         <td class="clt_data">crimson.jar<br>facade22.jar<br>
-          jasper.jar<br>jaxp.jar<br>tomcat_modules.jar<br>tomcat_util.jar<br>
-          tomcat-startup.jar<br>xalan.jar</td></tr>
+          jasper.jar<br>tomcat_modules.jar<br>tomcat_util.jar<br>xalan.jar<br>
+          (if RPM)commons-collections.jar<br>commons-dbcp.jar<br>
+          commons-pool.jar<br></td></tr>
     </table></td>
 	<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>
     <table align="center">
@@ -851,9 +853,8 @@ Tomcat 3.3 looks like this:</p>
       <tr><td class="clt_label">directory:</td></tr>
       <tr><td class="clt_data">lib/common</td></tr>
       <tr><td class="clt_label">default contents:</td></tr>
-      <tr>
-        <td class="clt_data">connector_util.jar<br>core_util.jar<br>jasper-runtime.jar<br>
-          servlet.jar<br>tomcat_core.jar</td></tr>
+      <tr><td class="clt_data">connector_util.jar<br>core_util.jar<br>
+          etomcat.jar<br>jasper-runtime.jar<br>servlet.jar<br>tomcat_core.jar</td></tr>
 	  </table>
 	</td>
 	<td>&nbsp;</td><td>&nbsp;</td></tr>
@@ -971,7 +972,7 @@ modifying the <code>server.xml</code> file.</p>
 
 <p>The <code>ContextXmlReader</code> module supports a <code>config</code>
 parameter which specifies the file to read.  Like <code>server.xml</code>,
-additional files are read based on the pattern <code><i>base</i>-*.xml</code>.
+additional files are read based on the pattern <code>&lt;base&gt;-*.xml</code>.
 Thus, specifying <code>config=&quot;conf/myapps.xml&quot;</code> would read
 <code>conf/myapps.xml</code>, if it exists, plus all files in the
 <code>conf</code> directory matching the pattern <code>myapps-*.xml</code>.</p>
@@ -1048,7 +1049,7 @@ only the <code>&lt;Context&gt;</code> entries.</p>
   <tr><td>&lt;<a href="serverxml.html#SessionIdGenerator">SessionIdGenerator</a><br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;randomClass=&quot;java.security.SecureRandom&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;randomFile=&quot;/dev/urandom&quot; /&gt;</td><td>&nbsp;</td>
-    <td>Generates session ID's for requests that need a new session.</td></tr>
+    <td>Generates session IDs for requests that need a new session.</td></tr>
   <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
       name=&quot;servlet_log&quot;<br>
 	  &nbsp;&nbsp;&nbsp;&nbsp;timestamps=&quot;true&quot;<br>
