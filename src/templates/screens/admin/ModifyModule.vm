@@ -91,10 +91,17 @@ module that you can edit.
    </td>
   </tr>
   <tr>
-   <th>* URL</th>
+   <th>URL</th>
    <td>
     <input name="$moduleGroup.Url.Key" value="$moduleGroup.Url" type="text" size="25" />
     #fieldErrorMsg($moduleGroup.Url "")
+   </td>
+  </tr>
+  <tr>
+   <th>Archive Email</th>
+   <td>
+    <input name="$moduleGroup.ArchiveEmail.Key" value="$moduleGroup.ArchiveEmail" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.ArchiveEmail "")
    </td>
   </tr>
 #if (($createNew == "true") || ($moduleId != "0"))
@@ -120,12 +127,14 @@ module that you can edit.
    </td>
   </tr>
 #end
+#if ($createNew != "true")
   <tr>
     <th>* Deleted</td>
     <td>
         #booleanCheckbox($moduleGroup.Deleted)
     </td>
   </tr>
+#end
  </table>
 </div>
 

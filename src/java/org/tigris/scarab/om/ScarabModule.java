@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.114 2002/05/13 22:30:19 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.115 2002/05/18 16:50:48 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -583,13 +583,19 @@ public class ScarabModule
 
     /**
      * All emails related to this module will have a copy sent to
-     * this address.  The email address can be specified in 
+     * this address.  A system-wide default email address can be specified in 
      * Scarab.properties with the key: scarab.email.archive.toAddress
      */
     public String getArchiveEmail()
     {
-        return Turbine.getConfiguration()
-            .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
+        String email = super.getArchiveEmail();
+        if (email == null || email.length() == 0) 
+        {
+            email = Turbine.getConfiguration()
+                .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
+        }
+        
+        return email;
     }
 
     /**

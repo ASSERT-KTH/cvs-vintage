@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.97 2002/05/14 04:32:05 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.98 2002/05/18 16:50:48 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -765,6 +765,11 @@
         URL pointing to the information on the module.
     -->
     <column name="MODULE_URL" javaName="Url" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        An email address that all emails generated for this module 
+        will be sent to.
+    -->
+    <column name="ARCHIVE_EMAIL" required="false" type="VARCHAR" size="99"/>
     <!--
         Parent module containing the module.
         Allows for hierarchical structure of modules.

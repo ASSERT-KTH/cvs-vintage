@@ -321,6 +321,9 @@
         <field name="Url" key="url" type="String">
             <rule name="maxLength" value="255"/>
         </field>
+        <field name="ArchiveEmail" key="email" type="String">
+            <rule name="maxLength" value="99"/>
+        </field>
         <field name="ParentId" key="parentid" type="NumberKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
