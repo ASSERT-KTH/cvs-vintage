@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.39 2003/01/12 03:08:23 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.40 2003/01/30 02:58:40 spestov Exp $
  */
 public class TextUtilities
 {
@@ -659,7 +659,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 		String leadingWhitespace = text.substring(0,leadingWhitespaceCount);
 		int leadingWhitespaceWidth = MiscUtilities.getLeadingWhiteSpaceWidth(text,tabSize);
 
-		buf.append(new StringBuffer(leadingWhitespace));
+		buf.append(leadingWhitespace);
 
 		int lineLength = leadingWhitespaceWidth;
 		StringTokenizer st = new StringTokenizer(text);
