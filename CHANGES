@@ -50,6 +50,12 @@ Fixed bugs:
 - #995883 Task Manager - empty list - cancel cause Except. (fdietz)
 - #995880 Folder not renameable via properties. (cliffb53)
 - upgrade to jwizz-0.1.2 providing bugfixes for windows laf issues (javaprog)
+- fixed statusbar update handling (fdietz)
+- #1001121 authentication issues, like exception when sending message (stich) 
+- #987483, Bug when forwarding messages with attachments
+- #999289, IMAP:All MSGs have size of 0KB; added fecth of RFC822.SIZE (tstich)
+- textpart was shown as attachment with 'open message in composer' (tstich)
+- all composed messages where tagged as having attachments (tstich)
 
 Columba v1.0 RC1-test4
 
