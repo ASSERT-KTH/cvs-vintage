@@ -1,0 +1,5 @@
+It is necessary to run
+
+ant migrate-b15-b16
+
+from the build directory when upgrading from 1.0b15 to 0.16.x
