@@ -89,9 +89,8 @@ public final class ColumbaLogger {
                 consoleHandler.setLevel(Level.ALL);
                 System.setProperty("javax.net.debug", "ssl,handshake,data,trustmanager"); // init java.net.ssl debugging
 
-                //TODO Ristretto should handle their own logging stuff, not relying on outside applications.
+                //TODO Ristretto should handle the logging of streams in another way.
                 RistrettoLogger.setLogStream(System.out);
-                RistrettoLogger.setParentLogger(LOG);
             } else {
                 consoleHandler.setFormatter(new OneLineFormatter());
                 consoleHandler.setLevel(Level.SEVERE);
