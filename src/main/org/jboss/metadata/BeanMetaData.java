@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.65 $
+ * @version $Revision: 1.66 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -910,5 +910,6 @@ public abstract class BeanMetaData
       {
          iorSecurityConfig = new IorSecurityConfigMetaData(iorSecurityConfigEl);
       }
+
    }
 }
