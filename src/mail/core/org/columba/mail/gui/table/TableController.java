@@ -263,8 +263,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		// folder in which the update occurs
 		FolderTreeNode folder = event.getSrcFolder();
 
-		ColumbaLogger.log.debug("source folder="+folder.getName());
-		
+		ColumbaLogger.log.debug("source folder=" + folder.getName());
+
 		// get current selection
 		FolderCommandReference[] r =
 			(FolderCommandReference[]) mailFrameController
@@ -272,8 +272,10 @@ public class TableController implements FocusOwner, ListSelectionListener {
 				.getSelection("mail.table");
 		Folder srcFolder = (Folder) r[0].getFolder();
 
-		ColumbaLogger.log.debug("selected folder="+srcFolder.getName());
-		
+		// its always possible that no folder is currenlty selected
+		if ( srcFolder != null )
+			ColumbaLogger.log.debug("selected folder=" + srcFolder.getName());
+
 		// make tree visible
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
 			if (srcFolder != null)
@@ -281,6 +283,16 @@ public class TableController implements FocusOwner, ListSelectionListener {
 					.treeController
 					.getView()
 					.makeVisible(srcFolder.getSelectionTreePath());
+		}
+
+		// update infopanel (gray panel below the toolbar)
+		// showing total/unread/recent messages count
+		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
+
+			if ( srcFolder != null)
+			((ThreePaneMailFrameController) getMailFrameController())
+				.folderInfoPanel
+				.setFolder(srcFolder);
 		}
 
 		// only update table if, this folder is the same
@@ -327,13 +339,6 @@ public class TableController implements FocusOwner, ListSelectionListener {
 			// only re-select if only a single row was formerly selected
 			if (previouslySelectedRows.length == 1)
 				view.selectRow(previouslySelectedRows[0]);
-		}
-
-		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
-
-			((ThreePaneMailFrameController) getMailFrameController())
-				.folderInfoPanel
-				.setFolder(srcFolder);
 		}
 
 	}
