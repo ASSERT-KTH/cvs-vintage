@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepad.java,v 1.3 2001/11/11 12:26:20 jgellene Exp $
+ * $Id: QuickNotepad.java,v 1.4 2003/04/14 05:21:57 spestov Exp $
  */
 
 // from Java:
@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.msg.ViewUpdate;
 import org.gjt.sp.util.Log;
 
 
-public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadActions
+public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadActions, DefaultFocusComponent
 {
 	private String filename;
 	private String defaultFilename;
@@ -89,6 +89,11 @@ public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadAct
 		add(BorderLayout.CENTER, pane);
 
 		readFile();
+	}
+
+	public void focusOnDefaultComponent()
+	{
+		textArea.requestFocus();
 	}
 
 	//

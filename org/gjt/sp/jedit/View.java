@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.71 2003/04/14 03:59:21 spestov Exp $
+ * @version $Id: View.java,v 1.72 2003/04/14 05:21:57 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1141,6 +1141,7 @@ public class View extends JFrame implements EBComponent
 	//{{{ close() method
 	void close()
 	{
+		GUIUtilities.saveGeometry(this,plainView ? "plain-view" : "view");
 		closed = true;
 
 		// save dockable window geometry, and close 'em
@@ -1560,6 +1561,15 @@ public class View extends JFrame implements EBComponent
 
 		public ViewConfig()
 		{
+		}
+
+		public ViewConfig(boolean plainView)
+		{
+			String prefix = (plainView ? "plain-view" : "view");
+			x = jEdit.getIntegerProperty(prefix + ".x",0);
+			y = jEdit.getIntegerProperty(prefix + ".y",0);
+			width = jEdit.getIntegerProperty(prefix + ".width",0);
+			height = jEdit.getIntegerProperty(prefix + ".height",0);
 		}
 
 		public ViewConfig(boolean plainView, String splitConfig,

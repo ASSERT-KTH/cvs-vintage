@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.12 2003/04/04 19:51:14 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.13 2003/04/14 05:21:58 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
@@ -97,7 +97,15 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		{
 			public void run()
 			{
-				entry.win.requestDefaultFocus();
+				if(entry.win instanceof DefaultFocusComponent)
+				{
+					((DefaultFocusComponent)entry.win)
+						.focusOnDefaultComponent();
+				}
+				else
+				{
+					entry.win.requestDefaultFocus();
+				}
 			}
 		});
 	} //}}}

@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.235 2003/04/14 02:41:01 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.236 2003/04/14 05:21:58 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5902,16 +5902,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			for(int i = 0; i < runnables.size(); i++)
 				((Runnable)runnables.get(i)).run();
 			runnables.clear();
-		} //}}}
-
-		//{{{ nextLineRequested() method
-		public void nextLineRequested(Buffer buffer, int line)
-		{
-			/* System.err.println("next line requested: " + line);
-			chunkCache.invalidateChunksFromPhys(line);
-			invalidateScreenLineRange(chunkCache
-				.getScreenLineOfOffset(line,0),
-				visibleLines); */
 		} //}}}
 
 		//{{{ delayedRepaint() method

@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.Buffer;
  * implementing it directly.
  *
  * @author Slava Pestov
- * @version $Id: BufferChangeListener.java,v 1.8 2003/04/13 00:17:11 spestov Exp $
+ * @version $Id: BufferChangeListener.java,v 1.9 2003/04/14 05:21:57 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public interface BufferChangeListener
@@ -105,16 +105,5 @@ public interface BufferChangeListener
 	 * @since jEdit 4.0pre6
 	 */
 	void transactionComplete(Buffer buffer);
-	//}}}
-
-	//{{{ nextLineRequested() method
-	/**
-	 * Called when a syntax highlighting line context changes.
-	 *
-	 * @param buffer The buffer in question
-	 * @param line Reconsider all lines after this
-	 * @since jEdit 4.2pre1
-	 */
-	void nextLineRequested(Buffer buffer, int line);
 	//}}}
 }

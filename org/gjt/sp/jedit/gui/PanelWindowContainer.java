@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.63 2003/04/14 03:59:21 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.64 2003/04/14 05:21:58 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -179,8 +179,15 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			if(entry != null)
 			{
-				entry.win.requestFocus();
-				entry.win.requestDefaultFocus();
+				if(entry.win instanceof DefaultFocusComponent)
+				{
+					((DefaultFocusComponent)entry.win)
+						.focusOnDefaultComponent();
+				}
+				else
+				{
+					entry.win.requestDefaultFocus();
+				}
 			}
 			return;
 		}
@@ -201,8 +208,15 @@ public class PanelWindowContainer implements DockableWindowContainer
 			int index = dockables.indexOf(entry);
 			((JToggleButton)buttons.getComponent(index + 2)).setSelected(true);
 
-			entry.win.requestFocus();
-			entry.win.requestDefaultFocus();
+			if(entry.win instanceof DefaultFocusComponent)
+			{
+				((DefaultFocusComponent)entry.win)
+					.focusOnDefaultComponent();
+			}
+			else
+			{
+				entry.win.requestDefaultFocus();
+			}
 		}
 		else
 		{

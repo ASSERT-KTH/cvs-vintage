@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.128 2003/04/14 04:38:26 spestov Exp $
+ * @version $Id: jEdit.java,v 1.129 2003/04/14 05:21:57 spestov Exp $
  */
 public class jEdit
 {
@@ -1869,9 +1869,11 @@ public class jEdit
 	 */
 	public static View newView(View view, Buffer buffer, boolean plainView)
 	{
-		View.ViewConfig config = (view == null ? new View.ViewConfig()
-			: view.getViewConfig());
-		config.plainView = plainView;
+		View.ViewConfig config;
+		if(view != null && (plainView == view.isPlainView()))
+			config = view.getViewConfig();
+		else
+			config = new View.ViewConfig(plainView);
 		return newView(view,buffer,config);
 	} //}}}
 
@@ -1883,9 +1885,7 @@ public class jEdit
 	 */
 	public static View newView(View view)
 	{
-		View.ViewConfig config = view.getViewConfig();
-		config.plainView = false;
-		return newView(view,null,config);
+		return newView(view,null,false);
 	} //}}}
 
 	//{{{ newView() method

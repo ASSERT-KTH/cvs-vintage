@@ -30,6 +30,7 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import org.gjt.sp.jedit.io.VFSManager;
+import org.gjt.sp.jedit.gui.DefaultFocusComponent;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.textarea.*;
 import org.gjt.sp.jedit.*;
@@ -38,9 +39,10 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.24 2003/03/17 03:05:50 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.25 2003/04/14 05:21:58 spestov Exp $
  */
-public class HyperSearchResults extends JPanel implements EBComponent
+public class HyperSearchResults extends JPanel implements EBComponent,
+	DefaultFocusComponent
 {
 	public static final String NAME = "hypersearch-results";
 
@@ -84,11 +86,10 @@ public class HyperSearchResults extends JPanel implements EBComponent
 		add(BorderLayout.CENTER, scrollPane);
 	} //}}}
 
-	//{{{ requestDefaultFocus() method
-	public boolean requestDefaultFocus()
+	//{{{ focusOnDefaultComponent() method
+	public void focusOnDefaultComponent()
 	{
 		resultTree.grabFocus();
-		return true;
 	} //}}}
 
 	//{{{ addNotify() method
