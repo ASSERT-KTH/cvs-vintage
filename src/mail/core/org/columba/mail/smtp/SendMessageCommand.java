@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -13,7 +13,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy

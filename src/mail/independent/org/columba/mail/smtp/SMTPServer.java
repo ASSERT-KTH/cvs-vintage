@@ -184,7 +184,7 @@ public class SMTPServer {
 			}
 
 			accountItem.getSmtpItem().set("user", username);
-
+			accountItem.getSmtpItem().set("password", password);
 			accountItem.getSmtpItem().set("save_password", passDialog.getSave());
 			//accountItem.getSmtpItem().setLoginMethod(method);
 
