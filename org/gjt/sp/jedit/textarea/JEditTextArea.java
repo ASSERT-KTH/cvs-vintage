@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.260 2003/05/27 21:15:34 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.261 2003/05/28 22:37:19 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4754,41 +4754,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ processKeyEvent() method
 	public void processKeyEvent(KeyEvent evt)
 	{
-		/* // Ignore
-		if(view.isClosed())
-			return; */
-
 		view.processKeyEvent(evt,true);
-
-		/* time = System.currentTimeMillis();
-		evt = KeyEventWorkaround.processKeyEvent(evt);
-		if(evt == null)
-			return;
-
-		InputHandler inputHandler = view.getInputHandler();
-		KeyListener keyEventInterceptor = view.getKeyEventInterceptor();
-		switch(evt.getID())
-		{
-		case KeyEvent.KEY_TYPED:
-			//timing = true;
-			if(keyEventInterceptor != null)
-				keyEventInterceptor.keyTyped(evt);
-			else
-				inputHandler.keyTyped(evt);
-			break;
-		case KeyEvent.KEY_PRESSED:
-			if(keyEventInterceptor != null)
-				keyEventInterceptor.keyPressed(evt);
-			else
-				inputHandler.keyPressed(evt);
-			break;
-		case KeyEvent.KEY_RELEASED:
-			if(keyEventInterceptor != null)
-				keyEventInterceptor.keyReleased(evt);
-			else
-				inputHandler.keyReleased(evt);
-			break;
-		} */
 
 		if(!evt.isConsumed())
 			super.processKeyEvent(evt);

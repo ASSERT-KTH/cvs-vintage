@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
 /**
  * A pool of work threads.
  * @author Slava Pestov
- * @version $Id: WorkThreadPool.java,v 1.5 2002/04/08 13:13:56 spestov Exp $
+ * @version $Id: WorkThreadPool.java,v 1.6 2003/05/28 22:37:19 spestov Exp $
  * @see org.gjt.sp.util.WorkThread
  * @since jEdit 2.6pre1
  */
@@ -371,15 +371,17 @@ public class WorkThreadPool
 	//}}}
 
 	//{{{ doAWTRequests() method
+	/** Must always be called with the lock held. */
 	private void doAWTRequests()
 	{
-		while(firstAWTRequest != null)
+		while(requestCount == 0 && firstAWTRequest != null)
 		{
 			doAWTRequest(getNextAWTRequest());
 		}
 	} //}}}
 
 	//{{{ doAWTRequest() method
+	/** Must always be called with the lock held. */
 	private void doAWTRequest(Request request)
 	{
 //		Log.log(Log.DEBUG,this,"Running in AWT thread: " + request);
@@ -399,6 +401,7 @@ public class WorkThreadPool
 	} //}}}
 
 	//{{{ queueAWTRunner() method
+	/** Must always be called with the lock held. */
 	private void queueAWTRunner()
 	{
 		if(!awtRunnerQueued)

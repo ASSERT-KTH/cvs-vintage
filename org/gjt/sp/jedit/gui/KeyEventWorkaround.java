@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.15 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.16 2003/05/28 22:37:19 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -86,6 +86,23 @@ public class KeyEventWorkaround
 						last = LAST_NUMKEYPAD;
 						lastKeyTime = System.currentTimeMillis();
 						return evt;
+				}
+
+				if(!(evt.isControlDown()
+					|| evt.isAltDown()
+					|| evt.isMetaDown()))
+				{
+					if(keyCode >= KeyEvent.VK_0
+						&& keyCode <= KeyEvent.VK_9)
+					{
+						return null;
+					}
+
+					if(keyCode >= KeyEvent.VK_A
+						&& keyCode <= KeyEvent.VK_Z)
+					{
+						return null;
+					}
 				}
 
 				if(!OperatingSystem.isMacOS())

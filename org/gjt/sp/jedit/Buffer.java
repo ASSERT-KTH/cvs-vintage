@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.173 2003/05/25 21:58:27 spestov Exp $
+ * @version $Id: Buffer.java,v 1.174 2003/05/28 22:37:18 spestov Exp $
  */
 public class Buffer
 {
@@ -1246,7 +1246,8 @@ public class Buffer
 
 			/* nothing can go here since we re-use the 'seg'! */
 
-			if(!getFlag(UNDO_IN_PROGRESS))
+			if(!getFlag(UNDO_IN_PROGRESS)
+				&& !getFlag(LOADING))
 			{
 				undoMgr.contentRemoved(offset,length,
 					seg.toString(),!getFlag(DIRTY));
