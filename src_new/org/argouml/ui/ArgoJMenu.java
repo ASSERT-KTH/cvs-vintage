@@ -1,4 +1,4 @@
-// $Id: ArgoJMenu.java,v 1.8 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: ArgoJMenu.java,v 1.9 2004/07/17 16:52:03 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,8 @@ public class ArgoJMenu extends JMenu {
      * @param   bundle      the localization bundle name to use
      * @param   key         the resource string to find
      */
-    public static final void localize(JMenuItem menuItem, String bundle, String key) {
+    public static final void localize(JMenuItem menuItem, 
+            			      String bundle, String key) {
         menuItem.setText(Translator.localize(bundle, key));
 
         String localMnemonic = Translator.localize(bundle, key + ".mnemonic");
@@ -99,7 +100,8 @@ public class ArgoJMenu extends JMenu {
 	Boolean selected = (Boolean) a.getValue("SELECTED");
 	JCheckBoxMenuItem mi =
 	    new JCheckBoxMenuItem(name, icon,
-				  (selected == null || selected.booleanValue()));
+				  (selected == null 
+				   || selected.booleanValue()));
 	// End of block
 	mi.setHorizontalTextPosition(JButton.RIGHT);
 	mi.setVerticalTextPosition(JButton.CENTER);

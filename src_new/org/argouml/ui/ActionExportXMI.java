@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.8 2004/06/24 06:25:40 linus Exp $
+// $Id: ActionExportXMI.java,v 1.9 2004/07/17 16:52:03 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ import org.argouml.uml.ui.UMLAction;
 public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 
     /** logger */
-    private static Logger cat = Logger.getLogger(ActionExportXMI.class);
+    private static final Logger LOG = Logger.getLogger(ActionExportXMI.class);
 
     private static ActionExportXMI instance = new ActionExportXMI();
 
@@ -110,9 +110,9 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
      * @see org.argouml.application.api.ArgoModule#initializeModule()
      */
     public boolean initializeModule() {
-        cat.info("+---------------------------------+");
-        cat.info("| Export XMI plugin enabled!      |");
-        cat.info("+---------------------------------+");
+        LOG.info("+---------------------------------+");
+        LOG.info("| Export XMI plugin enabled!      |");
+        LOG.info("+---------------------------------+");
 
         return true;
     }
@@ -225,7 +225,8 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 			String sTitle =
 			    Translator.localize(
 				"Actions",
-				"optionpane.save-project-general-exception-title"
+				"optionpane."
+				+ "save-project-general-exception-title"
 			    );
 
                         JOptionPane.showMessageDialog(
@@ -234,7 +235,7 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 			    sTitle,
 			    JOptionPane.ERROR_MESSAGE);
 			
-                        cat.error(sMessage, ex);
+                        LOG.error(sMessage, ex);
                     }
                 }
             }
