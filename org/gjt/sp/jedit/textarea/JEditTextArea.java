@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.318 2004/07/12 19:25:08 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.319 2004/07/22 00:55:26 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4996,10 +4996,10 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			foo[i] = ' ';
 		}
 
-		tabSize = (float)painter.getFont().getStringBounds(foo,0,_tabSize,
-			painter.getFontRenderContext()).getWidth();
+		tabSize = (float)painter.getStringWidth(new String(foo));
 
-		charWidth = (int)Math.round(painter.getFont().getStringBounds(foo,0,1,
+		charWidth = (int)Math.round(
+			painter.getFont().getStringBounds(foo,0,1,
 			painter.getFontRenderContext()).getWidth());
 
 		boolean invalidateCachedScreenLineCounts = false;
