@@ -112,7 +112,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.119 2002/08/23 01:30:08 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.120 2002/09/04 23:54:38 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -202,6 +202,7 @@ public class ModifyIssue extends BaseModifyIssue
             // Set the attribute values entered 
             SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
             Iterator iter2 = avMap.iterator();
+            boolean modifiedAttribute = false;
             while (iter2.hasNext())
             {
                 aval = (AttributeValue)avMap.get(iter2.next());
@@ -230,10 +231,15 @@ public class ModifyIssue extends BaseModifyIssue
                     {
                         group.setProperties(aval2);
                         newAttVals.put(aval.getAttributeId(), aval2);
+                        modifiedAttribute = true;
                     }
                 }
             } 
-
+            if (!modifiedAttribute)
+            {
+                scarabR.setAlertMessage("You need to modify an attribute.");
+                return;
+            }
             Attachment attachment = AttachmentManager.getInstance();
             commentGroup.setProperties(attachment);
             try
