@@ -28,7 +28,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.19 1998/10/13 18:09:31 jrobbins Exp $
+// $Id: FigEdge.java,v 1.20 1998/10/16 00:08:17 jrobbins Exp $
 
 package uci.gef;
 
@@ -404,6 +404,8 @@ implements PropertyChangeListener {
   /** After the file is loaded, re-establish any connections from the
    * model to the Figs */
   public void postLoad() { setOwner(getOwner()); }
+
+  public void cleanUp() { _fig.cleanUp(); }
 
   ////////////////////////////////////////////////////////////////
   // inner classes

@@ -27,7 +27,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.15 1998/10/08 00:05:46 jrobbins Exp $
+// $Id: Fig.java,v 1.16 1998/10/16 00:08:16 jrobbins Exp $
 
 package uci.gef;
 
@@ -722,5 +722,6 @@ public class Fig implements java.io.Serializable, PropertyChangeListener  {
   public void postSave() { }
   public void postLoad() { }
 
+  public void cleanUp() { }
 
 } /* end class Fig */

@@ -28,7 +28,7 @@
 // File: Geometry.java
 // Classes: Geometry
 // Orginal Author: jrobbins@ics.uci.edu
-// $Id: Geometry.java,v 1.6 1998/07/02 02:52:24 jrobbins Exp $
+// $Id: Geometry.java,v 1.7 1998/10/16 00:08:19 jrobbins Exp $
 
 package uci.gef;
 
@@ -80,7 +80,8 @@ public class Geometry {
     if (p2.x == p1.x && p2.y > p1.y) return 270;
     if (p2.y == p1.y && p2.x > p1.x) return 0;
     if (p2.y == p1.y) return 180;
-    int dx = p2.x - p1.x; int dy = p2.y = p1.y;
+    double dx = p2.x - p1.x;
+    double dy = p2.y - p1.y;
     double m = dy / dx;
     double a = Math.atan(m);
     if (dx > 0) return a; else return -a;

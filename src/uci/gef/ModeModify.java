@@ -28,7 +28,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.13 1998/10/09 01:05:02 jrobbins Exp $
+// $Id: ModeModify.java,v 1.14 1998/10/16 00:08:21 jrobbins Exp $
 
 package uci.gef;
 
@@ -214,6 +214,12 @@ public class ModeModify extends Mode {
   public void start() {
     _minDeltaAchieved = false;
     super.start();
+  }
+
+  public void done() {
+    super.done();
+    SelectionManager sm = getEditor().getSelectionManager();
+    sm.cleanUp();
   }
 
   /** Reply true if the user had moved the mouse enough to signify

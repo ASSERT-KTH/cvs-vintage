@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.17 1998/08/06 21:31:30 jrobbins Exp $
+// $Id: Editor.java,v 1.18 1998/10/16 00:08:16 jrobbins Exp $
 
 package uci.gef;
 
@@ -170,7 +170,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
   protected void defineLayers(GraphModel gm, Layer lay) {
     _layerManager.addLayer(new LayerGrid());
-    //_layerManager.addLayer(new LayerPageBreaks());
+    _layerManager.addLayer(new LayerPageBreaks());
     // the following line is an example of another "grid"
     //_layerManager.addLayer(new LayerPolar());
     if (lay != null) _layerManager.addLayer(lay);

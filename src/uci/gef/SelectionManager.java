@@ -28,7 +28,7 @@
 // File: SelectionManager.java
 // Classes: SelectionManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionManager.java,v 1.10 1998/10/13 18:09:35 jrobbins Exp $
+// $Id: SelectionManager.java,v 1.11 1998/10/16 00:08:22 jrobbins Exp $
 
 package uci.gef;
 
@@ -331,6 +331,15 @@ implements Serializable, KeyListener, MouseListener, MouseMotionListener {
     sel.dragHandle(mx, my, an_x, an_y, h);
   }
 
+  public void cleanUp() {
+    Enumeration sels = _selections.elements(); 
+    while (sels.hasMoreElements()) {
+      Selection sel = (Selection)sels.nextElement();
+      Fig f = sel.getContent();
+      f.cleanUp();
+    }
+  }
+
   /** When a multiple selection are deleted, each selection is deleted */
   public void delete() {
     Enumeration ss = ((Vector)_selections.clone()).elements();
@@ -406,6 +415,8 @@ implements Serializable, KeyListener, MouseListener, MouseMotionListener {
       ((Selection) sels.nextElement()).mouseEntered(me);
   }
 
+
+  
   ////////////////////////////////////////////////////////////////
   // graph events
   

@@ -27,7 +27,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.10 1998/10/08 00:05:50 jrobbins Exp $
+// $Id: FigPoly.java,v 1.11 1998/10/16 00:08:18 jrobbins Exp $
 
 package uci.gef;
 
@@ -49,6 +49,12 @@ import uci.util.*;
  * @see FigEdgeRectilinear */
 
 public class FigPoly extends Fig {
+
+  ////////////////////////////////////////////////////////////////
+  // constants
+
+  /** The radian angle at which a point can be deleted. */
+  protected static final double FUDGEFACTOR = .11;
 
   ////////////////////////////////////////////////////////////////
   // instance variables
@@ -333,6 +339,26 @@ public class FigPoly extends Fig {
     moveVertex(h, mX, mY, false);
   }
 
+  public void cleanUp() {
+    double first=0, second=0;
+    for (int handleNumber=1; handleNumber<_npoints-1; handleNumber++) {
+      Point start = new Point(_xpoints[handleNumber-1],
+			      _ypoints[handleNumber-1]);
+      Point middle = new Point(_xpoints[handleNumber],
+			       _ypoints[handleNumber]);
+      Point end = new Point(_xpoints[handleNumber+1],_ypoints[handleNumber+1]);
+      // remove points that are on top of each other
+      if (start.equals(middle) || end.equals(middle)) {
+	removePoint(handleNumber);
+	break;
+      }
+      double startToMiddleAngle = Geometry.segmentAngle(start,middle);
+      double middleToEndAngle = Geometry.segmentAngle(middle,end);
+      double difference = Math.abs(startToMiddleAngle - middleToEndAngle);
+      if ( difference < FUDGEFACTOR ) removePoint(handleNumber);
+    }
+    calcBounds();
+  }
 
   /** Returns the point that other connected Figs should attach to. By
    *  default, returns the point closest to anotherPt. */
