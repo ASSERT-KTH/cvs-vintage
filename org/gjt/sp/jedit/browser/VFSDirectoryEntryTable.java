@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.21 2004/02/14 19:02:48 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.22 2004/12/31 21:10:16 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -163,7 +163,8 @@ public class VFSDirectoryEntryTable extends JTable
 		else
 		{
 			browserView.clearExpansionState();
-			browserView.loadDirectory(entry,entry.dirEntry.path);
+			browserView.loadDirectory(entry,entry.dirEntry.path,
+				false);
 		}
 
 		VFSManager.runInAWTThread(new Runnable()
@@ -206,7 +207,7 @@ public class VFSDirectoryEntryTable extends JTable
 			String path = e.dirEntry.path;
 			if(tmpExpanded.contains(path))
 			{
-				browserView.loadDirectory(e,path);
+				browserView.loadDirectory(e,path,false);
 				tmpExpanded.remove(path);
 			}
 		}
@@ -236,7 +237,7 @@ public class VFSDirectoryEntryTable extends JTable
 			if(VFSBrowser.pathsEqual(path,otherPath))
 			{
 				browserView.saveExpansionState();
-				browserView.loadDirectory(e,path);
+				browserView.loadDirectory(e,path,false);
 				return;
 			}
 		}
