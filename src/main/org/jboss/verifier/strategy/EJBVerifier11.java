@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.23 2000/11/05 19:02:36 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.24 2000/11/14 19:54:33 juha Exp $
  */
 
 
@@ -54,7 +54,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -875,10 +875,71 @@ public class EJBVerifier11 extends AbstractVerifier {
             }
             catch (ClassNotFoundException ignored) {}
             
-           
-            /* [TODO]   finders   */
             
+            /*
+             * Each finder method MUST match one of the ejbFind<METHOD> methods
+             * defined in the entity bean class.
+             *
+             * The matching ejbFind<METHOD> method MUST have the same number and
+             * types of arguments.
+             *
+             * The return type for a find<METHOD> method MUST be the entity 
+             * bean's remote interface type (single-object finder) or a
+             * collection thereof (for a multi-object finder).
+             *
+             * All the exceptions defined in the throws clause of an ejbFind
+             * method of the entity bean class MUST be included in the throws
+             * clause of the matching find method of the home interface.
+             *
+             * The throws clause of a finder method MUST include the 
+             * javax.ejb.FinderException.
+             *
+             * Spec 9.2.8
+             */
+            Iterator finderMethods = getFinderMethods(home);
             
+            try {
+                String beanClass   = entity.getEjbClass();
+                Class  bean        = classloader.loadClass(beanClass);
+                
+                while (finderMethods.hasNext()) {
+                    
+                    Method finder = (Method)finderMethods.next();
+                    
+                    if ((entity.isBMP()) && (!hasMatchingEJBFind(bean, finder))) {
+                        
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.8.j"));
+                        
+                        status = false;
+                    }
+                    
+                    if (!(hasRemoteReturnType(entity, finder) || isMultiObjectFinder(finder))) {
+                        
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.8.k"));
+                        
+                        status = false;
+                    }
+                    
+                    if ((entity.isBMP()) && (hasMatchingEJBFind(bean, finder))) {
+                    
+                        Method ejbFind  = getMatchingEJBFind(bean, finder);
+                        
+                        if ( !(hasMatchingExceptions(ejbFind, finder))) 
+                            fireSpecViolationEvent(entity, finder, new Section("9.2.8.l"));
+                        
+                    }
+                    
+                    if (!throwsFinderException(finder)) {
+                        
+                        fireSpecViolationEvent(entity, finder, new Section("9.2.8.m"));
+                        
+                        status = false;
+                    }
+                }
+            }
+            catch (ClassNotFoundException ignored) {}
+
+             
         }
         catch (ClassNotFoundException e) {
 
@@ -1314,7 +1375,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (hasFinderMethod(bean)) {
 
-                Iterator it = getFinderMethods(bean);
+                Iterator it = getEJBFindMethods(bean);
 
                 while (it.hasNext()) {
 

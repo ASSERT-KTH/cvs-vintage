@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.14 2000/11/05 19:02:36 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.15 2000/11/14 19:54:33 juha Exp $
  */
 
 // standard imports
@@ -61,7 +61,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -179,7 +179,21 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return false;
     }
 
-
+    /*
+     * checks if the methods includes javax.ejb.FinderException in its
+     * throws clause.
+     */
+    public boolean throwsFinderException(Method method) {
+        
+        Class[] exception = method.getExceptionTypes();
+        
+        for (int i = 0; i < exception.length; ++i)
+            if (javax.ejb.FinderException.class.isAssignableFrom(exception[i]))
+                return true;
+                
+        return false;
+    }
+    
 
     /*
      * checks if a class's member (method, constructor or field) has a 'static'
@@ -509,7 +523,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     /*
      * returns the ejbFind<METHOD> methods of a bean
      */
-    public Iterator getFinderMethods(Class c) {
+    public Iterator getEJBFindMethods(Class c) {
 
         List finders = new LinkedList();
 
@@ -525,6 +539,24 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
 
+    /*
+     * returns the finder methods of a home interface
+     */
+    public Iterator getFinderMethods(Class home) {
+        
+        List finders = new LinkedList();
+        
+        Method[] method = home.getMethods();
+        
+        for (int i = 0; i < method.length; ++i) {
+            
+            if (method[i].getName().startsWith("find"))
+                finders.add(method[i]);
+        }
+        
+        return finders.iterator();
+    }
+    
     /*
      * Returns the ejbCreate(...) methods of a bean
      */
@@ -624,6 +656,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         }
     }
 
+    
     public boolean hasMatchingEJBCreate(Class bean, Method create) {
         try {
             return (bean.getMethod(EJB_CREATE_METHOD, create.getParameterTypes()) != null);
@@ -653,6 +686,28 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         }
     }
 
+    public boolean hasMatchingEJBFind(Class bean, Method finder) {
+        try {
+            String methodName = "ejbF" + finder.getName().substring(1);
+
+            return (bean.getMethod(methodName, finder.getParameterTypes()) != null);
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+    
+    public Method getMatchingEJBFind(Class bean, Method finder) {
+        try {
+            String methodName = "ejbF" + finder.getName().substring(1);
+
+            return bean.getMethod(methodName, finder.getParameterTypes());
+        }
+        catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+    
 /*
  *************************************************************************
  *
