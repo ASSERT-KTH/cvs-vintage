@@ -627,6 +627,15 @@ public class ScarabRequestTool
     /**
      * A Attribute object for use within the Scarab API.
      */
+    public Attribute getAttribute(String pk)
+     throws Exception
+    {
+         return getAttribute(new Integer(pk));
+    }
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
     public AttributeOption getAttributeOption(Integer pk)
      throws Exception
     {

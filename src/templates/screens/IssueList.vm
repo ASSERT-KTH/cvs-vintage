@@ -121,7 +121,7 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
 #if (!$noAttrs)
 #set ($rmuas = $scarabR.RModuleUserAttributes)
 #foreach ($rmua in $rmuas)
- #set ($userAttribute = $rmua.Attribute)
+ #set ($userAttribute = $scarabR.getAttribute($rmua))
  #if ($mitlist.isSingleModuleIssueType())
    #set ($value = $mitlist.Module.getRModuleAttribute($userAttribute, $mitlist.IssueType).DisplayValue)
  #else

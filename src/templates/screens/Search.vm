@@ -106,11 +106,13 @@ $user.setHomePage("query")
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
  <th width="120">$l10n.SortBy</th>
+ #set ($rmuas = $scarabR.RModuleUserAttributes)
  <td>
+ #if (!$rmuas.isEmpty())
  <select name="$searchGroup.SortAttributeId.Key">
     <option value="">$l10n.Choose</option>
-#foreach ($rmua in $scarabR.RModuleUserAttributes)
-#set ($attribute = $rmua.Attribute)
+#foreach ($rmua in $rmuas)
+#set ($attribute = $scarabR.getAttribute($rmua))
    <option value="$attribute.AttributeId"
      #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
           selected="selected" #end>
@@ -118,6 +120,7 @@ $user.setHomePage("query")
    </option>
 #end
 </select>&#160;
+ #end
 <select name="$searchGroup.SortPolarity.Key">
     <option value="asc"
      #if ($searchGroup.SortPolarity.Value.equals("asc"))

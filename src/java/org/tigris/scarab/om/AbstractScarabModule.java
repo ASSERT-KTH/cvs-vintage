@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.108 2003/09/15 23:45:50 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.109 2003/09/16 22:39:13 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1009,15 +1009,6 @@ public abstract class AbstractScarabModule
         return availIssueTypes;
     }
 
-    /**
-     * Returns RModuleAttributes associated with this Module.  Tries to find
-     * RModuleAttributes associated directly through the db, but if none are
-     * found it should look up the parent module tree until it finds a 
-     * non-empty list.
-     */
-    public abstract List getRModuleAttributes(Criteria crit)
-        throws TorqueException;
-
     /** 
      * Returns RModuleAttributes associated with this module through the
      * foreign key in the schema. This method will return an empty list, if the
@@ -1026,7 +1017,7 @@ public abstract class AbstractScarabModule
      * to this method as it seems to break things when an attribute is changed on
      * an existing issue. (JSS)
      */
-    protected List getRModuleAttributesThisModuleOnly(Criteria crit)
+    public List getRModuleAttributes(Criteria crit)
         throws TorqueException
     {
         crit.add(RModuleAttributePeer.MODULE_ID, getModuleId());

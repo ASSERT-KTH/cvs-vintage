@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.141 2003/08/26 17:54:35 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.142 2003/09/16 22:39:13 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -562,26 +562,7 @@ public class ScarabModule
     public List getRModuleAttributes(Criteria crit)
         throws TorqueException
     {
-        List rModAtts = null;
-        AbstractScarabModule module = this;
-        AbstractScarabModule prevModule = null;
-        do
-        {
-            rModAtts = module.getRModuleAttributesThisModuleOnly(crit);
-            prevModule = module;
-            try
-            {
-                module = (AbstractScarabModule)prevModule.getParent();
-            }
-            catch (Exception e)
-            {
-                throw new TorqueException(e);
-            }
-        }
-        while (rModAtts.size() == 0 &&
-               !ROOT_ID.equals(prevModule.getModuleId()));
-
-        return rModAtts;
+        return super.getRModuleAttributes(crit);
     }
 
     /**
