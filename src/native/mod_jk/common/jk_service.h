@@ -59,7 +59,7 @@
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  *              Dan Milstein <danmil@shore.net> 
- * Version:     $Revision: 1.6 $                                               *
+ * Version:     $Revision: 1.7 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H
@@ -143,7 +143,9 @@ struct jk_ws_service {
     char    *server_software;
     unsigned content_length;    /* integer that represents the content  */
                                 /* length should be 0 if unknown.        */
+
     unsigned is_chunked;        /* 1 if content length is unknown (chunked rq) */
+
     unsigned no_more_chunks;    /* 1 if last chunk has been read */
     unsigned content_read;      /* number of bytes read */
 
