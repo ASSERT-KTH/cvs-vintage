@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
@@ -26,18 +28,16 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-
 public class ColumbaViewer extends AbstractViewer {
+
     public Process openWith(MimeHeader header, File tempFile) {
         boolean save = false;
-        ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header.getMimeType()
-                                                                       .getType(),
-                header.getMimeType().getSubtype(), save);
+        ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header
+                .getMimeType().getType(), header.getMimeType().getSubtype(),
+                save);
         String viewer = viewerDialog.getViewer();
 
-        if (viewer == null) {
-            return null;
-        }
+        if (viewer == null) { return null; }
 
         save = viewerDialog.saveViewer();
 
@@ -63,16 +63,18 @@ public class ColumbaViewer extends AbstractViewer {
     public Process open(MimeHeader header, File tempFile) {
         String viewer = MimeRouter.getInstance().getViewer(header);
 
-        if (viewer == null) {
+        File viewerFile = new File(viewer);
+
+        // if viewer is not yet specified
+        // or if viewer app is not found
+        if ((viewer == null) || (!viewerFile.exists())) {
             boolean save = false;
-            ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header.getMimeType()
-                                                                           .getType(),
+            ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header
+                    .getMimeType().getType(),
                     header.getMimeType().getSubtype(), save);
             viewer = viewerDialog.getViewer();
 
-            if (viewer == null) {
-                return null;
-            }
+            if (viewer == null) { return null; }
 
             save = viewerDialog.saveViewer();
 
@@ -84,8 +86,8 @@ public class ColumbaViewer extends AbstractViewer {
         Process child = null;
 
         try {
-            child = Runtime.getRuntime().exec(viewer + " " +
-                    tempFile.toString());
+            child = Runtime.getRuntime().exec(
+                    viewer + " " + tempFile.toString());
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
@@ -96,16 +98,17 @@ public class ColumbaViewer extends AbstractViewer {
     public Process openURL(URL url) {
         boolean save = false;
         String viewer = MimeRouter.getInstance().getViewer("text", "html");
+        File viewerFile = new File(viewer);
 
-        if (viewer == null) {
+        // if viewer is not yet specified
+        // or if viewer app is not found
+        if ((viewer == null) || (!viewerFile.exists())) {
             ChooseViewerDialog viewerDialog = new ChooseViewerDialog("text",
                     "html", save);
 
             viewer = viewerDialog.getViewer();
 
-            if (viewer == null) {
-                return null;
-            }
+            if (viewer == null) { return null; }
 
             save = viewerDialog.saveViewer();
 
@@ -134,9 +137,7 @@ public class ColumbaViewer extends AbstractViewer {
 
         viewer = viewerDialog.getViewer();
 
-        if (viewer == null) {
-            return null;
-        }
+        if (viewer == null) { return null; }
 
         save = viewerDialog.saveViewer();
 
