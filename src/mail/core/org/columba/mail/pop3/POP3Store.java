@@ -18,19 +18,19 @@ package org.columba.mail.pop3;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.CommandCancelledException;
-import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -38,15 +38,9 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.config.account.IncomingServerPanel;
 import org.columba.mail.gui.util.PasswordDialog;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.io.Source;
-import org.columba.ristretto.io.TempSourceFactory;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
 import org.columba.ristretto.pop3.POP3Protocol;
@@ -54,7 +48,15 @@ import org.columba.ristretto.pop3.ScanListEntry;
 import org.columba.ristretto.pop3.UidListEntry;
 
 /**
- * @author freddy
+ * First abstractionlayer of the POP3 Protocol. Its task is to
+ * manage the state of the server and handle the low level connection
+ * stuff. This means open the connection using SSL or not, login
+ * via the most secure or selected authentication method. It also
+ * provides the capabilites to convert an POP3 uid to the index.
+ * 
+ * @see POP3Server
+ * 
+ * @author freddy, tstich
  */
 public class POP3Store {
 
@@ -70,9 +72,12 @@ public class POP3Store {
 	private POP3PreProcessingFilterPluginHandler handler;
 	private Hashtable filterCache;
 	private StatusObservableImpl observable;
-	private UidListEntry[] uidMap;
-	private ScanListEntry[] sizes;
+	
+	private Map uidMap;
+	private List sizeList;
 	private String[] capas;
+	private int messageCount;
+	
 	private boolean usingSSL;
 
 	/**
@@ -99,50 +104,65 @@ public class POP3Store {
 		filterCache = new Hashtable();
 
 		usingSSL = false;
+		messageCount = -1;
 	}
 
 	public List getUIDList() throws Exception {
-		ensureTransaction();
-
-		//Delete the old sizes
-		sizes = null;
-
-		LinkedList list = new LinkedList();
-
-		for (int i = 0; i < getUidMap().length; i++) {
-			list.add(getUidMap()[i].getUid());
-		}
-
-		return list;
+		return new ArrayList(getUidMap().keySet());
 	}
 
-	public int getSize(Object uid) throws Exception {
-		// If we did not already fetch the sizes
-		// -> do it
-		if (sizes == null) {
-			ensureTransaction();
-			sizes = protocol.list();
+	
+	public int getSize(int index) throws IOException, POP3Exception, CommandCancelledException {
+		try {
+			int size = ((Integer)getSizeList().get(index)).intValue();
+
+			return size;
+		} catch (IndexOutOfBoundsException e ) {
+			throw new MessageNotOnServerException(new Integer(index));
+		} catch (NullPointerException e ){
+			throw new MessageNotOnServerException(new Integer(index));
 		}
+	}
 
-		// Get the index for the UID
-		int index = getIndex(uid);
-
-		// .. and search for it in the list
-		for (int i = 0; i < sizes.length; i++) {
-			if (sizes[i].getIndex() == index) {
-				return sizes[i].getSize();
+	/**
+	 * @return
+	 */
+	private List getSizeList() throws IOException, POP3Exception, CommandCancelledException {
+		if (sizeList == null) {
+			ensureTransaction();
+			ScanListEntry[] sizes = protocol.list();
+			
+			sizeList = new ArrayList(sizes.length+1);
+			// since the indices on the pop server start with 1 we add
+			// a dummy null for the 0 element in the list
+			sizeList.add(null);
+			
+			for( int i=0; i<sizes.length; i++) {
+				if( sizes[i].getIndex() > sizeList.size()-1 ) {
+					// fill with nulls
+					for( int nextIndex = sizeList.size()-1;nextIndex < sizes[i].getIndex(); nextIndex++  ) {
+						sizeList.add(null);
+					}
+				}
+				
+				// put size at the specified place
+				sizeList.set(sizes[i].getIndex(), new Integer(sizes[i].getSize()));
 			}
 		}
-
-		return protocol.list(index).getSize();
+		
+		return sizeList;
 	}
 
-	public int getMessageCount() throws Exception {
-		ensureTransaction();
+	public int getMessageCount() throws IOException, POP3Exception, CommandCancelledException {
+		if( messageCount == -1 ) {
+			ensureTransaction();
 
-		int[] stat = protocol.stat();
+			int[] stat = protocol.stat();
 
-		return stat[0];
+			messageCount = stat[0];
+		}
+		
+		return messageCount;
 	}
 
 	public boolean deleteMessage(Object uid) throws CommandCancelledException, IOException, POP3Exception {
@@ -221,43 +241,26 @@ public class POP3Store {
 
 	protected int getIndex(Object uid) throws IOException, POP3Exception,
 			CommandCancelledException {
-		for (int i = 0; i < getUidMap().length; i++) {
-			if (getUidMap()[i].getUid().equals(uid)) {
-				return getUidMap()[i].getIndex();
-			}
-		}
 		
-		throw new MessageNotOnServerException( uid);
+		if( getUidMap().containsKey(uid)) {
+			return ((Integer)getUidMap().get(uid)).intValue();
+		} else {			
+			throw new MessageNotOnServerException( uid);
+		}
 	}
 
-	public ColumbaMessage fetchMessage(Object uid, WorkerStatusController worker) throws Exception {
+	public InputStream fetchMessage(int index) throws IOException, POP3Exception, CommandCancelledException {
 		ensureTransaction();
 		
-		InputStream messageStream = new ProgressObservedInputStream( protocol.retr(getIndex(uid), getSize(uid)), worker, true);  
-		Source source = TempSourceFactory.createTempSource(messageStream, messageStream.available());
-		
-		// pipe through preprocessing filter
-		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
-		//	rawString = modifyMessage(rawString);
-		//TODO: Activate PreProcessor again with Source instead of String
-		Header header = HeaderParser.parse(source);
-
-		ColumbaMessage m = new ColumbaMessage(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-
-		m.setSource(source);
-		h.getAttributes().put("columba.pop3uid", uid);
-		h.getAttributes().put("columba.size",
-				new Integer(source.length() / 1024));
-
-		return m;
+		return protocol.retr(index, getSize(index));  
 	}
 
 	public void logout() throws IOException, POP3Exception {
 		protocol.quit();
 
 		uidMap = null;
-		sizes = null;
+		sizeList = null;
+		messageCount = -1;
 	}
 
 	protected boolean isSupported(String command) throws IOException {
@@ -535,11 +538,20 @@ public class POP3Store {
 	/**
 	 * @return Returns the uidMap.
 	 */
-	private UidListEntry[] getUidMap() throws CommandCancelledException, IOException ,POP3Exception {
+	private Map getUidMap() throws CommandCancelledException, IOException ,POP3Exception {
 		if( uidMap == null ) {
-			ensureTransaction();
+			if( getMessageCount() != 0) {
+				ensureTransaction();
 			
-			uidMap = protocol.uidl();
+				UidListEntry[] uidList = protocol.uidl();
+				uidMap = new Hashtable();
+				
+				for( int i=0; i<uidList.length; i++ ) {
+					uidMap.put(uidList[i].getUid(), new Integer(uidList[i].getIndex()));
+				}
+			} else {
+				uidMap = new Hashtable(0);
+			}
 		}
 		return uidMap;
 	}
