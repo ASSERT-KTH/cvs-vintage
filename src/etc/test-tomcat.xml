@@ -584,7 +584,7 @@
    </target>
 
 
-   <target name="client" depends="jsp,wrong_request">
+   <target name="client" depends="file,dispatch,get,requestMap,post,jsp,wrong_request">
    </target>
 
 

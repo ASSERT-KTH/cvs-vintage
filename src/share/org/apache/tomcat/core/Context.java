@@ -627,7 +627,7 @@ public class Context {
 
 	url=new URL(docBase.getProtocol(), docBase.getHost(),
 		       docBase.getPort(), docBase.getFile() + mappedPath);
-	if( debug>0) log( "getResourceURL=" + url + " request=" + lr );
+	if( debug>3) log( "getResourceURL=" + url + " request=" + lr );
 	return url;
     }
 

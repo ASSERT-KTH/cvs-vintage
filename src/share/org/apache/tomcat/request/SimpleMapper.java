@@ -204,7 +204,7 @@ public class SimpleMapper extends  BaseInterceptor  {
 	m=(Mappings)securityConstraints.get(ctxP);
 	if( m==null) return OK;
 	Container scontainer=findContainer( m, path, context, req);
-	if( m==null ) {
+	if( scontainer==null ) {
 	    // no security
 	    return OK;
 	}
