@@ -428,8 +428,7 @@ public class ReportDefinition
     {
         String summary = null;
         List options = heading.getReportOptionAttributes();
-        List users = heading.getReportUserAttributes();
-        if (options != null) 
+        if (options != null && !options.isEmpty()) 
         {
             String attribute = null;
             StringBuffer sb = new StringBuffer(20*options.size());
@@ -451,42 +450,52 @@ public class ReportDefinition
             sb.setLength(sb.length() - 2);
             summary = sb.toString();
         }
-        else if (heading.getReportGroups() != null) 
+        else if (heading.getReportGroups() != null)
         {
-            StringBuffer sb = 
-                new StringBuffer(10*heading.getReportGroups().size());
-            for (Iterator i = heading.getReportGroups().iterator(); i.hasNext();) 
+            List groups = heading.getReportGroups();
+            if (!groups.isEmpty()) 
             {
-                sb.append(((ReportGroup)i.next()).getName())
-                  .append('/');
-            }
-            sb.setLength(sb.length() - 1);
-            summary = sb.toString();
-        }
-        else if (users != null) 
-        {
-            String attribute = null;
-            StringBuffer sb = new StringBuffer(20*users.size());
-            for (Iterator i = users.iterator(); i.hasNext();) 
-            {
-                ReportUserAttribute rua = (ReportUserAttribute)i.next();
-                String newAttribute = displayAttribute(rua);
-                if (!newAttribute.equals(attribute))
+                StringBuffer sb = 
+                    new StringBuffer(10*groups.size());
+                for (Iterator i = groups.iterator(); i.hasNext();) 
                 {
-                    if (attribute != null) 
-                    {
-                        sb.append("; ");
-                    }
-                    attribute = newAttribute;
-                    sb.append(attribute).append(": ");
+                    sb.append(((ReportGroup)i.next()).getName())
+                        .append('/');
                 }
-                sb.append(displayUser(rua)).append(", ");
+                sb.setLength(sb.length() - 1);
+                summary = sb.toString();
             }
-            sb.setLength(sb.length() - 2);
-            summary = sb.toString();
         }
+        else if (heading.getReportUserAttributes() != null) 
+        {
+            List users = heading.getReportUserAttributes();
+            if (!users.isEmpty()) 
+            {
+                String attribute = null;
+                StringBuffer sb = new StringBuffer(20*users.size());
+                for (Iterator i = users.iterator(); i.hasNext();) 
+                {
+                    ReportUserAttribute rua = (ReportUserAttribute)i.next();
+                    String newAttribute = displayAttribute(rua);
+                    if (!newAttribute.equals(attribute))
+                    {
+                        if (attribute != null) 
+                        {
+                            sb.append("; ");
+                        }
+                        attribute = newAttribute;
+                        sb.append(attribute).append(": ");
+                    }
+                    sb.append(displayUser(rua)).append(", ");
+                }
+                sb.setLength(sb.length() - 2);
+                summary = sb.toString();
+            }
+        }
+        // date ranges are not implemented yet.
         else if (heading.getReportDates() != null 
-                 || heading.getReportDateRanges() != null) 
+                 && !heading.getReportDates().isEmpty())
+            //|| heading.getReportDateRanges() != null) 
         {
             summary = "Dates";
         }
