@@ -3,4 +3,4 @@ project '$module.Name'.
 
 To approve or reject it, please go to:
 
-<$link.setPage("admin,Approval.vm").setEncodeURLOff()>
+<$link.setPage("admin,Approval.vm").setAbsolute(true).setEncodeURLOff()>

@@ -3,7 +3,7 @@
 Issue '$issue.UniqueId' has just been modified by user '$user.UserName'
 
 You can view the issue detail at the following URL:
-   <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId).setEncodeURLOff()>
+   <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId).setAbsolute(true).setEncodeURLOff()>
 
 #if (!$activityList.isEmpty())
 

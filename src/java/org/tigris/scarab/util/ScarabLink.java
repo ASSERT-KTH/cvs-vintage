@@ -64,7 +64,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.18 2001/12/03 05:18:13 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.19 2001/12/12 02:09:33 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -95,6 +95,7 @@ public class ScarabLink extends TemplateLink
         // exception.
         super.init(data);
         this.data = (RunData)data;
+        setAbsolute(false);
     }
 
     /**
@@ -179,6 +180,18 @@ public class ScarabLink extends TemplateLink
             }
         }
         return this;
+    }
+
+    /**
+     * Prints out the url and resets the relative flag to true.
+     *
+     * @return a <code>String</code> url
+     */
+    public String toString()
+    {
+        String s = super.toString();
+        setAbsolute(false);
+        return s;
     }
     
     // ****************************************************************
