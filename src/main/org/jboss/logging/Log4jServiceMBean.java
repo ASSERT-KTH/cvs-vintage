@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.logging;
 
 import javax.management.ObjectName;
@@ -15,13 +16,15 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface Log4jServiceMBean
 {
    /** The default JMX object name for this MBean. */
    ObjectName OBJECT_NAME =
       ObjectNameFactory.create("jboss.system:service=Logging,type=Log4J");
+
+   int getRefreshPeriod();
 
    /**
     * Get the log4j.properties format config file path
@@ -32,18 +35,6 @@ public interface Log4jServiceMBean
     * Set the log4j.properties format config file path
     */
    void setConfigurationPath(String path);
-
-   /**
-    * Get the refresh flag. This determines if the log4j.properties file
-    * is reloaded every refreshPeriod seconds or not.
-    */  
-   boolean getRefreshFlag();
-
-   /**
-    * Set the refresh flag. This determines if the log4j.properties file
-    * is reloaded every refreshPeriod seconds or not.
-    */
-   void setRefreshFlag(boolean flag);
 
    /**
     * Configures the log4j framework using the current service properties

@@ -8,6 +8,7 @@
 package org.jboss.logging;
 
 import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -16,51 +17,83 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.apache.log4j.Category;
+import org.apache.log4j.Priority;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import org.jboss.util.ThrowableHandler;
 import org.jboss.util.ThrowableListener;
 
+import org.jboss.system.BootstrapLogger;
+
+import org.jboss.logging.log4j.CategoryStream;
+
 /**
- * This is a JMX MBean that provides three features:
- * 
- * <ol>
- * <li>It initalizes the log4j framework from the log4j properties format file
- *     specified by the ConfigurationPath attribute to that the log4j may be
- *     used by JBoss components.
- * <li>It uses the log name as the category to log under, allowing you to turn 
- *     individual components on and off using the log4j configuration file
- *     (automatically reloaded frequently).
- * </ol>
- * 
+ * Initializes the Log4j logging framework.  Supports XML and standard
+ * configuration file formats.  Defaults to using 'log4j.xml' read
+ * from a system resource.
+ *
+ * <p>Sets up a {@link ThrowableListener} to adapt unhandled
+ *    throwables to a category.
+ *
+ * <p>Installs CategoryStream adapters for System.out and System.err
+ *    to catch and redirect calls to Log4j.
+ *
+ * @version <tt>$Revision: 1.19 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.18 $
  */
 public class Log4jService
    implements Log4jServiceMBean, MBeanRegistration
 {
    /**
-    * The default path, either read from system properties or if not set
-    * default to log4j.properties.
-    *
-    * <p>Note, this is a minor HACK to allow loading a different
-    *    logging configuration file other that log4j.properties.  This should
-    *    be fixed by exposing more configuration in the boot strapping
-    *    xml snippet.
+    * The default path for the configuration file.  Reads the value
+    * from the system property <tt>org.jboss.logging.Log4jService.configfile</tt>
+    * or if that is not set defaults to <tt>log4j.xml</tt>.
     */
    public static final String DEFAULT_PATH =
-      System.getProperty(Log4jService.class.getName() + ".configfile", "log4j.properties");
+      System.getProperty(Log4jService.class.getName() + ".configfile", "log4j.xml");
 
+   /**
+    * Default flag to enable/disable cacthing System.out.  Reads the value
+    * from the system property <tt>org.jboss.logging.Log4jService.catchSystemOut</tt>
+    * or if not set defaults to <tt>true</tt>.
+    */
+   public static final boolean CATCH_SYSTEM_OUT =      
+      getBoolean(Log4jService.class.getName() + ".catchSystemOut", true);
+
+   /**
+    * Default flag to enable/disable cacthing System.err.  Reads the value
+    * from the system property <tt>org.jboss.logging.Log4jService.catchSystemErr</tt>
+    * or if not set defaults to <tt>true</tt>.
+    */
+   public static final boolean CATCH_SYSTEM_ERR =
+      getBoolean(Log4jService.class.getName() + ".catchSystemErr", true);
+
+   private static final BootstrapLogger log = BootstrapLogger.getLogger(Log4jService.class);
+
+   /** Helper to get boolean value from system property or use default if not set. */
+   private static boolean getBoolean(String name, boolean defaultValue)
+   {
+      String value = System.getProperty(name, null);
+      if (value == null)
+         return defaultValue;
+      return new Boolean(value).booleanValue();
+   }
+   
    // Attributes ----------------------------------------------------
 
-   private Category category;
    private String configurationPath;
    private int refreshPeriod;
-   private boolean refreshFlag;
+   private ThrowableListenerLoggingAdapter throwableAdapter;
+
+   /** The previous value of System.out. */
+   private PrintStream out;
+
+   /** The previous value of System.err. */
+   private PrintStream err;
 
    // Constructors --------------------------------------------------
    
@@ -75,7 +108,7 @@ public class Log4jService
    }
    
    /**
-    * @param path             The path to the log4j.properties format file
+    * @param path             The path to the configuration file
     * @param refreshPeriod    The refreshPeriod in seconds to wait between
     *                         each check.
     */
@@ -83,9 +116,16 @@ public class Log4jService
    {
       this.configurationPath = path;
       this.refreshPeriod = refreshPeriod;
-      this.refreshFlag = true;
+
+      out = System.out;
+      err = System.err;
    }
 
+   public int getRefreshPeriod()
+   {
+      return refreshPeriod;
+   }
+   
    /**
     * Get the log4j.properties format config file path
     */
@@ -101,25 +141,7 @@ public class Log4jService
    {
       this.configurationPath = path;
    }
-   
-   /**
-    * Get the refresh flag. This determines if the log4j.properties file
-    * is reloaded every refreshPeriod seconds or not.
-    */
-   public boolean getRefreshFlag()
-   {
-      return refreshFlag;
-   }
-   
-   /**
-    * Set the refresh flag. This determines if the log4j.properties file
-    * is reloaded every refreshPeriod seconds or not.
-    */
-   public void setRefreshFlag(boolean flag)
-   {
-      this.refreshFlag = flag;
-   }
-   
+
    /**
     * Configures the log4j framework using the current service properties
     * and sets the service category to the log4j root Category. This method
@@ -129,55 +151,83 @@ public class Log4jService
     */
    public void start() throws Exception
    {
-      // See if this is an xml configuration file
-      boolean isXML = configurationPath.endsWith(".xml");
+      log.debug("Configuration path: " + configurationPath);
       
       // Make sure the config file can be found
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       URL url = loader.getResource(configurationPath);
-      if (url == null) {
+      if (url == null)
+      {
          throw new FileNotFoundException
             ("Failed to find logj4 configuration: " + configurationPath);
       }
-
-      if (refreshFlag)
+      log.debug("Configuration URL: " + url);
+      
+      // configurationPath is a file path
+      String path = url.getFile();
+      boolean isXML = configurationPath.endsWith(".xml");
+      log.debug("isXML: " + isXML);
+      if (isXML)
       {
-         // configurationPath is a file path
-         String path = url.getFile();
-         if (isXML) {
-            DOMConfigurator.configureAndWatch(path, 1000 * refreshPeriod);
-         }
-         else {
-            PropertyConfigurator.configureAndWatch(path, 1000 * refreshPeriod);
-         }
+         DOMConfigurator.configureAndWatch(path, 1000 * refreshPeriod);
       }
       else
       {
-         if (isXML) {
-            DOMConfigurator.configure(url);
-         }
-         else {
-            PropertyConfigurator.configure(url);
-         }
+         PropertyConfigurator.configureAndWatch(path, 1000 * refreshPeriod);
       }
-      
-      this.category = Category.getRoot();
-      category.info("Started Log4jService, config=" + url);
 
+      // Make sure Category has loaded
+      Category category = Category.getRoot();
+      
+      // Mark the BootstrapLogger as initialized
+      BootstrapLogger.LOG4J_INITIALIZED = true;
+      
       // Install listener for unhandled throwables to turn them into log messages
-      ThrowableHandler.addThrowableListener(new ThrowableListenerLoggingAdapter());
+      throwableAdapter = new ThrowableListenerLoggingAdapter();
+      ThrowableHandler.addThrowableListener(throwableAdapter);
+      log.debug("Added ThrowableListener: " + throwableAdapter);
+      
+      // Install catchers
+      if (CATCH_SYSTEM_OUT)
+      {
+         category = Category.getInstance("STDOUT");
+         System.setOut(new CategoryStream(category, Priority.INFO, out));
+         log.debug("Install System.out adapter");
+      }
+      if (CATCH_SYSTEM_ERR)
+      {
+         category = Category.getInstance("STDERR");
+         System.setErr(new CategoryStream(category, Priority.ERROR, err));
+         log.debug("Install System.err adapter");
+      }
+
+      log.info("Started");
    }
    
    /**
     * Stops the log4j framework by calling the Category.shutdown() method.
+    * 
     * @see org.apache.log4j.Category#shutdown()
     */
    public void stop()
    {
-      Category.shutdown();
-      if (category != null) {
-         category.info("Stopped Log4jService");
+      // Remove throwable adapter
+      ThrowableHandler.removeThrowableListener(throwableAdapter);
+
+      // Remove System adapters
+      if (out != null) {
+         System.out.flush();
+         System.setOut(out);
       }
+      if (err != null) {
+         System.err.flush();
+         System.setErr(err);
+      }
+      
+      // Shutdown Log4j
+      Category.shutdown();
+      
+      log.debug("Stopped");
    }
 
    // Public --------------------------------------------------------
@@ -185,7 +235,7 @@ public class Log4jService
    // --- Begin MBeanRegistration interface methods
    
    /**
-    * Invokes start() to configure the log4j framework.
+    * Invokes {@link start} to configure the Log4j framework.
     * 
     * @return the name of this mbean.
     */
@@ -193,6 +243,7 @@ public class Log4jService
       throws Exception
    {
       start();
+
       return name == null ? OBJECT_NAME : name;
    }
    

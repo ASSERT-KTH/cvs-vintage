@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class BootstrapLogger
 {
@@ -47,6 +47,7 @@ public class BootstrapLogger
    
    /** An array of Priority objects corresponding to the names TRACE..FATAL */
    private static Object[] log4jPriorities = new Object[PRIORITY_NAMES.length];
+
    /** The indcies into the log4jPriorities array */
    private static final int TRACE = 0;
    private static final int DEBUG = 1;
@@ -70,11 +71,21 @@ public class BootstrapLogger
    /** True to enable more verbose logging when log4j is not yet initialized. */
    private static boolean verbose = false;
 
-   /** The placeholder passed to the log(int,Object,Throwable) method by
-    the log methods that do not take a Throwable.
+   /** 
+    * The placeholder passed to the log(int,Object,Throwable) method by
+    * the log methods that do not take a Throwable.
     */
    private static final Throwable NO_EXCEPTION = new Throwable();
 
+   /** 
+    * Set by Log4jService once it has finished the configuration of
+    * Log4j.
+    *
+    * <p>This should be made package private once (if) BootstrapLogger
+    *    is moved to org.jboss.logging.
+    */
+   public static boolean LOG4J_INITIALIZED = false;
+   
    // Externalize behavior using properties
    static
    {
@@ -230,23 +241,26 @@ public class BootstrapLogger
       return isEnabled;
    }
 
-   /** Called by the xxx(Object) and xxx(Object,Throwable) methods.
+   /**
+    * Called by the xxx(Object) and xxx(Object,Throwable) methods.
+    * 
     * @param idx   the index into the log4jPriorities array to use as
     *              the priority of the msg
     * @param msg   the log message object
     * @param ex    the exception associated with the msg or the special token
-    * NO_EXCEPTION to indicate no exception was passed in.
+    *              NO_EXCEPTION to indicate no exception was passed in.
     */
    private void log(int idx, Object msg, Throwable ex)
    {
       // If we don't have a category yet, then try to initialize
-      if( category == null )
+      
+      if (category == null || !LOG4J_INITIALIZED)
       {
          // Try to load the log4j classes
          init();
-         if( category == null )
+         if (category == null || !LOG4J_INITIALIZED)
          {
-            if (!isEnabledFor(idx)) return;
+            // if (!isEnabledFor(idx)) return;
             
             // construct the message to print
             StringBuffer buff = new StringBuffer();
@@ -257,7 +271,7 @@ public class BootstrapLogger
             }
             buff.append(msg);
             
-            // Failed, dump the msg to System.out & print stack trace
+            // Dump the msg to System.out & print stack trace
             System.out.println(buff);
             
             // If ex is not NO_EXCEPTION then it is an exception
@@ -348,10 +362,10 @@ public class BootstrapLogger
     */
    private static synchronized void initLog4j()
       throws ClassNotFoundException,
-      NoSuchMethodException,
-      IllegalAccessException,
-      IllegalArgumentException,
-      InvocationTargetException
+             NoSuchMethodException,
+             IllegalAccessException,
+             IllegalArgumentException,
+             InvocationTargetException
    {
       if (log4jMethods != null || initAttempts > maxInitAttempts)
       {
