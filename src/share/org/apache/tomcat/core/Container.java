@@ -415,7 +415,9 @@ public class Container implements Cloneable{
     public static final int H_getInfo=14;
     public static final int H_setInfo=15;
     public static final int H_engineInit=16;
-    public static final int H_COUNT=17;
+    public static final int H_preInitCheck=17;
+    public static final int H_postInitCheck=18;
+    public static final int H_COUNT=19;
 
     private Hooks hooks=new Hooks();
     private BaseInterceptor hooksCache[][]=null;
@@ -439,6 +441,8 @@ public class Container implements Cloneable{
 	hooks.registerHook( "getInfo", H_getInfo );
 	hooks.registerHook( "setInfo", H_setInfo );
 	hooks.registerHook( "engineInit", H_engineInit );
+	hooks.registerHook( "preInitCheck", H_preInitCheck );
+	hooks.registerHook( "postInitCheck", H_postInitCheck );
     }
 
     public Hooks getHooks() {

@@ -547,6 +547,20 @@ public class BaseInterceptor
     {
     }
 
+    /** Setup before calling init.
+     */
+    public int preInitCheck( Request req, Handler sw )
+	throws TomcatException
+    {
+	return 0;
+    }
+
+    
+    public int postInitCheck( Request req, Handler sw )
+	throws TomcatException
+    {
+	return 0;
+    }
     /** Servlet Destroy  notification
      */
     public void preServletDestroy( Context ctx, Handler sw )
