@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.*;
@@ -32,6 +33,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.help.HelpManager;
 import org.columba.core.io.DiskIO;
 import org.columba.core.profiles.Profile;
@@ -256,6 +258,13 @@ implements ActionListener, ListSelectionListener {
         list = new JList(model);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addListSelectionListener(this);
+        list.addMouseListener(new DoubleClickListener()
+                              {
+          											public void doubleClick(MouseEvent e)
+          											{
+          											  actionPerformed(new ActionEvent(list,0,"EDIT"));
+          											}
+                              });
         
         String selected = ProfileManager.getInstance().getSelectedProfile();
         if (selected != null) {

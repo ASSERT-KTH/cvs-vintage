@@ -23,6 +23,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -47,12 +49,14 @@ import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DoubleClickListener;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class SelectAddressDialog extends JDialog implements ActionListener {
+  
 	// recipient lists
 	private AddressbookDNDListView toList;
 
@@ -242,6 +246,15 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		dialogAddressbookListModel[0].setHeaderItemList(headerItemList[0]);
 		toList = new AddressbookDNDListView(dialogAddressbookListModel[0]);
 		toList.setMinimumSize(new Dimension(150, 150));
+		toList.addMouseListener(new DoubleClickListener()
+		                        {
+		  												
+		  												public void doubleClick(MouseEvent ev)
+		  												{
+	  													  actionPerformed(new ActionEvent(toList,0,"TO_REMOVE"));
+		  												}
+		  
+		                        });
 
 		ccLabel = new JLabel(AddressbookResourceLoader.getString("dialog",
 				"selectaddressdialog", "cc")); //$NON-NLS-1$
@@ -250,6 +263,15 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		dialogAddressbookListModel[1].setHeaderItemList(headerItemList[1]);
 		ccList = new AddressbookDNDListView(dialogAddressbookListModel[1]);
 		ccList.setMinimumSize(new Dimension(150, 150));
+		ccList.addMouseListener(new DoubleClickListener()
+		                        {
+		  												
+		  												public void doubleClick(MouseEvent ev)
+		  												{
+	  													  actionPerformed(new ActionEvent(ccList,0,"CC_REMOVE"));
+		  												}
+		  
+		                        });
 
 		bccLabel = new JLabel(AddressbookResourceLoader.getString("dialog",
 				"selectaddressdialog", "bcc")); //$NON-NLS-1$
@@ -258,6 +280,15 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		dialogAddressbookListModel[2].setHeaderItemList(headerItemList[2]);
 		bccList = new AddressbookDNDListView(dialogAddressbookListModel[2]);
 		bccList.setMinimumSize(new Dimension(150, 150));
+		bccList.addMouseListener(new DoubleClickListener()
+		                        {
+		  												
+		  												public void doubleClick(MouseEvent ev)
+		  												{
+	  													  actionPerformed(new ActionEvent(bccList,0,"BCC_REMOVE"));
+		  												}
+		  
+		                        });
 
 		toButton = new JButton(AddressbookResourceLoader.getString("dialog",
 				"selectaddressdialog", "right_arrow_to")); //$NON-NLS-1$
@@ -300,7 +331,16 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		addressbook = new AddressbookDNDListView();
 		addressbook.setMinimumSize(new Dimension(450, 200));
 		addressbook.setAcceptDrop(false);
-
+		addressbook.addMouseListener(new DoubleClickListener()
+		                        {
+		  												
+		  												public void doubleClick(MouseEvent ev)
+		  												{
+	  													  actionPerformed(new ActionEvent(addressbook,0,"TO"));
+		  												}
+		  
+		                        });
+		
 		okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
 				"global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
 		okButton.setActionCommand("OK"); //$NON-NLS-1$

@@ -21,6 +21,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
@@ -40,6 +41,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -117,7 +119,13 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         String[] ids = handler.getPluginIdList();
         list = new JList(ids);
         list.addListSelectionListener(this);
-
+				list.addMouseListener(new DoubleClickListener()
+				                      {
+				  											public void doubleClick(MouseEvent ev)
+				  											{
+				  												actionPerformed(new ActionEvent(list,0,"CONFIG"));  
+				  											}
+				                      });
         // top panel
         JPanel topPanel = new JPanel();
 

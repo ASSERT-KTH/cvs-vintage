@@ -161,6 +161,11 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 						.getModel();
 				m.setSortingComparator(c);
 			}
+			else
+			{
+				// sorting is disabled
+				tree = new SortedJTree(MailInterface.treeModel);
+			}
 		} else {
 			// sorting is disabled
 			tree = new SortedJTree(MailInterface.treeModel);

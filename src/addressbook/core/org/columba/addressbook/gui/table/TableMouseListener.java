@@ -27,6 +27,7 @@ import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.Contact;
+import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.main.MainInterface;
 
@@ -34,7 +35,7 @@ import org.columba.core.main.MainInterface;
 /**
  * @author Celso Pinto &lt;cpinto@yimports.com&gt;
  */
-public class TableMouseListener implements MouseListener
+public class TableMouseListener extends DoubleClickListener
 {
 	private TableController controller = null;
 	private AddressbookFrameMediator mediator = null;
@@ -43,9 +44,9 @@ public class TableMouseListener implements MouseListener
 		controller = tableController;  
 		mediator = controller.getMediator();
 	}
-	
-	public void mouseClicked(MouseEvent e)
-	{
+
+  public void doubleClick(MouseEvent e)
+  {
 	  /*
 	   * does exactly the same thing as EditPropertiesAction when contact
 	   * table is focused
@@ -104,11 +105,5 @@ public class TableMouseListener implements MouseListener
 			}
 	  	
 	  }
-	}
-	
-	public void mousePressed(MouseEvent e){}
-	public void mouseReleased(MouseEvent e){}
-	public void mouseEntered(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	
+  }
 }

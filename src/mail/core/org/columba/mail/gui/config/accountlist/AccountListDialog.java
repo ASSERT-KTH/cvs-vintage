@@ -27,6 +27,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -49,6 +50,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
@@ -202,7 +204,13 @@ implements ActionListener, ListSelectionListener {
         
         listView = new AccountListTable(accountList, this);
         listView.getSelectionModel().addListSelectionListener(this);
-        
+        listView.addMouseListener(new DoubleClickListener()
+                                  {
+          													public void doubleClick(MouseEvent ev)
+          													{
+          													  actionPerformed(new ActionEvent(listView,0,"EDIT"));
+          													}
+                                  });
         JScrollPane scrollPane = new JScrollPane(listView);
         scrollPane.setPreferredSize(new Dimension(300, 250));
         scrollPane.getViewport().setBackground(Color.white);
