@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.53 2003/01/18 10:18:55 mkl Exp $
+// $Id: FigNodeModelElement.java,v 1.54 2003/01/21 19:33:57 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -682,9 +682,11 @@ public abstract class FigNodeModelElement
             if (me.getUUID() == null)
                 me.setUUID(UUIDManager.SINGLETON.getNewUUID());
         }
-        _readyToEdit = true;        
-        bindPort(own, _bigPort);
+        _readyToEdit = true;      
         renderingChanged();
+        updateBounds();  
+        bindPort(own, _bigPort);
+        
 
     }
 
