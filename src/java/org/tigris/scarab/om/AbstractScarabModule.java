@@ -128,7 +128,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.1 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.2 2002/03/14 01:45:14 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -265,11 +265,18 @@ public abstract class AbstractScarabModule
                 sb.append(me.getRealName());
                 firstTime = false;
             }
-            if (parents.size() >= 1)
+            boolean isRoot = getModuleId().toString().equals(ROOT_ID);
+            // Make sure we have parents and if we are root, 
+            // don't show ourselves again.
+            if (parents.size() >= 1 && !isRoot)
             {
                 sb.append(Module.NAME_DELIMINATOR);
             }
-            sb.append(getRealName());
+            // If we are root, don't show ourselves again.
+            if (!isRoot)
+            {
+                sb.append(getRealName());
+            }
             name = sb.toString();
         }
         return name;
@@ -308,6 +315,19 @@ public abstract class AbstractScarabModule
             addAncestors(parent);
         }
         return parentModules;
+    }
+
+    /**
+     * recursive helper method for getAncestors()
+     */
+    private void addAncestors(ModuleEntity module)
+        throws Exception
+    {
+        if (!module.getParentId().equals(ROOT_ID))
+        {
+            addAncestors(module.getParent());
+        }
+        parentModules.add(module);
     }
 
     /**
@@ -463,19 +483,6 @@ public abstract class AbstractScarabModule
         }
         return sequence;
     }    
-
-    /**
-     * recursive helper method for getAncestors()
-     */
-    private void addAncestors(Module module)
-        throws Exception
-    {
-        if (!module.getParentId().equals(ROOT_ID))
-        {
-            addAncestors(module.getParent());
-        }
-        parentModules.add(module);
-    }
 
     public ScarabUser[] getEligibleIssueReporters()
         throws Exception
