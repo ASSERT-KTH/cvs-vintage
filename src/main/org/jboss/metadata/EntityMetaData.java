@@ -19,7 +19,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -48,6 +48,8 @@ public class EntityMetaData
    private String primKeyField;
    private ArrayList queries = new ArrayList();
    private boolean readOnly = false;
+   private boolean doDistCachInvalidations = false;
+   private CacheInvalidationConfigMetaData cacheInvalidConfig = null; 
 
    // Static --------------------------------------------------------
 
@@ -191,6 +193,16 @@ public class EntityMetaData
          }
       }
    }
+   
+   public boolean doDistributedCacheInvalidations ()
+   {
+      return this.doDistCachInvalidations ;
+   }
+   
+   public CacheInvalidationConfigMetaData getDistributedCacheInvalidationConfig ()
+   {
+      return this.cacheInvalidConfig ;
+   }
 
    public void importEjbJarXml( Element element )
       throws DeploymentException
@@ -322,6 +334,24 @@ public class EntityMetaData
       {
          readOnly = Boolean.valueOf(readOnlyString).booleanValue();
       }
+      
+      // Manage distributed cache-invalidation settings
+      //
+      String distCacheInvalidations = getElementContent(getOptionalChild( element,
+         "cache-invalidation"), (this.doDistCachInvalidations ? "True" : "False") );
+      this.doDistCachInvalidations = distCacheInvalidations.equalsIgnoreCase ("True");
+
+      Element cacheInvalidConfigElement = getOptionalChild(element,
+         "cache-invalidation-config");
+
+      this.cacheInvalidConfig = new CacheInvalidationConfigMetaData();
+      this.cacheInvalidConfig.init(this);
+      if (cacheInvalidConfigElement != null)
+      {
+         this.cacheInvalidConfig.importJbossXml(cacheInvalidConfigElement);
+      }
+
+      
    }
 
    // Package protected ---------------------------------------------
