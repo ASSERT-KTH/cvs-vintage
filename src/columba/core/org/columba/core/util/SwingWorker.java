@@ -195,6 +195,12 @@ public abstract class SwingWorker
 		};
 
 		Thread t = new Thread(doConstruct);
+		// following java guidelines I'm setting this to low priority
+		//  -> this should make the gui more responsive, because the
+		//  -> background worker has low priority whereas the gui worker
+		//  -> has normal priority
+		t.setPriority( Thread.MIN_PRIORITY );
+		
 		threadVar = new ThreadVar(t);
 	}
 
