@@ -724,12 +724,23 @@ public class Issue
     }
 
     /**
+     * Gets default limit for this module-issue type.
+     */
+    private int getLimit() throws Exception
+    {
+        int limit=10;
+        limit = ((ScarabModule)getModule()).getRModuleIssueType(getIssueType())
+                .getHistory();
+        return limit;
+    }
+        
+    /**
      * Determines whether the history list is longer than
-     * The default limit (10).
+     * The default limit.
      */
     public boolean isHistoryLong() throws Exception
     {
-        return isHistoryLong(10);
+        return isHistoryLong(getLimit());
     }
 
     /**
@@ -743,11 +754,10 @@ public class Issue
 
     /**
      * Returns list of Activity objects associated with this Issue.
-     * Limits it to 10 history items (this is the default)
      */
     public Vector getActivity() throws Exception  
     {
-        return getActivity(false, 10);
+        return getActivity(false, getLimit());
     }
 
     /**
@@ -765,7 +775,8 @@ public class Issue
      */
     public Vector getActivity(boolean fullHistory) throws Exception  
     {
-        return getActivity(fullHistory, 10);
+System.out.println(getLimit());
+        return getActivity(fullHistory, getLimit());
     }
 
     /**
