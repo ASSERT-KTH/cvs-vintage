@@ -4,6 +4,24 @@ rem A batch file to start/stop tomcat server.
 rem This batch file written and tested under Windows NT
 rem Improvements to this file are welcome
 
+rem Guess TOMCAT_HOME if it is not present
+
+if not "%TOMCAT_HOME%" == "" goto gothome
+
+SET TOMCAT_HOME=.
+if exist %TOMCAT_HOME%\bin\tomcat.bat goto gothome
+
+SET TOMCAT_HOME=..
+if exist %TOMCAT_HOME%\bin\tomcat.bat goto gothome
+
+SET TOMCAT_HOME=
+echo Unable to determine the value of TOMCAT_HOME.
+goto eof
+
+:gothome
+
+rem Set up the CLASSPATH that we need
+
 set cp=%CLASSPATH%
 
 set CLASSPATH=.
@@ -87,3 +105,4 @@ set appClassPath=
 set cp=
 
 rem pause
+:eof
