@@ -1,8 +1,11 @@
 <project name="carol_archive_tests" default="test.dist.jar">
   <target name="test.dist.jar">
     <!-- CAROL JAR -->
-    <jar jarfile="${test.dist.lib}/carol_test.jar" basedir="${test.build}/classes"
-      includes="**/jtests/**/*.class">
+    <jar jarfile="${test.dist.lib}/carol_test.jar">
+      <fileset dir="${test.build}/classes">
+        <include name="**/jtests/**/*.class"/>
+        <include name="**/ant/*.class"/>
+      </fileset>   
 
       <manifest>
         <attribute name="Manifest-Version" value="1.0"/>

@@ -27,7 +27,9 @@
   <property name="test.archive" 	 value="${basedir}/archive"/>
   <property name="test.ext"              value="${basedir}/ext"/>  
   <property name="test.genstub"          value="${basedir}/genstub"/>
-
+  <dirname property="test.absolute.dir"     file="${basedir}/X" />
+  <property name="test.etc.dir"          value="${test.absolute.dir}/etc"/>
+  
   <!--======================================================
   load the following user properties from a file:
   - build.compiler: Wich compiler do you want use ? (optional)
@@ -41,14 +43,23 @@
   <property name="test.dist.lib"           value="${test.dist}/lib"/>
   <property name="test.dist.jdoc"  	   value="${test.dist}/jdoc"/>
   <property name="test.dist.results"  	   value="${test.dist}/results"/>
+  <property name="test.dist.report"  	   value="${test.dist}/report"/>
   <property name="test.conform"            value="conform"/>
   <property name="test.conform.src"        value="${test.src}/org/objectweb/carol"/>
 
-  <!-- tmp directories for tests lauhing -->
+  
+  <!-- tmp directories for tests launching -->
   <property name="test.tmp"                value="${test.dist}/tmp"/> 
     
   <property name="test.build.stub"          value="${test.build}/test/stub"/>
 
+  <!-- Date -->
+  <tstamp>
+        <format property="dateofday"
+                pattern="yyyy-MM-dd"
+                locale="en" />
+      </tstamp>
+  
   <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="test.classpath">
     <fileset dir="${carol.dist}/lib">

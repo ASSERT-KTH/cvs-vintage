@@ -189,12 +189,13 @@
     </waitfor>
 
     <mkdir dir="${parallel.report.dir1}"/>
+    <property name="test.mode" value="parallel1"/>
     <junit printsummary="yes" 
       haltonfailure="no"
       haltonerror="no"
       fork="yes" >
       <classpath refid="test.client.classpath1" />
-      <formatter type="xml"/>
+      <formatter classname="org.objectweb.carol.ant.JunitFormatter" extension=".xml"/>
       <batchtest fork="yes" todir="${parallel.report.dir1}">
         <fileset dir="${test.src}">
           <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
@@ -213,13 +214,14 @@
       <socket server="localhost" port="10101"/>
     </waitfor>
 
+    <property name="test.mode" value="parallel2"/>
     <mkdir dir="${parallel.report.dir2}"/>
     <junit printsummary="yes" 
       haltonfailure="no"
       haltonerror="no"
       fork="yes" >
       <classpath refid="test.client.classpath2" />
-      <formatter type="xml"/>
+      <formatter classname="org.objectweb.carol.ant.JunitFormatter" extension=".xml"/>
       <batchtest fork="yes" todir="${parallel.report.dir2}">
         <fileset dir="${test.src}">
           <include name="org/objectweb/carol/jtests/conform/basic/clients/*Tests.java" />
@@ -249,30 +251,6 @@
     </antcall>
   </target>
 
-  <target name="report1">
-    <antcall target="report">
-      <param name="_report.dir" value="${parallel.report.dir1}"/>
-    </antcall>
-  </target>
-
-  <!-- Only generate this report, if there has been a second junit process -->
-  <target name="maybe.report2" if="stub.jar.name2">
-    <antcall target="report">
-      <param name="_report.dir" value="${parallel.report.dir2}"/>
-    </antcall>
-  </target>
-
-  <target name="report">
-    <mkdir dir="${_report.dir}/html" />
-
-    <junitreport todir="${_report.dir}">
-      <fileset dir="${_report.dir}">
-	<include name="TEST-*.xml"/>
-      </fileset>
-      <report format="frames" todir="${_report.dir}/html"/>
-    </junitreport>
-  </target>
-
   <target name="launch.test">
     <parallel failonany="true">
       <antcall target="maybe.start.nameserver1"/>
@@ -283,9 +261,6 @@
       <antcall target="runtests1"/>
       <antcall target="maybe.runtests2"/>
     </parallel>
-
-    <antcall target="report1"/>
-    <antcall target="maybe.report2"/>
   </target> 
 
 

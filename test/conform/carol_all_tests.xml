@@ -48,5 +48,22 @@
       propDestination="${test.build.properties}"
       propSource="${test.ext}">
     </carolTest>
+    <antcall target="report" />
   </target>
+  
+    <target name="report">
+     <mkdir dir="${test.dist.report}" />
+     <junitreport todir="${test.dist.report}">
+       <fileset dir="${test.dist.results}">
+         <include name="**/**/TEST-*.xml"/>
+       </fileset>
+       <report format="noframes"
+                     todir="${test.dist.report}"
+                     styledir="${test.etc.dir}" />
+     </junitreport>
+      <move file="${test.dist.report}/junit-noframes.html"
+               tofile="${test.dist.report}/report-${dateofday}.html" />
+   </target>
+
+  
 </project>
