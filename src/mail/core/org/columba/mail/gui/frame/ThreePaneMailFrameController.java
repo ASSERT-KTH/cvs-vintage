@@ -25,6 +25,7 @@ import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
+import org.columba.mail.gui.table.action.DeleteAction;
 import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
@@ -80,6 +81,13 @@ public class ThreePaneMailFrameController
 		tableController.getView().getActionMap().put(
 			"PASTE",
 			new PasteAction(this));
+
+		tableController.getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+			"DELETE");
+		tableController.getView().getActionMap().put(
+			"DELETE",
+			new DeleteAction(this));
 
 		treeController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
