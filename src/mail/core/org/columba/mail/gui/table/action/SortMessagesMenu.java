@@ -128,7 +128,7 @@ public class SortMessagesMenu
         orderGroup.add(descendingMenuItem);
         add(descendingMenuItem);
 
-        update(observable, null);
+        //update(observable, null);
 
     }
 
@@ -155,6 +155,9 @@ public class SortMessagesMenu
                 action);
             table.getTableController().getUpdateManager().update();
         }
+        
+		table.getTableController().getTableModelSorter().getSortingStateObservable().notifyObservers();
+        //update(observable, null);
     }
 
     /*

@@ -60,6 +60,8 @@ public class SortingOptionsPlugin extends AbstractFolderOptionsPlugin {
 
 		tableController.getTableModelSorter().setSortingColumn(column);
 		tableController.getTableModelSorter().setSortingOrder(order);
+		
+		tableController.getTableModelSorter().getSortingStateObservable().setSortingState(column, order);
 	}
 
 	/**
