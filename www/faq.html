@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.6 2002/08/08 17:22:00 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.7 2002/09/05 23:32:25 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -324,10 +324,11 @@ applied.</p>
 
 <p>
 The CollabNet Scarab developers provide MySQL database upgrade scripts
-for each new version of Scarab. These scripts reside in the
-scarab/src/sql/upgrade directory. Some of these scripts are .sql files
-and some are unix shell .sh files. If you are using another database or 
-system, we welcome your contributions to port these files.
+for each new version of Scarab. We also take contributions for other
+databases. These scripts reside in the scarab/src/sql/upgrade directory.
+Some of these scripts are .sql files and some are unix shell .sh files.
+If you are using another database or operating system, we welcome your
+contributions to port these files.
 </p>
 
 <p>
@@ -395,6 +396,31 @@ server.
 
 <p>
 The fix is simple, create an A record for your domain entry.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>
+I can't seem to access Scarab's self hosting issue tracker on port 8081.
+</strong></p>
+
+<p>
+This is either because the server is down or, more likely, your firewall
+prevents you from making connections to port 8081. We might consider setting
+up a proxy system to allow connections to port 80, but don't hold your breath.
+The better solution is to get your sysadmin's to realize that security is not
+obtained by locking out access to random ports.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>
+I want the Velocity templates to be copied into the webapp directory so that
+I can deploy Scarab as a WAR.
+</strong></p>
+
+<p>
+In your build.properties, add the line: <code>scarab.copy.templates=true</code>
 </p>
 
 <hr noshade="noshade" size="1" />
