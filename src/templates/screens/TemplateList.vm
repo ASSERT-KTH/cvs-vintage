@@ -1,6 +1,5 @@
 $page.setTitle("Template list")
 
-#set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
@@ -9,35 +8,41 @@ $page.setTitle("Template list")
 #end
 
 <div class="app" id="templateList">
-<form method="post" action="$action">
+<form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 
-<div class="functnbar2">
+<h2>$page.Title</h2>
+
+<div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
   #if ($user.UserId)
-  <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
-  <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />  
+  <input type="submit" value="Create new" name="eventSubmit_doCreatenew" />&#160;
+  #if ($noTemplates.equals("false"))
+  <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end
+  #end
+  #if ($noTemplates.equals("false"))
   &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+  #end
   </td>
  </tr>
 </table>
 </div>
 
-<h2>$page.Title</h2>
+<h3>Stored Templates</h3>
 
 #if ($noTemplates.equals("true"))
-
     <p><strong class="alert">
     There are no stored templates, click <a
     href="$link.setPage("SaveTemplate.vm")">here</a> to create a new
     one.
     </strong></p>
-
 #else
-
+  
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th nowrap="nowrap">
@@ -50,10 +55,10 @@ $page.setTitle("Template list")
   <th>Initiated by</th>
   </tr>
 
-#foreach ( $template in $module.getPrivateTemplates($user, $issueType) )
+#foreach ($template in $module.getPrivateTemplates($user, $issueType))
    #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
-  #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
+  #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
   <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
   <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &#160; #end</td>
   <td>$template.templateInfo.Scope.Name
@@ -72,7 +77,7 @@ $page.setTitle("Template list")
   </tr>
 #end
 
-#foreach ( $template in $module.getGlobalTemplates($issueType))
+#foreach ($template in $module.getGlobalTemplates($issueType))
 #indexedRows($velocityCount)
 #if ($security.hasPermission("Item | Delete", $module))
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
@@ -81,23 +86,30 @@ $page.setTitle("Template list")
 #end
   <td>
     #if ($security.hasPermission("Item | Delete", $module))
-      #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
+      #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
       <a href="$editLink">$template.TemplateInfo.Name</a>
     #else
       $template.TemplateInfo.Name
     #end
   </td>
-  <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &#160; #end</td>
+  <td>
+    #if($template.TemplateInfo.Description)
+      $template.TemplateInfo.Description 
+    #else
+      &#160; 
+    #end
+  </td>
   <td>$template.IssueType.Name
      #if (!$template.TemplateInfo.Approved)
        (until approved)
      #end
   </td>
    #set ($createdUser = $template.CreatedBy)
-   <td>#if ($createdUser)
-   <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+   <td>
+   #if ($createdUser)
+     <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
    #else
-   &#160;
+     &#160;
    #end
    </td>
   </tr>
@@ -106,6 +118,7 @@ $page.setTitle("Template list")
   </table>
 
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
