@@ -66,6 +66,9 @@ Global attributes
 
 <h3>Global Attributes</h3>
 
+#if ($allAttributes.isEmpty())
+<p class="alert">Click the Create new button to create a new global attribute.</p>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Select</th>
@@ -99,11 +102,14 @@ Global attributes
   #end
 #end
 </table>
+#end
 
 <div class="functnbar3">
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
+#if (!$allAttributes.isEmpty())
 <input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
 <input type="submit" value="Delete selected"  name="eventSubmit_doDelete" />
+#end
 </div>
 
 #if ($paginated)

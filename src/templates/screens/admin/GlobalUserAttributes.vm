@@ -3,12 +3,12 @@
 #set ($module = $scarabR.CurrentModule)
 
 <div class="tabs">
-    <table cellpadding="3" cellspacing="0" border="0">
-    <tr>
-    <td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">Global attributes</a></td>
-    <th>Global user attributes</th>
-    </tr>
-    </table>
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+<td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">Global attributes</a></td>
+<th>Global user attributes</th>
+</tr>
+</table>
 </div>
 
 <form action="$link.setPage("admin,GlobalUserAttributes.vm")" method="post">
@@ -42,7 +42,7 @@
 #end
 #if ($userAttrs.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($userAttrs, $pageNum.toString(),       $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($userAttrs, $pageNum.toString(), $resultsPerPage.toString()))
  #if ($pagList)
    #set ($userAttrs = $pagList)
  #end
@@ -54,6 +54,9 @@
 
 <h3>Global user attributes</h3>
 
+#if ($userAttrs.isEmpty())
+<p class="alert">Click the Create new button to create a new global user attribute.</p>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">Select</th>
@@ -64,7 +67,7 @@
 <th>#sort("user" "Author")</th>
 <th>#sort("date" "Creation date")</th>
 </tr>
-        
+       
 #foreach ($attr in $userAttrs)
   #set ($attgroup = $intake.Attribute.mapTo($attr))
   #indexedRows($velocityCount)
@@ -97,19 +100,23 @@
   </tr>
 #end        
 </table>
+#end
 
 <div class="functnbar3">
+#if (!$userAttrs.isEmpty())
 <input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
+#end
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
+#if (!$userAttrs.isEmpty())
 <input type="submit" value="Copy selected"  name="eventSubmit_doCopy" />&#160;
 <input type="submit" value="Delete selected"  name="eventSubmit_doDelete" />
+#end
 </div>
 
 #if ($paginated)
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-        
 $intake.declareGroups()
 </form>
 </div>
