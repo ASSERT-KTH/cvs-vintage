@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.118 2004/08/14 19:28:19 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.119 2004/08/15 20:57:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -216,7 +216,7 @@ public abstract class FigNodeModelElement
     private FigText stereo; 
 
     /**
-     * _enclosedFigs are the Figs that are enclosed by this figure. Say that
+     * enclosedFigs are the Figs that are enclosed by this figure. Say that
      * it is a Package then these are the Classes, Interfaces, Packages etc
      * that are on this figure. This is not the same as the figures in the
      * FigGroup that this FigNodeModelElement "is", since these are the
@@ -265,7 +265,7 @@ public abstract class FigNodeModelElement
     }
 
     /** Partially construct a new FigNode.  This method creates the
-     *  _name element that holds the name of the model element and adds
+     *  name element that holds the name of the model element and adds
      *  itself as a listener. 
      * 
      * @param gm ignored
@@ -276,7 +276,7 @@ public abstract class FigNodeModelElement
         setOwner(node);
         name.setText(placeString());
         readyToEdit = false;
-        ArgoEventPump.addListener(ArgoEvent.ANY_NOTATION_EVENT, this);
+        //ArgoEventPump.addListener(ArgoEvent.ANY_NOTATION_EVENT, this);
     }
 
     /**
