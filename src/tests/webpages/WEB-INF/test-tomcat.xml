@@ -16,10 +16,12 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.47 $" />  
+     <property name="revision" value="$Revision: 1.48 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
+     <property name="dir.status" value="301" />
+     <property name="redir.status" value="301" />
      <property name="outputType"     value="text" />
      <property name="debug"     value="0" />
      <!-- expected http protocol -->
@@ -78,9 +80,11 @@
 
   <target name="file" depends="init">
 
-    <gtest  description="Content Type Test"
-           request="GET /test/binaries/image1.gif HTTP/1.0"
-           expectHeaders="Content-Type:image/gif" />
+    <httpClient unless="netscape.static">
+        <comment>Content Type Test</comment>
+        <httpRequest path="/test/binaries/image1.gif" />
+        <headerMatch name="Content-Type" value="image/gif"/>
+    </httpClient>
 
     <gtest  description="File Integrity and Length Test"
            request="GET /test/binaries/image1.gif HTTP/1.0"
@@ -90,11 +94,11 @@
     <gtest  description="Get a directory - expect redirect"
            request="GET /test/welcome HTTP/1.0"
            expectHeaders="Location:/welcome/" 
-           returnCode="${http.protocol} 301" /> 
+           returnCode="${http.protocol} ${redir.status}" /> 
 
     <gtest  description="Get a dir without welcome file"
            request="GET /test/binaries HTTP/1.0"
-           returnCode="${http.protocol} 301" />
+           returnCode="${http.protocol} ${redir.status}" />
     
   </target>
 
@@ -116,6 +120,7 @@
           <httpRequest path="/test/servlet/params.Params">
              <param name="a" value="Inscrie%C5%A3i-v%C4%83" />
           </httpRequest>
+          <responseMatch match="Inscrie&#xC5;&#xA3;i-v&#xC4;&#x83;" />
           <httpStatusMatch match="200" />
       </httpClient>
       <httpClient>
@@ -124,6 +129,62 @@
              <param name="lang" value="ja" />
           </httpRequest>
           <responseMatch match="Location = &#xBD;&#xEA;&#xBA;&#xDF;&#xC3;&#xCF;" />
+      </httpClient>
+      <httpClient>
+          <comment>Test space in directory name</comment>
+          <httpRequest path="/test/enc/dir%20name" />
+          <httpStatusMatch match="${redir.status}" />
+          <headerMatch name="Location"
+                       value="http://${host}${colonPort}/enc/dir%20name/index.html"
+                        />
+      </httpClient>
+      <httpClient>
+          <comment>Test space in directory name #2</comment>
+          <httpRequest path="/test/enc/dir%20name/index.html" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Found" />
+      </httpClient>
+      <httpClient>
+          <comment>Test space in HTML name</comment>
+          <httpRequest path="/test/enc/test%20file.html" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test" />
+      </httpClient>
+      <httpClient>
+          <comment>Test space in JSP name</comment>
+          <httpRequest path="/test/enc/test%20jsp.jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Hello" />
+      </httpClient>
+      <httpClient>
+          <comment>Test encoded space in HTML name</comment>
+          <httpRequest path="/test/enc/double%2520enc.html" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test if we decode only once &lt;%= 1 %&gt;" />
+      </httpClient>
+      <httpClient>
+          <comment>Test encoded space in JSP Name</comment>
+          <httpRequest path="/test/enc/double%2520enc.jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test if we decode only once 1" />
+      </httpClient>
+      <httpClient>
+          <comment>Test '+' in HTML name</comment>
+          <httpRequest path="/test/enc/test+plus.html" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test with + &lt;%= 1 %&gt;" />
+      </httpClient>
+      <httpClient>
+          <comment>Test '+' in JSP name</comment>
+          <httpRequest path="/test/enc/test+plus.jsp" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="Test with + 1" />
+      </httpClient>
+      <httpClient>
+          <comment>Test servlet with encoded '?' in pathinfo</comment>
+          <httpRequest path="/test/servlet/RequestDump/path%3Finfo" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="&lt;tr&gt;&lt;td&gt;Path Info&lt;/td&gt;&lt;td&gt;/path?info&lt;/td&gt;&lt;/tr&gt;" />
       </httpClient>
   </target>
 
@@ -498,42 +559,6 @@
 
     </target>
 
-  <!-- ==================== Standalone specific ==================== -->
-  <!-- The standalone http and StaticInterceptor may have 
-       different behavior than Apache ( even if correct ) -->
-  <target name="tomcat-standalone" depends="init">
-
-    <gtest  request="GET /test/jsp/ HTTP/1.0"
-           returnCode="${http.protocol} 301"           
-	   description="Get a dir with static welcome file"  />
-
-    <gtest description="Get a dir with static welcome file"
-	   request="GET /test/welcome/ HTTP/1.0"
-	   returnCode="${http.protocol} 301"  />
-
-    <gtest request="GET /test/ HTTP/1.0"
-	   returnCode="${http.protocol} 302" />
-
-   </target>
-
-  <!-- ==================== Tomcat+Apache specific ==================== -->
-  <target name="tomcat-apache" depends="init">
-    <gtest  request="GET /test/jsp/ HTTP/1.0"
-           goldenFile="${gdir}/index.txt"  
-           returnCode="${http.protocol} 200" 
-           description="Get a dir with static welcome file"
-    />
-
-    <gtest  description="Get a dir with static welcome file"
-           request="GET /test/welcome/ HTTP/1.0"
-           returnCode="${http.protocol} 200" 
-           goldenFile="${gdir}/welcome.txt" />
-
-    <gtest request="GET /test/ HTTP/1.0"
-	   returnCode="${http.protocol} 200"  />
-
-    </target>
-
   <!-- ==================== Jsp tests ==================== -->
   <target name="jsp" depends="init">
     <gtest request="GET /test/jsp/special-name.foo.jsp HTTP/1.0"
@@ -837,9 +862,9 @@
              returnCode="404" magnitude="false"
       />
 
-      <gtest description="HTTP 0.9, check the body for 404"  
+      <gtest description="HTTP 0.9, check the body for Not found"  
 	     request="GET /test/request/uri/does/not/exist"
-             responseMatch="404"
+             responseMatch="Not Found"
       />
 
       <gtest  request="GET /test/request/uri/does/not/exist HTTP/1.0"
@@ -863,7 +888,18 @@
       />
 
       <gtest  request="GET /test/welcome HTTP/1.0"
-	      returnCode="${http.protocol} 301"  />
+	      returnCode="${http.protocol} ${redir.status}"  />
+
+      <gtest description="Get a dir with static welcome file"
+             request="GET /test/welcome/ HTTP/1.0"
+             returnCode="${http.protocol} ${dir.status}"  />
+
+      <gtest request="GET /test/ HTTP/1.0"
+             returnCode="${http.protocol} ${dir.status}" />
+
+      <gtest  request="GET /test/jsp/ HTTP/1.0"
+              returnCode="${http.protocol} ${dir.status}"           
+	      description="Get a dir with static welcome file" />
 
    </target>
 
@@ -1241,15 +1277,21 @@ mod_webapp into mod_jk )
            returnCode="${http.protocol} 40" 
       />
 
-      <gtest description="This URL should return 404 Not Found"
-           request="GET /test/jsp/HelloWorld.jsp/ HTTP/1.0"
-           returnCode="${http.protocol} 40" 
-      />
+      <httpClient >
+          <comment>This URL should return 404 Not Found (unless Netscape)</comment>
+          <httpRequest path="/test/jsp/HelloWorld.jsp/" 
+		      method="GET" />
+          <httpStatusMatch match="${http.protocol} 500" if="netscape.server"/>
+          <httpStatusMatch match="${http.protocol} 40" unless="netscape.server"/>
+      </httpClient>
 
-      <gtest description="This URL should return 403 Forbidden"
-           request="GET /test/jsp/HelloWorld.jsp%5C HTTP/1.0"
-           returnCode="${http.protocol} 40" 
-      />
+      <httpClient >
+          <comment>This URL should return 403 Forbidden (unless Netscape)</comment>
+          <httpRequest path="/test/jsp/HelloWorld.jsp%5C" 
+		      method="GET" />
+          <httpStatusMatch match="${http.protocol} 500" if="netscape.server"/>
+          <httpStatusMatch match="${http.protocol} 40" unless="netscape.server"/>
+      </httpClient>
 
       <gtest description="This URL should return 403 Forbidden"
            request="GET /test/jsp/HelloWorld.jsp%255C HTTP/1.0"
@@ -1266,10 +1308,14 @@ mod_webapp into mod_jk )
            returnCode="${http.protocol} 40" 
       />
 
-      <gtest description="This URL should return 404 Not Found"
-           request="GET /test/jsp/HelloWorld.jsp%00 HTTP/1.0"
-           returnCode="${http.protocol} 40" 
-      />
+      <httpClient >
+          <comment>This URL should return 404 Not Found (unless Netscape)</comment>
+          <httpRequest path="/test/jsp/HelloWorld.jsp%00" 
+		      method="GET" />
+          <responseMatch match="HelloWorld" if="netscape.server" />
+          <httpStatusMatch match="${http.protocol} 200" if="netscape.server"/>
+          <httpStatusMatch match="${http.protocol} 40" unless="netscape.server"/>
+      </httpClient>
 
       <gtest description="This URL should return 403 Forbidden"
            request="GET /%2e%2e/%2e%2e/%00.jsp HTTP/1.0"
