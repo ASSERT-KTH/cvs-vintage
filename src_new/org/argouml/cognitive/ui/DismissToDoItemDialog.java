@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.12 2003/11/18 14:45:07 linus Exp $
+// $Id: DismissToDoItemDialog.java,v 1.13 2003/11/21 19:09:59 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,7 +105,7 @@ public class DismissToDoItemDialog extends JDialog {
                 "button.not-of-concern-at-moment.mnemonic").charAt(0));
         _explainButton.setMnemonic(
             Argo.localize(BTNBUNDLE, 
-                "button.button.reason-given-below.mnemonic").charAt(0));
+                "button.reason-given-below.mnemonic").charAt(0));
 	setLocation(300, 200);
 	setSize(new Dimension(300, 250));
 	Container content = getContentPane();
