@@ -134,7 +134,7 @@ public class DependManager {
     public boolean shouldReload1() {
 	// somebody else is checking, so we don't know yet.
 	// assume we're fine - reduce the need for sync
-	if( debug > 0 && expired )
+	if( debug > 0  && expired )
 	    log( "ShouldReload1 E=" + expired + " C=" + checking);
 	if( checking ) return expired;
 
@@ -168,6 +168,7 @@ public class DependManager {
 			if( ! d.isLocal() ) {
 			    // if d is local, it'll just be marked as expired,
 			    // the DependManager will not.
+			    //			    if( debug >0 )
 			    expired=true;
 			}
 		    }
@@ -194,6 +195,9 @@ public class DependManager {
     }
 
     public void setExpired( boolean e ) {
+	if( debug > 0 ) {
+	    log( "SetExpired " + e );
+ 	}
 	for( int i=0; i<depsCount; i++ ) {
 	    deps[i].setExpired( e );
 	}
@@ -211,7 +215,11 @@ public class DependManager {
 
     // -------------------- Private 
 
-    private static final int debug=0;
+    private int debug=0;
+
+    public void setDebug( int i ) {
+	debug=i;
+    }
     
     void log( String s ) {
 	System.out.println("DependManager: " + s );

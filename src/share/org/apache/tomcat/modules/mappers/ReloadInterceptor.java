@@ -105,7 +105,9 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    dm=new DependManager();
 	    context.getContainer().setNote("DependManager", dm);
 	}
-
+	if( debug > 0 ) {
+	    dm.setDebug( debug );
+	}
     }
     
     /** Example of adding web.xml to the dependencies.
