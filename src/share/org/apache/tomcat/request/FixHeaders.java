@@ -74,7 +74,6 @@ import javax.servlet.http.*;
 public class FixHeaders extends  BaseInterceptor implements RequestInterceptor {
     
     public FixHeaders() {
-	methods.addElement("beforeBody");
     }
 	
     public int beforeBody( Request request, Response response ) {
