@@ -1,15 +1,15 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.ejb;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import java.rmi.MarshalledObject; // tmp
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
@@ -46,7 +46,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.monitor.StatisticsProvider;
-import org.jboss.util.SerializableEnumeration;
+import org.jboss.util.collection.SerializableEnumeration;
 import org.jboss.system.Registry;
 import org.jboss.metadata.EntityMetaData;
 
@@ -62,7 +62,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.67 $
+* @version $Revision: 1.68 $
 *
 * <p><b>Revisions:</b>
 *

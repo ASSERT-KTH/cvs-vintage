@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.61 2002/02/16 01:33:25 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.62 2002/02/16 07:21:50 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -549,7 +549,6 @@
         <include name="org/jboss/tm/usertx/client/*.class"/>
         <include name="org/jboss/tm/usertx/interfaces/*.class"/>
         <include name="org/jboss/tm/usertx/server/*Stub.class"/>
-        <include name="org/jboss/util/SerializableEnumeration.class"/>
       </fileset>
     </jar>
 
