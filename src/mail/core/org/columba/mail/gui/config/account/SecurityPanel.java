@@ -85,7 +85,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
     protected void layoutComponents() {
         //		Create a FormLayout instance. 
-        FormLayout layout = new FormLayout("10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
+        FormLayout layout = new FormLayout("10dlu, max(70dlu;default), 3dlu, fill:max(150dlu;default):grow ",
                 
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)

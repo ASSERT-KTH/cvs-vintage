@@ -135,7 +135,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
 	protected void layoutComponents() {
 		//		Create a FormLayout instance.
 		FormLayout layout = new FormLayout(
-				"10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow, 3dlu, fill:max(150dlu;default):grow",
+				"10dlu, 10dlu, max(100;default), 3dlu, max(150dlu;default):grow, 3dlu",
 
 				// 2 columns
 				""); // rows are added dynamically (no need to define them

@@ -39,7 +39,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.command.ExceptionHandler;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -72,7 +74,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private JLabel hostLabel;
     private JTextField hostTextField;
     private JLabel portLabel;
-    private JTextField portTextField;
+    private JSpinner portSpinner;
     private JRadioButton esmtpRadioButton;
     private JLabel loginLabel;
     private JTextField loginTextField;
@@ -89,6 +91,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private SmtpItem item;
     private AccountItem accountItem;
     private JButton checkAuthMethods;
+    
+    private JComboBox sslComboBox;
 
     public OutgoingServerPanel(AccountItem accountItem) {
         super();
@@ -117,7 +121,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         if (b) {
             hostTextField.setText(item.get("host"));
 
-            portTextField.setText(item.get("port"));
+            String port = item.get("port");
+            portSpinner.setValue(new Integer(port));
 
             loginTextField.setText(item.get("user"));
 
@@ -159,7 +164,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
             item.set("save_password", storePasswordCheckBox.isSelected()); //$NON-NLS-1$
 
-            item.set("port", portTextField.getText());
+            item.set("port", ((Integer)portSpinner.getValue()).toString());
 
             item.set("host", hostTextField.getText());
 
@@ -185,7 +190,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
     protected void layoutComponents() {
         //Create a FormLayout instance.
-        FormLayout layout = new FormLayout("10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
+        FormLayout layout = new FormLayout("10dlu, 10dlu, max(60dlu;default), 3dlu, fill:max(150dlu;default):grow, 3dlu, default, 3dlu, default  ",
 
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)
@@ -200,42 +205,53 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         builder.setLeadingColumnOffset(1);
 
         // Add components to the panel:
-        builder.append(defaultAccountCheckBox, 5);
+        builder.append(defaultAccountCheckBox, 7);
         builder.nextLine();
 
         builder.appendSeparator(MailResourceLoader.getString("dialog",
                 "account", "configuration"));
         builder.nextLine();
+        
+        //builder.setLeadingColumnOffset(1);
 
+        builder.append(loginLabel, 2);
+        builder.append(loginTextField,5);
+        builder.nextLine();
+        
         builder.append(hostLabel, 2);
         builder.append(hostTextField);
-        builder.nextLine();
+        //builder.nextLine();
 
-        builder.append(portLabel, 2);
-        builder.append(portTextField);
+        builder.append(portLabel);
+        builder.append(portSpinner);
         builder.nextLine();
+        
+        builder.setLeadingColumnOffset(1);
+        
+        
 
         builder.appendSeparator(MailResourceLoader.getString("dialog",
                 "account", "security"));
         builder.nextLine();
 
-        builder.append(needAuthCheckBox, 4);
+        
+        builder.append(needAuthCheckBox, 8);
         builder.nextLine();
 
         builder.setLeadingColumnOffset(2);
 
         JPanel panel = new JPanel();
-        FormLayout l = new FormLayout("max(80dlu;default), 3dlu, fill:max(50dlu;default), 2dlu, left:max(50dlu;default)",
+        FormLayout l = new FormLayout("default, 3dlu, left:pref:grow, 3dlu, left:pref:grow",
 
             // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+        		"fill:default:grow"); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
         b.append(authenticationLabel, authenticationComboBox, checkAuthMethods);
-        b.nextLine();
-        b.append(loginLabel, loginTextField);
-        builder.append(panel, 3);
+        //b.nextLine();
+        //b.append(loginLabel, loginTextField);
+        builder.append(panel, 5);
         builder.nextLine();
 
         /*
@@ -248,13 +264,31 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
          * builder.append(panel2, 3); builder.nextLine();
          */
         //builder.setLeadingColumnOffset(1);
-        builder.append(storePasswordCheckBox, 3);
+        
+        builder.append(secureCheckBox, 6);
+        builder.nextLine();
+        
+        JPanel panel2 = new JPanel();
+        FormLayout l2 = new FormLayout(
+                "default, 3dlu, left:pref",
+
+                // 2 columns
+				"fill:default:grow"); // rows are added dynamically (no need to define them here)
+
+        // create a form builder
+        DefaultFormBuilder b2 = new DefaultFormBuilder(panel2, l2);
+        b2.setRowGroupingEnabled(true);
+        b2.append(secureCheckBox, sslComboBox);
+        builder.append(panel2, 3);
+        builder.nextLine();
+        
+        
+        builder.append(storePasswordCheckBox, 5);
         builder.nextLine();
 
-        builder.setLeadingColumnOffset(1);
+       // builder.setLeadingColumnOffset(1);
 
-        builder.append(secureCheckBox, 4);
-        builder.nextLine();
+       
     }
 
     protected void showDefaultAccountWarning() {
@@ -300,8 +334,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "port")); //$NON-NLS-1$
 
-        portTextField = new JTextField();
-        portLabel.setLabelFor(portTextField);
+        portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 99999, 1));
+        portLabel.setLabelFor(portSpinner);
 
         needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
@@ -336,6 +370,12 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
+        
+        sslComboBox = new JComboBox();
+        sslComboBox.addItem(MailResourceLoader
+                .getString("dialog", "account", "ssl_combobox_popimaps"));
+        sslComboBox.addItem(MailResourceLoader
+                .getString("dialog", "account", "ssl_combobox_tls"));
     }
 
     /**
@@ -456,7 +496,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     private List getAuthSMTP() throws IOException, SMTPException {
         List result = new LinkedList();
         SMTPProtocol protocol = new SMTPProtocol(hostTextField.getText(),
-                Integer.parseInt(portTextField.getText()));
+        		 ((Integer) portSpinner.getValue()).intValue());
 
         protocol.openPort();
 

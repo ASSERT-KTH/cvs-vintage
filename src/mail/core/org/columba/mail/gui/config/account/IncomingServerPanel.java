@@ -39,7 +39,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.command.ExceptionHandler;
 import org.columba.core.config.DefaultItem;
@@ -82,7 +84,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
     private JLabel portLabel;
 
-    private JTextField portTextField;
+    private JSpinner portSpinner;
 
     private JLabel typeLabel;
 
@@ -111,7 +113,9 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
     private ReceiveOptionsPanel receiveOptionsPanel;
 
     private JButton checkAuthMethods;
-
+    
+    private JComboBox sslComboBox;
+    
     //private ConfigFrame frame;
     private JDialog dialog;
 
@@ -158,7 +162,8 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             loginTextField.setText(serverItem.get("user"));
             passwordTextField.setText(serverItem.get("password"));
             hostTextField.setText(serverItem.get("host"));
-            portTextField.setText(serverItem.get("port"));
+            String port = serverItem.get("port");
+            portSpinner.setValue(new Integer(port));
 
             storePasswordCheckBox.setSelected(serverItem
                     .getBoolean("save_password"));
@@ -186,7 +191,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             serverItem.set("user", loginTextField.getText());
             serverItem.set("host", hostTextField.getText());
             serverItem.set("password", passwordTextField.getText());
-            serverItem.set("port", portTextField.getText());
+            serverItem.set("port", ((Integer)portSpinner.getValue()).toString());
 
             serverItem.set("save_password", storePasswordCheckBox.isSelected());
 
@@ -243,7 +248,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
     protected void layoutComponents() {
         // Create a FormLayout instance.
         FormLayout layout = new FormLayout(
-                "10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
+                "10dlu, max(70dlu;default), 3dlu, fill:max(150dlu;default):grow, 3dlu, default, 3dlu, default",
 
                 // 2 columns
                 ""); // rows are added dynamically (no need to define them here)
@@ -260,7 +265,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         builder.setLeadingColumnOffset(1);
 
         // Add components to the panel:
-        builder.append(defaultAccountCheckBox, 4);
+        builder.append(defaultAccountCheckBox, 7);
         builder.nextLine();
 
         builder.appendSeparator(MailResourceLoader.getString("dialog",
@@ -268,15 +273,15 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         builder.nextLine();
 
         builder.append(loginLabel, 1);
-        builder.append(loginTextField);
+        builder.append(loginTextField, 5);
         builder.nextLine();
 
         builder.append(hostLabel, 1);
         builder.append(hostTextField);
-        builder.nextLine();
+        //builder.nextLine();
 
-        builder.append(portLabel, 1);
-        builder.append(portTextField);
+        builder.append(portLabel);
+        builder.append(portSpinner);
         builder.nextLine();
 
         builder.appendSeparator(MailResourceLoader.getString("dialog",
@@ -285,22 +290,48 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
         JPanel panel = new JPanel();
         FormLayout l = new FormLayout(
-                "max(100;default), 3dlu, left:max(50dlu;default), 2dlu, left:max(50dlu;default)",
+                "default, 3dlu, fill:pref:grow, 3dlu, fill:pref:grow",
 
                 // 2 columns
-                ""); // rows are added dynamically (no need to define them here)
+				"fill:default:grow"); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
         b.append(authenticationLabel, authenticationComboBox, checkAuthMethods);
         builder.append(panel, 3);
         builder.nextLine();
-
-        builder.append(storePasswordCheckBox, 3);
-        builder.nextLine();
-
+      
         builder.append(secureCheckBox, 3);
         builder.nextLine();
+        
+        JPanel panel2 = new JPanel();
+        FormLayout l2 = new FormLayout(
+                "default, 3dlu, left:pref",
+
+                // 2 columns
+                ""); // rows are added dynamically (no need to define them here)
+
+        // create a form builder
+        DefaultFormBuilder b2 = new DefaultFormBuilder(panel2, l2);
+        b2.setRowGroupingEnabled(true);
+        b2.append(secureCheckBox, sslComboBox);
+        builder.append(panel2, 3);
+        builder.nextLine();
+        
+        builder.append(storePasswordCheckBox, 3);
+        builder.nextLine();
+               
+        /*
+        builder.append(sslLabel, 3);
+        builder.nextLine();
+        
+        builder.append(disableSSLConnectionRadioButton, 2);
+        builder.nextLine();
+        builder.append(enableSSLConnectionRadioButton, 2);
+        builder.nextLine();
+        builder.append(enableSTARTTLSExtensionRadioButton, 2);
+        builder.nextLine();
+        */
     }
 
     protected void initComponents() {
@@ -350,8 +381,8 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
                 "dialog", "account", "port"));
 
-        portTextField = new JTextField();
-        portLabel.setLabelFor(portTextField);
+        portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 99999, 1));
+        portLabel.setLabelFor(portSpinner);
 
         storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
                 .getString("dialog", "account",
@@ -372,6 +403,12 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
                 "dialog", "account", "authentication_checkout_methods"));
         checkAuthMethods.setActionCommand("CHECK_AUTHMETHODS");
         checkAuthMethods.addActionListener(this);
+        
+        sslComboBox = new JComboBox();
+        sslComboBox.addItem(MailResourceLoader
+                .getString("dialog", "account", "ssl_combobox_popimaps"));
+        sslComboBox.addItem(MailResourceLoader
+                .getString("dialog", "account", "ssl_combobox_tls"));
     }
 
     private void updateAuthenticationComboBox() {
@@ -459,7 +496,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
     private LinkedList getAuthPOP3() throws IOException, POP3Exception {
         LinkedList list;
         POP3Protocol protocol = new POP3Protocol(hostTextField.getText(),
-                Integer.parseInt(portTextField.getText()));
+                ((Integer) portSpinner.getValue()).intValue());
         protocol.openPort();
 
         String[] capas = protocol.capa();

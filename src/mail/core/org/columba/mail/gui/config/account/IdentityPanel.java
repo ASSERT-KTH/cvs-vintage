@@ -157,7 +157,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 
     protected void layoutComponents() {
         // Create a FormLayout instance.
-        FormLayout layout = new FormLayout("10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
+        FormLayout layout = new FormLayout("10dlu, max(70dlu;default), 3dlu, fill:max(150dlu;default):grow",
                 
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)
@@ -205,16 +205,18 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 
         builder.append(replyaddressLabel, 1);
         builder.append(replyaddressTextField);
-        builder.nextLine();
+        builder.nextLine(1);
+        
 
         JPanel panel = new JPanel();
         FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
                 
             // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+            "fill:default:grow"); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+        
         b.append(attachsignatureCheckBox, selectSignatureButton);
 
         //b.append(selectSignatureButton);

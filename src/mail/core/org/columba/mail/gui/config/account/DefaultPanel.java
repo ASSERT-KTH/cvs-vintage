@@ -18,6 +18,7 @@ package org.columba.mail.gui.config.account;
 import javax.swing.JPanel;
 
 
+
 public class DefaultPanel extends JPanel {
     /**
  * model->view
