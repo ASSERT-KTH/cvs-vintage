@@ -50,7 +50,7 @@ $page.setTitle("Confirm Your Email Address")
 <form method="post" action="$link.setPage("Confirm.vm")">
     <input type="hidden" name="action" value="Confirm">
     <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Start.vm">
+    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">
 
 #set ($user = $data.User)
 #set ($email = $data.Parameters.Email)
