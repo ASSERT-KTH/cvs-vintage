@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.21 2001/10/18 20:03:42 vharcq Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.22 2001/10/20 22:09:35 patriot1burke Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -182,7 +182,7 @@
 	    <MaximumSize>100</MaximumSize>
 	    <MinimumSize>10</MinimumSize>
 	 </container-pool-conf>
-	 <commit-option>A</commit-option>
+	 <commit-option>B</commit-option>
       </container-configuration>
 
       <container-configuration>
@@ -478,7 +478,7 @@
 	    <MaximumSize>100</MaximumSize>
 	    <MinimumSize>10</MinimumSize>
 	 </container-pool-conf>
-	 <commit-option>A</commit-option>
+	 <commit-option>B</commit-option>
       </container-configuration>
 
       <container-configuration>
