@@ -58,7 +58,7 @@
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.10 $                                           *
+ * Version:     $Revision: 1.11 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -264,6 +264,10 @@ static int read_fully_from_server(jk_ws_service_t *s,
 {
     unsigned rdlen = 0;
 
+    if (s->is_chunked && s->no_more_chunks) {
+	return 0;
+    }
+
     while(rdlen < len) {
         unsigned this_time = 0;
         if(!s->read(s, buf + rdlen, len - rdlen, &this_time)) {
@@ -271,44 +275,59 @@ static int read_fully_from_server(jk_ws_service_t *s,
         }
 
         if(0 == this_time) {
+	    if (s->is_chunked) {
+		s->no_more_chunks = 1; /* read no more */
+	    }
             break;
         }
-	    rdlen += this_time;
+        rdlen += this_time;
     }
 
     return (int)rdlen;
 }
 
+/* Returns -1 on error, else number of bytes read */
 static int read_into_msg_buff(ajp13_endpoint_t *ep,
                               jk_ws_service_t *r, 
                               jk_msg_buf_t *msg, 
                               jk_logger_t *l,
                               unsigned len)
 {
-    unsigned char *read_buf = jk_b_get_buff(msg);                                                                                       
+    unsigned char *read_buf = jk_b_get_buff(msg);
 
     jk_b_reset(msg);
     
     read_buf += AJP13_HEADER_LEN;    /* leave some space for the buffer headers */
     read_buf += AJP13_HEADER_SZ_LEN; /* leave some space for the read length */
 
-    if(read_fully_from_server(r, read_buf, len) < 0) {
+    /* Pick the max size since we don't know the content_length */
+    if (r->is_chunked && len == 0) {
+	len = MAX_SEND_BODY_SZ;
+    }
+
+    if((len = read_fully_from_server(r, read_buf, len)) < 0) {
         jk_log(l, JK_LOG_ERROR, 
                "read_into_msg_buff: Error - read_fully_from_server failed\n");
-        return JK_FALSE;                        
+        return -1;
     } 
-    
-    ep->left_bytes_to_send -= len;
 
-    if(0 != jk_b_append_int(msg, (unsigned short)len)) {
-        jk_log(l, JK_LOG_ERROR, 
-               "read_into_msg_buff: Error - jk_b_append_int failed\n");
-        return JK_FALSE;
+    if (!r->is_chunked) {
+	ep->left_bytes_to_send -= len;
+    }
+
+    if (len > 0) {
+	/* Recipient recognizes empty packet as end of stream, not
+	   an empty body packet */
+        if(0 != jk_b_append_int(msg, (unsigned short)len)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "read_into_msg_buff: Error - jk_b_append_int failed\n");
+            return -1;
+	}
     }
 
     jk_b_set_len(msg, jk_b_get_len(msg) + len);
     
-    return JK_TRUE;
+    return len;
 }
 
 static int ajp13_process_callback(jk_msg_buf_t *msg, 
@@ -370,7 +389,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
 		}
 
 		/* the right place to add file storage for upload */
-		if(read_into_msg_buff(ep, r, pmsg, l, len)) {
+		if((len = read_into_msg_buff(ep, r, pmsg, l, len)) >= 0) {
 		    r->content_read += len;
 		    return JK_AJP13_HAS_RESPONSE;
 		}                  
@@ -636,11 +655,11 @@ static int send_request(jk_endpoint_t *e,
 		 * for resend if the remote Tomcat is down, a fact we will learn only
 		 * doing a read (not yet) 
 	 	 */
-		if(p->left_bytes_to_send > 0) {
+		if(s->is_chunked || p->left_bytes_to_send > 0) {
 			unsigned len = p->left_bytes_to_send;
-			if(len > MAX_SEND_BODY_SZ) 
+			if(len > MAX_SEND_BODY_SZ)
 				len = MAX_SEND_BODY_SZ;
-            		if(!read_into_msg_buff(p, s, op->post, l, len)) {
+            		if((len = read_into_msg_buff(p, s, op->post, l, len)) < 0) {
 				/* the browser stop sending data, no need to recover */
 				op->recoverable = JK_FALSE;
 				return JK_FALSE;
