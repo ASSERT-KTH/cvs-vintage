@@ -23,7 +23,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedBoolean;
  * Implements the application server message endpoint requirements.
  * 
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class MessageEndpointInterceptor extends Interceptor
 {
@@ -219,21 +219,39 @@ public class MessageEndpointInterceptor extends Interceptor
       if (oldClassLoader != null)
          delivered = true;
       
+      JBossMessageEndpointFactory mef = (JBossMessageEndpointFactory) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_FACTORY);
+      MessageDrivenContainer container = mef.getContainer();
+      boolean commit = true;
       try
       {
+         // Check for starting a transaction
+         if (oldClassLoader == null)
+            startTransaction("delivery", mi, container);
          return getNext().invoke(mi);
       }
       catch (Throwable t)
       {
          if (trace)
             log.trace("MessageEndpoint " + getProxyString(mi) + " delivery error", t);
+         if (t instanceof Error || t instanceof RuntimeException)
+            commit = false;
          throw t;
       }
       finally
       {
-         // No before/after delivery, release the lock
+         // No before/after delivery, end any transaction and release the lock
          if (oldClassLoader == null)
-            releaseThreadLock(mi);
+         {
+            try
+            {
+               // Finish any transaction we started
+               endTransaction(mi, commit);
+            }
+            finally
+            {
+               releaseThreadLock(mi);
+            }
+         }
       }
    }
    
