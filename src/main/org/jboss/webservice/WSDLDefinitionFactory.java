@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.9 2004/06/14 12:17:33 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.10 2004/06/15 20:46:43 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -156,12 +156,21 @@ public class WSDLDefinitionFactory
 
          String wsdlImport = null;
          String external = parentURL.toExternalForm();
-         
-         if (resource.startsWith("/"))
+
+         // An external URL
+         if (resource.startsWith("http://") || resource.startsWith("https://"))
+         {
+            wsdlImport = resource;
+         }
+
+         // Absolute path
+         else if (resource.startsWith("/"))
          {
             String beforePath = external.substring(0, external.indexOf(parentURL.getPath()));
             wsdlImport = beforePath + resource;
          }
+
+         // A relative path
          else
          {
             String parentDir = external.substring(0, external.lastIndexOf("/"));
