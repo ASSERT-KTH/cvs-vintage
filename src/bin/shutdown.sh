@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: shutdown.sh,v 1.6 2002/06/13 18:17:24 starksm Exp $ ###
+### $Id: shutdown.sh,v 1.7 2003/04/07 22:09:15 kimptoc Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -49,7 +49,7 @@ else
 fi
 
 # Setup the classpath
-JBOSS_BOOT_CLASSPATH="$JBOSS_HOME/bin/shutdown.jar:$JBOSS_HOME/client/jnet.jar"
+JBOSS_BOOT_CLASSPATH="$JBOSS_HOME/bin/shutdown.jar:$JBOSS_HOME/client/jnet.jar:$JBOSS_HOME/lib/jboss-system.jar"
 
 if [ "x$JBOSS_CLASSPATH" = "x" ]; then
     JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH"
