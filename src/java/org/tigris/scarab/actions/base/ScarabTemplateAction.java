@@ -54,6 +54,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -65,7 +66,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.31 2003/03/27 23:53:03 jon Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.32 2003/08/07 00:55:34 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -252,5 +253,21 @@ public abstract class ScarabTemplateAction extends TemplateAction
     protected Logger log()
     {
         return LOG;
+    }
+
+    public void doRefreshresultsperpage(RunData data, TemplateContext context) 
+        throws Exception
+    {
+        ValueParser params = data.getParameters();
+        int resultsPerPage = params.getInt("resultsPerPage");
+        int newResultsPerPage = params.getInt("newResultsPerPage");
+        int pageNum = params.getInt("pageNum");
+        int offset =  (pageNum-1) * resultsPerPage;
+        int newPageNum = 1+ (offset - (offset % newResultsPerPage))/newResultsPerPage;
+        params.remove("resultsPerPage");
+        params.add("resultsPerPage", newResultsPerPage);
+        params.remove("pageNum");
+        params.add("pageNum", newPageNum);
+        setTarget(data, getCurrentTemplate(data));            
     }
 }

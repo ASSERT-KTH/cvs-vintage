@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.21 2003/07/24 17:26:50 jmcnally Exp $
+ * @version $Id: ManageUser.java,v 1.22 2003/08/07 00:55:34 elicia Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -367,6 +367,7 @@ public class ManageUser extends RequireLoginFirstAction
         String orderByField = data.getParameters().getString("orderByField");
         String ascOrDesc = data.getParameters().getString("ascOrDesc");
         String resultsPerPage = data.getParameters().getString("resultsPerPage");
+        String pageNum = data.getParameters().getString("pageNum");
         
         List users = gTool.getSearchUsers(
                 searchField, searchCriteria, orderByField, ascOrDesc);
@@ -378,8 +379,7 @@ public class ManageUser extends RequireLoginFirstAction
         scarabR.setGlobalUserSearchParam("orderByField", orderByField);
         scarabR.setGlobalUserSearchParam("ascOrDesc", ascOrDesc);
         scarabR.setGlobalUserSearchParam("resultsPerPage", resultsPerPage);
-        scarabR.setGlobalUserSearchParam("pageNum", String.valueOf(
-            getScarabRequestTool(context).getAdjustedPageNum()));
+        scarabR.setGlobalUserSearchParam("pageNum", pageNum);
         
         setTarget(data, "admin,ManageUserSearch.vm");
     }

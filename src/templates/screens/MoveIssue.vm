@@ -43,7 +43,7 @@
 </div>
 
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $scarabR.AdjustedPageNum)
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
 #set ($sortPolarity = $data.Parameters.getInt("sortPolarity", 1))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
 

@@ -54,6 +54,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -69,7 +70,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.49 2003/04/23 01:47:03 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.50 2003/08/07 00:55:34 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -287,6 +288,23 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     {
         setTarget(data, getCurrentTemplate(data));            
     }
+
+    public void doRefreshresultsperpage(RunData data, TemplateContext context) 
+        throws Exception
+    {
+        ValueParser params = data.getParameters();
+        int resultsPerPage = params.getInt("resultsPerPage");
+        int newResultsPerPage = params.getInt("newResultsPerPage");
+        int pageNum = params.getInt("pageNum");
+        int offset =  (pageNum-1) * resultsPerPage;
+        int newPageNum = 1+ (offset - (offset % newResultsPerPage))/newResultsPerPage;
+        params.remove("resultsPerPage");
+        params.add("resultsPerPage", newResultsPerPage);
+        params.remove("pageNum");
+        params.add("pageNum", newPageNum);
+        setTarget(data, getCurrentTemplate(data));            
+    }
+
 
     public void doReset(RunData data, TemplateContext context)
         throws Exception
