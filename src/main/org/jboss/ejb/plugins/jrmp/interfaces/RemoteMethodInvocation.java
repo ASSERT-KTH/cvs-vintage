@@ -10,11 +10,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.HashMap;
 
 import java.security.Principal;
+import java.security.MessageDigest;
+import java.security.DigestOutputStream;
 
 import javax.transaction.Transaction;
 
@@ -28,7 +34,7 @@ import javax.transaction.Transaction;
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
  *  @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Externalizable
@@ -37,8 +43,8 @@ public final class RemoteMethodInvocation
 
    // Attributes ----------------------------------------------------
    Object id;
-   String className;
-   int hash;
+//   String className;
+   long hash;
 	
    Object[] args;
 
@@ -47,37 +53,115 @@ public final class RemoteMethodInvocation
    private Object credential;
 	
    transient Map methodMap;
-
+   
    // Static --------------------------------------------------------
+   static Map hashMap = new WeakHashMap();
 
+
+	/**
+	 * Calculate method hashes. This algo is taken from RMI.
+	 *
+	 * @param   intf  
+	 * @return     
+	 */
+   public static Map getInterfaceHashes(Class intf)
+   {
+      // Create method hashes
+      Method[] methods = intf.getDeclaredMethods();
+      HashMap map = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+      {
+         Method method = methods[i];
+         Class[] parameterTypes = method.getParameterTypes();
+         String methodDesc = method.getName()+"(";
+         for(int j = 0; j < parameterTypes.length; j++)
+         {
+            methodDesc += getTypeString(parameterTypes[j]);
+         }
+         methodDesc += ")"+getTypeString(method.getReturnType());
+      
+         try
+         {
+            long hash = 0;
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
+            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
+            dataoutputstream.writeUTF(methodDesc);
+            dataoutputstream.flush();
+            byte abyte0[] = messagedigest.digest();
+            for(int j = 0; j < Math.min(8, abyte0.length); j++)
+              hash += (long)(abyte0[j] & 0xff) << j * 8;
+            map.put(method, new Long(hash));
+         } catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+      }
+      
+      return map;
+   }
+
+   static String getTypeString(Class cl)
+   {
+      if (cl == Byte.TYPE)
+      {
+         return "B";
+      } else if (cl == Character.TYPE)
+      {
+         return "C";
+      } else if (cl == Double.TYPE)
+      {
+         return "D";
+      } else if (cl == Float.TYPE)
+      {
+         return "F";
+      } else if (cl == Integer.TYPE)
+      {
+         return "I";
+      } else if (cl == Long.TYPE)
+      {
+         return "J";
+      } else if (cl == Short.TYPE)
+      {
+         return "S";
+      } else if (cl == Boolean.TYPE)
+      {
+         return "Z";
+      } else if (cl == Void.TYPE)
+      {
+         return "V";
+      } else if (cl.isArray())
+      {
+         return "["+getTypeString(cl.getComponentType());
+      } else
+      {
+         return "L"+cl.getName().replace('.','/')+";";
+      }
+   }
+   
    /*
    * The use of hashCode is not enough to differenciate methods
    * we override the hashCode
    *
-   * This is taken from the RMH code in EJBoss 0.9
-   *
+   * The hashes are cached in a static for efficiency
+   * RO: WeakHashMap needed to support undeploy
    */
-   public static int calculateHash(Method method)
+   public static long calculateHash(Method method)
    {
-      int hash =
-          // We use the declaring class
-          method.getDeclaringClass().getName().hashCode() ^ //name of class
-          // We use the name of the method
-          method.getName().hashCode(); //name of method
-
-      Class[] clazz = method.getParameterTypes();
-
-      for (int i = 0; i < clazz.length; i++) {
-         // XOR
-         // We use the constant because
-         // a^b^b = a (thank you norbert)
-         // so that methodA() hashes to methodA(String, String)
-
-         hash = (hash +20000) ^ clazz[i].getName().hashCode();
+      Map methodHashes = (Map)hashMap.get(method.getDeclaringClass());
+      
+      if (methodHashes == null)
+      {
+         methodHashes = getInterfaceHashes(method.getDeclaringClass());
+         
+         // Copy and add
+         WeakHashMap newHashMap = new WeakHashMap();
+         newHashMap.putAll(hashMap);
+         newHashMap.put(method.getDeclaringClass(), methodHashes);
+         hashMap = newHashMap;
       }
-
-      //DEBUGSystem.out.println(method+"="+hash);
-      return hash;
+   
+      return ((Long)methodHashes.get(method)).longValue();
    }
 	
    // Constructors --------------------------------------------------
@@ -96,7 +180,7 @@ public final class RemoteMethodInvocation
       this.id = id;
       this.args = args;
       this.hash = calculateHash(m);
-      this.className = m.getDeclaringClass().getName();
+//      this.className = m.getDeclaringClass().getName();
    }
 	
    // Public --------------------------------------------------------
@@ -106,7 +190,12 @@ public final class RemoteMethodInvocation
 
    public Method getMethod()
    {
-      return (Method)methodMap.get(new Integer(hash));
+      Method m = (Method)methodMap.get(new Long(hash));
+      
+      if (m == null)
+         throw new NullPointerException("METHOD IS NOT FOUND:"+hash+" "+methodMap);
+      
+      return (Method)methodMap.get(new Long(hash));
    }
 
    public Object[] getArguments()
@@ -148,16 +237,13 @@ public final class RemoteMethodInvocation
    {
       this.credential = credential;
    }
-	 
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
+	
+   // Externalizable implementation ---------------------------------
    public void writeExternal(java.io.ObjectOutput out)
       throws IOException
    {
       out.writeObject(id);
-      out.writeUTF(className);
-      out.writeInt(hash);
+      out.writeLong(hash);
       out.writeObject(args);
 
       out.writeObject(tpc);
@@ -169,17 +255,12 @@ public final class RemoteMethodInvocation
       throws IOException, ClassNotFoundException
    {
       id = in.readObject();
-      className = in.readUTF();
-      hash = in.readInt();
+      hash = in.readLong();
       args = (Object[])in.readObject();
 
       tpc = in.readObject();
       identity = (Principal)in.readObject();
       credential = in.readObject();
    }
-
-   // Private -------------------------------------------------------
-	
-   // Inner classes -------------------------------------------------
 }
 
