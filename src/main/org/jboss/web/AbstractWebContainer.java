@@ -144,7 +144,7 @@ import org.w3c.dom.Element;
 
  @author  Scott.Stark@jboss.org
  @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- @version $Revision: 1.70 $
+ @version $Revision: 1.71 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -196,9 +196,12 @@ public abstract class AbstractWebContainer
    protected boolean java2ClassLoadingCompliance = false;
    /** A flag indicating if war archives should be unpacked */
    protected boolean unpackWars = true;
-
    /** objectname of a ws4ee deployer */
-   private ObjectName ws4eeDeployer;
+   protected ObjectName ws4eeDeployer;
+   /** If true, ejb-links that don't resolve don't cause an error (fallback to
+    * jndi-name)
+    */
+   protected boolean lenientEjbLink = false;
 
    public AbstractWebContainer()
    {
@@ -266,6 +269,30 @@ public abstract class AbstractWebContainer
    {
       this.ws4eeDeployer = deployer;
    }
+
+    /**
+     * Get the flag indicating if ejb-link errors should be ignored
+     * in favour of trying the jndi-name in jboss-web.xml
+     * @return a <code>boolean</code> value
+     *
+     * @jmx:managed-attribute
+     */
+    public boolean getLenientEjbLink ()
+    {
+        return lenientEjbLink;
+    }
+
+    /**
+     * Set the flag indicating if ejb-link errors should be ignored
+     * in favour of trying the jndi-name in jboss-web.xml
+     * @return a <code>boolean</code> value
+     *
+     * @jmx:managed-attribute
+     */
+    public void setLenientEjbLink (boolean flag)
+    {
+        lenientEjbLink = flag;
+    }
 
    public boolean accepts(DeploymentInfo sdi)
    {
