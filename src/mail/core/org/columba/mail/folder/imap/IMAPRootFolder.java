@@ -196,12 +196,18 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 				parent.getNode().addElement(subFolder.getNode());
 
 				((IMAPFolder) subFolder).existsOnServer = true;
+				subFolder.getFolderItem().set("selectable", "false");
+
 				// this is the final folder
 				//subFolder = addIMAPChildFolder(parent, info, subchild);
 			} else {
+				if( !((IMAPFolder) subFolder).existsOnServer) {
 				((IMAPFolder) subFolder).existsOnServer = true;
+				subFolder.getFolderItem().set("selectable", "false");
+				}
 			}
-
+			
+			
 			// recursively go on
 			syncFolder(
 				subFolder,
@@ -228,6 +234,8 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 			
 			if( info.getParameter(ListInfo.NOSELECT) ) {
 				subFolder.getFolderItem().set("selectable", "false");
+			} else {
+				subFolder.getFolderItem().set("selectable", "true");				
 			}
 		}
 	}
