@@ -10,7 +10,7 @@ import org.jboss.invocation.nrmi.algorithm.NRMI;
  * The server site NRMI interceptor.
  * Must be first in the chain of server interceptors.
  * @author <a href="mailto:tilevich@cc.gatech.edu">Eli Tilevich</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ServerInterceptor extends AbstractInterceptor {
 	
@@ -20,7 +20,7 @@ public class ServerInterceptor extends AbstractInterceptor {
  */
 public InvocationResponse invoke(final Invocation invocation) throws Exception {
 boolean[] passByCopyRestore = 
-			(boolean[])invocation.getValue(ClientInterceptor.PASS_BY_COPY_RESTORE);
+			(boolean[])invocation.getValue(NRMI.PASS_BY_COPY_RESTORE);
 
 Object[][] linearRepresentations = NRMI.createLinearRepresentations (passByCopyRestore,
                                                                      invocation.getArguments()); 
