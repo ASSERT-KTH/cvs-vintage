@@ -149,7 +149,7 @@ public class TableController implements TreeSelectionListener {
         HeaderItem item;
 
         for (int i = 0; i < rows.length; i++) {
-            item = (HeaderItem) sortDecorator.getValueAt(rows[i], 0);
+            item = (HeaderItem) sortDecorator.getHeaderItem(rows[i]);
 
             Object uid = item.getUid();
             uids[i] = uid;
@@ -169,7 +169,7 @@ public class TableController implements TreeSelectionListener {
         int row = getView().getSelectedRow();
 
         // we use the SortDecorator, because the indices are sorted
-        HeaderItem item = (HeaderItem) sortDecorator.getValueAt(row, 0);
+        HeaderItem item = (HeaderItem) sortDecorator.getHeaderItem(row);
 
         return item;
     }

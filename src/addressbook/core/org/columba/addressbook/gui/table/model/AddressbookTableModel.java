@@ -17,11 +17,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-
 import javax.swing.table.AbstractTableModel;
 
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
 
 /**
  * Simple table model, using an extended TableModel interface.
@@ -29,50 +28,60 @@ import javax.swing.table.AbstractTableModel;
  * @author fdietz
  */
 public class AddressbookTableModel extends AbstractTableModel
-    implements HeaderListTableModel {
-    private String[] columns = { "type", "displayname", "email;internet", "url" };
-    private HeaderItemList rows;
+		implements
+			HeaderListTableModel {
+	private String[] columns = {"type", "displayname", "email;internet", "url"};
+	private HeaderItemList rows;
 
-    public AddressbookTableModel() {
-        super();
+	public AddressbookTableModel() {
+		super();
 
-        rows = new HeaderItemList();
-    }
+		rows = new HeaderItemList();
+	}
 
-    public HeaderItemList getHeaderList() {
-        return rows;
-    }
+	public HeaderItemList getHeaderList() {
+		return rows;
+	}
 
-    public void setHeaderList(HeaderItemList list) {
-        this.rows = list;
+	public void setHeaderList(HeaderItemList list) {
+		this.rows = list;
 
-        fireTableDataChanged();
-    }
+		fireTableDataChanged();
+	}
 
-    public void update() {
-        fireTableDataChanged();
-    }
+	public void update() {
+		fireTableDataChanged();
+	}
 
-    /**
- * @see javax.swing.table.TableModel#getColumnCount()
- */
-    public int getColumnCount() {
-        return columns.length;
-    }
+	/**
+	 * @see javax.swing.table.TableModel#getColumnCount()
+	 */
+	public int getColumnCount() {
+		return columns.length;
+	}
 
-    /**
- * @see javax.swing.table.TableModel#getRowCount()
- */
-    public int getRowCount() {
-        return rows.count();
-    }
+	/**
+	 * @see javax.swing.table.TableModel#getRowCount()
+	 */
+	public int getRowCount() {
+		if ( rows == null ) return 0;
+		
+		return rows.count();
+	}
 
-    /**
- * @see javax.swing.table.TableModel#getValueAt(int, int)
- */
-    public Object getValueAt(int row, int column) {
-        HeaderItem item = rows.get(row);
+	/**
+	 * @see javax.swing.table.TableModel#getValueAt(int, int)
+	 */
+	public Object getValueAt(int row, int column) {
+		HeaderItem item = rows.get(row);
 
-        return item.get(columns[column]);
-    }
+		return item.get(columns[column]);
+	}
+	/**
+	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#getHeaderItem(int)
+	 */
+	public HeaderItem getHeaderItem(int index) {
+
+		return rows.get(index);
+	}
 }
