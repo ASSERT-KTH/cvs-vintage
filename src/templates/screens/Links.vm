@@ -25,6 +25,19 @@ $page.setTitle("Scarab Links")
 </ul>
 
 <h3>Admin Pages</h3>
+
+<p>
+Working:
+</p>
+
+<ul>
+<li><a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
+</ul>
+
+<p>
+Not working:
+</p>
+
 <ul>
 <li><a href="$link.setPage("admin,AddUser.vm")">admin,AddUser.vm</a>
 <li><a href="$link.setPage("admin,AdminHome.vm")">admin,AdminHome.vm</a>
