@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.14 2002/05/29 01:16:04 elicia Exp $
+ * @version $Id: IssueTest.java,v 1.15 2002/05/29 20:14:52 elicia Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -86,7 +86,9 @@ public class IssueTest extends BaseTestCase
         createTestIssues(); 
         loopThruTestIssues();
         testAssignIssue();
-        testGetAssociatedUsers();
+        testGetUserAttributeValues();
+        testGetEligibleUsers();
+        testGetUsersToEmail();
     }
     
     private void createTestIssues() throws Exception
@@ -163,9 +165,25 @@ public class IssueTest extends BaseTestCase
                                attribute, "test reason");
     }
                
-    private void testGetAssociatedUsers() throws Exception
+    private void testGetUserAttributeValues() throws Exception
     {
         System.out.println ("testAssociatedUsers()");
-        List users = getIssue0().getAssociatedUsers();
+        List attVals = getIssue0().getUserAttributeValues();
+        AttributeValue attVal = (AttributeValue)attVals.get(0);
+        assertEquals(attVal.getAttributeId().toString(), "2");
+    }
+
+    private void testGetEligibleUsers() throws Exception
+    {
+        System.out.println ("testGetEligibleUsers()");
+        List users = getIssue0().getEligibleUsers(getAssignAttribute());
+        assertEquals(users.size(), 5);
+    }
+
+    private void testGetUsersToEmail() throws Exception
+    {
+        System.out.println ("testGetUsersToEmail()");
+        List users = getIssue0().getUsersToEmail(AttributePeer.EMAIL_TO);
+        assertEquals(users.size(), 2);
     }
 }
