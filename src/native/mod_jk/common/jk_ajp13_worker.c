@@ -58,7 +58,7 @@
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.12 $                                           *
+ * Version:     $Revision: 1.13 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"

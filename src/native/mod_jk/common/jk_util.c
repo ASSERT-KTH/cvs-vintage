@@ -57,7 +57,7 @@
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.7 $                                           *
+ * Version:     $Revision: 1.8 $                                           *
  ***************************************************************************/
 
 
