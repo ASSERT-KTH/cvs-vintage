@@ -73,7 +73,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.83 $
+ * @version $Revision: 1.84 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -689,6 +689,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             "in ejbCreate; this should be done in the ejbPostCreate " +
             "method instead [EJB 2.0 Spec. 10.5.2].");
       }
+
       if(isCollectionValued() && value == null)
       {
          throw new IllegalArgumentException("null cannot be assigned to a " +
@@ -825,28 +826,41 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
     */
    public void setInstanceValue(EntityEnterpriseContext myCtx, Object newValue)
    {
-      load(myCtx);
-      FieldState fieldState = getFieldState(myCtx);
-
-      // is this just setting our own relation set back
-      if(newValue == fieldState.getRelationSet())
-      {
-         return;
-      }
-
+      // validate new value first
       EJBLocalObject[] valueCopy;
       if(newValue instanceof Collection)
       {
          Collection col = (Collection) newValue;
          valueCopy = (EJBLocalObject[]) Array.newInstance(relatedEntity.getLocalInterface(), col.size());
-         try
+
+         if(valueCopy.length > 0)
          {
-            col.toArray(valueCopy);
-         }
-         catch(ArrayStoreException e)
-         {
-            throw new IllegalArgumentException("The elements in the collection must be of type " +
-               relatedEntity.getLocalInterface().getName());
+            try
+            {
+               col.toArray(valueCopy);
+            }
+            catch(ArrayStoreException e)
+            {
+               throw new IllegalArgumentException("The elements in the collection must be of type " +
+                  relatedEntity.getLocalInterface().getName());
+            }
+
+            for(int i = 0; i < valueCopy.length; ++i)
+            {
+               EJBLocalObject localObject = valueCopy[i];
+               try
+               {
+                  Object relatedId = localObject.getPrimaryKey();
+                  if(relatedManager.wasCascadeDeleted(relatedId))
+                  {
+                     throw new IllegalArgumentException("The instance was cascade-deleted: pk=" + relatedId);
+                  }
+               }
+               catch(NoSuchObjectLocalException e)
+               {
+                  throw new IllegalArgumentException(e.getMessage());
+               }
+            }
          }
       }
       else
@@ -856,7 +870,18 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             valueCopy = (EJBLocalObject[]) Array.newInstance(relatedEntity.getLocalInterface(), 1);
             try
             {
-               valueCopy[0] = (EJBLocalObject) newValue;
+               EJBLocalObject localObject = (EJBLocalObject) newValue;
+               Object relatedId = localObject.getPrimaryKey();
+               if(relatedManager.wasCascadeDeleted(relatedId))
+               {
+                  throw new IllegalArgumentException("The instance was cascade-deleted: pk=" + relatedId);
+               }
+
+               valueCopy[0] = localObject;
+            }
+            catch(NoSuchObjectLocalException e)
+            {
+               throw new IllegalArgumentException(e.getMessage());
             }
             catch(ArrayStoreException e)
             {
@@ -868,6 +893,16 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          {
             valueCopy = EMPTY_LOCAL_ARR;
          }
+      }
+
+      // load the current value
+      load(myCtx);
+      FieldState fieldState = getFieldState(myCtx);
+
+      // is this just setting our own relation set back
+      if(newValue == fieldState.getRelationSet())
+      {
+         return;
       }
 
       // list of new pk values. just not to fetch them twice
@@ -884,16 +919,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
             EJBLocalObject ejbObject = valueCopy[i];
             if(ejbObject != null)
             {
-               Object pkObject;
-               try
-               {
-                  pkObject = ejbObject.getPrimaryKey();
-               }
-               catch(NoSuchObjectLocalException e)
-               {
-                  throw new IllegalArgumentException(e.getMessage());
-               }
-
+               Object pkObject = ejbObject.getPrimaryKey();
                checkSetForeignKey(myCtx, pkObject);
                newPkValues.add(pkObject);
             }
@@ -928,15 +954,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
                EJBLocalObject newBean = valueCopy[i];
                if(newBean != null)
                {
-                  Object relatedId;
-                  try
-                  {
-                     relatedId = newBean.getPrimaryKey();
-                  }
-                  catch(NoSuchObjectLocalException e)
-                  {
-                     throw new IllegalArgumentException(e.getMessage());
-                  }
+                  Object relatedId = newBean.getPrimaryKey();
                   createRelationLinks(myCtx, relatedId);
                }
             }

@@ -55,7 +55,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  */
 public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
@@ -115,7 +115,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
    {
       protected Object initialValue()
       {
-         return new HashSet();
+         return new CascadeDeleteRegistry();
       }
    };
 
@@ -245,8 +245,8 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
     */
    public void scheduleCascadeDelete(List pks)
    {
-      Set registered = (Set)cascadeDeleteSet.get();
-      registered.addAll(pks);
+      CascadeDeleteRegistry registry = (CascadeDeleteRegistry)cascadeDeleteSet.get();
+      registry.scheduleAll(pks);
    }
 
    /**
@@ -256,8 +256,19 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
     */
    public boolean unscheduledCascadeDelete(Object pk)
    {
-      Set registered = (Set)cascadeDeleteSet.get();
-      return registered.remove(pk);
+      CascadeDeleteRegistry registry = (CascadeDeleteRegistry)cascadeDeleteSet.get();
+      return registry.unschedule(pk);
+   }
+
+   /**
+    * Checks whether the instance was cascade-deleted.
+    * @param pk instance primary key.
+    * @return true if instance was cascade deleted, false otherwise.
+    */
+   public boolean wasCascadeDeleted(Object pk)
+   {
+      CascadeDeleteRegistry registry = (CascadeDeleteRegistry)cascadeDeleteSet.get();
+      return registry.wasCascadeDeleted(pk);
    }
 
    public Object getApplicationTxData(Object key)
@@ -717,5 +728,34 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
          throw new DeploymentException("No metadata found for bean " + ejbName);
       }
       return metadata;
+   }
+
+   // Inner
+
+   private final class CascadeDeleteRegistry
+   {
+      private Set scheduled;
+      private Set deleted;
+
+      public void scheduleAll(List pks)
+      {
+         if(scheduled == null)
+         {
+            scheduled = new HashSet();
+            deleted = new HashSet();
+         }
+         scheduled.addAll(pks);
+         deleted.addAll(pks);
+      }
+
+      public boolean unschedule(Object pk)
+      {
+         return scheduled.remove(pk);
+      }
+
+      public boolean wasCascadeDeleted(Object pk)
+      {
+         return (deleted == null ? false : deleted.contains(pk));
+      }
    }
 }
