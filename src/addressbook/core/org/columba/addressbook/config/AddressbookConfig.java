@@ -28,7 +28,7 @@ public class AddressbookConfig extends DefaultConfig {
 
 	public static final String MODULE_NAME = "addressbook";
 
-	private static File addressbookFile;
+	//private static File addressbookFile;
 	private static File addressbookOptionsFile;
 	private static File folderFile;
 
@@ -39,11 +39,13 @@ public class AddressbookConfig extends DefaultConfig {
 
 		File configDirectory = createConfigDir(MODULE_NAME);
 
+		/*
 		addressbookFile = new File(configDirectory, "addressbook.xml");
 		registerPlugin(
 			addressbookFile.getName(),
 			new DefaultXmlConfig(addressbookFile));
-
+		*/
+		
 		addressbookOptionsFile =
 			new File(configDirectory, "options.xml");
 		registerPlugin(
