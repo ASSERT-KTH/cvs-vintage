@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.14 2002/03/19 02:02:00 elicia Exp $
+ * @version $Id: BaseTestCase.java,v 1.15 2002/05/29 20:12:32 elicia Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -91,6 +91,7 @@ public class BaseTestCase extends TestCase
     private ScarabUser user2 = null;
     private Issue issue0 = null;
     private Attribute platformAttribute = null;
+    private Attribute assignAttribute = null;
 
     private static boolean initialized = false;
 
@@ -210,6 +211,16 @@ public class BaseTestCase extends TestCase
             platformAttribute  = AttributeManager.getInstance(new NumberKey(5));
         }
         return platformAttribute;
+    }
+
+    protected Attribute getAssignAttribute()
+        throws Exception
+    {
+        if (assignAttribute == null)
+        {
+            assignAttribute  = AttributeManager.getInstance(new NumberKey(2));
+        }
+        return assignAttribute;
     }
 
     protected Transaction getEditTransaction()
