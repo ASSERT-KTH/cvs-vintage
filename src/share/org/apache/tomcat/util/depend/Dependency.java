@@ -150,7 +150,12 @@ public final class Dependency {
 	return target;
     }
     
-
+    public String toString() {
+	return "Dep(O=" + origin + " LM=" + lastModified +
+	    " OLM=" + ((origin!=null) ? origin.lastModified() :0) +
+	    " E=" + expired + ") ";
+    }
+    
     // -------------------- methods --------------------
 
     /** Check if the origin changed since target's was lastModified.

@@ -76,7 +76,7 @@ import java.security.*;
  */
 public class DependManager {
     int delay=4000;
-    Dependency deps[]=new Dependency[32];
+    Dependency deps[];
     int depsCount=0;
     long lastCheck=0;
     boolean checking=false;
@@ -84,8 +84,15 @@ public class DependManager {
     int checkCount=0;
 
     private boolean expired=false;
+
+    static final int INITIAL_DEP_SIZE=32;
     
     public DependManager() {
+	this( INITIAL_DEP_SIZE );
+    }
+
+    public DependManager(int initial_size) {
+	deps=new Dependency[initial_size];
     }
 
     /** Reset the depend manager - all dependencies are reset too.
@@ -177,6 +184,21 @@ public class DependManager {
 	}
     }
 
+    /** Update all times, so next "shouldReload" will happen if
+     *  any time changes ( after the specified time )
+     */
+    public void setLastModified( long time ) {
+	for( int i=0; i<depsCount; i++ ) {
+	    deps[i].setLastModified( time );
+	}
+    }
+
+    public void setExpired( boolean e ) {
+	for( int i=0; i<depsCount; i++ ) {
+	    deps[i].setExpired( e );
+	}
+    }
+    
     public synchronized void addDependency( Dependency dep ) {
 	if( depsCount >= deps.length ) {
 	    Dependency deps1[]=new Dependency[ deps.length *2 ];
