@@ -28,6 +28,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import org.jboss.ejb.plugins.TxSupport;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
@@ -37,23 +38,17 @@ import org.jboss.system.client.Client;
 import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.logging.Logger;
 
-/*
-import javax.naming.Name;
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
-*/
+
 /**
-* The client-side proxy for an EJB Home object.
-*      
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.6 $
-*
-* <p><b>2001/11/21: marcf</b>
-* <ol>
-*   <li>Initial checkin
-* </ol>
-*/
+ * The client-side proxy for an EJB Home object.
+ *      
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.7 $
+ *
+ */
 public class TransactionInterceptor
-extends Interceptor
+   extends Interceptor
 {
    // Constants -----------------------------------------------------
    
@@ -71,19 +66,21 @@ extends Interceptor
 
    //only look once for the tx manager.  It should always be there, but if not, don't waste time.
    private boolean noTransactionManager = false;
+
    
    // Constructors --------------------------------------------------
    
    /**
-   * No-argument constructor for externalization.
-   */
+    * No-argument constructor for externalization.
+    */
    public TransactionInterceptor() {}
    
    
    // Public --------------------------------------------------------
-   
+
+  
    public Object invoke(Invocation invocation) 
-   throws Throwable
+      throws Throwable
    {
       if (tm == null && !noTransactionManager)
       {
@@ -120,9 +117,39 @@ extends Interceptor
       if (tm != null)
       {
 	 Transaction tx = tm.getTransaction();
-	 invocation.setTransaction(tx);
+	 InvocationContext ic = invocation.getInvocationContext();
+	 Map methodHashToTxSupportMap = ic.getMethodHashToTxSupportMap();
+	 if (methodHashToTxSupportMap == null)
+	 {
+	    throw new IllegalStateException("No methodHashToTxSupportMap! " + ic);   
+	 } // end of if ()
+	 
+	 TxSupport txSupport = null;
+	 //local relationship calls may have no method.  TxRequired then.
+	 Method m = invocation.getMethod();
+	 if (m != null)
+	 {
+	    txSupport = (TxSupport)methodHashToTxSupportMap
+	       .get(new Integer(m.hashCode()));
+	    
+	 } // end of if ()
+	 else
+	 {
+	    txSupport = TxSupport.REQUIRED;
+	 } // end of else
+	 
+	 if (txSupport == null)
+	 {
+	    log.warn("No tx support found for method: " + m.getName());
+	    txSupport = TxSupport.DEFAULT;   
+	 } // end of if ()
+	 return txSupport.clientInvoke(invocation, tm, getNext());
       }
-      return getNext().invoke(invocation);
+      else 
+      {
+	 return getNext().invoke(invocation);
+      } // end of else
+      
    }
 
 }

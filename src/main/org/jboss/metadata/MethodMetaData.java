@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.InvocationType;
+import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * The combination of the method-permission, container-transaction
@@ -39,7 +40,7 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class MethodMetaData extends MetaData
 {
@@ -104,7 +105,7 @@ public class MethodMetaData extends MetaData
     * <trans-attribute>Mandatory</trans-attribute>
     * <trans-attribute>Never</trans-attribute>
     */
-   private byte transactionType;
+   private TxSupport transactionType;
 
    private Set permissions;
 
@@ -172,12 +173,12 @@ public class MethodMetaData extends MetaData
       return paramList.iterator();
    }
 
-   public byte getTransactionType()
+   public TxSupport getTransactionType()
    {
       return transactionType;
    }
 
-   public void setTransactionType(byte type)
+   public void setTransactionType(TxSupport type)
    {
       transactionType = type;
    }

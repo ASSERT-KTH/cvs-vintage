@@ -26,7 +26,8 @@ import org.jboss.invocation.PayloadKey;
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.6 $
  */
 public class ClientContainer
    implements Externalizable, InvocationHandler

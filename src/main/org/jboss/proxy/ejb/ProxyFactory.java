@@ -71,7 +71,8 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.19 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.20 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -285,15 +286,9 @@ public class ProxyFactory
    {
       try
       {   
-         // Create a stack from the description (in the future) for now we hardcode it
-         InvocationContext context = new InvocationContext();
+	 InvocationContext context = setupInvocationContext(homeInvoker);
 
-         context.setObjectName(new Integer(objectName));
-         context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-         // The behavior for home proxying should be isolated in an interceptor FIXME
-         context.setInvoker(homeInvoker);
-         context.setValue(InvocationKey.EJB_METADATA, ejbMetaData);
-         context.setInvokerProxyBinding(invokerMetaData.getName());
+	 context.setValue(InvocationKey.EJB_METADATA, ejbMetaData);
          
          ClientContainer client = new ClientContainer(context);
          loadInterceptorChain(homeInterceptorClasses, client);
@@ -314,13 +309,7 @@ public class ProxyFactory
              ((SessionMetaData)container.getBeanMetaData()).isStateless())
          {
             // Create a stack from the description (in the future) for now we hardcode it
-            context = new InvocationContext();
-            
-            context.setObjectName(new Integer(objectName));
-            context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-            // The behavior for home proxying should be isolated in an interceptor FIXME
-            context.setInvoker(beanInvoker);
-            context.setInvokerProxyBinding(invokerMetaData.getName());
+            context = setupInvocationContext(beanInvoker);
             
             client = new ClientContainer(context);
             
@@ -396,15 +385,9 @@ public class ProxyFactory
     */
    public Object getStatefulSessionEJBObject(Object id)
    {
-      // Create a stack from the description (in the future) for now we hardcode it
-      InvocationContext context = new InvocationContext();
+      InvocationContext context = setupInvocationContext(beanInvoker);
       
-      context.setObjectName(new Integer(objectName));
       context.setCacheId(id);
-      context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-      context.setInvoker(beanInvoker);
-      log.debug("seting invoker proxy binding for stateful session: " + invokerMetaData.getName());
-      context.setInvokerProxyBinding(invokerMetaData.getName());
       
       ClientContainer client = new ClientContainer(context);
       try
@@ -430,14 +413,9 @@ public class ProxyFactory
     */
    public Object getEntityEJBObject(Object id)
    {
-      // Create a stack from the description (in the future) for now we hardcode it
-      InvocationContext context = new InvocationContext();
+      InvocationContext context =  setupInvocationContext(beanInvoker);
       
-      context.setObjectName(new Integer(objectName));
       context.setCacheId(id);
-      context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-      context.setInvoker(beanInvoker);
-      context.setInvokerProxyBinding(invokerMetaData.getName());
       
       ClientContainer client = new ClientContainer(context);
       
@@ -470,15 +448,9 @@ public class ProxyFactory
 
       while(idEnum.hasNext())
       {
-         // Create a stack from the description (in the future) 
-         // for now we hardcode it
-         InvocationContext context = new InvocationContext();
+         InvocationContext context = setupInvocationContext(beanInvoker);
       
-         context.setObjectName(new Integer(objectName));
          context.setCacheId(idEnum.next());
-         context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-         context.setInvoker(beanInvoker);
-         context.setInvokerProxyBinding(invokerMetaData.getName());
       
          ClientContainer client = new ClientContainer(context);
       
@@ -500,4 +472,27 @@ public class ProxyFactory
       return list;
    }
 
+   /**
+    * The <code>setupInvocationContext</code> method puts standard
+    * data in the InvocationContext.  Some of this, in particular the
+    * methodHashToTxSupportMap, should be inserted by the client side
+    * interceptor in a "start" lifecycle method.  Since this does not
+    * yet exist, it is hardcoded here.
+    *
+    * @param invoker an <code>Invoker</code> value
+    * @return an <code>InvocationContext</code> value
+    */
+   private InvocationContext setupInvocationContext(Invoker invoker)
+   {
+      InvocationContext context = new InvocationContext();
+
+      context.setObjectName(new Integer(objectName));
+      context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
+      // The behavior for home proxying should be isolated in an interceptor FIXME
+      context.setInvoker(invoker);
+      context.setInvokerProxyBinding(invokerMetaData.getName());
+
+      context.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
+      return context;
+   }
 }

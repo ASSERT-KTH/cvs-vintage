@@ -6,25 +6,29 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.util.Hashtable;
 
+
+
+
+
+import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
-import javax.naming.Reference;
 import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
-
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 import org.jboss.ejb.EnterpriseContext;
-
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
 
@@ -36,7 +40,8 @@ import org.jboss.metadata.SessionMetaData;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.23 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.24 $
  */
 public final class TxInterceptorBMT extends AbstractTxInterceptor
 {
@@ -56,10 +61,12 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
     */
    private boolean stateless;
 
-   public void create() throws Exception
+   //public void create() throws Exception
+   public void start() throws Exception
    {
       // Do initialization in superclass.
-      super.create();
+      super.start();
+
 
       // Set the atateless attribute
       BeanMetaData beanMetaData = getContainer().getBeanMetaData();
@@ -70,7 +77,30 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
       {
          stateless = true;
       }
-
+      //COPY/PASTE FROM CMT INTERCEPTOR
+      Map methodToTxSupportMap = new HashMap();
+      if (getContainer().getHomeClass() != null)
+      {
+	 mapMethods(getContainer().getHomeClass(), beanMetaData, InvocationType.HOME,  methodToTxSupportMap);
+      } // end of if ()
+      
+      if (getContainer().getRemoteClass() != null)
+      {
+	 mapMethods(getContainer().getRemoteClass(), beanMetaData, InvocationType.REMOTE, methodToTxSupportMap);
+      } // end of if ()
+      
+      if (getContainer().getLocalHomeClass() != null)
+      {
+	 mapMethods(getContainer().getLocalHomeClass(), beanMetaData, InvocationType.LOCALHOME, methodToTxSupportMap);
+      } // end of if ()
+      
+      if (getContainer().getLocalClass() != null)
+      {
+	 mapMethods(getContainer().getLocalClass(), beanMetaData, InvocationType.LOCAL, methodToTxSupportMap);
+      } // end of if ()
+      
+      getContainer().setMethodToTxSupportMap(methodToTxSupportMap);
+      //END COPY/PASTE
       // bind java:comp/UserTransaction
       RefAddr refAddr = new RefAddr("userTransaction") {
          public Object getContent() {
@@ -87,7 +117,20 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
       context.bind("UserTransaction", ref);
    }
 
-   public void destroy()
+   private void mapMethods(Class clazz, BeanMetaData beanMetaData, InvocationType type, Map methodToTxSupportMap)
+      throws Exception
+   {
+      Method[] methods = clazz.getMethods();
+      for (int i = 0; i < methods.length; i++)
+      {
+	 Method m = methods[i];
+	 methodToTxSupportMap.put(methods[i], TxSupport.NOT_SUPPORTED);
+      } // end of for ()
+      
+   }
+
+   //public void destroy()
+   public void stop()
    {
       // unbind java:comp/UserTransaction
       try 
@@ -96,6 +139,8 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
          context.unbind("UserTransaction");
       }
       catch(Exception e) {}
+      super.stop();
+      getContainer().setMethodToTxSupportMap(null);
    }
 
    /**
@@ -106,6 +151,9 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
     * And it takes care that any lookup of
     * <code>java:comp/UserTransaction</code> will return the right
     * UserTransaction for the bean instance.
+    *
+    * @todo Move this logic to a TxSupport subclass and coalesce this
+    * class with TxInterceptorCMT.
     *
     * @param invocation the invocation context
     * @return the results of this invocation

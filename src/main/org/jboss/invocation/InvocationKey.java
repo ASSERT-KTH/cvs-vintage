@@ -112,7 +112,7 @@ public final class InvocationKey implements Serializable {
    
    public final static InvocationKey XID = new InvocationKey("XID");
    public final static InvocationKey TX_TIMEOUT = new InvocationKey("TX_TIMEOUT");
-
+   public final static InvocationKey METHOD_TO_TX_SUPPORT_MAP = new InvocationKey("METHOD_TO_TX_SUPPORT_MAP");
    private final transient String name;
 
    // this is the only value serialized

@@ -39,7 +39,8 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.27 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.28 $
  */
 public class MessageDrivenContainer extends Container
    implements EJBProxyFactoryContainer
@@ -159,13 +160,6 @@ public class MessageDrivenContainer extends Container
          // Start the instance pool
          getInstancePool().start();
 
-         // Start all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.start();
-            in = in.getNext();
-         }
       }
       finally
       {
@@ -198,13 +192,6 @@ public class MessageDrivenContainer extends Container
          // Stop the instance pool
          getInstancePool().stop();
 
-         // Stop all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.stop();
-            in = in.getNext();
-         }
       }
       finally
       {

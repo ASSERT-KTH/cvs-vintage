@@ -2,11 +2,12 @@ package org.jboss.ejb.plugins.local;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import org.jboss.invocation.InvocationType;
 
 /** The EJBLocal proxy for a stateful session
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.3 $
+ @version $Revision: 1.4 $
  */
 class StatefulSessionProxy extends LocalProxy
    implements InvocationHandler
@@ -38,7 +39,7 @@ class StatefulSessionProxy extends LocalProxy
       // If not taken care of, go on and call the container
       else
       {
-         return factory.invoke(id, m, args);
+         return factory.invoke(id, m, args, InvocationType.LOCAL);
       }
    }
 }

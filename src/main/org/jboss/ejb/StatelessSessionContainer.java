@@ -37,7 +37,8 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.42 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.43 $
  */
 public class StatelessSessionContainer extends Container
    implements EJBProxyFactoryContainer
@@ -135,13 +136,6 @@ public class StatelessSessionContainer extends Container
          // Start the instance pool
          getInstancePool().start();
 
-         // Start all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.start();
-            in = in.getNext();
-         }
       }
       finally
       {
@@ -172,13 +166,6 @@ public class StatelessSessionContainer extends Container
          // Stop the instance pool
          getInstancePool().stop();
 
-         // Stop all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.stop();
-            in = in.getNext();
-         }
       }
       finally
       {

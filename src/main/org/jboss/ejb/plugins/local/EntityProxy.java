@@ -2,11 +2,12 @@ package org.jboss.ejb.plugins.local;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import org.jboss.invocation.InvocationType;
 
 /** The EJBLocal proxy for an entity
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.3 $
+ @version $Revision: 1.4 $
  */
 class EntityProxy extends LocalProxy
    implements InvocationHandler
@@ -31,11 +32,11 @@ class EntityProxy extends LocalProxy
       if (args == null)
          args = EMPTY_ARGS;
 
-      Object retValue = super.invoke( proxy, m, args );
+      Object retValue = super.invoke(proxy, m, args);
       if( retValue == null )
       {
          // If not taken care of, go on and call the container
-         retValue = factory.invoke(cacheKey, m, args);
+         retValue = factory.invoke(cacheKey, m, args, InvocationType.LOCAL);
       }
       return retValue;
    }

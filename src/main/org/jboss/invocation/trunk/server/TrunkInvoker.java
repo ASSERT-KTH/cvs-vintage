@@ -27,21 +27,23 @@ import javax.transaction.TransactionManager;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.PayloadKey;
+import org.jboss.invocation.ServerID;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.ITrunkListener;
-import org.jboss.invocation.ServerID;
 import org.jboss.invocation.trunk.client.TrunkInvokerProxy;
-import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TrunkRequest;
+import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.server.bio.BlockingServer;
 import org.jboss.logging.Logger;
-import org.jboss.util.naming.Util;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
+import org.jboss.util.naming.Util;
+import org.jboss.invocation.Invoker;
+import org.jboss.invocation.InvokerXAResource;
 
 /**
  * Provides the MBean used by the JBoss JMX system to start this
@@ -115,10 +117,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
     * The proxy object that will sent to clients so that they 
     * know how to connect to the server.
     */
-   private TrunkInvokerProxy optimizedInvokerProxy;
+   private Invoker invoker;
 
-   private static TransactionPropagationContextFactory tpcFactory;
-   private static TransactionPropagationContextImporter tpcImporter;
 
    ////////////////////////////////////////////////////////////////////////
    //
@@ -131,7 +131,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
     */
    public String getName()
    {
-      return "Optimized-Invoker";
+      return "Trunk-Invoker";
    }
 
    /**
@@ -182,7 +182,10 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
       ServerID sa = new ServerID(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeoutMillis);
-      optimizedInvokerProxy = new TrunkInvokerProxy(sa);
+      Invoker transport = new TrunkInvokerProxy(sa);
+      InvokerXAResource xares = new InvokerXAResource();
+      xares.setInvoker(transport);
+      invoker = xares;
 
       log.info("Invoker service available at: " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
       log.info("Invoker clients will connect to: " + clientConnectAddress + ":" + clientConnectPort);
@@ -191,11 +194,11 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       // Register the service with the rest of the JBoss Kernel
       ///////////////////////////////////////////////////////////      
       // Export references to the bean
-      Registry.bind(getServiceName(), optimizedInvokerProxy);
+      Registry.bind(getServiceName(), invoker);
       // Bind the invoker in the JNDI invoker naming space
       // It should look like so "invokers/<hostname>/trunk" 
       InitialContext ctx = new InitialContext();
-      Util.rebind(ctx, "invokers/" + clientConnectAddress + "/trunk", optimizedInvokerProxy);
+      Util.rebind(ctx, "invokers/" + clientConnectAddress + "/trunk", invoker);
 
       log.debug("Bound invoker for JMX node");
       ctx.close();
@@ -484,11 +487,11 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
    /**
     * @jmx:managed-attribute
-    */
-   public TrunkInvokerProxy getOptimizedInvokerProxy()
+    * /
+   public Invoker getInvokerProxy()
    {
-      return optimizedInvokerProxy;
+      return invoker;
    }
-
+   */
 }
 // vim:expandtab:tabstop=3:shiftwidth=3

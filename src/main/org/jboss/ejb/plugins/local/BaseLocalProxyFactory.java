@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins.local;
 
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -30,18 +31,20 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
-
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactoryContainer;
 import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
-import org.jboss.util.naming.Util;
-import org.jboss.util.MethodHashing;
+import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.security.SecurityAssociation;
+import org.jboss.util.MethodHashing;
+import org.jboss.util.naming.Util;
+import org.jboss.proxy.Interceptor;
 
 
 /** 
@@ -51,6 +54,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  */
 public class BaseLocalProxyFactory implements LocalProxyFactory
 {
@@ -79,6 +83,10 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
    protected Map beanMethodInvokerMap;
    protected Map homeMethodInvokerMap;
+
+   private final InvocationContext invocationContext = new InvocationContext();
+
+   private final Interceptor next = new TransactionInterceptor();
    
    // Static --------------------------------------------------------
    
@@ -101,15 +109,24 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
    public void start() throws Exception
    {
+      if (container.getMethodToTxSupportMap() == null)
+      {
+	 throw new IllegalStateException("methodToTxSupportMap not set on container: " + container); 
+      } // end of if ()
+      
+      invocationContext.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
+      Interceptor containerInterceptor = new ContainerInterceptor(container);
+      next.setNext(containerInterceptor);
+
       BeanMetaData metaData = container.getBeanMetaData();
       EJBProxyFactoryContainer invokerContainer = 
-            (EJBProxyFactoryContainer) container;
+	 (EJBProxyFactoryContainer) container;
       Class localHomeClass = invokerContainer.getLocalHomeClass();
       Class localClass = invokerContainer.getLocalClass();
       if( localHomeClass == null || localClass == null )
       {
          log.debug(metaData.getEjbName() + " cannot be Bound, doesn't " +
-               "have local and local home interfaces");
+		   "have local and local home interfaces");
          return;
       }
 
@@ -119,7 +136,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
       transactionManager = 
-            (TransactionManager) iniCtx.lookup("java:/TransactionManager");
+	 (TransactionManager) iniCtx.lookup("java:/TransactionManager");
 
       // Create method mappings for container invoker
       Method[] methods = localClass.getMethods();
@@ -158,6 +175,8 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       catch(Exception ignore)
       {
       }
+      next.setNext(null);
+      invocationContext.setMethodHashToTxSupportMap(null);
    }
 
    public void destroy()
@@ -243,50 +262,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       return list;
    }
    
-   /**
-    *  Invoke a Home interface method.
-    */
-   public Object invokeHome(Method m, Object[] args) throws Exception
-   {
-      // Set the right context classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(container.getClassLoader());
-      
-      try
-      {
-         Invocation invocation = new Invocation(
-               null, 
-               m, 
-               args,
-               getTransaction(), 
-               getPrincipal(), 
-               getCredential());
-         invocation.setType(InvocationType.LOCALHOME);
-         
-         return container.invoke(invocation);
-      }
-      catch (AccessException ae)
-      {
-         throw new AccessLocalException( ae.getMessage(), ae );
-      }
-      catch (NoSuchObjectException nsoe)
-      {
-         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
-      }
-      catch (TransactionRequiredException tre)
-      {
-         throw new TransactionRequiredLocalException( tre.getMessage() );
-      }
-      catch (TransactionRolledbackException trbe)
-      {
-         throw new TransactionRolledbackLocalException( 
-               trbe.getMessage(), trbe );
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(oldCl);
-      }
-   }
 
    public String getJndiName()
    {
@@ -323,13 +298,11 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    }
 
    /**
-    *  Invoke a local interface method.
+    *  Invoke a local or local home interface method.
     */
-   public Object invoke(Object id, Method m, Object[] args )
-      throws Exception
+   public Object invoke(Object id, Method m, Object[] args, InvocationType type )
+      throws Throwable
    {
-      // FIXME: I think this is the same code as invokeHome
-      
       // Set the right context classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
@@ -343,9 +316,10 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
                getTransaction(), 
                getPrincipal(), 
                getCredential());
-         invocation.setType(InvocationType.LOCAL);
+         invocation.setType(type);
+         invocation.setInvocationContext(invocationContext);
          
-         return container.invoke(invocation);
+         return next.invoke(invocation);
       }
       catch (AccessException ae)
       {

@@ -24,9 +24,11 @@ import org.jboss.util.NestedRuntimeException;
 /** A generic factory of java.lang.reflect.Proxy that constructs a proxy
  * that is a composite of ClientContainer/Interceptors/Invoker
  *
+ * @todo find a way to customize or add more to the InvocationContext.
+ *
  * @todo generalize the proxy/invoker factory object
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class GenericProxyFactory
 {
@@ -44,6 +46,7 @@ public class GenericProxyFactory
       String jndiName, String proxyBindingName,
       ArrayList interceptorClasses, ClassLoader loader, Class[] ifaces)
    {
+
       InvocationContext context = new InvocationContext();
       Integer nameHash = new Integer(invokerName.hashCode());
       context.setObjectName(nameHash);
@@ -57,6 +60,9 @@ public class GenericProxyFactory
       context.setInvoker(invoker);
       if( proxyBindingName != null )
          context.setInvokerProxyBinding(proxyBindingName);
+
+      //for use with txInterceptors you need something like this:
+      //context.setMethodHashToTxSupportMap(container.getMethodHashToTxSupportMap());
 
       ClientContainer client = new ClientContainer(context);
       try

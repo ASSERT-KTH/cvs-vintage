@@ -74,7 +74,8 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.87 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.88 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer, 
@@ -242,13 +243,6 @@ public class EntityContainer
          // Start the instance pool
          getInstancePool().start();
 
-         // Start all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.start();
-            in = in.getNext();
-         }
       }
       finally
       {
@@ -269,6 +263,7 @@ public class EntityContainer
          //This assures that CachedConnectionInterceptor will get removed
          //from in between this and the pm before the pm is stopped.
          // Stop all interceptors in the chain
+	 //??Might be a problem, the superclass is now also stopping the interceptors.
          Interceptor in = interceptor;
          while (in != null)
          {

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
@@ -107,14 +108,14 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.109 $
+ * @version $Revision: 1.110 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an 
  * aspect/interceptor.  Make this whole stack into a model mbean.
  */
 public abstract class Container extends ServiceMBeanSupport
    implements MBeanRegistration, DynamicMBean, 
-   StatisticsProvider, InstancePoolContainer
+	      StatisticsProvider, InstancePoolContainer
 {
    public final static String BASE_EJB_CONTAINER_NAME = 
          "jboss.j2ee:service=EJB";
@@ -301,6 +302,8 @@ public abstract class Container extends ServiceMBeanSupport
     * Timer Service for this Container
     **/
    public HashMap timerServices = new HashMap();
+
+   private Map methodToTxSupportMap;
    
    /**
     * Get the Di value.
@@ -558,6 +561,38 @@ public abstract class Container extends ServiceMBeanSupport
    {
       this.webClassLoader = webClassLoader;
    }
+
+
+   /**
+    * Get the MethodToTxSupportMap value.
+    * @return the MethodToTxSupportMap value.
+    */
+   public Map getMethodToTxSupportMap()
+   {
+      return methodToTxSupportMap;
+   }
+
+   public Map getMethodHashToTxSupportMap()
+   {
+      Map result = new HashMap(methodToTxSupportMap.size());
+      for (Iterator i = methodToTxSupportMap.entrySet().iterator(); i.hasNext();)
+      {
+	 Map.Entry e = (Map.Entry)i.next();
+	 result.put(new Integer(e.getKey().hashCode()), e.getValue()); 
+      } // end of for ()
+      return result;
+   }
+
+   /**
+    * Set the MethodToTxSupportMap value.
+    * @param methodToTxSupportMap The new MethodToTxSupportMap value.
+    */
+   public void setMethodToTxSupportMap(Map methodToTxSupportMap)
+   {
+      this.methodToTxSupportMap = methodToTxSupportMap;
+   }
+
+   
    
    /**
     * Returns the permissions for a method. (a set of roles)
@@ -838,6 +873,13 @@ public abstract class Container extends ServiceMBeanSupport
       // Setup "java:comp/env" namespace
       setupEnvironment();
       started = true;
+      // Start all interceptors in the chain
+      Interceptor in = interceptor;
+      while (in != null)
+      {
+	 in.start();
+	 in = in.getNext();
+      }
       localProxyFactory.start();
 
       // We keep the hashCode around for fast creation of proxies
@@ -881,6 +923,14 @@ public abstract class Container extends ServiceMBeanSupport
          {
             log.warn("Failed to unregister webClassLoader", e);
          }
+      }
+
+      // Stop all interceptors in the chain
+      Interceptor in = interceptor;
+      while (in != null)
+      {
+	 in.stop();
+	 in = in.getNext();
       }
    }
    

@@ -33,12 +33,13 @@ import org.jboss.util.MethodHashing;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.53 $</tt>
+ * @version <tt>$Revision: 1.54 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  */
 public class StatefulSessionContainer extends Container
    implements EJBProxyFactoryContainer
@@ -165,13 +166,6 @@ public class StatefulSessionContainer extends Container
          // Start persistence
          persistenceManager.start();
 
-         // Start all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.start();
-            in = in.getNext();
-         }
       }
       finally
       {
@@ -211,13 +205,6 @@ public class StatefulSessionContainer extends Container
          // Stop the instance pool
          getInstancePool().stop();
 
-         // Stop all interceptors in the chain
-         Interceptor in = interceptor;
-         while (in != null)
-         {
-            in.stop();
-            in = in.getNext();
-         }
       }
       finally
       {

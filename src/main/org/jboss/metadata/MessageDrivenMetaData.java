@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 
 import org.jboss.invocation.InvocationType;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * Provides a container and parser for the metadata of a message driven
@@ -24,7 +25,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * <p>Have to add changes ApplicationMetaData and ConfigurationMetaData.
  *
- * @version <tt>$Revision: 1.24 $</tt>
+ * @version <tt>$Revision: 1.25 $</tt>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
@@ -43,13 +44,12 @@ public class MessageDrivenMetaData
       Session.CLIENT_ACKNOWLEDGE;
    public static final byte DURABLE_SUBSCRIPTION = 0;
    public static final byte NON_DURABLE_SUBSCRIPTION = 1;
-   public static final byte TX_UNSET = 9;
    public static final String DEFAULT_MESSAGE_DRIVEN_BEAN_INVOKER_PROXY_BINDING = "message-driven-bean";
 
    // Attributes ----------------------------------------------------
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
    private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
-   private byte methodTransactionType = TX_UNSET;
+   private TxSupport methodTransactionType = null;
    private String destinationType;
    private String messageSelector;
    private String destinationJndiName;
@@ -102,7 +102,7 @@ public class MessageDrivenMetaData
       // anyway, if we find that this is needed for other
       // JMS provider, or is not good.
 
-      if (getMethodTransactionType() == TX_REQUIRED)
+      if (getMethodTransactionType() == TxSupport.REQUIRED)
       {
          return CLIENT_ACKNOWLEDGE_MODE;
       }
@@ -175,9 +175,9 @@ public class MessageDrivenMetaData
    /**
     * Check MDB methods TX type, is cached here
     */
-   public byte getMethodTransactionType()
+   public TxSupport getMethodTransactionType()
    {
-      if( methodTransactionType == TX_UNSET )
+      if( methodTransactionType == null )
       {
          if( isContainerManagedTx() )
          {
@@ -189,18 +189,19 @@ public class MessageDrivenMetaData
             //
             Class[] sig = {};
             if( super.getMethodTransactionType("onMessage", sig, null)
-               == MetaData.TX_REQUIRED )
+               == TxSupport.REQUIRED )
             {
-               methodTransactionType = TX_REQUIRED;
+               methodTransactionType = TxSupport.REQUIRED;
             }
             else
             {
-               methodTransactionType = TX_NOT_SUPPORTED;
+               methodTransactionType = TxSupport.NOT_SUPPORTED;
             }
          }
          else
          {
-            methodTransactionType = TX_UNKNOWN;
+	    //THIS IS A CHANGE FROM "UNKNOWN" which got mapped to DEFAULT later!
+            methodTransactionType = TxSupport.DEFAULT;
          }
       }
 
@@ -211,7 +212,7 @@ public class MessageDrivenMetaData
     * Overide here, since a message driven bean only ever have one method,
     * which we might cache.
     */
-   public byte getMethodTransactionType(String methodName, Class[] params,
+   public TxSupport getMethodTransactionType(String methodName, Class[] params,
       InvocationType iface)
    {
       // An MDB may only ever have on method

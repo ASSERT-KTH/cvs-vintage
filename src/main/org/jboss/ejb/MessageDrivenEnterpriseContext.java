@@ -25,11 +25,12 @@ import javax.ejb.EJBException;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
+import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * Context for message driven beans.
  * 
- * @version <tt>$Revision: 1.16 $</tt>
+ * @version <tt>$Revision: 1.17 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -165,7 +166,7 @@ public class MessageDrivenEnterpriseContext
       private boolean isTxRequired()
       {
          MessageDrivenMetaData md = (MessageDrivenMetaData)con.getBeanMetaData();
-         return md.getMethodTransactionType() == MetaData.TX_REQUIRED;
+         return md.getMethodTransactionType() == TxSupport.REQUIRED;
       }
       
       /**

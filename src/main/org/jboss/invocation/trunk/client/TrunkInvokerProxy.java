@@ -14,15 +14,15 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.io.ObjectStreamException;
 import java.rmi.RemoteException;
+import javax.management.Attribute;
 import javax.management.ObjectName;
 import javax.transaction.Transaction;
-import javax.transaction.xa.XAResource;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
-import org.jboss.logging.Logger;
-import org.jboss.proxy.ProxyXAResource;
-import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.invocation.ServerID;
+import org.jboss.logging.Logger;
+import org.jboss.system.client.ClientServiceMBeanSupport;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * This is the proxy object of the TrunkInvoker that lives on the server.
@@ -30,14 +30,18 @@ import org.jboss.invocation.ServerID;
  * server and then use that client to send Invocations to the server.
  *
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public final class TrunkInvokerProxy 
-   extends ServiceMBeanSupport
+   extends ClientServiceMBeanSupport
    implements java.io.Serializable, Invoker, TrunkInvokerProxyMBean
 {
-   private final static Logger log = Logger.getLogger(TrunkInvokerProxy.class);
+   private static final Object[] noArgs = new Object[0];
+   private static final String[] noTypes = new String[0];
+
+   //   private final static Logger log = Logger.getLogger(TrunkInvokerProxy.class);
 
    static final int DEFAULT_TX_TIMEOUT = 6;//seconds?
 
@@ -46,40 +50,59 @@ public final class TrunkInvokerProxy
 
    private ObjectName connectionManagerName;
 
-   private ObjectName xaResourceFactoryName;
-
-   private transient ProxyXAResource proxyXAResource;
-
    private transient ConnectionManager connectionManager;
 
    public TrunkInvokerProxy(ServerID serverID)
    {
       this.serverID = serverID;
+      //This kind of sucks, name should be set on server and serialized
+      serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerProxy," + serverID.toObjectNameClause());
    }
 
-   //this is how it sets itself up in a new vm:
+   //Remove this!!
+   protected void internalSetServiceName() throws Exception
+   {
+      getLog().info("internalSetServiceName called: " + getServerID().toObjectNameClause());
+      serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerProxy," + getServerID().toObjectNameClause());
+   }
 
-   /**
-    * The <code>readResolve</code> method uses the ClientSetup class
-    * to create an mbean server if necessary and set up the needed
-    * mbeans.  If an mbean with the correct name is already
-    * registered, it is returned instead of this instance.  Thus the
-    * TrunkInvokerProxy is a singleton.
-    *
-    * @return an <code>Object</code> value
-    * @exception ObjectStreamException if an error occurs
-    */
+   //Does the superclass readResolve method work for us also? NO!!
    private Object readResolve() throws ObjectStreamException
    {
-      try
+      return internalReadResolve();
+   }
+   
+
+   protected void internalSetup() throws Exception
+   {
+      String serverIdObjectNameClause = getServerID().toObjectNameClause();
+      ObjectName workManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerWorkManager," + serverIdObjectNameClause);
+      if (!getServer().isRegistered(workManagerName))
       {
-         return ClientSetup.setUpClient(this);
+         getServer().createMBean("org.jboss.resource.work.BaseWorkManager", 
+                            workManagerName);
       }
-      catch (Exception e)
+      getServer().setAttribute(workManagerName, new Attribute("MaxThreads", new Integer(50)));
+
+      ObjectName trunkInvokerConnectionManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerConnectionManager," + serverIdObjectNameClause);
+      if (!getServer().isRegistered(trunkInvokerConnectionManagerName))
       {
-         getLog().fatal("Could not set up mbean server or mbeans in client", e);
-         throw new InvalidObjectException("Problem setting up mbean server or mbeans in client: " + e);
+         getServer().createMBean(ConnectionManager.class.getName(), trunkInvokerConnectionManagerName);
       }
+      getServer().setAttribute(trunkInvokerConnectionManagerName, new Attribute("WorkManagerName", workManagerName));
+
+      setConnectionManagerName(trunkInvokerConnectionManagerName);
+
+      //create everything
+      getServer().invoke(workManagerName, "create", noArgs, noTypes);
+      getServer().invoke(trunkInvokerConnectionManagerName, "create", noArgs, noTypes);
+      getServer().invoke(getServiceName(), "create", noArgs, noTypes);
+
+      //start everything
+      getServer().invoke(workManagerName, "start", noArgs, noTypes);
+      getServer().invoke(trunkInvokerConnectionManagerName, "start", noArgs, noTypes);
+      getServer().invoke(getServiceName(), "start", noArgs, noTypes);
+      log.info("Just started TrunkInvokerProxy in internalSetup");
    }
 
    public ServerID getServerID()
@@ -97,25 +120,6 @@ public final class TrunkInvokerProxy
       return this;
    }
    
-   /**
-    * Get the XaResourceFactoryName value.
-    * @return the XaResourceFactoryName value.
-    *
-    * @jmx.managed-attribute
-    */
-   public ObjectName getXAResourceFactoryName() {
-      return xaResourceFactoryName;
-   }
-
-   /**
-    * Set the xaResourceFactoryName value.
-    * @param newXaResourceFactoryName The new XaResourceFactoryName value.
-    *
-    * @jmx.managed-attribute
-    */
-   public void setXAResourceFactoryName(ObjectName xaResourceFactoryName) {
-      this.xaResourceFactoryName = xaResourceFactoryName;
-   }
 
    
    /**
@@ -142,13 +146,11 @@ public final class TrunkInvokerProxy
    protected void startService() throws Exception
    {
       connectionManager = (ConnectionManager)getServer().getAttribute(connectionManagerName, "ConnectionManager");
-      proxyXAResource = (ProxyXAResource)getServer().getAttribute(xaResourceFactoryName, "XAResource");
    }
 
    protected void stopService() throws Exception
    {
       connectionManager = null;
-      proxyXAResource = null;
    }
 
 
@@ -167,44 +169,12 @@ public final class TrunkInvokerProxy
       if (trace) {
 	 log.trace("Invoking, invocation: " + invocation);
       } // end of if ()
-      
-
-      Transaction tx = invocation.getTransaction();
-      if (tx == null) 
-      {
-         TrunkRequest request = new TrunkRequest();
-         request.setOpInvoke(invocation);
-	 if (trace) {
-	    log.trace("No tx, request: " + request);
-	 }
-         return issue(request);
+      TrunkRequest request = new TrunkRequest();
+      request.setOpInvoke(invocation);
+      if (trace) {
+	 log.trace("No tx, request: " + request);
       }
-      else
-      {
-	 proxyXAResource.setInvocation(invocation);
-         tx.enlistResource(proxyXAResource);
-	 //dont' try to send the tx
-	 invocation.setTransaction(null);
-         TrunkRequest request = new TrunkRequest();
-	 if (trace) {
-	    log.trace("Tx found. request: " + request);
-	 }
-         request.setOpInvoke(invocation);
-         try 
-         {
-            return issue(request);            
-         }
-         finally
-         {
-	    if (trace) {
-	       log.trace("Returned from invocation");
-	    }
-	    //restore the tx.
-	    invocation.setTransaction(tx);
-            tx.delistResource(proxyXAResource, XAResource.TMSUSPEND);
-         } // end of try-catch
-      } // end of else
-      
+      return issue(request);
    }
 
    public Object issue(TrunkRequest request) throws Exception

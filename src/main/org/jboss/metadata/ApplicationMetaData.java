@@ -20,6 +20,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * The top level meta data from the jboss.xml and ejb-jar.xml descriptor.
@@ -29,7 +30,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -435,10 +436,11 @@ public class ApplicationMetaData
                Element containerTransaction = (Element)iterator.next();
 
                // find the type of the transaction
-               byte transactionType;
                String type = getElementContent( getUniqueChild(
                   containerTransaction, "trans-attribute") );
 
+               TxSupport transactionType = TxSupport.byName(type);
+	       /*
                if( type.equalsIgnoreCase("NotSupported") ||
                   type.equalsIgnoreCase("Not_Supported") )
                {
@@ -470,6 +472,7 @@ public class ApplicationMetaData
                   throw new DeploymentException( "invalid " +
                      "<transaction-attribute> : " + type);
                }
+	       */
 
                // find the methods
                Iterator methods = getChildrenByTagName(

@@ -22,6 +22,7 @@ import org.jboss.security.SimplePrincipal;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * A common meta data class for the entity, message-driven and session
@@ -33,8 +34,9 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -430,11 +432,11 @@ public abstract class BeanMetaData
       excludedMethods.add(method);
    }
 
-   public byte getMethodTransactionType(String methodName, Class[] params,
+   public TxSupport getMethodTransactionType(String methodName, Class[] params,
       InvocationType iface)
    {
       // default value
-      byte result = TX_UNKNOWN;
+      TxSupport result = TxSupport.DEFAULT;//TX_UNKNOWN;
 
       Iterator iterator = getTransactionMethods();
       while (iterator.hasNext())

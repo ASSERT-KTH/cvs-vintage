@@ -7,11 +7,13 @@
  *
  */
 
-package org.jboss.proxy;
+package org.jboss.invocation;
 
 
+import java.io.ObjectStreamException;
 import java.lang.ThreadLocal;
 import java.lang.reflect.Method;
+import javax.management.Attribute;
 import javax.management.ObjectName;
 import javax.resource.spi.XATerminator;
 import javax.transaction.Transaction;
@@ -20,16 +22,33 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.Invoker;
+import org.jboss.invocation.Invoker;
 import org.jboss.invocation.PayloadKey;
-import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.invocation.ServerID;
+import org.jboss.system.client.Client;
+import org.jboss.system.client.ClientServiceMBeanSupport;
+import org.jboss.tm.JBossXidFactory;
 import org.jboss.tm.XAResourceFactory;
+import org.jboss.tm.client.ClientTransactionManager;
+import org.jboss.tm.client.ClientUserTransaction;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 
 /**
- * ProxyXAResource.java
+ * InvokerXAResource.java
  *
+ * Contrary to popular opinion, this class is far easier to implement
+ * if it is a interceptor attached to an invoker rather than one
+ * interceptor in the client invoker chain.  There needs to be one
+ * XAResource for each remote server we attach to.  This is because
+ * the XAResource needs to know what server it is attached to so it
+ * can answer isSameRM at any time, whether or not an invocation is
+ * present.  Since each client interceptor chain can send invocations
+ * to many remote servers (due to load balancing and HA), the
+ * XAResource cannot be in the client interceptor chain.
  *
  * Created: Thu Oct  3 21:04:01 2002
  *
@@ -39,11 +58,16 @@ import org.jboss.tm.XAResourceFactory;
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 
-public class ProxyXAResource 
-   extends ServiceMBeanSupport
-   implements XAResource, XAResourceFactory, ProxyXAResourceMBean
+public class InvokerXAResource 
+   extends ClientServiceMBeanSupport
+   implements Invoker, XAResource, XAResourceFactory, InvokerXAResourceMBean
 {
 
+   
+   private static final ObjectName TRANSACTION_MANAGER_SERVICE = ObjectNameFactory.create("jboss.tm:service=TransactionManagerService");
+
+   private static final Object[] noArgs = new Object[0];
+   private static final String[] noTypes = new String[0];
 
    private static final Method PREPARE_METHOD;
 
@@ -75,17 +99,18 @@ public class ProxyXAResource
       }
    }
 
-   private ThreadLocal xids = new ThreadLocal();
+   private transient ThreadLocal xids = new ThreadLocal();
 
-   private ThreadLocal invocations = new ThreadLocal();
+   private transient ThreadLocal invocations = new ThreadLocal();
 
    private int transactionTimeout = 6;//Gotta pick something for a default
 
    private ObjectName transactionManagerService;
 
-   private TransactionManager tm;
+   private transient TransactionManager tm;
 
    /**
+    * Actually this is "next"
     * The variable <code>invoker</code> tells the prepare/commit
     * etc. methods where to send their invocation.  It can't be put in
     * a threadlocal to share one ProxyXAResource among many invokers
@@ -96,10 +121,67 @@ public class ProxyXAResource
     */
    private Invoker invoker;
 
-   public ProxyXAResource() 
+   public InvokerXAResource() 
    {
    }
 
+
+   //Remove this!!
+   protected void internalSetServiceName() throws Exception
+   {
+      getLog().info("internalSetServiceName called: " + getServerID().toObjectNameClause());
+      serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerXAResource," + getServerID().toObjectNameClause());
+   }
+   
+   public Object readResolve() throws ObjectStreamException
+   {
+      return internalReadResolve();
+   }
+   
+
+   /**
+    * The <code>internalSetup</code> method sets up the transaction
+    * manager and xid factory for this XAResource.
+    *
+    * @exception Exception if an error occurs
+    */
+   protected void internalSetup() throws Exception
+   {
+      //This part is independent of which invoker we are using...
+      //Set up the client transaction manager for this vm and remote server, if there is no "real" jboss tm.
+      ObjectName tmName = TRANSACTION_MANAGER_SERVICE;
+      if (!getServer().isRegistered(tmName))
+      {
+	 String serverIdObjectNameClause = getServerID().toObjectNameClause();
+         ObjectName xidFactoryName = ObjectNameFactory.create("jboss.client:service=XidFactory," + serverIdObjectNameClause);
+         //Yikes it's an xmbean!
+         Client.createXMBean(JBossXidFactory.class.getName(), xidFactoryName, "org/jboss/tm/JBossXidFactory.xml");
+         //needs work
+         getServer().setAttribute(xidFactoryName, new Attribute("BaseGlobalId", serverIdObjectNameClause + "_client"));
+         //getServer().setAttribute(xidFactoryName, new Attribute("TxLoggerName", ??));
+
+         tmName = ObjectNameFactory.create("jboss.client:service=TransactionManager," + serverIdObjectNameClause);
+         getServer().createMBean(ClientTransactionManager.class.getName(), tmName);
+         getServer().setAttribute(tmName, new Attribute("XidFactoryName", xidFactoryName));
+
+         ObjectName clientUTName = ObjectNameFactory.create("jboss.client:service=UserTransaction," + serverIdObjectNameClause);
+         getServer().createMBean(ClientUserTransaction.class.getName(), clientUTName);
+         getServer().setAttribute(clientUTName, new Attribute("TransactionManagerName", tmName));
+
+         //create everything
+         getServer().invoke(xidFactoryName, "create", noArgs, noTypes);
+         getServer().invoke(tmName, "create", noArgs, noTypes);
+         getServer().invoke(clientUTName, "create", noArgs, noTypes);
+
+         //start everything
+         getServer().invoke(xidFactoryName, "start", noArgs, noTypes);
+         getServer().invoke(tmName, "start", noArgs, noTypes);
+         getServer().invoke(clientUTName, "start", noArgs, noTypes);
+      }
+      getServer().setAttribute(getServiceName(), new Attribute("TransactionManagerService", tmName));
+      getServer().invoke(getServiceName(), "create", noArgs, noTypes);
+      getServer().invoke(getServiceName(), "start", noArgs, noTypes);
+   }
 
    /**
     * Get the TransactionManagerService value.
@@ -145,6 +227,43 @@ public class ProxyXAResource
       this.invoker = invoker;
    }
 
+
+   // Implementation of org.jboss.invocation.Invoker
+   
+   public ServerID getServerID() throws Exception
+   {
+      return invoker.getServerID();
+   }
+   
+   public Object invoke(Invocation invocation) throws Exception
+   {
+      Transaction tx = invocation.getTransaction();
+      if (tx == null) 
+      {
+	 return invoker.invoke(invocation);
+      }
+      else
+      {
+	 invocations.set(invocation);
+         tx.enlistResource(this);
+	 //dont' try to send the tx
+	 invocation.setTransaction(null);
+         try 
+         {
+            return invoker.invoke(invocation);
+         }
+         finally
+         {
+	    if (log.isTraceEnabled()) {
+	       log.trace("Returned from invocation");
+	    }
+	    //restore the tx.
+	    invocation.setTransaction(tx);
+            tx.delistResource(this, XAResource.TMSUSPEND);
+         } // end of try-catch
+      } // end of else
+   }
+   
    
    protected void startService() throws Exception
    {
@@ -213,17 +332,6 @@ public class ProxyXAResource
    {
    }
 
-   /**
-    * The <code>setInvocation</code> method is called by the invoker
-    * just before this XAResource is enrolled in a transaction.  It
-    * provides the context for the start method to operate on.
-    *
-    * @param invocation an <code>Invocation</code> value
-    */
-   public void setInvocation(Invocation invocation)
-   {
-      invocations.set(invocation);
-   }
    
    // implementation of javax.transaction.xa.XAResource interface
 
@@ -419,6 +527,7 @@ public class ProxyXAResource
    }
 
    /**
+    * @todo should tx timeout be in a ThreadLocal??
     *
     * @param param1 <description>
     * @return <description>

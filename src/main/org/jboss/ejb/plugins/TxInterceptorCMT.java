@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import javax.ejb.EJBException;
 import javax.ejb.TransactionRequiredLocalException;
+import javax.ejb.TransactionRolledbackLocalException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.RollbackException;
@@ -22,12 +23,12 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
-import javax.ejb.TransactionRolledbackLocalException;
+import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.MetaData;
-import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
 
 /**
  *  This interceptor handles transactions for CMT beans.
@@ -37,20 +38,22 @@ import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.32 $
+ *  @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ *  @version $Revision: 1.33 $
  */
 public final class TxInterceptorCMT extends AbstractTxInterceptor
 {
    public static int MAX_RETRIES = 5;
    public static Random random = new Random();
 
-   /** 
-    * A cache mapping methods to transaction attributes. 
-    */
-   private HashMap methodTx = new HashMap();
-
    /**
-    *  This method does invocation interpositioning of tx management
+    *  This method does calls internalInvoke up to the specified count of retries.
+    *
+    * @todo put the retry logic in a separate invoker
+    * @todo provide an option to copy the args before calling so the retrys actually use the same arguments.
+    * @todo Make this only retry if it has started the tx: it should
+    * rollback to the beginning of tx, then retry the whole tx with
+    * the new copies of the original arguments.
     */
    public Object invoke(Invocation invocation) throws Exception
    {
@@ -59,7 +62,7 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
       {
          try
          {
-            return runWithTransactions(invocation);
+            return internalInvoke(invocation);
          }
          catch (Exception ex)
          {
@@ -67,8 +70,8 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
             if (deadlock != null)
             {
                if (!deadlock.retryable() || 
-                     oldTransaction != null || 
-                     i + 1 >= MAX_RETRIES) 
+		   oldTransaction != null || 
+		   i + 1 >= MAX_RETRIES) 
                {      
                   throw deadlock;
                }
@@ -85,325 +88,114 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
       throw new RuntimeException("Unreachable");
    }
 
-   private void printMethod(Method m, byte type)
+   /**
+    * The <code>internalInvoke</code> method chooses the TxSupport
+    * subclass depending on the methods transaction support, then
+    * delegates the server side tx handing to it.
+    *
+    * @param invocation an <code>Invocation</code> value
+    * @return an <code>Object</code> value
+    * @exception Exception if an error occurs
+    */
+   protected Object internalInvoke(Invocation invocation) throws Exception
    {
-      String name;
-      switch(type)
+      Map methodToTxSupportMap = getContainer().getMethodToTxSupportMap();
+      Method m = invocation.getMethod();
+      TxSupport txSupport = (TxSupport)methodToTxSupportMap.get(m);
+      if (txSupport == null)
       {
-         case MetaData.TX_MANDATORY:
-            name = "TX_MANDATORY";
-            break;
-         case MetaData.TX_NEVER:
-            name = "TX_NEVER";
-            break;
-         case MetaData.TX_NOT_SUPPORTED:
-            name = "TX_NOT_SUPPORTED";
-            break;
-         case MetaData.TX_REQUIRED:
-            name = "TX_REQUIRED";
-            break;
-         case MetaData.TX_REQUIRES_NEW:
-            name = "TX_REQUIRES_NEW";
-            break;
-         case MetaData.TX_SUPPORTS:
-            name = "TX_SUPPORTS";
-            break;
-         default:
-            name = "TX_UNKNOWN";
-      }
+	 txSupport = TxSupport.DEFAULT;   
+      } // end of if ()
 
-      String methodName;
-      if(m != null) 
-      {
-         methodName = m.getName();
-      } 
-      else
-      {
-         methodName ="<no method>";
-      }
+      printMethod(m, txSupport);
 
-      if(log.isTraceEnabled()) 
-      {
-         log.trace(name+" for " + methodName);
-      }
+      TransactionManager tm = getContainer().getTransactionManager();
+      return txSupport.serverInvoke(invocation, tm, getNext());
    }
 
    /**
-    * This method does invocation interpositioning of tx management.
+    * The <code>start</code> method sets up the method to TxSupport
+    * mapping.  Ideally this logic would be in an ejb specific
+    * deployer rather than an interceptor, enabling the use of the
+    * interceptor with any AOP object.
     *
-    * This is where the meat is.  We define what to do with the Tx based
-    * on the declaration.
-    * The Invocation is always the final authority on what the Tx
-    * looks like leaving this interceptor.  In other words, interceptors
-    * down the chain should not rely on the thread association with Tx but
-    * on the Tx present in the Invocation.
-    *
-    * @param remoteInvocation If <code>true</code> this is an invocation
-    * of a method in the remote interface, otherwise it is an invocation of a 
-    * method in the home interface.
-    * @param invocation The <code>Invocation</code> of this call.
+    * @exception Exception if an error occurs
     */
-   private Object runWithTransactions(Invocation invocation) throws Exception
+   public void start() throws Exception
    {
-      // Old transaction is the transaction that comes with the MI
-      Transaction oldTransaction = invocation.getTransaction();
-      // New transaction is the new transaction this might start
-      Transaction newTransaction = null;
-      
-      boolean trace = log.isTraceEnabled();
-      if(trace)
-      {
-         log.trace("Current transaction in MI is " + oldTransaction);
-      }
-
-      InvocationType type = invocation.getType();
-      byte transType = getTransactionMethod(invocation.getMethod(), type);
-
-      if(trace)
-      {
-         printMethod(invocation.getMethod(), transType);
-      }
-
-      // Thread arriving must be clean (jboss doesn't set the thread
-      // previously). However optimized calls come with associated
-      // thread for example. We suspend the thread association here, and
-      // resume in the finally block of the following try.
-      TransactionManager tm = getContainer().getTransactionManager();
-      Transaction threadTx = tm.suspend();
-      if(trace)
-      {
-         log.trace("Thread came in with tx " + threadTx);
-      }
-
-      try
-      {
-         switch (transType)
-         {
-            case MetaData.TX_NOT_SUPPORTED:
-            {
-               // Do not set a transaction on the thread even if in MI, just run
-               return invokeNext(invocation, false);
-            }   
-            case MetaData.TX_REQUIRED:
-            {
-               if (oldTransaction == null)
-               { // No tx running
-                  // Create tx
-                  tm.begin();
-                  
-                  // get the tx
-                  newTransaction = tm.getTransaction();
-                  if( trace )
-                     log.trace("Starting new tx " + newTransaction);
-                  
-                  // Let the method invocation know
-                  invocation.setTransaction(newTransaction);
-               }
-               else
-               { 
-                  // We have a tx propagated
-                  // Associate it with the thread
-                  tm.resume(oldTransaction);
-               }
-
-               // Continue invocation
-               try
-               {
-                  return invokeNext(invocation, oldTransaction != null);
-               }
-               finally
-               {
-                  if( trace )
-                     log.trace("TxInterceptorCMT: In finally");
-
-                  // Only do something if we started the transaction
-                  if (newTransaction != null)
-                  {
-                     endTransaction(invocation, newTransaction, oldTransaction);
-                  }
-                  else
-                  {
-                     tm.suspend();
-                  }
-               }
-            } 
-            case MetaData.TX_SUPPORTS:
-            {
-               // Associate old transaction with the thread
-               // Some TMs cannot resume a null transaction and will throw
-               // an exception (e.g. Tyrex), so make sure it is not null
-               if (oldTransaction != null) 
-               {
-                  tm.resume(oldTransaction);
-               }
-               
-               try
-               {
-                  return invokeNext(invocation, oldTransaction != null);
-               }
-               finally
-               {
-                  tm.suspend();
-               }
-               
-               // Even on error we don't do anything with the tx, 
-               // we didn't start it
-            }
-            case MetaData.TX_REQUIRES_NEW:
-            {
-               // Always begin a transaction
-               tm.begin();
-               
-               // get it
-               newTransaction = tm.getTransaction();
-               
-               // Set it on the method invocation
-               invocation.setTransaction(newTransaction);
-               // Continue invocation
-               try
-               {
-                  return invokeNext(invocation, false);
-               }
-               finally
-               {
-                  // We started the transaction for sure so we commit 
-                  // or roll back
-                  endTransaction(invocation, newTransaction, oldTransaction);
-               }
-            }
-            case MetaData.TX_MANDATORY:
-            {
-               if (oldTransaction == null) 
-               {
-                  if (type == InvocationType.LOCAL ||
-                        type == InvocationType.LOCALHOME) 
-                  {
-                     throw new TransactionRequiredLocalException(
-                           "Transaction Required");
-                  }
-                  else
-                  {
-                     throw new TransactionRequiredException(
-                           "Transaction Required");
-                  }
-               }
-
-               // Associate it with the thread
-               tm.resume(oldTransaction);
-               try
-               {
-                  return invokeNext(invocation, true);
-               } finally
-               {
-                  tm.suspend();
-               }
-            }   
-            case MetaData.TX_NEVER:
-            {
-               if (oldTransaction != null) 
-               {
-                  throw new EJBException("Transaction not allowed");
-               }
-               return invokeNext(invocation, false);
-            }
-         }
-      }
-      finally
-      {
-         // IN case we had a Tx associated with the thread reassociate
-         if (threadTx != null)
-            tm.resume(threadTx);
-      }
-
-      return null;
-   }
-
-   private void endTransaction(
-         final Invocation invocation, 
-         final Transaction tx, 
-         final Transaction oldTx) 
-         throws TransactionRolledbackException, SystemException
-   {
-      try 
-      {
-         // Marked rollback
-         if(tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-         {
-            tx.rollback();
-         }
-         else
-         {
-            // Commit tx
-            // This will happen if
-            // a) everything goes well
-            // b) app. exception was thrown
-            tx.commit();
-         }
-      }
-      catch (RollbackException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
-      } 
-      catch (HeuristicMixedException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
-      }
-      catch (HeuristicRollbackException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
-      }
-      catch (SystemException e)
-      {
-         throw new TransactionRolledbackException(e.getMessage());
-      } // end of try-catch
-      finally
-      {
-         // reassociate the oldTransaction with the Invocation (even null)
-         invocation.setTransaction(oldTx);
-
-         // Always drop thread association even if committing or
-         // rolling back the newTransaction because not all TMs
-         // will drop thread associations when commit() or rollback()
-         // are called through tx itself (see JTA spec that seems to
-         // indicate that thread assoc is required to be dropped only
-         // when commit() and rollback() are called through TransactionManager
-         // interface)
-         //tx has committed, so we can't throw txRolledbackException.
-         getContainer().getTransactionManager().suspend();
-      }
-   }
-
-   // This should be cached, since this method is called very often
-   protected byte getTransactionMethod(Method m, InvocationType iface)
-   {
-      if(m == null)
-      {
-         return MetaData.TX_SUPPORTS;
-      }
-
-      Byte b = (Byte)methodTx.get(m);
-      if(b != null)  
-      {
-         return b.byteValue();
-      }
-
+      log.info("Setting TxSupport map for container: " + getContainer());
       BeanMetaData bmd = getContainer().getBeanMetaData();
+      Map methodToTxSupportMap = new HashMap();
+      if (getContainer().getHomeClass() != null)
+      {
+	 mapMethods(getContainer().getHomeClass(), bmd, InvocationType.HOME,  methodToTxSupportMap);
+      } // end of if ()
       
-      //DEBUG 
-      //log.debug("Found metadata for bean '" + bmd.getEjbName() + "'" + 
-      //      " method is " + m.getName());
+      if (getContainer().getRemoteClass() != null)
+      {
+	 mapMethods(getContainer().getRemoteClass(), bmd, InvocationType.REMOTE, methodToTxSupportMap);
+      } // end of if ()
       
-      byte result = bmd.getMethodTransactionType(
-            m.getName(), 
-            m.getParameterTypes(), 
-            iface);
+      if (getContainer().getLocalHomeClass() != null)
+      {
+	 mapMethods(getContainer().getLocalHomeClass(), bmd, InvocationType.LOCALHOME, methodToTxSupportMap);
+      } // end of if ()
       
-      // provide default if method is not found in descriptor
-      if(result == MetaData.TX_UNKNOWN) {
-         result = MetaData.TX_REQUIRED;
-      }
+      if (getContainer().getLocalClass() != null)
+      {
+	 mapMethods(getContainer().getLocalClass(), bmd, InvocationType.LOCAL, methodToTxSupportMap);
+      } // end of if ()
       
-      methodTx.put(m, new Byte(result));
-      return result;
+      getContainer().setMethodToTxSupportMap(methodToTxSupportMap);
    }
+
+   /**
+    * The <code>mapMethods</code> method maps the methods for one
+    * interface to the TxSupport subclass that implements the required
+    * behavior.
+    *
+    * @param clazz a <code>Class</code> value
+    * @param bmd a <code>BeanMetaData</code> value
+    * @param type an <code>InvocationType</code> value
+    * @param methodToTxSupportMap a <code>Map</code> value
+    * @exception Exception if an error occurs
+    */
+   private void mapMethods(Class clazz, BeanMetaData bmd, InvocationType type, Map methodToTxSupportMap)
+      throws Exception
+   {
+      Method[] methods = clazz.getMethods();
+      for (int i = 0; i < methods.length; i++)
+      {
+	 Method m = methods[i];
+	 TxSupport txSupport = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(),  type);
+	 methodToTxSupportMap.put(methods[i], txSupport);
+      } // end of for ()
+      
+   }
+
+   public void stop()
+   {
+      log.info("Unsetting TxSupport map for container: " + getContainer());
+      getContainer().setMethodToTxSupportMap(null);
+   }
+
+   private void printMethod(Method m, TxSupport type)
+   {
+
+      if(log.isTraceEnabled()) 
+      {
+	 String methodName;
+	 if(m != null) 
+	 {
+	    methodName = m.getName();
+	 } 
+	 else
+	 {
+	    methodName ="<no method>";
+	 }
+
+         log.trace(type.toString() +" for " + methodName);
+      }
+   }
+
 }

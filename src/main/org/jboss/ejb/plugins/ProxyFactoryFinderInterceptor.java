@@ -41,7 +41,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
 {
@@ -56,18 +56,6 @@ public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
          return;
       }
 
-      /*
-      if (invokerBinding == null)
-      {
-         log.error("***************** invokerBinding is null ********");
-         log.error("Method name: " + invocation.getMethod().getName());
-         log.error("jmx name: " + container.getJmxName().toString());
-         new Throwable().printStackTrace();
-         log.error("*************************");
-         throw new EJBException("Couldn't insert proxy factory, " +
-               "invokerBinding was null");
-      }
-      */
 
       Object proxyFactory = getContainer().lookupProxyFactory(invokerBinding);
       if (proxyFactory == null)

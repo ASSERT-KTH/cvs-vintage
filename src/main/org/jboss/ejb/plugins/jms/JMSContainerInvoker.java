@@ -42,11 +42,12 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
+import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans.
  * 
- * @version <tt>$Revision: 1.52 $</tt>
+ * @version <tt>$Revision: 1.53 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -407,10 +408,10 @@ public class JMSContainerInvoker
       String destinationType = config.getDestinationType();
       
       // Should we used local tranactions
-      byte txType = config.getMethodTransactionType("onMessage", 
+      TxSupport txType = config.getMethodTransactionType("onMessage", 
                                          new Class[]{ Message.class }, 
                                          InvocationType.LOCAL);
-      boolean isNotSupportedTx = txType == MetaData.TX_NOT_SUPPORTED; 
+      boolean isNotSupportedTx = (txType == TxSupport.NOT_SUPPORTED); 
       useLocalTx = !config.isContainerManagedTx() || isNotSupportedTx;
 
       boolean useXAConnection = config.getUseXAConnection();

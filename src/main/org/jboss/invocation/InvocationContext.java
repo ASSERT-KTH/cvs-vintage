@@ -25,42 +25,33 @@ import org.jboss.invocation.Invoker;
  *    can interpret the data in it. 
  * 
  * <p>Essentially we can carry ANYTHING from the client to the server, we 
- *    keep a series of redifined variables and method calls to get at the 
+ *    keep a series of redefined variables and method calls to get at the 
  *    pointers.  But really it is just a repository of objects. 
  *
+ * <p>The generic getter and setter is really all that one needs to talk to 
+ * this object.  We introduce typed getters and setters for convenience 
+ *  and code readability in the codebase
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.6 $
  */
 public class InvocationContext
    implements java.io.Serializable
 {
    // Context is a map
-   public Map context;
+   private final Map context;
 
-   /**
-    * Exposed for externalization only.
-    */
-   public InvocationContext() {
+   public InvocationContext()
+   {
       context = new HashMap();
    }
    
-   /**
-    * Invocation creation
-    */
-   public InvocationContext(final Map context) {
-      this.context = context;
-   }
-      
-   // 
-   // The generic getter and setter is really all that one needs to talk to 
-   // this object.  We introduce typed getters and setters for convenience 
-   // and code readability in the codebase
-   //
-   
+  
    /**
     * The generic store of variables
     */
-   public void setValue(Object key, Object value) {
+   public void setValue(Object key, Object value)
+   {
       context.put(key,value);
    }
    
@@ -75,38 +66,56 @@ public class InvocationContext
    /**
     * A container for server side association.
     */
-   public void setObjectName(Object objectName) {
+   public void setObjectName(Object objectName)
+   {
       context.put(InvocationKey.OBJECT_NAME, objectName);
    }
    
-   public Object getObjectName() {
+   public Object getObjectName()
+   {
       return context.get(InvocationKey.OBJECT_NAME);
    }
    
    /**
     * Return the invocation target ID.  Can be used to identify a cached object.
     */
-   public void setCacheId(Object id) {
+   public void setCacheId(Object id)
+   {
       context.put(InvocationKey.CACHE_ID, id);
    }
    
-   public Object getCacheId() {
+   public Object getCacheId()
+   {
       return context.get(InvocationKey.CACHE_ID);
    }
    
-   public void setInvoker(Invoker invoker) {
+   public void setInvoker(Invoker invoker)
+   {
       context.put(InvocationKey.INVOKER, invoker);
    }
    
-   public Invoker getInvoker() {
+   public Invoker getInvoker()
+   {
       return (Invoker) context.get(InvocationKey.INVOKER);
    }
    
-   public void setInvokerProxyBinding(String binding) {
+   public void setInvokerProxyBinding(String binding)
+   {
       context.put(InvocationKey.INVOKER_PROXY_BINDING, binding);
    }
    
-   public String getInvokerProxyBinding() {
+   public String getInvokerProxyBinding()
+   {
       return (String) context.get(InvocationKey.INVOKER_PROXY_BINDING);
+   }
+
+   public void setMethodHashToTxSupportMap(Map methodHashToTxSupportMap)
+   {
+      context.put(InvocationKey.METHOD_TO_TX_SUPPORT_MAP, methodHashToTxSupportMap);
+   }
+
+   public Map getMethodHashToTxSupportMap()
+   {
+      return (Map) context.get(InvocationKey.METHOD_TO_TX_SUPPORT_MAP);
    }
 }
