@@ -1,6 +1,6 @@
 <!-- 
     Intake XML input constraints DTD 
-    $Id: intake.dtd,v 1.4 2001/04/25 23:41:11 jon Exp $
+    $Id: intake.dtd,v 1.5 2001/05/18 21:22:01 jmcnally Exp $
 -->
 
 <!ELEMENT input-data (group+)>
@@ -26,17 +26,15 @@
   multiValued ( true | false ) "false"
   mapToObject CDATA #IMPLIED
   mapToProperty CDATA #IMPLIED
+  validator CDATA #IMPLIED
 >
 
                   
 <!ELEMENT rule (#PCDATA)>
 <!ATTLIST rule 
-  mask CDATA #IMPLIED
-  minLength CDATA #IMPLIED
-  maxLength CDATA #IMPLIED
-  minValue CDATA #IMPLIED
-  maxValue CDATA #IMPLIED
-  action ( invalidate | force ) "invalidate"
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED
 >
 
 <!ELEMENT required-message (#PCDATA)>
+
