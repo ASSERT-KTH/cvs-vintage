@@ -76,10 +76,12 @@
     <mkdir dir="${tomcat.build}/bin"/>
     <mkdir dir="${tomcat.build}/doc"/>
     <mkdir dir="${tomcat.build}/webapps"/>
+    <mkdir dir="${tomcat.build}/native"/>
 
     <copydir src="src/shell" dest="${tomcat.build}/bin" />
     <copydir src="src/etc" dest="${tomcat.build}/conf"/>
     <copydir src="src/doc" dest="${tomcat.build}/doc"/>
+    <copydir src="src/native" dest="${tomcat.build}/native"/>
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
 
     <!-- include ant, it is used for testing and will be used for
