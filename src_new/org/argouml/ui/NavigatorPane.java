@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.63 2004/01/25 12:13:52 linus Exp $
+// $Id: NavigatorPane.java,v 1.64 2004/01/25 12:22:51 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
