@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEventFactory.java,v 1.2 2000/06/01 22:29:43 juha Exp $
+ * $Id: VerificationEventFactory.java,v 1.3 2000/06/03 17:49:33 juha Exp $
  */
 
  
@@ -49,7 +49,7 @@ import org.jboss.verifier.strategy.EJBVerifier11;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public class VerificationEventFactory {
@@ -88,7 +88,23 @@ public class VerificationEventFactory {
         else if (EJBVerifier11.SECTION_6_6_1.equals(section))
             buildBeanManagedTxBeanCannotSynchEvent(event, name);
             
+
+        else if (EJBVerifier11.SECTION_6_10_2_a.equals(section))
+            buildSessionBeanClassNotPublicEvent(event, name);
             
+        else if (EJBVerifier11.SECTION_6_10_2_b.equals(section))
+            buildSessionBeanClassIsFinalEvent(event, name);
+
+        else if (EJBVerifier11.SECTION_6_10_2_c.equals(section))
+            buildSessionBeanClassIsAbstractEvent(event, name);
+        
+        else if (EJBVerifier11.SECTION_6_10_2_d.equals(section))
+            buildNoDefaultConstructorInSessionBeanEvent(event, name);
+        
+        else if (EJBVerifier11.SECTION_6_10_2_e.equals(section))
+            buildSessionBeanDefinesFinalizerEvent(event, name);
+
+        
         else if (EJBVerifier11.DTD_EJB_CLASS.equals(section))
             buildEJBClassNotFoundEvent(event, name);
             
@@ -153,6 +169,36 @@ public class VerificationEventFactory {
     //    event.setVerbose();
     }
     
+    private void buildSessionBeanClassNotPublicEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+
+    private void buildSessionBeanClassIsFinalEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+
+    private void buildSessionBeanClassIsAbstractEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+
+    private void buildNoDefaultConstructorInSessionBeanEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+
+    private void buildSessionBeanDefinesFinalizerEvent(VerificationEvent event, String name) {
+        
+    //    event.setMessage();
+    //    event.setVerbose();
+    }
+
     private void buildEJBClassNotFoundEvent(VerificationEvent event, String name) {
         
         event.setMessage(EJB_CLASS_ELEMENT_NOT_FOUND);

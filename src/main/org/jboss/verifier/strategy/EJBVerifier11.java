@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.3 2000/06/03 15:24:15 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.4 2000/06/03 17:49:32 juha Exp $
  */
 
 
@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Constructor;
 
 
 // non-standard class dependencies
@@ -50,8 +52,8 @@ import com.dreambean.ejx.ejb.Entity;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors (jplindfo@helsinki.fi
- * @version $Revision: 1.3 $
+ * @author 	Juha Lindfors (jplindfo@helsinki.fi)
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 implements VerificationStrategy {
@@ -214,9 +216,11 @@ public class EJBVerifier11 implements VerificationStrategy {
 
             
             /*
-             * A session bean MUST implement javax.ejb.SessionBean interface.
+             * A session bean MUST implement, directly or indirectly,
+             * javax.ejb.SessionBean interface.
              *
              * Spec 6.5.1
+             * Spec 6.10.2
              */
             if (!hasSessionBeanInterface(bean)) {
                 
@@ -263,7 +267,10 @@ public class EJBVerifier11 implements VerificationStrategy {
                 
                 /*
                  * [TODO] the ejbCreate signature in bean class must match the
-                 *        create methods signature in home interface
+                 *        create methods signature in home interface.
+                 *
+                 *        this is stated implicitly in 6.10.2
+                 *        didnt find explicit requirement yet
                  */
             }
 
@@ -281,6 +288,68 @@ public class EJBVerifier11 implements VerificationStrategy {
                 status = false;
             }     
 
+            /*
+             * The session bean class MUST be defined as public.
+             *
+             * Spec 6.10.2
+             */
+            if (!isPublicClass(bean)) {
+               
+               fireSpecViolationEvent(SECTION_6_10_2_a, name);
+               
+               status = false;
+            }
+            
+            /*
+             * The session bean class MUST NOT be final.
+             *
+             * Spec 6.10.2
+             */
+            if (isFinalClass(bean)) {
+                
+                fireSpecViolationEvent(SECTION_6_10_2_b, name);
+                
+                status = false;
+            }
+            
+            /*
+             * The session bean class MUST NOT be abstract.
+             *
+             * Spec 6.10.2
+             */
+            if (isAbstractClass(bean)) {
+                
+                fireSpecViolationEvent(SECTION_6_10_2_c, name);
+                
+                status = false;
+            }
+            
+            /*
+             * The session bean class MUST have a public constructor that
+             * takes no arguments.
+             *
+             * Spec 6.10.2
+             */
+            if (!hasDefaultConstructor(bean)) {
+                
+                fireSpecViolationEvent(SECTION_6_10_2_d, name);
+                
+                status = false;
+            }
+            
+            /*
+             * The session bean class MUST NOT define the finalize() method.
+             *
+             * Spec 6.10.2
+             */
+            if (hasFinalizer(bean)) {
+                
+                fireSpecViolationEvent(SECTION_6_10_2_e, name);
+                
+                status = false;
+            }
+            
+            
                       
         }
         catch (ClassNotFoundException e) {
@@ -299,14 +368,11 @@ public class EJBVerifier11 implements VerificationStrategy {
 
     
     /*
-     * Searches for an instance of a ejbCreate method from the class
+     * Searches for an instance of a public ejbCreate method from the class
      */
     private boolean hasEJBCreateMethod(Class c) {
     
         try {
-            // [NOTE] Making the implicit assumption that the ejbCreate method
-            //        has to be public. Didn't find the section in the spec that
-            //        explicitly stated this, yet.
             Method[] methods = c.getMethods();
          
             for (int i = 0; i < methods.length; ++i) {
@@ -363,6 +429,51 @@ public class EJBVerifier11 implements VerificationStrategy {
     }
 
     
+    private boolean hasDefaultConstructor(Class c) {
+        try {
+            Constructor constructor = c.getConstructor(new Class[] { Void.TYPE });
+        }
+        
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+        
+        catch (SecurityException e) {
+            System.err.println(e);
+            // [TODO]   Can be thrown by the getConstructor() call if access is
+            //          denied --> createVerifierWarningEvent
+            
+            return false;
+        }
+        
+        return true;
+    }
+    
+
+    private boolean hasFinalizer(Class c) {
+        
+        try {
+            Method finalizer = c.getDeclaredMethod("finalize", new Class[] { Void.TYPE });
+            
+            if (finalizer.getModifiers() != Modifier.PROTECTED)
+                return false;
+        }
+        
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+        
+        catch (SecurityException e) {
+            System.err.println(e);
+            // [TODO]   Can be thrown by the getDeclaredMethod() call if access is
+            //          denied --> createVerifierWarningEvent
+            
+            return false;
+        }
+        
+        return true;
+    }
+    
     
     private boolean isStateful(Session session) {
 
@@ -391,6 +502,32 @@ public class EJBVerifier11 implements VerificationStrategy {
         return false;
     }
     
+    
+    private boolean isPublicClass(Class c) {
+        
+        if (c.getModifiers() == Modifier.PUBLIC)
+            return true;
+            
+        return false;
+    }
+    
+    
+    private boolean isFinalClass(Class c) {
+        
+        if (c.getModifiers() == Modifier.FINAL)
+            return true;
+            
+        return false;
+    }
+
+
+    private boolean isAbstractClass(Class c) {
+        
+        if (c.getModifiers() == Modifier.ABSTRACT)
+            return true;
+            
+        return false;
+    }
     
     
     private void fireSpecViolationEvent(String section, String name) {
@@ -439,8 +576,23 @@ public class EJBVerifier11 implements VerificationStrategy {
         
     public final static String SECTION_6_6_1         =
         "Section 6.6.1 Operations allowed in the methods of a stateful session bean class";    
-    
-    
+            
+    public final static String SECTION_6_10_2_a      =
+        "Section 6.10.2 Session bean class (public class)";
+
+    public final static String SECTION_6_10_2_b      =
+        "Section 6.10.2 Session bean class (not final class)";
+
+    public final static String SECTION_6_10_2_c      =
+        "Section 6.10.2 Session bean class (not abstract class)";
+
+    public final static String SECTION_6_10_2_d      =
+        "Section 6.10.2 Session bean class (public constructor)";
+        
+    public final static String SECTION_6_10_2_e      =
+        "Section 6.10.2 Session bean class (no finalizer)";
+
+        
     /*
      * Ejb-jar DTD
      */

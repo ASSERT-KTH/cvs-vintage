@@ -18,11 +18,8 @@ package org.jboss.verifier.strategy;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This package and its source code is available at www.gjt.org
- * $Id: VerificationStrategy.java,v 1.2 2000/06/03 15:24:15 juha Exp $
- *
- * You can reach the author by sending email to jpl@gjt.org or
- * directly to jplindfo@helsinki.fi.
+ * This package and its source code is available at www.jboss.org
+ * $Id: VerificationStrategy.java,v 1.3 2000/06/03 17:49:32 juha Exp $
  */
 
 
@@ -42,8 +39,8 @@ import org.gjt.lindfors.pattern.Strategy;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors
- * @version $Revision: 1.2 $
+ * @author 	Juha Lindfors (jplindfo@helsinki.fi)
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public interface VerificationStrategy extends Strategy {
