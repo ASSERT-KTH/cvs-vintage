@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.2 2001/09/03 05:58:06 spestov Exp $
+ * @version $Id: jEdit.java,v 1.3 2001/09/08 04:50:46 spestov Exp $
  */
 public class jEdit
 {
@@ -447,10 +447,15 @@ public class jEdit
 		if(name == null)
 			return null;
 		if(args == null)
-			return props.getProperty(name,name);
+			return props.getProperty(name);
 		else
-			return MessageFormat.format(props.getProperty(name,
-				name),args);
+		{
+			String value = props.getProperty(name);
+			if(value == null)
+				return null;
+			else
+				return MessageFormat.format(value,args);
+		}
 	}
 
 	/**
