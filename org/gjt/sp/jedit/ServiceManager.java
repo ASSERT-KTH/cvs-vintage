@@ -81,7 +81,7 @@ import org.gjt.sp.util.Log;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceManager.java,v 1.5 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: ServiceManager.java,v 1.6 2003/05/09 23:42:24 spestov Exp $
  */
 public class ServiceManager
 {
@@ -93,6 +93,8 @@ public class ServiceManager
 	public static void loadServices(PluginJAR plugin, URL uri,
 		PluginJAR.PluginCacheEntry cache)
 	{
+		Reader in = null;
+
 		try
 		{
 			Log.log(Log.DEBUG,jEdit.class,"Loading services from " + uri);
@@ -100,9 +102,10 @@ public class ServiceManager
 			ServiceListHandler dh = new ServiceListHandler(plugin,uri);
 			XmlParser parser = new XmlParser();
 			parser.setHandler(dh);
-			parser.parse(null, null, new BufferedReader(
+			in = new BufferedReader(
 				new InputStreamReader(
-				uri.openStream())));
+				uri.openStream()))
+			parser.parse(null, null, in);
 			if(cache != null)
 				cache.cachedServices = dh.getCachedServices();
 		}
@@ -116,6 +119,18 @@ public class ServiceManager
 		catch(Exception e)
 		{
 			Log.log(Log.ERROR,ServiceManager.class,e);
+		}
+		finally
+		{
+			try
+			{
+				if(in != null)
+					in.close();
+			}
+			catch(IOException io)
+			{
+				Log.log(Log.ERROR,ServiceManager.class,io);
+			}
 		}
 	} //}}}
 

@@ -137,7 +137,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.21 2003/05/07 03:19:57 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.22 2003/05/09 23:42:23 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -422,16 +422,18 @@ public class ActionSet
 		loaded = true;
 		//actions.clear();
 
+		Reader stream = null;
+
 		try
 		{
 			Log.log(Log.DEBUG,this,"Loading actions from " + uri);
 
 			ActionListHandler ah = new ActionListHandler(uri.toString(),this);
+			stream = new BufferedReader(new InputStreamReader(
+				uri.openStream()));
 			XmlParser parser = new XmlParser();
 			parser.setHandler(ah);
-			parser.parse(null, null, new BufferedReader(
-				new InputStreamReader(
-				uri.openStream())));
+			parser.parse(null, null, stream);
 		}
 		catch(XmlException xe)
 		{
@@ -443,6 +445,18 @@ public class ActionSet
 		catch(Exception e)
 		{
 			Log.log(Log.ERROR,uri,e);
+		}
+		finally
+		{
+			try
+			{
+				if(stream != null)
+					stream.close();
+			}
+			catch(IOException io)
+			{
+				Log.log(Log.ERROR,this,io);
+			}
 		}
 	} //}}}
 

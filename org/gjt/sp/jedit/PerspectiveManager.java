@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.4 2003/04/14 05:28:11 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.5 2003/05/09 23:42:23 spestov Exp $
  */
 public class PerspectiveManager
 {
@@ -52,9 +52,10 @@ public class PerspectiveManager
 		PerspectiveHandler handler = new PerspectiveHandler(restoreFiles);
 		XmlParser parser = new XmlParser();
 		parser.setHandler(handler);
+		Reader in = null;
 		try
 		{
-			BufferedReader in = new BufferedReader(new FileReader(perspective));
+			in = new BufferedReader(new FileReader(perspective));
 			parser.parse(null, null, in);
 		}
 		catch(XmlException xe)
@@ -70,6 +71,18 @@ public class PerspectiveManager
 		catch(Exception e)
 		{
 			Log.log(Log.ERROR,PerspectiveManager.class,e);
+		}
+		finally
+		{
+			try
+			{
+				if(in != null)
+					in.close();
+			}
+			catch(IOException io)
+			{
+				Log.log(Log.ERROR,PerspectiveManager.class,io);
+			}
 		}
 
 		return handler.view;

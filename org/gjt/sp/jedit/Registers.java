@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.13 2003/03/16 05:37:51 spestov Exp $
+ * @version $Id: Registers.java,v 1.14 2003/05/09 23:42:24 spestov Exp $
  */
 public class Registers
 {
@@ -504,10 +504,11 @@ public class Registers
 		RegistersHandler handler = new RegistersHandler();
 		XmlParser parser = new XmlParser();
 		parser.setHandler(handler);
+		Reader in = null;
 		try
 		{
 			loading = true;
-			BufferedReader in = new BufferedReader(new FileReader(file));
+			in = new BufferedReader(new FileReader(file));
 			parser.parse(null, null, in);
 		}
 		catch(XmlException xe)
@@ -528,6 +529,15 @@ public class Registers
 		finally
 		{
 			loading = false;
+			try
+			{
+				if(in != null)
+					in.close();
+			}
+			catch(IOException io)
+			{
+				Log.log(Log.ERROR,Registers.class,io);
+			}
 		}
 	} //}}}
 
