@@ -60,8 +60,6 @@
 package org.apache.tomcat.util.compat;
 
 import java.net.URL;
-// XXX move it here, it's 1.1 specific
-import org.apache.tomcat.util.SimpleClassLoader; 
 
 /** General-purpose utility to provide backward-compatibility and JDK
     independence. This allow use of JDK1.2 ( or higher ) facilities if
@@ -117,7 +115,7 @@ public class Jdk11Compat {
     }
     public URL[] getParentURLs(ClassLoader cl){
         SimpleClassLoader scl=(SimpleClassLoader)cl;
-        return ((SimpleClassLoader)scl.getParent()).getURLs();
+        return ((SimpleClassLoader)scl.getParentLoader()).getURLs();
     }
     // Other methods, as needed
         

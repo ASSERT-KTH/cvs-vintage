@@ -52,7 +52,7 @@
  * please see <http://java.apache.org/>.
  *
  */
-package org.apache.tomcat.util;
+package org.apache.tomcat.util.compat;
 
 import java.io.*;
 import java.lang.*;
@@ -139,6 +139,14 @@ public class SimpleClassLoader extends ClassLoader {
 	this.reserved=reserved;
 	sm=System.getSecurityManager();
 	checkURLs();
+    }
+
+    /** We can't declare a method "getParent" since it'll not compile in
+	JDK1.2 - the method is final. But we don't have to - this will
+	be used via JdkCompat
+    */
+    public ClassLoader getParentLoader() {
+	return parent;
     }
 
     private void checkURLs() {

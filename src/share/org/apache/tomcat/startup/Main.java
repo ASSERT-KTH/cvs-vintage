@@ -66,7 +66,8 @@ import java.util.Hashtable;
 import java.util.*;
 import java.net.*;
 
-import org.apache.tomcat.util.SimpleClassLoader;
+// XXX This should be replaced by JdkCompat
+import org.apache.tomcat.util.compat.SimpleClassLoader;
 import org.apache.tomcat.util.IntrospectionUtils;
 
 // Depends:
@@ -184,9 +185,10 @@ public class Main {
 	    urlV.addElement( new URL( "file", null , System.getProperty( "java.home" ) +"/../lib/tools.jar"));
             URL[] serverClassPath=getURLs(urlV);
             // ClassLoader for webapps it uses a shared dir as repository, distinct from lib
+
             URL[] sharedClassPath=getURLs(getClassPathV(getSharedDir()));
             URL[] commonClassPath=getURLs(getClassPathV(getCommonDir()));
-            ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
+	    // XXX Should be: JdkCompat.newClassLoaderInstance !!            ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
 	    ClassLoader sharedCl= IntrospectionUtils.getURLClassLoader(sharedClassPath , commonCl );
             ClassLoader serverCl= IntrospectionUtils.getURLClassLoader(serverClassPath , commonCl );
 	    if( commonCl==null ) {
