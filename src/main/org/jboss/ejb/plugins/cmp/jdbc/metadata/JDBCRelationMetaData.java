@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -58,7 +58,7 @@ public final class JDBCRelationMetaData {
    private transient DataSource dataSource;
    
    /** type mapping used for the relation table */
-   private final JDBCTypeMappingMetaData typeMapping;
+   private final JDBCTypeMappingMetaData datasourceMapping;
    
    /** the name of the table to use for this bean */
    private final String tableName;
@@ -111,7 +111,7 @@ public final class JDBCRelationMetaData {
       }
 
       dataSourceName = null;
-      typeMapping = null;
+      datasourceMapping = null;
       createTable = false;
       removeTable = false;
       rowLocking = false;
@@ -128,7 +128,9 @@ public final class JDBCRelationMetaData {
                   this, 
                   jdbcApplication,      
                   rightRole); 
-                  
+      left.init(right);
+      right.init(left);
+
       if(mappingStyle == TABLE) {
          tableName = createDefaultTableName();         
       } else {
@@ -156,76 +158,14 @@ public final class JDBCRelationMetaData {
          JDBCRelationMetaData defaultValues) throws DeploymentException {
       
       relationName = defaultValues.getRelationName();
-
-      // get the mapping element; may be the defaults, table-mapping, or
-      // foreign-key-mapping
-      Element mappingElement;
-      if("defaults".equals(element.getTagName())) {
-         mappingElement = element;
-
-         // set mapping style based on perferred-relation-mapping (if possible) 
-         String perferredRelationMapping = MetaData.getOptionalChildContent(
-               element, "preferred-relation-mapping");
-
-         if("table".equals(perferredRelationMapping) ||
-               defaultValues.isManyToMany()) {
-            mappingStyle = TABLE;
-         } else {
-            mappingStyle = FOREIGN_KEY;
-         }
-      } else {
-         // check for table mapping style
-         mappingElement = MetaData.getOptionalChild(element, "table-mapping");
-         if(mappingElement != null) {
-            mappingStyle = TABLE;
-         } else {
-            // check for foreign key mapping 
-            mappingElement = MetaData.getOptionalChild(
-                  element, "foreign-key-mapping");
-            if(mappingElement != null) {
-               mappingStyle = FOREIGN_KEY;
-               if(defaultValues.isManyToMany()) {
-                  throw new DeploymentException("Foreign key mapping-style " +
-                        "is not allowed for many-to-many relationsips.");
-               }
-            } else {
-               // no mapping style element, will use defaultValues
-               if(defaultValues.isForeignKeyMappingStyle()) {
-                  mappingStyle = FOREIGN_KEY;
-               } else {
-                  mappingStyle = TABLE;
-               }
-            }
-         }
-      }
-            
-      // if no mapping element given, use defaultValues
-      if(mappingElement == null) {
-         dataSourceName = defaultValues.getDataSourceName();
-         typeMapping = defaultValues.getTypeMapping();
-         tableName = defaultValues.getTableName();
-         createTable = defaultValues.getCreateTable();
-         removeTable = defaultValues.getRemoveTable();
-         rowLocking = defaultValues.hasRowLocking();
-         primaryKeyConstraint = defaultValues.hasPrimaryKeyConstraint();
-         readOnly = defaultValues.isReadOnly();
-         readTimeOut = defaultValues.getReadTimeOut();
-         
-         left = new JDBCRelationshipRoleMetaData(
-                     this,
-                     jdbcApplication,                     
-                     element,
-                     defaultValues.getLeftRelationshipRole());
-                     
-         right = new JDBCRelationshipRoleMetaData(
-                     this,
-                     jdbcApplication,
-                     element,
-                     defaultValues.getRightRelationshipRole());
-         
-         return;      
-      } 
+      mappingStyle = loadMappingStyle(element, defaultValues);
       
+      //
+      // Load all of the table options. defaults and relation-table-mapping 
+      // will have these elements, and foreign-key will get the default values.
+      //
+      Element mappingElement = getMappingElement(element);
+
       // datasource name
       String dataSourceNameString = MetaData.getOptionalChildContent(
             mappingElement, "datasource");
@@ -237,18 +177,19 @@ public final class JDBCRelationMetaData {
       
       // get the type mapping for this datasource (optional, but always 
       // set in standardjbosscmp-jdbc.xml)
-      String typeMappingString = MetaData.getOptionalChildContent(
-            mappingElement, "type-mapping");      
-      if(typeMappingString != null) {
-         typeMapping = jdbcApplication.getTypeMappingByName(
-               typeMappingString);
+      String datasourceMappingString = MetaData.getOptionalChildContent(
+            mappingElement, "datasource-mapping");      
+      if(datasourceMappingString != null) {
+         datasourceMapping = jdbcApplication.getTypeMappingByName(
+               datasourceMappingString);
       
-         if(typeMapping == null) {
+         if(datasourceMapping == null) {
             throw new DeploymentException("Error in jbosscmp-jdbc.xml : " +
-                  "type-mapping " + typeMappingString + " not found");
+                  "datasource-mapping " + datasourceMappingString + 
+                  " not found");
          }
       } else {
-         typeMapping = defaultValues.getTypeMapping();
+         datasourceMapping = defaultValues.getTypeMapping();
       }
       
       // get table name
@@ -323,67 +264,143 @@ public final class JDBCRelationMetaData {
       //
       // load metadata for each specified role
       //
-      String leftRoleName =
-            defaultValues.getLeftRelationshipRole().getRelationshipRoleName();
-      String rightRoleName =
-            defaultValues.getRightRelationshipRole().getRelationshipRoleName();
-      JDBCRelationshipRoleMetaData leftRole = null;
-      JDBCRelationshipRoleMetaData rightRole = null;
+      JDBCRelationshipRoleMetaData defaultLeft =
+            defaultValues.getLeftRelationshipRole();
+      JDBCRelationshipRoleMetaData defaultRight =
+            defaultValues.getRightRelationshipRole();
       
+      if(!MetaData.getChildrenByTagName(
+            element, "ejb-relationship-role").hasNext()) {
+
+         // no roles specified use the defaults
+         left = new JDBCRelationshipRoleMetaData(
+                     this,
+                     jdbcApplication,                     
+                     element,
+                     defaultLeft);
+                     
+         right = new JDBCRelationshipRoleMetaData(
+                     this,
+                     jdbcApplication,
+                     element,
+                     defaultRight);
+
+         left.init(right);
+         right.init(left);
+      } else {
+         Element leftElement = 
+               getEJBRelationshipRoleElement(element, defaultLeft);
+         left = new JDBCRelationshipRoleMetaData(
+                     this,
+                     jdbcApplication,
+                     leftElement,
+                     defaultLeft);
+
+         Element rightElement = 
+               getEJBRelationshipRoleElement(element, defaultRight);
+         right = new JDBCRelationshipRoleMetaData(
+                     this,
+                     jdbcApplication,
+                     rightElement,
+                     defaultRight);
+
+         left.init(right, leftElement);
+         right.init(left, rightElement);
+      }
+   }
+
+   private int loadMappingStyle(Element element,
+         JDBCRelationMetaData defaultValues) throws DeploymentException {
+
+      // if defaults check for preferred-relation-mapping
+      if("defaults".equals(element.getTagName())) {
+         // set mapping style based on perferred-relation-mapping (if possible) 
+         String perferredRelationMapping = MetaData.getOptionalChildContent(
+               element, "preferred-relation-mapping");
+
+         if("relation-table".equals(perferredRelationMapping) ||
+               defaultValues.isManyToMany()) {
+            return TABLE;
+         } else {
+            return FOREIGN_KEY;
+         }
+      }
+
+      // check for table mapping style
+      if(MetaData.getOptionalChild(element, "relation-table-mapping") != null) {
+         return TABLE;
+      }
+
+      // check for foreign-key mapping style
+      if(MetaData.getOptionalChild(element, "foreign-key-mapping") != null) {
+         if(defaultValues.isManyToMany()) {
+            throw new DeploymentException("Foreign key mapping-style " +
+                  "is not allowed for many-to-many relationsips.");
+         }
+         return FOREIGN_KEY;
+      }
+
+      // no mapping style element, will use defaultValues
+      return defaultValues.mappingStyle;
+   }
+
+   private Element getMappingElement(Element element) 
+         throws DeploymentException {
+
+      // if defaults check for preferred-relation-mapping
+      if("defaults".equals(element.getTagName())) {
+         return element;
+      }
+
+      // check for table mapping style
+      Element tableMappingElement = 
+            MetaData.getOptionalChild(element, "relation-table-mapping");
+      if(tableMappingElement != null) {
+         return tableMappingElement;
+      }
+
+      // check for foreign-key mapping style
+      Element foreignKeyMappingElement = 
+            MetaData.getOptionalChild(element, "foreign-key-mapping");
+      if(foreignKeyMappingElement != null) {
+         return foreignKeyMappingElement;
+      }
+      return null;
+   }
+ 
+   private Element getEJBRelationshipRoleElement(
+         Element element,
+         JDBCRelationshipRoleMetaData defaultRole) throws DeploymentException {
+
+      String roleName = defaultRole.getRelationshipRoleName();
+
       Iterator iter = MetaData.getChildrenByTagName(
-            mappingElement, "ejb-relationship-role");
+            element, "ejb-relationship-role");
+      if(!iter.hasNext()) {
+         throw new DeploymentException("No ejb-relationship-role " + 
+               "elements found");
+      }
+      
+      Element roleElement = null;
       for(int i=0; iter.hasNext(); i++) {
-         
          // only 2 roles are allow 
          if(i > 1) {
             throw new DeploymentException("Expected only 2 " +
                   "ejb-relationship-role but found more then 2");
          }
          
-         Element relationshipRoleElement = (Element)iter.next();
-         String relationshipRoleName = MetaData.getUniqueChildContent(
-               relationshipRoleElement, "ejb-relationship-role-name");
-         if(leftRoleName.equals(relationshipRoleName)) {
-            leftRole = new JDBCRelationshipRoleMetaData(
-                        this,
-                        jdbcApplication,
-                        relationshipRoleElement, 
-                        defaultValues.getLeftRelationshipRole());
-         } else if(rightRoleName.equals(relationshipRoleName)) {
-            rightRole = new JDBCRelationshipRoleMetaData(
-                        this,
-                        jdbcApplication,
-                        relationshipRoleElement, 
-                        defaultValues.getRightRelationshipRole());
-         } else {
-            throw new DeploymentException("Found ejb-relationship-role '" +
-                  relationshipRoleName + "' in jboss-cmp.xml, but no " +
-                  "matching role exits in ejb-jar.xml");
+         Element tempElement = (Element)iter.next();
+         if(roleName.equals(MetaData.getUniqueChildContent(
+               tempElement, "ejb-relationship-role-name"))) {
+            roleElement = tempElement;
          }
       }
-      
-      // if left role was not specified create a new one for this relation
-      if(leftRole == null) {
-         leftRole = new JDBCRelationshipRoleMetaData(
-                     this,
-                     jdbcApplication,                     
-                     element,
-                     defaultValues.getLeftRelationshipRole());
-                     
+
+      if(roleElement == null) {
+         throw new DeploymentException("An ejb-relationship-role element was " +
+               "not found for role '" + roleName + "'");
       }
-      
-      // if right role was not specified create a new one for this relation
-      if(rightRole == null) {
-         rightRole = new JDBCRelationshipRoleMetaData(
-                     this,
-                     jdbcApplication,
-                     element,
-                     defaultValues.getRightRelationshipRole());
-      }
-      
-      // assign the final roles
-      left = leftRole;
-      right = rightRole;
+      return roleElement;
    }
 
    /** 
@@ -464,7 +481,7 @@ public final class JDBCRelationMetaData {
     * @return the jdbc type mapping for this entity
     */
    public JDBCTypeMappingMetaData getTypeMapping() {
-      return typeMapping;
+      return datasourceMapping;
    }
    
    /**

@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -71,46 +71,37 @@ public final class JDBCRelationshipRoleMetaData {
     */
    private final JDBCReadAheadMetaData readAhead;
    
-   private final Map tableKeyFields = new HashMap();
-   private final Map foreignKeyFields = new HashMap();
+   /**
+    * The other role in this relationship.
+    */
+   private JDBCRelationshipRoleMetaData relatedRole;
+
+   /**
+    * The key fields used by this role by field name.
+    */
+   private Map keyFields;
    
    public JDBCRelationshipRoleMetaData(
          JDBCRelationMetaData relationMetaData,
          JDBCApplicationMetaData application,
-         RelationshipRoleMetaData relationshipRole) throws DeploymentException {
+         RelationshipRoleMetaData role) throws DeploymentException {
       
       this.relationMetaData = relationMetaData;
-      RelationshipRoleMetaData relatedRole =
-               relationshipRole.getRelatedRoleMetaData();
       
-      relationshipRoleName = relationshipRole.getRelationshipRoleName();
-      multiplicityOne = relationshipRole.isMultiplicityOne();
-      cascadeDelete = relationshipRole.isCascadeDelete();
+      relationshipRoleName = role.getRelationshipRoleName();
+      multiplicityOne = role.isMultiplicityOne();
+      cascadeDelete = role.isCascadeDelete();
       foreignKeyConstraint = false;
       readAhead = null;
       
-      String tempCmrFieldName = relationshipRole.getCMRFieldName();
-      if(tempCmrFieldName == null) {
-         // no cmr field on this side use relatedEntityName_relatedCMRFieldName
-         tempCmrFieldName = relatedRole.getEntityName() + "_" +
-               relatedRole.getCMRFieldName();
-      }
-      cmrFieldName = tempCmrFieldName;
-      cmrFieldType = relationshipRole.getCMRFieldType();
+      cmrFieldName = loadCMRFieldName(role);
+      cmrFieldType = role.getCMRFieldType();
 
       // get the entity for this role
-      entity = application.getBeanByEjbName(relationshipRole.getEntityName());
+      entity = application.getBeanByEjbName(role.getEntityName());
       if(entity == null) {
-         throw new DeploymentException("Entity: " + 
-              relationshipRole.getEntityName() + 
-              " not found for: " + relationshipRoleName);
-      }
-      
-      if(relationMetaData.isTableMappingStyle()) {
-         loadTableKeyFields();
-      } else if(relatedRole.isMultiplicityOne()){   
-         String relatedEntityName = relatedRole.getEntityName();
-         loadForeignKeyFields(application.getBeanByEjbName(relatedEntityName));
+         throw new DeploymentException("Entity: " + role.getEntityName() + 
+              " not found for: " + role);
       }
    }
 
@@ -150,25 +141,33 @@ public final class JDBCRelationshipRoleMetaData {
       } else {
          readAhead = entity.getReadAhead();
       }
+   }
 
-      if(relationMetaData.isTableMappingStyle()) {
-         if("defaults".equals(element.getTagName())) {
-            loadTableKeyFields();
-         } else {
-            loadTableKeyFields(element);
-         }
-      } else if(defaultValues.getRelatedRole().isMultiplicityOne()) {
-         String relatedEntityName =
-               defaultValues.getRelatedRole().getEntity().getName();
-         JDBCEntityMetaData relatedEntity = 
-               application.getBeanByEjbName(relatedEntityName);
+   public void init(JDBCRelationshipRoleMetaData relatedRole) 
+         throws DeploymentException {
+      init(relatedRole, null);
+   }
 
-         if("defaults".equals(element.getTagName())) {
-            loadForeignKeyFields(relatedEntity);
-         } else {
-            loadForeignKeyFields(element, relatedEntity);
-         }
+   public void init(JDBCRelationshipRoleMetaData relatedRole, Element element) 
+         throws DeploymentException {
+      this.relatedRole = relatedRole;
+      if(element == null || "defaults".equals(element.getTagName())) {
+         keyFields = loadKeyFields();
+      } else {
+         keyFields = loadKeyFields(element);
       }
+   }
+
+   private String loadCMRFieldName(RelationshipRoleMetaData role) {
+      String fieldName = role.getCMRFieldName();
+      if(fieldName == null) {
+         // no cmr field on this side use relatedEntityName_relatedCMRFieldName
+         RelationshipRoleMetaData relatedRole =
+               role.getRelatedRoleMetaData();
+         fieldName = relatedRole.getEntityName() + "_" +
+               relatedRole.getCMRFieldName();
+      }
+      return fieldName;
    }
    
    /**
@@ -271,123 +270,26 @@ public final class JDBCRelationshipRoleMetaData {
    }
 
    /**
-    * Gets the foreign key fields of this role. The foreign key fields hold the
-    * primary keys of the related entity. A relationship role has foreign key 
-    * fields if the relation mapping style is foreign key and the other side of
-    * the relationship has a multiplicity of one.
+    * Gets the key fields of this role.
     * @return an unmodifiable collection of JDBCCMPFieldMetaData objects
     */
-   public Collection getForeignKeyFields() {
-      return Collections.unmodifiableCollection(foreignKeyFields.values());
-   }
-   
-   /**
-    * Gets the key fields of this role in the relation table. The table key
-    * fields hold the primary keys of this role's entity. A relationship role
-    * has table key  fields if the relation is mapped to a relation table.
-    * @return an unmodifiable collection of JDBCCMPFieldMetaData objects
-    */
-   public Collection getTableKeyFields() {
-      return Collections.unmodifiableCollection(tableKeyFields.values());
+   public Collection getKeyFields() {
+      return Collections.unmodifiableCollection(keyFields.values());
    }
 
    /**
-    * Loads the foreign key fields for this role based on the primary keys of
-    * the specified related entity.
-    */
-   private void loadForeignKeyFields(JDBCEntityMetaData relatedEntity) 
-         throws DeploymentException {
-
-      if(relatedEntity == null) {
-         throw new DeploymentException("Entity: Related entity not found " +
-               "for: " + relationshipRoleName);
-      }
-
-      ArrayList pkFields = new ArrayList();
-
-      for(Iterator i = relatedEntity.getCMPFields().iterator(); i.hasNext();) {
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
-
-         if(cmpField.isPrimaryKeyMember()) {
-            pkFields.add(cmpField);
-         }
-      }
-      
-      for(Iterator i = pkFields.iterator(); i.hasNext(); ) {
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
-      
-         String columnName = getCMRFieldName();
-         if(pkFields.size() > 1) {
-            columnName += "_" + cmpField.getFieldName();
-         }
-
-         cmpField = new JDBCCMPFieldMetaData(
-               entity,
-               cmpField,
-               columnName,
-               false,
-               relationMetaData.isReadOnly(),
-               relationMetaData.getReadTimeOut());
-         foreignKeyFields.put(cmpField.getFieldName(), cmpField);
-      }
-   }
-   
-   /**
-    * Loads the foreign key fields for this role based on the primary keys of
-    * the specified related entity and the override data from the xml element.
-    */
-   private void loadForeignKeyFields(
-         Element element,
-         JDBCEntityMetaData relatedEntity) throws DeploymentException {
-
-      loadForeignKeyFields(relatedEntity);
-
-      Element foreignKeysElement = MetaData.getOptionalChild(
-            element,"foreign-key-fields");
-      
-      // no field overrides, we're done
-      if(foreignKeysElement == null) {
-         return;
-      }
-      
-      // load overrides
-      Iterator fkIter = MetaData.getChildrenByTagName(
-            foreignKeysElement, "foreign-key-field");
-      
-      // if empty foreign-key-fields element, no fk should be used
-      if(!fkIter.hasNext()) {
-         foreignKeyFields.clear();
-      }
-      
-      while(fkIter.hasNext()) {
-         Element foreignKeyElement = (Element)fkIter.next();
-         String foreignKeyName = MetaData.getUniqueChildContent(
-               foreignKeyElement, "field-name");
-         JDBCCMPFieldMetaData cmpField = 
-               (JDBCCMPFieldMetaData)foreignKeyFields.get(foreignKeyName);
-         if(cmpField == null) {
-            throw new DeploymentException(
-                  "CMP field for foreign key not found: field name=" + 
-                  foreignKeyName);
-         }
-         cmpField = new JDBCCMPFieldMetaData(
-               entity,
-               foreignKeyElement,
-               cmpField,
-               false,
-               relationMetaData.isReadOnly(),
-               relationMetaData.getReadTimeOut());
-         foreignKeyFields.put(cmpField.getFieldName(), cmpField);
-      }
-   }
-
-   /**
-    * Loads the table key fields for this role based on the primary keys of the
+    * Loads the key fields for this role based on the primary keys of the
     * this entity.
     */
-   private void loadTableKeyFields() {
-      ArrayList pkFields = new ArrayList();
+   private Map loadKeyFields() {
+      // with foreign key mapping, the one side of one-to-many
+      // does not have key fields
+      if(relationMetaData.isForeignKeyMappingStyle() && isMultiplicityMany()) {
+         return Collections.EMPTY_MAP;
+      }
 
+      // get all of the pk fields
+      ArrayList pkFields = new ArrayList();
       for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
          JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 
@@ -396,10 +298,18 @@ public final class JDBCRelationshipRoleMetaData {
          }
       }
       
+      // generate a new key field for each pk field
+      Map fields = new HashMap(pkFields.size());
       for(Iterator i = pkFields.iterator(); i.hasNext(); ) {
          JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
       
-         String columnName = entity.getName();
+         String columnName;
+         if(relationMetaData.isTableMappingStyle()) {
+            columnName = entity.getName();
+         } else {
+            columnName = relatedRole.getCMRFieldName();
+         }
+
          if(pkFields.size() > 1) {
             columnName += "_" + cmpField.getFieldName();
          }
@@ -411,47 +321,69 @@ public final class JDBCRelationshipRoleMetaData {
                false,
                relationMetaData.isReadOnly(),
                relationMetaData.getReadTimeOut());
-         tableKeyFields.put(cmpField.getFieldName(), cmpField);
+         fields.put(cmpField.getFieldName(), cmpField);
       }
+      return Collections.unmodifiableMap(fields);
    }
 
    /**
-    * Loads the table key fields for this role based on the primary keys of the
+    * Loads the key fields for this role based on the primary keys of the
     * this entity and the override data from the xml element.
     */
-   private void loadTableKeyFields(Element element) throws DeploymentException {
-      loadTableKeyFields();
+   private Map loadKeyFields(Element element)
+         throws DeploymentException {
       
-      Element tableKeysElement = MetaData.getOptionalChild(
-            element,"table-key-fields");
+      Element keysElement = 
+            MetaData.getOptionalChild(element,"key-fields");
       
       // no field overrides, we're done
-      if(tableKeysElement == null) {
-         return;
+      if(keysElement == null) {
+         return loadKeyFields();
       }
-      
-      // load overrides
-      for(Iterator i = MetaData.getChildrenByTagName(
-               tableKeysElement, "table-key-field"); i.hasNext(); ) {
 
-         Element tableKeyElement = (Element)i.next();
-         String tableKeyName = MetaData.getUniqueChildContent(
-               tableKeyElement, "field-name");
+      // load overrides
+      Iterator iter = MetaData.getChildrenByTagName(keysElement, "key-field");
+      
+      // if key-fields element empty, no key should be used
+      if(!iter.hasNext()) {
+         return Collections.EMPTY_MAP;
+      } else if(relationMetaData.isForeignKeyMappingStyle() 
+            && isMultiplicityMany()) {
+         throw new DeploymentException("A role with multiplicity many using " +
+               "foreign-key mapping is not allowed to have key-fields");
+      }
+
+      // load the default field values
+      Map defaultFields = new HashMap(loadKeyFields());
+     
+      // load overrides
+      Map fields = new HashMap(defaultFields.size());
+      while(iter.hasNext()) {
+         Element keyElement = (Element)iter.next();
+         String fieldName = 
+               MetaData.getUniqueChildContent(keyElement, "field-name");
+
          JDBCCMPFieldMetaData cmpField = 
-               (JDBCCMPFieldMetaData)tableKeyFields.get(tableKeyName);
+               (JDBCCMPFieldMetaData)defaultFields.remove(fieldName);
          if(cmpField == null) {
             throw new DeploymentException(
-                  "CMP field for table key not found: field name=" + 
-                  tableKeyName);
+                  "CMP field for key not found: field name=" + fieldName);
          }
          cmpField = new JDBCCMPFieldMetaData(
                entity,
-               tableKeyElement,
+               keyElement,
                cmpField,
                false,
                relationMetaData.isReadOnly(),
                relationMetaData.getReadTimeOut());
-         tableKeyFields.put(cmpField.getFieldName(), cmpField);
+         fields.put(cmpField.getFieldName(), cmpField);
       }
+      
+      // all fields must be overriden
+      if(!defaultFields.isEmpty()) {
+         throw new DeploymentException("Mappings were not provided for all " +
+               "fields: unmaped fields=" + defaultFields.keySet());
+      }
+      return Collections.unmodifiableMap(fields);
    }
 }
