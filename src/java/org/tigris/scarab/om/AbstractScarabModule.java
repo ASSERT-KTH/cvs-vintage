@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.70 2002/12/24 10:58:40 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.71 2003/01/13 15:32:39 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1598,7 +1598,7 @@ public abstract class AbstractScarabModule
      * @exception TorqueException if an error occurs
      */
     public List getOptionTree(Attribute attribute, IssueType issueType)
-        throws TorqueException
+        throws Exception
     {
         return getOptionTree(attribute, issueType, true);
     }
@@ -1614,51 +1614,57 @@ public abstract class AbstractScarabModule
      */
     public List getOptionTree(Attribute attribute, IssueType issueType,
                               boolean activeOnly)
-        throws TorqueException
+        throws Exception
     {
+        // I think this code should place an option that had multiple parents -
+        // OSX and Mac,BSD is usual example - into the list in multiple places
+        // and it should have the level set differently for the two locations.
+        // The code is currently only placing the option in the list once.
+        // Since the behavior is not well spec'ed, leaving as it is. - jdm
+
         List moduleOptions = null;
-try{
         moduleOptions = getRModuleOptions(attribute, issueType, activeOnly);
         int size = moduleOptions.size();
         List[] ancestors = new List[size];
 
-        // put option id's in a map for searching and find all ancestors
-        Map optionsMap = new HashMap((int)(size*1.5));
+        // find all ancestors
         for ( int i=size-1; i>=0; i-- )
         {
             AttributeOption option =
                 ((RModuleOption)moduleOptions.get(i)).getAttributeOption();
-            optionsMap.put(option.getOptionId(), null);
-
-            List moduleOptionAncestors = option.getAncestors();
-            ancestors[i] = moduleOptionAncestors;
+            ancestors[i] = option.getAncestors();
         }
 
         for ( int i=0; i<size; i++ )
         {
             RModuleOption moduleOption = (RModuleOption)moduleOptions.get(i);
-
             int level = 1;
             if ( ancestors[i] != null )
             {
+                // Set level for first ancestor as the option is only
+                // shown once. 
                 for ( int j=ancestors[i].size()-1; j>=0; j-- )
                 {
-                    AttributeOption option =
+                    AttributeOption ancestor =
                         (AttributeOption)ancestors[i].get(j);
 
-                    if ( optionsMap.containsKey(option.getOptionId()) &&
-                         !option.getOptionId()
-                         .equals(moduleOption.getOptionId()) )
+                    for (int k=0; k<i; k++) 
                     {
-                        moduleOption.setLevel(level++);
+                        RModuleOption potentialParent = (RModuleOption)
+                            moduleOptions.get(k);
+                        if (ancestor.getOptionId()
+                            .equals(potentialParent.getOptionId()) &&
+                            !ancestor.getOptionId()
+                            .equals(moduleOption.getOptionId())    ) 
+                        {
+                            moduleOption.setLevel(level++);
+                        }
                     }
                 }
             }
         }
-}catch (Exception e){e.printStackTrace();}
 
         return moduleOptions;
-
     }
     
     /** 

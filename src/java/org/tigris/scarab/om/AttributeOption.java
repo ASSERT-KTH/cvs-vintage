@@ -86,7 +86,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.26 2002/06/20 22:41:57 elicia Exp $
+  * @version $Id: AttributeOption.java,v 1.27 2003/01/13 15:32:39 jmcnally Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -244,8 +244,11 @@ public class AttributeOption
         {
             AttributeOption parent = (AttributeOption) 
                 parents.get(i);
-            ancestors.add(parent);
-            parent.addAncestors(ancestors);
+            if (!ancestors.contains(parent)) 
+            {
+                ancestors.add(parent);    
+                parent.addAncestors(ancestors);
+            }
         }
     }
 
