@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.24 2002/02/14 02:07:43 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.25 2002/02/19 21:14:07 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -263,6 +263,41 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         if (contextMap.containsKey(currentPage))
         {
             contextMap.remove(currentPage);
+        }
+
+        if (contextMap.containsKey(cancelPage))
+        {
+            restoreContext(data, contextMap, cancelPage);
+        }
+        user.setTemp("cancelTargets", cancelTargets);
+        user.setTemp("contextMap", contextMap);
+        data.setTarget(cancelPage);
+    }
+
+    /*
+     * Cancels back to given page.
+     */
+    public void cancelBackTo( RunData data, TemplateContext context,
+                              String cancelPage )
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+        if (cancelTargets.contains(cancelPage))
+        {
+            int cancelPageIndex = cancelTargets.indexOf(cancelPage);
+            for (int i = cancelTargets.size(); i > (cancelPageIndex + 1); i--)
+            {
+               cancelTargets.pop();
+            }
+            cancelPage = (String)cancelTargets.pop();
+        }
+
+        // Remove current page mapping from context map
+        HashMap contextMap = (HashMap)user.getTemp("contextMap");
+        if (contextMap.containsKey(cancelPage))
+        {
+            contextMap.remove(cancelPage);
         }
 
         if (contextMap.containsKey(cancelPage))
