@@ -127,7 +127,6 @@ $intake.declareGroups()
  <input type="hidden" name="issue_ids" value="$issueId" />
 #end
 
-#set ($searchString = $data.Parameters.getString("searchString" , ""))
 
 <a name="add"><h3>Users</h3></a> 
 <div class="axial">
@@ -144,17 +143,17 @@ $intake.declareGroups()
 </table>
 </div>
 
-
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
 #if ($searchString && $searchString.length() > 0)
    #set ($searchResults = $scarabR.UserSearchResults) 
+   #if ( $searchResults.isEmpty())
+      <p class="alert">No users match your criteria. Displaying full user list.</p>
+      #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+   #end
 #else
-   #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+      #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
 #end
    
-#if ( $searchResults.isEmpty() && $searchString)
-  <p class="alert">No users match your criteria. Displaying full user list.</p>
-  #set ($searchResults = $module.getUsers("Issue | Enter"))
-#end
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
