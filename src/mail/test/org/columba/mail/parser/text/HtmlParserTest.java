@@ -78,4 +78,29 @@ public class HtmlParserTest extends TestCase {
         assertTrue(result.equals("<html><body><p>And some text</p> \n\n"
                 + "<h1>A header </h><p>" + "<i>The end</i></p></body></html>"));
     }
+    
+    public void restoreSpecialCharacters1() {
+    	String input = "this &#59; is encoded!";
+    	
+    	assertEquals("this ; is encoded!", HtmlParser.restoreSpecialCharacters(input));
+    }
+
+    public void restoreSpecialCharacters2() {
+    	String input = "this &auml; is encoded!";
+    	
+    	assertEquals(";", HtmlParser.restoreSpecialCharacters(input));
+    }
+
+    public void restoreSpecialCharacters3() {
+    	String input = "this is &frac12; encoded &#59; !";
+    	
+    	assertEquals("this is \u00bd encoded ; !", HtmlParser.restoreSpecialCharacters(input));
+    }
+
+    public void restoreSpecialCharacters4() {
+    	String input = "this is&lt;encoded&gt;!";
+    	
+    	assertEquals("this is<encoded>!", HtmlParser.restoreSpecialCharacters(input));
+    }
+
 }

@@ -17,6 +17,8 @@ package org.columba.mail.parser.text;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,18 +105,40 @@ prot + "://  protocol and ://
     // TODO (@author fdietz): Add more special entities - e.g. accenture chars such as ?
 
     /** Special entities recognized by restore special entities */
+    // The form of the entities must be a regexp!
     private static final String[] SPECIAL_ENTITIES = {
-        "&lt;", "&gt;", "&amp;", "&nbsp;", "&#160;", "&quot;", "&apos;",
-        "&aelig;", "&#230;", "&oslash;", "&#248;", "&aring;", "&#229;",
-        "&AElig;", "&#198;", "&Oslash;", "&#216;", "&Aring;", "&#197;"
-    };
+    		"&quot;", "&amp;", "&lt;", "&gt;",
+    		"&nbsp;","&iexcl;","&cent;","&pound;","&curren;","&yen;","&brvbar;","&sect;",
+			"&uml;","&copy;","&ordf;","&laquo;","&not;","&shy;","&reg;","&macr;",
+			"&deg;","&plusmn;","&sup2;","&sup3;","&acute;","&micro;","&para;","&middot;",
+			"&cedil;","&sup1;","&ordm;","&raquo;","&frac14;","&frac12;","&frac34;","&iquest;",
+			"&Agrave;","&Aacute;","&Acirc;","&Atilde;","&Auml;","&Aring;","&AElig;","&Ccedil;",
+			"&Egrave;","&Eacute;","&Ecirc;","&Euml;","&Igrave;","&Iacute;","&Icirc;","&Iuml;",
+			"&ETH;","&Ntilde;","&Ograve;","&Oacute;","&Ocirc;","&Otilde;","&Ouml;","&times;",
+			"&Oslash;","&Ugrave;","&Uacute;","&Ucirc;","&Uuml;","&Yacute;","&THORN;","&szlig;",
+			"&agrave;","&aacute;","&acirc;","&atilde;","&auml;","&aring;","&aelig;","&ccedil;",
+			"&egrave;","&eacute;","&ecirc;","&euml;","&igrave;","&iacute;","&icirc;","&iuml;",
+			"&eth;","&ntilde;","&ograve;","&oacute;","&ocirc;","&otilde;","&ouml;","&divide;",
+			"&oslash;","&ugrave;","&uacute;","&ucirc;","&uuml;","&yacute;","&thorn;","&yuml;"    };
 
     /** Normal chars corresponding to the defined special entities */
-    private static final char[] ENTITY_CHARS = {
-        '<', '>', '&', ' ', ' ', '"', '\'', '?', '?', '?', '?', '?', '?', '?',
-        '?', '?', '?', '?', '?'
-    };
+    private static final String[] ENTITY_STRINGS = {
+    		"\"", "&", "<", ">",
+    		"\u00a0","\u00a1","\u00a2","\u00a3","\u00a4","\u00a5","\u00a6","\u00a7",
+			"\u00a8","\u00a9","\u00aa","\u00ab","\u00ac","\u00ad","\u00ae","\u00af",
+			"\u00b0","\u00b1","\u00b2","\u00b3","\u00b4","\u00b5","\u00b6","\u00b7",
+			"\u00b8","\u00b9","\u00ba","\u00bb","\u00bc","\u00bd","\u00be","\u00bf",
+			"\u00c0","\u00c1","\u00c2","\u00c3","\u00c4","\u00c5","\u00c6","\u00c7",
+			"\u00c8","\u00c9","\u00ca","\u00cb","\u00cc","\u00cd","\u00ce","\u00cf",
+			"\u00d0","\u00d1","\u00d2","\u00d3","\u00d4","\u00d5","\u00d6","\u00d7",
+			"\u00d8","\u00d9","\u00da","\u00db","\u00dc","\u00dd","\u00de","\u00df",
+			"\u00e0","\u00e1","\u00e2","\u00e3","\u00e4","\u00e5","\u00e6","\u00e7",
+			"\u00e8","\u00e9","\u00ea","\u00eb","\u00ec","\u00ed","\u00ee","\u00ef",
+			"\u00f0","\u00f1","\u00f2","\u00f3","\u00f4","\u00f5","\u00f6","\u00f7",
+			"\u00f8","\u00f9","\u00fa","\u00fb","\u00fc","\u00fd","\u00fe","\u00ff"
+			};
 
+    private static final Pattern SPECIAL_PATTERN = Pattern.compile("&#(\\d)+;");    
     /**
      * Strips html tags and removes extra spaces which occurs due
      * to e.g. indentation of the html and the head section, which does
@@ -217,78 +241,29 @@ prot + "://  protocol and ://
      *                         (moved from org.columba.mail.gui.message.util.DocumentParser)
      */
     public static String restoreSpecialCharacters(String s) {
-        // initial check of input:
-        if (s == null) {
-            return null;
-        }
 
-        StringBuffer sb = new StringBuffer(s.length());
-        StringReader sr = new StringReader(s);
-        BufferedReader br = new BufferedReader(sr);
-        String ss = null;
+    	//First replace all special entities
+    	for( int i=0; i<SPECIAL_ENTITIES.length; i++) {
+    		s.replaceAll(SPECIAL_ENTITIES[i],ENTITY_STRINGS[i]);
+    	}
 
-        try {
-            while ((ss = br.readLine()) != null) {
-                int pos = 0;
-
-                while (pos < ss.length()) {
-                    char c = ss.charAt(pos);
-
-                    if (c == '&') {
-                        // a special character is possibly found
-                        if (ss.substring(pos).startsWith("&nbsp;&nbsp;&nbsp;&nbsp;")
-                                || ss.substring(pos).startsWith("&#160;&#160;&#160;&#160;")) {
-                            // 4 spaces -> tab character
-                            sb.append('\t');
-                            pos = pos + 24;
-                        } else {
-                            // seach among know special entities
-                            boolean found = false;
-
-                            for (int i = 0; i < SPECIAL_ENTITIES.length; i++) {
-                                if (ss.substring(pos).startsWith(SPECIAL_ENTITIES[i])) {
-                                    sb.append(ENTITY_CHARS[i]);
-                                    pos = pos + SPECIAL_ENTITIES[i].length();
-                                    found = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (!found) {
-                                if (ss.charAt(pos + 1) == '#') {
-                                    char converted = (char) Integer.parseInt(ss.substring(pos
-                                            + 2, pos + 5));
-                                    sb.append(converted);
-                                    pos = pos + 6;
-                                    found = true;
-                                }
-                            }
-
-                            if (!found) {
-                                // unknown special char - just keep it as-is
-                                sb.append(c);
-                                pos++;
-                            }
-                        }
-                    } else {
-                        // a "normal" char - keep it as is
-                        sb.append(c);
-                        pos++;
-                    }
-                }
-
-                // end of line
-                sb.append('\n');
-            }
-        } catch (Exception e) {
-            LOG.severe("Error restoring special characters: "
-                    + e.getMessage());
-
-            return null; // error
-        }
-
-        return sb.toString();
+    	StringBuffer result = new StringBuffer(s.length());
+    	int pos = 0;
+    	
+    	Charset isoCharset = Charset.forName("iso-8859-1");
+    	//replace the other entities
+    	Matcher matcher = SPECIAL_PATTERN.matcher(s);
+    	while( matcher.find()) {
+    		result.append(s.substring(pos,matcher.start()));
+    		result.append(isoCharset.decode( ByteBuffer.wrap(new byte[]{ (byte) Integer.parseInt(matcher.group(1))})));
+    		
+    		pos = matcher.end();
+    	}
+    	
+    	result.append(pos);
+    	
+    	//Convert 4 WS in a row to a tab
+    	return result.toString().replaceAll("    ","\t");
     }
 
     /**
