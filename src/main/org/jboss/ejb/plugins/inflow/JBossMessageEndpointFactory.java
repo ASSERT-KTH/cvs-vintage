@@ -17,9 +17,7 @@ import java.util.Iterator;
 
 import javax.ejb.EJBMetaData;
 import javax.management.ObjectName;
-import javax.resource.cci.ResourceAdapterMetaData;
 import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.ResourceAdapter;
 import javax.resource.spi.UnavailableException;
 import javax.resource.spi.endpoint.MessageEndpoint;
 import javax.resource.spi.endpoint.MessageEndpointFactory;
@@ -32,7 +30,6 @@ import org.jboss.ejb.MessageDrivenContainer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.InvokerInterceptor;
-import org.jboss.logging.Logger;
 import org.jboss.metadata.ActivationConfigPropertyMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MessageDestinationMetaData;
@@ -41,7 +38,6 @@ import org.jboss.metadata.MetaData;
 import org.jboss.mx.util.JMXExceptionDecoder;
 import org.jboss.proxy.GenericProxyFactory;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.NotImplementedException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -54,7 +50,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.9 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -162,6 +158,9 @@ public class JBossMessageEndpointFactory
       context.put(MessageEndpointInterceptor.MESSAGE_ENDPOINT_XARESOURCE, resource);
 
       String ejbName = container.getBeanMetaData().getContainerObjectNameJndiName();
+
+      if (trace)
+         log.trace("createEndpoint " + this + " xaResource=" + resource);
       
       MessageEndpoint endpoint = (MessageEndpoint) proxyFactory.createProxy
       (
@@ -285,6 +284,7 @@ public class JBossMessageEndpointFactory
       buffer.append(super.toString());
       buffer.append("{ resourceAdapter=").append(resourceAdapterObjectName);
       buffer.append(", messagingType=").append(messagingTypeClass.getName());
+      buffer.append(", ejbName=").append(container.getBeanMetaData().getContainerObjectNameJndiName());
       buffer.append(", activationConfig=").append(properties.values());
       buffer.append(", activationSpec=").append(activationSpec);
       buffer.append("}");
