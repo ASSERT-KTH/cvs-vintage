@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.16 2004/08/16 18:04:45 mvw Exp $
+// $Id: ActionExit.java,v 1.17 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,7 @@ public class ActionExit extends UMLAction
     /**
      * The singleton.
      */
-    public static ActionExit SINGLETON = new ActionExit();
+    public static final ActionExit SINGLETON = new ActionExit();
  
     /** remember if this form is already active, so that it does
         not popup twice.

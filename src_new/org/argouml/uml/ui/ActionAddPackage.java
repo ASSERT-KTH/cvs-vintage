@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.8 2004/08/16 19:30:58 mvw Exp $
+// $Id: ActionAddPackage.java,v 1.9 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class ActionAddPackage  extends UMLAction {
     /**
      * The singleton.
      */
-    public static ActionAddPackage SINGLETON = new ActionAddPackage();
+    public static final ActionAddPackage SINGLETON = new ActionAddPackage();
     
     ////////////////////////////////////////////////////////////////
     // constructors

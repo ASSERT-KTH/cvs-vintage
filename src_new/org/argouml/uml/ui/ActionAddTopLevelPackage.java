@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.11 2004/08/16 19:30:58 mvw Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.12 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ public class ActionAddTopLevelPackage extends UMLChangeAction {
     /**
      * The singleton.
      */
-    public static ActionAddTopLevelPackage SINGLETON =
+    public static final ActionAddTopLevelPackage SINGLETON =
 	new ActionAddTopLevelPackage(); 
 
 

@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.17 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionSetSourcePath.java,v 1.18 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,8 @@ public class ActionSetSourcePath extends UMLAction {
     /**
      * The singleton.
      */
-    public static ActionSetSourcePath SINGLETON = new ActionSetSourcePath();
+    public static final ActionSetSourcePath SINGLETON = 
+        new ActionSetSourcePath();
 
     //public static final String separator = "/";
     //System.getProperty("file.separator");

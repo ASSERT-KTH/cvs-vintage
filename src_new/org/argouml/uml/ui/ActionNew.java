@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.22 2004/08/16 18:04:45 mvw Exp $
+// $Id: ActionNew.java,v 1.23 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class ActionNew extends UMLAction {
     /**
      * The singleton.
      */
-    public static ActionNew SINGLETON = new ActionNew(); 
+    public static final ActionNew SINGLETON = new ActionNew(); 
 
     ////////////////////////////////////////////////////////////////
     // constructors

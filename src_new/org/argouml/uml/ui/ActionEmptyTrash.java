@@ -1,4 +1,4 @@
-// $Id: ActionEmptyTrash.java,v 1.5 2004/08/16 18:04:45 mvw Exp $
+// $Id: ActionEmptyTrash.java,v 1.6 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ public class ActionEmptyTrash extends UMLChangeAction {
     /**
      * The singleton.
      */
-    public static ActionEmptyTrash SINGLETON = new ActionEmptyTrash(); 
+    public static final ActionEmptyTrash SINGLETON = new ActionEmptyTrash(); 
 
 
     ////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.24 2004/08/16 18:04:45 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.25 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,8 @@ public class ActionSaveProjectAs extends ActionSaveProject {
     /**
      * The singleton.
      */
-    public static ActionSaveProjectAs SINGLETON = new ActionSaveProjectAs();
+    public static final ActionSaveProjectAs SINGLETON = 
+        new ActionSaveProjectAs();
 
     //public static final String separator = "/";
     //System.getProperty("file.separator");

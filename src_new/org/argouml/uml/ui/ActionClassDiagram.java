@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.16 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionClassDiagram.java,v 1.17 2004/09/16 20:50:04 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class ActionClassDiagram extends ActionAddDiagram {
     /**
      * The singleton.
      */
-    public static ActionClassDiagram SINGLETON = new ActionClassDiagram();
+    public static final ActionClassDiagram SINGLETON = new ActionClassDiagram();
 
     ////////////////////////////////////////////////////////////////
     // constructors
