@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!-- The JBoss 4.x specific elements for ears.
-$Id: jboss-app_4_0.dtd,v 1.3 2004/05/21 03:38:42 ejort Exp $
+$Id: jboss-app_4_0.dtd,v 1.4 2004/08/14 00:35:40 starksm Exp $
 
 DOCTYPE jboss-app
     PUBLIC "-//JBoss//DTD J2EE Application 1.4//EN"
@@ -10,7 +10,8 @@ DOCTYPE jboss-app
 
 <!-- The jboss-app element is the root element.
 -->
-<!ELEMENT jboss-app (security-domain?, unauthenticated-principal?, loader-repository?, jmx-name?, module*, security-role*)>
+<!ELEMENT jboss-app (security-domain?, unauthenticated-principal?,
+ loader-repository?, jmx-name?, module*, security-role*)>
 
 <!--
   The security-domain element specifies the JNDI name of the security
@@ -76,7 +77,7 @@ name and valid JMX ObjectName string.
 
 <!-- The module element is used to specify a jboss specific module archive.
 -->
-<!ELEMENT module (service)>
+<!ELEMENT module (service | har)>
 
 <!-- The service element specifies a service archive (SAR) to deploy.
 
@@ -86,6 +87,15 @@ Example:
    </module>
 -->
 <!ELEMENT service (#PCDATA)>
+
+<!-- The har element specifies a Hibernate archive (HAR) to deploy.
+
+Example:
+   <module>
+      <har>myapp.har</har>
+   </module>
+-->
+<!ELEMENT har (#PCDATA)>
 
 <!--
   The security-role element contains the definition of a security role.
