@@ -28,7 +28,7 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.2 $ <p>
+* @version   $Revision: 1.3 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -109,17 +109,32 @@ public class ServiceDeploymentInfo
    
    
    
+   /**
+    * The <code>createClassLoader</code> method creates a classloader for the urls in the 
+    * package this sdi represents and sets the state to CLASSESLOADED.
+    *
+    * @return an <code>URLClassLoader</code> value
+    */
    public URLClassLoader createClassLoader()
    {
       URL[] urlArray = (URL[])classUrls.toArray(new URL[classUrls.size()]);
       cl = new URLClassLoader(urlArray, key);
+      state = CLASSESLOADED;
       return cl;
    }
    
+   
+   /**
+    * The <code>removeClassLoader</code> method removes the local classloader and 
+    * sets the state to EMPTY.
+    *
+    * @return an <code>URLClassLoader</code> value
+    */
    public URLClassLoader removeClassLoader()
    {
       URLClassLoader localcl = cl;
       cl = null;
+      state = EMPTY;
       return localcl;
    }
    

@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.18 $ <p>
+* @version   $Revision: 1.19 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -289,8 +289,8 @@ implements ServiceDeployerMBean
             if(url.toString().endsWith("/"))  
             {
                sdi.addClassUrl(url);
-               sdi.createClassLoader();
-               sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
+               sdi.createClassLoader();//sets state also.
+               //sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
             }
             else // That "service" is a file
             {
@@ -334,7 +334,7 @@ implements ServiceDeployerMBean
                      } // end of for ()
                      throw new DeploymentException("No META-INF/jboss-service.xml found in alleged sar!");
                   }
-                  sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
+                  //sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
                   log.debug("got document jboss-service.xml from cl");
                }
                
@@ -343,7 +343,7 @@ implements ServiceDeployerMBean
                   || localFile.getName().endsWith(".zip"))
                {
                   sdi.createClassLoader();
-                  sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
+                  //sdi.state = ServiceDeploymentInfo.CLASSESLOADED;
                }
                //Not for us.
                else
@@ -592,6 +592,7 @@ implements ServiceDeployerMBean
       // FIXME track the dependencies in the service libraries
       ServiceLibraries.getLibraries().removeClassLoader(sdi.removeClassLoader());
       
+      //set the state - we've removed the Cl
       //delete the copied directories if possible.
       sdi.cleanup(getLog());
       
@@ -692,7 +693,25 @@ implements ServiceDeployerMBean
          ObjectName name = (ObjectName)i.previous();
          log.debug("undeploying mbean " + name);
          invoke(getServiceControllerName(),
-            "undeploy",
+            "stop",
+            new Object[] {name},
+            new String[] {"javax.management.ObjectName"});
+      }
+      for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
+      {
+         ObjectName name = (ObjectName)i.previous();
+         log.debug("undeploying mbean " + name);
+         invoke(getServiceControllerName(),
+            "destroy",
+            new Object[] {name},
+            new String[] {"javax.management.ObjectName"});
+      }
+      for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
+      {
+         ObjectName name = (ObjectName)i.previous();
+         log.debug("undeploying mbean " + name);
+         invoke(getServiceControllerName(),
+            "remove",
             new Object[] {name},
             new String[] {"javax.management.ObjectName"});
          //we don't supply it any more, maybe someone else will later.
