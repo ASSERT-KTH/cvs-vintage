@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.6 2001/11/27 04:09:00 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.7 2001/11/29 03:35:17 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -34,6 +34,12 @@ Bug No.  Description
 
 	 Fixed logic for response.encodeURL() so that it will work correctly 
 	 if the input URL includes an anchor tag.
+
+	 Improved the handling of invalid web.xml files.  Now you get the same
+	 error messages everytime you parse the file.
+
+	 Moved the setting of the default "*.jsp" mapping so that it is now 
+	 possible to entirely disable support for jsp files.
 
 Server:
 
