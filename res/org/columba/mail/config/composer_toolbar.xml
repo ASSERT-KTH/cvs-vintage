@@ -14,5 +14,7 @@
 	<button action="Spellcheck"/>
 	<button action="Addressbook"/>
 	<separator/>
+	<button action="ShowContextSpecificHelp"/>
+	<separator/>
 	<button action="Cancel"/>
 </toolbar>    

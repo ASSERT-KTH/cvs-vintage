@@ -32,4 +32,5 @@
  <action name="ShowLicense" class="org.columba.core.gui.action.ShowLicenseAction"/>
  <action name="ShowProjectPage" class="org.columba.core.gui.action.ShowProjectPageAction"/>
  <action name="AboutDialog" class="org.columba.core.gui.action.AboutDialogAction"/>
+ <action name="ShowContextSpecificHelp" class="org.columba.core.gui.action.ShowContextSpecificHelpAction" />
 </actionlist>

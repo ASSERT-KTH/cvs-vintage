@@ -77,7 +77,8 @@ public class DeleteMessageAction
 			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
 			ImageLoader.getImageIcon("stock_delete.png"),
             'D',
-            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK),
+            false);
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);

@@ -35,26 +35,25 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 	/**
 	 * @param frameController
 	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
 	 */
 	public ShowContextSpecificHelpAction(AbstractFrameController frameController) {
 		super(
 			frameController,
-			GlobalResourceLoader.getString(null, null, "Context Specific Help"),
-			null,
-			null,
-			"HELP",
-			ImageLoader.getSmallImageIcon("help_topic.gif"),
-			ImageLoader.getImageIcon("help_topic.gif"),
-			'H',
-			null,
-			false);
+			GlobalResourceLoader.getString(null, null, "Context Specific Help"));
 			
+		
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_extended-help.png"));
+		
+		/*
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_help-agent-16.png"));
+		setLargeIcon(ImageLoader.getImageIcon("stock_help-agent.png"));
+		*/
+		
+		setLongDescription("Context-specific help");
+		
+		enableToolBarText(false);
+		
 		addActionListener(new CSH.DisplayHelpAfterTracking(HelpManager.getHelpBroker()));
 	}
 
