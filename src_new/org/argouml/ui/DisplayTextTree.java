@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.47 2005/01/09 14:58:12 linus Exp $
+// $Id: DisplayTextTree.java,v 1.48 2005/01/16 11:14:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,6 +82,10 @@ public class DisplayTextTree extends JTree {
      * Override the default JTree implementation to display the
      * appropriate text for any object that will be displayed in
      * the todo list.
+     * 
+     * TODO: Since this is only used for the Todo list, 
+     * it should not be located here, which is a common class 
+     * for both trees, the explorer and the todo list.
      *
      * @param value the given object
      * @param selected ignored

@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.18 2005/01/09 14:58:13 linus Exp $
+// $Id: ExplorerTreeModel.java,v 1.19 2005/01/16 11:14:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -672,10 +672,9 @@ public class ExplorerTreeModel extends DefaultTreeModel
     public void itemStateChanged(ItemEvent e) {
 	if (e.getSource() instanceof PerspectiveComboBox) {
             rules = ((ExplorerPerspective) e.getItem()).getRulesArray();
-	} else {
+	} else { // it is the combo for "order"
 	    order = (Comparator) e.getItem();
 	}
-
 	structureChanged();
     }
 
