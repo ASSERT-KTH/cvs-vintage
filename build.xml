@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.126 2002/12/01 04:37:00 stormy_sky Exp $ -->
+<!-- $Id: build.xml,v 1.127 2002/12/05 10:47:05 ejort Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -376,6 +376,7 @@
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/proxy/**"/>
+        <include name="org/jboss/invocation/ByValueInvokerInterceptor.class"/>
         <include name="org/jboss/invocation/Invocation.class"/>
         <include name="org/jboss/invocation/InvocationContext.class"/>
         <include name="org/jboss/invocation/InvocationKey.class"/>
