@@ -83,7 +83,8 @@ public class ResetCacheValve
     {
         if (DEBUG)
         {
-            // Covenient place to add some timing metrics
+            // Convenient place to add some timing metrics since this valve
+            // runs at the beginning and end of the pipeline
             Long start = (Long)data.getRequest().getAttribute(KEY);
             if (start == null) 
             {
@@ -99,7 +100,7 @@ public class ResetCacheValve
                 System.out.println(s);
             }
         }
-        
+
         // clear the short-term cache
         ScarabCache.clear();
 
