@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.38 2001/11/28 08:30:08 spestov Exp $
+ * @version $Id: Buffer.java,v 1.39 2001/11/30 11:40:15 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1760,10 +1760,7 @@ public class Buffer implements EBComponent
 	 */
 	public void propertiesChanged()
 	{
-		if(getBooleanProperty("syntax"))
-			setTokenMarker(mode.getTokenMarker());
-		else
-			setTokenMarker(jEdit.getMode("text").getTokenMarker());
+		setTokenMarker(mode.getTokenMarker());
 
 		String folding = getStringProperty("folding");
 		if("explicit".equals(folding))

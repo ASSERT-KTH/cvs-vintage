@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.7 2001/11/24 02:27:08 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.8 2001/11/30 11:40:16 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 implements WorkThreadProgressListener
@@ -114,9 +114,6 @@ implements WorkThreadProgressListener
 		cancel = new JButton(jEdit.getProperty("common.cancel"));
 		cancel.addActionListener(new ActionHandler());
 		panel.add(cancel);
-
-		if(mode != VFSBrowser.SAVE_DIALOG)
-			panel.add(Box.createGlue());
 
 		bottomPanel.add(BorderLayout.NORTH,panel);
 

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.12 2001/11/28 08:30:08 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.13 2001/11/30 11:40:16 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -278,6 +278,8 @@ public class BrowserView extends JPanel
 		tree.setRowHeight(renderer.getTreeCellRendererComponent(
 			tree,new DefaultMutableTreeNode("foo"),
 			false,false,false,0,false).getSize().height);
+
+		splitPane.setBorder(null);
 	} //}}}
 
 	//{{{ Private members

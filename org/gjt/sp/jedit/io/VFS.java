@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @param author Slava Pestov
- * @author $Id: VFS.java,v 1.8 2001/11/23 09:08:49 spestov Exp $
+ * @author $Id: VFS.java,v 1.9 2001/11/30 11:40:16 spestov Exp $
  */
 public abstract class VFS
 {
@@ -210,6 +210,14 @@ public abstract class VFS
 		return '/';
 	} //}}}
 
+	//{{{ reloadDirectory() method
+	/**
+	 * Called before a directory is reloaded by the file system browser.
+	 * Can be used to flush a cache, etc.
+	 * @since jEdit 4.0pre3
+	 */
+	public void reloadDirectory(String path) {} //}}}
+
 	//{{{ createVFSSession() method
 	/**
 	 * Creates a VFS session. This method is called from the AWT thread,
@@ -237,7 +245,7 @@ public abstract class VFS
 	{
 		if((getCapabilities() & READ_CAP) == 0)
 		{
-			VFSManager.error(view,"vfs.not-supported.load",new String[] { name });
+			VFSManager.error(view,path,"vfs.not-supported.load",new String[] { name });
 			return false;
 		}
 
@@ -268,7 +276,7 @@ public abstract class VFS
 	{
 		if((getCapabilities() & WRITE_CAP) == 0)
 		{
-			VFSManager.error(view,"vfs.not-supported.save",new String[] { name });
+			VFSManager.error(view,path,"vfs.not-supported.save",new String[] { name });
 			return false;
 		}
 
@@ -301,7 +309,7 @@ public abstract class VFS
 	{
 		if((getCapabilities() & READ_CAP) == 0)
 		{
-			VFSManager.error(view,"vfs.not-supported.load",new String[] { name });
+			VFSManager.error(view,path,"vfs.not-supported.load",new String[] { name });
 			return false;
 		}
 
@@ -347,7 +355,7 @@ public abstract class VFS
 		Component comp)
 		throws IOException
 	{
-		VFSManager.error(comp,"vfs.not-supported.list",new String[] { name });
+		VFSManager.error(comp,directory,"vfs.not-supported.list",new String[] { name });
 		return null;
 	} //}}}
 
@@ -503,7 +511,7 @@ public abstract class VFS
 		String path, boolean ignoreErrors, Component comp)
 		throws IOException
 	{
-		VFSManager.error(comp,"vfs.not-supported.load",new String[] { name });
+		VFSManager.error(comp,path,"vfs.not-supported.load",new String[] { name });
 		return null;
 	} //}}}
 
@@ -521,7 +529,7 @@ public abstract class VFS
 		String path, Component comp)
 		throws IOException
 	{
-		VFSManager.error(comp,"vfs.not-supported.save",new String[] { name });
+		VFSManager.error(comp,path,"vfs.not-supported.save",new String[] { name });
 		return null;
 	} //}}}
 
