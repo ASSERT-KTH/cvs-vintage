@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+
+  <properties>
+    <title>Scarab Maven Properties</title>
+    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+    <section name="Scarab Maven Properties">
+      <table>
+        <tr>
+          <th>Property name</th>
+          <th>Optional?</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>scarab.scarabgen.home=../scarab-gen</td>
+          <td>Yes</td>
+          <td>
+            Location of the scarab-gen project.
+          </td>
+        </tr>     
+        <tr>
+          <td>scarab.docs.head=${scarab.scarabgen.home}/www/head</td>
+          <td>Yes</td>
+          <td>
+            Where to store the HEAD version of the documentation.
+          </td>
+        </tr>             
+      </table>
+    </section>
+  </body>
+</document>

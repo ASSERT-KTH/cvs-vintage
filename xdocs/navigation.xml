@@ -6,26 +6,30 @@
 
   <body>
     <links>
-      <item name="Scarab Home"           href="http://scarab.tigris.org"/>
+      <item name="Scarab Home"            href="http://scarab.tigris.org"/>
     </links>
 
     <menu name="General Information">
-      <item name="Overview"              href="/index.html"/>
-      <item name="Howto Build"   href="/howto/build-howto.html"/>
+      <item name="Overview"               href="/index.html"/>
+      <item name="Howto Build"            href="/howto/build-howto.html"/>
     </menu>
+    <menu name="Maven Goals">
+      <item name="Goals"                  href="/goals.html" />
+      <item name="Properties"             href="/properties.html" />
+    </menu>   
     <menu name="Documentation">
-      <item name="Changes"               href="/changes-report.html"/>
-      <item name="FAQ"                   href="/faq.html"/>
-      <item name="How-To's"              href="/howto/index.html"/>
-      <item name="JavaDocs"              href="/apidocs/index.html"/>
-      <item name="Old Docs"              href="http://scarab.tigris.org/project_docs.html"/>
+      <item name="Changes"                href="/changes-report.html"/>
+      <item name="FAQ"                    href="/faq.html"/>
+      <item name="How-To's"               href="/howto/index.html"/>
+      <item name="JavaDocs"               href="/apidocs/index.html"/>
+      <item name="Old Docs"               href="http://scarab.tigris.org/project_docs.html"/>
       <item name="Archive Generated Docs" href="http://scarab-gen.tigris.org/unbranded-source/browse/*checkout*/scarab-gen/www/index.html?rev=1.1"/>
     </menu>
 
     <!--menu name="Development">
-      <item name="Proposals"             href="/proposals.html"/>
-      <item name="How To Help"           href="/how-to-help.html"/>
-      <item name="Todo"                  href="/todo.html"/>
+      <item name="Proposals"              href="/proposals.html"/>
+      <item name="How To Help"            href="/how-to-help.html"/>
+      <item name="Todo"                   href="/todo.html"/>
     </menu-->
 
   </body>
