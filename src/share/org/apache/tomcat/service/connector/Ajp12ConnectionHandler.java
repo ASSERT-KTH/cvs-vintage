@@ -197,44 +197,57 @@ class AJP12RequestAdapter extends RequestImpl {
 		method = ajpin.readString(null);              //Method
 
 		contextPath = ajpin.readString(null);               //Zone
-		if("ROOT".equals( contextPath ) ) contextPath="";
-		//		System.out.println("AJP: CP=" + contextPath);
+		// GS, the following commented line causes the Apache + Jserv + Tomcat
+		// combination to hang with a 404!!!
+		// if("ROOT".equals( contextPath ) ) contextPath="";
+        if("ROOT".equalsIgnoreCase( contextPath ) ) contextPath=null;
+		// System.out.println("AJP: CP=" + contextPath);
+
 		if( contextPath!= null )
 		    context=contextM.getContext( contextPath );
+		// System.out.println("AJP: context=" + context );
 
 		servletName = ajpin.readString(null);         //Servlet
-
-		//		System.out.println("AJP: servlet=" + servletName );
+		// System.out.println("AJP: servlet=" + servletName );
 
 		serverName = ajpin.readString(null);            //Server hostname
+		// System.out.println("AJP: serverName=" + serverName );
 
 		dummy = ajpin.readString(null);               //Apache document root
 
 		pathInfo = ajpin.readString(null);               //Apache parsed path-info
-		//		System.out.println("AJP: PI=" + pathInfo );
+		// System.out.println("AJP: PI=" + pathInfo );
 
 		// XXX Bug in mod_jserv !!!!!
 		pathTranslated = ajpin.readString(null);               //Apache parsed path-translated
-		//		System.out.println("AJP: PT=" + pathTranslated );
+		// System.out.println("AJP: PT=" + pathTranslated );
 
 		queryString = ajpin.readString(null);         //query string
+        // System.out.println("AJP: QS=" + queryString );
+
 		remoteAddr = ajpin.readString("");            //remote address
+        // System.out.println("AJP: RA=" + remoteAddr );
+
 		remoteHost = ajpin.readString("");            //remote host
+        // System.out.println("AJP: RH=" + remoteHost );
 
 		remoteUser = ajpin.readString(null);                 //remote user
-		//		System.out.println("Remote User: " + remoteUser);
+		// System.out.println("AJP: RU=" + remoteUser);
 
 		authType = ajpin.readString(null);                 //auth type
+		// System.out.println("AJP: AT=" + authType);
 
 		dummy = ajpin.readString(null);                 //remote port
 
 		method = ajpin.readString(null);                //request method
-		//		System.out.println("AJP: Meth=" + method );
+		// System.out.println("AJP: Meth=" + method );
 
 		requestURI = ajpin.readString("");             //request uri
+		// System.out.println("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
+
 		if(contextPath!=null && contextPath.length() >0 )
 		    lookupPath=requestURI.substring( contextPath.length() + 1 );
-		//		System.out.println("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
+		// System.out.println("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 
 		dummy = ajpin.readString(null);                   //script filename
 		//		System.out.println("AJP: Script filen=" + dummy);
@@ -243,6 +256,7 @@ class AJP12RequestAdapter extends RequestImpl {
 		//		System.out.println("AJP: Script name=" + dummy);
 
 		serverName = ajpin.readString("");                //server name
+		// System.out.println("AJP: serverName=" + serverName );
 		try {
 		    serverPort = Integer.parseInt(ajpin.readString("80")); //server port
 		} catch (Exception any) {
@@ -256,6 +270,11 @@ class AJP12RequestAdapter extends RequestImpl {
 		dummy = ajpin.readString("");                     //server software
 		//		System.out.println("AJP: Server softw=" + dummy);
 		jvmRoute = ajpin.readString("");                     //JSERV ROUTE
+		if(jvmRoute.length() == 0) {
+		    jvmRoute = null;
+		}
+		// System.out.println("AJP: Server jvmRoute=" + jvmRoute);
+
 
                 /**
                  * The two following lines are commented out because we don't
