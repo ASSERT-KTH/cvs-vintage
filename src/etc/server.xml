@@ -40,7 +40,8 @@
 
         <SessionExpirer checkInterval="60" />
         <!-- For development you can use randomClass="java.util.Random" -->
-        <SessionIdGenerator randomClass="java.security.SecureRandom" />
+        <SessionIdGenerator randomClass="java.security.SecureRandom" 
+                            devRandom="/dev/urandom" />
 
 
         <!-- ========== context processing modules ========== -->

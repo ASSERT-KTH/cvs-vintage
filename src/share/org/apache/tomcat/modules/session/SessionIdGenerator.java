@@ -95,7 +95,9 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 
     String randomClassName=null;
     Random randomSource=null;
+
     DataInputStream randomIS=null;
+    String devRandomSource="/dev/urandom";
     
     static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
@@ -109,15 +111,29 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	randomSource=createRandomClass( randomClassName );
     }
 
-    /** Use /dev/random special device. This is new code, but may reduce the
-     *  big delay in generating the random
+    /** Use /dev/random-type special device. This is new code, but may reduce the
+     *  big delay in generating the random.
+     *
+     *  You must specify a path to a random generator file. Use /dev/urandom
+     *  for linux ( or similar ) systems. Use /dev/random for maximum security
+     *  ( it may block if not enough "random" exist ). You can also use
+     *  a pipe that generates random.
+     *
+     *  The code will check if the file exists, and default to java Random
+     *  if not found. There is a significant performance difference, very
+     *  visible on the first call to getSession ( like in the first JSP )
+     *  - so use it if available.
      */
-    public void setUseDevRandom( boolean u ) {
-	if( ! u ) return;
+    public void setRandomFile( String s ) {
+	// as a hack, you can use a static file - and genarate the same
+	// session ids ( good for strange debugging )
 	try {
-	    randomIS= new DataInputStream( new FileInputStream("/dev/random"));
+	    devRandomSource=s;
+	    File f=new File( devRandomSource );
+	    if( ! f.exists() ) return;
+	    randomIS= new DataInputStream( new FileInputStream(f));
 	    randomIS.readLong();
-	    log( "Opening /dev/random");
+	    log( "Opening " + devRandomSource );
 	} catch( IOException ex ) {
 	    randomIS=null;
 	}
@@ -141,8 +157,10 @@ public final class SessionIdGenerator  extends BaseInterceptor {
     /** Init session management stuff for this context. 
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-	if( randomSource==null && randomIS==null ) {
+	if( randomSource==null ) {
+	    // backward compatibility 
 	    String randomClass=(String)cm.getProperty("randomClass" );
+	    // set a reasonable default 
 	    if( randomClass==null ) {
 		randomClass="java.security.SecureRandom";
 	    }
@@ -161,13 +179,13 @@ public final class SessionIdGenerator  extends BaseInterceptor {
          * JSP or servlet may not have sufficient Permissions.
          */
 	String newId;
+
         if( System.getSecurityManager() == null ) {
-	    newId= SessionIdGenerator.getIdentifier(randomSource, randomIS, jsIdent);
+	    newId= getIdentifier(jsIdent);
 	    return newId;
 	}
 	// We're in a sandbox...
-	PriviledgedIdGenerator di = new
-	    PriviledgedIdGenerator(randomSource,randomIS, jsIdent);
+	PriviledgedIdGenerator di = new PriviledgedIdGenerator(this, jsIdent);
 	try {
 	    newId= (String)jdk11Compat.doPrivileged(di);
 	} catch( Exception ex ) {
@@ -178,18 +196,14 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 
     // Sandbox support
     static class PriviledgedIdGenerator extends Action {
-	private Random randomSource;
-	private String jsIdent;
-	DataInputStream randomIS;
-	public PriviledgedIdGenerator(Random rs, DataInputStream randomIS,String ident) {
-	    randomSource = rs;
-	    jsIdent = ident;
-	    this.randomIS=randomIS;
+	SessionIdGenerator sg;
+	String jsIdent;
+	public PriviledgedIdGenerator(SessionIdGenerator sg, String jsIdent ) {
+	    this.sg=sg;
+	    this.jsIdent=jsIdent;
 	}           
 	public Object run() {
-	    return SessionIdGenerator.getIdentifier(randomSource,
-						    randomIS,
-						    jsIdent);
+	    return sg.getIdentifier(jsIdent);
 	}           
     }    
 
@@ -248,24 +262,25 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 
     // ** NOTE that this must work together with get_jserv_session_balance()
     // ** in jserv_balance.c
-    static synchronized public String getIdentifier (Random randomSource,
-						     DataInputStream devRandomIS,
-						     String jsIdent)
+    public synchronized String getIdentifier(String jsIdent)
     {
         StringBuffer sessionId = new StringBuffer();
-	if( randomSource==null && devRandomIS==null)
+	if( randomSource==null && randomIS==null)
 	    throw new RuntimeException( "No random source " );
 	
         // random value ..
         long n = 0;
-	if( devRandomIS!=null ) {
+	if( randomIS!=null ) {
 	    try {
-		n=devRandomIS.readLong();
-		System.out.println("Getting /dev/random " + n );
+		n=randomIS.readLong();
+		//System.out.println("Getting /dev/random " + n );
 	    } catch( IOException ex ) {
 		ex.printStackTrace();
+		randomIS=null;
+		// We could also re-open it ( if it's a file of random values )
 	    }
-	} else {
+	}
+	if( randomIS==null ) {
 	    n=randomSource.nextLong();
 	} 
 
