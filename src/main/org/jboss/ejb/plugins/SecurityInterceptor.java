@@ -18,6 +18,7 @@ import org.jboss.security.*;
 import javax.ejb.EJBException;
 import java.security.Principal;
 import java.util.Set;
+import java.util.Map;
 
 /**
  * The SecurityInterceptor is where the EJB 2.0 declarative security model
@@ -26,7 +27,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -45,6 +46,9 @@ public class SecurityInterceptor extends AbstractInterceptor
    protected RealmMapping realmMapping;
    protected RunAsIdentity runAsIdentity;
 
+   // A map of SecurityRolesMetaData from jboss.xml
+   protected Map securityRoles;
+
    public SecurityInterceptor()
    {
    }
@@ -58,6 +62,10 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (container != null)
       {
          BeanMetaData beanMetaData = container.getBeanMetaData();
+         ApplicationMetaData application = beanMetaData.getApplicationMetaData();
+         AssemblyDescriptorMetaData assemblyDescriptor = application.getAssemblyDescriptor();
+         securityRoles = assemblyDescriptor.getSecurityRoles();
+
          SecurityIdentityMetaData secMetaData = beanMetaData.getSecurityIdentityMetaData();
          if (secMetaData != null && secMetaData.getUseCallerIdentity() == false)
          {
@@ -65,10 +73,7 @@ public class SecurityInterceptor extends AbstractInterceptor
             String principalName = secMetaData.getRunAsPrincipalName();
 
             // the run-as principal might have extra roles mapped in the assembly-descriptor
-            ApplicationMetaData application = beanMetaData.getApplicationMetaData();
-            AssemblyDescriptorMetaData assemblyDescriptor = application.getAssemblyDescriptor();
             Set extraRoleNames = assemblyDescriptor.getSecurityRoleNamesByPrincipal(principalName);
-
             runAsIdentity = new RunAsIdentity(roleName, principalName, extraRoleNames);
          }
          securityManager = container.getSecurityManager();
@@ -170,6 +175,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       if (callerRunAsIdentity == null)
       {
          // Check the security info from the method invocation
+         SecurityRolesAssociation.setSecurityRoles(securityRoles);
          if (securityManager.isValid(principal, credential) == false)
          {
             String msg = "Authentication exception, principal=" + principal;

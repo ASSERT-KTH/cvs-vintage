@@ -13,7 +13,7 @@ import java.util.*;
  * This implementation only contains the security-role meta data
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class AssemblyDescriptorMetaData extends MetaData
 {
@@ -23,6 +23,11 @@ public class AssemblyDescriptorMetaData extends MetaData
    public void addSecurityRoleMetaData(SecurityRoleMetaData srMetaData)
    {
       securityRoles.put(srMetaData.getRoleName(), srMetaData);
+   }
+
+   public HashMap getSecurityRoles()
+   {
+      return new HashMap(securityRoles);
    }
 
    public SecurityRoleMetaData getSecurityRoleByName(String roleName)
