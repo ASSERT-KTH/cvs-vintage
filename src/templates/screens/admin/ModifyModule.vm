@@ -117,21 +117,21 @@
   </tr>
 *#
   <tr>
-   <th>$l10n.Domain</th>
+   <th>* $l10n.Domain</th>
    <td>
     <input name="$moduleGroup.Domain.Key" value="$moduleGroup.Domain" type="text" size="25" />
     #fieldErrorMsg($moduleGroup.Domain "")
    </td>
   </tr>
   <tr>
-   <th>$l10n.Port</th>
+   <th>* $l10n.Port</th>
    <td>
     <input name="$moduleGroup.Port.Key" value="$moduleGroup.Port" type="text" size="10" />
     #fieldErrorMsg($moduleGroup.Port "")
    </td>
   </tr>
   <tr>
-   <th>$l10n.Scheme</th>
+   <th>* $l10n.Scheme</th>
    <td>
     <select name="$moduleGroup.Scheme.Key">
       <option value="http" #if ($editModule && $editModule.Scheme.equals("http"))selected #end>http</option>
