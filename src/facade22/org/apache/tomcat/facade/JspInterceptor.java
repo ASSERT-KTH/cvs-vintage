@@ -709,7 +709,7 @@ final class JasperLiaison {
 	if( debug>5) log.log( "ClassPath " + cp);
     }
 
-    static boolean tryJikes=true;
+    static boolean tryJikes=false;
     static Class jspCompilerPlugin = null;
     
     /** Compile a java to class. This should be moved to util, togheter
