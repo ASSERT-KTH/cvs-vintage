@@ -55,19 +55,20 @@ import org.apache.velocity.*;
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.intake.model.Field;
+import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 import org.apache.turbine.om.*;
 
 // Scarab Stuff
 import org.tigris.scarab.om.*;
-import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.attribute.*;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.util.word.IssueSearch;
 
@@ -75,7 +76,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.4 2001/07/02 23:09:06 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.5 2001/07/07 00:11:51 elicia Exp $
 */
 public class ModifyIssue extends VelocityAction
 {
@@ -88,46 +89,134 @@ public class ModifyIssue extends VelocityAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
        
-        Group group = null; 
-        if ( intake.isAllValid() ) 
-        {
-            HashMap avMap = issue.getAllAttributeValuesMap(); 
-            Iterator i = avMap.keySet().iterator();
-            while (i.hasNext()) 
-            {
-                AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                group = intake.get("AttributeValue", aval.getQueryKey(), false);
+        Attachment attachment = new Attachment();
+        // TODO: Explanatory comment is required
 
-                if ( group != null ) 
-                {            
-                    group.setProperties(aval);
-                }
+        // set any other required flags
+        Criteria crit = new Criteria()
+            .add(RModuleAttributePeer.ACTIVE, true)        
+            .add(RModuleAttributePeer.REQUIRED, true);        
+        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
+        AttributeValue aval = null;
+        Group group = null;
+
+        SequencedHashtable modMap = issue.getModuleAttributeValuesMap(); 
+        Iterator iter = modMap.iterator();
+        while ( iter.hasNext() ) 
+        {
+            aval = (AttributeValue)modMap.get(iter.next());
+            group = intake.get("AttributeValue", aval.getQueryKey(), false);
+
+            if ( group != null ) 
+            {            
+            Field field = null;
+            if ( aval instanceof OptionAttribute ) 
+            {
+                field = group.get("OptionId");
+            }
+            else 
+            {
+                field = group.get("Value");
             }
             
+            for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
+            {
+                if ( aval.getAttribute().getPrimaryKey().equals(
+                     requiredAttributes[j].getPrimaryKey() )) 
+                {
+                    field.setRequired(true);
+                    break;
+                }                    
+            }
+        }
+
+        if ( intake.isAllValid() ) 
+        {
+            // Save explanatory comment
+            Group commentGroup = intake.get("Attachment", "attCommentKey", false);
+            commentGroup.setProperties(attachment);
+            if ( attachment.getDataAsString() != null && 
+                 !attachment.getDataAsString().equals("") )
+            {
+                attachment.setIssue(issue);
+                attachment.setTypeId(new NumberKey("2"));
+                attachment.setMimeType("text/plain");
+                attachment.save();
+            }
+                    
+            // Save transaction record
+            Transaction transaction = new Transaction();
+            transaction.setCreatedDate(new Date());
+            //ObjectKey userId = ((ScarabUser)data.getUser()).getPrimaryKey();
+            //transaction.setCreatedBy(Integer.parseInt(userId.toString()));
+            transaction.save();
+
+            // set the attribute values entered 
+            HashMap avMap = issue.getAllAttributeValuesMap();
+            Iterator iter2 = avMap.keySet().iterator();
+            while (iter2.hasNext())
+            {
+                aval = (AttributeValue)avMap.get(iter2.next());
+            
+                group = intake.get("AttributeValue", aval.getQueryKey(), false);
+                if ( group != null ) 
+                {            
+                    String newValue = null;
+                    String oldValue = null;
+                    if ( aval instanceof OptionAttribute ) 
+                    {
+                        newValue = group.get("OptionId").toString();
+                        oldValue = aval.getOptionIdAsString();
+                    }
+                    else 
+                    {
+                        newValue = group.get("Value").toString();
+                        oldValue = aval.getValue();
+                    }
+
+                    if (!newValue.equals("") && !oldValue.equals(newValue))
+                    {
+                        group.setProperties(aval);
+
+                        // Save activity record
+                        Activity activity = new Activity();
+                        activity.setIssueId(id);  
+                        activity.setAttributeId(aval.getAttribute().getAttributeId());  
+                        activity.setTransaction(transaction);
+                        activity.setAttachment(attachment);
+                        activity.setOldValue(oldValue);
+                        activity.setNewValue(newValue);
+                        activity.save();
+                    }
+                }
+            }
             issue.save();
+          
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE, 
-                           "IssueView.vm");
+                           "ViewIssue.vm");
             setTemplate(data, template);            
         }
     }
 
+   }
    public void doSubmiturl (RunData data, Context context ) 
         throws Exception
    {
-        submitAttachment (data, context, "url");
+        SubmitAttachment (data, context, "url");
    } 
 
    public void doSubmitcomment (RunData data, Context context ) 
         throws Exception
    {
-        submitAttachment (data, context, "comment");
+        SubmitAttachment (data, context, "comment");
    } 
 
-   private void submitAttachment (RunData data, Context context, String type)
+   private void SubmitAttachment (RunData data, Context context, String type)
         throws Exception
     {                          
+        // TODO: display message if a field is missing for URL
         String id = data.getParameters().getString("id");
         Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
         IntakeTool intake = (IntakeTool)context
@@ -140,7 +229,9 @@ public class ModifyIssue extends VelocityAction
         {
             group = intake.get("Attachment", "urlKey", false);
             typeID = "3";
-        } else if (type.equals("comment")) {
+        } 
+        else if (type.equals("comment")) 
+        {
             group = intake.get("Attachment", "commentKey", false);
             typeID = "2";
         }
@@ -159,7 +250,7 @@ public class ModifyIssue extends VelocityAction
         }
         String template = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE, 
-                       "IssueView.vm");
+                       "ViewIssue.vm");
         setTemplate(data, template);            
    } 
 
@@ -184,12 +275,13 @@ public class ModifyIssue extends VelocityAction
         }
         String template = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE, 
-                       "IssueView.vm");
+                       "ViewIssue.vm");
         setTemplate(data, template);            
     }
 
     /**
-        Modifies the dependency type between parent and child issues.
+    *  Modifies the dependency type between the current issue
+    *  And its child issue.
     */
     public void doUpdatechild (RunData data, Context context )
         throws Exception
@@ -197,22 +289,24 @@ public class ModifyIssue extends VelocityAction
         String id = data.getParameters().getString("id");
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
-        Issue parent = (Issue) IssuePeer.retrieveByPK(
-                        new NumberKey(id));
+        Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
+                             new NumberKey(id));
         String key;
         String childId;
+        Depend depend;
 
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
-            if (key.startsWith("child_depend_type_"))
+            if (key.startsWith("child_depend_type_id"))
             {
                String dependTypeId = params.getString(key);
                
-               childId = key.substring(18);
+               childId = key.substring(21);
                Issue child = (Issue) IssuePeer.retrieveByPK(
                               new NumberKey(childId));
-               Depend depend = parent.getDependency(child);
+               depend = currentIssue.getDependency(child);
+
                // User selected to remove the dependency
                if (dependTypeId.equals("none"))
                {
@@ -228,6 +322,106 @@ public class ModifyIssue extends VelocityAction
             }
          }
     }
+
+    /**
+    *  Modifies the dependency type between the current issue
+    *  And its parent issue.
+    */
+    public void doUpdateparent (RunData data, Context context )
+        throws Exception
+    {                          
+        String id = data.getParameters().getString("id");
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
+                             new NumberKey(id));
+        String key;
+        String parentId;
+        Depend depend;
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("parent_depend_type_id"))
+            {
+               String dependTypeId = params.getString(key);
+               
+               parentId = key.substring(22);
+               Issue parent = (Issue) IssuePeer.retrieveByPK(
+                               new NumberKey(parentId));
+               depend = parent.getDependency(currentIssue);
+
+               // User selected to remove the dependency
+               if (dependTypeId.equals("none"))
+               {
+                   depend.delete();
+               } else {
+                   DependType dependType = (DependType) DependTypePeer.
+                                           retrieveByPK(new NumberKey
+                                           (dependTypeId));
+                   depend.setDependType(dependType);
+               }
+               depend.save();
+               break;
+            }
+         }
+    }
+
+    /**
+    *  Adds a dependency between this issue and another issue.
+    *  This issue will be the child. 
+    */
+    public void doAdddependency (RunData data, Context context )
+        throws Exception
+    {                          
+        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
+        String id = data.getParameters().getString("id");
+        String parentId = data.getParameters().getString("parent_id");
+        String dependTypeId = data.getParameters().
+                              getString("add_depend_type_id");
+        Issue parentIssue = null;
+        if (parentId == null || parentId.equals(""))
+        {
+            data.setMessage("Please select a parent id.");
+            setTemplate(data, template);
+        }
+        else if (dependTypeId.equals("0"))
+        {
+            data.setMessage("Please select a dependency type.");
+            setTemplate(data, template);
+        }
+        else
+        {
+            DependType dependType = (DependType) DependTypePeer.
+                                    retrieveByPK(new NumberKey
+                                    (dependTypeId));
+            Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
+                                 new NumberKey(id));
+            try
+            {
+               parentIssue = (Issue) IssuePeer.retrieveByPK(
+                                     new NumberKey(parentId));
+            }
+            catch (Exception e)
+            {
+                 data.setMessage("There is no issue that corresponds to the issue id you entered as a parent id.");
+                 return;
+            } 
+            if (parentIssue != null)
+            {
+                Depend depend = new Depend();
+                depend.setObservedId(parentId);
+                depend.setObserverId(id);
+                depend.setDependType(dependType);
+                depend.save();
+            }
+        }
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE, 
+                       "ViewIssue.vm");
+        setTemplate(data, nextTemplate);            
+    }
+
 
     /**
         This manages clicking the Cancel button
