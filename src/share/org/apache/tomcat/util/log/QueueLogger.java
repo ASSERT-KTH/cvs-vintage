@@ -126,47 +126,6 @@ public class QueueLogger extends Logger {
     public String toString() {
 	return "QueueLogger(" + getName() + ", " + getPath() + ")";
     }
-    
-
-    /**
-     * This is an entry that is created in response to every
-     * Logger.log(...) call.
-     */
-    public final  class LogEntry {
-	String logName;
-	long date=0;
-	String message;
-	Throwable t;
-	QueueLogger l;
-	
-	LogEntry(QueueLogger l, long date, String message, Throwable t) {
-	    this.date = date;
-	    this.message = message;
-	    this.t = t;
-	    this.l=l;
-	}
-
-	LogEntry( QueueLogger l, String message, Throwable t) {
-	    this.message = message;
-	    this.t = t;
-	    this.l=l;
-	}
-
-	public void print( StringBuffer outSB) {
-	    if (date!=0) {
-		formatTimestamp( date, outSB );
-		outSB.append(" - ");
-	    }
-		    
-	    if (message != null) 
-		outSB.append(message);
-	    
-	    if (t != null) {
-		outSB.append(" - ");
-		outSB.append(throwableToString( t ));
-	    }
-	}
-    }
 }
 /**
  * The daemon thread that looks in a queue and if it is not empty
@@ -191,8 +150,8 @@ final class LogDaemon extends Thread {
     
     private void emptyQueue() {
 	do {
-	    QueueLogger.LogEntry logEntry =
-		(QueueLogger.LogEntry) logQueue.pull();
+	    LogEntry logEntry =
+		(LogEntry) logQueue.pull();
 	    QueueLogger tl=logEntry.l;
 		Writer writer=tl.sink;
 		if (writer != null) {
@@ -216,7 +175,7 @@ final class LogDaemon extends Thread {
 		}
 	} while (!LogDaemon.this.logQueue.isEmpty());
     }
-    
+
     public void run() {
 	while (true) {
 	    emptyQueue();
