@@ -53,7 +53,10 @@ import com.workingdogs.village.*;
 
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.om.security.peer.TurbineUserPeer;
 import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.TurbineDB;
+import org.apache.turbine.util.db.pool.DBConnection;
 
 /**
     This class is an abstraction that is currently based around
@@ -62,26 +65,58 @@ import org.apache.turbine.util.db.Criteria;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserPeer.java,v 1.2 2001/04/18 21:26:32 jmcnally Exp $
+    @version $Id: ScarabUserPeer.java,v 1.3 2001/05/31 01:10:42 jmcnally Exp $
 */
 public class ScarabUserPeer extends BaseScarabUserPeer
 {
+
     /** 
-     * Overrides torque peer's method.  Does not use the Class argument
-     * as Users need to go through TurbineSecurity
+     * Retrieve a single object by pk
+     *
+     * @param ObjectKey pk
      */
-    public static ScarabUser row2Object (Record row, 
-                                              int offset, 
-                                              Class cls ) 
+    public static ScarabUser retrieveByPK( ObjectKey pk )
         throws Exception
     {
-        ScarabUser obj = (ScarabUser)TurbineSecurity.getUserInstance();
-        populateObject(row, offset, obj);
-                    obj.setModified(false);
-                obj.setNew(false);
-
-        return obj;
+        DBConnection db = null;
+        ScarabUser retVal = null;
+       try
+        {
+           db = TurbineDB
+               .getConnection( getTableMap().getDatabaseMap().getName() );
+           retVal = retrieveByPK( pk, db );
+        }
+        finally
+        {
+           if (db != null)
+              TurbineDB.releaseConnection(db);
+        }
+        return(retVal);
     }
+
+    /** 
+     * Retrieve a single object by pk
+     *
+     * @param ObjectKey pk
+     * @param DBConnection dbcon
+     */
+    public static ScarabUser retrieveByPK( ObjectKey pk, DBConnection dbcon )
+        throws Exception
+    {
+
+        Criteria criteria = new Criteria();
+            criteria.add( TurbineUserPeer.USER_ID, pk );
+        Vector v = doSelect(criteria, dbcon);
+        if ( v.size() != 1)
+        {
+            throw new Exception("Failed to select one and only one row.");
+        }
+        else
+        {
+            return (ScarabUser)v.firstElement();
+        }
+    }
+
 }    
 
 
