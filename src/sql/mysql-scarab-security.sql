@@ -43,8 +43,8 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
  * Create an account 'turbine@collab.net' for system administartor
  * Remember to set a good password for this user in a production system!
  */
-INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE) 
-    VALUES (1, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'turbine', 'turbine', 'CONFIRMED');
+INSERT INTO TURBINE_USER (USER_ID, EMAIL, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE) 
+    VALUES (1, 'turbine@collab.net', 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'turbine', 'turbine', 'CONFIRMED');
 
 
 /* create a temporary table. */
