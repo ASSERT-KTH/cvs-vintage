@@ -69,7 +69,7 @@ $page.setTitle("Add/Edit attribute group")
 <th>Sequence #</th>
 </tr>
 #foreach ($attribute in $group.Attributes)
-   #set ($rma = $scarabR.CurrentModule.getRModuleAttribute($attribute))
+   #set ($rma = $scarabR.CurrentModule.getRModuleAttribute($attribute, $group.IssueType))
    #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
    #set ($raag = $group.getRAttributeAttributeGroup($attribute))
    #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
@@ -81,7 +81,13 @@ $page.setTitle("Add/Edit attribute group")
  #else
  <td>$attribute.Name</td>
  #end
- <td><input type="text" size="15" value="$rmaGroup.DisplayValue" /></td>
+ <td><input type="text" size="15" name="$rmaGroup.DisplayValue.Key"
+    #if ($rmaGroup.DisplayValue.toString().length() > 0)
+          value="$rmaGroup.DisplayValue" 
+    #else
+          value="$attribute.Name"
+    #end
+ /></td>
  <td>#booleanCheckbox ($rmaGroup.Active)</td>
  <td>#booleanCheckbox ($rmaGroup.Required)</td>
  <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
