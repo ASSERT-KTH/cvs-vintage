@@ -94,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.32 2001/09/11 00:02:31 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.33 2001/09/12 21:51:13 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -657,12 +657,13 @@ public class ModifyIssue extends TemplateAction
     */
     public void doEditassignees(RunData data, TemplateContext context)
          throws Exception
-    {        
-        String id = data.getParameters().getString("id");
-        data.getParameters().add("intake-grp", "issue"); 
-        data.getParameters().add("issue", "_0"); 
-        data.getParameters().add("issue_0id", id);
-        data.getParameters().add("issue_id", id);
+    {
+        ParameterParser pp = data.getParameters();
+        String id = pp.getString("id");
+        pp.add("intake-grp", "issue"); 
+        pp.add("issue", "_0"); 
+        pp.add("issue_0id", id);
+        pp.add("issue_id", id);
         setTarget(data, "AssignIssue.vm");            
     }
 
