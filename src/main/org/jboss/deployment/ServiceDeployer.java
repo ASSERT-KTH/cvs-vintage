@@ -17,6 +17,8 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,13 +60,22 @@ import org.xml.sax.SAXException;
  *
  * @see       org.jboss.system.Service
  * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author    <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.5 $ <p>
+ * @version   $Revision: 1.6 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
  *        <li>
  *      </ul>
+ *      
+ *      <p><b>20010905 david maplesden:</b>
+ *      <ul>
+ *      <li>Changed deployment procedure to deploy all listed mbeans, then 
+ *      initialise them all before finally starting them all.  Changed services 
+ *      sets to lists to maintain ordering.
+ *      </ul>
+ *
  *      <b>20010908 david jencks</b>
  *      <ol>
  *        <li> fixed tabs to spaces and log4j logging. Made the urlToServiceSet
@@ -72,6 +83,11 @@ import org.xml.sax.SAXException;
  *        deploy. Made undeploy work, and implemented sar dependency management
  *        and recursive deploy/undeploy.
  *      </ol>
+ *      
+ *      <p><b>20010907 david maplesden:</b>
+ *      <ul>
+ *      <li>Added support for "depends" tag
+ *      </ul>
  *
  */
 public class ServiceDeployer
@@ -101,6 +117,16 @@ public class ServiceDeployer
 
    //To keep track of services suspended when we undeploy a jsr
    private Map suspendedUrlDependencyMap;
+
+
+   // each url is associated with an xml document
+   private Map urlToDocumentMap;
+
+   // each url specifies a number of services it is dependent on
+   private Map urlToDependsSetMap;
+
+   // maps mbeans to the urls that are dependent on them.
+   private Map mbeanToURLSetMap;
 
    // JMX
    private MBeanServer server;
@@ -177,27 +203,188 @@ public class ServiceDeployer
     * @exception DeploymentException    Thrown if the package could not be
     *      deployed.
     */
-   public void deploy(String urlString)
+   public void deploy(String url)
           throws MalformedURLException, IOException, DeploymentException
    {
 
-      log.debug("deploying document " + urlString);
+      log.debug("deploying document " + url);
 
-      if (isDeployed(urlString))
+      if (isDeployed(url))
       {
-         undeploy(urlString);
-         log.debug("undeployed previous version of document " + urlString);
+         undeploy(url);
+         log.debug("undeployed previous version of document " + url);
       }
 
+      // The Document describing the service
+      Document document = null;
+
+      /**
+       * First register the classloaders for this deployment If it is a jsr, the
+       * jsr points to itself If it is a something-service.xml then it looks for
+       * <classpath><codebase>http://bla.com (or file://bla.com)</codebase>
+       * default is system library dir <archives>bla.jar, bla2.jar, bla3.jar
+       * </archives>where bla is relative to codebase</classpath>
+       */
+
+      // Support for the new packaged format
+      try
+      {
+         if (url.endsWith(".jsr")
+                || url.endsWith(".sar"))
+         {
+            //use java.net.URLClassLoader here
+            ClassLoader cl = new java.net.URLClassLoader(new URL[]{new URL(url)});
+            document = getDocument("META-INF/jboss-service.xml", cl);
+            log.debug("got document jboss-service.xml from cl");
+         }
+
+         //no mbeans to deploy for jars
+         else if(url.endsWith(".jar")
+                   || url.endsWith(".zip"))
+         {
+            document = null;
+         }
+
+         // We can deploy bare xml files as well
+         else if (url.endsWith("service.xml"))
+         {
+            document = getDocument(url, null);
+         }
+         else
+         {
+            throw new Exception("not a deployable file type");
+         }
+
+      }
+      catch (Exception ignored)
+      {
+         log.error("Problem deploying url " + url + ", no valid service.xml file found.", ignored);
+         throw new DeploymentException("No valid service.xml file found" + ignored.getMessage());
+      }
+
+      Set dependsSet = new HashSet();
+
+      if(document != null){
+         
+         // Support for depends tag
+         List dependsBeans = new ArrayList();
+   
+         // Attempt to parse all depends tags first, catches all errors before we get too far.
+         try {
+            NodeList nl = document.getElementsByTagName("depends");
+            for (int i = 0 ; i < nl.getLength() ; i++) 	
+            {
+               //get object name for dependent mbean
+               Element dependsElement = (Element) nl.item(i);
+               dependsBeans.add(parseObjectName(dependsElement));
+            }
+         } 
+         catch(Exception e) 
+         { 
+            throw new DeploymentException("Error parsing depends elements.",e);
+         }
+   
+         for (int i = 0 ; i < dependsBeans.size() ; i++) 	
+         {
+            ObjectName objectName = (ObjectName) dependsBeans.get(i);
+   
+            //check if mbean is registered (deployed)
+            if(!server.isRegistered(objectName))
+            {
+               log.debug("Deployment of '"+url+"' will have to wait for mbean "+objectName);
+   
+               dependsSet.add(objectName);
+               
+               Set urlsForMBean = (Set) mbeanToURLSetMap.get(objectName);
+               if(urlsForMBean == null)
+               {
+                  urlsForMBean = new HashSet();
+                  mbeanToURLSetMap.put(objectName,urlsForMBean);
+               }
+   
+               urlsForMBean.add(url);
+            }
+         }
+      }
+
+      urlToDocumentMap.put(url,document);
+
+      LinkedList toDeploy = new LinkedList();
+
+      //if we have no dependents we can deploy
+      if(dependsSet.isEmpty())
+      {
+         toDeploy.addLast(url);
+      }
+      else
+      {
+         urlToDependsSetMap.put(url,dependsSet);   
+      }
+
+      //loop, continuing to deploy until all possible deployments are made
+      while(!toDeploy.isEmpty())
+      {
+         url = (String) toDeploy.removeFirst();
+         document = (Document) urlToDocumentMap.remove(url);
+
+         List mbeanList = null;
+         try
+         {
+            log.debug("Deploying '"+url+"'");
+            mbeanList = doDeployment(url,document);
+         }
+         catch(Exception e)
+         {
+            log.error("Error during deployment of '"+url+"'.",e);
+            mbeanList = new ArrayList();
+         }
+
+         Iterator deployedMBeans = mbeanList.iterator();
+
+         //for each deployed mbean check for pending deployments waiting for it.
+         while(deployedMBeans.hasNext())
+         {
+            ObjectName mbean = (ObjectName) deployedMBeans.next();
+            Set urlsForMBean = (Set)mbeanToURLSetMap.remove(mbean);
+            
+            if(urlsForMBean != null)
+            {
+               //for each pending deployment remove mbean and see whether we can now deploy
+               Iterator urls = urlsForMBean.iterator();
+               while(urls.hasNext())
+               {
+                  Object nextURL = urls.next();
+                  Set setToCheck = (Set) urlToDependsSetMap.get(nextURL);						
+                  setToCheck.remove(mbean);
+                  
+                  if(setToCheck.isEmpty())
+                  {
+                     log.debug("Found available deployment "+nextURL+" to do.");
+                     urlToDependsSetMap.remove(nextURL); //remove from map
+                     toDeploy.addLast(nextURL);
+                  }
+
+               }
+            }
+         }// for each deployed mbean...
+
+      }// while we still have deployments to do
+
+   }
+
+
+   private List doDeployment(String urlString, Document document)
+          throws MalformedURLException, IOException, DeploymentException
+   {
       //convert to canonical form - an URL object.
       URL url = new URL(urlString);
 
       // The set of classloaders for this url
       Set classLoaders = new HashSet();
 
-      // The Document describing the service
-      Document document = null;
-
+      // The list of mbeans deployed by this call
+      List deployedMBeans = new ArrayList();
+      
       /**
        * First register the classloaders for this deployment If it is a jsr, the
        * jsr points to itself If it is a something-service.xml then it looks for
@@ -216,31 +403,12 @@ public class ServiceDeployer
          {
 
             URLClassLoader cl = new URLClassLoader(new URL[]{url});
-            log.debug("got classloader for jsr " + url);
+            log.debug("got classloader for archive " + url);
             urlToPrimaryClassLoaderMap.put(url, cl);
             log.debug("added classloader to urlToPrimaryClassLoaderMap");
             classLoaders.add(cl);
             log.debug("added classloader to set of cl to register on success");
-            if (!urlString.endsWith(".jar")
-                   && !urlString.endsWith(".zip"))
-            {
-               document = getDocument("META-INF/jboss-service.xml", cl);
-               log.debug("got document jboss-service.xml from cl");
-            }
-
          }
-
-         // We can deploy bare xml files as well
-         else if (urlString.endsWith("service.xml"))
-         {
-            document = getDocument(urlString, null);
-
-         }
-         else
-         {
-            throw new Exception("not a deployable file type");
-         }
-
       }
       catch (Exception ignored)
       {
@@ -357,14 +525,14 @@ public class ServiceDeployer
                   {
                      //We have to wait till it's redeployed
                      //Put in a request to be deployed ourselves.
-                     if (!dependents.contains(url))
+                     if (!dependents.contains(urlString))
                      {
-                        dependents.add(url);
+                        dependents.add(urlString);
                      }
                      //may need more cleanup...
                      urlToPrimaryClassLoaderMap.remove(url);
                      //we'll try again later...
-                     return;
+                     return deployedMBeans;
                   }
 
                   //log.debug("adding URLClassLoader for url archive " + dependency);
@@ -402,9 +570,9 @@ public class ServiceDeployer
          NodeList nl = document.getElementsByTagName("mbean");
          for (int i = 0; i < nl.getLength(); i++)
          {
-
+   
             Element mbean = (Element)nl.item(i);
-
+   
             try
             {
                log.debug("deploying with ServiceController mbean " + mbean);
@@ -413,10 +581,11 @@ public class ServiceDeployer
                      "deploy",
                      new Object[]{mbean},
                      new String[]{"org.w3c.dom.Element"});
-
+   
                // marcf: I don't think we should keep track and undeploy...
                //david jencks what do you mean by this???
                services.add(service);
+               deployedMBeans.add(service);
             }
             catch (MBeanException mbe)
             {
@@ -443,12 +612,12 @@ public class ServiceDeployer
                log.error("Exception while creating mbean", e);
             }
          }
-
+   
          //init the mbeans in our package
          for (Iterator it = services.iterator(); it.hasNext(); )
          {
             ObjectName service = (ObjectName)it.next();
-
+   
             try
             {
                server.invoke(
@@ -482,12 +651,12 @@ public class ServiceDeployer
                log.error("Exception while creating mbean", e);
             }
          }
-
+   
          //iterate through services and start.
          for (Iterator it = services.iterator(); it.hasNext(); )
          {
             ObjectName service = (ObjectName)it.next();
-
+   
             try
             {
                server.invoke(
@@ -521,9 +690,9 @@ public class ServiceDeployer
                log.error("Exception while creating mbean", e);
             }
          }
-      }
-      //document != null
 
+      }// if document != null
+         
       //We loaded Ok, register all our classloaders
       registerClassLoaders(url, classLoaders);
 
@@ -534,11 +703,13 @@ public class ServiceDeployer
          Iterator dependencies = dependSet.iterator();
          while (dependencies.hasNext())
          {
-            URL dependent = (URL)dependencies.next();
-            deploy(dependent.toString());
+            String dependent = (String)dependencies.next();
+            deployedMBeans.addAll( doDeployment(dependent, (Document)urlToDocumentMap.get(dependent)) );
             //don't care about removing from dependSet, we're throwing it away
          }
       }
+      
+      return deployedMBeans;
    }
 
 
@@ -696,7 +867,7 @@ public class ServiceDeployer
           throws java.lang.Exception
    {
 
-      System.out.println("About to load the CLassPath");
+      log.debug("About to load the CLassPath");
       this.server = server;
 
       return name == null ? new ObjectName(OBJECT_NAME) : name;
@@ -723,6 +894,12 @@ public class ServiceDeployer
          urlToPrimaryClassLoaderMap = Collections.synchronizedMap(new HashMap());
          suspendedUrlDependencyMap = Collections.synchronizedMap(new HashMap());
 
+         // depends maps
+         urlToDocumentMap = Collections.synchronizedMap(new HashMap());
+         urlToDependsSetMap = Collections.synchronizedMap(new HashMap());
+         mbeanToURLSetMap = Collections.synchronizedMap(new HashMap());
+
+
          //Initialize the libraries for the server by default we add the libraries in lib/services
          // and client
          String urlString = System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml";
@@ -740,7 +917,8 @@ public class ServiceDeployer
             document = getDocument(urlString, null);
 
          }
-         deploy(urlString);
+
+         doDeployment(urlString,document);
       }
       catch (Exception e)
       {
@@ -851,5 +1029,27 @@ public class ServiceDeployer
          log.error("Problem registering classloader for url " + url, e);
       }
    }
+
+   /**
+   * Parse an object name from the given element attribute 'name'.
+   *
+   * @param element    Element to parse name from.
+   * @return           Object name.
+   *
+   * @throws ConfigurationException   Missing attribute 'name'
+   *                                  (thrown if 'name' is null or "").
+   * @throws MalformedObjectNameException
+   */
+   private ObjectName parseObjectName(final Element element)
+   throws org.jboss.system.ConfigurationException, MalformedObjectNameException
+   {
+      String name = ((org.w3c.dom.Text)element.getFirstChild()).getData().trim();
+      if (name == null || name.trim().equals("")) {
+         throw new org.jboss.system.ConfigurationException
+         ("Depends element must have a value.");
+      }
+      return new ObjectName(name);
+   }
+
 }
 
