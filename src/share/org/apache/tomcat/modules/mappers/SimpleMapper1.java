@@ -148,6 +148,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	throws TomcatException
     {
 	map.addMapping( ctx.getHost(), ctx.getPath(), ctx.getContainer());
+        map.addMappings( ctx.getHostAliases(), ctx.getPath(), ctx.getContainer());
     }
 
     /** Called when a context is removed from a CM - we must ask the mapper to
@@ -158,6 +159,11 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     {
 	if(debug>0) log( "Removed from maps ");
 	map.removeAllMappings( ctx.getHost(), ctx);
+
+        Enumeration vhostAliases=ctx.getHostAliases();
+        while( vhostAliases.hasMoreElements() )
+            map.removeAllMappings( (String)vhostAliases.nextElement(), ctx );
+
 	// extension mappings are local to ctx, no need to do something
 	// about that
     }
@@ -179,6 +185,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     {
 	Context ctx=ct.getContext();
 	String vhost=ctx.getHost();
+        Enumeration vhostAliases=ctx.getHostAliases();
 	String path=ct.getPath();
 	String ctxP=ctx.getPath();
 
@@ -195,9 +202,15 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	case Container.PREFIX_MAP:
 	    // cut /* ( no need to do a string concat for every match )
 	    // workaround for frequent bug in web.xml ( backw. compat )
-	    if( ! path.startsWith( "/" ) ) path="/" + path;
-	    map.addMapping( vhost,
-			    ctxP + path.substring( 0, path.length()-2 ), ct);
+            if( ! path.startsWith( "/" ) ) {
+                log("WARNING: Correcting error in web.xml for context \"" + ctxP +
+                        "\". Mapping for path \"" + path + "\" is missing a leading '/'.");
+                path="/" + path;
+            }
+            String prefixPath=ctxP + path.substring( 0, path.length()-2 );
+	    map.addMapping( vhost, prefixPath, ct);
+	    map.addMappings( vhostAliases, prefixPath, ct);
+
 	    if( debug>0 )
 		log("SM: prefix map " + vhost + ":" +  ctxP +
 		    path + " -> " + ct + " " );
@@ -236,8 +249,13 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    break;
 	case Container.PATH_MAP:
 	    // workaround for frequent bug in web.xml
-	    if( ! path.startsWith( "/" ) ) path="/" + path;
+            if( ! path.startsWith( "/" ) ) {
+                log("WARNING: Correcting error in web.xml for context \"" + ctxP +
+                        "\". Mapping for path \"" + path + "\" is missing a leading '/'.");
+                path="/" + path;
+            }
 	    map.addExactMapping( vhost, ctxP + path, ct);
+	    map.addExactMappings( vhostAliases, ctxP + path, ct);
 	    if( debug>0 )
 		log("SM: exact map " + vhost + ":" + ctxP +
 		    path + " -> " + ct + " " );
@@ -261,7 +279,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     /* -------------------- Request mapping -------------------- */
 
 
-    /** First step of request porcessing is finding the Context.
+    /** First step of request processing is finding the Context.
      */
     public int contextMap( Request req ) {
 	MessageBytes pathMB = req.requestURI();
@@ -460,7 +478,9 @@ class PrefixMapper  {
     // host -> PrefixMapper for virtual hosts
     // hosts are stored in lower case ( the "common" case )
     SimpleHashtable vhostMaps=new SimpleHashtable();
-
+    // host -> PrefixMapper for virtual hosts with leading '*'
+    // host key has '*' removed
+    SimpleHashtable vhostMapsWC=new SimpleHashtable();
 
     SimpleHashtable prefixMappedServlets;
     SimpleHashtable exactMappedServlets;
@@ -503,7 +523,10 @@ class PrefixMapper  {
 	PrefixMapper vmap=this;
 	if( host!=null ) {
 	    host=host.toLowerCase();
-	    vmap=(PrefixMapper)vhostMaps.get(host);
+            if( host.startsWith( "*" ) )
+                vmap=(PrefixMapper)vhostMapsWC.get(host.substring( 1 ));
+            else
+                vmap=(PrefixMapper)vhostMaps.get(host);
 	}
 	
 	// remove all paths starting with path
@@ -555,11 +578,18 @@ class PrefixMapper  {
 		prefixMappedServlets.put( path, target);
 	} else {
 	    host=host.toLowerCase();
-	    PrefixMapper vmap=(PrefixMapper)vhostMaps.get( host );
+            SimpleHashtable maps;
+            if( host.startsWith( "*" ) ) {
+                maps=vhostMapsWC;
+                host=host.substring( 1 );
+            } else {
+                maps=vhostMaps;
+            }
+	    PrefixMapper vmap=(PrefixMapper)maps.get( host );
 	    if( vmap == null ) {
 		vmap=new PrefixMapper();
 		vmap.setIgnoreCase( ignoreCase );
-		    vhostMaps.put( host, vmap );
+                maps.put( host, vmap );
 		vmap.setMapCache( mapCacheEnabled );
 	    }
 	    if( ignoreCase ) 
@@ -567,6 +597,13 @@ class PrefixMapper  {
 	    else
 		vmap.addMapping( path, target );
 	}
+    }
+
+    /**
+     */
+    public void addMappings( Enumeration hostAliases, String path, Object target ) {
+        while ( hostAliases.hasMoreElements() )
+            addMapping( (String)hostAliases.nextElement(), path, target );
     }
 
     /**
@@ -579,10 +616,17 @@ class PrefixMapper  {
                 exactMappedServlets.put( path, target);
         } else {
 	    host=host.toLowerCase();
-	    PrefixMapper vmap=(PrefixMapper)vhostMaps.get( host );
+            SimpleHashtable maps;
+            if( host.startsWith( "*" ) ) {
+                maps = vhostMapsWC;
+                host=host.substring( 1 );
+            } else {
+                maps = vhostMaps;
+            }
+	    PrefixMapper vmap=(PrefixMapper)maps.get( host );
 	    if( vmap == null ) {
 		vmap=new PrefixMapper();
-		vhostMaps.put( host, vmap );
+		maps.put( host, vmap );
 	    }
 	    if( ignoreCase ) 
 		vmap.addExactMapping( path.toLowerCase(), target );
@@ -590,7 +634,14 @@ class PrefixMapper  {
 		vmap.addExactMapping( path, target );
 	}
     }
-    
+
+    /**
+     */
+    public void addExactMappings( Enumeration hostAliases, String path, Object target ) {
+        while ( hostAliases.hasMoreElements() )
+            addExactMapping( (String)hostAliases.nextElement(), path, target );
+    }
+   
     
     // -------------------- Implementation --------------------
 
@@ -610,6 +661,17 @@ class PrefixMapper  {
 	    if( myMap==null ) {
 		myMap=(PrefixMapper)vhostMaps.get( host.toLowerCase() );
 	    }
+        }
+        if( myMap==null ) {
+            // Check host against virtual hosts that began with '*'
+            Enumeration vhosts = vhostMapsWC.keys();
+            while(vhosts.hasMoreElements()) {
+                String vhostName = (String)vhosts.nextElement();
+                if(host.endsWith(vhostName)) {
+                    myMap = (PrefixMapper)vhostMapsWC.get(vhostName);
+                    break;
+                }
+            }
 	}
 	
 	if( myMap==null ) myMap = this; // default server
