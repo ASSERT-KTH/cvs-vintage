@@ -81,7 +81,7 @@ On this screen, one can modify a module's Attribute information.
 <table width="70%" border="1" cellspacing="2" cellpadding="2">
 <tr>
  <th>&#160;</th>
- <th>Parent attribute option</th>
+ <th>Parent attribute option(s)</th>
  <th>Display Name</th>
  <th>Active</th>
  <th>Preferred order</th>
@@ -91,7 +91,20 @@ On this screen, one can modify a module's Attribute information.
     #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
     #indexedRows($velocityCount)
      <td><input type="checkbox" name="delete_$rmo.OptionId"></td>
-     <td>$rmo.AttributeOption.Parent $rmo.AttributeOption.Parent.Name</td>
+     <td>
+       #set ($comma = "")
+       #set ($parents = $rmo.AttributeOption.Parents)
+       #foreach ($parent in $parents)
+         #if ($parents.size() > 1)
+           #if ($velocityCount < $parents.size())
+               #set ($comma = ",")
+           #else
+               #set ($comma = "")
+           #end
+         #end
+         $parent.Name$comma
+       #end
+     </td>
      <td><input type="text" size="25" name="$rmoGroup.DisplayValue.Key" value="$rmoGroup.DisplayValue.Value" /></td>
      <td>
         #booleanCheckbox($rmoGroup.Active)
