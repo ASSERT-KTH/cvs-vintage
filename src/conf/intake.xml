@@ -399,7 +399,7 @@
         <required-message>Field is required</required-message>
     </field>
     <field name="File" key="d" type="FileItem">
-        <rule name="maxLength" value="16777215">Files larger than 16MB are not allowed</rule>
+        <rule name="maxLength" value="157286400">Files larger than 150MB are not allowed</rule>
         <required-message>No file was specified</required-message>
     </field>
     <!-- two different fields are used because there is an 'other' field -->
