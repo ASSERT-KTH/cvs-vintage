@@ -149,7 +149,6 @@ final class LoggerNameTreePanel extends JPanel implements Rule
     this.preferenceModel = preferenceModel;
 
     setLayout(new BorderLayout());
-    setBorder(BorderFactory.createEtchedBorder());
 
     logTree =
     new JTree(logTreeModel)
@@ -1026,7 +1025,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
    * DOCUMENT ME!
    *
    * @author $author$
-   * @version $Revision: 1.26 $, $Date: 2004/03/28 10:04:30 $
+   * @version $Revision: 1.27 $, $Date: 2004/05/01 09:18:48 $
    *
    * @author Paul Smith <psmith@apache.org>
         *
