@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
@@ -60,7 +59,7 @@ import org.apache.commons.fileupload.FileItem;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.5 2002/10/01 00:11:07 jmcnally Exp $
+ * @version $Id: AttachmentTest.java,v 1.6 2002/10/28 22:00:33 jon Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {

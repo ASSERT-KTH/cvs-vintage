@@ -46,22 +46,18 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeOption;
 
 /**
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeTest.java,v 1.4 2002/05/14 21:32:04 jon Exp $
+ * @version $Id: AttributeTest.java,v 1.5 2002/10/28 22:00:33 jon Exp $
  */
 public class AttributeTest extends BaseTestCase
 {
@@ -114,8 +110,8 @@ public class AttributeTest extends BaseTestCase
     {
         Attribute attribute = 
             AttributeManager.getInstance(new NumberKey(6));
-        List before = (List) attribute.getAttributeOptions();
-        List after = (List) attribute.getAttributeOptions();
+        List before = attribute.getAttributeOptions();
+        List after = attribute.getAttributeOptions();
         System.out.println ("Options Size Before: " + before.size());
         System.out.println ("Options Size After: " + after.size());
 //        attribute.sortOptions(new ArrayList(after));

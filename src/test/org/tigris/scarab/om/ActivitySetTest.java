@@ -48,17 +48,12 @@ package org.tigris.scarab.om;
 
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.om.ScopePeer;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivitySetTest.java,v 1.2 2002/10/01 00:11:07 jmcnally Exp $
+ * @version $Id: ActivitySetTest.java,v 1.3 2002/10/28 22:00:33 jon Exp $
  */
 public class ActivitySetTest extends BaseTestCase
 {

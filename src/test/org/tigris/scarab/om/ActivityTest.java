@@ -48,10 +48,6 @@ package org.tigris.scarab.om;
 
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.util.ScarabException;
-
-import java.util.Iterator;
-import java.util.List;
 
 import junit.framework.*;
 
@@ -59,7 +55,7 @@ import junit.framework.*;
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.7 2002/07/31 01:17:00 jmcnally Exp $
+ * @version $Id: ActivityTest.java,v 1.8 2002/10/28 22:00:33 jon Exp $
  */
 public class ActivityTest extends BaseTestCase
 {

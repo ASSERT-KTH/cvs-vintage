@@ -48,18 +48,12 @@ package org.tigris.scarab.om;
 
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.om.ScopePeer;
-import org.tigris.scarab.services.cache.ScarabCache;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleOptionTest.java,v 1.1 2002/03/27 00:23:36 elicia Exp $
+ * @version $Id: RModuleOptionTest.java,v 1.2 2002/10/28 22:00:33 jon Exp $
  */
 public class RModuleOptionTest extends BaseTestCase
 {
