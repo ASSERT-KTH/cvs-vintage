@@ -31,7 +31,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
+import org.columba.core.mimetype.MimeType;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.FileSource;
 import org.columba.ristretto.message.LocalMimePart;
@@ -184,10 +184,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
     public void addFileAttachment(File file) {
     	 if (file.isFile()) {
 
-           String mimetype = new LookupMimetypeHandler().lookup(file);
-            // fall-back to application
-            if(mimetype == null)
-                mimetype = "application/octet-stream";
+           String mimetype = MimeType.lookup(file);
 
             MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
             header.putContentParameter("name", file.getName());

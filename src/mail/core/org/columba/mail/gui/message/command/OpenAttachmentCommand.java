@@ -21,15 +21,17 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -38,6 +40,8 @@ import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
+import org.jdesktop.jdic.desktop.Desktop;
+import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * @author freddy
@@ -93,9 +97,15 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 			//inline = true;
 			//openInlineMessage(part, tempFile);
 		} else {
-			//inline = false;
-			MimeTypeViewer viewer = new MimeTypeViewer();
-			viewer.open(header, tempFile, false);
+			try {
+				//inline = false;
+				Desktop.open(tempFile);
+			} catch (DesktopException e) {
+				JOptionPane.showMessageDialog(null, GlobalResourceLoader
+						.getString("dialog", "error", "no_viewer"), "Error",
+						JOptionPane.ERROR_MESSAGE);
+
+			}
 		}
 	}
 

@@ -26,7 +26,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
+import org.columba.core.mimetype.MimeType;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -241,7 +241,7 @@ public class ComposerModel {
 			return;
 		}
 
-		List v = new ListParser().createListFromString(s);
+		List v = ListParser.createListFromString(s);
 		toList = v;
 	}
 
@@ -314,10 +314,7 @@ public class ComposerModel {
 	public void addFileAttachment(File file) {
    	 if (file.isFile()) {
 
-        String mimetype = new LookupMimetypeHandler().lookup(file);
-         // fall-back to application
-         if(mimetype == null)
-             mimetype = "application/octet-stream";
+        String mimetype = MimeType.lookup(file);
 
          MimeHeader header = new MimeHeader(mimetype.substring(0, mimetype.indexOf('/')), mimetype.substring(mimetype.indexOf('/') + 1));
          header.putContentParameter("name", file.getName());
@@ -501,7 +498,7 @@ public class ComposerModel {
 			String adr = (String) toList.get(i);
 			// remove leading/trailing whitespaces
 			adr = adr.trim();
-			
+			System.out.println("adr=" + adr);
 			if (!emailPattern.matcher(adr).matches())
 				return adr;
 

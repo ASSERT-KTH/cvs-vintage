@@ -28,7 +28,7 @@
    <jar href="@forms@"/>
    <jar href="@jscf@"/>
    <jar href="@jdom@"/>
-   <jar href="@frappucino@"/>
+   <jar href="@frapuccino@"/>
    <jar href="@lucene@"/>
    <jar href="@jpim@"/>
    <jar href="@macchiato@"/>
@@ -38,17 +38,21 @@
    <!-- it therefor can't be in the same jnlp file -->
    <!-- because it is signed by someone else -->
      
-   <extension href="javahelp.jnlp" />
+   <extension href="javahelp.jnlp" />   
    
+ </resources>
+ <resources os="Windows">
    <!-- JNIWrapper is signed by jniwrapper.com already -->
    <!-- it therefor can't be in the same jnlp file -->
    <!-- because it is signed by someone else -->
    
    <extension name="jniwrapper" href="jniwrapper.jnlp"/>
-   
+   <jar href="native/win32/@jdic@"/>
+   <nativelib href="native/win32/@native@"/>
  </resources>
- <resources os="Windows">
-    <nativelib href="@jniwraplib@"/>
-  </resources>
+ <resources os="Linux">
+   <jar href="native/linux/@jdic@"/>
+   <nativelib href="native/linux/@native@"/>
+ </resources>
  <application-desc/>
 </jnlp>

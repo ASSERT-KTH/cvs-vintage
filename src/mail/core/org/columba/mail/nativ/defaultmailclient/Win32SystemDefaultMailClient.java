@@ -8,6 +8,7 @@ package org.columba.mail.nativ.defaultmailclient;
 
 import com.jniwrapper.win32.registry.RegistryKey;
 
+
 /**
  * @author Timo
  *

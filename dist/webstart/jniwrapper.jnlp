@@ -11,8 +11,8 @@
       <all-permissions/>
   </security>
   <resources>
-    <jar href="@jniwrap@"/>
-    <jar href="@winpack@"/>
+    <jar href="native/win32/@jniwrap@"/>
+    <jar href="native/win32/@winpack@"/>
   </resources>
   <component-desc/>
 </jnlp>

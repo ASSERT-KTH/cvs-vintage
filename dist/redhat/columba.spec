@@ -24,6 +24,9 @@ rm -rf $RPM_BUILD_ROOT
 %install
 install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}
 install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}/lib
+install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}/native
+install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}/native/linux
+install -m 0755 -d $RPM_BUILD_ROOT/opt/columba-%{version}/native/linux/lib
 install -m 0755 -d $RPM_BUILD_ROOT/usr/bin
 install -m 0644 columba.jar $RPM_BUILD_ROOT/opt/columba-%{version}/
 install -m 0644 AUTHORS $RPM_BUILD_ROOT/opt/columba-%{version}/
@@ -32,6 +35,7 @@ install -m 0644 CHANGES $RPM_BUILD_ROOT/opt/columba-%{version}/
 install -m 0644 LICENSE $RPM_BUILD_ROOT/opt/columba-%{version}/
 install -m 0755 run.sh $RPM_BUILD_ROOT/opt/columba-%{version}/
 install -m 0644 lib/* $RPM_BUILD_ROOT/opt/columba-%{version}/lib/
+install -m 0644 native/linux/lib/* $RPM_BUILD_ROOT/opt/columba-%{version}/native/linux/lib/
 ln -sf /opt/columba-%{version}/run.sh $RPM_BUILD_ROOT/usr/bin/columba
 
 

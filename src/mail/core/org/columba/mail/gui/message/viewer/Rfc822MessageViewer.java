@@ -29,6 +29,7 @@ import java.util.Observer;
 
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.Scrollable;
@@ -42,8 +43,8 @@ import javax.swing.text.html.HTMLDocument;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.gui.util.FontProperties;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
@@ -58,6 +59,8 @@ import org.columba.mail.gui.message.filter.PGPMessageFilter;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
+import org.jdesktop.jdic.desktop.Desktop;
+import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * IViewer for a complete RFC822 message.
@@ -429,8 +432,13 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 
 				controller.updateComponents(true);
 			} else {
-				// open url
-				new MimeTypeViewer().openURL(url);
+				try {
+					Desktop.browse(url);
+				} catch (DesktopException e) {
+					JOptionPane.showMessageDialog(null, GlobalResourceLoader
+							.getString("dialog", "error", "no_browser"), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	}

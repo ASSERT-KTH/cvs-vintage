@@ -15,25 +15,37 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.nativ.mimetype;
+package org.columba.core.mimetype;
 
 import java.io.File;
+import java.net.MalformedURLException;
+
+import org.jdesktop.jdic.filetypes.Association;
+import org.jdesktop.jdic.filetypes.AssociationService;
 
 /**
- * Get mimetype associated with file-extension.
- * <p>
- * For example: .txt would be text/plain, .html would be text/html 
+ * Retrieve associated mimetype of file.
  * 
  * @author fdietz
  */
-public interface LookupMimetype {
+public class MimeType {
+
+	private static AssociationService associationService = new AssociationService();
 
 	/**
-	 * Get mimetype of file-extension
-	 * 
-	 * @param file		file 
-	 * 
-	 * @return		mimetype (for example: text/plain, text/html)
+	 * @see org.columba.core.nativ.mimetype.LookupMimetype#lookup(java.io.File)
 	 */
-	String lookup(File file);
+	public static String lookup(File file) {
+		String mimetype = "application/octetstream";
+		
+		try {
+			Association a = associationService.getAssociationByContent( file.toURL());
+			
+			return a.getMimeType();
+		} catch (MalformedURLException e) {
+		}
+		
+		return mimetype;
+	}
+
 }

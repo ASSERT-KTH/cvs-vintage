@@ -2,10 +2,10 @@
 # Configuration for the Janel Launcher
 # Janel Version >= 2.0.2
 
--Djava.class.path={app}\columba.jar
+-Djava.class.path={app}\columba.jar;native\win32\lib\jdic.jar;native\win32\lib\jniwrap-2.4.jar;native\win32\lib\winpack.jar
 janel.main.class=org.columba.core.main.Main
 janel.min.java.version=1.4
-janel.library.path=native/
+janel.library.path=native/win32/lib/
 
 
 

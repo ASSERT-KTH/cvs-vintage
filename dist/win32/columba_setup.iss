@@ -39,9 +39,9 @@ Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additi
 [Files]
 Source: AUTHORS; DestDir: {app}
 Source: CHANGES; DestDir: {app}
-Source: native\win32\launcher\columba.exe; DestDir: {app}
-Source: native\win32\launcher\columbaw.exe; DestDir: {app}
-Source: native\win32\launcher\columba.lap; DestDir: {app}; AfterInstall: updateLAPfile
+Source: native\win32\columba.exe; DestDir: {app}
+Source: native\win32\columbaw.exe; DestDir: {app}
+Source: native\win32\columba.lap; DestDir: {app}; AfterInstall: updateLAPfile
 Source: {app}\columba.lap; DestDir: {app}; DestName: columbaw.lap; Flags: external
 Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
@@ -52,9 +52,7 @@ Source: {#JHALL}; DestDir: {app}
 Source: {#USERMANUAL}; DestDir: {app}
 Source: {#FORMS}; DestDir: {app}
 Source: {#MACCHIATO}; DestDir: {app}
-Source: {#WINPACK}; DestDir: {app}
-Source: {#JNIWRAP}; DestDir: {app}
-Source: {#FRAPPUCINO}; DestDir: {app}
+Source: {#FRAPUCCINO}; DestDir: {app}
 Source: {#JSCF}; DestDir: {app}
 Source: {#JARGS}; DestDir: {app}
 Source: {#LUCENE}; DestDir: {app}
@@ -63,7 +61,12 @@ Source: {#PLASTIC}; DestDir: {app}
 Source: {#JE}; DestDir: {app}
 Source: {#JDOM}; DestDir: {app}
 Source: {#JPIM}; DestDir: {app}
-Source: native\win32\JNI-wrapper\jniwrap.dll; DestDir: {app}\native\win32\JNI-wrapper\
+Source: native\win32\{#JNIWRAP}; DestDir: {app}\native\win32\
+Source: native\win32\{#WINPACK}; DestDir: {app}\native\win32\
+Source: native\win32\{#JDIC}; DestDir: {app}\native\win32\
+Source: native\win32\lib\jniwrap.dll; DestDir: {app}\native\win32\lib\
+Source: native\win32\lib\tray.dll; DestDir: {app}\native\win32\lib\
+Source: native\win32\lib\jdic.dll; DestDir: {app}\native\win32\lib\
 #ifdef BUNDLE_JRE
 Source: {#JRE_SRC_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
 #endif

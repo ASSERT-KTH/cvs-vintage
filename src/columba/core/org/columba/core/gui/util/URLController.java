@@ -21,9 +21,12 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.gui.mimetype.MimeTypeViewer;
+import org.columba.core.util.GlobalResourceLoader;
+import org.jdesktop.jdic.desktop.Desktop;
+import org.jdesktop.jdic.desktop.DesktopException;
 
 public class URLController implements ActionListener {
     private String address;
@@ -118,16 +121,15 @@ public class URLController implements ActionListener {
     }
 
     public void open(URL url) {
-        MimeTypeViewer viewer = new MimeTypeViewer();
-        viewer.openURL(url);
+    	try {
+			Desktop.browse(url);
+		} catch (DesktopException e) {
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader
+					.getString("dialog", "error", "no_browser"), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
     }
 
-    public void openWith(URL url) {
-        MimeTypeViewer viewer = new MimeTypeViewer();
-        viewer.openWithURL(url);
-    }
-
-   
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
@@ -137,8 +139,6 @@ public class URLController implements ActionListener {
             contact(getAddress());
         } else if (action.equals("OPEN")) {
             open(getLink());
-        } else if (action.equals("OPEN_WITH")) {
-            openWith(getLink());
         } else if (action.equals("OPEN_WITHINTERNALBROWSER")) {
             //openWithBrowser(getLink());
         }

@@ -45,8 +45,7 @@ public class OpenAttachmentAction extends AbstractColumbaAction {
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
-		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
-
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));		
 	}
 
 	/*

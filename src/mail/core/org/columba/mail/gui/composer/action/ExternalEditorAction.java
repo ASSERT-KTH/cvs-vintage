@@ -16,6 +16,7 @@
 package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -59,9 +60,13 @@ public class ExternalEditorAction extends AbstractColumbaAction {
 
                     ExternalEditor Ed = new ExternalEditor();
 
-                    //Ed.startExternalEditor(
-                    //	composerController.getEditorController().getView());
-                    Ed.startExternalEditor(composerController.getEditorController());
+                    try {
+						//Ed.startExternalEditor(
+						//	composerController.getEditorController().getView());
+						Ed.startExternalEditor(composerController.getEditorController());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 
                     return Ed;
                 }

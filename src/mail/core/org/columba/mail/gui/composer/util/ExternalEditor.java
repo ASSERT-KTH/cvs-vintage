@@ -21,15 +21,18 @@ import java.awt.Font;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.TempFileStore;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MimeHeader;
+import org.jdesktop.jdic.filetypes.Action;
+import org.jdesktop.jdic.filetypes.Association;
+import org.jdesktop.jdic.filetypes.AssociationService;
 
 public class ExternalEditor {
 	String Cmd;
@@ -42,14 +45,13 @@ public class ExternalEditor {
 	}
 
 	// END public ExternalEditor(String EditorCommand)
-	public boolean startExternalEditor(AbstractEditorController EditCtrl) {
+	public boolean startExternalEditor(AbstractEditorController EditCtrl) throws IOException {
 		/*
 		 * *20030906, karlpeder* Method signature changed to take an
 		 * AbstractEditorController (instead of an TextEditorView) as parameter
 		 * since the view is no longer directly available
 		 */
 		MimeHeader myHeader = new MimeHeader("text", "plain");
-		MimeTypeViewer viewer = new MimeTypeViewer();
 		File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
 		FileWriter FO;
 		FileReader FI;
@@ -100,7 +102,12 @@ public class ExternalEditor {
 				"extern_editor_using_msg"));
 
 		// execute application, enabling blocking
-		Process child = viewer.open(myHeader, tmpFile, true);
+		Association association = new AssociationService().getFileExtensionAssociation("txt");
+		Action action = association.getActionByVerb("edit");
+		
+		
+		Process child = Runtime.getRuntime().exec(
+				action.getCommand() + " " + tmpFile.toString());
 
 		if (child == null) {
 			return false;

@@ -19,14 +19,18 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
+import org.jdesktop.jdic.desktop.Desktop;
+import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * Open link in external browser.
@@ -58,7 +62,13 @@ public class OpenAction extends AbstractColumbaAction implements Observer {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		new MimeTypeViewer().openURL(url.getRealURL());
+		try {
+			Desktop.browse(url.getRealURL());
+		} catch (DesktopException e) {
+			JOptionPane.showMessageDialog(null, GlobalResourceLoader
+					.getString("dialog", "error", "no_browser"), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	/*

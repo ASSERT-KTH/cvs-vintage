@@ -45,16 +45,21 @@
 	</target>
 	
 	<target name="init-native" description="Initialises platform dependant stuff" >
-		<condition property="native.library.path" value="${native.win32}" >
+		<condition property="native.base" value="${native.win32}" >
 			<os family="windows"/>			
 		</condition>
 
-		<condition property="native.library.path" value="${native.linux}" >
+		<condition property="native.base" value="${native.linux}" >
 			<os name="linux"/>			
-		</condition>		
+		</condition>
+		
+		<!-- Other platform maintainers must add their platform here !-->
+		
+		
+		<property name="native.library.path" value="${native.base}/lib/"/>
 	</target >
 	
-	<target name="init" description="Initialises the build system">
+	<target name="init" depends="init-native" description="Initialises the build system">
 		
 		<echo message="you are running java version ${ant.java.version}"/>
 
@@ -81,12 +86,12 @@
 			<pathelement path="${lib.frapuccino}"/>
 			<pathelement path="${lib.lucene}"/>			
 			<pathelement path="${lib.plastic}"/>			
-			<pathelement path="${lib.jniwrap}"/>
-			<pathelement path="${lib.winpack}"/>			
+			<pathelement path="${native.win32}/${lib.jniwrap}"/>
+			<pathelement path="${native.win32}/${lib.winpack}"/>			
 			<pathelement path="${lib.jdom}"/>			
 			<pathelement path="${lib.jpim}"/>			
 			<pathelement path="${lib.je}"/>						
-			<pathelement path="${lib.jdic}"/>						
+			<pathelement path="${native.base}/${lib.jdic}"/>						
 		</path>
 		<path id="run.classpath" >
 			<path refid="compile.classpath" />
@@ -112,7 +117,7 @@
 		</path>			
 	</target>
 	
-	<target name="init-rpm" description="Initialises the RPM directories">
+	<target name="init-rpm" depends="init" description="Initialises the RPM directories">
 		<mkdir dir="${dist.rpm}/BUILD" />
 		<mkdir dir="${dist.rpm}/SRPMS" />
 		<mkdir dir="${dist.rpm}/RPMS" />
@@ -130,7 +135,7 @@
 		<property name="keypass" value="columba"/>
 		<property name="webstart.codebase" value="http://columba.sourceforge.net/webstart" />
 		
-		<fileset dir="${basedir}" id="sign.jars" >
+		<fileset dir="${release.base}/webstart" id="sign.jars" >
 			<include name="columba.jar"/>
 			<include name="${manual.jar}"/>
 			<include name="${lib.forms}"/>
@@ -142,11 +147,13 @@
 			<include name="${lib.frapuccino}"/>
 			<include name="${lib.lucene}"/>			
 			<include name="${lib.plastic}"/>			
-			<include name="${lib.jniwraplib}"/>
 			<include name="${lib.jdom}"/>			
 			<include name="${lib.jpim}"/>			
 			<include name="${lib.je}"/>
-			<include name="${lib.jdic}" />
+			<include name="${native.linux}${lib.jdic}" />
+			<include name="${native.linux}${lib.native}"/>
+			<include name="${native.win32}${lib.jdic}" />
+			<include name="${native.win32}${lib.native}"/>
 			<!-- never sign JavaHelp, its already signed by SUN -->
 			<!-- never sign jniwrapper, its already signed by jniwrapper.com -->
 		</fileset>			
@@ -243,7 +250,7 @@
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main" />
-				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.winpack} ${lib.jniwrap} ${lib.jdom} ${lib.jpim} ${lib.je} ${lib.jdic}"/>
+				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -283,18 +290,15 @@
 
 	<!-- create a release zip file for linux and unix flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a binary release -->
-	<target name="zip-bin-unix" depends="jar, linefeeds-unix"
+	<target name="bin-unix" depends="jar, linefeeds-unix"
 	description="Creates packaged Columba release">
-		<echo message="the zipfile is going to columba-unix-${version}-bin.zip "/>
-		<zip zipfile="${release.base}/columba-unix-${version}-bin.zip" update="true">
-			<zipfileset dir="${basedir}" prefix="columba-unix-${version}-bin">
+		<tar tarfile="${release.base}/columba-unix-${version}-bin.tar.bz2" compression="bzip2">
+			<tarfileset dir="${basedir}" prefix="columba-unix-${version}-bin">
 				<include name="README"/>
 				<include name="AUTHORS"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<include name="columba.jar"/>
-				<include name="run.sh"/>
-				<include name="${native.linux}/*.so"/>
 				<include name="${lib.forms}"/>
 				<include name="${lib.jscf}"/>
 				<include name="${lib.jargs}"/>
@@ -308,32 +312,35 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>									
-			</zipfileset>
-			<zipfileset dir="${native.linux}" prefix="columba-win32-${version}-bin/lib">
-				<!-- This is a workaround until there is a unified
-					jdic jar available (tstich) -->
-				<include name="${lib.jdic}" />
-			</zipfileset>
-			
-		</zip>
+				<include name="${native.linux}/${lib.jdic}" />
+				<include name="${native.linux}/lib/*.so"/>
+			</tarfileset>
+			<tarfileset dir="${basedir}" mode="755" prefix="columba-unix-${version}-bin">
+				<include name="run.sh"/>				
+			</tarfileset>				
+		</tar>
 	</target>
 
 	<!-- create a release zip file for windows flavors, containing the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a binary release -->
-	<target name="zip-bin-win32" depends="jar, linefeeds-win32"
+	<target name="bin-win32" depends="jar, linefeeds-win32"
 	description="Creates packaged Columba release">
-		<echo message="the zipfile is going to columba-win32-${version}-bin.zip "/>
 		
-		<zip zipfile="${release.base}/columba-win32-${version}-bin.zip" update="true">
+		<copy file="${native.win32}/Columba.lap" todir="${basedir}"/>
+		
+		<replace file="${basedir}/Columba.lap" >
+			<replacefilter token="{app}" value="."/>
+		</replace>
+
+		<copy file="${basedir}/Columba.lap" tofile="${basedir}\Columbaw.lap"/>
+		
+		<zip zipfile="${release.base}/columba-win32-${version}-bin.zip">
 			<zipfileset dir="${basedir}" prefix="columba-win32-${version}-bin">
 				<include name="README"/>
 				<include name="AUTHORS"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
-				<include name="run.bat"/>
 				<include name="columba.jar"/>
-				<include name="**/*.jar"/>
-				<include name="${native.win32}/*.dll"/>
 				<include name="${lib.forms}"/>
 				<include name="${lib.jscf}"/>
 				<include name="${lib.jargs}"/>
@@ -347,19 +354,26 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
-				<include name="${lib.jniwrap}"/>
-				<include name="${lib.winpack}"/>
-				<include name="${lib.jdic}" />
-
-				<include name="native.win32.launcher/Columba.exe" />
-				<include name="native.win32.launcher/Columba.lap" />
+				<include name="${native.win32}/${lib.jniwrap}"/>
+				<include name="${native.win32}/${lib.winpack}"/>
+				<include name="${native.win32}/${lib.jdic}" />
+				<include name="${native.win32}/lib/*.dll"/>
+				<include name="Columba.lap" />
+				<include name="Columbaw.lap" />
+			</zipfileset>
+			<zipfileset dir="${native.win32}" prefix="columba-win32-${version}-bin">
+				<include name="Columba.exe" />
+				<include name="Columbaw.exe" />
 			</zipfileset>
 		</zip>
+		
+		<delete file="${basedir}/Columba.lap"/>
+		<delete file="${basedir}/Columbaw.lap"/>
 	</target>
 
 	<!-- create a source zip file for linux and unix flavors containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
-	<target name="zip-source-unix" depends="init,linefeeds-unix"
+	<target name="source-unix" depends="init,linefeeds-unix"
 	description="Creates packaged Columba release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<zip zipfile="${release.base}/columba-unix-${version}-src.zip" update="true">
@@ -387,7 +401,7 @@
 
 	<!-- create a source zip file for windows flavors, containing all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for a source release -->
-	<target name="zip-source-win32" depends="init,linefeeds-win32"
+	<target name="source-win32" depends="init,linefeeds-win32"
 	description="Creates packaged Columba release">
 		<echo message="the zipfile is going to columba-${version}-src.zip "/>
 		<zip zipfile="${release.base}/columba-win32-${version}-src.zip" update="true">
@@ -416,14 +430,10 @@
 
 	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
 	<!-- this is also the release target ;-0 -->
-	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32, rpm, winsetup, winsetup-bundlejre"
+	<target name="release" depends="bin-unix,bin-win32,source-unix,source-win32, rpm, winsetup, winsetup-bundlejre"
 	description="Builds a complete Columba rellease"/>
 
 	<target name="webstart" depends="init-webstart, jar" description="Signs all jars for use with Java Webstart">
-		<signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
-			<fileset refid="sign.jars" />
-		</signjar>
-		
 		<copy toDir="${release.base}/webstart">
 			<fileset dir="${basedir}">
 				<include name="columba.jar"/>				
@@ -441,9 +451,6 @@
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
 				<include name="${lib.je}"/>		
-				<include name="${lib.jniwrap}"/>
-				<include name="${lib.jniwraplib}"/>
-				<include name="${lib.winpack}"/>
 			</fileset>
 			<fileset dir="${dist.webstart}" >
 				<include name="columba.jnlp" />
@@ -452,12 +459,39 @@
 			</fileset>
 		</copy>
 		
+		<copy toDir="${release.base}/webstart/${native.win32}">
+			<fileset dir="${native.win32}" > 
+				<include name="${lib.jdic}" />
+				<include name="${lib.jniwrap}"/>
+				<include name="${lib.winpack}"/>			
+			</fileset>						
+		</copy>
+		
+		<jar destfile="${release.base}/webstart/${native.win32}/${lib.native}" basedir="${native.win32}/lib/" >
+			<include name="*.dll" />
+		</jar>
+
+		<copy toDir="${release.base}/webstart/${native.linux}">
+			<fileset dir="${native.linux}" > 
+				<include name="${lib.jdic}" />
+			</fileset>
+		</copy>
+
+		<jar destfile="${release.base}/webstart/${native.linux}/${lib.native}" basedir="${native.linux}/lib/">
+			<include name="*.so" />
+		</jar>
+
 		<copy toDir="${release.base}/webstart/images">
 			<fileset dir="${res.base}/org/columba/core/images">
 				<include name="icon32.gif"/>
 			</fileset>
 		</copy>
 		
+
+		<signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
+			<fileset refid="sign.jars" />
+		</signjar>		
+
 		<replace dir="${release.base}/webstart" includes="*.jnlp" >
 			<replacefilter token="@codebase@" value="${webstart.codebase}"/>			
 			<replacefilter token="@ristretto@" value="${lib.ristretto}"/>			
@@ -476,7 +510,8 @@
 			<replacefilter token="@jhall@" value="${lib.jhall}"/>			
 			<replacefilter token="@jniwrap@" value="${lib.jniwrap}"/>			
 			<replacefilter token="@winpack@" value="${lib.winpack}"/>							
-			<replacefilter token="@jniwraplib@" value="${lib.jniwraplib}"/>			
+			<replacefilter token="@jdic@" value="${lib.jdic}"/>			
+			<replacefilter token="@native@" value="${lib.native}"/>			
 		</replace>
 	</target>
 
@@ -545,8 +580,14 @@
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
 				<include name="${lib.jpim}"/>			
-				<include name="${lib.je}"/>						
-				<include name="${manual.jar}"/>						
+				<include name="${lib.je}"/>
+				<include name="${manual.jar}"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist.rpm}/SOURCES/columba-${version}/${native.linux}" >
+			<fileset dir="${basedir}/${native.linux}" >
+				<include name="${lib.jdic}" />
+				<include name="lib/*.so"/>				
 			</fileset>
 		</copy>
 
@@ -581,7 +622,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
+			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -604,7 +645,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
+			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -636,7 +677,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
+			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -645,6 +686,7 @@
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
+			<arg value="/dJDIC=${lib.jdic}" />			
 		</exec>		
 
 		<exec os="Windows 95, Windows NT, Windows 2000, Windows XP" executable="iscc">
@@ -659,7 +701,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
+			<arg value="/dFRAPUCCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -668,6 +710,7 @@
 			<arg value="/dJE=${lib.je}" />
 			<arg value="/dJDOM=${lib.jdom}" />
 			<arg value="/dJPIM=${lib.jpim}" />
+			<arg value="/dJDIC=${lib.jdic}" />			
 		</exec>		
 	</target>
 </project>

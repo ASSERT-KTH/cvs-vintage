@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
-import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.io.TempFileStore;
 import org.columba.ristretto.message.MimeHeader;
 
@@ -46,8 +45,6 @@ public class OpenWithAttachmentCommand extends SaveAttachmentCommand {
      * @see org.columba.core.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
-        MimeTypeViewer viewer = new MimeTypeViewer();
-        viewer.openWith(header, tempFile, false);
     }
 
     /** {@inheritDoc} */

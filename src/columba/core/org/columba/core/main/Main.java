@@ -16,10 +16,12 @@
 
 package org.columba.core.main;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
-
-import javax.swing.RepaintManager;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -28,17 +30,16 @@ import org.apache.commons.cli.ParseException;
 import org.columba.core.config.Config;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.DebugRepaintManager;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ComponentPluginHandler;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.session.SessionController;
+import org.columba.core.trayicon.ColumbaTrayIcon;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -71,10 +72,32 @@ public class Main {
 		return instance;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		addCustomClasspath();
+		
 		Main.getInstance().run(args);
 	}
 
+	private static void addCustomClasspath() throws Exception {
+		String columbaPath = System.getProperty("columba.class.path");
+		if( columbaPath == null || columbaPath.length() == 0) return;
+		
+		String[] paths = columbaPath.split(":|;");
+		
+		URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+		Class sysclass = URLClassLoader.class;
+		
+		for( int i=0; i<paths.length; i++) {
+		try {
+			Method method = sysclass.getDeclaredMethod("addURL",new Class[]{URL.class});
+			method.setAccessible(true);
+			method.invoke(sysloader,new Object[]{ new URL("file:" + paths[i]) });
+		} catch (Throwable t) {
+			throw new Exception(t);
+		}
+		}
+	}
+	
 	public void run(String args[]) {
 		ColumbaLogger.createDefaultHandler();
 		registerCommandLineArguments();
@@ -114,6 +137,9 @@ public class Main {
 			frame = new StartUpFrame();
 			frame.setVisible(true);
 		}
+		
+		// Add the tray icon to the System tray
+		ColumbaTrayIcon.getInstance().addToSystemTray();
 
 		// register protocol handler
 		System.setProperty("java.protocol.handler.pkgs", "org.columba.core.url|"+System.getProperty(
@@ -159,9 +185,6 @@ public class Main {
 		if (restoreLastSession) {
 			FrameModel.getInstance().openStoredViews();
 		}
-
-		// ensure that native libraries are correctly initialized
-		NativeWrapperHandler.getInstance();
 
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
