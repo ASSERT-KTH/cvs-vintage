@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.32 2003/02/21 09:25:05 lepekhine Exp $
+// $Id: ModelFacade.java,v 1.33 2003/02/21 16:17:02 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,10 +176,19 @@ public class ModelFacade {
         return handle instanceof MClassifier;
     }
 
-    /** Recognizer for Classifier
+    /** Recognizer for DataType
      *
      * @param handle candidate
-     * @returns true if handle is a Classifier
+     * @returns true if handle is a DataType
+     */
+    public static boolean isADataType(Object handle) {
+        return handle instanceof MDataType;
+    }
+    
+    /** Recognizer for CompositeState
+     *
+     * @param handle candidate
+     * @returns true if handle is a CompositeState
      */
     public static boolean isACompositeState(Object handle) {
         return handle instanceof MCompositeState;
