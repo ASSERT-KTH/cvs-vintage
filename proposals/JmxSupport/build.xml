@@ -60,6 +60,7 @@
        destdir="${tomcat.build.modules}/JmxSupport/WEB-INF/classes">
        <classpath path="${tomcat.classes}"/>
        <classpath location="${jmx.jar}"/>
+       <classpath location="${jmxtools.jar}"/>
        <classpath location="${commons-logging.jar}"/>
     </javac>
 
