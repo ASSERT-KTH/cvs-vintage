@@ -22,7 +22,6 @@ On this screen, one can modify a module's Attribute information.
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />
-<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")">
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")">
 
 <div class="functnbar">
