@@ -35,7 +35,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCTypeFactory
 {
@@ -224,7 +224,7 @@ public final class JDBCTypeFactory
       {
          stateFactory = ARRAY;
       }
-      else if(isDefaultImmutable(clazz))
+      else if(usedWithEqualsStateFactory(clazz))
       {
          stateFactory = EQUALS;
       }
@@ -247,6 +247,15 @@ public final class JDBCTypeFactory
          result = checkDirtyAfterGet == JDBCCMPFieldMetaData.CHECK_DIRTY_AFTER_GET_TRUE;
       }
       return result;
+   }
+
+   private static final boolean usedWithEqualsStateFactory(Class clazz)
+   {
+      return
+         isDefaultImmutable(clazz) ||
+         clazz == java.util.Date.class ||
+         clazz == java.sql.Date.class ||
+         clazz == java.sql.Timestamp.class;
    }
 
    private static final boolean isDefaultImmutable(Class clazz)
