@@ -143,21 +143,4 @@ public  class RModuleIssueType
         return rmit2;
     }
 
-    /**
-     * Adding to debug a problem with project creation
-     */
-    public void save(DBConnection dbCon) 
-        throws TorqueException
-    {
-        // If this object has been modified, then save it to the database.
-        if (isModified())
-        {
-            if (isNew())
-            {
-                getCategory().debug("[RMIT] Saving new template type: " + 
-                                    getModuleId() + "-" + getIssueTypeId());
-            }
-        }
-        super.save(dbCon);
-    }
 }

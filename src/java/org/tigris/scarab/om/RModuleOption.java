@@ -168,16 +168,6 @@ public class RModuleOption
 
 
     /**
-     * Get the AttributeOption associated with this Module
-     * /
-    public AttributeOption getAttributeOption()
-        throws TorqueException
-    {
-        return AttributeOptionManager.getInstance(getOptionId());
-    }
-    */
-
-    /**
      * A convenience method for getting the option name.  It is 
      * preferred over using getAttributeOption().getName() as it
      * leaves open the possibility of per module display values.
@@ -228,16 +218,6 @@ public class RModuleOption
         Attribute attribute = getAttributeOption().getAttribute();
         return module.getRModuleAttribute(attribute, issueType);
     }
-
-    /* *
-     * The AttributeOption that is the parent of this moduleOption.
-     * Is different that for a moduleOption to have a parent, it
-     * must have siblings or nephews/nieces that fall in the same module.
-     * /
-    public AttributeOption getParent()
-    {
-    }
-    */
 
     public void delete( ScarabUser user )
          throws Exception
