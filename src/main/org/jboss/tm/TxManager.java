@@ -35,7 +35,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class TxManager
    implements TransactionManager,
@@ -311,7 +311,7 @@ public class TxManager
     */
    public void setDefaultTransactionTimeout(int seconds)
    {
-      timeOut = 1000 * seconds;
+      timeOut = 1000L * seconds;
 
       if (debug) {
          log.debug("default tx timeout is now: " + seconds + "s");
