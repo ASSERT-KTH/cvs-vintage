@@ -64,15 +64,15 @@ $l10n.Report
 #reportTable($reportModel)
 </div>
 
-#if ($report.isSavable($data.User))
 <form method="get" action="$link.setPage("reports,Report_1.vm")">
 <input type="hidden" name="action" value="ConfigureReport" />
 <div class="functnbar3">
+#if ($report.isSavable($data.User))
  <input type="submit" value="$l10n.SaveReport" name="eventSubmit_doSavereport" />&#160;
+#end 
  #exportFormats('eventSubmit_doGenerateReport')
 </div>
 </form>
-#end
 
 </div>
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))
