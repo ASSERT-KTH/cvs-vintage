@@ -316,6 +316,7 @@
             <rule name="maxLength" value="1024"/>
         </field>
         <field name="Code" key="code" type="String">
+            <rule name="mask" value="^[:alpha:]+$">Code must consist of alphabetical characters only</rule>
             <rule name="maxLength" value="4"/>
         </field>
         <field name="Url" key="url" type="String">
