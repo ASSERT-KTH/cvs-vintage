@@ -160,7 +160,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.59 $
+@version $Revision: 1.60 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -574,7 +574,8 @@ public abstract class AbstractWebContainer
          if( jndiName == null )
          {
             // Search the DeploymentInfo for a match
-            jndiName = EjbUtil.findEjbLink( server, di, linkName );
+            if (linkName != null)
+               jndiName = EjbUtil.findEjbLink( server, di, linkName );
             if( jndiName == null )
                throw new NamingException("ejb-ref: "+name+", no ejb-link match, use jndi-name in jboss-web.xml");
          }
@@ -591,7 +592,9 @@ public abstract class AbstractWebContainer
          EjbLocalRefMetaData ejb = (EjbLocalRefMetaData) ejbRefs.next();
          String name = ejb.getName();
          String linkName = ejb.getLink();
-         String jndiName = EjbUtil.findLocalEjbLink( server, di, linkName );
+         String jndiName = null;
+         if (linkName != null)
+            jndiName = EjbUtil.findLocalEjbLink( server, di, linkName );
 
          if( jndiName == null )
             throw new NamingException("ejb-local-ref: "+name+", target not found, add valid ejb-link");
