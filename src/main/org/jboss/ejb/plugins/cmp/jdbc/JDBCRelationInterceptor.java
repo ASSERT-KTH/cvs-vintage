@@ -7,13 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import javax.ejb.EJBException;
-import javax.transaction.Synchronization;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -32,14 +26,14 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
    // Constants -----------------------------------------------------
-   protected static final Method GET_RELATED_ID;
-   protected static final Method ADD_RELATION;
-   protected static final Method REMOVE_RELATION;
+   private static final Method GET_RELATED_ID;
+   private static final Method ADD_RELATION;
+   private static final Method REMOVE_RELATION;
    
    static
    {
@@ -78,7 +72,12 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
    /**
     *  The container of this interceptor.
     */
-   protected EntityContainer container;
+   private EntityContainer container;
+
+   /**
+    * The log.
+    */ 
+   private Logger log;
    
    // Static --------------------------------------------------------
    
@@ -88,6 +87,22 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
    public void setContainer(Container container)
    {
       this.container = (EntityContainer)container;
+
+      JDBCStoreManager manager = null;
+      try {
+         EntityContainer entityContainer = (EntityContainer)container;
+         CMPPersistenceManager cmpManager = 
+               (CMPPersistenceManager)entityContainer.getPersistenceManager();
+         manager = (JDBCStoreManager) cmpManager.getPersistenceStore();
+      } catch(ClassCastException e) {
+         throw new EJBException("JDBCRealtionInteceptor can only be used " +
+               "JDBCStoreManager", e);
+      }
+      
+      log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
    }
    
    public Container getContainer()
@@ -103,181 +118,92 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
       EntityEnterpriseContext ctx =
             (EntityEnterpriseContext)mi.getEnterpriseContext();
       
-      // The Tx coming as part of the Method Invocation
-      Transaction tx = mi.getTransaction();
-      
-      try
+      if(GET_RELATED_ID.equals(mi.getMethod()))
       {
-         if(GET_RELATED_ID.equals(mi.getMethod()))
-         {
             
-            // call getRelateId
-            JDBCCMRFieldBridge cmrField =
-                  (JDBCCMRFieldBridge)mi.getArguments()[0];
-            return cmrField.getRelatedId(ctx);
-            
-         } else if(ADD_RELATION.equals(mi.getMethod()))
-         {
-            
-            // call addRelation
-            JDBCCMRFieldBridge cmrField =
-                  (JDBCCMRFieldBridge)mi.getArguments()[0];
-            
-            Object relatedId = mi.getArguments()[1];
-            cmrField.addRelation(ctx, relatedId);
-            
-            RelationData relationData = getRelationData(cmrField, tx);
-            relationData.addRelation(
-                  cmrField,
-                  ctx.getId(),
-                  cmrField.getRelatedCMRField(),
-                  relatedId);
-
-            return null;
-            
-         } else if(REMOVE_RELATION.equals(mi.getMethod()))
-         {
-            
-            // call removeRelation
-            JDBCCMRFieldBridge cmrField = 
-                  (JDBCCMRFieldBridge)mi.getArguments()[0];
-            
-            Object relatedId = mi.getArguments()[1];
-            cmrField.removeRelation(ctx, relatedId);
-            
-            RelationData relationData = getRelationData(cmrField, tx);
-            relationData.removeRelation(
-                  cmrField,
-                  ctx.getId(),
-                  cmrField.getRelatedCMRField(),
-                  relatedId);
-
-            return null;
-            
-         } else
-         {
-            // No a message. Invoke down the chain
-            return getNext().invoke(mi);
+         // call getRelateId
+         JDBCCMRFieldBridge cmrField =
+               (JDBCCMRFieldBridge)mi.getArguments()[0];
+         if(log.isTraceEnabled()) {
+            log.trace("Getting related id: field=" + cmrField.getFieldName() +
+                  " id=" + ctx.getId());
          }
+         return cmrField.getRelatedId(ctx);
          
-      } finally
+      } else if(ADD_RELATION.equals(mi.getMethod()))
       {
-         register(tx);
+         
+         // call addRelation
+         JDBCCMRFieldBridge cmrField =
+               (JDBCCMRFieldBridge)mi.getArguments()[0];
+         
+         Object relatedId = mi.getArguments()[1];
+         if(log.isTraceEnabled()) {
+            log.trace("Add relation: field=" + cmrField.getFieldName() +
+                  " id=" + ctx.getId() +
+                  " relatedId=" + relatedId);
+         }
+         cmrField.addRelation(ctx, relatedId);
+         
+         RelationData relationData = getRelationData(cmrField);
+         relationData.addRelation(
+               cmrField,
+               ctx.getId(),
+               cmrField.getRelatedCMRField(),
+               relatedId);
+
+         return null;
+         
+      } else if(REMOVE_RELATION.equals(mi.getMethod()))
+      {
+         
+         // call removeRelation
+         JDBCCMRFieldBridge cmrField = 
+               (JDBCCMRFieldBridge)mi.getArguments()[0];
+         
+         Object relatedId = mi.getArguments()[1];
+         if(log.isTraceEnabled()) {
+            log.trace("Remove relation: field=" + cmrField.getFieldName() +
+                  " id=" + ctx.getId() +
+                  " relatedId=" + relatedId);
+         }
+         cmrField.removeRelation(ctx, relatedId);
+         
+         RelationData relationData = getRelationData(cmrField);
+         relationData.removeRelation(
+               cmrField,
+               ctx.getId(),
+               cmrField.getRelatedCMRField(),
+               relatedId);
+
+         return null;
+         
+      } else
+      {
+         // Not a message. Invoke down the chain
+         return getNext().invoke(mi);
       }
    }
    
-   protected RelationData getRelationData(
-         JDBCCMRFieldBridge cmrField, Transaction tx)
+   private RelationData getRelationData(JDBCCMRFieldBridge cmrField)
    {
-      Map txDataMap = cmrField.getJDBCStoreManager().getTxDataMap();
-      Map txData = (Map)txDataMap.get(tx);
-      if(txData == null)
-      {
-         txData = new HashMap();
-         txDataMap.put(tx, txData);
-      }
-      
+      JDBCStoreManager manager = cmrField.getJDBCStoreManager();
       JDBCRelationMetaData relationMetaData = 
             cmrField.getMetaData().getRelationMetaData();
-      RelationData relationData = (RelationData)txData.get(relationMetaData);
+
+      
+      RelationData relationData = 
+            (RelationData)manager.getApplicationTxData(relationMetaData);
+
       if(relationData == null)
       {
          relationData = new RelationData(
                cmrField, cmrField.getRelatedCMRField());
-         txData.put(relationMetaData, relationData);
+         manager.putApplicationTxData(relationMetaData, relationData);
       }
       return relationData;
    }
-   
+
    // Private  ----------------------------------------------------
-   
-   /**
-    *  Register a transaction synchronization callback with a context.
-    */
-   private void register(Transaction tx)
-   {
-      // Create a new synchronization
-      RelationSynchronization synch = new RelationSynchronization(tx);
-      
-      try
-      {
-         // We want to be notified when the transaction commits
-         tx.registerSynchronization(synch);
-      } catch(EJBException e)
-      {
-         throw e;
-      } catch(Exception e)
-      {
-         throw new EJBException(e);
-      }
-   }
-   
-   // Inner classes -------------------------------------------------
-   
-   private class RelationSynchronization implements Synchronization
-   {
-      /**
-       *  The transaction we follow.
-       */
-      private Transaction tx;
-      
-      /**
-       *  Create a new instance synchronization instance.
-       */
-      private RelationSynchronization(Transaction tx)
-      {
-         this.tx = tx;
-      }
-      
-      // Synchronization implementation -----------------------------
-      
-      /**
-       * Saves all of the relations changed in this transaction.
-       */
-      public void beforeCompletion()
-      {
-         // This is an independent point of entry. We need to make sure the
-         // thread is associated with the right context class loader
-         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-         Thread.currentThread().setContextClassLoader(
-               container.getClassLoader());
-         
-         try
-         {
-            // Get the manager
-            CMPPersistenceManager cmpPM = 
-                  (CMPPersistenceManager)container.getPersistenceManager();
-            JDBCStoreManager manager = 
-                  (JDBCStoreManager)cmpPM.getPersistenceStore();
-            
-            manager.synchronizeRelationData(tx);
-         } catch (Exception e)
-         {
-            log.error("ex", e);
-            
-            // Store failed -> rollback!
-            try
-            {
-               tx.setRollbackOnly();
-            } catch (SystemException ex)
-            {
-               // DEBUG ex.printStackTrace();
-            } catch (IllegalStateException ex)
-            {
-               // DEBUG ex.printStackTrace();
-            }
-         } finally
-         {
-            Thread.currentThread().setContextClassLoader(oldCl);
-         }
-      }
-      
-      /**
-       * Unused
-       */
-      public void afterCompletion(int status)
-      {
-      }
-   }
 }
 
