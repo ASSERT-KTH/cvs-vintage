@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.6 2001/10/11 11:44:27 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.7 2001/10/22 11:50:57 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -288,7 +288,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 	{
 		Buffer buffer = view.getBuffer();
 		mode.setText(buffer.getMode().getName());
-		encoding.setText(buffer.getProperty("encoding").toString());
+		encoding.setText(buffer.getStringProperty("encoding"));
 	} //}}}
 
 	//{{{ updateMiscStatus() method

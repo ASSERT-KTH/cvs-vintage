@@ -37,7 +37,7 @@ import org.gjt.sp.util.IntegerArray;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.5 2001/10/21 06:40:31 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.6 2001/10/22 11:50:57 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -196,21 +196,21 @@ public class OffsetManager
 			for(int i = 0; i < numLines; i++)
 			{
 				lineInfo[startLine + i] =
-					((offset + endOffsets.get(i) + 1)
-					| (0xffL << VISIBLE_SHIFT));
+					(((offset + endOffsets.get(i) + 1)
+					| (0xffL << VISIBLE_SHIFT))
+					& ~(FOLD_LEVEL_VALID | CONTEXT_VALID));
 			}
 		} //}}}
 
 		//{{{ Update remaining line start offsets
 		for(int i = endLine; i < lineCount; i++)
 		{
-			lineInfo[i] = ((getLineEndOffset(i) + length)
-				| (0xffL << VISIBLE_SHIFT));
+			lineInfo[i] = (((getLineEndOffset(i) + length)
+				| (0xffL << VISIBLE_SHIFT))
+				& ~(FOLD_LEVEL_VALID | CONTEXT_VALID));
 		} //}}}
 
 		// TODO: positions
-
-		linesChanged(startLine,lineCount - startLine);
 	} //}}}
 
 	//{{{ contentRemoved() method
@@ -231,11 +231,11 @@ public class OffsetManager
 		for(int i = startLine; i < lineCount; i++)
 		{
 			setLineEndOffset(i,getLineEndOffset(i) - length);
+			lineInfo[i] &= ~(FOLD_LEVEL_VALID_MASK
+				| CONTEXT_VALID_MASK);
 		} //}}}
 
 		// TODO: positions
-
-		linesChanged(startLine,lineCount - startLine);
 	} //}}}
 
 	//{{{ linesChanged() method
