@@ -24,7 +24,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.2 2002/08/10 14:57:45 linus Exp $
+// $Id: ChildGenRelated.java,v 1.3 2002/11/18 04:06:41 mkl Exp $
 
 package org.argouml.uml.cognitive;
 
@@ -38,6 +38,8 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.util.*;
 
+/** @stereotype singleton
+ */
 public class ChildGenRelated implements ChildGenerator {
   public static ChildGenRelated SINGLETON = new ChildGenRelated();
 
