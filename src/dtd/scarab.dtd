@@ -1,5 +1,5 @@
 <!ELEMENT activities ( activity+ ) >
-<!ELEMENT activity ( id?, attribute, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, description ) >
+<!ELEMENT activity ( id?, attribute, old-numeric-value?, new-numeric-value?, old-user?, new-user?, old-option?, new-option?, old-value?, new-value?, depend?, description ) >
 <!ELEMENT activity-set ( id, type, created-by, created-date, activities, attachment? ) >
 <!ELEMENT activity-sets ( activity-set+ ) >
 <!ELEMENT artifact-type ( #PCDATA ) >
@@ -10,15 +10,14 @@
 <!ELEMENT created-by ( #PCDATA ) >
 <!ELEMENT created-date ( format, timestamp ) >
 <!ELEMENT data ( #PCDATA ) >
-<!ELEMENT dependencies ( dependency+ ) >
-<!ELEMENT dependency ( type, child, parent? ) >
+<!ELEMENT depend ( id, parent, child, type ) >
 <!ELEMENT description ( #PCDATA ) >
-<!ELEMENT domain EMPTY >
+<!ELEMENT domain ( #PCDATA ) >
 <!ELEMENT filename ( #PCDATA ) >
 <!ELEMENT format ( #PCDATA ) >
 <!ELEMENT id ( #PCDATA ) >
 <!ELEMENT import-type ( #PCDATA ) >
-<!ELEMENT issue ( id, artifact-type, activity-sets, dependencies* ) >
+<!ELEMENT issue ( id, artifact-type, activity-sets ) >
 <!ELEMENT issues ( issue+ ) >
 <!ELEMENT mimetype ( #PCDATA ) >
 <!ELEMENT modified-by ( #PCDATA ) >
@@ -39,4 +38,4 @@
 <!ELEMENT scarab-issues ( import-type, module, issues+ ) >
 <!ELEMENT timestamp ( #PCDATA ) >
 <!ELEMENT type ( #PCDATA ) >
-<!ELEMENT url EMPTY >
+<!ELEMENT url ( #PCDATA ) >
