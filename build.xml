@@ -37,6 +37,7 @@
 				<include name="**/*.wav"/>
 				<include name="**/*.properties"/>
 				<include name="README"/>
+                                <include name="README_JDK1.3"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
 				<exclude name="build.xml"/>
@@ -56,6 +57,7 @@
 			<include name="**"/>
 			<exclude name="columba.jar"/>
 			<exclude name="README"/>
+                        <exclude name="README_JDK1.3"/>
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
 			<manifest>
