@@ -27,6 +27,7 @@ import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.util.MailResourceLoader;
 
 public class GeneralPanel extends JPanel implements ActionListener {
 	JLabel markLabel1, markLabel2;
@@ -139,19 +140,26 @@ public class GeneralPanel extends JPanel implements ActionListener {
 		JPanel markPanel = new JPanel();
 		markPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		markPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//LOCALIZE
-		markLabel1 = new JLabel("Mark messages as read after");
+		markLabel1 = new JLabel(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "mark_messages_read"));
 		markPanel.add(markLabel1);
-		markTextField = new JTextField("2", 3);
+		markTextField = new JTextField(3);
 		markPanel.add(markTextField);
-		markLabel2 = new JLabel("seconds");
+		markLabel2 = new JLabel(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "seconds"));
 		markPanel.add(markLabel2);
 		add(markPanel);
 		JPanel codepagePanel = new JPanel();
 		codepagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		codepagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//LOCALIZE
-		codepageLabel = new JLabel("Default locale:");
+		codepageLabel = new JLabel(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "locale"));
 		codepagePanel.add(codepageLabel);
 		codepageButton = new JButton(Locale.getDefault().getDisplayName());
 		codepageButton.setEnabled(false);
@@ -164,24 +172,36 @@ public class GeneralPanel extends JPanel implements ActionListener {
 		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
 		emptyTrashCheckBox.setEnabled(false);
 		add(emptyTrashCheckBox);
-		//LOCALIZE
-		preferHtmlCheckBox =
-			new JCheckBox("Prefer HTML messages, if available");
+		preferHtmlCheckBox = new JCheckBox(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "prefer_html"));
 		add(preferHtmlCheckBox);
 		JPanel toolbarPanel = new JPanel();
 		toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		toolbarPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//LOCALIZE
-		JLabel toolbarLabel = new JLabel("Toolbar:");
+		JLabel toolbarLabel = new JLabel(MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "toolbar"));
 		toolbarPanel.add(toolbarLabel);
-		//LOCALIZE
-		toolbarComboBox =
-			new JComboBox(
-				new String[] {
-					"Icons only",
-					"Text only",
-					"Text below Icons",
-					"Text beside Icons" });
+		toolbarComboBox = new JComboBox(new String[] {
+                                MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "toolbar_icons"),
+                                MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "toolbar_text"),
+                                MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "toolbar_below"),
+                                MailResourceLoader.getString(
+                                        "dialog",
+                                        "general",
+                                        "toolbar_beside") });
 		toolbarLabel.setLabelFor(toolbarComboBox);
 		toolbarPanel.add(toolbarComboBox);
 		add(toolbarPanel);
