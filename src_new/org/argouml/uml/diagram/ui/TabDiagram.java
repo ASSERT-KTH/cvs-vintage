@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.29 2003/09/19 21:28:42 d00mst Exp $
+// $Id: TabDiagram.java,v 1.30 2003/10/12 00:28:45 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.29 2003/09/19 21:28:42 d00mst Exp $
+// $Id: TabDiagram.java,v 1.30 2003/10/12 00:28:45 d00mst Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -303,7 +303,6 @@ public class TabDiagram
     }
 
     private void select(Object[] targets) {
-        _jgraph.deselectAll();
         LayerManager manager = _jgraph.getEditor().getLayerManager();
         Vector figList = new Vector();
         for (int i = 0; i < targets.length; i++) {
@@ -318,8 +317,11 @@ public class TabDiagram
                 }
             }
         }
-        _jgraph.select(figList);
 
+	if (!figList.equals(_jgraph.selectedFigs())) {
+            _jgraph.deselectAll();
+            _jgraph.select(figList);
+	}
     }
 
 }
