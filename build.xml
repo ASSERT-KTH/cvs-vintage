@@ -219,6 +219,7 @@
 	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar" />
       </classpath>
       <include name="org/apache/tomcat/facade/**" />    
+      <include name="org/apache/tomcat/modules/facade22/**" />    
     </javac>
     <jar jarfile="${tomcat.build}/lib/servlet22/facade22.jar"
       basedir="${tomcat.build}/classes" > 
