@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.28 2002/04/13 02:39:32 jmcnally Exp $
+    @version $Id: TemplateList.java,v 1.29 2002/05/03 01:32:24 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -132,13 +132,6 @@ public class TemplateList extends RequireLoginFirstAction
             issue.setTypeId(scarabR.getCurrentIssueType().getTemplateId());
             issue.save();
 
-            // Save template info
-            infoGroup.setProperties(info);
-            info.setIssueId(issue.getIssueId());
-            info.saveAndSendEmail(user, scarabR.getCurrentModule(),
-                new ContextAdapter(context));
-            data.getParameters().add("templateId", issue.getIssueId().toString());
-            setTarget(data, getNextTemplate(data)); 
         } 
         else
         {
@@ -146,6 +139,18 @@ public class TemplateList extends RequireLoginFirstAction
         }
     }
 
+    public void doSavetemplateinfo( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);        
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
+        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey() );
+        infoGroup.setProperties(info);
+        info.saveAndSendEmail((ScarabUser)data.getUser(), scarabR.getCurrentModule(),
+                              new ContextAdapter(context));
+        //data.getParameters().add("templateId", issue.getIssueId().toString());
+    }
 
     public void doDeletetemplates( RunData data, TemplateContext context )
         throws Exception
