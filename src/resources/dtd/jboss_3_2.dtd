@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.8 2004/09/10 13:01:45 loubyansky Exp $
-$Revision: 1.8 $
+$Id: jboss_3_2.dtd,v 1.9 2005/01/31 23:29:32 starksm Exp $
+$Revision: 1.9 $
 
 Overview of the architecture of jboss.xml
 
@@ -43,6 +43,7 @@ Overview of the architecture of jboss.xml
       <ejb-name />
       <jndi-name />
       <local-jndi-name />
+      <call-by-value/>
       <configuration-name>
       <security-proxy>
       <ejb-ref>
@@ -221,6 +222,7 @@ and other configuration options to use for the various EJB proxies.
 JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
 KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? , 
 jnp-context?)>
+
 <!--
   The jndi name of the jms provider adapter in the java:/ namespace.
   This is mandatory for an MDB and must implement
@@ -349,7 +351,7 @@ jnp-context?)>
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value? , read-only? ,
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value?, read-only? ,
  configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , resource-ref* ,
  resource-env-ref* , method-attributes? , clustered? , cluster-config?,
  cache-invalidation? , cache-invalidation-config?, depends*)>
@@ -363,7 +365,7 @@ jnp-context?)>
 
   Used in: enterprise-beans
 -->
-<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value? , configuration-name?,
+<!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value?, configuration-name?,
  invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , resource-ref* , resource-env-ref* , clustered? ,
  cluster-config?, method-attributes?, depends*)>
 
@@ -447,7 +449,7 @@ container or ejb depends.
 -->
 <!ELEMENT depends (#PCDATA)>
 
-<!-- The queue/topic jndi name from which we receive messages -->
+<!-- The jndi name of the queue/topic to receive messages from -->
 <!ELEMENT destination-jndi-name (#PCDATA)>
 
 <!-- The optional user for the jms connection that delivers messages -->
@@ -746,7 +748,7 @@ container or ejb depends.
 <!--
   The container-configurations element declares the different possible
   container configurations that the beans can use. standardjboss.xml
-  provides 16 standard configurations with the following container-names:
+  provides 15 standard configurations with the following container-names:
     - Standard CMP 2.x EntityBean
     - Standard CMP EntityBean
     - Clustered CMP 2.x EntityBean
@@ -754,7 +756,6 @@ container or ejb depends.
     - IIOP CMP 2.x EntityBean
     - IIOP CMP EntityBean
     - Standard Stateless SessionBean
-    - Webservice-Enabled Stateless SessionBean
     - Clustered Stateless SessionBean
     - IIOP Stateless SessionBean
     - Standard Stateful SessionBean
@@ -872,6 +873,11 @@ The client-interceptors defines the home and bean client side interceptor chain
   Used in: proxy-factory-config
 -->
 <!ELEMENT client-interceptors (home , bean, list-entity?)>
+
+<!-- Define whether the ejb proxy should expose an org.jboss.proxy.IClientContainer
+   interface to provide access to the invocation context and interceptors.
+-->
+<!ATTLIST client-interceptors exposeContainer (true | false )  "false">
 
 <!--
 The home element gives the chain of interceptors
@@ -1130,6 +1136,14 @@ Used in: invoker-proxy-conf for JMSContainerInvoker
 -->
 <!ELEMENT MaximumSize (#PCDATA)>
 
+<!--
+  The number of millis to keep an unused object in the pool. Currently unused by
+  JBoss EJB Pools.
+
+  Used in: invoker-proxy-conf for JMSContainerInvoker
+-->
+<!ELEMENT KeepAliveMillis (#PCDATA)>
+
 <!-- A boolean flag indicating if attempts to access the pool will block when
 MaximumSize instances are active. The default is false.
 
@@ -1143,14 +1157,6 @@ default is Long.MAX_VALUE or essentially enternity.
   Used in: container-pool-conf
 -->
 <!ELEMENT strictTimeout (#PCDATA)>
-
-<!--
-  The number of millis to keep an unused object in the pool. Currently unused by
-  JBoss EJB Pools.
-
-  Used in: invoker-proxy-conf for JMSContainerInvoker
--->
-<!ELEMENT KeepAliveMillis (#PCDATA)>
 
 <!--
   This option is only used for entity container configurations.
