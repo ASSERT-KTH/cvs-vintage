@@ -54,13 +54,14 @@ import org.apache.turbine.om.*;
 
 import org.tigris.scarab.tools.*;
 import org.tigris.scarab.util.*;
+import org.tigris.scarab.services.module.*;
 
 /**
     This BaseScarabObject contains methods and variables that are common
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.3 2001/05/11 17:34:17 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.4 2001/05/24 02:07:17 jmcnally Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {
@@ -139,20 +140,26 @@ public class BaseScarabObject extends BaseObject
                                 org.apache.velocity.context.Context context ) 
         throws Exception
     {
-          org.tigris.scarab.om.Module module = 
-              Module.getInstance(new org.apache.turbine.om.NumberKey("5"));
-          
-          ScarabRequestTool scarab = (ScarabRequestTool)
-              context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
-          
-          org.tigris.scarab.om.ScarabUser user = 
-              new org.tigris.scarab.om.ScarabUser();
-          user.setPrimaryKey(new NumberKey("2"));
-          user.setCurrentModule(module);
 
-          scarab.setUser(user);
-          data.setUser(user);
-
+        ScarabRequestTool scarab = (ScarabRequestTool)
+            context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+          
+        if ( data.getUser() == null ) 
+        {
+              org.tigris.scarab.om.ScarabUser user = 
+                  new org.tigris.scarab.om.ScarabUser();
+              user.setPrimaryKey(new NumberKey("2"));
+              user.setUserName("workarounduser");
+              scarab.setUser(user);
+              data.setUser(user);
+        }
+          
+        if ( scarab.getUser().getCurrentModule() == null ) 
+        {               
+              org.tigris.scarab.services.module.ModuleEntity module = 
+              ModuleManager.getInstance(
+                  new org.apache.turbine.om.NumberKey("5"));
+              scarab.getUser().setCurrentModule(module);
+        }
     }
-
 }
