@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCUtil
 {
@@ -513,6 +513,8 @@ public class JDBCUtil
          rsTypes.put(Float.TYPE.getName(),                 ResultSet.class.getMethod("getFloat", arg));
          rsTypes.put(java.lang.Double.class.getName(),     ResultSet.class.getMethod("getDouble", arg));
          rsTypes.put(Double.TYPE.getName(),                ResultSet.class.getMethod("getDouble", arg));
+         // byte[]
+         rsTypes.put("[B",                                 ResultSet.class.getMethod("getBytes", arg));
       } catch(NoSuchMethodException e)
       {
          // Should never happen
