@@ -1405,12 +1405,16 @@ e.printStackTrace();
             {
                 issue = IssueManager
                     .getIssueById(id, getCurrentModule().getCode());
-                if (issue == null || issue.getDeleted())
+                if (issue == null)
                 {
                     setAlertMessage(l10n.get("InvalidId"));
+                }
+                else if (issue.getDeleted())
+                {
+                    setAlertMessage(l10n.get("IssueMoved"));
                     issue = null;
                 }
-            }        
+            }
             catch (Exception e)
             {
                 setAlertMessage(l10n.get("InvalidId"));

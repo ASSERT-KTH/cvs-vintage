@@ -32,7 +32,7 @@ elseif ($copyToModules.isEmpty())
 #else
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 #end
-
+<input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>

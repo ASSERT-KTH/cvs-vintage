@@ -44,8 +44,10 @@
 <input type="hidden" name="action" value="MoveIssue" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="MoveIssue.vm" />
+<input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
 #foreach ($issueId in $issueList)
 <input type="hidden" name="issue_ids" value="$issueId" />
+<input type="hidden" name="id" value="$issueId" />
 #end
 <input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$newModuleId" />
 <input type="hidden" name="$moveIssueGroup.IssueTypeId.key" value="$newIssueTypeId" />

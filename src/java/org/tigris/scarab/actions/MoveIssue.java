@@ -62,7 +62,7 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.actions.base.BaseModifyIssue;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Module;
@@ -85,9 +85,9 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.61 2003/06/25 00:07:04 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.62 2003/07/18 06:45:09 venkatesh Exp $
  */
-public class MoveIssue extends RequireLoginFirstAction
+public class MoveIssue extends BaseModifyIssue
 {
 
     /**
@@ -97,6 +97,15 @@ public class MoveIssue extends RequireLoginFirstAction
     public void doValidate(RunData data, TemplateContext context)
         throws Exception
     {
+        boolean collisionOccurred = isCollision(data, context);
+        context.put("collisionDetectedOnMoveAttempt", collisionOccurred ? Boolean.TRUE : Boolean.FALSE);
+        if (collisionOccurred)
+        {
+            // Report the collision to the user.
+            doCancel(data, context);
+            return;
+        }
+
         IntakeTool intake = getIntakeTool(context);
         if (!intake.isAllValid())
         {
@@ -125,7 +134,7 @@ public class MoveIssue extends RequireLoginFirstAction
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
-        String[] modIssueTypes = 
+        String[] modIssueTypes =
             data.getParameters().getStrings("mod_issuetype");
         String modIssueType = null;
         if (modIssueTypes != null)
@@ -146,7 +155,7 @@ public class MoveIssue extends RequireLoginFirstAction
                     }
                 }
             }
-            
+
         }
 
         if (modIssueType == null)
@@ -223,6 +232,15 @@ public class MoveIssue extends RequireLoginFirstAction
     public void doSaveissue(RunData data, TemplateContext context)
         throws Exception
     {
+        boolean collisionOccurred = isCollision(data, context);
+        context.put("collisionDetectedOnMoveAttempt", collisionOccurred ? Boolean.TRUE : Boolean.FALSE);
+        if (collisionOccurred)
+        {
+            // Report the collision to the user.
+            setTarget(data, "ViewIssue.vm");
+            return;
+        }
+
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         if (!intake.isAllValid())

@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.171 2003/07/01 05:56:11 irk_tpt Exp $
+ * @version $Id: ModifyIssue.java,v 1.172 2003/07/18 06:45:09 venkatesh Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -1049,6 +1049,13 @@ public class ModifyIssue extends BaseModifyIssue
     public void doMove(RunData data, TemplateContext context)
          throws Exception
     {
+        boolean collisionOccurred = isCollision(data, context);
+        context.put("collisionDetectedOnMoveAttempt", collisionOccurred ? Boolean.TRUE : Boolean.FALSE);
+        if (collisionOccurred)
+        {
+            // Report the collision to the user.
+            return;
+        }
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module module = scarabR.getCurrentModule();
@@ -1076,6 +1083,13 @@ public class ModifyIssue extends BaseModifyIssue
     public void doCopy(RunData data, TemplateContext context)
          throws Exception
     {
+        boolean collisionOccurred = isCollision(data, context);
+        context.put("collisionDetectedOnMoveAttempt", collisionOccurred ? Boolean.TRUE : Boolean.FALSE);
+        if (collisionOccurred)
+        {
+            // Report the collision to the user.
+            return;
+        }
         ParameterParser pp = data.getParameters();
         pp.setString("mv_0rb", "copy");
         ((IntakeTool)context.get("intake")).get("MoveIssue")
