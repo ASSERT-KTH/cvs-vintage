@@ -170,22 +170,22 @@ public class TagBeginGenerator
 	    for(int i = 0; i < attributes.length; i++) {
                 String attrValue = (String) attrs.get(attributes[i].getName());
                 if (attrValue != null) {
-                    if (attributes[i].canBeRequestTime()) {
-                        if (JspUtil.isExpression(attrValue))
-                            attrValue = JspUtil.getExpr(attrValue);
-                        else 
-                            attrValue = writer.quoteString(attrValue);
-                    } else
-                        attrValue = writer.quoteString(attrValue);
-                    
+		    
                     String attrName = attributes[i].getName();
-                    Method m = tc.getSetterMethod(attrName);
-                    if (m == null)
-                        throw 
-                            new JasperException(Constants.getString("jsp.error.unable.to_find_method",
-                                                                    new Object[] { attrName }));
-                
-                    writer.println(thVarName+"."+m.getName()+"("+attrValue+");");
+		    
+		    if (!JspUtil.isExpression (attrValue)) {
+			writer.println("JspRuntimeLibrary.introspecthelper(" +
+				       thVarName + ",\"" + attrName +
+				       "\",\"" + JspUtil.escapeQueryString(attrValue) +
+				       "\",null,null,false);");
+		    } else {
+			
+			// This requires some careful handling.
+			// int, boolean, ... are not Object(s).
+			writer.println("JspRuntimeLibrary.handleSetProperty(" +
+				       thVarName + ",\"" + attrName +
+				       "\"," + JspUtil.getExpr(attrValue) + ");");
+		    }
                 }
             }
     }
