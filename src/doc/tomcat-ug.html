@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.14 2001/09/03 12:42:09 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.15 2001/09/18 03:28:27 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -805,7 +805,7 @@ or more of these directories.</p>
 </table>
 
 <p>Additionally you can, or Tomcat will, create the following
-directories:</p>\
+directories:</p>
 
 <table border="1" width="75%" VALIGN="center">
   <tr>
@@ -990,9 +990,185 @@ only the <code>&lt;Context&gt;</code> entries.</p>
 
 <p><i>This section will describe the default configuration supplied with Tomcat 3.3</i></p>
 
+<table border="1">
+  <tr><th>Module Entry</th><th>Status</th><th>Description</th></tr>
+  <tr><td>&lt;<a href="serverxml.html#LoaderInterceptor11">LoaderInterceptor11</a>
+    useApplicationLoader=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#TrustedLoader">TrustedLoader</a> /&gt;</td>
+    <td>&nbsp;</td>
+    <td>Provides special handling for &quot;trusted&quot; contexts which have
+      a <code>interceptors.xml</code> file in their <code>WEB-INF</code>
+      directory.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
+      name=&quot;tc_log&quot; timestamps="true"<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel="INFORMATION"  /&gt;</td><td>&nbsp;</td>
+    <td>Sets up Tomcat's log output channel. In the absence of a <code>path</code>
+      setting, output goes to <code>stderr</code>.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LogEvents">LogEvents</a> enabled="false" /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#ContextXmlReader">ContextXmlReader</a>
+    config="conf/server.xml" /&gt;</td><td>&nbsp;</td>
+    <td>Reads context definitions from the <code>server.xml</code> file for
+      backwards compatibility. This may be removed if you don't put
+      context definitions in your <code>server.xml</code> file.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#ContextXmlReader">ContextXmlReader</a>
+    config=&quot;conf/apps.xml&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Reads context definitions from the <code>conf/apps.xml</code> file
+      and any files matching the pattern <code>apps-*.xml</code> in the
+      <code>conf</code> directory.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#AutoDeploy">AutoDeploy</a>
+    source=&quot;modules&quot; target=&quot;modules&quot; 
+	redeploy=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Expands &quot;.war&quot; files in the <code>modules</code> directory.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#AutoWebApp">AutoWebApp</a>
+    dir=&quot;modules&quot; host=&quot;DEFAULT&quot; trusted=&quot;true&quot;/&gt;</td><td>&nbsp;</td>
+    <td>Auto-creates contexts for subdirectories in the <code>modules</code>
+      directory. These contexts are defaulted to &quot;trusted&quot;.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#AutoDeploy">AutoDeploy</a>
+    source=&quot;webapps&quot; target=&quot;webapps&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Expands &quot;.war&quot; files in the <code>webapps</code> directory.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#AutoWebApp">AutoWebApp</a>
+    dir=&quot;webapps&quot; host=&quot;DEFAULT&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Auto-creates contexts for the subdirectories in the <code>webapps</code>
+      directory.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#PolicyLoader">PolicyLoader</a><br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;securityManagerClass=&quot;java.lang.SecurityManager&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;policyFile=&quot;conf/tomcat.policy&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Sets a policy file and security manager if &quot;sandbox&quot; is
+      specified on the command line without also specifying a policy file
+      on the command line.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#SimpleMapper1">SimpleMapper1</a> /&gt;</td><td>&nbsp;</td>
+    <td>Handles the mapping of requests to contexts.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#SessionExpirer">SessionExpirer</a>
+    checkInterval=&quot;60&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Handles the destruction of sessions after they expire.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#SessionIdGenerator">SessionIdGenerator</a><br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;randomClass=&quot;java.security.SecureRandom&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;randomFile=&quot;/dev/urandom&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Generates session ID's for requests that need a new session.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
+      name=&quot;servlet_log&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;timestamps=&quot;true&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel = &quot;INFORMATION&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;path=&quot;logs/servlet-${yyyyMMdd}.log&quot; 
+		   /&gt;</td><td>&nbsp;</td>
+    <td>Sets up the &quot;servlet&quot; log output channel.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
+      name=&quot;JASPER_LOG&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;timestamps=&quot;true&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;path=&quot;logs/jasper-${yyyyMMdd}.log&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel = &quot;INFORMATION&quot;  /&gt;</td><td>&nbsp;</td>
+    <td>Sets up the Jasper's log output channel.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#WebXmlReader">WebXmlReader</a>
+    validate=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Reads the <code>web.xml</code> file for each context.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#ErrorHandler">ErrorHandler</a>
+    showDebugInfo=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Provides error handling for requests that encounter an error.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#WorkDirSetup">WorkDirSetup</a>
+    cleanWorkDir=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Sets the &quot;work&quot; directory for contexts which don't have the
+      &quot;work&quot; directory set explicitly.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#Jdk12Interceptor">Jdk12Interceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>Insures the proper context classloader is in effect during servlet
+      execution.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#InvokerInterceptor">InvokerInterceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#JspInterceptor">JspInterceptor</a>
+      keepGenerated=&quot;true&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;largeFile=&quot;false&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;useJspServlet=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Handles translation, compilation, and loading of JSP pages.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#StaticInterceptor">StaticInterceptor</a>
+    listings=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Generates the response for requests for static files and directories.</td></tr>
+  <tr><td>&lt;ReloadInterceptor fullReload=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#SimpleSessionStore">SimpleSessionStore</a>
+    maxActiveSessions=&quot;-1&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Creates, stores, and maintains session objects.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#AccessInterceptor">AccessInterceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>Checks if requests require authentication. Provides the basic handling
+      for BASIC and FORM authentication.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#CredentialsInterceptor">CredentialsInterceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>Extracts user name and password information for use by an
+      &quot;authentication&quot; module.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#SimpleRealm">SimpleRealm</a>
+    filename=&quot;conf/users/global-users.xml&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&quot;authentication&quot; module that checks user name and passwords
+      against data obtained from an XML file. Since this module appears outside
+      of a Context definition, the user names and passwords in the specified
+      file apply to all contexts.</td></tr>
+  <tr><td>&lt;JDBCRealm<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;debug=&quot;99&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;driverName=&quot;sun.jdbc.odbc.JdbcOdbcDriver&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;connectionURL=&quot;jdbc:odbc:TOMCAT&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;userTable=&quot;users&quot; userNameCol=&quot;user_name&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;userCredCol=&quot;user_pass&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;userRoleTable=&quot;user_roles&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;roleNameCol=&quot;role_name&quot; /&gt;</td><td>Disabled</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LoadOnStartupInterceptor">LoadOnStartupInterceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>Pre-loads servlets indicated as &lt;load-on-startup&gt; in a web.xml
+      file.</td></tr>
+  <tr><td>&lt;Servlet22Interceptor /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#LogSetter">LogSetter</a>
+     name=&quot;tag_pool_log&quot; timestamps=&quot;true&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;path=&quot;logs/tagpool-${yyyyMMdd}.log&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;verbosityLevel=&quot;INFORMATION&quot; /&gt;</td><td>Disabled</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#TagPoolManagerInterceptor">TagPoolManagerInterceptor</a>
+    /&gt;</td><td>Disabled</td>
+    <td>Manages a pool of custom tag libary tag objects.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#DecodeInterceptor">DecodeInterceptor</a>
+    /&gt;</td><td>&nbsp;</td>
+    <td>Handles the determination of the encoding of a request.</td></tr>
+  <tr><td>&lt;SessionId cookiesFirst=&quot;true&quot; noCookies=&quot;false&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#ApacheConfig">ApacheConfig</a>
+    noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Auto-generates a configuration file for use with <code>mod_jk</code>.</td></tr>
+  <tr><td>&lt;<a href="serverxml.html#IISConfig">IISConfig</a>
+    noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>Auto-generates a configuration file for use with <code>isapi_redirect.dll</code>.</td></tr>
+  <tr><td>&lt;NSConfig noRoot=&quot;true&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;AccessLogInterceptor/&gt;</td><td>Disabled</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;Http10Connector port=&quot;8080&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;secure=&quot;false&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;maxThreads=&quot;100&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;maxSpareThreads=&quot;50&quot;<br>
+	  &nbsp;&nbsp;&nbsp;&nbsp;minSpareThreads=&quot;10&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;Http10Connector  port=&quot;8443&quot; secure=&quot;true&quot; /&gt;</td><td>Disabled</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;JniConnector /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;Ajp12Connector	tomcatAuthentication=&quot;false&quot; port=&quot;8007&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+  <tr><td>&lt;Ajp13Connector port=&quot;8009&quot; /&gt;</td><td>&nbsp;</td>
+    <td>&nbsp;</td></tr>
+</table>
+
 <h4>Tomcat Server Customization</h4>
 
 <p><i>This section will describe the most common customizations</i></p>
+
+<h4><a name="standard_contexts">Tomcat's Standard Contexts</a></h4>
+
+<p><i>This section will describe contexts included in Tomcat 3.3</i></p>
+
+<h4><a name="customizing_contexts">Customizing Contexts</a></h4>
+
+<p><i>This section will describe how to add and customize contexts in Tomcat 3.3</i></p>
 
 <hr size="5">
 
