@@ -158,7 +158,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.41 $
+@version $Revision: 1.42 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -837,6 +837,7 @@ public abstract class AbstractWebContainer
          for(int u = 0; u < urls.length; u ++)
          {
             URL url = urls[u];
+            url = org.jboss.net.protocol.njar.Handler.njarToFile(url);
             tmp.add(url.toExternalForm());
          }
          cl = cl.getParent();
@@ -863,6 +864,15 @@ public abstract class AbstractWebContainer
          {
             Object[] args = {};
             urls = (URL[]) getURLs.invoke(cl, args);
+         }
+         if( urls == null || urls.length == 0 )
+         {
+            getURLs = cl.getClass().getMethod("getAllURLs", parameterTypes);
+            if( returnType.isAssignableFrom(getURLs.getReturnType()) )
+            {
+               Object[] args = {};
+               urls = (URL[]) getURLs.invoke(cl, args);
+            }
          }
       }
       catch(Exception ignore)
