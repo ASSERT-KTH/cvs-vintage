@@ -104,7 +104,7 @@ public class ExternalClassLoader extends URLClassLoader {
 		//    old solution and wrong:
 		//Constructor constructor = actClass.getConstructors()[0];//argClazz);
 		//
-		if (args.length == 0) {
+		if ( ( args == null ) || (args.length == 0) ) {
 			constructor = actClass.getConstructors()[0];
 			
 			return constructor.newInstance(args);
