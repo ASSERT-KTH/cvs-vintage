@@ -3,6 +3,7 @@
 
   <!-- Compilation properties -->
   <property file="${user.home}/.ant.properties"  />
+  <property file="${user.home}/build.properties"  />
 
   <property name="optimize" value="false"/>
   <property name="debug" value="on"/>
@@ -99,9 +100,9 @@
   <target name="prepare" depends="init">
     <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="${tomcat.build}"/>
-    <mkdir dir="${tomcat.build}/classes"/>
     <mkdir dir="${tomcat.build}/conf"/>
     <mkdir dir="${tomcat.build}/src"/>
+    <mkdir dir="${tomcat.build}/classes"/>
     <mkdir dir="${tomcat.build}/lib"/>
     <mkdir dir="${tomcat.build}/lib/apps"/>
     <mkdir dir="${tomcat.build}/lib/container"/>
@@ -188,8 +189,7 @@
       <include name="org/apache/tomcat/util/collections/**"/>    
       <include name="org/apache/tomcat/util/http/**"/>    
       <include name="org/apache/tomcat/util/res/**"/>    
-      <include name="org/apache/tomcat/util/buf/**"/>    
-      <include name="org/apache/tomcat/util/**"/>    
+      <include name="org/apache/tomcat/util/buf/**"/>
     </jar>
 
   </target>
@@ -368,10 +368,6 @@
 	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
       <include name="org/apache/tomcat/modules/**"/>    
-      <!-- <exclude 
-          name="org/apache/tomcat/modules/generators/Jdk12Interceptor.java" 
-	  unless="jdk12.present"/>
-       -->
       <exclude 
 	  name="org/apache/tomcat/modules/config/LoaderInterceptor12.java" 
           unless="jdk12.present"/>
@@ -386,6 +382,25 @@
       <include name="org/apache/tomcat/modules/**"/> 
     </jar>
   </target>
+
+  <target name="connector" depends="init">
+    <javac destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="${jakarta-tomcat-connectors}/jk/java">
+      <classpath>
+      </classpath>
+      <include name="org/apache/ajp/tomcat33/**"/>    
+    </javac>
+
+    <jar jarfile="${tomcat.build}/lib/container/jk_connector.jar" 
+	 basedir="${tomcat.build}/classes"> 
+      <include name="org/apache/ajp/tomcat33/**"/>    
+    </jar>
+
+  </target>
+
 
   <!-- ====================  Jasper ( 1.0 )  ========== -->
   <target name="jasper" depends="init">
@@ -431,7 +446,13 @@
     </jar>
   </target>
 
-  <target name="tomcat-jars" depends="connector_util,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat-startup">
+  <target name="jasper34" if="jakarta-tomcat-jasper-present">
+    <ant antfile="${jakarta-tomcat-jasper}/jasper34/build.xml"
+	 target="install"/>
+  </target>
+
+
+  <target name="tomcat-jars" depends="prepare,connector_util,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,connector,tomcat_modules,facade22,tomcat-startup,jasper34">
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat-jars">
