@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.223 2004/04/08 22:35:27 spestov Exp $
+ * @version $Id: jEdit.java,v 1.224 2004/04/18 02:02:42 spestov Exp $
  */
 public class jEdit
 {
@@ -3059,7 +3059,7 @@ public class jEdit
 				Log.log(Log.DEBUG,jEdit.class,
 					"Loading site snippet: " + path);
 
-				propMgr.loadSystemProps(new FileInputStream(new File(path)));
+				propMgr.loadSiteProps(new FileInputStream(new File(path)));
 			}
 			catch(FileNotFoundException fnf)
 			{
