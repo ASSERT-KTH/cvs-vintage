@@ -355,6 +355,7 @@
     <field name="Email" key="e" type="String">
         <rule name="required" value="true">Please enter an email address</rule>
         <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+        <rule name="maxLength" value="99">Your email address must be 99 characters or less in length</rule>
     </field>
     <field name="UserName" key="u" type="String" mapToProperty="Email">
         <rule name="required" value="true">Please enter an email address</rule>
