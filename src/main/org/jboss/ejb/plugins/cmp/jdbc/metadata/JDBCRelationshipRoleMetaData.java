@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -287,7 +287,9 @@ public final class JDBCRelationshipRoleMetaData {
                   entity,
                   cmpField,
                   getCMRFieldName() + "_" + cmpField.getFieldName(),
-                  false);
+                  false,
+                  relationMetaData.isReadOnly(),
+                  relationMetaData.getReadTimeOut());
             foreignKeyFields.put(cmpField.getFieldName(), cmpField);
          }
       }
@@ -332,7 +334,12 @@ public final class JDBCRelationshipRoleMetaData {
                   foreignKeyName);
          }
          cmpField = new JDBCCMPFieldMetaData(
-               entity, foreignKeyElement, cmpField, false);
+               entity,
+               foreignKeyElement,
+               cmpField,
+               false,
+               relationMetaData.isReadOnly(),
+               relationMetaData.getReadTimeOut());
          foreignKeyFields.put(cmpField.getFieldName(), cmpField);
       }
    }
@@ -351,7 +358,9 @@ public final class JDBCRelationshipRoleMetaData {
                   entity,
                   cmpField,
                   getCMRFieldName() + "_" + cmpField.getFieldName(),
-                  false);
+                  false,
+                  relationMetaData.isReadOnly(),
+                  relationMetaData.getReadTimeOut());
             tableKeyFields.put(cmpField.getFieldName(), cmpField);
          }
       }
@@ -387,7 +396,12 @@ public final class JDBCRelationshipRoleMetaData {
                   tableKeyName);
          }
          cmpField = new JDBCCMPFieldMetaData(
-               entity, tableKeyElement, cmpField, false);
+               entity,
+               tableKeyElement,
+               cmpField,
+               false,
+               relationMetaData.isReadOnly(),
+               relationMetaData.getReadTimeOut());
          tableKeyFields.put(cmpField.getFieldName(), cmpField);
       }
    }
