@@ -17,7 +17,6 @@
 <form method="post" action="$link.setPage("QueryList.vm").setAction("QueryList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
-##   <p>&#171; previous | 1 of 1 | next &#187; </p>
 
 <p>Click query name to edit. Click on location to execute.</p>
 
@@ -26,6 +25,39 @@
 <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
  
+## SORTING
+#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortColumn || $sortColumn.length() == 0)
+   #set ($sortColumn = "name")
+#end
+#if (!$sortPolarity || $sortPolarity.length() == 0)
+   #set ($sortPolarity = "asc")
+#end
+#set ($allQueries = $scarabR.Queries)
+
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = 1)
+#end
+#if ($allQueries.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($pagList = $scarabR.getPaginatedList($allQueries, $pageNum.toString(),$resultsPerPage.toString()))
+ #if ($pagList)
+   #set ($allQueries = $pagList)
+ #end
+#end
+
+#if ($paginated)
+  #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
+#end
+
 <h3>Saved queries</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -33,14 +65,14 @@
   <th nowrap="nowrap">Select</th>
   <th>Subscribe</th>
   <th>Subscribe frequency</th>
-  <th>Query name</th>
-  <th>Query description</th>
+  <th>#sort ("name" "Query name")
+  <th>#sort ("desc" "Query description")</th>
   <th>Default</th>
-  <th>Availability</th>
-  <th>Initiated by</th>
+  <th>#sort ("avail" "Availability")</th>
+  <th>#sort ("user" "Initiated by")</th>
  </tr>
  
- #foreach ($query in $module.getAllUserQueries($user, $issueType))
+ #foreach ($query in $allQueries)
   #set ($rqu = $query.getRQueryUser($user))
   #set ($rquGroup = $intake.RQueryUser.mapTo($rqu))
   #indexedRows($velocityCount)
