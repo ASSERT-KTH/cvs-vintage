@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.36 2002/09/26 23:06:39 d00mst Exp $
+// $Id: FigClass.java,v 1.37 2002/09/29 13:06:53 d00mst Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -566,6 +566,7 @@ public class FigClass extends FigNodeModelElement {
   }
 
   public void setEnclosingFig(Fig encloser) {
+    Fig oldEncloser = getEnclosingFig();
     super.setEnclosingFig(encloser);
     if (!(getOwner() instanceof MModelElement)) return;
     MModelElement me = (MModelElement) getOwner();
@@ -573,9 +574,10 @@ public class FigClass extends FigNodeModelElement {
     ProjectBrowser pb = ProjectBrowser.TheInstance;
 
     try {
-       // If moved into an Package
-        if (encloser != null && encloser.getOwner() instanceof MPackage) {
-             me.setNamespace((MNamespace) encloser.getOwner());
+        // If moved into an Package
+        if (encloser != null && oldEncloser != encloser &&
+	    encloser.getOwner() instanceof MPackage) {
+            me.setNamespace((MNamespace) encloser.getOwner());
         }
 
         // If default Namespace is not already set
