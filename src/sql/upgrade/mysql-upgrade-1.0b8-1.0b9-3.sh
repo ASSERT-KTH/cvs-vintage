@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ### DEFINE THESE PARAMETERS IF YOU NEED TO
-username=
-password=
-HOSTNAME=
+username=tigris
+password=euphrates
+HOSTNAME=localhost
 port=
 database=scarab
 
@@ -52,6 +52,23 @@ fi
 HOSTCMD="--host=${HOSTNAME}"
 
 MYSQLCMD="${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD}"
+
+## for deleted issue types, delete module-issuetype mappings, attribute groups and attributes
+SQL="select SCARAB_ISSUE_TYPE.ISSUE_TYPE_ID from SCARAB_ISSUE_TYPE where deleted=1"
+echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} | grep -v '^ISSUE_TYPE_ID' | \
+while read issuetypeid ; do
+ echo "issuetypeid is: $issuetypeid"
+ SQL="delete from SCARAB_R_MODULE_ISSUE_TYPE where ISSUE_TYPE_ID='$issuetypeid'"
+ echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} 
+ SQL="delete from SCARAB_ATTRIBUTE_GROUP where ISSUE_TYPE_ID='$issuetypeid'"
+ echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} 
+ SQL="delete from SCARAB_R_MODULE_ATTRIBUTE where ISSUE_TYPE_ID='$issuetypeid'"
+ echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} 
+ SQL="delete from SCARAB_R_MODULE_OPTION where ISSUE_TYPE_ID='$issuetypeid'"
+ echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} 
+done
+
+## for deleted attributes, delete module-attribute mappings and module-option mappings
 
 SQL="select SCARAB_ATTRIBUTE.ATTRIBUTE_ID from SCARAB_ATTRIBUTE where deleted=1"
 echo $SQL | ${MYSQL} ${MYSQLCMD} ${database} | grep -v '^ATTRIBUTE_ID' | \
