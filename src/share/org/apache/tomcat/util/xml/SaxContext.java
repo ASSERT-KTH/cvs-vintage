@@ -16,32 +16,55 @@ import org.w3c.dom.*;
 // XXX this interface is not final, but a prototype.
 
 /** SAX Context - used to match and perform actions 
- *    provide access to the current stack and XML elements.
+ *  provide access to the current stack and XML elements.
+ * 
+ *  We maintain a stack with all elements and their attributes.
+ *  We also support a stack of objects that can be used as in a
+ *  stack-based programming language.
  *
  * @author costin@dnt.ro
  */
 public interface SaxContext  {
 
-    // -------------------- Access to parsing context
+    // -------------------- Access to the element stack
 
-    /** Depth of the tag stack.
-     */
-    public int getTagCount();
-
-    /** Access attributes of a particular tag
-     */
-    public AttributeList getAttributeList( int pos );
-
-    /** Access a particular tag
-     */
-    public String getTag( int pos );
-
-    /** Body of the last tag
+    /** Body of the last tag.
      */
     public String getBody();
 
+    /** Attributes of the current tag
+     */
+    public AttributeList getCurrentAttributes();
+
+    /** Current element
+     */
+    public String getCurrentElement();
+
+
+    /** Depth of the tag stack.
+     *  XXX getElementDepth() ?
+     */
+    public int getTagCount();
+
+    /** Random access to attributes of a particular element.
+     */
+    public AttributeList getAttributeList( int pos );
+
+    /** Random Access a particular parent element
+     *  XXX getElement() is a better name
+     */
+    public String getTag( int pos );
+
+
+
     // -------------------- Object stack
 
+    public void pushObject(Object o);
+    public Object popObject();
+
+    public Object currentObject();
+    public Object previousObject();
+    
     /**
        The root object is either set by caller before starting the parse
        or can be created using the first tag. It is used to set object in
@@ -54,6 +77,7 @@ public interface SaxContext  {
 	as result of parsing. You can either use the stack ( which is
 	very powerfull construct !), or use the root object
 	and navigation in the result tree.
+	@deprecated
     */
     public Stack getObjectStack();
 
@@ -62,4 +86,11 @@ public interface SaxContext  {
     public int getDebug();
 
     public void log( String s );
+
+    public XmlMapper getMapper();
+
+    // -------------------- Variables -------------------- 
+    public void setVariable( String s, Object v );
+
+    public Object getVariable( String s );
 }

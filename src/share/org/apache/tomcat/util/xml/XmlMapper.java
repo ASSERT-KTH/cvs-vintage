@@ -32,7 +32,8 @@ public class XmlMapper
      */
     private Hashtable fileDTDs = new Hashtable();
     private Hashtable resDTDs = new Hashtable();
-
+    private Hashtable variables = new Hashtable();
+    
     // Stack of elements
     Stack oStack=new Stack();
     Object root;
@@ -144,6 +145,10 @@ public class XmlMapper
 	return (AttributeList)attributeStack[pos];
     }
 
+    public AttributeList getCurrentAttributes() {
+	return (AttributeList)attributeStack[sp-1];
+    }
+
     public int getTagCount() {
 	return sp;
     }
@@ -152,12 +157,35 @@ public class XmlMapper
 	return tagStack[pos];
     }
 
+    public String getCurrentElement() {
+	return tagStack[sp-1];
+    }
+
     public String getBody() {
 	return body;
     }
 
     public Stack getObjectStack() {
 	return oStack;
+    }
+
+    public Object popObject() {
+	return oStack.pop();
+    }
+
+    public Object currentObject() {
+	return oStack.peek();
+    }
+
+    public Object previousObject() {
+	Object o=oStack.pop();
+	Object result=oStack.peek();
+	oStack.push( o );
+	return result;
+    }
+
+    public void pushObject(Object o) {
+	oStack.push( o );
     }
 
     public Object getRoot() {
@@ -195,15 +223,29 @@ public class XmlMapper
 	System.out.println("XmlMapper: " + msg);
     }
 
+    public void setVariable( String name, Object value ) {
+	if( value==null)
+	    variables.remove(name);
+	else
+	    variables.put( name, value );
+    }
+
+    public Object getVariable( String name ) {
+	return variables.get( name );
+    }
+    
+    public XmlMapper getMapper() {
+	return this;
+    }
+    
     /** read an XML file, construct and return the object hierarchy
      */
     public Object readXml(File xmlFile, Object root)
 	throws Exception
     {
 	if(root!=null) {
-	    Stack st=this.getObjectStack();
 	    this.root=root;
-	    st.push( root );
+	    this.pushObject( root );
 	}
 	try {
 	    SAXParser parser=null;
@@ -240,9 +282,8 @@ public class XmlMapper
 	throws Exception
     {
 	if(root!=null) {
-	    Stack st=this.getObjectStack();
 	    this.root=root;
-	    st.push( root );
+	    this.pushObject( root );
 	}
 	SAXParser parser=null;
 	try {
@@ -311,8 +352,8 @@ public class XmlMapper
 	addRule( "xmlmapper:debug",
 		 new XmlAction() {
 			 public void start(SaxContext ctx) {
-			     int top=ctx.getTagCount()-1;
-			     AttributeList attributes = ctx.getAttributeList( top );
+			     AttributeList attributes =
+				 ctx.getCurrentAttributes();
 			     String levelS=attributes.getValue("level");
 			     XmlMapper mapper=(XmlMapper)ctx;
 			     if( levelS!=null)
@@ -325,8 +366,8 @@ public class XmlMapper
 		 new XmlAction() {
 			 public void start(SaxContext ctx) {
 			     XmlMapper mapper=(XmlMapper)ctx;
-			     int top=ctx.getTagCount()-1;
-			     AttributeList attributes = ctx.getAttributeList( top );
+			     AttributeList attributes =
+				 ctx.getCurrentAttributes();
 			     String match=attributes.getValue("match");
 			     if(match==null) return; //log
 			     String obj=attributes.getValue("object-create");
@@ -480,6 +521,12 @@ public class XmlMapper
 	return new SetProperties();
     }
 
+    /** Set a variable varName using the value of an attribute
+     */
+    public XmlAction setVariable( String varName, String attName ) {
+	return new SetVariable( varName, attName );
+    }
+
     /** For the last 2 objects in stack, create a parent-child
      *	and child.childM with parente as parameter
      */
@@ -573,27 +620,26 @@ class ObjectCreate extends XmlAction {
     }
 
     public void start( SaxContext ctx) throws Exception {
-	Stack st=ctx.getObjectStack();
-	int top=ctx.getTagCount()-1;
-	String tag=ctx.getTag(top);
+	String tag=ctx.getCurrentElement();
 	String classN=className;
 
 	if( attrib!=null) {
-	    AttributeList attributes = ctx.getAttributeList( top );
+	    AttributeList attributes = ctx.getCurrentAttributes();
 	    if (attributes.getValue(attrib) != null)
 		classN= attributes.getValue(attrib);
 	}
 	Class c=Class.forName( classN );
 	Object o=c.newInstance();
-	st.push(o);
-	if( ctx.getDebug() > 0 ) ctx.log("new "  + attrib + " " + classN + " "  + tag  + " " + o);
+	ctx.pushObject(o);
+	if( ctx.getDebug() > 0 )
+	    ctx.log("new "  + attrib + " " + classN + " "  + tag  + " " + o);
     }
 
     public void cleanup( SaxContext ctx) {
-	Stack st=ctx.getObjectStack();
-	String tag=ctx.getTag(ctx.getTagCount()-1);
-	Object o=st.pop();
-	if( ctx.getDebug() > 0 ) ctx.log("pop " + tag + " " + o.getClass().getName() + ": " + o);
+	String tag=ctx.getCurrentElement();
+	Object o=ctx.popObject();
+	if( ctx.getDebug() > 0 ) ctx.log("pop " + tag + " " +
+					 o.getClass().getName() + ": " + o);
     }
 }
 
@@ -601,16 +647,13 @@ class ObjectCreate extends XmlAction {
 /** Set object properties using XML attribute list
  */
 class SetProperties extends XmlAction {
-    //    static Class paramT[]=new Class[] { "String".getClass() };
 
     public SetProperties() {
     }
 
     public void start( SaxContext ctx ) {
-	Stack st=ctx.getObjectStack();
-	Object elem=st.peek();
-	int top=ctx.getTagCount()-1;
-	AttributeList attributes = ctx.getAttributeList( top );
+	Object elem=ctx.currentObject();
+	AttributeList attributes = ctx.getCurrentAttributes();
 
 	for (int i = 0; i < attributes.getLength (); i++) {
 	    String type = attributes.getType (i);
@@ -623,11 +666,14 @@ class SetProperties extends XmlAction {
     }
 
     /** Find a method with the right name
-	If found, call the method ( if param is int or boolean we'll convert value to
-	the right type before) - that means you can have setDebug(1).
+	If found, call the method ( if param is int or boolean we'll convert
+	value to the right type before) - that means you can have setDebug(1).
     */
-    static void setProperty( SaxContext ctx, Object o, String name, String value ) {
-	if( ctx.getDebug() > 1 ) ctx.log("setProperty(" + o.getClass() + " " +  name + "="  + value  +")" );
+    static void setProperty( SaxContext ctx, Object o, String name,
+			     String value ) {
+	if( ctx.getDebug() > 1 ) ctx.log("setProperty(" +
+					 o.getClass() + " " +  name + "="  +
+					 value  +")" );
 
 	String setter= "set" +capitalize(name);
 
@@ -661,7 +707,8 @@ class SetProperties extends XmlAction {
 			try {
 			    params[0]=new Integer(value);
 			} catch( NumberFormatException ex ) {ok=false;}
-		    } else if ("java.lang.Boolean".equals( paramType.getName()) ||
+		    } else if ("java.lang.Boolean".
+			       equals( paramType.getName()) ||
 			"boolean".equals( paramType.getName())) {
 			params[0]=new Boolean(value);
 		    } else {
@@ -669,7 +716,6 @@ class SetProperties extends XmlAction {
 		    }
 
 		    if( ok ) {
-			//	System.out.println("XXX: " + methods[i] + " " + o + " " + params[0] );
 			methods[i].invoke( o, params );
 			return;
 		    }
@@ -690,13 +736,19 @@ class SetProperties extends XmlAction {
 	    }
 
 	} catch( SecurityException ex1 ) {
-	    if( ctx.getDebug() > 0 ) ctx.log("SecurityException for " + o.getClass() + " " +  name + "="  + value  +")" );
+	    if( ctx.getDebug() > 0 )
+		ctx.log("SecurityException for " + o.getClass() + " " +
+			name + "="  + value  +")" );
 	    if( ctx.getDebug() > 1 ) ex1.printStackTrace();
 	} catch (IllegalAccessException iae) {
-	    if( ctx.getDebug() > 0 ) ctx.log("IllegalAccessException for " + o.getClass() + " " +  name + "="  + value  +")" );
+	    if( ctx.getDebug() > 0 )
+		ctx.log("IllegalAccessException for " +
+			o.getClass() + " " +  name + "="  + value  +")" );
 	    if( ctx.getDebug() > 1 ) iae.printStackTrace();
 	} catch (InvocationTargetException ie) {
-	    if( ctx.getDebug() > 0 ) ctx.log("InvocationTargetException for " + o.getClass() + " " +  name + "="  + value  +")" );
+	    if( ctx.getDebug() > 0 )
+		ctx.log("InvocationTargetException for " + o.getClass() +
+			" " +  name + "="  + value  +")" );
 	    if( ctx.getDebug() > 1 ) ie.printStackTrace();
 	}
     }
@@ -729,15 +781,13 @@ class SetParent extends XmlAction {
     }
 
     public void end( SaxContext ctx) throws Exception {
-	Stack st=ctx.getObjectStack();
-
-	Object obj=st.pop();
-	Object parent=st.peek();
-	st.push( obj ); // put it back
+	Object obj=ctx.currentObject();
+	Object parent=ctx.previousObject();
 
 	String parentC=parent.getClass().getName();
-	if( ctx.getDebug() > 0 ) ctx.log("Calling " + obj.getClass().getName() + "." + childM +
-					 " " + parentC);
+	if( ctx.getDebug() > 0 )
+	    ctx.log("Calling " + obj.getClass().getName() + "." + childM +
+		    " " + parentC);
 
 	Class params[]=new Class[1];
 	if( paramT==null) {
@@ -762,14 +812,12 @@ class AddChild extends XmlAction {
     }
 
     public void end( SaxContext ctx) throws Exception {
-	Stack st=ctx.getObjectStack();
-
-	Object obj=st.pop();
-	Object parent=st.peek();
-	st.push( obj ); // put it back
+	Object obj=ctx.currentObject();
+	Object parent=ctx.previousObject();
 
 	String parentC=parent.getClass().getName();
-	if( ctx.getDebug() >0) ctx.log("Calling " + parentC + "." + parentM  +" " + obj  );
+	if( ctx.getDebug() >0)
+	    ctx.log("Calling " + parentC + "." + parentM  +" " + obj  );
 
 	Class params[]=new Class[1];
 	if( paramT==null) {
@@ -784,7 +832,7 @@ class AddChild extends XmlAction {
 
 /**
  */
-class  MethodSetter extends 	    XmlAction {
+class  MethodSetter extends XmlAction {
     String mName;
     int paramC;
     String paramTypes[];
@@ -801,24 +849,23 @@ class  MethodSetter extends 	    XmlAction {
     }
 
     public void start( SaxContext ctx) {
-	Stack st=ctx.getObjectStack();
-	if(paramC==0) return;
 	String params[]=new String[paramC];
-	st.push( params );
+	ctx.pushObject( params );
     }
 
-    static final Class STRING_CLASS="String".getClass(); // XXX is String.CLASS valid in 1.1 ?
+    static final Class STRING_CLASS="String".getClass(); 
 
     public void end( SaxContext ctx) throws Exception {
-	Stack st=ctx.getObjectStack();
-	String params[]=null;
-	if( paramC >0 ) params=(String []) st.pop();
-	Object parent=st.peek();
+	String params[]=(String [])ctx.popObject();
+	Object parent=ctx.currentObject();
 
+	// XXX ???
 	if( paramC == 0 ) {
 	    params=new String[1];
 	    params[0]= ctx.getBody().trim();
-	    if( ctx.getDebug() > 0 ) ctx.log("" + parent.getClass().getName() + "." + mName + "( " + params[0] + ")");
+	    if( ctx.getDebug() > 0 )
+		ctx.log("" + parent.getClass().getName() + "." +
+			mName + "( " + params[0] + ")");
 	}
 
 	Class paramT[]=new Class[params.length];
@@ -843,7 +890,8 @@ class  MethodSetter extends 	    XmlAction {
 	try {
 	    m=parent.getClass().getMethod( mName, paramT );
 	} catch( NoSuchMethodException ex ) {
-	    ctx.log("Can't find method " + mName + " in " + parent + " CLASS " + parent.getClass());
+	    ctx.log("Can't find method " + mName + " in " +
+		    parent + " CLASS " + parent.getClass());
 	    return;
 	}
 	m.invoke( parent, realParam );
@@ -876,20 +924,15 @@ class  MethodParam extends XmlAction {
     // If param is an attrib, set it
     public void start( SaxContext ctx) {
 	if( attrib==null) return;
-
-	Stack st=ctx.getObjectStack();
-	String h[]=(String[])st.peek();
-
-	int top=ctx.getTagCount()-1;
-	AttributeList attributes = ctx.getAttributeList( top );
+	String h[]=(String[])ctx.currentObject();
+	AttributeList attributes = ctx.getCurrentAttributes();
 	h[paramId]= attributes.getValue(attrib);
     }
 
     // If param is the body, set it
     public void end( SaxContext ctx) {
 	if( attrib!=null) return;
-	Stack st=ctx.getObjectStack();
-	String h[]=(String[])st.peek();
+	String h[]=(String[])ctx.currentObject();
 	h[paramId]= ctx.getBody().trim();
     }
 }
@@ -902,8 +945,39 @@ class PopStack extends XmlAction {
     }
 
     public void end( SaxContext ctx) {
-	Stack st=ctx.getObjectStack();
-	Object top = st.pop();
-	if( ctx.getDebug() > 0 ) ctx.log("Pop " + top.getClass().getName());
+	Object top = ctx.popObject();
+	if( ctx.getDebug() > 0 )
+	    ctx.log("Pop " +
+		    ((top==null) ? "null" : 
+		    top.getClass().getName()));
+    }
+}
+
+/**
+ */
+class SetVariable extends XmlAction {
+    String varName;
+    String attributeN;
+    
+    public SetVariable(String varName, String attributeN) {
+	super();
+	this.varName=varName;
+	this.attributeN=attributeN;
+    }
+    
+    public void start( SaxContext ctx) throws Exception {
+	AttributeList attributes = ctx.getCurrentAttributes();
+	ctx.setVariable( varName,
+			 attributes.getValue(attributeN));
+	if( ctx.getDebug() > 0 )
+	    ctx.log("setVariable " + varName + " " + attributeN + " " +
+		    attributes.getValue( attributeN ));
+    }
+
+    public void cleanup( SaxContext ctx) {
+	ctx.setVariable( varName, null);
+	if( ctx.getDebug() > 0 )
+	    ctx.log("setVariable " + varName + " " + attributeN + " " +
+		    "null");
     }
 }
