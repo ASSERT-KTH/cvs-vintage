@@ -281,7 +281,8 @@ public class VirtualFolder extends Folder {
 						resultUids[i],
 						worker);
 				try {
-					add((ColumbaHeader) header, folder, resultUids[i]);
+					if ( header != null )
+						add((ColumbaHeader) header, folder, resultUids[i]);
 				} catch (Exception ex) {
 					System.out.println("Search exception: " + ex.getMessage());
 					ex.printStackTrace();
