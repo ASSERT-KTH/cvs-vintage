@@ -59,7 +59,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RModuleIssueTypeTest.java,v 1.1 2002/03/26 23:26:26 elicia Exp $
+ * @version $Id: RModuleIssueTypeTest.java,v 1.2 2002/05/29 20:13:00 elicia Exp $
  */
 public class RModuleIssueTypeTest extends BaseTestCase
 {
@@ -91,7 +91,7 @@ public class RModuleIssueTypeTest extends BaseTestCase
     private void testGetDisplayText() throws Exception
     {
         System.out.println("\ntestGetDisplayText()");
-        assertEquals("Defect", rmit.getDisplayText());
+        assertEquals("Defect", rmit.getDisplayName());
     }
 
     private void testCopy() throws Exception
