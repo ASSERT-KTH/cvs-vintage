@@ -1,4 +1,4 @@
-// $Id: ClOperationCompartment.java,v 1.9 2004/11/12 13:41:12 mkl Exp $
+// $Id: ClOperationCompartment.java,v 1.10 2004/12/11 22:08:50 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,8 @@ public class ClOperationCompartment implements Clarifier {
      */
     public void paintIcon(Component c, Graphics g, int x, int y) {
 	if (fig instanceof OperationsCompartmentContainer) {
-	    OperationsCompartmentContainer fc = (OperationsCompartmentContainer) fig;
+	    OperationsCompartmentContainer fc = 
+	        (OperationsCompartmentContainer) fig;
 
 	    // added by Eric Lefevre 13 Mar 1999: we must check if the
 	    // FigText for operations is drawn before drawing things
@@ -123,7 +124,8 @@ public class ClOperationCompartment implements Clarifier {
      */
     public boolean hit(int x, int y) {
 	if (!(fig instanceof OperationsCompartmentContainer)) return false;
-	OperationsCompartmentContainer fc = (OperationsCompartmentContainer) fig;
+	OperationsCompartmentContainer fc = 
+	    (OperationsCompartmentContainer) fig;
 	FigGroup fg = fc.getOperationsFig();
 	boolean res = fg.contains(x, y);
 	fig = null;

@@ -1,4 +1,4 @@
-// $Id: WizTooMany.java,v 1.1 2004/11/02 12:15:22 mkl Exp $
+// $Id: WizTooMany.java,v 1.2 2004/12/11 22:08:49 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,9 @@ import org.argouml.cognitive.ui.WizStepTextField;
  */
 public class WizTooMany extends UMLWizard {
 
-    private String instructions = "Please adjust the threshold according to your needs. This lets you adjust when the critic creates a particular ToDoItem.";
+    private String instructions = 
+        "Please adjust the threshold according to your needs. " 
+        + "This lets you adjust when the critic creates a particular ToDoItem.";
 
     private WizStepTextField step1;
 
@@ -47,7 +49,7 @@ public class WizTooMany extends UMLWizard {
      */
     public WizTooMany() {
         super();
-        // TODO Auto-generated constructor stub
+        // TODO: Auto-generated constructor stub
     }
 
     /**
