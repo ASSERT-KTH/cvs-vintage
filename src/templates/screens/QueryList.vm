@@ -66,17 +66,16 @@ $page.setTitle("Stored Query List")
         <th>Location</th>
         <th>Initiated By</th>
         </tr>
-        
 #foreach ( $query in $module.getPrivateQueries($user) )
 
          #indexedRows($velocityCount)
         <td><input type="checkbox" name="action_$query.QueryId"/></td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+        <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
         <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
-         <td><a href="$query.getExecuteLink($link.toString())">$query.QueryType.Name</a>
+         <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.QueryType.Name</a>
            #if (!$query.Approved)
              (until approved)
            #end
@@ -116,13 +115,13 @@ $page.setTitle("Stored Query List")
             #end
          </td>
         #if ($security.hasPermission("Item | Approve"))
-        <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+        <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
         #else
         <td>$query.Name</td>
         #end
         <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
-        <td><a href="$query.getExecuteLink($link.toString())">$query.QueryType.Name</a>
+        <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.QueryType.Name</a>
            #if (!$query.Approved)
              (until approved)
            #end
