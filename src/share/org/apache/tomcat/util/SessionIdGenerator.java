@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.3 2000/06/17 00:24:45 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/17 00:24:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.4 2000/08/23 20:21:49 jiricka Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/08/23 20:21:49 $
  *
  * ====================================================================
  *
@@ -89,7 +89,7 @@ public class SessionIdGenerator {
      */
     static private int session_count = 0;
     static private long lastTimeVal = 0;
-    static private java.util.Random randomSource = new java.security.SecureRandom();
+    static private java.util.Random randomSource;
 
     // MAX_RADIX is 36
     /*
@@ -118,6 +118,21 @@ public class SessionIdGenerator {
     static synchronized public String getIdentifier (String jsIdent)
     {
         StringBuffer sessionId = new StringBuffer();
+        
+        if (randomSource == null) {
+            String className = System.getProperty("tomcat.sessionid.randomclass");
+            if (className != null) {
+                try {
+                    Class randomClass = Class.forName(className);
+                    randomSource = (java.util.Random)randomClass.newInstance();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (randomSource == null)
+                randomSource = new java.security.SecureRandom();
+        }
 
         // random value ..
         long n = randomSource.nextLong();

@@ -302,6 +302,22 @@ public class ContextManager implements LogAware{
 	return parentLoader;
     }
     
+    /** Get the name of the class to be used for generating random numbers by the
+     * session id generator. By default this is <code>java.security.SecureRandom</code>.
+     **/
+    public String getRandomClass() {
+        String randomClass = System.getProperty("tomcat.sessionid.randomclass");
+        return randomClass == null ? "java.security.SecureRandom" : randomClass;
+    }
+    
+    /** Sets the name of the class used for generating random numbers by the
+     *  session id generator. 
+     */
+    public void setRandomClass(String randomClass) {
+        System.setProperty("tomcat.sessionid.randomclass", randomClass);
+    }
+
+
     // -------------------- Support functions --------------------
     /** Init() is called after the context manager is set up
      *  and configured. It will init all internal components
