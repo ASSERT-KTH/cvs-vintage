@@ -10,13 +10,14 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -58,7 +59,7 @@ import org.w3c.dom.Element;
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *  @author <a href="mailto:wburke@commercetone.com">Bill Burke</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class InstallerFactory
 {
@@ -197,6 +198,10 @@ public class InstallerFactory
             {
                result = loadConfig(new File(files[i], J2eeDeployer.CONFIG));
                break;
+            }
+            catch (FileNotFoundException e)
+            {
+               // Ignore as the config may have been removed
             }
             catch (IOException _ioe)
             {
