@@ -19,10 +19,13 @@ package org.columba.core.nativ;
 
 import java.awt.Component;
 import java.awt.Window;
+import java.io.File;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 
+import org.columba.core.io.DiskIO;
+import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
 
 import com.jniwrapper.DefaultLibraryLoader;
@@ -65,15 +68,26 @@ public class Win32Wrapper implements NativeWrapper, TrayIconListener {
 		// init icon
 		Icon icon = new Icon();
 		try {
-			icon.loadFromFile("res/org/columba/core/images/Columba.ico");
+			/**
+			 * NOTE: This is a hack!!
+			 * <p>
+			 * jniwrapper-2.4 doesn't support loading images from inputstream, this
+			 * is about to change in jniwrapper-2.5. After the official 2.5 release 
+			 * the hack will be replaced.
+			 * <p>
+			 * This is why we can't load this icon if its *in* the columba.jar. We 
+			 * therefore copy the icon from the columba.jar to the program-folder.
+			 */
 			
-		} catch (RuntimeException e) {
+			// create temporary file
+			File destFile = TempFileStore.createTempFile();
+			// copy icon from res/ or columba.jar to temporary file
+			DiskIO.copyResource("org/columba/core/images/Columba.ico", destFile);				
+			// load Columba.ico from temporary file
+			icon.loadFromFile(destFile.getAbsolutePath());
+		} catch (Exception e) {
 			if ( MainInterface.DEBUG)
 				e.printStackTrace();
-			
-			// Columba.ico is in columba.jar, Icon can't load images from jar-files
-			// -> fall-back to shipped version
-			icon.loadFromFile("Columba.ico");
 		}
 		
 		trayIcon.setIcon(icon);
