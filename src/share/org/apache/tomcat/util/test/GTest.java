@@ -85,6 +85,8 @@ public class GTest  {
     // Instance variables
 
     Project project=null;
+    String ifProp=null;
+    String unlessProp=null;
 
     // The "real" thing.
     // GTest is here to support the old ( and simpler ) syntax .
@@ -163,10 +165,18 @@ public class GTest  {
 	HttpClient.getHttpClients().clear();
     }
     
-    // ----------------- Ant Properie -----------------
+    // ----------------- Ant Properties -----------------
 
     public void setProject(Project p ) {
         project=p;
+    }
+
+    public void setIf(String prop) {
+        ifProp=prop;
+    }
+
+    public void setUnless(String prop) {
+        unlessProp=prop;
     }
 
     // -------------------- GTest behavior --------------------
@@ -322,6 +332,8 @@ public class GTest  {
 	    if( debug==-1) debug=defaultDebug;
 
             httpClient.setProject(project);
+            httpClient.setIf(ifProp);
+            httpClient.setUnless(unlessProp);
 	    initMatchers();
             httpClient.setWriter(out);
             httpClient.setOutput(outType);

@@ -58,6 +58,7 @@
  */ 
 package org.apache.tomcat.util.test;
 
+import org.apache.tools.ant.*;
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -76,8 +77,21 @@ public class Matcher {
     
     // If the matching fails, a description of what failed
     StringBuffer messageSB=new StringBuffer();
+
+    String ifProp=null;
+    String unlessProp=null;
         
     public Matcher() {
+    }
+
+    // ----------------- Ant Properties -----------------
+
+    public void setIf(String prop) {
+        ifProp=prop;
+    }
+
+    public void setUnless(String prop) {
+        unlessProp=prop;
     }
 
     // -------------------- General Properties --------------------
@@ -161,6 +175,21 @@ public class Matcher {
     public void execute() {
     }
 
-    
+    /** Check if test should be skipped
+     */
+    public boolean skipTest() {
+        if( client != null ) {
+            Project project = client.getProject();
+            if( project != null ) {
+                if( ifProp != null && project.getProperty(ifProp) == null)
+                    // skip if "if" property is not set
+                    return true;
+                if( unlessProp != null && project.getProperty(unlessProp) != null )
+                    // skip if "unless" property is set
+                    return true;
+            }
+        }
+        return false;
+    }    
     
 }

@@ -90,6 +90,8 @@ public class SessionMatch extends Matcher {
     // -------------------- Execute the request --------------------
 
     public void execute() {
+        if( skipTest() )
+            return;
 	try {
 	    extractSession();
 	} catch(Exception ex ) {

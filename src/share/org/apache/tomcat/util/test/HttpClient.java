@@ -82,6 +82,8 @@ public class HttpClient {
     static Report defaultReport=new Report();
 
     Project project=null;
+    String ifProp=null;
+    String unlessProp=null;
     HttpRequest firstRequest=null;
     Vector actions=new Vector();
     String id;
@@ -101,6 +103,14 @@ public class HttpClient {
 
     public Project getProject() {
         return project;
+    }
+
+    public void setIf(String prop) {
+        ifProp=prop;
+    }
+
+    public void setUnless(String prop) {
+        unlessProp=prop;
     }
 
     /** Set an unique id to this request. This allows it to be
@@ -205,6 +215,14 @@ public class HttpClient {
     // -------------------- Execute the request --------------------
 
     public void execute() {
+        if( project != null ) {
+            if( ifProp != null && project.getProperty(ifProp) == null)
+                // skip if "if" property is not set
+                return;
+            if( unlessProp != null && project.getProperty(unlessProp) != null )
+                // skip if "unless" property is set
+                return;
+        }
         HttpRequest lastRequest=null;
 	try {
 	    Enumeration aE=actions.elements();

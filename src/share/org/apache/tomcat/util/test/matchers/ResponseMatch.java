@@ -100,6 +100,8 @@ public class ResponseMatch extends Matcher {
     // -------------------- Execute the request --------------------
 
     public void execute() {
+        if( skipTest() )
+           return;
 	try {
 	    result=checkResponse( magnitude );
 	} catch(Exception ex ) {
