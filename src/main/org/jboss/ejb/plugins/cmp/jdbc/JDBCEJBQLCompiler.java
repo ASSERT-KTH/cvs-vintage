@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -830,18 +830,6 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    public Object visit(ASTMemberOf node, Object data) {
       BlockStringBuffer buf = (BlockStringBuffer)data;
 
-      // regular (not NOT) member of is just a simple entity compare
-      if(!node.not) {
-         // send the args backwards because compre expects that if a
-         // parameter is present it is the second argument.
-         compareEntity(
-               false,
-               node.jjtGetChild(1),
-               node.jjtGetChild(0),
-               buf);
-         return buf;
-      }
-
       // setup compare to vars first, so we can compre types in from vars
       ASTPath toPath = (ASTPath)node.jjtGetChild(1);
 
@@ -892,19 +880,19 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       // first part makes toChild not in toParent.child
       if(!subquerySupported) {
-         // subquery not supported; use a left join and is null
-         buf.append("(");
+         // subquery not supported; use a left join and is not null
+         buf.append(node.not ? "NOT (" : "(");
 
          if(relationTableAlias == null) {
             buf.append(SQLUtil.getIsNullClause(
-                  false, toChildEntity.getPrimaryKeyFields(), toChildAlias));
+                  true, toChildEntity.getPrimaryKeyFields(), toChildAlias));
          } else {
             buf.append(SQLUtil.getIsNullClause(
-                  false, toCMRField.getTableKeyFields(), relationTableAlias));
+                  true, toCMRField.getTableKeyFields(), relationTableAlias));
          }
       } else {
-         // subquery supported; use not exists
-         buf.append("NOT EXISTS (");
+         // subquery supported; use exists subquery
+         buf.append(node.not ? "NOT EXISTS (" : "EXISTS (");
 
          if(relationTableAlias == null) {
             buf.append("SELECT ");
