@@ -144,7 +144,7 @@ in the catalina module.
 
 @author  Scott.Stark@jboss.org
 @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
-@version $Revision: 1.67 $
+@version $Revision: 1.68 $
 */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -180,10 +180,20 @@ public abstract class AbstractWebContainer
        the performDeploy method.
       */
       public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception;
+
+      /** Get the DeploymentInfo for the war the triggered the deployment process.
+       * The returned reference may be updated to affect the state of the
+       * JBoss DeploymentInfo object. This can be used to assign ObjectNames
+       * of MBeans created by the container.
+       * @return The DeploymentInfo for the war being deployed.
+       */
+      public DeploymentInfo getDeploymentInfo();
    }
 
    /** A mapping of deployed warUrl strings to the WebApplication object */
    protected HashMap deploymentMap = new HashMap();
+   /** The parent class loader first model flag */
+   protected boolean java2ClassLoadingCompliance = false;
    /** A flag indicating if war archives should be unpacked */
    protected boolean unpackWars = true;
 
@@ -192,6 +202,25 @@ public abstract class AbstractWebContainer
 
    public AbstractWebContainer()
    {
+   }
+
+   /** Get the flag indicating if the normal Java2 parent first class loading
+    * model should be used over the servlet 2.3 web container first model.
+    * @return true for parent first, false for the servlet 2.3 model
+    * @jmx:managed-attribute
+    */
+   public boolean getJava2ClassLoadingCompliance()
+   {
+      return java2ClassLoadingCompliance;
+   }
+   /** Set the flag indicating if the normal Java2 parent first class loading
+    * model should be used over the servlet 2.3 web container first model.
+    * @param flag true for parent first, false for the servlet 2.3 model
+    * @jmx:managed-attribute
+    */
+   public void setJava2ClassLoadingCompliance(boolean flag)
+   {
+      java2ClassLoadingCompliance = flag;
    }
 
    /** Get the flag indicating if war archives should be unpacked. This may
@@ -1003,6 +1032,10 @@ public abstract class AbstractWebContainer
       public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception
       {
          AbstractWebContainer.this.parseWebAppDescriptors(di, loader, metaData);
+      }
+      public DeploymentInfo getDeploymentInfo()
+      {
+         return di;
       }
    }
 }
