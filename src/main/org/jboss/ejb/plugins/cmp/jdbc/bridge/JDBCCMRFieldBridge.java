@@ -29,7 +29,6 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalProxyFactory;
-import org.jboss.invocation.Invocation;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.EntityInstanceCache;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
@@ -43,6 +42,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
+import org.jboss.ejb.plugins.lock.Entrancy;
+import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
 
@@ -58,46 +59,9 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
-   // ------ Invocation messages ------
-   
-   /** tells the related continer to retrieve the id of the related entity */
-   private static final Method GET_RELATED_ID;
-   /** tells the related continer to add an id to its list related entities */
-   private static final Method ADD_RELATION;
-   /** tells the related continer to remove an id from its list related 
-    * entities */
-   private static final Method REMOVE_RELATION;
-   
-   // set the message method objects
-   static {
-      try {
-         final Class empty[] = {};
-         final Class type = CMRMessage.class;
-         
-         GET_RELATED_ID = type.getMethod("getRelatedId", new Class[] { 
-            EntityEnterpriseContext.class,
-            JDBCCMRFieldBridge.class
-         });
-         
-         ADD_RELATION = type.getMethod("addRelation", new Class[] { 
-            EntityEnterpriseContext.class,
-            Object.class
-         });
-         
-         REMOVE_RELATION = type.getMethod("removeRelation", new Class[] { 
-            EntityEnterpriseContext.class,
-            Object.class
-         });
-         }
-      catch (Exception e) {
-         e.printStackTrace();
-         throw new ExceptionInInitializerError(e);            
-      }
-   }
-   
    /**
     * The entity bridge to which this cmr field belongs.
     */
@@ -657,13 +621,17 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
 
-         return manager.getContainer().invoke(new Invocation(
-               instanceCache.createCacheKey(myId),
-               GET_RELATED_ID,
-               new Object[] { this },
-               tx, 
-               SecurityAssociation.getPrincipal(),
-               SecurityAssociation.getCredential()));
+         Invocation invocation = new Invocation();
+         invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
+               CMRMessage.GET_RELATED_ID, Invocation.AS_IS);
+         invocation.setValue(Entrancy.ENTRANCY_KEY,
+               Entrancy.NON_ENTRANT, Invocation.AS_IS);
+         invocation.setId(instanceCache.createCacheKey(myId));
+         invocation.setArguments(new Object[] { this });
+         invocation.setTransaction(tx);
+         invocation.setPrincipal(SecurityAssociation.getPrincipal());
+         invocation.setCredential(SecurityAssociation.getCredential());
+         return manager.getContainer().invoke(invocation);
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
@@ -682,13 +650,17 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
 
-         manager.getContainer().invoke(new Invocation(
-               instanceCache.createCacheKey(myId),
-               ADD_RELATION,
-               new Object[] { this, relatedId },
-               tx,
-               SecurityAssociation.getPrincipal(),
-               SecurityAssociation.getCredential()));
+         Invocation invocation = new Invocation();
+         invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
+               CMRMessage.ADD_RELATION, Invocation.AS_IS);
+         invocation.setValue(Entrancy.ENTRANCY_KEY,
+               Entrancy.NON_ENTRANT, Invocation.AS_IS);
+         invocation.setId(instanceCache.createCacheKey(myId));
+         invocation.setArguments(new Object[] { this, relatedId });
+         invocation.setTransaction(tx);
+         invocation.setPrincipal(SecurityAssociation.getPrincipal());
+         invocation.setCredential(SecurityAssociation.getCredential());
+         manager.getContainer().invoke(invocation);
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
@@ -707,13 +679,17 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          EntityInstanceCache instanceCache = 
                (EntityInstanceCache)manager.getContainer().getInstanceCache();
 
-         manager.getContainer().invoke(new Invocation(
-               instanceCache.createCacheKey(myId),
-               REMOVE_RELATION,
-               new Object[] { this, relatedId },
-               tx,
-               SecurityAssociation.getPrincipal(),
-               SecurityAssociation.getCredential()));
+         Invocation invocation = new Invocation();
+         invocation.setValue(CMRMessage.CMR_MESSAGE_KEY,
+               CMRMessage.REMOVE_RELATION, Invocation.AS_IS);
+         invocation.setValue(Entrancy.ENTRANCY_KEY,
+               Entrancy.NON_ENTRANT, Invocation.AS_IS);
+         invocation.setId(instanceCache.createCacheKey(myId));
+         invocation.setArguments(new Object[] { this, relatedId });
+         invocation.setTransaction(tx);
+         invocation.setPrincipal(SecurityAssociation.getPrincipal());
+         invocation.setCredential(SecurityAssociation.getCredential());
+         manager.getContainer().invoke(invocation);
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {

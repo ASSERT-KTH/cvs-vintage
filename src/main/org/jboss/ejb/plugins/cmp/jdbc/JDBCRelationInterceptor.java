@@ -26,47 +26,10 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
-   // Constants -----------------------------------------------------
-   private static final Method GET_RELATED_ID;
-   private static final Method ADD_RELATION;
-   private static final Method REMOVE_RELATION;
-   
-   static
-   {
-      try
-      {
-         final Class empty[] = {};
-         final Class type = CMRMessage.class;
-         
-         GET_RELATED_ID = type.getMethod("getRelatedId", new Class[]
-         {
-            EntityEnterpriseContext.class,
-            JDBCCMRFieldBridge.class
-         });
-         
-         ADD_RELATION = type.getMethod("addRelation", new Class[]
-         {
-            EntityEnterpriseContext.class,
-            Object.class
-         });
-         
-         REMOVE_RELATION = type.getMethod("removeRelation", new Class[]
-         {
-            EntityEnterpriseContext.class,
-            Object.class
-         });
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-         throw new ExceptionInInitializerError(e);
-      }
-   }
-   
    // Attributes ----------------------------------------------------
    
    /**
@@ -123,10 +86,15 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
       // We are going to work with the context a lot
       EntityEnterpriseContext ctx =
             (EntityEnterpriseContext)mi.getEnterpriseContext();
-      
-      if(GET_RELATED_ID.equals(mi.getMethod()))
+
+      CMRMessage relationshipMessage = 
+            (CMRMessage)mi.getValue(CMRMessage.CMR_MESSAGE_KEY);
+
+      if(relationshipMessage == null) {
+         // Not a relationship message. Invoke down the chain
+         return getNext().invoke(mi);
+      } else if(CMRMessage.GET_RELATED_ID == relationshipMessage)
       {
-            
          // call getRelateId
          JDBCCMRFieldBridge cmrField =
                (JDBCCMRFieldBridge)mi.getArguments()[0];
@@ -136,7 +104,7 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          }
          return cmrField.getRelatedId(ctx);
          
-      } else if(ADD_RELATION.equals(mi.getMethod()))
+      } else if(CMRMessage.ADD_RELATION == relationshipMessage)
       {
          
          // call addRelation
@@ -160,7 +128,7 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
 
          return null;
          
-      } else if(REMOVE_RELATION.equals(mi.getMethod()))
+      } else if(CMRMessage.REMOVE_RELATION == relationshipMessage)
       {
          
          // call removeRelation
@@ -186,8 +154,9 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          
       } else
       {
-         // Not a message. Invoke down the chain
-         return getNext().invoke(mi);
+         // this should not be possible we are using a type safe enum
+         throw new EJBException("Unknown cmp2.0-relationship-message=" +
+               relationshipMessage);
       }
    }
    
