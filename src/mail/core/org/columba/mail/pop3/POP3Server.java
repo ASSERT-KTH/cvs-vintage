@@ -248,4 +248,13 @@ public class POP3Server {
 	public void setCacheChanged(boolean hasChanged) {
 		this.cacheChanged = hasChanged;
 	}
+	
+	/**
+	 * Call this method if the underlying configuration changed.
+	 */
+	public void updateConfig() {
+		 PopItem item = accountItem.getPopItem();
+
+	     store = new POP3Store(item);
+	}
 }

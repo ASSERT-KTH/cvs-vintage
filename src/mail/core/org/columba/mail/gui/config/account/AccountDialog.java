@@ -38,6 +38,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -241,6 +242,10 @@ public class AccountDialog extends JDialog implements ActionListener {
 
             if (accountItem.isPopAccount()) {
                 int uid = accountItem.getUid();
+                POP3Server server = MailInterface.popServerCollection.uidGet(uid);
+                // update configuration
+                server.updateConfig();
+                
             } else {
                 // update tree label
                 int uid = accountItem.getUid();
