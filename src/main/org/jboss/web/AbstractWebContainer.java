@@ -17,15 +17,15 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
 import javax.naming.NamingException;
+import javax.management.ObjectName;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.ReflectionException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -144,12 +144,13 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.72 $
+@version $Revision: 1.73 $
 */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
    implements AbstractWebContainerMBean
 {
+
    public static interface WebDescriptorParser
    {
       /** This method is called as part of subclass performDeploy() method implementations
@@ -192,6 +193,9 @@ public abstract class AbstractWebContainer
 
    /** If true, ejb-links that don't resolve don't cause an error (fallback to jndi-name) */
    protected boolean lenientEjbLink = false;
+
+   /** Service name for the JSR-109 compliant (axis) webservice */
+   protected ObjectName jsr109ServiceName;
 
    public AbstractWebContainer()
    {
@@ -264,6 +268,28 @@ public abstract class AbstractWebContainer
         lenientEjbLink = flag;
     }
     
+   /**
+    * Get the jsr109ServiceName value.
+    * @return the jsr109ServiceName value.
+    *
+    * @jmx:managed-attribute
+    */
+   public ObjectName getJSR109ServiceName()
+   {
+      return jsr109ServiceName;
+   }
+
+   /**
+    * Set the jsr109ServiceName value.
+    * @return the jsr109ServiceName value.
+    *
+    * @jmx:managed-attribute
+    */
+   public void setJSR109ServiceName(ObjectName jsr109ServiceName)
+   {
+      this.jsr109ServiceName = jsr109ServiceName;
+   }
+
     public boolean accepts(DeploymentInfo sdi)
     {
         String warFile = sdi.url.getFile();
@@ -356,8 +382,79 @@ public abstract class AbstractWebContainer
    /** WARs do not have nested deployments
     * @param di
     */
-   protected void processNestedDeployments(DeploymentInfo di)
+   protected void processNestedDeployments(DeploymentInfo di) throws DeploymentException
    {
+      // look for web service deployments
+      if (isJSR109Deployment(di))
+      {
+         if (jsr109ServiceName != null)
+         {
+            URL webServiceUrl = di.localCl.getResource("WEB-INF/webservices.xml");
+            DeploymentInfo sub = new DeploymentInfo(webServiceUrl, di, getServer());
+            sub.localUrl = di.localUrl;
+
+            // add the webapp classes to the local class loader
+            // the deployer needs to find the service endpoint (SEI) interface
+            try
+            {
+               List urlList = new ArrayList(Arrays.asList(di.localCl.getURLs()));
+               urlList.add(new URL(di.localUrl.toExternalForm() + "WEB-INF/classes/"));
+
+               String [] libs = new File(di.localUrl.toExternalForm() + "WEB-INF/lib").list();
+               for (int i = 0; libs != null && i < libs.length; i++)
+               {
+                  urlList.add(new URL(di.localUrl.getFile() + "WEB-INF/lib/" + libs[i]));
+               }
+
+               URL [] urlArr = new URL[urlList.size()];
+               urlList.toArray(urlArr);
+               sub.localCl = new URLClassLoader(urlArr, di.localCl);
+            }
+            catch (MalformedURLException e)
+            {
+               throw new DeploymentException(e);
+            }
+         }
+         else
+         {
+            log.warn("This is a webservice, but 'JSR109ServiceName' is not set");
+         }
+      }
+   }
+
+   /**
+    * Return true if this deployment contains <code>META-INF/webservices.xml</code>
+    * @param di
+    * @return
+    */
+   private boolean isJSR109Deployment(DeploymentInfo di)
+   {
+      // look for web service deployments
+      return di.localCl.getResource("WEB-INF/webservices.xml") != null;
+   }
+
+   /**
+    * Sub-classes should override this method to provide custom 'create' logic.
+    *
+    * If the deployment is a webservice it calls webserviceCreate.
+    * This method issues a JMX notification of type SubDeployer.CREATE_NOTIFICATION.
+    */
+   public void create(DeploymentInfo di) throws DeploymentException
+   {
+      super.create(di);
+
+      try
+      {
+         // create the webservice
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceCreate", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Error during deploy", e);
+      }
    }
 
    /** A template pattern implementation of the deploy() method. This method
@@ -428,6 +525,12 @@ public abstract class AbstractWebContainer
          performDeploy(warInfo, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
 
+         // start the webservice
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceStart", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+
          // Generate an event for the startup
          super.start(di);
       }
@@ -469,10 +572,16 @@ public abstract class AbstractWebContainer
    public synchronized void stop(DeploymentInfo di)
       throws DeploymentException
    {
-      URL warURL = di.localUrl != null ? di.localUrl : di.url;
-      String warUrl = warURL.toString();
       try
       {
+         // stop the webservice
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceStop", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+
+         URL warURL = di.localUrl != null ? di.localUrl : di.url;
+         String warUrl = warURL.toString();
          performUndeploy(warUrl);
          // Remove the web application ENC...
          deploymentMap.remove(warUrl);
@@ -488,6 +597,30 @@ public abstract class AbstractWebContainer
       {
          throw new DeploymentException("Error during deploy", e);
       }
+   }
+
+   /**
+    * Sub-classes should override this method to provide
+    * custom 'destroy' logic.
+    *
+    * This method issues a JMX notification of type SubDeployer.DESTROY_NOTIFICATION.
+    */
+   public void destroy(DeploymentInfo di) throws DeploymentException
+   {
+      try
+      {
+         // destroy the webservice
+         if (isJSR109Deployment(di) && jsr109ServiceName != null)
+         {
+            getServer().invoke(jsr109ServiceName, "webserviceDestroy", new Object[]{di}, new String[]{DeploymentInfo.class.getName()});
+         }
+      }
+      catch (Exception e)
+      {
+         throw new DeploymentException("Error during deploy", e);
+      }
+
+      super.destroy(di);
    }
 
    /** Called as part of the undeploy() method template to ask the
