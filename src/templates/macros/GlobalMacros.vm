@@ -30,6 +30,8 @@
            #set ($selected=true)
           #end
        #end
+    #else
+         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $scarabR.Issue))
     #end
     #if ($canMakeTransition.toString().equals("true"))
       <option value="$option.OptionId"#selected($selected)>
