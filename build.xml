@@ -113,10 +113,13 @@
             <fileset dir="${ant.bin}"/>
         </copy>
 
+    <!-- 
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${ant.lib}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
 	  file="${ant.lib}/parser.jar"/>
+     -->
+
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${jaxp.home}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
