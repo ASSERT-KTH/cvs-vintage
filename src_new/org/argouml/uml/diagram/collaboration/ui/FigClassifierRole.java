@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.23 2003/09/13 22:06:05 alexb Exp $
+// $Id: FigClassifierRole.java,v 1.24 2003/09/16 18:53:18 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -237,7 +237,7 @@ public class FigClassifierRole extends FigNodeModelElement {
         
         Object stereo = null;
         if (ModelFacade.getStereotypes(me).size() > 0) {
-            stereo = ModelFacade.getStereotypes(me);
+            stereo = ModelFacade.getStereotypes(me).iterator().next();
         }
 
         // Where we now have no stereotype, mark as not displayed. Were we do
