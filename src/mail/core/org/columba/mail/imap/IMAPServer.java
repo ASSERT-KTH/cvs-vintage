@@ -1084,7 +1084,7 @@ public class IMAPServer implements IMAPListener {
 				pos = 0;
 				while( it.hasNext() ) {
 					IMAPFlags[] r = (IMAPFlags[])it.next();
-					System.arraycopy(result,0,r,pos,r.length);
+					System.arraycopy(r,0,result,pos,r.length);
 					
 					pos += r.length;
 				}				
