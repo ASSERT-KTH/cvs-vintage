@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
@@ -39,6 +41,7 @@ import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.AddressListRenderer;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -93,7 +96,7 @@ public class ForwardInlineCommand extends ForwardCommand {
 
         // Which Bodypart shall be shown? (html/plain)
         MimePart bodyPart = null;
-
+        Integer[] bodyPartAddress=null;
         if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
             bodyPart = mimePartTree.getFirstTextPart("html");
         } else {
@@ -105,9 +108,9 @@ public class ForwardInlineCommand extends ForwardCommand {
             initMimeHeader(bodyPart);
 
             StringBuffer bodyText;
-            Integer[] address = bodyPart.getAddress();
+            bodyPartAddress = bodyPart.getAddress();
 
-            String quotedBodyText = createQuotedBody(folder, uids, address);
+            String quotedBodyText = createQuotedBody(folder, uids, bodyPartAddress);
 
             /*
              * *20040210, karlpeder* Remove html comments - they are not
@@ -119,6 +122,22 @@ public class ForwardInlineCommand extends ForwardCommand {
 
             model.setBodyText(quotedBodyText);
         }
+        
+        //  add all attachments
+        MimeTree mt = folder.getMimePartTree(uids[0]);
+        Iterator it = mt.getAllLeafs().iterator();
+        while (it.hasNext()) {
+        	MimePart mp = (MimePart) it.next();
+        	Integer[] address = mp.getAddress();
+        	// skip if bodypart (already added as quoted text)
+        	if ( Arrays.equals(address, bodyPartAddress) ) continue;
+        	
+        	// add attachment
+        	InputStream stream = folder.getMimePartBodyStream(uids[0], address);
+            model.addMimePart(new InputStreamMimePart(mp.getHeader(),
+                    stream));
+        }
+        
     }
 
     private void initMimeHeader(MimePart bodyPart) {
