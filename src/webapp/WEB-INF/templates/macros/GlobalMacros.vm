@@ -1,5 +1,32 @@
+#macro (AllowedTransitionsForOption $attrValue $optionFieldName $size)
+  #set ($count=0)
+  #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
+  #set ($attr = $attrValue.Attribute)
+  #set ($issue = $attrValue.Issue)
+  #set ($module = $issue.Module)
+  #set ($issueType = $issue.IssueType)
+  #if ($issueType.ParentId > 0)
+     #set ($issueType = $issueType.IssueTypeForTemplateType)
+  #end
+  ## Initialize $newValues in case the second #set has a null RHS.
+  #set ($newValues = '')
+  #set ($newValues = $attrInput.get($optionFieldName).Value)
+  #foreach ($option in $module.getOptionTree($attr, $issueType, false))
+    #set ($selected = false)
+    #set ($canMakeTransition = true)
+    #if ($newValues && $newValues.toString() != '')
+    #else
+       #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+    #end
 
-#macro (attrValueLeafSelect $attrValue $optionFieldName $size $multiple)
+    #if ($canMakeTransition)
+      #set ($count=$count+1)
+    #end
+  #end
+  $count
+#end
+
+#macro (attrValueLeafSelect $attrValue $optionFieldName $size $multiple $required)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($issue = $attrValue.Issue)
@@ -12,7 +39,49 @@
   #set ($newValues = '')
   #set ($newValues = $attrInput.get($optionFieldName).Value)
 
-<select name="$attrInput.get($optionFieldName).Key"
+  #set ( $count = "#AllowedTransitionsForOption ( $attrValue $optionFieldName $size )")
+  #if  ($count.trim() == "1" && $required)
+    #foreach ($option in $module.getOptionTree($attr, $issueType, false))
+     #set ($selected = false)
+     #set ($canMakeTransition = true)
+     #if ($newValues && $newValues.toString() != '')
+       #if ($multiple.equals("true"))
+         #foreach ($value in $newValues)
+            #if ($value.equals($option.OptionId))
+               #set ($selected=true)
+            #end
+         #end
+       #else
+         #if ($issue.isNew())
+           #set ($values = '0')
+         #else
+           #set ($values = $newValues)
+         #end
+         #if ($issue.isTemplate())
+           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+         #else
+           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
+         #end 
+         #if ($newValues.equals($option.OptionId))
+           #set ($selected=true)
+          #end
+       #end
+     #else
+         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+     #end
+
+     #if ($canMakeTransition)
+	    <input type=hidden name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>
+		#if ($option.Active) 
+        		$option.DisplayValue
+		#else
+        		[I] $option.DisplayValue
+		#end
+     #end
+   #end
+  #else
+
+ <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
   #if ($size.length() == 0)
    <option value="">$l10n.Choose</option>
@@ -62,7 +131,8 @@
 	#end
     #end
   #end
-</select>
+ </select>
+ #end
 #end
 
 #macro (templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size $multiple)
@@ -983,7 +1053,7 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $modu
             #set ($templAttVal = $templ.getAttributeValue($att))
             #templateAttrValueLeafSelect ($attVal $templAttVal $field "" false)
            #else
-            #attrValueLeafSelect ($attVal $field "" false)
+            #attrValueLeafSelect ($attVal $field "" false $attVal.isRequired())
            #end
           #else
            #if ($templ)
