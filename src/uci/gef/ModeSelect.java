@@ -26,7 +26,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125 spring 1996
-// $Id: ModeSelect.java,v 1.19 1999/03/18 02:13:15 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.20 1999/03/20 04:36:35 jrobbins Exp $
 
 package uci.gef;
 
@@ -98,7 +98,9 @@ public class ModeSelect extends Mode {
       //System.out.println("ModeSelect consumed");
       return;
     }
+    if (me.getModifiers() == InputEvent.BUTTON3_MASK) { return; }
     if (me.isControlDown()) { gotoBroomMode(me); return; }
+    if (me.isAltDown()) return;
     int x = me.getX(), y = me.getY();
 
     _selectAnchor = new Point(x, y);
@@ -124,6 +126,7 @@ public class ModeSelect extends Mode {
 
   /** On mouse dragging, stretch the selection rectangle. */
   public void mouseDragged(MouseEvent me) {
+    if (me.getModifiers() == InputEvent.BUTTON3_MASK) { return; }
     if (me.isConsumed()) return;
     if (me.isAltDown()) return;
     int x = me.getX(), y = me.getY();
