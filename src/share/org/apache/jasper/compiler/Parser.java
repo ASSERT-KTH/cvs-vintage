@@ -113,8 +113,6 @@ public class Parser {
     static final class Directive implements CoreElement {
 	private static final String OPEN_DIRECTIVE  = "<%@";
 	private static final String CLOSE_DIRECTIVE = "%>";
-        private static final String OPEN_DIRECTIVE_2 = "<jsp:directive.";
-	private static final String CLOSE_DIRECTIVE_2 = "/>";
 
 	static final String[] directives = {
 	  "page",
@@ -154,9 +152,6 @@ public class Parser {
 	    if (reader.matches(OPEN_DIRECTIVE)) {
 		open = OPEN_DIRECTIVE;
 		close = CLOSE_DIRECTIVE;
-	    } else if (reader.matches(OPEN_DIRECTIVE_2)) {
-		open = OPEN_DIRECTIVE_2;
-		close = CLOSE_DIRECTIVE_2;
 	    } else
 		return false;
 
@@ -419,10 +414,6 @@ public class Parser {
 	private static final String OPEN_DECL  = "<%!";
 	private static final String CLOSE_DECL = "%>";
 
-	private static final String OPEN_DECL_2	 = "<jsp:decl";
-	private static final String END_OPEN_DECL_2 = ">";
-	private static final String CLOSE_DECL_2 = "</jsp:decl>";
-
         private static final JspUtil.ValidAttribute[] validAttributes = {
         };
 
@@ -432,11 +423,7 @@ public class Parser {
 	    String close, open, end_open = null;
             Hashtable attrs = null;
 				
-	    if (reader.matches(OPEN_DECL_2)) {
-		open = OPEN_DECL_2;
-                end_open = END_OPEN_DECL_2;
-		close = CLOSE_DECL_2;
-	    } else if (reader.matches(OPEN_DECL)) {
+	    if (reader.matches(OPEN_DECL)) {
 		open = OPEN_DECL;
 		close = CLOSE_DECL;
 	    } else
@@ -479,10 +466,6 @@ public class Parser {
 	private static final String OPEN_EXPR  = "<%=";
 	private static final String CLOSE_EXPR = "%>";
 
-	private static final String OPEN_EXPR_2	 = "<jsp:expression";
-	private static final String END_OPEN_EXPR_2 = ">";
-	private static final String CLOSE_EXPR_2 = "</jsp:expression>";
-    
         private static final JspUtil.ValidAttribute[] validAttributes = {
         };
 
@@ -492,11 +475,7 @@ public class Parser {
 	    String close, open, end_open=null;
             Hashtable attrs = null;
 		
-	    if (reader.matches(OPEN_EXPR_2)) {
-		open = OPEN_EXPR_2;
-                end_open = END_OPEN_EXPR_2;
-		close = CLOSE_EXPR_2;
-	    } else if (reader.matches(OPEN_EXPR)) {
+	    if (reader.matches(OPEN_EXPR)) {
 		open = OPEN_EXPR;
 		close = CLOSE_EXPR;
 	    } else
@@ -538,10 +517,6 @@ public class Parser {
 	private static final String OPEN_SCRIPTLET  = "<%";
 	private static final String CLOSE_SCRIPTLET = "%>";
 
-	private static final String OPEN_SCRIPTLET_2  = "<jsp:scriptlet";
-	private static final String END_OPEN_SCRIPTLET_2 = ">";
-	private static final String CLOSE_SCRIPTLET_2 = "</jsp:scriptlet>";
-
         private static final JspUtil.ValidAttribute[] validAttributes = {
         };
 
@@ -551,11 +526,7 @@ public class Parser {
 	    String close, open, end_open = null;
             Hashtable attrs = null;
 	    
-	    if (reader.matches(OPEN_SCRIPTLET_2)) {
-		open = OPEN_SCRIPTLET_2;
-                end_open = END_OPEN_SCRIPTLET_2;
-		close = CLOSE_SCRIPTLET_2;
-	    } else if (reader.matches(OPEN_SCRIPTLET)) {
+	    if (reader.matches(OPEN_SCRIPTLET)) {
 		open = OPEN_SCRIPTLET;
 		close = CLOSE_SCRIPTLET;
 	    } else
