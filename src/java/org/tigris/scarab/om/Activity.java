@@ -140,6 +140,20 @@ public class Activity
      */
     public void create(Issue issue, Attribute attribute, 
                        String desc, Transaction transaction,
+                       String oldValue, String newValue, 
+                       DBConnection dbCon)
+         throws TorqueException
+    {
+        create(issue, attribute, desc, transaction,
+               0, 0, null, null, null, null,
+               oldValue, newValue, null, dbCon);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
                        NumberKey oldUserId, NumberKey newUserId, 
                        Attachment attachment)
          throws TorqueException
@@ -171,7 +185,26 @@ public class Activity
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue, 
-                       Attachment attachment,DBConnection dbCon)
+                       DBConnection dbCon)
+         throws TorqueException
+    {
+        create(issue, attribute, desc, transaction,
+               oldNumericValue, newNumericValue, 
+               oldUserId, newUserId, 
+               oldOptionId, newOptionId,
+               oldValue, newValue, null, dbCon);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
+                       int oldNumericValue, int newNumericValue,
+                       NumberKey oldUserId, NumberKey newUserId,
+                       NumberKey oldOptionId, NumberKey newOptionId,
+                       String oldValue, String newValue, 
+                       Attachment attachment, DBConnection dbCon)
          throws TorqueException
     {
         setIssue(issue);
