@@ -55,8 +55,6 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateContext;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 // Scarab Stuff
 import org.tigris.scarab.screens.Default;
@@ -68,21 +66,14 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.xmlissues.ImportIssues;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
-
 /**
  * Loads XML into Scarab via import, returning XML-formatted results
  *
- * @author     <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
- * @version    $Id: XMLImportIssuesResults.java,v 1.5 2003/03/26 00:24:13 jon Exp $
+ * @author <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
+ * @version $Id: XMLImportIssuesResults.java,v 1.6 2003/03/28 00:00:52 jon Exp $
  */
 public class XMLImportIssuesResults extends Default
 {
-    /**
-     * Logging instance.
-     */
-    private static final Log log 
-        = LogFactory.getLog(XMLImportIssuesResults.class);
-
     private static final int MIN_XML_SIZE = 1;
     private static final int RESULT_OK = 0;
     private static final int RESULT_ERROR_EXCEPTION = 100;
