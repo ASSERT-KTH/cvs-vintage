@@ -243,6 +243,9 @@
             <fileset dir="${src.sql.dir}" includes="**/*.sh"/>
         </chmod>
 
+        <!-- express the type of database we are generating -->
+        <touch file="${build.sql.scarab}/${scarab.database.type}" />
+
         <!-- the source code directory -->
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
