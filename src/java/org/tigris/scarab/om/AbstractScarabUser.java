@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.3 2001/11/01 19:07:58 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.4 2001/11/08 20:35:33 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -307,17 +307,6 @@ public abstract class AbstractScarabUser
         }
     }
 
-    /**
-     * If user has no default query set, gets a default default query
-     * This query returns set of issues assigned to the user.
-     */
-    public String getDefaultDefaultQuery()
-        throws Exception
-    {
-        StringBuffer buf = new StringBuffer("&attv__2visids=");
-        buf.append(getUserId());
-        return buf.toString();
-    }
 
     /**
      * @see org.apache.torque.om.Persistent#save()

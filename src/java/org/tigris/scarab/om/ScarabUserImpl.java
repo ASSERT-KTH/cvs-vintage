@@ -92,7 +92,7 @@ import org.apache.fulcrum.security.impl.db.entity
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.35 2001/11/01 18:13:34 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.36 2001/11/08 20:35:33 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -468,11 +468,13 @@ public class ScarabUserImpl
     /**
      * If user has no default query set, gets a default default query.
      */
-    public String getDefaultDefaultQuery()
-        throws Exception
+    public String getDefaultDefaultQuery() throws Exception
     {
-        return internalUser.getDefaultDefaultQuery();
+        StringBuffer buf = new StringBuffer("&searchcb=");
+        buf.append(getEmail());
+        return buf.toString();
     }
+
 
     /**
      * Sets the password to expire with information from the scarab.properties
