@@ -84,7 +84,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.51 2003/06/25 07:02:51 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.52 2003/07/10 05:16:59 parun Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -455,9 +455,18 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         {        
             for (int i=0; i < attributeIds.length; i++)
             {
-                Attribute attribute = 
+                Attribute attribute =
                     scarabR.getAttribute(new Integer(attributeIds[i]));
-                ag.addAttribute(attribute);
+                try
+                {
+                    ag.addAttribute(attribute);
+                }
+                catch(TorqueException e)
+                {
+                    scarabR.setAlertMessage(l10n.get("ResubmitError"));
+                    doCancel(data, context);
+                    return;
+                }
             }
             doCancel(data, context);
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
