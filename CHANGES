@@ -1,3 +1,5 @@
+- added import/export of filters in the filters dialog (redsolo)
+- added drag and drop support between two filter dialogs (redsolo)
 - fixing getting the right id for signing, if a id is given in the security panel it 
   should be used instead of the sender
 - adding always sign feature to security panel (waffel)
