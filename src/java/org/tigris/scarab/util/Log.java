@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
  * org.tigris.scarab category.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Log.java,v 1.4 2003/01/24 19:07:07 jmcnally Exp $
+ * @version $Id: Log.java,v 1.5 2003/01/31 17:56:06 jmcnally Exp $
  */
 public abstract class Log
 {
@@ -75,7 +75,7 @@ public abstract class Log
      * Log free and total memory at DEBUG level.  Invokes Runtime.gc() prior
      * to taking memory snapshot.
      */
-    public static void debugMemory()
+    public static String debugMemory()
     {
         Runtime rt = Runtime.getRuntime();
         rt.gc();
@@ -84,5 +84,6 @@ public abstract class Log
 
         String m = "MEMORY Free="  + newfree + "; Total=" + newtotal + " bytes";
         get().debug(m);
+        return m;
     }
 }
