@@ -2,6 +2,8 @@
   <name>TurbineClassicPipeline</name>
   <valves>
 
+    <valve className="org.tigris.scarab.pipeline.DetermineCharsetValve"/>
+
     <!-- reset the cache in the event an exception prevented it at the end -->
     <valve className="org.tigris.scarab.pipeline.ResetCacheValve"/>
 

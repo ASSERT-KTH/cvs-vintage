@@ -272,6 +272,7 @@
         <filter token="INTAKE_SERIALIZE_FILE" value="${scarab.intake.serialize.file}"/>
         <filter token="INTAKE_OPTIONAL_GROUPS" value="${intake.optional.groups}"/>
         <filter token="FILE_UPLOAD_PATH" value="${scarab.file.upload.path}"/>
+        <filter token="FILE_UPLOAD_MAX_SIZE" value="${scarab.file.max.size}"/>
         <filter token="SCARAB_REGISTER_CHECK_VALID_A" value="${scarab.register.email.checkValidA}"/>
         <filter token="SCARAB_REGISTER_BAD_EMAILS" value="${scarab.register.email.badEmails}"/>
         <filter token="TORQUE_MANAGER_CACHE" value="${scarab.torque.manager.cache}"/>
@@ -299,6 +300,7 @@
         <filter token="LOG_APPEND_JCS" value="${scarab.log.append.jcs}"/>
         <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
+        <filter token="EMAIL_ENCODING" value="${scarab.email.encoding}"/>
         
         <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
             <fileset dir="${src.conf.dir}/">

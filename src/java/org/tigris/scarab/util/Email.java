@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.5 2002/07/26 21:14:40 jmcnally Exp $
+ * @version $Id: Email.java,v 1.6 2002/09/17 23:24:46 jmcnally Exp $
  */
 public class Email
 {
@@ -196,6 +196,13 @@ public class Email
             {
                 te.addCc(archiveEmail, null);
             }
+
+            String charset = Turbine.getConfiguration()
+                .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY); 
+            if (charset != null && charset.trim().length() > 0) 
+            {
+                te.setCharset(charset);                
+            }
             
             try
             {
@@ -227,6 +234,7 @@ public class Email
     {
         List toUsers = new LinkedList();
         toUsers.add(toUser);
-        return sendEmail( context, module, fromUser, replyToUser, toUsers, null, subject, template);
+        return sendEmail( context, module, fromUser, replyToUser, toUsers, 
+                          null, subject, template );
     }
 }
