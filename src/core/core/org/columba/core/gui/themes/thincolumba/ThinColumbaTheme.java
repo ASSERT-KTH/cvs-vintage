@@ -14,13 +14,13 @@
 
 package org.columba.core.gui.themes.thincolumba;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
 
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.themes.DefaultCTheme;
+import org.columba.core.gui.util.ImageLoader;
 
 public class ThinColumbaTheme extends DefaultCTheme {
 
@@ -212,6 +212,12 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put("MenuItem.acceleratorForeground", getAcceleratorSelectedForeground() );
         table.put("MenuItem.acceleratorSelectionForeground", getAcceleratorSelectedForeground() );
             
+        table.put("OptionPane.errorIcon",ImageLoader.getImageIcon("stock_dialog_error_48.png"));
+        table.put("OptionPane.informationIcon",ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+        table.put("OptionPane.warningIcon",ImageLoader.getImageIcon("stock_dialog_warning_48.png"));
+        table.put("OptionPane.questionIcon",ImageLoader.getImageIcon("stock_dialog_question_48.png"));
+        
+        
 		/*
 		table.put("CheckBoxMenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1));
 		table.put("RadioButtonMenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1) );
