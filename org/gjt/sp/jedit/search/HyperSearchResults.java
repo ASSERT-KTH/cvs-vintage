@@ -40,10 +40,9 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.3 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.4 2001/10/02 13:54:14 spestov Exp $
  */
-public class HyperSearchResults extends JPanel implements DockableWindow,
-	EBComponent
+public class HyperSearchResults extends JPanel implements EBComponent
 {
 	public static final String NAME = "hypersearch-results";
 
@@ -74,16 +73,6 @@ public class HyperSearchResults extends JPanel implements DockableWindow,
 		dim.width = 400;
 		scrollPane.setPreferredSize(dim);
 		add(BorderLayout.CENTER, scrollPane);
-	}
-
-	public String getName()
-	{
-		return NAME;
-	}
-
-	public Component getComponent()
-	{
-		return this;
 	}
 
 	public void addNotify()

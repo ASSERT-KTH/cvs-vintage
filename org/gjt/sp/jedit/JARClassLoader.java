@@ -25,12 +25,13 @@ import java.lang.reflect.Modifier;
 import java.net.*;
 import java.util.*;
 import java.util.zip.*;
+import org.gjt.sp.jedit.gui.DockableWindowManager;
 import org.gjt.sp.util.Log;
 
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.3 2001/09/16 09:06:55 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.4 2001/10/02 13:54:13 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -55,10 +56,19 @@ public class JARClassLoader extends ClassLoader
 			String lname = name.toLowerCase();
 			if(lname.equals("actions.xml"))
 			{
-				jar.actions = jEdit.loadActions(
+				jEdit.loadActions(
 					path + "!actions.xml",
 					new BufferedReader(new InputStreamReader(
-					zipFile.getInputStream(entry))));
+					zipFile.getInputStream(entry))),
+					jar.getActions());
+			}
+			if(lname.equals("dockables.xml"))
+			{
+				DockableWindowManager.loadDockableWindows(
+					path + "!dockables.xml",
+					new BufferedReader(new InputStreamReader(
+					zipFile.getInputStream(entry))),
+					jar.getActions());
 			}
 			else if(lname.endsWith(".props"))
 				jEdit.loadProps(zipFile.getInputStream(entry),true);
@@ -285,8 +295,9 @@ public class JARClassLoader extends ClassLoader
 				return;
 			}
 
-			if(jar.getActions() != null)
-				jar.getActions().setLabel(label);
+			jar.getActions().setLabel(jEdit.getProperty(
+				"action-set.plugin",
+				new String[] { label }));
 
 			Log.log(Log.NOTICE,this,"Starting plugin " + label
 					+ " (version " + version + ")");

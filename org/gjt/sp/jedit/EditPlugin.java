@@ -26,7 +26,7 @@ import org.gjt.sp.jedit.gui.OptionsDialog;
  * The interface between jEdit and a plugin.
  *
  * @author Slava Pestov
- * @version $Id: EditPlugin.java,v 1.3 2001/09/22 07:01:12 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.4 2001/10/02 13:54:13 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -155,6 +155,7 @@ public abstract class EditPlugin
 			this.path = path;
 			this.classLoader = classLoader;
 			plugins = new Vector();
+			actions = new ActionSet();
 		}
 
 		// package-private members
@@ -170,7 +171,7 @@ public abstract class EditPlugin
 		private String path;
 		private JARClassLoader classLoader;
 		private Vector plugins;
-		/*package-private*/ ActionSet actions;
+		private ActionSet actions;
 	}
 
 	// private members

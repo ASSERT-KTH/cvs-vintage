@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.4 2001/09/25 07:04:05 spestov Exp $
+ * @version $Id: EditAction.java,v 1.5 2001/10/02 13:54:13 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -146,6 +146,7 @@ public abstract class EditAction
 
 	// private members
 	private String name;
+	private String cachedCode;
 
 	/**
 	 * 'Wrap' EditActions in this class to turn them into AWT

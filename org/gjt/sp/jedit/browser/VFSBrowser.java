@@ -37,9 +37,9 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.2 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.3 2001/10/02 13:54:13 spestov Exp $
  */
-public class VFSBrowser extends JPanel implements EBComponent, DockableWindow
+public class VFSBrowser extends JPanel implements EBComponent
 {
 	public static final String NAME = "vfs.browser";
 
@@ -235,18 +235,6 @@ public class VFSBrowser extends JPanel implements EBComponent, DockableWindow
 		}
 		EditBus.removeFromBus(this);
 	}
-
-	// DockableWindow implementation
-	public String getName()
-	{
-		return NAME;
-	}
-
-	public Component getComponent()
-	{
-		return this;
-	}
-	// end DockableWindow implementation
 
 	public void handleMessage(EBMessage msg)
 	{
