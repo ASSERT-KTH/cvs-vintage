@@ -9,6 +9,10 @@ $page.setTitle("Edit query")
 
 <h2>Edit query</h2>
 
+<p>
+Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
+</p>
+
 <h3>Query: $currentQuery.Name</h3>
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm").toString())
