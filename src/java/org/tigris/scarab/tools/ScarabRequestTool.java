@@ -1255,6 +1255,12 @@ try{
         String[] assigneeIds = 
             data.getParameters().getStrings("addedusers");
   
+        if (searchField == null)
+        {
+            data.setMessage("Please enter a search field.");
+            return null ;
+        }
+
         // Build list of eligible assignees for this issue
         List eligibleAssignees = getIssue().getEligibleAssignees();
         List userIds = new ArrayList();
