@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.73 2001/12/13 20:44:38 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.74 2001/12/27 22:39:24 dr Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -728,8 +728,7 @@
     Example: Scarab
 -->
 <table name="SCARAB_MODULE" idMethod="idbroker" javaName="ScarabModule" 
-    baseClass="org.tigris.scarab.services.module.AbstractScarabModule" 
-    abstract="true">
+    baseClass="org.tigris.scarab.services.module.AbstractScarabModule">
     <!--
         Unique identifier.
     -->
@@ -777,6 +776,10 @@
         default="0" size="1"/>
     <column name="DEDUPE" required="false" type="BOOLEANINT" 
         default="1" size="1"/>
+
+    <column name="CLASS_KEY" required="false" type="INTEGER" inheritance="single">
+      <inheritance key="1" class="ScarabModuleContainer" extends="org.tigris.scarab.om.ScarabModule"/>
+    </column>
 
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="PARENT_ID" foreign="MODULE_ID"/>
