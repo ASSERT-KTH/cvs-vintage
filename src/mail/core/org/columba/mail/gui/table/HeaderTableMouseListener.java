@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 import org.columba.mail.gui.table.action.OpenMessageWithComposerAction;
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
+import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 
 /**
@@ -79,8 +80,8 @@ public class HeaderTableMouseListener extends MouseAdapter {
 
     protected void processDoubleClick() {
         int selectedRow = headerTableViewer.getView().getSelectedRow();
-        MessageNode node = (MessageNode) headerTableViewer
-                .getHeaderTableModel().getMessageNodeAtRow(selectedRow);
+        MessageNode node = (MessageNode) ((HeaderTableModel)headerTableViewer
+                .getHeaderTableModel()).getMessageNodeAtRow(selectedRow);
         boolean markedAsDraft = node.getHeader().getFlags().getDraft();
 
         if (markedAsDraft) {

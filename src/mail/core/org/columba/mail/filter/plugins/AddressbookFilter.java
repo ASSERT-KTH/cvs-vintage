@@ -20,9 +20,10 @@ package org.columba.mail.filter.plugins;
 import org.columba.addressbook.facade.IFolderFacade;
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
+import org.columba.core.folder.IFolder;
 import org.columba.core.services.ServiceNotFoundException;
 import org.columba.mail.connector.ServiceConnector;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.AddressParser;
@@ -40,12 +41,12 @@ public class AddressbookFilter extends AbstractFilter {
 	}
 
 	/**
-	 * @see org.columba.core.filter.AbstractFilter#process(org.columba.mail.folder.Folder,
+	 * @see org.columba.core.filter.AbstractFilter#process(IFolder,
 	 *      java.lang.Object)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid)
+	public boolean process(IFolder folder, Object uid)
 			throws Exception {
-		Header header = folder.getHeaderFields(uid, new String[] { "From" });
+		Header header = ((IMailbox)folder).getHeaderFields(uid, new String[] { "From" });
 		String from = header.get("From");
 
 		Address address = null;

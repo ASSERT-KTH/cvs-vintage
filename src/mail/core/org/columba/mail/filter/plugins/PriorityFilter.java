@@ -19,7 +19,8 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * Search for a certain priority.
@@ -73,14 +74,14 @@ public class PriorityFilter extends AbstractFilter {
 	 *      org.columba.mail.folder.Folder, java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid)
+	public boolean process(IFolder folder, Object uid)
 			throws Exception {
 		boolean result = false;
 
 		String s = (String) searchPattern;
 		Integer searchPatternInt = transformPriority(s);
 
-		Integer priority = (Integer) folder.getAttribute(uid,
+		Integer priority = (Integer) ((IMailbox)folder).getAttribute(uid,
 				"columba.priority");
 
 		if (priority == null) {

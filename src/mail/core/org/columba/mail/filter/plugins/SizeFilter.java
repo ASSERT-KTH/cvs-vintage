@@ -19,7 +19,8 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * Find messages with certain size.
@@ -58,13 +59,13 @@ public class SizeFilter extends AbstractFilter {
 	 *      org.columba.mail.folder.Folder, java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid)
+	public boolean process(IFolder folder, Object uid)
 			throws Exception {
 		boolean result = false;
 
 		Integer size = transformSize((String) pattern);
 
-		Integer s = (Integer) folder.getAttribute(uid, "columba.size");
+		Integer s = (Integer) ((IMailbox)folder).getAttribute(uid, "columba.size");
 
 		if (s == null) {
 			return false;

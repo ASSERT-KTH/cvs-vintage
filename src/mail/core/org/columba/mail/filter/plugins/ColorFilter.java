@@ -19,7 +19,8 @@ import java.awt.Color;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 
 
 /**
@@ -41,9 +42,9 @@ public class ColorFilter extends AbstractFilter {
     }
 
     /** {@inheritDoc} */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
+    public boolean process(IFolder folder, Object uid) throws Exception {
         int messageRGB = defaultColorRGB;
-        Color messageColor = (Color) folder.getAttribute(uid, "columba.color");
+        Color messageColor = (Color) ((IMailbox)folder).getAttribute(uid, "columba.color");
 
         if (messageColor != null) {
             messageRGB = messageColor.getRGB();

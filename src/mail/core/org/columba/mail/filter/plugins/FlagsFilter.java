@@ -19,7 +19,8 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Flags;
 
 /**
@@ -47,7 +48,7 @@ public class FlagsFilter extends AbstractFilter {
 	 *      org.columba.mail.folder.Folder, java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid)
+	public boolean process(IFolder folder, Object uid)
 			throws Exception {
 		boolean result = false;
 
@@ -55,7 +56,7 @@ public class FlagsFilter extends AbstractFilter {
 
 		String searchHeaderField = null;
 
-		Flags flags = folder.getFlags(uid);
+		Flags flags = ((IMailbox)folder).getFlags(uid);
 
 		if (headerField.equalsIgnoreCase("Answered")) {
 			result = flags.get(Flags.ANSWERED);
@@ -70,7 +71,7 @@ public class FlagsFilter extends AbstractFilter {
 		} else if (headerField.equalsIgnoreCase("Seen")) {
 			result = flags.get(Flags.SEEN);
 		} else if (headerField.equalsIgnoreCase("Spam")) {
-			result = ((Boolean) folder.getAttribute(uid, "columba.spam"))
+			result = ((Boolean) ((IMailbox)folder).getAttribute(uid, "columba.spam"))
 					.booleanValue();
 		}
 

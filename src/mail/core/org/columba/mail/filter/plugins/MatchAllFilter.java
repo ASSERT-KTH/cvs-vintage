@@ -17,7 +17,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.folder.IFolder;
 
 
 /**
@@ -41,9 +41,9 @@ public class MatchAllFilter extends AbstractFilter {
     }
 
     /**
- * @see org.columba.core.filter.AbstractFilter#process(org.columba.mail.folder.Folder, java.lang.Object)
+ * @see org.columba.core.filter.AbstractFilter#process(IFolder, java.lang.Object)
  */
-    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
+    public boolean process(IFolder folder, Object uid) throws Exception {
         // match all matches
         return true;
     }

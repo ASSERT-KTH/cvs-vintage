@@ -19,8 +19,9 @@ import java.io.InputStream;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
+import org.columba.core.folder.IFolder;
 import org.columba.core.io.StreamUtils;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * Search for a certain string in the message body.
@@ -37,11 +38,11 @@ public class BodyFilter extends AbstractFilter {
 	 *      org.columba.mail.folder.Folder, java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid)
+	public boolean process(IFolder folder, Object uid)
 			throws Exception {
 		// get message body
 
-		InputStream messageSourceStream = folder.getMessageSourceStream(uid);
+		InputStream messageSourceStream = ((IMailbox)folder).getMessageSourceStream(uid);
 		StringBuffer body = StreamUtils.readInString(messageSourceStream);
 		messageSourceStream.close();
 		String bodyText = pattern;

@@ -15,48 +15,49 @@
 //All Rights Reserved.
 package org.columba.core.filter;
 
+import org.columba.core.folder.IFolder;
 import org.columba.core.plugin.Plugin;
 
-import org.columba.mail.folder.AbstractMessageFolder;
-
-
 /**
- * A filter is used to find a set of messages, which
- * matches a certain search criteria.
+ * A filter is used to find a set of messages, which matches a certain search
+ * criteria.
  * <p>
  * The search criteria are specified in {@link Filter}.
  * <p>
  * Every FilterPlugin needs to subclass this class.
- *
+ * 
  * @author fdietz
  */
 public abstract class AbstractFilter implements Plugin {
-    /**
- * Constructor for AbstractFilter
+	/**
+	 * Constructor for AbstractFilter
+	 *  
+	 */
+	public AbstractFilter() {
+	}
 
- */
-    public AbstractFilter() {
-    }
+	/**
+	 * 
+	 * @param f
+	 *            filter containing the configuration
+	 */
+	public abstract void setUp(FilterCriteria f);
 
-    /**
- * 
- * @param f    filter containing the configuration
- */
-    public abstract void setUp(FilterCriteria f);
-
-    /**
-  *
-  * Execute the plugin
-  *
-  *
-  * @param folder        AbstractMessageFolder on which the filter gets applied
-  * @param uid           uid of Message object
-  *                      on the Statusbar
-  * @return boolean      true if match, otherwise false
-  *
-  * @throws Exception    pass exception one level higher to handle it in the
-  *                      correct  place
-  */
-    public abstract boolean process(AbstractMessageFolder folder, Object uid)
-        throws Exception;
+	/**
+	 * 
+	 * Execute the plugin
+	 * 
+	 * 
+	 * @param folder
+	 *            AbstractMessageFolder on which the filter gets applied
+	 * @param uid
+	 *            uid of Message object on the Statusbar
+	 * @return boolean true if match, otherwise false
+	 * 
+	 * @throws Exception
+	 *             pass exception one level higher to handle it in the correct
+	 *             place
+	 */
+	public abstract boolean process(IFolder folder, Object uid)
+			throws Exception;
 }

@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.Command;
 import org.columba.core.filter.AbstractFilterAction;
 import org.columba.core.filter.FilterAction;
+import org.columba.core.folder.IFolder;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -39,7 +40,7 @@ public class MoveMessageAction extends AbstractFilterAction {
 	 * move message from source- to destination-folder
 	 */
 	public Command getCommand(FilterAction filterAction,
-			AbstractMessageFolder srcFolder, Object[] uids) throws Exception {
+			IFolder srcFolder, Object[] uids) throws Exception {
 		int uid = filterAction.getUid();
 		AbstractMessageFolder destFolder = (AbstractMessageFolder) FolderTreeModel.getInstance()
 				.getFolder(uid);

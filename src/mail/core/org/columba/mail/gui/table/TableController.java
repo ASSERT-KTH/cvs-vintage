@@ -256,7 +256,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		MessageNode[] nodes = new MessageNode[uids.length];
 
 		for (int i = 0; i < uids.length; i++) {
-			nodes[i] = getHeaderTableModel().getMessageNode(uids[i]);
+			nodes[i] = ((HeaderTableModel)getHeaderTableModel()).getMessageNode(uids[i]);
 		}
 
 		int[] rows = new int[nodes.length];
@@ -382,7 +382,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 			// only re-select if only a single row was formerly selected
 			if ((previouslySelectedRows.length == 1)
 					&& (previouslySelectedNodes.length > 0)) {
-				int row = getHeaderTableModel().getRow(
+				int row = ((HeaderTableModel)getHeaderTableModel()).getRow(
 						previouslySelectedNodes[0]);
 
 				// if message was removed from JTable

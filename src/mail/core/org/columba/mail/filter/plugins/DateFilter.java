@@ -23,7 +23,8 @@ import java.util.logging.Logger;
 
 import org.columba.core.filter.AbstractFilter;
 import org.columba.core.filter.FilterCriteria;
-import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * 
@@ -61,7 +62,7 @@ public class DateFilter extends AbstractFilter {
 	 *      org.columba.mail.folder.Folder, java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
-	public boolean process(AbstractMessageFolder folder, Object uid)
+	public boolean process(IFolder folder, Object uid)
 			throws Exception {
 
 		// transform string to Date representation
@@ -72,7 +73,7 @@ public class DateFilter extends AbstractFilter {
 		boolean result = false;
 
 		// get date
-		Date d = (Date) folder.getAttribute(uid, "columba.date");
+		Date d = (Date) ((IMailbox)folder).getAttribute(uid, "columba.date");
 
 		if (d == null) {
 			LOG.fine("field date not found");

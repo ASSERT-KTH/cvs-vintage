@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.IHeaderList;
 
 /**
@@ -50,13 +49,13 @@ public interface IHeaderTableModel {
 	/** ********************** getter/setter methods *************************** */
 	void enableThreadedView(boolean b);
 
-	MessageNode getRootNode();
+	//MessageNode getRootNode();
 
-	MessageNode getMessageNode(Object uid);
+	//MessageNode getMessageNode(Object uid);
 	
-	int getRow(MessageNode node);
+	//int getRow(MessageNode node);
 	
-	MessageNode getMessageNodeAtRow(int index);
+	//MessageNode getMessageNodeAtRow(int index);
 	String getColumnName(int column);
 	void clearColumns();
 	void addColumn(String c);

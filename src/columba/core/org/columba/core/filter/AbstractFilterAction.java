@@ -16,33 +16,35 @@
 package org.columba.core.filter;
 
 import org.columba.core.command.Command;
+import org.columba.core.folder.IFolder;
 import org.columba.core.plugin.Plugin;
-import org.columba.mail.folder.AbstractMessageFolder;
-
 
 /**
- * Action which is executed if a filter found a matching
- * set of messages.
+ * Action which is executed if a filter found a matching set of messages.
  * <p>
- * If you need to run time consuming tasks which should be running 
- * in the background you need to create your own Command-Object. 
- * You should take a closer look to the Columba sourcetree. You will 
- * find dozens examples of Command- Objects which implement things 
- * like "Reply to Message", "Open Message in Composer", etc.
- *
+ * If you need to run time consuming tasks which should be running in the
+ * background you need to create your own Command-Object. You should take a
+ * closer look to the Columba sourcetree. You will find dozens examples of
+ * Command- Objects which implement things like "Reply to Message", "Open
+ * Message in Composer", etc.
+ * 
  * @author fdietz
  */
 public abstract class AbstractFilterAction implements Plugin {
-    /**
- * 
- * @param filterAction      filterAction containing the filter actoin configuration
- * @param srcFolder         selected folder
- * @param uids              message UIDs
- * @return                  return null for simple tasks, all other tasks have to implement
- *                          their own {@link Command}
- * 
- * @throws Exception        exception is just passed to the upper-level
- */
-    public abstract Command getCommand(FilterAction filterAction,
-        AbstractMessageFolder srcFolder, Object[] uids) throws Exception;
+	/**
+	 * 
+	 * @param filterAction
+	 *            filterAction containing the filter actoin configuration
+	 * @param srcFolder
+	 *            selected folder
+	 * @param uids
+	 *            message UIDs
+	 * @return return null for simple tasks, all other tasks have to implement
+	 *         their own {@link Command}
+	 * 
+	 * @throws Exception
+	 *             exception is just passed to the upper-level
+	 */
+	public abstract Command getCommand(FilterAction filterAction,
+			IFolder srcFolder, Object[] uids) throws Exception;
 }

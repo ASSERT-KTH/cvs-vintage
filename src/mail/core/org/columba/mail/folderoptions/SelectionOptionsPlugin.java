@@ -26,6 +26,7 @@ import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.IMessageNode;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
+import org.columba.mail.gui.table.model.HeaderTableModel;
 
 /**
  * Handles selecting message after folder selection changes.
@@ -135,7 +136,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 			Object uid = lastSelUids[0];
 
 			// this message doesn't exit in this folder anymore
-			if (tableController.getHeaderTableModel().getMessageNode(uid) == null) {
+			if (((HeaderTableModel)tableController.getHeaderTableModel()).getMessageNode(uid) == null) {
 
 				if (ascending) {
 					uid = view.selectLastRow();
