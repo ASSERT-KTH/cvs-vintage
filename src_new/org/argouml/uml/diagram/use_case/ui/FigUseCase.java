@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.32 2004/02/28 12:29:43 linus Exp $
+// $Id: FigUseCase.java,v 1.33 2004/03/17 20:34:08 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -203,7 +203,7 @@ public class FigUseCase extends FigNodeModelElement {
         getNameFig().setTextFilled(false);
         getNameFig().setFilled(false);
         getNameFig().setLineWidth(0);
-        getNameFig().setMultiLine(true);
+        getNameFig().setMultiLine(false);
 
         // The separator, again with arbitrary bounds for now.
 
