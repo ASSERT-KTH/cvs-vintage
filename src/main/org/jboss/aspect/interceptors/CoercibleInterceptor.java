@@ -19,10 +19,11 @@ import org.jboss.aspect.AspectInitizationException;
 import org.jboss.aspect.spi.AspectInterceptor;
 import org.jboss.aspect.spi.AspectInvocation;
 import org.jboss.util.Classes;
+import org.jboss.util.Coercible;
 
 /**
- * The AdaptorInterceptor allows you proivde add an adaptor
- * via the Adaptor interface.  
+ * The CoercibleInterceptor allows you proivde add an Coercible
+ * via the Coercible interface.  
  * 
  * The problem with the Delegating interceptor is that as you add more
  * interfaces to an object you run a higher chance of having method name 
@@ -31,36 +32,36 @@ import org.jboss.util.Classes;
  * 
  * This interceptor uses the following configuration attributes:
  * <ul>
- * <li>adaptor  - The interface that the implementation object is exposing 
+ * <li>Coercible  - The interface that the implementation object is exposing 
  *                via the Adaptable interface.  This is a required attribute. 
  * <li>implementation  - class name of the object that will be used to delegate
  *                method calls to.  This is a required attribute.
  * <li>singleton - if set to "true", then the method calls of multiple
  *                aspect object will be directed to a single instance of
- *                the delegate.  This makes the adaptor a singleton. 
+ *                the delegate.  This makes the Coercible a singleton. 
  * </ul>
  * 
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  * 
  */
-public class AdaptorInterceptor implements AspectInterceptor, Serializable
+public class CoercibleInterceptor implements AspectInterceptor, Serializable
 {
 
-    public static final Namespace NAMESPACE = Namespace.get(AdaptorInterceptor.class.getName());
-    public static final QName ATTR_ADAPTOR = new QName("adaptor", NAMESPACE);
+    public static final Namespace NAMESPACE = Namespace.get(CoercibleInterceptor.class.getName());
+    public static final QName ATTR_CLASS = new QName("class", NAMESPACE);
     public static final QName ATTR_IMPLEMENTATION = new QName("implementation", NAMESPACE);
     public static final QName ATTR_SIGLETON = new QName("singleton", NAMESPACE);
 
     public Object singeltonObject;
     public Class implementingClass;
-    public Class adaptorClass;
+    public Class CoercibleClass;
 
     static final Method GET_ADAPTER_METHOD;
     static {
         Method m = null;
         try
         {
-            m = Adaptor.class.getMethod("getAdapter", new Class[] { Class.class });
+            m = Coercible.class.getMethod("coerce", new Class[] { Class.class });
         }
         catch (NoSuchMethodException e)
         {
@@ -74,7 +75,7 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
     public Object invoke(AspectInvocation invocation) throws Throwable
     {
 
-        if (!adaptorClass.equals(invocation.args[0]))
+        if (!CoercibleClass.equals(invocation.args[0]))
         {
             if (invocation.isNextIntrestedInMethodCall())
                 return invocation.invokeNext();
@@ -108,10 +109,10 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
     {
         try
         {
-            String adaptorName = xml.attribute(ATTR_ADAPTOR).getValue();
+            String CoercibleName = xml.attribute(ATTR_CLASS).getValue();
             String className = xml.attribute(ATTR_IMPLEMENTATION).getValue();
 
-            adaptorClass = Classes.loadClass(adaptorName);
+            CoercibleClass = Classes.loadClass(CoercibleName);
             implementingClass = Classes.loadClass(className);
 
             String singlton = xml.attribute(ATTR_SIGLETON) == null ? null : xml.attribute(ATTR_SIGLETON).getValue();
@@ -130,7 +131,7 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
      */
     public Class[] getInterfaces()
     {
-        return new Class[] { Adaptor.class };
+        return new Class[] { Coercible.class };
     }
 
     public boolean isIntrestedInMethodCall(Method method)
