@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.85 2003/10/08 14:09:29 jjones Exp $
+// $Id: Project.java,v 1.86 2003/10/26 18:30:33 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -924,8 +924,7 @@ public class Project implements java.io.Serializable, TargetListener {
             // and is now null,
             // don't attempt to delete it!
             if(ModelFacade.getTop(ModelFacade.getStateMachine(statediagram)) != null){
-            ProjectManager.getManager().getCurrentProject()
-		.moveToTrash(statediagram.getStateMachine());
+                this.moveToTrash(statediagram.getStateMachine());
             }
         }
         d.removeChangeRegistryAsListener(_saveRegistry);
