@@ -1,4 +1,4 @@
-#set ($user = $scarabR.getUser($issue.ModifiedBy.toString()) )
+#set ($user = $issue.ModifiedBy )
 Bug report $issue.UniqueId has just been filed by user $user.UserName.
 
 #set ($attrValues = $issue.AttributeValuesMap)

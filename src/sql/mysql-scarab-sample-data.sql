@@ -72,7 +72,8 @@ INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (5,12,'Functional Area',1,0,1000,0,
  * Sample Issues
  */
 
-insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT, CREATED_BY) values (1, 5, 'PACD', 1,5);
+insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) 
+       values (1, 5, 'PACD', 1);
 
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 1, 'Documents are not as current as they should be.');
@@ -90,9 +91,16 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (9, 1, 9, 66, 'major');
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (19, 1, 12, 89, 'UI');
 
+/* add a transaction for the insertion */
+insert into SCARAB_TRANSACTION(TRANSACTION_ID, TYPE_ID, CREATED_BY, CREATED_DATE)
+       values (1, 1, 5, 200109020030);
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_VALUE)
+       values (1, 1, 11, 1, 'Docs are out of date.');
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID)
+       values (2, 1, 3, 1, 2);
 
-
-insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT, CREATED_BY) values (2, 2, 'PACS', 1, 5);
+insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) 
+       values (2, 2, 'PACS', 1);
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (10, 2, 1, 'Items do not display correctly.');
 /* summary */
@@ -111,6 +119,14 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTIO
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (17, 2, 7, 58, 'High');
 /* severity is major */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (18, 2, 9, 65, 'normal');
+
+/* add a transaction for the insertion */
+insert into SCARAB_TRANSACTION(TRANSACTION_ID, TYPE_ID, CREATED_BY, CREATED_DATE)
+       values (2, 1, 5, 200109030815);
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_VALUE)
+       values (3, 2, 11, 2, 'Dates display in long form instead of short form.');
+insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID)
+       values (4, 2, 3, 2, 2);
 
 
 /* make this issue a child issue of issue 1 */

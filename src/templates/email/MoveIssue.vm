@@ -5,7 +5,7 @@
   #set ($actionWord = "moved")
 #end
 
-#set ($user = $scarabR.getUser($issue.ModifiedBy.toString()) )
+#set ($user = $issue.ModifiedBy )
 #Issue $issue.UniqueId has just been $actionWord from $oldModule to $newModule by user $user.UserName.
 
 You can view the issue detail at the following URL:

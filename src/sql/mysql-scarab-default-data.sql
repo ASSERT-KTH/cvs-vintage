@@ -345,7 +345,7 @@ insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
         values(2, 'All users');
 
 /*
- *
+ * Attachment types
  */
 insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
         values(1, 'ATTACHMENT');
@@ -355,6 +355,16 @@ insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
         values(3, 'URL');
 insert into SCARAB_ATTACHMENT_TYPE(ATTACHMENT_TYPE_ID, ATTACHMENT_TYPE_NAME)
         values(4, 'MODIFICATION');
+
+/*
+ * Transaction types
+ */
+insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
+        values(1, 'Create Issue');
+insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
+        values(2, 'Edit Issue');
+insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
+        values(3, 'Move Issue');
 
 /*
  * root module

@@ -245,7 +245,7 @@ $!attVal.Value
 
 
 Reported by:<br>
-#set ( $email = $currentIssue.UserRelatedByCreatedBy.Email )
+#set ( $email = $currentIssue.CreatedBy.Email )
 <A HREF="mailto:$email">$email</A>
 
 

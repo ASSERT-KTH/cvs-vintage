@@ -94,6 +94,31 @@
 </table>
 </div>
 
+<h3>Personnel Search</h3>
+		
+<div class="axial">
+	<table width="100%" cellpadding="3" cellspacing="2" border="1">
+    	<tr>
+			<th width="120">committed by:</th>
+			<td>
+            <select multiple="multiple">
+			<option>user@users.com</option>
+			<option>user@users.com</option>
+			<option>user@users.com</option>
+			</select>
+            </td>
+	    </tr>
+			
+		<tr>
+			<th width="120">assignee(s):</th>
+			<td><select multiple="multiple">
+			<option>user@users.com</option>
+			<option>user@users.com</option>
+			<option>user@users.com</option>
+			</select></td>
+		</tr>
+	</table>
+</div>
 
 
        <h3>State change query</h3>

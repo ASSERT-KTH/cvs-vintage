@@ -94,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.30 2001/09/06 22:59:28 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.31 2001/09/07 00:35:38 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -164,7 +164,6 @@ public class ModifyIssue extends TemplateAction
 
         if ( intake.isAllValid() ) 
         {
-            // removeme issue.setModifiedBy(user.getUserId());
             issue.save();
 
             // Save explanatory comment
@@ -328,7 +327,6 @@ public class ModifyIssue extends TemplateAction
                                     null, null, "", "");
                 }
                 intake.remove(group);
-                // removeme issue.setModifiedBy(user.getUserId());
                 issue.save();
                 transaction.sendEmail(new ContextAdapter(context), issue);
 
@@ -385,7 +383,6 @@ public class ModifyIssue extends TemplateAction
                String desc = descBuf.toString();
                activity.create(issue, null, desc, transaction,
                                null, null, "", "");
-               // removeme issue.setModifiedBy(user.getUserId());
                issue.save();
                transaction.sendEmail(new ContextAdapter(context), issue);
             } 
@@ -441,7 +438,6 @@ public class ModifyIssue extends TemplateAction
                }
 
                depend.save();
-               // removeme currentIssue.setModifiedBy(user.getUserId());
                currentIssue.save();
 
                // Save transaction record
@@ -528,7 +524,6 @@ public class ModifyIssue extends TemplateAction
                activity.create(issue, null, desc,
                                transaction, null, null,
                                oldValue, newValue);
-               // removeme issue.setModifiedBy(user.getUserId());
                issue.save();
                transaction.sendEmail(new ContextAdapter(context), issue);
 
@@ -614,7 +609,6 @@ public class ModifyIssue extends TemplateAction
             String desc = descBuf.toString();
             activity.create(issue, null, desc,
                             transaction, null, null, "", "");
-            // removeme issue.setModifiedBy(user.getUserId());
             issue.save();
             transaction.sendEmail(new ContextAdapter(context), issue);
         }

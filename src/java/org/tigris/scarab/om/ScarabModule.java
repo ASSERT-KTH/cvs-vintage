@@ -121,11 +121,6 @@ public class ScarabModule
     {
         Issue issue = new Issue();
         issue.setModuleCast( (ModuleEntity) this );
-//        issue.setModifiedBy((NumberKey)user.getUserId());
-//        issue.setCreatedBy((NumberKey)user.getUserId());
-        java.util.Date now = new java.util.Date();
-        issue.setModifiedDate(now);
-        issue.setCreatedDate(now);
         issue.setDeleted(false);
         return issue;
     }

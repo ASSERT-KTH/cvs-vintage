@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.38 2001/08/30 00:01:23 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.39 2001/09/07 00:35:38 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -413,34 +413,12 @@
     -->
     <column name="MODULE_ID" required="true" type="INTEGER"></column>
     <!--
-        Person that made last modification to the issue.
-    -->
-    <column name="MODIFIED_BY" required="false" type="INTEGER"></column>
-    <!--
-        Person that created the issue initially.
-    -->
-    <column name="CREATED_BY" required="false" type="INTEGER"></column>
-    <!--
-        Date of the last modification of the issue.
-    -->
-    <column name="MODIFIED_DATE" required="false" type="TIMESTAMP"></column>
-    <!--
-        Date of the initial creation of the issue.
-    -->
-    <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
-    <!--
         Flag, which marks that issue has been deleted.
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
-        <reference local="CREATED_BY" foreign="USER_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
-        <reference local="MODIFIED_BY" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
@@ -839,6 +817,10 @@
     -->
     <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
+        Possible enumerated transaction type.
+    -->
+    <column name="TYPE_ID"  required="false" type="INTEGER"/>
+    <!--
         Comment added to modification.
     -->
     <column name="ATTACHMENT_ID"  required="false" type="INTEGER"/>
@@ -854,10 +836,32 @@
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="CREATED_BY" foreign="USER_ID"/>
     </foreign-key>
+    <foreign-key foreignTable="SCARAB_TRANSACTION_TYPE">
+        <reference local="TYPE_ID" foreign="TYPE_ID"/>
+    </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTACHMENT">
         <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
     </foreign-key>
 </table>
+
+<!--
+    Possible types of transactions.
+    Example: Issue Created
+    Example: Issue Moved
+-->
+<table name="SCARAB_TRANSACTION_TYPE" idMethod="idbroker" 
+        javaName="TransactionType">
+    <!--
+        Unique identifier.
+    -->
+    <column name="TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Name.
+    -->
+    <column name="NAME" javaName="Name" required="true" type="VARCHAR" 
+            size="100"/>
+</table>
+
 
 <!--
     Vote for the certain value of the attribute of an issue.

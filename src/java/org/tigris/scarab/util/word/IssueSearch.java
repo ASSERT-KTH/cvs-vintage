@@ -72,6 +72,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.TransactionPeer;
+import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
 
 import org.tigris.scarab.util.ScarabConstants;
@@ -709,9 +710,17 @@ public class IssueSearch
     {
         Date minUtilDate = parseDate(getMinDate(), false);
         Date maxUtilDate = parseDate(getMaxDate(), true);
-        addDateRange(IssuePeer.CREATED_DATE, minUtilDate, maxUtilDate, crit);
+        addDateRange(TransactionPeer.CREATED_DATE, 
+                     minUtilDate, maxUtilDate, crit);
+        crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                     ActivityPeer.TRANSACTION_ID);
+        crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+        crit.add(TransactionPeer.TYPE_ID, TransactionTypePeer.CREATE_ISSUE__PK);
+        // there could be multiple attributes modified during the creation
+        // which will lead to duplicate issue selection, so we need to 
+        // specify only unique issues
+        crit.setDistinct();
     }
-
 
 
     /**
@@ -814,40 +823,45 @@ public class IssueSearch
     {
         Criteria.Criterion c = null;
         boolean atLeastOne = false;
+        // int[] alias_indices = new int[attValues.size()];
+        // StringStackBuffer aliasIndices = 
+        //    new StringStackBuffer(attValues.size());
+        HashMap aliasIndices = new HashMap((int)(attValues.size()*1.25));
         for ( int i=0; i<attValues.size(); i++ ) 
         {
             AttributeValue aval = (AttributeValue)attValues.get(i);
             if ( aval instanceof OptionAttribute ) 
             {
+                // we will add at least one option attribute to the criteria
                 atLeastOne = true;
-                Criteria.Criterion c1 = crit.getNewCriterion("av" + i,
-                    AV_ISSUE_ID, "av" + i + "." + AV_ISSUE_ID + "=" + 
-                    IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
-                crit.addAlias("av" + i, AttributeValuePeer.TABLE_NAME);
-                List descendants = aval.getAttributeOption().getDescendants();
-                if ( descendants.size() == 0 ) 
+                // check if this is a new attribute or another possible value
+                String index = aval.getAttributeId().toString();
+                if ( aliasIndices.containsKey(index) ) 
                 {
-                    c1.and(crit.getNewCriterion( "av" + i, AV_OPTION_ID,
-                        aval.getOptionId(), Criteria.EQUAL));
+                    // this represents another possible value for an attribute
+                    // OR it to the other possibilities
+                    Criteria.Criterion prevCrit = 
+                        (Criteria.Criterion )aliasIndices.get(index);
+                    Criteria.Criterion c2 = buildOptionCriterion(aval);
+                    prevCrit.or(c2);
                 }
                 else
-                { 
-                    NumberKey[] ids = new NumberKey[descendants.size()];
-                    for ( int j=ids.length-1; j>=0; j-- ) 
+                {
+                    Criteria.Criterion c1 = crit.getNewCriterion("av"+index,
+                        AV_ISSUE_ID, "av" + index + "." + AV_ISSUE_ID + "=" + 
+                        IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
+                    crit.addAlias("av"+index, AttributeValuePeer.TABLE_NAME);
+                    Criteria.Criterion c2 = buildOptionCriterion(aval);
+                    c1.and(c2);
+                    aliasIndices.put(index, c2);
+                    if ( c == null ) 
                     {
-                        ids[j] = ((AttributeOption)descendants.get(j))
-                            .getOptionId();
+                        c = c1;
                     }
-                    c1.and(crit.getNewCriterion( "av" + i, AV_OPTION_ID,
-                        ids, Criteria.IN));
-                }                
-                if ( c == null ) 
-                {
-                    c = c1;
-                }
-                else 
-                {
-                    c.and(c1);
+                    else 
+                    {
+                        c.and(c1);
+                    }
                 }
             }
         }
@@ -856,6 +870,41 @@ public class IssueSearch
         {
             crit.add(c);            
         }
+    }
+
+    
+    /**
+     * This method builds a Criterion for a single attribute value.
+     * It is used in the addOptionAttributes method
+     *
+     * @param aval an <code>AttributeValue</code> value
+     * @return a <code>Criteria.Criterion</code> value
+     */
+    private Criteria.Criterion buildOptionCriterion(AttributeValue aval)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        Criteria.Criterion criterion = null;        
+        String index = aval.getAttributeId().toString();
+        List descendants = aval.getAttributeOption().getDescendants();
+        if ( descendants.size() == 0 ) 
+        {
+            criterion = crit.getNewCriterion( "av"+index, AV_OPTION_ID,
+                aval.getOptionId(), Criteria.EQUAL);
+        }
+        else
+        { 
+            NumberKey[] ids = new NumberKey[descendants.size()];
+            for ( int j=ids.length-1; j>=0; j-- ) 
+            {
+                ids[j] = ((AttributeOption)descendants.get(j))
+                    .getOptionId();
+            }
+            criterion = crit.getNewCriterion( "av"+index, AV_OPTION_ID,
+                                              ids, Criteria.IN);
+        }
+        
+        return criterion;
     }
 
     private NumberKey[] addTextMatches(Criteria crit, List attValues)

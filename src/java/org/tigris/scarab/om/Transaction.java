@@ -87,7 +87,7 @@ public class Transaction
     /**
      * Populates a new transaction object.
      */
-    public void create(ScarabUser user, Attachment attachment)
+    public void create(NumberKey typeId, ScarabUser user, Attachment attachment)
         throws Exception
     {
         if (attachment != null && attachment.getAttachmentId() == null) 
@@ -96,6 +96,7 @@ public class Transaction
                 "Attachment must be saved before starting transaction";
             throw new ScarabException(mesg);
         }
+        setTypeId(typeId);
         setCreatedBy(user.getUserId());
         setCreatedDate(new Date());
         if (attachment != null)

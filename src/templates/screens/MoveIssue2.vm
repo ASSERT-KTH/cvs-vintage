@@ -29,7 +29,7 @@
          <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
 
          <td>
-             #set ($createdUser = $scarabR.getUser($issue.CreatedBy.toString()) )
+             #set ($createdUser = $issue.CreatedBy)
              <a href="mailTo:$createdUser.Email">$createdUser.UserName</a>
          </td>
         </tr>

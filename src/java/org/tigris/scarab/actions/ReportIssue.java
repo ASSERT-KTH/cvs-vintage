@@ -76,6 +76,7 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.RModuleAttributePeer;
+import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -85,7 +86,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.43 2001/08/31 01:48:54 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.44 2001/09/07 00:35:38 jmcnally Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -313,7 +314,8 @@ public class ReportIssue extends TemplateAction
             {
                 // Save transaction record
                 Transaction transaction = new Transaction();
-                transaction.create(user, null);
+                transaction
+                    .create(TransactionTypePeer.CREATE_ISSUE__PK, user, null);
 
                 // enter the values into the transaction
                 i = avMap.iterator();
@@ -323,8 +325,6 @@ public class ReportIssue extends TemplateAction
                     aval.startTransaction(transaction);
                 }
 
-                issue.setCreatedBy(user.getUserId());
-                issue.setModifiedBy(user.getUserId());
                 issue.save();
                 user.setReportingIssue(null);
 
