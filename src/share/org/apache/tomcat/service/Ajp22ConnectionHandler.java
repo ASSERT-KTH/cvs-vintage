@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.5 1999/10/29 23:40:52 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/29 23:40:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.6 1999/11/02 17:37:20 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/11/02 17:37:20 $
  *
  * ====================================================================
  *
@@ -149,9 +149,6 @@ public class Ajp22ConnectionHandler  implements  TcpConnectionHandler {
 		// final fix on response & request
 		//		rresponse.setServerHeader(server.getServerHeader());
 
-		String ctxPath = ctx.getPath();
-		String pathInfo =path.substring(ctxPath.length(),
-						path.length());
                 //    don't do headers if request protocol is http/0.9
 		if (rrequest.getProtocol() == null) {
 		    rresponse.setOmitHeaders(true);

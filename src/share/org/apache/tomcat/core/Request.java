@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.6 1999/10/28 05:15:24 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/10/28 05:15:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.7 1999/11/02 17:37:19 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 1999/11/02 17:37:19 $
  *
  * ====================================================================
  *
@@ -64,7 +64,6 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.3 1999/10/31 19:28:01 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/31 19:28:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.4 1999/11/02 17:37:19 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/02 17:37:19 $
  *
  * ====================================================================
  *
@@ -64,7 +64,6 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
