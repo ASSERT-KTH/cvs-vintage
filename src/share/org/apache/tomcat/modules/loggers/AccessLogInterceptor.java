@@ -189,7 +189,7 @@ public class AccessLogInterceptor extends BaseInterceptor {
     
     /** <p>This method is actually creating an entry in the log file.</p>
      */
-    public int beforeCommit(Request request, Response response) {
+    public int postRequest(Request request, Response response) {
 	synchronized (AccessLogInterceptor.class) {
 	    FileWriter fw = getFileWriter();
 	    if (fw != null) {
@@ -242,9 +242,14 @@ public class AccessLogInterceptor extends BaseInterceptor {
 				fw.write(request.protocol().toString().trim());
 				break;
 			    case 'b':
-				String cl = response.getMimeHeaders().
-				                   getHeader("Content-Length");
-				if(cl != null) {
+				String cl;
+				if(response.getStatus() == 201) {
+				    cl = request.getHeader("Content-Length");
+				} else {
+				    cl = response.getMimeHeaders().
+					getHeader("Content-Length");
+				}
+				if(cl != null && !"0".equals(cl)) {
 				    fw.write(cl);
 				} else {
 				    fw.write("-");
