@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.27 2002/01/29 19:35:28 jon Exp $
+$Id: README.txt,v 1.28 2002/02/05 03:11:28 jon Exp $
 
 Welcome to Scarab!
 
@@ -102,6 +102,10 @@ system will take the first property it can find and use that. It will
 first look for the ~/build.properties and then look for the
 build/default.properties.
 
+Chances are that you are going to have to define your own database and
+mail server properties as well as a few other properties. Please look in
+the scarab/build/default.properties for a list of things that you can
+define.
 
 -------------------------------------------------------------------------
 | S E T T I N G  T H E  M A I L S E R V E R                             |
@@ -177,32 +181,42 @@ NOTE: There may be problems building and running Scarab with Tomcat 3.2.1.
 The process of building Scarab creates the .sql file that is used to
 describe the Scarab database schema. To install the database schema's,
 you will need to install MySQL and put the path to the mysqladmin and
-mysql binaries into your PATH environment variable. Once you have done
-that and you have MySQL up and running with no username/password for
-localhost access, you can simply execute the following:
+mysql binaries into your PATH environment variable. 
 
-cd src/sql
-./create-mysql-database.sh   <-- Unix
-create-mysql-database.bat    <-- Win32
+Simply put, the idea is that the database creation scripts and the Java
+database driver (JDBC) need the ability to connect to the database. In
+order to do this, the code needs to be told a host machine, database
+name, username and password.
 
-NOTE: This will attempt to first drop a database called "scarab" and 
-      then re-create it. If you execute this script, all of your
-      previous data will be lost without warning!
+By default, the scripts assume a database called 'scarab' and no
+username/password to connect to the database on localhost. If you have
+MySQL up and running with no username/password for localhost access, you
+can simply execute the following:
 
-NOTE: If you need to specify a host/username/password, you will need to 
-      edit the create-mysql-database.sh/.bat script to specify these to
-      the MySQL client. We have added a feature to the .sh script which
-      prevents you from needing to edit it, simply pass the
-      username/password in as arguments when you execute it.
+    cd src/sql
+    ./create-mysql-database.sh   <-- Unix
+    create-mysql-database.bat    <-- Win32
+
+If you need to specify a host/username/password/databasename, you will
+need to edit the dbsettings.props file (Unix) or the
+create-mysql-database.bat script (Win32) in order to specify these
+settings to the MySQL client. We have also added a feature to the .sh
+script which prevents you from needing to edit it, simply pass the
+username/password in as arguments when you execute it:
       
       ./create-mysql-database.sh USERNAME PASSWORD DATABASE_NAME
       
-      Also make sure to edit the src/conf/TurbineResources.properties
-      file and modify the database.default.url,
-      database.default.username and database.default.password
-      properties. Once you have done this, you will need to build the
-      sandbox again in order to copy the TR.props file to the right
-      location.
+Also make sure to define your own scarab.database.* properties in your
+local build.properties (see above for the explanation about how to use
+build.properties) based on what is in the
+scarab/build/default.properties. Once you have done this, you will need
+to build the sandbox again in order to generate the right configuration
+files based on this information.
+
+NOTE: This will attempt to first drop a database called "scarab" and 
+      then re-create it. If you execute this create-* script, all of
+      your previous data in that specific database will be lost without
+      warning!
 
 NOTE: If you get an 'access denied' or 'Invalid authorization' error
       from MySQL, please read the MySQL documentation on how to fix this
