@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.15 2002/09/02 13:24:49 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.16 2002/09/04 08:50:44 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -239,7 +239,9 @@ class UMLTypeModel extends UMLComboBoxModel {
 			return;
 		}
 		
-		setSelectedItem(new UMLComboBoxEntry((MModelElement)event.getNewValue(), _container.getProfile(), false));
+		if (!event.getNewValue().equals(event.getOldValue())) {
+			setSelectedItem(new UMLComboBoxEntry((MModelElement)event.getNewValue(), _container.getProfile(), false));
+		}
 		
 	}
 
