@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.34 2002/03/07 10:03:25 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.35 2002/03/15 03:50:28 spestov Exp $
  */
 public class ChunkCache
 {
@@ -103,26 +103,26 @@ public class ChunkCache
 						current = newChunk;
 
 						x += newChunk.width;
-
-						if(end != null
-							&& addedNonWhiteSpace
-							&& wrapMargin != 0
-							&& x > wrapMargin)
-						{
-							if(first != null)
-								out.add(first);
-							first = new Chunk(firstNonWhiteSpace,end.offset + 1);
-							first.next = end.next;
-							end.next = null;
-
-							x = x + firstNonWhiteSpace - endX;
-						}
-
-						if(first == null)
-							first = current;
-	
-						seenNonWhiteSpace = true;
 					}
+
+					if(end != null
+						&& addedNonWhiteSpace
+						&& wrapMargin != 0
+						&& x > wrapMargin)
+					{
+						if(first != null)
+							out.add(first);
+						first = new Chunk(firstNonWhiteSpace,end.offset + 1);
+						first.next = end.next;
+						end.next = null;
+
+						x = x + firstNonWhiteSpace - endX;
+					}
+
+					if(first == null)
+						first = current;
+	
+					seenNonWhiteSpace = true;
 					//}}}
 
 					//{{{ Create ' ' chunk
