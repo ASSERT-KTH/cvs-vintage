@@ -11,7 +11,7 @@ import javax.jms.Session;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /**
  * Provides a container and parser for the metadata of a message driven bean.
@@ -30,7 +30,7 @@ import org.jboss.ejb.DeploymentException;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData

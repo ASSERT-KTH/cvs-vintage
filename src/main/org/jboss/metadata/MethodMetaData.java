@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** The combination of the method-permission, container-transaction
 
@@ -37,7 +37,7 @@ attribute is to be applied to all the specified methods.
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class MethodMetaData extends MetaData {
     // Constants -----------------------------------------------------

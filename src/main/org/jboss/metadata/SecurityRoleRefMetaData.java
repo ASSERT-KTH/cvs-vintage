@@ -8,7 +8,7 @@ package org.jboss.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** The metadata object for the security-role-ref element.
 The security-role-ref element contains the declaration of a security
@@ -24,7 +24,7 @@ Used in: entity and session
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class SecurityRoleRefMetaData extends MetaData {
     // Constants -----------------------------------------------------

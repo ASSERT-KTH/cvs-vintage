@@ -14,9 +14,10 @@ import org.w3c.dom.Element;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
-public interface XmlLoadable {
+public interface XmlLoadable
+{
     
     // Public --------------------------------------------------------
     public void importXml(Element element) throws Exception;

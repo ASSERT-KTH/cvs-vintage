@@ -9,8 +9,6 @@ package org.jboss.deployment;
 import java.util.Vector;
 import java.util.Iterator;
 
-
-import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
@@ -20,7 +18,7 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author <firstname> <lastname> (<email>)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class J2eeApplicationMetaData
    extends MetaData
@@ -73,7 +71,8 @@ public class J2eeApplicationMetaData
 
 
 
-    public void importXml (Element element) throws DeploymentException {
+    public void importXml (Element element) throws DeploymentException
+    {
 		String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
 		
 		if (rootTag.equals("application")) {
@@ -91,7 +90,8 @@ public class J2eeApplicationMetaData
 				
             e2 = getOptionalChild (element, "large-icon");
 	 			largeIcon = e2 != null ? getElementContent (e2) : "";
-		   } else
+		   }
+         else
 		   {
 				smallIcon = "";
 				largeIcon = "";

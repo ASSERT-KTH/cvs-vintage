@@ -8,7 +8,7 @@ package org.jboss.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** The meta data information for a resource-env-ref element.
 The resource-env-ref element contains a declaration of an enterprise
@@ -27,7 +27,7 @@ Example:
 </resource-env-ref>
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class ResourceEnvRefMetaData extends MetaData
 {

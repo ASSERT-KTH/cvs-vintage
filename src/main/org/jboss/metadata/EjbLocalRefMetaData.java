@@ -8,7 +8,7 @@ package org.jboss.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /**
  *   <description> 

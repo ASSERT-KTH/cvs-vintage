@@ -8,7 +8,7 @@ package org.jboss.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** 
  * The meta data object for the cluster-config element.
@@ -16,7 +16,7 @@ import org.jboss.ejb.DeploymentException;
  * expanded to include other cluster configuration parameters later on.
 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ClusterConfigMetaData extends MetaData
 {

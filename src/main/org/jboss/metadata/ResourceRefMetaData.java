@@ -8,7 +8,7 @@ package org.jboss.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** The meta data information for a resource-ref element.
 The resource-ref element contains a declaration of enterprise bean’s
@@ -22,7 +22,7 @@ Used in: entity, message-driven, and session
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ResourceRefMetaData extends MetaData {
     // Constants -----------------------------------------------------

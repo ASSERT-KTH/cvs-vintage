@@ -18,13 +18,7 @@ import java.util.Vector;
 import java.util.Collection;
 import java.util.zip.ZipEntry;import java.util.zip.ZipInputStream;import java.util.Enumeration;
 
-
-
-
-
-import org.apache.log4j.Category;
-
-
+import org.jboss.logging.Logger;
 
 /** This class is used by the J2eeDeployer to create, remove or find a particular
  *  Deployment. It uses the Installer class to create a Deployment.
@@ -32,7 +26,7 @@ import org.apache.log4j.Category;
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *  @author <a href="mailto:wburke@commercetone.com">Bill Burke</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public class InstallerFactory
 {
@@ -43,8 +37,7 @@ public class InstallerFactory
    // the deployment base directory (for the temporary files)
    protected File baseDir;
    // the logger if there is something to say
-   protected Category log;
-   
+   protected Logger log;
    
    // Constructors --------------------------------------------------
    
@@ -52,7 +45,7 @@ public class InstallerFactory
     * @param _tmpDir the temporary deployment directory
     * @param _log the Log for output
     */
-   public InstallerFactory(File _tmpDir, Category _log) throws IOException
+   public InstallerFactory(File _tmpDir, Logger _log) throws IOException
    
    {
       baseDir = _tmpDir.getCanonicalFile();

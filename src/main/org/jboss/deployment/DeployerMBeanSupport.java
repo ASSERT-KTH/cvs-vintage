@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>Revisions:</b>
  *
@@ -79,7 +79,6 @@ public abstract class DeployerMBeanSupport
    // Constructors --------------------------------------------------
    public DeployerMBeanSupport()
    {
-      //category =  Logger.create(getClass());
    }
 
    

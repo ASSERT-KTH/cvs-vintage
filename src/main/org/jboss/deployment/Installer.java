@@ -30,14 +30,12 @@ import java.util.Enumeration;
 
 import javax.management.ObjectName;
 
-
-import org.jboss.metadata.XmlFileLoader;
-
-import org.jboss.ejb.DeploymentException;
-
-import org.apache.log4j.Category;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import org.jboss.logging.Logger;
+import org.jboss.metadata.XmlFileLoader;
+
 
 /** 
  * A class intended to encapsulate the complex task of making an URL pointed
@@ -48,7 +46,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 
 public class Installer
@@ -72,7 +70,7 @@ public class Installer
    Deployment d;
    
    // the log4j category for output
-   Category log;
+   Logger log;
 
    // to get the Log and the temprary deployment dir
    InstallerFactory factory;
@@ -168,27 +166,33 @@ public class Installer
    }
 
    /** install EAR application */
-   protected void executeEARModule(String name, Deployment d, File localCopy, URL libraryRoot) throws J2eeDeploymentException, IOException {
+   protected void executeEARModule(String name, Deployment d, File localCopy, URL libraryRoot)
+      throws J2eeDeploymentException, IOException
+   {
        // reading the deployment descriptor...
        JarFile jarFile = new JarFile(localCopy);
        J2eeApplicationMetaData app = null;
-       try {
+       try
+       {
            InputStream in = jarFile.getInputStream(jarFile.getEntry(files[EAR_MODULE]));
            XmlFileLoader xfl = new XmlFileLoader();
            Element root = xfl.getDocument(in, files[EAR_MODULE]).getDocumentElement();
            app = new J2eeApplicationMetaData(root);
            in.close();
        }
-       catch (IOException _ioe) {
-           throw new J2eeDeploymentException("Error in accessing application metadata: "+_ioe.getMessage());
+       catch (IOException e)
+       {
+           throw new J2eeDeploymentException("Error in accessing application metadata", e);
        }
-       catch (DeploymentException _de) {
-           throw new J2eeDeploymentException("Error in parsing application.xml: "+_de.getMessage());
+       catch (DeploymentException e)
+       {
+           throw new J2eeDeploymentException("Error deploying application", e);
        }
-       catch (NullPointerException _npe) {
-           throw new J2eeDeploymentException("unexpected error: application.xml was found once but not a second time?!");
+       catch (NullPointerException e)
+       {
+           throw new J2eeDeploymentException("unexpected error: application.xml was found once but not a second time?!", e);
        }
-       
+
        // iterating the modules and install them
        // the library url is used to root the embedded classpaths
        libraryRoot=new URL("jar:file:"+localCopy.getAbsolutePath()+"!/");

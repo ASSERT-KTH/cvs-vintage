@@ -9,13 +9,13 @@ package org.jboss.metadata;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** The meta data information specific to session beans.
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class SessionMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------

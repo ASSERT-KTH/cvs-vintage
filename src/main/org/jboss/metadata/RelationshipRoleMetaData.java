@@ -7,14 +7,14 @@
 package org.jboss.metadata;
 
 import org.w3c.dom.Element;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** 
  * Represents one ejb-relationship-role element found in the ejb-jar.xml
  * file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class RelationshipRoleMetaData extends MetaData {
    // one is one

@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.w3c.dom.Element;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** 
  * Represents one ejb-relation element found in the ejb-jar.xml
  * file's relationships elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class RelationMetaData extends MetaData {
    /** Name of the relation. Loaded from the ejb-relation-name element. */

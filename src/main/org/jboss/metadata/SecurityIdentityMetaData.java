@@ -8,7 +8,7 @@ package org.jboss.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** The meta data object for the security-identity element.
 The security-identity element specifies whether the caller’s security
@@ -20,7 +20,7 @@ identity to be used.
 Used in: session, entity, message-driven
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public class SecurityIdentityMetaData extends MetaData
 {

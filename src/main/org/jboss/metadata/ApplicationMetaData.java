@@ -18,7 +18,7 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 
 /** The top level meta data from the jboss.xml descriptor.
@@ -27,8 +27,8 @@ import org.jboss.ejb.DeploymentException;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.23 $
+ *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ *   @version $Revision: 1.24 $
  */
 public class ApplicationMetaData extends MetaData
 {

@@ -16,7 +16,7 @@ import java.util.Collection;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NobodyPrincipal;
 import org.jboss.security.SimplePrincipal;
@@ -30,7 +30,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>

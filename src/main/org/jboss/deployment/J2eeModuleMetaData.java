@@ -6,7 +6,6 @@
  */
 package org.jboss.deployment;
 
-import org.jboss.ejb.DeploymentException;
 import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
@@ -16,7 +15,7 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class J2eeModuleMetaData
    extends MetaData

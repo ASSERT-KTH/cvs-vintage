@@ -12,7 +12,7 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 /** A representation of the web-app.xml and jboss-web.xml deployment
  * descriptors as used by the AbstractWebContainer web container integration
@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  * @see org.jboss.web.AbstractWebContainer
 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class WebMetaData implements XmlLoadable
 {

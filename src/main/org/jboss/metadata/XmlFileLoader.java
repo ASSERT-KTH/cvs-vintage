@@ -24,7 +24,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 
 /**
@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  *
  *   Revisions:
  *   20010620 Bill Burke: Print an error message when failing to load standardjboss.xml
@@ -50,7 +50,7 @@ public class XmlFileLoader
 
     // Attributes ----------------------------------------------------
     private static boolean defaultValidateDTDs = false;
-    private static Logger log = Logger.create(XmlFileLoader.class);
+    private static Logger log = Logger.getLogger(XmlFileLoader.class);
     private ClassLoader classLoader;
     private ApplicationMetaData metaData;
     private boolean validateDTDs;

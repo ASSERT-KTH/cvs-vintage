@@ -11,7 +11,7 @@ import javax.naming.NamingException;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.naming.Util;
 
 /**
@@ -19,7 +19,7 @@ import org.jboss.naming.Util;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class EnvEntryMetaData extends MetaData {
     // Constants -----------------------------------------------------
