@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.33 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.34 2003/03/28 00:12:30 jon Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -103,7 +103,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 if (IssueTypePeer.isUnique(name, null)) 
                 {
                     group.setProperties(issueType);
-                    issueType.setParentId(IssueTypePeer.ROOT_KEY);
+                    issueType.setParentId(IssueTypePeer.getRootKey());
                     issueType.save();
                     
                     // Create default attribute groups
