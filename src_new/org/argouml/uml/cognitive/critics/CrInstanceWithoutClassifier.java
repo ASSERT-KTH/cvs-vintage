@@ -1,4 +1,4 @@
-// $Id: CrInstanceWithoutClassifier.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrInstanceWithoutClassifier.java,v 1.8 2003/12/14 17:14:04 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrInstanceWithoutClassifier.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrInstanceWithoutClassifier.java,v 1.8 2003/12/14 17:14:04 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -60,7 +61,7 @@ public class CrInstanceWithoutClassifier extends CrUML {
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
 	VectorSet offs = computeOffenders(dd);
-	return new ToDoItem(this, offs, dsgr);
+	return new UMLToDoItem(this, offs, dsgr);
     }
 
     public boolean stillValid(ToDoItem i, Designer dsgr) {

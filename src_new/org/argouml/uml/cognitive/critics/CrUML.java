@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.24 2003/12/05 09:15:42 mkl Exp $
+// $Id: CrUML.java,v 1.25 2003/12/14 17:14:07 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,18 +25,21 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.24 2003/12/05 09:15:42 mkl Exp $
+// $Id: CrUML.java,v 1.25 2003/12/14 17:14:07 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ocl.OCLEvaluator;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.tigris.gef.util.VectorSet;
 
 /** "Abstract" Critic subclass that captures commonalities among all
@@ -205,6 +208,13 @@ public class CrUML extends Critic {
 	    return res;		// string when not needed.
 	else
 	    return beginning.append(res).toString();
+    }
+    
+    /** create a new UMLToDoItem.
+     * @see org.argouml.uml.cognitive.UMLToDoItem
+     */
+    public ToDoItem toDoItem(Object dm, Designer dsgr) {
+	return new UMLToDoItem(this, dm, dsgr);
     }
 
 } /* end class CrUML */

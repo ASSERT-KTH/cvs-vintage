@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.12 2003/12/14 17:14:07 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,14 @@
 // File: CrUnconventionalAttrName.java
 // Classes: CrUnconventionalAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.12 2003/12/14 17:14:07 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
@@ -95,7 +96,7 @@ public class CrUnconventionalAttrName extends CrUML {
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	Object f = /*(MFeature)*/ dm;
 	VectorSet offs = computeOffenders(f);
-	return new ToDoItem(this, offs, dsgr);
+	return new UMLToDoItem(this, offs, dsgr);
     }
 
     protected VectorSet computeOffenders(Object /*MFeature*/ dm) {

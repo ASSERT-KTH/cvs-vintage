@@ -1,4 +1,4 @@
-// $Id: CrNameConflict.java,v 1.7 2003/12/11 22:05:25 mkl Exp $
+// $Id: CrNameConflict.java,v 1.8 2003/12/14 17:14:06 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConflict.java
 // Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.7 2003/12/11 22:05:25 mkl Exp $
+// $Id: CrNameConflict.java,v 1.8 2003/12/14 17:14:06 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
@@ -62,7 +63,7 @@ public class CrNameConflict extends CrUML {
     
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	VectorSet offs = computeOffenders(dm);
-	return new ToDoItem(this, offs, dsgr);
+	return new UMLToDoItem(this, offs, dsgr);
     }
 
     protected VectorSet computeOffenders(Object dm) {

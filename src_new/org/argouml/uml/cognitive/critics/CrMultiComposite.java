@@ -1,4 +1,4 @@
-// $Id: CrMultiComposite.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrMultiComposite.java,v 1.6 2003/12/14 17:14:06 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,12 @@
 // File: CrMultiComposite.java
 // Classes: CrMultiComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrMultiComposite.java,v 1.6 2003/12/14 17:14:06 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 

@@ -1,4 +1,4 @@
-// $Id: CrNameConfusion.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNameConfusion.java,v 1.10 2003/12/14 17:14:06 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNameConfusion.java,v 1.10 2003/12/14 17:14:06 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,6 +36,7 @@ import java.util.Iterator;
 import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
@@ -90,7 +91,7 @@ public class CrNameConfusion extends CrUML {
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	Object me = /*(MModelElement)*/ dm;
 	VectorSet offs = computeOffenders(me);
-	return new ToDoItem(this, offs, dsgr);
+	return new UMLToDoItem(this, offs, dsgr);
     }
 
     public boolean stillValid(ToDoItem i, Designer dsgr) {

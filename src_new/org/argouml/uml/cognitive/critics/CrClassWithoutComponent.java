@@ -1,4 +1,4 @@
-// $Id: CrClassWithoutComponent.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
+// $Id: CrClassWithoutComponent.java,v 1.10 2003/12/14 17:14:03 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,14 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrClassWithoutComponent.java,v 1.9 2003/08/30 23:40:28 alexb Exp $
+// $Id: CrClassWithoutComponent.java,v 1.10 2003/12/14 17:14:03 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
@@ -59,7 +60,7 @@ public class CrClassWithoutComponent extends CrUML {
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
 	VectorSet offs = computeOffenders(dd);
-	return new ToDoItem(this, offs, dsgr);
+	return new UMLToDoItem(this, offs, dsgr);
     }
 
     public boolean stillValid(ToDoItem i, Designer dsgr) {

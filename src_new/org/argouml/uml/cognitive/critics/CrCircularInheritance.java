@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.11 2003/12/06 18:12:55 alexb Exp $
+// $Id: CrCircularInheritance.java,v 1.12 2003/12/14 17:14:03 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,14 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.11 2003/12/06 18:12:55 alexb Exp $
+// $Id: CrCircularInheritance.java,v 1.12 2003/12/14 17:14:03 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -73,7 +74,7 @@ public class CrCircularInheritance extends CrUML {
 							      
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	VectorSet offs = computeOffenders(dm);
-	return new ToDoItem(this, offs, dsgr);
+	return new UMLToDoItem(this, offs, dsgr);
     }
 								  
     protected VectorSet computeOffenders(Object dm) {
