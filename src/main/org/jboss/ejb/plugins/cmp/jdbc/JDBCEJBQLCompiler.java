@@ -39,6 +39,7 @@ import org.jboss.ejb.plugins.cmp.ejbql.ASTFrom;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTIdentifier;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTIn;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTIsEmpty;
+import org.jboss.ejb.plugins.cmp.ejbql.ASTLCase;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTLength;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTLike;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTLocate;
@@ -60,6 +61,7 @@ import org.jboss.ejb.plugins.cmp.ejbql.ASTStringComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTStringLiteral;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTStringParenthetical;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTSubstring;
+import org.jboss.ejb.plugins.cmp.ejbql.ASTUCase;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTWhere;
 import org.jboss.ejb.plugins.cmp.ejbql.SimpleNode;
 
@@ -84,7 +86,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -1027,6 +1029,36 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                this, new BlockStringBuffer()).toString(),
          node.jjtGetChild(2).jjtAccept(
                this, new BlockStringBuffer()).toString()
+      }; 
+      buf.append(function.getFunctionSql(args));
+
+      return buf;
+   }
+
+   /** Type-mapping function translation */
+   public Object visit(ASTLCase node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+
+      JDBCFunctionMappingMetaData function =
+            typeMapping.getFunctionMapping("lcase");
+      String[] args = new String[] {
+         node.jjtGetChild(0).jjtAccept(
+               this, new BlockStringBuffer()).toString(),
+      }; 
+      buf.append(function.getFunctionSql(args));
+
+      return buf;
+   }
+
+   /** Type-mapping function translation */
+   public Object visit(ASTUCase node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+
+      JDBCFunctionMappingMetaData function =
+            typeMapping.getFunctionMapping("ucase");
+      String[] args = new String[] {
+         node.jjtGetChild(0).jjtAccept(
+               this, new BlockStringBuffer()).toString(),
       }; 
       buf.append(function.getFunctionSql(args));
 

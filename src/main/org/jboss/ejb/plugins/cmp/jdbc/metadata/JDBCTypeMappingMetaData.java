@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public final class JDBCTypeMappingMetaData {
    
@@ -277,7 +277,7 @@ public final class JDBCTypeMappingMetaData {
                      ")}"  
                },
                new int[] {0, 1} );
-      functionMappings.put(function.getFunctionName().toLowerCase(), function);         
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
 
       // substring
       function = new JDBCFunctionMappingMetaData("substring",
@@ -288,7 +288,25 @@ public final class JDBCTypeMappingMetaData {
                   ")}"
                },
                new int[] {0, 1, 2} );
-      functionMappings.put(function.getFunctionName().toLowerCase(), function);         
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
+
+      // lcase
+      function = new JDBCFunctionMappingMetaData("lcase",
+               new String[] { 
+                     "{fn lcase(",
+                     ")}"  
+               },
+               new int[] {0} );
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
+
+      // ucase
+      function = new JDBCFunctionMappingMetaData("ucase",
+               new String[] { 
+                     "{fn ucase(",
+                     ")}"  
+               },
+               new int[] {0} );
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
 
       // length
       function = new JDBCFunctionMappingMetaData("length",
@@ -297,7 +315,7 @@ public final class JDBCTypeMappingMetaData {
                   ")}"
                },
                new int[] {0} );
-      functionMappings.put(function.getFunctionName().toLowerCase(), function);         
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
 
       // locate
       function = new JDBCFunctionMappingMetaData("locate",
@@ -308,7 +326,7 @@ public final class JDBCTypeMappingMetaData {
                   ")}"
                },
                new int[] {0, 1, 2} );
-      functionMappings.put(function.getFunctionName().toLowerCase(), function);         
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
 
       // abs
       function = new JDBCFunctionMappingMetaData("abs",
@@ -317,7 +335,7 @@ public final class JDBCTypeMappingMetaData {
                   ")}"
                },
                new int[] {0} );
-      functionMappings.put(function.getFunctionName().toLowerCase(), function);         
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
 
       // sqrt
       function = new JDBCFunctionMappingMetaData("sqrt",
@@ -326,6 +344,6 @@ public final class JDBCTypeMappingMetaData {
                   ")}"
                },
                new int[] {0} );
-      functionMappings.put(function.getFunctionName().toLowerCase(), function);         
+      functionMappings.put(function.getFunctionName().toLowerCase(), function);
    }
 }
