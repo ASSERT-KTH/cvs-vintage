@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 import org.jboss.logging.Logger;
 
@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  *   <p><b>Revisions:</b>
  *

@@ -12,7 +12,6 @@ import java.rmi.RemoteException;
 import javax.ejb.RemoveException;
 
 import org.jboss.ejb.ContainerPlugin;
-import org.jboss.util.FinderResults;
 
 /**
  * This interface is implemented by any EntityBean persistence Store.
@@ -26,7 +25,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin

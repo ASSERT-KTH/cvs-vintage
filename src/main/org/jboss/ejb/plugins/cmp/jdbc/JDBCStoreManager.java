@@ -40,7 +40,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.util.CachePolicy;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 import org.jboss.util.LRUCachePolicy;
 
 /**
@@ -58,7 +58,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 

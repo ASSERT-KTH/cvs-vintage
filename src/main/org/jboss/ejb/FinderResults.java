@@ -1,4 +1,4 @@
-package org.jboss.util;
+package org.jboss.ejb;
 
 import java.util.Collection;
 import java.util.Iterator;

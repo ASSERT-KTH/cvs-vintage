@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -44,7 +44,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;

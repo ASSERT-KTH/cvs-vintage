@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * JDBCLoadEntityCommand loads the data for an instance from the table.
@@ -40,7 +40,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;

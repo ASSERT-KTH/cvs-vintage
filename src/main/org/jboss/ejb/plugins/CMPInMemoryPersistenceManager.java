@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * EntityPersistenceStore implementation storing values in-memory
@@ -26,7 +26,7 @@ import org.jboss.util.FinderResults;
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b>
  *

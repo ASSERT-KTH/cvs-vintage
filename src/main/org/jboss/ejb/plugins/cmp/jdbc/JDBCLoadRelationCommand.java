@@ -27,13 +27,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;

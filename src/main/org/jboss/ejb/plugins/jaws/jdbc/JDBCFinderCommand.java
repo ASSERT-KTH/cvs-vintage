@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -37,7 +37,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  *   <p><b>Revisions:</b>
  *

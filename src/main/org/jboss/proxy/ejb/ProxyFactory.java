@@ -33,7 +33,7 @@ import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.system.Registry;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 import org.jboss.logging.Logger;
 
@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
 * just implementing the Proxy generation calls. Separation of concern. 
 *
 *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @version $Revision: 1.6 $
+*  @version $Revision: 1.7 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2001/12/30: billb</b>

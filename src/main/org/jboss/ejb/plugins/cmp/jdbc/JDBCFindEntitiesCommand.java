@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * Delegates to the specific query command.
@@ -22,7 +22,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCFindEntitiesCommand {
    private final JDBCStoreManager manager;

@@ -8,7 +8,7 @@
 package org.jboss.ejb.plugins.jaws;
 
 import java.rmi.RemoteException;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * Interface for JAWSPersistenceManager LoadEntities - <b>pre</b> load data for a 
@@ -18,7 +18,7 @@ import org.jboss.util.FinderResults;
  * violate the container contract by loading data before ejbActivate is called.
  *      
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface JPMLoadEntitiesCommand
 {

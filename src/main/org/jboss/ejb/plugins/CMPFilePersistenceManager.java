@@ -33,12 +33,12 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.metadata.EntityMetaData;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * <p><b>20010801 marc fleury:</b>
  * <ul>
  * <li>- insertion in cache upon create in now done in the instance interceptor

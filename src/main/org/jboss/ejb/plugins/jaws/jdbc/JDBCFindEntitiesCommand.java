@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
 
 import org.jboss.logging.Logger;
 
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  * Keeps a map from finder name to specific finder command, and
@@ -31,7 +31,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  *   <p><b>Revisions:</b>
  *

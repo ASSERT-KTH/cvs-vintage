@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 import org.jboss.util.LRUCachePolicy;
 
 /**
@@ -31,7 +31,7 @@ import org.jboss.util.LRUCachePolicy;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ReadAheadCache {
    /**

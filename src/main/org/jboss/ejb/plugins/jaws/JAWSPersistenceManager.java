@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
 
 import org.jboss.metadata.EntityMetaData;
 
-import org.jboss.util.FinderResults;
+import org.jboss.ejb.FinderResults;
 
 /**
  *   Just Another Web Store - an O/R mapper
@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  *   <p><b>Revisions:</b>
  *
