@@ -124,17 +124,31 @@ public class FolderOptionsDialog
 		Folder folder,
 		boolean renameFolder,
 		MailFrameMediator mediator) {
-		this(folder, mediator);
+		super(mediator.getView(), true);
 
+		this.folder= folder;
 		this.renameFolder= renameFolder;
-
+		this.mediator= mediator;
+		
 		oldFolderName= folder.getName();
+
+		initComponents();
+
+		updateComponents(true);
+
+		pack();
+
+		setLocationRelativeTo(null);
+
+		
 
 		// focus name textfield
 		if (renameFolder) {
 			nameTextField.selectAll();
 			nameTextField.requestFocus();
 		}
+		
+		setVisible(true);
 	}
 
 	/**
@@ -156,10 +170,10 @@ public class FolderOptionsDialog
 
 		setLocationRelativeTo(null);
 
-		setVisible(true);
-
 		nameTextField.selectAll();
 		nameTextField.requestFocus();
+
+		setVisible(true);
 
 	}
 
@@ -433,6 +447,7 @@ public class FolderOptionsDialog
 			}
 		} else {
 			if (renameFolder) {
+
 				if (!oldFolderName.equals(nameTextField.getText())) {
 					// user changed folder name
 					FolderCommandReference[] r= new FolderCommandReference[1];
@@ -486,12 +501,14 @@ public class FolderOptionsDialog
 			}
 
 			// restore settings
-			getMediator().getFolderOptionsController().load(FolderOptionsController.STATE_BEFORE);
-			
+			getMediator().getFolderOptionsController().load(
+				FolderOptionsController.STATE_BEFORE);
+
 			// re-select folder to make changes visible to the user
 			FolderCommandReference[] r= new FolderCommandReference[1];
 			r[0]= new FolderCommandReference(folder);
-			MainInterface.processor.addOp(new ViewHeaderListCommand(getMediator(), r));
+			MainInterface.processor.addOp(
+				new ViewHeaderListCommand(getMediator(), r));
 		}
 	}
 
