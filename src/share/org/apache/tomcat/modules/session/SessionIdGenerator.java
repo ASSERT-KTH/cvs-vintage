@@ -177,7 +177,7 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	// We're in a sandbox...
 	PriviledgedIdGenerator di = new PriviledgedIdGenerator(this, jsIdent);
 	try {
-	    newId= (String)jdk11Compat.doPrivileged(di);
+	    newId= (String)jdk11Compat.doPrivileged(di, jdk11Compat.getAccessControlContext());
 	} catch( Exception ex ) {
 	    newId=null;
 	}
