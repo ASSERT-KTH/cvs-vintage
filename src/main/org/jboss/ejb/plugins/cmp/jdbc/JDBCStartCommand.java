@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public final class JDBCStartCommand
 {
@@ -176,19 +176,36 @@ public final class JDBCStartCommand
 
          }
       }
-      else // (tableExisted is false)
+      // Create table if necessary
+      if(!entity.getTableExists())
       {
-         // Create table if necessary
          if(entityMetaData.getCreateTable())
          {
             DataSource dataSource = entity.getDataSource();
             createTable(dataSource, entity.getTableName(), getEntityCreateTableSQL(dataSource));
 
-            // create indices
-            createCMPIndices(dataSource);
+            // create indices only if table did not yet exist.
+            if(!tableExisted)
+            {
+               createCMPIndices(dataSource);
+            }
+            else
+            {
+               if(log.isDebugEnabled())
+                  log.debug("Indices for table " + entity.getTableName() + "not created as table existed");
+            }
+
 
             // issue extra (user-defined) sql for table
-            issuePostCreateSQL(dataSource, entity.getTablePostCreateCmd(), entity.getTableName());
+            if(!tableExisted)
+            {
+               issuePostCreateSQL(dataSource, entity.getTablePostCreateCmd(), entity.getTableName());
+            }
+            else
+            {
+               log.debug("Did not issue user-defined SQL for existing table " + entity.getTableName());
+            }
+
          }
          else
          {
@@ -327,7 +344,6 @@ public final class JDBCStartCommand
       ArrayList idxAscDesc = oldIndexes.getColumnAscDesc();
 
       // search for for column in index
-      int colIndex=-1;
       for ( int i = 0 ;  i < idxColumns.size() ; i++ )
       {
          // only match ascending columns
