@@ -191,6 +191,7 @@
      <mkdir dir="${dist.dir}/bin"/>
      <mkdir dir="${dist.dir}/lib/ext"/>
      <mkdir dir="${dist.dir}/db"/>
+     <mkdir dir="${dist.dir}/db/hypersonic"/>
      <mkdir dir="${dist.dir}/deploy"/>
      <mkdir dir="${dist.dir}/log"/>
      <mkdir dir="${dist.dir}/db"/>
