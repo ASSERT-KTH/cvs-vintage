@@ -150,6 +150,11 @@ public class Issue
         setIdCount(fid.getCount());
     }
 
+    /**
+     * A FederatedId has this format: {Domain}-{Code}{Id}
+     * For example: collab.net-PACS1
+     * The domain can also be null.
+     */
     public static class FederatedId
     {
         String domainId;

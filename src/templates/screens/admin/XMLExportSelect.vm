@@ -21,7 +21,9 @@ $page.setTitle("XML Export")
   <p>
   Specify a comma separated list of issues and/or issue ranges.  A range
   is a starting issue followed by a &quot;-&quot; and finally the end
-  issue.
+  issue. Note: you must also include the module code prefix. For example,
+  if the module code is: 'PACS' and you want to find issue id '1' in that
+  module, then you would enter: 'PACS1'.
   </p>
   #fieldErrorMsg($xmlExportSelectGroup.FederatedIds "")
  </td>
@@ -39,7 +41,7 @@ $page.setTitle("XML Export")
   #xmlExportCheckNotExists($federatedIds)
 </div>
 <div>
-  <textarea rows="20" cols="100" wrap="off">#xmlExport($federatedIds)</textarea>
+  #textAreaLarge("" "#xmlExport($federatedIds)")
 </div>
 #end
 

@@ -55,7 +55,7 @@ import org.apache.commons.util.StringUtils;
 
 /**
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExport.java,v 1.5 2002/01/18 22:26:14 jon Exp $
+ * @version $Id: XMLExport.java,v 1.6 2002/02/14 00:48:18 jon Exp $
  */
 public class XMLExport
 {
@@ -151,9 +151,21 @@ public class XMLExport
         while (iter.hasNext())
         {
             FederatedId test = (FederatedId)iter.next();
+            if (test.getPrefix() == null)
+            {
+                throw new Exception ("Invalid prefix code for id: " + 
+                    test.getCount() + 
+                    " Did you remember to enter the Module prefix code?");
+            }
+            else if (test.getCount() <= 0)
+            {
+                throw new Exception ("Invalid federated id number. " + 
+                    "Cannot have a number less than or equal to zero.");
+            }
             if (test.getPrefix().equals(fidPrefix) && test.getCount() == fidCount)
             {
-                throw new Exception("Federated id already specified: " + fid.getPrefix() + fid.getCount());
+                throw new Exception("Federated id already specified: " + 
+                    fid.getPrefix() + fid.getCount());
             }
         }
         al.add(fid);

@@ -1,7 +1,7 @@
-#macro ( xmlExportCheckNotExists $fids )
+#macro (xmlExportCheckNotExists $fids)
 #foreach ($fid in $fids)
   #if (!$scarabR.getIssue("${fid.Prefix}${fid.Count}"))
-    Issue ${fid.Prefix}${fid.Count} does not exist<br>
+    <p><strong class="alert">Issue $!{fid.Prefix}$!{fid.Count} does not exist!</strong></p>
   #end
 #end
 #end
@@ -11,7 +11,7 @@
  * takes in a list of federated ids and loops thru them building the scarab xml
  *#
 
-#macro ( xmlExport $fids )
+#macro (xmlExport $fids)
 #xmlScarabHeader()
 #set ($currentModuleId = -1)
 #foreach ($fid in $fids)
@@ -31,26 +31,26 @@
     #xmlIssue($issue)
   #end
 #end
-#if ($currentModuleId)
+#if ($currentModuleId != -1)
     #xmlModuleFooter()
 #end
 #xmlScarabFooter()
 #end
 
-#macro ( xmlScarabHeader )
+#macro (xmlScarabHeader)
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE scarab SYSTEM "scarab.dtd">
 <scarab>
 #end
 
-#macro ( xmlModuleHeader $module )
+#macro (xmlModuleHeader $module)
 
   <module id="$module.ModuleId" parent="$module.ParentId">
     <name>$module.RealName</name>
     <code>$module.Code</code>
 #end
 
-#macro ( xmlIssue $issue )
+#macro (xmlIssue $issue)
 
     <issue id="$issue.IdCount">
       <artifact-type>$issue.IssueType.Name</artifact-type>
@@ -103,14 +103,14 @@
     </issue>
 #end
 
-#macro ( xmlTransactionHeader $transaction )
+#macro (xmlTransactionHeader $transaction)
 
       <transaction id="$transaction.TransactionId">
         <type>$transaction.TransactionType.Name</type>
         <committed-by>$scarabR.getUser($transaction.CreatedBy).UserName</committed-by>
 #end
 
-#macro ( xmlTransactionActivity $activity )
+#macro (xmlTransactionActivity $activity)
 
         <activity>
           <attribute>
@@ -127,17 +127,17 @@
         </activity>
 #end
 
-#macro ( xmlTransactionFooter )
+#macro (xmlTransactionFooter)
 
       </transaction>
 #end
 
-#macro ( xmlModuleFooter )
+#macro (xmlModuleFooter)
 
   </module>
 #end
 
-#macro ( xmlScarabFooter )
+#macro (xmlScarabFooter)
 
 </scarab>
 #end

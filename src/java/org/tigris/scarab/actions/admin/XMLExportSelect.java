@@ -67,7 +67,7 @@ import org.tigris.scarab.util.xml.XMLExport;
  * XML.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExportSelect.java,v 1.4 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: XMLExportSelect.java,v 1.5 2002/02/14 00:48:17 jon Exp $
  */
 public class XMLExportSelect extends RequireLoginFirstAction
 {
@@ -118,7 +118,7 @@ public class XMLExportSelect extends RequireLoginFirstAction
     public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
-        doCancel(data, context);
+        doXmlissues(data, context);
     }
 }
 
