@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -24,9 +25,9 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.config.columns.ColumnConfigDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
-
 
 /**
  * Open column config dialog.
@@ -34,17 +35,11 @@ import java.awt.event.ActionEvent;
  * @author fdietz
  */
 public class ColumnDialogAction extends AbstractColumbaAction {
-    /**
- * @param frameMediator
- * @param name
- */
     public ColumnDialogAction(FrameMediator frameMediator) {
-        super(frameMediator, "Configure Columns...");
+        super(frameMediator, MailResourceLoader.getString(
+            "dialog", "columns", "title") + "...");
     }
 
-    /**
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
     public void actionPerformed(ActionEvent arg0) {
         FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
 

@@ -13,31 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.columns;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -46,15 +30,16 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folderoptions.ColumnOptionsPlugin;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
+
 import org.frapuccino.checkablelist.CheckableItemImpl;
 import org.frapuccino.checkablelist.CheckableItemListTableModel;
 import org.frapuccino.checkablelist.CheckableList;
-
 
 /**
  * Configurabe visible columns of the table.
@@ -75,18 +60,15 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
     private MailFrameMediator mediator;
 
     public ColumnConfigDialog(MailFrameMediator mediator, XmlElement columns) {
-        super((JFrame) mediator.getView().getFrame(), true);
-        setTitle("Configure Columns");
-
+        super((JFrame) mediator.getView().getFrame(), MailResourceLoader.getString(
+            "dialog", "columns", "title"), true);
         this.mediator = mediator;
         this.columns = columns;
 
         list = new CheckableList();
-
         list.getSelectionModel().addListSelectionListener(this);
 
         initComponents();
-
         updateComponents(true);
 
         getRootPane().registerKeyboardAction(this, "CLOSE",
@@ -103,15 +85,15 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 
         bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "cancel"));
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+            MailResourceLoader.getString("global", "cancel"));
 
         //$NON-NLS-1$ //$NON-NLS-2$
         cancelButton.addActionListener(this);
         cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "ok"));
+        ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+            MailResourceLoader.getString("global", "ok"));
 
         //$NON-NLS-1$ //$NON-NLS-2$
         okButton.addActionListener(this);
@@ -119,8 +101,8 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
         okButton.setDefaultCapable(true);
         getRootPane().setDefaultButton(okButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+            MailResourceLoader.getString("global", "help"));
 
         // associate with JavaHelp
         HelpManager.getHelpManager().enableHelpOnButton(helpButton,
@@ -135,7 +117,6 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
         buttonPanel.add(helpButton);
 
         bottom.add(buttonPanel, BorderLayout.EAST);
-
         return bottom;
     }
 
@@ -146,14 +127,14 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
         mainPanel.setLayout(new BorderLayout(5, 0));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        showButton = new ButtonWithMnemonic("&Show");
-
+        showButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+            "dialog", "columns", "show"));
         showButton.setActionCommand("SHOW");
         showButton.addActionListener(this);
         showButton.setEnabled(false);
 
-        hideButton = new ButtonWithMnemonic("&Hide");
-
+        hideButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+            "dialog", "columns", "hide"));
         hideButton.setActionCommand("HIDE");
         hideButton.setEnabled(false);
         hideButton.addActionListener(this);
@@ -223,12 +204,10 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
     private XmlElement findColumn(XmlElement parent, String name) {
         for (int i = 0; i < parent.count(); i++) {
             XmlElement child = parent.getElement(i);
-
             if (child.getAttribute("name").equals(name)) {
                 return child;
             }
         }
-
         return null;
     }
 
@@ -241,13 +220,7 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
                 String c = stringList[j];
                 CheckableItemImpl item = new CheckableItemImpl(c);
                 XmlElement element = findColumn(columns, c);
-
-                if (element != null) {
-                    item.setSelected(true);
-                } else {
-                    item.setSelected(false);
-                }
-
+                item.setSelected(element != null);
                 model.addElement(item);
             }
 
@@ -285,11 +258,11 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
         }
 
         DefaultListSelectionModel theList = (DefaultListSelectionModel) e.getSource();
-
         if (!theList.isSelectionEmpty()) {
             index = theList.getAnchorSelectionIndex();
 
-            selection = (CheckableItemImpl) ((CheckableItemListTableModel) list.getModel()).getElement(index);
+            selection = (CheckableItemImpl) ((CheckableItemListTableModel) 
+                list.getModel()).getElement(index);
 
             updateButtonState();
         }
@@ -313,8 +286,8 @@ public class ColumnConfigDialog extends JDialog implements ActionListener,
 
             setVisible(false);
 
-            ColumnOptionsPlugin plugin = (ColumnOptionsPlugin) mediator.getFolderOptionsController()
-                                                                       .getPlugin("ColumnOptions");
+            ColumnOptionsPlugin plugin = (ColumnOptionsPlugin) 
+                mediator.getFolderOptionsController().getPlugin("ColumnOptions");
 
             // make sure this configuration is also visually working immediately
             FolderCommandReference[] r = mediator.getTreeSelection();
