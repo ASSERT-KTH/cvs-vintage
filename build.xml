@@ -65,6 +65,8 @@
                classname="javax.net.ssl.SSLServerSocket"/>
     <available property="jsse.present"
                file="${jsse.lib}/jsse.jar"/>
+    <available property="puretls.present"
+ 	       classname="COM.claymoresystems.ptls.SSLContext"/>
     <available property="commons-dbcp.present"
                file="${jakarta-commons}/dbcp/dist/commons-dbcp.jar" />
     <available property="jdk12.present"
@@ -86,12 +88,15 @@
   <target name="msg.jsse" if="jsse.present" >
     <echo message="Detected JSSE"/>
   </target>
+  <target name="msg.puretls" if="puretls.present">
+    <echo message="Detected PureTLS"/>
+  </target>
 
   <target name="msg.commons-dbcp" if="commons-dbcp.present" >
     <echo message="Detected commons-DBCP"/>
   </target>
 
-  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.commons-dbcp" >
+  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.puretls,msg.commons-dbcp" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
@@ -210,14 +215,12 @@
         <pathelement location="${jsse.lib}/jcert.jar"/>
       </classpath>
       <include name="org/apache/tomcat/util/**"/>
-      <exclude name="**/util/net/SSLSocketFactory.java"
-               unless="jsse.present"/>
-      <exclude name="**/util/net/SSLSocketFactory.java"
-               unless="jdk12.present"/>
-      <exclude name="**/util/compat/JSSECertCompat.java"
-               unless="jsse.present"/>
-      <exclude name="**/util/compat/JSSECertCompat.java"
-               unless="jdk12.present"/>
+      <exclude name="**/util/net/JSSE*" unless="jsse.present"/>
+      <exclude name="**/util/net/JSSE*" unless="jdk12.present"/>
+      <exclude name="**/util/net/PureTLS*" unless="puretls.present"/>
+      <exclude name="**/util/net/PureTLS*" unless="jdk12.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java" />
+
       <exclude name="**/util/compat/Jdk12Support.java"
                unless="jdk12.present"/>
       <exclude name="**/util/depend/DependClassLoader12.java"
@@ -268,10 +271,7 @@
 	       unless="jdk12.present"/>
       <exclude name="**/util/compat/Jdk12Support.java" 
 	       unless="jdk12.present"/>
-      <exclude name="**/util/compat/JSSECertCompat.java"
-               unless="jsse.present"/>
-      <exclude name="**/util/compat/JSSECertCompat.java"
-               unless="jdk12.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java" />
       <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar"
