@@ -6,8 +6,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_0.dtd">
 
-$Id: jboss_3_0.dtd,v 1.2 2002/02/08 17:47:05 mikesr Exp $
-$Revision: 1.2 $
+$Id: jboss_3_0.dtd,v 1.3 2002/02/09 15:45:19 mikesr Exp $
+$Revision: 1.3 $
 
 Overview of the architecture of jboss.xml
 
@@ -22,6 +22,7 @@ Overview of the architecture of jboss.xml
     <entity>
       <ejb-name />
       <jndi-name />
+      <local-jndi-name />
       <read-only> 
       <home-invoker>
       <bean-invoker>
@@ -40,6 +41,7 @@ Overview of the architecture of jboss.xml
     <session>
       <ejb-name />
       <jndi-name />
+      <local-jndi-name />
       <home-invoker>
       <bean-invoker>
       <configuration-name>
@@ -175,7 +177,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name, jndi-name?, read-only?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
+<!ELEMENT entity (ejb-name, jndi-name?, local-jndi-name?, read-only?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -186,7 +188,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT session (ejb-name, jndi-name?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
+<!ELEMENT session (ejb-name, jndi-name?, local-jndi-name?, home-invoker?, bean-invoker?, configuration-name?, security-proxy?, ejb-ref*, resource-ref*, resource-env-ref*, clustered?, cluster-config?)>
 
 <!--
   The message-driven element holds information specific to jboss and not declared
@@ -220,6 +222,13 @@ Overview of the architecture of jboss.xml
     ejb-ref, resource-ref, resource-env-ref 
 -->
 <!ELEMENT jndi-name (#PCDATA)>
+
+<!-- 
+  The JNDI name under with the local home interface should be bound
+  
+  Used in: entity and session 
+-->
+<!ELEMENT local-jndi-name (#PCDATA)>
 
 <!--
   The read-only element flags an entity bean as read only.
