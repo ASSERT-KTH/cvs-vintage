@@ -4,24 +4,21 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.util;
 
 /**
- * Interface for the execution of a task. <p>
+ * Interface for the execution of a task.
  * 
  * @see WorkerQueue
+ * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface Executable
 {
-	// Constants -----------------------------------------------------
-
-	// Static --------------------------------------------------------
-
-	// Public --------------------------------------------------------
-	/**
-	 * Executes the implemented task.
-	 */
-	public void execute() throws Exception;
+   /**
+    * Executes the implemented task.
+    */
+   void execute() throws Exception;
 }
