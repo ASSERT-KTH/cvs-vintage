@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -95,7 +95,7 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          {
             EntityContainer entityContainer = (EntityContainer)container;
             CMPPersistenceManager cmpManager = 
-                  (CMPPersistenceManager)entityContainer.getPersistenceManager();
+                 (CMPPersistenceManager)entityContainer.getPersistenceManager();
             manager = (JDBCStoreManager) cmpManager.getPersistenceStore();
          }
          catch(ClassCastException e)
@@ -105,9 +105,9 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
          }
 
          log = Logger.getLogger(
-               this.getClass().getName() + 
+               this.getClass().getName() +
                "." + 
-               manager.getMetaData().getName());
+               container.getBeanMetaData().getEjbName());
       }
    }
    
