@@ -258,9 +258,6 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 	}
 
 	public void update() {
-		//setHeaderList(headerList);
-		long start = System.currentTimeMillis();
-		System.out.println(start);
 
 		root.removeAllChildren();
 
@@ -292,36 +289,17 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 			}
 
-			long middle = System.currentTimeMillis();
-			System.out.println(middle);
-
-			long diff = middle - start;
-			System.out.println("filling vector took (ms): " + diff);
-
 			getTableModelThreadedView().manipulateModel(
 				TableModelPlugin.STRUCTURE_CHANGE);
 			getTableModelSorter().manipulateModel(
 				TableModelPlugin.STRUCTURE_CHANGE);
 
-			long nearend = System.currentTimeMillis();
-			System.out.println(
-				"sorting and threading took (ms): " + (nearend - middle));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
-		long node_start = System.currentTimeMillis();
-		
 		nodeStructureChanged(root);
-		
-		long node_stop = System.currentTimeMillis();
-		System.out.println("node update takes (ms): " + (node_stop-node_start));
 
-		long end = System.currentTimeMillis();
-		System.out.println(end);
-
-		long diff = end - start;
-		System.out.println("complete task takes (ms): " + diff);
 	}
 
 	public void setHeaderList(HeaderList list) {

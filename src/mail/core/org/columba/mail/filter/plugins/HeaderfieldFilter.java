@@ -69,7 +69,8 @@ public class HeaderfieldFilter extends AbstractFilter{
 			
 		// get message header
 		HeaderInterface header = folder.getMessageHeader(uid, worker);
-
+		if ( header == null ) return false;
+		
 		// get headerfield to search in (for example: Subject)
 		String headerItem = (String) header.get((String) args[0]);
 		

@@ -25,6 +25,7 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.folder.search.AbstractSearchEngine;
+import org.columba.mail.folder.search.LocalSearchEngine;
 import org.columba.mail.folder.search.LuceneSearchEngine;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
@@ -100,13 +101,13 @@ public abstract class LocalFolder extends Folder {
 		getDataStorageInstance().saveMessage(source, newUid);
 
 		getMessageFolderInfo().incExists();
-		
+
 		getSearchEngineInstance().messageAdded(message);
-		
+
 		changed = true;
 
 		return newUid;
-	}	
+	}
 
 	public Object addMessage(String source, WorkerStatusController worker)
 		throws Exception {
@@ -117,12 +118,12 @@ public abstract class LocalFolder extends Folder {
 		header.set("columba.size", new Integer(size));
 
 		parser.addColumbaHeaderFields(header);
-		
+
 		AbstractMessage m = new Message(header);
 		m.setSource(source);
 
 		changed = true;
-		
+
 		return addMessage(m, worker);
 	}
 
@@ -132,7 +133,7 @@ public abstract class LocalFolder extends Folder {
 		getSearchEngineInstance().messageRemoved(uid);
 
 		getMessageFolderInfo().decExists();
-		
+
 		changed = true;
 	}
 
@@ -206,19 +207,24 @@ public abstract class LocalFolder extends Folder {
 		return mptree;
 	}
 
-    /* ************* this method is overridden by all subclasses
+	/* ************* this method is overridden by all subclasses
 	public HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception { // ToDo: why not re-create only if necessary?
 		return getDataStorageInstance().recreateHeaderList(worker); // ToDo: needs to get mutex
 	}
-    ***************** */
+	***************** */
 
 	/********************** searching/filtering ***********************/
 
 	public AbstractSearchEngine getSearchEngineInstance() {
-		if (searchEngine == null){
-			searchEngine = new LuceneSearchEngine(this);
-			//searchEngine = new LocalSearchEngine(this);
+		if (searchEngine == null) {
+			boolean enableLucene =
+				getFolderItem().getBoolean("property", "enable_lucene", false);
+
+			if (enableLucene == true)
+				searchEngine = new LuceneSearchEngine(this);
+			else
+				searchEngine = new LocalSearchEngine(this);
 		}
 
 		return searchEngine;
@@ -242,8 +248,7 @@ public abstract class LocalFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker)
-		throws Exception {
+	public void expungeFolder(WorkerStatusController worker) throws Exception {
 	}
 
 	/**
@@ -259,7 +264,7 @@ public abstract class LocalFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#size()
 	 */
-	public int size() {		
+	public int size() {
 		return getDataStorageInstance().getMessageCount();
 	}
 
@@ -269,10 +274,10 @@ public abstract class LocalFolder extends Folder {
 	public String getDefaultChild() {
 		return null;
 	}
-	
+
 	public AbstractHeaderCache getHeaderCacheInstance() {
-		if( headerCache == null) {
-			headerCache =  new LocalHeaderCache(this);
+		if (headerCache == null) {
+			headerCache = new LocalHeaderCache(this);
 		}
 		return headerCache;
 	}

@@ -208,7 +208,7 @@ public abstract class AbstractHeaderCache {
 
 		for (int i = 0; i < capacity; i++) {
 
-			if ((worker != null) && (i % 500 == 0))
+			if ((worker != null) && (i % 100 == 0))
 				worker.setProgressBarValue(i);
 
 			//ColumbaHeader h = message.getHeader();
@@ -348,7 +348,7 @@ public abstract class AbstractHeaderCache {
 
 				m.freeMemory();
 
-				if (worker != null && i % 500 == 0) {
+				if (worker != null && i % 100 == 0) {
 					worker.setProgressBarValue(i);
 				}
 				
