@@ -58,7 +58,7 @@ import org.tigris.scarab.om.AttributeValue;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.3 2001/08/02 07:11:43 jon Exp $
+ * @version $Id: SearchIndex.java,v 1.4 2001/08/02 17:52:19 jmcnally Exp $
  */
 public interface SearchIndex
 {
@@ -66,6 +66,7 @@ public interface SearchIndex
     public static final String CLASSNAME = "searchindex.class";
     public static final String ISSUE_ID = "issid";
     public static final String ATTRIBUTE_ID = "attid";
+    public static final String ATTACHMENT_ID = "atchid";
     public static final String TEXT = "text";
     public static final NumberKey[] EMPTY_LIST = new NumberKey[0];
 

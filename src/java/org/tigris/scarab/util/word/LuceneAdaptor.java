@@ -72,7 +72,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.4 2001/08/02 07:11:43 jon Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.5 2001/08/02 17:52:19 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -188,8 +188,10 @@ public class LuceneAdaptor
             .append(query)
             .append(')');
 
+        System.out.println("Querybefore=" + fullQuery);
         Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
                                     new StandardAnalyzer());
+        System.out.println("Queryafter=" + q.toString("text"));
 
         /*
         System.out.println("Query: " + q.toString(TEXT));
@@ -245,6 +247,29 @@ public class LuceneAdaptor
         Field text = Field.UnStored(TEXT, attributeValue.getValue());
         doc.add(issueId);
         doc.add(attributeId);
+        doc.add(text);
+
+        IndexWriter indexer = 
+            new IndexWriter(path, new StandardAnalyzer(), false);
+        indexer.addDocument(doc);
+        indexer.close();
+    }
+
+
+    /**
+     * Store index information for an AttributeValue
+     */
+    public void index(Attachment attachment)
+        throws Exception
+    {
+        Document doc = new Document();
+        Field issueId = Field.UnIndexed(ISSUE_ID, 
+            attachment.getIssueId().toString());
+        Field attachmentId = Field.Keyword(ATTACHMENT_ID, 
+            attachment.getAttachmentId().toString());
+        Field text = Field.UnStored(TEXT, attachment.getDataAsString());
+        doc.add(issueId);
+        doc.add(attachmentId);
         doc.add(text);
 
         IndexWriter indexer = 

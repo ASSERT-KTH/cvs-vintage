@@ -51,11 +51,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.DateFormat;
+// import java.util.SimpleDateFormat;
 
 // Turbine classes
-import org.apache.torque.om.NumberKey;
-import org.apache.torque.util.Criteria;
+import org.apache.turbine.services.db.om.NumberKey;
+import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.SequencedHashtable;
+import org.apache.turbine.util.StringUtils;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
@@ -65,7 +69,10 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.ROptionOptionPeer;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.AttributePeer;
 
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 
@@ -74,18 +81,23 @@ import org.tigris.scarab.attribute.StringAttribute;
  * similar issues.  It subclasses Issue for functionality, it is 
  * not a more specific type of Issue.
  */
-public class IssueSearch 
+public class AdvancedIssueSearch 
     extends Issue
 {
-    private String searchWords;
-    private NumberKey[] textScope;
-    private int resultsPerPage;
-
     private static final NumberKey ALL_TEXT = new NumberKey("0");
+
     private static final String PARENT_ID;
     private static final String CHILD_ID;
     private static final String AV_ISSUE_ID;
     private static final String AV_OPTION_ID;
+
+    private String minId;
+    private String maxId;
+    private String minDate;
+    private String maxDate;
+    private int minVotes;
+    
+    private int resultsPerPage;
 
     static 
     {
@@ -100,79 +112,100 @@ public class IssueSearch
 
     }
 
+
     /**
-     * Get the value of searchWords.
-     * @return value of searchWords.
+     * Get the value of minId.
+     * @return value of minId.
      */
-    public String getSearchWords() 
+    public String getMinId() 
     {
-        return searchWords;
+        return minId;
     }
     
     /**
-     * Set the value of searchWords.
-     * @param v  Value to assign to searchWords.
+     * Set the value of minId.
+     * @param v  Value to assign to minId.
      */
-    public void setSearchWords(String  v) 
+    public void setMinId(String  v) 
     {
-        this.searchWords = v;
+        this.minId = v;
     }
 
+    
     /**
-     * Get the value of textScope.  if the scope is not set then all
-     * text attributes are returned.  if there are no relevant text
-     * attributes null will be returned.
-     * @return value of textScope.
+     * Get the value of maxId.
+     * @return value of maxId.
      */
-    public NumberKey[] getTextScope()
-        throws Exception
+    public String getMaxId() 
     {
-        if ( textScope == null ) 
-        {
-            setTextScopeToAll();
-        }
-        else
-        {
-            for ( int i=textScope.length-1; i>=0; i-- ) 
-            {
-                if ( textScope[i].equals(ALL_TEXT) ) 
-                {
-                    setTextScopeToAll();
-                    break;
-                }       
-            }
-        }
-        return textScope;
+        return maxId;
     }
-
-
+    
     /**
-     * Sets the text search scope to all quick search text attributes.
+     * Set the value of maxId.
+     * @param v  Value to assign to maxId.
      */
-    private void setTextScopeToAll()
-        throws Exception
+    public void setMaxId(String  v) 
     {
-        List textAttributes = getQuickSearchTextAttributes();
-        if ( textAttributes != null ) 
-        {
-            textScope = new NumberKey[textAttributes.size()];
-            for ( int j=textAttributes.size()-1; j>=0; j-- ) 
-            {
-                textScope[j] = ((Attribute)
-                                textAttributes.get(j)).getAttributeId();
-            }
-        }
+        this.maxId = v;
     }
-
+    
+    
     /**
-     * Set the value of textScope.
-     * @param v  Value to assign to textScope.
+     * Get the value of minDate.
+     * @return value of minDate.
      */
-    public void setTextScope(NumberKey[]  v) 
+    public String getMinDate() 
     {
-        this.textScope = v;
+        return minDate;
+    }
+    
+    /**
+     * Set the value of minDate.
+     * @param v  Value to assign to minDate.
+     */
+    public void setMinDate(String  v) 
+    {
+        this.minDate = v;
     }
 
+    
+    /**
+     * Get the value of maxDate.
+     * @return value of maxDate.
+     */
+    public String getMaxDate() 
+    {
+        return maxDate;
+    }
+    
+    /**
+     * Set the value of maxDate.
+     * @param v  Value to assign to maxDate.
+     */
+    public void setMaxDate(String  v) 
+    {
+        this.maxDate = v;
+    }
+    
+    /**
+     * Get the value of minVotes.
+     * @return value of minVotes.
+     */
+    public int getMinVotes() 
+    {
+        return minVotes;
+    }
+    
+    /**
+     * Set the value of minVotes.
+     * @param v  Value to assign to minVotes.
+     */
+    public void setMinVotes(int  v) 
+    {
+        this.minVotes = v;
+    }
+    
 
     /**
      * Get the value of resultsPerPage.
@@ -198,12 +231,7 @@ public class IssueSearch
     }
 
 
-    public NumberKey getALL_TEXT()
-    {
-        return ALL_TEXT;
-    }
-
-    public List getQuickSearchTextAttributes()
+    public List getTextAttributesValues()
         throws Exception
     {
         SequencedHashtable searchValues = getModuleAttributeValuesMap();
@@ -213,8 +241,7 @@ public class IssueSearch
         {
             AttributeValue searchValue = 
                 (AttributeValue)searchValues.getValue(i);
-            if ( searchValue.isQuickSearchAttribute() &&                  
-                 searchValue instanceof StringAttribute ) 
+            if ( searchValue instanceof StringAttribute ) 
             {
                 searchAttributes.add(searchValue.getAttribute());
             }
@@ -224,30 +251,6 @@ public class IssueSearch
     }
 
 
-    /**
-     * Returns OptionAttributes which have been marked for Quick search.
-     *
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
-    public List getQuickSearchOptionAttributeValues()
-        throws Exception
-    {
-        List allValues = getOptionAttributeValues();
-        List searchAttributeValues = new ArrayList(allValues.size());
-
-        for ( int i=0; i<allValues.size(); i++ ) 
-        {
-            AttributeValue searchValue = 
-                (AttributeValue)allValues.get(i);
-            if ( searchValue.isQuickSearchAttribute()  ) 
-            {
-                searchAttributeValues.add(searchValue);
-            }
-        }
-
-        return searchAttributeValues;
-    }
 
     /**
      * Returns OptionAttributes which have been marked for Quick search.
@@ -285,7 +288,7 @@ public class IssueSearch
         for ( int i=attValues.size()-1; i>=0; i-- ) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
-            if ( attVal.getOptionId() == null && attVal.getValue() == null 
+            if ( attVal.getOptionId() == null && attVal.getValue() == null
                  && attVal.getUserId() == null ) 
             {
                 attValues.remove(i);
@@ -293,6 +296,214 @@ public class IssueSearch
         }
     }
 
+
+    private void addMimimimVotes(Criteria crit)
+        throws ScarabException
+    {
+        if ( minVotes > 0 ) 
+        {
+            crit.addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
+                .add(AttributeValuePeer.ATTRIBUTE_ID, 
+                     AttributePeer.TOTAL_VOTES__PK)
+                .add(AttributeValuePeer.NUMERIC_VALUE, minVotes,
+                     Criteria.GREATER_EQUAL);
+        }
+    }
+
+    private void addIssueIdRange(Criteria crit)
+        throws ScarabException
+    {
+        // check limits to see which ones are present
+        // if neither are present, do nothing
+        if ( (minId != null && minId.length() != 0)
+              || (maxId != null && maxId.length() != 0) ) 
+        {
+            Issue.FederatedId minFid = null;
+            Issue.FederatedId maxFid = null;
+            if ( minId == null || minId.length() == 0 ) 
+            {
+                maxFid = new Issue.FederatedId(maxId);
+                //minFid = new Issue.FederatedId(maxFid.getDomainId(),
+                //                               maxFid.getPrefix(), 1);
+                crit.add(IssuePeer.ID_DOMAIN, maxFid.getDomain());
+                crit.add(IssuePeer.ID_PREFIX, maxFid.getPrefix());
+                crit.add(IssuePeer.ID_COUNT, maxFid.getCount(), 
+                         Criteria.LESS_EQUAL);
+            }
+            else if ( maxId == null || maxId.length() == 0 ) 
+            {
+                minFid = new Issue.FederatedId(minId);
+                /*
+                // need to get the largest value, it will be in id_table
+                String query = "select NEXT_ID from ID_TABLE where TABLE_NAME="
+                    + minFid.getPrefix();
+                List records = BasePeer.executeQuery(query);
+                int id = ((Record)records.get(0)).getValue(1).asInt();
+                maxFid = new Issue.FederatedId(minFid.getDomainId(),
+                                               minFid.getPrefix(), id);
+                */
+                crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
+                crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
+                crit.add(IssuePeer.ID_COUNT, minFid.getCount(), 
+                         Criteria.GREATER_EQUAL);
+
+            }
+            else 
+            {
+                minFid = new Issue.FederatedId(minId);
+                maxFid = new Issue.FederatedId(maxId);
+                // make sure min id is less than max id and that the character
+                // parts are equal otherwise skip the query, there are no 
+                // matches
+                if ( minFid.getCount() <= maxFid.getCount() 
+                     && minFid.getPrefix().equals(maxFid.getPrefix())
+                     && StringUtils
+                     .equals( minFid.getDomain(), maxFid.getDomain() ))
+                {
+                    Criteria.Criterion c1 = crit.getNewCriterion(
+                        IssuePeer.ID_COUNT, new Integer(minFid.getCount()), 
+                        Criteria.GREATER_EQUAL);
+                    c1.and(crit.getNewCriterion(
+                        IssuePeer.ID_COUNT, new Integer(maxFid.getCount()), 
+                        Criteria.LESS_EQUAL) );
+                    crit.add(c1);
+                    crit.add(IssuePeer.ID_DOMAIN, minFid.getDomain());
+                    crit.add(IssuePeer.ID_PREFIX, minFid.getPrefix());
+                }
+                else 
+                {
+                    throw new ScarabException("Incompatible issue Ids: " +
+                                              minId + " and " + maxId);
+                }
+            }
+        }
+    }
+
+
+    private void addDateRange(Criteria crit)
+        throws ScarabException
+    {
+        DateFormat dateFormatter = DateFormat.getDateInstance();
+        Date minUtilDate = null;
+        Date maxUtilDate = null;
+        try
+        {
+            minUtilDate = dateFormatter.parse(minDate);
+        }
+        catch (Exception e)
+        {
+            // ignore
+        }
+        try
+        {
+            maxUtilDate = dateFormatter.parse(maxDate);
+            // add 24 hours to max date so it is inclusive
+            maxUtilDate.setTime(maxUtilDate.getTime() + 86400000);
+        }
+        catch (Exception e)
+        {
+            // ignore
+        }
+
+        // check limits to see which ones are present
+        // if neither are present, do nothing
+        if ( minUtilDate != null || maxUtilDate != null ) 
+        {
+            if ( minUtilDate == null ) 
+            {
+                crit.add(IssuePeer.CREATED_DATE, maxUtilDate,
+                         Criteria.LESS_THAN);
+            }
+            else if ( maxUtilDate == null ) 
+            {
+                crit.add(IssuePeer.CREATED_DATE, minUtilDate,
+                         Criteria.GREATER_EQUAL);
+            }
+            else 
+            {
+                // make sure min id is less than max id and that the character
+                // parts are equal otherwise skip the query, there are no 
+                // matches
+                if ( minUtilDate.before(maxUtilDate) )
+                {
+                    Criteria.Criterion c1 = crit.getNewCriterion(
+                        IssuePeer.CREATED_DATE, minUtilDate, 
+                        Criteria.GREATER_EQUAL);
+                    c1.and(crit.getNewCriterion(
+                        IssuePeer.CREATED_DATE, maxUtilDate, 
+                        Criteria.LESS_EQUAL) );
+                    crit.add(c1);
+                }
+                else 
+                {
+                    throw new ScarabException("maxDate " + maxDate + 
+                        "is before minDate " + minDate);
+                }
+            }
+        }
+    }
+
+    /*
+      keeping before rearrangement of i f statements
+    private void addDateRange(Criteria crit)
+        throws ScarabException
+    {
+        DateFormat dateFormatter = DateFormat.getDateInstance();
+
+        // check limits to see which ones are present
+        // if neither are present, do nothing
+        if ( (minDate != null && minDate.length() != 0)
+              || (maxDate != null && maxDate.length() != 0) ) 
+        {
+            Date minUtilDate = null;
+            Date maxUtilDate = null;
+
+        try
+        {
+            minUtilDate = dateFormatter.parse(minDate);
+        }
+                maxUtilDate = dateFormatter.parse(maxDate);
+                // add 24 hours to max date so it is inclusive
+                maxUtilDate.setTime(maxUtilDate.getTime() + 86400000);
+
+            if ( minDate == null || minDate.length() == 0 ) 
+            {
+                maxUtilDate = dateFormatter.parse(maxDate);
+                // add 24 hours to max date so it is inclusive
+                maxUtilDate.setTime(maxUtilDate.getTime() + 86400000);
+                crit.add(IssuePeer.CREATED_DATE, maxUtilDate,
+                         Criteria.LESS_THAN);
+            }
+            else if ( maxDate == null || maxDate.length() == 0 ) 
+            {
+                minUtilDate = dateFormatter.parse(minDate);
+                crit.add(IssuePeer.CREATED_DATE, minUtilDate,
+                         Criteria.GREATER_EQUAL);
+            }
+            else 
+            {
+                // make sure min id is less than max id and that the character
+                // parts are equal otherwise skip the query, there are no 
+                // matches
+                if ( minUtilDate.before(maxUtilDate) )
+                {
+                    Criteria.Criterion c1 = crit.getNewCriterion(
+                        IssuePeer.CREATED_DATE, minUtilDate, 
+                        Criteria.GREATER_EQUAL);
+                    c1.and(crit.getNewCriterion(
+                        IssuePeer.CREATED_DATE, maxUtilDate, 
+                        Criteria.LESS_EQUAL) );
+                    crit.add(c1);
+                }
+                else 
+                {
+                    throw new ScarabException("maxDate " + maxDate + 
+                        "is before minDate " + minDate);
+                }
+            }
+        }
+    }
+    */
 
     /**
      * Returns a List of matching issues.  if no OptionAttributes were
@@ -348,9 +559,16 @@ public class IssueSearch
         if ( atLeastOne ) 
         {
             crit.add(c);
-            if ( validIssueIds != null && validIssueIds.length != 0 ) 
+            if ( validIssueIds != null ) 
             {
                 crit.addIn(AttributeValuePeer.ISSUE_ID, validIssueIds);
+                /*
+                Iterator iterator = validIssueIds.iterator();
+                while ( iterator.hasNext() ) 
+                {
+                    NumberKey id = (NumberKey)iterator.next();
+                }
+                */
             }
             
             return IssuePeer.doSelect(crit);
@@ -362,6 +580,7 @@ public class IssueSearch
     }
 
 
+
     /**
      * Get a List of Issues that match the criteria given by this
      * SearchIssue's searchWords and the quick search attribute values.
@@ -370,14 +589,20 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-
     public List getMatchingIssues(int limitResults)
         throws Exception
     {
         List matchingIssues = null;
+
+        Criteria crit = new Criteria(2)
+            .add(AttributeValuePeer.DELETED, false);        
+        List attValues = getAttributeValues(crit);
+        // remove unset AttributeValues before searching
+        removeUnsetValues(attValues);
         
         // search for issues based on text
-        NumberKey[] matchingIssueIds = null;      
+        NumberKey[] matchingIssueIds = null;
+        /*      
         if ( getSearchWords() != null && getSearchWords().length() != 0 ) 
         {
             SearchIndex searchIndex = SearchFactory.getInstance();
@@ -385,20 +610,15 @@ public class IssueSearch
             searchIndex.setAttributeIds(getTextScope());
             matchingIssueIds = searchIndex.getRelatedIssues();      
         }
+        */
 
-        Criteria crit = new Criteria(2)
-            .add(AttributeValuePeer.DELETED, false);        
-        List attValues = getAttributeValues(crit);
-        // remove unset AttributeValues before searching
-        removeUnsetValues(attValues);
         // get matching issues according to option values
         List optionMatchingIssues = 
             searchOnOptionAttributes(attValues, matchingIssueIds);
 
         
         // only have text search
-        if ( optionMatchingIssues == null && matchingIssueIds != null
-             && matchingIssueIds.length != 0 ) 
+        if ( optionMatchingIssues == null && matchingIssueIds != null ) 
         {
             crit = new Criteria()
                 .addIn(IssuePeer.ISSUE_ID, matchingIssueIds);

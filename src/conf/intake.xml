@@ -195,6 +195,15 @@
     </field>
 </group>
 
+<group name="AdvQuery" key="advsrch">
+        <field name="MinId" key="lid" type="String"/>
+        <field name="MaxId" key="hid" type="String"/>
+        <field name="MinDate" key="ld" type="String"/>
+        <field name="MaxDate" key="hd" type="String"/>
+        <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
+        <field name="ResultsPerPage" key="rpp" type="int"/>
+</group>
+
 <group name="Query" key="query" mapToObject="om.Query">
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
@@ -216,7 +225,6 @@
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
 </group>
-
 
 
 </input-data>

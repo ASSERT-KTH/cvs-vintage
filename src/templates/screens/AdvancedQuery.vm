@@ -1,0 +1,384 @@
+#set ( $query = $intake.AdvQuery.Default )
+#set ( $search = $scarabR.Search )
+#set ($attrValues = $search.ModuleAttributeValuesMap)
+
+<div class="app" id="advancedquery">
+<h2>Advanced Query (2.2.0)</h2>
+
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+
+<form action="$link.setPage("AdvancedQuery.vm")" method="get">
+<input type="hidden" name="nextTemplate" value="IssueList.vm" />
+<input type="hidden" name="action" value="AdvancedQuery" />
+
+<p class="functnbar">
+<input type="submit" value="submit" />&#160;
+<input type="submit" value="reset" />&#160;
+<input type="submit" value="save this query" />
+</p>
+
+<h3>Search the Scarab Knowledge Base</h3>
+
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+    <tr>
+         <th width="120">issue ID# range:</th>
+
+         <td>
+         from:&#160;<input type="text" size="20" 
+             name="$query.MinId.Key" value="$query.MinId" />
+         &#160;&#160;to:&#160;<input type="text" size="20"
+             name="$query.MaxId.Key" value="$query.MaxId" />
+         </td>
+    </tr>
+
+    <tr>
+         <th width="120">issue creation date range:</th>
+
+         <td>
+         from:&#160;<input type="text" size="20"
+             name="$query.MinDate.Key" value="$query.MaxDate" />
+         &#160;&#160;to:&#160;<input type="text" size="20"
+             name="$query.MaxDate.Key" value="$query.MinDate" />
+         </td>
+    </tr>
+
+    <tr>
+         <th width="120">state change query:<br />(not implemented)</th>
+
+         <td>
+
+         <select>
+          <option>
+           choice 1
+          </option>
+
+          <option>
+           choice 2
+          </option>
+
+          <option>
+           choice 3
+          </option>
+         </select> 
+         </td>
+        </tr>
+
+        <tr>
+         <th width="120">votes:</th>
+
+         <td><input type="text" size="25" value="" /></td>
+        </tr>
+
+
+#foreach ( $attKey in $attrValues.sequence() )
+  #set ( $attVal = $attrValues.get($attKey) )
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+
+  #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #set ( $field = "OptionId" )
+  #else
+        #set ( $field = "Value" )  
+  #end
+
+  #if ( !$attVal.isSet() )
+
+        <tr>
+         <th width="120">$attVal.Attribute.Name:</th>
+
+            <td>
+    #attrValueErrorMsg ( $attVal $field )
+
+    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+
+          #userSelectBox ($attVal "")
+
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+
+          #attrValueLeafSelect ($attVal $field "")
+
+    #else
+
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
+
+            <textarea name= "$attrInput.Value.Key" class="text" cols="40"
+               rows="4">$!attrInput.Value</textarea>
+        #else
+
+           <input name= "$attrInput.Value.Key"
+                value="$!attrInput.Value" size="25" type="text" class="text" />
+        #end
+
+    #end
+            </td>
+        </tr>
+  #end
+#end
+
+        <tr>
+         <th width="120">URL:</th>
+
+         <td><input type="text" size="25" value="http://" /></td>
+        </tr>
+
+        <tr>
+         <th width="120">boolean search:</th>
+
+         <td>
+          <select>
+           <option value="noop">
+            ---
+           </option>
+
+           <option value="groupset">
+            groupset
+           </option>
+
+           <option value="everconfirmed">
+            everconfirmed
+           </option>
+
+           <option value="bug_id">
+            Bug #
+           </option>
+
+           <option value="short_desc">
+            Summary
+           </option>
+
+           <option value="product">
+            Product
+           </option>
+
+           <option value="version">
+            Version
+           </option>
+
+           <option value="rep_platform">
+            Platform
+           </option>
+
+           <option value="bug_file_loc">
+            URL
+           </option>
+
+           <option value="op_sys">
+            OS/Version
+           </option>
+
+           <option value="bug_status">
+            Status
+           </option>
+
+           <option value="status_whiteboard">
+            Status Whiteboard
+           </option>
+
+           <option value="keywords">
+            Keywords
+           </option>
+
+           <option value="resolution">
+            Resolution
+           </option>
+
+           <option value="bug_severity">
+            Severity
+           </option>
+
+           <option value="priority">
+            Priority
+           </option>
+
+           <option value="component">
+            Component
+           </option>
+
+           <option value="assigned_to">
+            AssignedTo
+           </option>
+
+           <option value="reporter">
+            ReportedBy
+           </option>
+
+           <option value="votes">
+            Votes
+           </option>
+
+           <option value="qa_contact">
+            QAContact
+           </option>
+
+           <option value="cc">
+            CC
+           </option>
+
+           <option value="dependson">
+            BugsThisDependsOn
+           </option>
+
+           <option value="blocked">
+            OtherBugsDependingOnThis
+           </option>
+
+           <option value="attachments.description">
+            Attachment description
+           </option>
+
+           <option value="attachments.thedata">
+            Attachment data
+           </option>
+
+           <option value="attachments.mimetype">
+            Attachment mime type
+           </option>
+
+           <option value="attachments.ispatch">
+            Attachment is patch
+           </option>
+
+           <option value="target_milestone">
+            Target Milestone
+           </option>
+
+           <option value="delta_ts">
+            Last changed date
+           </option>
+
+           <option value="(to_days(now()) - to_days(bugs.delta_ts))">
+            Days since bug changed
+           </option>
+
+           <option value="longdesc">
+            Comment
+           </option>
+          </select> <select>
+           <option value="noop">
+            ---
+           </option>
+
+           <option value="equals">
+            equal to
+           </option>
+
+           <option value="notequals">
+            not equal to
+           </option>
+
+           <option value="casesubstring">
+            contains (case-sensitive) substring
+           </option>
+
+           <option value="substring">
+            contains (case-insensitive) substring
+           </option>
+
+           <option value="notsubstring">
+            does not contain (case-insensitive) substring
+           </option>
+
+           <option value="allwordssubstr">
+            all words as (case-insensitive) substrings
+           </option>
+
+           <option value="anywordssubstr">
+            any words as (case-insensitive) substrings
+           </option>
+
+           <option value="regexp">
+            contains regexp
+           </option>
+
+           <option value="notregexp">
+            does not contain regexp
+           </option>
+
+           <option value="lessthan">
+            less than
+           </option>
+
+           <option value="greaterthan">
+            greater than
+           </option>
+
+           <option value="anywords">
+            any words
+           </option>
+
+           <option value="allwords">
+            all words
+           </option>
+
+           <option value="nowords">
+            none of the words
+           </option>
+
+           <option value="changedbefore">
+            changed before
+           </option>
+
+           <option value="changedafter">
+            changed after
+           </option>
+
+           <option value="changedto">
+            changed to
+           </option>
+
+           <option value="changedby">
+            changed by
+           </option>
+          </select> <input type="text" size="25" value="" /> 
+
+          <p>
+           <input type="submit" value="and" />&#160;<input type="submit" value="or" />&#160;<input type="submit" value="add additional boolean search" />
+          </p>
+         </td>
+        </tr>
+
+        <tr>
+         <th width="120">sort by:</th>
+
+         <td><select>
+          <option>
+           choice 1
+          </option>
+
+          <option>
+           choice 2
+          </option>
+
+          <option>
+           choice 3
+          </option>
+         </select> </td>
+        </tr>
+
+    <tr>
+         <th width="120">issues per page:</th>
+
+         <td>
+         <input type="radio" name="$query.ResultsPerPage.Key" value="25" /> 25 
+         <input type="radio" name="$query.ResultsPerPage.Key" value="50" /> 50 
+         <input type="radio" name="$query.ResultsPerPage.Key" value="75" /> 75 
+         <input type="radio" name="$query.ResultsPerPage.Key" 
+             value="100" /> 100
+         </td>
+    </tr>
+
+</table>
+</div>
+
+<p class="functnbar">
+<input type="submit" value="submit" />&#160;
+<input type="submit" value="reset" />&#160;
+<input type="submit" value="save this query" />
+</p>
+     
+$intake.declareGroups()
+</form>
+
+</div>
