@@ -512,8 +512,8 @@ $l10n.NoDependencies
 #if ($canEdit && !$issueChildren.isEmpty())
     <td>#booleanCheckbox($dependGroup.Deleted)</td>
 #end
-<td> $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
-<td>Child</td>
+<td>$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
+<td>$l10n.Child</td>
 <td> 
 #if ($canEdit)
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -547,7 +547,7 @@ $l10n.NoDependencies
  #end
     <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
 </td>
-<td>Child</td>
+<td>$l10n.Child</td>
 <td> 
  #if (!$newDependGroup.TypeId.Message.equals(""))
   <p><strong class="alert">$newDependGroup.TypeId.Message</strong></p>
