@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JawsEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
@@ -36,7 +36,7 @@ public class JawsEjbJar
    public static final String JAWS_DOCUMENT="jaws";
     
    // Attributes ----------------------------------------------------
-   String dataSource = "Hypersonic";
+   String dataSource = "DefaultDS";
    String typeMapping = "Hypersonic SQL";
 	
    TypeMappings tm;
