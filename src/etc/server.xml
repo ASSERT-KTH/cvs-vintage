@@ -75,12 +75,12 @@
     />
 
     <Logger name="servlet_log" 
-            path="logs/servlet.log"
+            path="logs/servlet-${yyyyMMdd}.log"
             verbosityLevel = "INFORMATION" 
     />
 
     <Logger name="JASPER_LOG" 
-	    path="logs/jasper.log"
+	    path="logs/jasper-${yyyyMMdd}.log"
             verbosityLevel = "INFORMATION" 
     />
 
