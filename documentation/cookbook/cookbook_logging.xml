@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cookbook_logging.xml,v 1.13 2003/12/27 16:52:50 linus Exp $ -->
+<!-- $Id: cookbook_logging.xml,v 1.14 2004/02/22 14:59:18 linus Exp $ -->
 <sect1 id="logging">
 <title>Logging</title>
 <para id="comp-logging-purpose">
@@ -119,7 +119,7 @@ import org.apache.log4j.Logger;
 ...
 public class <replaceable>theClass</replaceable> {
 ...
-    private static Logger _Log = 
+    private static final Logger LOG = 
         Logger.getLogger(<replaceable>theClass</replaceable>.class);
 
 ...
