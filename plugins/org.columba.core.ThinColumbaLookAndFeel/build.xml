@@ -25,7 +25,7 @@
    <exclude name="build.xml"/>   
    <exclude name="plugin.xml"/>
    <manifest>
-     <attribute name="Class-Path" value="lib/metouia.jar"/>
+     <attribute name="Class-Path" value="lib/${dest}.jar"/>
      <attribute name="Sealed" value="true"/>
    </manifest>
   </jar>
