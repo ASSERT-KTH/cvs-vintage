@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.67 2003/11/18 20:51:57 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.68 2003/12/23 02:15:05 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -177,7 +177,9 @@ public class MiscUtilities
 			if(path.startsWith("\\\\"))
 				return true;
 		}
-		else if(OperatingSystem.isUnix())
+		// not sure if this is correct for OpenVMS.
+		else if(OperatingSystem.isUnix()
+			|| OperatingSystem.isVMS())
 		{
 			// nice and simple
 			if(path.length() > 0 && path.charAt(0) == '/')

@@ -4,7 +4,7 @@
 *
 * Copyright (C) 2003 Ollie Rutherfurd <oliver@rutherfurd.net>
 *
-* $Id: Increase_Font_Size.bsh,v 1.2 2003/11/22 20:32:28 spestov Exp $
+* $Id: Increase_Font_Size.bsh,v 1.3 2003/12/23 02:15:05 spestov Exp $
 */
 
 increaseFontSize()
@@ -30,7 +30,7 @@ increaseFontSize();
 <listitem>
 	<para><filename>Increase_Font_Size.bsh</filename></para>
 	<abstract><para>
-		Increases the font size in the editor & gutter by 1.
+		Increases the font size in the gutter and text area by 1 point.
 	</para></abstract>
 </listitem>
 

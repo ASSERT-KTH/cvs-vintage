@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.6 2003/08/08 21:14:51 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.7 2003/12/23 02:15:05 spestov Exp $
  */
 public class PerspectiveManager
 {
@@ -99,18 +99,20 @@ public class PerspectiveManager
 		if(jEdit.getBufferCount() == 0)
 			return;
 
-		File perspective = new File(MiscUtilities.constructPath(
-			settingsDirectory,"perspective.xml"));
-
 		if(!autosave)
-			Log.log(Log.MESSAGE,PerspectiveManager.class,"Saving " + perspective);
+			Log.log(Log.MESSAGE,PerspectiveManager.class,"Saving perspective.xml");
+
+		File file1 = new File(MiscUtilities.constructPath(
+			settingsDirectory,"#perspective.xml#save#"));
+		File file2 = new File(MiscUtilities.constructPath(
+			settingsDirectory,"perspective.xml"));
 
 		try
 		{
 			String lineSep = System.getProperty("line.separator");
 
 			BufferedWriter out = new BufferedWriter(new FileWriter(
-				perspective));
+				file1));
 
 			out.write("<?xml version=\"1.0\"?>");
 			out.write(lineSep);
@@ -198,10 +200,12 @@ public class PerspectiveManager
 			out.write("</PERSPECTIVE>");
 			out.write(lineSep);
 			out.close();
+			file2.delete();
+			file1.renameTo(file2);
 		}
 		catch(IOException io)
 		{
-			Log.log(Log.ERROR,PerspectiveManager.class,"Error saving " + perspective);
+			Log.log(Log.ERROR,PerspectiveManager.class,"Error saving " + file1);
 			Log.log(Log.ERROR,PerspectiveManager.class,io);
 		}
 	} //}}}

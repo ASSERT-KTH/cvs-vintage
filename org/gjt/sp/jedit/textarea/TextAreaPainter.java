@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.91 2003/11/18 20:51:58 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.92 2003/12/23 02:15:05 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -994,8 +994,17 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			if(end <= s.start || start > s.end)
 				return;
 
-			int selStartScreenLine = textArea.getScreenLineOfOffset(s.start);
-			int selEndScreenLine = textArea.getScreenLineOfOffset(s.end);
+			int selStartScreenLine;
+			if(textArea.displayManager.isLineVisible(s.startLine))
+				selStartScreenLine = textArea.getScreenLineOfOffset(s.start);
+			else
+				selStartScreenLine = -1;
+
+			int selEndScreenLine;
+			if(textArea.displayManager.isLineVisible(s.endLine))
+				selEndScreenLine = textArea.getScreenLineOfOffset(s.end);
+			else
+				selEndScreenLine = -1;
 
 			Buffer buffer = textArea.getBuffer();
 

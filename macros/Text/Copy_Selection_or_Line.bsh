@@ -5,7 +5,7 @@
 *
 * Copyright (C) 2003 Ollie Rutherfurd <oliver@rutherfurd.net>
 *
-* $Id: Copy_Selection_or_Line.bsh,v 1.1 2003/11/12 00:24:11 spestov Exp $
+* $Id: Copy_Selection_or_Line.bsh,v 1.2 2003/12/23 02:15:05 spestov Exp $
 */
 
 copySelectionOrLine(){
@@ -25,7 +25,7 @@ copySelectionOrLine();
 <listitem>
 	<para><filename>Copy_Selection_or_Line.bsh</filename>
 	<abstract><para>
-		If no text is selected, the current line is cppied to 
+		If no text is selected, the current line is copied to 
 		the clipboard, otherwise the selected text is copied 
 		to the clipboard.
 	</para></abstract>

@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.45 2003/08/10 03:11:19 spestov Exp $
+ * @version $Id: Gutter.java,v 1.46 2003/12/23 02:15:05 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -607,21 +607,31 @@ public class Gutter extends JComponent implements SwingConstants
 				int caretScreenLine;
 				if(caretLine > textArea.getLastPhysicalLine())
 					caretScreenLine = Integer.MAX_VALUE;
-				else
+				else if(textArea.displayManager.isLineVisible(
+						textArea.getCaretLine()))
 				{
 					caretScreenLine = textArea
 						.getScreenLineOfOffset(
 						textArea.getCaretPosition());
 				}
+				else
+				{
+					caretScreenLine = -1;
+				}
 
 				int structScreenLine;
 				if(match.startLine > textArea.getLastPhysicalLine())
 					structScreenLine = Integer.MAX_VALUE;
-				else
+				else if(textArea.displayManager.isLineVisible(
+						match.startLine))
 				{
 					structScreenLine = textArea
 						.getScreenLineOfOffset(
 						match.start);
+				}
+				else
+				{
+					structScreenLine = -1;
 				}
 
 				if(caretScreenLine > structScreenLine)
