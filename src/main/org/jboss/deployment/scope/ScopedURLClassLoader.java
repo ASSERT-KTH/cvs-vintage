@@ -78,17 +78,25 @@ public class ScopedURLClassLoader extends URLClassLoader {
 
     /** returns a set of relative urls in string spec that
      *  point to applications to which this application
-     *  is (most likely) dependent on
-     *  this feature is only prototypically implemented using a property file
+     *  is (most likely) dependent on. Works via analysing the
+     *  Class-Path: in the Manifest.mf. 
+     *  Marc: Please note that sharing scope works also without 
+     *  having these explicit annotations. However,
+     *  there may be circular dependencies that are already relevant
+     *  at deployment time (e.g., bean verification) which you otherwise
+     *  could never setup manually (i.e., by calling the deploy method). 
      */
     public String[] getDependingApplications() {
         try{
-            java.util.Properties localProps=new java.util.Properties();
+            java.util.jar.Manifest manifest= (java.util.jar.Manifest) 
+                new java.io.ObjectInputStream(getResourceProperly("META-INF/Manifest.mf").
+                    openStream()).readObject();
             
-            localProps.load(getResourceProperly("META-INF/org.jboss.deployment.scope.properties").openStream());
+            java.util.jar.Attributes attributes=
+                manifest.getMainAttributes();
             
             java.util.StringTokenizer tok=
-                new java.util.StringTokenizer(localProps.getProperty("org.jboss.deployment.scope.dependencies",""),";");
+                new java.util.StringTokenizer(attributes.getValue(java.util.jar.Attributes.Name.CLASS_PATH)," ");
             
             Collection allDeps=new java.util.ArrayList();
             
