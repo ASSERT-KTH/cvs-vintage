@@ -2,11 +2,13 @@
 
 $page.setTitle("Attribute Editor")
 #set ( $module = $scarabR.CurrentModule )
+#set ( $moduleGroup = $intake.Module.mapTo($module) )
 
  <h2>Customize/create artifact type (2.1.4.0)</h2>
 
-  
-
+<FORM METHOD="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
         <div class="functnbar">
             <table cellpadding="0" cellspacing="0" border="0">
 
@@ -32,12 +34,12 @@ $page.setTitle("Attribute Editor")
             <table border="1" cellspacing="2" cellpadding="3">
             <tr>
             <th>Artifact type name:</th>
-            <td><input type="text" size="25" value="" /></td>
+            <td><input type="text" size="25" name="$moduleGroup.Name.Key" value="$!moduleGroup.Name.Value" /></td>
             </tr>
             
             <tr>
             <th>Artifact type descr:</th>
-            <td><textarea rows="4" cols="40"></textarea></td>
+            <td><textarea rows="4" cols="40" name="$moduleGroup.Description.Key">$!moduleGroup.Description.Value</textarea></td>
             </tr>
             
             <tr>
@@ -80,9 +82,6 @@ $page.setTitle("Attribute Editor")
 
 ## NO GROUPS YET - user must push button to create default groups
 <p class="alert">This module has no groups. Please click to create default groups.
-<FORM METHOD="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
-      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
       <p><input type="submit" value="create default attribute groups" class="button" name="eventSubmit_doCreatedefaults" />
 </FORM>
         
@@ -101,7 +100,6 @@ $page.setTitle("Attribute Editor")
 ## DEDUPE
      #if ($velocityCount == ($module.DedupeSequence))
 
-    #set ( $moduleGroup = $intake.Module.mapTo($module) )
          <P>
          <tr>
              <td>&nbsp;</td>
