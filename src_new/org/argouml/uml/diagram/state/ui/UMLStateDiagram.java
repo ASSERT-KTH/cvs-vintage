@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.56 2004/09/02 20:53:57 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.57 2004/09/18 21:44:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.56 2004/09/02 20:53:57 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.57 2004/09/18 21:44:12 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -285,9 +285,8 @@ public class UMLStateDiagram extends UMLDiagram {
 	    actionShallowHistoryPseudoState,
 	    actionDeepHistoryPseudoState,
 	    null,
-	    _actionComment,
-            _actionCommentLink,
-	    null,
+	    actionComment,
+            actionCommentLink,
 	};
         return actions;
     }

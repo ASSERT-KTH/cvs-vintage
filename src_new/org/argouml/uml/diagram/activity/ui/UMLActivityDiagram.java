@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.56 2004/09/10 20:05:31 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.57 2004/09/18 21:44:11 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,8 +292,8 @@ public class UMLActivityDiagram extends UMLDiagram {
             /*actionSubactivityState,*/
 	    /*getExtendedActions(),*/
             null,
-	    _actionComment,
-            _actionCommentLink
+	    actionComment,
+            actionCommentLink
 	};
         return actions;
     }
