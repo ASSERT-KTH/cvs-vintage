@@ -7,19 +7,19 @@
 
 package org.jboss.configuration;
 
+import org.w3c.dom.Document;
+
 /**
- *   <description> 
+ * The <em>JMX</em> admin interface for the {@link ConfigurationService}
+ * MBean.
  *      
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ * @author Rickard Öberg (rickard.oberg@telkel.com)
+ * @version $Revision: 1.6 $
  */
 public interface ConfigurationServiceMBean
 {
-   // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = ":service=Configuration";
-    
-   // Public --------------------------------------------------------
+    /** The default object name. */
+    public static final String OBJECT_NAME = ":service=Configuration";
 
     /**
      * Get the attribute value auto-trim flag.
@@ -27,16 +27,45 @@ public interface ConfigurationServiceMBean
      * @return  True if attribute values are auto-trimmed.
      */
     boolean getAutoTrim();
-   
-	public void load(org.w3c.dom.Document conf)
-		throws Exception;
+
+    /**
+     * Parses the given configuration document and sets MBean attributes.
+     *
+     * @param configuration     The parsed configuration document.
+     *
+     * @throws Exception        Failed to load.
+     */
+    void load(Document configuration) throws Exception;
 		
-	public String save()
-		throws Exception;
-      
-   public void loadConfiguration()
-      throws Exception;
-      
-   public void saveConfiguration()
-      throws Exception;
+    /**
+     * Builds a string that consists of the configuration elements of
+     * the currently running MBeans registered in the server.
+     *
+     * @throws Exception    Failed to construct configuration.
+     */
+	String save() throws Exception;
+		
+    /**
+     * Load the configuration from the configuration file,
+     * installs and initailize configured MBeans and registeres the
+     * beans as services.
+     *
+     * <p>This is a 2-step process:
+     * <ol>
+     *   <li>Load user conf. and create MBeans from that.
+     *   <li>Apply user conf to created MBeans.
+     * </ol>
+     *
+     * @throws Exception    ???
+     */
+   void loadConfiguration() throws Exception;
+
+    /**
+     * Saves the current configuration of each registered MBean to
+     * the running state file file.  This will only occur if
+     * a file of the that name exists in the classpath.
+     *
+     * @throws Exception    Failed to save configuration.
+     */
+   void saveConfiguration() throws Exception;
 }
