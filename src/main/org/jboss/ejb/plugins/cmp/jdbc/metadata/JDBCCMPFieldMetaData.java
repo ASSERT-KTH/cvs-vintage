@@ -28,7 +28,14 @@ import org.w3c.dom.Element;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- * @version $Revision: 1.9 $
+ * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
+ *
+ * <p><b>2002/08/27: loubyansky</b>
+ * <ol>
+ *   <li>added JDBCCMPFieldMetaData( JDBCEntityMetaData entity )</li>
+ * </ol>
+ *
+ * @version $Revision: 1.10 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -93,6 +100,26 @@ public final class JDBCCMPFieldMetaData {
     * property overrides 
     */
    private final List propertyOverrides = new ArrayList();
+
+
+   /**
+    * This constructor added to create an unknown primary key
+    * For now metadata is hardcoded
+    */
+   public JDBCCMPFieldMetaData( JDBCEntityMetaData entity )
+   {
+      this.entity = entity;
+      fieldName = "unknownPkField";
+      fieldType = java.lang.String.class;
+      columnName = "unknownPkColumn";
+      jdbcType = java.sql.Types.VARCHAR;
+      sqlType = "VARCHAR(32)";
+      readOnly = false;
+      readTimeOut = 0;
+      primaryKeyMember = true;
+      notNull = true;
+      primaryKeyField = null;
+   }
 
    /**
     * Constructs cmp field meta data for a field on the specified entity with 
