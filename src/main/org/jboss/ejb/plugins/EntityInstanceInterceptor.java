@@ -37,6 +37,7 @@ import org.jboss.ejb.CacheKey;
 import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.util.Sync;
+import org.jboss.tm.TxManager;
 
 /**
  * The instance interceptors role is to acquire a context representing
@@ -58,7 +59,8 @@ import org.jboss.util.Sync;
  *    
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.37 $
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.38 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -77,6 +79,12 @@ import org.jboss.util.Sync;
  * <ol>
  *   <li>Handle a race condition when there is no ctx transaction
  * </ol>
+ * </ol>
+ * <p><b>2001/07/16: billb</b>
+ * <ol>
+ *   <li>Added wait(timeout) code, commented out so that we can easily turn it on
+ *   when this new code is done with it's trial period.
+ * </ol>
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -86,6 +94,7 @@ public class EntityInstanceInterceptor
    // Attributes ----------------------------------------------------
 
    protected EntityContainer container;
+   protected int timeout;
 	
    // Static --------------------------------------------------------
 
@@ -99,6 +108,18 @@ public class EntityInstanceInterceptor
    public void setContainer(Container container)
    {
       this.container = (EntityContainer)container;
+      timeout = 5000;
+      if (container.getTransactionManager() != null)
+      {
+         if (container.getTransactionManager() instanceof TxManager)
+         {
+            TxManager mgr = (TxManager)container.getTransactionManager();
+            timeout = (mgr.getDefaultTransactionTimeout() * 1000) + 50;
+         }
+      }
+      boolean trace = log.isTraceEnabled();
+      if ( trace )
+         log.trace("wait timeout = " + timeout);
    }
 	
    public Container getContainer()
@@ -158,6 +179,15 @@ public class EntityInstanceInterceptor
          log.trace("Begin invoke, key="+key);
       while (ctx == null)
       {
+         // Maybe my transaction already expired?  This must be at the top of the loop.
+         Transaction miTx = mi.getTransaction();
+         if (miTx != null && miTx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+         {
+            log.error("Saw rolled back tx="+miTx);
+            throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
+         }
+
+         // Ok, get moving...
          ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
          if( trace )
             log.trace("Begin while ctx==null, ctx="+ctx);
@@ -183,11 +213,18 @@ public class EntityInstanceInterceptor
                // Wait for it to finish, note that we use wait() and not wait(5000), why? 
                // cause we got cojones, if there a problem in this code we want a freeze not illusion
                // Threads finishing the transaction must notifyAll() on the ctx.txLock
+               //
+               // billb: wait() is good for debugging purposes, but transaction timeouts will
+               // never rollback this thread.  wait() will wait forever and ever.  You must uncomment
+               // the wait(timeout) lines below to turn on transaction timeouts.  BTW, remove this
+               // comment when wait() is finally removed.
                try
                {
                   if( trace )
                      log.trace("Begin wait on TxLock="+tx);
-                  ctx.getTxLock().wait();
+                  // FIXME: Uncomment this next line to enable transaction timeouts
+                  // ctx.getTxLock().wait(timeout);
+                  ctx.getTxLock().wait(); // FIXME, delete this line when 2.5 is released
                   if( trace )
                      log.trace("End wait on TxLock="+tx);
                }
@@ -218,15 +255,8 @@ public class EntityInstanceInterceptor
                continue;
             }
 
-            // Maybe my transaction already expired?
-            Transaction miTx = mi.getTransaction();
             if( trace )
                log.trace("Begin synchronized(ctx), ctx="+ctx+", mi.tx="+miTx);
-            if (miTx != null && miTx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-            {
-               log.error("Saw rolled back tx="+miTx);
-               throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-            }
             // We do not use pools any longer so the only thing that can happen is that 
             // a ctx has a null id (instance removed) (no more "wrong id" problem)
             if (ctx.getId() == null) 
@@ -260,7 +290,9 @@ public class EntityInstanceInterceptor
                   {
                      if( trace )
                         log.trace("Begin ctx.wait(), ctx="+ctx);
-                     ctx.wait();
+                     // FIXME: Uncomment this next line to enable transaction timeouts
+                     // ctx.wait(timeout);
+                     ctx.wait(); //FIXME, delete this line when 2.5 is released.
                   }
                   catch (InterruptedException ignored) {}					
                   // We need to try again
