@@ -1,2 +1,2 @@
 Main-Class: org.jboss.jmx.connector.ejb.TestClient
-Class-Path: ./ ../lib/jmxri.jar ./jnp-client.jar ./jboss-plastic-j2ee.jar ./jboss-client.jar ./jbossmq-client.jar ./log4j.jar
+Class-Path: ./ ../lib/jmxri.jar ./jnp-client.jar ./jboss-j2ee.jar ./jboss-client.jar ./jbossmq-client.jar ./log4j.jar

@@ -1,2 +1,2 @@
 Main-Class: org.jboss.verifier.Main
-Class-Path:  ../lib/ext/jpl-util-0_5b.jar ../client/jboss-plastic-j2ee.jar ../lib/jaxp.jar ../lib/crimson.jar ../external/metadata.jar
+Class-Path:  ../lib/ext/jpl-util-0_5b.jar ../client/jboss-j2ee.jar ../lib/jaxp.jar ../lib/crimson.jar ../external/metadata.jar

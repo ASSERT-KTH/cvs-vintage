@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.67 2002/02/17 08:39:05 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.68 2002/02/17 09:52:51 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -188,11 +188,11 @@
     <!-- Modules -->
     <!-- ======= -->
 
-    <!-- Plastic -->
-    <property name="jboss.plastic.root" value="${project.root}/plastic/output"/>
-    <property name="jboss.plastic.lib" value="${jboss.plastic.root}/lib"/>
-    <path id="jboss.plastic.classpath">
-      <pathelement path="${jboss.plastic.lib}/jboss-plastic-j2ee.jar"/>
+    <!-- J2EE -->
+    <property name="jboss.j2ee.root" value="${project.root}/j2ee/output"/>
+    <property name="jboss.j2ee.lib" value="${jboss.j2ee.root}/lib"/>
+    <path id="jboss.j2ee.classpath">
+      <pathelement path="${jboss.j2ee.lib}/jboss-j2ee.jar"/>
     </path>
 
     <!-- Common -->
@@ -211,7 +211,7 @@
 
     <!-- The combined dependant module classpath -->
     <path id="dependentmodule.classpath">
-      <path refid="jboss.plastic.classpath"/>
+      <path refid="jboss.j2ee.classpath"/>
       <path refid="jboss.common.classpath"/>
       <path refid="jboss.naming.classpath"/>
     </path>
