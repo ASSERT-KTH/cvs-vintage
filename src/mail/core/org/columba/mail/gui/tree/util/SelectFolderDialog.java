@@ -157,7 +157,7 @@ public class SelectFolderDialog implements ActionListener,
             }
 
             FolderCommandReference[] r = new FolderCommandReference[1];
-            r[0] = new FolderCommandReference(getSelectedFolder());
+            r[0] = new FolderCommandReference(dialog.getSelected());
             r[0].setFolderName(name);
 
             MainInterface.processor.addOp(new CreateSubFolderCommand(r));

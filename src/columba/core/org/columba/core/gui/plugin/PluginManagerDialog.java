@@ -291,13 +291,13 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
             JFileChooser chooser = new JFileChooser();
             chooser.addChoosableFileFilter(new FileFilter() {
                 public boolean accept(File file) {
-                    return file.isFile() && file.getName().toLowerCase().endsWith(".zip");
+                    return file.isDirectory() || file.getName().toLowerCase().endsWith(".zip");
                 }
                 
                 public String getDescription() {
-                    //TODO: i18n
                     return GlobalResourceLoader.getString(
                             RESOURCE_PATH, "pluginmanager", "filefilter");
+                    
                 }
             });
             chooser.setAcceptAllFileFilterUsed(false);

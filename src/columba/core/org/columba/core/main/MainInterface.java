@@ -32,7 +32,7 @@ import org.columba.core.plugin.PluginManager;
  */
 public class MainInterface {
     /** Current version */
-    public static final String version = "1.0 Milestone M2";
+    public static final String version = "1.0 Milestone M2 Release Candidate";
 
     /** If true, enables debugging output from org.columba.core.logging */
     public static boolean DEBUG = false;

@@ -202,7 +202,7 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
             }
 
             bool = true;
-            dispose();
+            setVisible(false);
         } else if (action.equals("CANCEL")) {
             bool = false;
 

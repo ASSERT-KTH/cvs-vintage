@@ -300,6 +300,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		// folder in which the update occurs
 		FolderTreeNode folder= event.getSrcFolder();
 
+		if (folder ==null ) return;
+		
 		ColumbaLogger.log.info("source folder=" + folder.getName());
 
 		// get current selection
