@@ -1,0 +1,598 @@
+<?xml version="1.0"?>
+
+<!-- Build file for Scarab -->
+
+<project name="Scarab" default="compile" basedir=".">
+
+    <!-- Give user a chance to override without editing this file
+        (and without typing -D each time it compiles it -->
+    <property file="${user.home}/build.properties" />
+    <property file="build.properties" />
+    <property file="${user.home}/.ant.properties" />
+    <property file=".ant.properties" />
+
+    <property name="Name" value="Scarab"/>
+    <property name="version" value="1.0-dev"/>
+    <property name="project" value="scarab"/>
+    <property name="final.name" value="${project}-${version}"/>
+    <property name="final.dir" value="${basedir}/../${final.name}/"/>
+
+    <property name="debug" value="on"/>
+    <property name="optimize" value="off"/>
+    <property name="deprecation" value="off"/>
+
+    <property name="ant.home" value="."/>
+    <property name="year" value="2000-2001"/>
+
+    <property name="build.dir.default" value="${basedir}/../target"/>
+
+    <property name="turbine.dir" value="${basedir}/../../jakarta-turbine"/>
+    <property name="scarab.turbine.version" 
+            value="3.0-dev"/>
+    <property name="scarab.turbine.final.name" 
+            value="turbine-${scarab.turbine.version}"/>
+    <property name="turbine.latest.jar" 
+            value="${scarab.turbine.final.name}.jar"/>
+            
+    <property name="torque.zip" value="torque.zip"/>
+    <property name="src.dir" value="${basedir}/../src"/>
+    <property name="src.conf.dir" value="${src.dir}/conf"/>
+    <property name="src.html.dir" value="${src.dir}/html"/>
+    <property name="src.images.dir" value="${src.dir}/images"/>
+    <property name="src.java.dir.scarab" value="${src.dir}/java"/>
+    <property name="src.sql.dir.scarab" value="${src.dir}/sql"/>
+    <property name="src.lib.dir" value="${basedir}/../lib"/>
+    <property name="src.sql.dir" value="${src.dir}/sql"/>
+    <property name="src.templates.dir" value="${src.dir}/templates"/>
+    <property name="src.resources.dir" value="${src.dir}/resources"/>
+    <property name="src.usecases.dir" value="${src.dir}/usecases"/>
+
+    <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
+    <property name="tomcat.cvs.dir" value="../../jakarta-tomcat-4.0"/>
+
+    <!-- Build classpath -->
+    <path id="classpath">
+        <fileset dir="${src.lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${basedir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Build directory properties                            -->
+    <!-- ================================================================== -->
+    <target name="pre-prepare-build.dir" unless="build.dir.scarab">
+        <property name="build.dir.scarab" value="${build.dir.default}"/>
+        <property name="prepare-tomcat-true" value="yes"/>
+    </target>
+    <target name="prepare-build.dir" depends="pre-prepare-build.dir">
+        <property name="build.webapps" value="${build.dir.scarab}/webapps"/>
+        <property name="build.project" value="${build.webapps}/${project}"/>
+        <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
+        <property name="build.src.scarab" value="${build.project.webinf}/src"/>
+        <property name="build.dest.scarab"
+                 value="${build.project.webinf}/classes"/>
+        <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
+        <property name="javadoc.destdir" value="${build.project}/docs"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Tomcat directory                                      -->
+    <!-- ================================================================== -->
+    <target name="prepare-tomcat" if="prepare-tomcat-true" 
+         depends="prepare-build.dir">
+
+        <echo message="Build Dir: ${build.dir.scarab}"/>
+        <mkdir dir="${build.dir.scarab}"/>
+
+        <!-- copy over tomcat -->
+        <copy todir="${build.dir.scarab}" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/"/>
+        </copy>
+
+        <chmod dir="${build.dir.scarab}" perm="ug+rx" includes="**/*.sh" />
+
+        <mkdir dir="${build.dir.scarab}/logs"/>
+        <mkdir dir="${build.dir.scarab}/work"/>
+        <mkdir dir="${build.dir.scarab}/webapps"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Check to see what optional dependencies are available              -->
+    <!-- ================================================================== -->
+    <target name="check_for_optional_packages">
+        <available property="lucene.present"
+                   classname="com.lucene.document.Document">
+            <classpath refid="classpath"/>
+        </available>
+        <available property="junit.present"
+           classname="junit.framework.TestCase">
+            <classpath refid="classpath"/>
+        </available>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Prepares the build directory                                       -->
+    <!-- ================================================================== -->
+    <target name="prepare" depends="prepare-tomcat, prepare-build.dir">
+
+        <!-- things to go into the project directory -->
+        <copy todir="${build.project}" filtering="no">
+            <fileset dir="${src.html.dir}">
+                <include name="**/*.html"/>
+                <include name="**/*.css"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.project}/images" filtering="no">
+            <fileset dir="${src.images.dir}" defaultexcludes="no"/>
+        </copy>
+        <copy todir="${build.project}/templates" filtering="no">
+            <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
+        </copy>
+        <copy todir="${build.project}/resources" filtering="no">
+            <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
+        </copy>
+        <copy todir="${build.project.webinf}" filtering="no">
+            <fileset dir="${src.conf.dir}/">
+                <include name="web.xml"/>
+            </fileset>
+        </copy>
+
+        <!-- things to go into the web-inf directory -->
+        <copy todir="${build.project.webinf}/conf" filtering="no">
+            <fileset dir="${src.conf.dir}/" defaultexcludes="no">
+                <include name="*.properties"/>
+                <include name="*.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.project.webinf}/lib" filtering="no">
+            <fileset dir="${src.lib.dir}/">
+                <exclude name="**/servlet*.jar"/>
+                <exclude name="**/stylebook*.jar"/>
+                <exclude name="**/torque.zip"/>
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- the source code directory -->
+        <copy todir="${build.src.scarab}/org" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
+                <include name="**/*.java"/>
+                <include name="**/*.properties"/>
+                <include name="**/package.html"/>
+                <exclude name="**/*Lucene*.java"/>
+            </fileset>
+        </copy>
+        <!-- add Lucene code to source directory -->
+        <antcall target="copy_lucene"/>
+        
+        <mkdir dir="${build.project}/logs"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Adds Lucene adaptor code to source directory                       -->
+    <!-- ================================================================== -->
+    <target name="copy_lucene" depends="check_for_optional_packages"
+        if="lucene.present">
+
+        <copy todir="${build.src.scarab}/org" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
+                <include name="**/*Lucene*.java"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Build Turbine and Torque if CVS is available                       -->
+    <!-- ================================================================== -->
+    <target name="check-for-turbine">
+        <available property="turbine.cvs.available" 
+            file="${turbine.dir}/build/build.xml"/>
+    </target>
+
+    <target name="prepare-turbine" depends="check-for-turbine" 
+            if="turbine.cvs.available">
+
+        <echo message="checking: ${src.lib.dir}/${turbine.latest.jar}"/>
+        <uptodate property="turbine.jar.uptodate"
+            targetfile="${src.lib.dir}/${turbine.latest.jar}">
+            <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
+        </uptodate>
+
+        <echo message="checking: ${src.lib.dir}/${torque.zip}"/>
+        <uptodate property="torque.uptodate"
+            targetfile="${src.lib.dir}/${torque.zip}">
+            <srcfiles dir="${turbine.dir}/conf/torque" includes="**/*"/>
+            <srcfiles dir="${turbine.dir}/src/java/org/apache/turbine/torque" 
+                      includes="**/*.java"/>
+        </uptodate>
+    </target>
+
+    <target name="skip-turbine" depends="check-for-turbine" 
+            unless="turbine.cvs.available">
+        <property name="turbine.jar.uptodate" value="true"/>
+        <property name="torque.uptodate" value="true"/>
+    </target>
+
+    <target name="build-turbine" depends="skip-turbine, prepare-turbine"
+            unless="turbine.jar.uptodate">
+        <echo message="+------------------------------------------+"/>
+        <echo message="|                                          |"/>
+        <echo message="|     Rebuilding Turbine CVS Version       |"/>
+        <echo message="|                                          |"/>
+        <echo message="+------------------------------------------+"/>
+
+        <!-- 
+            A hack to get around the fact that Ant has a bug. The problem
+            is that when Turbine gets compiled, for some reason,
+            Ant isn't found in the classpath, so the TorqueTask stuff
+            in Turbine doesn't compile because Ant can't be found.
+        -->
+        <copy todir="${turbine.dir}/lib">
+            <fileset dir="${basedir}">
+                <include name="ant*.jar"/>
+            </fileset>
+        </copy>
+
+        <ant antfile="build.xml" 
+                dir="${turbine.dir}/build" target="jar">
+            <property name="version" value="${scarab.turbine.version}"/>
+            <property name="project" value="turbine"/>
+            <property name="final.name" value="${scarab.turbine.final.name}"/>
+            <property name="src.dir" value="${turbine.dir}/src"/>
+        </ant>
+
+        <!--
+            See above comment about nasty hack. This is cleanup time so
+            that no one is the wiser.
+        -->
+        <delete>
+            <fileset dir="${turbine.dir}/lib">
+                <include name="ant*.jar"/>
+            </fileset>
+        </delete>
+
+        <copy file="${turbine.dir}/bin/${turbine.latest.jar}" overwrite="true"
+            todir="${src.lib.dir}"/>
+    </target>
+
+    <target name="build-torque"  depends="prepare-turbine,skip-turbine"
+            unless="torque.uptodate">
+        <echo message="+------------------------------------------+"/>
+        <echo message="|                                          |"/>
+        <echo message="|      Rebuilding Torque CVS Version       |"/>
+        <echo message="|                                          |"/>
+        <echo message="+------------------------------------------+"/>
+        <ant antfile="build-torque.xml" 
+                dir="${turbine.dir}/build" target="main">
+            <property name="build.dir" value="../bin"/>
+            <property name="build.dest" value="../bin/classes"/>
+        </ant>
+        <copy file="${turbine.dir}/bin/torque.zip" todir="${src.lib.dir}"/>
+    </target>
+
+    <target name="torque-expanded-check" depends="build-torque">
+        <!-- we can check that torque.zip is upToDate in order to know if
+             the archive has already been expanded because it is expanded
+             in the same target as it is copied to the directory -->
+        <uptodate property="torque.is.expanded"
+            targetfile="${build.src.scarab}/torque.zip">
+            <srcfiles dir="${src.lib.dir}" includes="torque.zip"/>
+        </uptodate>    
+    </target>
+
+    <target name="torque-init" depends="torque-expanded-check"
+            unless="torque.is.expanded">
+        <copy file="${src.lib.dir}/torque.zip" todir="${build.src.scarab}"/>
+        <unzip src="${build.src.scarab}/torque.zip"
+                dest="${build.src.scarab}" />
+        <copy todir="${build.src.scarab}/torque/lib">
+            <fileset dir="${src.lib.dir}">
+                <include name="mm.mysql-*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Generate SQL from Torque                                           -->
+    <!-- ================================================================== -->
+    <target name="schema-check">
+        <echo message="checking: ${src.sql.dir}/mysql-${project}.sql"/>
+        <uptodate property="schema.uptodate"
+            targetfile="${src.sql.dir}/mysql-${project}.sql">
+            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+        </uptodate>
+    </target>
+
+    <target name="sql" depends="prepare-build.dir,schema-check,torque-init" 
+            unless="schema.uptodate">
+        <copy file="${src.sql.dir}/${project}-schema.xml" 
+              todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props" 
+              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
+        <ant antfile="build.xml"
+                dir="${torque.dir.scarab}" target="project-sql">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+        </ant>
+
+        <move file="${src.sql.dir.scarab}/${project}-schema.sql"
+            tofile="${src.sql.dir}/mysql-${project}.sql"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Generate Data DTD from Torque                                      -->
+    <!-- ================================================================== -->
+    <target name="datadtd-check">
+        <echo message="checking: ${src.sql.dir}/${project}-data.dtd"/>
+        <uptodate property="datadtd.uptodate"
+            targetfile="${src.sql.dir}/${project}-data.dtd">
+            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+        </uptodate>
+    </target>
+
+    <target name="datadtd" depends="datadtd-check,compile"
+            unless="datadtd.uptodate">
+        <copy file="${src.sql.dir}/${project}-schema.xml"
+              todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props"
+              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
+        <ant antfile="build.xml"
+                dir="${torque.dir.scarab}" target="project-datadtd">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="databaseName" value="default"/>
+        </ant>
+
+        <move file="${src.java.dir.scarab}/${project}-data.dtd"
+            tofile="${src.sql.dir}/${project}-data.dtd"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Dump data from DB into xml                                         -->
+    <!-- ================================================================== -->
+
+    <target name="datadump" depends="compile">
+        <copy file="${src.sql.dir}/${project}-schema.xml"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props" overwrite="true"
+            tofile="${torque.dir.scarab}/build.properties"/>
+        <ant antfile="build.xml" dir="${torque.dir.scarab}"
+            target="project-datadump">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+        </ant>
+        <move file="${src.java.dir.scarab}/${project}-default-all-data.xml"
+            tofile="${src.sql.dir}/${project}-default-all-data.xml"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Generate SQL from data XML                                         -->
+    <!-- ================================================================== -->
+
+    <target name="datasql" depends="datadtd,compile">
+        <copy file="${src.sql.dir}/${project}-schema.xml"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.sql.dir}/${project}-data.xml"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.sql.dir}/${project}-data.dtd"
+            todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props" overwrite="true"
+            tofile="${torque.dir.scarab}/build.properties"/>
+        <ant antfile="build.xml" dir="${torque.dir.scarab}"
+            target="project-datasql">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+        </ant>
+        <move file="${src.java.dir.scarab}/${project}-data.sql"
+            tofile="${src.sql.dir}/${project}-data.sql"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Generate OM/Peer classes from Torque                               -->
+    <!-- ================================================================== -->
+    <target name="generated-check" depends="prepare-build.dir">
+        <echo message="checking: ${torque.dir.scarab}/report.scarab.om.generation"/>
+        <uptodate property="gen.uptodate"
+            targetfile=
+               "${torque.dir.scarab}/report.scarab.om.generation">
+            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+        </uptodate>
+    </target>
+
+    <target name="om-peer" depends="generated-check,torque-init,sql" 
+            unless="gen.uptodate">
+
+        <echo message="+------------------------------------------+"/>
+        <echo message="|                                          |"/>
+        <echo message="|        Building OM/Peer classes          |"/>
+        <echo message="|                                          |"/>
+        <echo message="+------------------------------------------+"/>
+        <copy file="${src.sql.dir}/${project}-schema.xml" 
+              todir="${torque.dir.scarab}/schema"/>
+        <copy file="${src.conf.dir}/torque.props" 
+              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
+        <ant antfile="build.xml" dir="${torque.dir.scarab}" 
+                target="project-om">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+        </ant>
+
+        <copy todir="${build.src.scarab}/org" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org">
+                <include name="**/Base*.java"/>
+                <exclude name="**/BaseScarabObject.java"/>
+                <include name="**/map/*MapBuilder.java"/>
+            </fileset>
+        </copy>
+
+        <copy file="${src.java.dir.scarab}/report.scarab.om.generation" 
+              overwrite="true" todir="${torque.dir.scarab}"/>
+
+        <delete>
+            <fileset dir="${src.java.dir.scarab}">
+                <include name="**/Base*.java"/>
+                <exclude name="**/BaseScarabObject.java"/>
+                <include name="**/map/*MapBuilder.java"/>
+                <include name="report.scarab.om.generation"/>
+            </fileset>
+        </delete>
+        <delete dir="${src.java.dir.scarab}/org/tigris/scarab/om/map"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Compiles the source directory                                      -->
+    <!-- ================================================================== -->
+    <target name="compile" depends="build-turbine,om-peer,prepare">
+        <mkdir dir="${build.dest.scarab}"/>
+        <javac srcdir="${build.src.scarab}"
+            destdir="${build.dest.scarab}"
+            excludes="**/package.html,torque/**"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}">
+
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- jars the source directory                                          -->
+    <!-- ================================================================== -->
+    <target name="jarsrc" depends="prepare">
+        <jar jarfile="${build.dir.scarab}/${final.name}.src.jar"
+            basedir="${build.src.scarab}"
+            excludes="**/package.html"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Tomcat easily                               -->
+    <!-- ================================================================== -->
+    <target name="upgrade-tomcat">
+        <copy todir="${tomcat.dist.dir}/bin" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/bin"/>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/common" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/common"/>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/lib" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/lib">
+                <include name="**/namingfactory.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/server" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/server">
+                <exclude name="**/warp.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Creates the API documentation                                      -->
+    <!-- ================================================================== -->
+    <target name="javadocs" depends="prepare">
+        <mkdir dir="${javadoc.destdir}"/>
+        <javadoc
+            sourcepath="${build.src.scarab}"
+            packagenames="org.tigris.scarab.*"
+            destdir="${javadoc.destdir}"
+            author="true"
+            private="true"
+            version="true"
+            use="true"
+            windowtitle="${Name} ${version} API"
+            doctitle="${Name} ${version} API"
+          bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
+        >
+            <classpath refid="classpath"/>
+    </javadoc>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Creates the Usecase documentation                                  -->
+    <!-- ================================================================== -->
+    <target name="usecases" depends="prepare">
+        <ant antfile="build.xml" 
+                dir="${src.usecases.dir}" target="docs">
+        </ant>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Package                                                            -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package" depends="javadocs">
+        <mkdir dir="${final.dir}"/>
+        <mkdir dir="${final.dir}/src/java"/>
+
+        <copy todir="${final.dir}/src/java">
+            <fileset dir="${build.dir.scarab}/src"/>
+        </copy>
+
+        <copy todir="${final.dir}/build">
+            <fileset dir="../build"/>
+        </copy>
+
+        <copy todir="${final.dir}/lib">
+            <fileset dir="../lib"/>
+        </copy>
+
+        <copy file="${build.dir.scarab}/${final.name}.jar" 
+            tofile="${final.dir}/${final.name}.jar"/>
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with ZIP                                 -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package-zip" depends="package">
+        <delete file="../${Name}-${version}.zip"/>
+        <zip zipfile="../${Name}-${version}.zip" 
+             basedir="../" includes="**/${final.name}/**"/>
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with TAR-GZIP                            -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package-tgz" depends="package">
+        <delete file="../${Name}-${version}.tar"/>
+        <delete file="../${Name}-${version}.tar.gz"/>
+        <tar tarfile="../${Name}-${version}.tar" 
+             basedir="../" includes="**/${final.name}/**"/>
+        <gzip zipfile="../${Name}-${version}.tar.gz" 
+                  src="../${Name}-${version}.tar"/>
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with ZIP and TAG-GZIP                    -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package-all" depends="package-zip, package-tgz">
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Same as package-all. It is just here for compatibility.            -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="dist" depends="package-all">
+    </target>
+    -->
+    
+    <!-- ================================================================== -->
+    <!-- Cleans up the build directory                                      -->
+    <!-- ================================================================== -->
+    <target name="clean" depends="prepare-build.dir">
+        <delete dir="${build.project}"/>
+    </target>
+    <target name="clean-all" depends="prepare-build.dir">
+        <delete dir="${build.dir.scarab}"/>
+    </target>
+
+</project>
+
