@@ -128,7 +128,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.23 2002/04/28 17:06:08 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.24 2002/04/28 17:35:46 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1253,20 +1253,11 @@ public abstract class AbstractScarabModule
             rmas = RModuleAttributePeer.doSelect(crit);
             getMethodResult().put(rmas, this, GET_R_MODULE_ATTRIBUTES, 
                 issueType, activeBool, attributeType);
-            System.out.println("Getting new list");
         }
         else 
         {
-            System.out.println("Getting cached list");
             rmas = (List)obj;
         }
-
-        Iterator iter = rmas.iterator();
-        while (iter.hasNext()) 
-        {
-            System.out.println(iter.next().getClass().getName());
-        }
-        
         return rmas;
     }
 
