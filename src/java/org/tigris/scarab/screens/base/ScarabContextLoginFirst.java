@@ -59,11 +59,11 @@ import org.tigris.scarab.util.ScarabConstants;
     for Scarab system.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabContextLoginFirst.java,v 1.7 2001/07/17 21:40:30 jon Exp $
+    @version $Id: ScarabContextLoginFirst.java,v 1.8 2001/08/24 23:42:56 jon Exp $
 */
 public abstract class ScarabContextLoginFirst extends RequireLoginFirst
 {
-    protected int cur_project_id = -1;
+    protected int cur_module_id = -1;
     
     /**
         Require people to implement this method
@@ -77,7 +77,7 @@ public abstract class ScarabContextLoginFirst extends RequireLoginFirst
     protected void doBuildTemplate( RunData data )
         throws Exception
     {
-        cur_project_id = data.getParameters().getInt(ScarabConstants.CURRENT_PROJECT, 1);
+        cur_module_id = data.getParameters().getInt(ScarabConstants.CURRENT_MODULE, 1);
         super.doBuildTemplate(data);
     }
 }
