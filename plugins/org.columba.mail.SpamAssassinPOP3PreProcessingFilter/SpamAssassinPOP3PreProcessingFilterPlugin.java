@@ -99,6 +99,8 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
 			buf.append("X-Spam-Flag: NO\n");
 		buf.append(rawString);
 		
+		rawString = null;
+		
 		// free memory
 		rawString=null;
 		result=null;
