@@ -6,28 +6,27 @@
  */
 package org.jboss.deployment;
 
-// $Id: J2eeApplicationMetaData.java,v 1.8 2004/05/20 19:52:04 ejort Exp $
+// $Id: J2eeApplicationMetaData.java,v 1.9 2004/08/12 23:58:03 starksm Exp $
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.SecurityRoleMetaData;
 import org.jboss.mx.util.MBeanServerLocator;
 import org.w3c.dom.Element;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-
 /**
  * A representation of the application.xml and jboss-app.xml deployment
  * descriptors.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @see org.jboss.metadata.XmlLoadable
  */
 public class J2eeApplicationMetaData
@@ -53,8 +52,8 @@ public class J2eeApplicationMetaData
     * The  unauthenticated-principal value assigned to the application
     */
    private String unauthenticatedPrincipal;
-
-   final Collection modules = new HashSet();
+   /** The application.xml modules in definition order */
+   private Collection modules = new ArrayList();
    
    /** The jmx name */
    private String jmxName;
