@@ -17,8 +17,8 @@ package org.columba.mail.gui.table;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.MissingResourceException;
-import java.util.Vector;
 
 import javax.swing.JTable;
 import javax.swing.event.MouseInputListener;
@@ -48,7 +48,6 @@ import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelThreadedView;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-import java.util.List;
 
 /**
  * This widget is a mix between a JTable and a JTree
@@ -113,7 +112,6 @@ public class TableView extends TreeTable {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
 
 		adjustColumn();
 
@@ -206,7 +204,7 @@ public class TableView extends TreeTable {
 			String name = v.get("name");
 			int size = v.getInteger("size");
 			int position = v.getInteger("position");
-			
+
 			TableColumn tc = null;
 
 			//ColumbaLogger.log.debug("name=" + name);
@@ -222,7 +220,7 @@ public class TableView extends TreeTable {
 				continue;
 
 			tc.setPreferredWidth(size);
-			
+
 			try {
 				int index = getColumnModel().getColumnIndex(name);
 				getColumnModel().moveColumn(index, position);
@@ -268,7 +266,7 @@ public class TableView extends TreeTable {
 					"Status",
 					new StatusRenderer(getTree()),
 					new BooleanHeaderRenderer(
-						true,
+						ImageLoader.getSmallImageIcon("mail-new.png"),
 						name,
 						getTableModelSorter()),
 					23,
@@ -279,7 +277,8 @@ public class TableView extends TreeTable {
 					"Flagged",
 					new FlaggedRenderer(getTree()),
 					new BooleanHeaderRenderer(
-						true,
+						ImageLoader.getSmallImageIcon(
+							"mark-as-important-16.png"),
 						name,
 						getTableModelSorter()),
 					23,
@@ -294,7 +293,7 @@ public class TableView extends TreeTable {
 						ImageLoader.getSmallImageIcon("attachment.png"),
 						"columba.attachment"),
 					new BooleanHeaderRenderer(
-						true,
+						ImageLoader.getSmallImageIcon("attachment.png"),
 						name,
 						getTableModelSorter()),
 					23,
@@ -317,7 +316,7 @@ public class TableView extends TreeTable {
 					"Priority",
 					new PriorityRenderer(getTree(), true),
 					new BooleanHeaderRenderer(
-						true,
+						ImageLoader.getSmallImageIcon("priority-high.png"),
 						name,
 						getTableModelSorter()),
 					23,
@@ -325,7 +324,7 @@ public class TableView extends TreeTable {
 					position);
 
 			} else if (name.equalsIgnoreCase("Subject")) {
-				
+
 				registerRenderer(
 					"Subject",
 					new HeaderTableCommonRenderer(getTree(), "Subject"),
@@ -336,7 +335,7 @@ public class TableView extends TreeTable {
 					size,
 					false,
 					position);
-				
+
 			} else {
 				String str = new String();
 				try {

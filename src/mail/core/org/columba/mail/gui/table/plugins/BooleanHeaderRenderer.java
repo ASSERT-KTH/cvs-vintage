@@ -29,67 +29,63 @@ import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;
 import org.columba.mail.gui.table.util.TableModelSorter;
 
+public class BooleanHeaderRenderer
+	extends JButton
+	implements TableCellRenderer {
+	Border unselectedBorder = null;
+	Border selectedBorder = null;
+	boolean isBordered = true;
+	String str;
 
-public class BooleanHeaderRenderer extends JButton implements TableCellRenderer
-    {
-        Border unselectedBorder = null;
-        Border selectedBorder = null;
-        boolean isBordered = true;
-        String str;
-	boolean bool;
-        TableModelSorter tableModelSorter;
-        ImageIcon image;
+	TableModelSorter tableModelSorter;
+	ImageIcon icon;
 
+	public void updateUI() {
+		super.updateUI();
 
-        public void updateUI()
-        {
-            super.updateUI();
+		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+	}
 
-            setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
-        }
+	public BooleanHeaderRenderer(
+		ImageIcon icon,
+		String str,
+		TableModelSorter tableModelSorter) {
+		super();
+		this.icon = icon;
+		this.str = str;
 
-        public BooleanHeaderRenderer(boolean bool, String str, TableModelSorter tableModelSorter)
-            {
-                super();
-                this.str = str;
-		this.bool = bool;
+		this.tableModelSorter = tableModelSorter;
 
-                this.tableModelSorter = tableModelSorter;
+		setHorizontalAlignment(SwingConstants.LEFT);
 
-                    //this.image = image;
-		setHorizontalAlignment( SwingConstants.LEFT );
-                //setHorizontalTextPosition( SwingConstants.CENTER );
-                    //setHorizontalAlignment( SwingConstants.CENTER );
-                setOpaque(true); //MUST do this for background to show up.
+		setOpaque(true); //MUST do this for background to show up.
 
-                setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
-                  //setMargin( new Insets(0,0,0,0) );
-            }
+		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 
+	}
 
+	public Component getTableCellRendererComponent(
+		JTable table,
+		Object str,
+		boolean isSelected,
+		boolean hasFocus,
+		int row,
+		int column) {
 
+		if (icon == null) {
 
-        public Component getTableCellRendererComponent(
-                                JTable table, Object str,
-                                boolean isSelected, boolean hasFocus,
-                                int row, int column)
-        {
+			if (tableModelSorter.getSortingColumn().equals(this.str)) {
+				if (tableModelSorter.getSortingOrder() == true)
+					setIcon(new AscendingIcon());
+				else
+					setIcon(new DescendingIcon());
+			} else {
+				setIcon(null);
+			}
+		} else {
+			setIcon(icon);
+		}
 
-              //setBorder( new CTableBorder(true) );
-
-	    //FIXME
-
-            if ( tableModelSorter.getSortingColumn().equals( this.str ) )
-            {
-                if ( tableModelSorter.getSortingOrder() == true )
-                    setIcon( new AscendingIcon() );
-                else
-                    setIcon( new DescendingIcon() );
-            } else
-            {
-                setIcon( null );
-            }
-
-            return this;
-        }
-    }
+		return this;
+	}
+}
