@@ -76,7 +76,7 @@ import org.xml.sax.*;
  *  an xml file. The file is fully read in memory when the context is
  *  initialized.
  *
- *  The default file is TOMCAT_HOME/conf/tomcat-users.xml. You can
+ *  The default file is TOMCAT_HOME/conf/users/tomcat-users.xml. You can
  *  change it, and you can also set this module as a per context
  *  interceptor, so that each module have it's own realm.
  *
@@ -93,7 +93,7 @@ public class SimpleRealm extends  BaseInterceptor {
     int userNote=-1;
     int passwordNote=-1;
 
-    String filename="/conf/tomcat-users.xml";
+    String filename="/conf/users/tomcat-users.xml";
 
     
     public SimpleRealm() {
@@ -241,7 +241,7 @@ public class SimpleRealm extends  BaseInterceptor {
             if (filename != null)
                 f=new File( home + File.separator + filename );
             else
-                f=new File( home + "/conf/tomcat-users.xml");
+                f=new File( home + "/conf/users/tomcat-users.xml");
 
             if( ! f.exists() ) {
                 log( "File not found  " + f );

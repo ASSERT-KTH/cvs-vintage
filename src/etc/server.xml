@@ -199,7 +199,7 @@
           -->
         <RequestInterceptor 
             className="org.apache.tomcat.request.SimpleRealm" 
-            filename="conf/global-users.xml"
+            filename="conf/users/global-users.xml"
             debug="0" />
 
        <!-- UnComment the following and comment out the
@@ -306,7 +306,7 @@
 	    reloadable="true" > 
            <RequestInterceptor 
               className="org.apache.tomcat.request.SimpleRealm" 
-              filename="conf/example-users.xml"
+              filename="conf/users/example-users.xml"
               debug="0" />
             <Logger name="example_tc_log" 
               path="logs/examples.log"
@@ -333,7 +333,7 @@
                  trusted="false" > 
         <RequestInterceptor 
             className="org.apache.tomcat.request.SimpleRealm" 
-            filename="conf/admin-users.xml"
+            filename="conf/users/admin-users.xml"
             debug="0" />
         </Context>
 
