@@ -58,6 +58,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.sql.Connection;
 
+import com.workingdogs.village.Record;
+
 import org.apache.commons.lang.ObjectUtils;
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -84,6 +86,7 @@ import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.workflow.WorkflowFactory;
+import org.tigris.scarab.om.IssuePeer;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -93,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.271 2003/02/13 02:15:43 jon Exp $
+ * @version $Id: Issue.java,v 1.272 2003/02/13 21:49:45 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -394,8 +397,23 @@ public class Issue
         List results = new ArrayList();
         for (int i = 0; i < issues.length; i++)
         {
+            if (issues[i].indexOf('*') != -1)
+            {
+                // probably better to use more Torque here, but this is definitely going
+                // to be faster and more efficient.
+                String sql =
+                    "SELECT CONCAT(" + IssuePeer.ID_PREFIX + ',' +  IssuePeer.ID_COUNT + ')' +
+                    " FROM " + IssuePeer.TABLE_NAME + " WHERE " + 
+                    IssuePeer.ID_PREFIX + " = '" + module.getCode() + '\'';
+                List records = BasePeer.executeQuery(sql);
+                for (Iterator j = records.iterator(); j.hasNext();)
+                {
+                    Record rec = (Record)j.next();
+                    results.add(rec.getValue(1).asString());
+                }
+            }
             // check for a -
-            if (issues[i].indexOf("-") == -1)
+            else if (issues[i].indexOf("-") == -1)
             {
                 results.add(issues[i]);
             }
