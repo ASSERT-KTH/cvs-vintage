@@ -87,7 +87,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.29 2002/08/12 04:31:20 jon Exp $
+ * @version $Id: Register.java,v 1.30 2002/08/12 04:33:07 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -163,13 +163,7 @@ public class Register extends ScarabTemplateAction
                 Record[] records = null;
                 if (domain != null)
                 {
-                    try
-                    {
-                        records = dns.getRecords(domain, Type.A);
-                    }
-                    catch (Exception e)
-                    {
-                    }
+                    records = dns.getRecords(domain, Type.A);
                     if (records == null || records.length == 0)
                     {
                         setTarget(data, template);
