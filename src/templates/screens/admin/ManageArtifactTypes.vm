@@ -5,32 +5,26 @@ $page.setTitle("Attribute Editor")
 <h2>Manage artifact types</h2>
 
 <form method="get" action="$link.setPage("admin,ManageArtifactTypes.vm")">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-<input type="hidden" name="nextTemplate" value="admin,ManageArtifactTypes.vm"/>
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="nextTemplate" value="admin,ManageArtifactTypes.vm" />
 
 <div class="functnbar">
-    <table cellpadding="0" cellspacing="0" border="0">
-
+  <table cellpadding="4" cellspacing="0" border="1">
     <tr>
-    <td><strong>Screen options:</strong></td>
-    <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    <td><strong>Artifact type management options:</strong></td>
-    <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    </tr>
-
-    <tr>
-    <td>
-        <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
-        <input type="submit" value="Cancel" />
+    <td class="firstchild">
+      <div>Screen options:</div>
+      <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
+      <input type="submit" value="Cancel" />
     </td>
-    <td>
-        <input type="submit" value="Add new" name="eventSubmit_doGotoartifactselect" />&#160;
-        <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-        <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
-        <!-- FIXME: <input type="submit" value="Resort" /> -->
+    <td nowrap="nowrap">
+      <div>Artifact type management options:</div>
+      <input type="submit" value="Add new" name="eventSubmit_doGotoartifactselect" />&#160;
+      <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
+      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
+      <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
     </tr>
-    </table>
+  </table>
 </div>
                   
 <h3>Artifact types</h3>
@@ -60,28 +54,22 @@ $page.setTitle("Attribute Editor")
 </table>
 
 <div class="functnbar2">
-    <table cellpadding="0" cellspacing="0" border="0">
-
+  <table cellpadding="4" cellspacing="0" border="1">
     <tr>
-    <td><strong>Screen options:</strong></td>
-    <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    <td><strong>Artifact type management options:</strong></td>
-    <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    </tr>
-
-    <tr>
-    <td>
-        <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
-        <input type="submit" value="Cancel" />
+    <td class="firstchild">
+      <div>Screen options:</div>
+      <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
+      <input type="submit" value="Cancel" />
     </td>
-    <td>
-        <input type="submit" value="Add new" name="eventSubmit_doGotoartifactselect" />&#160;
-        <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-        <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
-        <!-- FIXME: <input type="submit" value="Resort" /> -->
+    <td nowrap="nowrap">
+      <div>Artifact type management options:</div>
+      <input type="submit" value="Add new" name="eventSubmit_doGotoartifactselect" />&#160;
+      <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
+      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
+      <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
     </tr>
-    </table>
+  </table>
 </div>
         
 <p>* Maximum of five Artifact types in left hand navigation (first five
