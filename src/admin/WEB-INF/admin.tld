@@ -76,4 +76,29 @@
 	
 
   </tag>
+
+
+  <tag>
+    <name>gtest</name>
+    <tagclass>tadm.GTestTag</tagclass>
+    <teiclass>tadm.GTestTEI</teiclass>
+    <info>
+      Run a GTest-based test suite.
+    </info>
+    <attribute>
+       <name>testFile</name>
+       <required>true</required>
+    </attribute>
+    <attribute>
+       <name>testApp</name>
+       <required>false</required>
+    </attribute>
+    <attribute>
+       <name>target</name>
+       <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
 </taglib>
