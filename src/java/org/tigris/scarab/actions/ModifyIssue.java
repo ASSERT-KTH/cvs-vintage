@@ -81,6 +81,7 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.ScarabGlobalTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
@@ -97,7 +98,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.197 2005/01/04 17:24:35 jorgeuriarte Exp $
+ * @version $Id: ModifyIssue.java,v 1.198 2005/01/09 22:37:11 dabbous Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -127,12 +128,22 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
-        IntakeTool intake = getIntakeTool(context);       
+        IntakeTool intake = getIntakeTool(context);
+        
+        ScarabGlobalTool scarabG = this.getGlobalTool(data);
+        
+        boolean isReasonRequired = scarabG.isIssueChangeReasonRequired();
+        
         // Reason field is required to modify attributes
         Group reasonGroup = intake.get("Attachment", "attCommentKey" + issue.getQueryKey(), false);
         Field reasonField = null;
         reasonField = reasonGroup.get("Data");
-        reasonField.setRequired(true);
+
+        if(isReasonRequired)
+        {
+            reasonField.setRequired(true);
+        }
+        
         // make sure to trim the whitespace
         String reasonFieldString = reasonField.toString();
         if (reasonFieldString != null)
@@ -142,8 +153,11 @@ public class ModifyIssue extends BaseModifyIssue
         if (reasonGroup == null || !reasonField.isValid() ||
             reasonFieldString.length() == 0)
         {
-            reasonField.setMessage(
-                "ExplanatoryReasonRequiredToModifyAttributes");
+            if (isReasonRequired)
+            {
+                reasonField.setMessage(
+                    "ExplanatoryReasonRequiredToModifyAttributes");
+            }
         }
 
         // Set any other required flags
@@ -1232,5 +1246,14 @@ public class ModifyIssue extends BaseModifyIssue
         String tab = data.getParameters().getString("tab", 
                                           ScarabConstants.ISSUE_VIEW_ALL);
         data.getUser().setTemp(ScarabConstants.TAB_KEY, tab); 
+    }
+    
+    /**
+     * Helper method to retrieve the ScarabGlobalTool from the Context
+     */
+    private ScarabGlobalTool getGlobalTool(RunData data)
+    {
+        return (ScarabGlobalTool)org.apache.turbine.modules.Module
+            .getTemplateContext(data).get(ScarabConstants.SCARAB_GLOBAL_TOOL);
     }
 }

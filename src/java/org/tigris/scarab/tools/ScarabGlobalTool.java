@@ -101,7 +101,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.66 2005/01/04 11:05:14 dabbous Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.67 2005/01/09 22:37:11 dabbous Exp $
  */
 public class ScarabGlobalTool
     implements ApplicationTool
@@ -129,15 +129,8 @@ public class ScarabGlobalTool
     private static final String BUILD_VERSION = 
         Turbine.getConfiguration().getString("scarab.build.version", "");
 
-    private static String siteName = 
-        Turbine.getConfiguration().getString("scarab.site.name","");
 
-    private static String siteLogo = 
-        Turbine.getConfiguration().getString("scarab.site.logo","");
-
-    private static String publicModulesDisplayCount = 
-        Turbine.getConfiguration().getString("scarab.public.modules.display.count","-1");
-
+    
     public void init(Object data)
     {
     }
@@ -685,6 +678,9 @@ public class ScarabGlobalTool
      */
     public String getSiteName()
     {
+        String siteName = 
+            Turbine.getConfiguration().getString("scarab.site.name","");
+
         if (siteName == null)
         {
             siteName = "";
@@ -699,6 +695,9 @@ public class ScarabGlobalTool
      */
     public String getSiteLogo()
     {
+        String siteLogo = 
+            Turbine.getConfiguration().getString("scarab.site.logo","");
+
         if (siteLogo == null)
         {
             siteLogo = "";
@@ -713,9 +712,22 @@ public class ScarabGlobalTool
      */
     public int getPublicModulesDisplayCount()
     {
+        String publicModulesDisplayCount = 
+            Turbine.getConfiguration().getString("scarab.public.modules.display.count","-1");
         return Integer.parseInt(publicModulesDisplayCount);
     }
 
+    /**
+     * Provides the site logo for the top banner.
+     *
+     * @return the configured site logo
+     */
+    public boolean isIssueChangeReasonRequired()
+    {
+        return Turbine.getConfiguration().getBoolean("scarab.issue.edit.reason.required",true);
+    }
+
+    
     /**
      * Returns an <code>int</code> representation of the given
      * <code>Object</code> whose toString method should be a valid integer.

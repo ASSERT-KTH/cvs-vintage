@@ -67,7 +67,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.7 2005/01/04 11:05:19 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.8 2005/01/09 22:37:12 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -515,70 +515,71 @@
         deploy
     </details>
 
-    <property>
-      <name>system.mail.host</name>
-      <default>localhost</default>
-      <comment/>
-      <type>Runtime</type>
-       <customization modification="required">basic</customization>
-      <file/>
-      <details>
-        This is the host on which your Email service runs
-        as seen from Scarab. This is usually a named host, e.g.
-        mailserver.mydomain.com. If the mail service runs
-        on the same host as Scarab, you can use the default (localhost)        
-      </details>
-    </property>
-
-    <property>
-      <name>scarab.email.domain</name>
-      <default>example.org</default>
-      <comment/>
-      <type>Runtime</type>
-       <customization modification="required">basic</customization>
-      <file/>
-      <details>
-        This is the domain on which your Email service rund
-        (the part right from the "@" in the email adress  
-      </details>
-    </property>
-
-    <property>
-      <name>scarab.email.default.fromName</name>
-      <default>Administrator</default>
-      <comment>
-        E-mail name that e-mails from Scarab have in their 'from' address.
-      </comment>
-      <type>Runtime</type>
-       <customization modification="required">basic</customization>
-      <file/>
-      <details>
-        This is the username, Scarab inserts into the FROM part of
-        each Email it sends to the world. Please note, that some
-        Email services insist on finding a locally existing mailuser 
-        in this field.        
-      </details>
-    </property>
-
-    <property>
-      <name>scarab.email.forgotpassword.subject</name>
-      <default>Scarab Account Password</default>
-      <comment/>
-      <type>Runtime</type>
-       <customization modification="recommended">advanced</customization>
-      <file/>
-      <details>
-        The Email subject for emails containing 
-        information about a password reset:
-        Currently this field is not l10n enabled        
-      </details>
-    </property>
 
     <group name="email">
       <details>
         Following Email related properties are derived properties.
         Although they can be modified, usually they don't need to be changed.
       </details>
+
+      <property>
+        <name>system.mail.host</name>
+        <default>localhost</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+        <details>
+          This is the host on which your Email service runs
+          as seen from Scarab. This is usually a named host, e.g.
+          mailserver.mydomain.com. If the mail service runs
+          on the same host as Scarab, you can use the default (localhost)        
+        </details>
+      </property>
+
+      <property>
+        <name>scarab.email.domain</name>
+        <default>example.org</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+        <details>
+          This is the domain on which your Email service rund
+          (the part right from the "@" in the email adress  
+        </details>
+      </property> 
+
+      <property>
+        <name>scarab.email.default.fromName</name>
+        <default>Administrator</default>
+        <comment>
+          E-mail name that e-mails from Scarab have in their 'from' address.
+        </comment>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+        <details>
+          This is the username, Scarab inserts into the FROM part of
+          each Email it sends to the world. Please note, that some
+          Email services insist on finding a locally existing mailuser 
+          in this field.        
+        </details>
+      </property>
+
+      <property>
+        <name>scarab.email.forgotpassword.subject</name>
+        <default>Scarab Account Password</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="recommended">advanced</customization>
+        <file/>
+        <details>
+          The Email subject for emails containing 
+          information about a password reset:
+          Currently this field is not l10n enabled        
+        </details>
+      </property>
 
       <property>
         <name>scarab.email.register.fromName</name>
@@ -687,6 +688,7 @@
          <customization modification="optional">advanced</customization>
         <file/>
       </property>
+
       <property>
         <name>services.UploadService.repository</name>
         <default>WEB-INF</default>
@@ -695,6 +697,7 @@
          <customization modification="optional">advanced</customization>
         <file/>
       </property>
+
       <property>
         <name>searchindex.path</name>
         <default>WEB-INF/index</default>
@@ -703,6 +706,26 @@
          <customization modification="optional">advanced</customization>
         <file/>
       </property>
+
+      <property>
+        <name>scarab.issue.edit.reason.required</name>
+        <default>true</default>
+        <comment>
+          If this property is set to false, then Issues can be
+          saved without given Reason-String.
+        </comment>
+        <details>
+          Normally Scarab insists to receive a manually entered Reason-String 
+          whenver an attempt to save an Issue ocurs. In some environments 
+          this fixed behaviour of Scarab is not wanted. 
+          If this property is set to false (default=true), then issues are 
+          stored even if the reason-string is empty.
+        </details>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+      
     </group>
 
     <group name="appserver">
@@ -938,7 +961,6 @@
         </details>
       </property>
       
-
     </group>
   </section>
 
