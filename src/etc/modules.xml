@@ -499,6 +499,54 @@ in ServerXmlReader to use a simpler syntax.
 <addContext/>
 </module>
 
+<module name="JspInterceptor34" javaClass="org.apache.jasper34.tomcat33.JspInterceptor">
+<category name="facade"/>
+<doc>Not yet</doc>
+<attribute name="keepGenerated">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="largeFile">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="mappedFile">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="sendErrToClient">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="iEClassId">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="classPath">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="scratchdir">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="jspCompilerPath">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="jspCompilerPlugin">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="classDebugInfo">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="property">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="useJspServlet">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="jspServlet">
+<doc>Not yet</doc>
+</attribute>
+<attribute name="javaCompiler">
+<doc>Not yet</doc>
+</attribute>
+<addContext/>
+</module>
+
 
 <module name="Servlet22Interceptor" javaClass="org.apache.tomcat.facade.Servlet22Interceptor">
 <category name="facade"/>
@@ -509,6 +557,12 @@ in ServerXmlReader to use a simpler syntax.
 
 <module name="LoadOnStartupInterceptor" javaClass="org.apache.tomcat.facade.LoadOnStartupInterceptor">
 <category name="facade"/>
+<doc>Not yet</doc>
+</module>
+
+<module name="ProfileLoader" 
+	javaClass="org.apache.tomcat.modules.config.ProfileLoader">
+<category name="config"/>
 <doc>Not yet</doc>
 </module>
 
