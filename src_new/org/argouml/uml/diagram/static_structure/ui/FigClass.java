@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.12 2001/11/16 04:17:49 thn Exp $
+// $Id: FigClass.java,v 1.13 2001/11/23 19:35:03 sz9 Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -619,7 +619,7 @@ public class FigClass extends FigNodeModelElement {
 	return new Dimension(newW,newH);
   }
 
-  private class MyFigText extends FigText
+  public class MyFigText extends FigText
   {
 	private Fig refFig;
 	public MyFigText(int x, int y, int w, int h, Fig aFig) {super(x,y,w,h,true); refFig=aFig;}
