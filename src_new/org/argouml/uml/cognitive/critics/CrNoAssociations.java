@@ -1,4 +1,4 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// Copyright (c) 1996-02 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,7 +24,7 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.7 2002/10/20 21:11:15 linus Exp $
+// $Id: CrNoAssociations.java,v 1.8 2002/10/23 15:04:15 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,9 +54,16 @@ public class CrNoAssociations extends CrUML {
     if (!(dm instanceof MClassifier)) return NO_PROBLEM;
     MClassifier cls = (MClassifier) dm;
     if (!(CriticUtils.isPrimaryObject(cls))) return NO_PROBLEM;
-    
-    //if (cls.containsStereotype(MStereotype.UTILITY)) return NO_PROBLEM;
-    // stereotype <<record>>?
+
+
+    // types can probably have associations, but we should not nag at them
+    // not having any.
+    // utility is a namespace collection - also not strictly required to have
+    // associations.
+    if (CriticUtils.hasStereotype(cls, "type") ||
+        CriticUtils.hasStereotype(cls, "utility"))
+        return NO_PROBLEM;
+
     //TODO: different critic or special message for classes
     //that inherit all ops but define none of their own.
 
