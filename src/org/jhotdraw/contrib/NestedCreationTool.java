@@ -1,5 +1,5 @@
 /*
- * @(#)CompositeFigureCreationTool.java
+ * @(#)CreationTool2.java
  *
  * Project:		JHotdraw - a GUI framework for technical drawings
  *				http://www.jhotdraw.org
@@ -16,7 +16,6 @@ import CH.ifa.draw.standard.CompositeFigure;
 import CH.ifa.draw.standard.DecoratorFigure;
 import CH.ifa.draw.framework.Figure;
 import CH.ifa.draw.framework.DrawingEditor;
-import CH.ifa.draw.framework.DrawingView;
 
 import java.awt.event.MouseEvent;
 
@@ -24,15 +23,14 @@ import java.awt.event.MouseEvent;
  * @author	Wolfram Kaiser
  * @version <$CURRENT_VERSION$>
  */
-public class CompositeFigureCreationTool extends CreationTool {
+public class NestedCreationTool extends CreationTool {
 	private CompositeFigure myContainerFigure;
 
-	public CompositeFigureCreationTool(DrawingEditor newDrawingEditor, Figure prototype) {
+	public NestedCreationTool(DrawingEditor newDrawingEditor, Figure prototype) {
 		super(newDrawingEditor, prototype);
 	}
 
 	public void mouseDown(MouseEvent e, int x, int y) {
-		setView((DrawingView)e.getSource());
 		Figure figure = getFigureWithoutDecoration(drawing().findFigure(e.getX(), e.getY()));
 		if ((figure != null) && (figure instanceof CompositeFigure)) {
 			setContainerFigure((CompositeFigure)figure);

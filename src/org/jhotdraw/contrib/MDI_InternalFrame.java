@@ -12,7 +12,6 @@
 package CH.ifa.draw.contrib;
 
 import CH.ifa.draw.framework.*;
-import CH.ifa.draw.standard.*;
 import java.awt.*;
 import javax.swing.JInternalFrame;
 
@@ -20,7 +19,7 @@ import javax.swing.JInternalFrame;
  * This class provides support for JHotDraw applications with multiple
  * document interfaces.
  *
- * @author  Wolfram Kaiser
+ * @author  Wolfram Kaiser <mrfloppy@sourceforge.net>
  * @version <$CURRENT_VERSION$>
  */
 public class MDI_InternalFrame extends JInternalFrame {
@@ -100,7 +99,7 @@ public class MDI_InternalFrame extends JInternalFrame {
 	/**
 	 * Get the drawing view which represents the internal frame
 	 *
-	 * @param   newInternalDrawingView  drawing view for this internal frame
+	 * @return  drawing view for this internal frame
 	 */
 	public DrawingView getDrawingView() {
 		return internalDrawingView;
