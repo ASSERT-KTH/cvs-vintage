@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.212 2003/03/24 01:07:47 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.213 2003/03/24 01:18:48 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -341,6 +341,7 @@ public class JEditTextArea extends JComponent
 	} //}}}
 
 	//{{{ setFirstLine() method
+	public Exception trace;
 	/**
 	 * Sets the vertical scroll bar position
 	 *
@@ -358,6 +359,8 @@ public class JEditTextArea extends JComponent
 
 		if(firstLine == displayManager.getFirstLine())
 			return;
+
+		trace = new Exception();
 
 		displayManager.setFirstLine(firstLine);
 
