@@ -36,6 +36,7 @@ from:&#160;<input type="text" size="20"
 </td>
 </tr>
 </table>
+</div>
 
 ## ATTRIBUTES
 <div class="axial">
@@ -88,13 +89,13 @@ from:&#160;<input type="text" size="20"
 
 
 ##PERSONNEL
-<h3>Personel association search</h3>
+<h3>Personnel association search</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">&nbsp;</th>
-<td align="left"><strong>Name</strong></td>
-<td align="left"><strong>Email</strong></td>
-<td align="left"><strong>Association</strong></td>
+<th align="left"><strong>Name</strong></th>
+<th align="left"><strong>Email</strong></th>
+<th align="left"><strong>Association</strong></th>
 </tr>
 #set ($userList = $data.Parameters.getStrings("user_list"))
 #set ($userAttrs = $module.getUserAttributes($issueType)) 
