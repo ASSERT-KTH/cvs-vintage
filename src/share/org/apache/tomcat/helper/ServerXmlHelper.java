@@ -95,7 +95,7 @@ public class ServerXmlHelper {
 		    xh.setParent("setContextManager") );
 	xh.addRule( "ContextManager/ContextInterceptor",
 		    xh.addChild( "addContextInterceptor",
-				 "org.apache.tomcat.core.ContextInterceptor"));
+				 "org.apache.tomcat.core.BaseInterceptor"));
 
 	xh.addRule( "ContextManager/RequestInterceptor",
 		    xh.objectCreate(null, "className"));
@@ -105,7 +105,7 @@ public class ServerXmlHelper {
 		    xh.setParent("setContextManager") );
 	xh.addRule( "ContextManager/RequestInterceptor",
 		    xh.addChild( "addRequestInterceptor",
-				 "org.apache.tomcat.core.RequestInterceptor"));
+				 "org.apache.tomcat.core.BaseInterceptor"));
 
 	// Default host
  	xh.addRule( "ContextManager/Context",
@@ -124,7 +124,7 @@ public class ServerXmlHelper {
 		    xh.setParent("setContext") );
 	xh.addRule( "ContextManager/Context/RequestInterceptor",
 		    xh.addChild( "addRequestInterceptor",
-				 "org.apache.tomcat.core.RequestInterceptor"));
+				 "org.apache.tomcat.core.BaseInterceptor"));
 
 	// Virtual host support.
 	// Push a host object on the stack
@@ -178,7 +178,7 @@ public class ServerXmlHelper {
 				  "org.apache.tomcat.core.ContextManager") );
 	xh.addRule( "ContextManager/Connector",
 		    xh.addChild( "addContextInterceptor",
-				 "org.apache.tomcat.core.ContextInterceptor"));
+				 "org.apache.tomcat.core.BaseInterceptor"));
 
 	xh.addRule( "ContextManager/Connector/Parameter",
 		    xh.methodSetter("setProperty",2) );
