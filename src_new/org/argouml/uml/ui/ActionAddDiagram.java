@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.23 2004/05/01 09:26:05 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.24 2004/05/07 21:09:37 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.23 2004/05/01 09:26:05 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.24 2004/05/07 21:09:37 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -109,7 +109,8 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
         if (isValidNamespace(ns)) {
             ArgoDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
-            ProjectBrowser.getInstance().getNavigatorPane().addToHistory(diagram);
+            ProjectBrowser.getInstance().getNavigatorPane()
+                .addToHistory(diagram);
             ProjectBrowser.getInstance().setTarget(diagram);
             ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
             super.actionPerformed(e);
@@ -120,7 +121,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
     /**
      * Returns true as the given namespace a valid namespace is to add the 
      * diagram to.
-     * @param ns
+     * @param ns the namespace to check
      * @return boolean
      */
     public abstract boolean isValidNamespace(Object ns);

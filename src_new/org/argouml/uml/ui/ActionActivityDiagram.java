@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.28 2004/05/01 09:20:45 mvw Exp $
+// $Id: ActionActivityDiagram.java,v 1.29 2004/05/07 21:09:37 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,16 @@ public class ActionActivityDiagram extends ActionStateDiagram {
 
     public static ActionActivityDiagram SINGLETON = new ActionActivityDiagram();
 
+    /**
+     * @deprecated since V0.15.5. Make your own logger instead.
+     */
     protected static Logger cat =
 	Logger.getLogger(org.argouml.uml.ui.ActionActivityDiagram.class);
 
+    /**
+     * Constructor
+     *
+     */
     private ActionActivityDiagram() {
         super("action.activity-diagram");
     }
@@ -53,7 +60,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
         Object/*MActivityGraph*/ graph =
 	    ActivityGraphsFactory.getFactory().buildActivityGraph(target);
         /*if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
-            ns = ModelFacade.getNamespace(target); // this fails always, see issue 1817
+            ns = ModelFacade.getNamespace(target); 
+            // this fails always, see issue 1817
         }*/
         UMLActivityDiagram d = new UMLActivityDiagram(ns, graph);
         return d;
@@ -64,7 +72,8 @@ public class ActionActivityDiagram extends ActionStateDiagram {
      */
     public boolean shouldBeEnabled() {
         return super.shouldBeEnabled()
-	    || org.argouml.model.ModelFacade.isAPackage(TargetManager.getInstance().getModelTarget());
+	    || org.argouml.model.ModelFacade.isAPackage(TargetManager
+                .getInstance().getModelTarget());
     }
 
     /**

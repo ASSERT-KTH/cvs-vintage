@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.45 2004/04/26 19:46:56 thn Exp $
+// $Id: Notation.java,v 1.46 2004/05/07 21:11:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.45 2004/04/26 19:46:56 thn Exp $
+// $Id: Notation.java,v 1.46 2004/05/07 21:11:14 mvw Exp $
 
 package org.argouml.application.api;
 
@@ -57,7 +57,9 @@ public final class Notation implements PropertyChangeListener {
      */
     public static final Logger cat =
         Logger.getLogger("org.argouml.application.notation");
-
+    private static final Logger LOG = 
+        Logger.getLogger(Notation.class);
+    
     /** The name of the default Argo notation.  This notation is
      *  part of Argo core distribution.
      */
@@ -151,12 +153,12 @@ public final class Notation implements PropertyChangeListener {
     private static NotationProvider2 getProvider(NotationName notation) {
         NotationProvider2 np;
         np = NotationProviderFactory.getInstance().getProvider(notation);
-        cat.debug("getProvider(" + notation + ") returns " + np);
+        LOG.debug("getProvider(" + notation + ") returns " + np);
         return np;
     }
 
     public static void setDefaultNotation(NotationName n) {
-        cat.info("default notation set to " + n.getConfigurationValue());
+        LOG.info("default notation set to " + n.getConfigurationValue());
         Configuration.setString(
             KEY_DEFAULT_NOTATION,
             n.getConfigurationValue());
@@ -180,7 +182,7 @@ public final class Notation implements PropertyChangeListener {
         if (n == null) {
             n = NotationNameImpl.findNotation("Uml.1.3");
 	}
-        cat.debug("default notation is " + n.getConfigurationValue());
+        LOG.debug("default notation is " + n.getConfigurationValue());
         return n;
     }
     ////////////////////////////////////////////////////////////////
@@ -641,7 +643,7 @@ public final class Notation implements PropertyChangeListener {
      * Called after the notation default property gets changed.
      */
     public void propertyChange(PropertyChangeEvent pce) {
-        cat.info(
+        LOG.info(
             "Notation change:"
                 + pce.getOldValue()
                 + " to "

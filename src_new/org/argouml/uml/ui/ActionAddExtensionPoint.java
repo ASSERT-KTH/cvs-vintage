@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.11 2004/01/06 21:47:16 jjones Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.12 2004/05/07 21:09:37 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.11 2004/01/06 21:47:16 jjones Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.12 2004/05/07 21:09:37 mvw Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -137,7 +137,8 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
         // invoke the superclass action method.
 
 	Object/*MExtensionPoint*/ ep =
-            UmlFactory.getFactory().getUseCases().buildExtensionPoint(/*(MUseCase)*/target);
+            UmlFactory.getFactory().getUseCases()
+            .buildExtensionPoint(/*(MUseCase)*/target);
 
         TargetManager.getInstance().setTarget(ep);
 	super.actionPerformed(ae);
@@ -155,7 +156,8 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
     public boolean shouldBeEnabled() {
 	Object         target = TargetManager.getInstance().getModelTarget();
 
-	return super.shouldBeEnabled() && (org.argouml.model.ModelFacade.isAUseCase(target));
+	return super.shouldBeEnabled() && (org.argouml.model.ModelFacade
+            .isAUseCase(target));
     }
 
 } /* end class ActionAddExtensionPoint */
