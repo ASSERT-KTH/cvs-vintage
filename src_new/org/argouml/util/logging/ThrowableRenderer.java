@@ -1,4 +1,4 @@
-// $Id: ThrowableRenderer.java,v 1.4 2003/06/30 19:23:20 linus Exp $
+// $Id: ThrowableRenderer.java,v 1.5 2003/08/28 20:53:09 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,12 +29,14 @@ import org.apache.log4j.or.ObjectRenderer;
 import java.io.*;
 import java.sql.*;
 
-/**
+  /**
    *  Renderer used for <code>log4j</code> to place full information
    *  from { @link java.lang.Throwable } into the log.
-  
-   @author Thierry Lach
-   @since 0.9.4
+   * 
+   * @author Thierry Lach
+   * @since 0.9.4
+   * 
+   * @deprecated without replacement since log4j provides this functionality now.
    */
 public class ThrowableRenderer implements ObjectRenderer {
 
