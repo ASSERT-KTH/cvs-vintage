@@ -26,7 +26,7 @@ import org.jboss.invocation.InvocationType;
  * The client-side proxy for an EJB Home object.
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class HomeInterceptor
    extends GenericEJBInterceptor
@@ -91,10 +91,6 @@ public class HomeInterceptor
    
    /**
    * InvocationHandler implementation.
-   *
-   * @param proxy   The proxy object.
-   * @param m       The method being invoked.
-   * @param args    The arguments for the method.
    *
    * @throws Throwable    Any exception or error thrown while processing.
    */

@@ -26,20 +26,20 @@ import org.jboss.util.NestedRuntimeException;
  *
  * @todo generalize the proxy/invoker factory object
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class GenericProxyFactory
 {
 
    /** Create a composite proxy for the given interfaces, invoker.
-    @param id, the cache id for the target object if any
-    @param targetName, the name of the server side service
-    @param invoker, the detached invoker stub to embed in the proxy
-    @param jndiName, the JNDI name the proxy will be bound under if not null
-    @param proxyBindingName, the invoker-proxy-binding name if not null
-    @param interceptorClasses, the Class objects for the interceptors
-    @param loader, the ClassLoader to associate the the Proxy
-    @param ifaces, the Class objects for the interfaces the Proxy implements
+    @param id the cache id for the target object if any
+    @param targetName the name of the server side service
+    @param invoker the detached invoker stub to embed in the proxy
+    @param jndiName the JNDI name the proxy will be bound under if not null
+    @param proxyBindingName the invoker-proxy-binding name if not null
+    @param interceptorClasses the Class objects for the interceptors
+    @param loader the ClassLoader to associate the the Proxy
+    @param ifaces the Class objects for the interfaces the Proxy implements
     */
    public Object createProxy(Object id, ObjectName targetName,
       Invoker invoker, String jndiName, String proxyBindingName,
@@ -78,14 +78,14 @@ public class GenericProxyFactory
    }
 
    /** Create a composite proxy for the given interfaces, invoker.
-    @param id, the cache id for the target object if any
-    @param targetName, the name of the server side service
-    @param invokerName, the name of the server side JMX invoker
-    @param jndiName, the JNDI name the proxy will be bound under if not null
-    @param proxyBindingName, the invoker-proxy-binding name if not null
-    @param interceptorClasses, the Class objects for the interceptors
-    @param loader, the ClassLoader to associate the the Proxy
-    @param ifaces, the Class objects for the interfaces the Proxy implements
+    @param id the cache id for the target object if any
+    @param targetName the name of the server side service
+    @param invokerName the name of the server side JMX invoker
+    @param jndiName the JNDI name the proxy will be bound under if not null
+    @param proxyBindingName the invoker-proxy-binding name if not null
+    @param interceptorClasses the Class objects for the interceptors
+    @param loader the ClassLoader to associate the the Proxy
+    @param ifaces the Class objects for the interfaces the Proxy implements
     */
    public Object createProxy(Object id, ObjectName targetName, ObjectName invokerName,
       String jndiName, String proxyBindingName,
