@@ -59,7 +59,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.12 2002/12/24 22:03:02 elicia Exp $
+ * @version $Id: ActivityManager.java,v 1.13 2002/12/30 08:27:06 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -143,7 +143,7 @@ public class ActivityManager
                       0, 0,
                       null, null,
                       null, null,
-                      null, null, null);
+                      null, depend.getDependType().getName(), null);
     }
 
     public static Activity createChangeDependencyActivity(Issue issue,
@@ -171,7 +171,7 @@ public class ActivityManager
                       0, 0,
                       null, null,
                       null, null,
-                      null, null, null);
+                      depend.getDependType().getName(), null, null);
     }
     
     public static Activity createOptionActivity(Issue issue, Attribute attribute,
