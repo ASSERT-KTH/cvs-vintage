@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.64 2003/05/09 20:49:13 d_jencks Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.65 2003/06/16 02:01:40 d_jencks Exp $ -->
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <invoker-proxy-bindings>
@@ -855,20 +855,14 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
-        <!-- CMT -->
-        <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
-        <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor transaction="Container">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
-        <!-- BMT -->
-        <interceptor transaction="Bean">org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
-        <interceptor transaction="Bean">org.jboss.ejb.plugins.TxInterceptorBMT</interceptor>
-        <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor>org.jboss.resource.endpoint.MessageEndpointInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.StatelessSessionInstanceInterceptor</interceptor>
         @jca.connection.interceptor@
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>
       <instance-cache/>
       <persistence-manager/>
-      <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
       </container-pool-conf>

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
@@ -37,12 +38,11 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.util.naming.Util;
-import org.jboss.util.file.JarUtils;
 import org.jboss.security.plugins.NullSecurityManager;
+import org.jboss.util.file.JarUtils;
+import org.jboss.util.naming.Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import javax.management.ObjectName;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -59,7 +59,7 @@ into the JBoss server JNDI namespace:
 
 It also caters for delegating incorporated webservices.xml to an associated
 W24EEDeployer according to the J2EE1.4, Web-App2.4 and JAXRPC1.0 specifications.
- 
+
 Subclasses need to implement the {@link #performDeploy(WebApplication, String,
  WebDescriptorParser) performDeploy()}
 and {@link #performUndeploy(String) performUndeploy()} methods to perform the
@@ -144,12 +144,19 @@ in the catalina module.
 
 @author  Scott.Stark@jboss.org
 @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
-@version $Revision: 1.65 $
+@version $Revision: 1.66 $
 */
-public abstract class AbstractWebContainer 
+public abstract class AbstractWebContainer
    extends SubDeployerSupport
    implements AbstractWebContainerMBean
 {
+
+   /**
+    * The field <code>WEB_SERVICES_KEY</code>
+    * @todo PUT WEB_SERVICES_KEY somewhere appropriate.
+    */
+   public final static String WEB_SERVICES_KEY = "WEB_SERVICES";
+
    public static interface WebDescriptorParser
    {
       /** This method is called as part of subclass performDeploy() method implementations
@@ -167,7 +174,7 @@ public abstract class AbstractWebContainer
       ClassLoader passed to this method must be the thread context ClassLoader
       seen by the server/jsp pages during init/destroy/service/etc. method
       invocations if these methods interace with the JNDI ENC context.
-      
+
       @param loader, the ClassLoader for the web application. May not be null.
       @param metaData, the WebMetaData from the WebApplication object passed to
        the performDeploy method.
@@ -190,10 +197,10 @@ public abstract class AbstractWebContainer
    /** Get the flag indicating if war archives should be unpacked. This may
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
-    * 
+    *
     * @jmx:managed-attribute
     * @return true is war archives should be unpacked
-    */ 
+    */
    public boolean getUnpackWars()
    {
       return unpackWars;
@@ -201,16 +208,16 @@ public abstract class AbstractWebContainer
    /** Set the flag indicating if war archives should be unpacked. This may
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
-    * 
+    *
     * @jmx:managed-attribute
     * @param flag , true is war archives should be unpacked
-    */ 
+    */
    public void setUnpackWars(boolean flag)
    {
       this.unpackWars = flag;
    }
 
-   /** 
+   /**
     * returns the currently registered web service deployer
     * @jmx:managed-attribute
     */
@@ -218,7 +225,7 @@ public abstract class AbstractWebContainer
    {
       return ws4eeDeployer;
    }
-   
+
    /**
     * Set the web service deployer to delegate to
     *
@@ -229,24 +236,24 @@ public abstract class AbstractWebContainer
       this.ws4eeDeployer = deployer;
    }
 
-   public boolean accepts(DeploymentInfo sdi) 
+   public boolean accepts(DeploymentInfo sdi)
    {
       String warFile = sdi.url.getFile();
       return warFile.endsWith("war") || warFile.endsWith("war/");
    }
 
-   public synchronized boolean init(DeploymentInfo di) 
-      throws DeploymentException 
+   public synchronized boolean init(DeploymentInfo di)
+      throws DeploymentException
    {
       log.debug("Begin init");
       //super.init registers di as an mbean and calls
       //processNestedDeployments, which we override to do nothing.
-      if (!super.init(di)) 
+      if (!super.init(di))
       {
          return false;
       } // end of if ()
-      
-      try 
+
+      try
       {
          if (di.url.getPath().endsWith("/"))
          {
@@ -267,7 +274,7 @@ public abstract class AbstractWebContainer
             if( warFile.renameTo(tmp) == false )
                throw new DeploymentException("Was unable to move war to: "+tmp);
             if( warFile.mkdir() == false )
-               throw new DeploymentException("Was unable to mkdir: "+warFile);            
+               throw new DeploymentException("Was unable to mkdir: "+warFile);
             log.debug("Unpacking war to: "+warFile);
             FileInputStream fis = new FileInputStream(tmp);
             JarUtils.unjar(fis, warFile);
@@ -288,7 +295,7 @@ public abstract class AbstractWebContainer
       {
          log.error("Problem in init ", e); throw new DeploymentException(e);
       }
-      
+
       // if ok, and we have got a ws4ee deployer attached
       if(ws4eeDeployer!=null) {
          // try to find webservices info
@@ -313,10 +320,10 @@ public abstract class AbstractWebContainer
    public void create(DeploymentInfo di) throws DeploymentException
    {
       super.create(di);
-      
+
       // since web container does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"create",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
@@ -330,7 +337,7 @@ public abstract class AbstractWebContainer
    calls the {@link #performDeploy(String, String) performDeploy()} method to
    perform the container specific deployment steps and registers the
    returned WebApplication in the deployment map. The steps performed are:
-   
+
       ClassLoader appClassLoader = thread.getContextClassLoader();
       URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
       thread.setContextClassLoader(warLoader);
@@ -340,7 +347,7 @@ public abstract class AbstractWebContainer
       performDeploy(warInfo, warUrl, webAppParser);
       deploymentMap.put(warUrl, warInfo);
       thread.setContextClassLoader(appClassLoader);
-   
+
    The subclass performDeploy() implementation needs to invoke
    webAppParser.parseWebAppDescriptors(loader, warInfo) to have the JNDI
    java:comp/env namespace setup before any web app component can access
@@ -384,9 +391,9 @@ public abstract class AbstractWebContainer
 
          // register metadata in the di structure
          di.metaData=metaData;
-         
+
          // need to intercept here to transform webxml
-         if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
             try{
                server.invoke(ws4eeDeployer,"start",new Object[] {di},new String[] {di.getClass().getName()});
             } catch(Exception e) {
@@ -411,11 +418,11 @@ public abstract class AbstractWebContainer
       {
          thread.setContextClassLoader(appClassLoader);
       }
-      
+
    }
 
    /** This method is called by the deploy() method template and must be overriden by
-   subclasses to perform the web container specific deployment steps. 
+   subclasses to perform the web container specific deployment steps.
    @param webApp, The web application information context. This contains the
     metadata such as the context-root element value from the J2EE
    application/module/web application.xml descriptor and virtual-host.
@@ -435,19 +442,19 @@ public abstract class AbstractWebContainer
    perform the container specific undeployment steps and unregisters the
    the warUrl from the deployment map.
    */
-   public synchronized void stop(DeploymentInfo di) 
-      throws DeploymentException 
+   public synchronized void stop(DeploymentInfo di)
+      throws DeploymentException
    {
       // since web container does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"stop",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
             log.error("could not delegate ws4ee stopping.",e);
          }
       }
-      
+
       URL warURL = di.localUrl != null ? di.localUrl : di.url;
       String warUrl = warURL.toString();
       try
@@ -467,12 +474,12 @@ public abstract class AbstractWebContainer
       }
    }
 
-   public void destroy(DeploymentInfo di) 
-      throws DeploymentException 
+   public void destroy(DeploymentInfo di)
+      throws DeploymentException
    {
       // since web container does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"destroy",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
@@ -486,7 +493,7 @@ public abstract class AbstractWebContainer
    subclass for perform the web container specific undeployment steps.
    */
    protected abstract void performUndeploy(String warUrl) throws Exception;
-   
+
    /** See if a war is deployed.
      @jmx:managed-attribute
    */
@@ -494,7 +501,7 @@ public abstract class AbstractWebContainer
    {
       return deploymentMap.containsKey(warUrl);
    }
-   
+
    /** Get the WebApplication object for a deployed war.
    @param warUrl, the war url string as originally passed to deploy().
    @return The WebApplication created during the deploy step if the
@@ -505,7 +512,7 @@ public abstract class AbstractWebContainer
       WebApplication appInfo = (WebApplication) deploymentMap.get(warUrl);
       return appInfo;
    }
-   
+
    /** Returns the applications deployed by the web container subclasses.
    @jmx:managed-attribute
    @return An Iterator of WebApplication objects for the deployed wars.
@@ -514,7 +521,7 @@ public abstract class AbstractWebContainer
    {
       return deploymentMap.values().iterator();
    }
-   
+
    /** An accessor for any configuration element set via setConfig. This
    method always returns null and must be overriden by subclasses to
    return a valid value.
@@ -535,7 +542,7 @@ public abstract class AbstractWebContainer
 
    /** This method is invoked from within subclass performDeploy() method
    implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
-   
+
    @param loader, the ClassLoader for the web application. May not be null.
    @param metaData, the WebMetaData from the WebApplication object passed to
     the performDeploy method.
@@ -544,7 +551,7 @@ public abstract class AbstractWebContainer
       WebMetaData metaData)
       throws Exception
    {
-      log.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");      
+      log.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
       InitialContext iniCtx = new InitialContext();
       Context envCtx = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
@@ -562,15 +569,15 @@ public abstract class AbstractWebContainer
          envCtx = (Context) iniCtx.lookup("java:comp");
 
          // Add a link to the global transaction manager
-         envCtx.bind("UserTransaction", new LinkRef("UserTransaction"));
+         Util.rebind(envCtx, "UserTransaction", new LinkRef("UserTransaction"));
          log.debug("Linked java:comp/UserTransaction to JNDI name: UserTransaction");
-         envCtx = envCtx.createSubcontext("env");
+         envCtx = Util.createSubcontext(envCtx, "env");
       }
       finally
       {
          Thread.currentThread().setContextClassLoader(currentLoader);
       }
-      
+
       Iterator envEntries = metaData.getEnvironmentEntries();
       log.debug("addEnvEntries");
       addEnvEntries(envEntries, envCtx);
@@ -603,10 +610,10 @@ public abstract class AbstractWebContainer
          EnvEntryMetaData.bindEnvEntry(envCtx, entry);
       }
    }
-   
+
    protected void linkResourceEnvRefs(Iterator resourceEnvRefs, Context envCtx)
       throws NamingException
-   {  
+   {
       while( resourceEnvRefs.hasNext() )
       {
          ResourceEnvRefMetaData ref = (ResourceEnvRefMetaData) resourceEnvRefs.next();
@@ -631,7 +638,7 @@ public abstract class AbstractWebContainer
             Util.bind(envCtx, refName, new LinkRef(resourceName));
          }
       }
-   }   
+   }
 
    protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
       throws NamingException
@@ -791,7 +798,7 @@ public abstract class AbstractWebContainer
          */
          cl = cl.getParent();
       }
-      try 
+      try
       {
          URL[] globalUrls = (URL[])getServer().getAttribute(DeploymentInfo.DEFAULT_LOADER_REPOSITORY,
                                                          "URLs");
@@ -960,15 +967,15 @@ public abstract class AbstractWebContainer
          int suffix = webContext.lastIndexOf(".war");
          if( suffix > 0 )
             webContext = webContext.substring(0, suffix);
-          // Strip any '<int-value>.' prefix   
-          int index = 0;   
-          for(; index < webContext.length(); index ++)   
-          {   
-             char c = webContext.charAt(index);   
-             if( Character.isDigit(c) == false && c != '.' )   
-                break;   
-          }   
-          webContext = webContext.substring(index);   
+          // Strip any '<int-value>.' prefix
+          int index = 0;
+          for(; index < webContext.length(); index ++)
+          {
+             char c = webContext.charAt(index);
+             if( Character.isDigit(c) == false && c != '.' )
+                break;
+          }
+          webContext = webContext.substring(index);
       }
 
       // Servlet containers are anal about the web context starting with '/'

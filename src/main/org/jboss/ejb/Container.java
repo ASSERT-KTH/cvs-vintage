@@ -111,7 +111,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.119 $
+ * @version $Revision: 1.120 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -722,34 +722,6 @@ public abstract class Container extends ServiceMBeanSupport
    }
 
    /**
-    * The EJBDeployer calls this method.  The EJBDeployer has set
-    * all the plugins and interceptors that this bean requires and now proceeds
-    * to initialize the chain.  The method looks for the standard classes in
-    * the URL, sets up the naming environment of the bean. The concrete
-    * container classes should override this method to introduce
-    * implementation specific initialization behaviour.
-    *
-    * @throws Exception    if loading the bean class failed
-    *                      (ClassNotFoundException) or setting up "java:"
-    *                      naming environment failed (DeploymentException)
-    */
-   protected void createService() throws Exception
-   {
-      // Acquire classes from CL
-      beanClass = classLoader.loadClass(metaData.getEjbClass());
-
-      if (metaData.getLocalHome() != null)
-         localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
-      if (metaData.getLocal() != null)
-         localInterface = classLoader.loadClass(metaData.getLocal());
-
-      localProxyFactory.setContainer( this );
-      localProxyFactory.create();
-      if (localHomeInterface != null)
-         ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome() );
-   }
-
-   /**
     * Creates the single Timer Servic for this container if not already created
     *
     * @param pContext Context of the EJB
@@ -860,6 +832,121 @@ public abstract class Container extends ServiceMBeanSupport
       }
    }
 
+
+
+   /**
+    * The EJBDeployer calls this method.  The EJBDeployer has set
+    * all the plugins and interceptors that this bean requires and now proceeds
+    * to initialize the chain.  The method looks for the standard classes in
+    * the URL, sets up the naming environment of the bean. The concrete
+    * container classes should override this method to introduce
+    * implementation specific initialization behaviour.
+    *
+    * @throws Exception    if loading the bean class failed
+    *                      (ClassNotFoundException) or setting up "java:"
+    *                      naming environment failed (DeploymentException)
+    */
+   protected void createService() throws Exception
+   {
+      ClassLoader cl = getDeploymentInfo().ucl;
+      ClassLoader localCl = getDeploymentInfo().localCl;
+      int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
+      genericInitialize(transType, cl, localCl );
+      if (getBeanMetaData().getHome() != null)
+      {
+         createProxyFactories(cl);
+      }
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+
+      try
+      {
+
+         // Acquire classes from CL
+         beanClass = classLoader.loadClass(metaData.getEjbClass());
+
+         if (metaData.getLocalHome() != null)
+            localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
+         if (metaData.getLocal() != null)
+            localInterface = classLoader.loadClass(metaData.getLocal());
+
+         localProxyFactory.setContainer( this );
+         localProxyFactory.create();
+         if (localHomeInterface != null)
+            ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome() );
+         //from subclasses
+         // Acquire classes from CL
+         if(metaData.getHome() != null)
+         {
+            homeInterface = classLoader.loadClass(metaData.getHome());
+         }
+         if(metaData.getRemote() != null)
+         {
+            remoteInterface = classLoader.loadClass(metaData.getRemote());
+         }
+
+         //home/remote mappings?
+         // Map the interfaces to Long
+         setupMarshalledInvocationMapping();
+
+         typeSpecificCreate();
+         // Initialize the interceptor by calling the chain
+         Interceptor in = interceptor;
+         while(in != null)
+         {
+            in.setContainer(this);
+            in.create();
+            in = in.getNext();
+         }
+
+         // Initialize pool
+         getInstancePool().create();
+
+         for(Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory proxyFactory =
+               (EJBProxyFactory) proxyFactories.get(invokerBinding);
+            proxyFactory.create();
+         }
+
+      }
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
+
+   }
+
+   protected void setupMarshalledInvocationMapping() throws Exception
+   {
+      // Create method mappings for container invoker
+      if (homeInterface != null)
+      {
+         Method [] m = homeInterface.getMethods();
+         for (int i = 0 ; i<m.length ; i++)
+         {
+            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[i])), m[i]);
+         }
+      }
+
+      if (remoteInterface != null)
+      {
+         Method [] m = remoteInterface.getMethods();
+         for (int j = 0 ; j<m.length ; j++)
+         {
+            marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[j])), m[j]);
+         }
+      }
+      // Get the getEJBObjectMethod
+      //was not present for entity beans.  Why??
+      Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
+
+      // Hash it
+      marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
+   }
+
    /**
     * A default implementation of starting the container service.
     * The container registers it's dynamic MBean interface in the JMX base.
@@ -874,27 +961,53 @@ public abstract class Container extends ServiceMBeanSupport
     */
    protected void startService() throws Exception
    {
-      // Setup "java:comp/env" namespace
-      setupEnvironment();
-      started = true;
-      // Start all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
-      {
-         in.start();
-         in = in.getNext();
-      }
-      localProxyFactory.start();
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      // We keep the hashCode around for fast creation of proxies
-      int jmxHash = jmxName.hashCode();
-      Registry.bind(new Integer(jmxHash), jmxName);
-      log.debug("Bound jmxName="+jmxName+", hash="+jmxHash+"into Registry");
-      if( !( this instanceof StatefulSessionContainer ) ) {
-         // Restore Timers
-         ContainerTimerService temp = (ContainerTimerService) getTimerService( null );
-         // Start Recovery
-         temp.startRecovery();
+      try
+      {
+         // Setup "java:comp/env" namespace
+         setupEnvironment();
+         started = true;
+         // Start all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.start();
+            in = in.getNext();
+         }
+         localProxyFactory.start();
+
+         // We keep the hashCode around for fast creation of proxies
+         int jmxHash = jmxName.hashCode();
+         Registry.bind(new Integer(jmxHash), jmxName);
+         log.debug("Bound jmxName="+jmxName+", hash="+jmxHash+"into Registry");
+         if( !( this instanceof StatefulSessionContainer ) ) {
+            // Restore Timers
+            ContainerTimerService temp = (ContainerTimerService) getTimerService( null );
+            // Start Recovery
+            temp.startRecovery();
+         }
+         // Start container invokers
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory proxyFactory =
+               (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            proxyFactory.start();
+         }
+
+         // Start the instance pool
+         getInstancePool().start();
+
+         typeSpecificStart();
+
+      }
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
@@ -905,36 +1018,60 @@ public abstract class Container extends ServiceMBeanSupport
     */
    protected void stopService() throws Exception
    {
-      int jmxHash = jmxName.hashCode();
-      Registry.unbind(new Integer(jmxHash));
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      started = false;
-      localProxyFactory.stop();
-      log.info( "=======================> Stop Timers" );
-      stopTimers();
-      teardownEnvironment();
-      WebServiceMBean webServer =
-         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class,
-                                            WebServiceMBean.OBJECT_NAME);
-      ClassLoader wcl = getWebClassLoader();
-      if( wcl != null )
+      try
       {
-         try
+         int jmxHash = jmxName.hashCode();
+         Registry.unbind(new Integer(jmxHash));
+
+         started = false;
+         localProxyFactory.stop();
+         // Stop container invoker
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
-            webServer.removeClassLoader(wcl);
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory proxyFactory =
+               (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            proxyFactory.stop();
          }
-         catch(Throwable e)
+
+         log.info( "=======================> Stop Timers" );
+         stopTimers();
+         teardownEnvironment();
+         WebServiceMBean webServer =
+            (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class,
+                                               WebServiceMBean.OBJECT_NAME);
+         ClassLoader wcl = getWebClassLoader();
+         if( wcl != null )
          {
-            log.warn("Failed to unregister webClassLoader", e);
+            try
+            {
+               webServer.removeClassLoader(wcl);
+            }
+            catch(Throwable e)
+            {
+               log.warn("Failed to unregister webClassLoader", e);
+            }
          }
+
+         // Stop all interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.stop();
+            in = in.getNext();
+         }
+         // Stop the instance pool
+         getInstancePool().stop();
+
       }
-
-      // Stop all interceptors in the chain
-      Interceptor in = interceptor;
-      while (in != null)
+      finally
       {
-         in.stop();
-         in = in.getNext();
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 
@@ -945,17 +1082,64 @@ public abstract class Container extends ServiceMBeanSupport
     */
    protected void destroyService() throws Exception
    {
-      localProxyFactory.destroy();
-      ejbModule.removeLocalHome( this );
-      this.classLoader = null;
-      this.webClassLoader = null;
-      this.localClassLoader = null;
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
 
-      // this.lockManager = null; Setting this to null causes AbstractCache
-      // to fail on undeployment
-      this.methodPermissionsCache.clear();
+      try
+      {
+         // Destroy container invoker
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory proxyFactory =
+               (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            proxyFactory.destroy();
+         }
+         localProxyFactory.destroy();
+         ejbModule.removeLocalHome( this );
+
+         // Destroy the pool
+         getInstancePool().destroy();
+         getInstancePool().setContainer(null);
+
+         // Destroy all the interceptors in the chain
+         Interceptor in = interceptor;
+         while (in != null)
+         {
+            in.destroy();
+            in.setContainer(null);
+            in = in.getNext();
+         }
+         typeSpecificDestroy();
+
+         this.classLoader = null;
+         this.webClassLoader = null;
+         this.localClassLoader = null;
+
+         // this.lockManager = null; Setting this to null causes AbstractCache
+         // to fail on undeployment
+         this.methodPermissionsCache.clear();
+      }
+      finally
+      {
+         // Reset classloader
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
 
+   /**
+    * Describe <code>typeSpecificInitialize</code> method here.
+    * Override in type-specific subclasses.  Each implementation calls genericInitialize.
+    */
+   protected void typeSpecificCreate()  throws Exception
+   {}
+   protected void typeSpecificStart()  throws Exception
+   {}
+   protected void typeSpecificStop()  throws Exception
+   {}
+   protected void typeSpecificDestroy()  throws Exception
+   {}
    /**
     * This method is called when a method call comes
     * in on an EJBObject.  The Container forwards this call to the interceptor
@@ -981,6 +1165,16 @@ public abstract class Container extends ServiceMBeanSupport
       }
    }
 
+
+   // StatisticsProvider implementation ------------------------------------
+
+   public void retrieveStatistics( List container, boolean reset ) {
+      // Loop through all Interceptors and add statistics
+      getInterceptor().retrieveStatistics( container, reset );
+      if( !( getInstancePool() instanceof Interceptor ) ) {
+         getInstancePool().retrieveStatistics( container, reset );
+      }
+   }
    // DynamicMBean interface implementation ----------------------------------
 
    public Object getAttribute(String attribute)
@@ -1628,14 +1822,8 @@ public abstract class Container extends ServiceMBeanSupport
 
 
    //----------------------------------------
-   //Moved from EjbModule
 
-   /**
-    * Describe <code>typeSpecificInitialize</code> method here.
-    * Override in type-specific subclasses.  Each implementation calls genericInitialize.
-    */
-   protected void typeSpecificInitialize()  throws Exception
-   {}
+
 
    /**
     * Perform the common steps to initializing a container.

@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.TxSupport;
  *
  * <p>Have to add changes ApplicationMetaData and ConfigurationMetaData.
  *
- * @version <tt>$Revision: 1.26 $</tt>
+ * @version <tt>$Revision: 1.27 $</tt>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
@@ -77,6 +77,9 @@ public class MessageDrivenMetaData
 
    /**
     * Get the message acknowledgement mode.
+    * @todo remove, this should be handled byte the jca adapter.
+    *
+    *@todo THIS IS VERY BROKEN, it checks tx support using a NULL METHOD!
     *
     * @return    MessageDrivenMetaData.AUTO_ACKNOWLADGE_MODE or
     *            MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE or
@@ -103,7 +106,7 @@ public class MessageDrivenMetaData
       // anyway, if we find that this is needed for other
       // JMS provider, or is not good.
 
-      if (getMethodTransactionType() == TxSupport.REQUIRED)
+      if (getMethodTransactionType(null, new Class[] {}, InvocationType.LOCAL) == TxSupport.REQUIRED)
       {
          return CLIENT_ACKNOWLEDGE_MODE;
       }
@@ -112,7 +115,7 @@ public class MessageDrivenMetaData
          return acknowledgeMode;
       }
    }
-
+   /*
    public boolean getUseXAConnection()
    {
       return xaConnection;
@@ -122,8 +125,9 @@ public class MessageDrivenMetaData
    {
       return sessionPoolTransacted;
    }
-
+   */
    /**
+    * @todo activation spec
     * Get the Destination type ( Queue / Topic )
     */
    public String getDestinationType()
@@ -132,6 +136,7 @@ public class MessageDrivenMetaData
    }
 
    /**
+    * @todo activation spec
     * Get the message selector
     */
    public String getMessageSelector()
@@ -140,6 +145,7 @@ public class MessageDrivenMetaData
    }
 
    /**
+    * @todo activation spec
     * Get the JNDI Name of the destination
     */
    public String getDestinationJndiName()
@@ -163,11 +169,23 @@ public class MessageDrivenMetaData
       return password;
    }
 
+   /**
+    * @todo activation spec
+    * The <code>getClientId</code> method
+    *
+    * @return a <code>String</code> value
+    */
    public String getClientId()
    {
       return clientId;
    }
 
+   /**
+    * @todo activation spec
+    * The <code>getSubscriptionId</code> method
+    *
+    * @return a <code>String</code> value
+    */
    public String getSubscriptionId()
    {
       return subscriptionId;
@@ -176,7 +194,7 @@ public class MessageDrivenMetaData
    /**
     * Check MDB methods TX type, is cached here
     */
-   public TxSupport getMethodTransactionType()
+   /*   public TxSupport getMethodTransactionType()
    {
       if( methodTransactionType == null )
       {
@@ -201,26 +219,33 @@ public class MessageDrivenMetaData
          }
          else
          {
-	    //THIS IS A CHANGE FROM "UNKNOWN" which got mapped to DEFAULT later!
+            //THIS IS A CHANGE FROM "UNKNOWN" which got mapped to DEFAULT later!
             methodTransactionType = TxSupport.DEFAULT;
          }
       }
 
       return methodTransactionType;
    }
-
+   */
    /**
+    * @todo use session metadata method.
     * Overide here, since a message driven bean only ever have one method,
     * which we might cache.
     */
    public TxSupport getMethodTransactionType(String methodName, Class[] params,
       InvocationType iface)
    {
+      if (isBeanManagedTx())
+      {
+         return TxSupport.STATELESS_BMT;
+      }
+      return super.getMethodTransactionType(methodName, params, iface);
       // An MDB may only ever have on method
-      return getMethodTransactionType();
+      //      return getMethodTransactionType();
    }
 
    /**
+    * @todo activation spec
     * Get the subscription durability mode.
     *
     * @return    MessageDrivenMetaData.DURABLE_SUBSCRIPTION or
@@ -240,6 +265,14 @@ public class MessageDrivenMetaData
       throws DeploymentException
    {
       super.importEjbJarXml(element);
+
+      //ejb2.1
+      localClass = getOptionalChildContent(element, "messaging-type");
+      if (localClass == null)
+      {
+         localClass = "javax.jms.MessageListener";
+      } // end of if ()
+
 
       messageSelector = getOptionalChildContent(element, "message-selector");
       if (messageSelector != null)

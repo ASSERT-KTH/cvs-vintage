@@ -29,8 +29,8 @@ import org.jboss.ejb.plugins.TxSupport;
 
 /**
  * Context for message driven beans.
- * 
- * @version <tt>$Revision: 1.18 $</tt>
+ *
+ * @version <tt>$Revision: 1.19 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -56,7 +56,7 @@ public class MessageDrivenEnterpriseContext extends EnterpriseContext
       throws Exception
    {
       super(instance, con);
-      
+
       ctx = new MessageDrivenContextImpl();
       ((MessageDrivenBean)instance).setMessageDrivenContext(ctx);
 
@@ -68,7 +68,7 @@ public class MessageDrivenEnterpriseContext extends EnterpriseContext
       catch (InvocationTargetException e)
       {
          Throwable t = e.getTargetException();
-         
+
          if(t instanceof RuntimeException)
          {
             if(t instanceof EJBException)
@@ -166,22 +166,24 @@ public class MessageDrivenEnterpriseContext extends EnterpriseContext
             ("MDB must not call getCallerPrincipal (EJB 2.0 15.4.3)");
       }
 
-      /** Helper to check if the tx type is TX_REQUIRED. */
+      /** Helper to check if the tx type is TX_REQUIRED. * /
       private boolean isTxRequired()
       {
          MessageDrivenMetaData md = (MessageDrivenMetaData)container.getBeanMetaData();
          return md.getMethodTransactionType() == TxSupport.REQUIRED;
       }
-      
+      */
       /**
        * If transaction type is not Container or there is no transaction
        * then throw an exception.
        *
        * @throws IllegalStateException   If transaction type is not Container,
        *                                 or no transaction.
+       * @todo review decision to delegate all logic to superclass
        */
       public boolean getRollbackOnly()
       {
+         /*
          if(!isContainerManagedTx())
          {
             throw new IllegalStateException
@@ -193,13 +195,13 @@ public class MessageDrivenEnterpriseContext extends EnterpriseContext
          //        I think it would be better to silently ignore... or not so silently
          //        but still continue.
          //
-         
+
          if(!isTxRequired())
          {
             throw new IllegalStateException
                ("getRollbackOnly must only be called in the context of a transaction (EJB 2.0 - 15.5.1)");
          }
-
+         */
          return super.getRollbackOnly();
       }
 
@@ -209,9 +211,11 @@ public class MessageDrivenEnterpriseContext extends EnterpriseContext
        *
        * @throws IllegalStateException   If transaction type is not Container,
        *                                 or no transaction.
+       * @todo review decision to delegate all logic to superclass
        */
       public void setRollbackOnly()
       {
+         /*
          if(!isContainerManagedTx())
          {
             throw new IllegalStateException
@@ -223,7 +227,7 @@ public class MessageDrivenEnterpriseContext extends EnterpriseContext
             throw new IllegalStateException
                ("setRollbackOnly must only be called in the context of a transaction (EJB 2.0 - 15.5.1)");
          }
-
+         */
          super.setRollbackOnly();
       }
    }

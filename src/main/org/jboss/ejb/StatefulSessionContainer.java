@@ -34,7 +34,7 @@ import org.jboss.util.MethodHashing;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.56 $</tt>
+ * @version <tt>$Revision: 1.57 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
@@ -72,6 +72,47 @@ public class StatefulSessionContainer extends Container
 
    // Container implementation --------------------------------------
 
+   protected void typeSpecificCreate()  throws Exception
+   {
+      setupBeanMapping();
+      setupHomeMapping();
+      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
+      setInstanceCache( createInstanceCache( conf, false, getClassLoader() ) );
+      setInstancePool(new StatefulSessionInstancePool());
+      // Set persistence manager
+      setPersistenceManager( (StatefulSessionPersistenceManager) getClassLoader().loadClass( conf.getPersistenceManager() ).newInstance() );
+      //Set the bean Lock Manager
+      setLockManager(createBeanLockManager(false, conf.getLockConfig(), getClassLoader()));
+      // Init instance cache
+      getInstanceCache().create();
+
+      // Init persistence
+      persistenceManager.create();
+
+   }
+
+   protected void typeSpecificStart()  throws Exception
+   {
+      getInstanceCache().start();
+      persistenceManager.start();
+   }
+
+   protected void typeSpecificStop()  throws Exception
+   {
+      getInstanceCache().stop();
+      persistenceManager.stop();
+   }
+   protected void typeSpecificDestroy()  throws Exception
+   {
+      // Destroy instance cache
+      getInstanceCache().destroy();
+      getInstanceCache().setContainer(null);
+      // Destroy the persistence manager
+      getPersistenceManager().destroy();
+      getPersistenceManager().setContainer(null);
+   }
+
+   /*
    protected void createService() throws Exception
    {
       typeSpecificInitialize();
@@ -132,7 +173,8 @@ public class StatefulSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-
+   */
+   /*
    protected void startService() throws Exception
    {
       // Associate thread with classloader
@@ -255,7 +297,7 @@ public class StatefulSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-
+   */
    // EJBObject implementation --------------------------------------
 
    public void remove(Invocation mi)
@@ -475,21 +517,6 @@ public class StatefulSessionContainer extends Container
       throw new Error("Not Yet Implemented");
    }
 
-   // StatisticsProvider implementation ------------------------------------
-
-   public void retrieveStatistics( List container, boolean reset ) {
-      // Loop through all Interceptors and add statistics
-      getInterceptor().retrieveStatistics( container, reset );
-/* AS Method is not implemented in StatefulSessionPersistenceManager
-      if( !( getPersistenceManager() instanceof Interceptor ) ) {
-         getPersistenceManager().retrieveStatistics( container, reset );
-      }
-*/
-      if( !( getInstancePool() instanceof Interceptor ) ) {
-         getInstancePool().retrieveStatistics( container, reset );
-      }
-   }
-
    // Private -------------------------------------------------------
 
    protected void setupHomeMapping() throws Exception
@@ -617,6 +644,7 @@ public class StatefulSessionContainer extends Container
       beanMapping = map;
    }
 
+   /*
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       // Create method mappings for container invoker
@@ -643,7 +671,7 @@ public class StatefulSessionContainer extends Container
       // Hash it
       marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
-
+*/
    protected Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
@@ -653,7 +681,7 @@ public class StatefulSessionContainer extends Container
     * Describe <code>typeSpecificInitialize</code> method here.
     * stateful session specific initialization.
     */
-   protected void typeSpecificInitialize()  throws Exception
+   /*   protected void typeSpecificInitialize()  throws Exception
    {
       ClassLoader cl = getDeploymentInfo().ucl;
       ClassLoader localCl = getDeploymentInfo().localCl;
@@ -673,7 +701,7 @@ public class StatefulSessionContainer extends Container
       setLockManager(createBeanLockManager(false, conf.getLockConfig(), cl));
 
    }
-
+   */
    /**
     * This is the last step before invocation - all interceptors are done
     */

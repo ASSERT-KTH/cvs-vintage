@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: ejb-service.xml,v 1.2 2003/05/23 09:04:38 cgjung Exp $ -->
+<!-- $Id: ejb-service.xml,v 1.3 2003/06/16 02:01:40 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -55,6 +55,33 @@
     <!-- setting this dependency will allow for EJB2.1 Web Service Deployments -->
     <depends optional-attribute-name="WS4EEDeployer">jboss.net:service=WS4EEDeployer</depends>
 
+  </mbean>
+
+  <mbean code="org.jboss.deployment.XSLSubDeployer" name="jboss.ejb:service=ActivationSpecDeployer">
+    <attribute name="PackageSuffix">.jar</attribute>
+    <attribute name="DdNameToKeyMap">ejb-jar.xml=EJB_DD
+       jboss.xml=JBOSS_EJB_DD</attribute>
+    <attribute name="SourceDocumentKey">EJB_DD</attribute>
+    <attribute name="TargetDocumentKey">SERVICES_DD</attribute>
+
+    <!--attribute name="DependsXslUrl">stylesheets/ConnectionFactoryDependenciesTemplate.xsl</attribute-->
+
+    <attribute name="XslUrl">stylesheets/JMSMDBTemplate.xsl</attribute>
+    <depends optional-attribute-name="EntityResolverName">jboss.ejb:service=EJBEntityResolver</depends>
+    <depends optional-attribute-name="URIResolverFactoryName">jboss.jca:service=RaURIResolver</depends>
+    <depends optional-attribute-name="DelegateName">jboss.ejb:service=EJBDeployer</depends>
+ </mbean>
+
+   <mbean code="org.jboss.deployment.JBossEntityResolver" name="jboss.ejb:service=EJBEntityResolver">
+    <attribute name="Catalog">
+      <catalog>
+        <entity publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN" file="org/jboss/metadata/ejb-jar_2_0.dtd"/>
+        <entity publicId="-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.1//EN" file="org/jboss/metadata/ejb-jar_2_1.dtd"/>
+        <entity publicId="-//JBoss//DTD JBOSS 3.0//EN" file="org/jboss/metadata/jboss_3_0.dtd"/>
+        <entity publicId="-//JBoss//DTD JBOSS 3.2//EN" file="org/jboss/metadata/jboss_3_2.dtd"/>
+        <entity publicId="-//JBoss//DTD JBOSS 4.0//EN" file="org/jboss/metadata/jboss_4_0.dtd"/>
+      </catalog>
+    </attribute>
   </mbean>
 
   <!-- ==================================================================== -->

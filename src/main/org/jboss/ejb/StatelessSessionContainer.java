@@ -39,7 +39,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class StatelessSessionContainer extends Container
 {
@@ -56,6 +56,20 @@ public class StatelessSessionContainer extends Container
    protected Map beanMapping;
 
 
+   protected void typeSpecificCreate()  throws Exception
+   {
+      setupBeanMapping();
+      setupHomeMapping();
+      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
+      setInstancePool( createInstancePool( conf, getClassLoader() ) );
+   }
+
+   protected void typeSpecificDestroy() throws Exception
+   {
+      stopTimers();
+   }
+
+   /*
    protected void createService() throws Exception
    {
       typeSpecificInitialize();
@@ -210,7 +224,7 @@ public class StatelessSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-
+   */
    // EJBObject implementation --------------------------------------
 
    /**
@@ -331,14 +345,6 @@ public class StatelessSessionContainer extends Container
       return null;
    }
 
-   public void retrieveStatistics( List container, boolean reset ) {
-      // Loop through all Interceptors and add statistics
-      getInterceptor().retrieveStatistics( container, reset );
-      if( !( getInstancePool() instanceof Interceptor ) ) {
-         getInstancePool().retrieveStatistics( container, reset );
-      }
-   }
-
    protected void setupHomeMapping()
       throws NoSuchMethodException
    {
@@ -435,7 +441,7 @@ public class StatelessSessionContainer extends Container
 
       beanMapping = map;
    }
-
+   /*
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       // Create method mappings for container invoker
@@ -463,7 +469,7 @@ public class StatelessSessionContainer extends Container
       // Hash it
       marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
-
+   */
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
@@ -474,7 +480,7 @@ public class StatelessSessionContainer extends Container
     * Describe <code>typeSpecificInitialize</code> method here.
     * stateless session specific initialization.
     */
-   protected void typeSpecificInitialize()  throws Exception
+   /*   protected void typeSpecificInitialize()  throws Exception
    {
       ClassLoader cl = getDeploymentInfo().ucl;
       ClassLoader localCl = getDeploymentInfo().localCl;
@@ -488,7 +494,7 @@ public class StatelessSessionContainer extends Container
       ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
       setInstancePool( createInstancePool( conf, cl ) );
    }
-
+*/
 
    /**
     * This is the last step before invocation - all interceptors are done

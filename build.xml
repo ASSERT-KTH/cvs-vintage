@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.144 2003/05/02 19:20:22 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.145 2003/06/16 02:01:40 d_jencks Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -383,6 +383,7 @@
 
       <fileset dir="${build.resources}">
         <include name="org/jboss/**"/>
+        <include name="stylesheets/**"/>
         <exclude name="org/jboss/ejb/deployment/**"/>
         <exclude name="org/jboss/ejb/plugins/**"/>
       </fileset>

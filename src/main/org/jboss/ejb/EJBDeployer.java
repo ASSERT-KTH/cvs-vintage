@@ -7,33 +7,36 @@
 
 package org.jboss.ejb;
 
+
+
+
 import java.io.File;
 import java.net.URL;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-
 import org.apache.log4j.NDC;
-
-import org.jboss.deployment.DeploymentInfo;
-import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.deployment.DeploymentException;
-
+import org.jboss.deployment.DeploymentInfo;
+import org.jboss.deployment.SARDeployer;
+import org.jboss.deployment.SARDeployerMBean;
+import org.jboss.deployment.SubDeployer;
+import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.XmlFileLoader;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.util.jmx.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
-import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.metadata.XmlFileLoader;
 
 /**
  * A EJBDeployer is used to deploy EJB applications. It can be given a
  * URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
  * containers and make them available for invocation. In case of
- * EJB2.1 deployments containing webservices.xml meta-data, EJBDeployer 
+ * EJB2.1 deployments containing webservices.xml meta-data, EJBDeployer
  * can delegate to a web-service for j2ee deployer.
  *
  * @jmx:mbean
@@ -42,7 +45,7 @@ import org.jboss.metadata.XmlFileLoader;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.34 $</tt>
+ * @version <tt>$Revision: 1.35 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -58,6 +61,17 @@ public class EJBDeployer
    extends SubDeployerSupport
    implements EJBDeployerMBean
 {
+
+   /**
+    * The field <code>WEB_SERVICES_KEY</code>
+    * @todo PUT WEB_SERVICES_KEY somewhere appropriate.
+    */
+   public final static String WEB_SERVICES_KEY = "WEB_SERVICES";
+
+   protected ObjectName delegateName = SARDeployerMBean.OBJECT_NAME;
+
+   protected SubDeployer delegate;
+
    private ServiceControllerMBean serviceController;
 
    /** Verify EJB-jar contents on deployments */
@@ -78,7 +92,7 @@ public class EJBDeployer
 
    /** objectname of a ws4ee deployer */
    private ObjectName ws4eeDeployer;
-   
+
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws MalformedObjectNameException
    {
@@ -90,9 +104,11 @@ public class EJBDeployer
     */
    protected void startService() throws Exception
    {
+      delegate = (SubDeployer)MBeanProxy.create(SubDeployer.class, delegateName, server);
+
       serviceController = (ServiceControllerMBean)
-      MBeanProxy.create(ServiceControllerMBean.class,
-         ServiceControllerMBean.OBJECT_NAME, server);
+         MBeanProxy.create(ServiceControllerMBean.class,
+                           ServiceControllerMBean.OBJECT_NAME, server);
 
       // register with MainDeployer
       super.startService();
@@ -222,14 +238,14 @@ public class EJBDeployer
       this.validateDTDs = validate;
    }
 
-   /** 
+   /**
     * returns the currently registered web service deployer
     * @jmx:managed-attribute
     */
    public ObjectName getWS4EEDeployer() {
       return ws4eeDeployer;
    }
-   
+
    /**
     * Set the web service deployer to delegate to
     *
@@ -312,7 +328,11 @@ public class EJBDeployer
             throw (DeploymentException)e;
          throw new DeploymentException( "failed to initialize", e );
       }
-
+      if (di.getDocument(SARDeployer.SERVICES_KEY) != null )
+      {
+         delegate.init(di);
+         log.trace("DEPLOYED (init) GENERATED MBEANS");
+      }
       // invoke super-class initialization
       if(super.init(di)) {
          // if ok, and we have got a ws4ee deployer attached
@@ -334,7 +354,7 @@ public class EJBDeployer
       } else {
          return false;
       }
-      
+
    }
 
    public synchronized void create(DeploymentInfo di)
@@ -374,7 +394,7 @@ public class EJBDeployer
             verifier.addVerificationListener(new VerificationListener()
                {
                   Logger log = Logger.getLogger(EJBDeployer.class,
-                     "verifier" );
+                                                "verifier" );
 
                   public void beanChecked(VerificationEvent event)
                   {
@@ -384,13 +404,13 @@ public class EJBDeployer
                   public void specViolation(VerificationEvent event)
                   {
                      log.warn( "EJB spec violation: " +
-                        (verifierVerbose ? event.getVerbose() : event.getMessage()));
+                               (verifierVerbose ? event.getVerbose() : event.getMessage()));
                   }
                });
 
             log.debug("Verifying " + di.url);
             verifier.verify( di.url, (ApplicationMetaData) di.metaData,
-               di.ucl );
+                             di.ucl );
 
             allOK = verifier.getSuccess();
          }
@@ -411,9 +431,8 @@ public class EJBDeployer
          if( strictVerifier && !allOK )
          {
             throw new DeploymentException( "Verification of Enterprise " +
-               "Beans failed, see above for error messages." );
+                                           "Beans failed, see above for error messages." );
          }
-
       }
 
       // Create application
@@ -425,7 +444,7 @@ public class EJBDeployer
          String name = metadata.getJmxName();
          if( name == null )
          {
-            name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName; 
+            name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName;
          }
          // Build an escaped JMX name including deployment shortname
          ObjectName ejbModuleName = ObjectNameConverter.convert(name);
@@ -433,7 +452,7 @@ public class EJBDeployer
          if( server.isRegistered(ejbModuleName) == true )
          {
             log.debug("The EJBModule name: "+ejbModuleName
-               +"is already registered, adding uid="+System.identityHashCode(ejbModule));
+                      +"is already registered, adding uid="+System.identityHashCode(ejbModule));
             name = name + ",uid="+System.identityHashCode(ejbModule);
             ejbModuleName = ObjectNameConverter.convert(name);
          }
@@ -450,12 +469,17 @@ public class EJBDeployer
       catch (Exception e)
       {
          throw new DeploymentException( "error in create of EjbModule: "
-            + di.url, e );
+                                        + di.url, e );
       }
-      
+      if (di.getDocument(SARDeployer.SERVICES_KEY) != null )
+      {
+         delegate.create(di);
+         log.info("DEPLOYED (create) GENERATED MBEANS");
+      }
+
       // since ejb deployer does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"create",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
@@ -478,16 +502,20 @@ public class EJBDeployer
 
          serviceController.start(di.deployedObject);
          super.start(di);
-         
+
       }
       catch (Exception e)
       {
          throw new DeploymentException( "Could not deploy " + di.url, e );
       }
-      
+      if (di.getDocument(SARDeployer.SERVICES_KEY) != null )
+      {
+         delegate.start(di);
+         log.trace("DEPLOYED (start) GENERATED MBEANS");
+      }
       // since ejb deployer does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"start",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
@@ -504,14 +532,18 @@ public class EJBDeployer
    {
       // since ejb deployer does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"stop",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
             log.error("could not delegate ws4ee stopping.",e);
          }
       }
-
+      if (di.getDocument(SARDeployer.SERVICES_KEY) != null )
+      {
+         delegate.stop(di);
+         log.trace("DEPLOYED (stop) GENERATED MBEANS");
+      }
       try
       {
          serviceController.stop(di.deployedObject);
@@ -520,25 +552,29 @@ public class EJBDeployer
       catch (Exception e)
       {
          throw new DeploymentException( "problem stopping ejb module: " +
-            di.url, e );
+                                        di.url, e );
       }
-      
+
 
    }
 
-   public void destroy(DeploymentInfo di) 
+   public void destroy(DeploymentInfo di)
       throws DeploymentException
    {
       // since ejb deployer does not use the dom4j bit, we
       // can use this as a flag
-      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+      if(ws4eeDeployer!=null && di.getDocument(WEB_SERVICES_KEY)!=null) {
          try{
             server.invoke(ws4eeDeployer,"destroy",new Object[] {di},new String[] {di.getClass().getName()});
          } catch(Exception e) {
             log.error("could not delegate ws4ee destruction.",e);
          }
       }
-
+      if (di.getDocument(SARDeployer.SERVICES_KEY) != null )
+      {
+         delegate.destroy(di);
+         log.trace("DEPLOYED (destroy) GENERATED MBEANS");
+      }
       try
       {
          serviceController.destroy( di.deployedObject );
@@ -548,7 +584,7 @@ public class EJBDeployer
       catch (Exception e)
       {
          throw new DeploymentException( "problem destroying ejb module: " +
-            di.url, e );
+                                        di.url, e );
       }
    }
 }

@@ -27,10 +27,12 @@ import javax.ejb.TransactionRequiredLocalException;
 import javax.ejb.TransactionRolledbackLocalException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.resource.spi.endpoint.MessageEndpoint;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
+import javax.transaction.xa.XAResource;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.ejb.MessageDrivenContainer;
@@ -70,13 +72,13 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
     */
    protected String localJndiName;
 
-   protected TransactionManager transactionManager;
-
    // The home can be one.
    protected EJBLocalHome home;
 
    // The Stateless Object can be one.
    protected EJBLocalObject statelessObject;
+
+   protected MessageEndpoint messageEndpoint;
 
    protected Map beanMethodInvokerMap;
    protected Map homeMethodInvokerMap;
@@ -94,6 +96,11 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    public void setContainer(Container con)
    {
       this.container = con;
+   }
+
+   public Container getContainer()
+   {
+      return container;
    }
 
    public void create() throws Exception
@@ -121,11 +128,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
       Context iniCtx = new InitialContext();
       String beanName = metaData.getEjbName();
-
-      // Set the transaction manager and transaction propagation
-      // context factory of the GenericProxy class
-      transactionManager = container.getTransactionManager();
-      //(TransactionManager) iniCtx.lookup("java:/TransactionManager");
 
       // Create method mappings for container invoker
       Method[] methods = localClass.getMethods();
@@ -247,6 +249,20 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       return list;
    }
 
+   public MessageEndpoint getMessageEndpoint(XAResource xaResource)
+   {
+      InvocationHandler handler =
+         new MessageEndpointProxy(xaResource, (MessageDrivenContainer)container);
+      ClassLoader loader = container.getLocalClass().getClassLoader();
+      Class[] interfaces = {container.getLocalClass(), MessageEndpoint.class};
+
+      MessageEndpoint messageEndpoint = (MessageEndpoint) Proxy.newProxyInstance(
+         loader,
+         interfaces,
+         handler);
+      return messageEndpoint;
+   }
+
 
    public String getJndiName()
    {
@@ -269,18 +285,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       return SecurityAssociation.getCredential();
    }
 
-   /**
-    *  Return the transaction associated with the current thread.
-    *  Returns <code>null</code> if the transaction manager was never
-    *  set, or if no transaction is associated with the current thread.
-    */
-   Transaction getTransaction() throws javax.transaction.SystemException
-   {
-      if(transactionManager == null) {
-         return null;
-      }
-      return transactionManager.getTransaction();
-   }
 
    /**
     *  Invoke a local or local home interface method.
@@ -288,17 +292,13 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    public Object invoke(Object id, Method m, Object[] args, InvocationType type )
       throws Throwable
    {
-      // Set the right context classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(container.getClassLoader());
-
       try
       {
          Invocation invocation = new Invocation(
             id,
             m,
             args,
-            getTransaction(),
+            null,
             getPrincipal(),
             getCredential());
          invocation.setType(type);
@@ -321,10 +321,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       {
          throw new TransactionRolledbackLocalException(
             trbe.getMessage(), trbe );
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
 

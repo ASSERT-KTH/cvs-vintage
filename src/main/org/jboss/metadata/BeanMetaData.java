@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -70,7 +70,7 @@ public abstract class BeanMetaData
    private String localHomeClass;
    /** The local element contains the fully-qualified name of the enterprise
        bean’s local interface */
-   private String localClass;
+   protected String localClass;
 
    // The ejb-class element contains the fully-qualified name of the
    // enterprise bean's class.

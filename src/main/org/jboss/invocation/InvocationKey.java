@@ -116,6 +116,8 @@ public final class InvocationKey implements Serializable {
    public final static InvocationKey LOCATOR = new InvocationKey("LOCATOR");
    public final static InvocationKey REMOTING_CONTEXT = new InvocationKey("REMOTING_CONTEXT");
 
+   public final static InvocationKey MESSAGE_ENDPOINT_CONTEXT = new InvocationKey("MESSAGE_ENDPOINT_CONTEXT");
+
 
    private final transient String name;
 

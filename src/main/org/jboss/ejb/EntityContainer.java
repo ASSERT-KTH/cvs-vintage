@@ -77,7 +77,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.95 $
+ * @version $Revision: 1.96 $
  */
 public class EntityContainer
    extends Container implements
@@ -183,6 +183,41 @@ public class EntityContainer
       this.entityPersistenceManager = entityPersistenceManager;
    }
 
+
+   /**
+    * Describe <code>typeSpecificInitialize</code> method here.
+    * entity specific initialization.
+    */
+   protected void typeSpecificCreate()  throws Exception
+   {
+      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
+      setInstanceCache( createInstanceCache( conf, false, getClassLoader() ) );
+      setInstancePool( createInstancePool( conf, getClassLoader() ) );
+      //Set the bean Lock Manager
+      setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), getClassLoader()));
+
+      EntityMetaData entityMetaData = (EntityMetaData)metaData;
+      if(entityMetaData.getPrimaryKeyClass() != null) {
+         primaryKeyClass = classLoader.loadClass(
+            entityMetaData.getPrimaryKeyClass());
+      }
+
+
+      // Persistence Manager
+      EntityPersistenceManagerXMLFactory factory =
+         new EntityPersistenceManagerXMLFactory();
+      entityPersistenceManager = factory.create(
+         this,
+         conf.getPersistenceManagerElement());
+      entityPersistenceManager.setContainer(this);
+      entityPersistenceManager.create();
+      readOnly = ((EntityMetaData)metaData).isReadOnly();
+      // Init instance cache
+      getInstanceCache().create();
+
+   }
+
+   /*
    protected void createService() throws Exception
    {
       typeSpecificInitialize();
@@ -204,26 +239,10 @@ public class EntityContainer
          {
             remoteInterface = classLoader.loadClass(metaData.getRemote());
          }
-         EntityMetaData entityMetaData = (EntityMetaData)metaData;
-         if(entityMetaData.getPrimaryKeyClass() != null) {
-            primaryKeyClass = classLoader.loadClass(
-                  entityMetaData.getPrimaryKeyClass());
-         }
 
          // Map the interfaces to Long
          setupMarshalledInvocationMapping();
 
-         ConfigurationMetaData conf =
-            getBeanMetaData().getContainerConfiguration();
-
-         // Persistence Manager
-         EntityPersistenceManagerXMLFactory factory =
-            new EntityPersistenceManagerXMLFactory();
-         entityPersistenceManager = factory.create(
-               this,
-               conf.getPersistenceManagerElement());
-         entityPersistenceManager.setContainer(this);
-         entityPersistenceManager.create();
 
          // Initialize the interceptor by calling the chain
          Interceptor in = interceptor;
@@ -233,8 +252,6 @@ public class EntityContainer
             in.create();
             in = in.getNext();
          }
-
-         readOnly = ((EntityMetaData)metaData).isReadOnly();
 
          // Initialize pool
          getInstancePool().create();
@@ -247,8 +264,6 @@ public class EntityContainer
             proxyFactory.create();
          }
 
-         // Init instance cache
-         getInstanceCache().create();
       }
       finally
       {
@@ -256,7 +271,8 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-
+   */
+   /*
    protected void startService() throws Exception
    {
       // Associate thread with classloader
@@ -301,7 +317,40 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
+*/
+   protected void typeSpecificStart() throws Exception
+   {
+         // Start the persistence manager
+         getPersistenceManager().start();
 
+         // Start instance cache
+         getInstanceCache().start();
+
+         // Creat and start the OptionDInvalidator if necessary
+         ConfigurationMetaData configuration = getBeanMetaData().getContainerConfiguration();
+         if(configuration.getCommitOption() == ConfigurationMetaData.D_COMMIT_OPTION)
+         {
+            optionDInvalidator = new OptionDInvalidator(
+                  configuration.getOptionDRefreshRate());
+            optionDInvalidator.start();
+         }
+   }
+
+   protected void typeSpecificStop() throws Exception
+   {
+         if(optionDInvalidator != null)
+         {
+            optionDInvalidator.die();
+            optionDInvalidator = null;
+         }
+         // Stop instance cache
+         getInstanceCache().stop();
+
+         // Start the persistence manager
+         getPersistenceManager().stop();
+
+   }
+   /*
    protected void stopService() throws Exception
    {
       // Associate thread with classloader
@@ -355,7 +404,17 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-
+*/
+   protected void typeSpecificDestroy() throws Exception
+   {
+         // Destroy instance cache
+         getInstanceCache().destroy();
+         getInstanceCache().setContainer(null);
+         // Destroy the persistence manager
+         getPersistenceManager().destroy();
+         getPersistenceManager().setContainer(null);
+   }
+   /*
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
@@ -403,7 +462,7 @@ public class EntityContainer
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-
+*/
    /**
     * Returns a new instance of the bean class or a subclass of the bean class.
     * If this is 1.x cmp, simply return a new instance of the bean class.
@@ -536,15 +595,8 @@ public class EntityContainer
       }
    }
 
-   public void retrieveStatistics( List container, boolean reset ) {
-      // Loop through all Interceptors and add statistics
-      getInterceptor().retrieveStatistics( container, reset );
-      if( !( getInstancePool() instanceof Interceptor ) ) {
-         getInstancePool().retrieveStatistics( container, reset );
-      }
-      log.info( "retrieveStatistics(), ended with container: " + container );
-   }
 
+   /*
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       if(homeInterface != null)
@@ -569,7 +621,7 @@ public class EntityContainer
          }
       }
    }
-
+   */
    /**
     * Build the container MBean information on attributes, contstructors,
     * operations, and notifications. Currently there are no attributes, no
@@ -644,29 +696,6 @@ public class EntityContainer
    Interceptor createContainerInterceptor()
    {
       return null;
-   }
-
-   /**
-    * Describe <code>typeSpecificInitialize</code> method here.
-    * entity specific initialization.
-    */
-   protected void typeSpecificInitialize()  throws Exception
-   {
-      ClassLoader cl = getDeploymentInfo().ucl;
-      ClassLoader localCl = getDeploymentInfo().localCl;
-      int transType = CMT;
-
-      genericInitialize(transType, cl, localCl );
-      if (getBeanMetaData().getHome() != null)
-      {
-         createProxyFactories(cl);
-      }
-      ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
-      setInstanceCache( createInstanceCache( conf, false, cl ) );
-      setInstancePool( createInstancePool( conf, cl ) );
-      //Set the bean Lock Manager
-      setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), cl));
-
    }
 
    private class OptionDInvalidator extends Thread

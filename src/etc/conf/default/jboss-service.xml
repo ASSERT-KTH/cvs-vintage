@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.85 2003/06/01 08:07:41 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.86 2003/06/16 02:01:40 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -281,6 +281,9 @@
        deploy/
     </attribute>
   </mbean>
+
+  <!--Shared URIResolverFactory to access deployment descriptors within the same DeploymentInfo instance -->
+  <mbean code="org.jboss.deployment.DeploymentInfoURIResolverFactory" name="jboss.system:service=DeploymentInfoURIResolver"/> 
 
 
 </server>
