@@ -27,7 +27,7 @@ import org.apache.log4j.Category;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class Shutdown
    implements MBeanRegistration, ShutdownMBean
@@ -128,16 +128,19 @@ public class Shutdown
    {
       try
       {
+	// set to true for detailed name printouts
+        boolean verbose = false;
+
         // get the deployed objects from ServiceController
 		ObjectName[] deployed = (ObjectName[]) server.invoke(
             	new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
                 "getDeployed", new Object[0] , new String[0] );
 
-        List servicesCopy = Arrays.asList(deployed);
+	List servicesCopy = Arrays.asList(deployed);
      	ListIterator enum = servicesCopy.listIterator();
         ListIterator beanEnum = servicesCopy.listIterator();
-        ObjectName name = null;
-        String[] sig = { "javax.management.ObjectName" };
+	ObjectName name = null;
+	String[] sig = { "javax.management.ObjectName" };
 
         // filo ( first in last out )
 /*
@@ -147,27 +150,30 @@ public class Shutdown
 
             // filter out some services here ?
 
-		}
+	}
 
 */
-		// Stop / Destroy / Unload all MBeans from ServiceController
+	// Stop / Destroy / Unload all MBeans from ServiceController
 
         // Stop
         while (enum.hasNext())
-		//while (enum.hasPrevious())
-		{
+	//while (enum.hasPrevious())
+	{
             name = (ObjectName)enum.next();
             //name = (ObjectName)enum.previous();
-	       	Object[] args = { name };
-			log.info("**********************Looking at MBean : " + name.getCanonicalName());
+	    Object[] args = { name };
+            if(verbose)
+				log.info("**********************Looking at MBean : " + name.getCanonicalName());
 	        // Stop services
             if(! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
             && ! name.getCanonicalName().equals("Adaptor:name=html")
             && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
               )
             {
-               log.info("**********************Stopping   MBean : " + name.getCanonicalName());
-	           server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "stop", args , sig);
+		if(verbose)
+			log.info("**********************Stopping   MBean : " + name.getCanonicalName());
+		server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                    			"stop", args , sig);
 
                // Destroy services
 
@@ -180,22 +186,23 @@ public class Shutdown
         while (enum.hasPrevious())
         //while (enum.hasNext())
 		{
-            name = (ObjectName)enum.previous();
-			//name = (ObjectName)enum.next();
-	       	Object[] args = { name };
-            log.info("**********************Looking at MBean : " + name.getCanonicalName());
-			// Destroy services
-            if(! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
-            && ! name.getCanonicalName().equals("Adaptor:name=html")
-            && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
-              )
-            {
+	name = (ObjectName)enum.previous();
+	//name = (ObjectName)enum.next();
+	Object[] args = { name };
+	if(verbose)
+		log.info("**********************Looking at MBean : " + name.getCanonicalName());
+	// Destroy services
+        if(! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
+        && ! name.getCanonicalName().equals("Adaptor:name=html")
+        && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
+           )
+        {
+            if(verbose)
             	log.info("**********************Destroying MBean : " + name.getCanonicalName());
-            	server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"), "destroy", args , sig);
+            server.invoke(new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+                    			"destroy", args , sig);
 			}
-
 		}
-
 
         // Unload
 
@@ -219,27 +226,29 @@ public class Shutdown
          }
 		*/
 
-		// Unload all MBeans from MBean Server
-        Set allMBeans = server.queryNames(null,null);
-        Iterator i = allMBeans.iterator();
-		// write the Mbeans Out
+	// Unload all MBeans from MBean Server
+	Set allMBeans = server.queryNames(null,null);
+	Iterator i = allMBeans.iterator();
+	// write the Mbeans Out
         /*
          while(i.hasNext())	{
-			name = (ObjectName) i.next();
+	 name = (ObjectName) i.next();
     		log.info("**********************Looking at MBean : " + name.getCanonicalName());
          }
          */
         ///*
-         while(i.hasNext())	{
-			name = (ObjectName) i.next();
-    		log.info("**********************Looking at MBean : " + name.getCanonicalName());
+	while(i.hasNext())	{
+	    name = (ObjectName) i.next();
+            if(verbose)
+    			log.info("**********************Looking at MBean : " + name.getCanonicalName());
 			if(! name.getCanonicalName().equals("JMImplementation:type=MBeanServerDelegate")
             && ! name.getCanonicalName().equals("JMX:name=Connector,type=RMI")
             && ! name.getCanonicalName().equals("Adaptor:name=html")
             && ! name.getCanonicalName().equals("JBOSS-SYSTEM:service=Naming")
               )
             {
-				log.info("**********************Unloading  MBean : " + name.getCanonicalName());
+                if(verbose)
+					log.info("**********************Unloading  MBean : " + name.getCanonicalName());
 				server.unregisterMBean(name);
 	         }
         }
