@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.4 2000/07/22 21:23:42 juha Exp $
+ * $Id: AbstractVerifier.java,v 1.5 2000/07/25 17:36:12 juha Exp $
  */
 
 // standard imports
@@ -46,7 +46,7 @@ import com.dreambean.ejx.ejb.Session;
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -267,6 +267,22 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
 
     /*
+     * Finds javax.ejb.EJBHome interface from the class or its superclasses
+     */
+    public boolean hasEJBHomeInterface(Class c) {
+        
+        Class[] interfaces = c.getInterfaces();
+        
+        for (int i = 0; i < interfaces.length; ++i) {
+            
+            if ((EJB_HOME_INTERFACE).equals(interfaces[i].getName()))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    /*
      * Finds javax.ejb.SessionSynchronization interface from the class
      */
     public boolean hasSessionSynchronizationInterface(Class c) {
@@ -326,6 +342,32 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return true;
     }
 
+    /*
+     * Searches for an instance of a public create method from the class
+     */
+    public boolean hasCreateMethod(Class c) {
+        
+        try {
+            Method[] method = c.getMethods();
+            
+            for (int i = 0; i < method.length; ++i) {
+                
+                String name = method[i].getName();
+                
+                if (name.equals(CREATE_METHOD))
+                    return true;
+            }
+        }
+        
+        catch (SecurityException e) {
+            System.err.println(e);
+            // [TODO]   Can be thrown by the getMethods() call if access is
+            //          denied --> createVerifierWarningEvent
+        }
+
+        return false;
+    }
+            
     /*
      * Searches for an instance of a public ejbCreate method from the class
      */
@@ -498,6 +540,22 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return (count > 1);
     }
     
+    public boolean hasMatchingMethodNames(Class a, Class b) {
+        
+        return true;
+    }
+    
+    public boolean hasMatchingMethodArgs(Class a, Class b) {
+        
+        return true;
+    }
+    
+    public boolean hasMatchingMethodExceptions(Class a, Class b) {
+        
+        return true;
+    }
+    
+    
     /*
      * Ejb-jar DTD
      */
@@ -533,13 +591,17 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     private final static String REMOTE_EXCEPTION      =
         "java.rmi.RemoteException";
 
-    private final static String EJB_OBJECT_INTERFACE   =
+    private final static String EJB_OBJECT_INTERFACE  =
         "javax.ejb.EJBObject";
 
+    private final static String EJB_HOME_INTERFACE    =
+        "javax.ejb.EJBHome";
+        
+        
      
     private final static String EJB_CREATE_METHOD     =
         "ejbCreate";
-        
+     
     private final static String CREATE_METHOD         =
         "create";
 

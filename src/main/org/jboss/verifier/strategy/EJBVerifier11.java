@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.10 2000/07/22 21:23:42 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.11 2000/07/25 17:36:12 juha Exp $
  */
 
 
@@ -51,12 +51,12 @@ import com.dreambean.ejx.ejb.Entity;
  * Enterprise JavaBeans v1.1 specification.
  *
  * For more detailed documentation, refer to the
- * <a href="" << INSERT DOC LINK HERE >> </a>
+ * <a href="http://java.sun.com/products/ejb/docs.html">Enterprise JavaBeans v1.1, Final Release</a>
  *
- * @see     << OTHER RELATED CLASSES >>
+ * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -225,6 +225,72 @@ public class EJBVerifier11 extends AbstractVerifier {
                  }   
              }
              
+            /*
+             * The session bean's home interface MUST extend the
+             * javax.ejb.EJBHome interface.
+             *
+             * Spec 6.10.6
+             */
+            if (!hasEJBHomeInterface(home)) {
+                
+                fireSpecViolationEvent(new Section("6.10.6.a"));
+                
+                status = false;
+            }
+            
+            /*                
+             * Method arguments defined in the home interface MUST be
+             * of valid types for RMI/IIOP.
+             *
+             * Method return values defined in the home interface MUST
+             * be of valid types for RMI/IIOP.
+             *
+             * Methods defined in the home interface MUST include
+             * java.rmi.RemoteException in their throws clause.
+             *
+             * Spec 6.10.6
+             */
+            Iterator it = getMethods(home);
+            
+            while (it.hasNext()) {
+                
+                Method method = (Method)it.next();    
+                
+                if (!hasLegalRMIIIOPArguments(method)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.6.b"));
+                    
+                    status = false;
+                }
+                
+                if (!hasLegalRMIIIOPReturnType(method)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.6.c"));
+                    
+                    status = false;
+                }
+                
+                if (!throwsRemoteException(method)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.6.d"));
+                    
+                    status = false;
+                }
+            }
+
+            /*
+             * A session bean's home interface MUST define one or more
+             * create(...) methods.
+             *
+             * Spec 6.10.6
+             */
+            if (!hasCreateMethod(home)) {
+                
+                fireSpecViolationEvent(new Section("6.10.6.e"));
+
+                status = false;
+            }
+
              
         }
         catch (ClassNotFoundException e) {
@@ -310,6 +376,48 @@ public class EJBVerifier11 extends AbstractVerifier {
                 }
             }
 
+            /*
+             * For each method defined in the remote interface, there MUST be
+             * a matching method in the session bean's class. The matching
+             * method MUST have:
+             *
+             *  - the same name
+             *  - the same number and types of arguments, and the same
+             *    return type
+             *  - All the exceptions defined in the throws clause of the 
+             *    matching method of the session bean class must be defined
+             *    in the throws clause of the method of the remote interface
+             *
+             * Spec 6.10.5
+             */
+            try {
+                String beanName = session.getEjbClass();
+                Class  bean     = classloader.loadClass(beanName);
+                
+                if (!hasMatchingMethodNames(remote, bean)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.5.e"));
+                    
+                    status = false;
+                }
+                
+                if (!hasMatchingMethodArgs(remote, bean)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.5.f"));
+                    
+                    status = false;
+                }
+                
+                if (!hasMatchingMethodExceptions(remote, bean)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.5.g"));
+                    
+                    status = false;
+                }
+            }
+            
+            catch (ClassNotFoundException ignored) {}
+            
         }
         catch (ClassNotFoundException e) {
 
