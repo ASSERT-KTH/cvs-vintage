@@ -38,14 +38,24 @@
 	</p>
 	<p>
 	First check out the "scarab-gen" project from CVS.  This project has all the same permissions etc as the main Scarab project
-	itself.  
+	itself.  By default, Scarab expects the scarab-gen and scarab projects to be at the same level in the directory structure.  For
+	example on Windows:
+	<source>
+		c:\java\scarab
+		c:\java\scarab-gen
+	</source>	
+	If not, update the scarab.docs.home property in project.properties.
 	</p>
 	<p>
-	Then, if you are updating the HEAD version of the documentation, then copy the documentation from $SCARAB_HOME/target/docs/
-	to $SCARAB_GEN_HOME/www/head/.	
+	Iff you are updating the HEAD version of the documentation, run then run Maven:
+	<source>
+		maven scarab:deploy_docs_head
+	</source>	
+	 to copy $SCARAB_HOME/target/docs/ to $SCARAB_GEN_HOME/www/head/.	This also blanks out some of the commonly changed data so 
+	 that when you commit to CVS you don't have to update everysingle file just because the Javadoc timestamp changed.
 	</p>
 	<p>
-	If you are cutting a release, then instead generate the documentation, then copy the documentation from $SCARAB_HOME/target/docs/
+	If you are cutting a release, then having timestamps etc is okay.  Instead generate the documentation, then copy the documentation from $SCARAB_HOME/target/docs/
 	to $SCARAB_GEN_HOME/www/{betarelease}/.  So, for beta19, you would copy to $SCARAB_GEN_HOME/www/b19/.
 	</p>
 	<p>
