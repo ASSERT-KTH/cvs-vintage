@@ -44,7 +44,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -93,8 +93,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          con = manager.getEntityBridge().getDataSource().getConnection();
 
          // create the statement
-         if (debug)
+         if(log.isDebugEnabled()) {
             log.debug("Executing SQL: " + sql);
+         }  
          ps = con.prepareStatement(sql);
 
          // set the parameters
@@ -185,8 +186,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
 
    protected void setSQL(String sql) {
       this.sql = sql;
-      if (log.isDebugEnabled())
+      if(log.isDebugEnabled()) {
          log.debug("SQL: " + sql);
+      }
    }
 
    protected void setParameterList(List p) {
