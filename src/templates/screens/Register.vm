@@ -1,17 +1,23 @@
 $page.setTitle("Scarab Registration")
-  <div id="register" class="app">
-   <h2>$page.Title</h2>
-   <form name="RegisterForm" action="$link.setPage("Register.vm")" method="post">
-   <p>* Required field</p>
-    <input type="hidden" name="action" value="Register" />
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" />
-    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
+
+<div id="register" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Registration</h3>
+
+<form name="RegisterForm" action="$link.setPage("Register.vm")" method="post">
+<input type="hidden" name="action" value="Register" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
+
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ($user.FirstName)
-#set ($regGroup = $intake.Register.mapTo($user))
+  #set ($regGroup = $intake.Register.mapTo($user))
 #else
-#set ($regGroup = $intake.Register.Default)
+  #set ($regGroup = $intake.Register.Default)
 #end
+
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
@@ -53,14 +59,15 @@ $page.setTitle("Scarab Registration")
   #fieldErrorMsg($regGroup.PasswordConfirm "")
  </td>
 </tr>
-<tr>
- <td>&nbsp;</td>
- <td>
-     <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-     <input type="submit" name="eventSubmit_doRegister" value="Register" />
- </td>
-</tr>
 </table>
+
+<p>* Required field</p>
+
+<div class="functnbar2">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doRegister" value="Register" />
+</div>
+
 </div>
 $intake.declareGroups()
 </form>

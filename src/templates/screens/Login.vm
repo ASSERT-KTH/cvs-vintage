@@ -37,11 +37,11 @@ $page.setTitle("Login to Scarab")
   #fieldErrorMsg ($loginGroup.Password "")
   </td>
  </tr>
- <tr>
-  <td>&#160;</td>
-  <td><input type="submit" name="eventSubmit_doLogin" value="Login" /></td>
- </tr>
 </table>
+</div>
+
+<div class="functnbar2">
+<input type="submit" name="eventSubmit_doLogin" value="Login" />
 </div>
 
 $intake.declareGroups()
