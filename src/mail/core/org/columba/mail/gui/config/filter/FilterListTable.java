@@ -30,7 +30,7 @@ class FilterListTable extends JTable {
 	public FilterListTable(FilterList filterList, ConfigFrame frame) {
 		super(new FilterListDataModel(filterList));
 		config = MainInterface.config;
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setShowGrid(false);
 		setIntercellSpacing(new java.awt.Dimension(0, 0));
                 TableColumn tc = getColumnModel().getColumn(1);
@@ -43,5 +43,21 @@ class FilterListTable extends JTable {
 
 	public void update() {
 		((FilterListDataModel)getModel()).fireTableDataChanged();
+	}
+	
+	/**
+	 * Sets the specified row indicies to be selected in the table.
+	 * Note that this clears all previous selections.
+	 * @param selectedRows an array of integers containing the indices of 
+	 * all rows that are to be selected.
+	 */
+	public void setRowSelection(int[] selectedRows) {
+		ListSelectionModel model = getSelectionModel();
+		model.setValueIsAdjusting(true);
+		model.clearSelection();
+		for (int i = 0; i < selectedRows.length; i++) {
+			model.addSelectionInterval(selectedRows[i], selectedRows[i]);
+		}
+		model.setValueIsAdjusting(false);
 	}
 }
