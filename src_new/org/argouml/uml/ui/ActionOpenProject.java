@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.21 2003/05/02 16:34:30 jhraigniac Exp $
+// $Id: ActionOpenProject.java,v 1.22 2003/05/09 21:08:45 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -222,6 +222,9 @@ public class ActionOpenProject extends UMLAction {
                     + url.toString()
                     + "\n"
                     + "Project file probably corrupted.\n"
+                    + "\n"
+                    + io.getMessage()+"\n"
+                    + "\n"
                     + "Please file a bug report at argouml.tigris.org including"
                     + " the corrupted project file.");
             p = oldProject;
