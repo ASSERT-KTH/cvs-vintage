@@ -9,7 +9,7 @@ import java.security.PrivilegedAction;
  */
 public class GetTCLAction implements PrivilegedAction
 {
-   static PrivilegedAction ACTION = new GetTCLAction();
+   static PrivilegedAction ACTION = new GetTCLAction(null);
    Thread t;
 
    GetTCLAction(Thread t)
