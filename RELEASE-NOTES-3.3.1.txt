@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.4 2001/11/20 06:39:21 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.5 2001/11/21 04:33:54 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -67,6 +67,9 @@ Bug No.  Description
 4955	 Fixed bug in the parsing of the query string to 
 	 RequestDispatcher.include/forward wasn't handling the case where only
 	 the parameter name was specified.
+
+4948	 Fix DependClassLoader to be a Java2 ClassLoader when running under
+	 a Java2 JVM.  
 
 Configuration:
 
