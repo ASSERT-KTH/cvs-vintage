@@ -192,7 +192,7 @@ public class Request {
 
     public Request() {
  	headers = new MimeHeaders();
- 	recycle(); // XXX need better placement-super()
+	initRequest(); 	
     }
 
     public final int getState() {
@@ -831,6 +831,10 @@ public class Request {
 
     // -------------------- Recycling -------------------- 
     public void recycle() {
+	initRequest();
+    }
+
+    public void initRequest() {
         context = null;
         attributes.clear();
         parameters.clear();
