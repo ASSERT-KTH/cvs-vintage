@@ -1,4 +1,4 @@
-// $Id: ClassifierContext.java,v 1.1 2001/03/07 14:42:46 toby Exp $
+// $Id: ClassifierContext.java,v 1.2 2001/05/27 19:24:59 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -71,7 +71,8 @@ class ClassifierContext extends Context
      * @param classifierName The name of the classifier to retrieve.
      * @return A classifier for the name.
      */
-    public MClassifier get(String classifierName) {
+    public MClassifier get(String classifierName)
+    {
 	// Check if it is this classifier
 	if(classifierName.equals(mClassifier.getName())) {
 	    return mClassifier;
