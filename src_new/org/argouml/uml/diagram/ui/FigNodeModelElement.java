@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.54 2003/01/21 19:33:57 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.55 2003/01/22 13:03:27 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,6 +69,7 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.ActionGoToCritique;
+import org.argouml.ui.ActionAutoResize;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
@@ -584,10 +585,13 @@ public abstract class FigNodeModelElement
         }
         // TODO: remove the damage, as soon as we migrated to a structure that takes
         // the modelevents into account
-         CmdSetPreferredSize cmdSPS = 
-            new CmdSetPreferredSize(CmdSetPreferredSize.MINIMUM_SIZE);
-        cmdSPS.setFigToResize(this);
-        cmdSPS.doIt();
+
+        if (ActionAutoResize.isAutoResizable()) {
+            CmdSetPreferredSize cmdSPS = 
+                new CmdSetPreferredSize(CmdSetPreferredSize.MINIMUM_SIZE);
+            cmdSPS.setFigToResize(this);
+            cmdSPS.doIt();
+        }
         damage();
     }
 
