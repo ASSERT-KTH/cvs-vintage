@@ -113,19 +113,19 @@
     <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
-         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/util/FastKey.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class"
+         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/ejb/CacheKey.class, org/jboss/util/FastKey.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class"
     />
 
     <jar jarfile="${build.dir}/client/deploy.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/deploy.mf"
-         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
+         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class"
     />
 
     <jar jarfile="${build.dir}/client//stop.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/stop.mf"
-         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
+         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class"
     />
   </target>
 
