@@ -1,7 +1,8 @@
 @echo off
 rem build.bat -- Build Script for the "Hello, World" Application
-rem $Id: build.bat,v 1.2 2000/04/24 19:36:48 craigmcc Exp $
+rem $Id: build.bat,v 1.3 2000/05/19 21:32:09 nacho Exp $
 
+if "%TOMCAT_HOME%" == "" goto notomcathome
 if "%CLASSPATH%" == "" goto noclasspath
 
 :haveclasspath
@@ -18,10 +19,15 @@ set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\ant.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jasper.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\webserver.jar
-set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xml.jar
 
 rem Execute ANT to perform the requested build target
 java org.apache.tools.ant.Main -Dtomcat.home=%TOMCAT_HOME% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set CLASSPATH=%_CLASSPATH%
 set _CLASSPATH=
+goto end
+:notomcathome
+echo 
+echo you need to set TOMCAT_HOME to build this app
+echo
+:end

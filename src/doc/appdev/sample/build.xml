@@ -18,7 +18,7 @@
   <property name="javadoc.home"   value="${deploy.home}/javadoc"/>
 
 
-  <target name="prepare" init="init">
+  <target name="prepare">
     <mkdir dir="${deploy.home}"/>
     <copydir src="web" dest="${deploy.home}"/>
     <mkdir dir="${deploy.home}/WEB-INF"/>
@@ -30,31 +30,31 @@
   </target>
 
 
-  <target name="clean" init="init">
+  <target name="clean">
     <deltree dir="${deploy.home}"/>
   </target>
 
 
-  <target name="compile" depends="prepare" init="init">
+  <target name="compile" depends="prepare">
     <javac srcdir="src" destdir="${deploy.home}/WEB-INF/classes"
            classpath="${deploy.home}/WEB-INF/classes"
            debug="on" optimize="off" deprecation="off"/>
   </target>
 
 
-  <target name="javadoc" depends="prepare" init="init">
+  <target name="javadoc" depends="prepare">
     <!-- TODO -->
   </target>
 
 
-  <target name="all" depends="clean,prepare,compile,javadoc" init="init"/>
+  <target name="all" depends="clean,prepare,compile,javadoc"/>
 
 
-  <target name="dist" depends="prepare,compile" init="init">
+  <target name="dist" depends="prepare,compile">
     <jar jarfile="${dist.home}/${dist.src}"
-         basedir="." items="*"/>
+         basedir="." includes="*"/>
     <jar jarfile="${dist.home}/${dist.war}"
-         basedir="${deploy.home}" items="*"/>
+         basedir="${deploy.home}" includes="*"/>
   </target>
 
 
