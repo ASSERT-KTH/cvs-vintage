@@ -46,6 +46,7 @@ import javax.resource.spi.SecurityException;
 import javax.resource.spi.IllegalStateException;
 import javax.resource.spi.ConnectionEvent;
 
+import org.jboss.jms.ConnectionFactoryHelper;
 import org.jboss.jms.jndi.JMSProviderAdapter;
 
 /**
@@ -67,97 +68,104 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  *    LocalTx - we get a normal session. The LocalTransaction will then work
  *    against the normal session api.
  *
- * An invokation of JMS MAY BE DONE in none transacted context. What do we do
- * then? How much should we leave to the user???
+ * <p>An invokation of JMS MAY BE DONE in none transacted context. What do we 
+ *    do then? How much should we leave to the user???
  *
- * One possible solution is to use transactions any way, but under the hood.
- * If not LocalTransaction or XA has been aquired by the container, we have
- * to do the commit in send and publish. (CHECK is the container required to 
- * get a XA every time it uses a managed connection? No its is not, only at
- * creation!)
+ * <p>One possible solution is to use transactions any way, but under the hood.
+ *    If not LocalTransaction or XA has been aquired by the container, we have
+ *    to do the commit in send and publish. (CHECK is the container required 
+ *    to get a XA every time it uses a managed connection? No its is not, only 
+ *    at creation!)
  *
- * Does this mean that a session one time may be used in a transacted env, 
- * and another time in a not transacted.
+ * <p>Does this mean that a session one time may be used in a transacted env, 
+ *    and another time in a not transacted.
  *
- * Maybe we could have this simple rule:
+ * <p>Maybe we could have this simple rule:
  *
- * If a user is going to use non trans:
+ * <p>If a user is going to use non trans:
+ * <ul>
+ * <li>mark that i ra deployment descr
+ * <li>Use a JmsProviderAdapter with non XA factorys
+ * <li>Mark session as non transacted (this defeats the purpose of specifying
+ * <li>trans attrinbutes in deploy descr NOT GOOD
+ * </ul>
  *
- * - mark that i ra deployment descr
- * - Use a JmsProviderAdapter with non XA factorys
- * - Mark session as non transacted (this defeats the purpose of specifying
- *   trans attrinbutes in deploy descr NOT GOOD
+ * <p>From the JMS tutorial:
+ *    "When you create a session in an enterprise bean, the container ignores
+ *    the arguments you specify, because it manages all transactional 
+ *    properties for enterprise beans."
  *
- * From the JMS tutorial:
- * "When you create a session in an enterprise bean, the container ignores
- * the arguments you specify, because it manages all transactional properties
- * for enterprise beans."
+ * <p>And further:
+ *    "You do not specify a message acknowledgment mode when you create a
+ *    message-driven bean that uses container-managed transactions. The
+ *    container handles acknowledgment automatically."
  *
- * And further:
- * "You do not specify a message acknowledgment mode when you create a
- * message-driven bean that uses container-managed transactions. The
- * container handles acknowledgment automatically."
- *
- * On Session or Connection:
+ * <p>On Session or Connection:
+ * <p>From Tutorial:
+ *    "A JMS API resource is a JMS API connection or a JMS API session." But in
+ *    the J2EE spec only connection is considered a resource.
  * 
- * From Tutorial:
- * "A JMS API resource is a JMS API connection or a JMS API session." But in
- * the J2EE spec only connection is considered a resource.
- * 
- * Not resolved: connectionErrorOccurred: it is verry hard to know from the
- * exceptions thrown if it is a connection error. Should we register an
- * ExceptionListener and mark al handles as errounous? And then let them send
- * the event and throw an exception?
+ * <p>Not resolved: connectionErrorOccurred: it is verry hard to know from the
+ *    exceptions thrown if it is a connection error. Should we register an
+ *    ExceptionListener and mark al handles as errounous? And then let them 
+ *    send the event and throw an exception?
  *
- * Created: Tue Apr 10 13:09:45 2001
+ * <p>Created: Tue Apr 10 13:09:45 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.4 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.5 $
  */
 public class JmsManagedConnection
    implements ManagedConnection
 {
    private JmsManagedConnectionFactory mcf;
    private JmsConnectionRequestInfo info;
-   private String user = null;
-   private String pwd = null;
-
-   private boolean isDestroyed = false;
+   private String user; // = null;
+   private String pwd; // = null;
+   private boolean isDestroyed; // = false;
 
    // Physical JMS connection stuff
    private Connection con;
-   //    private TopicConnection topicConnection;
    private TopicSession topicSession;
    private XATopicSession xaTopicSession;
-   //    private QueueConnection queueConnection;
    private QueueSession queueSession;
    private XAQueueSession xaQueueSession;
    private XAResource xaResource;
-   // private boolean isTopic = true;
-   private boolean xaTransacted = true; 
+   private boolean xaTransacted; // = false;
 
-   // Should we have one for each connection
-   private PrintWriter logWriter = null;
+   /** Should we have one for each connection */
+   private PrintWriter logWriter; // = null;
    private JmsLogger logger = new JmsLogger();
     
-   // Holds all current JmsSession handles
-   private Set handles =  new HashSet();
+   /** Holds all current JmsSession handles. */
+   private Set handles = new HashSet();
 
-   // The event listeners
-   Vector listeners = new Vector();
-    
-   public JmsManagedConnection(JmsManagedConnectionFactory mcf,
-                               ConnectionRequestInfo info,
-                               String user, 
-                               String pwd) throws ResourceException 
+   /** The event listeners */
+   private Vector listeners = new Vector();
+
+   /**
+    * Create a <tt>JmsManagedConnection</tt>.
+    *
+    * @param mcf
+    * @param info
+    * @param user
+    * @param pwd
+    *
+    * @throws ResourceException
+    */
+   public JmsManagedConnection(final JmsManagedConnectionFactory mcf,
+                               final ConnectionRequestInfo info,
+                               final String user, 
+                               final String pwd)
+      throws ResourceException 
    {
       this.mcf = mcf;
       this.info = (JmsConnectionRequestInfo)info;
       this.user = user;
       this.pwd = pwd;
 
-      setUp();
-	
+      setup();
    }
 
    //---- ManagedConnection API ----
@@ -165,69 +173,102 @@ public class JmsManagedConnection
    /**
     * Get the physical connection handler.
     * 
-    * This bummer will be called in two situations. 
-    * 1. When a new mc has bean created and a connection is needed
-    * 2. When an mc has been fetched from the pool (returned in match*)
+    * <p>This bummer will be called in two situations:
+    * <ol>
+    * <li>When a new mc has bean created and a connection is needed
+    * <li>When an mc has been fetched from the pool (returned in match*)
+    * </ol>
     *
-    * It may also be called multiple time without a cleanup, to support
-    * connection sharing
-   */
-   public Object getConnection(Subject subject, 
-                               ConnectionRequestInfo info) 
+    * <p>It may also be called multiple time without a cleanup, to support
+    *    connection sharing.
+    *
+    * @param subject
+    * @param info
+    * @return           A new connection object.
+    *
+    * @throws ResourceException
+    */
+   public Object getConnection(final Subject subject, 
+                               final ConnectionRequestInfo info) 
       throws ResourceException
    {
       // Check user first
       JmsCred cred = JmsCred.getJmsCred(mcf,subject,info);
 
       // Null users are allowed!
-      if (user != null && !user.equals(cred.name) )
-         throw new SecurityException("Password credentials not the same, reauthentication not allowed");
-      if (cred.name != null && user == null) 
-         throw new SecurityException("Password credentials not the same, reauthentication not allowed");
+      if (user != null && !user.equals(cred.name)) {
+         throw new SecurityException
+            ("Password credentials not the same, reauthentication not allowed");
+      }
+      if (cred.name != null && user == null) {
+         throw new SecurityException
+            ("Password credentials not the same, reauthentication not allowed");
+      }
 	
-      user = cred.name; //Basically meaningless
+      user = cred.name; // Basically meaningless
 	
-      if(isDestroyed)
+      if (isDestroyed) {
          throw new IllegalStateException("ManagedConnection already destroyd");
+      }
+      
       // Create a handle
       JmsSession handle = new JmsSession(this);
       handles.add(handle);
       return handle;
-	
    }
-    
+
    /**
-    * Destroy the physical connection
+    * Destroy all handles.
+    *
+    * @throws ResourceException    Failed to close one or more handles.
+    */
+   private void destroyHandles() throws ResourceException {
+      Iterator iter = handles.iterator();
+      
+      while (iter.hasNext()) {
+         ((JmsSession)iter.next()).destroy();
+      }
+
+      // clear the handles map
+      handles.clear();
+   }
+   
+   /**
+    * Destroy the physical connection.
+    *
+    * @throws ResourceException    Could not property close the session and
+    *                              connection.
     */
    public void destroy() throws ResourceException {
       if (isDestroyed) return;
       isDestroyed = true;
-	
-      // Destroy all handles
-      Iterator h = handles.iterator();
-      while(h.hasNext()) {
-         ((JmsSession)h.next()).destroy();
-      }
-      handles.clear();
+
+      // destory handles
+      destroyHandles();
+      
       try {
          // Close session and connection
-         if(info.isTopic()) {
+         if (info.isTopic()) {
             topicSession.close();
-            if(xaTransacted) 
+            if (xaTransacted) {
                xaTopicSession.close();
-         } else {
+            }
+         }
+         else {
             queueSession.close();
-            if(xaTransacted) 
+            if (xaTransacted) {
                xaQueueSession.close();
+            }
          }
          con.close();
-      }catch(JMSException ex) {
-         ResourceException e = new ResourceException("Could not properly close the session and connection: " + ex);
+      }
+      catch (JMSException ex) {
+         ResourceException e = new ResourceException
+            ("Could not properly close the session and connection: " + ex);
          e.setLinkedException(ex);
          throw e;
       }
    }
-    
 
    /**
     * Cleans up the, from the spec
@@ -235,89 +276,148 @@ public class JmsManagedConnection
     *    state.
     *
     * Does that mean that autentication should be redone. FIXME
-   */
+    */
    public void cleanup() throws ResourceException {
-	
-      if(isDestroyed)
+      if (isDestroyed) {
          throw new IllegalStateException("ManagedConnection already destroyd");
-      // 
-      Iterator h = handles.iterator();
-      while(h.hasNext()) {
-         ((JmsSession)h.next()).destroy();
       }
-      handles.clear();
-	
+
+      // destory handles      
+      destroyHandles();
    }
 
    /**
-    * Move a handler from one mc to this one
+    * Move a handler from one mc to this one.
+    *
+    * @param obj   An object of type JmsSession.
+    *
+    * @throws ResourceException        Failed to associate connection.
+    * @throws IllegalStateException    ManagedConnection in an illegal state.
     */ 
-   public void associateConnection(Object connection)
+   public void associateConnection(final Object obj)
       throws ResourceException
    {
+      //
       // Should we check auth, ie user and pwd? FIXME
-      if(!isDestroyed &&
-         connection instanceof JmsSession) {
-         JmsSession h = (JmsSession) connection;
+      //
+      
+      if (!isDestroyed && obj instanceof JmsSession) {
+         JmsSession h = (JmsSession)obj;
          h.setManagedConnection(this);
          handles.add(h);
-      }else {
-         throw new IllegalStateException("ManagedConnection in an illegal state");
       }
-
+      else {
+         throw new IllegalStateException
+            ("ManagedConnection in an illegal state");
+      }
    }
 
-   public void addConnectionEventListener(ConnectionEventListener listener) {
+   /**
+    * Add a connection event listener.
+    *
+    * @param l   The connection event listener to be added.
+    */
+   public void addConnectionEventListener(final ConnectionEventListener l) {
       logger.log(Level.FINE,"ConnectionEvent listener added");
-      listeners.addElement(listener);
+      listeners.addElement(l);
    }
 
-   public void removeConnectionEventListener(ConnectionEventListener listener) {
-      listeners.removeElement(listener);
+   /**
+    * Remove a connection event listener.
+    *
+    * @param l    The connection event listener to be removed.
+    */
+   public void removeConnectionEventListener(final ConnectionEventListener l) {
+      listeners.removeElement(l);
    }
-    
-    
+
+   /**
+    * Get the XAResource for the connection.
+    *
+    * @return   The XAResource for the connection.
+    *
+    * @throws ResourceException    XA transaction not supported
+    */
    public XAResource getXAResource() throws ResourceException {
-      /* Spec says a mc must allways return the same XA resource, so we
-         chaches it
-      */
-	
-      if (! xaTransacted)
+      //
+      // Spec says a mc must allways return the same XA resource, 
+      // so we cache it.
+      //
+      if (!xaTransacted) {
          throw new NotSupportedException("XA transaction not supported");
+      }
 	
       if (xaResource == null) {
-         if (info.isTopic())
+         if (info.isTopic()) {
             xaResource = xaTopicSession.getXAResource();
-         else
+         }
+         else {
             xaResource = xaQueueSession.getXAResource();
+         }
       }
       logger.log(Level.FINE, "Leaving out XAResource");
+
       return xaResource;
    }
 
+   /**
+    * Get the location transaction for the connection.
+    *
+    * @return    The local transaction for the connection.
+    *
+    * @throws ResourceException
+    */
    public LocalTransaction getLocalTransaction() throws ResourceException {
       logger.log(Level.FINE, "Leaving out LocalTransaction");
       return new JmsLocalTransaction(this);
    }
-    
+
+   /**
+    * Get the meta data for the connection.
+    *
+    * @return    The meta data for the connection.
+    *
+    * @throws ResourceException
+    * @throws IllegalStateException    ManagedConnection already destroyed.
+    */
    public ManagedConnectionMetaData getMetaData() throws ResourceException {
-      if(isDestroyed)
+      if (isDestroyed) {
          throw new IllegalStateException("ManagedConnection already destroyd");
+      }
+      
       return new JmsMetaData(this);
    }
-    
-   public void setLogWriter(PrintWriter out) throws ResourceException {
+
+   /**
+    * Set the log writer for this connection.
+    *
+    * @param out   The log writer for this connection.
+    *
+    * @throws ResourceException
+    */
+   public void setLogWriter(final PrintWriter out) throws ResourceException {
       this.logWriter = out;
-      if (out != null)
+      if (out != null) {
          logger.setLogWriter(out);
+      }
    }
     
+   /**
+    * Get the log writer for this connection.
+    *
+    * @return   The log writer for this connection.
+    */
    public PrintWriter getLogWriter() throws ResourceException {
       return logWriter;
    }
 
-
    // --- Api to JmsSession
+
+   /**
+    * Get the session for this connection.
+    *
+    * @return   Either a topic or queue connection.
+    */
    protected Session getSession() {
       if (info.isTopic()) {
          return topicSession;
@@ -326,118 +426,150 @@ public class JmsManagedConnection
       }
    }
 
+   /**
+    * Get the logger for this connection.
+    *
+    * @return    The logger for this connection.
+    */
    protected JmsLogger getLogger() {
       return logger;
    }
 
-   protected void sendEvent(ConnectionEvent ev) {
-      logger.log(Level.FINE,"Sending connection event: " + ev.getId());
+   /**
+    * Send an event.
+    *
+    * @param event    The event to send.
+    */
+   protected void sendEvent(final ConnectionEvent event) {
+      logger.log(Level.FINE,"Sending connection event: " + event.getId());
       Vector list = (Vector) listeners.clone();
       int size = list.size();
+      
       for (int i=0; i<size; i++) {
          ConnectionEventListener listener = 
-            (ConnectionEventListener) list.elementAt(i);
-         int type = ev.getId();
+            (ConnectionEventListener)list.elementAt(i);
+         int type = event.getId();
+         
          switch (type) {
           case ConnectionEvent.CONNECTION_CLOSED:
-             listener.connectionClosed(ev);
+             listener.connectionClosed(event);
              break;
+             
           case ConnectionEvent.LOCAL_TRANSACTION_STARTED:
-             listener.localTransactionStarted(ev);
+             listener.localTransactionStarted(event);
              break;
+             
           case ConnectionEvent.LOCAL_TRANSACTION_COMMITTED:
-             listener.localTransactionCommitted(ev);
+             listener.localTransactionCommitted(event);
              break;
+             
           case ConnectionEvent.LOCAL_TRANSACTION_ROLLEDBACK:
-             listener.localTransactionRolledback(ev);
+             listener.localTransactionRolledback(event);
              break;
+             
           case ConnectionEvent.CONNECTION_ERROR_OCCURRED:
-             listener.connectionErrorOccurred(ev);
+             listener.connectionErrorOccurred(event);
              break;
+             
           default:
-             throw new IllegalArgumentException("Illegal eventType: " +
-                                                type);
+             throw new IllegalArgumentException("Illegal eventType: " + type);
          }
       }
    }
-   
 
-   protected void removeHandle(JmsSession handle) {
+   /**
+    * Remove a handle from the handle map.
+    *
+    * @param handle     The handle to remove.
+    */
+   protected void removeHandle(final JmsSession handle) {
       handles.remove(handle);
    }
 
-   //--- Used by MCF
+   // --- Used by MCF
+
+   /**
+    * Get the request info for this connection.
+    *
+    * @return    The request info for this connection.
+    */
    protected ConnectionRequestInfo getInfo() {
       return info;
    }
 
+   /**
+    * Get the connection factory for this connection.
+    *
+    * @return    The connection factory for this connection.
+    */
    protected JmsManagedConnectionFactory getManagedConnectionFactory() {
       return mcf;
    }
 
-   // --- Used bu MetaData
+   // --- Used by MetaData
+
+   /**
+    * Get the user name for this connection.
+    *
+    * @return    The user name for this connection.
+    */
    protected String getUserName() {
       return user;
    }
    
-   //---- Private helper methods
-   private void setUp() throws ResourceException
+   // --- Private helper methods
+
+   /**
+    * Get the JMS provider adapter that will be used to create JMS
+    * resources.
+    *
+    * @return    A JMS provider adapter.
+    *
+    * @throws NamingException    Failed to lookup provider adapter.
+    */
+   private JMSProviderAdapter getProviderAdapter() throws NamingException {
+      JMSProviderAdapter adapter;
+      
+      if (mcf.getJmsProviderAdapterJNDI() != null) {
+         // lookup the adapter from JNDI
+         Context ctx = new InitialContext();
+         try {
+            adapter = (JMSProviderAdapter)
+               ctx.lookup(mcf.getJmsProviderAdapterJNDI());
+         }
+         finally {
+            ctx.close();
+         }
+      }
+      else {
+         adapter = mcf.getJmsProviderAdapter();
+      }
+
+      return adapter;
+   }
+   
+   /**
+    * Setup the connection.
+    *
+    * @throws ResourceException
+    */
+   private void setup() throws ResourceException
    {
       try {
-         JMSProviderAdapter adapter;
-         if (mcf.getJmsProviderAdapterJNDI() != null) {
-	    
-            // Get initial context
-            Context serverCtx = new InitialContext();
-            //Lokup adapter
-            adapter = (JMSProviderAdapter)serverCtx.
-               lookup(mcf.getJmsProviderAdapterJNDI());
-         } else {
-            adapter = mcf.getJmsProviderAdapter();
-         }
-
+         JMSProviderAdapter adapter = getProviderAdapter();
          Context context = adapter.getInitialContext();
-	    
-         // Get connections
+
+         Object factory;
          if (info.isTopic()) {
-            // Get connectionFactory
-            TopicConnectionFactory topicFactory = 
-               (TopicConnectionFactory)context.
-               lookup(adapter.getTopicFactoryRef());
-		
-	    // Set up connection
-            if(user != null) 
-            {
-               logger.log(Level.FINE, "Creating topic connection with user: " + user + " passwd: " + pwd);
-               con = topicFactory.
-                  createTopicConnection(user, pwd);
-            }
-            else 
-            {
-               logger.log(Level.FINE, "Creating topic connection");
-               con = topicFactory.createTopicConnection();
-            }
-		
-         } else {
-            // Get connectionFactory
-            QueueConnectionFactory queueFactory = 
-               (QueueConnectionFactory)context.
-               lookup(adapter.getQueueFactoryRef());
-		
-            // Queue connection
-            if (user != null) 
-            {
-               logger.log(Level.FINE, "Creating queue connection with user: " + user + " passwd: " + pwd); 
-               con = queueFactory.
-                  createQueueConnection(user,pwd);
-            } 
-            else 
-            {
-               logger.log(Level.FINE, "Creating queue connection");
-               con = queueFactory.createQueueConnection();
-            }
+            factory = context.lookup(adapter.getTopicFactoryRef());
          }
-	    
+         else {
+            factory = context.lookup(adapter.getQueueFactoryRef());
+         }
+         
+         con = ConnectionFactoryHelper.createConnection(factory, user, pwd);
+         logger.log(Level.FINE, "created connection: " + con);
+         
          // Get sessions
          boolean transacted = true;
          int ack = Session.AUTO_ACKNOWLEDGE;
@@ -446,30 +578,43 @@ public class JmsManagedConnection
             xaTopicSession = ((XATopicConnection)con).createXATopicSession();
             topicSession = xaTopicSession.getTopicSession();
             xaTransacted = true;
-         } else if(con instanceof XAQueueConnection) {
-            xaQueueSession = ((XAQueueConnection)con).createXAQueueSession();
+         }
+         else if (con instanceof XAQueueConnection) {
+            xaQueueSession =
+               ((XAQueueConnection)con).createXAQueueSession();
             queueSession = xaQueueSession.getQueueSession();
             xaTransacted = true;
-         } else if (con instanceof TopicConnection) {
-            topicSession = ((TopicConnection)con).createTopicSession(transacted, ack);
-            logger.log(Level.WARNING,"WARNING: Using a non-XA TopicConnection.  It will not be able to participate in a Global UOW");
-         } else if(con instanceof QueueConnection) {
-            queueSession = ((QueueConnection)con).createQueueSession(transacted, ack);
-            logger.log(Level.WARNING,"WARNING: Using a non-XA QueueConnection.  It will not be able to participate in a Global UOW");
-         } else {
-            logger.log(Level.SEVERE,"Error in getting session for con: " + con);
-            throw new ResourceException("Connection was not reconizable: " + con);
          }
-	    
-      }catch(NamingException ne) {
-         CommException ce = new CommException(ne.toString());
-         ce.setLinkedException(ne);
+         else if (con instanceof TopicConnection) {
+            topicSession =
+               ((TopicConnection)con).createTopicSession(transacted, ack);
+            logger.log(Level.WARNING,
+                       "Using a non-XA TopicConnection.  " +
+                       "It will not be able to participate in a Global UOW");
+         }
+         else if (con instanceof QueueConnection) {
+            queueSession =
+               ((QueueConnection)con).createQueueSession(transacted, ack);
+            logger.log(Level.WARNING,
+                       "Using a non-XA QueueConnection.  " +
+                       "It will not be able to participate in a Global UOW");
+         }
+         else {
+            logger.log(Level.SEVERE,
+                       "Error in getting session for con: " + con);
+            throw new ResourceException
+               ("Connection was not reconizable: " + con);
+         }
+      }
+      catch (NamingException e) {
+         CommException ce = new CommException(e.toString());
+         ce.setLinkedException(e);
          throw ce;
-      }catch(JMSException je) {
-         CommException ce = new CommException(je.toString());
-         ce.setLinkedException(je);
+      }
+      catch (JMSException e) {
+         CommException ce = new CommException(e.toString());
+         ce.setLinkedException(e);
          throw ce;
       }
    }
-    
-} // JmsManagedConnection
+}
