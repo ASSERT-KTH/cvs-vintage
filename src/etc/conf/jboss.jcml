@@ -4,7 +4,7 @@
      <mbean name="DefaultDomain:service=Logging,type=Console">
        <attribute name="Format">[{2}] {4}</attribute>
      </mbean>
-     <mbean name="DefaultDomain:service=Logging,type=File">
+     <mbean name="DefaultDomain:service=Logging,type=File,sources=All">
        <attribute name="LogName">server.log</attribute>
      </mbean>
      <mbean name="EJB:service=ContainerFactory">
