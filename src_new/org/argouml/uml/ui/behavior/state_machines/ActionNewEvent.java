@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.2 2003/06/29 23:50:12 linus Exp $
+// $Id: ActionNewEvent.java,v 1.3 2004/06/01 19:31:20 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
+import org.argouml.ui.targetmanager.TargetManager;
 
 /**
  * @since Dec 15, 2002
@@ -67,6 +68,7 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
     protected abstract Object createEvent();
 
     /**
+     * Creates the event, sets its role, and navigates towards it.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
@@ -75,5 +77,6 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
         if (getValue(ROLE).equals(Roles.TRIGGER)) {
             StateMachinesHelper.getHelper().setEventAsTrigger(getTarget(), event);
         }
+        TargetManager.getInstance().setTarget(event);
     }
 }
