@@ -53,8 +53,6 @@ public class EditPropertiesAction extends FrameAction {
 		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_properties_toolbar"));
-		setShowToolBarText(true);
-					
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));

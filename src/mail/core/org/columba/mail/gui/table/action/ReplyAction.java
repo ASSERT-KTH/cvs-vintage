@@ -63,8 +63,6 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 				"mainframe",
 				"menu_message_reply_toolbar"));
 
-		setShowToolBarText(true);
-
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("reply_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("reply.png"));

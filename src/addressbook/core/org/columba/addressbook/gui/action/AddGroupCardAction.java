@@ -49,8 +49,6 @@ public class AddGroupCardAction extends FrameAction {
 		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_addgroup_toolbar"));
-		setShowToolBarText(true);
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("group_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("group.png"));

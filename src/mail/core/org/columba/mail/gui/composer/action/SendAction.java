@@ -55,8 +55,6 @@ public class SendAction extends FrameAction {
 		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_file_send_toolbar"));
-		setShowToolBarText(true);
-		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("send-24.png"));
 		

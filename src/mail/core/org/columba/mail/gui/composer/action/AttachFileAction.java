@@ -38,8 +38,6 @@ public class AttachFileAction extends FrameAction {
 		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_message_attachFile_toolbar"));
-		setShowToolBarText(true);
-		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("stock_attach.png"));
 		

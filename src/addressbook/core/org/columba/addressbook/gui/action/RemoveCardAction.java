@@ -47,8 +47,6 @@ public class RemoveCardAction extends FrameAction {
 		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_remove_toolbar"));
-		setShowToolBarText(true);
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));

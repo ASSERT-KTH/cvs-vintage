@@ -83,8 +83,6 @@ public class ForwardAction
 				"menu",
 				"mainframe",
 				"menu_message_forward_toolbar"));
-		setShowToolBarText(true);
-
 		setEnabled(false);
 		(
 			(
