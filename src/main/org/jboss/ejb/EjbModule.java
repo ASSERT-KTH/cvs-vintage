@@ -76,7 +76,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -467,6 +467,7 @@ public class EjbModule
             try
             {
                serviceController.destroy(jmxName);
+               log.info("Undeployed " + con.getBeanMetaData().getEjbName());
             }
             catch (Throwable e)
             {
