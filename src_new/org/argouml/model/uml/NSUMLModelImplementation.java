@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.6 2005/01/30 20:48:14 linus Exp $
+// $Id: NSUMLModelImplementation.java,v 1.7 2005/02/20 20:10:14 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.model.uml;
+
+import java.io.Writer;
 
 import org.argouml.model.ActivityGraphsFactory;
 import org.argouml.model.ActivityGraphsHelper;
@@ -52,11 +54,15 @@ import org.argouml.model.PseudostateKind;
 import org.argouml.model.ScopeKind;
 import org.argouml.model.StateMachinesFactory;
 import org.argouml.model.StateMachinesHelper;
+import org.argouml.model.UmlException;
 import org.argouml.model.UmlFactory;
 import org.argouml.model.UmlHelper;
 import org.argouml.model.UseCasesFactory;
 import org.argouml.model.UseCasesHelper;
 import org.argouml.model.VisibilityKind;
+import org.argouml.model.XmiReader;
+import org.argouml.model.XmiWriter;
+import org.xml.sax.SAXException;
 
 /**
  * The handle to find all helper and factories.
@@ -338,4 +344,20 @@ public class NSUMLModelImplementation implements ModelImplementation {
     public VisibilityKind getVisibilityKind() {
         return theKindsObject;
     }
+    
+    /**
+     * @see org.argouml.model.ModelImplementation#getXmiReader()
+     */
+    public XmiReader getXmiReader() throws UmlException {
+        return new XmiReaderImpl();
+    }
+    
+    /**
+     * @see org.argouml.model.ModelImplementation#getXmiWriter()
+     */
+    public XmiWriter getXmiWriter(Object model, Writer writer)
+            throws UmlException {
+        return new XmiWriterImpl(model, writer);
+    }
+    
 }

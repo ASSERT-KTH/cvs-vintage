@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.6 2005/02/20 17:49:58 bobtarling Exp $
+// $Id: XmiReader.java,v 1.1 2005/02/20 20:10:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,15 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.model.uml;
+package org.argouml.model;
 
-import java.io.IOException;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
  * A wrapper around the genuine XmiReader that provides public
@@ -38,45 +34,19 @@ import org.xml.sax.SAXException;
  *
  * @author Bob Tarling
  */
-public class XmiReader {
-    private static final Logger LOG = Logger.getLogger(XmiReader.class);
-
-    private NsumlXmiReader nsumlXmiReader;
-
-    /**
-     * Constructor for XMIReader.
-     * @throws SAXException when there is a XML problem
-     * @throws ParserConfigurationException if a parser cannot
-     * be created which satisfies the requested configuration
-     */
-    public XmiReader() throws SAXException, ParserConfigurationException {
-        nsumlXmiReader = new NsumlXmiReader();
-    }
+public interface XmiReader {
 
     /**
      * Parses a given inputsource to a model. Does not override the novosoft
      * parse method since that does not have the right signature.
      * @param pIs the input source for parsing
      * @return MModel the UML model
-     * @throws SAXException if there is an XML problem
-     * @throws IOException if there is a file I/O problem
+     * @throws UmlException on any error
      */
-    public Object parseToModel(InputSource pIs)
-        throws SAXException, IOException {
-	return nsumlXmiReader.parseToModel(pIs);
-    }
-
-//    /**
-//     * @return true if there were errors
-//     */
-//    public boolean getErrors() {
-//        return nsumlXmiReader.getErrors();
-//    }
+    Object parseToModel(InputSource pIs) throws UmlException;
 
     /**
      * @return the map
      */
-    public Map getXMIUUIDToObjectMap() {
-        return nsumlXmiReader.getXMIUUIDToObjectMap();
-    }
+    Map getXMIUUIDToObjectMap();
 }

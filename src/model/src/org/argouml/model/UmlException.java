@@ -1,4 +1,4 @@
-// $Id: UmlException.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: UmlException.java,v 1.2 2005/02/20 20:10:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,8 +71,16 @@ public class UmlException extends Exception {
      * @param c the cause of the exception
      */
     public UmlException(String message, Throwable c) {
-	super(message);
-	cause = c;
+        super(message);
+        cause = c;
+    }
+
+    /**
+     * @param c the cause of the exception
+     */
+    public UmlException(Throwable c) {
+        super();
+        cause = c;
     }
 
     /**

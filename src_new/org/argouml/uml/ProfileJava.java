@@ -1,4 +1,4 @@
-// $Id: ProfileJava.java,v 1.30 2005/02/20 18:50:14 bobtarling Exp $
+// $Id: ProfileJava.java,v 1.31 2005/02/20 20:10:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
-import org.argouml.model.uml.XmiReader;
+import org.argouml.model.UmlException;
+import org.argouml.model.XmiReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -340,19 +341,9 @@ public class ProfileJava extends Profile {
         
         if (is != null) {
             try {
-                XmiReader xmiReader = new XmiReader();
-                //
-                //   would really like to turn validation off to save
-                //      a lot of scary messages
-                Object/*MModel*/ model =
-                    xmiReader.parseToModel(new InputSource(is));
-            
-                return model;
-            } catch (ParserConfigurationException e) {
-                throw new ProfileException(e);
-            } catch (IOException e) {
-                throw new ProfileException(e);
-            } catch (SAXException e) {
+                XmiReader xmiReader = Model.getXmiReader();
+                return xmiReader.parseToModel(new InputSource(is));
+            } catch (UmlException e) {
                 throw new ProfileException(e);
             }
         }
