@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.6 2002/12/27 10:08:02 linus Exp $
+// $Id: ActionClassDiagram.java,v 1.7 2003/01/09 19:52:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.uml.ui;
 import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.uml.diagram.static_structure.ui.*;
+import org.argouml.uml.diagram.ui.UMLDiagram;
+
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
 import java.awt.event.*;
@@ -54,7 +56,7 @@ public class ActionClassDiagram extends ActionAddDiagram {
     /**
      * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,Object)
      */
-    public ArgoDiagram createDiagram(MNamespace ns, Object target) {
+    public UMLDiagram createDiagram(MNamespace ns) {
         return new UMLClassDiagram(ns);
     }
 

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
+// $Id: UMLTextField2.java,v 1.6 2003/01/09 19:52:15 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.JTextField;

@@ -1,4 +1,4 @@
-// $Id: ActionUseCaseDiagram.java,v 1.9 2002/12/27 10:08:02 linus Exp $
+// $Id: ActionUseCaseDiagram.java,v 1.10 2003/01/09 19:52:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,16 +24,12 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.kernel.*;
-import org.argouml.ui.*;
-import org.argouml.uml.diagram.use_case.ui.*;
-import org.argouml.i18n.Translator;
+import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.model_management.*;
-import java.awt.event.*;
-import java.beans.*;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MPackage;
 
 /** Action to create a new use case diagram.
  *  @stereotype singleton
@@ -49,7 +45,7 @@ public class ActionUseCaseDiagram extends ActionAddDiagram {
     /**
      * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,Object)
      */
-    public ArgoDiagram createDiagram(MNamespace ns, Object target) {
+    public UMLDiagram createDiagram(MNamespace ns) {
         return new UMLUseCaseDiagram(ns);
     }
 
