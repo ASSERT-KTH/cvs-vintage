@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.321 2003/08/19 00:40:51 elicia Exp $
+ * @version $Id: Issue.java,v 1.322 2003/08/21 18:04:34 venkatesh Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3620,8 +3620,8 @@ public class Issue
      * Sets AttributeValues for an issue based on a hashmap of attribute values
      * This is data is saved to the database and the proper ActivitySet is 
      * also recorded.
-     *
-     * @throws Exception when the workflow has an error to report
+     * @see #setAttributeValues(ActivitySet,
+     *                           HashMap, Attachment, ScarabUser,boolean)
      */
     public ActivitySet setAttributeValues(ActivitySet activitySet, 
                                           HashMap newAttVals, 
@@ -3629,12 +3629,37 @@ public class Issue
                                           ScarabUser user)
         throws Exception
     {
+        return setAttributeValues(activitySet, newAttVals, attachment,
+                                     user, false);
+    }
+
+    /**
+     * Sets AttributeValues for an issue based on a hashmap of attribute values
+     * This is data is saved to the database and the proper ActivitySet is
+     * also recorded.
+     * @param activitySet ActivitySet instance
+     * @param newAttVals A map of attribute Id's vs new AttributeValues
+     * @param attachment Attachment to the issue
+     * @param user User responsible for this activity
+     * @param isIssueTemplate TRUE if the Issue represents an issue template.
+                              FALSE if it represents a real issue.
+     * @return ActivitySet object containing the changes made to the issue
+     * @throws Exception when the workflow has an error to report
+     */
+    public ActivitySet setAttributeValues(ActivitySet activitySet,
+                                          HashMap newAttVals,
+                                          Attachment attachment,
+                                          ScarabUser user, boolean isIssueTemplate)
+        throws Exception
+    {
+        if (!isIssueTemplate)
+        {
         String msg = doCheckAttributeValueWorkflow(newAttVals, user);
         if (msg != null)
         {
             throw new Exception(msg);
         }
-
+        }
         // save the attachment if it exists.
         if (attachment != null)
         {
@@ -3646,7 +3671,6 @@ public class Issue
         // Create the ActivitySet
         if (activitySet == null)
         {
-        
             activitySet = getActivitySet(user, attachment,
                                       ActivitySetTypePeer.EDIT_ISSUE__PK);
             activitySet.save();
@@ -3657,6 +3681,7 @@ public class Issue
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
         Iterator iter = newAttVals.keySet().iterator();
+        boolean attValDeleted = false;
         while (iter.hasNext())
         {
             Integer attrId = (Integer)iter.next();
@@ -3677,9 +3702,16 @@ public class Issue
             {
                 oldAttVal.setDeleted(true);
                 Log.get().debug("setDeleted(true)");
+                attValDeleted = true;
             }
             oldAttVal.startActivitySet(activitySet);
             oldAttVal.save();
+        }
+        if (attValDeleted)
+        {
+             //Remove attribute value map from cache
+             getMethodResult().remove(this, GET_MODULE_ATTRVALUES_MAP,
+                                          Boolean.TRUE);
         }
         return activitySet;
     }

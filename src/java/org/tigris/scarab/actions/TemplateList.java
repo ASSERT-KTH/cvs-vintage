@@ -48,7 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.HashMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.collections.SequencedHashMap;
 
@@ -88,7 +88,7 @@ import org.tigris.scarab.util.ScarabException;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.54 2003/08/19 23:56:36 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.55 2003/08/21 18:04:34 venkatesh Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -226,15 +226,17 @@ public class TemplateList extends RequireLoginFirstAction
 
         if (intake.isAllValid()) 
         {
-            // Save activitySet record
-            ActivitySet activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
-            activitySet.save();
+            AttributeValue aval2 = null;
+            HashMap newAttVals = new HashMap();
+            boolean modifiedAttribute = false;
 
             Iterator iter = avMap.iterator();
             while (iter.hasNext()) 
             {
                 aval = (AttributeValue)avMap.get(iter.next());
+                aval2 = AttributeValue.getNewInstance(aval.getAttributeId(),
+                                                      aval.getIssue());
+                aval2.setProperties(aval);
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
                 if (group != null)
                 {
@@ -267,15 +269,31 @@ public class TemplateList extends RequireLoginFirstAction
                         newValue = group.get("Value").toString();
                         oldValue = aval.getValue();
                     }
-
-                    if (!newValue.equals("") && 
-                        (oldValue == null  || !oldValue.equals(newValue)))
+                    // A value has been entered for the attribute.
+                    // The old value is different from the new, or is unset:
+                    // Set new value.
+                    if (newValue.length() > 0 && (oldValue == null ||
+                          !newValue.trim().equals(oldValue.trim())))
                     {
-                        aval.startActivitySet(activitySet);
-                        group.setProperties(aval);
-                        aval.save();
+                        group.setProperties(aval2);
+                        newAttVals.put(aval.getAttributeId(), aval2);
+                        modifiedAttribute = true;
+                    }
+                    // The attribute is being undefined.
+                    else if (oldValue != null && newValue.length() == 0 &&
+                             oldValue.length() != 0)
+                    {
+                        aval2.setValue(null);
+                        newAttVals.put(aval.getAttributeId(), aval2);
+                        modifiedAttribute = true;
                     }
                 }                
+            }
+            //save data only if there is a change
+            if (modifiedAttribute)
+            {
+                issue.setAttributeValues(null, newAttVals, null, user, true);
+                intake.removeAll();
             }
             scarabR.setConfirmMessage(l10n.get("TemplateModified"));
         } 
