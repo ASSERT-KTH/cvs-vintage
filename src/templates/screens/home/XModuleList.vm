@@ -42,8 +42,10 @@
    <p>$l10n.ChoosePredefinedList</p>
    <p><input type="radio" name="$key" value="allmits"
      #if($checked) checked="checked"#end />$l10n.AllModulesAndIssueTypes</p>
+   #if ($scarabR.CurrentIssueType)
    <p><input type="radio" name="$key" value="oneitallmods"
      #if($checked2) checked="checked"#end />$l10n.format("CurrentIssueTypeAllModules", $scarabR.CurrentIssueType.Name)</p>
+   #end
  </div>
 
  <div class="functnbar2">
