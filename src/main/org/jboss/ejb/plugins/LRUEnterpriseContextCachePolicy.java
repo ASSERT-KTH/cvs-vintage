@@ -24,9 +24,9 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
 /**
  * Least Recently Used cache policy for EnterpriseContexts.
  *
- * @see EnterpriseInstanceCache
+ * @see AbstractInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	implements EnterpriseContextCachePolicy, XmlLoadable, Monitorable
@@ -34,7 +34,7 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	// Constants -----------------------------------------------------
 
 	// Attributes ----------------------------------------------------
-	/* The EnterpriseInstanceCache that uses this cache policy */
+	/* The AbstractInstanceCache that uses this cache policy */
 	private AbstractInstanceCache m_cache;
 	/* The period of the resizer's runs */
 	private long m_resizerPeriod;
@@ -354,7 +354,7 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 		protected OveragerTask(long period) 
 		{
 			super(period);
-			m_message = "Scheduling for passivation overaged bean " + m_cache.getContainer().getBeanMetaData().getEjbName() + " with id = ";
+			m_message = getTaskLogMessage() + " " + m_cache.getContainer().getBeanMetaData().getEjbName() + " with id = ";
 			m_buffer = new StringBuffer();
 		}
 		public void execute() 
@@ -366,15 +366,15 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 			{
 				for (LRUCacheEntry entry = list.m_tail; entry != null; entry = list.m_tail)
 				{
-					if (now - entry.m_time >= m_maxBeanAge)
+					if (now - entry.m_time >= getMaxAge())
 					{
 						int initialSize = list.m_count;
 						
 						// Log informations
 						log(entry.m_key, initialSize);
 						
-						// Kick off the cache this entry
-						ageOut(entry);
+						// Kick out of the cache this entry
+						kickOut(entry);
 						
 						int finalSize = list.m_count;
 						
@@ -403,7 +403,7 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 				Message message = m_cache.createMessage(key);
 				try 
 				{
-					message.setStringProperty("TYPE", "OVERAGER");
+					message.setStringProperty("TYPE", getJMSTaskType());
 					message.setIntProperty("SIZE", count);
 				}
 				catch (JMSException x) 
@@ -415,6 +415,10 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 				m_cache.sendMessage(message);
 			}
 		}
+		protected String getTaskLogMessage() {return "Scheduling for passivation overaged bean";}
+		protected String getJMSTaskType() {return "OVERAGER";}
+		protected void kickOut(LRUCacheEntry entry) {ageOut(entry);}
+		protected long getMaxAge() {return m_maxBeanAge;}
 	}
 
 	/**
