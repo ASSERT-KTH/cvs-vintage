@@ -54,7 +54,7 @@
  * Author:      Bernard Bernstein <bernard@corp.talkcity.com>                *
  * Updated:     March 1999 Jean-Luc Rochat <jlrochat@jnix.com>               *
  * Description: solved part of fail-over problems & LB improvments           *
- * Version:     $Revision: 1.1 $
+ * Version:     $Revision: 1.2 $
  *****************************************************************************/
 
 #include "jserv.h"
@@ -70,7 +70,7 @@
 /* then so must the other. This must stay in sync with the session cookie  */
 /* or parameter set by the java code                                       */
 
-#define SESSION_IDENTIFIER "JServSessionId"
+#define SESSION_IDENTIFIER "JSESSIONID"
 #define ROUTING_IDENTIFIER "JSERV_ROUTE"
 
 /* ========================================================================= */
@@ -141,7 +141,13 @@ get_jserv_sessionid(request_rec *r, char *zone)
   char *val;
   char sessionid[256];
   strcpy(sessionid, SESSION_IDENTIFIER);
-  strcat(sessionid, zone);
+
+  /* 
+   * Not needed anymore... the route is based on the cookie's 
+   * "path"
+   * strcat(sessionid, zone); 
+   */
+
   val = get_param(sessionid, r);
   if (val == NULL)
     val = get_cookie(sessionid, r);
