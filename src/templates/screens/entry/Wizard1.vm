@@ -54,7 +54,6 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <input type="hidden" name="templateId" value="$!templateId" />
 
-HELLO $templ.IssueId
 <div class="axial">
 #foreach ($group in $issueType.getAttributeGroups($module))
     #if ($group.Dedupe && !$group.Attributes.isEmpty())
