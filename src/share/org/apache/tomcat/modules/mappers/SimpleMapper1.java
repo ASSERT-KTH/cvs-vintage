@@ -534,7 +534,7 @@ class PrefixMapper  {
 	while( en.hasMoreElements() ) {
 	    String s=(String)en.nextElement();
 	    Container ct=(Container)vmap.prefixMappedServlets.get( s );
-	    if( ct.getContext() == ctx ) {
+	    if( ct!=null && ct.getContext() == ctx ) {
 		if(debug > 0 )
 		    ctx.log( "Remove mapping " + s ); 
 		vmap.prefixMappedServlets.remove( s );
