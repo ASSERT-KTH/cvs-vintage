@@ -39,7 +39,8 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.40 $
+*   @author <a href="bill@burkecentral.com">Bill Burke</a>
+*   @version $Revision: 1.41 $
 */
 public class EntityContainer
 extends Container
@@ -73,6 +74,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
 
    // This is the instancepool that is to be used
    protected InstancePool instancePool;
+
+   // This provides a way to find the entities that are part of a given transaction
+   // EntitySynchronizationInterceptor and InstanceSynchronization manage
+   // this instance.
+   protected TxEntityMap txEntityMap = new TxEntityMap();
 
    // This is the first interceptor in the chain. The last interceptor must be provided by the container itself
    protected Interceptor interceptor;
@@ -128,6 +134,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
    public EntityPersistenceManager getPersistenceManager()
    {
       return persistenceManager;
+   }
+
+   public TxEntityMap getTxEntityMap()
+   {
+      return txEntityMap;
    }
 
    public void setPersistenceManager(EntityPersistenceManager pm)
