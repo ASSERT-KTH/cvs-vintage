@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * hopelessly broken in this regard.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.11 2002/03/19 08:59:59 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.12 2002/03/19 09:40:56 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -111,6 +111,7 @@ public class KeyEventWorkaround
 				switch(ch)
 				{
 				case 'B':
+				case 'M':
 				case 'X':
 				case 'c':
 				case '!':
