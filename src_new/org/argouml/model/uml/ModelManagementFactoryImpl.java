@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactoryImpl.java,v 1.5 2005/02/20 15:47:14 bobtarling Exp $
+// $Id: ModelManagementFactoryImpl.java,v 1.6 2005/02/28 22:31:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 package org.argouml.model.uml;
 
+import org.apache.log4j.Logger;
+import org.argouml.kernel.Project;
 import org.argouml.model.ModelManagementFactory;
 
 import ru.novosoft.uml.MFactory;
@@ -45,6 +47,11 @@ import ru.novosoft.uml.model_management.MSubsystem;
 public class ModelManagementFactoryImpl
 	extends AbstractUmlModelFactory
 	implements ModelManagementFactory {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = Logger.getLogger(ModelManagementFactoryImpl.class);
 
     /**
      * The root model.
@@ -81,6 +88,7 @@ public class ModelManagementFactoryImpl
      * @param rootModel the new root model.
      */
     public void setRootModel(Object rootModel) {
+        LOG.info("Setting the root model to " + rootModel);
         this.rootModel = (MModel)rootModel;
     }
     

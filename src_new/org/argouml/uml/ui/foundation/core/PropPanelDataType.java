@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.62 2005/01/30 20:47:34 linus Exp $
+// $Id: PropPanelDataType.java,v 1.63 2005/02/28 22:31:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,10 +198,7 @@ public class PropPanelDataType extends PropPanelClassifier {
                             if (!match) {
                                 stereo =
                                     Model.getExtensionMechanismsFactory()
-                                        .createStereotype();
-                                Model.getCoreHelper().setName(
-                                        stereo,
-                                        "enumeration");
+                                        .buildStereotype("enumeration");
                                 Model.getCoreHelper().addOwnedElement(
                                         model,
                                         stereo);

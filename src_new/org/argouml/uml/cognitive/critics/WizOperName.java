@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.26 2005/02/13 12:55:15 mvw Exp $
+// $Id: WizOperName.java,v 1.27 2005/02/28 22:31:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ import org.argouml.model.Model;
  * </pre>
  */
 public class WizOperName extends WizMEName {
-    private static final Logger LOG = Logger.getLogger(WizMEName.class);
+    private static final Logger LOG = Logger.getLogger(WizOperName.class);
 
     private boolean possibleConstructor = false;
 
@@ -235,7 +235,7 @@ public class WizOperName extends WizMEName {
                 if (theStereotype == null) {
                     theStereotype =
                         Model.getExtensionMechanismsFactory()
-                        	.createStereotype();
+                        	.buildStereotype("create");
                     Model.getCoreHelper().setName(theStereotype, "create");
                     // theStereotype.setStereotype(???);
                     Model.getExtensionMechanismsHelper()
