@@ -92,7 +92,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.56 2002/03/15 04:07:59 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.57 2002/03/24 23:22:55 maartenc Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -427,6 +427,10 @@ public class ScarabUserImpl
                      ((Module)scarabModules.get(i)).getModuleId()) ) 
                     {
                         crit = new Criteria();
+                        if (!showDeletedModules)
+                        {
+                            crit.add(ScarabModulePeer.DELETED, 0);
+                        }
                         scarabModules = ScarabModulePeer.doSelect(crit);
                         break;
                     }
