@@ -12,10 +12,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.dom4j.Element;
 import org.jboss.aspect.AspectInitizationException;
 import org.jboss.aspect.internal.AspectSupport;
+import org.jboss.util.Classes;
 
 /**
  * The AspectDefinition holds the definition for a aspect.
@@ -69,6 +71,35 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
         v.toArray(interceptors);
 
         v.clear();
+
+		//
+		// All the interfaces listed in the 'interfaces' attribute of the 
+		// aspect xml def need to be be exposed.
+		// 
+		ClassLoader cl = Classes.getContextClassLoader();        
+        if (xml.attribute(ATTR_INTERFACES) != null) {
+            String interfaces = xml.attribute(ATTR_INTERFACES).getValue();
+			String ilist[] = splitTrimmed(interfaces, ",");
+            for (int j = 0; j < ilist.length; j++)
+            {
+                Class t;
+                try
+                {
+                    t = cl.loadClass(ilist[j]);
+	                if (!v.contains(t))
+	                    v.add(t);
+                }
+                catch (ClassNotFoundException e)
+                {
+                	throw new AspectInitizationException("Could not load interface: "+ilist[j],e);
+                }
+            }
+        }
+        
+		//
+		// All the interfaces that interceptors expose need to also be
+		// added to the list of exposed interfaces.
+		// 
         for (int i = 0; i < interceptors.length; i++)
         {
             Class x[] = interceptors[i].getInterfaces();
@@ -85,6 +116,28 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
         v.toArray(interfaces);
 
     }
+
+    /**
+     * Method split.
+     * @param interfaces
+     * @param string
+     * @return String
+     */
+    private String[] splitTrimmed(String s, String delimiter)
+    {
+    	ArrayList v = new ArrayList();
+    	StringTokenizer st = new StringTokenizer(s, delimiter, false);
+    	while( st.hasMoreElements() ) {
+    		String t = st.nextToken().trim();
+    		if( t.length() == 0 )
+    			continue;
+    		v.add( t );
+    	}
+    	String rc[] = new String[v.size()];
+    	v.toArray(rc);
+    	return rc;
+    }
+
 
 	public AspectDefinition cloneAspectDefinition() {
         try

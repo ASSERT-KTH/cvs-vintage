@@ -8,6 +8,8 @@
  ***************************************/
 package org.jboss.aspect.spi;
 
+import gnu.regexp.RE;
+import gnu.regexp.REException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
@@ -26,10 +28,16 @@ import org.jboss.util.Classes;
 final public class AspectInterceptorHolder implements AspectDefinitionConstants, Serializable
 {
     public final AspectInterceptor interceptor;
-    
-    
-    public AspectInterceptorHolder(AspectInterceptor interceptor) {
-    	this.interceptor = interceptor;
+    public final RE methodFilter;
+
+    public AspectInterceptorHolder(AspectInterceptor interceptor)
+    {
+        this(interceptor, null);
+    }
+    public AspectInterceptorHolder(AspectInterceptor interceptor, RE methodFilter)
+    {
+        this.interceptor = interceptor;
+        this.methodFilter = methodFilter;
     }
 
     public AspectInterceptorHolder(Element xml) throws AspectInitizationException
@@ -45,6 +53,23 @@ final public class AspectInterceptorHolder implements AspectDefinitionConstants,
             throw new AspectInitizationException("Invlaid interceptor class: " + className + ": " + e);
         }
 
+        if (xml.attribute(ATTR_FILTER) != null)
+        {
+            String s = xml.attribute(ATTR_FILTER).getValue();
+            try
+            {
+                methodFilter = new RE(s);
+            }
+            catch (REException e)
+            {
+                throw new AspectInitizationException("Invalid regular expression for method filer: " + s, e);
+            }
+        }
+        else
+        {
+            methodFilter = null;
+        }
+
         interceptor.init(xml);
     }
 
@@ -55,6 +80,10 @@ final public class AspectInterceptorHolder implements AspectDefinitionConstants,
 
     public boolean isIntrestedInMethodCall(Method method)
     {
+    	if( methodFilter != null) 
+    		if( !methodFilter.isMatch(method.getName()) )
+    			return false;
+    	
         return interceptor.isIntrestedInMethodCall(method);
     }
 

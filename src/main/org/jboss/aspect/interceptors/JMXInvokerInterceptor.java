@@ -74,9 +74,9 @@ public class JMXInvokerInterceptor implements AspectInterceptor
 
         // I think that we will eventuraly get the following values out
         // of ThreadLocals instead of the DP attachments.
-        Transaction tx = (Transaction) invocation.attachments.get(TRANSACTION_KEY);
-        Principal principle = (Principal) invocation.attachments.get(PRINCIPLE_KEY);
-        Object credentials = (Object) invocation.attachments.get(CREDENTIAL_KEY);
+        Transaction tx = (Transaction) invocation.aspectAttachments.get(TRANSACTION_KEY);
+        Principal principle = (Principal) invocation.aspectAttachments.get(PRINCIPLE_KEY);
+        Object credentials = (Object) invocation.aspectAttachments.get(CREDENTIAL_KEY);
 
         // Convert the AspectInvocation into a JBoss Invocation
         Invocation jmxInvocation =

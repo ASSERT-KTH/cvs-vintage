@@ -30,5 +30,7 @@ public interface AspectDefinitionConstants
     public static final QName ATTR_NAME = new QName("name", NAMESPACE);
     public static final QName ATTR_CLASS = new QName("class", NAMESPACE);
     public static final QName ATTR_METHODS = new QName("methods", NAMESPACE);
+    public static final QName ATTR_INTERFACES = new QName("interfaces", NAMESPACE);
+    public static final QName ATTR_FILTER = new QName("filter", NAMESPACE);
 
 }

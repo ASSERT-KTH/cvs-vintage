@@ -88,7 +88,7 @@ public class AdaptorInterceptor implements AspectInterceptor, Serializable
         }
         else
         {
-            Map attachments = invocation.attachments;
+            Map attachments = invocation.aspectAttachments;
             o = attachments.get(this);
             if (o == null)
             {

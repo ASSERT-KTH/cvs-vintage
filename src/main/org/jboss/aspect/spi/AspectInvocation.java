@@ -11,6 +11,7 @@ package org.jboss.aspect.spi;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.aspect.AspectRuntimeException;
@@ -31,7 +32,9 @@ final public class AspectInvocation
     /** the aspect definition of the aspect */
     final public AspectInterceptorHolder[] interceptors;
     /** attachments that have been made against the aspect object */
-    final public Map attachments;
+    final public Map aspectAttachments;
+    /** attachments that have been made against the invocation */
+    final public Map invocationAttachments = new HashMap();
     /** the target object is the original object that the aspect was applyed to, could be null */
     final public Object targetObject;
     /** if the target object was a Proxy, then this is the InvocationHandler to the proxy */
@@ -54,7 +57,7 @@ final public class AspectInvocation
     public AspectInvocation(AspectObject handler, Object aspectObject, Method method, Object[] args)
     {
         this.interceptors = handler.definition.interceptors;
-        this.attachments = handler.attachments;
+        this.aspectAttachments = handler.attachments;
         this.targetObject = handler.targetObject;
         this.targetObjectIH = handler.targetObjectIH;
 

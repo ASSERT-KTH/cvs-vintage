@@ -72,7 +72,7 @@ public class DelegatingInterceptor implements AspectInterceptor, Serializable
         }
         else
         {
-            Map attachments = invocation.attachments;
+            Map attachments = invocation.aspectAttachments;
             delegate = attachments.get(this);
             if (delegate == null)
             {
@@ -83,7 +83,14 @@ public class DelegatingInterceptor implements AspectInterceptor, Serializable
 
         try
         {
-            return invocation.method.invoke(delegate, invocation.args);
+        	try {
+	            return invocation.method.invoke(delegate, invocation.args);
+        	} catch ( IllegalArgumentException e ) {
+        		// Could be because delegate is not an instance of 'method's declaring class.
+        		// Look up the right method in the delegate.
+        		Method method = implementingClass.getMethod(invocation.method.getName(), invocation.method.getParameterTypes());
+        		return method.invoke(delegate, invocation.args);
+        	}
         }
         catch (InvocationTargetException e)
         {
@@ -126,7 +133,7 @@ public class DelegatingInterceptor implements AspectInterceptor, Serializable
 
     public boolean isIntrestedInMethodCall(Method method)
     {
-        return exposedMethods.contains(method);
+        return exposedMethods.contains(AspectSupport.getMethodSignature(method));
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException
