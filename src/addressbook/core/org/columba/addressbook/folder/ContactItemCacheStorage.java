@@ -21,6 +21,14 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 
 /**
+ * Contact item cache storage.
+ * <p>
+ * All items needed by JTable to display a contact folder contents
+ * are cached here to allow faster loading time.
+ * <p>
+ * These items currently include a displayname, the email address
+ * and the website of a contact.
+ * 
  * @author fdietz
  *
  */

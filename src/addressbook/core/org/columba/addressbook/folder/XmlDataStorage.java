@@ -24,6 +24,9 @@ import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
 /**
+ * Datastorage implementation using a MH-style mailbox approach with
+ * one folder containing one XML file per contact.
+ * 
  * @author fdietz
  *  
  */

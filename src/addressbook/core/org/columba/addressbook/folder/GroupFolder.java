@@ -29,6 +29,10 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
 /**
+ * Group folder storing a list of contact indices.
+ * <p>
+ * This can be seen as a filtered view of a contact folder. 
+ * 
  * @author fdietz
  *  
  */

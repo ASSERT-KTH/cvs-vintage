@@ -68,6 +68,13 @@ public class AddressbookConfig {
         return path;
     }
 
+    /**
+     * Return top-level xml node from configuration 
+     * file with specified name.
+     * 
+     * @param name		name of config-file without file-ending
+     * @return			top-level xml node
+     */
     public XmlElement get(String name) {
         DefaultXmlConfig xml = getPlugin(name + ".xml");
 

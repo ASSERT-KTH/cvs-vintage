@@ -21,8 +21,9 @@ import org.columba.core.xml.XmlElement;
 
 
 /**
+ * Provides common access to the addressbook component.
+ * 
  * @author fdietz
- *
  */
 public class AddressbookFacade {
     public static XmlElement getConfigElement(String configName) {

@@ -22,12 +22,9 @@ import org.columba.core.xml.XmlElement;
 
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Top-level root folder of JTree.
+ * 
+ * @author fdietz
  */
 public class Root extends AddressbookTreeNode {
     FolderItem item;

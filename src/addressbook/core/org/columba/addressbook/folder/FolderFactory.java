@@ -23,6 +23,8 @@ import org.columba.addressbook.model.Group;
 import org.columba.core.xml.XmlElement;
 
 /**
+ * Provides static helper methods for creating new folders.
+ * 
  * @author fdietz
  *  
  */

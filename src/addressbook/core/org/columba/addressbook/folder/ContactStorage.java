@@ -20,6 +20,8 @@ package org.columba.addressbook.folder;
 import org.columba.addressbook.model.Contact;
 
 /**
+ * Contact storage facility.
+ * 
  * @author fdietz
  *  
  */

@@ -34,6 +34,12 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 
+/**
+ * Abstract base class for every contact folder.
+ * 
+ * @author fdietz
+ *
+ */
 public abstract class AbstractFolder extends AddressbookTreeNode implements
 		ContactStorage {
 

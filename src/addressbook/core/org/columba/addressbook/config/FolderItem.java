@@ -20,8 +20,9 @@ import org.columba.core.xml.XmlElement;
 
 
 /**
- * @version         1.0
- * @author
+ * Convinience wrapper for a contact folder configuration.
+ * 
+ * @author fdietz
  */
 public class FolderItem extends DefaultItem {
     /*

@@ -18,6 +18,13 @@ package org.columba.addressbook.folder;
 import org.columba.addressbook.config.FolderItem;
 
 
+/**
+ * Complete contact folder using the contact item cache storage
+ * and the xml based data storgae.
+ * 
+ * @author fdietz
+ *
+ */
 public class AddressbookFolder extends LocalFolder {
 
     public AddressbookFolder(String name, String path) {

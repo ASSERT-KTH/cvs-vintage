@@ -26,7 +26,7 @@ import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
 /**
- * Contact management.
+ * Provides contact management helper methods.
  * 
  * @author fdietz   
  */

@@ -31,6 +31,8 @@ import org.columba.core.xml.XmlNewIO;
 import org.jdom.Document;
 
 /**
+ * Contact item cache storage.
+ * 
  * @author fdietz
  *  
  */

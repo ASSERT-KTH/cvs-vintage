@@ -21,8 +21,9 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.main.AddressbookInterface;
 
 /**
+ * Contact folder-related functionality.
+ * 
  * @author fdietz
- *  
  */
 public class FolderFacade {
 
