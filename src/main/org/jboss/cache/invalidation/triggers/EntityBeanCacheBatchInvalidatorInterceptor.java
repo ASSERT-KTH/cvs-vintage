@@ -15,7 +15,7 @@ package org.jboss.cache.invalidation.triggers;
  *
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class EntityBeanCacheBatchInvalidatorInterceptor 
       extends org.jboss.ejb.plugins.AbstractInterceptor
@@ -45,8 +45,12 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
    public void stop()
    {
       this.invalMgr = null;
-      this.ig.removeReference (); // decrease the usage counter
-      this.ig = null;
+      // ig can be null if cache-invalidation is false
+      if(ig != null)
+      {
+         this.ig.removeReference (); // decrease the usage counter
+         this.ig = null;
+      }
    }
  
    // Interceptor implementation --------------------------------------
