@@ -3,7 +3,7 @@
 # Author: Kunle Odutola
 #         May 2001
 #
-# $Id: build.sh,v 1.1 2001/05/19 07:57:24 kunle Exp $
+# $Id: build.sh,v 1.2 2001/05/21 16:08:21 kunle Exp $
 #
  
 # +-------------------------------------------------------------------------+
@@ -65,6 +65,7 @@ LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/jaxp.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/xalan.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/xerces.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/bsf.jar
+LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/js.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/fop.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib/w3c.jar
 LOCAL_CLASSPATH=$LOCAL_CLASSPATH:../lib
