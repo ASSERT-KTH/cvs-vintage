@@ -116,7 +116,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
         // add new query string parameters to request
         // if names are duplicates, new values will be prepended to arrays
-        reqFacade.getRealRequest().addQueryString(queryString);
+        addQueryString(reqFacade.getRealRequest(), queryString);
 
         fRequest.setServletPath(this.lookupResult.getServletPath());
 	fRequest.setPathInfo(this.lookupResult.getPathInfo());
@@ -185,7 +185,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
         // add new query string parameters to request
         // if names are duplicates, new values will be prepended to arrays
-        reqFacade.getRealRequest().addQueryString( this.queryString );
+        addQueryString( reqFacade.getRealRequest(), this.queryString );
 
         if (reqFacade.getRealRequest().getQueryString() != null) {
 	    req.setAttribute(Constants.Attribute.QueryString,
