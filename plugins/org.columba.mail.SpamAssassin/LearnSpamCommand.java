@@ -61,7 +61,7 @@ public class LearnSpamCommand extends FolderCommand {
 
         ColumbaLogger.log.debug("creating process..");
         ipcHelper.executeCommand(ExternalToolsHelper.getSALearn() +
-            " --spam --dir" + path);
+            " --spam --dir " + path);
 
         int exitCode = ipcHelper.waitFor();
         ColumbaLogger.log.debug("exitcode=" + exitCode);
