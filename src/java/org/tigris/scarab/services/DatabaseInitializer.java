@@ -67,7 +67,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.14 2003/05/13 18:25:06 thierrylach Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.15 2003/07/25 17:18:00 thierrylach Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -173,18 +173,18 @@ public class DatabaseInitializer
                         // Oracle returns null on empty field.
                         if (key != null)
                         {
-                        	try 
-	                        {
-	                            value = Localization.getString(row[0], 
-	                                                           defaultLocale,
-	                                                           key);
-	                        }
-	                        catch (MissingResourceException e)
-	                        {
-	                            Log.get().debug("Missing database initialization "
-	                                            + "resource: " + e.getMessage());
-	                        } 
-						}
+                            try 
+                            {
+                                value = Localization.getString(row[0], 
+                                                               defaultLocale,
+                                                               key);
+                            }
+                            catch (MissingResourceException e)
+                            {
+                                Log.get().debug("Missing database initialization "
+                                                + "resource: " + e.getMessage());
+                            } 
+                        }
                         if (value != null) 
                         {
                             Object[] arg = {value};

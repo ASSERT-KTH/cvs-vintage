@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.317 2003/07/21 23:58:50 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.318 2003/07/25 17:17:59 thierrylach Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2039,25 +2039,25 @@ public class Issue
             }
             else
             {
-            	// Determine if this issue is a child to the potentialDependency
-	            Criteria crit2 = new Criteria(2)
-	                .add(DependPeer.OBSERVER_ID, getIssueId())
-	                .add(DependPeer.OBSERVED_ID, potentialDependency.getIssueId());
-	            if (hideDeleted)
-	            {
-	                crit2.add(DependPeer.DELETED, false);
-	            }
-	            List parentIssues = DependPeer.doSelect(crit2);
-            	if (!parentIssues.isEmpty())
-            	{
-            	    result = (Depend)parentIssues.get(0);
-            	}
+                // Determine if this issue is a child to the potentialDependency
+                Criteria crit2 = new Criteria(2)
+                    .add(DependPeer.OBSERVER_ID, getIssueId())
+                    .add(DependPeer.OBSERVED_ID, potentialDependency.getIssueId());
+                if (hideDeleted)
+                {
+                    crit2.add(DependPeer.DELETED, false);
+                }
+                List parentIssues = DependPeer.doSelect(crit2);
+                if (!parentIssues.isEmpty())
+                {
+                    result = (Depend)parentIssues.get(0);
+                }
             }
 
             if (result != null)
             {
-				ScarabCache.put(result, this, GET_DEPENDENCY, potentialDependency);
-			}
+                ScarabCache.put(result, this, GET_DEPENDENCY, potentialDependency);
+            }
         }
         else
         {
@@ -2382,7 +2382,7 @@ public class Issue
                         Activity a = (Activity)j.next();
                         if (a.getAttachmentId() == null && a.getDependId() == null)
                         {
-                        	newAS = new ActivitySet();
+                            newAS = new ActivitySet();
                             newAS.setTypeId(ActivitySetTypePeer.EDIT_ISSUE__PK);
                             newAS.setAttachmentId(as.getAttachmentId());
                             newAS.setCreatedBy(user.getUserId());

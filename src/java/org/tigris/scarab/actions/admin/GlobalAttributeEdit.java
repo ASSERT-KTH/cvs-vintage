@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.60 2003/07/17 21:35:39 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.61 2003/07/25 17:18:00 thierrylach Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -494,7 +494,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
             else if (lastTemplate.equals("admin,ArtifactTypeEdit.vm"))
             {
-	        Module currentModule = scarabR.getCurrentModule();
+            Module currentModule = scarabR.getCurrentModule();
                 IssueType issueType = scarabR.getIssueType();
                 if (log().isDebugEnabled())
                 {

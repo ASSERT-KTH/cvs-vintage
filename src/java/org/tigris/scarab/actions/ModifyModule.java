@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.34 2003/07/11 19:44:42 thierrylach Exp $
+ * @version $Id: ModifyModule.java,v 1.35 2003/07/25 17:17:59 thierrylach Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -132,10 +132,10 @@ public class ModifyModule extends RequireLoginFirstAction
                 }
 
                 Module origParent = me.getParent();
-				String origCode = me.getCode();
+                String origCode = me.getCode();
                 moduleGroup.setProperties(me);
                 Module newParent = me.getParent();
-				String newCode = me.getCode();
+                String newCode = me.getCode();
 
                 if (newParent.getParent() == me)
                 {
@@ -157,24 +157,24 @@ public class ModifyModule extends RequireLoginFirstAction
                 // Cascade update the code to the (denormalized) issue prefix
                 if (! newCode.equals(origCode))
                 {
-					if (me instanceof ScarabModule)
-					{
+                    if (me instanceof ScarabModule)
+                    {
                         ScarabModule sm = (ScarabModule)me;
-						List issues = sm.getIssues();
+                        List issues = sm.getIssues();
                         for (int i = 0; i < issues.size(); i++)
                         {
                             Issue issue = (Issue)issues.get(i);
                             if (! issue.getIdPrefix().equals(me.getCode()))
                             {
-								issue.setIdPrefix(me.getCode());
-								issue.save();
+                                issue.setIdPrefix(me.getCode());
+                                issue.save();
                             }
                         }
-					}
-					else
-					{
-						throw new Exception ("Did not get a ScarabModule");
-					}
+                    }
+                    else
+                    {
+                        throw new Exception ("Did not get a ScarabModule");
+                    }
                 }
                 
                 me.save();
