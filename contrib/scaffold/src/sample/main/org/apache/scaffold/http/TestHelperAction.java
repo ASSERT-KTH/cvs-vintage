@@ -1,13 +1,87 @@
+package org.apache.scaffold.http;
+
+import java.util.Locale;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.apache.cactus.ServletTestCase;
+import org.apache.cactus.WebRequest;
+
+/**
+ * Integration unit tests for <code>HelperAction</code>.
+ *
+ * @author <a href="mailto:vmassol@apache.org">Vincent Massol</a>
+ */
+public class TestHelperAction extends ServletTestCase
+{
+    /**
+     * Defines the testcase name for JUnit.
+     *
+     * @param theName the testcase's name.
+     */
+    public TestHelperAction(String theName)
+    {
+        super(theName);
+    }
+
+    /**
+     * Start the tests.
+     *
+     * @param theArgs the arguments. Not used
+     */
+    public static void main(String[] theArgs)
+    {
+        junit.swingui.TestRunner.main(new String[] {
+            TestHelperAction.class.getName()});
+    }
+
+    /**
+     * @return a test suite (<code>TestSuite</code>) that includes all methods
+     *         starting with "test"
+     */
+    public static Test suite()
+    {
+        // All methods starting with "test" will be executed in the test suite.
+        return new TestSuite(TestHelperAction.class);
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Verify that calling <code>getLocale()</code> with no locale defined in
+     * the request and no session returns the default locale.
+     */
+    public void beginGetLocaleNoLocaleInRequestNoSession(WebRequest request)
+    {
+        request.setAutomaticSession(false);
+    }
+
+    /**
+     * Verify that calling <code>getLocale()</code> with no locale defined in
+     * the request and no session returns the default locale.
+     */
+    public void testGetLocaleNoLocaleInRequestNoSession()
+    {
+        HelperAction helper = new HelperAction();
+        Locale locale = helper.getLocale(request);
+        assertEquals(Locale.getDefault(), locale);
+    }
+
+    //-------------------------------------------------------------------------
+
+}
+
 /*
- * $Header: /tmp/cvs-vintage/struts/contrib/scaffold/src/framework/main/org/apache/scaffold/util/Attic/LabelValueBean.java,v 1.2 2001/12/28 13:34:58 vmassol Exp $
- * $Revision: 1.2 $
+ * $Header: /tmp/cvs-vintage/struts/contrib/scaffold/src/sample/main/org/apache/scaffold/http/Attic/TestHelperAction.java,v 1.1 2001/12/28 13:34:58 vmassol Exp $
+ * $Revision: 1.1 $
  * $Date: 2001/12/28 13:34:58 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,73 +132,3 @@
  * <http://www.apache.org/>.
  *
  */
-
-package org.apache.scaffold.util;
-
-
-/**
- * Simple JavaBean to represent label-value pairs for use in collections
- * that are utilized by the <code>&lt;form:options&gt;</code> tag.
- *
- * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2001/12/28 13:34:58 $
- */
-
-public class LabelValueBean {
-
-
-    // ----------------------------------------------------------- Constructors
-
-
-    /**
-     * Construct a new LabelValueBean with the specified values.
-     *
-     * @param label The label to be displayed to the user
-     * @param value The value to be returned to the server
-     */
-    public LabelValueBean(String label, String value) {
-        this.label = label;
-        this.value = value;
-    }
-
-
-    // ------------------------------------------------------------- Properties
-
-
-    /**
-     * The label to be displayed to the user.
-     */
-    protected String label = null;
-
-    public String getLabel() {
-        return (this.label);
-    }
-
-
-    /**
-     * The value to be returned to the server.
-     */
-    protected String value = null;
-
-    public String getValue() {
-        return (this.value);
-    }
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    /**
-     * Return a string representation of this object.
-     */
-    public String toString() {
-        StringBuffer sb = new StringBuffer("LabelValueBean[");
-        sb.append(this.label);
-        sb.append(", ");
-        sb.append(this.value);
-        sb.append("]");
-        return (sb.toString());
-    }
-
-
-}

@@ -20,7 +20,7 @@ import org.apache.scaffold.model.ModelException;
  * retrieves detail based on the master. (A field in the
  * master record would usually match a field in the detail.)
  * @author Ted Husted
- * @version $Revision: 1.1 $ $Date: 2001/12/23 19:32:50 $
+ * @version $Revision: 1.2 $ $Date: 2001/12/28 13:34:57 $
  */
 public class MasterDetailHelper extends ModelHelper {
 
@@ -58,9 +58,9 @@ public class MasterDetailHelper extends ModelHelper {
 
 
 /*
- * $Header: /tmp/cvs-vintage/struts/contrib/scaffold/src/framework/main/org/apache/scaffold/http/Attic/MasterDetailHelper.java,v 1.1 2001/12/23 19:32:50 vmassol Exp $
- * $Revision: 1.1 $
- * $Date: 2001/12/23 19:32:50 $
+ * $Header: /tmp/cvs-vintage/struts/contrib/scaffold/src/framework/main/org/apache/scaffold/http/Attic/MasterDetailHelper.java,v 1.2 2001/12/28 13:34:57 vmassol Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/12/28 13:34:57 $
  *
  * ====================================================================
  *
@@ -88,7 +88,7 @@ public class MasterDetailHelper extends ModelHelper {
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Scaffold", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
