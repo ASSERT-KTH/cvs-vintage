@@ -20,7 +20,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -62,12 +62,11 @@ public class NamingService
    
    public void setLogging(boolean l)
    {
-      naming.setLogging(l);
    }
    
    public boolean getLogging()
    {
-      return naming.getLogging();
+       return false;
    }
    
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
