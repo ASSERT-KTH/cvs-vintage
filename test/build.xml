@@ -69,7 +69,7 @@
   <!-- Multiple xml file task def -->
   <taskdef name="multipleAnt"
     classname="org.objectweb.util.ant.MultipleAnt"
-    classpath="${test.config}/ow_util_ant_tasks.jar"/>
+    classpath="${config}/ow_util_ant_tasks.jar"/>
 
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
