@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/graphedit/demo
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.1 1998/01/26 22:19:26 jrobbins Exp $
+# $Id: Makefile,v 1.2 1998/02/11 22:29:19 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -28,8 +28,8 @@ CLASSES = \
 	BasicApplication.class \
 	FlexibleApplet.class \
 	EquipmentApplet.class \
-	SampleArc.class \
-	SampleArc2.class \
+	SampleEdge.class \
+	SampleEdge2.class \
 	SampleNode.class \
 	SampleNode2.class \
 	SamplePort.class \
@@ -41,8 +41,8 @@ CLASSES = \
 	NodeWall.class \
 	PortData.class \
 	PortPower.class \
-	ArcData.class \
-	ArcPower.class
+	EdgeData.class \
+	EdgePower.class
 
 
 
