@@ -65,7 +65,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.58 $</tt>
+ * @version <tt>$Revision: 1.59 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -752,19 +752,6 @@ public class JMSContainerInvoker
    
    protected void destroyService() throws Exception
    {
-      // Take down DLQ
-      try
-      {
-         if (dlqHandler != null)
-         {
-            dlqHandler.destroy();
-            dlqHandler = null;
-         }
-      }
-      catch (Exception e)
-      {
-         log.error("Failed to close the dlq handler", e);
-      }
 
       // close the connection consumer
       try
@@ -804,6 +791,20 @@ public class JMSContainerInvoker
          {
             log.error("Failed to close connection", e);
          }
+      }
+
+      // Take down DLQ
+      try
+      {
+         if (dlqHandler != null)
+         {
+            dlqHandler.destroy();
+            dlqHandler = null;
+         }
+      }
+      catch (Exception e)
+      {
+         log.error("Failed to close the dlq handler", e);
       }
    }
 
