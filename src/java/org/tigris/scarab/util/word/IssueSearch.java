@@ -636,7 +636,6 @@ public class IssueSearch
     private void addIssueIdRange(Criteria crit)
         throws ScarabException, Exception
     {
-        System.out.println("minId=" + minId + " maxId=" + maxId);
         // check limits to see which ones are present
         // if neither are present, do nothing
         if ( (minId != null && minId.length() != 0)
@@ -730,16 +729,24 @@ public class IssueSearch
         Date date = null;
         if ( dateString != null ) 
         {
-            try
+            if ( dateString.indexOf(':') == -1 )
             {
-                date = DATE_FORMATTER.parse(dateString);
-                // add 24 hours to max date so it is inclusive
-                if ( addTwentyFourHours ) 
-                {                
-                    date.setTime(date.getTime() + 86399999);
+                try
+                {
+                    date = DATE_FORMATTER.parse(dateString);
+                    // add 24 hours to max date so it is inclusive
+                    if ( addTwentyFourHours ) 
+                    {                
+                        date.setTime(date.getTime() + 86399999);
+                    }
+                }
+                catch (Exception ee)
+                {
+                    // ignore/debug
+                    ee.printStackTrace();
                 }
             }
-            catch (Exception e)
+            else
             {
                 try
                 {
@@ -752,6 +759,7 @@ public class IssueSearch
                 }
             }
         }
+        
         return date;
     }
 
@@ -927,7 +935,8 @@ public class IssueSearch
                     // might want to log user error here
                 }
             }
-            crit.add(ActivityPeer.ATTRIBUTE_ID, getStateChangeAttributeId());
+            //crit.add(ActivityPeer.ATTRIBUTE_ID, getStateChangeAttributeId());
+            crit.addJoin(IssuePeer.ISSUE_ID, ActivityPeer.ISSUE_ID);
 
             // add dates, if given
             Date minUtilDate = parseDate(getStateChangeFromDate(), false);
@@ -973,6 +982,7 @@ public class IssueSearch
         // state change query
         addStateChangeQuery(crit);
 
+        /* not ready yet
         // Add any order by clause
         if ( getInitialSortAttributeId() != null ) 
         {
@@ -980,11 +990,12 @@ public class IssueSearch
             // columns
             IssuePeer.addSelectColumns(crit);
             crit.addSelectColumn(RModuleOptionPeer.PREFERRED_ORDER);
-            /*
+            
             option_id = 
             attribute_id= getInitialSortAttributeId()
-            */
+            
         }
+        */
 
         // get matching issues
         List matchingIssues = IssuePeer.doSelect(crit);

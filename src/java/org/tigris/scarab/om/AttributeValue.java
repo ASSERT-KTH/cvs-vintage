@@ -227,7 +227,7 @@ public abstract class AttributeValue
         // save the last saved value
         if ( !isNew() && !oldOptionIdIsSet ) 
         {
-            oldOptionId = getOptionId();
+            oldOptionId = new NumberKey(getOptionId());
             oldOptionIdIsSet = true;
         }
         super.setOptionId(optionId);
