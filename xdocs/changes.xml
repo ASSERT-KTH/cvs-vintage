@@ -7,6 +7,10 @@
 
   <body>
     <release version="b19" date="in cvs">  
+      <action dev="epugh" type="fix">
+        Updated Scarab to use the latest Turbine 3.  Turbine 3 (and T2.3) use a log4j.properties file for
+        configuring logging.  Fixes the logs not showing up problem.
+      </action>       
       <action dev="epugh" type="update">
         Removed references to Turbine Scheduler that wasn't used.
       </action>      
