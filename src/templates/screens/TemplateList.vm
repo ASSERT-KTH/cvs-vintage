@@ -24,15 +24,16 @@ $page.setTitle("Template list")
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
 
+#if ($noTemplates.equals("false"))
 #TemplateListBar("")
+#end
 
 <h3>Templates</h3>
 
 #if ($noTemplates.equals("true"))
     <p><strong class="alert">
-    There are no stored templates, click <a
-    href="$link.setPage("SaveTemplate.vm")">here</a> to create a new
-    one.
+    There are no stored templates, click the Create new button to create
+    a new template.
     </strong></p>
 #else
   
@@ -43,7 +44,7 @@ $page.setTitle("Template list")
   <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
   <th>Template name</th>
-  <th>Template desc</th>
+  <th>Template description</th>
   <th>Location</th>
   <th>Created by</th>
   </tr>
@@ -125,8 +126,9 @@ $page.setTitle("Template list")
   #end
 </div>
 
-
+#if ($noTemplates.equals("false"))
 #TemplateListBar("2")
+#end
 
 </form>
 </div>

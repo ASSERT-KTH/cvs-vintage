@@ -43,7 +43,7 @@ $page.setTitle("Save/edit template")
   </td>
 </tr>
 <tr>
-  <th>Template descr</th>
+  <th>Template description</th>
   <td>
   #textAreaMedium("$templateGroup.Description.Key" $templateGroup.Description)
   </td>
@@ -105,6 +105,10 @@ $page.setTitle("Save/edit template")
  </tr>
 #end
 </table>
+</div>
+
+<div class="functnbar3">
+<input type="submit" value="Save changes" name="eventSubmit_doSubmit" />
 </div>
 
 #SaveTemplateBar("2")
