@@ -194,9 +194,11 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	    // cookie. We must check for validity in the current context.
 	    Context ctx=request.getContext();
 	    SessionManager sM = ctx.getSessionManager();    
-	    if(null != sM.findSession(ctx, sessionId)) {
-		sM.accessed(ctx, request, sessionId );
+	    HttpSession sess= sM.findSession( sessionId );
+	    if(null != sess) {
+		sM.accessed( sess );
 		request.setRequestedSessionId(sessionId);
+		request.setSession( sess );
 		if( debug>0 ) cm.log(" Final session id " + sessionId );
 		return sessionId;
 	    }
@@ -250,7 +252,7 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	throws TomcatException
     {
 	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
-	ctx.getSessionManager().removeSessions(ctx);
+	ctx.getSessionManager().removeSessions();
     }
 
 

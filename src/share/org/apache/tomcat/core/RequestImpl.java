@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.33 2000/05/12 02:19:59 costin Exp $
- * $Revision: 1.33 $
- * $Date: 2000/05/12 02:19:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.34 2000/05/12 06:15:23 costin Exp $
+ * $Revision: 1.34 $
+ * $Date: 2000/05/12 06:15:23 $
  *
  * ====================================================================
  *
@@ -433,7 +433,7 @@ public class RequestImpl  implements Request {
 	// if the interceptors found a request id, use it
 	if( reqSessionId != null ) {
 	    // we have a session !
-	    serverSession=sM.findSession( context, reqSessionId );
+	    serverSession=sM.findSession( reqSessionId );
 	    if( serverSession!=null) return serverSession;
 	}
 
@@ -441,7 +441,7 @@ public class RequestImpl  implements Request {
 	    return null;
 
 	// no session exists, create flag
-	serverSession =sM.createSession( context );
+	serverSession =sM.createSession( );
 	reqSessionId = serverSession.getId();
 
 	// XXX XXX will be changed - post-request Interceptors

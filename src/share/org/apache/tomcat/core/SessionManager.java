@@ -74,6 +74,8 @@ import javax.servlet.http.*;
  */
 public interface SessionManager {
 
+    public void setContext( Context ctx );
+    
     /**
      * Construct and return a new session object, based on the default
      * settings specified by this Manager's properties.  The session
@@ -85,20 +87,14 @@ public interface SessionManager {
      * @exception IllegalStateException if a new session cannot be
      *  instantiated for any reason
      */
-    public HttpSession createSession(Context ctx);
+    public HttpSession createSession();
 
 
     /** Will mark the session lastAccess time.
      *  Will be called for each request that has a valid sessionId
      *
-     *  A simple SessionManager will just use the id, a complex
-     * manager may use the ctx and req to do additional work.
-     *
-     * @param ctx the context where the request belong
-     * @param req the request having the id
-     * @param id
      */
-    public void accessed(Context ctx, Request req, String id);
+    public void accessed(HttpSession s);
     //  we can pass only Request, as it contains both, but it's better to
     // show explicitely what this method uses.
 
@@ -115,12 +111,12 @@ public interface SessionManager {
      * @exception IllegalStateException if a new session cannot be
      *  instantiated for any reason
      */
-    public HttpSession findSession(Context ctx, String id);
+    public HttpSession findSession(String id);
 
 
     /** Used by context when stoped, need to remove all sessions used by that context
      */
-    public void removeSessions( Context ctx );
+    public void removeSessions();
 
     /**
      * Used by context to configure the session manager's inactivity timeout.

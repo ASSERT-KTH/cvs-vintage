@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.4 2000/05/12 02:31:58 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/12 02:31:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.5 2000/05/12 06:15:24 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/12 06:15:24 $
  *
  * ====================================================================
  *
@@ -103,12 +103,20 @@ import org.apache.tomcat.core.*;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.4 $ $Date: 2000/05/12 02:31:58 $
+ * @version $Revision: 1.5 $ $Date: 2000/05/12 06:15:24 $
  */
 
-public final class StandardManager implements Runnable {
+public final class StandardManager implements Runnable, SessionManager {
+    public StandardManager() {
+	try {
+	    start();
+	} catch( Exception ex ) {
+	}
+    }
+
     // ----------------------------------------------------- Instance Variables
 
+    Context ctx;
 
     /**
      * The Container with which this Manager is associated.
@@ -152,6 +160,9 @@ public final class StandardManager implements Runnable {
 
     // ------------------------------------------------------------- Properties
 
+    public void setContext( Context ctx ) {
+	this.ctx=ctx;
+    }
 
     /**
      * Return the Container with which this Manager is associated.
@@ -238,6 +249,18 @@ public final class StandardManager implements Runnable {
 
     // --------------------------------------------------------- Public Methods
 
+    /**
+     * Mark the specified session's last accessed time.  This should be
+     * called for each request by a RequestInterceptor.
+     *
+     * @param session The session to be marked
+     */
+    public void accessed( HttpSession session ) {
+	if( session == null) return;
+	if (session instanceof StandardSession)
+	    ((StandardSession) session).access();
+    }
+
 
     /**
      * Return the active Session, associated with this Manager, with the
@@ -252,15 +275,50 @@ public final class StandardManager implements Runnable {
      * @exception IOException if an input/output error occurs while
      *  processing this request
      */
-    public HttpSession findSession(String id) throws IOException {
-
+    public HttpSession findSession(String id) {
+	
 	if (id == null)
 	    return (null);
 	return ((HttpSession) sessions.get(id));
+    }
+
+    /**
+     * Remove all sessions because our associated Context is being shut down.
+     *
+     * @param ctx The context that is being shut down
+     */
+    public void removeSessions() {
+
+	// XXX XXX a manager may be shared by multiple
+	// contexts, we just want to remove the sessions of ctx!
+	// The manager will still run after that ( i.e. keep database
+	// connection open
+	try {
+	    stop();
+	} catch (TomcatException e) {
+	    throw new IllegalStateException("" + e);
+	}
 
     }
 
+    /**
+     * Used by context to configure the session manager's inactivity timeout.
+     *
+     * The SessionManager may have some default session time out, the
+     * Context on the other hand has it's timeout set by the deployment
+     * descriptor (web.xml). This method lets the Context conforgure the
+     * session manager according to this value.
+     *
+     * @param minutes The session inactivity timeout in minutes.
+     */
+    public void setSessionTimeOut(int minutes) {
+        if(-1 != minutes) {
+            // The manager works with seconds...
+            setMaxInactiveInterval(minutes * 60);
+        }
+    }
 
+    
     /**
      * Return the set of active Sessions associated with this Manager.
      * If this Manager has no active Sessions, a zero-length array is returned.
@@ -468,70 +526,6 @@ public final class StandardManager implements Runnable {
 	session.setId(SessionUtil.generateSessionId());
 
 	return (session);
-    }
-
-
-    // ------------------------------------------------------ Lifecycle Methods
-
-
-    /**
-     * Configure this component, based on the specified configuration
-     * parameters.  This method should be called immediately after the
-     * component instance is created, and before <code>start()</code>
-     * is called.
-     *
-     * @param parameters Configuration parameters for this component
-     *  (<B>FIXME: What object type should this really be?)
-     *
-     * @exception IllegalStateException if this component has already been
-     *  configured and/or started
-     * @exception TomcatException if this component detects a fatal error
-     *  in the configuration parameters it was given
-     */
-    public void configure(Node parameters)
-	throws TomcatException {
-
-	// Validate and update our current component state
-	if (configured)
-	    throw new TomcatException
-		(sm.getString("standardManager.alreadyConfigured"));
-	configured = true;
-	if (parameters == null)
-	    return;
-
-	// Parse and process our configuration parameters
-	if (!("Manager".equals(parameters.getNodeName())))
-	    return;
-	NamedNodeMap attributes = parameters.getAttributes();
-	Node node = null;
-
-	node = attributes.getNamedItem("checkInterval");
-	if (node != null) {
-	    try {
-		setCheckInterval(Integer.parseInt(node.getNodeValue()));
-	    } catch (Throwable t) {
-		;	// XXX - Throw exception?
-	    }
-	}
-
-	node = attributes.getNamedItem("maxActiveSessions");
-	if (node != null) {
-	    try {
-		setMaxActiveSessions(Integer.parseInt(node.getNodeValue()));
-	    } catch (Throwable t) {
-		;	// XXX - Throw exception?
-	    }
-	}
-
-	node = attributes.getNamedItem("maxInactiveInterval");
-	if (node != null) {
-	    try {
-		setMaxInactiveInterval(Integer.parseInt(node.getNodeValue()));
-	    } catch (Throwable t) {
-		;	// XXX - Throw exception?
-	    }
-	}
-
     }
 
 
