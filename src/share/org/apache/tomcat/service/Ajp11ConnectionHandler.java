@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.2 1999/10/19 23:38:32 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/19 23:38:32 $
  *
  * ====================================================================
  *
@@ -110,7 +110,6 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 	    AJPRequest request = new AJPRequest(socket); // todo: clean ConnectionHandler, make it abstract
 	    AJPResponse response = new AJPResponse();
             response.setOutputStream(socket.getOutputStream());
-        
 	    int count = 1;
 
 	    request.setResponse(response);

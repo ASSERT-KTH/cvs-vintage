@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.1 1999/10/09 00:30:16 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.2 1999/10/19 23:38:31 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/19 23:38:31 $
  *
  * ====================================================================
  *
@@ -290,12 +290,29 @@ public class ResponseImpl extends Response {
             Cookie c  = (Cookie)cookieEnum.nextElement();
             headers.putHeader( CookieTools.getCookieHeaderName(c),
 			       CookieTools.getCookieHeaderValue(c));
+	    if( c.getVersion() == 1 ) {
+		// add a version 0 header too.
+		// XXX what if the user set both headers??
+		Cookie c0 = (Cookie)c.clone();
+		c0.setVersion(0);            
+		headers.putHeader( CookieTools.getCookieHeaderName(c0),
+				   CookieTools.getCookieHeaderValue(c0));
+	    }
         }
+	// XXX duplicated code, ugly
         cookieEnum = userCookies.elements();
         while (cookieEnum.hasMoreElements()) {
             Cookie c  = (Cookie)cookieEnum.nextElement();
             headers.putHeader( CookieTools.getCookieHeaderName(c),
 			       CookieTools.getCookieHeaderValue(c));
+	    if( c.getVersion() == 1 ) {
+		// add a version 0 header too.
+		// XXX what if the user set both headers??
+		Cookie c0 = (Cookie)c.clone();
+		c0.setVersion(0);            
+		headers.putHeader( CookieTools.getCookieHeaderName(c0),
+				   CookieTools.getCookieHeaderValue(c0));
+	    }
         }
 	// XXX
         // do something with content encoding here

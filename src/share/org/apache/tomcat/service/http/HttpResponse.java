@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponse.java,v 1.1 1999/10/09 00:20:49 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponse.java,v 1.2 1999/10/19 23:38:32 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/19 23:38:32 $
  *
  * ====================================================================
  *
@@ -128,7 +128,7 @@ public class HttpResponse extends ResponseImpl  {
         int size = headers.size();
         for (int i = 0; i < size; i++) {
             MimeHeaderField h = headers.getField(i);
-            buf.append(h + "\r\n");
+            buf.append(h).append("\r\n");
         }
         buf.append("\r\n");
         
