@@ -16,59 +16,87 @@
 
 package org.columba.mail.gui.config.filter.plugins;
 
+import java.awt.Component;
+
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
+import org.columba.mail.util.MailResourceLoader;
 
-public class MarkActionRow extends DefaultActionRow
-{
+/**
+ * Mark message filter action.
+ * 
+ *
+ * @author fdietz
+ */
+public class MarkActionRow extends DefaultActionRow {
+	JComboBox variantComboBox;
 
-	
-    public MarkActionRow( ActionList list, FilterAction action )
-    {
-        super( list, action );
+	public MarkActionRow(ActionList list, FilterAction action) {
+		super(list, action);
 
-    }
-	
-	
-    public void updateComponents( boolean b)
-    {
-        super.updateComponents( b );
+	}
 
+	public void updateComponents(boolean b) {
+		super.updateComponents(b);
 
-    }
+		if (b) {
+			String variant = filterAction.getMarkVariant();
+			
+			// use "mark as read" as default fallback mechanism
+			if ( variant == null ) variant = "read";
+			
+			variantComboBox.setSelectedItem(variant);
+		} else {
+			filterAction.setMarkVariant(
+				(String) variantComboBox.getSelectedItem());
+		}
 
+	}
 
-    public void initComponents()
-    {
-        super.initComponents();
+	public void initComponents() {
+		super.initComponents();
+		
+		String[] items=
+			{
+				"read",
+				"unread",
+				"expunged",
+				"not_expunged",
+				"flagged",
+				"not_flagged",
+				"answered",
+				"spam",
+				"no_spam" };
 
-        /*
-        c.gridx = GridBagConstraints.REMAINDER;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        Box box = Box.createHorizontalBox();
-        gridbag.setConstraints( box, c );
+		variantComboBox= new JComboBox(items);
+		variantComboBox.setRenderer(new ComboBoxRenderer());
+		
+		addComponent(variantComboBox);
 
-        add( box );
-        */
+	}
 
+	class ComboBoxRenderer extends DefaultListCellRenderer {
 
-        //validate();
-        //repaint();
-    }
+		public ComboBoxRenderer() {
+			super();
+		}
 
+		public Component getListCellRendererComponent(
+			JList arg0,
+			Object arg1,
+			int arg2,
+			boolean arg3,
+			boolean arg4) {
 
+			setText(MailResourceLoader.getString("dialog", "filter", (String) arg1));
+
+			return this;
+		}
+
+	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-

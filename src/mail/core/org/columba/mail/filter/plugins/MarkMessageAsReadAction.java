@@ -31,20 +31,44 @@ import org.columba.mail.folder.command.MarkMessageCommand;
  */
 public class MarkMessageAsReadAction extends AbstractFilterAction {
 
-	
-
 	/**
 	 * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
 	 */
-		public Command getCommand(FilterAction filterAction, Folder srcFolder, Object[] uids) throws Exception{
-		FolderCommandReference[] r = new FolderCommandReference[1];
-		r[0] = new FolderCommandReference(srcFolder, uids);
-		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+	public Command getCommand(
+		FilterAction filterAction,
+		Folder srcFolder,
+		Object[] uids)
+		throws Exception {
+		FolderCommandReference[] r= new FolderCommandReference[1];
+		r[0]= new FolderCommandReference(srcFolder, uids);
 
-		MarkMessageCommand c = new MarkMessageCommand( r);
+		String variant= filterAction.getMarkVariant();
+		if (variant.equals("read"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+		else if (variant.equals("unread"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNREAD);
+		else if (variant.equals("flagged"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
+		else if (variant.equals("not_flagged"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
+		else if (variant.equals("expunged"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+		else if (variant.equals("not_expunged"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
+		else if (variant.equals("answered"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+		else if (variant.equals("spam"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
+		else if (variant.equals("no_spam"))
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
+			
+		// if something goes wrong here, fall back to "mark as read" 
+		else
+			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+
+		MarkMessageCommand c= new MarkMessageCommand(r);
 
 		return c;
 	}
 
-	
 }

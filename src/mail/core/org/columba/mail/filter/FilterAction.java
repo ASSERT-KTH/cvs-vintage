@@ -98,5 +98,28 @@ public class FilterAction extends DefaultItem {
 		set("type", s);
 
 	}
+	
+	/**
+	 * Mark message variant can be of value:<br>
+	 * <ul>
+	 *  <li>read</li>
+	 *  <li>unread</li>
+	 *  <li>flagged</li>
+	 *  <li>not_flagged</li>
+	 *  <li>expunged</li>
+	 *  <li>not_expunged</li>
+	 *  <li>answered</li>
+	 *  <li>spam</li>
+	 *  <li>no_spam</li>
+	 * </ul>
+	 * @param s
+	 */
+	public void setMarkVariant(String s) {
+		set("markvariant", s);
+	}
+	
+	public String getMarkVariant() {
+		return get("markvariant");
+	}
 
 }
