@@ -245,17 +245,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
      */
     public int contextMap( Request req ) {
 	MessageBytes pathMB = req.requestURI();
-	if( pathMB.isNull())
-	    throw new RuntimeException("ASSERT: null path in request URI");
-	// 	if( path.indexOf("?") >=0 )
-	// 	    throw new RuntimeException("ASSERT: ? in requestURI");
-
-	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
-	    // XXX rewrite URLDecode to avoid allocation
-	    log( "Found encoded char - it should have been decoded earlier");
-	    pathMB.unescapeURL();
-	    // pathMB.setString( RequestUtil.URLDecode(pathMB.toString()) );
-	}
 	try {
 	    //	    String host=null;
 	    MessageBytes hostMB=req.serverName();
