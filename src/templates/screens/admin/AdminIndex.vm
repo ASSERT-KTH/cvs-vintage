@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.8 2001/12/06 20:49:49 elicia Exp $
+@version $Id: AdminIndex.vm,v 1.9 2001/12/07 23:29:20 dr Exp $
 *#
 
 $page.setTitle("Scarab Administration")
@@ -10,7 +10,8 @@ $page.setTitle("Scarab Administration")
 
 <h2>$page.Title</h2>
 
-#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT, $scarabR.CurrentModule))
+#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__ADMIN,$scarabR.CurrentModule))
+
 <p>
 This is the new administrative piece of Scarab (to replace Flux). At this
 point, a lot of the underlying 'action' code is a rip off of the 'Flux'
@@ -47,6 +48,10 @@ The following are some other things to do (in no particular order):
  <li> <a href="admin,ManageRoles.vm">Role List</a> </li>
  <li> <a href="admin,AddRole.vm">Add New Role</a> </li>
 </ul>
+
+#end
+
+#if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT, $scarabR.CurrentModule))
 
 <h3>Global Data</h3>
 <ul>
