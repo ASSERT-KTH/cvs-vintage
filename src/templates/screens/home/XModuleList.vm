@@ -114,7 +114,7 @@ No issue types have been selected.  Please select from the list below.
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th>$l10n.FilterString</th>
-   <td><input type="text" name="searchString" value="$searchString"/>&nbsp;
+   <td><input type="text" name="searchString" value="$searchString" />&nbsp;
      <select name="searchField" size="">
        <option value="module" #if($searchField.equals("module")) selected="selected"#end>Module</option>
        <option value="issuetype" #if($searchField.equals("issuetype")) selected="selected"#end>Issue type</option>
