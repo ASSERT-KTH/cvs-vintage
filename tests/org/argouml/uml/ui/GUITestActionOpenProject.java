@@ -1,4 +1,4 @@
-// $Id: GUITestActionOpenProject.java,v 1.2 2004/10/04 05:43:54 linus Exp $
+// $Id: GUITestActionOpenProject.java,v 1.3 2004/10/05 06:01:13 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,9 +59,8 @@ public class GUITestActionOpenProject extends TestCase {
      * Test an empty project.
      */
     public void testEmptyProject() {
-        URL url =
-            this.getClass().getClassLoader()
-                .getResource("testmodels/EmptyProject0161.zargo");
+        URL url = CheckMain.getTestModel("testmodels/EmptyProject0161.zargo");
+	
         CheckMain.callMain(new String[] {
             "-nosplash",
             "-command",
@@ -77,8 +76,8 @@ public class GUITestActionOpenProject extends TestCase {
      */
     public void testProjectWithContents() {
         URL url =
-            this.getClass().getClassLoader()
-                .getResource("testmodels/GUITestPropertyPanels.zargo");
+	    CheckMain.getTestModel("testmodels/GUITestPropertyPanels.zargo");
+
         CheckMain.callMain(new String[] {
             "-nosplash",
             "-command",
@@ -88,6 +87,5 @@ public class GUITestActionOpenProject extends TestCase {
         assertEquals("GUITestPropertyPanels",
 		ProjectManager.getManager().getCurrentProject().getBaseName());
     }
-
 }
 
