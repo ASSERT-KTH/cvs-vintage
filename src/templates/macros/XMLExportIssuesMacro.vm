@@ -89,11 +89,14 @@
             <activity>
               <id>$activity.ActivityId</id>
               <attribute>$scarabR.getAttribute($activity.AttributeId).Name</attribute>
-              #if (! ($activity.OldNumericValue.toString().equals("0") && $activity.NewNumericValue.toString().equals("0")))
-
-              <old-numeric-value>$activity.OldNumericValue</old-numeric-value>
-              <new-numeric-value>$activity.NewNumericValue</new-numeric-value>
+              #if ($activity.OldNumericValue)
+                <old-numeric-value>$activity.OldNumericValue</old-numeric-value>
               #end
+
+              #if ($activity.NewNumericValue)
+                <new-numeric-value>$activity.NewNumericValue</new-numeric-value>
+              #end
+
               #if ($activity.OldUserId)
 
               <old-user>$!scarabR.getUser($activity.OldUserId).UserName</old-user>
