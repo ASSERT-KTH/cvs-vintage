@@ -24,32 +24,40 @@ import javax.resource.spi.ConnectionRequestInfo;
 import javax.resource.spi.ManagedConnection;
 
 /**
-
-  <p>The resource adapters own ConnectionManager, used in non managed
- environments. 
-  </p>
-   <p>
- Will handle some of the houskeeping an appserver nomaly does.
- </p>
-
+ * The resource adapters own ConnectionManager, used in non-managed
+ * environments.
+ * 
+ * <p>Will handle some of the houskeeping an appserver nomaly does.
  *
- * Created: Thu Mar 29 16:09:26 2001
+ * <p>Created: Thu Mar 29 16:09:26 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
+public class JmsConnectionManager
+   implements ConnectionManager
+{
+   /**
+    * Construct a <tt>JmsConnectionManager</tt>.
+    */
+   public JmsConnectionManager() {
+      super();
+   }
 
-public class JmsConnectionManager implements ConnectionManager {
-    
-    public JmsConnectionManager() {
-	
-    }
-
-    public Object allocateConnection(ManagedConnectionFactory mcf,
-				     ConnectionRequestInfo cxRequestInfo) 
-	throws ResourceException{
-	ManagedConnection mc = mcf.createManagedConnection(null,cxRequestInfo);
-	return mc.getConnection(null,cxRequestInfo);
-
-    }
-} // JmsConnectionManager
+   /**
+    * Allocate a new connection.
+    *
+    * @param mcf
+    * @param cxRequestInfo
+    * @return                   A new connection
+    *
+    * @throws ResourceException Failed to create connection.
+    */
+   public Object allocateConnection(ManagedConnectionFactory mcf,
+                                    ConnectionRequestInfo cxRequestInfo) 
+      throws ResourceException
+   {
+      ManagedConnection mc = mcf.createManagedConnection(null, cxRequestInfo);
+      return mc.getConnection(null, cxRequestInfo);
+   }
+}
