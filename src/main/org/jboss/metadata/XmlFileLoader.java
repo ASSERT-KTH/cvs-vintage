@@ -35,7 +35,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -259,7 +259,9 @@ public class XmlFileLoader {
             registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
             registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
             registerDTD("-//JBoss//DTD JAWS//EN", "jaws.dtd");
+            registerDTD("-//JBoss//DTD JAWS 2.4//EN", "jaws_2_4.dtd");
             registerDTD("-//JBoss//DTD JBOSS//EN","jboss.dtd");
+            registerDTD("-//JBoss//DTD JBOSS 2.4//EN","jboss_2_4.dtd");
 		}
 
         /**
