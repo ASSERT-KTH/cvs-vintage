@@ -44,10 +44,6 @@
   <!-- JAAS security manager and realm mapping -->
   <mbean code="org.jboss.security.plugins.JaasSecurityManagerService" name="Security:name=JaasSecurityManager">
     <attribute name="SecurityManagerClassName">org.jboss.security.plugins.JaasSecurityManager</attribute>
-    <!--
-    <attribute name="SecurityProxyFactoryClassName">org.jboss.security.SubjectSecurityProxyFactory</attribute>
-    -->
-    <attribute name="AuthenticationCacheJndiName">SRPAuthenticationCache</attribute>
   </mbean>
 
   <!-- Uncomment to enable the XML implementation of the JAAS policy
