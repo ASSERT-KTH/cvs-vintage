@@ -1,3 +1,4 @@
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -100,6 +101,9 @@ public class Constants {
 	"javax.servlet.*",
 	"javax.servlet.http.*",
 	"javax.servlet.jsp.*",
+	// WRONG, the spec says only the above 3 should be included, but
+	// watchdog has a different opinion
+	"javax.servlet.jsp.tagext.*" 
     };
     
     /**
