@@ -49,6 +49,7 @@ package org.tigris.scarab.actions;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.collections.SequencedHashMap;
 
 // Turbine Stuff 
@@ -62,6 +63,7 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
@@ -87,7 +89,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.47 2003/04/28 16:54:58 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.48 2003/05/17 01:41:20 elicia Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -110,6 +112,7 @@ public class TemplateList extends RequireLoginFirstAction
         IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
         Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey());
         Group issueGroup = intake.get("Issue", issue.getQueryKey());
+        ActivitySet activitySet = null;
         Field name = infoGroup.get("Name");
         name.setRequired(true);
 
@@ -125,43 +128,62 @@ public class TemplateList extends RequireLoginFirstAction
             }
             else
             {
+                boolean atLeastOne = false;
                 Iterator iter = avMap.iterator();
                 if (iter.hasNext()) 
                 {
                     // Save activitySet record
-                    ActivitySet activitySet = ActivitySetManager
+                    activitySet = ActivitySetManager
                         .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
                     activitySet.save();
-
                     while (iter.hasNext()) 
                     {
                         aval = (AttributeValue)avMap.get(iter.next());
                         group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                        String value = null;
                         if (group != null)
                         {
-                            aval.startActivitySet(activitySet);
-                            group.setProperties(aval);
-                        }                
+                            if (aval instanceof OptionAttribute) 
+                            {
+                                value = group.get("OptionId").toString();
+                            }
+                            else 
+                            {
+                                value = group.get("Value").toString();
+                            }
+                            if (StringUtils.isNotEmpty(value))
+                            {
+                                atLeastOne = true;
+                                aval.startActivitySet(activitySet);
+                                group.setProperties(aval);
+                            }
+                        }
                     }
                 }
-
-                // get issue type id = the child type of the current issue type
-                issue.save();
-                info.setIssueId(issue.getIssueId());
-
-                // Save template info
-                boolean success = info.saveAndSendEmail(user, 
-                                  scarabR.getCurrentModule(), context);
-                if (success)
+                if (atLeastOne)
                 {
-                    data.getParameters().add("templateId", issue.getIssueId().toString());
-                    scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
-                }
+                    issue.setCreatedTransId(activitySet.getActivitySetId());
+                    issue.save();
+                    info.setIssueId(issue.getIssueId());
+
+                    // Save template info
+                    boolean success = info.saveAndSendEmail(user, 
+                                      scarabR.getCurrentModule(), context);
+                    if (success)
+                    {
+                        data.getParameters().add("templateId", issue.getIssueId().toString());
+                        scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
+                    }
+                    else
+                    {
+                        scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                    }
+                } 
                 else
                 {
-                    scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                    scarabR.setAlertMessage(l10n.get("AtLeastOneAttributeForTemplate"));
                 }
-            } 
+            }
         }
         else
         {
