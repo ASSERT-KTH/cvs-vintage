@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.28 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: Gutter.java,v 1.29 2003/01/14 02:09:23 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -907,12 +907,11 @@ public class Gutter extends JComponent implements SwingConstants
 		{
 			if(isMarkerHighlightEnabled())
 			{
-				int start = textArea.xyToOffset(0,y);
-				if(start == -1)
+				int line = y / textArea.getPainter().getFontMetrics().getHeight();
+				int start = textArea.getScreenLineStartOffset(line);
+				int end = textArea.getScreenLineEndOffset(line);
+				if(start == -1 || end == -1)
 					return null;
-
-				int end = textArea.getScreenLineEndOffset(
-					textArea.getScreenLineOfOffset(start));
 
 				Marker marker = textArea.getBuffer().getMarkerInRange(start,end);
 				if(marker != null)

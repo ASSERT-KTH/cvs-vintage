@@ -47,7 +47,7 @@ import org.gjt.sp.jedit.syntax.*;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.173 2003/01/14 01:27:31 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.174 2003/01/14 02:09:23 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -694,13 +694,12 @@ public class JEditTextArea extends JComponent
 								count += incr;
 						}
 
-						if(physFirstLine == 0)
+						int prevLine = foldVisibilityManager
+							.getPrevVisibleLine(physFirstLine);
+						if(prevLine == -1)
 							break;
 						else
-						{
-							physFirstLine = foldVisibilityManager
-								.getPrevVisibleLine(physFirstLine);
-						}
+							physFirstLine = prevLine;
 					}
 
 					firstLine = physicalToVirtual(physFirstLine);
