@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.10 2001/04/29 22:11:29 marcus Exp $
+// $Id: Modeller.java,v 1.11 2001/05/24 13:42:47 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -511,8 +511,12 @@ public class Modeller
 	Collection generalizations = child.getGeneralizations();
 	for(Iterator i = generalizations.iterator(); i.hasNext(); ) {
 	    mGeneralization = (MGeneralization)i.next();
-	    if(parent != mGeneralization.getParent()) {
-		child.removeGeneralization(mGeneralization);
+	    if (parent == mGeneralization.getParent()) {
+		// This is the existing generalization we were looking
+		// for.
+		break;
+            }
+	    else {
 		mGeneralization = null;
 	    }
 	}
