@@ -97,9 +97,12 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
+import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
+
 
 import org.apache.turbine.Log;
 
@@ -114,7 +117,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.31 2002/02/12 20:14:43 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.32 2002/02/13 19:59:20 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -260,6 +263,132 @@ public abstract class AbstractScarabModule
         }
         return parentModules;
     }
+
+    /**
+     * Creates new attribute group.
+     */
+    public AttributeGroup createNewGroup (IssueType issueType)
+        throws Exception
+    {
+        List groups = getAttributeGroups(issueType);
+        AttributeGroup ag = new AttributeGroup();
+
+        // Make default group name 'attribute group x' where x is size + 1
+        ag.setName("attribute group " + Integer.toString(groups.size()+1));
+        ag.setOrder(groups.size() +2);
+        ag.setModuleId(getModuleId());
+        ag.setIssueTypeId(issueType.getIssueTypeId());
+        ag.save();
+        return ag;
+    }
+
+    /**
+     * List of active attribute groups associated with this module.
+     */
+    public List getAttributeGroups(IssueType issueType)
+        throws Exception
+    {
+        return getAttributeGroups(issueType, true);
+    }
+
+    /**
+     * List of attribute groups associated with this module).
+     */
+    public List getAttributeGroups(IssueType issueType, boolean activeOnly)
+        throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(AttributeGroupPeer.MODULE_ID, getModuleId())
+            .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
+            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
+        if (activeOnly)
+        {
+            crit.add(AttributeGroupPeer.ACTIVE, true);
+        }
+        return AttributeGroupPeer.doSelect(crit);
+    }
+
+    /**
+     * Get this attribute's attribute group.
+     */
+    public AttributeGroup getAttributeGroup(IssueType issueType, 
+                                            Attribute attribute)
+        throws Exception
+    {
+        AttributeGroup group = null;
+        Criteria crit = new Criteria()
+          .add(AttributeGroupPeer.MODULE_ID, getModuleId())
+          .add(AttributeGroupPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
+          .addJoin(RAttributeAttributeGroupPeer.GROUP_ID, 
+                   AttributeGroupPeer.ATTRIBUTE_GROUP_ID)
+          .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
+               attribute.getAttributeId());
+        List results = AttributeGroupPeer.doSelect(crit);
+        if (results.size() > 0)
+        {
+            group = (AttributeGroup)results.get(0);
+        }
+        return group;
+    }
+         
+    /**
+     * List of active dedupe attribute groups associated with this module.
+     */
+    public List getDedupeAttributeGroups(IssueType issueType)
+        throws Exception
+    {
+        return getDedupeAttributeGroups(issueType, true);
+    }
+
+    /**
+     * List of attribute groups associated with this module.
+     */
+    public List getDedupeAttributeGroups(IssueType issueType,
+                                         boolean activeOnly)
+        throws Exception
+    {
+        List groups = getAttributeGroups(issueType, activeOnly);
+        List dedupeGroups = new ArrayList();
+        for (int i =0;i< groups.size(); i++)
+        {
+            AttributeGroup group = (AttributeGroup)groups.get(i);
+            if (group.getDedupe())
+            {
+                dedupeGroups.add(group);
+            }
+        }
+        return dedupeGroups;
+    }
+
+    /**
+     * Gets the sequence where the dedupe screen fits between groups.
+     */
+    public int getDedupeSequence(IssueType issueType)
+        throws Exception
+    {
+        int sequence = 1;
+        List groups = getAttributeGroups(issueType);
+        for (int i=1; i<=groups.size(); i++)
+        {
+            int order;
+            int previousOrder;
+            try
+            {
+                order = ((AttributeGroup)groups.get(i)).getOrder();
+                previousOrder = ((AttributeGroup)groups.get(i-1)).getOrder();
+            }
+            catch (Exception e)
+            {
+                return sequence;
+            }
+            if (order != previousOrder + 1)
+            {
+                sequence = order-1;
+                break;
+            }
+        }
+        return sequence;
+    }    
 
     /**
      * recursive helper method for getAncestors()
@@ -794,17 +923,27 @@ public abstract class AbstractScarabModule
 
     /**
      * Array of Attributes which are active and required by this module.
-     *
-     * @param inOrder flag determines whether the attribute order is important
-     * @return an <code>Attribute[]</code> value
+     * Whose attribute group's are also active.
+     * @return an <code>List</code> value
      */
-    public Attribute[] getRequiredAttributes(IssueType issueType)
+    public List getRequiredAttributes(IssueType issueType)
         throws Exception
     {
         Criteria crit = new Criteria(3)
             .add(RModuleAttributePeer.REQUIRED, true);
         addActiveAndOrderByClause(crit, issueType);
-        return getAttributes(crit);
+        Attribute[] temp =  getAttributes(crit);
+        List requiredAttributes  = new ArrayList();
+        for (int i=0; i <temp.length; i++)
+        {
+            Attribute att = (Attribute)temp[i];
+            AttributeGroup group = getAttributeGroup(issueType, att);
+            if (group != null && group.getActive())
+            {
+                requiredAttributes.add(att);
+            }
+        }
+        return requiredAttributes;
     }
 
     /**
@@ -1195,10 +1334,10 @@ try{
         rmit.save();
 
         // Create default groups
-        AttributeGroup ag = issueType.createNewGroup(this);
+        AttributeGroup ag = createNewGroup(issueType);
         ag.setOrder(1);
         ag.save();
-        AttributeGroup ag2 = issueType.createNewGroup(this);
+        AttributeGroup ag2 = createNewGroup(issueType);
         ag2.setOrder(3);
         ag2.save();
          
@@ -1336,8 +1475,7 @@ try{
             IssueType issueType = rmit1.getIssueType();
                 
             // set attribute group defaults
-            List attributeGroups = issueType
-                .getAttributeGroups(parentModule);
+            List attributeGroups = getAttributeGroups(issueType);
             for (int j=0; j<attributeGroups.size(); j++)
             {
                 ag1 = (AttributeGroup)attributeGroups.get(j);

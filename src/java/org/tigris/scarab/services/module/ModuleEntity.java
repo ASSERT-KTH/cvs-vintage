@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.57 2002/02/08 18:20:26 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.58 2002/02/13 19:59:20 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -170,8 +170,48 @@ public interface ModuleEntity
 
     public void save() throws Exception;
 
-    public List getRModuleAttributes(IssueType issueType, boolean activeOnly,
-                                     String attributeType)
+    /**
+     * Creates new attribute group.
+     */
+    public AttributeGroup createNewGroup (IssueType issueType)
+        throws Exception;
+
+    /**
+     * Returns the attribute group this attribute is associated with.
+     */
+    public AttributeGroup getAttributeGroup(IssueType issueType, 
+                                            Attribute attribute)
+        throws Exception;
+
+    /**
+     * List of active attribute groups associated with this module.
+     */
+    public List getAttributeGroups(IssueType issueType)
+        throws Exception;
+
+    /**
+     * List of attribute groups associated with this module).
+     */
+    public List getAttributeGroups(IssueType issueType, boolean activeOnly)
+        throws Exception;
+
+    /**
+     * List of active dedupe attribute groups associated with this module.
+     */
+    public List getDedupeAttributeGroups(IssueType issueType)
+        throws Exception;
+
+    /**
+     * List of attribute groups associated with this module.
+     */
+    public List getDedupeAttributeGroups(IssueType issueType,
+                                         boolean activeOnly)
+        throws Exception;
+
+    /**
+     * Gets the sequence where the dedupe screen fits between groups.
+     */
+    public int getDedupeSequence(IssueType issueType)
         throws Exception;
 
     public List getRModuleAttributes(IssueType issueType, boolean activeOnly)
@@ -300,7 +340,7 @@ public interface ModuleEntity
      * @param inOrder flag determines whether the attribute order is important
      * @return an <code>Attribute[]</code> value
      */
-    public Attribute[] getRequiredAttributes(IssueType issueType)
+    public List getRequiredAttributes(IssueType issueType)
         throws Exception;
 
     /**
