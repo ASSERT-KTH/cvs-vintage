@@ -91,7 +91,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 
         try {
             in = new BufferedInputStream(folder.getMessageSourceStream(uid));
-            tempFile = TempFileStore.createTempFile();
+            tempFile = TempFileStore.createTempFileWithSuffix("txt");
             out = new BufferedOutputStream(new FileOutputStream(tempFile));
 
             byte[] buffer = new byte[1024];
