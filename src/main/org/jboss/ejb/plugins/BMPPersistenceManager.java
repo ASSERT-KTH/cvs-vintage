@@ -31,6 +31,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.management.j2ee.CountStatistic;
 import org.jboss.management.j2ee.TimeStatistic;
+import org.apache.log4j.Category;
 
 /**
 *   <description>
@@ -39,7 +40,7 @@ import org.jboss.management.j2ee.TimeStatistic;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.30 $
+*  @version $Revision: 1.31 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -57,6 +58,8 @@ implements EntityPersistenceManager
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
+   Category log = Category.getInstance(BMPPersistenceManager.class);
+
    EntityContainer con;
 
    Method ejbLoad;
@@ -126,8 +129,24 @@ implements EntityPersistenceManager
       {
          if (methods[i].getName().equals("create"))
          {
-            createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
-            postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
+            try
+            {
+               createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
+            }
+            catch (NoSuchMethodException e)
+            {
+               log.error("Home Method " + methods[i] + " not implemented in bean class");
+               throw e;
+            }
+            try
+            {
+               postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
+            }
+            catch (NoSuchMethodException e)
+            {
+               log.error("Home Method " + methods[i] + " not implemented in bean class");
+               throw e;
+            }
          }
       }
 
@@ -136,7 +155,15 @@ implements EntityPersistenceManager
       {
          if (methods[i].getName().startsWith("find"))
          {
-            finderMethods.put(methods[i], con.getBeanClass().getMethod("ejbF" + methods[i].getName().substring(1), methods[i].getParameterTypes()));
+            try
+            {
+               finderMethods.put(methods[i], con.getBeanClass().getMethod("ejbF" + methods[i].getName().substring(1), methods[i].getParameterTypes()));
+            }
+            catch (NoSuchMethodException e)
+            {
+               log.error("Home Method " + methods[i] + " not implemented in bean class");
+               throw e;
+            }
          }
       }
    }
