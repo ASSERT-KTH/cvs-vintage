@@ -143,6 +143,8 @@ public class LogSetter extends  BaseInterceptor {
     boolean servletLogger=false;
     boolean timestamps=true;
     String tsFormat=null;
+
+    QueueLogger ql;
     
     public LogSetter() {
     }
@@ -249,8 +251,10 @@ public class LogSetter extends  BaseInterceptor {
     {
 	if( getContext() != null )
 	    return;
-	
+
+	if( debug > 0 ) log( "Stopping the logger " + name);
 	cm.getLog().flush();
+	if( ql!=null ) ql.flush();
 	// engineShutdown shouldn't be called on local modules anyway !
 
 	LogDaemon logDaemon=(LogDaemon)cm.getNote("tc.LogDaemon");
@@ -287,13 +291,12 @@ public class LogSetter extends  BaseInterceptor {
 
     }
 
-    
     private void createLogger(LogManager logManager, LogDaemon logDaemon) {
 	
 	if( debug>0) 
 	    log( "Constructing logger " + name + " " + path + " " + ctx );
 	
-	QueueLogger ql=new QueueLogger();
+	ql=new QueueLogger();
 	ql.setLogDaemon( logDaemon );
 	if( ! timestamps )
 	    ql.setTimestamp( "false" );
