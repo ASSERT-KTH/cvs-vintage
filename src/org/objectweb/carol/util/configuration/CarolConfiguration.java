@@ -382,7 +382,7 @@ public class CarolConfiguration {
             }
         }
 
-        if (multiRMI) {
+        if( multiRMI || true ) {
             // Set the system properties
             if (startRMI) {
                 jvmProps.setProperty("javax.rmi.CORBA.PortableRemoteObjectClass", CarolDefaultValues.MULTI_PROD);
