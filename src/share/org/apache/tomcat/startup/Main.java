@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.29 2001/03/05 17:38:44 larryi Exp $
+/* $Id: Main.java,v 1.30 2001/03/06 05:25:14 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -107,7 +107,7 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.29 $ $Date: 2001/03/05 17:38:44 $
+	@version $Revision: 1.30 $ $Date: 2001/03/06 05:25:14 $
  */
 public class Main{
 
@@ -220,7 +220,7 @@ public class Main{
             if( f.isDirectory() ){
                     path +="/";
             }
-            return new URL( "file", null, path );
+            return new URL( "file", "", path );
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
@@ -281,7 +281,7 @@ public class Main{
             for(int i=0; i < serverUrlV.size();i++){
                 serverJars.addElement(serverUrlV.elementAt(i));
             }
-            serverJars.addElement( new URL( "file", null ,
+            serverJars.addElement( new URL( "file", "" ,
                 System.getProperty( "java.home" ) + "/../lib/tools.jar"));
 
             Vector commonDirJars = getClassPathV(getCommonDir());
@@ -392,7 +392,7 @@ public class Main{
                 if(f.isDirectory()){
                         path += "/";
                 }
-                URL url = new URL("file",null,path);
+                URL url = new URL("file","",path);
                 if(!jars.contains(url)){
                         jars.addElement(url);
                 }
