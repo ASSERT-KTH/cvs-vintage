@@ -1,4 +1,4 @@
-// $Id: UMLModelElementCachedListModel.java,v 1.18 2004/09/13 19:21:23 mvw Exp $
+// $Id: UMLModelElementCachedListModel.java,v 1.19 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,16 +42,29 @@ public abstract class UMLModelElementCachedListModel
      * 
      * @param container the container
      * @param property the property
-     * @param showNone
+     * @param showNone true if we have to show "none" for elements without name
      */
     public UMLModelElementCachedListModel(UMLUserInterfaceContainer container, 
             String property, boolean showNone) {
         super(container, property, showNone);
     }
 
+    /**
+     * Reset the cache.
+     */
     protected abstract void resetCache();
+    
+    /**
+     * @return the cache
+     */
     protected abstract java.util.List getCache();
+    
+    /**
+     * @param obj the given class
+     * @return
+     */
     public abstract boolean isProperClass(Object obj);
+    
     abstract Collection getRawCollection();
 
     java.util.Collection createCollection(int initialSize) {

@@ -1,4 +1,4 @@
-// $Id: UMLStimulusListModel.java,v 1.9 2004/04/27 08:20:14 thn Exp $
+// $Id: UMLStimulusListModel.java,v 1.10 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,20 +30,33 @@ import org.argouml.model.ModelFacade;
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
  *             replaced by ?,
- *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             this class is part of the 'old'(pre 0.13.*) 
+ *             implementation of proppanels
  *             that used reflection a lot.
  */
 public class UMLStimulusListModel extends UMLModelElementListModel  {
 
     // list of sent or received stimuli
-    private String stimulusType;
+    private String theStimulusType;
 
-    public UMLStimulusListModel(UMLUserInterfaceContainer container, String property, boolean showNone, String stimulusType) {
+    /**
+     * The constructor.
+     * 
+     * @param container the container of UML user interface components
+     * @param property the property
+     * @param showNone true if we have to show "none" when there is no name
+     * @param stimulusType the type of the stimulus
+     */
+    public UMLStimulusListModel(UMLUserInterfaceContainer container, 
+            String property, boolean showNone, String stimulusType) {
 	super(container, property, showNone);
-	this.stimulusType = stimulusType;
+	this.theStimulusType = stimulusType;
 
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel#open(int)
+     */
     public void open(int index) {
         Object/*MModelElement*/ stimulus = getModelElementAt(index);
         if (stimulus != null) {
@@ -52,6 +65,9 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
     }
 
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel#recalcModelElementSize()
+     */
     protected int recalcModelElementSize() {
         int size = 0;
         Collection stimuli = getStimuli();
@@ -61,11 +77,14 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
         return size;
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementListModel#getModelElementAt(int)
+     */
     protected Object getModelElementAt(int index) {
         Object/*MModelElement*/ elem = null;
         Collection stimuli = getStimuli();
         if (stimuli != null) {
-            elem = elementAtUtil(stimuli, index, (Class)ModelFacade.STIMULUS);
+            elem = elementAtUtil(stimuli, index, (Class) ModelFacade.STIMULUS);
         }
         return /*(MModelElement)*/ elem;
     }
@@ -73,9 +92,9 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
     private Collection getStimuli() {
 	Object/*MObject*/ obj = getTarget();
 	Collection stimuli = null;
-        if (stimulusType.equals("sent") ) {
+        if (theStimulusType.equals("sent") ) {
 	    stimuli = ModelFacade.getStimuli3(obj);
-	} else if (stimulusType.equals("received") ) {
+	} else if (theStimulusType.equals("received") ) {
 	    stimuli = ModelFacade.getStimuli2(obj);
   	}
 	return stimuli;
@@ -86,7 +105,8 @@ public class UMLStimulusListModel extends UMLModelElementListModel  {
 
 
     /**
-     * @see org.argouml.uml.ui.UMLModelElementListModel#buildPopup(JPopupMenu, int)
+     * @see org.argouml.uml.ui.UMLModelElementListModel#buildPopup(
+     * JPopupMenu, int)
      */
     public boolean buildPopup(JPopupMenu popup, int index) {
 	return false;

@@ -1,4 +1,4 @@
-// $Id: UMLConditionExpressionModel.java,v 1.1 2004/07/31 08:31:57 mkl Exp $
+// $Id: UMLConditionExpressionModel.java,v 1.2 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
@@ -35,6 +36,15 @@ import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
  */
 public class UMLConditionExpressionModel extends UMLExpressionModel2 {
 
+    private static final Logger LOG =
+        Logger.getLogger(UMLConditionExpressionModel.class);
+    
+    /**
+     * The constructor.
+     * 
+     * @param container the container of UML user interface components
+     * @param propertyName the name of the property
+     */
     public UMLConditionExpressionModel(UMLUserInterfaceContainer container,
             String propertyName) {
         super(container, propertyName);
@@ -45,7 +55,7 @@ public class UMLConditionExpressionModel extends UMLExpressionModel2 {
      */
     public Object getExpression() {
         LOG.debug("getting condition");
-        return ModelFacade.getCondition(_container.getTarget());
+        return ModelFacade.getCondition(getContainer().getTarget());
     }
 
     /**
@@ -54,7 +64,7 @@ public class UMLConditionExpressionModel extends UMLExpressionModel2 {
     public void setExpression(Object expression) {
         LOG.debug("setting condidtion");
         LOG.debug(expression);
-        ModelFacade.setCondition(_container.getTarget(), expression);
+        ModelFacade.setCondition(getContainer().getTarget(), expression);
     }
 
     /**
@@ -62,7 +72,7 @@ public class UMLConditionExpressionModel extends UMLExpressionModel2 {
      */
     public Object newExpression() {
         LOG.debug("new boolean expression");
-        return new MBooleanExpression("","");
+        return new MBooleanExpression("", "");
     }
 
 }

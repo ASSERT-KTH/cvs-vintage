@@ -1,4 +1,4 @@
-// $Id: UMLLinkedList.java,v 1.16 2004/07/31 08:31:57 mkl Exp $
+// $Id: UMLLinkedList.java,v 1.17 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,24 +41,30 @@ import javax.swing.event.ListSelectionListener;
  */
 public class UMLLinkedList extends UMLList2 implements ListSelectionListener {
     
-    private UMLLinkMouseListener _mouseListener;
+    private UMLLinkMouseListener mouseListener;
 
     /**
      * Constructor for UMLLinkedList.
-     *
-     * @param dataModel
+     * 
+     * @param dataModel the data model
+     * @param showIcon true if an icon should be shown
      */
-    public UMLLinkedList(
-        UMLModelElementListModel2 dataModel, boolean showIcon) {
+    public UMLLinkedList(UMLModelElementListModel2 dataModel, 
+            boolean showIcon) {
         super(dataModel, new UMLLinkedListCellRenderer(showIcon));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setForeground(Color.blue);
         setSelectionForeground(Color.blue.darker());
-        _mouseListener = new UMLLinkMouseListener(this);
-        addMouseListener(_mouseListener);
+        mouseListener = new UMLLinkMouseListener(this);
+        addMouseListener(mouseListener);
         addListSelectionListener(this);
     }
     
+    /**
+     * The constructor.
+     * 
+     * @param dataModel the data model
+     */
     public UMLLinkedList(UMLModelElementListModel2 dataModel) {
         this(dataModel, true);
     }
@@ -75,6 +81,6 @@ public class UMLLinkedList extends UMLList2 implements ListSelectionListener {
      */
     public void valueChanged(ListSelectionEvent e) {       
         super.valueChanged(e);
-        _mouseListener.setSelectedValue(getSelectedValue());
+        mouseListener.setSelectedValue(getSelectedValue());
     }
 }

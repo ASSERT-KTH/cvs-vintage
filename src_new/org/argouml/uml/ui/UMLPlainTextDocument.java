@@ -1,4 +1,4 @@
-// $Id: UMLPlainTextDocument.java,v 1.24 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLPlainTextDocument.java,v 1.25 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,11 +79,11 @@ public abstract class UMLPlainTextDocument
      * Constructor for UMLPlainTextDocument. This takes a panel to set the
      * thirdpartyeventlistener to the given list of events to listen to.
      *
-     * @param eventName the event
+     * @param name the event
      */
-    public UMLPlainTextDocument(String eventName) {
+    public UMLPlainTextDocument(String name) {
         super();
-        setEventName(eventName);
+        setEventName(name);
     }
 
     /**

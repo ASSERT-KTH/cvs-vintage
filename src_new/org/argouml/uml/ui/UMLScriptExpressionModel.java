@@ -1,4 +1,4 @@
-// $Id: UMLScriptExpressionModel.java,v 1.1 2004/07/31 08:31:57 mkl Exp $
+// $Id: UMLScriptExpressionModel.java,v 1.2 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,12 @@ import ru.novosoft.uml.foundation.data_types.MActionExpression;
  */
 public class UMLScriptExpressionModel extends UMLExpressionModel2 {
 
+    /**
+     * The constructor.
+     * 
+     * @param container the container of UML user interface components
+     * @param propertyName the name of the property
+     */
     public UMLScriptExpressionModel(UMLUserInterfaceContainer container,
             String propertyName) {
         super(container, propertyName);
@@ -44,21 +50,21 @@ public class UMLScriptExpressionModel extends UMLExpressionModel2 {
      * @see org.argouml.uml.ui.UMLExpressionModel2#getExpression()
      */
     public Object getExpression() {
-        return ModelFacade.getScript(_container.getTarget());
+        return ModelFacade.getScript(getContainer().getTarget());
     }
 
     /**
      * @see org.argouml.uml.ui.UMLExpressionModel2#setExpression(java.lang.Object)
      */
     public void setExpression(Object expression) {
-        ModelFacade.setScript(_container.getTarget(), expression);
+        ModelFacade.setScript(getContainer().getTarget(), expression);
     }
 
     /**
      * @see org.argouml.uml.ui.UMLExpressionModel2#newExpression()
      */
     public Object newExpression() {
-        return new MActionExpression("","");
+        return new MActionExpression("", "");
     }
 
 }

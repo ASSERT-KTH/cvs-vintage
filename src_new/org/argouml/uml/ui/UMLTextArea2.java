@@ -1,4 +1,4 @@
-// $Id: UMLTextArea2.java,v 1.4 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextArea2.java,v 1.5 2004/09/14 20:12:16 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextArea2.java,v 1.4 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextArea2.java,v 1.5 2004/09/14 20:12:16 mvw Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.JTextArea;
@@ -38,12 +38,13 @@ import ru.novosoft.uml.MElementListener;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 28, 2002
  */
-public class UMLTextArea2 extends JTextArea implements MElementListener, TargettableModelView {
+public class UMLTextArea2 extends JTextArea 
+    implements MElementListener, TargettableModelView {
 
     
     /**
      * Constructor for UMLTextArea2.
-     * @param doc
+     * @param doc the plain text document
      */
     public UMLTextArea2(UMLPlainTextDocument doc) {
         super(doc);
