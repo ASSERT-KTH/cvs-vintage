@@ -133,13 +133,13 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.9 $
+	@version $Revision: 1.10 $
  */
 public class NSConfig  extends BaseJkConfig { 
 
-    public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
-    public static final String NS_CONFIG = "/conf/auto/obj.conf";
-    public static final String NSAPI_LOG_LOCATION = "/logs/nsapi_redirect.log";
+    public static final String WORKERS_CONFIG = "conf/jk/workers.properties";
+    public static final String NS_CONFIG = "conf/auto/obj.conf";
+    public static final String NSAPI_LOG_LOCATION = "logs/nsapi_redirect.log";
     /** default location of nsapi plug-in. */
     public static String NSAPI_REDIRECTOR;
     
