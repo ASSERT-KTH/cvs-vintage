@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.*;
 import java.net.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 
 // Used to stop tomcat
@@ -37,34 +38,24 @@ public class Tomcat {
     }
 
     // Set the mappings
-    void setHelper( XmlHelper xmlHelper ) {
-	xmlHelper.addMap( "module", "org.apache.tomcat.service.startup.Module", true);
-	xmlHelper.addMap( "contextManager", "org.apache.tomcat.core.ContextManager");
-	xmlHelper.addMap( "context", "org.apache.tomcat.core.Context");
-	xmlHelper.addMap( "adapter" , "httpAdapter", "org.apache.tomcat.service.http.HttpAdapter");
-	xmlHelper.addMap( "adapter" , "ajp12Adapter", "org.apache.tomcat.service.connector.Ajp12Adapter");
-	xmlHelper.addMap( "requestInterceptor" , "mapper", "org.apache.tomcat.request.MapperInterceptor");
-	xmlHelper.addMap( "requestInterceptor", "contextMapper", "org.apache.tomcat.request.ContextMapperInterceptor");
-	xmlHelper.addMap( "requestInterceptor", "session", "org.apache.tomcat.request.SessionInterceptor");
-	xmlHelper.addMap( "requestInterceptor", "simpleMapper", "org.apache.tomcat.request.SimpleMapper");
-    }
-    
-    // Set the mappings
-    void setHelperOld( XmlHelper xmlHelper ) {
-	xmlHelper.addMap( "Server", "org.apache.tomcat.server.HttpServer");
-	xmlHelper.addMap( "ContextManager", "org.apache.tomcat.core.ContextManager");
-	xmlHelper.addMap( "Context", "org.apache.tomcat.core.Context");
-	xmlHelper.addMap( "Connector", "org.apache.tomcat.core.Context");
+    void setHelper( XmlMapper xh ) {
+ 	xh.addRule( "ContextManager", xh.objectCreate("org.apache.tomcat.core.ContextManager") );
+	xh.addRule( "ContextManager", xh.setProperties() );
+	//	xh.addRule( "ContextManager", xh.setParent( "setServer" ) );
+	xh.addRule( "ContextManager", xh.addChild( "setContextManager", null) );
+	
+ 	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
+	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
+	xh.addRule( "ContextManager/Context", xh.setProperties() );
+	xh.addRule( "ContextManager/Context", xh.addChild( "addContext", null ) );
 
-	// special treatement - use name attribute as a property name in parent
-	xmlHelper.addPropertyTag( "Parameter" );
+	xh.addRule( "ContextManager/Connector", xh.objectCreate(null, "className"));
+	xh.addRule( "ContextManager/Connector", xh.setParent( "setContextManager") );
+	xh.addRule( "ContextManager/Connector", xh.addChild( "addServerConnector", "org.apache.tomcat.core.ServerConnector") );
 
-	xmlHelper.addAttributeMap( "org.apache.tomcat.server.HttpServer",
-				   "ContextManager",
-				   "contextManager");
-	xmlHelper.addAttributeMap( "org.apache.tomcat.core.Context",
-				   "ContextManager",
-				   "contextManager");
+	xh.addRule( "ContextManager/Connector/Parameter", xh.methodSetter("setProperty",2) );
+	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(0, "name") );
+	xh.addRule( "ContextManager/Connector/Parameter", xh.methodParam(1, "value") );
     }
     
     public void execute(String args[] ) throws Exception {
@@ -76,26 +67,18 @@ public class Tomcat {
 
 	File f=new File(configFile);
 
-	XmlHelper xmlHelper=new XmlHelper();
-	xmlHelper.setDebug( 0 );
+	XmlMapper xh=new XmlMapper();
+	xh.setDebug( 0 );
 	ContextManager cm=null;
-	if( configFile.indexOf("server.xml") <0 ) {
-	    // new config format
-	    setHelper( xmlHelper );
-	    cm=(ContextManager)xmlHelper.readXml(f);
-	} else {
-	    // old config format
-	    setHelperOld( xmlHelper );
-	    org.apache.tomcat.server.HttpServer server=(org.apache.tomcat.server.HttpServer)xmlHelper.readXml(f);
-	    // XXX use invocation to do start!
-	    cm=server.getContextManager();
-	}
+	setHelper( xh );
+	org.apache.tomcat.server.HttpServer server=new org.apache.tomcat.server.HttpServer();
+	xh.readXml(f,server);
+	cm=server.getContextManager();
 
 	if( doStop ) {
 	    stopTomcat(cm);
 	    return;
 	}
-	    
 	cm.start();
     }
     
