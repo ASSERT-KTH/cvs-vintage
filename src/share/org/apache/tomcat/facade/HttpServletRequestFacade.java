@@ -288,7 +288,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	    if( path==null) return null;
 	}
 
-	return request.getContext().getRequestDispatcher(path);
+	return request.getContext().getFacade().getRequestDispatcher(path);
     }
 
     /** Adapter: first elelment

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageString.java,v 1.2 2000/05/23 20:58:26 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/23 20:58:26 $
  *
  * ====================================================================
  *
@@ -75,7 +75,6 @@ import javax.servlet.ServletOutputStream;
  *
  * @author dac@eng.sun.com
  */
-
 public class MessageString extends MessageBytes {
     /**
      * The message String.

@@ -496,11 +496,11 @@ class AJP12ResponseAdapter extends HttpResponseAdapter {
     /** Override setStatus
      */
     protected void sendStatus( int status, String message)  throws IOException {
-	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-	statusSB.setLength(0);
-	statusSB.append("Status: " ).append( status ).append(" ").append(message).append("\r\n");
-	sout.write(statusSB.toString().getBytes());
-	statusSB.setLength(0);
+	printHead("Status: " );
+	printHead( String.valueOf( status ));
+	printHead( " " );
+	printHead( message );
+	printHead("\r\n");
     }
 }
 

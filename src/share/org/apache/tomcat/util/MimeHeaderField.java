@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.4 2000/05/02 19:58:41 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/02 19:58:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.5 2000/05/23 20:58:27 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/23 20:58:27 $
  *
  * ====================================================================
  *
@@ -70,11 +70,18 @@ import java.io.OutputStream;
 
 /**
  * This class is used to represent a MIME header field.
+ * It uses MessageString, and can be used in 0-GC mode ( no
+ * garbage generated unless toString() is called )
+ *
  *
  * @author dac@eng.sun.com
  * @author James Todd [gonzo@eng.sun.com]
  */
 public class MimeHeaderField {
+    public static final byte[] charval = { 
+	(byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4',
+	(byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9' 
+    };
 
     private StringManager sm =
         StringManager.getManager("org.apache.tomcat.util");
@@ -82,31 +89,26 @@ public class MimeHeaderField {
     /**
      * The header field name.
      */
-
     protected final MessageString name = new MessageString();
 
     /**
      * The header field value.
      */
-
     protected final MessageString value = new MessageString();
 
     /**
      * The header field integer value.
      */
-
     protected int intValue;
 
     /**
      * The header field Date value.
      */
-    
     protected final HttpDate dateValue = new HttpDate(0);
 
     /**
      * The header field value type.
      */
-
     protected int type = T_NULL;
 
     protected static final int T_NULL = 0;
@@ -114,22 +116,15 @@ public class MimeHeaderField {
     protected static final int T_INT  = 2;
     protected static final int T_DATE = 3;
 
-    private static final byte[] charval = { 
-	(byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4',
-	(byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9' 
-    };
-
     /**
      * Creates a new, uninitialized header field.
      */
-
     public MimeHeaderField() {
     }
 
     /**
      * Resets the header field to an uninitialized state.
      */
-
     public void reset() {
 	name.reset();
 	value.reset();
@@ -140,7 +135,6 @@ public class MimeHeaderField {
      * Sets the header field name to the specified string.
      * @param s the header field name String
      */
-
     public void setName(String s) {
 	name.setString(s);
     }
@@ -151,7 +145,6 @@ public class MimeHeaderField {
      * @param off the start offset of the bytes
      * @param len the length of the bytes
      */
-
     public void setName(byte[] b, int off, int len) {
 	name.setBytes(b, off, len);
     }
@@ -160,7 +153,6 @@ public class MimeHeaderField {
      * Sets the header field value to the specified string.
      * @param s the header field value String
      */
-
     public void setValue(String s) {
 	value.setString(s);
 	type = T_STR;
@@ -172,7 +164,6 @@ public class MimeHeaderField {
      * @param off the start offset of the bytes
      * @param len the length of the bytes
      */
-
     public void setValue(byte[] b, int off, int len) {
 	value.setBytes(b, off, len);
 	type = T_STR;
@@ -182,7 +173,6 @@ public class MimeHeaderField {
      * Sets the header field to the specified integer value.
      * @param i the header field integer value
      */
-
     public void setIntValue(int i) {
 	intValue = i;
 	type = T_INT;
@@ -192,7 +182,6 @@ public class MimeHeaderField {
      * Sets the header field date value to the specified time.
      * @param t the time in milliseconds since the epoch
      */
-
     public void setDateValue(long t) {
 	dateValue.setTime(t);
 	type = T_DATE;
@@ -201,7 +190,6 @@ public class MimeHeaderField {
     /**
      * Sets the header field date value to the current time.
      */
-
     public void setDateValue() {
 	dateValue.setTime();
 	type = T_DATE;
@@ -210,7 +198,6 @@ public class MimeHeaderField {
     /**
      * Returns the header field name as a String.
      */
-
     public String getName() {
 	return name.toString();
     }
@@ -218,7 +205,6 @@ public class MimeHeaderField {
     /**
      * Returns the header field value as a String, or null if not set.
      */
-
     public String getValue() {
 	switch (type) {
 	case T_STR:
@@ -238,7 +224,8 @@ public class MimeHeaderField {
      */
 
     public int getIntValue()
-    throws NumberFormatException {
+	throws NumberFormatException
+    {
 	switch (type) {
 	case T_INT:
 	    return intValue;
@@ -256,9 +243,9 @@ public class MimeHeaderField {
      * @return the header date value in number of milliseconds since the epoch
      * @exception IllegalArgumentException if the date format was invalid
      */
-
     public long getDateValue()
-    throws IllegalArgumentException {
+	throws IllegalArgumentException
+    {
 	switch (type) {
 	case T_DATE:
 	    return dateValue.getTime();
@@ -276,7 +263,6 @@ public class MimeHeaderField {
      * @param target - the integer to convert.  Must be in the range [0..2^31].
      * @return the number of bytes added to buf
      */
-
     private int intGetBytes(int target, byte buf[], int offset) {
 	int power = 1000000000;  // magnitude of highest digit we can handle
 	int this_digit;
@@ -309,7 +295,6 @@ public class MimeHeaderField {
      * Put the bytes for this header into buf starting at offset buf_offset.
      * @return the length of what was added
      */
-
     public int getBytes(byte buf[], int buf_offset) {
 	int len;
 	int start_pt = buf_offset;
@@ -356,7 +341,6 @@ public class MimeHeaderField {
      * @param len the length of the bytes
      * @exception IllegalArgumentException if the header format was invalid
      */
-
     public boolean parse(byte[] b, int off, int len)
     {
 	int start = off;
@@ -389,7 +373,6 @@ public class MimeHeaderField {
     /**
      * Writes this header field to the specified servlet output stream.
      */
-
     public void write(ServletOutputStream out)
     throws IOException {
 	name.write(out);
@@ -417,7 +400,6 @@ public class MimeHeaderField {
      * case is ignored in the comparison.
      * @param s the string to compare
      */
-
     public boolean nameEquals(String s) {
 	return name.equalsIgnoreCase(s);
     }
@@ -429,7 +411,6 @@ public class MimeHeaderField {
      * @param off the start offset of the bytes
      * @param len the length of the bytes
      */
-
     public boolean nameEquals(byte[] b, int off, int len) {
 	return name.equalsIgnoreCase(b, off, len);
     }
@@ -437,7 +418,6 @@ public class MimeHeaderField {
     /**
      * Returns a string representation of the header field.
      */
-
     public String toString() {
 	StringBuffer sb = new StringBuffer();
 

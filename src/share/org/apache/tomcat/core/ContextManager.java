@@ -832,7 +832,7 @@ public class ContextManager {
 	// Try a normal "error page" ( path based )
 	if( errorServlet==null && errorPath != null ) {
 	    try {
-		RequestDispatcher rd = ctx.getRequestDispatcher(errorPath);
+		RequestDispatcher rd = ctx.getFacade().getRequestDispatcher(errorPath);
 		// reset the response, keeping the status code if necessary
 		// try a forward if possible, otherwise an include
 		if (res.isBufferCommitted()) {

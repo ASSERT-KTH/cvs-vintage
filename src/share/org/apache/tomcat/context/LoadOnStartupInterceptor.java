@@ -177,7 +177,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	request.setContext(context);
 	request.getSession(true);
 	
-	RequestDispatcher rd = context.getRequestDispatcher(requestURI);
+	RequestDispatcher rd = context.getFacade().getRequestDispatcher(requestURI);
 	
 	try {
 	    rd.forward(request.getFacade(), response.getFacade());

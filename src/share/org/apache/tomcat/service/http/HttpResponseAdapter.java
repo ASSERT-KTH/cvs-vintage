@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.8 2000/04/25 17:54:26 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/04/25 17:54:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.9 2000/05/23 20:58:25 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/05/23 20:58:25 $
  *
  * ====================================================================
  *
@@ -82,21 +82,17 @@ import javax.servlet.http.*;
 public class HttpResponseAdapter extends  ResponseImpl {
     protected OutputStream sout;
 
-    // no need to create new objects/request,
-    // avoid extra String creation
-    protected StringBuffer statusSB;
-    protected StringBuffer headersSB;
-
+    protected static final int DEFAULT_HEAD_BUFFER_SIZE = 1024;
+    protected byte[] buffer = new byte[DEFAULT_HEAD_BUFFER_SIZE];
+    protected int bufferCount = 0;
+    
     public HttpResponseAdapter() {
         super();
-	statusSB=new StringBuffer();
-	headersSB=new StringBuffer();
     }
 
     public void recycle() {
 	super.recycle();
-	statusSB.setLength(0);
-	headersSB.setLength(0);
+	bufferCount=0;
     }
 
     public void setOutputStream(OutputStream os) {
@@ -110,23 +106,21 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	
 	sendStatus( status, ResponseImpl.getMessage( status ));
 
-	Enumeration e = headers.names();
-	while (e.hasMoreElements()) {
-	    String name = (String)e.nextElement();
-	    String values[] = headers.getHeaders(name);
-	    for( int i=0; i< values.length; i++ ) {
-		String value=values[i];
-		headersSB.setLength(0);
-		headersSB.append(name).append(": ").append(value).append("\r\n");
-		//		try {
-		sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
-		//		} catch( IOException ex ) {
-		//		    ex.printStackTrace();
-		//XXX mark the error - should abandon everything 
-		//}
-	    }
+	int count=headers.size();
+	for( int i=0; i<count; i++ ) {
+	    MimeHeaderField field=headers.getField( i );
+	    // response headers are set by the servlet, so probably we have only
+	    // Strings.
+	    // XXX date, cookies, etc shoud be extracted from response
+	    printHead( field.getName() );
+	    printHead(": ");
+	    printHead( field.getValue() );
+	    printHead("\r\n");
 	}
-	sout.write( CRLF, 0, 2 );
+	
+	printHead( "\r\n" );
+
+	sout.write( buffer, 0, bufferCount );
 	sout.flush();
     }
 
@@ -134,15 +128,47 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	HTTP response is the status line
     */
     protected void sendStatus( int status, String message ) throws IOException {
-	// statusSB.reset();
-	statusSB.append("HTTP/1.0 ").append(status);
-	if(message!=null) statusSB.append(" ").append(message);
-	statusSB.append("\r\n");
-	sout.write(statusSB.toString().getBytes(Constants.CharacterEncoding.Default));
-	statusSB.setLength(0);
+	printHead("HTTP/1.0 ");
+	printHead(String.valueOf(status));
+	if(message!=null) {
+	    printHead(" ");
+	    printHead(message);
+	}
+	printHead("\r\n");
     }
 
     public void doWrite( byte buffer[], int pos, int count) throws IOException {
 	sout.write( buffer, pos, count);
     }
+
+    // From BufferedServletOutputStream
+    // XXX will be moved in a new in/out system, temp. code
+    // Right now it's not worse than BOS
+    protected void printHead( String s ) {
+	if (s==null) s="null";
+
+	int len = s.length();
+	for (int i = 0; i < len; i++) {
+	    char c = s.charAt (i);
+	    
+	    //
+	    // XXX NOTE:  This is clearly incorrect for many strings,
+	    // but is the only consistent approach within the current
+	    // servlet framework.  It must suffice until servlet output
+	    // streams properly encode their output.
+	    //
+	    if ((c & 0xff00) != 0) {	// high order byte must be zero
+		// XXX will go away after we change the I/O system
+		System.out.println("Header character is not iso8859_1, not supported yet: " + c ) ;
+	    }
+	    if( bufferCount >= buffer.length ) {
+		byte bufferNew[]=new byte[ buffer.length * 2 ];
+		System.arraycopy( buffer,0, bufferNew, 0, buffer.length );
+		buffer=bufferNew;
+	    }
+	    buffer[bufferCount] = (byte)c;
+	    bufferCount++;
+	}	
+    }
+					
 }

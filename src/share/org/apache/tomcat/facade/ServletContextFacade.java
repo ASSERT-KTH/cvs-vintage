@@ -150,11 +150,27 @@ final class ServletContextFacade implements ServletContext {
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
-	return context.getRequestDispatcher( path );
+	if ( path == null  || ! path.startsWith("/")) {
+	    return null; // spec say "return null if we can't return a dispather
+	}
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( context );
+	rD.setPath( path );
+	
+	return rD;
     }
 
     public RequestDispatcher getNamedDispatcher(String name) {
-	return context.getNamedDispatcher( name );
+        if (name == null)
+	    return null;
+
+	// We need to do the checks
+	ServletWrapper wrapper = context.getServletByName( name );
+	if (wrapper == null)
+	    return null;
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( context );
+	rD.setName( name );
+
+	return rD;
     }
 
     public String getServerInfo() {
