@@ -25,17 +25,14 @@ This page is for selecting an Attribute to edit which is defined in a global sca
  #end
 #end
 
-$scarabR.CurrentTemplate
-
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
-
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-<th>global attributes</th>
+<th>Global attributes</th>
 <td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">User attributes</a></td>
 </tr>
 </table>
