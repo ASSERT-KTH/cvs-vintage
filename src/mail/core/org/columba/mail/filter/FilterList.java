@@ -151,7 +151,7 @@ public class FilterList extends DefaultItem {
 	 * @param filter the filter to move up.
 	 */
 	public void moveUp( Filter filter ) {
-		move(filter, -1);
+		move(indexOf(filter), -1);
 	}
 	
 	/**
@@ -159,7 +159,7 @@ public class FilterList extends DefaultItem {
 	 * @param filter the filter to move down.
 	 */
 	public void moveDown( Filter filter ) {
-		move(filter, 1);
+		move(indexOf(filter), 1);
 	}
 	
 	/**
@@ -168,16 +168,26 @@ public class FilterList extends DefaultItem {
 	 * @param nrOfPositions the number of positions to move in the list, can be negative.
 	 */
 	public void move( Filter filter, int nrOfPositions ) {
-		int filterIndex = indexOf(filter);
-		if (filterIndex != -1) {
-			int newFilterIndex = filterIndex + nrOfPositions;
+		move(indexOf(filter), nrOfPositions);
+	}
+
+	/**
+	 * Moves the filter at the specified index a number of positions in the list.
+	 * @param filterIndex the filters index.
+	 * @param nrOfPositions the number of positions to move in the list, can be negative.
+	 */
+	public void move( int filterIndex, int nrOfPositions ) {
+		if ((filterIndex >= 0) && (filterIndex < count())) {
+			XmlElement filterXML = getRoot().getElement(filterIndex);			
+			int newFilterIndex = filterIndex + nrOfPositions;	
+			newFilterIndex = ( newFilterIndex < 0 ? 0 : newFilterIndex );		
+			
 			getRoot().removeElement(filterIndex);
-			newFilterIndex = ( newFilterIndex < 0 ? 0 : newFilterIndex );
 			if (newFilterIndex > count()) {
-				add( filter );
+				getRoot().addElement(filterXML);
 			} else {
-				insert(filter, newFilterIndex);
-			}
+				getRoot().insertElement(filterXML, newFilterIndex);
+			}			
 		}
 	}
 	
