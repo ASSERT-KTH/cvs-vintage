@@ -221,7 +221,8 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 			// if folder doesn't exist already
 			if (folder.getChild(name) == null) {
 
-				addIMAPChildFolder(folder, info, name);
+				//addIMAPChildFolder(folder, info, name);
+				folder.addFolder(name, "IMAPFolder");
 			}
 
 		}
