@@ -67,7 +67,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.44 2003/08/04 12:50:34 mpoeschl Exp $
+ * @version $Id: RModuleAttribute.java,v 1.45 2003/12/04 14:27:26 mpoeschl Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -181,7 +181,7 @@ public class RModuleAttribute
             }
             catch (Exception e)
             {
-                log().error(e);
+                getLog().error(e);
                 dispVal = "!Error-Check Logs!";
             }
         }

@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.114 2003/11/22 18:09:24 dep4b Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.115 2003/12/04 14:27:26 mpoeschl Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -349,7 +349,7 @@ public class ScarabUserImpl
         catch (Exception e)
         {
             hasPermission = false;
-            log().error("Permission check failed on:" + perm, e);
+            getLog().error("Permission check failed on:" + perm, e);
         }
         
         Boolean b = hasPermission ? Boolean.TRUE : Boolean.FALSE;
@@ -480,7 +480,7 @@ public class ScarabUserImpl
             }
             catch (Exception e)
             {
-                log().error("An exception prevented retrieving any modules", e);
+                getLog().error("An exception prevented retrieving any modules", e);
             }
             ScarabCache.put(result, this, GET_MODULES, permissions);
         }

@@ -67,7 +67,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.33 2003/09/17 23:44:52 elicia Exp $
+ * @version $Id: RModuleIssueType.java,v 1.34 2003/12/04 14:27:26 mpoeschl Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
@@ -249,7 +249,7 @@ public  class RModuleIssueType
             }
             catch (TorqueException e)
             {
-                log().error("Error getting the issue type name: ", e);
+                getLog().error("Error getting the issue type name: ", e);
             }
         }
         return display;
@@ -278,7 +278,7 @@ public  class RModuleIssueType
             }
             catch (TorqueException e)
             {
-                log().error("Error getting the issue type description: ", e);
+                getLog().error("Error getting the issue type description: ", e);
             }
         }
         return display;

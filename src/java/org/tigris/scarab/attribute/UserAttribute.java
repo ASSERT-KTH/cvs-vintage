@@ -58,7 +58,7 @@ import org.tigris.scarab.om.ScarabUserManager;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.21 $ $Date: 2003/02/13 21:35:41 $
+ * @version $Revision: 1.22 $ $Date: 2003/12/04 14:27:27 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -104,7 +104,7 @@ public class UserAttribute extends AttributeValue
         catch (Exception e)
         {
             e.printStackTrace();
-            log().error(e);
+            getLog().error(e);
         }
     }
 
@@ -129,7 +129,7 @@ public class UserAttribute extends AttributeValue
         }
         catch (TorqueException e)
         {
-            log().error(e);
+            getLog().error(e);
             value="Error. Please see logs.";
         }
         return value;

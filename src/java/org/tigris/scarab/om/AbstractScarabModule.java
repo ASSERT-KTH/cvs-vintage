@@ -100,7 +100,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.114 2003/12/04 14:10:40 mpoeschl Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.115 2003/12/04 14:27:26 mpoeschl Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -197,7 +197,7 @@ public abstract class AbstractScarabModule
             catch (Exception e)
             {
                 e.printStackTrace();
-                log().error(e);
+                getLog().error(e);
                 return null;
             }
             Iterator itr = parents.iterator();
@@ -470,7 +470,7 @@ public abstract class AbstractScarabModule
                     }
                     catch (org.xml.sax.SAXException e)
                     {
-                        log().warn("Could not parse the report id=" +
+                        getLog().warn("Could not parse the report id=" +
                                  torqueReport.getReportId() + 
                                  ", so it has been marked as deleted.");
                         torqueReport.setDeleted(true);
@@ -1905,7 +1905,7 @@ public abstract class AbstractScarabModule
                 rma2.setModuleId(newModuleId);
                 rma2.setAttributeId(rma1.getAttributeId());
                 rma2.setIssueTypeId(rma1.getIssueTypeId());
-                log().debug("[ASM] Saving rma for new template type: " + 
+                getLog().debug("[ASM] Saving rma for new template type: " + 
                                     rma2.getModuleId()
                                     + "-" + rma2.getIssueTypeId() + "-" +
                                     rma2.getAttributeId());
@@ -2069,7 +2069,7 @@ public abstract class AbstractScarabModule
         }
         catch (RESyntaxException e)
         {
-            log().error("Could not compile regex: " + regex, e);
+            getLog().error("Could not compile regex: " + regex, e);
             try
             {
                 rep = rec.compile(REGEX_PREFIX + REGEX_SUFFIX);
@@ -2077,7 +2077,7 @@ public abstract class AbstractScarabModule
             catch (RESyntaxException ee)
             {
                 // this should not happen, but it might when we localize
-                log().error("Could not compile standard regex", ee);
+                getLog().error("Could not compile standard regex", ee);
                 try
                 {
                     rep = rec.compile("[:alpha:]+\\d+");
@@ -2085,7 +2085,7 @@ public abstract class AbstractScarabModule
                 catch (RESyntaxException eee)
                 {
                     // this will never happen, but log it, just in case 
-                    log().error("Could not compile simple id regex", eee);
+                    getLog().error("Could not compile simple id regex", eee);
                 }
             }
         }

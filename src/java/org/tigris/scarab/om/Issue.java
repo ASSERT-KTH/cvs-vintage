@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.330 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.331 2003/12/04 14:27:26 mpoeschl Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -521,7 +521,7 @@ public class Issue
         }
         catch (Exception e)
         {
-            log().error("Problem determining whether issue is template");
+            getLog().error("Problem determining whether issue is template");
         }
         return isTemplate;
     }
@@ -1253,7 +1253,7 @@ public class Issue
             }
             catch (Exception e)
             {
-                log().error("Issue.getUsersToEmail(): ", e);
+                getLog().error("Issue.getUsersToEmail(): ", e);
                 throw new Exception("Error in retrieving users.");
             }
             ScarabCache.put(result, this, GET_ALL_USERS_TO_EMAIL, action);
@@ -1367,7 +1367,7 @@ public class Issue
         Date result = null;
         if (creationSet == null) 
         {
-            log().warn("Issue " + getUniqueId() + " (pk=" + getIssueId() +
+            getLog().warn("Issue " + getUniqueId() + " (pk=" + getIssueId() +
                            ") does not have a creation ActivitySet");
         }
         else 
@@ -1388,7 +1388,7 @@ public class Issue
         ScarabUser result = null;
         if (creationSet == null) 
         {
-            log().warn("Issue " + getUniqueId() + " (pk=" + getIssueId() +
+            getLog().warn("Issue " + getUniqueId() + " (pk=" + getIssueId() +
                            ") does not have a creation ActivitySet");
         }
         else 
@@ -1405,7 +1405,7 @@ public class Issue
         boolean result = false;
         if (creationSet == null) 
         {
-            log().warn("Issue " + getUniqueId() + " (pk=" + getIssueId() +
+            getLog().warn("Issue " + getUniqueId() + " (pk=" + getIssueId() +
                            ") does not have a creation ActivitySet");
         }
         else 
@@ -2114,10 +2114,10 @@ public class Issue
                     }
                     catch (Exception badException)
                     {
-                        log().error("Could not get an id, even after "
+                        getLog().error("Could not get an id, even after "
                             +"trying to add a module entry into the ID_TABLE", 
                             e);
-                        log()
+                        getLog()
                             .error("Error trying to create ID_TABLE entry for "
                                    + getIdTableKey(), badException);
                         // throw the original
@@ -2701,7 +2701,7 @@ public class Issue
                         }
                         catch (Exception e)
                         {
-                            log().error(e);
+                            getLog().error(e);
                             e.printStackTrace();
                         }
                         Attribute attr = attVal.getAttribute();

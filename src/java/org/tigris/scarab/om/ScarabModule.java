@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.145 2003/11/14 22:12:00 dep4b Exp $
+ * @version $Id: ScarabModule.java,v 1.146 2003/12/04 14:27:26 mpoeschl Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -139,7 +139,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                log().error("Error getting HTTP_DOMAIN:", e);
+                getLog().error("Error getting HTTP_DOMAIN:", e);
             }
         }
         return domain;
@@ -322,7 +322,7 @@ public class ScarabModule
                 }
                 catch (Exception e)
                 {
-                    log().error(
+                    getLog().error(
                         "An exception prevented retrieving any users", e);
                     // this method should probably throw the exception, but
                     // until the interface is changed, wrap it in a RuntimeExc.
@@ -388,7 +388,7 @@ public class ScarabModule
         }
         catch ( Exception e) 
         {
-            log().error("getUsers Exception during MITList gathering: " + e);
+            getLog().error("getUsers Exception during MITList gathering: " + e);
         }
 
         if (potential == null || potential.size() == 0)
