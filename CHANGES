@@ -1,3 +1,73 @@
+Version 0.12.0:
+
+New Features:
+
+# Printing support for text and html-messages (karlpeder)
+# Added the new message frame which only shows the message without tree/table (fdietz)
+# New Wizard framework added, AccountWizard, MailImportWizard and AddressbookWizard  
+  integrated (javaprog)
+# Delete message from POP3 server (fdietz)
+# Save Bodytext/Save Message as File (karlpeder)
+# Create Filter/vFolder from Subject/From/To (karlpeder)
+# MessageFolderInfo (total/unread/recent count) is loaded/saved (fdietz)
+# quotes are colored lightgray, smily images replace ASCII-text (tstich/fdietz)
+# New TreeTable component (fixes many visual glitches) (fdietz)
+# New plugin-handler for Look and Feels (Metouia and Kunstoff plugins) added
+# Headercache optimization for local-/remote folders and POP3 cache (tstich/fdietz)
+# Cut/Copy/Paste of messages (fdietz)
+# Using background-thread to shutting down Columba, make sure that no tasks are 
+  running before exiting (fdietz)
+# Use background-thread to save configuration, folder-headercache, pop3-headercache 
+  when no other tasks are running (fdietz)
+# Cleanups of local folders structure to make it easier to add new mailbox formats 
+  (fdietz)
+# Started porting Columba to JDK1.4, this makes this version incompatible to JDK1.3
+# Font settings are disabled by default. User can choose to overwrite the Look and 
+  Feel font settings (javaprog/fdietz)
+# added plugin-handler for addressbook import (fdietz)
+# added new default Look and Feel from jGoodies, ThinColumba is still available
+  as plugin (fdietz)
+# when using --debug show all logging information, otherwise show nothing
+  (this also includes info/error messages) (javaprog)
+# massive amount of i18n fixes and source code cleanups (javaprog/waffel)
+# Bounce message action is removed from Columba's core and now available
+  as separate plugin (fdietz)
+# show dialog box with error message when POP3 error occurs
+# added a couple of testcases for several parsers, de-/encoders and IMAP
+# allow searching with IMAP using non US-ASCII characters (fdietz)
+# folder remembers last selected message and re-selects it again
+  automatically (waffel)
+# mark message as read after x seconds reactivated (waffel)
+# added several build files for all components (waffel)
+# added buildall.sh script to build all available plugins at once (fdietz)
+# moved text/html related parsers to independent for allowing 
+  easier reuse (karlpeder)
+# moving up/down arrow keys in table viewer updates message view (waffel)
+# rpm package adds Gnome/KDE icons to corresponding menu (fdietz)
+ 
+Bigger Bugs:
+- #774117: header viewer wasn't adjusting width correctly (karlpeder)
+- #771747: save as draft/template, using trash and sent folder
+  wasn't working when using IMAP (fdietz) 
+- #758315: From column empty when using translation files (fdietz)
+- #734175: Open With in attachment viewer opens native windows
+  dialog to choose application (karlpeder)
+- #766995: searching wasn't using the correct configuration item
+  in some cases (fdietz)
+- window maximization wasn't working correctly on Linux/Unix (fdietz)
+- locking problem when downloading mail from your POP3 server (fdietz)
+- character encoding wasn't initialized correctly in composer (karlpeder)
+- table viewer wasn't updating correctly (fdietz)
+- action plugin were only able to extend the core menu (fdietz)
+- table viewer selection problems (fdietz)
+- many IMAP parser fixes for CommuniGate Pro server (fdietz)
+- fixed pending PGP bugs, this feature will be activated in
+  the next version (waffel)
+- problems if messages are > 10MB (tstich)
+- baseURL wasn't reset correctly in message viewer (tstich)
+- xml backend wasn't replacing " characters correctly (karlpeder)
+- fixed classloader problems when using Java Webstart (fdietz)
+
 Version 0.10.2:
  - mailurl commandline argument handling fixed
  - opening composer with commandline argument wasn't updating 
