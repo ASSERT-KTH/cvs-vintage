@@ -23,6 +23,7 @@ import org.jboss.minerva.pools.ObjectPool;
 import org.jboss.minerva.pools.PoolObjectFactory;
 import org.jboss.minerva.xa.TransactionListener;
 import org.jboss.minerva.xa.XAConnectionImpl;
+import org.jboss.minerva.xa.XAResourceImpl;
 import org.jboss.logging.Logger;
 
 
@@ -39,7 +40,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -109,10 +110,13 @@ public class XAConnectionFactory extends PoolObjectFactory {
                     // Real XAConnection -> not associated w/ transaction
                     pool.releaseObject(con);
                 } else {
-                    if(trans == null) {
+                    XAConnectionImpl xaCon = (XAConnectionImpl)con;
+                    if(!((XAResourceImpl)xaCon.getXAResource()).isTransaction()) {
                         // Wrapper - we can only release it if there's no current transaction
+                        // Can't just check TM because con may have been committed but left open
+                        //   so if there's a current transaction it may not apply to the con.
                         try {
-                            ((XAConnectionImpl)con).rollback();
+                            xaCon.rollback();
                         } catch(SQLException e) {
                             pool.markObjectAsInvalid(con);
                         }
@@ -126,21 +130,29 @@ public class XAConnectionFactory extends PoolObjectFactory {
         };
         transListener = new TransactionListener() {
             public void transactionFinished(XAConnectionImpl con) {
-                con.removeConnectionEventListener(errorListener);
                 con.clearTransactionListener();
                 Object tx = wrapperTx.remove(con);
                 if(tx != null)
                     wrapperTx.remove(tx);
+                try {
+                    con.removeConnectionEventListener(errorListener);
+                } catch(IllegalArgumentException e) {
+                    return; // connection was not closed, but transaction ended
+                }
                 pool.releaseObject(con);
             }
 
             public void transactionFailed(XAConnectionImpl con) {
-                con.removeConnectionEventListener(errorListener);
                 con.clearTransactionListener();
                 Object tx = wrapperTx.remove(con);
                 if(tx != null)
                     wrapperTx.remove(tx);
                 pool.markObjectAsInvalid(con);
+                try {
+                    con.removeConnectionEventListener(errorListener);
+                } catch(IllegalArgumentException e) {
+                    return; // connection was not closed, but transaction ended
+                }
                 pool.releaseObject(con);
             }
         };
