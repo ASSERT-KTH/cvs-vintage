@@ -7,8 +7,8 @@
   #if ($issueType.equals($scarabR.CurrentIssueType))
     <div><small><strong>$rmit.DisplayText</strong></small>
     <div><small>#if ($scarabR.CurrentModule.Dedupe)<a href="$link.setPage("entry,Wizard1.vm")">#else<a href="$link.setPage("entry,Wizard3.vm")">#end Enter new</a></small></div>
-    <div><small><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></small></div>
-    <div><small><a href="$link.setPage("Search.vm")">Custom Query</a></small></div>
+##    <div><small><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></small></div>
+##    <div><small><a href="$link.setPage("Search.vm")">Custom Query</a></small></div>
     <div><small><a href="$link.setPage("QueryList.vm")">Saved queries</a></small></div>
     <div><small><a href="$link.setPage("TemplateList.vm")">Template list</a></small></div>
     <div><small><a href="$link.setPage("reports,Step1.vm")">New report</a></small></div>
