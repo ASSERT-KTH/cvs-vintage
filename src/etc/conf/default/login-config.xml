@@ -23,7 +23,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.10 $
+$Revision: 1.11 $
 -->
 
 <policy>
@@ -41,6 +41,19 @@ $Revision: 1.10 $
     <!-- Security domain for JBossMQ -->
     <application-policy name = "jbossmq">
        <authentication>
+          <login-module code = "org.jboss.security.auth.spi.DatabaseServerLoginModule"
+             flag = "required">
+             <module-option name = "unauthenticatedIdentity">guest</module-option>
+             <module-option name = "dsJndiName">java:/DefaultDS</module-option>
+             <module-option name = "principalsQuery">SELECT PASSWD FROM JMS_USERS WHERE USERID=?</module-option>
+             <module-option name = "rolesQuery">SELECT ROLEID, 'Roles' FROM JMS_ROLES WHERE USERID=?</module-option>
+          </login-module>
+       </authentication>
+    </application-policy>
+
+    <!-- Security domain for JBossMQ when using file-state-service.xml
+    <application-policy name = "jbossmq">
+       <authentication>
           <login-module code = "org.jboss.mq.sm.file.DynamicLoginModule"
              flag = "required">
              <module-option name = "unauthenticatedIdentity">guest</module-option>
@@ -48,6 +61,7 @@ $Revision: 1.10 $
           </login-module>
        </authentication>
     </application-policy>
+    -->
 
     <!-- Security domains for testing new jca framework -->
     <application-policy name = "HsqlDbRealm">
