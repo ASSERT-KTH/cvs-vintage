@@ -76,6 +76,12 @@ mapname=TurbineMap
 suffix=MapBuilder
 
 # -------------------------------------------------------------------
+# Generate Manager classes that use JCS for caching.  This is still
+# considered experimental.
+# -------------------------------------------------------------------
+useManagers=true
+
+# -------------------------------------------------------------------
 # 
 #  D A T A B A S E  S E T T I N G S
 #
