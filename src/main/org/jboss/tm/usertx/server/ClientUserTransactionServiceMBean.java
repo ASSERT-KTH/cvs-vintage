@@ -9,16 +9,29 @@ package org.jboss.tm.usertx.server;
 
 import javax.management.ObjectName;
 import org.jboss.mx.util.ObjectNameFactory;
+import org.jboss.invocation.Invocation;
 
 /**
  * MBean for ClientUserTransaction service.
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.8 $
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.9 $
  */
 public interface ClientUserTransactionServiceMBean
    extends org.jboss.system.ServiceMBean
 {
-   ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss:service=ClientUserTransaction");
+   /** Set the proxy factory service for the UserTransactionSessions
+    * @param proxyName the proxy factory MBean name
+    */ 
+   public void setTxProxyName(ObjectName proxyName);
+
+   /** The detached invoker callback operation.
+    * 
+    * @param invocation
+    * @return the invocation result
+    * @throws Exception thrown on invocation failure
+    */ 
+   public Object invoke(Invocation invocation) throws Exception;
 }
 
