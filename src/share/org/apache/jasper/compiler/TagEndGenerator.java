@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.3 1999/10/21 07:57:22 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/21 07:57:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.4 1999/11/03 23:43:18 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/03 23:43:18 $
  *
  * ====================================================================
  * 
@@ -114,28 +114,30 @@ public class TagEndGenerator
             writer.println("} while (false);");
         
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
-	writer.popIndent(); // try 
 
-        /** FIXME: REMOVE BEGIN */
-        writer.println("} catch (Throwable t) {");
-        writer.pushIndent();
-
-        writer.println("System.err.println(\"Caught: \");");
-        writer.println("t.printStackTrace();");
-        writer.popIndent();
-        /** FIXME: REMOVE END */
-        
-	writer.println("} finally {");
-	writer.pushIndent();
         if (implementsBodyTag) {
+            writer.popIndent(); // try 
+
+            /** FIXME: REMOVE BEGIN */
+            writer.println("} catch (Throwable t) {");
+            writer.pushIndent();
+
+            writer.println("System.err.println(\"Caught: \");");
+            writer.println("t.printStackTrace();");
+
+            writer.popIndent();
+            /** FIXME: REMOVE END */
+        
+            writer.println("} finally {");
+            writer.pushIndent();
             writer.println("if ("+evalVarName+" != Tag.EVAL_BODY_INCLUDE)");
             writer.pushIndent(); 
             writer.println("out = pageContext.popBody();");
             writer.popIndent();
-        }
 
-	writer.popIndent();
-	writer.println("}");
+            writer.popIndent();
+            writer.println("}");
+        }
 
 	writer.popIndent(); // EVAL_BODY
 	writer.println("}");

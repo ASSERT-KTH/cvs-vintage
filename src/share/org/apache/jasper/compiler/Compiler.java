@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.2 1999/10/15 00:11:07 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 00:11:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.3 1999/11/03 23:43:02 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/03 23:43:02 $
  *
  * ====================================================================
  * 
@@ -118,7 +118,7 @@ public abstract class Compiler {
         Constants.message("jsp.message.class_file_name_is",
                           new Object[] { classFileName },
                           Constants.MED_VERBOSITY);
-        
+
         JspReader reader = JspReader.createJspReader(ctxt.getJspFile(), ctxt.getServletContext());
 
         ServletWriter writer = 

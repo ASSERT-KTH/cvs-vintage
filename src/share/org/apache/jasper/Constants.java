@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.6 1999/10/21 02:47:50 mandar Exp $
- * $Revision: 1.6 $
- * $Date: 1999/10/21 02:47:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.7 1999/11/03 23:42:55 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 1999/11/03 23:42:55 $
  *
  * ====================================================================
  * 
@@ -112,6 +112,14 @@ public class Constants {
      * want to have this JSP engine running on them. 
      */
     public static final String SERVLET_CLASSPATH = "org.apache.tomcat.jsp_classpath";
+
+    /**
+     * ServletContext attribute for classpath. This is tomcat specific. 
+     * Other servlet engines can choose to have this attribute if they 
+     * want to have this JSP engine running on them. 
+     */
+    public static final String SERVLET_CLASS_LOADER = "org.apache.tomcat.classloader";
+
 
     /**
      * Codes that indicate how verbose you want the JSP engine to be. 

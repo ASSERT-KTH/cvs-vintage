@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Parser.java,v 1.4 1999/10/21 07:56:40 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/21 07:56:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Parser.java,v 1.5 1999/11/03 23:43:10 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/11/03 23:43:10 $
  *
  * ====================================================================
  * 
@@ -92,14 +92,6 @@ public class Parser {
      * Char buffer for HTML data
      */
     CharArrayWriter caw;
-
-    /**
-     * constants for escapes
-     */
-    private static String QUOTED_START_TAG = "<\\%";
-    private static String QUOTED_END_TAG = "%\\>";
-    private static String START_TAG = "<%";
-    private static String END_TAG = "%>";
 
     public interface Action {
         void execute() throws JasperException;
@@ -406,7 +398,7 @@ public class Parser {
     static {
 	coreElements.addElement(new Comment());
     }
-    
+
     /*
      * Scripting elements
      */
@@ -909,33 +901,42 @@ public class Parser {
      * Entities &apos; and &quote;
      */
     static final class QuoteEscape implements CoreElement {
+        /**
+         * constants for escapes
+         */
+        private static String QUOTED_START_TAG = "<\\%";
+        private static String QUOTED_END_TAG = "%\\>";
+        private static String START_TAG = "<%";
+        private static String END_TAG = "%>";
+
 	private static final String APOS = "&apos;";
 	private static final String QUOTE = "&quote;";
+        
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
-	throws JasperException 
+            throws JasperException 
 	{
-	try {
-	    if (reader.matches(parser.QUOTED_START_TAG)) {
-		reader.advance(parser.QUOTED_START_TAG.length());
-		parser.caw.write(parser.START_TAG);
-		parser.flushCharData();
-		return true;
-	    } else if (reader.matches(APOS)) {
-		reader.advance(APOS.length());
-		parser.caw.write("\'");
-		parser.flushCharData();
-		return true;
-	    }
-	    else if (reader.matches(QUOTE)) {
-		reader.advance(QUOTE.length());
-		parser.caw.write("\"");
-		parser.flushCharData();
-		return true;
-	    }
-	} catch (java.io.IOException ex) {
-	    System.out.println (ex.getMessage());
-	}
-	return false;
+            try {
+                if (reader.matches(QUOTED_START_TAG)) {
+                    reader.advance(QUOTED_START_TAG.length());
+                    parser.caw.write(START_TAG);
+                    parser.flushCharData();
+                    return true;
+                } else if (reader.matches(APOS)) {
+                    reader.advance(APOS.length());
+                    parser.caw.write("\'");
+                    parser.flushCharData();
+                    return true;
+                }
+                else if (reader.matches(QUOTE)) {
+                    reader.advance(QUOTE.length());
+                    parser.caw.write("\"");
+                    parser.flushCharData();
+                    return true;
+                }
+            } catch (java.io.IOException ex) {
+                System.out.println (ex.getMessage());
+            }
+            return false;
 	}
     }
     
@@ -953,12 +954,29 @@ public class Parser {
     public void parse() throws JasperException {
         parse(null);
     }
-    
+
     public void parse(String until) throws JasperException {
+        parse(until, null);
+    }
+    
+    public void parse(String until, Class[] accept) throws JasperException {
 	while (reader.hasMoreInput()) {
             if (until != null && reader.matches(until)) 
                 return;
-	    Enumeration e = coreElements.elements();
+
+	    Enumeration e = coreElements.elements(); 
+
+            if (accept != null) {
+                Vector v = new Vector();
+                while (e.hasMoreElements()) {
+                    CoreElement c = (CoreElement) e.nextElement();
+                    for(int i = 0; i < accept.length; i++)
+                        if (c.getClass().equals(accept[i]))
+                            v.addElement(c);
+                }
+                e = v.elements();
+            }
+
 	    boolean accepted = false;
 	    while (e.hasMoreElements()) {
 		CoreElement c = (CoreElement) e.nextElement();

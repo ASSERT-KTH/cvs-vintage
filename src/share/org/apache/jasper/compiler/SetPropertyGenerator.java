@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SetPropertyGenerator.java,v 1.1 1999/10/09 00:20:38 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SetPropertyGenerator.java,v 1.2 1999/11/03 23:43:12 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/03 23:43:12 $
  *
  * ====================================================================
  * 
@@ -240,7 +240,8 @@ public class SetPropertyGenerator
 			    throw new JasperException(m);
 			} else {
 			    if (tp.equals(String.class))
-				writer.println (name+"."+methodName+"(\"" + value + "\");");
+			        writer.println (name+"."+methodName+"(" +
+						writer.quoteString(value) + ");");
 			    else if (tp.equals(char.class))
 				writer.println (name+"."+methodName+"((new String (\"" +
 						value + "\")).charAt(0));");

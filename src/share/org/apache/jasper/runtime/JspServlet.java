@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.6 1999/11/03 20:54:57 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/11/03 20:54:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/JspServlet.java,v 1.7 1999/11/03 23:43:51 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 1999/11/03 23:43:51 $
  *
  * ====================================================================
  * 
@@ -158,7 +158,7 @@ public class JspServlet extends HttpServlet {
 
                 theServlet.service(request, response);
             } catch (FileNotFoundException ex) {
-		//		ex.printStackTrace();
+		ex.printStackTrace(); 
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, 
                                    Constants.getString("jsp.error.file.not.found", 
                                                        new Object[] {
@@ -201,10 +201,14 @@ public class JspServlet extends HttpServlet {
         else {
             options = new Options(config, context);
 
-            parentClassLoader = engine.getClassLoader(context);
-            if (parentClassLoader == null) {
+            parentClassLoader = (ClassLoader) context.getAttribute(Constants.SERVLET_CLASS_LOADER);
+            if (parentClassLoader == null)
                 parentClassLoader = this.getClass().getClassLoader();
-            }
+            
+            Constants.message("jsp.message.parent_class_loader_is", 
+                              new Object[] {
+                                  parentClassLoader.toString()
+                              }, Constants.MED_VERBOSITY);
 
             this.loader = new JspLoader(context, 
                                         parentClassLoader, 
@@ -325,6 +329,8 @@ public class JspServlet extends HttpServlet {
             else
                 jspUri = includeUri;
 
+            boolean precompile = preCompile(request);
+
             if (Constants.matchVerbosity(Constants.MED_VERBOSITY)) {
 		System.err.println("JspEngine --> "+jspUri);
                 System.err.println("\t     ServletPath: "+request.getServletPath());
@@ -340,8 +346,7 @@ public class JspServlet extends HttpServlet {
                     System.err.println("\t\t "+name+" = "+request.getParameter(name));
                 }
             }
-
-            serviceJspFile(request, response, jspUri, null, preCompile(request));
+            serviceJspFile(request, response, jspUri, null, precompile);
 	    
 	} catch (RuntimeException e) {
 	    throw e;

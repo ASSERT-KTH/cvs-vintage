@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspReader.java,v 1.1 1999/10/09 00:20:36 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspReader.java,v 1.2 1999/11/03 23:43:06 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/03 23:43:06 $
  *
  * ====================================================================
  * 
@@ -664,7 +664,7 @@ public class JspReader {
 	if ( ! isSpace() ) {
 	    int ch = peekChar();
 	    // Look for a single-char work delimiter:
-	    if ( ch == '=' || ch == '>' || ch == '"' || ch == '\'' ) 
+	    if ( ch == '=' || ch == '>' || ch == '"' || ch == '\'' || ch == '/') 
 		return true;
 	    // Look for an end-of-comment or end-of-tag:		
 	    if ( ch == '-' ) {

@@ -1,7 +1,7 @@
 /*
- * $Id: BodyContentImpl.java,v 1.2 1999/10/17 08:23:34 mode Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/17 08:23:34 $
+ * $Id: BodyContentImpl.java,v 1.3 1999/11/03 23:43:49 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/03 23:43:49 $
  *
  * ====================================================================
  * 
@@ -160,6 +160,7 @@ public class BodyContentImpl extends BodyContent {
 		   reAllocBuff (len);
 
             System.arraycopy(cbuf, off, cb, nextChar, len);
+	    nextChar+=len;
         }
     }
 
@@ -503,6 +504,11 @@ public class BodyContentImpl extends BodyContent {
      */
 
     public void clear() throws IOException {
+        synchronized (lock) {
+            cb = new char [Constants.DEFAULT_BUFFER_SIZE];
+	    bufferSize = Constants.DEFAULT_BUFFER_SIZE;
+	    nextChar = 0;
+	}
     }
 
     /**
@@ -515,19 +521,7 @@ public class BodyContentImpl extends BodyContent {
      */
 
     public void clearBuffer() throws IOException {
-    }
-
-    /**
-     * Flush the stream.  If the stream has saved any characters from the
-     * various write() methods in a buffer, write them immediately to their
-     * intended destination.  Then, if that destination is another character or
-     * byte stream, flush it.  Thus one flush() invocation will flush all the
-     * buffers in a chain of Writers and OutputStreams.
-     *
-     * @exception  IOException  If an I/O error occurs
-     */
-
-    public void flush()  throws IOException {
+        this.clear();
     }
 
     /**
@@ -539,6 +533,9 @@ public class BodyContentImpl extends BodyContent {
      */
 
     public void close() throws IOException {
+        synchronized (lock) {
+	    cb = null;	
+	}
     }
 
     /**
@@ -557,11 +554,7 @@ public class BodyContentImpl extends BodyContent {
      * @returns the value of this BodyJspWriter as a Reader
      */
     public Reader getReader() {
-	//XXX need to optimize this
-	    char[] tmp = new char [ nextChar - 1];
-	    for (int i=0; i < tmp.length; i++) 
-	        tmp[i] = cb[i];	
-	    return new CharArrayReader (tmp);
+        return new CharArrayReader (cb, 0, nextChar-1);
     }
 
     /**
@@ -572,11 +565,7 @@ public class BodyContentImpl extends BodyContent {
      * @returns the value of the BodyJspWriter as a String
      */
     public String getString() {
-	//XXX need to optimize this
-	    char[] tmp = new char [ nextChar - 1];
-	    for (int i=0; i < tmp.length; i++) 
-	        tmp[i] = cb[i];	
-	    return new String (tmp);
+        return new String(cb, 0, nextChar-1);
     }
 	
     /**
@@ -587,19 +576,12 @@ public class BodyContentImpl extends BodyContent {
      * @param out The writer into which to place the contents of
      * this body evaluation
      */
-    public void writeOut(Writer out) {
-	try {
-            out.write (cb);
-	} catch (IOException ioe) {
-	    //What do we do here???	
-	}
+    public void writeOut(Writer out) throws IOException {
+        out.write(cb, 0, nextChar-1);
+	//Flush not called as the writer passed could be a BodyContent and
+	//it doesn't allow to flush.
     }
 
-    public void clearBody() {
-        nextChar = 0;
-	cb = null;
-	bufferSize = Constants.DEFAULT_BUFFER_SIZE;
-    }
 
     public static void main (String[] args) throws Exception {
 	char[] buff = {'f','o','o','b','a','r','b','a','z','y'};

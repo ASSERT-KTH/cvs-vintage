@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.5 1999/10/21 02:47:51 mandar Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/21 02:47:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.6 1999/11/03 23:43:24 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/11/03 23:43:24 $
  *
  * ====================================================================
  * 
@@ -160,34 +160,41 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 						     Constants.WEBAPP_DTD_PUBLIC_ID);
 	    NodeList nList =  webtld.getElementsByTagName("taglib");
 	    
-	    // Check if a macthing "taglib" exists.
+	    // Check if a matching "taglib" exists.
 	    // XXX. Some changes that akv recommended.
 	    if (nList.getLength() != 0) {
 		for(int i = 0; i < nList.getLength(); i++) {
 		    Element e = (Element) nList.item(i);
-		    NodeList nodeL = e.getChildNodes();
+		    NodeList list = e.getChildNodes();
 		    String tagLoc = null;
 		    boolean match = false;
-		    for(int j = 0; j < nodeL.getLength(); j++) {
-			Element em = (Element) nodeL.item(j);
+		    for(int j = 0; j < list.getLength(); j++) {
+			Element em = (Element) list.item(j);
 			String tname = em.getNodeName();
 			if (tname.equals("taglib-location")) {
-			    tagLoc = ((Text)em.getFirstChild()).getData();
-                            if (tagLoc != null)
-                                tagLoc = tagLoc.trim();
+                            Text t = (Text) em.getFirstChild();
+                            if (t != null) {
+                                tagLoc = t.getData();
+                                if (tagLoc != null)
+                                    tagLoc = tagLoc.trim();
+                            }
 			}
 			if (tname.equals("taglib-uri")) {
-			    String tmpUri =  ((Text)em.getFirstChild()).getData();
-			    if (tmpUri != null) {
-                                tmpUri = tmpUri.trim();
-                                if (tmpUri.equals(uriIn))
-                                    match = true;
+                            Text t = (Text) em.getFirstChild();
+                            if (t != null) {
+                                String tmpUri =  t.getData();
+                                if (tmpUri != null) {
+                                    tmpUri = tmpUri.trim();
+                                    if (tmpUri.equals(uriIn))
+                                        match = true;
+                                }
                             }
 			}
 		    }
-		if (match == true && tagLoc != null) this.uri = tagLoc;
+                    if (match == true && tagLoc != null) 
+                        this.uri = tagLoc;
 		}
-	    }
+            }
 	    
 	    // "uri" should point to the correct tld location.
 
@@ -196,8 +203,6 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 		String actURI =  request.getServletPath();
 		String baseURI = actURI.substring(0, actURI.lastIndexOf('/'));
 		uri = baseURI + '/' + uri;
-		//url = new URL(uri);
-		//in = url.openStream();
 	    }
 	    //else {
 	    //relativeURL = true;
@@ -207,7 +212,6 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    if (in == null)
 		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
 							      new Object[] {TLD}));
-	    
 	    //Now parse the tld.
 	    parseTLD(in);
 	}
@@ -462,10 +466,6 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
                     rtexprvalue = Boolean.valueOf(t.getData()).booleanValue();
-            } else if (tname.equals("reqtime")) {
-                Text t = (Text) e.getFirstChild();
-                if (t != null)
-                    reqTime = Boolean.valueOf(t.getData()).booleanValue();
             } else if (tname.equals("type")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
@@ -479,8 +479,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   );
         }
         
-        return new TagAttributeInfo(name, required, rtexprvalue, type, 
-                                    reqTime);
+        return new TagAttributeInfo(name, required, rtexprvalue, type);
     }
 
     static void copy(InputStream in, String fileName) 

@@ -1,9 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/BodyTag.java,v 1.2 1999/10/20 11:37:21 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:37:21 $
- *
- * ====================================================================
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/BodyTag.java,v 1.3 1999/11/03 23:42:33 costin Exp $ $Date: 1999/11/03 23:42:33 $ $Revision: 1.3 $
  * 
  * The Apache Software License, Version 1.1
  *
@@ -57,8 +53,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
- 
+ */
 package javax.servlet.jsp.tagext;
 
 import javax.servlet.jsp.*;
@@ -132,7 +127,7 @@ public interface BodyTag extends Tag {
      * @seealso #doAfterBody
      */
 
-    void doInitBody() throws JspError;
+    void doInitBody() throws JspException;
 
     /**
      * Actions after some body has been evaluated.
@@ -151,5 +146,5 @@ public interface BodyTag extends Tag {
      * @seealso #doInitBody
      */
 
-    int doAfterBody() throws JspError;
+    int doAfterBody() throws JspException;
 }

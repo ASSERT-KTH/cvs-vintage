@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.3 1999/11/03 20:38:54 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/03 20:38:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.4 1999/11/03 23:43:56 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/03 23:43:56 $
  *
  * ====================================================================
  *
@@ -184,6 +184,7 @@ class ServletLoader extends ClassLoader {
     }
 
     private URL getResource(URL base, Enumeration paths, String name) {
+	
         return getResource(base, paths, name, false);
     }
 
@@ -282,7 +283,7 @@ class ServletLoader extends ClassLoader {
             String path = (String)paths.nextElement();
             String entryName = name.replace('.', '/') + ".class";
 	    Vector v = new Vector();
-
+	    
 	    if (! lib) {
 	        v = getPathURL(base, path, entryName);
 	    } else {

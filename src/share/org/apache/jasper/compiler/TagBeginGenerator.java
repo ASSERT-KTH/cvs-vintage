@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.5 1999/10/21 07:57:22 akv Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/21 07:57:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.6 1999/11/03 23:43:16 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/11/03 23:43:16 $
  *
  * ====================================================================
  * 
@@ -236,13 +236,13 @@ public class TagBeginGenerator
         if (implementsBodyTag) {
             writer.println("if ("+evalVar+" == Tag.EVAL_BODY_INCLUDE)");
             writer.pushIndent();
-            writer.println("throw new JspError(\"Since tag handler "+tc.getTagHandlerClass()+
+            writer.println("throw new JspTagException(\"Since tag handler "+tc.getTagHandlerClass()+
                            " implements BodyTag, it can't return Tag.EVAL_BODY_INCLUDE\");");
             writer.popIndent();
         } else {
             writer.println("if ("+evalVar+" == BodyTag.EVAL_BODY_TAG)");
             writer.pushIndent();
-            writer.println("throw new JspError(\"Since tag handler "+tc.getTagHandlerClass()+
+            writer.println("throw new JspTagException(\"Since tag handler "+tc.getTagHandlerClass()+
                            " does not implement BodyTag, it can't return BodyTag.EVAL_BODY_TAG\");");
             writer.popIndent();
         }
@@ -250,11 +250,10 @@ public class TagBeginGenerator
         writer.println("if ("+evalVar+" != Tag.SKIP_BODY) {");
 	writer.pushIndent();
 
-	writer.println("try {");
-	writer.pushIndent();
-	
-
 	if (implementsBodyTag) {
+            writer.println("try {");
+            writer.pushIndent();
+
 	    writer.println("if ("+evalVar+" != Tag.EVAL_BODY_INCLUDE) {");
 	    writer.pushIndent();
 

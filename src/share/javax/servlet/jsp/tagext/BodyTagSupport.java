@@ -1,9 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/BodyTagSupport.java,v 1.2 1999/10/20 11:40:29 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:40:29 $
- *
- * ====================================================================
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/BodyTagSupport.java,v 1.3 1999/11/03 23:42:36 costin Exp $ $Date: 1999/11/03 23:42:36 $ $Revision: 1.3 $
  * 
  * The Apache Software License, Version 1.1
  *
@@ -57,8 +53,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
- 
+ */
 package javax.servlet.jsp.tagext;
 
 import javax.servlet.jsp.*;
@@ -89,6 +84,23 @@ public class BodyTagSupport extends TagSupport implements BodyTag {
     public BodyTagSupport() {
 	super();
     }
+
+    /**
+     * Process the start tag for this instance.
+     *
+     * The doStartTag() method assumes that all setter methods have been
+     * invoked before.
+     *
+     * When this method is invoked, the body has not yet been invoked.
+     *
+     * @returns EVAL_BODY_TAG if the tag wants to process body, SKIP_BODY if it
+     * does ont want to process it.
+     */
+ 
+    public int doStartTag() throws JspException {
+        return EVAL_BODY_TAG;
+    }
+
 
     /**
      * Process the end tag. This method will be called on all Tag objects.
@@ -129,7 +141,7 @@ public class BodyTagSupport extends TagSupport implements BodyTag {
      * @seealso #doAfterBody
      */
 
-    public void doInitBody() {
+    public void doInitBody() throws JspException {
     }
 
     /**
@@ -149,7 +161,7 @@ public class BodyTagSupport extends TagSupport implements BodyTag {
      * @seealso #doInitBody
      */
 
-    public int doAfterBody() throws JspError {
+    public int doAfterBody() throws JspException {
  	return SKIP_BODY;
     }
 

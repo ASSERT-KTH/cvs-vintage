@@ -1,9 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/TagSupport.java,v 1.2 1999/10/20 21:36:19 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 21:36:19 $
- *
- * ====================================================================
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/TagSupport.java,v 1.3 1999/11/03 23:42:40 costin Exp $ $Date: 1999/11/03 23:42:40 $ $Revision: 1.3 $
  * 
  * The Apache Software License, Version 1.1
  *
@@ -57,8 +53,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */ 
- 
+ */
 package javax.servlet.jsp.tagext;
 
 import javax.servlet.jsp.*;
@@ -106,7 +101,7 @@ public class TagSupport implements Tag, Serializable {
 	    }
 
 	    if ((isInterface && klass.isInstance(tag)) ||
-	        klass.equals(tag.getClass()))
+	        klass.isAssignableFrom(tag.getClass()))
 		return tag;
 	    else
 		from = tag;
@@ -145,7 +140,7 @@ public class TagSupport implements Tag, Serializable {
      *
      * When this method is invoked, the body has not yet been invoked.
      *
-     * @returns EVAL_BODY if the tag wants to process body, SKIP_BODY if it
+     * @returns EVAL_BODY_INCLUDE if the tag wants to process body, SKIP_BODY if it
      * does ont want to process it.
      */
  
@@ -197,7 +192,7 @@ public class TagSupport implements Tag, Serializable {
      * Set the id attribute
      */
 
-    public void setTagId(String id) {
+    public void setId(String id) {
 	this.id = id;
     }
 
@@ -207,7 +202,7 @@ public class TagSupport implements Tag, Serializable {
      * @return the value of the id attribute, or null
      */
     
-    public String getTagId() {
+    public String getId() {
 	return id;
     }
 
