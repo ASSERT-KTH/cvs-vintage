@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.4 2003/01/05 18:40:08 kataka Exp $
+// $Id: UMLListCellRenderer2.java,v 1.5 2003/01/05 19:45:52 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -36,6 +36,7 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 
 /**
  * The default cell renderer for uml model elements. Used by UMLList2 and its
@@ -97,7 +98,10 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             if (name == null || name.equals("")) {
                 name = "(anon " + makeTypeName(elem) + ")";
             }
-        } else {
+        } else 
+        if (value instanceof MMultiplicity) {
+            name = value.toString();
+        } else {                    
             name = makeTypeName(value);
         }
         return name;

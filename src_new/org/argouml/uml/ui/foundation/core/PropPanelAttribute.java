@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.24 2003/01/05 18:41:00 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.25 2003/01/05 19:45:52 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.24 2003/01/05 18:41:00 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.25 2003/01/05 19:45:52 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -43,13 +43,11 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
-import org.argouml.uml.ui.UMLEditableComboBox;
 import org.argouml.uml.ui.UMLEnumerationBooleanProperty;
 import org.argouml.uml.ui.UMLInitialValueComboBox;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLReflectionListModel;
-import org.argouml.uml.ui.UMLSearchableComboBox;
 import org.argouml.uml.ui.UMLTaggedBooleanProperty;
 import org.argouml.uml.ui.UMLVisibilityPanel;
 import org.argouml.util.ConfigLoader;
