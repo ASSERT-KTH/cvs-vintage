@@ -50,7 +50,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.51 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.52 2003/03/14 04:40:59 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -332,14 +332,14 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		if(message == null)
 		{
 			InputHandler inputHandler = view.getInputHandler();
-			if(inputHandler.isRepeatEnabled())
+			/* if(inputHandler.isRepeatEnabled())
 			{
 				int repeatCount = inputHandler.getRepeatCount();
 
 				this.message.setText(jEdit.getProperty("view.status.repeat",
 					new Object[] { repeatCount == 1 ? "" : String.valueOf(repeatCount) }));
 			}
-			else if(view.getMacroRecorder() != null)
+			else */ if(view.getMacroRecorder() != null)
 				this.message.setText(jEdit.getProperty("view.status.recording"));
 			else
 				this.message.setText(" ");

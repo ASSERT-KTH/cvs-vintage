@@ -53,7 +53,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.35 2003/03/11 02:02:03 spestov Exp $
+ * @version $Id: EditPane.java,v 1.36 2003/03/14 04:40:59 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -121,7 +121,7 @@ public class EditPane extends JPanel implements EBComponent
 					&& (bufferSwitcher == null
 					|| !bufferSwitcher.isPopupVisible()))
 				{
-					focusOnTextArea();
+					textArea.grabFocus();
 				}
 			}
 		});
@@ -190,14 +190,13 @@ public class EditPane extends JPanel implements EBComponent
 	 */
 	public void focusOnTextArea()
 	{
-		textArea.grabFocus();
-		// trying to work around buggy focus handling in some
-		// Java versions
-//		if(!textArea.hasFocus())
-//		{
-//			textArea.processFocusEvent(new FocusEvent(textArea,
-//				FocusEvent.FOCUS_GAINED));
-//		}
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				textArea.grabFocus();
+			}
+		});
 	} //}}}
 
 	//{{{ getTextArea() method

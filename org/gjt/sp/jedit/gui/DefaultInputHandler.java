@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.15 2003/01/14 20:05:18 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.16 2003/03/14 04:40:59 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -231,8 +231,7 @@ public class DefaultInputHandler extends InputHandler
 				Toolkit.getDefaultToolkit().beep();
 				// F10 should be passed on, but C+e F10
 				// shouldn't
-				repeatCount = 0;
-				repeat = false;
+				repeatCount = 1;
 				evt.consume();
 				setCurrentBindings(bindings);
 			}
@@ -328,19 +327,7 @@ public class DefaultInputHandler extends InputHandler
 			invokeAction((EditAction)o);
 		}
 		else
-		{
-			// otherwise, reset to default map and do user input
-			setCurrentBindings(bindings);
-
-			if(repeat && Character.isDigit(c))
-			{
-				repeatCount *= 10;
-				repeatCount += (c - '0');
-				view.getStatus().setMessage(null);
-			}
-			else
-				userInput(c);
-		}
+			userInput(c);
 	} //}}}
 
 	//{{{ setModifierMapping() method
