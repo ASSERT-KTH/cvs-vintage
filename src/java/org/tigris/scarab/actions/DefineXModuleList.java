@@ -53,7 +53,6 @@ import java.util.ArrayList;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 
@@ -75,7 +74,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.17 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.18 2003/03/27 23:52:15 jon Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {

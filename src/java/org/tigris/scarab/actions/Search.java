@@ -57,7 +57,6 @@ import org.apache.turbine.ParameterParser;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.torque.om.NumberKey;
 import org.apache.commons.lang.StringUtils;
 
 import org.apache.turbine.tool.IntakeTool;
@@ -88,7 +87,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.119 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: Search.java,v 1.120 2003/03/27 23:52:15 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {

@@ -68,11 +68,11 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.30 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: ModifyModule.java,v 1.31 2003/03/27 23:52:15 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
-    private static final String[] emailParms = 
+    private static final String[] EMAIL_PARAMS = 
         {GlobalParameterManager.EMAIL_ENABLED, 
          GlobalParameterManager.EMAIL_INCLUDE_ISSUE_DETAILS};
 
@@ -151,9 +151,9 @@ public class ModifyModule extends RequireLoginFirstAction
                 {
                     ParameterParser pp = data.getParameters();
                     String name;
-                    for (int i=0; i<emailParms.length; i++) 
+                    for (int i=0; i<EMAIL_PARAMS.length; i++) 
                     {
-                        name = emailParms[i];
+                        name = EMAIL_PARAMS[i];
                         GlobalParameterManager
                             .setBoolean(name, pp.getBoolean(name));
                     }

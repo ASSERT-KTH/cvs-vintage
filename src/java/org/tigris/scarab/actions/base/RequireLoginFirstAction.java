@@ -49,7 +49,7 @@ package org.tigris.scarab.actions.base;
 // Java Stuff
 
 // Turbine Stuff
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
@@ -69,12 +69,11 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.46 2003/03/04 17:27:18 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.47 2003/03/27 23:53:02 jon Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
-    private static final Category log = 
-        Category.getInstance("org.tigris.scarab");
+    private static final Logger LOG = Logger.getLogger("org.tigris.scarab");
 
     protected static final String ERROR_MESSAGE = 
         "MoreInformationWasRequired";
@@ -310,9 +309,9 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         doCancel(data, context);
     }
 
-    protected Category log()
+    protected Logger log()
     {
-        return log;
+        return LOG;
     }
 
     /**

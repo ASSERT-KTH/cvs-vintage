@@ -49,7 +49,7 @@ package org.tigris.scarab.actions.base;
 // Java Stuff
 
  // Turbine Stuff
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
@@ -65,12 +65,11 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.30 2003/03/04 17:27:18 jmcnally Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.31 2003/03/27 23:53:03 jon Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
-    private static final Category log = 
-        Category.getInstance("org.tigris.scarab");
+    private static final Logger LOG = Logger.getLogger("org.tigris.scarab");
 
     protected static final String ERROR_MESSAGE = 
         "MoreInformationWasRequired";
@@ -250,9 +249,8 @@ public abstract class ScarabTemplateAction extends TemplateAction
         doCancel(data, context);
     }
 
-
-    protected Category log()
+    protected Logger log()
     {
-        return log;
+        return LOG;
     }
 }
