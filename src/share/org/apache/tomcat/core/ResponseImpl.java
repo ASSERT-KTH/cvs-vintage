@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.8 2000/01/25 01:11:54 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/25 01:11:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.9 2000/01/29 05:51:32 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/01/29 05:51:32 $
  *
  * ====================================================================
  *
@@ -399,6 +399,14 @@ public class ResponseImpl implements Response {
 
     public void addCookie(Cookie cookie) {
 	userCookies.addElement(cookie);
+    }
+
+    public Enumeration getCookies() {
+	return userCookies.elements();
+    }
+
+    public Enumeration getSystemCookies() {
+	return systemCookies.elements();
     }
 
     public void addSystemCookie(Cookie cookie) {

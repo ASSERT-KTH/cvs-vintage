@@ -62,6 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.net.*;
+import org.apache.tomcat.context.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
@@ -135,56 +136,43 @@ public class ContextManager {
         return contexts.keys();
     }
 
-    public void start() throws Exception {
+    public void init()  throws TomcatException {
 
-	// set a default connector ( http ) if none defined yet
-	if(connectors.size()==0) {
-	    // Make the default customizable!
-	    addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
-	}
+	// Initialize and check Context Manager 
+	(new DefaultCMSetter()).handleContextManagerInit(this);
+	(new AutoSetup()).handleContextManagerInit(this);
 	
-	for( int i=0; i<connectors.size(); i++ ) {
-	    ((ServerConnector)connectors.elementAt(i)).setContextManager( this );
-	    ((ServerConnector)connectors.elementAt(i)).start();
-	}
-	
-	// check for default context 
-	Context defaultContext=getContext("");
-	if (defaultContext == null ||
-	    defaultContext.getDocumentBase() == null) {
-	    // XXX find a better exception 
-	    throw new IllegalArgumentException("No default context " + defaultContext);
-	}
-	
-	if( requestInterceptors.size() == 0 ) {
-	    // nothing set up by starter, add default ones
-	    if(debug>0) log("Setting default interceptors " + requestInterceptors);
-	    addRequestInterceptor(new ContextMapperInterceptor( this ));
-	    addRequestInterceptor(new SessionInterceptor());
-	    //	    addRequestInterceptor(new MapperInterceptor());
-
-	    // Use the simplified mapper - revert if too many bugs and
-	    addRequestInterceptor(new SimpleMapper());
-	}
-	
-	// init contexts
+    	// init contexts
 	Enumeration enum = getContextNames();
 	while (enum.hasMoreElements()) {
             Context context = getContext((String)enum.nextElement());
             context.init();
 	}
-
-	// XXX make it configurable - all actions in this method will
-	// be replaced with Interceptors or Tasks. 
-// 	org.apache.tomcat.task.ApacheConfig apacheConfig=new org.apache.tomcat.task.ApacheConfig();
-// 	apacheConfig.execute( this );
+    }
+    
+    /** Will start the connectors and begin serving requests
+     */
+    public void start() throws Exception {//TomcatException {
+	init();
+	
+	Enumeration connE=getConnectors();
+	while( connE.hasMoreElements() ) {
+	    ((ServerConnector)connE.nextElement()).start();
+	}
     }
 
-    public void stop() throws Exception {
+    public void stop() throws Exception {//TomcatException {
 	System.out.println("Stopping context manager ");
-	for (int i=0; i<connectors.size(); i++) {
-	    ((ServerConnector)connectors.elementAt(i)).stop();
+
+	Enumeration connE=getConnectors();
+	while( connE.hasMoreElements() ) {
+	    ((ServerConnector)connE.nextElement()).stop();
 	}
+
+	destroy();
+    }
+
+    public void destroy() throws Exception {//TomcatException {
 
 	Enumeration enum = getContextNames();
 	while (enum.hasMoreElements()) {
@@ -259,6 +247,7 @@ public class ContextManager {
      */
     public synchronized void addServerConnector( ServerConnector con ) {
 	if(debug>0) log(" adding connector " + con.getClass().getName());
+	con.setContextManager( this );
 	connectors.addElement( con );
     }
 
@@ -269,6 +258,10 @@ public class ContextManager {
     public void addRequestInterceptor( RequestInterceptor ri ) {
 	if(debug>0) log(" adding request intereptor " + ri.getClass().getName());
 	requestInterceptors.addElement( ri );
+    }
+
+    public Enumeration getRequestInterceptors() {
+	return requestInterceptors.elements();
     }
     
     // -------------------- Defaults for all contexts --------------------
@@ -501,7 +494,11 @@ public class ContextManager {
 	debug=level;
     }
 
-    void log( String msg ) {
+    public int getDebug( ) {
+	return debug;
+    }
+
+    public void log( String msg ) {
 	System.out.println("CM: " + msg );
     }
 

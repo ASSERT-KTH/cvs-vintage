@@ -140,7 +140,7 @@
     <deltree dir="${tomcat.home}"/>
   </target>
 
-  <target name="all" depends="clean,main,dist"/>
-  <target name="main" depends="tomcat,webapps"/>
+  <target name="all" depends="clean,main,dist,webapps"/>
+  <target name="main" depends="tomcat"/>
   
 </project>

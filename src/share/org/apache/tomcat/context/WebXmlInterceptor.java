@@ -90,7 +90,7 @@ public class WebXmlInterceptor implements ContextInterceptor {
 	        webApplicationDescriptor.getResourceAsStream("web.xml");
 	    String msg = sm.getString("context.getConfig.msg", "default");
 
-    	    System.out.println(msg);
+	    // No message for default  !! System.out.println(msg);
 
 	    processWebApp(ctx, is, true);
 	} catch (Exception e) {
@@ -113,10 +113,10 @@ public class WebXmlInterceptor implements ContextInterceptor {
 	    webURL = new URL(s + "/" + Constants.Context.ConfigFile);
 
 	    InputStream is = webURL.openConnection().getInputStream();
-	    String msg = sm.getString("context.getConfig.msg",
-				      webURL.toString());
+	    // 	    String msg = sm.getString("context.getConfig.msg",
+	    // 				      webURL.toString());
 
-	    System.out.println(msg);
+	    System.out.println("Context(" + ctx.getPath() + "): " + webURL.getFile());
 	    
 	    processWebApp(ctx, is, false);
 	} catch (Exception e) {

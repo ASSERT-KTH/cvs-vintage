@@ -273,10 +273,6 @@ public class Context {
 	rD.setPath( path );
 
 	return rD;
-// 	Request subReq=contextM.createRequest( this, path );
-// 	contextM.processRequest(subReq);
-	
-// 	return new RequestDispatcherImpl(subReq);
     }
 
     public RequestDispatcher getNamedDispatcher(String name) {
@@ -287,18 +283,10 @@ public class Context {
 	ServletWrapper wrapper = getServletByName( name );
 	if (wrapper == null)
 	    return null;
-
 	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
 	rD.setName( name );
 
 	return rD;
-// 	// creates a new subrequest, and set the wrapper.
-// 	Request subR = new Request();
-// 	subR.setWrapper( wrapper );
-// 	subR.setPathInfo("");
-// 	subR.setContext( this );
-	
-//         return  new RequestDispatcherImpl(subR);
     }
 
     /** Implements getResource() - use a sub-request to let interceptors do the job.

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.8 2000/01/15 23:30:20 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/15 23:30:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.9 2000/01/29 05:51:31 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/01/29 05:51:31 $
  *
  * ====================================================================
  *
@@ -176,6 +176,7 @@ public class RequestImpl  implements Request {
     public String getServerName() {
 	if(serverName!=null) return serverName;
 
+	// XXX Move to interceptor!!!
 	String hostHeader = this.getHeader("host");
 	if (hostHeader != null) {
 	    int i = hostHeader.indexOf(':');
