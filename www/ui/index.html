@@ -20,29 +20,14 @@
 <body>
 
 <h2>Scarab UI</h2>
-<p>*updated Jan 10, 2001</p>
-<p>(!) these screens require further UI review/discussion (jan 10, 2002)</p>
-
-<em>$Id: index.html,v 1.69 2002/02/05 02:15:29 braino Exp $ <a href=""></a></em>
+<p>updated Feb 11, 2001</p>
 
 
-<ul>
-	<li><a href="http://scarab.tigris.org/">Back to scarab.tigris.org</a></li>
-	<li><a href="#milscre">Milestone screens - resource map</a></li>
-	<li><a href="#stygui">Style Guide</a></li>
-</ul>
-
-<h3><a name="milscre">Milestone screens - resource map</a></h3>
-<dl>
-	<dt>milestone 1</dt>
+<dt>General display UI</dt>
 	<dd>
+
 		<table>
-		<tr>
-		<th width="100">comp</th>
-		<th>title</th>
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
-		
+
 		<tr class="a">
 		<td><a href="./milestone1x_screens/error.html">Error-msgs</a></td>
 		<td>class="alert"</td>
@@ -61,57 +46,43 @@
 		<td></td>
 		</tr>
 		
-		<tr class="b">
+		</table>
+	</dd>
+
+
+<dt>Navigating Scarab, managing Artifact (Issue) types, and attributes</dt>
+	<dd>
+
+		<table>
+		
+		
+		<tr class="a">
 		<td><a href="./milestone1x_screens/2-0-0.html">2.0.0</a></td>
-		<td>*Select Module</td>
+		<td>Select Module</td>
 		<td>??.vm</td>
 		</tr>
 		
-		<tr class="a">
+		<tr class="b">
 		<td><a href="./milestone1x_screens/2-0-0-1.html">2.0.0.1</a></td>
-		<td>*Artifact types</td>
+		<td>Artifact types</td>
 		<td>??.vm</td>
-		</tr>
-		
-		<tr class="b">
-		<td><a href="./milestone1x_screens/2-1-0.html">2.1.0</a></td>
-		<td>*Enter Issue</td>
-		<td>entry/Wizard1.vm</td>
-		</tr>
-		
-		<tr class="a">
-		<td><a href="./milestone1x_screens/2-1-1.html">2.1.1</a></td>
-		<td>*Identified as Duplicate</td>
-		<td>entry/Wizard2.vm</td>
-		</tr>
-		
-		<tr class="b">
-		<td><a href="./milestone1x_screens/2-1-2.html">2.1.2</a></td>
-		<td>*Enter Issue Verbose</td>
-		<td>entry/Wizard3.vm</td>
-		</tr>
-		
-		<tr class="a">
-		<td><a href="./milestone1x_screens/2-1-4.html">2.1.4</a></td>	
-		<td>*Manage artifact type</td>	
-		<td>>ModuleEdit.vm</td>
 		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone1x_screens/3-1-4.html">3.1.4</a></td>	
-		<td>*System artifact types</td>	
+		<td>System artifact types</td>	
+		<td>>ModuleEdit.vm</td>
+		</tr>
+		
+		<tr class="b">
+		<td><a href="./milestone1x_screens/2-1-4.html">2.1.4</a></td>	
+		<td>Manage artifact type</td>	
 		<td>>ModuleEdit.vm</td>
 		</tr>
 
-		<tr class="b">
-		<td><a href="./milestone1x_screens/2-1-4-0.html">2.1.4.0</a></td>	
-		<td>*Customize / create artifact type</td>	
-		<td>>ModuleAttributeEdit.vm</td>
-		</tr>
-
 		<tr class="a">
-		<td><a href="./milestone1x_screens/2-1-4-0-1.html">2.1.4.0.1</a></td>	
-		<td>*User preferences</td>	
+		<td><a href="./milestone1x_screens/2-1-4-0.html">2.1.4.0</a></td>	
+		<td>Customize / create artifact type</td>	
 		<td>>ModuleAttributeEdit.vm</td>
 		</tr>
 
@@ -122,40 +93,15 @@
 		<td>>not defined</td>
 		</tr>
 
-
 		<tr class="a">
 		<td><a href="./milestone1x_screens/3-0-1.html">3.0.1</a></td>	
-		<td>*2.1.4.0->add attribute (3.0.1)</td>	
+		<td>Add attribute (3.0.1)</td>	
 		<td>GlobalAttributeSelect.vm</td>
 		</tr>
-
-		<tr class="b">
-		<td><a href="./milestone1x_screens/2-6-1.html">2.6.1</a></td>
-		<td>*Issue view - with editable comments</td>
-		<td>? - suggest 'IssDet.vm'</td>
-		</tr>
-		
-		<tr class="a">
-		<td><a href="./milestone1x_screens/2-6-1_b.html">2.6.1</a></td>
-		<td>*Issue view - with static comments</td>
-		<td>? - suggest 'IssDet.vm'</td>
-		</tr>
 		
 		<tr class="b">
-		<td><a href="./milestone1x_screens/2-6-2.html">2.6.2</a></td>
-		<td>*Issue view long form</td>
-		<td>? - suggest 'IssDetLonFor.vm'</td>
-		</tr>
-		
-		<tr class="a">
 		<td><a href="./milestone1x_screens/3-0-0.html">3.0.0</a></td>
-		<td>*Global attributes</td>
-		<td>admin/AttributeShow.vm</td>
-		</tr>
-
-		<tr class="b">
-		<td><a href="./milestone1x_screens/3-0-0-1.html">3.0.0.1</a></td>
-		<td>*User attributes</td>
+		<td>Data attributes</td>
 		<td>admin/AttributeShow.vm</td>
 		</tr>
 		
@@ -164,315 +110,223 @@
 		<td>Data attribute detail</td>
 		<td>admin/AttributeEdit.vm</td>
 		</tr>
-		
+
 		<tr class="b">
+		<td><a href="./milestone1x_screens/3-0-0-1.html">3.0.0.1</a></td>
+		<td>*User attributes</td>
+		<td>admin/AttributeShow.vm</td>
+		</tr>
+		
+		
+		<tr class="a">
 		<td><a href="./milestone1x_screens/3-0-3-0.html">3.0.3.0 step 1</a></td>
 		<td>User attribute detail</td>
 		<td>? - is this a state of AttributeEdit?</td>
 		</tr>
+		
 		</table>
-
 	</dd>
-	
-	<dt>milestone 2</dt>
+
+
+<dt>Issue handling</dt>
 	<dd>
+
 		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
+		
+		<tr class="a">
+		<td><a href="./milestone1x_screens/2-1-0.html">2.1.0</a></td>
+		<td>Enter Issue</td>
+		<td>entry/Wizard1.vm</td>
+		</tr>
+		
+		<tr class="bb">
+		<td><a href="./milestone1x_screens/2-1-1.html">2.1.1</a></td>
+		<td>Identified as Duplicate</td>
+		<td>entry/Wizard2.vm</td>
 		</tr>
 		
 		<tr class="a">
+		<td><a href="./milestone1x_screens/2-1-2.html">2.1.2</a></td>
+		<td>Enter Issue Verbose</td>
+		<td>entry/Wizard3.vm</td>
+		</tr>
+		
+		<tr class="b">
 		<td><a href="./milestone2x_screens/2-2-0-x.html">2.2.0.x</a></td>	
-		<td>*Custom search</td>	
+		<td>Custom query</td>	
 		<td>? - suggest 'CusSea.vm'</td>
 		</tr>
 		
-		<tr class="b">
+		<tr class="a">
 		<td><a href="./milestone2x_screens/2-2-0.html">2.2.0</a></td>	
-		<td>*Advanced query</td>	
+		<td>Advanced query</td>	
 		<td>Query.vm</td>
 		</tr>
 		
-		<tr class="a">
-		<td><a href="./milestone2x_screens/2-2-1.html">2.2.1</a></td>	
-		<td>*Saved query</td>	
-		<td>? - suggest 'SavQue.vm'</td>
-		</tr>
-		
 		<tr class="b">
-		<td><a href="./milestone2x_screens/2-2-2.html">2.2.2</a></td>	
-		<td>*Saved query list</td>	
-		<td>? - suggest 'SavQue.vm'</td>
-		</tr>
-		
-		<tr class="a">
 		<td><a href="./milestone2x_screens/2-6-0.html">2.6.0</a></td>	
-		<td>*Query results</td>	
+		<td>Query results</td>	
 		<td>? - suggest 'QueLisSeaRes.vm'</td>
 		</tr>
 		
-		<tr class="b">
+		<tr class="a">
 		<td><a href="./milestone2x_screens/2-6-0-1.html">2.6.0.1</a></td>	
-		<td>*Add / edit attributes in view</td>	
+		<td>Add / edit attributes in view</td>	
 		<td>--</td>
-		</tr>	
-		
-		<tr class="a">
-		<td><a href="./milestone2x_screens/2-6-1-0.html">2.6.1.0</a></td>	
-		<td>*Bulk edit selected issues</td>	
-		<td>--</td>
-		</tr>
-		</table>
-	</dd>
-	
-	<dt>milestone 3</dt>
-	<dd>
-		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
-		
-		<tr class="a">
-		<td><a href="./milestone3x_screens/2-0-0-2.html">2.0.0.2</a></td>	
-		<td>(!)Vote management</td>	
-		<td>? - suggest 'VoteMan.vm'</td>
-		</tr>
+		</tr>			
 		
 		<tr class="b">
 		<td><a href="./milestone3x_screens/2-1-3.html">2.1.3</a></td>	
-		<td>*Assign issue</td>	
+		<td>Assign issue</td>	
 		<td>? - suggest 'AssIss.vm'</td>
 		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone3x_screens/2-1-3-0.html">2.1.3_0</a></td>	
-		<td>*Assign issue (showing bulk assign)</td>	
+		<td>Assign issue (showing bulk assign)</td>	
 		<td>? - suggest 'AssIss.vm'</td>
+		</tr>
+				
+		<tr class="b">
+		<td><a href="./milestone1x_screens/2-6-1.html">2.6.1</a></td>
+		<td>Issue view - with editable comments</td>
+		<td>? - suggest 'IssDet.vm'</td>
 		</tr>
 		
 		<tr class="a">
+		<td><a href="./milestone1x_screens/2-6-1_b.html">2.6.1</a></td>
+		<td>Issue view - with static comments</td>
+		<td>? - suggest 'IssDet.vm'</td>
+		</tr>
+
+		<tr class="b">
+		<td><a href="./milestone2x_screens/2-6-1-0.html">2.6.1.0</a></td>	
+		<td>Bulk edit selected issues</td>	
+		<td>--</td>
+		</tr>
+				
+		<tr class="a">
+		<td><a href="./milestone1x_screens/2-6-2.html">2.6.2</a></td>
+		<td>Issue view long form</td>
+		<td>? - suggest 'IssDetLonFor.vm'</td>
+		</tr>		
+
+		<tr class="b">
 		<td><a href="./milestone3x_screens/2-7-0_step1.html">2.7.0 step 1</a></td>
-		<td>(!)Move/copy issue</td>
+		<td>Move/copy issue</td>
 		<td>? - suggest 'MovCopIss.vm'</td>
 		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone3x_screens/2-7-0_step2.html">2.7.0 step 2</a></td>
-		<td>(!)Move/copy issue</td>
+		<td>Move/copy issue</td>
 		<td>? - suggest 'MovCopIss.vm'</td>
 		</tr>
 		
-		<tr class="b">
-		<td><a href="./milestone3x_screens/3-3-0.html">3.3.0</a></td>	
-		<td>(!)Voting Management</td>	
-		<td>? - suggest 'VotiMan.vm'</td>
-		</tr>
 		</table>
 	</dd>
-	
-	<dt>milestone 4</dt>
+		
+
+<dt>Report generation</dt>
 	<dd>
 		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
-	
-		<tr class="a">
-		<td><a href="./milestone4x_screens/3-5-0.html">3.5.0</a></td>	
-		<td>(!)Workflow Customization Options</td>
-		<td>? - suggest 'WorCusOpt.vm'</td>
-		</tr>
-		</table>
-	</dd>
-	
-	<dt>milestone 5</dt>
-	<dd>
-		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
-		</table>
-	</dd>
-	
-	<dt>milestone 6 - reports: UI still under review</dt>
-	<dd>
-		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone6x_screens/builder1_info.html">2.4.1</a></td>	
-		<td>*Report builder: Report info</td>	
+		<td>Report builder: Report info</td>	
 		<td>?</td>
 		</tr>
 		
 		<tr class="b">
 		<td><a href="./milestone6x_screens/builder1_dataset.html">2.4.1</a></td>	
-		<td>*Report builder: Report data groups</td>	
+		<td>Report builder: Report data groups</td>	
 		<td>?</td>
 		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone6x_screens/builder1.html">2.4.1</a></td>
-		<td>*Report builder: output</td>	
+		<td>Report builder: output</td>	
 		<td>?</td>
 		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone6x_screens/builder1_row.html">2.4.1</a></td>	
-		<td>*Report builder: Select/add row content</td>	
+		<td>Report builder: Select/add row content</td>	
 		<td>?</td>
 		</tr>
 		
 		<tr class="b">
 		<td><a href="./milestone6x_screens/builder1_col.html">2.4.1</a></td>	
-		<td>*Report builder: Select/add column content</td>	
-		<td>?</td>
-		</tr>
-
-		<!--
-		<tr class="b">
-		<td><a href="./milestone6x_screens/2-4-1_a-output.html">2.4.1.X</a></td>	
-		<td>Comparative analysis: output</td>	
-		<td>?</td>
-		</tr>
-
-		<tr class="a">
-		<td><a href="./milestone6x_screens/2-4-1_b-output.html">2.4.1.X (b)</a></td>	
-		<td>Rate of change output</td>	
-		<td>?</td>
-		</tr> -->
-		
-		<tr class="a">
-		<td><a href="./milestone6x_screens/2-4-2.html">2.4.2</a></td>	
-		<td>*Saved report list</td>	
+		<td>Report builder: Select/add column content</td>	
 		<td>?</td>
 		</tr>
 
 		</table>
 	</dd>
-	
-	<dt>milestone 7 contains no template screens</dt>
+
+
+<dt>Repettitive task handling</dt>
 	<dd>
 		<table>
-		<tr>
-		<th>-</th>	
-		<th>-</th>
-		<th>-</th>
-		</tr>
-		
-		<tr>
-		<td>-</td>	
-		<td>-</td>	
-		<td>-</td>
-		</tr>
-		</table>
-	</dd>
-	
-	<dt>milestone 8</dt>
-	<dd>
-		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
-		
-		<tr class="a">
-		<td><a href="./milestone8x_screens/3-6-0.html">3.6.0</a></td>	
-		<td>*User submission queue (3.6.0)</td>	
-		<td>?</td>
-		</tr>
-		</table>
-	</dd>
-	
-	<dt>milestone 10</dt>
-	<dd>
-		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
 		
 		<tr class="a">
 		<td><a href="./milestone10x_screens/2-1-0-1.html">2.1.0.1</a></td>	
-		<td>*Save / edit template</td>	
+		<td>Save / edit template</td>	
 		<td>?</td>
 		</tr>
 		
 		<tr class="b">
 		<td><a href="./milestone10x_screens/2-1-0-2.html">2.1.0.2</a></td>	
-		<td>*Template list</td>	
+		<td>Template list</td>	
 		<td>?</td>
 		</tr>
+
+		<tr class="a">
+		<td><a href="./milestone2x_screens/2-2-1.html">2.2.1</a></td>	
+		<td>Saved query</td>	
+		<td>? - suggest 'SavQue.vm'</td>
+		</tr>
 		
-		
-		</table>
-	</dd>
-	<!--
-	<dt>other screens</dt>
-	<dd>
-		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
+		<tr class="b">
+		<td><a href="./milestone2x_screens/2-2-2.html">2.2.2</a></td>	
+		<td>Saved query list</td>	
+		<td>? - suggest 'SavQue.vm'</td>
 		</tr>
 		
 		<tr class="a">
-		<td><a href="./milestone1x_screens/404.html">Alert - Error message</a></td>	
-		<td>?</td>	
+		<td><a href="./milestone6x_screens/2-4-2.html">2.4.2</a></td>	
+		<td>Saved report list</td>	
 		<td>?</td>
-		</tr>		
+		</tr>
+		
+		<tr class="b">
+		<td><a href="./milestone8x_screens/3-6-0.html">3.6.0</a></td>	
+		<td>User submission queue (3.6.0)</td>	
+		<td>?</td>
+		</tr>
 		
 		</table>
 	</dd>
 	
-	<dt>help files/app</dt>
+
+<dt>Personalization and workflow automation</dt>
 	<dd>
 		<table>
-		<tr>
-		<th width="100">comp</th>	
-		<th>title</th>	
-		<th>template pathname (/scarab/src/templates/screens)</th>
-		</tr>
 		
 		<tr class="a">
-		<td><a href="./help_screens/index.html" target="_new">help.html</a></td>	
-		<td>Help home</td>	
-		<td>?</td>
+		<td><a href="./milestone1x_screens/2-1-4-0-1.html">2.1.4.0.1</a></td>	
+		<td>User preferences</td>	
+		<td>>ModuleAttributeEdit.vm</td>
 		</tr>
+		<tr class="b">
+		<td><a href="./milestone4x_screens/3-5-0.html">3.5.0</a></td>	
+		<td>Workflow Customization Options</td>
+		<td>? - suggest 'WorCusOpt.vm'</td>
+		</tr>
+		
 		</table>
-	</dd>
-	-->
+		
 </dl>
-
-<h3><a id="stygui" name="stygui">Style Guide</a></h3>
-
-<pre>
-	Structure
-	Usage
-	Headings
-	Tables
-	Divisions and paragraphs
-	BR: mostly evil
-	Miscellaneous class and ID attributes
-	Syntax
-	Cascading Style Sheets
-</pre>
-
 </body>
 </html>
 
