@@ -58,9 +58,9 @@ import org.apache.torque.om.BaseObject;
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.13 2001/08/02 07:11:38 jon Exp $    
+    @version $Id: BaseScarabObject.java,v 1.14 2001/09/12 21:19:01 jmcnally Exp $    
 */
-public class BaseScarabObject extends BaseObject
+public abstract class BaseScarabObject extends BaseObject
 {
     /** created_by_id */
     private int created_by_id = -1;
