@@ -11,11 +11,27 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
- * @author frd
+ * @author fdietz
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * See RFC 2060 IMAP4 (http://rfc-editor.org)
+ * 
  */
+
+//
+//7.2.3.  LSUB Response
+//
+//   Contents:   name attributes
+//			   hierarchy delimiter
+//			   name
+//
+//	  The LSUB response occurs as a result of an LSUB command.  It
+//	  returns a single name that matches the LSUB specification.  There
+//	  can be multiple LSUB responses for a single LSUB command.  The
+//	  data is identical in format to the LIST response.
+//
+//   Example:    S: * LSUB () "." #news.comp.mail.misc
+
+
 public class LSubParser {
 	
 	public static List parseLsub(String s) {

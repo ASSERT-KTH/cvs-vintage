@@ -22,13 +22,37 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.imap.IMAPResponse;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * See RFC 2060 IMAP4 (http://rfc-editor.org)
+ * 
+ * fetch list of message flags
+ * 
+ * example:
+ *  
+ * C: A999 UID FETCH 4827313:4828442 FLAGS
+ * S: * 23 FETCH (FLAGS (\Seen) UID 4827313)
+ * S: * 24 FETCH (FLAGS (\Seen) UID 4827943)
+ * S: * 25 FETCH (FLAGS (\Seen) UID 4828442)
+ * S: A999 UID FETCH completed
+ * 
  */
+
+
+//7.2.6.  FLAGS Response
+//
+//   Contents:   flag parenthesized list
+//
+//	  The FLAGS response occurs as a result of a SELECT or EXAMINE
+//	  command.  The flag parenthesized list identifies the flags (at a
+//	  minimum, the system-defined flags) that are applicable for this
+//	  mailbox.  Flags other than the system flags can also exist,
+//	  depending on server implementation.
+//
+//	  The update from the FLAGS response MUST be recorded by the client.
+//
+//   Example:    S: * FLAGS (\Answered \Flagged \Deleted \Seen \Draft)
+//
 public class FlagsParser {
 
 	

@@ -21,13 +21,31 @@ import java.util.StringTokenizer;
 import org.columba.mail.imap.IMAPResponse;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * See RFC 2060 IMAP4 (http://rfc-editor.org)
+ * 
+ * Example:    
+ * 
+ * C: A282 SEARCH FLAGGED SINCE 1-Feb-1994 NOT FROM "Smith"
+ * S: * SEARCH 2 84 882
+ * S: A282 OK SEARCH completed
+ * 
+ * 
  */
+
+//7.2.5.  SEARCH Response
+//
+//   Contents:   zero or more numbers
+//
+//	  The SEARCH response occurs as a result of a SEARCH or UID SEARCH
+//	  command.  The number(s) refer to those messages that match the
+//	  search criteria.  For SEARCH, these are message sequence numbers;
+//	  for UID SEARCH, these are unique identifiers.  Each number is
+//	  delimited by a space.
+//
+//   Example:    S: * SEARCH 2 3 6
+			   
 public class SearchResultParser {
 
 	/**
