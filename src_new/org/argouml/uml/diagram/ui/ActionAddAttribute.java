@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.15 2005/01/08 23:27:26 linus Exp $
+// $Id: ActionAddAttribute.java,v 1.16 2005/01/14 19:28:12 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,8 @@ public class ActionAddAttribute extends UMLAction {
 	Object target = TargetManager.getInstance().getModelTarget();
 	Object/*MClassifier*/ cls = null;
 
-	if (ModelFacade.isAClassifier(target)) {
+	if (ModelFacade.isAClassifier(target)
+            || ModelFacade.isAAssociationEnd(target)) {
 	    cls = target;
 	} else if (ModelFacade.isAFeature(target)
 		 && ModelFacade.isAClass(ModelFacade.getOwner(target))) {
@@ -96,7 +97,8 @@ public class ActionAddAttribute extends UMLAction {
 	return super.shouldBeEnabled()
 	       && (ModelFacade.isAClass(target)
 		   || (ModelFacade.isAFeature(target)
-		       && ModelFacade.isAClass(ModelFacade.getOwner(target))));
+		       && ModelFacade.isAClass(ModelFacade.getOwner(target)))
+           || ModelFacade.isAAssociationEnd(target));
     }
     /**
      * @return Returns the singleton.

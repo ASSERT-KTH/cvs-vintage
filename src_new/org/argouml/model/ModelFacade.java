@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.247 2005/01/11 21:03:31 mvw Exp $
+// $Id: ModelFacade.java,v 1.248 2005/01/14 19:28:16 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3905,6 +3905,20 @@ public class ModelFacade {
     }
 
     /**
+     * Get the qualified attributes of an association end.
+     *
+     * @param handle association end to retrieve from
+     * @return Collection with qualifiers.
+     */
+    public static Collection getQualifiers(Object handle) {
+        if (handle instanceof MAssociationEnd) {
+            Collection qualifiers = ((MAssociationEnd) handle).getQualifiers();
+            return qualifiers;
+        }
+        return illegalArgumentCollection(handle);
+    }
+
+    /**
      * Determine if the passed parameter has a RETURN direction kind.
      *
      * @return true if it is a return direction kind
@@ -4827,16 +4841,22 @@ public class ModelFacade {
     }
 
     /**
-     * Return the owner of a feature.
+     * Return the owner of a feature or its
+     * association end if it is a
+     * qualified attribute.
      *
      * @param handle is the feature
      * @return classifier
      */
     public static Object getOwner(Object handle) {
+        if ((handle instanceof MAttribute)
+                && ((MAttribute) handle).getAssociationEnd() != null) {
+            return ((MAttribute) handle).getAssociationEnd();
+        }
         if (handle instanceof MFeature) {
             return ((MFeature) handle).getOwner();
         }
-	return illegalArgumentObject(handle);
+        return illegalArgumentObject(handle);
     }
 
     /**
@@ -6647,6 +6667,20 @@ public class ModelFacade {
             return;
         }
 	illegalArgument(handle, parameters);
+    }
+
+    /**
+     * Sets the qualified attributes of an association end
+     *
+     * @param handle the association end
+     * @param elems is a Collection of qualifiers
+     */
+    public static void setQualifiers(Object handle, Collection elems) {
+        if (handle instanceof MAssociationEnd && elems instanceof List) {
+            ((MAssociationEnd) handle).setQualifiers((List) elems);
+            return;
+        }
+        illegalArgument(handle);
     }
 
     /**

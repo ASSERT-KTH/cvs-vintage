@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.13 2005/01/12 18:18:10 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.14 2005/01/14 19:28:14 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -945,20 +945,30 @@ public class CoreFactoryImpl
      *         java.lang.Object, java.lang.Object, java.util.Collection)
      */
     public Object buildAttribute(Object handle, Object model, Object intType,
-            			 Collection propertyChangeListeners) {
-        if (!ModelFacade.isAClassifier(handle)) {
+                                 Collection propertyChangeListeners) {
+        if (!ModelFacade.isAClassifier(handle)
+                && !ModelFacade.isAAssociationEnd(handle)) {
             return null;
         }
-        MClassifier cls = (MClassifier) handle;
-        MAttribute attr = (MAttribute) buildAttribute(model, intType);
-        cls.addFeature(attr);
+        MAttribute attr = null;
+        if (ModelFacade.isAClassifier(handle)) {
+            MClassifier cls = (MClassifier) handle;
+            attr = (MAttribute) buildAttribute(model, intType);
+            cls.addFeature(attr);
+        }
+        if (ModelFacade.isAAssociationEnd(handle)) {
+            MAssociationEnd assend = (MAssociationEnd) handle;
+            attr = (MAttribute) buildAttribute(model, intType);
+            assend.addQualifier(attr);
+            //attr.setAssociationEnd((MAssociationEnd) handle);
+        }
         // we set the listeners to the figs here too
         // it would be better to do that in the figs themselves
         Iterator it = propertyChangeListeners.iterator();
 
         while (it.hasNext()) {
             PropertyChangeListener listener =
-                (PropertyChangeListener) it.next();
+                    (PropertyChangeListener) it.next();
             // nsmodel.getPump().removeModelEventListener(listener, attr);
             nsmodel.getModelEventPump().addModelEventListener(listener, attr);
         }
