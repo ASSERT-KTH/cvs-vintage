@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.29 2004/04/03 00:22:01 d00mst Exp $
+// $Id: StateMachinesFactory.java,v 1.30 2004/05/01 20:06:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -259,6 +259,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
     	if (statemachine != null ) {
 	    MCompositeState state = createCompositeState();
 	    state.setStateMachine(statemachine);
+	    state.setName("top");
 	    return state;
     	} else
 	    throw new IllegalArgumentException("In buildCompositeState: "
@@ -269,24 +270,24 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      * Builds a state machine owned by the given context.
      *
      * @param oContext
-     * @return MActivityGraph
+     * @return MStateMachine
      */
     public MStateMachine buildStateMachine(Object oContext) {
     	if (oContext != null
 	    && (StateMachinesHelper.getHelper()
 		.isAddingStatemachineAllowed(oContext))) {
 
-	    MStateMachine graph = createStateMachine();
+	    MStateMachine machine = createStateMachine();
             MModelElement context = (MModelElement) oContext;
-	    graph.setContext(context);
+	    machine.setContext(context);
 	    if (context instanceof MNamespace) {
-		graph.setNamespace((MNamespace) context);
+		machine.setNamespace((MNamespace) context);
 	    } else if (context instanceof MFeature) {
 		MFeature feature = (MFeature) context;
-		graph.setNamespace(feature.getOwner());
+		machine.setNamespace(feature.getOwner());
     	    }
-	    StateMachinesFactory.getFactory().buildCompositeState(graph);
-	    return graph;
+	    StateMachinesFactory.getFactory().buildCompositeState(machine);
+	    return machine;
 
     	} else {
 	    throw new IllegalArgumentException("In buildStateMachine: "
