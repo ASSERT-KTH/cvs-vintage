@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.29 2004/11/04 17:23:14 bobtarling Exp $
+// $Id: AddToDoItemDialog.java,v 1.30 2004/11/05 13:28:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,8 @@ public class AddToDoItemDialog extends ArgoDialog {
     
     /**
      * Create a new AddToDoItemDialog
-     * @param renderer the ListCellRenderer to use in order to display the offenders
+     * @param renderer the ListCellRenderer to use in order 
+     *                 to display the offenders
      */
     public AddToDoItemDialog(ListCellRenderer renderer) {
         super(ProjectBrowser.getInstance(), 
