@@ -7,25 +7,13 @@
 package org.jboss.ejb.entity;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
-import javax.ejb.EntityBean;
-import javax.ejb.EJBException;
-import javax.ejb.EJBLocalHome;
-
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityPersistenceStore;
-import org.jboss.ejb.EJBProxyFactory;
-import org.jboss.ejb.LocalProxyFactory;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -34,7 +22,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * This interceptor delegates calls to an EntiyPersistenceStore.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class CMPInterceptor extends AbstractEntityTypeInterceptor
 {
