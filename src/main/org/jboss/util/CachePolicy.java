@@ -6,13 +6,14 @@
  */
 package org.jboss.util;
 
+import org.jboss.system.Service;
 /**
  * Interface that specifies a policy for caches. <p>
  * Implementation classes can implement a LRU policy, a random one, 
  * a MRU one, or any other suitable policy.
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface CachePolicy extends Service
 {

@@ -9,7 +9,7 @@ package org.jboss.util;
 import java.security.InvalidParameterException;
 import java.util.Date;
 
-import org.jboss.util.ServiceMBean;
+import org.jboss.system.ServiceMBean;
 
 /**
  * This interface defines the manageable interface for a Scheduler Service
@@ -25,7 +25,7 @@ public interface SchedulerMBean
    // Constants
    // -------------------------------------------------------------------------  
 
-   public static final String OBJECT_NAME = "DefaultDomain:service=Scheduler";
+   public static final String OBJECT_NAME = "JBOSS-SYSTEM:service=Scheduler";
 
    // -------------------------------------------------------------------------
    // Methods

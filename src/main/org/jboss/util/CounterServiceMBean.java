@@ -7,7 +7,7 @@ import java.util.Vector;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</href>
  */
 public interface CounterServiceMBean 
-   extends org.jboss.util.ServiceMBean
+   extends org.jboss.system.ServiceMBean
 {
    public String list();
 }

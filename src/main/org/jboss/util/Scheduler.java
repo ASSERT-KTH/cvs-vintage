@@ -34,7 +34,7 @@ import javax.naming.StringRefAddr;
 
 import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
 * Scheduler Instance to allow clients to run this as a
