@@ -21,7 +21,7 @@
 #if (!$data.Parameters.getString("oldscreen"))
     #set ($allTemplates = $scarabR.IssueTemplates)
     #if ($allTemplates.size() > 0 )
-     <h3>Apply a $scarabR.CurrentIssueType.Name.toLowerCase() template</h3>
+     <h3>Apply a $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase() template</h3>
      <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
           <tr>

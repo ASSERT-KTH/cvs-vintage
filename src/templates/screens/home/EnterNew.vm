@@ -27,10 +27,12 @@
       <th>Description</th>
     </tr>
 
-#foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
+#set ($currentModule = $scarabR.CurrentModule)
+#foreach ($issueType in $currentModule.IssueTypes)
 
     #indexedRows($velocityCount)
-      <td><a href="$link.setPage("entry,Wizard1.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $issueType.QueryKey).setAction("SelectIssueType")">$issueType.Name</a></td>
+    #set ($rmit = $currentModule.getRModuleIssueType($issueType))
+      <td><a href="$link.setPage("entry,Wizard1.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $issueType.QueryKey).setAction("SelectIssueType")">$rmit.DisplayName</a></td>
 <!-- commenting out until functionality is added
       <td><input type="checkbox" /></td>
 -->
