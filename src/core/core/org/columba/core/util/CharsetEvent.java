@@ -29,7 +29,8 @@ public class CharsetEvent extends EventObject {
 	private int id;
 	private String value;
 
-	public CharsetEvent( int id, String name ) {
+	public CharsetEvent( Object source, int id, String name ) {
+		super(source);
 		this.id = id;
 		value = name;	
 	}

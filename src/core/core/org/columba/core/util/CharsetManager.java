@@ -182,7 +182,7 @@ public class CharsetManager implements ActionListener{
 
 		int charsetId = ((CharsetMenuItem)e.getSource()).getId();
 
-		event = new CharsetEvent( charsetId,  charsets[charsetId]);
+		event = new CharsetEvent( this, charsetId, charsets[charsetId]);
 			
 		selectedMenuItem.setText( MailResourceLoader.getString(
 							"menu","mainframe",
