@@ -238,7 +238,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			String charsetName = null;
 			
 			if( bodyPart != null ) {
-				bodyPart.getHeader().getContentParameter("charset");
+				charsetName = bodyPart.getHeader().getContentParameter("charset");
 			}
 				
 
