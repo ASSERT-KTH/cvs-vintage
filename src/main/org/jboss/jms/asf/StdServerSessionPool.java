@@ -47,7 +47,7 @@ import org.apache.log4j.Category;
  * <p>Created: Thu Dec  7 17:02:03 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class StdServerSessionPool
    implements ServerSessionPool
@@ -137,8 +137,12 @@ public class StdServerSessionPool
       executor.setKeepAliveTime(1000*30);
       executor.waitWhenBlocked();
       executor.setThreadFactory(new ThreadFactory() {
+            private volatile int count = 0;
+            
             public Thread newThread(final Runnable command) {
-               return new Thread(threadGroup, command, "Thread Pool Worker");
+               return new Thread(threadGroup,
+                                 command,
+                                 "Thread Pool Worker-" + count++);
             }
          });
 
