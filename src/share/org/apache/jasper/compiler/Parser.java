@@ -765,10 +765,9 @@ public class Parser {
                 return false;
             }
             String prefix = tag.substring(0, i);
-            String shortTagName = null;
-            if (++i < tag.length()-1) 
+            String shortTagName = "";
+            if (++i < tag.length()) 
                 shortTagName = tag.substring(i);
-
             
             /*
              * Check if this is a user-defined tag; otherwise we won't touch this...
