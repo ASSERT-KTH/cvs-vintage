@@ -288,6 +288,124 @@ public final class CharChunk implements Cloneable, Serializable {
 	return -1;
     }
 
+    // based on ap_unescape_url ( util.c, Apache2.0 )
+    public int unescapeURL()
+    {
+	int end=charsOff+ charsLen;
+	int idx= indexOf( chars, charsOff, end, '%' );
+	if( idx<0) return 0;
+
+	for( int j=idx; j<end; j++, idx++ ) {
+	    if( chars[ j ] != '%' ) {
+		chars[idx]=chars[j];
+	    } else {
+		// read next 2 digits
+		if( j+2 >= end ) {
+		    // invalid
+		    return 400; // BAD_REQUEST
+		}
+		char b1= chars[j+1];
+		char b2=chars[j+2];
+		if( !isHexDigit( b1 ) || ! isHexDigit(b2 ))
+		    return 400;
+		
+		j+=2;
+		int res=x2c( b1, b2 );
+		if( res=='/' || res=='\0' )
+		    return 400;
+		chars[idx]=(char)res;
+	    }
+	}
+	return 0;
+    }
+
+    public static boolean isHexDigit( int c ) {
+	return ( ( c>='0' && c<='9' ) ||
+		 ( c>='a' && c<='f' ) ||
+		 ( c>='A' && c<='F' ));
+    }
+    
+    public static int x2c( char b1, char b2 ) {
+	int digit= (b1>='A') ? ( (b1 & 0xDF)-'A') + 10 :
+	    (b1 -'0');
+	digit*=16;
+	digit +=(b2>='A') ? ( (b2 & 0xDF)-'A') + 10 :
+	    (b2 -'0');
+	return digit;
+    }
+
+
+    
+    /**
+     * This method decodes the given urlencoded string.
+     *
+     * @param  str the url-encoded string
+     * @return the decoded string
+     * @exception IllegalArgumentException If a '%' is not
+     * followed by a valid 2-digit hex number.
+     *
+     * @author: cut & paste from JServ, much faster that previous tomcat impl 
+     */
+    public final static String unescapeURL(String str)
+    {
+	// old code
+	System.out.println("XXX old unescape URL "+ str);
+
+        if (str == null)  return  null;
+	
+	// pay for what you use - unencoded requests will not get
+	// less overhead
+	// XXX this should be in the caller ?
+	if( str.indexOf( '+' ) <0 && str.indexOf( '%' ) < 0 )
+	    return str;
+	
+        StringBuffer dec = new StringBuffer();    // decoded string output
+        int strPos = 0;
+        int strLen = str.length();
+
+        dec.ensureCapacity(str.length());
+        while (strPos < strLen) {
+            int laPos;        // lookahead position
+
+            // look ahead to next URLencoded metacharacter, if any
+            for (laPos = strPos; laPos < strLen; laPos++) {
+                char laChar = str.charAt(laPos);
+                if ((laChar == '+') || (laChar == '%')) {
+                    break;
+                }
+            }
+
+            // if there were non-metacharacters, copy them all as a block
+            if (laPos > strPos) {
+                dec.append(str.substring(strPos,laPos));
+                strPos = laPos;
+            }
+
+            // shortcut out of here if we're at the end of the string
+            if (strPos >= strLen) {
+                break;
+            }
+
+            // process next metacharacter
+            char metaChar = str.charAt(strPos);
+            if (metaChar == '+') {
+                dec.append(' ');
+                strPos++;
+                continue;
+            } else if (metaChar == '%') {
+		// We throw the original exception - the super will deal with
+		// it
+		//                try {
+		dec.append((char)Integer.
+			   parseInt(str.substring(strPos + 1, strPos + 3),16));
+                strPos += 3;
+            }
+        }
+
+        return dec.toString();
+    }
+
+
 
 
 }

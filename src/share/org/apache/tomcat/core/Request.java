@@ -65,8 +65,7 @@ import org.apache.tomcat.util.Counters;
 import org.apache.tomcat.util.SimplePrincipal;
 import org.apache.tomcat.util.MessageBytes;
 
-// XXX 
-import org.apache.tomcat.helper.RequestUtil;
+import org.apache.tomcat.util.http.ContentType;
 
 import org.apache.tomcat.util.http.*;
 
@@ -347,7 +346,7 @@ public class Request {
 
     public String getCharacterEncoding() {
         if(charEncoding!=null) return charEncoding;
-        charEncoding = RequestUtil.getCharsetFromContentType( getContentType());
+        charEncoding = ContentType.getCharsetFromContentType(getContentType());
 	return charEncoding;
     }
 
@@ -704,16 +703,42 @@ public class Request {
 	    String qString=queryString().toString();
 	    if(qString!=null) {
 		didParameters=true;
-		RequestUtil.processFormData( qString, parameters );
+		Parameters.processFormData( qString, parameters );
 	    }
 	}
 	if (!didReadFormData) {
 	    didReadFormData = true;
-	    Hashtable postParameters=RequestUtil.readFormData( this );
-	    if(postParameters!=null)
-		parameters = RequestUtil.mergeParameters(parameters,
-							 postParameters);
+	    int len=Parameters.formContentLength( getContentType(),
+						  getContentLength());
+	    if( len > 0 ) {
+		// based on HttpUtils, very ,very slow and bad
+		byte[] formData = new byte [contentLength];
+		try {
+		    readBody( formData, contentLength );
+		} catch(IOException ex ) {
+		    return;
+		}
+
+		Hashtable postParameters=Parameters.processFormData(formData);
+		parameters = Parameters.mergeParameters(parameters,
+							postParameters);
+	    }
 	}
+    }
+
+    private int readBody(byte body[], int len)
+	throws IOException
+    {
+	int offset = 0;
+	
+	do {
+	    int inputLen = doRead(body, offset, len - offset);
+	    if (inputLen <= 0) {
+		return offset;
+	    }
+	    offset += inputLen;
+	} while ((len - offset) > 0);
+	return len;
     }
 
 

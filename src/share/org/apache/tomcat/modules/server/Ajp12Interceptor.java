@@ -71,6 +71,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.http.*;
 
 /* 
  */
@@ -260,7 +261,7 @@ class AJP12Response extends Response {
 
     public void endHeaders()  throws IOException {
 	super.endHeaders();
-	sendStatus( status, RequestUtil.getMessage( status ));
+	sendStatus( status, HttpMessages.getMessage( status ));
 	http.sendHeaders( getMimeHeaders() );
     }
 

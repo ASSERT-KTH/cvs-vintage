@@ -345,6 +345,19 @@ public final class MessageBytes implements Cloneable, Serializable {
 	}
     }
 
+    public int unescapeURL() {
+	switch (type) {
+	case T_STR:
+	    if( strValue==null ) return 0;
+	    strValue=CharChunk.unescapeURL( strValue );
+	case T_CHARS:
+	    return charC.unescapeURL();
+	case T_BYTES:
+	    return byteC.unescapeURL();
+	}
+	return 0;
+    }
+    
     public boolean equals(MessageBytes mb) {
 	switch (type) {
 	case T_STR:

@@ -60,8 +60,8 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
-import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.http.*;
 import java.io.*;
 import java.net.*;
 import java.text.*;
@@ -355,7 +355,8 @@ final class DirHandler extends Handler  {
     {
 	// this is how get locale is implemented. Ugly, but it's in
 	// the next round of optimizations
-	Locale locale=RequestUtil.getLocale(req.getMimeHeaders());
+	String acceptL=req.getMimeHeaders().getHeader( "Accept-Language");
+	Locale locale=AcceptLanguage.getLocale(acceptL);;
 	StringManager sm=StringManager.
 	    getManager("org.apache.tomcat.resources",locale);
 	DateFormat dateFormat =

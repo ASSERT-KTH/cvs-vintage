@@ -63,7 +63,6 @@ package org.apache.tomcat.facade;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.helper.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;

@@ -242,8 +242,13 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	SecurityConstraints ctxSec=(SecurityConstraints)ctx.getContainer().
 	    getNote( secMapNote );
 	if( ctxSec==null || ctxSec.patterns==0 ) return 0; // fast exit
-	
-	String reqURI = RequestUtil.URLDecode(req.requestURI().toString());
+
+	MessageBytes reqURIMB=req.requestURI();
+	if (reqURIMB.indexOf('%') >= 0 || reqURIMB.indexOf( '+' ) >= 0) {
+	    log("Shouldn't happen - the request is decoded earlier");
+	    reqURIMB.unescapeURL();
+	}
+	String reqURI = req.requestURI().toString();
 	String ctxPath= ctx.getPath();
 	String path=reqURI.substring( ctxPath.length());
 	String method=req.method().toString();

@@ -252,7 +252,9 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 
 	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
 	    // XXX rewrite URLDecode to avoid allocation
-	    pathMB.setString( RequestUtil.URLDecode(pathMB.toString()) );
+	    log( "Found encoded char - it should have been decoded earlier");
+	    pathMB.unescapeURL();
+	    // pathMB.setString( RequestUtil.URLDecode(pathMB.toString()) );
 	}
 	try {
 	    //	    String host=null;

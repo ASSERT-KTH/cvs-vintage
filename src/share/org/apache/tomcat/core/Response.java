@@ -67,7 +67,7 @@ import org.apache.tomcat.util.StringManager;
 import org.apache.tomcat.util.MimeHeaders;
 
 // XXX 
-import org.apache.tomcat.helper.RequestUtil;
+import org.apache.tomcat.util.http.ContentType;
 
 /**
  *
@@ -424,7 +424,7 @@ public class Response {
 
         // Set the contentType for header output
         // Use the setContentType() method so encoding is set properly
-        String newType = RequestUtil.constructLocalizedContentType(contentType,
+        String newType = ContentType.constructLocalizedContentType(contentType,
 								   locale);
         setContentType(newType);
 
@@ -439,7 +439,7 @@ public class Response {
     public void setContentType(String contentType) {
         if( included ) return;
 	this.contentType = contentType;
-	String encoding = RequestUtil.getCharsetFromContentType(contentType);
+	String encoding = ContentType.getCharsetFromContentType(contentType);
         if (encoding != null) {
 	    characterEncoding = encoding;
         }

@@ -62,7 +62,6 @@ package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.helper.RequestUtil;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.session.*;
@@ -178,7 +177,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	String value=request.getHeader( name );
 	if( value==null) return -1;
 	
-	long date=RequestUtil.toDate(value);
+	long date=DateTool.parseDate(value);
 	if( date==-1) {
 	    String msg = sm.getString("httpDate.pe", value);
 	    throw new IllegalArgumentException(msg);
@@ -360,7 +359,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Delegate to RequestUtil
      */
     public Enumeration getLocales() {
-        return RequestUtil.getLocales(request.getMimeHeaders());
+	MimeHeaders headers=request.getMimeHeaders();
+        return AcceptLanguage.getLocales(headers.getHeader("Accept-Language"));
     }
 
     /** Delegate to Context

@@ -184,5 +184,159 @@ public final class Parameters extends MultiMap {
     public void mergeParameters( Parameters extra ) {
 	
     }
+
+
+    // XXX Generic code moved from RequestUtil - will be replaced
+    // with more efficient code.
+        /** Combine 2 hashtables into a new one.
+     *  XXX Will move to the MimeHeaders equivalent for params.
+     */
+    public static Hashtable mergeParameters(Hashtable one, Hashtable two) {
+	// Try some shortcuts
+	if (one.size() == 0) {
+	    return two;
+	}
+
+	if (two.size() == 0) {
+	    return one;
+	}
+
+	Hashtable combined = (Hashtable) one.clone();
+
+        Enumeration e = two.keys();
+
+	while (e.hasMoreElements()) {
+	    String name = (String) e.nextElement();
+	    String[] oneValue = (String[]) one.get(name);
+	    String[] twoValue = (String[]) two.get(name);
+	    String[] combinedValue;
+
+	    if (oneValue == null) {
+		combinedValue = twoValue;
+	    }
+
+	    else {
+		combinedValue = new String[oneValue.length + twoValue.length];
+
+	        System.arraycopy(oneValue, 0, combinedValue, 0,
+                    oneValue.length);
+	        System.arraycopy(twoValue, 0, combinedValue,
+                    oneValue.length, twoValue.length);
+	    }
+
+	    combined.put(name, combinedValue);
+	}
+
+	return combined;
+    }
+    
+    public static void processFormData(String data, Hashtable parameters) {
+        // XXX
+        // there's got to be a faster way of doing this.
+	if( data==null ) return; // no parameters
+        StringTokenizer tok = new StringTokenizer(data, "&", false);
+        while (tok.hasMoreTokens()) {
+            String pair = tok.nextToken();
+	    int pos = pair.indexOf('=');
+	    if (pos != -1) {
+		String key = unUrlDecode(pair.substring(0, pos));
+		String value = unUrlDecode(pair.substring(pos+1,
+							  pair.length()));
+		String values[];
+		if (parameters.containsKey(key)) {
+		    String oldValues[] = (String[])parameters.get(key);
+		    values = new String[oldValues.length + 1];
+		    for (int i = 0; i < oldValues.length; i++) {
+			values[i] = oldValues[i];
+		    }
+		    values[oldValues.length] = value;
+		} else {
+		    values = new String[1];
+		    values[0] = value;
+		}
+		parameters.put(key, values);
+	    } else {
+		// we don't have a valid chunk of form data, ignore
+	    }
+        }
+    }
+
+    // from RequestUtil
+    public static Hashtable processFormData(byte data[]   ) {
+	Hashtable postParameters =  new Hashtable();
+
+	try {
+	    String postedBody = new String(data, 0, data.length,
+					   "8859_1");
+	    
+	    Parameters.processFormData( postedBody, postParameters);
+	    return postParameters;
+	} catch( UnsupportedEncodingException ex ) {
+	    return postParameters;
+	}
+    }
+
+    /** Decode a URL-encoded string. Inefficient.
+     */
+    private static String unUrlDecode(String data) {
+	System.out.println("DECODING : " +data );
+	StringBuffer buf = new StringBuffer();
+	for (int i = 0; i < data.length(); i++) {
+	    char c = data.charAt(i);
+	    switch (c) {
+	    case '+':
+		buf.append(' ');
+		break;
+	    case '%':
+		// XXX XXX 
+		try {
+		    buf.append((char) Integer.parseInt(data.substring(i+1,
+                        i+3), 16));
+		    i += 2;
+		} catch (NumberFormatException e) {
+                    String msg = "Decode error ";
+		    // XXX no need to add sm just for that
+		    // sm.getString("serverRequest.urlDecode.nfe", data);
+
+		    throw new IllegalArgumentException(msg);
+		} catch (StringIndexOutOfBoundsException e) {
+		    String rest  = data.substring(i);
+		    buf.append(rest);
+		    if (rest.length()==2)
+			i++;
+		}
+		
+		break;
+	    default:
+		buf.append(c);
+		break;
+	    }
+	}
+	return buf.toString();
+    }           
+
+    // XXX Ugly, most be rewritten
+    /** Process the POST data from a request.
+     */
+    public static int formContentLength( String contentType,
+					 int contentLength )
+    {
+
+	if (contentType != null) {
+            if (contentType.indexOf(";")>0)
+                contentType=contentType.substring(0,contentType.indexOf(";"));
+            contentType = contentType.toLowerCase().trim();
+        }
+
+	if (contentType != null &&
+            contentType.startsWith("application/x-www-form-urlencoded")) {
+	    
+	    if( contentLength >0 ) return contentLength;
+	}
+	return 0;
+    }
+
+    
+
     
 }

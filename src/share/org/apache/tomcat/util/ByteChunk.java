@@ -319,7 +319,51 @@ public final class ByteChunk implements Cloneable, Serializable {
 	return true;
     }
 
+    // based on ap_unescape_url ( util.c, Apache2.0 )
+    public int unescapeURL()
+    {
+	int end=bytesOff+ bytesLen;
+	int idx= indexOf( bytes, bytesOff, end, '%' );
+	if( idx<0) return 0;
+
+	for( int j=idx; j<end; j++, idx++ ) {
+	    if( bytes[ j ] != '%' ) {
+		bytes[idx]=bytes[j];
+	    } else {
+		// read next 2 digits
+		if( j+2 >= end ) {
+		    // invalid
+		    return 400; // BAD_REQUEST
+		}
+		byte b1= bytes[j+1];
+		byte b2=bytes[j+2];
+		if( !isHexDigit( b1 ) || ! isHexDigit(b2 ))
+		    return 400;
+		
+		j+=2;
+		int res=x2c( b1, b2 );
+		if( res=='/' || res=='\0' )
+		    return 400;
+		bytes[idx]=(byte)res;
+	    }
+	}
+	return 0;
+    }
+
+    public static boolean isHexDigit( int c ) {
+	return ( ( c>='0' && c<='9' ) ||
+		 ( c>='a' && c<='f' ) ||
+		 ( c>='A' && c<='F' ));
+    }
     
+    public static int x2c( byte b1, byte b2 ) {
+	int digit= (b1>='A') ? ( (b1 & 0xDF)-'A') + 10 :
+	    (b1 -'0');
+	digit*=16;
+	digit +=(b2>='A') ? ( (b2 & 0xDF)-'A') + 10 :
+	    (b2 -'0');
+	return digit;
+    }
 
     // -------------------- Hash code  --------------------
 
@@ -432,4 +476,5 @@ public final class ByteChunk implements Cloneable, Serializable {
     }
 
 
+    
 }

@@ -300,10 +300,7 @@ public class Http10 {
 	// Perform URL decoding only if necessary
 	if ((uriMB.indexOf('%') >= 0) || (uriMB.indexOf('+') >= 0)) {
 	    try {
-		// XXX rewrite URLDecode to avoid allocation
-		String requestURI = uriMB.toString();
-		requestURI = RequestUtil.URLDecode(requestURI);
-		uriMB.setString( requestURI );
+		uriMB.unescapeURL();
 	    } catch (Exception e) {
 		return 400;
 	    }

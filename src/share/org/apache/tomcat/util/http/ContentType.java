@@ -57,79 +57,68 @@
  *
  */ 
 
-
-package org.apache.tomcat.facade;
+package org.apache.tomcat.util.http;
 
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.*;
+
 import java.io.*;
 import java.net.*;
-import java.security.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.text.*;
 
 /**
- * Facade for a ServerCookie object. The ServerCookie is a recyclable
- * and efficient Cookie implementation. The Facades makes sure the
- * user "sees" only what's permited by the servlet spec.
- *
- * @author Costin Manolache
+ * Usefull methods for Content-Type processing
+ * 
+ * @author James Duncan Davidson [duncan@eng.sun.com]
+ * @author James Todd [gonzo@eng.sun.com]
+ * @author Jason Hunter [jch@eng.sun.com]
+ * @author Harish Prabandham
+ * @author costin@eng.sun.com
  */
-final class CookieFacade extends Cookie {
-    ServerCookie sC;
-    
-    CookieFacade( ServerCookie sC ) {
-	// we can't reuse super anyway
-	super("", "");
-	this.sC=sC;
+public class ContentType {
+    protected static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.resources");
+	
+
+    // Basically return everything after ";charset="
+    // If no charset specified, use the HTTP default (ASCII) character set.
+    public static String getCharsetFromContentType(String type) {
+        if (type == null) {
+            return null;
+        }
+        int semi = type.indexOf(";");
+        if (semi == -1) {
+            return null;
+        }
+        String afterSemi = type.substring(semi + 1);
+        int charsetLocation = afterSemi.indexOf("charset=");
+        if (charsetLocation == -1) {
+            return null;
+        }
+        String afterCharset = afterSemi.substring(charsetLocation + 8);
+        String encoding = afterCharset.trim();
+        return encoding;
     }
-    public void setComment(String purpose) {
-	sC.getComment().setString( purpose);
+
+    /** Utility method for parsing the mime type and setting
+     *  the encoding to locale. Also, convert from java Locale to mime
+     * encodings
+     */
+    public static String constructLocalizedContentType(String type,
+							Locale loc) {
+        // Cut off everything after the semicolon
+        int semi = type.indexOf(";");
+        if (semi != -1) {
+            type = type.substring(0, semi);
+        }
+
+        // Append the appropriate charset, based on the locale
+        String charset = LocaleToCharsetMap.getCharset(loc);
+        if (charset != null) {
+            type = type + "; charset=" + charset;
+        }
+
+        return type;
     }
-    public String getComment() {
-	return sC.getComment().toString();
-    }
-    public void setDomain(String pattern) {
-	sC.getDomain().setString( pattern.toLowerCase());
-	// IE allegedly needs this
-    }
-    public String getDomain() {
-	return sC.getDomain().toString();
-    }
-    public void setMaxAge(int expiry) {
-	sC.setMaxAge(expiry);
-    }
-    public int getMaxAge() {
-	return sC.getMaxAge();
-    }
-    public void setPath(String uri) {
-	sC.getPath().setString( uri );
-    }
-    public String getPath() {
-	return sC.getPath().toString();
-    }
-    public void setSecure(boolean flag) {
-	sC.setSecure( flag );
-    }
-    public boolean getSecure() {
-	return sC.getSecure();
-    }
-    public String getName() {
-	return sC.getName().toString();
-    }
-    public void setValue(String newValue) {
-	sC.getValue().setString(newValue);
-    }
-    public String getValue() {
-	return sC.getValue().toString();
-    }
-    public int getVersion() {
-	return sC.getVersion();
-    }
-    public void setVersion(int v) {
-	sC.setVersion(v);
-    }
+
 }

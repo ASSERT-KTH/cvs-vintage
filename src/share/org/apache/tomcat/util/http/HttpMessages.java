@@ -57,79 +57,61 @@
  *
  */ 
 
+package org.apache.tomcat.util.http;
 
-package org.apache.tomcat.facade;
+import org.apache.tomcat.util.StringManager;
 
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.*;
 import java.io.*;
 import java.net.*;
-import java.security.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.text.*;
 
 /**
- * Facade for a ServerCookie object. The ServerCookie is a recyclable
- * and efficient Cookie implementation. The Facades makes sure the
- * user "sees" only what's permited by the servlet spec.
- *
- * @author Costin Manolache
+ * Handle (internationalized) HTTP messages.
+ * 
+ * @author James Duncan Davidson [duncan@eng.sun.com]
+ * @author James Todd [gonzo@eng.sun.com]
+ * @author Jason Hunter [jch@eng.sun.com]
+ * @author Harish Prabandham
+ * @author costin@eng.sun.com
  */
-final class CookieFacade extends Cookie {
-    ServerCookie sC;
+public class HttpMessages {
+    // XXX move message resources in this package
+    protected static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.resources");
+	
+    static String st_200=null;
+    static String st_302=null;
+    static String st_400=null;
+    static String st_404=null;
     
-    CookieFacade( ServerCookie sC ) {
-	// we can't reuse super anyway
-	super("", "");
-	this.sC=sC;
-    }
-    public void setComment(String purpose) {
-	sC.getComment().setString( purpose);
-    }
-    public String getComment() {
-	return sC.getComment().toString();
-    }
-    public void setDomain(String pattern) {
-	sC.getDomain().setString( pattern.toLowerCase());
-	// IE allegedly needs this
-    }
-    public String getDomain() {
-	return sC.getDomain().toString();
-    }
-    public void setMaxAge(int expiry) {
-	sC.setMaxAge(expiry);
-    }
-    public int getMaxAge() {
-	return sC.getMaxAge();
-    }
-    public void setPath(String uri) {
-	sC.getPath().setString( uri );
-    }
-    public String getPath() {
-	return sC.getPath().toString();
-    }
-    public void setSecure(boolean flag) {
-	sC.setSecure( flag );
-    }
-    public boolean getSecure() {
-	return sC.getSecure();
-    }
-    public String getName() {
-	return sC.getName().toString();
-    }
-    public void setValue(String newValue) {
-	sC.getValue().setString(newValue);
-    }
-    public String getValue() {
-	return sC.getValue().toString();
-    }
-    public int getVersion() {
-	return sC.getVersion();
-    }
-    public void setVersion(int v) {
-	sC.setVersion(v);
+    /** Get the status string associated with a status code.
+     *  No I18N - return the messages defined in the HTTP spec.
+     *  ( the user isn't supposed to see them, this is the last
+     *  thing to translate)
+     *
+     *  Common messages are cached.
+     *
+     */
+    public static String getMessage( int status ) {
+	// method from Response.
+	
+	// Does HTTP requires/allow international messages or
+	// are pre-defined? The user doesn't see them most of the time
+	switch( status ) {
+	case 200:
+	    if( st_200==null ) st_200=sm.getString( "sc.200");
+	    return st_200;
+	case 302:
+	    if( st_302==null ) st_302=sm.getString( "sc.302");
+	    return st_302;
+	case 400:
+	    if( st_400==null ) st_400=sm.getString( "sc.400");
+	    return st_400;
+	case 404:
+	    if( st_404==null ) st_404=sm.getString( "sc.404");
+	    return st_404;
+	}
+	return sm.getString("sc."+ status);
     }
 }
