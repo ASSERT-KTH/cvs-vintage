@@ -7,6 +7,10 @@
 
   <body>
     <release version="b19" date="in cvs">  
+      <action dev="pledbrook" type="update">
+        Renamed the locale resource bundles to minimise duplicates and to
+        follow a more standard form.
+      </action>
       <action dev="epugh" type="add">
         Revamped the site docs to be in xdoc format.  Integrated the existing docbook formatted admin guides.
         Added a tasks.xml file to track the roadmap to 1.0.
