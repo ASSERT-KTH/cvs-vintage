@@ -19,7 +19,7 @@ import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 /**
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class StatefulSessionInterceptor
    extends GenericEJBInterceptor
@@ -76,7 +76,8 @@ public class StatefulSessionInterceptor
                jndiName, 
                invoker, 
                ctx.getInvokerProxyBinding(), 
-               id);
+               id,
+               ctx.getValue("InvokerID"));
       }
       else if (m.equals(GET_EJB_HOME))
       {
