@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.63 2002/09/11 23:22:51 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.64 2002/09/18 13:18:39 lsanders Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -232,7 +232,7 @@
              If the name portion of the url begins with 1 or more digits, those 
              digits are converted to an int (ignoring leading zeroes), and 
              files are deployed in that order.  Files that do not start with 
-             any digits will be deployed last, and they will be sorted by
+             any digits will be deployed first, and they will be sorted by
              extension as above with DeploymentSorter.
     -->
     <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
