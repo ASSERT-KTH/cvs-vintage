@@ -5,3 +5,4 @@ scarab-scarab-all-data.xml
 scarab-?.?-*-dev
 *.log
 junit*.properties
+*.ser
