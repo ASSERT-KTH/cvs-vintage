@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.18 2003/06/22 21:23:33 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.19 2003/08/12 04:57:46 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -145,7 +145,7 @@ public class VFSDirectoryEntryTable extends JTable
 	} //}}}
 
 	//{{{ toggleExpanded() method
-	public void toggleExpanded(int row)
+	public void toggleExpanded(final int row)
 	{
 		VFSDirectoryEntryTableModel model
 		= (VFSDirectoryEntryTableModel)getModel();
@@ -165,6 +165,14 @@ public class VFSDirectoryEntryTable extends JTable
 			browserView.clearExpansionState();
 			browserView.loadDirectory(entry,entry.dirEntry.path);
 		}
+
+		VFSManager.runInAWTThread(new Runnable()
+		{
+			public void run()
+			{
+				setSelectedRow(row);
+			}
+		});
 	} //}}}
 
 	//{{{ setDirectory() method
