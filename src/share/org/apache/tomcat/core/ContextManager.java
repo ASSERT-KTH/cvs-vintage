@@ -105,7 +105,7 @@ import java.util.Enumeration;
 public class ContextManager {
     /** Official name and version
      */
-    public static final String TOMCAT_VERSION = "3.3.2 Final";
+    public static final String TOMCAT_VERSION = "3.3.3 - Dev";
     public static final String TOMCAT_NAME = "Tomcat Web Server";
     
     /** System property used to set the base directory ( tomcat home ).
