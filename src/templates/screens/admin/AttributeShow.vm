@@ -19,7 +19,7 @@ Attribute" button:
 
 ## default to first attribute if none was selected previously
 #if ( $attgroup.Id.isSet() )
-    #set ($selectedId = $attgroup.Id.Value.Value)
+    #set ($selectedId = $attgroup.Id.Value)
     #set ($selected = "")
 #else
     #set ($selected = " selected")

@@ -48,6 +48,9 @@ public class RModuleOption
             }            
         };
 
+    private int level;
+
+
     /**
      * Compares numeric value and in cases where the numeric value
      * is the same it compares the display values.
@@ -82,6 +85,35 @@ public class RModuleOption
         
         // return getAttributeOption().getName();
     }
+    
+    /**
+     * Get the level in the option parent-child tree.
+     * @return value of level.
+     */
+    public int getLevel() 
+    {
+        return level;
+    }
+    
+    /**
+     * Get the level in the option parent-child tree.
+     * @param v  Value to assign to level.
+     */
+    public void setLevel(int  v) 
+    {
+        this.level = v;
+    }
+    
+
+    /* *
+     * The AttributeOption that is the parent of this moduleOption.
+     * Is different that for a moduleOption to have a parent, it
+     * must have siblings or nephews/nieces that fall in the same module.
+     * /
+    public AttributeOption getParent()
+    {
+    }
+    */
 }
 
 

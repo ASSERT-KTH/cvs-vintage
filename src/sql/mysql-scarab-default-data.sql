@@ -127,87 +127,87 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERI
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
         values(75, 6, 'Windows', 2);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(25, 6, 'windows 3.1', 2);
+        values(25, 6, 'windows 3.1', 3);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(26, 6, 'windows 95', 3);
+        values(26, 6, 'windows 95', 4);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(27, 6, 'windows 98', 4);
+        values(27, 6, 'windows 98', 5);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(28, 6, 'windows ME', 5);
+        values(28, 6, 'windows ME', 6);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(29, 6, 'windows 2000', 6);
+        values(29, 6, 'windows 2000', 7);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(30, 6, 'windows NT', 7);
+        values(30, 6, 'windows NT', 8);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(76, 6, 'MacOS', 2);
+        values(76, 6, 'MacOS', 9);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(31, 6, 'mac system 7', 8);
+        values(31, 6, 'mac system 7', 10);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(32, 6, 'mac system 7.5', 9);
+        values(32, 6, 'mac system 7.5', 11);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(33, 6, 'mac system 7.6.1', 10);
+        values(33, 6, 'mac system 7.6.1', 12);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(34, 6, 'mac system 8.0', 11);
+        values(34, 6, 'mac system 8.0', 13);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(35, 6, 'mac system 8.5', 12);
+        values(35, 6, 'mac system 8.5', 14);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(36, 6, 'mac system 8.6', 13);
+        values(36, 6, 'mac system 8.6', 15);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(37, 6, 'mac system 9.0', 14);
+        values(37, 6, 'mac system 9.0', 16);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(77, 6, 'OSX', 14);
+        values(77, 6, 'OSX', 17);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(38, 6, 'Linux', 15);
+        values(38, 6, 'Linux', 18);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(78, 6, 'Redhat', 15);
+        values(78, 6, 'Redhat', 19);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(79, 6, 'Suse', 15);
+        values(79, 6, 'Suse', 20);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(80, 6, 'Debian', 15);
+        values(80, 6, 'Debian', 21);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(81, 6, 'Other Linux', 15);
+        values(81, 6, 'Other Linux', 22);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(82, 6, '*BSD', 16);
+        values(82, 6, '*BSD', 23);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(40, 6, 'FreeBSD', 17);
+        values(40, 6, 'FreeBSD', 24);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(41, 6, 'NetBSD', 18);
+        values(41, 6, 'NetBSD', 25);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(42, 6, 'OpenBSD', 19);
+        values(42, 6, 'OpenBSD', 26);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(83, 6, 'Commercial Unix', 16);
+        values(83, 6, 'Commercial Unix', 27);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(39, 6, 'BSDI', 16);
+        values(39, 6, 'BSDI', 28);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(43, 6, 'AIX', 20);
+        values(43, 6, 'AIX', 29);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(44, 6, 'BeOS', 21);
+        values(44, 6, 'BeOS', 30);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(45, 6, 'HP-UX', 22);
+        values(45, 6, 'HP-UX', 31);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(46, 6, 'IRIX', 23);
+        values(46, 6, 'IRIX', 34);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(47, 6, 'Neutrino', 24);
+        values(47, 6, 'Neutrino', 39);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(48, 6, 'OpenVMS', 25);
+        values(48, 6, 'OpenVMS', 42);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(49, 6, 'OS/2', 26);
+        values(49, 6, 'OS/2', 41);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(50, 6, 'OSF/1', 27);
+        values(50, 6, 'OSF/1', 35);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(51, 6, 'Solaris', 28);
+        values(51, 6, 'Solaris', 32);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(52, 6, 'SunOS', 29);
+        values(52, 6, 'SunOS', 33);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(53, 6, 'Other', 30);
+        values(53, 6, 'Other', 40);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(84, 6, 'Realtime/Embedded', 30);
+        values(84, 6, 'Realtime/Embedded', 38);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(85, 6, 'Handheld/PDA', 30);
+        values(85, 6, 'Handheld/PDA', 36);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(86, 6, 'PalmOS', 30);
+        values(86, 6, 'PalmOS', 37);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
-        values(87, 6, 'Unix', 30);
+        values(87, 6, 'Unix', 17);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /* Priorities select-one */
         values(54, 7, 'High', 1);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME, NUMERIC_VALUE) /*  */
@@ -269,6 +269,7 @@ insert into SCARAB_R_OPTION_OPTION values (24, 87, 1, 0);
 insert into SCARAB_R_OPTION_OPTION values (24, 53, 1, 0); 
 insert into SCARAB_R_OPTION_OPTION values (24, 84, 1, 0); 
 insert into SCARAB_R_OPTION_OPTION values (24, 85, 1, 0); 
+insert into SCARAB_R_OPTION_OPTION values (75, 25, 1, 0); 
 insert into SCARAB_R_OPTION_OPTION values (75, 26, 1, 0); 
 insert into SCARAB_R_OPTION_OPTION values (75, 27, 1, 0); 
 insert into SCARAB_R_OPTION_OPTION values (75, 28, 1, 0); 
@@ -373,8 +374,8 @@ INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,20,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,21,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,22,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,23,NULL,1,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,24,NULL,0,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,25,NULL,0,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,24,NULL,1,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,25,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,26,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,27,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,28,NULL,1,-1);
@@ -424,19 +425,19 @@ INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,71,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,72,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,73,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,74,NULL,1,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,75,NULL,0,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,76,NULL,0,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,75,NULL,1,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,76,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,77,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,78,NULL,0,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,79,NULL,0,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,80,NULL,0,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,81,NULL,0,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,82,NULL,0,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,83,NULL,0,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,82,NULL,1,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,83,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,84,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,85,NULL,1,-1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,86,NULL,0,-1);
-INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,87,NULL,0,-1);
+INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,87,NULL,1,-1);
 
 
 

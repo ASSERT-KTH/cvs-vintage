@@ -80,6 +80,7 @@
         <field name="ModuleId" key="modid" type="NumberKey">
             <rule mask="[0-9]+">badIdMessage</rule>
         </field>
+        <field name="FederatedId" key="fid" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group class="Module" key="mod" mapToObject="om.Module">

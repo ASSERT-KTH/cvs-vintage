@@ -1,18 +1,43 @@
-#macro ( attrValueSelect $attrValue $optionFieldName $size )
+#macro ( attrValueLeafSelect $attrValue $optionFieldName $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #set ( $attr = $attrValue.Attribute )
     #set ( $module = $attrValue.Issue.Module )
 
-        <select name="$attrInput.OptionId.Key" #if($size.length())size="$size"#end>
+        <select name="$attrInput.get($optionFieldName).Key" 
+                #if($size.length())size="$size"#end>
             #if ($size.length() == 0)
             <option value="">Choose...</option>
             #end
-            #foreach ($option in $module.getRModuleOptions($attr))
+            #foreach ($option in $module.getLeafRModuleOptions($attr))
               #set ( $selected = "" )
               #if ( $option.OptionId == $attrInput.get($optionFieldName).Value )
                 #set ( $selected = " selected" )
               #end
               <option$selected value="$option.OptionId">
+                  $option.DisplayValue</option>
+            #end
+        </select>
+#end
+
+
+#macro ( attrValueHierarchySelect $attrValue $optionFieldName $size )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $module = $attrValue.Issue.Module )
+
+        <select name="$attrInput.get($optionFieldName).Key" 
+                #if($size.length() != 1)size="$size"#end>
+            #if ($size.length() == 0)
+            <option value="">Choose...</option>
+            #end
+            #foreach ($option in $module.getOptionTree($attr))
+              #set ( $selected = "" )
+              #if ($option.OptionId == $attrInput.get($optionFieldName).Value)
+                #set ( $selected = " selected" )
+              #end
+
+              <option$selected value="$option.OptionId">
+#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
                   $option.DisplayValue</option>
             #end
         </select>

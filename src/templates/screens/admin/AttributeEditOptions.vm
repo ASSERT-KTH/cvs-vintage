@@ -60,7 +60,7 @@ $page.setTitle("Attribute Editor")
       <td width="75%">          
         <div align="center">
 
-    #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value.Value 1 )
+    #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value 1 )
 
       </div>
       </td>

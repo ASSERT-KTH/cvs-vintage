@@ -54,6 +54,7 @@ public class Attribute
 
     public Attribute()
     {
+        /*
         try
         {            
             buildOptionsMap();
@@ -62,6 +63,7 @@ public class Attribute
         {
             Log.error("Unable to setup attribute "+getName()+"'s options", e);
         }
+        */
     }
 
     static String getCacheKey(ObjectKey key)
@@ -95,6 +97,7 @@ public class Attribute
                 throw new ScarabException("Attribute with ID " + attId + 
                                           " can not be found");
             }
+            attribute.buildOptionsMap();
             tgcs.addObject(key, new CachedObject(attribute));
         }
         
@@ -108,7 +111,8 @@ public class Attribute
     public List getAllAttributeOptions()
         throws Exception
     {
-        return getAttributeOptions(allOptionsCriteria);  
+        return getAttributeOptions(new Criteria());  
+        // return getAttributeOptions(allOptionsCriteria);  
     }
 
     /**

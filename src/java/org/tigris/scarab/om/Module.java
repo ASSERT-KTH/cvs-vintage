@@ -95,8 +95,6 @@ public class Module
         return getAttributes(new Criteria());
     }
 
-
-
     public List getRModuleOptions(Attribute attribute)
         throws Exception
     {
@@ -113,7 +111,9 @@ public class Module
         }
         crit.add(AttributeOptionPeer.ATTRIBUTE_ID, attribute.getAttributeId());
         crit.addOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
+        crit.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
         crit.addOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
+        crit.addOrderByColumn(AttributeOptionPeer.OPTION_NAME);
 
         List rModOpts = null;
         Module module = this;
@@ -127,6 +127,122 @@ public class Module
         while ( rModOpts.size() == 0 && 
                !ROOT_ID.equals((NumberKey)prevModule.getPrimaryKey()));
         return rModOpts;
+    }
+
+    public List getLeafRModuleOptions(Attribute attribute)
+        throws Exception
+    {
+        return getLeafRModuleOptions(attribute, true);
+    }
+
+    public List getLeafRModuleOptions(Attribute attribute, boolean activeOnly)
+        throws Exception
+    {
+        List rModOpts = getRModuleOptions(attribute, activeOnly);
+
+        // put options in a map for searching
+        Map optionsMap = new HashMap((int)(rModOpts.size()*1.5));
+        for ( int i=rModOpts.size()-1; i>=0; i-- ) 
+        {
+            AttributeOption option = ((RModuleOption)rModOpts.get(i))
+                .getAttributeOption();
+            optionsMap.put(option.getOptionId(), null);
+        }
+
+        // remove options with descendants in the list
+        for ( int i=rModOpts.size()-1; i>=0; i-- ) 
+        {
+            RModuleOption modOpt = (RModuleOption)rModOpts.get(i);
+            List descendants = modOpt.getAttributeOption().getDescendants();
+            if ( descendants != null ) 
+            {
+                for ( int j=descendants.size()-1; j>=0; j-- ) 
+                {
+                    AttributeOption descendant = 
+                        (AttributeOption)descendants.get(j);
+                    if ( optionsMap.containsKey(descendant.getOptionId()) ) 
+                    {
+                        rModOpts.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return rModOpts;
+    }
+
+    /**
+     * Gets a list of active RModuleOptions which have had their level
+     * within the options for this module set.
+     *
+     * @param attribute an <code>Attribute</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getOptionTree(Attribute attribute)
+        throws Exception
+    {
+        return getOptionTree(attribute, true);
+    }
+
+    /**
+     * Gets a list of RModuleOptions which have had their level
+     * within the options for this module set.
+     *
+     * @param attribute an <code>Attribute</code> value
+     * @param activeOnly a <code>boolean</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getOptionTree(Attribute attribute, boolean activeOnly)
+        throws Exception
+    {
+        List moduleOptions = null;
+try{
+        moduleOptions = getRModuleOptions(attribute, activeOnly);
+        int size = moduleOptions.size();
+        List[] ancestors = new List[size];
+
+        // put option id's in a map for searching and find all ancestors
+        Map optionsMap = new HashMap((int)(size*1.5));
+        for ( int i=size-1; i>=0; i-- ) 
+        {
+            AttributeOption option = ((RModuleOption)moduleOptions.get(i))
+                .getAttributeOption();
+            optionsMap.put(option.getOptionId(), null);
+
+            List moduleOptionAncestors = option.getAncestors();
+            ancestors[i] = moduleOptionAncestors;
+        }
+
+        for ( int i=0; i<size; i++ ) 
+        {
+            RModuleOption moduleOption = (RModuleOption)moduleOptions.get(i);
+            AttributeOption attributeOption = 
+                moduleOption.getAttributeOption();
+
+            int level = 1;
+            if ( ancestors[i] != null ) 
+            {
+                for ( int j=ancestors[i].size()-1; j>=0; j-- ) 
+                {
+                    AttributeOption option = 
+                        (AttributeOption)ancestors[i].get(j);
+                    
+                    if ( optionsMap.containsKey(option.getOptionId()) &&
+                         !option.getOptionId()
+                         .equals(moduleOption.getOptionId()) ) 
+                    {
+                        moduleOption.setLevel(level++);   
+                    }
+                }
+            }            
+        }
+}catch (Exception e){e.printStackTrace();}
+
+        return moduleOptions;
+
     }
 
     /**
@@ -224,4 +340,59 @@ public class Module
                         .getString(prefix + "qacontactid") ));
         return this;
     }
+
+    public class OptionInList
+    {
+        public int Level;
+        private AttributeOption attOption;
+        private RModuleOption modOption;
+
+        public OptionInList(int level, AttributeOption option)
+        {
+            Level = level;
+            attOption = option;
+        }
+
+        public OptionInList(int level, RModuleOption option)
+        {
+            Level = level;
+            modOption = option;
+        }
+         
+        public boolean equals(Object obj)
+        {
+            OptionInList oil = (OptionInList)obj;
+            return Level == oil.Level 
+                && (attOption == null || attOption.equals(oil.attOption)) 
+                && (modOption == null || modOption.equals(oil.modOption)); 
+        }
+
+        public NumberKey getOptionId()
+        {
+            if ( attOption != null ) 
+            {
+                return attOption.getOptionId();
+            }
+            else 
+            {
+                return modOption.getOptionId();
+            }
+            
+        }
+
+        public String getDisplayValue()
+        {
+            if ( attOption != null ) 
+            {
+                return attOption.getName();
+            }
+            else 
+            {
+                return modOption.getDisplayValue();
+            }
+        }
+    }
+
+
+
 }

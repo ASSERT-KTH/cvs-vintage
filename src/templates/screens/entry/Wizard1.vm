@@ -39,7 +39,7 @@
         #attrValueErrorMsg ( $attVal $field )
     </font>
     <br>
-    #attrValueSelect ($attVal $field "")
+    #attrValueLeafSelect ($attVal $field "")
 
 <br><br>
     #end

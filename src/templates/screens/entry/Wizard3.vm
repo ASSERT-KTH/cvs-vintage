@@ -38,7 +38,7 @@ attributes to submit the issue.</p>
             #attrValueErrorMsg ( $attVal $field )
           </font>
           <br>
-          #attrValueSelect ($attVal $field "")
+          #attrValueLeafSelect ($attVal $field "")
     #else
 
           <font color="red">
@@ -87,7 +87,7 @@ attributes to submit the issue.</p>
             #attrValueErrorMsg ( $attVal $field )
           </font>
           <br>
-          #attrValueSelect ($attVal $field "")
+          #attrValueLeafSelect ($attVal $field "")
     #else
 
           <font color="red">

@@ -64,13 +64,13 @@ public class AttributeOption
 
     /**
      * Compares numeric value and in cases where the numeric value
-     * is the same it compares the diplay values.
+     * is the same it compares the display values.
      */
     public static Comparator getComparator()
     {
         return comparator;
     }
-
+    
     // need a local reference
     private Attribute aAttribute;                 
     public Attribute getAttribute() throws Exception
@@ -91,7 +91,116 @@ public class AttributeOption
         super.setAttribute(v);
     }
 
-    // public AttributeOption
+    public AttributeOption[] getParents()
+        throws Exception
+    {
+        AttributeOption[] options = null;
+        NumberKey[] parentIds = 
+            (NumberKey[])childParentMap.get(getPrimaryKey());
+        if ( parentIds != null ) 
+        {
+            options = new AttributeOption[parentIds.length];
+            for ( int i=parentIds.length-1; i>=0; i-- ) 
+            {
+                options[i] = getAttribute().getAttributeOption(parentIds[i]);
+            }
+        }
+        
+        return options;
+    }
+
+
+    public AttributeOption[] getChildren()    
+        throws Exception
+    {
+        AttributeOption[] options = null;
+        NumberKey[] childIds = 
+            (NumberKey[])parentChildMap.get(getPrimaryKey());
+        if ( childIds != null ) 
+        {
+            options = new AttributeOption[childIds.length];
+            for ( int i=childIds.length-1; i>=0; i-- ) 
+            {
+                options[i] = getAttribute().getAttributeOption(childIds[i]);
+            }
+        }
+        
+        return options;
+    }
+
+    public List getDescendants()
+        throws Exception
+    {
+        List options = new ArrayList();
+        addChildren(options);
+        return options;
+    }
+
+    private void addChildren(List descendants)
+        throws Exception
+    {
+        NumberKey[] childIds = 
+            (NumberKey[])parentChildMap.get(getPrimaryKey());
+        if ( childIds != null ) 
+        {
+            for ( int i=childIds.length-1; i>=0; i-- ) 
+            {
+                AttributeOption child = (AttributeOption)
+                    getAttribute().getAttributeOption(childIds[i]);
+                descendants.add(child);
+                child.addChildren(descendants);
+            }
+        }
+    }
+
+    public List getAncestors()
+        throws Exception
+    {
+        List options = new ArrayList();
+        addAncestors(options);
+        return options;
+    }
+
+    private void addAncestors(List ancestors)
+        throws Exception
+    {
+        NumberKey[] parentIds = 
+            (NumberKey[])childParentMap.get(getPrimaryKey());
+        if ( parentIds != null ) 
+        {
+            for ( int i=parentIds.length-1; i>=0; i-- ) 
+            {
+                AttributeOption parent = (AttributeOption) 
+                    getAttribute().getAttributeOption(parentIds[i]);
+                ancestors.add(parent);
+                parent.addAncestors(ancestors);
+            }
+        }
+    }
+
+    public List descendantsInModule(Module module)
+        throws Exception
+    {
+        List moduleOptions = 
+            module.getRModuleOptions(this.getAttribute(), false);
+        List descendants = getDescendants();
+        List descendantsInModule = new ArrayList();
+        for ( int i=0; i<moduleOptions.size(); i++ ) 
+        {
+            AttributeOption moduleOption = 
+                ((RModuleOption)moduleOptions.get(i)).getAttributeOption();
+            for ( int j=0; j<descendants.size(); j++ ) 
+            {
+                if ( moduleOption.equals(descendants.get(j)) ) 
+                {
+                    descendantsInModule.add(moduleOption);
+                }
+            }
+        }
+
+        return descendantsInModule;
+    }
+
 
     /**
      * Is this an ancestor of the option 
@@ -140,6 +249,11 @@ public class AttributeOption
     {
         return parentChildMap.containsKey(getPrimaryKey()); 
     }
+
+    public boolean hasParents()
+    {
+        return childParentMap.containsKey(getPrimaryKey()); 
+    }
         
     public static void buildParentChildMaps()
         throws Exception
@@ -166,6 +280,7 @@ public class AttributeOption
             else 
             {
                 children = new ArrayList();
+                parentChildMap.put(relation.getOption1Id(), children);
             }
             children.add(relation.getOption2Id());
 
@@ -178,6 +293,7 @@ public class AttributeOption
             else 
             {
                 parents = new ArrayList();
+                childParentMap.put(relation.getOption2Id(), parents);
             }
             parents.add(relation.getOption1Id());
         }
@@ -189,7 +305,7 @@ public class AttributeOption
             Object key = keys.next();
             ArrayList children = (ArrayList)parentChildMap.get(key);
             Object[] childArray = 
-                children.toArray(new ObjectKey[children.size()]);
+                children.toArray(new NumberKey[children.size()]);
             parentChildMap.put(key, childArray);
         }
         keys = childParentMap.keySet().iterator();
@@ -198,7 +314,7 @@ public class AttributeOption
             Object key = keys.next();
             ArrayList parents = (ArrayList)childParentMap.get(key);
             Object[] parentArray = 
-                parents.toArray(new ObjectKey[parents.size()]);
+                parents.toArray(new NumberKey[parents.size()]);
             childParentMap.put(key, parentArray);
         }
         

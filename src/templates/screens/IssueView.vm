@@ -1,259 +1,157 @@
-  <form method="post" name="IssueViewForm" action="">
-  <input type="hidden" name="action" value="IssueView">
 
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-      <td>
-<!-- top nav bar -->
-        <table border="0" cellpadding="2" cellspacing="0">
-          <tr>
-            <td nowrap class="NavHeader">SCARAB:</td>
-            <td nowrap class="NavHeader"><a href="/">My Bugs</a></td>
-            <td nowrap class="NavHeader">|</td>
-            <td nowrap class="NavHeader"><a href="/">Report</a></td>
-            <td nowrap class="NavHeader">|</td>
-            <td nowrap class="NavHeader"><a href="/">Browse</a></td>
-            <td nowrap class="NavHeader">|</td>
-            <td nowrap class="NavHeader"><a href="/">Assign (8)</a>&nbsp;</td>
-            <td class="NavHeaderOn" bgcolor="#cccccc">&nbsp;</td>
-            <td class="NavHeaderOn" nowrap bgcolor="#cccccc"><a href="query.html">Search</a></td>
-            <td class="NavHeader" bgcolor="#cccccc">&nbsp;</td>
-            <td nowrap class="NavHeader">&nbsp;<a href="/">Admin</a></td>
-            <td nowrap class="NavHeader">|</td>
-            <td class="NavHeader"><a href="/">Help</a></td>
-            <td class="NavHeader">|</td>
-            <td class="NavHeader"><a href="/">Prefs</a></td>
-            <td class="NavHeader">|</td>
-            <td nowrap class="NavHeader"><a href="/">Log Out</a></td>
-          </tr>
-        </table>
-<!-- end top nav bar -->
-      </td>
-    </tr>
-    <tr>
-      <td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
-    </tr>
-</table>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
- <tr>
-  <td class="SectionHeader" bgcolor="#cccccc" nowrap>My Projects:</td>
-  <td bgcolor="#cccccc">
-  <select name="MyProjectsSelect">
-  <option selected>PacMan VM</option>
-  <option>Project 2</option>
-  <option>Project 3</option>
-  </select>
-  </td>
-  <td bgcolor="#cccccc" width="100%"><input type="submit" name="eventSubmit_doRefreshProjectData" value="Refresh Project Data"></td>
- </tr>
-</table>
-<p>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
- <tr>
-  <td class="Header" bgcolor="#999999" colspan="2" nowrap>&nbsp;VIEW ISSUE</td>
- </tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Issue ID#:</td>
-  <td valign="top" class="TableData">34678</td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Status:</td>
-  <td valign="top" class="TableData">Closed</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
+#set ( $currentIssueId = $data.Parameters.getString("id") )
+#set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Component:</td>
-  <td valign="top" class="TableData">Java SWING UI widget set</td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Resolution:</td>
-  <td valign="top" class="TableData">$resolution</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Summary:</td>
-  <td valign="top" colspan="4" class="TableData">UI widgets don't accurately reflect the native widgets found on each wireless delivery platform</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Description:</td>
-  <td valign="top" class="TableData">$description</td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Type:</td>
-  <td valign="top" class="TableData">$type</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Reported by:</td>
-  <td valign="top" class="TableData"><a href="cam@collab.net">cam@collab.net</a></td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Date Entered:</td>
-  <td valign="top" class="TableData">2000-06-13</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Assigned to:</td>
-  <td valign="top" class="TableData"><a href="mailto:jon@collab.net">jon@collab.net</a></td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Last Modified:</td>
-  <td valign="top" class="TableData">2000-08-21</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Severity</td>
-  <td valign="top" class="TableData">Minor</td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Priority:</td>
-  <td valign="top" class="TableData">P4</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- 
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Keywords</td>
-  <td valign="top" class="TableData">UI, widgets, swing</td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Votes:</td>
-  <td valign="top" class="TableData">12</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
-  
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td valign="top" class="TableDataHeader">Depends On:</td>
-  <td valign="top" class="TableData"><a href="/">13567</a>, <a href="/">23084</a></td>
-  <td valign="top">&nbsp;</td>
-  <td valign="top" class="TableDataHeader">Dependents:</td>
-  <td valign="top" class="TableData">??</td>
- </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
-  <tr>
-    <td colspan="5"><input type="submit" name="eventSubmit_doAssignIssue" value="Assign Issue"></td> 
-  </tr>
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
-</table>
-<p>
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
- <tr>
-  <td class="SectionHeader" bgcolor="#cccccc">&nbsp;Comments</td>
- </tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
- <tr>
-  <td height="2" colspan="5"><spacer type="block" height="2"></td>
- </tr>
- <tr>
-  <td class="TableDataHeader">From: <span class="TableData"><a href="mailto:bob@collab.net">bob@collab.net</a></span></td>
-  <td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
- </tr>
- <tr>
-  <td height="4" colspan="5"><spacer type="block" height="4"></td>
- </tr>
- <tr>
-  <td colspan="2" class="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue #12856, #30856, and $2945 are also duplicates. Gervase needs to clean up this code.</td>
- </tr>
- <tr>
-  <td height="4" colspan="5"><spacer type="block" height="4"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
- <tr>
-  <td class="TableDataHeader">From: <span class="TableData"><a href="mailto:matt@collab.net">matt@collab.net</a></span></td>
-  <td class="TableDataHeader">Date: <span class="TableData">2000-08-12</span></td>
- </tr>
- <tr>
-  <td height="4" colspan="5"><spacer type="block" height="4"></td>
- </tr>
- <tr>
-  <td colspan="2" class="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</td>
- </tr>
- <tr>
-  <td height="4" colspan="5"><spacer type="block" height="4"></td>
- </tr>
- <tr>
-  <td height="1" colspan="5" bgcolor="#cccccc"><spacer type="block" height="1"></td>
- </tr>
-  <tr>
-    <td colspan="5"><input type="submit" name="eventSubmit_doAddComment" value="Add Comment"></td>
-  </tr>
-</table>
-</form>
+#if ($currentIssue)
+
+  ## The issue details
+
+
+      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
+        <TR>
+          <TD BGCOLOR="#999999">ISSUE DETAILS</TD>
+        </TR>
+        <TR>
+          <TD>
+
+            Issue ID#: $currentIssue.UniqueId
+
+          </TD>
+        </tr>
+
+  #foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
+
+        <tr><td>
+
+    <b>$attVal.Attribute.Name:</b>
+    #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
+
+        <a href="mailto:$attVal.Value">$attVal.Value</a>
+
+    #else
+        $!attVal.Value
+    #end
+        </td></tr>
+
+  #end
+
+        <TR>
+          <TD>
+
+  Reported by:<br>
+  #set ( $email = $currentIssue.UserRelatedByCreatedBy.Email )
+          <A HREF="mailto:$email">$email</A>
+
+          </TD>
+        </tr>
+
+        <tr>
+          <TD>
+
+  Date Entered:<br>
+  $currentIssue.CreatedDate
+
+          </TD>
+        </TR>
+
+        <tr>
+          <TD>
+
+  Last Modified:<br>
+  $currentIssue.ModifiedDate
+
+          </TD>
+        </TR>
+
+
+        <TR>
+          <TD>Votes:</TD>
+          <TD>12</TD>
+        </TR>
+
+
+        <TR>
+          <TD>Depends On:<br>
+
+  #set ( $comma = "" )
+  #foreach ($issue in $currentIssue.BlockerIssues)
+      #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+
+            $comma<A HREF="$issueLink">$issue.UniqueId</A>
+      #set ( $comma = ", " )
+  #end
+          </TD>
+        </tr>
+
+        <TR>
+          <TD>Dependents:<br>
+
+  #set ( $comma = "" )
+  #foreach ($issue in $currentIssue.BlockerIssues)
+      #set ( $issueLink = $link.setPage("IssueDetails.vm").addPathInfo("currentIssueId", $currentIssueId).addPathInfo($data.Parameters).addPathInfo("prevTemplate", $link.CurrentTemplate) )
+
+            $comma<A HREF="$issueLink">$issue.UniqueId</A>
+      #set ( $comma = ", " )
+  #end
+
+          </TD>
+        </tr>
+
+
+#*  Comments are not ready.
+<a href="#Comments">Add Comment</a>
+
+
+<P>
+<a name="Comments">
+Comments<br>
+<br>
+          <TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:bob@collab.net">bob@collab.net</A></SPAN></TD>
+          <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
+        </TR>
+        <TR>
+          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+        </TR>
+        <TR>
+          <TD COLSPAN="2" CLASS="TableData">The Java SWING widget set is only cross-platform if you are using version 1.34 from Sun Microsystems. Issue#12856,#30856, and $2945 are also duplicates. Gervase needs to clean up this code.</TD>
+        </TR>
+        <TR>
+          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+        </TR>
+        <TR>
+          <TD HEIGHT="1" COLSPAN="5" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+        </TR>
+        <TR>
+          <TD CLASS="TableDataHeader">From: <SPAN CLASS="TableData"><A HREF="mailto:matt@collab.net">matt@collab.net</A></SPAN></TD>
+          <TD CLASS="TableDataHeader">Date: <SPAN CLASS="TableData">2000-08-12</SPAN></TD>
+        </TR>
+        <TR>
+          <TD HEIGHT="4" COLSPAN="5"><SPACER TYPE="block" HEIGHT="4"></TD>
+        </TR>
+        <TR>
+          <TD COLSPAN="2" CLASS="TableData">Java is meant to be a cross-platform programming lnaguage, not a cross-platform user interface language. If using the Gecko browser this project can take advantage of the XUL language from Mozilla.</TD>
+        </TR>
+
+
+Add a comment<br>
+<br>
+<TEXTAREA NAME="" value="$description" COLS="40" ROWS="3"></TEXTAREA><br>
+<input type="submit" name="eventSubmit_doAddComment" value="Add Comment">
+
+*#
+
+      </table>
+
+#else     ## issue id was not valid
+
+    #if ($currentIssueId)
+
+        The issue id, $currentIssueId, is not valid.
+
+    #else
+    
+        You need to enter an issue id.
+
+    #end
+
+#end

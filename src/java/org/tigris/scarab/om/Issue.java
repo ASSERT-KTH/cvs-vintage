@@ -37,9 +37,123 @@ public class Issue
 {
     private Vocabulary vocabulary;
 
-    public String getUniqueId() throws Exception
+    public String getUniqueId() // throws Exception
     {
         return getIdPrefix() + getIdCount();
+    }
+
+    public String getFederatedId()
+    {
+        if ( getIdInstance() != null ) 
+        {
+            return getIdInstance() + getUniqueId();
+        }
+        return getUniqueId();
+    }
+
+    public void setFederatedId(String id)
+    {
+        FederatedId fid = new FederatedId(id);
+        setIdInstance(fid.getInstance());
+        setIdPrefix(fid.getInstance());
+        setIdCount(fid.getCount());
+    }
+     
+    public static class FederatedId
+    {
+        String instanceId;
+        String prefix;
+        int count;
+
+        public FederatedId(String id)
+        {
+            int dash = id.indexOf('-');
+            if ( dash > 0 ) 
+            {
+                instanceId = id.substring(0, dash);
+                setUniqueId(id.substring(dash+1));
+            }
+            else 
+            {
+                setUniqueId(id);
+            }
+        }
+
+        public void setUniqueId(String id)
+        {
+            // we could start at 1 here, if the spec says one char is 
+            // required, will keep it safe for now.
+            StringBuffer code = new StringBuffer(4);
+            for ( int i=0; i<4; i++) 
+            {
+                char c = id.charAt(i);
+                if ( c != '0' && c != '1' && c != '2' && c != '3' && c != '4'
+                     && c != '5' && c != '6' && c != '7' && c!='8' && c!='9' )
+                {
+                    code.append(c);
+                }
+            }
+            prefix = code.toString();
+            count = Integer.parseInt( id.substring(code.length()) );
+            
+        }
+
+        /**
+         * Get the Prefix
+         * @return String
+         */
+        public String getPrefix()
+        {
+            return prefix;
+        }
+        
+        
+        /**
+         * Get the Count
+         * @return int
+         */
+        public int getCount()
+        {
+            return count;
+        }
+        
+        /**
+         * Get the IdInstance
+         * @return String
+         */
+        public String getInstance()
+        {
+            return instanceId;
+        }
+    }
+
+    public static Issue getIssueById(String id)
+    {
+        FederatedId fid = new FederatedId(id);
+        return getIssueById(fid);
+    }
+
+    public static Issue getIssueById(FederatedId fid)
+    {
+        Criteria crit = new Criteria(5)
+            .add(IssuePeer.ID_PREFIX, fid.getPrefix())
+            .add(IssuePeer.ID_COUNT, fid.getCount());
+
+        if (  fid.getInstance() != null ) 
+        {
+            crit.add(IssuePeer.ID_INSTANCE, fid.getInstance());    
+        }
+        
+        Issue issue = null;
+        try
+        {
+            issue = (Issue)IssuePeer.doSelect(crit).get(0);
+        }
+        catch (Exception e) 
+        {
+            // return null
+        }
+        return issue;
     }
 
     /**

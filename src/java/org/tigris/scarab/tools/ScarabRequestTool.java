@@ -222,14 +222,31 @@ try{
     }
 
     /**
-     * Get a specific issue by key value.
+     * The id may be a primary key or an issue id.
      *
      * @param key a <code>String</code> value
      * @return a <code>Issue</code> value
      */
-    public Issue getIssue(String key) throws Exception
+    public Issue getIssue(String key)
+        throws Exception
     {
-        return IssuePeer.retrieveByPK(new NumberKey(key));
+        Issue issue = null;
+        try
+        {
+            issue = IssuePeer.retrieveByPK(new NumberKey(key));
+        }
+        catch (RuntimeException re)
+        {
+            // was not a primary key, try fid
+            Issue.FederatedId fid = new Issue.FederatedId(key);
+            if ( fid.getInstance() == null ) 
+            {
+                // handle null (always null right now)
+            }
+            issue = Issue.getIssueById(fid);
+        }
+
+        return issue;
     }
 
     /**
