@@ -571,7 +571,7 @@
     <dependency> 
       <groupId>maven</groupId> 
       <artifactId>maven-findbugs-plugin</artifactId> 
-      <version>0.7.1</version> 
+      <version>0.7.4</version> 
       <url>http://maven-plugins.sourceforge.net/maven-findbugs-plugin/</url> 
       <type>plugin</type>
     </dependency> 
