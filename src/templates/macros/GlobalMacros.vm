@@ -587,13 +587,13 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 </div>
 
 #if ($searchString && $searchString.length() > 0)
-    #set ($searchResults = $scarabR.UserFilteredSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+    #set ($searchResults = $scarabR.getUserFilteredSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
     #if ( $searchResults.getList().isEmpty())
         <p class="alert">$l10n.NoUsersMatch</p>
-        #set ($searchResults = $scarabR.UserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+        #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
     #end
 #else
-    #set ($searchResults = $scarabR.UserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+    #set ($searchResults = $scarabR.getUserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
 #end 
 
 #set ($searchResultsSize = $searchResults.getTotalListSize())
@@ -609,12 +609,12 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #else
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>
-	<th nowrap="nowrap">$l10n.Select</th>
-	<th>#userSort ("username" "$l10n.Username" "AssignIssue.vm")</th>
-    <th>#userSort ("name" "$l10n.FullName" "AssignIssue.vm")</th>
-	<th>$l10n.Association</th>
-	</tr>
+   <tr>
+    <th nowrap="nowrap">$l10n.Select</th>
+    <th>#userSort ("username" "$l10n.Username" $data.Target)</th>
+    <th>#userSort ("name" "$l10n.FullName" $data.Target)</th>
+    <th>$l10n.Association</th>
+   </tr>
    #foreach ($user in $searchResultsList)
     #indexedRows($velocityCount)
     <td><input type="checkbox" name="add_user" value="$user.UserId" /></td>
