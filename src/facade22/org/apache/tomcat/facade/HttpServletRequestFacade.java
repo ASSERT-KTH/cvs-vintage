@@ -346,7 +346,20 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getRemoteHost() {
-        return request.remoteHost().toString();
+		String remoteHost = request.remoteHost().toString();
+
+        // AJP12 defaults to empty string, AJP13 defaults to null
+        if(remoteHost != null && remoteHost.length() != 0)
+            return remoteHost;
+
+        try{
+            remoteHost = InetAddress.getByName(request.remoteAddr().toString()).getHostName();
+        }catch(Exception e){
+            // If anything went wrong then fall back to using the remote hosts IP address
+            remoteHost = request.remoteAddr().toString();
+        }
+
+        return remoteHost;
     }
 
     public String getRequestURI() {
