@@ -3,7 +3,7 @@
 #set ($itGroup = $intake.IssueType.mapTo($issueType))
 
 #macro (GlobalArtifactTypeEdit $var)
-<div class="functnbar">
+<div class="functnbar$var">
 #if (!$createNew)
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
 #end
@@ -18,8 +18,6 @@
 #else
    #set ($createNew = true)
 #end
-
-#asterisk()
 
 <form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
@@ -55,8 +53,9 @@
       <input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
 </div>
 
-#GlobalArtifactTypeEdit("2")
+#asterisk()
 
+#GlobalArtifactTypeEdit("2")
 
 $intake.declareGroups()
 </form>

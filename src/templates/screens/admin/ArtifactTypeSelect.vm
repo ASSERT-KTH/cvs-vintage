@@ -22,19 +22,18 @@
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
 
-    <h3>Issue types</h3>
+<h3>Issue types</h3>
 
-    <p><strong class="alert">There are no more issue types to add to
-    this module.</strong></p>
+<p><strong class="alert">There are no more issue types to add to
+this module.</strong></p>
 
 #else
-
         
-    <h3>Issue Types</h3>
+<h3>Issue Types</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap></th>
+<th width="70">Select</th>
 <th>Name</th>
 <th>Description</th>
 </tr>
@@ -47,7 +46,6 @@
   </tr>
 #end
 </table>
-
         
 #end
 
@@ -60,7 +58,6 @@
 #end
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
-
 
 </form>
 </div>
