@@ -27,7 +27,6 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
@@ -319,30 +318,33 @@ public class MessageBuilder {
 	 *                the bodytext of the message we want
 	 * 	              reply/forward.
 	 */
-	private static String createBodyText(ColumbaMessage message) throws IOException {
+	private static String createBodyText(MimePart mimePart)
+		throws IOException {
 		CharSequence bodyText = "";
 
-		StreamableMimePart bodyPart = (StreamableMimePart) message.getBodyPart();
-		String charsetName = bodyPart.getHeader().getContentParameter("charset");
+		StreamableMimePart bodyPart = 
+			(StreamableMimePart) mimePart;
+		String charsetName =
+			bodyPart.getHeader().getContentParameter("charset");
 		String encoding = bodyPart.getHeader().getContentTransferEncoding();
-		
+
 		InputStream body = bodyPart.getInputStream();
-		if( encoding != null ) {
-			if( encoding.equals("quoted-printable")) {
-				body = new QuotedPrintableDecoderInputStream( body );
-			} else if( encoding.equals("base64")) {
-				body = new Base64DecoderInputStream( body );
+		if (encoding != null) {
+			if (encoding.equals("quoted-printable")) {
+				body = new QuotedPrintableDecoderInputStream(body);
+			} else if (encoding.equals("base64")) {
+				body = new Base64DecoderInputStream(body);
 			}
 		}
-		
-		if( charsetName != null ) {
+
+		if (charsetName != null) {
 			Charset charset;
 			try {
-				charset = Charset.forName( charsetName );
-			} catch ( UnsupportedCharsetException e ) {
-				charset = Charset.forName( System.getProperty("file.encoding"));
+				charset = Charset.forName(charsetName);
+			} catch (UnsupportedCharsetException e) {
+				charset = Charset.forName(System.getProperty("file.encoding"));
 			}
-			body = new CharsetDecoderInputStream( body, charset );
+			body = new CharsetDecoderInputStream(body, charset);
 		}
 
 		return StreamUtils.readInString(body).toString();
@@ -362,9 +364,10 @@ public class MessageBuilder {
 	 * 
 	 */
 	private static String createQuotedBodyText(
-						ColumbaMessage message,
-						boolean html) throws IOException {
-		String bodyText = createBodyText(message);
+		MimePart mimePart,
+		boolean html)
+		throws IOException {
+		String bodyText = createBodyText(mimePart);
 
 		// Quote according model type (text/html)
 		String quotedBodyText;
@@ -373,7 +376,7 @@ public class MessageBuilder {
 			// message formattet with a blue line at left edge
 
 			// TODO: Implement quoting (font color, stylesheet, blockquote???)
-			
+
 			/*
 			String lcase = bodyText.toLowerCase();
 			StringBuffer buf = new StringBuffer();
@@ -388,14 +391,14 @@ public class MessageBuilder {
 			buf.append(bodyText.substring(pos, end));
 			buf.append(quoteEnd);
 			buf.append(bodyText.substring(end));
-
+			
 			ColumbaLogger.log.debug("Source:\n" + bodyText);
 			ColumbaLogger.log.debug("Result:\n" + buf.toString());
 			
 			quotedBodyText = buf.toString();
 			*/
-			quotedBodyText = bodyText;			
-			
+			quotedBodyText = bodyText;
+
 		} else {
 			// plain text
 			quotedBodyText = BodyTextParser.quote(bodyText);
@@ -424,7 +427,8 @@ public class MessageBuilder {
 	public void createMessage(
 		ColumbaMessage message,
 		ComposerModel model,
-		int operation) throws IOException {
+		int operation)
+		throws IOException {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
@@ -506,9 +510,7 @@ public class MessageBuilder {
 			}
 		} else {
 			// prepend "> " to every line of the bodytext
-			String bodyText = createQuotedBodyText(
-									message,
-									model.isHtml());
+			String bodyText = createQuotedBodyText(message.getBodyPart(), model.isHtml());
 			if (bodyText == null) {
 				bodyText = "[Error parsing bodytext]";
 			}
@@ -538,7 +540,8 @@ public class MessageBuilder {
 		ColumbaMessage message,
 		ComposerModel model,
 		String templateBody,
-		boolean htmlTemplate) throws IOException {
+		boolean htmlTemplate)
+		throws IOException {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
@@ -575,11 +578,11 @@ public class MessageBuilder {
 		}
 
 		// prepend "> " to every line of the bodytext
-		String bodyText = createQuotedBodyText(message, model.isHtml());
+		String bodyText = createQuotedBodyText(message.getBodyPart(), model.isHtml());
 		if (bodyText == null) {
 			bodyText = "[Error parsing bodytext]";
 		}
-		
+
 		if (!htmlTemplate && model.isHtml()) {
 			// conversion to html necessary
 			templateBody = HtmlParser.textToHtml(templateBody, null, null);
@@ -587,14 +590,14 @@ public class MessageBuilder {
 			// conversion to text necessary
 			templateBody = HtmlParser.htmlToText(templateBody);
 		}
-		
+
 		StringBuffer buf;
 		if (model.isHtml()) {
 			// insert template just before ending body tag
 			String lcase = bodyText.toLowerCase();
 			int pos = lcase.indexOf("</body>");
 			if (pos < 0) {
-				pos = bodyText.length(); 
+				pos = bodyText.length();
 			}
 			buf = new StringBuffer(bodyText.substring(0, pos));
 			buf.append(HtmlParser.getHtmlBody(templateBody));
@@ -657,7 +660,9 @@ public class MessageBuilder {
 		} else {
 			model.setHtml(false);
 		}
-		model.setBodyText(bodyPart.getBody().toString());
+
+		//model.setBodyText(bodyPart.getBody().toString());
+		model.setBodyText( createBodyText( bodyPart) );
 		
 	}
 
