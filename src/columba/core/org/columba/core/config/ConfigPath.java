@@ -30,8 +30,6 @@ import org.columba.core.util.OSInfo;
  */
 public class ConfigPath {
 
-	public static String lineSeparator;
-	public static String fileSeparator;
 	public static String userName;
 	public static String userHome;
 
@@ -44,7 +42,6 @@ public class ConfigPath {
 	}
 
 	public ConfigPath(String configPath) {
-		
 		configDirectory = new File(configPath);
 		
 		configDirectory.mkdir();
@@ -57,16 +54,9 @@ public class ConfigPath {
 	protected void getSystemProperties() {
 		String hstr;
 
-		lineSeparator = new String(System.getProperty("line.separator"));
-		fileSeparator = new String(System.getProperty("file.separator"));
-
-		//System.out.println("os.arch: "+System.getProperty("os.arch") );
-		//System.out.println("os.version: "+System.getProperty("os.version") );
-
 		userName = new String(System.getProperty("user.name"));
 		userHome = new String(System.getProperty("user.home"));
 		//userDir = new String(System.getProperty("user.dir"));
-		//System.out.println("User home: "+userHome);
 
 		if (OSInfo.isWindowsPlatform()) {
 			// this os has no home directory
@@ -89,10 +79,6 @@ public class ConfigPath {
 		configDirectory = new File(hstr);
 		//DiskIO.ensureDirectory(hstr);
 		
-	
-
 		//createDefaultConfigFiles();
-
 	}
-
 }
