@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.241 2003/04/23 01:59:45 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.242 2003/04/23 02:58:21 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6267,7 +6267,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			if(evt.isShiftDown())
 			{
 				// XXX: getMarkPosition() deprecated!
-				resizeSelection(getMarkPosition(),dragStart,extraEndVirt,control);
+				resizeSelection(getMarkPosition(),dragStart,extraEndVirt,
+					isRectangularSelectionEnabled());
 
 				if(!quickCopyDrag)
 					moveCaretPosition(dragStart,false);
