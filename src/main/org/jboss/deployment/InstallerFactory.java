@@ -1,5 +1,5 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource EJB server
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -57,7 +57,8 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.2 $
+ *  @author <a href="mailto:wburke@commercetone.com">Bill Burke</a>
+ *	@version $Revision: 1.3 $
  */
 public class InstallerFactory
 {
@@ -155,26 +156,57 @@ public class InstallerFactory
 			return null;
 
 		Deployment result = null;
+        String realPattern = null;
+        // First try to see if _pattern is a URL.
+        try
+        {
+            URL u = new URL(_pattern);
+            String realtmp = u.getFile();
+            File fp = new File(realtmp);
+            realPattern = fp.getName();
+        }
+        catch (MalformedURLException ex)
+        {
+            /* Ignore, this is ok. We're dealing with an actual file path */
+        }
 
-		File[] files =  baseDir.listFiles();
-		for (int i = 0, l = files.length; i<l; ++i)
-		{
-			if (_pattern.endsWith (files[i].getName()))
-			{
-				try
-				{
-					result = loadConfig(new File (files[i], J2eeDeployer.CONFIG));
-					break;
-				}
-				catch (IOException _ioe)
-				{
-					log.error("exception while searching deployment: "+_ioe.getMessage());
-				}
-			}
-		}
-		return result;
-	}
+        if (realPattern == null)
+        {
+            // If it's not a URL maybe it is a file path
+            try
+            {
+                File fp = new File(_pattern);
+                realPattern = fp.getName();
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+        if (realPattern == null)
+        {
+            // REVISIT: Maybe we should log something here?
+            return result;
+        }
 
+        File[] files =  baseDir.listFiles();
+        for (int i = 0, l = files.length; i<l; ++i)
+        {
+            if (realPattern.equals(files[i].getName()))
+            {
+                try
+                {
+                    result = loadConfig(new File (files[i], J2eeDeployer.CONFIG));
+                    break;
+                }
+                catch (IOException _ioe)
+                {
+                    log.error("exception while searching deployment: "+_ioe.getMessage());
+                }
+            }
+        }
+
+        return result;
+    }
 
 	/** Does some cleanup in the deployments. Intended to remove files that didnt become removed
 	 *  in previous sessions because of the Win2k removal problems.
