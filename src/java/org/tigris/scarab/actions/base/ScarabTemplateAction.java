@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.13 2002/01/19 01:08:02 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.14 2002/01/28 20:20:06 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -266,7 +266,11 @@ public abstract class ScarabTemplateAction extends TemplateAction
         { 
             String key = (String)iter.next();
             pp.remove(key);
-            pp.add(key, (String)params.get(key));
+            String[] ids = (String[])params.get(key);
+            for (int i = 0; i< ids.length; i++)
+            {
+                pp.add(key, ids[i]);
+            }
         }
     }
         
