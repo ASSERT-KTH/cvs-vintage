@@ -19,7 +19,10 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Insert_Date.bsh,v 1.1 2001/09/02 05:39:35 spestov Exp $
+ * $Id: Insert_Date.bsh,v 1.2 2001/11/06 15:04:21 jgellene Exp $
+ *
+ * Checked for jEdit 4.0 API
+ *
  */
 
 // Inserts the current date and Internet Time at the caret position
@@ -56,6 +59,22 @@ void insertDate()
 }
 
 insertDate();
+
+/*
+	Macro index data (in DocBook format)
+
+<listitem>
+    <para><filename>Insert_Date.bsh</filename></para>
+    <abstract><para>
+        Inserts the current date and time in the current buffer.
+    </para></abstract>
+    <para>
+        The inserted text includes a representation of the time in the
+        <quote>Internet Time</quote> format.
+    </para>
+</listitem>
+
+*/
 
 // end Insert_Date.bsh
 

@@ -19,11 +19,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  *
- * $Id: Duplicate_Line.bsh,v 1.1 2001/09/02 05:39:36 spestov Exp $
+ * $Id: Duplicate_Line.bsh,v 1.2 2001/11/06 15:04:21 jgellene Exp $
+ *
+ * Checked for jEdit 4.0 API
+ *
  */
 
 void duplicateLine()
 {
+	/*
+	 * Guard for readonly files becuase Buffer.insert()
+	 * ignores the flag
+	 *
+	 */
+	if(buffer.isReadOnly())
+	{
+		Macros.error(view, "This file is read only.");
+		return;
+	}
 	line = textArea.getCaretLine();
 	offset = textArea.getLineEndOffset(line);
 	// handle last line differently
@@ -34,7 +47,7 @@ void duplicateLine()
 	}
 	else
 		text = textArea.getLineText(line) + "\n";
-	buffer.insertString(offset, text, null);
+	buffer.insert(offset, text);
 	textArea.goToNextLine(false);
 }
 
