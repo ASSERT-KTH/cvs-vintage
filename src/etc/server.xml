@@ -44,17 +44,32 @@
         <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />
         <ContextInterceptor className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
         <!-- Request processing -->
-        <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" debug="0" />
+        <!-- Session interceptor will extract the session id from cookies and 
+             deal with URL rewriting. It has to be first to support rewriting ( otherwise
+             the mapper will have to know about sessions 
+          -->
         <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
+
+        <!-- Find the container ( context and prefix/extension map ) for a request.
+             For "integrated" mode it can be avoided, assuming we get all the info from
+             the server.
+          -->
+        <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper1" debug="0" />
+
+        <!-- Check permissions -->
         <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
+
+        <!-- Set extra headers - like Date: and ServletEngine, plus version 0 cookies
+             Most of this is not needed, but it was allways here. There are better 
+             ways to do that -->
         <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
 
-        <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
+        <Connector className="org.apache.tomcat.service.PoolTcpConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
             <Parameter name="port" value="8080"/>
         </Connector>
 
-        <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
+        <Connector className="org.apache.tomcat.service.PoolTcpConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
             <Parameter name="port" value="8007"/>
         </Connector>
@@ -68,6 +83,17 @@
 
         <Context path="/test" docBase="webapps/test" debug="0" reloadable="true" > 
         </Context>
+
+        <Context path="/admin" docBase="webapps/admin" debug="0" reloadable="true" trusted="true" > 
+        </Context>
+
+        <!-- Virtual host example - just use numeric IP instead of localhost
+             and you should see /examples as the root context and root as examples.
+             Same docBase is used, just different mappings :-)        -->
+        <Host name="127.0.0.1" >
+           <Context path="" docBase="webapps/examples" />
+           <Context path="/examples" docBase="webapps/ROOT" />
+        </Host>
 
     </ContextManager>
 </Server>
