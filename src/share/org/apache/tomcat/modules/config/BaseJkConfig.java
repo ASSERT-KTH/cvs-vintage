@@ -1,4 +1,4 @@
-/* $Id: BaseJkConfig.java,v 1.1 2001/08/10 03:57:07 larryi Exp $
+/* $Id: BaseJkConfig.java,v 1.2 2001/08/10 20:55:38 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -117,7 +117,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Larry Isaacs
-	@version $Revision: 1.1 $
+	@version $Revision: 1.2 $
  */
 public class BaseJkConfig  extends BaseInterceptor { 
     protected File configHome = null;
@@ -192,14 +192,14 @@ public class BaseJkConfig  extends BaseInterceptor {
     }
 
     /**
-        set the path to the mod_jk log file
+        set the path to the log file
         @param <b>path</b> String path to a file
     */
     public void setJkLog(String path){
         jkLog= ( path==null?null:new File(path));
     }
     
-    /** Set the verbosity level for mod_jk.
+    /** Set the verbosity level
         ( use debug, error, etc. ) If not set, no log is written.
      */
     public void setJkDebug( String level ) {
@@ -243,7 +243,46 @@ public class BaseJkConfig  extends BaseInterceptor {
 	if( jkProto==null ) jkProto="ajp12";
     }
 
-    // -------------------- Utils --------------------
+    // -------------------- Config Utils  --------------------
+
+    protected boolean addMapping( Context ctx, Container ct,
+				PrintWriter pw )
+    {
+	int type=ct.getMapType();
+	String ctPath=ct.getPath();
+	String ctxPath=ctx.getPath();
+
+	if( type==Container.EXTENSION_MAP ) {
+	    if( ctPath.length() < 3 ) return false;
+	    String ext=ctPath.substring( 2 );
+	    return addExtensionMapping( ctxPath, ext , pw );
+	}
+	String fullPath=null;
+	if( ctPath.startsWith("/" ))
+	    fullPath=ctxPath+ ctPath;
+	else
+	    fullPath=ctxPath + "/" + ctPath;
+	return addMapping( fullPath, pw);
+    }
+
+    /** Add an extension mapping. Override with method to generate
+        web server specific configuration
+     */
+    protected boolean addExtensionMapping( String ctxPath, String ext,
+					 PrintWriter pw )
+    {
+	return true;
+    }
+    
+    
+    /** Add a fulling specified mapping.  Override with method to generate
+        web server specific configuration
+     */
+    protected boolean addMapping( String fullPath, PrintWriter pw ) {
+	return true;
+    }
+
+    // -------------------- General Utils --------------------
 
     protected File getConfigFile( File base, File configDir, String defaultF )
     {

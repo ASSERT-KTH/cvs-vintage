@@ -59,7 +59,8 @@
 package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.io.FileUtil;
+//import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.util.*;
@@ -127,19 +128,17 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.5 $
+	@version $Revision: 1.6 $
  */
 public class IISConfig extends BaseJkConfig  { 
 
     public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
     public static final String URI_WORKERS_MAP_CONFIG = "/conf/auto/uriworkermap.properties";
-    public static final String ISAPI_LOG_LOCATION = "/logs/isapi_redirect.log";
-    public static final String ISAPI_REG_FILE = "/conf/auto/isapi_redirect.reg";    
+    public static final String ISAPI_LOG_LOCATION = "/logs/iis_redirect.log";
+    public static final String ISAPI_REG_FILE = "/conf/auto/iis_redirect.reg";    
 
     private File regConfig = null;
     private File uriConfig = null;
-
-    Log loghelper = Log.getLog("tc_log", "IISConfig");
 
     public IISConfig() 
     {
@@ -205,90 +204,154 @@ public class IISConfig extends BaseJkConfig  {
             PrintWriter regfile = new PrintWriter(new FileWriter(regConfig));
             PrintWriter uri_worker = new PrintWriter(new FileWriter(uriConfig));        
 
-            regfile.println("REGEDIT4");
-            regfile.println();
-            regfile.println("[HKEY_LOCAL_MACHINE\\SOFTWARE\\Apache Software Foundation\\Jakarta Isapi Redirector\\1.0]");
-            regfile.println("\"extension_uri\"=\"/jakarta/isapi_redirect.dll\"");
-            regfile.println("\"log_file\"=\"" + dubleSlash(jkLog.toString()) +"\"");
-            regfile.println("\"log_level\"=\"" + jkDebug + "\"");
-            regfile.println("\"worker_file\"=\"" + dubleSlash(workersConfig.toString()) +"\"");
-            regfile.println("\"worker_mount_file\"=\"" + dubleSlash(uriConfig.toString()) +"\"");
+            generateRegistrySettings(regfile);
 
-            
-            uri_worker.println("###################################################################");		    
-            uri_worker.println("# Auto generated configuration. Dated: " +  new Date());
-            uri_worker.println("###################################################################");		    
-            uri_worker.println();
+            generateUriWorkerHeader(uri_worker);            
 
-            uri_worker.println("#");        
-            uri_worker.println("# Default worker to be used through our mappings");
-            uri_worker.println("#");        
-            uri_worker.println("default.worker=" + jkProto);        
-            uri_worker.println();
-            
-            uri_worker.println("#");                    
-            uri_worker.println("# Root context mounts for Tomcat");
-            uri_worker.println("#");        
-		    uri_worker.println("/servlet/*=$(default.worker)");
-		    uri_worker.println("/*.jsp=$(default.worker)");
-            uri_worker.println();            
+            // Set up contexts
+            // XXX deal with Virtual host configuration !!!!
+            Enumeration enum = cm.getContexts();
+            while (enum.hasMoreElements()) {
+                Context context = (Context)enum.nextElement();
 
+                String vhost = context.getHost();
+                if(vhost != null) {
+                    // Vhosts are not supported yet for IIS
+                    continue;
+                }
 
-	        // Set up contexts
-	        // XXX deal with Virtual host configuration !!!!
-	        Enumeration enum = cm.getContexts();
-	        while (enum.hasMoreElements()) {
-		        Context context = (Context)enum.nextElement();
-		        String path  = context.getPath();
-		        String vhost = context.getHost();
+		if( forwardAll )
+		    generateStupidMappings( context, uri_worker );
+		else
+		    generateContextMappings( context, uri_worker );
+            }
 
-		        if(vhost != null) {
-		            // Vhosts are not supported yet for IIS
-		            continue;
-		        }
-		        if(path.length() > 1) {
-                    // Static files will be served by IIS
-                    uri_worker.println("#########################################################");		    
-                    uri_worker.println("# Auto configuration for the " + path + " context starts.");
-                    uri_worker.println("#########################################################");		    
-                    uri_worker.println();
-            
+            regfile.close();
+            uri_worker.close();
 
-                    uri_worker.println("#");		    
-                    uri_worker.println("# The following line mounts all JSP file and the /servlet/ uri to tomcat");
-                    uri_worker.println("#");                        
-		            uri_worker.println(path +"/servlet/*=$(default.worker)");
-		            uri_worker.println(path +"/*.jsp=$(default.worker)");
-                    uri_worker.println();            
+        } catch(Exception ex) {
+            Log loghelper = Log.getLog("tc_log", this);
+            loghelper.log("Error generating automatic IIS configuration", ex);
+        }
+    }
 
-                    uri_worker.println("#");		    
-                    uri_worker.println("# The following line specifies that tomcat should serve all the resources");
-                    uri_worker.println("# (including static) that are port of the " + path + " context.  This insures");
-                    uri_worker.println("# that behavior specified in the web.xml functions correctly.  If you want");
-                    uri_worker.println("# IIS to serve static resources, comment out this line and replace with");
-                    uri_worker.println("# appropriate mappings.  Then update the IIS configuration as needed.");
-                    uri_worker.println("#");                        
-                    uri_worker.println(path +"=$(default.worker)");
-                    uri_worker.println(path +"/*=$(default.worker)");
+    // -------------------- Config sections  --------------------
 
-                    uri_worker.println("#######################################################");		    
-                    uri_worker.println("# Auto configuration for the " + path + " context ends.");
-                    uri_worker.println("#######################################################");		    
-                    uri_worker.println();
-		        }
-	        }
+    /** Writes the registry settings required by the IIS connector
+     */
+    private void generateRegistrySettings(PrintWriter regfile)
+    {
+        regfile.println("REGEDIT4");
+        regfile.println();
+        regfile.println("[HKEY_LOCAL_MACHINE\\SOFTWARE\\Apache Software Foundation\\Jakarta Isapi Redirector\\1.0]");
+        regfile.println("\"extension_uri\"=\"/jakarta/isapi_redirect.dll\"");
+        regfile.println("\"log_file\"=\"" + dubleSlash(jkLog.toString()) +"\"");
+        regfile.println("\"log_level\"=\"" + jkDebug + "\"");
+        regfile.println("\"worker_file\"=\"" + dubleSlash(workersConfig.toString()) +"\"");
+        regfile.println("\"worker_mount_file\"=\"" + dubleSlash(uriConfig.toString()) +"\"");
+    }
 
-	        regfile.close();
-	        uri_worker.close();
-	        
-	    } catch(Exception ex) {
-	        loghelper.log("Error generating automatic IIS configuration", ex);
-	    }
+    /** Writes the header information to the uriworkermap file
+     */
+    private void generateUriWorkerHeader(PrintWriter uri_worker)
+    {
+        uri_worker.println("###################################################################");		    
+        uri_worker.println("# Auto generated configuration. Dated: " +  new Date());
+        uri_worker.println("###################################################################");		    
+        uri_worker.println();
+
+        uri_worker.println("#");        
+        uri_worker.println("# Default worker to be used through our mappings");
+        uri_worker.println("#");        
+        uri_worker.println("default.worker=" + jkProto);        
+        uri_worker.println();
+    }
+
+    /** Forward all requests for a context to tomcat.
+	The default.
+     */
+    private void generateStupidMappings(Context context, PrintWriter uri_worker )
+    {
+        String ctxPath  = context.getPath();
+	String nPath=("".equals(ctxPath)) ? "/" : ctxPath;
+
+        if( noRoot &&  "".equals(ctxPath) ) {
+            log("Ignoring root context in forward-all mode  ");
+            return;
+        } 
+
+        // map all requests for this context to Tomcat
+        uri_worker.println(nPath +"=$(default.worker)");
+        if( "".equals(ctxPath) ) {
+            uri_worker.println(nPath +"*=$(default.worker)");
+            uri_worker.println(
+                    "# Note: To correctly serve the Tomcat's root context, IIS's Home Directory must");
+            uri_worker.println(
+                    "# must be set to: \"" + getAbsoluteDocBase(context) + "\"");
+        }
+        else
+            uri_worker.println(nPath +"/*=$(default.worker)");
+    }
+
+    private void generateContextMappings(Context context, PrintWriter uri_worker )
+    {
+        String ctxPath  = context.getPath();
+	String nPath=("".equals(ctxPath)) ? "/" : ctxPath;
+
+        if( noRoot &&  "".equals(ctxPath) ) {
+            log("Ignoring root context in forward-all mode  ");
+            return;
+        } 
+
+        // Static files will be served by IIS
+        uri_worker.println();
+        uri_worker.println("#########################################################");		    
+        uri_worker.println("# Auto configuration for the " + nPath + " context.");
+        uri_worker.println("#########################################################");		    
+        uri_worker.println();
+
+        // Static mappings are not set in uriworkermap, but must be set with IIS admin.
+
+	// InvokerInterceptor - it doesn't have a container,
+	// but it's implemented using a special module.
+
+	// XXX we need to better collect all mappings
+	addMapping( ctxPath + "/servlet/*", uri_worker );
+
+	Enumeration servletMaps=context.getContainers();
+	while( servletMaps.hasMoreElements() ) {
+	    Container ct=(Container)servletMaps.nextElement();
+	    addMapping( context, ct , uri_worker );
+	}
+
+	// XXX ErrorDocument
+	// Security and filter mappings
+
+    }
+
+    /** Add an IIS extension mapping.
+     */
+    protected boolean addExtensionMapping( String ctxPath, String ext,
+					 PrintWriter uri_worker )
+    {
+        if( debug > 0 )
+            log( "Adding extension map for " + ctxPath + "/*." + ext );
+	uri_worker.println(ctxPath + "/*." + ext + " " + jkProto);
+        return true;
+    }
+
+    /** Add a fulling specified IIS mapping.
+     */
+    protected boolean addMapping( String fullPath, PrintWriter uri_worker ) {
+        if( debug > 0 )
+            log( "Adding map for " + fullPath );
+        uri_worker.println(fullPath + "=$(default.worker)" );
+        return true;
     }
 
     // -------------------- Utils --------------------
 
-    protected String dubleSlash(String in) 
+    private String dubleSlash(String in) 
     {
         StringBuffer sb = new StringBuffer();
         
@@ -303,4 +366,16 @@ public class IISConfig extends BaseJkConfig  {
         
         return sb.toString();
     }
+
+    private String getAbsoluteDocBase(Context context)
+    {
+	// Calculate the absolute path of the document base
+	String docBase = context.getDocBase();
+	if (!FileUtil.isAbsolute(docBase)){
+	    docBase = tomcatHome + "/" + docBase;
+	}
+	docBase = FileUtil.patch(docBase);
+        return docBase;
+    }
+
 }
