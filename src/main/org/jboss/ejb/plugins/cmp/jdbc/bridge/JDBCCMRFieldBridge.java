@@ -66,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1272,6 +1272,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          setHandle[0].removeAll(removedRelations);
 
          // add the already added values
+         // but remove FKs we are going to add to avoid duplication
+         setHandle[0].removeAll(addedRelations);
          setHandle[0].addAll(addedRelations);
 
          // mark the field loaded
