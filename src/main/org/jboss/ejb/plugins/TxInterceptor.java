@@ -21,7 +21,9 @@ import javax.transaction.SystemException;
 
 import javax.ejb.EJBException;
 
+import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.MethodInvocation;
 import org.jboss.logging.Logger;
 
 /**
@@ -29,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class TxInterceptor
    extends AbstractInterceptor
@@ -45,12 +47,23 @@ public class TxInterceptor
    // Attributes ----------------------------------------------------
    private TransactionManager tm;
 	private HashMap methodTx = new HashMap();
+	
+	protected Container container;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+   public void setContainer(Container container) 
+   { 
+   	this.container = container; 
+   }
+
+   public  Container getContainer()
+   {
+   	return container;
+   }
 
    // Interceptor implementation --------------------------------------
 	public void init()
@@ -64,11 +77,11 @@ public class TxInterceptor
 //		eb.getBeanContext()
 	}
 	
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
       // TODO
-      return getNext().invokeHome(method, args, ctx);
+      return getNext().invokeHome(mi);
    }
 
    /**
@@ -80,12 +93,12 @@ public class TxInterceptor
     * @return     
     * @exception   Exception  
     */
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
-      Transaction current = getContainer().getTransactionManager().getTransaction();
+      Transaction current = mi.getTransaction();
       
-      switch (getTransactionMethod(method))
+      switch (getTransactionMethod(mi.getMethod()))
       {
          case TX_NOT_SUPPORTED:
          {
@@ -97,7 +110,7 @@ public class TxInterceptor
                
                try
                {
-                  return getNext().invoke(id, method, args, ctx);
+                  return getNext().invoke(mi);
                } finally
                {
                   // Resume tx
@@ -105,7 +118,7 @@ public class TxInterceptor
                }
             } else
             {
-               return getNext().invoke(id, method, args, ctx);
+               return getNext().invoke(mi);
             }
          }
          
@@ -120,13 +133,13 @@ public class TxInterceptor
                // Create tx
 //DEBUG               Logger.debug("Begin tx");
                getContainer().getTransactionManager().begin();
-               tx = getContainer().getTransactionManager().getTransaction();
+               mi.setTransaction(getContainer().getTransactionManager().getTransaction());
             } 
             
             // Continue invocation
             try
             {
-               return getNext().invoke(id, method, args, ctx);
+               return getNext().invoke(mi);
             } catch (RemoteException e)
             {
 					if (!tx.equals(current))
@@ -169,14 +182,13 @@ public class TxInterceptor
          case TX_SUPPORTS:
          {
 //DEBUG	         Logger.debug("TX_SUPPORTS");
-	         Transaction tx = current;
 	         
 				// This mode doesn't really do anything
 				// If tx started -> do nothing
 				// If tx not started -> do nothing
 				
 	         // Continue invocation
-            return getNext().invoke(id, method, args, ctx);
+            return getNext().invoke(mi);
          }
          
          case TX_REQUIRES_NEW:
@@ -186,11 +198,12 @@ public class TxInterceptor
             // Always begin new tx
             Logger.debug("Begin tx");
             getContainer().getTransactionManager().begin();
+				mi.setTransaction(getContainer().getTransactionManager().getTransaction());
 	         
 	         // Continue invocation
 	         try
 	         {
-	            return getNext().invoke(id, method, args, ctx);
+	            return getNext().invoke(mi);
 	         } catch (RemoteException e)
 	         {
 	        		getContainer().getTransactionManager().rollback();
@@ -228,7 +241,7 @@ public class TxInterceptor
 					throw new TransactionRequiredException();
 	         } else
 	         {
-	            return getNext().invoke(id, method, args, ctx);
+	            return getNext().invoke(mi);
 	         }
          }
          
@@ -240,7 +253,7 @@ public class TxInterceptor
 	         	throw new RemoteException("Transaction not allowed");
 	         } else
 	         {
-	            return getNext().invoke(id, method, args, ctx);
+	            return getNext().invoke(mi);
 	         }
          }
       }

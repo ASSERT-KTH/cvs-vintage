@@ -18,7 +18,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class FileLogging
    implements FileLoggingMBean, MBeanRegistration, NotificationListener
@@ -102,9 +102,9 @@ public class FileLogging
    {
       try
       {
-         server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
-         
          out = new PrintStream(new FileOutputStream(new File(new File(getClass().getResource("/log.properties").getFile()).getParent(), logName)));
+
+         server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
          
          log.log("Logging started");
          return new ObjectName(OBJECT_NAME);

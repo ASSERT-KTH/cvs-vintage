@@ -22,6 +22,7 @@ import javax.ejb.RemoveException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.MethodInvocation;
 
 import org.jboss.logging.Log;
 
@@ -30,7 +31,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -38,15 +39,26 @@ public class LogInterceptor
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   Log log;
+   protected Log log;
    
-	boolean callLogging;
+	protected boolean callLogging;
+	
+	protected Container container;
 	
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+   public void setContainer(Container container) 
+   { 
+   	this.container = container; 
+   }
+	
+   public  Container getContainer()
+   {
+   	return container;
+   }
 
    // Container implementation --------------------------------------
    public void init()
@@ -62,7 +74,7 @@ public class LogInterceptor
       log = new Log(name);
    }
    
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
       Log.setLog(log);
@@ -71,8 +83,9 @@ public class LogInterceptor
 		if (callLogging)
 		{
 			StringBuffer str = new StringBuffer();
-			str.append(method.getName());
+			str.append(mi.getMethod().getName());
 			str.append("(");
+			Object[] args = mi.getArguments();
 			if (args != null)
 			   for (int i = 0; i < args.length; i++)
 				{
@@ -85,7 +98,7 @@ public class LogInterceptor
       
       try
       {
-         return getNext().invokeHome(method, args, ctx);
+         return getNext().invokeHome(mi);
       } catch (Exception e)
       {
 			// Log system exceptions
@@ -113,7 +126,7 @@ public class LogInterceptor
     * @return     
     * @exception   Exception  
     */
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
       Log.setLog(log);
@@ -122,9 +135,10 @@ public class LogInterceptor
       if (callLogging)
       {
       	StringBuffer str = new StringBuffer();
-         str.append(id == null ? "" : "["+id.toString()+"] ");
-      	str.append(method.getName());
+         str.append(mi.getId() == null ? "" : "["+mi.getId().toString()+"] ");
+      	str.append(mi.getMethod().getName());
       	str.append("(");
+         Object[] args = mi.getArguments();
          if (args != null)
             for (int i = 0; i < args.length; i++)
       		{
@@ -137,7 +151,7 @@ public class LogInterceptor
 		
       try
       {
-         return getNext().invoke(id, method, args, ctx);
+         return getNext().invoke(mi);
       } catch (Exception e)
       {
          log.exception(e);

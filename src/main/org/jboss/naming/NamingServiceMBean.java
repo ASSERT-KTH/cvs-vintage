@@ -13,7 +13,7 @@ package org.jboss.naming;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public interface NamingProviderMBean
+public interface NamingServiceMBean
    extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------

@@ -47,7 +47,7 @@ import org.jboss.logging.ConsoleLogging;
 import org.jboss.logging.ConsoleLoggingMBean;
 
 import org.jboss.util.MBeanProxy;
-import org.jboss.web.WebProviderMBean;
+import org.jboss.web.WebServiceMBean;
 
 import org.jboss.ejb.plugins.*;
 
@@ -66,10 +66,11 @@ import org.jboss.verifier.event.VerificationListener;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.20 $
+*   @version $Revision: 1.21 $
 */
 public class ContainerFactory
-implements ContainerFactoryMBean, MBeanRegistration
+	extends org.jboss.util.ServiceMBeanSupport
+	implements ContainerFactoryMBean
 {
 	// Constants -----------------------------------------------------
 	public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
@@ -79,16 +80,58 @@ implements ContainerFactoryMBean, MBeanRegistration
 	
 	// Attributes ----------------------------------------------------
 	// The logger of this service
-	Log log = new Log("Container factory");
-	
-	// The JMX agent
-	MBeanServer server;
+	Log log = new Log(getName());
 	
 	// A map of current deployments. If a deployment is made and it is already in this map,
 	// then undeploy it first (i.e. make it a re-deploy).
 	HashMap deployments = new HashMap();
 	
+	// Verify EJB-jar contents on deployments
+	boolean verifyDeployments = false;
+	
 	// Public --------------------------------------------------------
+	public ObjectName getObjectName(MBeanServer server, ObjectName name)
+	   throws javax.management.MalformedObjectNameException
+	{
+	   return new ObjectName(OBJECT_NAME);
+	}
+	
+	public String getName()
+	{
+	   return "Container factory";
+	}
+	
+	public void stopService()
+	{
+		Iterator apps = deployments.values().iterator();
+		while (apps.hasNext())
+		{
+			Application app = (Application)apps.next();
+			app.stop();
+		}
+	}
+	
+	public void destroyService()
+	{
+		Iterator apps = deployments.values().iterator();
+		while (apps.hasNext())
+		{
+			Application app = (Application)apps.next();
+			app.destroy();
+		}
+		
+		deployments.clear();
+	}
+	
+	public void setVerifyDeployments(boolean verify)
+	{
+		verifyDeployments = verify;
+	}
+		
+	public boolean getVerifyDeployments()
+	{
+		return verifyDeployments;
+	}
 	
 	/**
 	*	Deploy the file at this URL. This method is typically called from remote administration
@@ -99,7 +142,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 	* @exception   DeploymentException  
 	*/
 	public void deploy(String url)
-	throws MalformedURLException, DeploymentException
+		throws MalformedURLException, DeploymentException
 	{
 		// Delegate to "real" deployment
 		deploy(new URL(url));
@@ -115,7 +158,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 	* @exception   DeploymentException  
 	*/
 	public void undeploy(String url)
-	throws MalformedURLException, DeploymentException
+		throws MalformedURLException, DeploymentException
 	{
 		// Delegate to "real" undeployment
 		undeploy(new URL(url));
@@ -133,8 +176,11 @@ implements ContainerFactoryMBean, MBeanRegistration
 	* @exception   DeploymentException  
 	*/
 	public synchronized void deploy(URL url)
-	throws DeploymentException
+		throws DeploymentException
 	{
+		// Create application
+		Application app = new Application();
+		
 		try
 		{
 			Log.setLog(log);
@@ -143,24 +189,22 @@ implements ContainerFactoryMBean, MBeanRegistration
 			if (deployments.containsKey(url))
 				undeploy(url);
 
-            // [JPL] for now, use verifier only for testing..
-            boolean useVerifier = Boolean.getBoolean("jboss.verifier.isEnabled");
+			// Check validity	
+         if (verifyDeployments) 
+			{
+             BeanVerifier verifier = new BeanVerifier();
+             
+             verifier.addVerificationListener(new VerificationListener() 
+				 {
+                 public void beanChecked(VerificationEvent event) 
+					  {
+                     System.out.println(event.getMessage());
+                 }
+             });
+             
+             verifier.verify(url);
+         }
             
-            if (useVerifier) {
-                BeanVerifier verifier = new BeanVerifier();
-                
-                verifier.addVerificationListener(new VerificationListener() {
-                    
-                    public void beanChecked(VerificationEvent event) {
-                        System.out.println(event.getMessage());
-                    }
-                });
-                
-                verifier.verify(url);
-            }
-            
-			// Create application
-			Application app = new Application();
 			app.setURL(url);
 			
 			log.log("Deploying:"+url);
@@ -188,20 +232,16 @@ implements ContainerFactoryMBean, MBeanRegistration
 			}
 			
 			// Create classloader for this application
-			//         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), jar.isSecure());
+//			ClassLoader cl = new EJBClassLoader(new URL[] {url}, null, jar.isSecure());
 			ClassLoader cl = efm.getClassLoader();
 			
 			// Get list of beans for which we will create containers
 			Iterator beans = jar.getEnterpriseBeans().iterator();
 			
-			// Create list of containers
-			ArrayList containers = new ArrayList();
-			
 			// Deploy beans
 			Context ctx = new InitialContext();
 			while(beans.hasNext())
 			{
-				Container con = null;
 				jBossEnterpriseBean bean = (jBossEnterpriseBean)beans.next();
 				
 				log.log("Deploying "+bean.getEjbName());
@@ -211,16 +251,16 @@ implements ContainerFactoryMBean, MBeanRegistration
 					if (((jBossSession)bean).getSessionType().equals("Stateless")) // Is stateless?
 					{
 						// Create container
-						con = new StatelessSessionContainer();
+						StatelessSessionContainer container = new StatelessSessionContainer();
 						
 						// Create classloader for this container
-						con.setClassLoader(new BeanClassLoader(cl));
+						container.setClassLoader(new BeanClassLoader(cl));
 						
 						// Set metadata
-						con.setMetaData(bean);
+						container.setMetaData(bean);
 						
 						// Get container configuration
-						ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
+						ContainerConfiguration conf = bean.getContainerConfiguration();
 						
 						// Make sure we have a default configuration
 						if (conf == null) 
@@ -235,25 +275,23 @@ implements ContainerFactoryMBean, MBeanRegistration
 						}
 						
 						// Set container invoker
-						((StatelessSessionContainer)con).setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+						container.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
 						
 						// Set instance pool
-						con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+						container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
 						
 						// Create interceptors
 						
-						//                  con.addInterceptor(new LogInterceptor());
-						//                  con.addInterceptor(new SecurityInterceptor());
-						//                  con.addInterceptor(new TxInterceptor());
-						
-						con.addInterceptor(new StatelessSessionInstanceInterceptor());
+						container.addInterceptor(new LogInterceptor());
+						container.addInterceptor(new SecurityInterceptor());
+						container.addInterceptor(new TxInterceptor());
+						container.addInterceptor(new StatelessSessionInstanceInterceptor());
 						
 						// Finally we add the last interceptor from the container
-						con.addInterceptor(con.createContainerInterceptor());
+						container.addInterceptor(container.createContainerInterceptor());
 						
 						// Add container to application
-						containers.add(con);
-					
+						app.addContainer(container);
 					} else // Stateful
 					{
 						boolean implemented = false;
@@ -261,16 +299,16 @@ implements ContainerFactoryMBean, MBeanRegistration
 						//if (!implemented) throw new Error("Stateful Container not implemented yet");
 						
 						// Create container
-						con = new StatefulSessionContainer();
+						StatefulSessionContainer container = new StatefulSessionContainer();
 						
 						// Create classloader for this container
-						con.setClassLoader(new BeanClassLoader(cl));
+						container.setClassLoader(new BeanClassLoader(cl));
 						
 						// Set metadata
-						con.setMetaData(bean);
+						container.setMetaData(bean);
 						
 						// Get container configuration
-						ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
+						ContainerConfiguration conf = bean.getContainerConfiguration();
 						
 						// Make sure we have a default configuration
 						if (conf == null) 
@@ -284,43 +322,41 @@ implements ContainerFactoryMBean, MBeanRegistration
 						}
 						
 						// Set container invoker
-						((StatefulSessionContainer)con).setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+						container.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
 						
 						// Set instance cache
-						((StatefulSessionContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+						container.setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+						
+						// Set instance pool
+						container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
 						
 						// Set persistence manager
-						((StatefulSessionContainer)con).setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-						
-						// Set instance pools (this is bogus anyway) should be set through default stuff 
-						con.setInstancePool((InstancePool)cl.loadClass("org.jboss.ejb.plugins.StatefulSessionInstancePool").newInstance());
-						
+						container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 						
 						// Create interceptors
-						//con.addInterceptor(new LogInterceptor());
-						//con.addInterceptor(new TxInterceptor());
-						con.addInterceptor(new StatefulSessionInstanceInterceptor());
-						//con.addInterceptor(new SecurityInterceptor());
+						container.addInterceptor(new LogInterceptor());
+						container.addInterceptor(new TxInterceptor());
+						container.addInterceptor(new StatefulSessionInstanceInterceptor());
+						container.addInterceptor(new SecurityInterceptor());
 						
-						con.addInterceptor(con.createContainerInterceptor());
+						container.addInterceptor(container.createContainerInterceptor());
 						
 						// Add container to application
-						containers.add(con);
-					
+						app.addContainer(container);
 					}
 				} else // Entity
 				{
 					// Create container
-					con = new EntityContainer();
+					EntityContainer container = new EntityContainer();
 					
 					// Create classloader for this container
-					con.setClassLoader(new BeanClassLoader(cl));
+					container.setClassLoader(new BeanClassLoader(cl));
 					
 					// Set metadata
-					con.setMetaData(bean);
+					container.setMetaData(bean);
 					
 					// Get container configuration
-					ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
+					ContainerConfiguration conf = bean.getContainerConfiguration();
 					
 					// Make sure we have a default configuration
 					if (conf == null) 
@@ -345,83 +381,39 @@ implements ContainerFactoryMBean, MBeanRegistration
 					}
 					
 					// Set container invoker
-					((EntityContainer)con).setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+					container.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
 					
 					// Set instance cache
-					((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+					container.setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
 					
 					// Set instance pool
-					con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+					container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
 					
 					// Set persistence manager
-					((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-					
+					container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
 					
 					// Create interceptors
-					//					con.addInterceptor(new LogInterceptor());
-					//					con.addInterceptor(new SecurityInterceptor());
-					//					con.addInterceptor(new TxInterceptor());
-					con.addInterceptor(new EntityInstanceInterceptor());
-					con.addInterceptor(new EntitySynchronizationInterceptor());
+					container.addInterceptor(new LogInterceptor());
+					container.addInterceptor(new SecurityInterceptor());
+					container.addInterceptor(new TxInterceptor());
+					container.addInterceptor(new EntityInstanceInterceptor());
+					container.addInterceptor(new EntitySynchronizationInterceptor());
 					
-					con.addInterceptor(con.createContainerInterceptor());
+					container.addInterceptor(container.createContainerInterceptor());
 					
 					// Add container to application
-					containers.add(con);
+					app.addContainer(container);
 				}
-				
-				// Set callback to application
-				if (con != null)
-					con.setApplication(app);
 			}
 			
-			// Init/Start container
-			for (int i = 0; i < containers.size(); i++)
-			{
-				Container con = (Container)containers.get(i);
-				
-				// Init container
-				con.init();
-				
-				// Start
-				con.start();
-				log.log("Started: "+con.getMetaData().getEjbName());
-			}
+			// Init application
+			app.init();
 			
-			// Bind container in global JNDI namespace
-			for (int i = 0; i < containers.size(); i++)
-			{
-				Container con = (Container)containers.get(i);
-   
-                // Use rebind to make sure you overwrite the name
-				rebind(ctx, con.getMetaData().getJndiName(), con.getContainerInvoker().getEJBHome());
-					
-				// Done
-				log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
-				
-				/*if (con instanceof EntityContainer)
-				{
-					rebind(ctx, con.getMetaData().getJndiName(), ((EntityContainer)con).getContainerInvoker().getEJBHome());
-					
-					// Done
-					log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
-				} else if (con instanceof StatelessSessionContainer)
-				{
-					rebind(ctx, con.getMetaData().getJndiName(), ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome());
-					
-					// Done
-					log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
-				} else if (con instanceof StatefulSessionContainer) 
-			    {
-				    rebind(ctx, con.getMetaData().getJndiName(), ((StatefulSessionContainer) con).getContainerInvoker().getEJBHome());
-		            log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
-				}
-				*/
-				
-			}
+			// Start application
+			app.start();
 			
 			// Add to webserver so client can access classes through dynamic class downloading
-			WebProviderMBean webServer = (WebProviderMBean)MBeanProxy.create(WebProviderMBean.class, WebProviderMBean.OBJECT_NAME);
+			WebServiceMBean webServer = (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, WebServiceMBean.OBJECT_NAME);
 			webServer.addClassLoader(cl);
 			
 			// Done
@@ -429,10 +421,14 @@ implements ContainerFactoryMBean, MBeanRegistration
 			
 			// Register deployment
 			deployments.put(url, app);
-		} catch (Exception e)
+		} catch (Throwable e)
 		{
 			e.printStackTrace();
-			throw new DeploymentException("Could not deploy "+url.toString(),e);
+			
+			app.stop();
+			app.destroy();
+			
+			throw new DeploymentException("Could not deploy "+url.toString());
 		} finally
 		{
 			Log.unsetLog();
@@ -461,96 +457,17 @@ implements ContainerFactoryMBean, MBeanRegistration
 		// Undeploy application
 		Log.setLog(log);
 		log.log("Undeploying:"+url);
-		try
-		{
-			// Unbind in JNDI
-			Iterator enum = app.getContainers().iterator();
-			Context ctx = new InitialContext();
-			while (enum.hasNext())
-			{
-				Container con = (Container)enum.next();
-				ctx.unbind(con.getMetaData().getJndiName());
-				
-				// Done
-				log.log("Unbound: "+con.getMetaData().getJndiName());
-			}
-			
-			// Stop/destroy container
-			enum = app.getContainers().iterator();
-			while (enum.hasNext())
-			{
-				Container con = (Container)enum.next();
-				
-				// Stop container
-				con.stop();
-				
-				// Destroy container
-				con.destroy();
-				
-				// Done
-				log.log("Removed: "+con.getMetaData().getEjbName());
-			}
-			
-			// Remove deployment
-			deployments.remove(url);
-			
-			// Done
-			log.log("Undeployed application: "+app.getName());
-		} catch (Exception e)
-		{
-			log.error("Undeploy failed");
-			log.exception(e);
-			
-			throw new DeploymentException("Undeploy failed", e);
-		} finally
-		{
-			Log.unsetLog();
-		}
-	}
-	
-	// MBeanRegistration ---------------------------------------------
-	public ObjectName preRegister(MBeanServer server, ObjectName name)
-	throws java.lang.Exception
-	{
-		this.server = server;
+		app.stop();
+		app.destroy();
 		
-		return new ObjectName(OBJECT_NAME);
-		//      return name;
-	}
-	
-	public void postRegister(java.lang.Boolean registrationDone)
-	{
-	}
-	
-	public void preDeregister()
-	throws java.lang.Exception
-	{
-	}
-	
-	public void postDeregister()
-	{
+		// Remove deployment
+		deployments.remove(url);
+			
+		// Done
+		log.log("Undeployed application: "+app.getName());
+		
+		Log.unsetLog();
 	}
 	
 	// Protected -----------------------------------------------------
-	protected void rebind(Context ctx, String name, Object val)
-	throws NamingException
-	{
-		// Bind val to name in ctx, and make sure that all intermediate contexts exist
-		
-		Name n = ctx.getNameParser("").parse(name);
-		while (n.size() > 1)
-		{
-			String ctxName = n.get(0);
-			try
-			{
-				ctx = (Context)ctx.lookup(ctxName);
-			} catch (NameNotFoundException e)
-			{
-				ctx = ctx.createSubcontext(ctxName);
-			}
-			n = n.getSuffix(1);
-		}
-		
-		ctx.rebind(n.get(0), val);
-	}
 }

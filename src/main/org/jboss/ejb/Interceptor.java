@@ -16,7 +16,7 @@ import com.dreambean.ejx.ejb.EnterpriseBean;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface Interceptor
    extends ContainerPlugin
@@ -29,10 +29,10 @@ public interface Interceptor
    public void setNext(Interceptor interceptor);
    public Interceptor getNext();
    
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext instance)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception;
       
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext instance)
+   public Object invoke(MethodInvocation mi)
       throws Exception;
 }
 

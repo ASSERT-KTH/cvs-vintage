@@ -13,9 +13,9 @@ import  org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
-public class HomeProxy
+public final class HomeProxy
    extends org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy
    implements java.lang.reflect.InvocationHandler
 {

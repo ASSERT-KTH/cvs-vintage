@@ -25,7 +25,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
@@ -56,7 +56,7 @@ public class HypersonicDatabase
       return "Hypersonic";
    }
    
-   public void startService()
+   public void initService()
       throws Exception
    {
       final Log log = this.log;

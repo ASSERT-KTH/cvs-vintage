@@ -30,7 +30,7 @@
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
     
-    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jpl-util-0_5b.jar"/>
+    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jpl-util-0_5b.jar"/>
     <property name="packages" value="org.jboss,org.jboss.ejb,org.jboss.util,org.jboss.tm,org.jboss.logging,org.jboss.jdbc,org.jboss.naming,org.jboss.web"/>
 
     <property name="build.compiler" value="classic"/>
@@ -66,7 +66,8 @@
 			 
     <rmic base="${build.classes.dir}" 
           classname="org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker" 
-          stubVersion="1.2"/>  
+          stubVersion="1.2"
+			 classpath="${classpath}"/>  
   </target>
 
   <!-- =================================================================== -->
@@ -112,7 +113,7 @@
     <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
-         includes="org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**"
+         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**"
     />
 	 
     <jar jarfile="${build.dir}/client/deploy.jar"

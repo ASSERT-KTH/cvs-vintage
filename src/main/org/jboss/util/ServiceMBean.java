@@ -11,9 +11,10 @@ package org.jboss.util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface ServiceMBean
+	extends Service
 {
    // Constants -----------------------------------------------------
     
@@ -25,9 +26,4 @@ public interface ServiceMBean
    public int getState();
    
    public String getStateString();
-   
-   public void start()
-      throws Exception;
-   
-   public void stop();
 }

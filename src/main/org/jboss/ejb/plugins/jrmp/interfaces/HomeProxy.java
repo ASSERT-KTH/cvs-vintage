@@ -17,9 +17,9 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.6 $
+ *      @version $Revision: 1.7 $
  */
-public abstract class HomeProxy
+public class HomeProxy
    extends GenericProxy
 {
    // Constants -----------------------------------------------------
@@ -56,27 +56,28 @@ public abstract class HomeProxy
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = new Object[0];
-      System.out.println(); 
-	  System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
-	   
+			
       if (m.equals(toStr))
       {
          return name+" home";
       }
       else
       {
-         // Delegate to container
-         // Optimize if calling another bean in same EJB-application
-         if (optimize && isLocal())
-         {
-            return container.invokeHome(m, args, null, null);
-         }
-                
-         Object result = container.invokeHome(new MarshalledObject(new MethodInvocation(m, args)), null, null);         
-         if (result instanceof MarshalledObject)
-            return ((MarshalledObject)result).get();
-         else
-            return result;
+	      
+	      // Delegate to container
+	      // Optimize if calling another bean in same EJB-application
+	      if (optimize && isLocal())
+	      {
+	         return container.invokeHome(m, args, 
+		         								tm != null ? tm.getTransaction() : null,
+		         								null);
+	      } else
+	      {
+	         RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
+	         if (tm != null)
+	            rmi.setTransaction(tm.getTransaction());
+	         return container.invokeHome(new MarshalledObject(rmi));
+	      }
       }
    }
 

@@ -19,6 +19,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.InstancePoolContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -30,7 +31,7 @@ import org.jboss.ejb.deployment.jBossEntity;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class NoPassivationEntityInstanceCache
    implements InstanceCache
@@ -129,7 +130,7 @@ public class NoPassivationEntityInstanceCache
       if (ctx == null) // Not in cache
       {
          // Get new instance from pool
-         ctx = (EntityEnterpriseContext)con.getInstancePool().get();
+         ctx = (EntityEnterpriseContext)((InstancePoolContainer)con).getInstancePool().get();
          
          // Activate
          ctx.setId(id);
@@ -162,7 +163,7 @@ public class NoPassivationEntityInstanceCache
          ((InstanceInfo)((EntityEnterpriseContext)ctx).getCacheContext()).unlock();
 //         System.out.println("Release entity:"+ctx.getId());
          if (!((InstanceInfo)((EntityEnterpriseContext)ctx).getCacheContext()).isLocked())
-            ctx.notify();
+            ctx.notifyAll();
       }
    }
    

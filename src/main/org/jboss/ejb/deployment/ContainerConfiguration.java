@@ -17,7 +17,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.dreambean.awt.GenericCustomizer;
 import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
@@ -27,7 +26,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -175,7 +174,7 @@ public abstract class ContainerConfiguration
    public Component getComponent()
    {
       if (c == null)
-          c = new GenericCustomizer(false, this);
+          c = new com.dreambean.awt.GenericCustomizer(false, this);
       return c;
    }
    

@@ -14,7 +14,7 @@ package org.jboss.web;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public interface WebProviderMBean
+public interface WebServiceMBean
    extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------
@@ -24,4 +24,8 @@ public interface WebProviderMBean
    public void addClassLoader(ClassLoader cl);
    
    public void removeClassLoader(ClassLoader cl);
+
+	public void setPort(int port);
+	
+   public int getPort();
 }

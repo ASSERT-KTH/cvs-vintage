@@ -19,6 +19,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.InstancePoolContainer;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
@@ -31,7 +32,7 @@ import org.jboss.ejb.deployment.jBossSession;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.4 $
+*	@version $Revision: 1.5 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
@@ -108,7 +109,7 @@ implements InstanceCache
 		if (ctx == null) {
 			
 			// Get new instance from pool (bogus in our case)
-			ctx = (StatefulSessionEnterpriseContext)con.getInstancePool().get();
+			ctx = (StatefulSessionEnterpriseContext)((InstancePoolContainer)con).getInstancePool().get();
 			
 			// Activate
 			ctx.setId(id);

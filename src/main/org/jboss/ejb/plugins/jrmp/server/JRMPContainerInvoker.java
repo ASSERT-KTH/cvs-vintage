@@ -28,31 +28,41 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.naming.Name;
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.NameNotFoundException;
+import javax.transaction.Transaction;
 
+import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.deployment.jBossEntity;
 import org.jboss.ejb.deployment.jBossSession;
 import org.jboss.ejb.deployment.ContainerConfiguration;
 import org.jboss.ejb.deployment.JRMPContainerInvokerConfiguration;
 
 import org.jboss.ejb.Container;
+import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.ContainerInvoker;
+import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy;
-import org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy;
+import org.jboss.ejb.plugins.jrmp.interfaces.GenericProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
-import org.jboss.ejb.plugins.jrmp.interfaces.MethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
+import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
+
+import org.jboss.logging.Logger;
 
 /**
  *      <description> 
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.6 $
+ *      @version $Revision: 1.7 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -62,10 +72,13 @@ public abstract class JRMPContainerInvoker
     
    // Attributes ----------------------------------------------------
    protected boolean optimize = false;
-   protected Container con;
+   protected Container container;
    protected String jndiName;
    protected EJBMetaDataImpl ejbMetaData;
    protected EJBHome home;
+	
+	protected HashMap beanMethodInvokerMap;
+	protected HashMap homeMethodInvokerMap;
    
    // Static --------------------------------------------------------
    
@@ -98,109 +111,106 @@ public abstract class JRMPContainerInvoker
    public abstract Collection getEntityCollection(Collection ids);
    
    // ContainerRemote implementation --------------------------------
-   public Object invokeHome(MarshalledObject mimo, Object tx, Principal user)
+   public Object invokeHome(MarshalledObject mimo)
       throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(con.getClassLoader());
-      
-      MethodInvocation mi = (MethodInvocation)mimo.get();
-      
+      Thread.currentThread().setContextClassLoader(container.getClassLoader());
+		
       try
       {
-		 
-		  Method m = mi.getMethod();
-		 System.out.println("In invoke Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
-	   
-         return con.invokeHome(mi.getMethod(), mi.getArguments());
-//         return new MarshalledObject(con.invoke(mi.getId(), mi.getMethod(), mi.getArguments()));
+	      RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
+	      rmi.setMethodMap(homeMethodInvokerMap);
+		
+			return invokeHome(rmi.getMethod(), rmi.getArguments(), rmi.getTransaction(), rmi.getPrincipal());
+      } catch (Exception e)
+      {
+      	e.printStackTrace();
+			throw e;
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
       
-   public Object invoke(MarshalledObject mimo, Object tx, Principal user)
+   public Object invoke(MarshalledObject mimo)
       throws Exception
    {
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(con.getClassLoader());
+      Thread.currentThread().setContextClassLoader(container.getClassLoader());
+		
       try
       {
-         
-         MethodInvocation mi = (MethodInvocation)mimo.get();
-      
-         return con.invoke(mi.getId(), mi.getMethod(), mi.getArguments());
-//         return new MarshalledObject(con.invoke(mi.getId(), mi.getMethod(), mi.getArguments()));
-      } catch (Throwable e)
-      {
-         e.printStackTrace();
-         throw (Exception)e;
+         RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
+         rmi.setMethodMap(beanMethodInvokerMap);
+			
+         return invoke(rmi.getId(), rmi.getMethod(), rmi.getArguments(), rmi.getTransaction(), rmi.getPrincipal());
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
     
-   public Object invokeHome(Method m, Object[] args, Object tx, Principal user)
+   public Object invokeHome(Method m, Object[] args, Transaction tx, Principal identity)
       throws Exception
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(con.getClassLoader());
-      
-      try
-      {
-         return con.invokeHome(m, args);
-      } finally
-      {
-         Thread.currentThread().setContextClassLoader(oldCl);
-      }
+	   return container.invokeHome(new MethodInvocation(null , m, args, tx, identity));
    }
       
-   public Object invoke(Object id, Method m, Object[] args, Object tx, Principal user)
+   public Object invoke(Object id, Method m, Object[] args, Transaction tx, Principal identity)
       throws Exception
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(con.getClassLoader());
-      
-      try
-      {
-         return con.invoke(id, m, args);
-      } finally
-      {
-         Thread.currentThread().setContextClassLoader(oldCl);
-      }
-      
+	   return container.invoke(new MethodInvocation(id, m, args, tx, identity));
    }
    
    // ContainerService implementation -------------------------------
    public void setContainer(Container con)
    {
-      this.con = con;
-      jndiName = con.getMetaData().getJndiName();
+      this.container = con;
+      jndiName = container.getMetaData().getJndiName();
    }
    
    public void init()
       throws Exception
    {
-      ContainerConfiguration conConf = con.getMetaData().getContainerConfiguration();
+		// Set transaction manager
+      GenericProxy.setTransactionManager(container.getTransactionManager());
+      // Unfortunately this be a problem if many TM's are to be used
+      // How to solve???
+		
+      ContainerConfiguration conConf = container.getMetaData().getContainerConfiguration();
       if (conConf != null)
       {
          JRMPContainerInvokerConfiguration conf = (JRMPContainerInvokerConfiguration)conConf.getContainerInvokerConfiguration();
          optimize = conf.isOptimized();
       }
       
-      // Create metadata
-      if (con.getMetaData() instanceof jBossEntity)
+      // Create method mappings for container invoker
+      Method[] methods = ((ContainerInvokerContainer)container).getRemoteClass().getMethods();
+      beanMethodInvokerMap = new HashMap();
+      for (int i = 0; i < methods.length; i++)
       {
-         ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), con.getClassLoader().loadClass(((jBossEntity)con.getMetaData()).getPrimaryKeyClass()), false, false, getEJBHome());
+         beanMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+      }
+		
+      methods = ((ContainerInvokerContainer)container).getHomeClass().getMethods();
+      homeMethodInvokerMap = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+      {
+         homeMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+      }
+		
+      // Create metadata
+      if (container.getMetaData() instanceof jBossEntity)
+      {
+         ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), container.getClassLoader().loadClass(((jBossEntity)container.getMetaData()).getPrimaryKeyClass()), false, false, getEJBHome());
       }
       else
       {
-         if (((jBossSession)con.getMetaData()).getSessionType().equals("Stateless"))
-            ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), null, true, false, getEJBHome());
+         if (((jBossSession)container.getMetaData()).getSessionType().equals("Stateless"))
+            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, false, getEJBHome());
          else
-            ejbMetaData = new EJBMetaDataImpl(con.getRemoteClass(), con.getHomeClass(), null, true, true, getEJBHome());
+            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, true, getEJBHome());
       }      
 
    }
@@ -215,9 +225,12 @@ public abstract class JRMPContainerInvoker
                                           new SecureSocketFactory(), 
                                           new SecureSocketFactory());
 */         
-         UnicastRemoteObject.exportObject(this);
-         MethodInvocation.addLocal(con.getMetaData().getJndiName(), this);
+         UnicastRemoteObject.exportObject(this,4444);
+         GenericProxy.addLocal(container.getMetaData().getJndiName(), this);
          
+	      rebind(new InitialContext(), container.getMetaData().getJndiName(), ((ContainerInvokerContainer)container).getContainerInvoker().getEJBHome());
+			
+			Logger.log("Bound "+container.getMetaData().getEjbName() + " to " + container.getMetaData().getJndiName());
       } catch (IOException e)
       {
          throw new ServerException("Could not create secure socket factory", e);
@@ -226,7 +239,7 @@ public abstract class JRMPContainerInvoker
    
    public void stop()
    {
-      MethodInvocation.removeLocal(con.getMetaData().getJndiName());
+      GenericProxy.removeLocal(container.getMetaData().getJndiName());
    }
 
    public void destroy()
@@ -236,6 +249,27 @@ public abstract class JRMPContainerInvoker
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
+   protected void rebind(Context ctx, String name, Object val)
+   throws NamingException
+   {
+   	// Bind val to name in ctx, and make sure that all intermediate contexts exist
+   	
+   	Name n = ctx.getNameParser("").parse(name);
+   	while (n.size() > 1)
+   	{
+   		String ctxName = n.get(0);
+   		try
+   		{
+   			ctx = (Context)ctx.lookup(ctxName);
+   		} catch (NameNotFoundException e)
+   		{
+   			ctx = ctx.createSubcontext(ctxName);
+   		}
+   		n = n.getSuffix(1);
+   	}
+   	
+   	ctx.rebind(n.get(0), val);
+   }
     
    // Private -------------------------------------------------------
  

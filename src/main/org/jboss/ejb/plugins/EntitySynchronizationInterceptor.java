@@ -26,12 +26,14 @@ import javax.transaction.TransactionManager;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
+import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.MethodInvocation;
 
 import org.jboss.logging.Logger;
 
@@ -45,7 +47,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -62,12 +64,24 @@ public class EntitySynchronizationInterceptor
    HashMap synchs = new HashMap();  // tx -> synch
 	
 	int commitOption = A;
+	
+	protected EntityContainer container;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+	public void setContainer(Container container) 
+	{ 
+		this.container = (EntityContainer)container; 
+	}
+	
+	public  Container getContainer()
+	{
+		return container;
+	}
+	
 	public void setCommitOption(int commitOption)
 	{
 		this.commitOption = commitOption;
@@ -125,19 +139,20 @@ public class EntitySynchronizationInterceptor
    
    // Interceptor implementation --------------------------------------
    
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
       try
       {
-         return getNext().invokeHome(method, args, ctx);
+         return getNext().invokeHome(mi);
       } finally
       {
          // Anonymous was sent in, so if it has an id it was created
-         if (ctx.getId() != null && getContainer().getTransactionManager().getTransaction().getStatus() == Status.STATUS_ACTIVE)
+			EnterpriseContext ctx = mi.getEnterpriseContext();
+         if (ctx.getId() != null && mi.getTransaction().getStatus() == Status.STATUS_ACTIVE)
          {
             // Set tx
-            register(ctx, getContainer().getTransactionManager().getTransaction());
+            register(ctx, mi.getTransaction());
             
             // Currently synched with underlying storage
             ((EntityEnterpriseContext)ctx).setSynchronized(true);
@@ -145,70 +160,30 @@ public class EntitySynchronizationInterceptor
       }
    }
 
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
-      EntityEnterpriseContext entityCtx = (EntityEnterpriseContext)ctx;
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
       
       
-      Transaction tx = entityCtx.getTransaction();
-      Transaction current = getContainer().getTransactionManager().getTransaction();
+      Transaction tx = ctx.getTransaction();
+      Transaction current = mi.getTransaction();
       
 //DEBUG      Logger.debug("TX:"+(current.getStatus() == Status.STATUS_ACTIVE));
       
       if (current.getStatus() == Status.STATUS_ACTIVE)
       {
-         // Registered with other tx?
-         if (tx != null && !tx.equals(current))
-         {
-            // Wait for other tx associated with ctx to finish
-            while ((tx = entityCtx.getTransaction()) != null)
-            {
-               // Release context temporarily
-               ((EntityContainer)getContainer()).getInstanceCache().release(entityCtx);
-               
-               // Wait for tx to end
-//DEBUG               Logger.debug("Wait for "+ctx.getId()+":Current="+current+", Tx="+tx);
-               Synchronization synch = new Synchronization()
-               {
-                  public void beforeCompletion() {}
-                  public synchronized void afterCompletion(int status)
-                  {
-                     this.notifyAll();
-                  }
-               };
-               tx.registerSynchronization(synch);
-               synchronized(synch)
-               {
-                  try
-                  {
-                     synch.wait(TIMEOUT); // This should be changed to a s
-                  } catch (InterruptedException e)
-                  {
-                     throw new ServerException("Time out", e);
-                  }
-               }
-               
-               // Get context again -- it may be gone by now though if other tx removed it
-               ctx = ((EntityContainer)getContainer()).getInstanceCache().get(ctx.getId());
-            }
-            
-         } 
-         
-         // At this point the ctx is either not associated with a tx, 
-         // or it has been previously associated with the current tx
-         
          // Synchronize with DB
 //DEBUG         Logger.debug("SYNCH");
-         if (!entityCtx.isSynchronized())
+         if (!ctx.isSynchronized())
          {
-            ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(entityCtx);
-            entityCtx.setSynchronized(true);
+            ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
+            ctx.setSynchronized(true);
          }
          
          try
          {
-            return getNext().invoke(id, method, args, ctx);
+            return getNext().invoke(mi);
          } finally
          {
             if (ctx.getId() != null)
@@ -216,16 +191,16 @@ public class EntitySynchronizationInterceptor
                // Associate ctx with tx
                if (tx == null)
                {
-                  entityCtx.setInvoked(true); // This causes ejbStore to be invoked on tx commit
+                  ctx.setInvoked(true); // This causes ejbStore to be invoked on tx commit
                   register(ctx, current);
                }
             } else
             {
                // Entity was removed
-               if (entityCtx.getTransaction() != null)
+               if (ctx.getTransaction() != null)
                {
                   // Disassociate ctx with tx
-                  deregister(entityCtx, current);
+                  deregister(ctx, current);
                }
             }
          }
@@ -235,25 +210,26 @@ public class EntitySynchronizationInterceptor
          
          // Synchronize with DB
 //DEBUG         Logger.debug("SYNCH");
-         if (!entityCtx.isSynchronized())
+         if (!ctx.isSynchronized())
          {
-            ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(entityCtx);
-            entityCtx.setSynchronized(true);
+            ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
+            ctx.setSynchronized(true);
          }
          
          try
          {
-            Object result = getNext().invoke(id, method, args, ctx);
+            Object result = getNext().invoke(mi);
          
-            // Store after each invocation -- not on exception though, or removal   
-            if (ctx.getId() != null && !method.getName().startsWith("get"))
-               ((EntityContainer)getContainer()).getPersistenceManager().storeEntity((EntityEnterpriseContext)ctx);
+            // Store after each invocation -- not on exception though, or removal
+				// And skip reads too ("get" methods)
+            if (ctx.getId() != null && !mi.getMethod().getName().startsWith("get"))
+               ((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
             
             return result;
          } catch (Exception e)
          {
             // Exception - force reload on next call
-            entityCtx.setSynchronized(false);
+            ctx.setSynchronized(false);
             throw e;
          }
       }
@@ -323,9 +299,6 @@ public class EntitySynchronizationInterceptor
       
       public void afterCompletion(int status)
       {
-         InstanceCache cache = ((EntityContainer)getContainer()).getInstanceCache();
-         InstancePool pool = getContainer().getInstancePool();
-         
          // If rolled back -> invalidate instance
          if (status == Status.STATUS_ROLLEDBACK)
          {
@@ -338,8 +311,8 @@ public class EntitySynchronizationInterceptor
                   
                   ctx.setId(null);
                   ctx.setTransaction(null);
-                  cache.remove(ctx);
-                  pool.free(ctx); // TODO: should this be done? still valid instance?
+                  container.getInstanceCache().remove(ctx);
+                  container.getInstancePool().free(ctx); // TODO: should this be done? still valid instance?
                } catch (Exception e)
                {
                   // Ignore
@@ -358,7 +331,7 @@ public class EntitySynchronizationInterceptor
 							   EntityEnterpriseContext ctx = (EntityEnterpriseContext)ctxList.get(i);
 							   ctx.setTransaction(null);
 							   ctx.setInvoked(false);
-							   cache.release(ctx);
+							   container.getInstanceCache().release(ctx);
 							} catch (Exception e)
 							{
 							   Logger.debug(e);
@@ -374,7 +347,7 @@ public class EntitySynchronizationInterceptor
 							   ctx.setInvoked(false);
 								
 								ctx.setSynchronized(false); // Invalidate state
-							   cache.release(ctx);
+							   container.getInstanceCache().release(ctx);
 							} catch (Exception e)
 							{
 							   Logger.debug(e);
@@ -389,10 +362,11 @@ public class EntitySynchronizationInterceptor
 						   ctx.setTransaction(null);
 						   ctx.setInvoked(false);
 							
+							container.getInstanceCache().get(ctx.getId()); // Lock in cache
 							((EntityContainer)getContainer()).getPersistenceManager().passivateEntity(ctx); // Passivate instance
-						   cache.remove(ctx.getId()); // Remove from cache
+						   container.getInstanceCache().remove(ctx.getId()); // Remove from cache
 							
-							pool.free(ctx); // Add to instance pool
+							container.getInstancePool().free(ctx); // Add to instance pool
 							
 						} catch (Exception e)
 						{

@@ -20,9 +20,9 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public class NamingProvider
+public class NamingService
    extends ServiceMBeanSupport
-   implements NamingProviderMBean
+   implements NamingServiceMBean
 {
    // Constants -----------------------------------------------------
     
@@ -32,7 +32,7 @@ public class NamingProvider
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   public NamingProvider()
+   public NamingService()
    {
       naming = new Main();
    }
@@ -49,14 +49,14 @@ public class NamingProvider
       return "Naming";
    }
    
-   public void startService()
+   public void initService()
       throws Exception
    {
       naming.start();
       log.log("Naming started on port "+naming.getPort());
    }
    
-   public void stopService()
+   public void destroyService()
    {
       naming.stop();
    }

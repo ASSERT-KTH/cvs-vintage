@@ -20,9 +20,9 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.5 $
+ *      @version $Revision: 1.6 $
  */
-public abstract class StatelessSessionProxy
+public class StatelessSessionProxy
    extends GenericProxy
 {
    // Constants -----------------------------------------------------
@@ -32,7 +32,7 @@ public abstract class StatelessSessionProxy
    // Static --------------------------------------------------------
    static Method getHandle;
    static Method toStr;
-   
+	
    static
    {
       try
@@ -54,14 +54,14 @@ public abstract class StatelessSessionProxy
    // Public --------------------------------------------------------
 
    // InvocationHandler implementation ------------------------------
-   public Object invoke(Object proxy, Method m, Object[] args)
+   public final Object invoke(Object proxy, Method m, Object[] args)
       throws Throwable
    {
       // Normalize args to always be an array
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = new Object[0];
-      
+			
       if (m.equals(getHandle))
       {
          return new StatelessHandleImpl(name);
@@ -75,14 +75,17 @@ public abstract class StatelessSessionProxy
          // Optimize if calling another bean in same EJB-application
          if (optimize && isLocal())
          {
-            return container.invoke(null, m, args, null, null);
+            return container.invoke(null, m, args, 
+            								tm != null ? tm.getTransaction() : null,
+            								null);
+         } else
+         {
+	         RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
+	         if (tm != null)
+	            rmi.setTransaction(tm.getTransaction());
+					
+	         return container.invoke(new MarshalledObject(rmi));
          }
-                
-         Object result = container.invoke(new MarshalledObject(new MethodInvocation(m, args)), null, null);
-         if (result instanceof MarshalledObject)
-            return ((MarshalledObject)result).get();
-         else
-            return result;
       }
    }
 
@@ -91,6 +94,6 @@ public abstract class StatelessSessionProxy
    // Protected -----------------------------------------------------
     
    // Private -------------------------------------------------------
-	
-   // Inner classes -------------------------------------------------
+	  
+	// Inner classes -------------------------------------------------
 }

@@ -28,7 +28,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class InstantDBDatabase
    extends ServiceMBeanSupport
@@ -64,7 +64,7 @@ public class InstantDBDatabase
       return "InstantDB";
    }
    
-   public void startService()
+   public void initService()
       throws Exception
    {
       // Test database

@@ -11,14 +11,14 @@ import java.security.Principal;
 import java.rmi.Remote;
 import java.rmi.MarshalledObject;
 
-import javax.naming.Name;
+import javax.transaction.Transaction;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public interface ContainerRemote
    extends Remote
@@ -31,16 +31,16 @@ public interface ContainerRemote
    // Public --------------------------------------------------------
 
    // ContainerRemote implementation --------------------------------
-   public Object invokeHome(MarshalledObject mi, Object tx, Principal user)
+   public Object invokeHome(MarshalledObject mi)
       throws Exception;
 
-   public Object invoke(MarshalledObject mi, Object tx, Principal user)
+   public Object invoke(MarshalledObject mi)
       throws Exception;
 
-   public Object invokeHome(Method m, Object[] args, Object tx, Principal user)
+   public Object invokeHome(Method m, Object[] args, Transaction tx, Principal identity)
       throws Exception;
 
-   public Object invoke(Object id, Method m, Object[] args, Object tx, Principal user)
+   public Object invoke(Object id, Method m, Object[] args, Transaction tx, Principal identity)
       throws Exception;
    // Package protected ---------------------------------------------
     

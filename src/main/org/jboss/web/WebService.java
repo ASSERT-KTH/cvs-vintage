@@ -8,11 +8,13 @@
 package org.jboss.web;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.net.InetAddress;
+import java.util.Properties;
+import java.util.Enumeration;
 
 import javax.management.*;
-
-import com.dreambean.dynaserver.DynaServer;
 
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
@@ -22,23 +24,43 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.1 $
  */
-public class WebProvider
+public class WebService
    extends ServiceMBeanSupport
-   implements WebProviderMBean, MBeanRegistration
+   implements WebServiceMBean
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   DynaServer server;
+   WebServer server;
+	
+	Log log = new Log(getName());
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   public WebProvider()
+   public WebService()
    {
-      this.server = new DynaServer();
+      this.server = new WebServer();
+
+      // Load the file mime.types into the mapping list
+		Properties mimeTypes = new Properties();
+      try
+      {
+         mimeTypes.load(getClass().getResourceAsStream("mime.types"));
+			
+			Enumeration keys = mimeTypes.keys();
+			while (keys.hasMoreElements())
+			{
+				String extension = (String)keys.nextElement();
+				String type = mimeTypes.getProperty(extension);
+				server.addMimeType(extension, type);
+			}
+      } catch (IOException e)
+      {
+         e.printStackTrace(System.err);
+      }
    }
    
    // Public --------------------------------------------------------
@@ -57,7 +79,15 @@ public class WebProvider
       throws Exception
    {
       server.start();
-      log.log("Started dynamic downloading service on port "+server.getPort());
+      // Set codebase
+      String host = System.getProperty("java.rmi.server.hostname");
+      if (host ==null) host = InetAddress.getLocalHost().getHostName(); 
+      
+      String codebase = "http://"+host+":"+getPort()+"/";
+      System.setProperty("java.rmi.server.codebase", codebase);
+      log.log("Codebase set to "+codebase);
+		
+      log.log("Started webserver on port "+server.getPort());
    }
    
    public void stopService()
@@ -73,6 +103,16 @@ public class WebProvider
    public void removeClassLoader(ClassLoader cl)
    {
       server.removeClassLoader(cl);
+   }
+	
+	public void setPort(int port)
+	{
+		server.setPort(port);
+	}
+	
+   public int getPort()
+   {
+   	return server.getPort();
    }
    // Protected -----------------------------------------------------
 }

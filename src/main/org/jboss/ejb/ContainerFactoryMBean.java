@@ -13,9 +13,10 @@ import java.net.MalformedURLException;
  *      
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public interface ContainerFactoryMBean
+	extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------
    public static String OBJECT_NAME = "EJB:service=ContainerFactory";
@@ -42,5 +43,9 @@ public interface ContainerFactoryMBean
 	 */
    public void undeploy(String url)
       throws MalformedURLException, DeploymentException;
+		
+   public void setVerifyDeployments(boolean verify);
+		
+   public boolean getVerifyDeployments();
 }
 

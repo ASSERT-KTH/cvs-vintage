@@ -24,6 +24,7 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ContainerInvoker;
+import org.jboss.ejb.MethodInvocation;
 
 import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
@@ -34,7 +35,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
@@ -42,12 +43,22 @@ public class SecurityInterceptor
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+   protected Container container;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+   public void setContainer(Container container) 
+   { 
+   	this.container = container; 
+   }
+
+   public  Container getContainer()
+   {
+   	return container;
+   }
 
    // Container implementation --------------------------------------
    public void start()
@@ -56,12 +67,12 @@ public class SecurityInterceptor
       super.start();
    }
    
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-//      if (ctx != null)
-//         ctx.setPrincipal(SecureSocketFactory.getPrincipal());
-      return getNext().invokeHome(method, args, ctx);
+		// TODO security checks
+	
+      return getNext().invokeHome(mi);
    }
 
    /**
@@ -75,11 +86,11 @@ public class SecurityInterceptor
     * @return     
     * @exception   Exception  
     */
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
-//      ctx.setPrincipal(SecureSocketFactory.getPrincipal());
-      return getNext().invoke(id, method, args, ctx);
+		// TODO security checks
+      return getNext().invoke(mi);
    }
    
    // Private -------------------------------------------------------

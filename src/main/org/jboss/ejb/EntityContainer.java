@@ -33,20 +33,24 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class EntityContainer
    extends Container
+	implements ContainerInvokerContainer, InstancePoolContainer
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
 	
-	// These are the mappings between the create methods and the ejbCreate methods
-   protected Map createMapping;
+	// These are the mappings between the home interface methods and the container methods
+	protected Map homeMapping;
 	
-   // These are the mappings between the create methods and the ejbPostCreate methods
-   protected Map postCreateMapping;
+	// These are the mappings between the remote interface methods and the bean methods
+	protected Map beanMapping;
+	
+	// This is the container invoker for this container
+	protected ContainerInvoker containerInvoker;
 	
    // This is the persistence manager for this container
    protected EntityPersistenceManager persistenceManager;
@@ -54,6 +58,12 @@ public class EntityContainer
    // This is the instance cache for this container
    protected InstanceCache instanceCache;
    
+   // This is the instancepool that is to be used
+   protected InstancePool instancePool;
+   
+   // This is the first interceptor in the chain. The last interceptor must be provided by the container itself
+   protected Interceptor interceptor;
+	
    // Public --------------------------------------------------------
    public void setContainerInvoker(ContainerInvoker ci) 
    { 
@@ -64,6 +74,25 @@ public class EntityContainer
       ci.setContainer(this);
    }
 
+   public ContainerInvoker getContainerInvoker() 
+   { 
+   	return containerInvoker; 
+   }
+	
+   public void setInstancePool(InstancePool ip) 
+   { 
+      if (ip == null)
+      	throw new IllegalArgumentException("Null pool");
+   		
+      this.instancePool = ip; 
+      ip.setContainer(this);
+   }
+
+   public InstancePool getInstancePool() 
+   { 
+   	return instancePool; 
+   }
+	
    public void setInstanceCache(InstanceCache ic)
    { 
       if (ic == null)
@@ -92,6 +121,39 @@ public class EntityContainer
       pm.setContainer(this);
    }
    
+   public void addInterceptor(Interceptor in) 
+   { 
+      if (interceptor == null)
+      {
+         interceptor = in;
+      } else
+      {
+         
+         Interceptor current = interceptor;
+         while ( current.getNext() != null)
+         {
+            current = current.getNext();
+         }
+            
+         current.setNext(in);
+      }
+   }
+   
+   public Interceptor getInterceptor() 
+   { 
+   	return interceptor; 
+   }
+	
+   public Class getHomeClass()
+   {
+      return homeInterface;
+   }
+   
+   public Class getRemoteClass()
+   {
+      return remoteInterface;
+   }
+	
    // Container implementation --------------------------------------
    public void init()
       throws Exception
@@ -100,9 +162,22 @@ public class EntityContainer
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
+		// Acquire classes from CL
+		homeInterface = classLoader.loadClass(metaData.getHome());
+		remoteInterface = classLoader.loadClass(metaData.getRemote());
+		
 		// Call default init
-      super.init();
+      super.init();      
+		
+      // Map the bean methods
+      setupBeanMapping();
       
+      // Map the home methods
+      setupHomeMapping();
+		
+      // Initialize pool 
+      instancePool.init();
+		
       // Init container invoker
       containerInvoker.init();
 		
@@ -112,8 +187,14 @@ public class EntityContainer
       // Init persistence
       persistenceManager.init();
       
-      setupBeanMapping();
-      setupHomeMapping();
+      // Initialize the interceptor by calling the chain
+      Interceptor in = interceptor;
+      while (in != null)
+      {
+         in.setContainer(this);
+         in.init();
+         in = in.getNext();
+      }
       
       // Reset classloader  
       Thread.currentThread().setContextClassLoader(oldCl);
@@ -138,6 +219,17 @@ public class EntityContainer
       // Start persistence
       persistenceManager.start();
       
+		// Start the instance pool
+		instancePool.start();
+		
+		// Start all interceptors in the chain		
+		Interceptor in = interceptor;
+		while (in != null)
+		{
+		   in.start();
+		   in = in.getNext();
+		}
+		
 		// Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
@@ -160,6 +252,17 @@ public class EntityContainer
 	   // Stop persistence
 	   persistenceManager.stop();
 	   
+	   // Stop the instance pool
+	   instancePool.stop();
+	   
+	   // Stop all interceptors in the chain		
+	   Interceptor in = interceptor;
+	   while (in != null)
+	   {
+	      in.stop();
+	      in = in.getNext();
+	   }
+		
 	   // Reset classloader
 	   Thread.currentThread().setContextClassLoader(oldCl);
    }
@@ -182,99 +285,108 @@ public class EntityContainer
 	   // Destroy persistence
 	   persistenceManager.destroy();
 	   
+	   // Destroy the pool
+	   instancePool.destroy();
+	   
+	   // Destroy all the interceptors in the chain		
+	   Interceptor in = interceptor;
+	   while (in != null)
+	   {
+	      in.destroy();
+	      in = in.getNext();
+	   }
+		
 	   // Reset classloader
 	   Thread.currentThread().setContextClassLoader(oldCl);
    }
    
-   public Object invokeHome(Method method, Object[] args)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-	   return getInterceptor().invokeHome(method, args, null);
+	   return getInterceptor().invokeHome(mi);
    }
 
-   public Object invoke(Object id, Method method, Object[] args)
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
       // Invoke through interceptors
-      return getInterceptor().invoke(id, method, args, null);
+      return getInterceptor().invoke(mi);
    }
    
    // EJBObject implementation --------------------------------------
-   public void remove(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public void remove(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
-      getPersistenceManager().removeEntity(ctx);
-      ctx.setId(null);
+      getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
+      mi.getEnterpriseContext().setId(null);
    }
    
-   public Handle getHandle(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public Handle getHandle(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
       // TODO
 		throw new Error("Not yet implemented");
    }
 
-   public Object getPrimaryKey(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public Object getPrimaryKey(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
    
-   public EJBHome getEJBHome(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public EJBHome getEJBHome(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
       return containerInvoker.getEJBHome();
    }
    
-   public boolean isIdentical(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public boolean isIdentical(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
-		return ((EJBObject)args[0]).getPrimaryKey().equals(ctx.getId());
+		return ((EJBObject)mi.getArguments()[0]).getPrimaryKey().equals(mi.getEnterpriseContext().getId());
 		// TODO - should also check type
    }
    
    // Home interface implementation ---------------------------------
-   public Object find(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public Object find(MethodInvocation mi)
       throws java.rmi.RemoteException, FinderException
    {
       // Multi-finder?
-      if (!m.getReturnType().equals(getRemoteClass()))
+      if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
          // Iterator finder
-         Collection c = getPersistenceManager().findEntities(m, args, ctx);
+         Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
          return containerInvoker.getEntityCollection(c);
       } else
       {
          // Single entity finder
-         Object id = getPersistenceManager().findEntity(m, args, ctx);
-         return (EJBObject)containerInvoker.getEntityEJBObject(id);
+         Object id = getPersistenceManager().findEntity(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+         return (EJBObject)containerInvoker.getEntityEJBObject(mi.getId());
       }
    }
 
-   public EJBObject createHome(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public EJBObject createHome(MethodInvocation mi)
       throws java.rmi.RemoteException, CreateException
    {
-	   System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
-	   
-      getPersistenceManager().createEntity(m, args, ctx);
-      return ctx.getEJBObject();
+      getPersistenceManager().createEntity(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
+      return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
 
    // EJBHome implementation ----------------------------------------
-   public void removeHome(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public void removeHome(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
       throw new Error("Not yet implemented");
    }
    
-   public EJBMetaData getEJBMetaDataHome(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
       return getContainerInvoker().getEJBMetaData();
    }
    
-   public HomeHandle getHomeHandleHome(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public HomeHandle getHomeHandleHome(MethodInvocation mi)
       throws java.rmi.RemoteException   
    {
       // TODO
@@ -290,17 +402,16 @@ public class EntityContainer
       Method[] m = homeInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-		  System.out.println("THE NEW METHOD IS "+m[i].getName()+m[i].getParameterTypes().length);
 			try
 			{
 	         // Implemented by container
 	         if (m[i].getName().startsWith("find"))
-	            map.put(m[i], getClass().getMethod("find", new Class[] { Method.class, Object[].class, EntityEnterpriseContext.class }));
+	            map.put(m[i], getClass().getMethod("find", new Class[] { MethodInvocation.class }));
 	         else            
-	            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { Method.class, Object[].class, EntityEnterpriseContext.class }));
+	            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
 			} catch (NoSuchMethodException e)
 			{
-				throw new DeploymentException("Could not find matching method for "+m[i], e);
+				throw new DeploymentException("Could not find matching method for "+m[i]);
 			}
       }
       
@@ -325,7 +436,7 @@ public class EntityContainer
 	         else
 	         {
                // Implemented by container
-               map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Method.class, Object[].class , EntityEnterpriseContext.class}));
+               map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
 	         }
 	      } catch (NoSuchMethodException e)
 	      {
@@ -356,27 +467,26 @@ public class EntityContainer
       public void stop() {}
       public void destroy() {}
       
-      public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
+      public Object invokeHome(MethodInvocation mi)
          throws Exception
       {
 		 
-		  //Debug
-		 System.out.println("InvokingHome "+method.getName());
-         //Debug
+			//Debug
+			System.out.println("Invoking Home "+mi.getMethod().getName());
 		 
-         Method m = (Method)homeMapping.get(method);
          // Invoke and handle exceptions
+         Method m = (Method)homeMapping.get(mi.getMethod());
          
-		 try
+		 	try
          {
-            return m.invoke(EntityContainer.this, new Object[] { method, args, ctx});
+            return m.invoke(EntityContainer.this, new Object[] { mi.getArguments() });
          } catch (InvocationTargetException e)
          {
-			//Debug
-			e.printStackTrace();
-			System.out.println("Home Exception seen  "+e.getMessage());
-            //Debug
-			Throwable ex = e.getTargetException();
+				//Debug
+				e.printStackTrace();
+				System.out.println("Home Exception seen  "+e.getMessage());
+				
+				Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
             else
@@ -384,29 +494,25 @@ public class EntityContainer
          }
       }
          
-      public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+      public Object invoke(MethodInvocation mi)
          throws Exception
       {
          // Get method
-         Method m = (Method)beanMapping.get(method);
+         Method m = (Method)beanMapping.get(mi.getMethod());
 		 
-		 //Debug
-		 System.out.println("InvokingBean "+method.getName());
-		 //Debug
-         
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(EntityContainer.class))
          {
             // Invoke and handle exceptions
             try
             {
-               return m.invoke(EntityContainer.this, new Object[] { method, args, ctx });
+               return m.invoke(EntityContainer.this, new Object[] { mi });
             } catch (InvocationTargetException e)
             {
                //Debug
-			   System.out.println("Bean Exception seen  "+e.getMessage());
-			   //Debug
-			   Throwable ex = e.getTargetException();
+				   System.out.println("Bean Exception seen  "+e.getMessage());
+					
+				   Throwable ex = e.getTargetException();
                if (ex instanceof Exception)
                   throw (Exception)ex;
                else
@@ -417,7 +523,7 @@ public class EntityContainer
             // Invoke and handle exceptions
             try
             {
-               return m.invoke(ctx.getInstance(), args);
+               return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
             } catch (InvocationTargetException e)
             {
                Throwable ex = e.getTargetException();

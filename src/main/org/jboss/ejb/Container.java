@@ -63,7 +63,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *	 @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public abstract class Container
 {
@@ -80,13 +80,7 @@ public abstract class Container
 	
 	// This is the jBoss-specific metadata. Note that it extends the generic EJB 1.1 class from EJX
    protected jBossEnterpriseBean metaData;
-	
-	// This is the instancepool that is to be used
-   protected InstancePool instancePool;
-	
-	// This is the first interceptor in the chain. The last interceptor must be provided by the container itself
-   protected Interceptor interceptor;
-   
+	   
 	// This is the Home interface class
    protected Class homeInterface;
 	
@@ -98,17 +92,13 @@ public abstract class Container
    
    // This is the TransactionManager
    protected TransactionManager tm;
-   
-   // These are the mappings between the home interface methods and the container methods
-   protected Map homeMapping;
-	
-   // These are the mappings between the remote interface methods and the bean methods
-   protected Map beanMapping;
-   
-	// This is the container invoker for this container
-   protected ContainerInvoker containerInvoker;
-	
+   	
    // Public --------------------------------------------------------
+	
+	public void setTransactionManager(TransactionManager tm)
+	{
+		this.tm = tm;
+	}
 	
 	public TransactionManager getTransactionManager()
 	{
@@ -121,7 +111,6 @@ public abstract class Container
 			throw new IllegalArgumentException("Null application");
 			
       application = app; 
-      app.addContainer(this);
    }
    
    public Application getApplication() 
@@ -147,61 +136,8 @@ public abstract class Container
    public jBossEnterpriseBean getMetaData() 
 	{ 
 		return metaData; 
-	}
-	
-   public void setInstancePool(InstancePool ip) 
-   { 
-      if (ip == null)
-      	throw new IllegalArgumentException("Null pool");
-			
-      this.instancePool = ip; 
-      ip.setContainer(this);
-   }
-
-   public InstancePool getInstancePool() 
-	{ 
-		return instancePool; 
-	}
-	
-	
-	public ContainerInvoker getContainerInvoker() 
-	{ 
-		return containerInvoker; 
-	}
-	
-   public void addInterceptor(Interceptor in) 
-   { 
-      if (interceptor == null)
-      {
-         interceptor = in;
-      } else
-      {
-         
-         Interceptor current = interceptor;
-         while ( current.getNext() != null)
-         {
-            current = current.getNext();
-         }
-            
-         current.setNext(in);
-      }
-   }
-   
-   public Interceptor getInterceptor() 
-	{ 
-		return interceptor; 
-	}
-	   
-	public Class getHomeClass()
-	{
-	   return homeInterface;
-	}
-	
-	public Class getRemoteClass()
-	{
-	   return remoteInterface;
-	}
-	
+	}		
+			   	
 	public Class getBeanClass()
 	{
 	   return beanClass;
@@ -218,70 +154,23 @@ public abstract class Container
       throws Exception
    {
 		// Acquire classes from CL
-      homeInterface = classLoader.loadClass(metaData.getHome());
-      remoteInterface = classLoader.loadClass(metaData.getRemote());
       beanClass = classLoader.loadClass(metaData.getEjbClass());
       
-		// Get transaction manager
-		tm = (TransactionManager)new InitialContext().lookup("TransactionManager");
-		
 		// Setup "java:" namespace
-      setupEnvironment();
-	  
-		// Initialize pool 
-       instancePool.init();
-      
- 	   // Initialize the interceptor by calling the chain
-      Interceptor in = interceptor;
-      while (in != null)
-      {
-         in.setContainer(this);
-         in.init();
-         in = in.getNext();
-      }
+      setupEnvironment();	        
    }
    
    public void start()
       throws Exception
    {
-		// Start the instance pool
-       instancePool.start();
-      
-		// Start all interceptors in the chain		
-      Interceptor in = interceptor;
-      while (in != null)
-      {
-         in.start();
-         in = in.getNext();
-      }
    }
    
    public void stop() 
    {
-		// Stop the instance pool
-       instancePool.stop();
-      
-		// Stop all interceptors in the chain		
-      Interceptor in = interceptor;
-      while (in != null)
-      {
-         in.stop();
-         in = in.getNext();
-      }
    }
    
    public void destroy() 
    {
-		// Destroy the pool
-       instancePool.destroy();
-      
-		// Destroy all the interceptors in the chain		
-      Interceptor in = interceptor;
-      while (in != null)
-      {
-         in.destroy();
-         in = in.getNext();
-      }
    }
 
 	/**
@@ -289,12 +178,11 @@ public abstract class Container
 	 *
 	 *	The Container forwards this call to the interceptor chain for further processing.
 	 *
-	 * @param   method  the method being invoked
-	 * @param   args  the parameters
+	 * @param   mi  the object holding all info about this invocation
 	 * @return     the result of the home invocation
 	 * @exception   Exception  
 	 */
-   public abstract Object invokeHome(Method method, Object[] args)
+   public abstract Object invokeHome(MethodInvocation mi)
       throws Exception;
 
 	/**
@@ -308,7 +196,7 @@ public abstract class Container
 	 * @return     the result of the invocation
 	 * @exception   Exception  
 	 */
-   public abstract Object invoke(Object id, Method method, Object[] args)
+   public abstract Object invoke(MethodInvocation mi)
       throws Exception;
       
    // Protected -----------------------------------------------------

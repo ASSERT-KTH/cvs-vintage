@@ -6,6 +6,8 @@
  */
 package org.jboss.ejb.deployment;
 
+import org.w3c.dom.Element;
+
 /**
  *   StatefulSessionContainerConfiguration
  *
@@ -14,7 +16,7 @@ package org.jboss.ejb.deployment;
  *      
  *   @see ContainerConfiguration
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class StatefulSessionContainerConfiguration
    extends ContainerConfiguration
@@ -30,6 +32,14 @@ public class StatefulSessionContainerConfiguration
    // Public --------------------------------------------------------
 
    // XmlExternalizable implementation ------------------------------
+   public void importXml(Element elt)
+      throws Exception
+   {
+   	super.importXml(elt);
+		
+		// Set default pool
+		setInstancePool("org.jboss.ejb.plugins.StatefulSessionInstancePool");
+   }
    
    // Package protected ---------------------------------------------
     

@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration
@@ -107,7 +107,7 @@ public class ClassPathExtension
          }
       }
       
-      return new ObjectName(OBJECT_NAME);
+      return new ObjectName(OBJECT_NAME+",url="+url);
    }
    
    public void postRegister(java.lang.Boolean registrationDone)

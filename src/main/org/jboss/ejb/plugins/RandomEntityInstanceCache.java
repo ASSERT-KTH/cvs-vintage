@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class RandomEntityInstanceCache
    extends NoPassivationEntityInstanceCache
@@ -85,7 +85,7 @@ public class RandomEntityInstanceCache
                int currentActive = active.size();
                if (currentActive > minActive)
                {
-                  InstancePool pool = con.getInstancePool();
+                  InstancePool pool = ((EntityContainer)con).getInstancePool();
                   
                   Logger.debug("Too many active instances:"+currentActive);
                   // Passivate some instance; they need to be unlocked though

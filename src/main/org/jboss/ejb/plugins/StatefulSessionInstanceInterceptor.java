@@ -8,10 +8,13 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+
+import org.jboss.ejb.Container;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.MethodInvocation;
 
 
 /**
@@ -20,38 +23,45 @@ import org.jboss.ejb.EnterpriseContext;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 */
 public class StatefulSessionInstanceInterceptor
-extends AbstractInterceptor
+	extends AbstractInterceptor
 {
 	// Constants ----------------------------------------------------
 	
 	// Attributes ---------------------------------------------------
+	protected StatefulSessionContainer container;
 	
 	// Static -------------------------------------------------------
 	
 	// Constructors -------------------------------------------------
 	
 	// Public -------------------------------------------------------
+	public void setContainer(Container container) 
+	{ 
+		this.container = (StatefulSessionContainer)container; 
+	}
 	
+	public  Container getContainer()
+	{
+		return container;
+	}
 	// Interceptor implementation -----------------------------------
-	public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
-	throws Exception
+	public Object invokeHome(MethodInvocation mi)
+		throws Exception
 	{
 		// Get context
-		ctx = ((StatefulSessionContainer)getContainer()).getInstancePool().get();
+		mi.setEnterpriseContext(container.getInstancePool().get());
 		
 		try
 		{
 			// Invoke through interceptors
-			return getNext().invokeHome(method, args, ctx);
-		
+			return getNext().invokeHome(mi);
 		} finally
 		{
 			// Still free? Not free if create() was called successfully
-			// MF Praise: hey for once the comment is good rickard ;-0
-			if (ctx.getId() == null)
+			if (mi.getEnterpriseContext().getId() == null)
 			{
 				// Create did not associate an ID with the ctx
 				// There is nothing to do just let the garbage collector do its work
@@ -59,58 +69,60 @@ extends AbstractInterceptor
 			} else
 			{
 				// Create was called succesfully we go to the cache
-				((StatefulSessionContainer)getContainer()).getInstanceCache().release(ctx);
+				container.getInstanceCache().release(mi.getEnterpriseContext());
 			}
 		}
 	}
 	
-	public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
-	throws Exception
+	public Object invoke(MethodInvocation mi)
+		throws Exception
 	{
 		// Get context
-		ctx = ((StatefulSessionContainer)getContainer()).getInstanceCache().get(id);
+		EnterpriseContext ctx = container.getInstanceCache().get(mi.getId());
+		mi.setEnterpriseContext(ctx);
 		
 		try
 		{
 			// Invoke through interceptors
-			return getNext().invoke(id, method, args, ctx);
+			return getNext().invoke(mi);
 		} catch (RemoteException e)
 		{
 			// Discard instance
-			((StatefulSessionContainer)getContainer()).getInstanceCache().remove(id);
+			container.getInstanceCache().remove(mi.getId());
 			ctx = null;
 			
 			throw e;
 		} catch (RuntimeException e)
 		{
 			// Discard instance
-			((StatefulSessionContainer)getContainer()).getInstanceCache().remove(id);
+			container.getInstanceCache().remove(mi.getId());
 			ctx = null;
 			
 			throw e;
 		} catch (Error e)
 		{
 			// Discard instance
-			((StatefulSessionContainer)getContainer()).getInstanceCache().remove(id);
+			container.getInstanceCache().remove(mi.getId());
 			ctx = null;
 			
 			throw e;
-		} 
-		finally {
-			
+		} finally 
+		{
 			if (ctx != null)
 			{
+				// Still a valid instance
+				
 				if (ctx.getId() == null)
 				{
 					// Remove from cache
-					((StatefulSessionContainer)getContainer()).getInstanceCache().remove(id);
+					container.getInstanceCache().remove(mi.getId());
 					
 					// It has been removed -> send to free pool
-					getContainer().getInstancePool().free(ctx);
+					container.getInstancePool().free(ctx);
 				}
 				{
 					// Return context
-					((StatefulSessionContainer)getContainer()).getInstanceCache().release(ctx);
+					container.getInstanceCache().release(ctx);
 				}
 			}
 		}

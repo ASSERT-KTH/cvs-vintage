@@ -26,14 +26,29 @@ import javax.ejb.RemoveException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class StatelessSessionContainer
-extends Container
+	extends Container
+	implements ContainerInvokerContainer, InstancePoolContainer
 {
 	// Constants -----------------------------------------------------
 	
 	// Attributes ----------------------------------------------------
+	// These are the mappings between the home interface methods and the container methods
+	protected Map homeMapping;
+	
+	// These are the mappings between the remote interface methods and the bean methods
+	protected Map beanMapping;
+	
+	// This is the container invoker for this container
+	protected ContainerInvoker containerInvoker;
+	
+	// This is the instancepool that is to be used
+	protected InstancePool instancePool;
+	
+	// This is the first interceptor in the chain. The last interceptor must be provided by the container itself
+	protected Interceptor interceptor;
 	
 	// Static --------------------------------------------------------
 	
@@ -49,21 +64,72 @@ extends Container
 		ci.setContainer(this);
 	}
 	
+	public ContainerInvoker getContainerInvoker() 
+	{ 
+		return containerInvoker; 
+	}
+	
+	public void setInstancePool(InstancePool ip) 
+	{ 
+	   if (ip == null)
+	   	throw new IllegalArgumentException("Null pool");
+			
+	   this.instancePool = ip; 
+	   ip.setContainer(this);
+	}
+
+	public InstancePool getInstancePool() 
+	{ 
+		return instancePool; 
+	}
+	
+	public void addInterceptor(Interceptor in) 
+	{ 
+	   if (interceptor == null)
+	   {
+	      interceptor = in;
+	   } else
+	   {
+	      
+	      Interceptor current = interceptor;
+	      while ( current.getNext() != null)
+	      {
+	         current = current.getNext();
+	      }
+	         
+	      current.setNext(in);
+	   }
+	}
+	
+	public Interceptor getInterceptor() 
+	{ 
+		return interceptor; 
+	}
+	
+	public Class getHomeClass()
+	{
+	   return homeInterface;
+	}
+	
+	public Class getRemoteClass()
+	{
+	   return remoteInterface;
+	}
 	
 	// Container implementation --------------------------------------
 	public void init()
-	throws Exception
+		throws Exception
 	{
 		// Associate thread with classloader
 		ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(getClassLoader());
 		
+		// Acquire classes from CL
+		homeInterface = classLoader.loadClass(metaData.getHome());
+		remoteInterface = classLoader.loadClass(metaData.getRemote());
+		
 		// Call default init
 		super.init();
-		
-		// Init container invoker
-		containerInvoker.init();
-		
 		
 		// Map the bean methods
 		setupBeanMapping();
@@ -71,12 +137,27 @@ extends Container
 		// Map the home methods
 		setupHomeMapping();
 		
+		// Initialize pool 
+		instancePool.init();
+		
+		// Init container invoker
+		containerInvoker.init();		
+		
+		// Initialize the interceptor by calling the chain
+		Interceptor in = interceptor;
+		while (in != null)
+		{
+		   in.setContainer(this);
+		   in.init();
+		   in = in.getNext();
+		}
+		
 		// Reset classloader  
 		Thread.currentThread().setContextClassLoader(oldCl);
 	}
 	
 	public void start()
-	throws Exception
+		throws Exception
 	{
 		// Associate thread with classloader
 		ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -87,6 +168,17 @@ extends Container
 		
 		// Start container invoker
 		containerInvoker.start();
+		
+		// Start the instance pool
+		instancePool.start();
+		
+		// Start all interceptors in the chain		
+		Interceptor in = interceptor;
+		while (in != null)
+		{
+		   in.start();
+		   in = in.getNext();
+		}
 		
 		// Reset classloader
 		Thread.currentThread().setContextClassLoader(oldCl);
@@ -104,6 +196,17 @@ extends Container
 		// Stop container invoker
 		containerInvoker.stop();
 		
+		// Stop the instance pool
+		instancePool.stop();
+		
+		// Stop all interceptors in the chain		
+		Interceptor in = interceptor;
+		while (in != null)
+		{
+		   in.stop();
+		   in = in.getNext();
+		}
+		
 		// Reset classloader
 		Thread.currentThread().setContextClassLoader(oldCl);
 	}
@@ -120,14 +223,25 @@ extends Container
 		// Destroy container invoker
 		containerInvoker.destroy();
 		
+		// Destroy the pool
+		instancePool.destroy();
+		
+		// Destroy all the interceptors in the chain		
+		Interceptor in = interceptor;
+		while (in != null)
+		{
+		   in.destroy();
+		   in = in.getNext();
+		}
+		
 		// Reset classloader
 		Thread.currentThread().setContextClassLoader(oldCl);
 	}
 	
-	public Object invokeHome(Method method, Object[] args)
-	throws Exception
+	public Object invokeHome(MethodInvocation mi)
+		throws Exception
 	{
-		return getInterceptor().invokeHome(method, args, null);
+		return getInterceptor().invokeHome(mi);
 	}
 	
 	/**
@@ -141,81 +255,75 @@ extends Container
 	* @return     
 	* @exception   Exception  
 	*/
-	public Object invoke(Object id, Method method, Object[] args)
+	public Object invoke(MethodInvocation mi)
 	throws Exception
 	{
 		// Invoke through interceptors
-		return getInterceptor().invoke(id, method, args, null);
+		return getInterceptor().invoke(mi);
 	}
 	
 	// EJBObject implementation --------------------------------------
-	public void remove()
-	throws java.rmi.RemoteException, RemoveException
-	{
-		// TODO
-	}
-	
-	public void remove(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
-	throws java.rmi.RemoteException, RemoveException
+	public void remove(MethodInvocation mi)
+		throws java.rmi.RemoteException, RemoveException
 	{
 		//TODO
 	}
 	
-	public Handle getHandle(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
-	throws java.rmi.RemoteException
+	public Handle getHandle(MethodInvocation mi)
+		throws java.rmi.RemoteException
 	{
 		// TODO
 		return null;
 	}
 	
-	public Object getPrimaryKey(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
-	throws java.rmi.RemoteException
+	public Object getPrimaryKey(MethodInvocation mi)
+		throws java.rmi.RemoteException
 	{
 		// TODO
 		return null;
 	}
 	
-	public EJBHome getEJBHome(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
-	throws java.rmi.RemoteException
+	public EJBHome getEJBHome(MethodInvocation mi)
+		throws java.rmi.RemoteException
 	{
 		return containerInvoker.getEJBHome();
 	}
 	
-	public boolean isIdentical(Method m, Object[] args, StatelessSessionEnterpriseContext ctx)
-	throws java.rmi.RemoteException
+	public boolean isIdentical(MethodInvocation mi)
+		throws java.rmi.RemoteException
 	{
 		return false; // TODO
 	}
 	
 	// EJBHome implementation ----------------------------------------
-	public EJBObject create()
-	throws java.rmi.RemoteException, CreateException
+	public EJBObject createHome()
+		throws java.rmi.RemoteException, CreateException
 	{
 		Object obj = containerInvoker.getStatelessSessionEJBObject();
 		return (EJBObject)obj;
 	}
 	
-	public void remove(Handle handle)
-	throws java.rmi.RemoteException, RemoveException
+	public void removeHome(Handle handle)
+		throws java.rmi.RemoteException, RemoveException
 	{
 		// TODO
 	}
 	
-	public void remove(java.lang.Object primaryKey)
-	throws java.rmi.RemoteException, RemoveException
+	public void removeHome(Object primaryKey)
+		throws java.rmi.RemoteException, RemoveException
 	{
 		// TODO
 	}
 	
-	public EJBMetaData getEJBMetaData()
-	throws java.rmi.RemoteException
+	public EJBMetaData getEJBMetaDataHome()
+		throws java.rmi.RemoteException
 	{
 		// TODO
 		return null;
 	}
 	
-	public HomeHandle getHomeHandle()
-	throws java.rmi.RemoteException   
+	public HomeHandle getHomeHandleHome()
+		throws java.rmi.RemoteException   
 	{
 		// TODO
 		return null;
@@ -223,7 +331,7 @@ extends Container
 	
 	// Protected  ----------------------------------------------------
 	protected void setupHomeMapping()
-	throws NoSuchMethodException
+		throws NoSuchMethodException
 	{
 		Map map = new HashMap();
 		
@@ -231,15 +339,15 @@ extends Container
 		for (int i = 0; i < m.length; i++)
 		{
 			// Implemented by container
-			//System.out.println("Mapping "+m[i].getName());
-			map.put(m[i], getClass().getMethod(m[i].getName(), m[i].getParameterTypes()));
+//			System.out.println("Mapping "+m[i].getName());
+			map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
 		}
 		
 		homeMapping = map;
 	}
 	
 	protected void setupBeanMapping()
-	throws NoSuchMethodException
+		throws NoSuchMethodException
 	{
 		Map map = new HashMap();
 		Method[] m = remoteInterface.getMethods();
@@ -257,7 +365,7 @@ extends Container
 				{
 					// Implemented by container
 					//System.out.println("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
-					map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Method.class, Object[].class, StatelessSessionEnterpriseContext.class}));
+					map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
 					
 					
 				} catch (NoSuchMethodException e)
@@ -291,56 +399,61 @@ extends Container
 		public void stop() {}
 		public void destroy() {}
 		
-		public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
-		throws Exception
+		public Object invokeHome(MethodInvocation mi)
+			throws Exception
 		{
-			Method m = (Method)homeMapping.get(method);
-			return m.invoke(StatelessSessionContainer.this, args);
+			Method m = (Method)homeMapping.get(mi.getMethod());
+			try
+			{
+			   return m.invoke(StatelessSessionContainer.this, mi.getArguments());
+			} catch (InvocationTargetException e)
+			{
+				//Debug
+				e.printStackTrace();
+				System.out.println("Home Exception seen  "+e.getMessage());
+				
+				Throwable ex = e.getTargetException();
+			   if (ex instanceof Exception)
+			      throw (Exception)ex;
+			   else
+			      throw (Error)ex;
+			}
 		}
 		
-		public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
-		throws Exception
+		public Object invoke(MethodInvocation mi)
+			throws Exception
 		{
 			// Get method and instance to invoke upon
-			Method m = (Method)beanMapping.get(method);
+			Method m = (Method)beanMapping.get(mi.getMethod());
 			
-			Object instance;
-			
-			//If we have a method that needs to be fielded by the container
-			if (m.getDeclaringClass().equals(StatelessSessionContainer.this.getClass())) {
-				
-		    	try {
-             		
-					// Return by the present container, adapt the method invocation parameters
-					return m.invoke(StatelessSessionContainer.this, new Object[] { method, args, ctx });
-            	
-				} catch (InvocationTargetException e) {
+			//If we have a method that needs to be done by the container (EJBObject methods)
+			if (m.getDeclaringClass().equals(StatelessSessionContainer.class)) 
+			{
+		    	try 
+				{
+					return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
+				} catch (InvocationTargetException e) 
+				{
+		   		Throwable ex = e.getTargetException();
                
-			   		Throwable ex = e.getTargetException();
-               
-			   		if (ex instanceof Exception) throw (Exception)ex;
-               		else throw (Error)ex;
-            	}
-			}
-			
-		    // we have a method that needs to be fielded by a bean instance
-			else {
-            
+		   		if (ex instanceof Exception) throw (Exception)ex;
+            		else throw (Error)ex;
+         	}
+			} else // we have a method that needs to be done by a bean instance
+			{
 				// Invoke and handle exceptions
-            	try {
-               
-			   		return m.invoke(ctx.getInstance(), args);
-            
-				} 
-				catch (InvocationTargetException e) {
-               	
+           	try 
+				{
+		   		return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
+				} catch (InvocationTargetException e) 
+				{
 					Throwable ex = e.getTargetException();
                		
 					if (ex instanceof Exception) throw (Exception)ex;
                		else throw (Error)ex;
-            	} 
          	}
       	}
+		}
 	}
 }
 

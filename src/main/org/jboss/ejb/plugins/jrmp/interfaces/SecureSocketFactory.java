@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class SecureSocketFactory
    extends RMISocketFactory
@@ -51,9 +51,15 @@ public class SecureSocketFactory
    
    public boolean equals(Object obj)
    {
+		System.out.println(obj instanceof SecureSocketFactory);
       return obj instanceof SecureSocketFactory;
    }
     
+   public int hashCode()
+   {
+      return getClass().getName().hashCode();
+   }
+	
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
@@ -105,6 +111,15 @@ public class SecureSocketFactory
          throws IOException
       {
          super(host, port);
+         System.out.println("Create socket to "+host+" "+port);
+			
+			try
+			{
+				throw new Exception();
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
          
          DataOutputStream out = new DataOutputStream(getOutputStream());
          out.writeUTF(System.getProperty("user.name"));

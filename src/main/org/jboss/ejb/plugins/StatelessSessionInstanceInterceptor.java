@@ -25,12 +25,12 @@ import javax.transaction.TransactionManager;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
-import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.MethodInvocation;
 
 /**
  *   This container acquires the given instance. This must be used after
@@ -39,7 +39,7 @@ import org.jboss.ejb.InstancePool;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -47,34 +47,44 @@ public class StatelessSessionInstanceInterceptor
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+	protected StatelessSessionContainer container;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
-
-   // Interceptor implementation --------------------------------------
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
-      throws Exception
-   {
-      return getNext().invokeHome(method, args, ctx);
+   public void setContainer(Container container) 
+   { 
+   	this.container = (StatelessSessionContainer)container; 
    }
 
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+   public  Container getContainer()
+   {
+   	return container;
+   }
+	
+   // Interceptor implementation --------------------------------------
+   public Object invokeHome(MethodInvocation mi)
+      throws Exception
+   {
+      return getNext().invokeHome(mi);
+   }
+
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
       // Get context
-      ctx = getContainer().getInstancePool().get();
+      mi.setEnterpriseContext(container.getInstancePool().get());
       
       try
       {
          // Invoke through interceptors
-         return getNext().invoke(id, method, args, ctx);
+         return getNext().invoke(mi);
       } finally
       {
          // Return context
-         getContainer().getInstancePool().free(ctx);
+         container.getInstancePool().free(mi.getEnterpriseContext());
       }
    }
 }

@@ -20,7 +20,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -77,6 +77,9 @@ public abstract class ServiceMBeanSupport
    public void start()
       throws Exception
    {
+      if (getState() != STOPPED)
+      	return;
+			
       state = STARTING;
       sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
       log.log("Starting");
@@ -102,6 +105,9 @@ public abstract class ServiceMBeanSupport
    
    public void stop()
    {
+		if (getState() != STARTED)
+			return;
+	
       state = STOPPING;
       sendNotification(new AttributeChangeNotification(AttributeChangeNotification.ATTRIBUTE_CHANGE, this, id++, new Date(), getName()+" stopping", "State", "java.lang.Integer", new Integer(STARTED), new Integer(STOPPING)));
       log.log("Stopping");
@@ -123,6 +129,9 @@ public abstract class ServiceMBeanSupport
    
    public void destroy()
    {
+		if (getState() != STOPPED)
+			stop();
+	
    	log.log("Destroying");
    	log.setLog(log);
    	try
@@ -144,14 +153,13 @@ public abstract class ServiceMBeanSupport
 
 		init();
 		
-      start();
       return name;
    }
    
    public void postRegister(java.lang.Boolean registrationDone)
    {
       if (!registrationDone.booleanValue())
-         stop();
+         destroy();
    }
    
    public void preDeregister()
@@ -161,9 +169,6 @@ public abstract class ServiceMBeanSupport
    
    public void postDeregister()
    {
-		if (getState() == STARTED)
-	      stop();
-		
 	   destroy();
    }
    

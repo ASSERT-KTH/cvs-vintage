@@ -17,17 +17,19 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
-   implements LoggerMBean, MBeanRegistration, NotificationBroadcaster
+   implements LoggerMBean, MBeanRegistration, NotificationBroadcaster, Runnable
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
    long sequence = 0;
    Date now = new Date();
+	
+	boolean running = true;
    
    ArrayList notificationListeners = new ArrayList();
    
@@ -76,12 +78,15 @@ public class Logger
    public Logger()
    {
       logger = this;
+		
+		Thread runner = new Thread(this, "Log time updater");
+		runner.setDaemon(true);
+		runner.start();
    }
    
    // Public --------------------------------------------------------
    public synchronized void fireNotification(String type, Object source, String message)
    {
-      now.setTime(System.currentTimeMillis());
       Notification n = new Notification(type, this, sequence++, now, message);
       n.setUserData(source);
     
@@ -103,7 +108,26 @@ public class Logger
       throws java.lang.Exception 
    {}
    
-   public void postDeregister() {}
+   public void postDeregister() 
+	{
+		running = false;
+	}
 
+   // Runnable implementation ---------------------------------------
+	public void run()
+	{
+		while (running)
+		{
+			now.setTime(System.currentTimeMillis());
+		
+			try
+			{
+				Thread.sleep(5*1000);
+			} catch (InterruptedException e)
+			{
+				// Ignore
+			}
+		}
+	}
 }
 

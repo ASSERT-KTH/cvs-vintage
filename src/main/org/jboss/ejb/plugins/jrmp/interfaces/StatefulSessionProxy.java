@@ -18,9 +18,9 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.6 $
+ *      @version $Revision: 1.7 $
  */
-public abstract class StatefulSessionProxy
+public class StatefulSessionProxy
    extends GenericProxy
 {
    // Constants -----------------------------------------------------
@@ -41,27 +41,28 @@ public abstract class StatefulSessionProxy
    // Public --------------------------------------------------------
 
    // InvocationHandler implementation ------------------------------
-   public Object invoke(Object proxy, Method m, Object[] args)
+   public final Object invoke(Object proxy, Method m, Object[] args)
       throws Throwable
    {
-      // Normalize args to always be an array
-      // Isn't this a bug in the proxy call??
-      if (args == null)
-         args = new Object[0];
-
-      // Optimize if calling another bean in same EJB-application
-//      if (optimize &&
-//          this.getClass().getClassLoader() == Thread.currentThread().getContextClassLoader())
-//             return container.invoke(id, m, args, null, null);
-                
-				
-	System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
+	   // Normalize args to always be an array
+	   // Isn't this a bug in the proxy call??
+	   if (args == null)
+	      args = new Object[0];
 	   
-      Object result = container.invoke(new MarshalledObject(new MethodInvocation(id, m, args)), null, null);
-      if (result instanceof MarshalledObject)
-         return ((MarshalledObject)result).get();
-      else
-         return result;
+	   // Delegate to container
+	   // Optimize if calling another bean in same EJB-application
+	   if (optimize && isLocal())
+	   {
+	      return container.invoke(id, m, args, 
+	      								tm != null ? tm.getTransaction() : null,
+	      								null);
+	   } else
+	   {
+	      RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
+	      if (tm != null)
+	         rmi.setTransaction(tm.getTransaction());
+	      return ((MarshalledObject)container.invoke(new MarshalledObject(rmi))).get();
+	   }
    }
 
    // Package protected ---------------------------------------------

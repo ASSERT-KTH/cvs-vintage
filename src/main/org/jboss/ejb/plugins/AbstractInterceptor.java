@@ -22,13 +22,14 @@ import com.dreambean.ejx.ejb.EnterpriseBean;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.MethodInvocation;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -36,7 +37,6 @@ public abstract class AbstractInterceptor
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   private Container container;
    protected Interceptor nextInterceptor;
 
    // Static --------------------------------------------------------
@@ -46,8 +46,8 @@ public abstract class AbstractInterceptor
    // Public --------------------------------------------------------
 
    // Interceptor implementation ------------------------------------
-   public void setContainer(Container container) { this.container = container; }
-   public Container getContainer() { return container; }
+   public abstract void setContainer(Container container);
+   public abstract Container getContainer();
    public void setNext(Interceptor interceptor) { nextInterceptor = interceptor; }
    public Interceptor getNext() { return nextInterceptor; }
    
@@ -69,16 +69,16 @@ public abstract class AbstractInterceptor
    {
    }
 
-   public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
+   public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-      return getNext().invokeHome(method, args, ctx);
+      return getNext().invokeHome(mi);
    }
 
-   public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
+   public Object invoke(MethodInvocation mi)
       throws Exception
    {
-      return getNext().invoke(id, method, args, ctx);
+      return getNext().invoke(mi);
    }
    // Protected -----------------------------------------------------
 }

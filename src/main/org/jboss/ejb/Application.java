@@ -7,8 +7,11 @@
 package org.jboss.ejb;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Collection;
 import java.util.HashMap;
+
+import org.jboss.util.Service;
 
 /**
  *   An Application represents a collection of beans that are deployed as a unit.
@@ -17,9 +20,10 @@ import java.util.HashMap;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class Application
+	implements Service
 {
    // Constants -----------------------------------------------------
     
@@ -41,6 +45,7 @@ public class Application
    public void addContainer(Container con)
    {
       containers.put(con.getMetaData().getEjbName(), con);
+	   con.setApplication(this);
    }
    
 
@@ -125,4 +130,47 @@ public class Application
       if (name.equals(""))
          name = url.toString();
    }
+	
+	// Service implementation ----------------------------------------
+	public void init()
+	   throws Exception
+	{
+		Iterator enum = containers.values().iterator();
+		while (enum.hasNext())
+		{
+			Container con = (Container)enum.next();
+			con.init();
+		}
+	}
+	
+	public void start()
+	   throws Exception
+	{
+		Iterator enum = containers.values().iterator();
+		while (enum.hasNext())
+		{
+			Container con = (Container)enum.next();
+			con.start();
+		}
+	}
+	
+	public void stop()
+	{
+		Iterator enum = containers.values().iterator();
+		while (enum.hasNext())
+		{
+			Container con = (Container)enum.next();
+			con.stop();
+		}
+	}
+	
+	public void destroy()
+	{
+		Iterator enum = containers.values().iterator();
+		while (enum.hasNext())
+		{
+			Container con = (Container)enum.next();
+			con.destroy();
+		}
+	}
 }
