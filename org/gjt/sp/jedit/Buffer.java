@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.76 2002/03/17 03:05:24 spestov Exp $
+ * @version $Id: Buffer.java,v 1.77 2002/05/14 11:20:41 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1541,6 +1541,8 @@ public class Buffer implements EBComponent
 				Log.log(Log.WARNING, this, path + ": invalid 'folding' property: " + folding); 
 			setFoldHandler(new DummyFoldHandler());
 		}
+
+		EditBus.send(new BufferUpdate(this,null,BufferUpdate.PROPERTIES_CHANGED));
 	} //}}}
 
 	//{{{ getTabSize() method
@@ -3410,9 +3412,6 @@ public class Buffer implements EBComponent
 
 			int collapseFolds = getIntegerProperty("collapseFolds",0);
 			offsetMgr.expandFolds(collapseFolds);
-
-			EditBus.send(new BufferUpdate(this,null,
-				BufferUpdate.FOLD_HANDLER_CHANGED));
 		}
 	} //}}}
 

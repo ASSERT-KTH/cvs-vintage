@@ -29,7 +29,7 @@ import org.gjt.sp.util.Log;
  * their own messages.
  *
  * @author Slava Pestov
- * @version $Id: EditBus.java,v 1.2 2001/10/02 13:54:13 spestov Exp $
+ * @version $Id: EditBus.java,v 1.3 2002/05/14 11:20:41 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -97,8 +97,6 @@ public class EditBus
 			try
 			{
 				comps[i].handleMessage(message);
-				if(message.isVetoed())
-					break;
 			}
 			catch(Throwable t)
 			{

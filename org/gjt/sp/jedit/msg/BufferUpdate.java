@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a buffer-related change occurs.
  * @author Slava Pestov
- * @version $Id: BufferUpdate.java,v 1.5 2002/05/14 07:55:48 spestov Exp $
+ * @version $Id: BufferUpdate.java,v 1.6 2002/05/14 11:20:41 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -71,18 +71,6 @@ public class BufferUpdate extends EBMessage
 	public static final Object MODE_CHANGED = "MODE_CHANGED";
 
 	/**
-	 * Character encoding changed.
-	 * @since jEdit 3.2pre4
-	 */
-	public static final Object ENCODING_CHANGED = "ENCODING_CHANGED";
-
-	/**
-	 * Fold handler changed.
-	 * @since jEdit 4.0pre1
-	 */
-	public static final Object FOLD_HANDLER_CHANGED = "FOLD_HANDLER_CHANGED";
-
-	/**
 	 * Buffer saving.
 	 */
 	public static final Object SAVING = "SAVING";
@@ -92,6 +80,12 @@ public class BufferUpdate extends EBMessage
 	 * @since jEdit 4.0pre4
 	 */
 	public static final Object SAVED = "SAVED";
+
+	/**
+	 * Properties changed.
+	 * @since jEdit 4.1pre1
+	 */
+	public static final Object PROPERTIES_CHANGED = "PROPERTIES_CHANGED";
 	//}}}
 
 	//{{{ BufferUpdate constructor
