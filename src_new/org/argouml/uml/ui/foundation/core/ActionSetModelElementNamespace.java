@@ -1,5 +1,5 @@
 
-// $Id: ActionSetModelElementNamespace.java,v 1.5 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetModelElementNamespace.java,v 1.6 2003/09/11 17:52:45 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,6 @@ public class ActionSetModelElementNamespace extends UMLChangeAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
         Object source = e.getSource();
         MNamespace oldNamespace = null;
         MNamespace newNamespace = null;
@@ -77,6 +76,7 @@ public class ActionSetModelElementNamespace extends UMLChangeAction {
         }
         if (newNamespace != oldNamespace && m != null && newNamespace != null) {
             m.setNamespace(newNamespace);
+            super.actionPerformed(e);
         }
     }
 

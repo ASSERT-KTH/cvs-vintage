@@ -1,5 +1,5 @@
 
-// $Id: ActionSetModelElementStereotype.java,v 1.6 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.7 2003/09/11 17:52:45 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,6 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
         Object source = e.getSource();
         MStereotype oldStereo = null;
         MStereotype newStereo = null;
@@ -84,6 +83,7 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
 				  target.getModel());
 	    }
             ExtensionMechanismsHelper.getHelper().setStereoType(target, newStereo);
+            super.actionPerformed(e);
         }
     }
             

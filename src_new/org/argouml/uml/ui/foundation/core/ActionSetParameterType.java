@@ -1,6 +1,6 @@
 
 
-// $Id: ActionSetParameterType.java,v 1.8 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetParameterType.java,v 1.9 2003/09/11 17:52:45 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,6 @@ public class ActionSetParameterType extends UMLChangeAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        super.actionPerformed(e);
         Object source = e.getSource();
         MClassifier oldClassifier = null;
         MClassifier newClassifier = null;
@@ -82,6 +81,7 @@ public class ActionSetParameterType extends UMLChangeAction {
 				      newClassifier,
 				      para.getModel());
             para.setType(newClassifier);
+            super.actionPerformed(e);
         }
         
     }
