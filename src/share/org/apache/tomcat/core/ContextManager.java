@@ -176,8 +176,8 @@ public class ContextManager {
 
 	// XXX make it configurable - all actions in this method will
 	// be replaced with Interceptors or Tasks. 
-	org.apache.tomcat.task.ApacheConfig apacheConfig=new org.apache.tomcat.task.ApacheConfig();
-	apacheConfig.execute( this );
+// 	org.apache.tomcat.task.ApacheConfig apacheConfig=new org.apache.tomcat.task.ApacheConfig();
+// 	apacheConfig.execute( this );
     }
 
     public void stop() throws Exception {
