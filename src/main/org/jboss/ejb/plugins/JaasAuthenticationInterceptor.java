@@ -29,7 +29,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JaasAuthenticationInterceptor extends AbstractInterceptor
 {
@@ -87,7 +87,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      SecurityActions.pushRunAsIdentity(runAsIdentity);
+      if( runAsIdentity != null )
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -96,7 +97,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         SecurityActions.popRunAsIdentity();
+         if( runAsIdentity != null )
+            SecurityActions.popRunAsIdentity();
          SecurityActions.setSubject(prevSubject);
       }
    }
@@ -118,7 +120,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      SecurityActions.pushRunAsIdentity(runAsIdentity);
+      if( runAsIdentity != null )
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -127,7 +130,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         SecurityActions.popRunAsIdentity();
+         if( runAsIdentity != null )
+            SecurityActions.popRunAsIdentity();
          SecurityActions.setSubject(prevSubject);
       }
    }
@@ -163,9 +167,8 @@ public class JaasAuthenticationInterceptor extends AbstractInterceptor
          if (securityManager.isValid(principal, credential) == false)
          {
             String msg = "Authentication exception, principal=" + principal;
-            log.error(msg);
             SecurityException e = new SecurityException(msg);
-            throw new EJBException("checkSecurityAssociation", e);
+            throw e;
          }
          else
          {

@@ -24,7 +24,7 @@ import org.jboss.metadata.BeanMetaData;
 /** This interceptor is where the JACC ejb container authorization is performed.
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JaccAuthorizationInterceptor extends AbstractInterceptor
 {
@@ -93,9 +93,8 @@ public class JaccAuthorizationInterceptor extends AbstractInterceptor
       if( policy.implies(pd, methodPerm) == false )
       {
          String msg = "Denied: "+methodPerm+", caller=" + caller;
-         log.error(msg);
          SecurityException e = new SecurityException(msg);
-         throw new EJBException("checkSecurityAssociation", e);
+         throw e;
       }
    }
 }

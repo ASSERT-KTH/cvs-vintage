@@ -19,7 +19,6 @@ import org.jboss.security.RealmMapping;
 import org.jboss.security.RunAsIdentity;
 import org.jboss.security.SecurityRolesAssociation;
 
-import javax.ejb.EJBException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
@@ -31,21 +30,15 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
-   /**
-    * @supplierCardinality 0..1
-    * @supplierQualifier authentication
-    * @clientCardinality 1..*
+   /** The authentication manager plugin
     */
    protected AuthenticationManager securityManager;
 
-   /**
-    * @supplierCardinality 0..1
-    * @clientCardinality 1..*
-    * @supplierQualifier identity mapping
+   /** The authorization manager plugin
     */
    protected RealmMapping realmMapping;
 
@@ -99,7 +92,8 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      SecurityActions.pushRunAsIdentity(runAsIdentity);
+      if( runAsIdentity != null )
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -108,7 +102,8 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         SecurityActions.popRunAsIdentity();
+         if( runAsIdentity != null )
+            SecurityActions.popRunAsIdentity();
       }
    }
 
@@ -121,7 +116,8 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      SecurityActions.pushRunAsIdentity(runAsIdentity);
+      if( runAsIdentity != null )
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
 
       try
       {
@@ -130,7 +126,8 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         SecurityActions.popRunAsIdentity();
+         if( runAsIdentity != null )
+            SecurityActions.popRunAsIdentity();
       }
    }
 
@@ -156,8 +153,7 @@ public class SecurityInterceptor extends AbstractInterceptor
 
       if (realmMapping == null)
       {
-         throw new EJBException("checkSecurityAssociation",
-            new SecurityException("Role mapping manager has not been set"));
+         throw new SecurityException("Role mapping manager has not been set");
       }
 
       // authenticate the current principal
@@ -169,9 +165,8 @@ public class SecurityInterceptor extends AbstractInterceptor
          if (securityManager.isValid(principal, credential) == false)
          {
             String msg = "Authentication exception, principal=" + principal;
-            log.error(msg);
             SecurityException e = new SecurityException(msg);
-            throw new EJBException("checkSecurityAssociation", e);
+            throw e;
          }
          else
          {
@@ -191,9 +186,8 @@ public class SecurityInterceptor extends AbstractInterceptor
          String method = mi.getMethod().getName();
          String msg = "No method permissions assigned to method=" + method
             + ", interface=" + iface;
-         log.error(msg);
          SecurityException e = new SecurityException(msg);
-         throw new EJBException("checkSecurityAssociation", e);
+         throw e;
       }
       else if (trace)
       {
@@ -215,9 +209,8 @@ public class SecurityInterceptor extends AbstractInterceptor
                String msg = "Insufficient method permissions, principal=" + principal
                   + ", method=" + method + ", interface=" + iface
                   + ", requiredRoles=" + methodRoles + ", principalRoles=" + userRoles;
-               log.error(msg);
                SecurityException e = new SecurityException(msg);
-               throw new EJBException("checkSecurityAssociation", e);
+               throw e;
             }
          }
 
@@ -231,9 +224,8 @@ public class SecurityInterceptor extends AbstractInterceptor
                String msg = "Insufficient method permissions, runAsPrincipal=" + callerRunAsIdentity.getName()
                   + ", method=" + method + ", interface=" + iface
                   + ", requiredRoles=" + methodRoles + ", runAsRoles=" + callerRunAsIdentity.getRunAsRoles();
-               log.error(msg);
                SecurityException e = new SecurityException(msg);
-               throw new EJBException("checkSecurityAssociation", e);
+               throw e;
             }
          }
       }

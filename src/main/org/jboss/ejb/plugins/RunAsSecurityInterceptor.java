@@ -22,7 +22,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -71,7 +71,8 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      SecurityActions.pushRunAsIdentity(runAsIdentity);
+      if( runAsIdentity != null )
+         SecurityActions.pushRunAsIdentity(runAsIdentity);
       try
       {
          Object returnValue = getNext().invokeHome(mi);
@@ -79,7 +80,8 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         SecurityActions.popRunAsIdentity();
+         if( runAsIdentity != null )
+            SecurityActions.popRunAsIdentity();
       }
    }
 
