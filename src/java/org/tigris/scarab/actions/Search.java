@@ -79,7 +79,7 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
@@ -90,7 +90,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.68 2002/03/30 01:41:29 jon Exp $
+    @version $Id: Search.java,v 1.69 2002/04/11 00:42:48 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -150,26 +150,32 @@ public class Search extends RequireLoginFirstAction
         data.getParameters().add("queryString", getQueryString(data));
 
         Module module = scarabR.getCurrentModule();
-        ScarabUser[] userList = module.getUsers(ScarabSecurity.MODULE__EDIT);
-        if (userList == null || userList.length == 0)
-        {
-            data.setMessage("Sorry, no users have the module edit permission " +
-            "in this module (" + module.getName() + "). Please contact your " + 
-            "Scarab administrator and ask them to give the Module Edit permission " +
-            "to someone in this module.");
-            return;
-        }
         if (intake.isAllValid()) 
         {
             queryGroup.setProperties(query);
             query.setUserId(user.getUserId());
             query.setIssueType(scarabR.getCurrentIssueType());
-            query.saveAndSendEmail(user, module,
-                                   context);
 
-            String template = data.getParameters()
-                .getString(ScarabConstants.NEXT_TEMPLATE);
-            setTarget(data, template);            
+            ScarabUser[] userList = 
+                module.getUsers(ScarabSecurity.ITEM__APPROVE);
+            if (Scope.GLOBAL__PK.equals(query.getScopeId()) &&
+                (userList == null || userList.length == 0))
+            {
+                data.setMessage(
+                    "Sorry, no users have the  permission to approve" +
+                    " global queries in this module (" + module.getName() + 
+                    "). Please contact your Scarab administrator and ask " + 
+                    "them to give the Item Approve permission to someone" + 
+                    " in this module.");
+            }
+            else 
+            {            
+                query.saveAndSendEmail(user, module, context);
+                
+                String template = data.getParameters()
+                    .getString(ScarabConstants.NEXT_TEMPLATE);
+                setTarget(data, template);            
+            }
         }
         else
         {

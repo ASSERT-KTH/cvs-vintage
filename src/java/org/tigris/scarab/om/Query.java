@@ -154,14 +154,11 @@ public class Query
         // If it's a global query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
         boolean success = true;
-        if (getScopeId().equals(Scope.PERSONAL__PK))
+        if (getScopeId().equals(Scope.PERSONAL__PK) 
+            || user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
         }
-        else if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
-        {
-            setApproved(true);
-        } 
         else
         {
             setApproved(false);
@@ -180,7 +177,7 @@ public class Query
                               "email/RequireApproval.vm");
 
                 ScarabUser[] toUsers = module
-                    .getUsers(ScarabSecurity.MODULE__EDIT);
+                    .getUsers(ScarabSecurity.ITEM__APPROVE);
                 String fromUser = "scarab.email.default";
                 if (!Email.sendEmail(new ContextAdapter(context), module, 
                     fromUser, Arrays.asList(toUsers), null, subject, template))
