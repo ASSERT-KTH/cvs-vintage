@@ -138,6 +138,32 @@
     </java>
   </target>
 
+  <target name="test-rmoduleissuetype" depends="compile">
+    <echo>Running RModuleIssueType tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.RModuleIssueTypeTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-rmoduleoption" depends="compile">
+    <echo>Running RModuleOption tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.RModuleOptionTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
 
   <target name="test-query" depends="compile">
     <echo>Running Query tests...</echo>
