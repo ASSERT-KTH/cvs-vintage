@@ -13,6 +13,7 @@ import javax.management.AttributeChangeNotification;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.management.MalformedObjectNameException;
 
 import org.apache.log4j.Category;
    
@@ -20,48 +21,54 @@ import org.jboss.logging.Log;
 import org.jboss.logging.LogToCategory;
 import org.jboss.logging.log4j.JBossCategory;
 
-/** An abstract base class JBoss services can subclass to implement a
-service that conforms to the ServiceMBean interface. Subclasses must
-override {@link #getName() getName} method and should override 
-{@link #initService() initService}, {@link #startService() startService},
-{@link #stopService() stopService}, {@link #destroyService() destroyService}
-as approriate.
-
-@see org.jboss.util.ServiceMBean
-
-<a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.1 $
-
-Revisions:
-20010619 scott.stark: use the full service class name as the log4j category name
-*/
+/**
+ * An abstract base class JBoss services can subclass to implement a
+ * service that conforms to the ServiceMBean interface. Subclasses must
+ * override {@link #getName} method and should override 
+ * {@link #initService}, {@link #startService}, {@link #stopService} AND
+ * {@link #destroyService} as approriate.
+ * 
+ * 
+ * @see ServiceMBean
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
+ * @version $Revision: 1.2 $
+ * 
+ * Revisions:
+ * 20010619 scott.stark: use the full service class name as the log4j
+ *                       category name
+ */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
    implements ServiceMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
+
    private int state;
    private MBeanServer server;
    private int id = 0;
+
    protected Log log;
    protected JBossCategory category;
 
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
+
    public ServiceMBeanSupport()
    {
-      category = (JBossCategory) JBossCategory.getInstance(getClass());
+      category = (JBossCategory)JBossCategory.getInstance(getClass());
       log = new LogToCategory(category);
    }
 
    // Public --------------------------------------------------------
+
    public abstract String getName();
 
    public MBeanServer getServer()
    {
-       return server;
+      return server;
    }
 
    public int getState()
@@ -74,33 +81,33 @@ public abstract class ServiceMBeanSupport
       return states[state];
    }
    
-    public void init()
-            throws Exception
-    {
-        log.setLog(log);
-        category.info("Initializing");
-        try
-        {
-           initService();
-        } catch (Exception e)
-        {
-           category.error("Initialization failed", e);
-           throw e;
-        } finally
-        {
-           log.unsetLog();
-        }
-        category.info("Initialized");
-    }
+   public void init()
+      throws Exception
+   {
+      log.setLog(log);
+      category.info("Initializing");
+      try
+      {
+         initService();
+      } catch (Exception e)
+      {
+         category.error("Initialization failed", e);
+         throw e;
+      } finally
+      {
+         log.unsetLog();
+      }
+      category.info("Initialized");
+   }
 	
    public void start()
       throws Exception
    {
       if (getState() != STOPPED)
-      	return;
+         return;
 			
       state = STARTING;
-	  //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+      //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
       category.info("Starting");
       log.setLog(log);
@@ -110,7 +117,7 @@ public abstract class ServiceMBeanSupport
       } catch (Exception e)
       {
          state = STOPPED;
-	     //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+         //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
          sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STOPPED)));
          category.error("Stopped", e);
          throw e;
@@ -124,10 +131,10 @@ public abstract class ServiceMBeanSupport
       category.info("Started");
    }
    
-    public void stop()
-    {
-        if (getState() != STARTED)
-                return;
+   public void stop()
+   {
+      if (getState() != STARTED)
+         return;
 	
       state = STOPPING;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
@@ -155,29 +162,29 @@ public abstract class ServiceMBeanSupport
       if (getState() != STOPPED)
          stop();
 	
-   	category.info("Destroying");
-   	log.setLog(log);
-   	try
-   	{
-   	   destroyService();
-   	} catch (Exception e)
-   	{
-   	   category.error(e);
-   	}
+      category.info("Destroying");
+      log.setLog(log);
+      try
+      {
+         destroyService();
+      } catch (Exception e)
+      {
+         category.error(e);
+      }
    	
-   	log.unsetLog();
-   	category.info("Destroyed");
+      log.unsetLog();
+      category.info("Destroyed");
    }
 	
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws java.lang.Exception
+      throws Exception
    {
-        name = getObjectName(server, name);
-        this.server = server;
-        return name;
+      name = getObjectName(server, name);
+      this.server = server;
+      return name;
    }
 
-   public void postRegister(java.lang.Boolean registrationDone)
+   public void postRegister(Boolean registrationDone)
    {
       if (!registrationDone.booleanValue())
       {
@@ -187,18 +194,19 @@ public abstract class ServiceMBeanSupport
    }
    
    public void preDeregister()
-      throws java.lang.Exception
+      throws Exception
    {
    }
    
    public void postDeregister()
    {
-       destroy();
+      destroy();
    }
    
    // Protected -----------------------------------------------------
+   
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
+      throws MalformedObjectNameException
    {
       return name;
    }

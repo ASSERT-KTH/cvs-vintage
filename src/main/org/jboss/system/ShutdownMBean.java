@@ -11,10 +11,13 @@ package org.jboss.system;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface ShutdownMBean
 {
+   /** The default object name to use. */
+   String OBJECT_NAME = ":type=Shutdown";
+   
    /**
     * Shutdown the virtual machine and run shutdown hooks.
     */
@@ -25,8 +28,3 @@ public interface ShutdownMBean
     */
    void halt();
 }
-
-
-
-
-
