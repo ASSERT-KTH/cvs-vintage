@@ -219,6 +219,19 @@
         <echo message="|     Rebuilding Turbine CVS Version       |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
+
+        <!-- 
+            A hack to get around the fact that Ant has a bug. The problem
+            is that when Turbine gets compiled, for some reason,
+            Ant isn't found in the classpath, so the TorqueTask stuff
+            in Turbine doesn't compile because Ant can't be found.
+        -->
+        <copy todir="${turbine.dir}/lib">
+            <fileset dir="${basedir}">
+                <include name="ant*.jar"/>
+            </fileset>
+        </copy>
+
         <ant antfile="build.xml" 
                 dir="${turbine.dir}/build" target="jar">
             <property name="version" value="${scarab.turbine.version}"/>
@@ -226,6 +239,17 @@
             <property name="final.name" value="${scarab.turbine.final.name}"/>
             <property name="src.dir" value="${turbine.dir}/src"/>
         </ant>
+
+        <!--
+            See above comment about nasty hack. This is cleanup time so
+            that no one is the wiser.
+        -->
+        <delete>
+            <fileset dir="${turbine.dir}/lib">
+                <include name="ant*.jar"/>
+            </fileset>
+        </delete>
+
         <copy file="${turbine.dir}/bin/${turbine.latest.jar}" overwrite="true"
             todir="${src.lib.dir}"/>
     </target>
