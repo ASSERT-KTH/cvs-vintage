@@ -37,6 +37,7 @@ public class MailConfig extends DefaultConfig {
     private static File accountTemplateFile;
     private static File folderFile;
     private static File mainFrameOptionsFile;
+    private static File pop3Directory;
     private static File popManageOptionsFile;
     private static File composerOptionsFile;
 
@@ -49,6 +50,10 @@ public class MailConfig extends DefaultConfig {
      */
     public MailConfig() {
         File configDirectory = createConfigDir(MODULE_NAME);
+        pop3Directory = new File(configDirectory, "pop3server");
+        if (!pop3Directory.exists() || !pop3Directory.isDirectory()) {
+            pop3Directory.mkdir();
+        }
 
         accountFile = new File(configDirectory, "account.xml");
         registerPlugin(accountFile.getName(), new AccountXmlConfig(accountFile));
@@ -105,6 +110,13 @@ public class MailConfig extends DefaultConfig {
                 remoteFilterFile.getName(),
                 new LocalFilterXmlConfig(remoteFilterFile));
         */
+    }
+
+    /**
+     * Returns the POP3 directory.
+     */
+    public static File getPOP3Directory() {
+        return pop3Directory;
     }
 
     /**

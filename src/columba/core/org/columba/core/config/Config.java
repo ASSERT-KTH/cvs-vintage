@@ -59,7 +59,6 @@ public class Config {
     protected Map templatePluginList = new Hashtable();
     
     protected File path;
-    protected File pop3Directory;
     protected File optionsFile;
     protected File toolsFile;
 
@@ -81,10 +80,6 @@ public class Config {
         path.mkdir();
         optionsFile = new File(path, "options.xml");
         toolsFile = new File(path, "external_tools.xml");
-        pop3Directory = new File(path, "mail/pop3server");
-        if (!pop3Directory.exists()) {
-            pop3Directory.mkdir();
-        }
     }
     
     /**
@@ -119,13 +114,6 @@ public class Config {
         load();
     }
     
-    /**
-     * Returns the POP3 directory.
-     */
-    public File getPOP3Directory() {
-        return pop3Directory;
-    }
-
     /**
      * Method registerPlugin.
      * @param moduleName
@@ -275,7 +263,7 @@ public class Config {
     /**
      * Loads all plugins and template plugins.
      */
-    public void load() {
+    protected void load() {
         List list = getPluginList();
         list.addAll(getTemplatePluginList());
 
