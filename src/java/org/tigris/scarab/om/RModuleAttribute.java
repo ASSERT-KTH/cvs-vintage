@@ -93,9 +93,9 @@ public class RModuleAttribute
             try
             {
                 ria = getIssueType().getRIssueTypeAttribute(getAttribute());
-                if (ria != null && ria.getLocked())
+                if ( (isNew() == false ) && (ria != null && ria.getLocked()))
                 {
-                    throw new TorqueException(getAttribute().getName() + "is locked");
+                    throw new TorqueException(getAttribute().getName() + " is locked");
                 }
                 else
                 {
@@ -104,7 +104,7 @@ public class RModuleAttribute
             }
             catch (Exception e)
             {
-                throw new TorqueException("An error has occurred.");
+                throw new TorqueException("An error has occurred.", e);
             }
         }
     }
