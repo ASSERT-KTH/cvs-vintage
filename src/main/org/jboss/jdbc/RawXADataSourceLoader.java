@@ -38,7 +38,7 @@ import org.jboss.util.ServiceMBeanSupport;
  * Service that loads a JDBC 2 std. extension-compliant
  * <code>XADataSource</code> and makes it available through JNDI.
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  * @author Toby Allsopp (toby.allsopp@peace.com)
  */
@@ -65,7 +65,7 @@ public class RawXADataSourceLoader
    }
    public void setPoolName(String name)
    {
-      this.name = name;
+      this.name = name.trim();
       log = Log.createLog(name);
    }
    
@@ -76,7 +76,7 @@ public class RawXADataSourceLoader
    
    public void setDataSourceClass(String clazz)
    {
-      dataSourceClass = clazz;
+      dataSourceClass = clazz.trim();
    }
    
    public String getDataSourceClass()

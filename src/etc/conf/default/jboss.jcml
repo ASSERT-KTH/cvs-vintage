@@ -172,7 +172,9 @@
   <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
          name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory">
     <attribute name="FactoryName">MinervaNoTransCMFactory</attribute>
-    <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaNoTransCMFactory</attribute>
+    <attribute name="FactoryClass">
+      org.opentools.minerva.connector.jboss.MinervaNoTransCMFactory
+    </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
 
@@ -183,7 +185,9 @@
   <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
          name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory">
     <attribute name="FactoryName">MinervaSharedLocalCMFactory</attribute>
-    <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaSharedLocalCMFactory</attribute>
+    <attribute name="FactoryClass">
+      org.opentools.minerva.connector.jboss.MinervaSharedLocalCMFactory
+    </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
 
@@ -194,7 +198,9 @@
   <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
          name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory">
     <attribute name="FactoryName">MinervaXACMFactory</attribute>
-    <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaXACMFactory</attribute>
+    <attribute name="FactoryClass">
+      org.opentools.minerva.connector.jboss.MinervaXACMFactory
+    </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
 
@@ -204,12 +210,16 @@
          name="JCA:service=ConnectionFactoryLoader,name=MinervaDS">
     <attribute name="FactoryName">MinervaDS</attribute>
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
-    <attribute name="ResourceAdapterName">Minerva JDBC LocalTransaction ResourceAdapter</attribute>
+    <attribute name="ResourceAdapterName">
+      Minerva JDBC LocalTransaction ResourceAdapter
+    </attribute>
     <attribute name="Properties">
       ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
     </attribute>
 
-    <attribute name="ConnectionManagerFactoryName">MinervaSharedLocalCMFactory</attribute>
+    <attribute name="ConnectionManagerFactoryName">
+      MinervaSharedLocalCMFactory
+    </attribute>
     <!-- See the documentation for the specific connection manager
          implementation you are using for the properties you can set -->
     <attribute name="ConnectionManagerProperties">
@@ -232,7 +242,9 @@
     </attribute>
 
     <!-- Principal mapping configuration -->
-    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
+    <attribute name="PrincipalMappingClass">
+      org.jboss.resource.security.ManyToOnePrincipalMapping
+    </attribute>
     <attribute name="PrincipalMappingProperties">
       userName=sa
       password=
@@ -249,7 +261,9 @@
   <mbean code="org.jboss.jdbc.RawXADataSourceLoader"
          name="DefaultDomain:service=RawXADataSourceLoader,name=MinervaXADS">
     <attribute name="PoolName">MinervaXADS</attribute>
-    <attribute name="DataSourceClass">Put your XADataSource implementation class here</attribute>
+    <attribute name="DataSourceClass">
+      Put your XADataSource implementation class here
+    </attribute>
     <attribute name="Properties"></attribute>
   </mbean>
 
@@ -257,12 +271,16 @@
          name="JCA:service=ConnectionFactoryLoader,name=XAMinervaDS">
     <attribute name="FactoryName">XAMinervaDS</attribute>
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
-    <attribute name="ResourceAdapterName">Minerva JDBA XA Resource Adapter</attribute>
+    <attribute name="ResourceAdapterName">
+      Minerva JDBA XA Resource Adapter
+    </attribute>
     <attribute name="Properties">
       XADataSourceName=java:/MinervaXADS
     </attribute>
 
-    <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
+    <attribute name="ConnectionManagerFactoryName">
+      MinervaXACMFactory 
+    </attribute>
     <attribute name="ConnectionManagerProperties">
       # Pool type - uncomment to force, otherwise it is the default
       #PoolConfiguration=per-factory
@@ -282,7 +300,9 @@
       MaxIdleTimeoutPercent=1.0
     </attribute>
 
-    <attribute name="PrincipalMappingClass">org.jboss.resource.security.ManyToOnePrincipalMapping</attribute>
+    <attribute name="PrincipalMappingClass">
+      org.jboss.resource.security.ManyToOnePrincipalMapping
+    </attribute>
     <attribute name="PrincipalMappingProperties">
       userName=sa
       password=
