@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.29 2002/09/07 16:08:32 d00mst Exp $
+// $Id: GeneratorDisplay.java,v 1.30 2002/09/17 14:11:14 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -574,8 +574,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
     String predecessors = "";
     int lpn;
 
-    if (m == null)
-	return "";
+    if (m == null) return "";
 
     ptr = new MsgPtr();
     lpn = recCountPredecessors(m, ptr) + 1;
@@ -584,40 +583,40 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
     pre = m.getPredecessors();
     it = pre.iterator();
     if (it.hasNext()) {
-	MsgPtr ptr2 = new MsgPtr();
-	int precnt = 0;
-
-	while (it.hasNext()) {
-	    MMessage msg = (MMessage) it.next();
-	    int mpn = recCountPredecessors(msg, ptr2) + 1;
-
-	    if (mpn == lpn - 1 && rt == msg.getActivator() &&
-		msg.getPredecessors().size() < 2 &&
-		(ptr2.message == null || countSuccessors(ptr2.message) < 2)) {
-		continue;
-	    }
-
-	    if (predecessors.length() > 0)
-		predecessors += ", ";
-	    predecessors += generateMessageNumber(msg, ptr2.message, mpn);
-	    precnt++;
-	}
-
-	if (precnt > 0)
-	    predecessors += " / ";
+		MsgPtr ptr2 = new MsgPtr();
+		int precnt = 0;
+	
+		while (it.hasNext()) {
+		    MMessage msg = (MMessage) it.next();
+		    int mpn = recCountPredecessors(msg, ptr2) + 1;
+	
+		    if (mpn == lpn - 1 && rt == msg.getActivator() &&
+			msg.getPredecessors().size() < 2 &&
+			(ptr2.message == null || countSuccessors(ptr2.message) < 2)) {
+				continue;
+		    }
+	
+		    if (predecessors.length() > 0)
+				predecessors += ", ";
+		    predecessors += generateMessageNumber(msg, ptr2.message, mpn);
+		    precnt++;
+		}
+	
+		if (precnt > 0)
+		    predecessors += " / ";
     }
 
     number = generateMessageNumber(m, ptr.message, lpn);
 
     act = m.getAction();
     if (act != null) {
-	if (act.getRecurrence() != null)
-	    number = generateRecurrence(act.getRecurrence()) + " " + number;
-
-	action = generateAction(act);
+		if (act.getRecurrence() != null)
+		    number = generateRecurrence(act.getRecurrence()) + " " + number;
+	
+		action = generateAction(act);
     }
 
-    return predecessors + number + " : " + action;
+    return predecessors + number + " : " + m.getName() + " " + action;
   }
 
     public String generateAssociationFrom(MAssociation a, MAssociationEnd ae) {

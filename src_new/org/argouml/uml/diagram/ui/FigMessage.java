@@ -23,7 +23,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.10 2002/09/03 16:19:21 kataka Exp $
+// $Id: FigMessage.java,v 1.11 2002/09/17 14:11:14 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -291,6 +291,15 @@ public class FigMessage extends FigNodeModelElement {
 	public void paint(Graphics g) {
 		updateArrow();
 		super.paint(g);
+	}
+
+	/**
+	 * @see org.tigris.gef.presentation.Fig#setOwner(Object)
+	 */
+	public void setOwner(Object own) {
+		super.setOwner(own);
+		((MModelElement)own).removeMElementListener(this);
+		((MModelElement)own).addMElementListener(this);
 	}
 
 } /* end class FigMessage */
