@@ -22,7 +22,7 @@
 <!-- format and timestamp are nested in created-date and modified-date 
      must be able to parse the timestamp entry into the format or errors
      will happen.  format is a date/time format specifier, as defined
-     by java.text.SimpleDateFormat.-->
+     by java.text.SimpleDateFormat (e.g. yyyy-MM-dd HH:mm:ss z). -->
 <!ELEMENT format ( #PCDATA ) >
 <!ELEMENT timestamp ( #PCDATA ) >
 <!-- a short description of a change or an attachment. less than 250 characters -->
