@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTableModel.java,v 1.7 2003/05/29 02:46:48 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTableModel.java,v 1.8 2003/05/29 19:02:56 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTableModel extends AbstractTableModel
@@ -201,7 +201,6 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 	//{{{ addExtendedAttributes() method
 	private void addExtendedAttributes(VFS vfs)
 	{
-		System.err.println("adding " + vfs);
 		String[] attrs = vfs.getExtendedAttributes();
 vfs_attr_loop:	for(int i = 0; i < attrs.length; i++)
 		{
@@ -227,7 +226,6 @@ vfs_attr_loop:	for(int i = 0; i < attrs.length; i++)
 	//{{{ removeExtendedAttributes() method
 	private void removeExtendedAttributes(VFS vfs)
 	{
-		System.err.println("removing " + vfs);
 		String[] attrs = vfs.getExtendedAttributes();
 vfs_attr_loop:	for(int i = 0; i < attrs.length; i++)
 		{

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.73 2003/05/29 02:46:48 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.74 2003/05/29 19:02:55 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -191,7 +191,8 @@ class BrowserView extends JPanel
 					0L,false),0);
 				String newParent = _vfs.getParentOfPath(parent);
 
-				if(newParent == null || parent.equals(newParent))
+				if(newParent == null ||
+					VFSBrowser.pathsEqual(parent,newParent))
 					break;
 				else
 					parent = newParent;

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.92 2003/05/29 02:46:48 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.93 2003/05/29 19:02:56 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -689,13 +689,12 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		}
 		else
 		{
-			VFS vfs = VFSManager.getVFSForPath(path);
-			path = vfs.getParentOfPath(path);
 			String name = MiscUtilities.getFileName(path);
 			String ext = MiscUtilities.getFileExtension(name);
 			filter = (ext == null || ext.length() == 0
 				? getFilenameFilter()
 				: "*" + ext);
+			path = MiscUtilities.getParentOfPath(path);
 		}
 
 		SearchAndReplace.setSearchFileSet(new DirectoryListSet(
