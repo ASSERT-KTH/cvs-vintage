@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
 /**
  * @since jEdit 4.3pre1
  * @author Slava Pestov
- * @version $Id: ScreenLineManager.java,v 1.2 2005/01/15 21:30:31 spestov Exp $
+ * @version $Id: ScreenLineManager.java,v 1.3 2005/03/20 22:29:27 spestov Exp $
  */
 class ScreenLineManager
 {
@@ -121,10 +121,10 @@ class ScreenLineManager
 		int endLine = startLine + numLines;
 		screenLines[startLine] &= ~SCREEN_LINES_VALID_MASK;
 
-		if(numLines > 0)
+		if(numLines > 0 && endLine != screenLines.length)
 		{
-			System.arraycopy(screenLines,endLine,screenLines,
-				startLine,screenLines.length - endLine);
+			System.arraycopy(screenLines,endLine + 1,screenLines,
+				startLine + 1,screenLines.length - endLine - 1);
 		}
 	} //}}}
 
