@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: Import.java,v 1.23 2003/03/18 12:03:42 lepekhine Exp $
+//$Id: Import.java,v 1.24 2003/03/18 14:55:49 lepekhine Exp $
 
 package org.argouml.uml.reveng;
 
@@ -58,8 +58,8 @@ import org.apache.log4j.Category;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Revision: 1.23 $
- * <p>$Date: 2003/03/18 12:03:42 $
+ * <p>$Revision: 1.24 $
+ * <p>$Date: 2003/03/18 14:55:49 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -101,7 +101,7 @@ public class Import {
 			dialog = new JDialog(pb, "Import sources");
 			dialog.setModal(true);
 			dialog.getContentPane().add(chooser, BorderLayout.WEST);			
-			dialog.getContentPane().add(getConfigPanel(), BorderLayout.EAST);
+			dialog.getContentPane().add(getConfigPanel(this), BorderLayout.EAST);
 			dialog.pack();
 			int x = (pb.getSize().width-dialog.getSize().width)/2;
 			int y = (pb.getSize().height-dialog.getSize().height)/2;
@@ -128,12 +128,44 @@ public class Import {
      * Get the panel that lets the user set reverse engineering
      * parameters.
      */
-    public JComponent getConfigPanel() {
-
+    public JComponent getConfigPanel(Import _import) {
+    	
+	final Import imp = _import;
+	final JTabbedPane tab = new JTabbedPane();
+	
 	if(configPanel == null) {
 	    JPanel general = new JPanel();
-	    general.setLayout(new GridLayout(3,1));
+	    general.setLayout(new GridLayout(10,1));
 
+		general.add(new JLabel("Select language for import:"));
+		
+		Vector languages = new Vector();
+		languages.add("Java");
+		languages.add("Just for testing");
+		JComboBox selectedLanguage = new JComboBox(languages);
+		selectedLanguage.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb = (JComboBox)e.getSource();
+				String selected = (String)cb.getSelectedItem();
+				if (selected.equals("Java")) {
+					dialog.getContentPane().remove(0);
+					dialog.getContentPane().add(module.getChooser(imp), 0);
+					tab.add(module.getConfigPanel(), "Java", 1);
+					tab.validate();
+					dialog.validate();
+				} else {
+					dialog.getContentPane().remove(0);
+					JFileChooser ch = (JFileChooser)module.getChooser(imp);
+					ch.setFileFilter(FileFilters.GIFFilter);
+					dialog.getContentPane().add(ch, 0);
+					tab.remove(1);
+					tab.validate();
+					dialog.validate();
+				}
+			}
+		});
+		general.add(selectedLanguage);
+		
 	    descend = new JCheckBox("Descend directories recursively.");
 	    descend.setSelected(true);
 	    general.add(descend);
@@ -150,7 +182,6 @@ public class Import {
                         if(!create_diagrams.isSelected())
                             minimise_figs.setSelected(false);}});
                 
-	    JTabbedPane tab = new JTabbedPane();
 	    tab.add(general, "General");
 	    tab.add(module.getConfigPanel(), "Java");
 	    configPanel = tab;
