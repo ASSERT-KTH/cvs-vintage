@@ -78,7 +78,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -652,9 +652,9 @@ public class EjbModule
       {
          Class clazz = cl.loadClass(webClassLoaderName);
          Constructor constructor = clazz.getConstructor(
-                  new Class[] { Container.class, UnifiedClassLoader.class } );
+                  new Class[] { ObjectName.class, UnifiedClassLoader.class } );
          wcl = (WebClassLoader)constructor.newInstance(
-                  new Object[] { container, cl });
+                  new Object[] { container.getJmxName(), cl });
       }
       catch (Exception e) 
       {

@@ -2,10 +2,9 @@ package org.jboss.web;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import javax.management.ObjectName;
 
-import org.jboss.ejb.Container;
 import org.jboss.system.UnifiedClassLoader;
-
 
 /** A simple subclass of URLClassLoader that is used in conjunction with the 
 the WebService mbean to allow dynamic loading of resources and classes from 
@@ -25,26 +24,26 @@ as the WebClassLoader constructor.
 @see #getUrls()
 @see #setWebURLs(URL[])
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
 @author  <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class WebClassLoader extends URLClassLoader
 {
     /** This WebClassLoader is associated with this container. */
-    private Container container;
+    private ObjectName containerName;
 
     /** The URLs returned by the getURLs() method override */
     private URL[] webURLs;
 
     /** Creates new WebClassLoader. 
         Subclasses must have a constructor with the same signature. */
-    public WebClassLoader(Container container, UnifiedClassLoader parent)
+    public WebClassLoader(ObjectName containerName, UnifiedClassLoader parent)
     {
         super(new URL[0], parent);
-        this.container = container;
+        this.containerName = containerName;
     }
 
     /** Gets a string key used as the key into the WebServer's loaderMap. */
@@ -58,10 +57,10 @@ public class WebClassLoader extends URLClassLoader
         return key;
     }
 
-    /** Gets this WebClassLoader's container. */
-    public Container getContainer()
+    /** Gets the JMX ObjectName of the WebClassLoader's container. */
+    public ObjectName getContainer()
     {
-        return container;
+        return containerName;
     }
 
     /** Returns the single URL for my parent, an UnifiedClassLoader. */
@@ -109,7 +108,8 @@ public class WebClassLoader extends URLClassLoader
      @return a byte array with the bytecodes for class <code>cls</code>, or
      *       null if this classloader is unable to return such byte array.
      */
-    public byte[] getBytes(Class clz) {
+    public byte[] getBytes(Class clz)
+    {
         return null; // this classloader is unable to return bytecodes
     }
    
