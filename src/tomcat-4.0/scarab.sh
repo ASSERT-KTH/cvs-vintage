@@ -7,8 +7,8 @@ if [ "${1}" = "-h" ] ; then
     exit
 fi
 
-if [ ! ${CLASSPATH} = "" ] ; then
-echo "Classpath: ${CLASSPATH}"
+if [ "${CLASSPATH}" != "" ] ; then
+    echo "Classpath: ${CLASSPATH}"
 fi
 
 if [ "${1}" != "-l" ] ; then
