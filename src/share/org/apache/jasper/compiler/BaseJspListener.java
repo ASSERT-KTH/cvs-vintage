@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.2 1999/10/20 11:22:53 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.3 1999/12/21 16:32:30 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/21 16:32:30 $
  *
  * ====================================================================
  * 
@@ -99,15 +99,15 @@ public class BaseJspListener implements ParseEventListener {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.directives"));
     }
     
-    public void handleDeclaration(Mark start, Mark stop) throws JasperException {
+    public void handleDeclaration(Mark start, Mark stop, Hashtable attrs) throws JasperException {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.declarations"));
     }
     
-    public void handleScriptlet(Mark start, Mark stop) throws JasperException {
+    public void handleScriptlet(Mark start, Mark stop, Hashtable attrs) throws JasperException {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.scriptlets"));
     }
     
-    public void handleExpression(Mark start, Mark stop) throws JasperException {
+    public void handleExpression(Mark start, Mark stop, Hashtable attrs) throws JasperException {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.expressions"));
     }
 

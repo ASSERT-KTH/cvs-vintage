@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.4 1999/10/21 21:50:20 mandar Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/21 21:50:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.5 1999/12/21 16:32:31 rubys Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/12/21 16:32:31 $
  *
  * ====================================================================
  * 
@@ -729,7 +729,7 @@ public class JspParseEventListener extends BaseJspListener {
         }
     }
     
-    public void handleDeclaration(Mark start, Mark stop) 
+    public void handleDeclaration(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
         Generator gen
@@ -738,7 +738,7 @@ public class JspParseEventListener extends BaseJspListener {
 	addGenerator(gen);
     }
     
-    public void handleScriptlet(Mark start, Mark stop) 
+    public void handleScriptlet(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
         Generator gen
@@ -747,7 +747,7 @@ public class JspParseEventListener extends BaseJspListener {
 	addGenerator(gen);
     }
     
-    public void handleExpression(Mark start, Mark stop) 
+    public void handleExpression(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException 
     {
         Generator gen

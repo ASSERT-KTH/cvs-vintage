@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.3 1999/11/03 23:43:02 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/03 23:43:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.4 1999/12/21 16:32:30 rubys Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/12/21 16:32:30 $
  *
  * ====================================================================
  * 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.2 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.3 1999/12/21 16:32:31 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/21 16:32:31 $
  *
  * ====================================================================
  * 
@@ -81,9 +81,9 @@ public interface ParseEventListener {
     void handleDirective(String directive, 
 			 Mark start, Mark stop, 
 			 Hashtable attrs) throws JasperException;
-    void handleDeclaration(Mark start, Mark stop) throws JasperException;
-    void handleScriptlet(Mark start, Mark stop) throws JasperException;
-    void handleExpression(Mark start, Mark stop) throws JasperException;
+    void handleDeclaration(Mark start, Mark stop, Hashtable attrs) throws JasperException;
+    void handleScriptlet(Mark start, Mark stop, Hashtable attrs) throws JasperException;
+    void handleExpression(Mark start, Mark stop, Hashtable attrs) throws JasperException;
     void handleBean(Mark start, Mark stop, Hashtable attrs) 
 	throws JasperException;
     void handleBeanEnd (Mark start, Mark stop, Hashtable attrs)

@@ -403,16 +403,22 @@ public class Parser {
 	private static final String OPEN_DECL  = "<%!";
 	private static final String CLOSE_DECL = "%>";
 
-	private static final String OPEN_DECL_2	 = "<jsp:decl>";
+	private static final String OPEN_DECL_2	 = "<jsp:decl";
+	private static final String END_OPEN_DECL_2 = ">";
 	private static final String CLOSE_DECL_2 = "</jsp:decl>";
+
+        private static final String[] validAttributes = {
+        };
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
 	    throws JasperException 
 	{
-	    String close, open;
+	    String close, open, end_open = null;
+            Hashtable attrs = null;
 				
 	    if (reader.matches(OPEN_DECL_2)) {
 		open = OPEN_DECL_2;
+                end_open = END_OPEN_DECL_2;
 		close = CLOSE_DECL_2;
 	    } else if (reader.matches(OPEN_DECL)) {
 		open = OPEN_DECL;
@@ -421,13 +427,27 @@ public class Parser {
 		return false;
 
 	    reader.advance(open.length());
+
+            if (end_open != null) {
+                attrs = reader.parseTagAttributes();
+
+		reader.skipSpaces();
+		if (!reader.matches(end_open)) 
+		    throw new ParseException(reader.mark(),
+			Constants.getString("jsp.error.unterminated"));
+	        reader.advance(end_open.length());
+		reader.skipSpaces();
+
+                checkAttributes("Declaration", attrs.keys(), validAttributes);
+            }
+
 	    Mark start = reader.mark();
 	    Mark stop = reader.skipUntil(close);
 	    if (stop == null)
 		throw new ParseException(Constants.getString("jsp.error.unterminated", 
                                                              new Object[] { open }));
 
-	    listener.handleDeclaration(start, stop);
+	    listener.handleDeclaration(start, stop, attrs);
 	    return true;
 	}
     }
@@ -443,17 +463,22 @@ public class Parser {
 	private static final String OPEN_EXPR  = "<%=";
 	private static final String CLOSE_EXPR = "%>";
 
-	private static final String OPEN_EXPR_2	 = "<jsp:expr>";
+	private static final String OPEN_EXPR_2	 = "<jsp:expr";
+	private static final String END_OPEN_EXPR_2 = ">";
 	private static final String CLOSE_EXPR_2 = "</jsp:expr>";
     
+        private static final String[] validAttributes = {
+        };
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
 	    throws JasperException
 	{
-	    String close, open;
+	    String close, open, end_open=null;
+            Hashtable attrs = null;
 		
 	    if (reader.matches(OPEN_EXPR_2)) {
 		open = OPEN_EXPR_2;
+                end_open = END_OPEN_EXPR_2;
 		close = CLOSE_EXPR_2;
 	    } else if (reader.matches(OPEN_EXPR)) {
 		open = OPEN_EXPR;
@@ -462,13 +487,27 @@ public class Parser {
 		return false;
 
 	    reader.advance(open.length());
+
+            if (end_open != null) {
+                attrs = reader.parseTagAttributes();
+
+		reader.skipSpaces();
+		if (!reader.matches(end_open)) 
+		    throw new ParseException(reader.mark(),
+			Constants.getString("jsp.error.unterminated"));
+	        reader.advance(end_open.length());
+		reader.skipSpaces();
+
+                checkAttributes("Expression", attrs.keys(), validAttributes);
+            }
+
 	    Mark start = reader.mark();
 	    Mark stop = reader.skipUntil(close);
 	    if (stop == null)
 		throw new ParseException(reader.mark(), 
                                          Constants.getString("jsp.error.unterminated", 
                                                                  new Object[] { open }));
-	    listener.handleExpression(start, stop);
+	    listener.handleExpression(start, stop, attrs);
 	    return true;
 	}
     }
@@ -483,17 +522,22 @@ public class Parser {
 	private static final String OPEN_SCRIPTLET  = "<%";
 	private static final String CLOSE_SCRIPTLET = "%>";
 
-	private static final String OPEN_SCRIPTLET_2  = "<jsp:scriptlet>";
+	private static final String OPEN_SCRIPTLET_2  = "<jsp:scriptlet";
+	private static final String END_OPEN_SCRIPTLET_2 = ">";
 	private static final String CLOSE_SCRIPTLET_2 = "</jsp:scriptlet>";
 
+        private static final String[] validAttributes = {
+        };
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
 	    throws JasperException
 	{
-	    String close, open;
+	    String close, open, end_open = null;
+            Hashtable attrs = null;
 	    
 	    if (reader.matches(OPEN_SCRIPTLET_2)) {
 		open = OPEN_SCRIPTLET_2;
+                end_open = END_OPEN_SCRIPTLET_2;
 		close = CLOSE_SCRIPTLET_2;
 	    } else if (reader.matches(OPEN_SCRIPTLET)) {
 		open = OPEN_SCRIPTLET;
@@ -502,13 +546,27 @@ public class Parser {
 		return false;
 		
 	    reader.advance(open.length());
+
+            if (end_open != null) {
+                attrs = reader.parseTagAttributes();
+
+		reader.skipSpaces();
+		if (!reader.matches(end_open)) 
+		    throw new ParseException(reader.mark(),
+			Constants.getString("jsp.error.unterminated"));
+	        reader.advance(end_open.length());
+		reader.skipSpaces();
+
+                checkAttributes("Scriptlet", attrs.keys(), validAttributes);
+            }
+
 	    Mark start = reader.mark();
 	    Mark stop = reader.skipUntil(close);
 	    if (stop == null)
 		throw new ParseException(reader.mark(), 
                                          Constants.getString("jsp.error.unterminated", 
                                                                  new Object[] { open }));
-	    listener.handleScriptlet(start, stop);
+	    listener.handleScriptlet(start, stop, attrs);
 	    return true;
 	}
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DelegatingListener.java,v 1.2 1999/10/20 11:22:53 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DelegatingListener.java,v 1.3 1999/12/21 16:32:30 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/21 16:32:30 $
  *
  * ====================================================================
  * 
@@ -110,19 +110,19 @@ final class DelegatingListener implements ParseEventListener {
         delegate.handleDirective(directive, start, stop, attrs);
     }
     
-    public void handleDeclaration(Mark start, Mark stop) throws JasperException {
+    public void handleDeclaration(Mark start, Mark stop, Hashtable attrs) throws JasperException {
         doAction();
-        delegate.handleDeclaration(start, stop);
+        delegate.handleDeclaration(start, stop, attrs);
     }
     
-    public void handleScriptlet(Mark start, Mark stop) throws JasperException {
+    public void handleScriptlet(Mark start, Mark stop, Hashtable attrs) throws JasperException {
         doAction();
-        delegate.handleScriptlet(start, stop);
+        delegate.handleScriptlet(start, stop, attrs);
     }
     
-    public void handleExpression(Mark start, Mark stop) throws JasperException {
+    public void handleExpression(Mark start, Mark stop, Hashtable attrs) throws JasperException {
         doAction();
-        delegate.handleExpression(start, stop);
+        delegate.handleExpression(start, stop, attrs);
     }
 
     public void handleBean(Mark start, Mark stop, Hashtable attrs) 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DumbParseEventListener.java,v 1.2 1999/10/20 11:22:53 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/DumbParseEventListener.java,v 1.3 1999/12/21 16:32:31 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/21 16:32:31 $
  *
  * ====================================================================
  * 
@@ -97,21 +97,21 @@ public class DumbParseEventListener extends BaseJspListener {
 	System.err.println("\t"+attrs);
     }
     
-    public void handleDeclaration(Mark start, Mark stop) 
+    public void handleDeclaration(Mark start, Mark stop, Hashtable attrs) 
         throws JasperException 
     {
 	System.err.println("\nDeclaration: ");
 	System.err.println(reader.getChars(start, stop));
     }
     
-    public void handleScriptlet(Mark start, Mark stop) 
+    public void handleScriptlet(Mark start, Mark stop, Hashtable attrs) 
         throws JasperException 
     {
 	System.err.println("\nScriptlet: ");
 	System.err.println(reader.getChars(start, stop));
     }
     
-    public void handleExpression(Mark start, Mark stop) 
+    public void handleExpression(Mark start, Mark stop, Hashtable attrs) 
         throws JasperException 
     {
 	System.err.println("\nExpression: ");
