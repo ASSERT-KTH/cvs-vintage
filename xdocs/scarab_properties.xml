@@ -56,7 +56,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.4 2004/12/30 02:42:13 dabbous Exp $
+     $Id: scarab_properties.xml,v 1.5 2004/12/30 22:03:15 jorgeuriarte Exp $
     
      Structure of this file
      ----------------------
@@ -857,21 +857,35 @@
           this property is set to false.
         </details>
       </property>
-
       <property>
-        <name>scarab.anonymous.username</name>
-        <default>anonymous</default>
-        <comment>Allow anonymous users and choose which user will act as Anonymous</comment>
+        <name>scarab.anonymous.enable</name>
+        <default>true</default>
+        <comment>Enable anonymous user using the scarab.anonymous.username
+        </comment>
         <type>Runtime</type>
          <customization modification="optional">advanced</customization>
         <file/>
         <details>
-          Allow anonymous users and choose which user will act as Anonymous user.
-          If you do not want an anonymous user, please set this property to "":
+          If you set this property to true, the anonymous login will be enabled,
+	using the user stated in scarab.anonymous.username (which should exist!)
+          If you do not want an anonymous user, please set this property to false:
 
-              scarab.anonymous.username=
+              scarab.anonymous.enable=false
 
         </details>
+      </property>
+      <property>
+        <name>scarab.anonymous.username</name>
+        <default>anonymous</default>
+        <comment>Choose which user will act as Anonymous</comment>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          Choose which user will act as Anonymous user.  This property will only
+	be used if scarab.anonymous.enable=true
+          The user you choose should already exist in the database.
+      </details>
       </property>
     </group>
   </section>

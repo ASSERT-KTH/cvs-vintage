@@ -3096,7 +3096,7 @@ e.printStackTrace();
      */
     public boolean isAnonymousLoginAllowed()
     {
-        return Turbine.getConfiguration().getProperty("scarab.anonymous.username")!=null;
+        return Turbine.getConfiguration().getBoolean("scarab.anonymous.enable");
     }
 
     public Transition getTransition(Integer pk)

@@ -5,7 +5,7 @@
 #if (!$user.hasLoggedIn())
 <p class="infomark"><em>$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</em></p>
 #else
-#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").isAllowed())
+#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").isAllowed() && !$user.isUserAnonymous())
 <p>$l10n.format("RequestRolesInOtherModules", $link)</p>
 #end
 
