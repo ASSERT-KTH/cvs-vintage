@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.54 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: View.java,v 1.55 2003/02/17 19:48:56 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1283,7 +1283,7 @@ public class View extends JFrame implements EBComponent
 
 		getRootPane().revalidate();
 
-		SwingUtilities.updateComponentTreeUI(getRootPane());
+		//SwingUtilities.updateComponentTreeUI(getRootPane());
 	} //}}}
 
 	//{{{ loadToolBars() method

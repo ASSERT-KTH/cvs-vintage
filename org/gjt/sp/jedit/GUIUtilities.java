@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.57 2003/02/11 02:31:06 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.58 2003/02/17 19:48:54 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1261,6 +1261,7 @@ public class GUIUtilities
 		}
 
 		JMenu menu = new EnhancedMenu("plugins");
+		((EnhancedMenu)menu).init();
 
 		if(pluginMenuItems.isEmpty())
 		{
