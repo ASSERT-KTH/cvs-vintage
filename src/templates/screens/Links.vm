@@ -32,6 +32,13 @@ $page.setTitle("Scarab Links")
 </li>
 </ul>
 
+<h3>Documentation</h3>
+<ul>
+<li>
+    <a href="http://scarab.whichever.com/api/">Javadoc API Documentation</a>
+</li>
+</ul>
+
 <!--
 <p>
 Not working:
