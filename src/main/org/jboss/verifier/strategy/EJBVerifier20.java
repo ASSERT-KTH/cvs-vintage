@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.6 2000/08/12 00:42:13 salborini Exp $
+ * $Id: EJBVerifier20.java,v 1.7 2000/08/20 20:48:07 juha Exp $
  */
 
 
@@ -51,7 +51,7 @@ import org.jboss.metadata.EntityMetaData;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -89,7 +89,7 @@ public class EJBVerifier20 extends AbstractVerifier {
             // NOT IMPLEMENTED YET
     }        
         
-    public void checkMessageDriven(BeanMetaData bean) {
+    public void checkMessageBean(BeanMetaData bean) {
             
             // NOT IMPLEMENTED YET
     }

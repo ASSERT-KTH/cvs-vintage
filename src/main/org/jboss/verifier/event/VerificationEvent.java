@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.gjt.org
- * $Id: VerificationEvent.java,v 1.2 2000/06/07 00:02:52 mulder Exp $
+ * $Id: VerificationEvent.java,v 1.3 2000/08/20 20:48:08 juha Exp $
  *
  * You can reach the author by sending email to jpl@gjt.org or
  * directly to jplindfo@helsinki.fi.
@@ -42,7 +42,7 @@ import java.util.EventObject;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public class VerificationEvent extends EventObject {
@@ -57,13 +57,24 @@ public class VerificationEvent extends EventObject {
     /*
      * Contains a short, one line message for this event.
      */
-    private String message = "<undefined>";
+    private String message  = "<undefined>";
 
     /*
      * Contains a more verbose description of this event.
      */
-    private String verbose = "";
+    private String verbose  = "";
 
+    private String beanName = "<unnamed>";
+    
+ 
+/*
+ *************************************************************************
+ *
+ *      PUBLIC INSTANCE METHODS
+ *
+ *************************************************************************
+ */
+ 
 
     /*
      * Constructor
@@ -109,6 +120,10 @@ public class VerificationEvent extends EventObject {
         this.verbose = msg;
     }
 
+    public void setName(String name) {
+        this.beanName = name;
+    }
+    
     public String getMessage() {
         return message;
     }
@@ -117,6 +132,11 @@ public class VerificationEvent extends EventObject {
         return verbose;
     }
 
+    public String getName() {
+        return beanName;
+    }
+    
+    
     /*
      * String constants
      */

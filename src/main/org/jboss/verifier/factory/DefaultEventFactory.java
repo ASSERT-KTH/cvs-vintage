@@ -19,7 +19,7 @@ package org.jboss.verifier.factory;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: DefaultEventFactory.java,v 1.1 2000/07/19 21:27:46 juha Exp $
+ * $Id: DefaultEventFactory.java,v 1.2 2000/08/20 20:48:07 juha Exp $
  */
 
  
@@ -52,7 +52,7 @@ import org.jboss.verifier.event.VerificationEventGenerator;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since  	JDK 1.3
  */
 public class DefaultEventFactory implements VerificationEventFactory {
@@ -88,7 +88,7 @@ public class DefaultEventFactory implements VerificationEventFactory {
         VerificationEvent event = new VerificationEvent(source);
         
         event.setState(VerificationEvent.OK);
-        event.setMessage(/*name +*/ " verified.");
+        event.setMessage("Verified.");
         
         return event;
     }

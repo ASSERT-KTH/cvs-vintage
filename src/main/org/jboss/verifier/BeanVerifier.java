@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.4 2000/08/12 00:42:12 salborini Exp $
+ * $Id: BeanVerifier.java,v 1.5 2000/08/20 20:48:09 juha Exp $
  */
 
  
@@ -60,7 +60,7 @@ import org.jboss.metadata.SessionMetaData;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {
@@ -141,6 +141,9 @@ public class BeanVerifier implements VerificationContext {
         events.fireBeanChecked(event);
     }
 
+    public void fireSpecViolation(VerificationEvent event) {
+        events.fireSpecViolation(event);
+    }
     
   /*
    **************************************************************************

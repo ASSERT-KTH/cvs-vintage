@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationStrategy.java,v 1.4 2000/08/12 00:42:13 salborini Exp $
+ * $Id: VerificationStrategy.java,v 1.5 2000/08/20 20:48:07 juha Exp $
  */
 
 
@@ -44,7 +44,7 @@ import org.jboss.metadata.SessionMetaData;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
 public interface VerificationStrategy extends Strategy {
@@ -62,7 +62,7 @@ public interface VerificationStrategy extends Strategy {
     /*
      * Checks the message driven beans (EJB 2.0 only).
      */
-    abstract void checkMessageDriven(BeanMetaData session);
+    abstract void checkMessageBean(BeanMetaData session);
     
 }
 

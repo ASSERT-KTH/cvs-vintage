@@ -18,11 +18,10 @@ package org.jboss.verifier.strategy;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This package and its source code is available at www.gjt.org
- * $Id: VerificationContext.java,v 1.3 2000/08/12 00:42:13 salborini Exp $
+ * This package and its source code is available at www.jboss.org
+ * $Id: VerificationContext.java,v 1.4 2000/08/20 20:48:07 juha Exp $
  *
- * You can reach the author by sending email to jpl@gjt.org or
- * directly to jplindfo@helsinki.fi.
+ * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
 
 
@@ -48,7 +47,7 @@ import org.jboss.metadata.ApplicationMetaData;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
 public interface VerificationContext extends StrategyContext,
