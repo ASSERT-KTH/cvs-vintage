@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.92 2002/05/02 22:29:52 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.93 2002/05/07 04:58:01 jmcnally Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -289,11 +289,26 @@ public class ModifyIssue extends BaseModifyIssue
             {
                 IntakeTool intake = getIntakeTool(context);
                 Group group = intake.get("Attachment", attachment.getQueryKey(), false);
-                group.setProperties(attachment);
-                attachment.save();
+
+                Field nameField = group.get("Name"); 
+                Field dataField = group.get("DataAsString"); 
+                if (nameField.isValid())
+                {
+                    nameField.setRequired(true);
+                }
+                if (dataField.isValid())
+                {
+                    dataField.setRequired(true);
+                }
+                
+                if (intake.isAllValid())
+                {
+                    group.setProperties(attachment);
+                    attachment.save();
+                }
             }
-        }
-   } 
+        } 
+   }
 
     /**
     *  Adds an attachment of type "comment".
@@ -346,19 +361,17 @@ public class ModifyIssue extends BaseModifyIssue
         {
             Field nameField = group.get("Name"); 
             Field dataField = group.get("DataAsString"); 
-            nameField.setRequired(true);
-// FIXME: dataField is commented out because this method is
-//        really overloaded in functionality. In reality, a
-//        file attachment should require this to be filled in
-//            dataField.setRequired(true);
-            if (!nameField.isValid())
+            if (nameField.isValid())
             {
-                nameField.setMessage("This field requires a value.");
+                nameField.setRequired(true);
             }
-//            if (!dataField.isValid())
-//            {
-//                dataField.setMessage("This field requires a value.");
-//            }
+            if (dataField.isValid() && (typeId == Attachment.COMMENT__PK 
+                                        || typeId == Attachment.URL__PK))
+            {
+                dataField.setRequired(true);
+            }
+
+
             if (intake.isAllValid())
             {
                 Attachment attachment = new Attachment();
