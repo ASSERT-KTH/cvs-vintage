@@ -242,7 +242,8 @@ public  class AttributeGroup
             AttributeGroupPeer.doDelete(c);
             List attrGroups = module.getAttributeGroups(getIssueType(), false);
             attrGroups.remove(this);
-            attrGroups = module.getAttributeGroups(getIssueType(), false);
+            attrGroups = module.getAttributeGroups(getIssueType(), true);
+            attrGroups.remove(this);
         } 
         else
         {
