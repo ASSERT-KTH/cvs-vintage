@@ -1,4 +1,4 @@
-// $Id: TreeModelSupport.java,v 1.5 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: TreeModelSupport.java,v 1.6 2004/09/01 16:18:41 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,38 +34,47 @@ import org.apache.log4j.Logger;
 /**
  * Helper class for tree models that provides tree event handling.
  *
- * <p>$Id: TreeModelSupport.java,v 1.5 2003/09/04 20:11:45 thierrylach Exp $
+ * <p>$Id: TreeModelSupport.java,v 1.6 2004/09/01 16:18:41 mvw Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003
  */
 public class TreeModelSupport extends PerspectiveSupport {
 
-    private static Logger cat =
+    private static final Logger LOG =
         Logger.getLogger(TreeModelSupport.class);
                 
     /** tree model listener list. */
-    protected EventListenerList _listenerList = new EventListenerList();
+    private EventListenerList listenerList = new EventListenerList();
 
-    /** needs documenting */
+    /**
+     * The constructor.
+     * 
+     * @param name the name that will be localized
+     */
     public TreeModelSupport(String name) {
         
         super(name);
     }
     
     // ---------------- listener management ----------------
-    
+
     /**
-     *
+     * Listener management.
+     * 
+     * @param l the listener to be added
      */
     public void addTreeModelListener(TreeModelListener l) {
-        _listenerList.add(TreeModelListener.class, l);
+        listenerList.add(TreeModelListener.class, l);
     }
 
     /**
+     * Listener management. 
+     * 
+     * @param l the listener to be removed
      */
     public void removeTreeModelListener(TreeModelListener l) {
-        _listenerList.remove(TreeModelListener.class, l);
+        listenerList.remove(TreeModelListener.class, l);
     }
     
     // --------------- tree nodes -------------------------
@@ -84,7 +93,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = _listenerList.getListenerList();
+        Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -117,7 +126,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					 Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = _listenerList.getListenerList();
+        Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -150,7 +159,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = _listenerList.getListenerList();
+        Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event
@@ -172,13 +181,15 @@ public class TreeModelSupport extends PerspectiveSupport {
     // ------------- tree structure -----------------
     
     /**
-     *empty
+     * @see #fireTreeStructureChanged(Object, Object[], int[], Object[])
      */
     public void fireTreeStructureChanged() {
     }
     
     /**
-     *empty
+     * @see #fireTreeStructureChanged(Object, Object[], int[], Object[])
+     *
+     * @param path
      */
     public void fireTreeStructureChanged(TreePath path) {
     }
@@ -195,7 +206,10 @@ public class TreeModelSupport extends PerspectiveSupport {
       
 	fireTreeStructureChanged(this, path);
     }
+
     /**
+     * @see #fireTreeStructureChanged(Object, Object[], int[], Object[])
+     * 
      */
     protected void fireTreeStructureChanged(Object source, Object[] path) {
         fireTreeStructureChanged(source, path, null, null);
@@ -215,7 +229,7 @@ public class TreeModelSupport extends PerspectiveSupport {
 					 Object[] children) {
             
         // Guaranteed to return a non-null array
-        Object[] listeners = _listenerList.getListenerList();
+        Object[] listeners = listenerList.getListenerList();
         TreeModelEvent e = null;
         // Process the listeners last to first, notifying
         // those that are interested in this event

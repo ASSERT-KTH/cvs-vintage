@@ -1,4 +1,4 @@
-// $Id: ToDoPerspective.java,v 1.8 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: ToDoPerspective.java,v 1.9 2004/09/01 16:18:39 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,29 +39,32 @@ import org.argouml.ui.TreeModelComposite;
  *   - a todo tree model / perspective (which is a collection of GoRules)
  *</pre>
  *
- * $Id: ToDoPerspective.java,v 1.8 2003/09/04 20:11:48 thierrylach Exp $
+ * $Id: ToDoPerspective.java,v 1.9 2004/09/01 16:18:39 mvw Exp $
  */
 public abstract class ToDoPerspective extends TreeModelComposite
     implements Serializable 
 {
     
-    private static Logger cat = Logger.getLogger(ToDoPerspective.class);
+    private static final Logger LOG = Logger.getLogger(ToDoPerspective.class);
     
     ////////////////////////////////////////////////////////////////
     // instance variables
     
     /** todoList specific */
-    protected boolean _flat;
+    private boolean flat;
     
     /** todoList specific */
-    protected Vector _flatChildren;
+    private Vector flatChildren;
     
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * The constructor.
+     * 
+     * @param name the name that will be localized
+     */
     public ToDoPerspective(String name) {
         
         super(name);
-        _flatChildren = new Vector();
+        flatChildren = new Vector();
     }
     
     ////////////////////////////////////////////////////////////////
@@ -75,54 +78,70 @@ public abstract class ToDoPerspective extends TreeModelComposite
      * @return the child found at index. Null if index is out of bounds.
      */
     public Object getChild(Object parent, int index) {
-        if (_flat && parent == _root) {
-            return _flatChildren.elementAt(index);
+        if (flat && parent == getRoot()) {
+            return flatChildren.elementAt(index);
         }
         return super.getChild( parent,  index);
     }
     
-    /** needs documenting */
+    /**
+     * @see javax.swing.tree.TreeModel#getChildCount(java.lang.Object)
+     */
     public int getChildCount(Object parent) {
-        if (_flat && parent == _root) {
-            return _flatChildren.size();
+        if (flat && parent == getRoot()) {
+            return flatChildren.size();
         }
         return super.getChildCount( parent);
     }
     
-    /** needs documenting */
+    /**
+     * @see javax.swing.tree.TreeModel#getIndexOfChild(java.lang.Object, 
+     * java.lang.Object)
+     */
     public int getIndexOfChild(Object parent, Object child) {
-        if (_flat && parent == _root) {
-            return _flatChildren.indexOf(child);
+        if (flat && parent == getRoot()) {
+            return flatChildren.indexOf(child);
         }
         return super.getIndexOfChild(parent, child);
     }
     
     // ------------ other methods ------------
     
-    /** todoList specific */
+    /** 
+     * todoList specific
+     * @param b true if flat
+     */
     public void setFlat(boolean b) {
-        _flat = false;
+        flat = false;
         if (b) calcFlatChildren();
-        _flat = b;
+        flat = b;
     }
     
-    /** todoList specific */
-    public boolean getFlat() { return _flat; }
+    /** 
+     * todoList specific
+     * 
+     * @return the flatness: true if flat
+     */
+    public boolean getFlat() { return flat; }
     
     /** todoList specific */
     public void calcFlatChildren() {
-        _flatChildren.removeAllElements();
-        addFlatChildren(_root);
+        flatChildren.removeAllElements();
+        addFlatChildren(getRoot());
     }
     
-    /** todoList specific */
+    /** 
+     * todoList specific
+     * 
+     * @param node the object to be added
+     */
     public void addFlatChildren(Object node) {
         if (node == null) return;
-        cat.debug("addFlatChildren");
+        LOG.debug("addFlatChildren");
         // hack for to do items only, should check isLeaf(node), but that
         // includes empty folders. Really I need alwaysLeaf(node).
-        if ((node instanceof ToDoItem) && !_flatChildren.contains(node))
-            _flatChildren.addElement(node);
+        if ((node instanceof ToDoItem) && !flatChildren.contains(node))
+            flatChildren.addElement(node);
         
         int nKids = getChildCount(node);
         for (int i = 0; i < nKids; i++) {
