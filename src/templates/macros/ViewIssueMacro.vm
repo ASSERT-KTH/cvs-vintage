@@ -32,6 +32,7 @@
   #else
         #set ($field = "Value")
   #end
+  #if (!$attr.isUserAttribute())
   #if ($canEdit)
      <tr>
       <th>$attVal.RModuleAttribute.DisplayValue</th>
@@ -39,8 +40,6 @@
     #if ($attr.isOptionAttribute())
         #attrValueLeafSelect ($attVal $field "" false)
         #attrValueErrorMsg ($attVal $field)
-    #elseif ($attr.isUserAttribute())
-      #listUsers($attr)
     #else
         #attrValueErrorMsg($attVal "Value")
         #if ($attr.AttributeType.Name == "long-string")
@@ -58,14 +57,13 @@
        #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
        #if ($attVal.Attribute.isOptionAttribute())
           $!attVal.AttributeOption.Name
-       #elseif ($attr.isUserAttribute())
-          #listUsers($attr)
        #else
           $!attrInput.Value
        #end
     #end
       </td>
      </tr>
+  #end
   #end
 #end
 </table>
