@@ -128,6 +128,9 @@ public class Handler {
     // Debug
     protected int debug=0;
     protected Log logger=null;
+    Handler next;
+    Handler prev;
+
 
     private Counters cntr=new Counters(ContextManager.MAX_NOTES);
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
@@ -241,6 +244,32 @@ public class Handler {
 	    handleServiceError( req, res, serviceException );
     }
 
+    /** A handler may either directly generate the response or it can
+     *	act as a part of a pipeline. Next/Prev allow modules to generically
+     *  set the pipeline.
+     *
+     *  Most handlers will generate the content themself. Few handlers
+     *  may prepare the request/response - one example is the Servlet
+     *  handler that wraps them and calls a servlet. Modules may
+     *  do choose to either hook into the server using the provided
+     *  callbacks, or use a pipeline of handler ( valves ). 
+     */	
+    public void setNext( Handler next ) {
+	this.next=next;
+    }
+
+    public Handler getNext() {
+	return next;
+    }
+
+    public Handler getPrevious() {
+	return prev;
+    }
+
+    public void setPrevious( Handler prev ) {
+	this.prev=prev;
+    }
+    
     // -------------------- methods you can override --------------------
     
     protected void handleServiceError( Request req, Response res, Throwable t )
@@ -254,16 +283,26 @@ public class Handler {
     public void reload() {
     }
     
-    /** This is the actual content generator. Can't be called
-     *  from outside.
-     *
-     *  This method can't be called directly, you must use service(),
-     *  which also tests the initialization and deals with the errors.
-     */
+    // Old name, deprecated
     protected void doService(Request req, Response res)
 	throws Exception
     {
 
+    }
+
+    /** This is the actual content generator. A handler must generate
+     *  the response - either itself or by calling another class, after
+     *  setting/changing request properties or altering/wrapping
+     *  the request and response.
+     *
+     *  A Handler should use the "next" property if it is part
+     *  of a pipeline ( "valve") 
+     */
+    protected void invoke(Request req, Response res)
+	throws Exception
+    {
+	// backward compatibility
+	doService(req, res);
     }
 
     // -------------------- Debug --------------------
