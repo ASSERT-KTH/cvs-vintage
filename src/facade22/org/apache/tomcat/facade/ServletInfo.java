@@ -58,15 +58,18 @@
  */ 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.depend.*;
-import org.apache.tomcat.util.collections.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import javax.servlet.ServletConfig;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.collections.EmptyEnumeration;
+import org.apache.tomcat.util.depend.DependManager;
+import org.apache.tomcat.util.depend.Dependency;
 
 /**
  * Class used to represent a servlet inside a Context.

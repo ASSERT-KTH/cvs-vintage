@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/SessionContextImpl.java,v 1.1 2000/08/23 05:39:20 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/08/23 05:39:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/SessionContextImpl.java,v 1.2 2003/09/22 09:17:17 hgomez Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/09/22 09:17:17 $
  *
  * ====================================================================
  *
@@ -64,11 +64,11 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
 import java.util.Enumeration;
 import java.util.Vector;
-import javax.servlet.*;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 /**
  * 

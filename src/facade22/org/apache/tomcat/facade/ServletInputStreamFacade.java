@@ -60,10 +60,11 @@
 
 package org.apache.tomcat.facade;
 
-import java.io.*;
-import javax.servlet.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import java.io.IOException;
+
+import javax.servlet.ServletInputStream;
+
+import org.apache.tomcat.core.Request;
 
 /**
  * This is the input stream returned by ServletRequest.getInputStream().

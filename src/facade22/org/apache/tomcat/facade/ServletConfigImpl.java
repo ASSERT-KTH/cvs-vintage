@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/ServletConfigImpl.java,v 1.3 2000/12/12 20:21:22 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/12/12 20:21:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/ServletConfigImpl.java,v 1.4 2003/09/22 09:17:17 hgomez Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/09/22 09:17:17 $
  *
  * ====================================================================
  *
@@ -64,13 +64,10 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.Enumeration;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 /**
  * 

@@ -60,10 +60,11 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
-import java.io.*;
-import javax.servlet.ServletOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.apache.tomcat.core.OutputBuffer;
+import org.apache.tomcat.core.Response;
 
 /**
  *  Facade to the PrintWriter returned by Response.

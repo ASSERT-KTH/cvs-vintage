@@ -60,10 +60,12 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import java.io.*;
+import java.io.IOException;
+
 import javax.servlet.ServletOutputStream;
+
+import org.apache.tomcat.core.OutputBuffer;
+import org.apache.tomcat.core.Response;
 
 /**
  * 

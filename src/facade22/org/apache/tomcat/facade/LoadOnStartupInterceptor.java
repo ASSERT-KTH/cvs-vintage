@@ -59,12 +59,17 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
 import org.apache.tomcat.util.log.Log;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  * Interceptor that loads the "load-on-startup" servlets

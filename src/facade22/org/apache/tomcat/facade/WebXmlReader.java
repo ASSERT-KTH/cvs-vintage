@@ -1,21 +1,26 @@
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.xml.*;
-import java.beans.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.StringTokenizer;
-import org.xml.sax.InputSource;
+import java.util.Enumeration;
+import java.util.Stack;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.compat.Action;
+import org.apache.tomcat.util.compat.Jdk11Compat;
+import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.xml.SaxContext;
+import org.apache.tomcat.util.xml.XmlAction;
+import org.apache.tomcat.util.xml.XmlMapper;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import org.w3c.dom.*;
-import org.apache.tomcat.util.compat.*;
+import org.xml.sax.SAXParseException;
 
 // XXX XXX Specific to servlet 2.2 
 

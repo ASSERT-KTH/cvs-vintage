@@ -58,14 +58,20 @@
  */ 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.collections.*;
+import javax.servlet.Servlet;
+import javax.servlet.SingleThreadModel;
+import javax.servlet.UnavailableException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.collections.SimplePool;
 
 /**
  * Handler for servlets. It'll implement all servlet-specific

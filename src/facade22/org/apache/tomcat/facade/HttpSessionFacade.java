@@ -60,13 +60,15 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+import javax.servlet.http.HttpSessionContext;
+
+import org.apache.tomcat.core.ServerSession;
 import org.apache.tomcat.util.res.StringManager;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
  * Facade for http session. Used to prevent servlets to access

@@ -54,30 +54,43 @@
  */
 package org.apache.tomcat.facade;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Properties;
 
-import javax.servlet.jsp.HttpJspPage;
+import javax.servlet.Servlet;
 import javax.servlet.jsp.JspFactory;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
-
-import org.apache.tomcat.util.log.Log;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.depend.*;
-import org.apache.tomcat.util.compat.*;
-
-import org.apache.jasper.*;
 import org.apache.jasper.Constants;
-import org.apache.jasper.runtime.*;
-import org.apache.jasper.compiler.*;
+import org.apache.jasper.JasperEngineContext;
+import org.apache.jasper.JasperException;
+import org.apache.jasper.JasperOptionsImpl;
+import org.apache.jasper.JspCompilationContext;
+import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.*;
-
+import org.apache.jasper.compiler.JasperMangler;
+import org.apache.jasper.compiler.JavaCompiler;
+import org.apache.jasper.compiler.JikesJavaCompiler;
+import org.apache.jasper.compiler.Mangler;
+import org.apache.jasper.compiler.SunJavaCompiler;
+import org.apache.jasper.runtime.HttpJspBase;
+import org.apache.jasper.runtime.JspFactoryImpl;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.compat.Jdk11Compat;
+import org.apache.tomcat.util.depend.DependManager;
+import org.apache.tomcat.util.depend.Dependency;
+import org.apache.tomcat.util.log.Log;
+
 /**
  * Plug in the JSP engine (a.k.a Jasper)!
  * Tomcat uses a "built-in" mapping for jsps ( *.jsp -> jsp ). "jsp"

@@ -60,16 +60,9 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.*;
-import java.io.*;
-import java.net.*;
-import java.security.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+
+import org.apache.tomcat.util.http.ServerCookie;
 
 /**
  * Facade for a ServerCookie object. The ServerCookie is a recyclable
