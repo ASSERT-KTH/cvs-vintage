@@ -430,26 +430,6 @@ public class Http10 {
 	printHead("\r\n");
     }
 
-
-    public void setHttpHeaders(Request req, MimeHeaders headers) {
-	// Hack: set Date header.
-	// This method is overriden by ajp11, ajp12 - so date will not be set
-	// for any of those ( instead the server will generate the date )
-	// This avoids redundant setting of date ( very expensive ).
-	// XXX XXX Check if IIS, NES do generate the date
-	if( false ) {
-	    headers.setValue(  "Date" ).setTime( System.currentTimeMillis());
-	}
-	
-	// Servlet Engine header will be set per/adapter - smarter adapters will
-	// not send it every time ( have it in C side ), and we may also want
-	// to add informations about the adapter used 
-	if( req.getContext() != null)
-	    headers.setValue("Servlet-Engine").setString(
-		      req.getContext().getEngineHeader());
-    }
-
-    
     public void doWrite( byte buffer[], int pos, int count)
 	throws IOException
     {

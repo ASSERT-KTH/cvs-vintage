@@ -90,11 +90,14 @@ import org.apache.tomcat.util.log.*;
  *  - keystore - certificates - default to ~/.keystore
  *  - keypass - password
  *  - clientauth - true if the server should authenticate the client using certs
+ * Properties for HTTP:
+ *  - reportedname - name of server sent back to browser (security purposes)
  */
 public class Http10Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler
 {
     private int	timeout = 300000;	// 5 minutes as in Apache HTTPD server
+    private String reportedname;
 
     public Http10Interceptor() {
 	super();
@@ -112,7 +115,9 @@ public class Http10Interceptor extends PoolTcpConnector
     public void setTimeout( int timeouts ) {
 	timeout = timeouts * 1000;
     }
-
+    public void setReportedname( String reportedName) {
+    reportedname = reportedName;
+    }
     // -------------------- Handler implementation --------------------
     public void setServer( Object o ) {
 	this.cm=(ContextManager)o;
@@ -122,6 +127,8 @@ public class Http10Interceptor extends PoolTcpConnector
 	Object thData[]=new Object[3];
 	HttpRequest reqA=new HttpRequest();
 	HttpResponse resA=new HttpResponse();
+    if (reportedname != null)
+        resA.setReported(reportedname);
 	cm.initRequest( reqA, resA );
 	thData[0]=reqA;
 	thData[1]=resA;
@@ -151,6 +158,7 @@ public class Http10Interceptor extends PoolTcpConnector
 	    
 	    cm.service( reqA, resA );
 
+        // XXX didn't honor HTTP/1.0 KeepAlive, should be fixed
 	    TcpConnection.shutdownInput( socket );
 	}
 	catch(java.net.SocketException e) {
@@ -184,6 +192,7 @@ public class Http10Interceptor extends PoolTcpConnector
 	} 
 	finally {
 	    // recycle kernel sockets ASAP
+        // XXX didn't honor HTTP/1.0 KeepAlive, should be fixed
 	    try { if (socket != null) socket.close (); }
 	    catch (IOException e) { /* ignore */ }
         }
@@ -323,6 +332,7 @@ class HttpRequest extends Request {
 
 class HttpResponse extends  Response {
     Http10 http;
+    String reportedname;
     
     public HttpResponse() {
         super();
@@ -334,6 +344,10 @@ class HttpResponse extends  Response {
 
     public void recycle() {
 	super.recycle();
+    }
+
+    public void setReported(String reported) {
+        reportedname = reported;
     }
 
     public void endHeaders()  throws IOException {
@@ -350,6 +364,13 @@ class HttpResponse extends  Response {
     // no date header set by user
         getMimeHeaders().setValue(  "Date" ).setTime( System.currentTimeMillis());
     }
+
+    // return server name (or the reported one)
+    if (reportedname == null)
+        getMimeHeaders().setValue(  "Server" ).setString(request.getContext().getEngineHeader());
+    else
+        if (reportedname.length() != 0)
+            getMimeHeaders().setValue(  "Server" ).setString(reportedname);
 
 	http.sendHeaders( getMimeHeaders() );
     }
