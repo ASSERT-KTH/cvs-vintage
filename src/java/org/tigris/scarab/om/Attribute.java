@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.74 2003/12/17 22:41:23 thierrylach Exp $
+  * @version $Id: Attribute.java,v 1.75 2003/12/17 22:55:26 thierrylach Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -160,6 +160,7 @@ public class Attribute
         throws Exception
     {
         Attribute result = null;
+// TODO Should attributes even be cached by name?   What if the name is changed?
         Object obj = ScarabCache.get(ATTRIBUTE, GET_INSTANCE, attributeName.toLowerCase()); 
         if (obj == null) 
         {        
