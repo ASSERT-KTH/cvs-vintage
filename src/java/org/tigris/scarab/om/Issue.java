@@ -92,7 +92,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.169 2002/07/23 00:37:39 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.170 2002/07/24 23:53:40 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -608,6 +608,15 @@ public class Issue
         return result;
     }
 
+    public void addAttributeValue(AttributeValue aval)
+       throws TorqueException
+    {
+        List avals = getAttributeValues();
+        if (!avals.contains(aval)) 
+        {
+            super.addAttributeValue(aval);
+        }
+    }
 
     public AttributeValue getAttributeValue(Attribute attribute)
        throws Exception
