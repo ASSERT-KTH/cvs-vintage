@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.37 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.38 2003/09/21 13:57:08 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,8 +45,6 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -139,7 +137,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
     public PropPanelAssociationEnd() {
         super("AssociationEnd", ConfigLoader.getTabPropsOrientation());
         _associationLabel = Argo.localize("UMLMenu", "label.association");
-        Class mclass = MAssociationEnd.class;
+        Class mclass = (Class)ModelFacade.ASSOCIATION_END;
         createControls(mclass);
         positionStandardControls();
         positionControls();
