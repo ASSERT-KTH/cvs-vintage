@@ -120,3 +120,6 @@ BaseUserPreferencePeer.java
 BaseUserVote.java
 BaseUserVoteManager.java
 BaseUserVotePeer.java
+BaseTransitionManager.java
+BaseTransition.java
+BaseTransitionPeer.java
