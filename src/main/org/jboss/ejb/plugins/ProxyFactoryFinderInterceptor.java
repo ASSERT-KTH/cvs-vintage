@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
@@ -35,23 +36,19 @@ import org.jboss.invocation.Invocation;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.system.Registry;
 import org.jboss.naming.ENCThreadLocalKey;
+
 /** 
- *   This interceptor injects the ProxyFactory into the ThreadLocal container variable
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.1 $
+ * This interceptor injects the ProxyFactory into the ThreadLocal container variable
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.2 $
  */
 public class ProxyFactoryFinderInterceptor
    extends AbstractInterceptor
 {
-   // Static --------------------------------------------------------
-   
-   // Attributes ----------------------------------------------------
    protected Container container;
    
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
    public void setContainer(Container container)
    {
       this.container = container;
@@ -62,19 +59,16 @@ public class ProxyFactoryFinderInterceptor
       return container;
    }
    
-   // Container implementation --------------------------------------
-   public void create()
-      throws Exception
+   public void create() throws Exception
    {
    }
-   
 
    protected void setProxyFactory(String invokerBinding, Invocation mi) throws Exception
    {
       //      if (BeanMetaData.LOCAL_INVOKER_PROXY_BINDING.equals(invokerBinding)) return;
       if (invokerBinding == null)
       {
-         System.out.println("********* invokerBInding is null in ProxyFactoryFinder");
+         log.debug("invokerBInding is null in ProxyFactoryFinder");
          return;
       }
       /*
@@ -95,7 +89,7 @@ public class ProxyFactoryFinderInterceptor
          log.error("Method name: " + mi.getMethod().getName());
          log.error("jmx name: " + container.getJmxName().toString());
          log.error("invokerBinding: " + invokerBinding);
-         new Throwable().printStackTrace();
+         log.error("Stack trace", new Throwable());
          log.error("*************************");
          throw new ServerException("Couldn't find proxy factory");
       }
