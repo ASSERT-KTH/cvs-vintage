@@ -40,7 +40,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class TxInterceptorCMT
 extends AbstractInterceptor
@@ -139,7 +139,10 @@ extends AbstractInterceptor
 			// EJB 2.0 17.3, table 15
 			if (mi.getTransaction() != null)
 			{
-				mi.getTransaction().setRollbackOnly();
+				try {
+					mi.getTransaction().setRollbackOnly();
+				} catch (IllegalStateException ex) {
+				}
 				RemoteException tre = new TransactionRolledbackException(e.getMessage());
 				tre.detail = e;
 				throw tre;
@@ -153,7 +156,10 @@ extends AbstractInterceptor
 			// EJB 2.0 17.3, table 15
 			if (mi.getTransaction() != null)
 			{
-				mi.getTransaction().setRollbackOnly();
+				try {
+					mi.getTransaction().setRollbackOnly();
+				} catch (IllegalStateException ex) {
+				}
 				RemoteException tre = new TransactionRolledbackException(e.getMessage());
 				tre.detail = e;
 				throw tre;
@@ -167,7 +173,10 @@ extends AbstractInterceptor
 			// EJB 2.0 17.3, table 15
 			if (mi.getTransaction() != null)
 			{
-				mi.getTransaction().setRollbackOnly();
+				try {
+					mi.getTransaction().setRollbackOnly();
+				} catch (IllegalStateException ex) {
+				}
 				RemoteException tre = new TransactionRolledbackException(e.getMessage());
 				tre.detail = e;
 				throw tre;

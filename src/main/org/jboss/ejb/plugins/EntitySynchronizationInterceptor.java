@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.19 $
+*   @version $Revision: 1.20 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -332,6 +332,8 @@ extends AbstractInterceptor
 					try {
 						tx.setRollbackOnly();
 					} catch (SystemException ex) {
+						// DEBUG ex.printStackTrace();
+					} catch (IllegalStateException ex) {
 						// DEBUG ex.printStackTrace();
 					}
 				}
