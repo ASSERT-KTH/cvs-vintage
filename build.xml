@@ -428,6 +428,7 @@
     <mkdir dir="${tomcat.home}"/>
     <copydir src="${tomcat.build}" dest="${tomcat.home}"/>
     <copydir src="src/share/org" dest="${tomcat.home}/src/org"/>
+    <copydir src="src/facade22/org" dest="${tomcat.home}/src/org"/>
     <copyfile src="${servlet.jar}" dest="${tomcat.home}/lib/servlet.jar"/>
     <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.home}/lib/jaxp.jar"/>
     <copyfile src="${jaxp}/parser.jar" dest="${tomcat.home}/lib/parser.jar"/>
