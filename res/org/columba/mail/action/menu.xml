@@ -35,7 +35,8 @@
 	<menu name="menu_view" extensionpoint="top">
 	    <menuitem action="ColumnDialog"/>
 		<separator/>	    
-		<menuitem imenu="SortMessagesMenu"/>		
+		<menuitem imenu="SortMessagesMenu"/>	
+		<menuitem imenu="SortFoldersMenu"/>		
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>

@@ -74,6 +74,7 @@
  <action name="FolderOptions" class="org.columba.mail.gui.tree.action.FolderOptionsAction"/>
  <action name="MoveUp" class="org.columba.mail.gui.tree.action.MoveUpAction"/>
  <action name="MoveDown" class="org.columba.mail.gui.tree.action.MoveDownAction"/>
+ <action name="SortFoldersMenu" class="org.columba.mail.gui.tree.action.SortFoldersMenu"/>
  
  <!-- utilities menu -->
  <action name="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>

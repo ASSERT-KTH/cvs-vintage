@@ -19,6 +19,8 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.gui.tree.comparator.FolderComparator;
+import org.frappucino.swing.SortedJTree;
 
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
@@ -29,6 +31,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Comparator;
 
 import javax.swing.JComponent;
 import javax.swing.JTree;
@@ -41,7 +44,7 @@ import javax.swing.tree.TreePath;
 /**
  * this class does all the dirty work for the TreeController
  */
-public class TreeView extends JTree {
+public class TreeView extends SortedJTree {
     /** The treepath that was selected before the drag and drop began. */
     private TreePath selectedPathBeforeDrag;
 
@@ -52,13 +55,15 @@ public class TreeView extends JTree {
     private boolean isInDndMode = false;
 
     /** A Timer that expands/collapses leafs when the mouse hovers above it.
- * This is only used during Drag and Drop. */
+     * This is only used during Drag and Drop. */
     private Timer dndAutoExpanderTimer;
 
+    private FolderComparator folderComparator;
+
     /**
- * Constructa a tree view
- * @param model the tree model that this JTree should use.
- */
+     * Constructa a tree view
+     * @param model the tree model that this JTree should use.
+     */
     public TreeView(javax.swing.tree.TreeModel model) {
         super(model);
 
@@ -83,9 +88,9 @@ public class TreeView extends JTree {
     }
 
     /**
- * Expands the specified node so it corresponds to the expanded attribute in the configuration.
- * @param parent node to check if it should be expanded or not.
- */
+     * Expands the specified node so it corresponds to the expanded attribute in the configuration.
+     * @param parent node to check if it should be expanded or not.
+     */
     public final void expand(AbstractFolder parent) {
         // get configuration from tree.xml file
         FolderItem item = parent.getConfiguration();
@@ -115,11 +120,11 @@ public class TreeView extends JTree {
     }
 
     /**
- * Returns the tree node that is intended for a drop action.
- * If this method is called during a non-drag-and-drop invocation
- * there is no guarantee what it will return.
- * @return the folder tree node that is targeted for the drop action; null otherwise.
- */
+     * Returns the tree node that is intended for a drop action.
+     * If this method is called during a non-drag-and-drop invocation
+     * there is no guarantee what it will return.
+     * @return the folder tree node that is targeted for the drop action; null otherwise.
+     */
     public AbstractFolder getDropTargetFolder() {
         AbstractFolder node = null;
 
@@ -131,20 +136,20 @@ public class TreeView extends JTree {
     }
 
     /**
- * Sets the stored drop target path to null.
- * This should be done after the getDropTargetFolder() has been used in
- * a folder command. 
- */
+     * Sets the stored drop target path to null.
+     * This should be done after the getDropTargetFolder() has been used in
+     * a folder command.
+     */
     void resetDropTargetFolder() {
         dropTargetPath = null;
     }
 
     /**
- * Returns the tree node that was selected before a drag and drop was initiated.
- * If this method is called during a non-drag-and-drop invocation
- * there is no guarantee what it will return.
- * @return the folder that is being dragged; null if it wasnt initiated in this component.
- */
+     * Returns the tree node that was selected before a drag and drop was initiated.
+     * If this method is called during a non-drag-and-drop invocation
+     * there is no guarantee what it will return.
+     * @return the folder that is being dragged; null if it wasnt initiated in this component.
+     */
     public AbstractFolder getSelectedNodeBeforeDragAction() {
         AbstractFolder node = null;
 
@@ -156,27 +161,27 @@ public class TreeView extends JTree {
     }
 
     /**
- * Returns true if the tree is in a Drag and Drop action.
- * @return true if the tree is in a Drag and Drop action; false otherwise.
- */
+     * Returns true if the tree is in a Drag and Drop action.
+     * @return true if the tree is in a Drag and Drop action; false otherwise.
+     */
     public boolean isInDndAction() {
         return isInDndMode;
     }
 
     /**
- * Sets up this TreeView for Drag and drop action.
- * Stores the selected tree leaf before the action begins, this
- * is used later when the Drag and drop action is completed.
- */
+     * Sets up this TreeView for Drag and drop action.
+     * Stores the selected tree leaf before the action begins, this
+     * is used later when the Drag and drop action is completed.
+     */
     private void setUpDndAction() {
         isInDndMode = true;
         selectedPathBeforeDrag = getSelectionPath();
     }
 
     /**
- * Resets this TreeView after a Drag and drop action has occurred.
- * Selects the previous selected tree leaf before the DnD action began.
- */
+     * Resets this TreeView after a Drag and drop action has occurred.
+     * Selects the previous selected tree leaf before the DnD action began.
+     */
     private void resetDndAction() {
         dndAutoExpanderTimer.stop();
         setSelectionPath(selectedPathBeforeDrag);
@@ -185,12 +190,38 @@ public class TreeView extends JTree {
     }
 
     /**
- * Our own drop target implementation.
- * This treeview class uses its own drop target since the common drop target in Swing >1.4
- * does not provide a fine grained support for dragging items onto
- * leafs, when some leafs does not accept new items.
- * @author redsolo
- */
+     * If the folders should be sorted ascending or descending.
+     * @param ascending if it should be sorted ascending.
+     */
+    public void sortAscending(boolean ascending) {
+        folderComparator.setAscending(ascending);
+        super.setSortingComparator(folderComparator);
+    }
+
+    /**
+     * Set a new folder comparator for sorting the folders.
+     * @param comparator the folder comparator to use.
+     */
+    public void setFolderComparator(FolderComparator comparator) {
+        folderComparator = comparator;
+        super.setSortingComparator(folderComparator);
+    }
+
+    /**
+     * Deprecated method, use <code>setFolderComparator()</code> instead.
+     * @param comparator ignored.
+     * @deprecated Use @link TreeView#setFolderComparator(FolderComparator) instad.
+     */
+    public void setSortingComparator(Comparator comparator) {
+    }
+
+    /**
+     * Our own drop target implementation.
+     * This treeview class uses its own drop target since the common drop target in Swing >1.4
+     * does not provide a fine grained support for dragging items onto
+     * leafs, when some leafs does not accept new items.
+     * @author redsolo
+     */
     private class DropHandler extends DropTarget {
         private boolean canImport;
 
@@ -198,9 +229,9 @@ public class TreeView extends JTree {
         private Point location;
 
         /**
- * Our own implementation to ask the transfer handler for each leaf the user moves above.
- * {@inheritDoc}
- */
+         * Our own implementation to ask the transfer handler for each leaf the user moves above.
+         * {@inheritDoc}
+         */
         public void dragOver(DropTargetDragEvent e) {
             if ((location == null) || (!location.equals(e.getLocation()))) {
                 location = e.getLocation();
@@ -306,16 +337,16 @@ public class TreeView extends JTree {
     }
 
     /**
- * An ActionListener that collapses/expands leafs in a tree.
- * @author redsolo
- */
+     * An ActionListener that collapses/expands leafs in a tree.
+     * @author redsolo
+     */
     private class TreeLeafActionListener implements ActionListener {
         private JTree treeParent;
 
         /**
- * Constructs a leaf listener.
- * @param parent the parent JTree.
- */
+         * Constructs a leaf listener.
+         * @param parent the parent JTree.
+         */
         public TreeLeafActionListener(JTree parent) {
             treeParent = parent;
         }

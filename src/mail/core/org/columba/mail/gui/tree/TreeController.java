@@ -25,12 +25,10 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
@@ -45,25 +43,22 @@ public class TreeController implements TreeWillExpandListener {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.tree");
 
-    private TreeView folderTree;
-    private boolean b = false;
-    private TreePath treePath;
-    private FolderInfoPanel messageFolderInfoPanel;
-    public JScrollPane scrollPane;
-    private AbstractFolder oldSelection;
     private FolderTreeMouseListener mouseListener;
     private AbstractFolder selectedFolder;
-    private TreeModel model;
     private TreeView view;
     private FrameMediator frameController;
-    protected TreeMenu menu;
+    private TreeMenu menu;
 
-    public TreeController(FrameMediator frameController,
-        TreeModel model) {
-        this.model = model;
-        this.frameController = frameController;
+    /**
+     * Constructor for tree controller.
+     * @param controller the parent controller.
+     * @param model the tree model to display.
+     */
+    public TreeController(FrameMediator controller, TreeModel model) {
+        frameController = controller;
 
         view = new TreeView(model);
+        view.setSortingEnabled(false);
 
         view.addTreeWillExpandListener(this);
 
@@ -78,22 +73,26 @@ public class TreeController implements TreeWillExpandListener {
         getView().setDragEnabled(true);
 
         /*
-getView().getInputMap().put(
-        KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
-        "RENAME");
-RenameFolderAction action = new RenameFolderAction(mailFrameController);
-getView().getActionMap().put("RENAME", action);
-*/
+        getView().getInputMap().put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
+                "RENAME");
+        RenameFolderAction action = new RenameFolderAction(mailFrameController);
+        getView().getActionMap().put("RENAME", action);
+        */
     }
 
-    public TreeModel getModel() {
-        return model;
-    }
-
+    /**
+     * Returns the tree view.
+     * @return the tree view.
+     */
     public TreeView getView() {
         return view;
     }
 
+    /**
+     * Set the specified folder as seleceted.
+     * @param folder the new selected folder.
+     */
     public void setSelected(MessageFolder folder) {
         view.clearSelection();
 
@@ -108,30 +107,43 @@ getView().getActionMap().put("RENAME", action);
 
         MainInterface.processor.addOp(new ViewHeaderListCommand(
                 getFrameController(),
-                ((MailFrameMediator)getFrameController()).getTreeSelection()));
+                ((MailFrameMediator) getFrameController()).getTreeSelection()));
     }
 
+    /**
+     * Creates a Popup menu.
+     */
     public void createPopupMenu() {
         menu = new TreeMenu(frameController);
     }
 
+    /**
+     * Returns the pop up menu for the controller.
+     * @return the pop up menu.
+     */
     public JPopupMenu getPopupMenu() {
         return menu;
     }
 
+    /**
+     * Returns the selected folder.
+     * @return the selected folder.
+     */
     public AbstractFolder getSelected() {
         return selectedFolder;
     }
 
     /**
- * Returns the mailFrameController.
- * @return MailFrameController
- */
+     * Returns the mailFrameController.
+     * @return MailFrameController
+     */
     public FrameMediator getFrameController() {
         return frameController;
     }
 
     /******************** TreeWillExpand Interface *******************************/
+
+    /** {@inheritDoc} */
     public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
         LOG.info("treeWillExpand=" + e.getPath().toString());
 
@@ -156,6 +168,7 @@ MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
         saveExpandedState(treeNode, e.getPath());
     }
 
+    /** {@inheritDoc} */
     public void treeWillCollapse(TreeExpansionEvent e) {
         AbstractFolder treeNode = (AbstractFolder) e.getPath()
                                                     .getLastPathComponent();
@@ -168,6 +181,11 @@ MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
         saveExpandedState(treeNode, e.getPath());
     }
 
+    /**
+     * Saves the tree expanded state.
+     * @param folder the folder to get the configuration for.
+     * @param path the tree path in the tree view.
+     */
     private void saveExpandedState(AbstractFolder folder, TreePath path) {
         FolderItem item = folder.getConfiguration();
 
