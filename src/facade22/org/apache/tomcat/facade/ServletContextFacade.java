@@ -140,6 +140,7 @@ final class ServletContextFacade implements ServletContext {
         InputStream is = null;
         try {
             URL url = getResource(path);
+	    if( url==null ) return null;
             URLConnection con = url.openConnection();
             con.connect();
             is = con.getInputStream();
@@ -158,7 +159,10 @@ final class ServletContextFacade implements ServletContext {
 	    log( "Unsafe path " + absPath + " " + rpath );
 	    return null;
 	}
-
+	File f=new File( realPath );
+	if( ! f.exists() ) {
+	    return null;
+	}
 	try {
             return new URL("file", null, 0,realPath );
 	} catch( IOException ex ) {
