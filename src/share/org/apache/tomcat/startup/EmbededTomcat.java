@@ -668,10 +668,13 @@ public class EmbededTomcat {
     // -------------------- Class loader methods --------------------
 
     static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    /** System property used to set the application class loader, which
+	will be the parent of all webapps.
+    */
     public static final String PROPERTY_APPS_LOADER =
-	"org.apache.tomcat.apps.loader";
+	"org.apache.tomcat.apps.classpath";
     public static final String PROPERTY_CONTAINER_LOADER =
-	"org.apache.tomcat.container.loader";
+	"org.apache.tomcat.container.classpath";
 	
 
     /** Initialize class loaders with the defaults, if not set

@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.40 2001/09/07 04:25:20 costin Exp $
+/* $Id: Main.java,v 1.41 2001/09/09 00:46:28 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -94,8 +94,14 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
  * @author Mel Martinez mmartinez@g1440.com
  */
 public class Main{
+    /** System property that can be used to pass additional classpath
+	to the 'common' loader, used to load EmbededTomcat and the
+	core. EmbededTomcat will load the container int a separate
+	loader, and each applications will be set up int its own loader.
+	The loader configurator module may use additional properties
+    */
     public static final String PROPERTY_COMMON_LOADER =
-	"org.apache.tomcat.common.loader";
+	"org.apache.tomcat.common.classpath";
 
     String installDir;
     String libDir;
