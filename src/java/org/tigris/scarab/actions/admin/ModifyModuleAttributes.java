@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.25 2001/10/16 23:54:02 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.26 2001/10/17 00:02:16 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -272,6 +272,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         String attributeId = data.getParameters().getString("attributeid");
         String groupId = data.getParameters().getString("groupId");
+        AttributeGroup group = null;
 
         // FIXME: use intake for this stuff...
         if (groupId == null || groupId.length() == 0)
@@ -288,7 +289,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         try
         {
-            AttributeGroup group = (AttributeGroup) AttributeGroupPeer
+            group = (AttributeGroup) AttributeGroupPeer
                                    .retrieveByPK(new NumberKey(groupId));
         }
         catch (Exception e)
