@@ -24,7 +24,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.5 2002/08/19 20:43:50 kataka Exp $
+// $Id: SelectionInterface.java,v 1.6 2002/08/22 12:41:07 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -122,7 +122,7 @@ public class SelectionInterface extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 11: //add realization
-      edgeClass = MAbstractionImpl.class;
+      edgeClass = MAbstraction.class;
       reverse = true;
       by = cy + ch;
       bx = cx + cw/2;

@@ -24,7 +24,7 @@
 // File: SelectionClass.java
 // Classes: SelectionClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionClass.java,v 1.5 2002/08/19 20:43:50 kataka Exp $
+// $Id: SelectionClass.java,v 1.6 2002/08/22 12:40:35 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -159,23 +159,23 @@ public class SelectionClass extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 10: //add superclass
-      edgeClass = ru.novosoft.uml.foundation.core.MGeneralizationImpl.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MGeneralization.class;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add subclass
-      edgeClass = ru.novosoft.uml.foundation.core.MGeneralizationImpl.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MGeneralization.class;
       reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add assoc
-      edgeClass = ru.novosoft.uml.foundation.core.MAssociationImpl.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MAssociation.class;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add assoc
-      edgeClass = ru.novosoft.uml.foundation.core.MAssociationImpl.class;
+      edgeClass = ru.novosoft.uml.foundation.core.MAssociation.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx;
