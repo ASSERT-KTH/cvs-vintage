@@ -31,7 +31,7 @@ import org.apache.log4j.Category;
  * Created: Fri Dec 22 09:34:04 2000
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.6 $</pre>
+ * @version <pre>$Revision: 1.7 $</pre>
  * @author  <a href="mailto:peter.antman@dn.se">Peter Antman</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -39,69 +39,69 @@ import org.apache.log4j.Category;
 public class JBossMQProvider 
    extends AbstractJMSProviderAdapter
 {
-    /** The initial context factory to use. */
-	public static final String INITIAL_CONTEXT_FACTORY =
-        "org.jnp.interfaces.NamingContextFactory";
+   /** The initial context factory to use. */
+   public static final String INITIAL_CONTEXT_FACTORY =
+      "org.jnp.interfaces.NamingContextFactory";
 
-    /** The url package prefixes. */
-	public static final String URL_PKG_PREFIXES =
-        "org.jboss.naming";
+   /** The url package prefixes. */
+   public static final String URL_PKG_PREFIXES =
+      "org.jboss.naming";
 
-    /** The security manager to use. */
-	private static final String SECURITY_MANAGER =
-        "java.naming.rmi.security.manager";
+   /** The security manager to use. */
+   private static final String SECURITY_MANAGER =
+      "java.naming.rmi.security.manager";
 
-    /** Instance logger. */
-    private transient Category log = Category.getInstance(this.getClass());
+   /** Instance logger. */
+   private transient Category log = Category.getInstance(this.getClass());
     
-    /** Flag to enable JNDI security manager. */
-	private String hasJndiSecurityManager = "yes";
+   /** Flag to enable JNDI security manager. */
+   private String hasJndiSecurityManager = "yes";
 
-    /**
-     * Default no-argument constructor.
-     */
-	public JBossMQProvider() {
-        // empty
-        log.debug("initializing");
-	}
+   /**
+    * Default no-argument constructor.
+    */
+   public JBossMQProvider() {
+      // empty
+      log.debug("initializing");
+   }
 
-    /** Override of standard de-serialization to re-create logger. */
-    private void readObject(java.io.ObjectInputStream in)
-        throws java.io.IOException, ClassNotFoundException
-    {
-        in.defaultReadObject();
-        this.log = Category.getInstance(this.getClass());
-    }
+   /** Override of standard de-serialization to re-create logger. */
+   private void readObject(java.io.ObjectInputStream in)
+      throws java.io.IOException, ClassNotFoundException
+   {
+      in.defaultReadObject();
+      this.log = Category.getInstance(this.getClass());
+   }
 
-    /**
-     * Create a new InitialContext suitable for this JMS provider.
-     *
-     * @return  An InitialContext suitable for this JMS provider.
-     *
-     * @throws NamingException  Failed to construct context.
-     */
-	public Context getInitialContext() throws NamingException {
-		Context ctx = null;
-		if (providerURL == null) {
-			// Use default
-            log.debug("no provider url; connecting to local JNDI");
-			ctx = new InitialContext(); // Only for JBoss embedded now
-		} else {
-			// Try another location
-			Hashtable props = new Hashtable();
-			props.put(Context.INITIAL_CONTEXT_FACTORY,
-                      INITIAL_CONTEXT_FACTORY);
-			props.put(Context.PROVIDER_URL, providerURL);
-			props.put(SECURITY_MANAGER, hasJndiSecurityManager);
-			props.put(Context.URL_PKG_PREFIXES, URL_PKG_PREFIXES);
+   /**
+    * Create a new InitialContext suitable for this JMS provider.
+    *
+    * @return  An InitialContext suitable for this JMS provider.
+    *
+    * @throws NamingException  Failed to construct context.
+    */
+   public Context getInitialContext() throws NamingException {
+      Context ctx = null;
+      if (providerURL == null) {
+         // Use default
+         log.debug("no provider url; connecting to local JNDI");
+         ctx = new InitialContext(); // Only for JBoss embedded now
+      } else {
+         // Try another location
+         Hashtable props = new Hashtable();
+         props.put(Context.INITIAL_CONTEXT_FACTORY,
+                   INITIAL_CONTEXT_FACTORY);
+         props.put(Context.PROVIDER_URL, providerURL);
+         props.put(SECURITY_MANAGER, hasJndiSecurityManager);
+         props.put(Context.URL_PKG_PREFIXES, URL_PKG_PREFIXES);
 
-            log.debug("connecting to remote JNDI with props: " + props);
-			ctx = new InitialContext(props);
-		}
+         log.debug("connecting to remote JNDI with props: " + props);
+         ctx = new InitialContext(props);
+      }
 
-        if (log.isDebugEnabled()) {
-            log.debug("created context: " + ctx);
-        }
-		return ctx;
-	}
+      if (log.isDebugEnabled()) {
+         log.debug("created context: " + ctx);
+      }
+      return ctx;
+   }
 }
