@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.32 2005/01/30 20:47:48 linus Exp $
+// $Id: ActionAddDiagram.java,v 1.33 2005/02/12 23:53:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,8 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.32 2005/01/30 20:47:48 linus Exp $
-
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -41,9 +39,13 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  * The children of this class should implement createDiagram to do any specific
  * actions for creating a diagram and isValidNamespace that checks if some
  * namespace is valid to add the diagram to.
+ *
  * @author jaap.branderhorst@xs4all.nl
  */
 public abstract class ActionAddDiagram extends UMLAction {
+    /**
+     * Logger.
+     */
     private static final Logger LOG =
         Logger.getLogger(ActionAddDiagram.class);
 
@@ -79,6 +81,7 @@ public abstract class ActionAddDiagram extends UMLAction {
 
     /**
      * Find the right namespace for the diagram.
+     *
      * @return the namespace or null
      */
     private Object findNamespace() {
@@ -106,19 +109,19 @@ public abstract class ActionAddDiagram extends UMLAction {
     }
 
     /**
-     * Returns true as the given namespace a valid namespace is to add the
-     * diagram to.
+     * Test if the given namespace is a valid namespace to add the diagram to.
+     *
      * @param ns the namespace to check
-     * @return boolean
+     * @return Returns <code>true</code> if valid.
      */
     public abstract boolean isValidNamespace(Object ns);
 
     /**
      * Creates the diagram. Classes derived from this class should implement any
      * specific behaviour to create the diagram.
+     *
      * @param ns The namespace the UMLDiagram should get.
      * @return UMLDiagram
      */
     public abstract UMLDiagram createDiagram(Object ns);
-
 }
