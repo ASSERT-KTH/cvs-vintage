@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.269 2003/06/19 01:28:08 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.270 2003/06/20 00:25:04 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5146,7 +5146,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			return;
 
 		if(Debug.SCROLL_DEBUG)
-			Log.log(Log.DEBUG,this,"updateScrollBars()");
+			Log.log(Log.DEBUG,this,"updateScrollBars(), slc="
+				+ displayManager.getScrollLineCount());
 
 		if(vertical != null && visibleLines != 0)
 		{
