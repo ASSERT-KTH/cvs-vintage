@@ -10,8 +10,8 @@ package org.jboss.security;
 to create a SecurityProxy from a security delegate object that is
 not a SecurityProxy instance.
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.4 $
 */
 public interface SecurityProxyFactory
 {

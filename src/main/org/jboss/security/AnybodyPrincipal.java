@@ -16,8 +16,8 @@ will always be found equals to the AnybodyPrincipal.
 Note that this class is not likely to operate correctly in a collection
 since the hashCode() and equals() methods are not correlated.
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.4 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.5 $
 */
 public class AnybodyPrincipal implements Comparable, Principal
 {

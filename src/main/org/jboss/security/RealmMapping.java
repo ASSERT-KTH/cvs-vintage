@@ -17,8 +17,8 @@ the method for validating the application domain roles to which the operational
 environment Principal belongs via the {@link #getPrincipal(Principal) getPrincipal}
 method.
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.7 $
 */
 public interface RealmMapping
 {

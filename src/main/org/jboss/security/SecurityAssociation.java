@@ -31,8 +31,8 @@ class variables which makes the information available to all threads within
 the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.7 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.8 $
 */
 public final class SecurityAssociation
 {
@@ -48,11 +48,11 @@ public final class SecurityAssociation
         boolean useThreadLocal = false;
         try
         {
-           useThreadLocal = Boolean.getBoolean("org.jboss.security.SecurityAssociation.ThreadLocal");
+            useThreadLocal = Boolean.getBoolean("org.jboss.security.SecurityAssociation.ThreadLocal");
         }
         catch(SecurityException e)
         {
-           // Just use the default
+            // Ignore and use the default
         }
 
         if( useThreadLocal )
