@@ -24,7 +24,7 @@ import javax.ejb.RemoveException;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class StatelessSessionContainer
    extends Container
@@ -32,6 +32,10 @@ public class StatelessSessionContainer
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+
+   // This is the container invoker for this container
+   protected ContainerInvoker containerInvoker;
+	
    Map homeMapping;
    Map beanMapping;
    
@@ -40,21 +44,90 @@ public class StatelessSessionContainer
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+   public void setContainerInvoker(ContainerInvoker ci) 
+   { 
+      if (ci == null)
+      	throw new IllegalArgumentException("Null invoker");
+   		
+      this.containerInvoker = ci; 
+      ci.setContainer(this);
+   }
+
+   public ContainerInvoker getContainerInvoker() 
+   { 
+   	return containerInvoker; 
+   }
 
    // Container implementation --------------------------------------
-   public void start()
+   public void init()
       throws Exception
    {
+   	// Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
-      super.start();
+   	// Call default init
+      super.init();
+      
+      // Init container invoker
+      containerInvoker.init();
+   	
       setupBeanMapping();
       setupHomeMapping();
       
+      // Reset classloader  
       Thread.currentThread().setContextClassLoader(oldCl);
    }
    
+   public void start()
+      throws Exception
+   {
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+      
+   	// Call default start
+      super.start();
+      
+      // Start container invoker
+      containerInvoker.start();
+      
+   	// Reset classloader
+      Thread.currentThread().setContextClassLoader(oldCl);
+   }
+   
+   public void stop()
+   {
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+   	
+   	// Call default stop
+      super.stop();
+   	
+      // Stop container invoker
+      containerInvoker.stop();
+      
+      // Reset classloader
+      Thread.currentThread().setContextClassLoader(oldCl);
+   }
+   
+   public void destroy()
+   {
+      // Associate thread with classloader
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClassLoader());
+      
+      // Call default destroy
+      super.destroy();
+      
+      // Destroy container invoker
+      containerInvoker.destroy();
+      
+      // Reset classloader
+      Thread.currentThread().setContextClassLoader(oldCl);
+   }
+	
    public Object invokeHome(Method method, Object[] args)
       throws Exception
    {
@@ -167,7 +240,7 @@ public class StatelessSessionContainer
       beanMapping = map;
    }
    
-   public Interceptor createContainerInterceptor()
+   Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }

@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -101,7 +101,7 @@ public class EntitySynchronizationInterceptor
          }
          
          synch.add(ctx);
-         ctx.setTransaction(tx);
+         ((EntityEnterpriseContext)ctx).setTransaction(tx);
       }
    }
 
@@ -151,7 +151,7 @@ public class EntitySynchronizationInterceptor
       EntityEnterpriseContext entityCtx = (EntityEnterpriseContext)ctx;
       
       
-      Transaction tx = ctx.getTransaction();
+      Transaction tx = entityCtx.getTransaction();
       Transaction current = getContainer().getTransactionManager().getTransaction();
       
 //DEBUG      Logger.debug("TX:"+(current.getStatus() == Status.STATUS_ACTIVE));
@@ -162,10 +162,10 @@ public class EntitySynchronizationInterceptor
          if (tx != null && !tx.equals(current))
          {
             // Wait for other tx associated with ctx to finish
-            while ((tx = ctx.getTransaction()) != null)
+            while ((tx = entityCtx.getTransaction()) != null)
             {
                // Release context temporarily
-               ((EntityContainer)getContainer()).getInstanceCache().release(ctx);
+               ((EntityContainer)getContainer()).getInstanceCache().release(entityCtx);
                
                // Wait for tx to end
 //DEBUG               Logger.debug("Wait for "+ctx.getId()+":Current="+current+", Tx="+tx);
@@ -182,7 +182,7 @@ public class EntitySynchronizationInterceptor
                {
                   try
                   {
-                     tx.wait(TIMEOUT); // This should be changed to a s
+                     synch.wait(TIMEOUT); // This should be changed to a s
                   } catch (InterruptedException e)
                   {
                      throw new ServerException("Time out", e);
@@ -222,7 +222,7 @@ public class EntitySynchronizationInterceptor
             } else
             {
                // Entity was removed
-               if (ctx.getTransaction() != null)
+               if (entityCtx.getTransaction() != null)
                {
                   // Disassociate ctx with tx
                   deregister(entityCtx, current);

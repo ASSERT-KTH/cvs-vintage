@@ -52,43 +52,65 @@ import org.jboss.web.WebProviderMBean;
 import org.jboss.ejb.plugins.*;
 
 /**
- *   A CF is used to create implementations of EJB Containers. 
- *   It encapsulates the notion of a configuration since all containers
- *   that are created use the same persistence engine, the same implementation
- *   of containers, and so on. If several different such configurations are desired,
- *   several containerfactories should be used.
+ *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to 
+ *	  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
+ *	  them available for invocation.
  *      
- *   @see <related>
+ *   @see Container
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
-    
+	public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
+	public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
+	public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
+	public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
+	
    // Attributes ----------------------------------------------------
+	// The logger of this service
    Log log = new Log("Container factory");
    
+	// The JMX agent
    MBeanServer server;
    
+	// A map of current deployments. If a deployment is made and it is already in this map,
+	// then undeploy it first (i.e. make it a re-deploy).
    HashMap deployments = new HashMap();
    
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-   
    // Public --------------------------------------------------------
+
+	/**
+	 *	Deploy the file at this URL. This method is typically called from remote administration
+	 *	tools that cannot handle java.net.URL's as parameters to methods
+	 *
+	 * @param   url  
+	 * @exception   MalformedURLException  
+	 * @exception   DeploymentException  
+	 */
    public void deploy(String url)
       throws MalformedURLException, DeploymentException
    {
+		// Delegate to "real" deployment
       deploy(new URL(url));
    }
    
+
+	/**
+	 *	Undeploy the file at this URL. This method is typically called from remote administration
+	 *	tools that cannot handle java.net.URL's as parameters to methods
+	 *
+	 * @param   url  
+	 * @exception   MalformedURLException  
+	 * @exception   DeploymentException  
+	 */
    public void undeploy(String url)
       throws MalformedURLException, DeploymentException
    {
+      // Delegate to "real" undeployment
       undeploy(new URL(url));
    }
    
@@ -119,9 +141,8 @@ public class ContainerFactory
          Log.setLog(log);
          log.log("Deploying:"+url);
          
+			// Create a file manager with which to load the files
          jBossFileManagerFactory fact = new jBossFileManagerFactory();
-         
-         // Create classloader
          jBossFileManager efm = (jBossFileManager)fact.createFileManager();
          
          // Setup beancontext
@@ -131,121 +152,144 @@ public class ContainerFactory
          
          // Load XML
          jBossEjbJar jar = efm.load(url);
-         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), ((jBossEnterpriseBeans)jar.getEnterpriseBeans()).isSecure());
+			
+			// Create classloader for this application
+         ClassLoader cl = new EJBClassLoader(new URL[] {url}, getClass().getClassLoader(), jar.isSecure());
          
+			// Get list of beans for which we will create containers
          Iterator beans = jar.getEnterpriseBeans().iterator();
          
+			// Create list of containers
          ArrayList containers = new ArrayList();
          
-         // Deploy bean
+         // Deploy beans
          Context ctx = new InitialContext();
          while(beans.hasNext())
          {
             Container con = null;
             jBossEnterpriseBean bean = (jBossEnterpriseBean)beans.next();
+				
             log.log("Deploying "+bean.getEjbName());
+				
             if (bean instanceof jBossSession) // Is session?
             {
                if (((jBossSession)bean).getSessionType().equals("Stateless")) // Is stateless?
                {
+						// Create container
                   con = new StatelessSessionContainer();
                   
-//                  con.addInterceptor(new LogInterceptor());
-//                  con.addInterceptor(new TxInterceptor());
+						// Create classloader for this container
+                  con.setClassLoader(new BeanClassLoader(cl));
+						
+						// Set metadata
+                  con.setMetaData(bean);
+				   
+						// Get container configuration
+                  ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
+                 
+						// Make sure we have a default configuration
+					  	if (conf == null) 
+					  	{
+							log.warning("No configuration chosen. Using default configuration");
+
+							// Get the container default configuration
+							conf = jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_STATELESS_CONFIGURATION);
+
+							// Make sure this bean knows the configuration he is using
+							bean.setConfigurationName(DEFAULT_STATELESS_CONFIGURATION);
+						}
+						
+						// Set container invoker
+                  ((StatelessSessionContainer)con).setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+						
+                  // Set instance pool
+                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+                  
+                  // Create interceptors
+                  con.addInterceptor(new LogInterceptor());
+                  con.addInterceptor(new TxInterceptor());
                   con.addInterceptor(new StatelessSessionInstanceInterceptor());
                   con.addInterceptor(new SecurityInterceptor());
                   
                   con.addInterceptor(con.createContainerInterceptor());
-                  
-                  con.setClassLoader(new BeanClassLoader(cl));
-                  con.setMetaData(bean);
-				   
-                  ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
-                 
-				  // Make sure we have a default configuration
-				  if (conf == null) {
-					  
-					 log.log("Using default configuration");
-					 
-					 // Get the container default configuration
-					 conf =  jar.getContainerConfigurations().getContainerConfiguration("Default Stateless SessionBean");
-					 
-					 // Make sure this bean knows the configuration he is using
-					 bean.setConfigurationName("Default Stateless SessionBean");
-				  }
-				  
-                  con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
-                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-                  
-//                con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
-                  con.setTransactionManager(new org.jboss.tm.TxManager());
-                  
+						
+						// Add container to application
                   containers.add(con);
                } else // Stateful
                {
-				   throw new Error("Stateful beans not yet implemented");
+					   // throw new Error("Stateful beans not yet implemented");
                }
             } else // Entity
             {
-                  con = new EntityContainer();
-                  
-//                  con.addInterceptor(new LogInterceptor());
-//                  con.addInterceptor(new TxInterceptor());
-                  con.addInterceptor(new EntityInstanceInterceptor());
-                  con.addInterceptor(new SecurityInterceptor());
-                  con.addInterceptor(new EntitySynchronizationInterceptor());
-                 
-                  con.addInterceptor(con.createContainerInterceptor());
-                  
-				  con.setClassLoader(new BeanClassLoader(cl));
-                  con.setMetaData(bean);
-                  
-                  ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
-                  
-				  // Make sure we have a default configuration
-				  if (conf == null) {
-					  
-					  log.log("Using default configuration");
-					  if (((jBossEntity) bean).getPersistenceType().equalsIgnoreCase("bean")) {
-						 
-						 // BMP case
-						 conf =  jar.getContainerConfigurations().getContainerConfiguration("BMP EntityBean");
-				     
-						 // Make sure this bean knows the configuration he is using
-					 	 bean.setConfigurationName("BMP EntityBean");
-					 }
-					 else { 
-					 
-					     // CMP case
-						 conf =  jar.getContainerConfigurations().getContainerConfiguration("CMP EntityBean");
-				     
-					 	// Make sure this bean knows the configuration he is using
-					 	bean.setConfigurationName("CMP EntityBean");
-					 }
-				  }
-                  con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
-                  ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
-                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-                  ((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-                       
-//                con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
-				  con.setTransactionManager(new org.jboss.tm.TxManager());
-                  
-                  containers.add(con);
-                  
+					// Create container
+					con = new EntityContainer();
+
+					// Create classloader for this container
+					con.setClassLoader(new BeanClassLoader(cl));
+					
+					// Set metadata
+					con.setMetaData(bean);
+
+					// Get container configuration
+					ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
+
+					// Make sure we have a default configuration
+					if (conf == null) 
+					{
+						log.warning("No configuration chosen. Using default configuration");
+						if (((jBossEntity) bean).getPersistenceType().equals("Bean")) 
+						{
+							 // BMP case
+							 conf =  jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_ENTITY_BMP_CONFIGURATION);
+
+							 // Make sure this bean knows the configuration he is using
+							 bean.setConfigurationName(DEFAULT_ENTITY_BMP_CONFIGURATION);
+						}
+						else 
+						{ 
+							// CMP case
+							conf =  jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_ENTITY_CMP_CONFIGURATION);
+
+							// Make sure this bean knows the configuration he is using
+							bean.setConfigurationName(DEFAULT_ENTITY_CMP_CONFIGURATION);
+						}
+					}
+					
+					// Set container invoker
+					((EntityContainer)con).setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+					
+					// Set instance cache
+					((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+					
+					// Set instance pool
+					con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+					
+					// Set persistence manager
+					((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+					     
+
+					// Create interceptors
+					con.addInterceptor(new LogInterceptor());
+					con.addInterceptor(new TxInterceptor());
+					con.addInterceptor(new EntityInstanceInterceptor());
+					con.addInterceptor(new SecurityInterceptor());
+					con.addInterceptor(new EntitySynchronizationInterceptor());
+
+					con.addInterceptor(con.createContainerInterceptor());
+
+					// Add container to application
+					containers.add(con);
             }
             
+				// Set callback to application
             if (con != null)
-               con.setApplication(app);
+		         con.setApplication(app);
          }
          
          // Init/Start container
          for (int i = 0; i < containers.size(); i++)
          {
             Container con = (Container)containers.get(i);
-            
-            // Register Container with JMX
-//            server.registerMBean(con, new ObjectName("EJB:service=Container,application="+app.getName()+",name="+con.getMetaData().getEjbName()));
             
             // Init container
             con.init();
@@ -255,22 +299,28 @@ public class ContainerFactory
             log.log("Started: "+con.getMetaData().getEjbName());
          }
          
-         // Bind in JNDI
+         // Bind container in global JNDI namespace
          for (int i = 0; i < containers.size(); i++)
          {
             Container con = (Container)containers.get(i);
-            rebind(ctx, con.getMetaData().getJndiName(), con.getContainerInvoker().getEJBHome());
-            
-            // Done
-            log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
+				if (con instanceof EntityContainer)
+				{
+					rebind(ctx, con.getMetaData().getJndiName(), ((EntityContainer)con).getContainerInvoker().getEJBHome());
+					
+					// Done
+					log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
+				} else if (con instanceof StatelessSessionContainer)
+				{
+					rebind(ctx, con.getMetaData().getJndiName(), ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome());
+					
+					// Done
+					log.log("Bound "+con.getMetaData().getEjbName() + " to " + con.getMetaData().getJndiName());
+				}
          }
          
          // Add to webserver so client can access classes through dynamic class downloading
          WebProviderMBean webServer = (WebProviderMBean)MBeanProxy.create(WebProviderMBean.class, WebProviderMBean.OBJECT_NAME);
          webServer.addClassLoader(cl);
-         
-         // Register Application with JMX
-//         server.registerMBean(app, new ObjectName("EJB:service=Application,name="+app.getName()));
          
          // Done
          log.log("Deployed application: "+app.getName());
@@ -297,6 +347,7 @@ public class ContainerFactory
    public void undeploy(URL url)
       throws DeploymentException
    {
+		// Get application from table
       Application app = (Application)deployments.get(url);
       
       // Check if deployed
@@ -310,7 +361,6 @@ public class ContainerFactory
       log.log("Undeploying:"+url);
       try
       {
-         
          // Unbind in JNDI
          Iterator enum = app.getContainers().iterator();
          Context ctx = new InitialContext();
@@ -329,14 +379,14 @@ public class ContainerFactory
          {
             Container con = (Container)enum.next();
             
-            // Init container
+            // Stop container
             con.stop();
             
-            // Start
+            // Destroy container
             con.destroy();
             
             // Done
-            log.log("Removed: "+con.getMetaData().getJndiName());
+            log.log("Removed: "+con.getMetaData().getEjbName());
          }
          
          // Remove deployment
@@ -346,6 +396,9 @@ public class ContainerFactory
          log.log("Undeployed application: "+app.getName());
       } catch (Exception e)
       {
+         log.error("Undeploy failed");
+         log.exception(e);
+			
          throw new DeploymentException("Undeploy failed", e);
       } finally
       {

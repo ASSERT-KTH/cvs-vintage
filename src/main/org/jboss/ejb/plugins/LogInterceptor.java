@@ -7,7 +7,7 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
-import java.security.Principal;
+import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -30,7 +30,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -40,6 +40,8 @@ public class LogInterceptor
    // Attributes ----------------------------------------------------
    Log log;
    
+	boolean callLogging;
+	
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -53,6 +55,10 @@ public class LogInterceptor
       super.start();
       
       String name = getContainer().getMetaData().getEjbName();
+		
+		// Should we log all calls?
+		callLogging = getContainer().getMetaData().getContainerConfiguration().getCallLogging();
+		
       log = new Log(name);
    }
    
@@ -61,31 +67,34 @@ public class LogInterceptor
    {
       Log.setLog(log);
       
-      StringBuffer str = new StringBuffer();
-		str.append(method.getName());
-		str.append("(");
-      if (args != null)
-         for (int i = 0; i < args.length; i++)
-			{
-            str.append(i==0?"":",");
-				str.append(args[i]);
-			}
-		str.append(")");
-      log.log(str.toString());
+		// Log calls?
+		if (callLogging)
+		{
+			StringBuffer str = new StringBuffer();
+			str.append(method.getName());
+			str.append("(");
+			if (args != null)
+			   for (int i = 0; i < args.length; i++)
+				{
+			      str.append(i==0?"":",");
+					str.append(args[i]);
+				}
+			str.append(")");
+			log.log(str.toString());
+		}
       
       try
       {
          return getNext().invokeHome(method, args, ctx);
       } catch (Exception e)
       {
-         if (e instanceof FinderException)
-            throw e;
-         else if (e instanceof CreateException)
-            throw e;
-         else if (e instanceof RemoveException)
-            throw e;
-            
-         e.printStackTrace();
+			// Log system exceptions
+         if (e instanceof RemoteException ||
+				 e instanceof RuntimeException)
+			{
+				e.printStackTrace();
+			}
+			
          throw e;
       } finally
       {

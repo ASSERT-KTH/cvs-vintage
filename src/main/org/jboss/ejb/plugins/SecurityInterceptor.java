@@ -34,7 +34,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
@@ -59,8 +59,8 @@ public class SecurityInterceptor
    public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
       throws Exception
    {
-      if (ctx != null)
-         ctx.setPrincipal(SecureSocketFactory.getPrincipal());
+//      if (ctx != null)
+//         ctx.setPrincipal(SecureSocketFactory.getPrincipal());
       return getNext().invokeHome(method, args, ctx);
    }
 
@@ -78,7 +78,7 @@ public class SecurityInterceptor
    public Object invoke(Object id, Method method, Object[] args, EnterpriseContext ctx)
       throws Exception
    {
-      ctx.setPrincipal(SecureSocketFactory.getPrincipal());
+//      ctx.setPrincipal(SecureSocketFactory.getPrincipal());
       return getNext().invoke(id, method, args, ctx);
    }
    

@@ -22,16 +22,18 @@ import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
 import com.dreambean.ejx.ejb.EjbReference;
+import com.dreambean.ejx.ejb.CMPField;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class JawsEntity
    extends com.dreambean.ejx.ejb.Entity
+	implements BeanContextContainerProxy
 {
    // Constants -----------------------------------------------------
     
@@ -43,7 +45,7 @@ public class JawsEntity
 	boolean readOnly = false;
 	int timeOut = 5*60; // 5 minute timeout on read-only state
 
-   Container c;
+   Customizer c;
    
    // Static --------------------------------------------------------
 
@@ -71,9 +73,15 @@ public class JawsEntity
    public com.dreambean.ejx.ejb.CMPField addCMPField()
       throws Exception
    {
-      return (com.dreambean.ejx.ejb.CMPField)instantiateChild("org.jboss.ejb.plugins.jaws.deployment.JawsCMPField");
+      return (CMPField)instantiateChild("org.jboss.ejb.plugins.jaws.deployment.JawsCMPField");
    }
    
+   public EjbReference addEjbReference()
+      throws Exception
+   {
+      return (EjbReference)instantiateChild("org.jboss.ejb.plugins.jaws.deployment.JawsEjbReference");
+   }
+	
    public Finder addFinder()
       throws Exception
    {
@@ -85,23 +93,19 @@ public class JawsEntity
       return Util.getChildrenByClass(iterator(),Finder.class);
    }
    
-   // BeanContextContainerProxy implementation -----------------
+	public Iterator iterator()
+	{
+		// Don't show children
+		return new ArrayList().iterator();
+	}
+	
+   // BeanContextChildComponentProxy implementation -----------------
    public Container getContainer()
    {
       if (c == null)
       {
-          c = new JTabbedPane();
-          c.add(new GenericCustomizer(this), "Entity");
-          
-          try
-          {
-             c.add(new GenericPropertySheet(this, JawsCMPField.class), "CMP mappings");
-          } catch (Exception e) {}
-          
-          try
-          {
-             c.add(new GenericPropertySheet(this, Finder.class), "Finders");
-          } catch (Exception e) {}
+          c = new JawsEntityViewer();
+			 c.setObject(this);
       }
       return (Container)c;
    }

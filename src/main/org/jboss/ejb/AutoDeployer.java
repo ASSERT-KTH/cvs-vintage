@@ -15,36 +15,57 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.HashMap;
 import java.util.ArrayList;
-import javax.management.*;
-
+import javax.management.MBeanServer;
+import javax.management.MBeanException;
+import javax.management.RuntimeErrorException;
+import javax.management.ObjectName;
 
 import org.jboss.logging.Log;
-//import org.jboss.cluster.*;
 import org.jboss.util.MBeanProxy;
+import org.jboss.util.ServiceMBeanSupport;
 
 /**
- *   <description> 
+ *   The AutoDeployer is used to automatically deploy EJB-jars.
+ *	  It can be used on either .jar or .xml files. The AutoDeployer can
+ *	  be configured to "watch" one or more files. If they are updated they will
+ *	  be redeployed. 
+ *
+ *	  If it is set to watch a directory instead of a single file, all files within that
+ *	  directory will be watched separately.
+ *
+ *	  When a jar is to be deployed, the AutoDeployer will use a ContainerFactory to deploy it.
  *      
- *   @see <related>
+ *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class AutoDeployer
-   implements AutoDeployerMBean, MBeanRegistration, Runnable
+	extends ServiceMBeanSupport
+   implements AutoDeployerMBean, Runnable
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "EJB:service=AutoDeployer";
     
    // Attributes ----------------------------------------------------
+	
+	// Callback to the JMX agent
    MBeanServer server;
+	
+	// JMX name of the ContainerFactory
    ObjectName factoryName;
    
+	// The watch thread
    boolean running = false;
    
+	// Watch these directories for new files
    ArrayList watchedDirectories = new ArrayList();
+	
+	// These URL's have been deployed. Check for new timestamp
    HashMap deployedURLs = new HashMap();
+	
+	// These URL's are being watched
    ArrayList watchedURLs = new ArrayList();
    
+	// The logger for this service
    Log log = new Log("Auto deploy");
 
    // Static --------------------------------------------------------
@@ -52,8 +73,14 @@ public class AutoDeployer
    // Constructors --------------------------------------------------
    public AutoDeployer(String urlList)
    {
+		addURLs(urlList);
+	}
+	
+	public void addURLs(String urlList)
+	{
       StringTokenizer urls = new StringTokenizer(urlList, ",");
       
+		// Add URLs to list
       while (urls.hasMoreTokens())
       {
          String url = urls.nextToken();
@@ -62,17 +89,6 @@ public class AutoDeployer
          File urlFile = new File(url);
          if (urlFile.exists() && urlFile.isDirectory())
          {
-/*            
-            File[] files = url.listFiles();
-            for (int i = 0; i < files.length; i++)
-            {
-               if (!deployedURLs.contains(files[i].toURL()))
-               {
-                  watchedURLs.addElement(new Deployment(files[i].toURL()));
-               }
-            }
-*/          
-
             File metaFile = new File(urlFile, "META-INF/ejb-jar.xml");
             if (metaFile.exists()) // It's unpackaged
             {
@@ -86,6 +102,7 @@ public class AutoDeployer
                }
             } else
             {
+					// This is a directory whose contents shall be checked for deployments
                try
                {
                   watchedDirectories.add(urlFile.getCanonicalFile());
@@ -105,7 +122,7 @@ public class AutoDeployer
                {
                   log.warning("Cannot auto-deploy "+urlFile);
                }
-         } else // It's a real URL
+         } else // It's a real URL (probably http:) pointing to a JAR
          {
             try
             {
@@ -113,71 +130,13 @@ public class AutoDeployer
             } catch (MalformedURLException e)
             {
                // Didn't work
-               log.log("Cannot auto-deploy "+url);
+               log.warning("Cannot auto-deploy "+url);
             }
          }
       }
    }
    
    // Public --------------------------------------------------------
-   public void start()
-      throws Exception
-   {
-      running = true;
-      new Thread(this).start();
-   }
-   
-   public void stop()
-   {
-      running = false;
-   }
-
-   public void deploy(String url)
-      throws Exception
-   {
-      try
-      {   
-        
-         // MF INFO: the call will land on ContainerFactory
-         
-         server.invoke(factoryName, "deploy",
-                         new Object[] { url }, new String[] { "java.lang.String" });
-      } catch (MBeanException e)
-      {
-         throw e.getTargetException();
-      } catch (RuntimeErrorException e)
-      {
-         throw e.getTargetError();
-      }
-   }
-   
-   
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws java.lang.Exception
-   {
-      this.server = server;
-      
-      // MF INFO: the ObjetName is ContainerFactory 
-      factoryName = new ObjectName(ContainerFactoryMBean.OBJECT_NAME);
-      
-      run(); // Pre-deploy
-      start();
-      return new ObjectName(OBJECT_NAME);
-   }
-   
-   public void postRegister(java.lang.Boolean registrationDone)
-   {
-   }
-   
-   public void preDeregister()
-      throws java.lang.Exception
-   {
-   }
-   
-   public void postDeregister()
-   {
-   }
-   
    public void run()
    {
       do 
@@ -190,7 +149,7 @@ public class AutoDeployer
          
          try
          {
-            // Check directories
+            // Check directories - add new entries to list of files
             for (int i = 0; i < watchedDirectories.size(); i++)
             {
                File dir = (File)watchedDirectories.get(i);
@@ -200,6 +159,8 @@ public class AutoDeployer
                   URL fileUrl = files[idx].toURL();
                   if (deployedURLs.get(fileUrl) == null)
                   {
+							// This file has not been seen before
+							// Add to list of files to deploy automatically
                      watchedURLs.add(new Deployment(fileUrl));
                      deployedURLs.put(fileUrl, fileUrl);
                   }
@@ -215,9 +176,11 @@ public class AutoDeployer
                long lm;
                if (deployment.watch.getProtocol().startsWith("file"))
                {
+						// Get timestamp of file from file system
                   lm = new File(deployment.watch.getFile()).lastModified();
                } else
                {
+						// Use URL connection to get timestamp
                   lm = deployment.watch.openConnection().getLastModified();
                }
                
@@ -229,22 +192,83 @@ public class AutoDeployer
                   try
                   {
                      deploy(deployment.url.toString());
-                  } catch (DeploymentException e)
+                  } catch (Throwable e)
                   {
                      log.error("Deployment failed:"+deployment.url);
-                     log.exception(e.getCause());
+                     log.exception(e);
+							
+							// Deployment failed - won't retry until updated
                   }
                }
             }
          } catch (Exception e)
          {
             e.printStackTrace(System.err);
+				
+				// Stop auto deployer
             running = false;
          }
       } while(running);
    }
-   // Protected -----------------------------------------------------
+	
+   // ServiceMBeanSupport overrides ---------------------------------
+   public String getName()
+   {
+      return "Auto deployer";
+   }
    
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws javax.management.MalformedObjectNameException
+   {
+   	this.server = server;
+      return new ObjectName(OBJECT_NAME);
+   }
+	
+   protected void initService()
+      throws Exception
+   {
+      // Save JMX name of ContainerFactory
+      factoryName = new ObjectName(ContainerFactoryMBean.OBJECT_NAME);
+   }
+
+   protected void startService()
+      throws Exception
+   {
+      run(); // Pre-deploy. This is done so that deployments available
+      		 // on start of container is deployed ASAP
+   			 
+      // Start auto deploy thread
+      running = true;
+      new Thread(this, "Auto deploy").start();
+   }
+   
+   protected void stopService()
+   {
+   	// Stop auto deploy thread
+      running = false;
+   }
+	
+   // Protected -----------------------------------------------------
+   protected void deploy(String url)
+      throws Exception
+   {
+      try
+      {   
+   		// Call the ContainerFactory that is loaded in the JMX server
+         server.invoke(factoryName, "deploy",
+                         new Object[] { url }, new String[] { "java.lang.String" });
+      } catch (MBeanException e)
+      {
+         throw e.getTargetException();
+      } catch (RuntimeErrorException e)
+      {
+         throw e.getTargetError();
+      }
+   }
+   
+   // Inner classes -------------------------------------------------
+	
+	// This class holds info about a deployement, such as the URL and the last timestamp
    static class Deployment
    {
       long lastModified;

@@ -28,11 +28,10 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class jBossEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
-	implements BeanContextContainerProxy
 {
    // Constants -----------------------------------------------------
    public static final String JBOSS_DOCUMENT="jboss";
@@ -40,8 +39,9 @@ public class jBossEjbJar
    // Attributes ----------------------------------------------------
    ResourceManagers rm;
    ContainerConfigurations cc;
+	boolean secure;
 	
-	JTabbedPane con;
+	Customizer c;	
 
    // Static --------------------------------------------------------
    
@@ -58,30 +58,32 @@ public class jBossEjbJar
    }
    
    // Public --------------------------------------------------------
+   public void setSecure(boolean s) { secure = s; }
+   public boolean isSecure() { return secure; }
    
    public ResourceManagers getResourceManagers() { return rm; }
    public ContainerConfigurations getContainerConfigurations() { return cc; }
    
-	public Container getContainer()
-	{
-		if (con == null)
-		{
-			// Create tabbed pane
-			con = new JTabbedPane();
-			con.add(cc.getComponent());
-			con.add(rm.getComponent());
-			con.add(eb.getContainer());
-			con.add(((jBossEnterpriseBeans)eb).getComponent());
-		}
-		return con;
-	}
-
+   // BeanContextChildComponentProxy implementation -----------------
+   public java.awt.Component getComponent()
+   {
+      if (c == null)
+      {
+         c = new jBossEjbJarViewer();
+         c.setObject(this);
+      }
+   	
+      return (java.awt.Component)c;
+   }
+	
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
    	throws Exception
    {
       Element ejbjar = doc.createElement("jboss");
 
+      XMLManager.addElement(ejbjar,"secure",new Boolean(isSecure()).toString());
+		
       ejbjar.appendChild(cc.exportXml(doc));
       ejbjar.appendChild(rm.exportXml(doc));
       ejbjar.appendChild(eb.exportXml(doc));
@@ -109,7 +111,10 @@ public class jBossEjbJar
             } else if (name.equals("container-configurations"))
             {
                cc.importXml((Element)n);
-            }
+            } else if (name.equals("secure"))
+            {
+               setSecure(new Boolean(XMLManager.getString(n)).booleanValue());
+            } 
          }
       } else
       {

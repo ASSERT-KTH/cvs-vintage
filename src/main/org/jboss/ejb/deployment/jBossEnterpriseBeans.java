@@ -33,7 +33,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class jBossEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -41,7 +41,6 @@ public class jBossEnterpriseBeans
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   boolean secure = true;
 	
 	Container c;
 	Component com;
@@ -51,8 +50,6 @@ public class jBossEnterpriseBeans
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
-   public void setSecure(boolean s) { secure = s; }
-   public boolean isSecure() { return secure; }
 
 	
    public com.dreambean.ejx.ejb.Entity addEntity()
@@ -77,70 +74,14 @@ public class jBossEnterpriseBeans
 		}
 	}
 
-   // BeanContextContainerProxy implementation ----------------------
-   public Container getContainer()
-   {
-      if (c == null)
-      {
-   		c = new BeanContextPanel(this);
-   		JSplitPane sp = (JSplitPane)c;
-   		JScrollPane scrollPane = (JScrollPane)sp.getLeftComponent();
-   		((BeanContextTreeView)scrollPane.getViewport().getView()).expandPath(((BeanContextTreeView)scrollPane.getViewport().getView()).getPathForRow(0));
-   		((BeanContextTreeView)scrollPane.getViewport().getView()).setRootVisible(false);
-   		JToolBar toolBar = new JToolBar();
-   		toolBar.add(new AbstractAction("Add JNDI name prefix")
-   		{
-   			public void actionPerformed(ActionEvent evt)
-   			{
-   				try
-   				{
-   					BeanInfo bi = Introspector.getBeanInfo(jBossEnterpriseBeans.class);
-   					
-   					MethodDescriptor[] mdList = bi.getMethodDescriptors();
-   					for (int i = 0; i < mdList.length; i++)
-   					{
-   						if (mdList[i].getName().equals("addJndiPrefix"))
-   						{
-   							new GenericMethodDialog(jBossEnterpriseBeans.this, mdList[i], (Frame)SwingUtilities.getRoot(c));
-   							break;
-   						}
-   					}
-   				} catch (Exception e)
-   				{
-   					e.printStackTrace();
-   				}
-   			}
-   		});
-   		
-   		JPanel p = new JPanel(new BorderLayout());
-   		p.add("Center", c);
-   		p.add("North", toolBar);
-   		
-   		c = p;
-   		c.setName("Enterprise beans");
-      }
-      return (Container)c;
-   }
-	
-   // BeanContextChildComponentProxy implementation -----------------
-   public Component getComponent()
-   {
-      if (com == null)
-      {
-	      com = new GenericCustomizer(false, this);
-      	com.setName("Application settings");
-      }
-      return com;
-   }
-	
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
       throws Exception
    {
       Element enterprisebeans = super.exportXml(doc);
       
-      XMLManager.addElement(enterprisebeans,"secure",new Boolean(isSecure()).toString());
-      
+		// No settings
+		
       return enterprisebeans;
    }
    
@@ -182,9 +123,6 @@ public class jBossEnterpriseBeans
                   e.printStackTrace();
                   // Does not exist anymore...
                }
-            } else if (name.equals("secure"))
-            {
-               setSecure(new Boolean(XMLManager.getString(n)).booleanValue());
             } 
          }
       } else

@@ -6,29 +6,22 @@
  */
 package org.jboss.ejb;
 
+import org.jboss.util.ServiceMBean;
+
 /**
- *   <description> 
+ *   This is the interface of the AutoDeployer that is exposed for administration
  *      
- *   @see <related>
+ *   @see AutoDeployer
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface AutoDeployerMBean
+	extends ServiceMBean
 {
    // Constants -----------------------------------------------------
+   public static final String OBJECT_NAME = "EJB:service=AutoDeployer";
     
-   // Attributes ----------------------------------------------------
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-   
    // Public --------------------------------------------------------
-   public void start()
-      throws Exception;
-   
-   public void stop();
-
-   // Protected -----------------------------------------------------
+   public void addURLs(String urlList);
 }
 

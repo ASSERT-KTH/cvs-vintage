@@ -24,14 +24,14 @@ import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -44,16 +44,31 @@ public class StatefulSessionContainer
    Map homeMapping;
    Map beanMapping;
    
-   Log log;
-   
-   StatefulSessionPersistenceManager persistenceManager;
-   InstanceCache instanceCache;
+   // This is the container invoker for this container
+   protected ContainerInvoker containerInvoker;
+	
+   // This is the persistence manager for this container
+   protected StatefulSessionPersistenceManager persistenceManager;
+   protected InstanceCache instanceCache;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    
    // Public --------------------------------------------------------
+   public void setContainerInvoker(ContainerInvoker ci) 
+   { 
+      if (ci == null)
+      	throw new IllegalArgumentException("Null invoker");
+   		
+      this.containerInvoker = ci; 
+      ci.setContainer(this);
+   }
+
+   public ContainerInvoker getContainerInvoker() 
+   { 
+   	return containerInvoker; 
+   }
 
    public void setInstanceCache(InstanceCache ic)
    { 
@@ -84,8 +99,6 @@ public class StatefulSessionContainer
       super.start();
       setupBeanMapping();
       setupHomeMapping();
-      
-      log = new Log(getMetaData().getEjbName() + " EJB");
    }
    
    public Object invokeHome(Method method, Object[] args)
@@ -243,7 +256,6 @@ public class StatefulSessionContainer
          Method m = (Method)homeMapping.get(method);
          // Invoke and handle exceptions
          
-         Log.setLog(log);
          try
          {
             return m.invoke(StatefulSessionContainer.this, new Object[] { method, args, ctx});
@@ -254,9 +266,6 @@ public class StatefulSessionContainer
                throw (Exception)ex;
             else
                throw (Error)ex;
-         } finally
-         {
-            Log.unsetLog();
          }
       }
          
@@ -270,7 +279,6 @@ public class StatefulSessionContainer
          if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
          {
             // Invoke and handle exceptions
-            Log.setLog(log);
             try
             {
                return m.invoke(StatefulSessionContainer.this, new Object[] { method, args, ctx });
@@ -281,14 +289,10 @@ public class StatefulSessionContainer
                   throw (Exception)ex;
                else
                   throw (Error)ex;
-            } finally
-            {
-               Log.unsetLog();
-            }
+            } 
          } else
          {
             // Invoke and handle exceptions
-            Log.setLog(log);
             try
             {
                return m.invoke(ctx.getInstance(), args);
@@ -299,10 +303,7 @@ public class StatefulSessionContainer
                   throw (Exception)ex;
                else
                   throw (Error)ex;
-            } finally
-            {
-               Log.unsetLog();
-            }
+            } 
          }
       }
    }

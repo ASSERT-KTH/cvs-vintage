@@ -17,7 +17,7 @@ import java.security.Permissions;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class EJBClassLoader
    extends URLClassLoader
@@ -25,6 +25,7 @@ public class EJBClassLoader
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+	// The permissions given to restricted EJB classes
    Permissions perms;
    
    boolean secure; // True -> Enforce EJB restrictions
@@ -45,5 +46,12 @@ public class EJBClassLoader
    }
    
    // Public --------------------------------------------------------
+   protected PermissionCollection getPermissions(CodeSource source)
+   {
+      if (secure)
+         return perms;
+      else
+         return super.getPermissions(source);
+   }
 }
 

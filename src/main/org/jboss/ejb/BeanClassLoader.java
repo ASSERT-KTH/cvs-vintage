@@ -13,11 +13,13 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 
 /**
- *   ClassLoader that one can attach thread-specific data to
+ *   This classloader is used to hold the java: JNDI-namespace root.
+ *	  Each container has its own BCL. When a "java:" lookup is made
+ *	  the JNDI-provider will use the root to lookup the values.
  *      
- *   @see <related>
+ *   @see org.jboss.naming.java.javaURLContextFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class BeanClassLoader
    extends URLClassLoader
@@ -25,6 +27,7 @@ public class BeanClassLoader
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+	// This is the root of the "java:" JNDI-namespace
    Object jndiRoot;
    
    // Static --------------------------------------------------------
@@ -36,7 +39,14 @@ public class BeanClassLoader
    }
    
    // Public --------------------------------------------------------
-   public void setJNDIRoot(Object root) { this.jndiRoot = root; }
-   public Object getJNDIRoot() { return jndiRoot; }
+   public void setJNDIRoot(Object root) 
+	{ 
+		this.jndiRoot = root; 
+	}
+	
+   public Object getJNDIRoot() 
+	{ 
+		return jndiRoot; 
+	}
 }
 

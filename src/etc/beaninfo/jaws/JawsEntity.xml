@@ -33,7 +33,7 @@
 	 
   <property 
     name="TimeOut" class="int" 
-    displayname="Timeout"/>
+    displayname="Timeout(for read only state)"/>
 	 
   <method name="addFinder" displayname="Add finder">
   </method>

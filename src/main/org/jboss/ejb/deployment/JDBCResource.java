@@ -25,7 +25,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class JDBCResource
 	extends BeanContextChildSupport
@@ -62,7 +62,7 @@ public class JDBCResource
    public Component getComponent()
    {
       if (c == null)
-          c = new GenericCustomizer(this);
+          c = new GenericCustomizer(false, this);
       return (Component)c;
    }
    

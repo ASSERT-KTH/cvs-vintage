@@ -27,9 +27,10 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class URLResource
+   extends BeanContextChildSupport
    implements BeanContextChildComponentProxy, XmlExternalizable, ResourceManager
 {
    // Constants -----------------------------------------------------
@@ -54,11 +55,16 @@ public class URLResource
    
    public String getType() { return "java.net.URL"; }
    
+   public void removeResource()
+   {
+   	getBeanContext().remove(this);
+   }
+	
    // BeanContextChildComponentProxy implementation -----------------
    public Component getComponent()
    {
       if (c == null)
-          c = new GenericCustomizer(this);
+          c = new GenericCustomizer(false, this);
       return c;
    }
    

@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class jBossEntity
    extends com.dreambean.ejx.ejb.Entity
@@ -38,7 +38,7 @@ public class jBossEntity
    // Attributes ----------------------------------------------------
    String jndiName= "";
    String configurationName = "";
-
+	
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -67,7 +67,7 @@ public class jBossEntity
    {
       return (com.dreambean.ejx.ejb.EjbReference)instantiateChild("org.jboss.ejb.deployment.jBossEjbReference");
    }
-   
+	
    // XmlExternalizable implementation ------------------------------
    public Element exportXml(Document doc)
    	throws Exception
@@ -155,4 +155,25 @@ public class jBossEntity
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
+	class AttributeAggregate
+		extends BeanContextSupport
+		implements BeanContextContainerProxy
+	{
+		Container com = new GenericCustomizer(this);
+	
+		public Container getContainer()
+		{
+			return com;
+		}
+	
+		public Iterator iterator()
+		{
+			return getEjbReferences();
+		}
+		
+		public String toString() 
+		{
+			 return "EJB references";
+		}
+	}
 }

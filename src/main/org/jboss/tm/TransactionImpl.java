@@ -29,7 +29,7 @@ import javax.transaction.xa.XAException;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -53,16 +53,16 @@ public class TransactionImpl
    static String hostName;
    
    // Constructors --------------------------------------------------
-   public TransactionImpl(int timeout)
+   public TransactionImpl(TxManager tm, int timeout)
    {
+		this(tm);
+		
       resources = new Vector();
       sync = new Vector();
       status = Status.STATUS_ACTIVE;
       
       this.timeout = (long)timeout;
       start = System.currentTimeMillis();
-      
-      xid = new XidImpl((getHostName()+"/"+getNextId()).getBytes(), null);
    }
    
    public TransactionImpl(TxManager tm)

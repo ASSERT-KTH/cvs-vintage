@@ -9,25 +9,21 @@ package org.jboss.ejb;
 import org.jboss.util.Service;
 
 /**
- *   <description> 
+ *   This is a superinterface for all Container plugins. All plugin interfaces
+ *	  must extend this interface.
  *      
- *   @see <related>
+ *   @see Service
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public interface ContainerPlugin
    extends Service
 {
-   // Constants -----------------------------------------------------
-    
-   // Static --------------------------------------------------------
-
    // Public --------------------------------------------------------
-
-   /**
-    *
-    *
-    * @return     
-    */
+	/**
+	 *	This callback is set by the container so that the plugin may access it
+	 *
+	 * @param   con  the container using this plugin
+	 */
    public void setContainer(Container con);
 }

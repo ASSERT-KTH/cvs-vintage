@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class TxInterceptor
    extends AbstractInterceptor
@@ -89,7 +89,7 @@ public class TxInterceptor
       {
          case TX_NOT_SUPPORTED:
          {
-            Logger.debug("TX_NOT_SUPPORTED");
+//DEBUG            Logger.debug("TX_NOT_SUPPORTED");
             if (current.getStatus() != Status.STATUS_NO_TRANSACTION)
             {
                // Suspend tx
@@ -111,14 +111,14 @@ public class TxInterceptor
          
          case TX_REQUIRED:
          {
-            Logger.debug("TX_REQUIRED");
+//DEBUG            Logger.debug("TX_REQUIRED");
             Transaction tx = current;
             
-            if (tx.getStatus() == Status.STATUS_NO_TRANSACTION)
+            if (current.getStatus() == Status.STATUS_NO_TRANSACTION)
             {
                // No tx running
                // Create tx
-               Logger.debug("Begin tx");
+//DEBUG               Logger.debug("Begin tx");
                getContainer().getTransactionManager().begin();
                tx = getContainer().getTransactionManager().getTransaction();
             } 
@@ -131,21 +131,21 @@ public class TxInterceptor
             {
 					if (!tx.equals(current))
 					{
-						getContainer().getTransactionManager().rollback();
+						tx.rollback();
 					}
                throw e;
             } catch (RuntimeException e)
             {
             	if (!tx.equals(current))
             	{
-            		getContainer().getTransactionManager().rollback();
+            		tx.rollback();
             	}
                throw new ServerException("Exception occurred", e);
             } catch (Error e)
             {
             	if (!tx.equals(current))
             	{
-            		getContainer().getTransactionManager().rollback();
+            		tx.rollback();
             	}
                throw new ServerException("Exception occurred:"+e.getMessage());
             } finally
@@ -168,7 +168,7 @@ public class TxInterceptor
          
          case TX_SUPPORTS:
          {
-	         Logger.debug("TX_SUPPORTS");
+//DEBUG	         Logger.debug("TX_SUPPORTS");
 	         Transaction tx = current;
 	         
 				// This mode doesn't really do anything
@@ -222,7 +222,7 @@ public class TxInterceptor
          
          case TX_MANDATORY:
          {
-	         Logger.debug("TX_MANDATORY");
+//DEBUG	         Logger.debug("TX_MANDATORY");
 	         if (current.getStatus() == Status.STATUS_NO_TRANSACTION)
 	         {
 					throw new TransactionRequiredException();
@@ -234,7 +234,7 @@ public class TxInterceptor
          
          case TX_NEVER:
          {
-	         Logger.debug("TX_NEVER");
+//DEBUG	         Logger.debug("TX_NEVER");
 	         if (current.getStatus() == Status.STATUS_ACTIVE)
 	         {
 	         	throw new RemoteException("Transaction not allowed");
@@ -253,7 +253,7 @@ public class TxInterceptor
    // This should be cached, since this method is called very often
    protected int getTransactionMethod(Method m)
    {
-      return TX_REQUIRED; // TODO: find out transaction method
+      return TX_SUPPORTS; // TODO: find out transaction method
    }
    // Inner classes -------------------------------------------------
 }

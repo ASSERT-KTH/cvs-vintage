@@ -23,10 +23,10 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class TxManager
-   implements TransactionManager // , TransactionManagerRemote
+   implements TransactionManager
 {
    // Constants -----------------------------------------------------
     
@@ -45,7 +45,7 @@ public class TxManager
       throws NotSupportedException,SystemException
    {
 //      System.out.println("begin tx");
-      tx.set(new TransactionImpl(this));
+      tx.set(new TransactionImpl(this, timeOut));
    }
    
    public void commit()

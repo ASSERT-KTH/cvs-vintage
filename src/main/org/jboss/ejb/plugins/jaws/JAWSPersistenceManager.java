@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -246,10 +246,10 @@ public class JAWSPersistenceManager
       throws Exception
    {
       // Find datasource
-      url = ((JawsEnterpriseBeans)entity.getBeanContext()).getDataSource();
+      url = ((JawsEjbJar)entity.getBeanContext().getBeanContext()).getDataSource();
       if (!url.startsWith("jdbc:"))
       {
-         ds = (DataSource)new InitialContext().lookup(((JawsEnterpriseBeans)entity.getBeanContext()).getDataSource());
+         ds = (DataSource)new InitialContext().lookup(((JawsEjbJar)entity.getBeanContext().getBeanContext()).getDataSource());
       }
       
       // Create table if necessary

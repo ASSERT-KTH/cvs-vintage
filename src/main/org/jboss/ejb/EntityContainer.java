@@ -24,14 +24,15 @@ import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
- *   <description> 
+ *   This is a Container for EntityBeans (both BMP and CMP).
  *      
- *   @see <related>
+ *   @see Container
+ *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class EntityContainer
    extends Container
@@ -39,24 +40,48 @@ public class EntityContainer
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   Map createMapping;
-   Map postCreateMapping;
-   Map homeMapping;
-   Map beanMapping;
+	
+	// These are the mappings between the create methods and the ejbCreate methods
+   protected Map createMapping;
+	
+   // These are the mappings between the create methods and the ejbPostCreate methods
+   protected Map postCreateMapping;
+	
+   // These are the mappings between the home interface methods and the container methods
+   protected Map homeMapping;
+	
+   // These are the mappings between the remote interface methods and the bean methods
+   protected Map beanMapping;
    
-   Log log;
-   
-   EntityPersistenceManager persistenceManager;
-   InstanceCache instanceCache;
-   
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
+	// This is the container invoker for this container
+   protected ContainerInvoker containerInvoker;
+	
+   // This is the persistence manager for this container
+   protected EntityPersistenceManager persistenceManager;
+	
+   // This is the instance cache for this container
+   protected InstanceCache instanceCache;
    
    // Public --------------------------------------------------------
+   public void setContainerInvoker(ContainerInvoker ci) 
+   { 
+      if (ci == null)
+      	throw new IllegalArgumentException("Null invoker");
+   		
+      this.containerInvoker = ci; 
+      ci.setContainer(this);
+   }
 
+   public ContainerInvoker getContainerInvoker() 
+   { 
+   	return containerInvoker; 
+   }
+	
    public void setInstanceCache(InstanceCache ic)
    { 
+      if (ic == null)
+      	throw new IllegalArgumentException("Null cache");
+			
       this.instanceCache = ic; 
       ic.setContainer(this);
    }
@@ -66,9 +91,16 @@ public class EntityContainer
       return instanceCache; 
    }
    
-   public EntityPersistenceManager getPersistenceManager() { return persistenceManager; }
+   public EntityPersistenceManager getPersistenceManager() 
+	{ 
+		return persistenceManager; 
+	}
+	
    public void setPersistenceManager(EntityPersistenceManager pm) 
    { 
+      if (pm == null)
+      	throw new IllegalArgumentException("Null persistence manager");
+			
       persistenceManager = pm; 
       pm.setContainer(this);
    }
@@ -77,55 +109,94 @@ public class EntityContainer
    public void init()
       throws Exception
    {
+		// Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
-      log = new Log(getMetaData().getEjbName() + " EJB");
-      
+		// Call default init
       super.init();
       
+      // Init container invoker
+      containerInvoker.init();
+		
+      // Init instance cache
+      instanceCache.init();
+		
       // Init persistence
       persistenceManager.init();
       
       setupBeanMapping();
       setupHomeMapping();
       
+      // Reset classloader  
       Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public void start()
       throws Exception
    {
+      // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
+		// Call default start
       super.start();
+      
+      // Start container invoker
+      containerInvoker.start();
+      
+      // Start instance cache
+      instanceCache.start();
       
       // Start persistence
       persistenceManager.start();
       
+		// Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public void stop()
    {
+      // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
-      // Stop persistence
-      persistenceManager.stop();
-      
+		
+		// Call default stop
       super.stop();
-      
-      Thread.currentThread().setContextClassLoader(oldCl);
+		
+	   // Stop container invoker
+	   containerInvoker.stop();
+	   
+	   // Stop instance cache
+	   instanceCache.stop();
+	   
+	   // Stop persistence
+	   persistenceManager.stop();
+	   
+	   // Reset classloader
+	   Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public void destroy()
    {
-      // Destroy persistence
-      persistenceManager.destroy();
-      
-      super.destroy();
+	   // Associate thread with classloader
+	   ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+	   Thread.currentThread().setContextClassLoader(getClassLoader());
+	   
+	   // Call default destroy
+	   super.destroy();
+	   
+	   // Destroy container invoker
+	   containerInvoker.destroy();
+	   
+	   // Destroy instance cache
+	   instanceCache.destroy();
+	   
+	   // Destroy persistence
+	   persistenceManager.destroy();
+	   
+	   // Reset classloader
+	   Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public Object invokeHome(Method method, Object[] args)
@@ -134,16 +205,6 @@ public class EntityContainer
 	   return getInterceptor().invokeHome(method, args, null);
    }
 
-   /**
-    *   This method retrieves the instance from an object table, and invokes the method
-    *   on the particular instance through the chain of interceptors
-    *
-    * @param   id  
-    * @param   m  
-    * @param   args  
-    * @return     
-    * @exception   Exception  
-    */
    public Object invoke(Object id, Method method, Object[] args)
       throws Exception
    {
@@ -163,14 +224,14 @@ public class EntityContainer
       throws java.rmi.RemoteException
    {
       // TODO
-      return null;
+		throw new Error("Not yet implemented");
    }
 
    public Object getPrimaryKey(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws java.rmi.RemoteException
    {
       // TODO
-      return null;
+      throw new Error("Not yet implemented");
    }
    
    public EJBHome getEJBHome(Method m, Object[] args, EntityEnterpriseContext ctx)
@@ -182,7 +243,8 @@ public class EntityContainer
    public boolean isIdentical(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws java.rmi.RemoteException
    {
-      return false; // TODO
+		return ((EJBObject)args[0]).getPrimaryKey().equals(ctx.getId());
+		// TODO - should also check type
    }
    
    // Home interface implementation ---------------------------------
@@ -214,7 +276,7 @@ public class EntityContainer
    public void removeHome(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws java.rmi.RemoteException, RemoveException
    {
-      // TODO
+      throw new Error("Not yet implemented");
    }
    
    public EJBMetaData getEJBMetaDataHome(Method m, Object[] args, EntityEnterpriseContext ctx)
@@ -227,52 +289,58 @@ public class EntityContainer
       throws java.rmi.RemoteException   
    {
       // TODO
-      return null;
+      throw new Error("Not yet implemented");
    }
       
    // Private -------------------------------------------------------
    protected void setupHomeMapping()
-      throws NoSuchMethodException
+      throws DeploymentException
    {
       Map map = new HashMap();
       
       Method[] m = homeInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         // Implemented by container
-         if (m[i].getName().startsWith("find"))
-            map.put(m[i], getClass().getMethod("find", new Class[] { Method.class, Object[].class, EntityEnterpriseContext.class }));
-         else            
-            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { Method.class, Object[].class, EntityEnterpriseContext.class }));
+			try
+			{
+	         // Implemented by container
+	         if (m[i].getName().startsWith("find"))
+	            map.put(m[i], getClass().getMethod("find", new Class[] { Method.class, Object[].class, EntityEnterpriseContext.class }));
+	         else            
+	            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { Method.class, Object[].class, EntityEnterpriseContext.class }));
+			} catch (NoSuchMethodException e)
+			{
+				throw new DeploymentException("Could not find matching method for "+m[i], e);
+			}
       }
       
       homeMapping = map;
    }
 
    protected void setupBeanMapping()
-      throws NoSuchMethodException
+      throws DeploymentException
    {
       Map map = new HashMap();
       
       Method[] m = remoteInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         if (!m[i].getDeclaringClass().equals(EJBObject.class))
-         {
-            // Implemented by bean
-            map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-         }
-         else
-         {
-            try
-            {
+			try
+			{
+	         if (!m[i].getDeclaringClass().equals(EJBObject.class))
+	         {
+	            // Implemented by bean
+	            map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+	         }
+	         else
+	         {
                // Implemented by container
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Method.class, Object[].class , EntityEnterpriseContext.class}));
-            } catch (NoSuchMethodException e)
-            {
-               System.out.println(m[i].getName() + " in bean has not been mapped");
-            }
-         }
+	         }
+	      } catch (NoSuchMethodException e)
+	      {
+	      	throw new DeploymentException("Could not find matching method for "+m[i], e);
+	      }
       }
       
       beanMapping = map;
@@ -283,6 +351,7 @@ public class EntityContainer
       return new ContainerInterceptor();
    }
    
+	// Inner classes -------------------------------------------------
    // This is the last step before invocation - all interceptors are done
    class ContainerInterceptor
       implements Interceptor
@@ -303,7 +372,6 @@ public class EntityContainer
          Method m = (Method)homeMapping.get(method);
          // Invoke and handle exceptions
          
-         Log.setLog(log);
          try
          {
             return m.invoke(EntityContainer.this, new Object[] { method, args, ctx});
@@ -314,9 +382,6 @@ public class EntityContainer
                throw (Exception)ex;
             else
                throw (Error)ex;
-         } finally
-         {
-            Log.unsetLog();
          }
       }
          
@@ -330,7 +395,6 @@ public class EntityContainer
          if (m.getDeclaringClass().equals(EntityContainer.this.getClass()))
          {
             // Invoke and handle exceptions
-            Log.setLog(log);
             try
             {
                return m.invoke(EntityContainer.this, new Object[] { method, args, ctx });
@@ -341,14 +405,10 @@ public class EntityContainer
                   throw (Exception)ex;
                else
                   throw (Error)ex;
-            } finally
-            {
-               Log.unsetLog();
-            }
+            } 
          } else
          {
             // Invoke and handle exceptions
-            Log.setLog(log);
             try
             {
                return m.invoke(ctx.getInstance(), args);
@@ -359,10 +419,7 @@ public class EntityContainer
                   throw (Exception)ex;
                else
                   throw (Error)ex;
-            } finally
-            {
-               Log.unsetLog();
-            }
+            } 
          }
       }
    }

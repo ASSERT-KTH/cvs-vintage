@@ -30,7 +30,7 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class JawsFileManager
    extends BeanContextServicesSupport
@@ -207,7 +207,6 @@ public class JawsFileManager
       
       // Load default Jaws XML
       InputStream jawsXml = getClass().getResourceAsStream("defaultjaws.xml");
-      System.out.println("Loading default XML");
       if (jawsXml != null)
       {
          try
@@ -275,7 +274,6 @@ public class JawsFileManager
             
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             Writer w = new OutputStreamWriter(out);
-            System.out.println(doc+"#"+w);
             xm.save(doc,w);
             w.close();
             byte[] arr = out.toByteArray();
@@ -327,7 +325,7 @@ public class JawsFileManager
    {
       if (comp == null)
       {
-         comp = new BeanContextPanel(ejbJar,"JAWS XML");
+         comp = ejbJar.getComponent();
       }
       return comp;
    }

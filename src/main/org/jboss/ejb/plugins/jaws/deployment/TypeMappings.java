@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.dreambean.awt.GenericCustomizer;
+import com.dreambean.awt.BeanContextViewer;
 import com.dreambean.ejx.xml.XMLManager;
 import com.dreambean.ejx.xml.XmlExternalizable;
 import com.dreambean.ejx.Util;
@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class TypeMappings
    extends BeanContextSupport
@@ -73,7 +73,11 @@ public class TypeMappings
    public Component getComponent()
    {
       if (c == null)
-          c = new GenericCustomizer(this);
+      {
+   		c = new BeanContextViewer();
+   		c.setObject(this);
+   	}
+   		
       return (Component)c;
    }
    

@@ -3,10 +3,6 @@
   displayname="Application settings"
   iconcolor16="/images/container.gif">
 
-  <property 
-    name="Secure" class="boolean" 
-    displayname="Enforce EJB 1.1 bean restrictions" propertyeditor="com.dreambean.awt.editors.BooleanEditor"/>
-
   <method name="addJndiPrefix" displayname="Add JNDI name prefix">
     <parameter displayname="JNDI prefix"/>
   </method>

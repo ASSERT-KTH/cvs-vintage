@@ -15,7 +15,7 @@ import com.dreambean.awt.editors.TagsEditor;
  *      
  *   @see DDEditor
  *   @author $Author: oberg $
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class JdbcTypeEditor
    extends TagsEditor
@@ -23,6 +23,6 @@ public class JdbcTypeEditor
    // Constructors --------------------------------------------------
    public JdbcTypeEditor()
    {
-      super("jdbctypes.properties");
+      super("org/jboss/ejb/plugins/jaws/deployment/editors/jdbctypes.properties");
    }
 }

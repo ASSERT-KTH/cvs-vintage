@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.7 $
+ *      @version $Revision: 1.8 $
  */
 public abstract class EntityProxy
    extends GenericProxy
@@ -35,6 +35,7 @@ public abstract class EntityProxy
    static Method isIdentical;
    static Method toStr;
    static Method eq;
+   static Method hash;
    
    static
    {
@@ -45,6 +46,7 @@ public abstract class EntityProxy
          isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] { EJBObject.class });
          toStr = Object.class.getMethod("toString", new Class[0]);
          eq = Object.class.getMethod("equals", new Class[] { Object.class });
+	      hash = Object.class.getMethod("hashCode", new Class[0]);
       } catch (Exception e)
       {
          e.printStackTrace();
@@ -86,6 +88,14 @@ public abstract class EntityProxy
       else if (m.equals(eq))
       {
          return invoke(proxy, isIdentical, args);
+      }
+      else if (m.equals(isIdentical))
+      {
+			return new Boolean(((EJBObject)args[0]).getPrimaryKey().equals(id));
+      }
+      else if (m.equals(hash))
+      {
+      	return new Integer(id.hashCode());
       }
       else
       {

@@ -17,7 +17,7 @@ import javax.swing.table.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ViewerLogging
    implements ViewerLoggingMBean, MBeanRegistration, NotificationListener
@@ -85,7 +85,7 @@ public class ViewerLogging
 //         tableModel.addRow(new Object[] { fmt.format(n.getTimeStamp()), n.getUserData(), n.getMessage() });
       } catch (Throwable e)
       {
-         Logger.log(e);
+         Logger.exception(e);
       }
    }
    

@@ -7,17 +7,18 @@
 package org.jboss.ejb;
 
 /**
- *      
- *   @see <related>
+ *	This exception is thrown by the ContainerFactory if an EJB application
+ *	could not be deployed
+ *
+ *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class DeploymentException
    extends Exception
 {
-   // Constants -----------------------------------------------------
-    
    // Attributes ----------------------------------------------------
+	// The root cause of this exception
    Exception cause;
    
    // Static --------------------------------------------------------

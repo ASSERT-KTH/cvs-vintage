@@ -20,11 +20,11 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
-   implements ServiceMBean, MBeanRegistration
+   implements ServiceMBean, MBeanRegistration, Service
 {
    // Attributes ----------------------------------------------------
    private int state;
@@ -42,9 +42,6 @@ public abstract class ServiceMBeanSupport
    // Static --------------------------------------------------------
 
    // Public --------------------------------------------------------
-   public abstract ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException;
-   
    public abstract String getName();
 
    public int getState()
@@ -57,6 +54,26 @@ public abstract class ServiceMBeanSupport
       return states[state];
    }
    
+	public void init()
+		throws Exception
+	{
+		log.log("Initializing");
+		log.setLog(log);
+		try
+		{
+		   initService();
+		} catch (Exception e)
+		{
+		   log.error("Initialization failed");
+		   log.exception(e);
+		   throw e;
+		} finally
+		{
+		   log.unsetLog();
+		}
+		log.log("Initialized");
+	}
+	
    public void start()
       throws Exception
    {
@@ -104,10 +121,29 @@ public abstract class ServiceMBeanSupport
       log.unsetLog();
    }
    
+   public void destroy()
+   {
+   	log.log("Destroying");
+   	log.setLog(log);
+   	try
+   	{
+   	   destroyService();
+   	} catch (Exception e)
+   	{
+   	   log.exception(e);
+   	}
+   	
+   	log.unsetLog();
+   	log.log("Destroyed");
+   }
+	
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
 		name = getObjectName(server, name);
+
+		init();
+		
       start();
       return name;
    }
@@ -125,16 +161,31 @@ public abstract class ServiceMBeanSupport
    
    public void postDeregister()
    {
-      stop();
+		if (getState() == STARTED)
+	      stop();
+		
+	   destroy();
    }
    
    // Protected -----------------------------------------------------
+   protected abstract ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws javax.management.MalformedObjectNameException;
+   
+   protected void initService()
+      throws Exception
+   {
+   }
+	
    protected void startService()
       throws Exception
    {
    }
    
    protected void stopService()
+   {
+   }
+	
+   protected void destroyService()
    {
    }
 }

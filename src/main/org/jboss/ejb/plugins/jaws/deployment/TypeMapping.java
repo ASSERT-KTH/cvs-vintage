@@ -32,7 +32,7 @@ import com.dreambean.ejx.ejb.EjbReference;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class TypeMapping
    extends BeanContextServicesSupport
@@ -90,8 +90,8 @@ public class TypeMapping
                   return ref.getName();
                }
             }
-         }
-      } catch (Exception e)
+			}
+		} catch (Exception e)
       {
          e.printStackTrace();
       }

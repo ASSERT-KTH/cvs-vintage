@@ -24,24 +24,31 @@ import javax.transaction.RollbackException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
+import org.jboss.logging.Logger;
+
 /**
- *	<description> 
- *      
- *	@see <related>
+ *	The EnterpriseContext is used to associate EJB instances with metadata about it.
+ *	
+ *	@see StatefulSessionEnterpriseContext
+ *	@see StatelessSessionEnterpriseContext
+ *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public abstract class EnterpriseContext
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+	// The EJB instanfce
    Object instance;
+	
+	// The container using this context
    Container con;
-   Transaction tx;
+	
+	// Set to the synchronization currently associated with this context. May be null
    Synchronization synch;
-   Principal principal;
-    
+	
    Object id; // Not used for sessions
    // Static --------------------------------------------------------
    
@@ -53,19 +60,23 @@ public abstract class EnterpriseContext
    }
    
    // Public --------------------------------------------------------
-   public Object getInstance() { return instance; }
+   public Object getInstance() 
+	{ 
+		return instance; 
+	}
    
    public abstract void discard()
       throws RemoteException;
       
-   public void setPrincipal(Principal p) { principal = p; }
-   public Principal getPrincipal(Principal p) { return principal; }
-   
-   public void setTransaction(Transaction tx) { this.tx = tx; }
-   public Transaction getTransaction() { return tx; }
-   
-   public void setId(Object id) { this.id = id; }
-   public Object getId() { return id; }
+   public void setId(Object id) 
+	{ 
+		this.id = id; 
+	}
+	
+   public Object getId() 
+	{ 
+		return id; 
+	}
 
    // Package protected ---------------------------------------------
     
@@ -77,16 +88,45 @@ public abstract class EnterpriseContext
    protected class EJBContextImpl
       implements EJBContext
    {
-      public Identity getCallerIdentity() { throw new EJBException("Deprecated"); }
+      /**
+       *
+       *
+       * @deprecated
+       */
+      public Identity getCallerIdentity() 
+		{ 
+			throw new EJBException("Deprecated"); 
+		}
       
-      public Principal getCallerPrincipal() { return principal; }
+      public Principal getCallerPrincipal() 
+		{ 
+			throw new Error("Not yet implemented");
+		}
       
       public EJBHome getEJBHome() 
       { 
-         return con.getContainerInvoker().getEJBHome(); 
+			if (con instanceof EntityContainer)
+			{
+				return ((EntityContainer)con).getContainerInvoker().getEJBHome(); 
+			} if (con instanceof StatelessSessionContainer)
+			{
+				return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
+			} else
+			{
+				// Should never get here
+				throw new EJBException("No EJBHome available (BUG!)");
+			}
       }
       
-      public Properties getEnvironment() { throw new EJBException("Deprecated"); }
+      /**
+       *
+       *
+       * @deprecated
+       */
+      public Properties getEnvironment() 
+		{ 
+			throw new EJBException("Deprecated"); 
+		}
       
       public boolean getRollbackOnly() 
       { 
@@ -95,22 +135,47 @@ public abstract class EnterpriseContext
             return con.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK; 
          } catch (SystemException e)
          {
+            Logger.debug(e);
             return true;
          }
       }
        
-      public void setRollbackOnly() { }
+      public void setRollbackOnly() 
+		{ 
+			try
+			{
+				con.getTransactionManager().setRollbackOnly();
+			} catch (SystemException e)
+			{
+				Logger.debug(e);
+			}
+		}
    
-      public boolean isCallerInRole(Identity id) { throw new EJBException("Deprecated"); }
+      /**
+       *
+       *
+       * @deprecated
+       */
+      public boolean isCallerInRole(Identity id) 
+		{ 
+			throw new EJBException("Deprecated"); 
+		}
    
       // TODO - how to handle this best?
-      public boolean isCallerInRole(String id) { return false; }
+      public boolean isCallerInRole(String id) 
+		{ 
+			return false; 
+		}
    
       // TODO - how to handle this best?
-      public UserTransaction getUserTransaction() { return new UserTransactionImpl(); }
+      public UserTransaction getUserTransaction() 
+		{ 
+			return new UserTransactionImpl(); 
+		}
    }
    
-   protected class UserTransactionImpl
+	// Inner classes -------------------------------------------------
+   class UserTransactionImpl
       implements UserTransaction
    {
       public void begin()

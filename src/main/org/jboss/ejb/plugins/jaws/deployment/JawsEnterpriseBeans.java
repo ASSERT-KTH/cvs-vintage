@@ -28,7 +28,7 @@ import com.dreambean.ejx.Util;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class JawsEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans
@@ -36,38 +36,12 @@ public class JawsEnterpriseBeans
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   String dataSource = "";
-   String typeMapping = "";
     
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
-   public void setDataSource(String ds) { dataSource = ds; }
-   public String getDataSource() { return dataSource; }
-   
-   public void setTypeMapping(String tm) { String old = typeMapping; typeMapping = tm; firePropertyChange("TypeMapping", old, typeMapping); }
-   
-   /*
-    * getTypeMapping()
-    * 
-    * If no type mapping is specified (no jaws.xml file provided) we use the default
-    * Hypersonic default database settings
-    *
-    */
-    public String getTypeMapping() {
-	    
-		if (!typeMapping.equals("")) {
-			
-			// We have a specified typeMapping either from XML or default
-			return typeMapping;
-		}
-		else {
-			 
-			return "Hypersonic SQL";
-		}
-	}
    
    public com.dreambean.ejx.ejb.Entity addEntity()
       throws IOException, ClassNotFoundException
@@ -81,9 +55,8 @@ public class JawsEnterpriseBeans
    {
       Element enterprisebeans = super.exportXml(doc);
       
-      XMLManager.addElement(enterprisebeans,"datasource",dataSource);
-      XMLManager.addElement(enterprisebeans,"type-mapping",getTypeMapping());
-      
+      // No settings
+		
       return enterprisebeans;
    }
    
@@ -112,12 +85,6 @@ public class JawsEnterpriseBeans
 //                  e.printStackTrace();
                   // Does not exist anymore...
                }
-            } else if (name.equals("datasource"))
-            {
-               setDataSource(n.hasChildNodes() ? XMLManager.getString(n) : "");
-            } else if (name.equals("type-mapping"))
-            {
-			   setTypeMapping(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } 
          }
       } else

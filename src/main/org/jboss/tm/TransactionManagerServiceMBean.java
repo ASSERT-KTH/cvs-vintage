@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
 
-package org.jboss.jmx.server;
+package org.jboss.tm;
 
 /**
  *   <description> 
@@ -14,11 +14,11 @@ package org.jboss.jmx.server;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @version $Revision: 1.1 $
  */
-public interface JMXAdaptorServerMBean
+public interface TransactionManagerServiceMBean
    extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "Adaptor:name=RMI";
+   public static final String OBJECT_NAME = ":service=TransactionManager";
     
    // Public --------------------------------------------------------
 }

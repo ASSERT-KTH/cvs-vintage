@@ -23,7 +23,7 @@ import com.dreambean.ejx.xml.*;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class JawsCMPField
    extends com.dreambean.ejx.ejb.CMPField
@@ -80,7 +80,7 @@ public class JawsCMPField
 			java.lang.reflect.Field type = clazz.getField(getFieldName());
 			
 			// Retrieve the sql type from Mapping defaults
-			sqlType = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+			sqlType = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
         
 			return sqlType;
 		}
@@ -124,7 +124,7 @@ public class JawsCMPField
 		
 		    // Go get the default from jawsDefault
 			// If there is no database in JawsEnterpriseBeans we use default Mappings
-	   		jdbcType = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+	   		jdbcType = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
            
 	   		return jdbcType;
    		}
@@ -163,8 +163,6 @@ public class JawsCMPField
    
    public void importXml(Element elt)
    {
-      ((JawsEnterpriseBeans)getBeanContext().getBeanContext()).addPropertyChangeListener("TypeMapping", this);
-      
       if (elt.getOwnerDocument().getDocumentElement().getTagName().equals(JawsEjbJar.JAWS_DOCUMENT))
       {
          NodeList nl = elt.getChildNodes();
@@ -209,11 +207,11 @@ public class JawsCMPField
             Class clazz = cl.loadClass(((JawsEntity)getBeanContext()).getEjbClass());
             java.lang.reflect.Field type = clazz.getField(getFieldName());
             
-			String sql = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+				String sql = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMapping()).getSqlTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
             if (sql != null)
                setSqlType(sql);
               
-            String jdbc = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEnterpriseBeans)getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
+            String jdbc = ((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMappings().getTypeMapping(((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).getTypeMapping()).getJdbcTypeForJavaType(type.getType(), (JawsEntity)getBeanContext());
            
 			if (jdbc != null)
                setJdbcType(jdbc);
@@ -228,7 +226,10 @@ public class JawsCMPField
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-    
+	protected void initializeBeanContextResources()
+	{
+		((JawsEjbJar)getBeanContext().getBeanContext().getBeanContext()).addPropertyChangeListener("TypeMapping", this);
+	}
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------

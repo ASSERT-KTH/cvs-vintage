@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.Hashtable;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -23,9 +24,15 @@ import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
+import javax.naming.Reference;
+import javax.naming.NamingEnumeration;
+import javax.naming.NameClassPair;
 import javax.naming.NamingException;
+import javax.naming.RefAddr;
 import javax.naming.NameNotFoundException;
+import javax.naming.spi.ObjectFactory;
 import javax.transaction.TransactionManager;
+import javax.sql.DataSource;
 
 import org.jboss.ejb.deployment.jBossEnterpriseBean;
 import com.dreambean.ejx.ejb.EnvironmentEntry;
@@ -43,36 +50,61 @@ import org.jnp.interfaces.java.javaURLContextFactory;
 import org.jnp.server.NamingServer;
 
 /**
- *   <description> 
- *      
- *   @see <related>
+ *   This is the base class for all EJB-containers in jBoss. A Container
+ *	  functions as the central hub of all metadata and plugins. Through this
+ *	  the container plugins can get hold of the other plugins and any metadata they need.
+ *
+ *	  The ContainerFactory creates instances of subclasses of this class and calls the appropriate
+ *	  initialization methods.
+ *
+ *	  A Container does not perform any significant work, but instead delegates to the plugins to provide for
+ *	  all kinds of algorithmic functionality.
+ *
+ *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public abstract class Container
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+	
+	// This is the application that this container is a part of
    protected Application application;
+	
+	// This is the classloader of this container. All classes and resources that
+	// the bean uses will be loaded from here. By doing this we make the bean re-deployable
    protected ClassLoader classLoader;
+	
+	// This is the jBoss-specific metadata. Note that it extends the generic EJB 1.1 class from EJX
    protected jBossEnterpriseBean metaData;
+	
+	// This is the instancepool that is to be used
    protected InstancePool instancePool;
-   protected ContainerInvoker containerInvoker;
-   protected TransactionManager transactionManager;
+	
+	// This is the first interceptor in the chain. The last interceptor must be provided by the container itself
    protected Interceptor interceptor;
    
+	// This is the Home interface class
    protected Class homeInterface;
+	
+   // This is the Remote interface class
    protected Class remoteInterface;
+	
+   // This is the EnterpriseBean class
    protected Class beanClass;
    
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-   
+   // This is the TransactionManager
+   protected TransactionManager tm;
+	
    // Public --------------------------------------------------------
-
-   // Container implementation --------------------------------------
+	
+	public TransactionManager getTransactionManager()
+	{
+		return tm;
+	}
+	
    public void setApplication(Application app) 
    { 
 		if (app == null)
@@ -92,19 +124,20 @@ public abstract class Container
       this.classLoader = cl; 
    }
    
+   public ClassLoader getClassLoader() 
+	{ 
+		return classLoader; 
+	}
+	
    public void setMetaData(jBossEnterpriseBean metaData) 
    { 
       this.metaData = metaData; 
    }
    
-   public void setContainerInvoker(ContainerInvoker ci) 
-   { 
-      if (ci == null)
-      	throw new IllegalArgumentException("Null invoker");
-			
-      this.containerInvoker = ci; 
-      ci.setContainer(this);
-   }
+   public jBossEnterpriseBean getMetaData() 
+	{ 
+		return metaData; 
+	}
 	
    public void setInstancePool(InstancePool ip) 
    { 
@@ -115,8 +148,11 @@ public abstract class Container
       ip.setContainer(this);
    }
 
-   public void setInterceptor(Interceptor in) { this.interceptor = in; }
-
+   public InstancePool getInstancePool() 
+	{ 
+		return instancePool; 
+	}
+	
    public void addInterceptor(Interceptor in) 
    { 
       if (interceptor == null)
@@ -135,166 +171,133 @@ public abstract class Container
       }
    }
    
-   public ClassLoader getClassLoader(ClassLoader cl) { return classLoader; }
-   public jBossEnterpriseBean getMetaData() { return metaData; }
-   public ContainerInvoker getContainerInvoker() { return containerInvoker; }
-   public InstancePool getInstancePool() { return instancePool; }
-   public Interceptor getInterceptor() { return interceptor; }
-      
-   public TransactionManager getTransactionManager() { return transactionManager; }
-   public void setTransactionManager(TransactionManager tm) { transactionManager = tm; }
-   
-   /*
-   * init()
-   *
-   * The ContainerFactory calls this method.  The ContainerFactory has set all the 
-   * plugins and interceptors that this bean requires and now proceeds to initialize
-   * the chain.  The method looks for the standard classes in the URL, sets up
-   * the naming environment of the bean.
-   *
-   */
-   
+   public Interceptor getInterceptor() 
+	{ 
+		return interceptor; 
+	}
+	   
+	public Class getHomeClass()
+	{
+	   return homeInterface;
+	}
+	
+	public Class getRemoteClass()
+	{
+	   return remoteInterface;
+	}
+	
+	public Class getBeanClass()
+	{
+	   return beanClass;
+	}
+	/**
+	 * The ContainerFactory calls this method.  The ContainerFactory has set all the 
+	 * plugins and interceptors that this bean requires and now proceeds to initialize
+	 * the chain.  The method looks for the standard classes in the URL, sets up
+	 * the naming environment of the bean.
+	 *
+	 * @exception   Exception  
+	 */
    public void init()
       throws Exception
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
-      
+		// Acquire classes from CL
       homeInterface = classLoader.loadClass(metaData.getHome());
       remoteInterface = classLoader.loadClass(metaData.getRemote());
       beanClass = classLoader.loadClass(metaData.getEjbClass());
       
+		// Get transaction manager
+		tm = (TransactionManager)new InitialContext().lookup("TransactionManager");
+		
+		// Setup "java:" namespace
       setupEnvironment();
       
+		// Initialize pool
       instancePool.init();
       
-      containerInvoker.init();
-	  
-	  
-	  // Initialize the interceptor by calling the chain
+ 	   // Initialize the interceptor by calling the chain
       Interceptor in = interceptor;
       while (in != null)
       {
-		
          in.setContainer(this);
          in.init();
          in = in.getNext();
       }
-        
-      Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public void start()
       throws Exception
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
-      
+		// Start the instance pool
       instancePool.start();
       
-      containerInvoker.start();
-      
+		// Start all interceptors in the chain		
       Interceptor in = interceptor;
       while (in != null)
       {
          in.start();
          in = in.getNext();
       }
-      
-      Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public void stop() 
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
-      
+		// Stop the instance pool
       instancePool.stop();
       
-      containerInvoker.stop();
-      
+		// Stop all interceptors in the chain		
       Interceptor in = interceptor;
       while (in != null)
       {
          in.stop();
          in = in.getNext();
       }
-      
-      Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public void destroy() 
    {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
-      
+		// Destroy the pool
       instancePool.destroy();
       
-      containerInvoker.destroy();
-      
+		// Destroy all the interceptors in the chain		
       Interceptor in = interceptor;
       while (in != null)
       {
          in.destroy();
          in = in.getNext();
       }
-      
-      Thread.currentThread().setContextClassLoader(oldCl);
    }
-   
-   /**
-    *
-    *
-    * @return     
-    */
-   public ClassLoader getClassLoader() { return classLoader; }
-   
-   public Class getHomeClass()
-   {
-      if (homeInterface == null)
-      {
-         try
-         {
-            homeInterface = classLoader.loadClass(metaData.getHome());
-         } catch (Exception e) {}
-      }
-      return homeInterface;
-   }
-   
-   public Class getRemoteClass()
-   {
-      if (remoteInterface == null)
-      {
-         try
-         {
-            remoteInterface = classLoader.loadClass(metaData.getRemote());
-         } catch (Exception e) {}
-      }
-      return remoteInterface;
-   }
-   
-   public Class getBeanClass()
-   {
-      if (beanClass == null)
-      {
-         try
-         {
-            beanClass = classLoader.loadClass(metaData.getEjbClass());
-         } catch (Exception e) {}
-      }
-      return beanClass;
-   }
-   
+
+	/**
+	 *	This method is called by the ContainerInvoker when a method call comes in on the Home object.
+	 *
+	 *	The Container forwards this call to the interceptor chain for further processing.
+	 *
+	 * @param   method  the method being invoked
+	 * @param   args  the parameters
+	 * @return     the result of the home invocation
+	 * @exception   Exception  
+	 */
    public abstract Object invokeHome(Method method, Object[] args)
       throws Exception;
-      
+
+	/**
+  	 *	This method is called by the ContainerInvoker when a method call comes in on an EJBObject.
+	 *
+	 *	The Container forwards this call to the interceptor chain for further processing.
+	 *
+	 * @param   id  the id of the object being invoked. May be null if stateless
+	 * @param   method  the method being invoked
+	 * @param   args  the parameters
+	 * @return     the result of the invocation
+	 * @exception   Exception  
+	 */
    public abstract Object invoke(Object id, Method method, Object[] args)
       throws Exception;
       
    // Protected -----------------------------------------------------
    
-   // MF WHY: why the protected here, it gives a rather strange structure to the init
-   protected abstract Interceptor createContainerInterceptor();
+   abstract Interceptor createContainerInterceptor();
    
    // Private -------------------------------------------------------
    
@@ -309,18 +312,18 @@ public abstract class Container
    * DataSource ressources.
    *
    */
-   
-   // MF WHY: part of the issue is that some meta data information is 
-   // kept in many classes. There 2 repositories of metaData in this case.
-   // One is the BeanClassLoader the other the "bean" in Container.
-   
    private void setupEnvironment()
       throws DeploymentException
    {
 		try
 		{
+			// Create a new java: namespace root
 	      NamingServer root = new NamingServer();
+			
+			// Associate this root with the classloader of the bean
 	      ((BeanClassLoader)getClassLoader()).setJNDIRoot(root);
+			
+			// Since the BCL is already associated with this thread we can start using the java: namespace directly
 	      Context ctx = (Context)new InitialContext().lookup("java:/");
 	      ctx.createSubcontext("comp");
 	      ctx = ctx.createSubcontext("comp/env");
@@ -354,6 +357,7 @@ public abstract class Container
 	               bind(ctx, entry.getName(), new Boolean(entry.getValue()));
 	            } else
 	            {
+						// Unknown type
 	               // Default is string
 	               bind(ctx, entry.getName(), entry.getValue());
 	            }
@@ -368,7 +372,6 @@ public abstract class Container
 	            jBossEjbReference ref = (jBossEjbReference)enum.next();
 	            
 	            Name n = ctx.getNameParser("").parse(ref.getLink());
-	            ContainerInvoker ci = getContainerInvoker();
 	            
 	            if (!ref.getJndiName().equals(""))
 	            {
@@ -379,8 +382,23 @@ public abstract class Container
 	            else
 	            {
 	               // Internal link
-	               Logger.debug("Bind "+ref.getName() +" to "+getApplication().getContainer(ref.getLink()).getContainerInvoker().getEJBHome());
-	               bind(ctx, ref.getName(), getApplication().getContainer(ref.getLink()).getContainerInvoker().getEJBHome());
+	               Logger.debug("Bind "+ref.getName() +" to "+ref.getLink());
+						
+						final Container con = getApplication().getContainer(ref.getLink());
+						
+						// Use Reference to link to ensure lazyloading. 
+						// Otherwise we might try to get EJBHome from not yet initialized container
+						// will would result in nullpointer exception
+						RefAddr refAddr = new RefAddr("EJB")
+						{
+							public Object getContent() 
+							{
+								 return con;
+							}
+						};
+						Reference reference = new Reference("javax.ejb.EJBObject",refAddr, new EjbReferenceFactory().getClass().getName(), null);
+						
+						bind(ctx, ref.getName(), reference);
 	            }
 	         }
 	      }
@@ -396,18 +414,57 @@ public abstract class Container
 	            ResourceManager rm = rms.getResourceManager(ref.getResourceName());
 	            
 					if (rm == null)
-						throw new DeploymentException("No resource manager named "+ref.getResourceName());
+					{
+						// Try to locate defaults
+						if (ref.getType().equals("javax.sql.DataSource"))
+						{
+							// Go through JNDI and look for DataSource - use the first one
+							Context dsCtx = new InitialContext();
+							NamingEnumeration list = dsCtx.list("");
+							while (list.hasMore())
+							{
+								NameClassPair pair = (NameClassPair)list.next();
+								try
+								{
+									Class cl = getClass().getClassLoader().loadClass(pair.getClassName());
+									if (DataSource.class.isAssignableFrom(cl))
+									{
+										// Found it!!
+										Logger.log("Using default DataSource:"+pair.getName());
+										rm = new JDBCResource();
+										((JDBCResource)rm).setJndiName(pair.getName());
+										list.close();
+										break;
+									}
+								} catch (Exception e)
+								{
+									Logger.debug(e);
+								}
+							}
+						
+						}
+						
+						// Default failed? Warn user and move on
+						// POTENTIALLY DANGEROUS: should this be a critical error?
+						if (rm == null)
+						{
+							Logger.warning("No resource manager found for "+ref.getResourceName());
+							continue;
+						}
+					}
 						
 	            if (rm.getType().equals("javax.sql.DataSource"))
 	            {
+	               // Datasource bindings	
 	               JDBCResource res = (JDBCResource)rm;
-	               bind(ctx, res.getName(), new LinkRef(res.getJndiName()));
+	               bind(ctx, ref.getName(), new LinkRef(res.getJndiName()));
 	            } else if (rm.getType().equals("java.net.URL"))
 	            {
+	               // URL bindings	
 	               try
 	               {
 	                  URLResource res = (URLResource)rm;
-	                  bind(ctx, res.getName(), new URL(res.getUrl()));
+	                  bind(ctx, ref.getName(), new URL(res.getUrl()));
 	               } catch (MalformedURLException e)
 	               {
 	                  throw new NamingException("Malformed URL:"+e.getMessage());
@@ -417,15 +474,26 @@ public abstract class Container
 	      }
 		} catch (NamingException e)
 		{
+			e.printStackTrace();
+			e.getRootCause().printStackTrace();
 			throw new DeploymentException("Could not set up environment", e);
 		}
    }
    
+	
+
+	/**
+	 *	Bind a value to a name in a JNDI-context, and create any missing subcontexts
+	 *
+	 * @param   ctx  
+	 * @param   name  
+	 * @param   val  
+	 * @exception   NamingException  
+	 */
    private void bind(Context ctx, String name, Object val)
       throws NamingException
    {
       // Bind val to name in ctx, and make sure that all intermediate contexts exist
-      
       Name n = ctx.getNameParser("").parse(name);
       while (n.size() > 1)
       {
@@ -442,4 +510,27 @@ public abstract class Container
       
       ctx.bind(n.get(0), val);
    }
+	
+	public static class EjbReferenceFactory
+		implements ObjectFactory
+	{
+		public Object getObjectInstance(Object ref,
+		                                Name name,
+		                                Context nameCtx,
+		                                Hashtable environment)
+		                         throws Exception
+		{
+			Object con = ((Reference)ref).get(0).getContent();
+			if (con instanceof EntityContainer)
+			{
+				return ((EntityContainer)con).getContainerInvoker().getEJBHome();
+			} if (con instanceof StatelessSessionContainer)
+			{
+				return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome();
+			} else
+			{
+				return null;
+			}
+		}
+	}
 }

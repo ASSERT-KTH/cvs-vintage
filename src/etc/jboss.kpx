@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Tue May 23 12:42:03 2000">
+<kawaproject timestamp="Tue May 30 15:44:14 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -148,6 +148,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"beaninfo\jBossEjbReferenceList.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"beaninfo\jBossEnterpriseBeans.xml"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -232,6 +240,14 @@
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"102194232"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"beaninfo\URLResource.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
 </scmstatus>
 </file>
 </virtualfolder>
@@ -486,7 +502,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\ContainerPlugin.java"</relativepath>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -603,6 +619,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\jBossEjbJar.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\deployment\jBossEjbJarViewer.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -946,6 +970,14 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsEjbJarViewer.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsEjbReference.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -963,6 +995,14 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsEntity.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jaws\deployment\JawsEntityViewer.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1486,7 +1526,7 @@
 </file>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorServer.java"</relativepath>
+<relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorService.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1494,7 +1534,7 @@
 </file>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorServerMBean.java"</relativepath>
+<relativepath>"..\main\org\jboss\jmx\server\JMXAdaptorServiceMBean.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -1694,6 +1734,22 @@
 </file>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tm\TransactionManagerService.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\tm\TransactionManagerServiceMBean.java"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\tm\TxManager.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -1883,6 +1939,22 @@
 </file>
 <file>
 <dirty>"0"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\plugins\jaws\deployment\defaultjaws.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\resources\org\jboss\ejb\deployment\defaultjboss.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
 <relativepath>"..\resources\org\jboss\ejb\deployment\editors\entityinstancecache.properties"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -1948,7 +2020,7 @@
 </runclassname>
 </runclassnames>
 <executedirs checked="1">
-<executedir selected="1">
+<executedir selected="34">
 <value>"H:\projects\jboss2\jboss\dist\bin\"</value>
 </executedir>
 </executedirs>
