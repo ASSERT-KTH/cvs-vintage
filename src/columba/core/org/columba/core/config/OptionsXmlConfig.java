@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.config;
 
 import org.columba.core.xml.XmlElement;
@@ -20,7 +21,6 @@ import org.columba.core.xml.XmlElement;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class OptionsXmlConfig extends DefaultXmlConfig {
 
@@ -50,7 +50,7 @@ public class OptionsXmlConfig extends DefaultXmlConfig {
         convert();
         
         XmlElement proxy = getRoot().getElement("/options/proxy");
-        if (proxy != null) {
+        if (proxy != null && System.getProperty("http.proxyHost") != null) {
             System.setProperty("http.proxyHost", proxy.getAttribute("host"));
             System.setProperty("http.proxyPort", proxy.getAttribute("port"));
         }

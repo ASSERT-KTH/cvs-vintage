@@ -230,11 +230,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             proxyHost = System.getProperty("http.proxyHost");
             String proxyPortString = System.getProperty("http.proxyPort", "-1");
             proxyPort = Integer.parseInt(proxyPortString);
-            if (proxyHost != null) {
-                proxyButton.setText(proxyHost + ":" + proxyPortString);
-            } else {
-                proxyButton.setText("-");
-            }
+            updateProxyButtonText();
         } else {
             // fonts
             textFontElement.addAttribute("name", getTextFont().getName());
@@ -527,12 +523,17 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             if (dialog.showDialog() == ProxyConfigurationDialog.APPROVE_OPTION) {
                 proxyHost = dialog.getProxyHost();
                 proxyPort = dialog.getProxyPort();
-                if (proxyHost != null) {
-                    proxyButton.setText(proxyHost + ":" + Integer.toString(proxyPort));
-                } else {
-                    proxyButton.setText("-");
-                }
+                updateProxyButtonText();
             }
+        }
+    }
+    
+    protected void updateProxyButtonText() {
+        if (proxyHost != null) {
+            proxyButton.setText(proxyHost + ":" + Integer.toString(proxyPort));
+        } else {
+            proxyButton.setText(GlobalResourceLoader.getString(
+                    RESOURCE_PATH, "proxy", "no_proxy"));
         }
     }
 
