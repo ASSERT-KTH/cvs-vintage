@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.213 2003/03/24 01:18:48 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.214 2003/03/24 01:29:37 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4796,12 +4796,13 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		visibleLines = height / lineHeight;
 		lastLinePartial = (height % lineHeight != 0);
 
-		// this does the "trick" to eliminate blank space at the end
-		if(displayManager != null)
-			setFirstLine(getFirstLine());
-
 		chunkCache.recalculateVisibleLines();
 		maxHorizontalScrollWidth = 0;
+
+		// this does the "trick" to eliminate blank space at the end
+		if(displayManager != null && buffer != null && buffer.isLoaded())
+			setFirstLine(getFirstLine());
+
 		updateScrollBars();
 	} //}}}
 
