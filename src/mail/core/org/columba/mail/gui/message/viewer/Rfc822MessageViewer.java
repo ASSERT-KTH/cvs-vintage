@@ -164,7 +164,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		getSecurityInformationViewer().updateGUI();
 
 		layoutComponents();
-
 	}
 
 	/**

@@ -19,6 +19,7 @@ package org.columba.mail.gui.message.viewer;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.InputStream;
 
@@ -31,6 +32,8 @@ import javax.swing.UIManager;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.MessageViewOwner;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
@@ -47,6 +50,8 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 	private byte[] data;
 
 	private ImageIcon image;
+
+	private int width;
 
 	/**
 	 *  
@@ -69,7 +74,6 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 	 */
 	public void view(IMailbox folder, Object uid, Integer[] address,
 			MailFrameMediator mediator) throws Exception {
-
 
 		MimePart bodyPart = folder.getMimePartTree(uid).getFromAddress(address);
 
@@ -98,8 +102,6 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 		data = StreamUtils.readInByteArray(bodyStream);
 	}
 
-
-
 	/**
 	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
@@ -107,18 +109,29 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 
 		removeAll();
 
-		
 		image = new ImageIcon(Toolkit.getDefaultToolkit().createImage(data));
 		//image = new ImageIcon(data);
-		Container parent = getParent();
-		System.out.println("container-width="+parent.getWidth());
-		System.out.println("image-width="+image.getIconHeight());
+
+		//Container parent = getParent();
+		Container parent = ((MessageController)((MessageViewOwner)mediator).getMessageController()).getViewport();
+		int cwidth = (int) parent.getWidth();
+
+		// if image is bigger than message viewer size
+		if (cwidth < image.getIconWidth()) {
+			// scale image
+			float scaling = (float) cwidth / image.getIconWidth();
+
+			image = new ImageIcon(image.getImage()
+					.getScaledInstance((int) (image.getIconWidth() * scaling),
+							(int) (image.getIconHeight() * scaling),
+							Image.SCALE_SMOOTH));
+		}
 
 		JLabel label = new JLabel(image);
 		add(label, BorderLayout.CENTER);
-		
+
 		revalidate();
-		
+
 	}
 
 	/**
@@ -134,4 +147,5 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 	public boolean isVisible() {
 		return true;
 	}
+
 }

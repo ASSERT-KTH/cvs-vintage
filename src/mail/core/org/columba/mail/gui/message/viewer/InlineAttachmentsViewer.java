@@ -460,8 +460,8 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			centerPanel.setLayout(new BorderLayout());
 		} else {
 			centerPanel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory
-							.createEtchedBorder()));
+					BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createCompoundBorder(BorderFactory
+							.createEtchedBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5))));
 			centerPanel
 					.setBackground(UIManager.getColor("TextArea.background"));
 			centerPanel.setLayout(new BorderLayout());

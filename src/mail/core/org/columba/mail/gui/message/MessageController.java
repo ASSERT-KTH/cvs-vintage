@@ -17,6 +17,7 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.event.MouseListener;
 import java.util.Observer;
 
@@ -129,6 +130,7 @@ public class MessageController extends JScrollPane implements
 
 		messageViewer.updateGUI();
 
+		getVerticalScrollBar().setValue(0);
 	}
 
 	/**
