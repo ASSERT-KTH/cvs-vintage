@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.37 2003/02/03 23:39:54 elicia Exp $
+ * @version $Id: IssueType.java,v 1.38 2003/02/04 00:54:23 dlr Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -132,14 +132,7 @@ public  class IssueType
     public boolean hasIssues()
         throws Exception
     {
-        boolean hasIssues = false;
-        Criteria crit = new Criteria();
-        crit.add(IssuePeer.TYPE_ID, getIssueTypeId());
-        if (IssuePeer.doSelect(crit).size() > 0)
-        {
-            hasIssues = true;
-        }
-        return hasIssues;
+        return hasIssues((Module) null);
     }        
 
     /**
@@ -148,15 +141,13 @@ public  class IssueType
     public boolean hasIssues(Module module)
         throws Exception
     {
-        boolean hasIssues = false;
         Criteria crit = new Criteria();
         crit.add(IssuePeer.TYPE_ID, getIssueTypeId());
-        crit.add(IssuePeer.MODULE_ID, module.getModuleId());
-        if (IssuePeer.doSelect(crit).size() > 0)
+        if (module != null)
         {
-            hasIssues = true;
+            crit.add(IssuePeer.MODULE_ID, module.getModuleId());
         }
-        return hasIssues;
+        return (IssuePeer.doSelect(crit).size() > 0);
     }        
 
     /**
