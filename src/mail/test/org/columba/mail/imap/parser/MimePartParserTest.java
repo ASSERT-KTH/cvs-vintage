@@ -38,7 +38,6 @@ public class MimePartParserTest extends TestCase {
 				+ "\n"
 				+ "Please attend to this at your earliest convenience.  This notice of\n"
 				+ "pending requests, if any, will be sent out daily.\n"
-				+ "\n"
 				+ ")";
 
 		IMAPResponse[] r = { new IMAPResponse(testData)};
@@ -49,7 +48,7 @@ public class MimePartParserTest extends TestCase {
 				+ "https://lists.sourceforge.net/lists/admindb/columba-bugs\n"
 				+ "\n"
 				+ "Please attend to this at your earliest convenience.  This notice of\n"
-				+ "pending requests, if any, will be sent out daily.";
+				+ "pending requests, if any, will be sent out daily.\n";
 		String messageSource = MimePartParser.parse(r);
 
 		ColumbaLogger.log.debug("source=<" + messageSource + ">");
@@ -80,8 +79,7 @@ public class MimePartParserTest extends TestCase {
 				+ "https://lists.sourceforge.net/lists/admindb/columba-bugs\n"
 				+ "\n"
 				+ "Please attend to this at your earliest convenience.  This notice of\n"
-				+ "pending requests, if any, will be sent out daily."
-				+ "\n";
+				+ "pending requests, if any, will be sent out daily.\n";
 
 		String messageSource = MimePartParser.parse(r);
 		ColumbaLogger.log.debug("source=<" + messageSource + ">");

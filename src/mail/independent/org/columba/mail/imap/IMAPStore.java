@@ -79,7 +79,7 @@ public class IMAPStore {
 	private String delimiter = new String();
 
 	private IMAPProtocol imap;
-	
+
 	private ImapItem item;
 
 	private IMAPRootFolder parent;
@@ -960,7 +960,8 @@ public class IMAPStore {
 						// flags updated
 					} else {
 						Object uid = null;
-						ColumbaHeader header = parseMessage(HeaderParser.parse(r));
+						ColumbaHeader header =
+							parseMessage(HeaderParser.parse(r));
 						if (header != null) {
 
 							header.set("columba.uid", list.get(i));
@@ -1224,11 +1225,31 @@ public class IMAPStore {
 			//MessageSet set = new MessageSet(uids);
 			printStatusMessage("Searching in " + path + " ...", worker);
 
-			IMAPResponse[] responses = imap.search("ALL " + searchString);
+			IMAPResponse[] responses = null;
+
+			if (isAscii(searchString))
+				responses = imap.search("ALL " + searchString);
+			else {
+				// try to use UTF-8 first
+				// -> fall back to system default charset
+				try {
+
+					responses =
+						imap.search("ALL CHARSET UTF-8 " + searchString);
+				} catch (BadCommandException ex) {
+					// this probably means that UTF-8 isn't support by server
+					// -> lets try the system  default charset instead
+
+					String charset =
+						(String) System.getProperty("file.encoding");
+					responses =
+						imap.search(
+							"ALL CHARSET " + charset + " " + searchString);
+
+				}
+			}
 
 			result = SearchResultParser.parse(responses);
-
-			//result = convertIndexToUid(result, worker);
 
 			return result;
 		} catch (BadCommandException ex) {
@@ -1245,6 +1266,16 @@ public class IMAPStore {
 		}
 
 		return null;
+	}
+
+	protected static boolean isAscii(String s) {
+		int l = s.length();
+
+		for (int i = 0; i < l; i++) {
+			if ((int) s.charAt(i) > 0177) // non-ascii
+				return false;
+		}
+		return true;
 	}
 
 }

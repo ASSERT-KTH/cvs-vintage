@@ -53,7 +53,7 @@ public class MimePartParser {
 		int rightIndex = -1;
 		if (uidAtBeginning) {
 			// message is ending with "\n)"
-			rightIndex = source.length() - 2;
+			rightIndex = source.lastIndexOf(")");
 		} else {
 			// message is ending with " UID 17)"
 			// note the whitespace before "UID" !

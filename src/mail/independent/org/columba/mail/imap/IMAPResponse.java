@@ -411,9 +411,10 @@ public class IMAPResponse {
 	}
 
 	public String getSource() {
+		/*
 		if (source.length() > 1)
 			return source.substring(0, source.length() - 1);
-
+		*/
 		return source;
 	}
 

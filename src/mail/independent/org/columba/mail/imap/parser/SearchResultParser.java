@@ -58,17 +58,18 @@ public class SearchResultParser {
 	public static LinkedList parse(IMAPResponse[] responses) {
 		LinkedList v = new LinkedList();
 
-		for (int i = 0; i < responses.length - 1; i++) {
+		for (int i = 0; i < responses.length; i++) {
 			if (responses[i] == null)
 				continue;
 
-			// skip "*"
-			String data = parseLine(responses[i].getSource());
-
+			String data = responses[i].getSource();
+			
 			if ( data.startsWith("OK") ) continue;
 			
-			// skip "SEARCH"
-			data = parseLine(data);
+			// "* SEARCH 7090 8110"
+			if ( data.startsWith("* SEARCH") == false ) continue;
+			
+			data = data.substring(8);
 			
 			StringTokenizer tok = new StringTokenizer(data, " ");
 			while (tok.hasMoreTokens()) {

@@ -6,6 +6,9 @@
  */
 package org.columba.mail.imap.parser;
 
+import java.util.List;
+
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.columba.mail.imap.IMAPResponse;
@@ -27,10 +30,17 @@ public class SearchResultParserTest extends TestCase {
 	}
 
 	public void testParse() {
-		String testData = "testData";
+		String testData =
+			"* OK [PARSE] Unterminated mailbox: Undisclosed-Recipient@.MISSING-HOST-NAME.\n"
+				+ "* OK [PARSE] Unexpected characters at end of address: :;>\n"
+				+ "* SEARCH 7090 8110\n";
 		IMAPResponse[] r = ParserTestUtil.fillIMAPResponse(testData);
 
-		SearchResultParser.parse(r);
+		List list = SearchResultParser.parse(r);
+
+		Assert.assertEquals("7090", list.get(0));
+		Assert.assertEquals("8110", list.get(1));
+
 	}
 
 }
