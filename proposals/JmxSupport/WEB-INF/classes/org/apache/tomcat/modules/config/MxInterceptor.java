@@ -1,4 +1,4 @@
-/* $Id: MxInterceptor.java,v 1.1 2002/09/30 02:17:43 larryi Exp $
+/* $Id: MxInterceptor.java,v 1.2 2003/09/29 07:38:10 hgomez Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -58,12 +58,24 @@
  */
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.io.FileUtil;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.InetAddress;
 
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
+import mx4j.adaptor.rmi.jrmp.JRMPAdaptorMBean;
+import mx4j.tools.naming.NamingServiceMBean;
+import mx4j.util.StandardMBeanProxy;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.modules.config.DynamicMBeanProxy;
 
 /**
  *
@@ -72,11 +84,12 @@ import javax.management.*;
 public class MxInterceptor  extends BaseInterceptor { 
 
     MBeanServer     mserver;
-    private int     port=-1;
+    private int    port=-1;
     private String host;
-    private String  auth;
+    private String auth;
     private String user;
     private String password;
+    private String type = "http";
     
     // -------------------- Tomcat callbacks --------------------
 
@@ -101,7 +114,7 @@ public class MxInterceptor  extends BaseInterceptor {
 
     /* -------------------- Public methods -------------------- */
 
-    /** Enable the MX4J internal adapter
+    /** Enable the MX4J internal adaptor
      */
     public void setPort( int i ) {
         port=i;
@@ -140,58 +153,119 @@ public class MxInterceptor  extends BaseInterceptor {
         return password != null && password.length() > 0;
     }
 
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
     /* ==================== Start/stop ==================== */
     ObjectName serverName=null;
     
+	/** Initialize the JRMP Adaptor for JMX.
+	 */
+	private void loadJRMPAdaptor()
+	{
+		try
+		{
+			// Create the RMI Naming registry
+			ObjectName naming = new ObjectName("Naming:type=registry");
+			mserver.createMBean("mx4j.tools.naming.NamingService", naming, null, new Object[] {new Integer(port)}, new String[] {"int"});
+			NamingServiceMBean nsmbean = (NamingServiceMBean)StandardMBeanProxy.create(NamingServiceMBean.class, mserver, naming);
+			nsmbean.start();
+
+			// Create the JRMP adaptor
+			ObjectName adaptor = new ObjectName("Adaptor:protocol=JRMP");
+			mserver.createMBean("mx4j.adaptor.rmi.jrmp.JRMPAdaptor", adaptor, null);
+			JRMPAdaptorMBean jrmpmbean = (JRMPAdaptorMBean)StandardMBeanProxy.create(JRMPAdaptorMBean.class, mserver, adaptor);
+	
+			// Set the JNDI name with which will be registered
+			String jndiName = "jrmp";
+			jrmpmbean.setJNDIName(jndiName);
+
+			String lHost = host;
+
+			if (lHost == null)
+				lHost = "localhost";
+			else if (lHost.length() == 0)
+					lHost = InetAddress.getLocalHost().getHostName();
+
+			log( "Started mx4j jrmp adaptor" + ((host != null) ? " for host " + host : "") + " at port " + port);
+
+			jrmpmbean.putJNDIProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.rmi.registry.RegistryContextFactory");
+			jrmpmbean.putJNDIProperty(javax.naming.Context.PROVIDER_URL, "rmi://" + lHost + ":" + port);
+
+			jrmpmbean.start();
+			
+		} 
+		catch( Throwable t ) 
+		{
+			log("Can't load MX4J JRMP adaptor" + t.toString() );
+		}
+	}
+
+	/** Initialize the HTTP Adaptor for JMX.
+	 */
+	private void loadHTTPAdaptor() {
+		try {
+			serverName = new ObjectName("Http:name=HttpAdaptor");
+			mserver.createMBean("mx4j.adaptor.http.HttpAdaptor", serverName, null);
+            
+			if( host!=null ) 
+				mserver.setAttribute(serverName, new Attribute("Host", host));
+            
+			mserver.setAttribute(serverName, new Attribute("Port", new Integer(port)));
+
+			// use authentication if user/password set
+			if( auth!=null && user!=null && password!=null) 
+				mserver.setAttribute(serverName, new Attribute("AuthenticationMethod", auth));
+
+			// add user names
+			mserver.invoke(serverName, "addAuthorization", new Object[] {user, password}, 
+						   new String[] {"java.lang.String", "java.lang.String"});
+
+			ObjectName processorName = new ObjectName("Http:name=XSLTProcessor");
+			mserver.createMBean("mx4j.adaptor.http.XSLTProcessor", processorName, null);
+			mserver.setAttribute(serverName, new Attribute("ProcessorName", processorName));
+                
+			mserver.invoke(serverName, "start", null, null);
+			log( "Started mx4j http adaptor" + ((host != null) ? " for host " + host : "") + " at port " + port);
+			return;
+		} catch( Throwable t ) {
+			log( "Can't load the MX4J http adaptor " + t.toString()  );
+		}
+
+		try {
+			Class c=Class.forName( "com.sun.jdmk.comm.HtmlAdaptorServer" );
+			Object o=c.newInstance();
+			serverName=new ObjectName("Adaptor:name=html,port=" + port);
+			log("Registering the JMX_RI html adaptor " + serverName);
+			mserver.registerMBean(o,  serverName);
+
+			mserver.setAttribute(serverName,
+								 new Attribute("Port", new Integer(port)));
+
+			mserver.invoke(serverName, "start", null, null);
+			log( "Start JMX_RI http adaptor at port " + port);
+
+		} catch( Throwable t ) {
+			log( "Can't load the JMX_RI http adaptor " + t.toString()  );
+		}
+	}
+
     /** Initialize the worker. After this call the worker will be
      *  ready to accept new requests.
      */
-    public void loadAdapter() throws IOException {
-        try {
-            serverName = new ObjectName("Http:name=HttpAdaptor");
-            mserver.createMBean("mx4j.adaptor.http.HttpAdaptor", serverName, null);
-            
-            if( host!=null ) 
-                mserver.setAttribute(serverName, new Attribute("Host", host));
-            
-            mserver.setAttribute(serverName, new Attribute("Port", new Integer(port)));
-
-            // use authentication if user/password set
-            if( auth!=null && user!=null && password!=null) 
-                mserver.setAttribute(serverName, new Attribute("AuthenticationMethod", auth));
-
-            // add user names
-            mserver.invoke(serverName, "addAuthorization", new Object[] {user, password}, 
-                           new String[] {"java.lang.String", "java.lang.String"});
-
-            ObjectName processorName = new ObjectName("Http:name=XSLTProcessor");
-            mserver.createMBean("mx4j.adaptor.http.XSLTProcessor", processorName, null);
-            mserver.setAttribute(serverName, new Attribute("ProcessorName", processorName));
-                
-            mserver.invoke(serverName, "start", null, null);
-            log( "Started mx4j http adaptor" + ((host != null) ? " for host " + host : "") + " at port " + port);
-            return;
-        } catch( Throwable t ) {
-            log( "Can't load the MX4J http adapter " + t.toString()  );
-        }
-
-        try {
-            Class c=Class.forName( "com.sun.jdmk.comm.HtmlAdaptorServer" );
-            Object o=c.newInstance();
-            serverName=new ObjectName("Adaptor:name=html,port=" + port);
-            log("Registering the JMX_RI html adapter " + serverName);
-            mserver.registerMBean(o,  serverName);
-
-            mserver.setAttribute(serverName,
-                                 new Attribute("Port", new Integer(port)));
-
-            mserver.invoke(serverName, "start", null, null);
-            log( "Start JMX_RI http adaptor at port " + port);
-
-        } catch( Throwable t ) {
-            log( "Can't load the JMX_RI http adapter " + t.toString()  );
-        }
+    public void loadAdaptor() throws IOException {
+    	
+    	if (type.equalsIgnoreCase("jrmp"))
+    		loadJRMPAdaptor();
+    	else
+			loadHTTPAdaptor();
     }
+    	
 
     public void destroy() {
         try {
@@ -233,7 +307,7 @@ public class MxInterceptor  extends BaseInterceptor {
 
                 if( port > 0 ) {
                     try {
-                        loadAdapter();
+                        loadAdaptor();
                     }
                     catch (IOException ioe)
                     {
