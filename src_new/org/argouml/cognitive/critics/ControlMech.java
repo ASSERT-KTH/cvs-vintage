@@ -1,4 +1,4 @@
-// $Id: ControlMech.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
+// $Id: ControlMech.java,v 1.5 2004/09/04 21:33:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: ControlMech.java
 // Classes: ControlMech EnabledCM NotHushedCM CompositeCM
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ControlMech.java,v 1.4 2003/08/30 20:09:52 alexb Exp $
+// $Id: ControlMech.java,v 1.5 2004/09/04 21:33:02 mvw Exp $
 
 // TO DO: Do all these classes need to be in their own files? public?
 
@@ -44,7 +44,17 @@ import org.argouml.cognitive.Designer;
 
 public abstract class ControlMech implements Serializable {
 
+    /**
+     * The constructor.
+     * 
+     */
     public ControlMech() { }
+    
+    /**
+     * @param c the critic
+     * @param d the designer
+     * @return true f the critic is relevant for the given designer
+     */
     public boolean isRelevant(Critic c, Designer d) {
 	return true;
     }
