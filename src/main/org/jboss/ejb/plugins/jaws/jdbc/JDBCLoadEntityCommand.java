@@ -39,7 +39,7 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -143,6 +143,10 @@ public class JDBCLoadEntityCommand
             Object[] data = factory.getPreloadData(ctx.getId());
             if (data != null) {
                loadFromPreload(data, ctx);
+               if (debug)
+               {
+                  log.debug("preloading: " + ctx.getId().toString());
+               }
             } else {
                jdbcExecute(ctx);
             }
@@ -150,7 +154,7 @@ public class JDBCLoadEntityCommand
          {
             throw new ServerException("Load failed", e);
          }
-      }
+      } 
    }
 
    // JDBCQueryCommand overrides ------------------------------------
