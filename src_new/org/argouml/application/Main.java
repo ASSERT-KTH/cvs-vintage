@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.70 2003/05/04 14:10:27 kataka Exp $
+// $Id: Main.java,v 1.71 2003/05/20 20:12:00 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
 import org.argouml.uml.ui.ActionOpenProject;
+import org.argouml.util.FileConstants;
 import org.argouml.util.Trash;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
@@ -209,8 +210,8 @@ public class Main {
         URL urlToOpen = null;
 
         if (projectName != null) {
-            if (!projectName.endsWith(Project.COMPRESSED_FILE_EXT))
-                projectName += Project.COMPRESSED_FILE_EXT;
+            if (!projectName.endsWith(FileConstants.COMPRESSED_FILE_EXT))
+                projectName += FileConstants.COMPRESSED_FILE_EXT;
             projectFile = new File(projectName);
             if (!projectFile.exists()) {
                 System.err.println(
