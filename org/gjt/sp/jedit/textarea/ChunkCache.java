@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.96 2004/07/11 06:00:36 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.97 2004/10/30 01:22:14 spestov Exp $
  */
 class ChunkCache
 {
@@ -631,9 +631,6 @@ class ChunkCache
 				// if the line has no text, out.size() == 0
 				if(out.size() == 0)
 				{
-					textArea.displayManager
-						.setScreenLineCount(
-						physicalLine,1);
 					if(i == 0)
 					{
 						if(textArea.displayManager.firstLine.skew > 0)
@@ -651,9 +648,6 @@ class ChunkCache
 				// otherwise, the number of subregions
 				else
 				{
-					textArea.displayManager
-						.setScreenLineCount(
-						physicalLine,out.size());
 					if(i == 0)
 					{
 						int skew = textArea.displayManager.firstLine.skew;
