@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.33 2001/10/20 00:51:05 jon Exp $
+  * @version $Id: Attribute.java,v 1.34 2001/11/08 02:12:38 elicia Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -87,7 +87,7 @@ public class Attribute
     private static final String SELECT_ONE = "select-one";
     
     /** should be cloned to use */
-    private static Criteria moduleOptionsCriteria;
+    //private static Criteria moduleOptionsCriteria;
 
     private List orderedROptionOptionList = null;
     private List orderedAttributeOptionList = null;
@@ -98,6 +98,7 @@ public class Attribute
     private List attributeOptionsWithoutDeleted;
     private static HashMap optionAttributeMap = new HashMap();
 
+/*
     static
     {
         moduleOptionsCriteria = new Criteria();
@@ -106,6 +107,7 @@ public class Attribute
         moduleOptionsCriteria
             .addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
     }
+*/
 
     /**
      * Must call getInstance()
@@ -464,21 +466,23 @@ public class Attribute
     public List getAttributeOptions(boolean includeDeleted)
         throws Exception
     {
+        List allOptions = getAllAttributeOptions();
+        List nonDeleted = new ArrayList(allOptions.size());
         if ( includeDeleted ) 
         {
-            if (attributeOptionsWithDeleted == null)
-            {
-                buildOptionsMap();
-            }
-            return attributeOptionsWithDeleted;
+            return allOptions;
         }
         else 
         {
-            if (attributeOptionsWithoutDeleted == null)
+            for ( int i=0; i<allOptions.size(); i++ ) 
             {
-                buildOptionsMap();
+                AttributeOption option = (AttributeOption)allOptions.get(i);
+                if (!option.getDeleted())
+                {
+                    nonDeleted.add(option);
+                }
             }
-            return attributeOptionsWithoutDeleted; 
+            return nonDeleted;
         }
     }
 
