@@ -93,7 +93,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.100 $
+ * @version $Revision: 1.101 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -606,6 +606,14 @@ public abstract class Container
       {
 	 return getBeanMetaData();
       }
+      if ("State".equals(attribute))
+      {
+	 return new Integer(getState());
+      }
+      if ("StateString".equals(attribute))
+      {
+	 return getStateString();
+      }
       throw new AttributeNotFoundException("invalid attribute: " + attribute);
    }
    
@@ -814,7 +822,32 @@ public abstract class Container
 				"Return the contained object's classloader",
 				true,
 				false,
-				false)};
+				false),
+	 new MBeanAttributeInfo("BeanClass",
+				"java.lang.Class",
+				"Return the Beans class",
+				true,
+				false,
+				false),
+	 new MBeanAttributeInfo("BeanMetaData",
+				"org.jboss.metadata.BeanMetaData",
+				"Return Beans metadata object",
+				true,
+				false,
+				false),
+	 new MBeanAttributeInfo("State",
+				"int",
+				"Return the containers state",
+				true,
+				false,
+				false),
+	 new MBeanAttributeInfo("StateString",
+				"java.lang.String",
+				"Return the container's state as a String",
+				true,
+				false,
+				false)
+      };
       
       MBeanOperationInfo[] opInfo = {
          new MBeanOperationInfo("home",
