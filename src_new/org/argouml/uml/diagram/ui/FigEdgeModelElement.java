@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.5 2001/10/22 16:03:46 thierrylach Exp $
+// $Id: FigEdgeModelElement.java,v 1.6 2001/11/29 10:54:35 thierrylach Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -377,11 +377,11 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   public void updateStereotypeText() {
     MModelElement me = (MModelElement) getOwner();
     if (me == null) return;
-    // MStereotype stereos = me.getStereotype();
-    // if (stereos == null) {
-      // _stereo.setText("");
-      // return;
-    // }
+    MStereotype stereos = me.getStereotype();
+    if (stereos == null) {
+      _stereo.setText("");
+      return;
+    }
     // String stereoStr = stereos.getName();
     // if (stereoStr.length() == 0) _stereo.setText("");
     // else _stereo.setText("<<" + stereoStr + ">>");
