@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ApplicationMetaData extends MetaData {
 	// Constants -----------------------------------------------------
@@ -254,7 +254,7 @@ public class ApplicationMetaData extends MetaData {
 				Element resourceManager = (Element)iterator.next();
 				String resName = getElementContent(getUniqueChild(resourceManager, "res-name"));
 				
-				String jndi = getElementContent(getOptionalChild(resourceManager, "jndi-name"));
+				String jndi = getElementContent(getOptionalChild(resourceManager, "res-jndi-name"));
 				String url = getElementContent(getOptionalChild(resourceManager, "res-url"));
 				
 				if (jndi != null && url == null) {
@@ -262,7 +262,7 @@ public class ApplicationMetaData extends MetaData {
 				} else if (jndi == null && url != null) {
 					resources.put(resName, url);
 				} else {
-					throw new DeploymentException("Resource " + resName + " : expected res-url or jndi-name tag");
+					throw new DeploymentException("Resource " + resName + " : expected res-url or res-jndi-name tag");
 				}
 			}
 		}
