@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://db.apache.org/torque/dtd/database_3_0_1.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.135 2003/07/26 21:19:03 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.136 2003/10/17 17:28:09 dep4b Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@" defaultJavaType="object">
 <!--
@@ -108,12 +108,12 @@
         <reference local="DEPEND_ID" foreign="DEPEND_ID"/>
     </foreign-key>
 
-    <index name="IX_ATTRIBUTE_ISSUE_ENDDATE">
+    <index name="IX_ATTR_ISS_ENDDT">
         <index-column name="ATTRIBUTE_ID"/>
         <index-column name="ISSUE_ID"/>
         <index-column name="END_DATE"/>
     </index>
-    <index name="IX_ISSUE_TRANSACTION">
+    <index name="IX_ISSUE_TRANS">
         <index-column name="ISSUE_ID"/>
         <index-column name="TRANSACTION_ID"/>
     </index>
@@ -131,7 +131,7 @@
          END_DATE in the index would be useful, but it appears to slow things 
          down about 50% 
     -->
-    <index name="IX_NEW_OPTION_ISSUE">
+    <index name="IX_NEW_OPT_ISS">
         <index-column name="NEW_OPTION_ID"/>
         <index-column name="ISSUE_ID"/>
     </index>
@@ -144,7 +144,7 @@
           make use of the common issue_id join condition which led to a
           cross join of sorts.  We could replace the index above with those
           below, but the optimum speed is obtained with both. -->
-    <index name="IX_ISSUE_NEW_OPTION">
+    <index name="IX_ISS_NEW_OPT">
         <index-column name="ISSUE_ID"/>
         <index-column name="NEW_OPTION_ID"/>
     </index>
@@ -211,7 +211,7 @@
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1" javaType="primitive"></column>
-    <index name="IX_ISSUE_ATTACHTYPE">
+    <index name="IX_ISS_ATTACHTYPE">
         <index-column name="ISSUE_ID"/>
         <index-column name="ATTACHMENT_TYPE_ID"/>
     </index>
@@ -344,7 +344,7 @@
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
-    <index name="IX_ISSUE_MODULE_PREF_ORDER">
+    <index name="IX_ISS_MOD_PRF_ORD">
         <index-column name="ISSUE_TYPE_ID"/>
         <index-column name="MODULE_ID"/>
         <index-column name="PREFERRED_ORDER"/>
@@ -856,7 +856,7 @@
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
-    <index name="IX_DELETED_ISSUE_ATTRIBUTE">
+    <index name="IX_DEL_ISS_ATTR">
         <index-column name="DELETED"/>
         <index-column name="ISSUE_ID"/>
         <index-column name="ATTRIBUTE_ID"/>
@@ -866,18 +866,18 @@
           the last key was slightly better than having it as the first
           key, but the dataset was skewed towards having all deleted=0, so
           I don't know how it might work with a more even distribution. -->
-     <index name="IX_AV_OPTION_ISSUE_DEL">
+     <index name="IX_AV_OPT_ISS_DEL">
         <index-column name="OPTION_ID"/>
         <index-column name="ISSUE_ID"/>
         <index-column name="DELETED"/>
      </index>
      <!-- Similar indices to the above for non-option attributes -->
-     <index name="IX_AV_USER_ISSUE_DEL">
+     <index name="IX_AV_USER_ISS_DEL">
         <index-column name="USER_ID"/>
         <index-column name="ISSUE_ID"/>
         <index-column name="DELETED"/>
      </index>
-     <index name="IX_AV_INT_ISSUE_DEL">
+     <index name="IX_AV_INT_ISS_DEL">
         <index-column name="NUMERIC_VALUE"/>
         <index-column name="ISSUE_ID"/>
         <index-column name="DELETED"/>
@@ -887,17 +887,17 @@
           make use of the common issue_id join condition which led to a
           cross join of sorts.  We could replace the index above with those
           below, but the optimum speed is obtained with both. -->
-     <index name="IX_AV_ISSUE_OPTION_DEL">
+     <index name="IX_AV_ISS_OPT_DEL">
         <index-column name="ISSUE_ID"/>
         <index-column name="OPTION_ID"/>
         <index-column name="DELETED"/>
      </index>
-     <index name="IX_AV_ISSUE_USER_DEL">
+     <index name="IX_AV_ISS_USER_DEL">
         <index-column name="ISSUE_ID"/>
         <index-column name="USER_ID"/>
         <index-column name="DELETED"/>
      </index>
-     <index name="IX_AV_ISSUE_INT_DEL">
+     <index name="IX_AV_ISS_INT_DEL">
         <index-column name="ISSUE_ID"/>
         <index-column name="NUMERIC_VALUE"/>
         <index-column name="DELETED"/>
@@ -1068,10 +1068,10 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 
-    <index name="IX_MOD_ATTR_REQUIRED">
+    <index name="IX_MOD_ATTR_REQ">
         <index-column name="REQUIRED"/>
     </index>
-    <index name="IX_MOD_ATTR_QUICKSEARCH">
+    <index name="IX_MOD_ATTR_QSRCH">
         <index-column name="QUICK_SEARCH"/>
     </index>
 </table>
@@ -1125,10 +1125,10 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 
-    <index name="IX_ISSUETYPE_ATTR_REQUIRED">
+    <index name="IX_ISSTYP_ATTR_REQ">
         <index-column name="REQUIRED"/>
     </index>
-    <index name="IX_ISSUETYPE_ATTR_QUICKSEARCH">
+    <index name="IX_ITYP_ATTR_QSRCH">
         <index-column name="QUICK_SEARCH"/>
     </index>
 </table>
@@ -1315,10 +1315,7 @@
     </foreign-key>
 
     <unique>
-        <unique-column name="LIST_ID"/>
-        <unique-column name="MODULE_ID"/>
         <unique-column name="USER_ID"/>
-        <unique-column name="ISSUE_TYPE_ID"/>
         <unique-column name="ATTRIBUTE_ID"/>
     </unique>
 </table>
