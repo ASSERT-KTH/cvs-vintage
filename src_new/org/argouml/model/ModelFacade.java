@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.103 2003/09/01 23:13:20 alexb Exp $
+// $Id: ModelFacade.java,v 1.104 2003/09/03 08:13:19 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3818,17 +3818,17 @@ public class ModelFacade {
 
     /**
      * Sets the type of some parameter.
-     * @param parameter
+     * @param handle
      * @param type
      */
-    public static void setType(Object parameter, Object type) {
-        if (parameter != null && (type == null || type instanceof MClassifier)) {
-            if (parameter instanceof MParameter)
-		((MParameter) parameter).setType((MClassifier) type);
-            else if (parameter instanceof MAssociationEnd)
-		((MAssociationEnd) parameter).setType((MClassifier) type);
-            else if (parameter instanceof MAttribute)
-		((MAttribute) parameter).setType((MClassifier) type);
+    public static void setType(Object handle, Object type) {
+        if (handle != null && (type == null || type instanceof MClassifier)) {
+            if (handle instanceof MParameter)
+		((MParameter)handle).setType((MClassifier) type);
+            else if (handle instanceof MAssociationEnd)
+		((MAssociationEnd)handle).setType((MClassifier) type);
+            else if (handle instanceof MAttribute)
+		((MAttribute)handle).setType((MClassifier) type);
         }
     }
 
