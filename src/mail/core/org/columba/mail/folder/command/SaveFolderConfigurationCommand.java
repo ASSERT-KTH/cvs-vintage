@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -23,7 +24,6 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-
 
 /**
  * Save folder configuration including MessageFolderInfo and
@@ -44,11 +44,7 @@ public class SaveFolderConfigurationCommand extends FolderCommand {
      */
     public void execute(Worker worker) throws Exception {
         // skip if no reference available
-        if (getReferences().length == 0) {
-            return;
-        }
-
-        if (getReferences()[0] == null) {
+        if (getReferences().length == 0 || getReferences()[0] == null) {
             return;
         }
 

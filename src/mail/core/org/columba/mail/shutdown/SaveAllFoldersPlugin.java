@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.shutdown;
 
 import org.columba.core.backgroundtask.TaskInterface;
@@ -26,30 +27,20 @@ import org.columba.mail.main.MailInterface;
 
 import java.util.Enumeration;
 
-
 /**
- * @author freddy
+ * Launches a new SaveFolderConfigurationCommand for each folder in the
+ * hierarchy.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author freddy
  */
 public class SaveAllFoldersPlugin implements TaskInterface {
     public void run() {
-        saveAllFolders();
-    }
-
-    public void saveAllFolders() {
         FolderTreeNode rootFolder = (FolderTreeNode) MailInterface.treeModel.getRoot();
-
         saveFolder(rootFolder);
     }
 
-    public void saveFolder(FolderTreeNode parentFolder) {
-        int count = parentFolder.getChildCount();
+    protected void saveFolder(FolderTreeNode parentFolder) {
         FolderTreeNode child;
-        FolderTreeNode folder;
 
         for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
             child = (FolderTreeNode) e.nextElement();
@@ -57,7 +48,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
             FolderCommandReference[] r = new FolderCommandReference[1];
             r[0] = new FolderCommandReference(child);
 
-            ColumbaLogger.log.info("saving folder: " + child.getName());
+            ColumbaLogger.log.info("Saving folder " + child.getName());
 
             MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
 

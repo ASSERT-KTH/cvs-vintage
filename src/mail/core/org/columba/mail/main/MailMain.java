@@ -16,6 +16,8 @@
 
 package org.columba.mail.main;
 
+import java.util.Enumeration;
+
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
@@ -23,7 +25,11 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
+
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
@@ -70,11 +76,31 @@ public class MailMain extends DefaultMain {
     public void initGui() {
         MailInterface.popServerCollection = new POP3ServerCollection();
 
-        new MailResourceLoader();
-
+        MailInterface.mailCheckingManager = new MailCheckingManager();
+        
         MailInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
-
-		MailInterface.mailCheckingManager = new MailCheckingManager();     
+        
+        //TODO: move this to TreeModel constructor
+        ShutdownManager.getShutdownManager().register(new Runnable() {
+            public void run() {
+                saveFolder((FolderTreeNode)MailInterface.treeModel.getRoot());
+            }
+            
+            protected void saveFolder(FolderTreeNode parentFolder) {
+                FolderTreeNode child;
+                for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
+                    child = (FolderTreeNode)e.nextElement();
+                    if (child instanceof Folder) {
+                        try {
+                            ((Folder)child).save();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    saveFolder(child);
+                }
+            }
+        });
     }
 
     /* (non-Javadoc)
@@ -111,7 +137,6 @@ public class MailMain extends DefaultMain {
 
         TaskInterface plugin = new SaveAllFoldersPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
-        ShutdownManager.getShutdownManager().register(plugin);
         
         plugin = new SavePOP3CachePlugin();
         MainInterface.backgroundTaskManager.register(plugin);
