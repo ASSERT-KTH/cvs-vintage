@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    private final JDBCStoreManager manager;
@@ -54,7 +54,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    private final boolean primaryKeyMember;
    private final Class primaryKeyClass;
    private final Field primaryKeyField;
-   private final boolean isKeyDbGenerated;
+   private final boolean unknownPk;
    
    public JDBCAbstractCMPFieldBridge(
          JDBCStoreManager manager, 
@@ -80,7 +80,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
             metadata.isPrimaryKeyMember(),
             metadata.getEntity().getPrimaryKeyClass(),
             metadata.getPrimaryKeyField(),
-            metadata.isKeyDbGenerated());
+            metadata.isUnknownPkField());
    }
 
    public JDBCAbstractCMPFieldBridge(
@@ -93,7 +93,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          boolean primaryKeyMember,
          Class primaryKeyClass,
          Field primaryKeyField,
-         boolean isKeyDbGenerated) {
+         boolean unknownPk) {
 
       this.manager = manager;
 
@@ -108,7 +108,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       this.primaryKeyClass = primaryKeyClass;
       this.primaryKeyField = primaryKeyField;
       
-      this.isKeyDbGenerated = isKeyDbGenerated;
+      this.unknownPk = unknownPk;
 
       this.log = Logger.getLogger(
             this.getClass().getName() + 
@@ -155,8 +155,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
       return readTimeOut;
    }
 
-   public boolean isKeyDbGenerated() {
-      return isKeyDbGenerated;
+   public boolean isUnknownPk() {
+      return unknownPk;
    }
 
    public abstract boolean isReadTimedOut(EntityEnterpriseContext ctx);
