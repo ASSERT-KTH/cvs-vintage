@@ -58,7 +58,7 @@ import javax.management.ObjectName;
  *      @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.15 $
+ *      @version $Revision: 1.16 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -533,37 +533,27 @@ ContainerInvoker, XmlLoadable
 
 	public void onException(JMSException ex) {
 	    currentThread = Thread.currentThread();
-	    try {
-		Logger.warning("MDB lost connection to provider");
-		boolean tryIt = true;
-		while(tryIt && notStoped) {
-		    Logger.log("MDB Trying to reconnect...");
-		    try {
-			try {
-			    Thread.sleep(10000);
-			}catch(InterruptedException ie) { tryIt=false; return;}
-			//try {
-			// Reboot container
-			invoker.innerStop();
-			invoker.destroy();
-			invoker.init();
-			invoker.start();
-			tryIt = false;
-			Logger.log("OK - reconnected");
-			//return;
-		    }catch(Exception e) {
-			Logger.log("MDB error reconnecting: " +e);
-		    }
-		}
-		
-		
-		//topicConnection.close();
-	    }catch(Exception je) {
-		Logger.warning("Could not restart connection " + je);
-		je.printStackTrace();
-	    } finally {
-		currentThread = null;
-	    }
+	    
+	    Logger.warning("MDB lost connection to provider");
+	    boolean tryIt = true;
+	    while(tryIt && notStoped) {
+	        Logger.log("MDB Trying to reconnect...");
+	        try {
+	    	    try {
+		        Thread.sleep(10000);
+		    }catch(InterruptedException ie) { tryIt=false; return;}
+		    // Reboot container
+		    invoker.innerStop();
+		    invoker.destroy();
+		    invoker.init();
+		    invoker.start();
+		    tryIt = false;
+		    Logger.log("OK - reconnected");
+	        }catch(Exception e) {
+		    Logger.log("MDB error reconnecting: " +e);
+	        }
+            }
+	    currentThread = null;
 	}
 	
     }

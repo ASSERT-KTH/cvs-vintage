@@ -84,12 +84,7 @@ public class ConnectorFactoryService
 	
 	// Protected -----------------------------------------------------
 	protected void initService() throws Exception {
-		try {
-         mFactory = new ConnectorFactoryImpl( mServer );
-		}
-		catch( Exception e ) {
-			e.printStackTrace();
-		}
+            mFactory = new ConnectorFactoryImpl( mServer );
 	}
 	
 	protected void startService() throws Exception {

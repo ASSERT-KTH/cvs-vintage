@@ -14,7 +14,7 @@ import org.jboss.logging.Logger;
  *  A simple thread pool.
  *      
  *  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 public class ThreadPool
 {
@@ -112,7 +112,7 @@ public class ThreadPool
       public synchronized void die()
       {
          running = false;
-         notify();
+         this.notify();
       }
 
       /**
@@ -126,7 +126,7 @@ public class ThreadPool
          if (this.work != null)
            throw new IllegalStateException("Worker already has work to do.");
          this.work = work;
-         notify();
+         this.notify();
       }
 
       /**
@@ -153,7 +153,7 @@ public class ThreadPool
             synchronized (this) {
                while (running && work == null) {
                   try {
-                     wait();
+                     this.wait();
                   } catch (InterruptedException e) {
                      // Ignore
                   }

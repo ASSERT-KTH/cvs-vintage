@@ -51,7 +51,7 @@ import org.jboss.logging.Log;
  *		One per cmp entity bean type. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -162,7 +162,7 @@ public class JDBCEntityBridge implements EntityBridge {
 	}
 	
 	public String getEntityName() {
-		return metadata.getName();;
+		return metadata.getName();
 	}
 
 	public JDBCEntityMetaData getMetaData() {

@@ -31,7 +31,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author Peter Fagerlund pf@iprobot.se @see stopService()
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
@@ -119,7 +119,7 @@ public class HypersonicDatabase
          public void run()
          {
             // Get DB directory
-            URL dbLocator = getClass().getResource("/db.properties");
+            URL dbLocator = this.getClass().getResource("/db.properties");
             File dbDir = new File(dbLocator.getFile()).getParentFile();
             File dbName = new File(dbDir, "hypersonic/"+name);
             
