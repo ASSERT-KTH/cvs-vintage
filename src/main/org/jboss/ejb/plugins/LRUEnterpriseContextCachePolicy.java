@@ -26,7 +26,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy
@@ -126,13 +126,15 @@ public class LRUEnterpriseContextCachePolicy
       if (m_resizerPeriod > 0)
       {
          m_resizer = new ResizerTask(m_resizerPeriod);
-         tasksTimer.schedule(m_resizer, (long)(Math.random() * m_resizerPeriod));
+         long delay = (long) (Math.random() * m_resizerPeriod);
+         tasksTimer.schedule(m_resizer, delay, m_resizerPeriod);
       }
 				
       if (m_overagerPeriod > 0) 
       {
          m_overager = new OveragerTask(m_overagerPeriod);
-         tasksTimer.schedule(m_overager, (long)(Math.random() * m_overagerPeriod));
+         long delay = (long) (Math.random() * m_overagerPeriod);
+         tasksTimer.schedule(m_overager, delay, m_overagerPeriod);
       }
    }
 

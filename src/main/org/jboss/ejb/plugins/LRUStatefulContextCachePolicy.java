@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  * Least Recently Used cache policy for StatefulSessionEnterpriseContexts.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePolicy
 {
@@ -58,7 +58,8 @@ public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePoli
 		if (m_maxBeanLife > 0)
 		{
 			m_remover = new RemoverTask(m_removerPeriod);
-			tasksTimer.schedule(m_remover, (long)(Math.random() * m_removerPeriod));
+         long delay = (long) (Math.random() * m_removerPeriod);
+         tasksTimer.schedule(m_remover, delay, m_removerPeriod);
 		}
 	}
 
