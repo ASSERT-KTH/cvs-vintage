@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment;
 
-import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -31,10 +30,6 @@ import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * @author freddy
- * 
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates. To enable and disable the creation of
- * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class AttachmentView extends IconPanel {
     private AttachmentModel model;
@@ -57,7 +52,7 @@ public class AttachmentView extends IconPanel {
         String contentType;
         String contentSubtype;
         String text = null;
-        String tooltip = null;
+        StringBuffer tooltip = new StringBuffer();
         boolean output = false;
 
         removeAll();
@@ -78,7 +73,7 @@ public class AttachmentView extends IconPanel {
             contentSubtype = type.getSubtype();
 
             //Get Text for Icon
-            
+
             if (header.getFileName() != null) {
                 text = header.getFileName();
             } else {
@@ -86,13 +81,22 @@ public class AttachmentView extends IconPanel {
             }
 
             //Get Tooltip for Icon
-            
-            if( header.getContentDescription() != null ){
-                tooltip = header.getContentDescription();
-            } else {
-                tooltip = text; 
+
+            tooltip.append("<html><body>");
+            if (header.getFileName() != null) {
+                tooltip.append(header.getFileName());
+                tooltip.append(" - ");
             }
-            
+            tooltip.append("<i>");
+            if (header.getContentDescription() != null) {
+                tooltip.append(header.getContentDescription());
+            } else {
+                tooltip.append(contentType);
+                tooltip.append("/");
+                tooltip.append(contentSubtype);
+            }
+            tooltip.append("</i></body></html>");
+
             ImageIcon icon = null;
 
             icon =
@@ -100,13 +104,10 @@ public class AttachmentView extends IconPanel {
                     type.getType(),
                     type.getSubtype());
 
-            add(icon, text, text);
+
+            add(icon, text, tooltip.toString());
             output = true;
         }
-
-        Dimension d = getSize();
-
         return output;
     }
-    
 }
