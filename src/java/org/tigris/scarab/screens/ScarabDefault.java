@@ -50,15 +50,16 @@ package org.tigris.scarab.screens;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.tigris.scarab.util.AnonymousUserUtil;
 
 /**
  * This class adds a special link tool that should only be used
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.10 2005/01/04 01:31:05 dabbous Exp $
+ * @version $Id: ScarabDefault.java,v 1.1 2005/01/04 01:31:05 dabbous Exp $
  */
-public class SelectModule extends Default
+public abstract class ScarabDefault extends Default
 {
     /**
      * builds up the context for display of variables on the page.
@@ -67,8 +68,8 @@ public class SelectModule extends Default
         throws Exception 
     {
         super.doBuildTemplate(data, context);
+        AnonymousUserUtil.anonymousLogin(data);
         context.put("modulelink", new ModuleSwitchingLink(data));
     }
-
 }
 

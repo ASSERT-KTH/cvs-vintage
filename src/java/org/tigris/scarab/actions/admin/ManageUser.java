@@ -72,6 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.util.AnonymousUserUtil;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.PasswordGenerator;
@@ -83,7 +84,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.34 2004/12/28 23:07:07 jorgeuriarte Exp $
+ * @version $Id: ManageUser.java,v 1.35 2005/01/04 01:31:02 dabbous Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -115,7 +116,7 @@ public class ManageUser extends RequireLoginFirstAction
                                       IntakeTool.DEFAULT_KEY, false);
             }
             
-            su  = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            su  = (ScarabUser) AnonymousUserUtil.getAnonymousUser();
             su.setUserName(register.get("UserName").toString());
             su.setFirstName(register.get("FirstName").toString());
             su.setLastName(register.get("LastName").toString());

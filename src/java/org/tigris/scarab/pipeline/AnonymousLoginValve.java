@@ -4,27 +4,25 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TurbineException;
 import org.apache.turbine.ValveContext;
 import org.apache.turbine.pipeline.AbstractValve;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.util.AnonymousUserUtil;
 import org.tigris.scarab.util.Log;
 
 /*
  * This valve will try to automatically login an Anonymous user if there is no user authenticated.
  * The user and password will be set in scarab.user.anonymous and scarab.anonymous.password
- * If scarab.anonymous.username does not exists, the valve will just pass control to the following
+ * If scarab.anonymous.userid does not exists, the valve will just pass control to the following
  * through the pipeline.
  * 
  */
 public class AnonymousLoginValve extends AbstractValve
 {
     private final static Set nonAnonymousTargets = new HashSet();
-    private String username                = null;
+    private String userid                = null;
     private boolean anonymousAccessAllowed = false;
     
     /**
@@ -33,15 +31,14 @@ public class AnonymousLoginValve extends AbstractValve
      */
     public void initialize() throws Exception
     {
-        Configuration conf = Turbine.getConfiguration();
-        anonymousAccessAllowed = conf.getBoolean("scarab.anonymous.enable",false);
+        anonymousAccessAllowed = AnonymousUserUtil.anonymousAccessAllowed();
         if (anonymousAccessAllowed) {
             Log.get().info("anonymous Login enabled.");
-            username = (String)conf.getProperty("scarab.anonymous.username");
-	        nonAnonymousTargets.add("Index.vm");
-	        nonAnonymousTargets.add("Logout.vm");
-	        nonAnonymousTargets.add(conf.getProperty("template.login"));
-	        nonAnonymousTargets.add(conf.getProperty("template.homepage"));
+            userid = AnonymousUserUtil.getAnonymousUserId();
+	        //nonAnonymousTargets.add("Index.vm");
+	        //nonAnonymousTargets.add("Logout.vm");
+	        //nonAnonymousTargets.add(conf.getProperty("template.login"));
+	        //nonAnonymousTargets.add(conf.getProperty("template.homepage"));
 	        nonAnonymousTargets.add("Register.vm");
 	        nonAnonymousTargets.add("ForgotPassword.vm");
         }
@@ -62,32 +59,10 @@ public class AnonymousLoginValve extends AbstractValve
         {
 	        // If there's no user, we will login as Anonymous.
 	        ScarabUser user = (ScarabUser)data.getUserFromSession();
-	        if (null == user || user.getUserId() == null)
-	            anonymousLogin(data, context);
+	        if (null == user || user.getUserId() == null || !user.hasLoggedIn())
+	            AnonymousUserUtil.anonymousLogin(data);
         }
         context.invokeNext(data);        
-    }
-
-    /**
-     * Logs the user defined as anonymous in the system.
-     * @param data
-     * @param context
-     */
-    private void anonymousLogin(RunData data, ValveContext context)
-    {
-        try
-        {
-            ScarabUser user = (ScarabUser)TurbineSecurity.getUser(username);
-            data.setUser(user);
-            user.setHasLoggedIn(Boolean.TRUE);
-            user.updateLastLogin();
-            data.save();            
-        }
-        catch (Exception e)
-        {
-            Log.get().error("anonymousLogin failed to login anonymously: " + e.getMessage());
-        }
-        
     }
 
 }

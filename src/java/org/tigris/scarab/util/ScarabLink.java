@@ -68,7 +68,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.71 2004/11/14 21:07:04 dep4b Exp $
+ * @version $Id: ScarabLink.java,v 1.72 2005/01/04 01:31:05 dabbous Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
@@ -78,7 +78,9 @@ public class ScarabLink extends TemplateLink
     private String attributeText;
     private String alternateText;
     private String currentModuleId;
+    private String lastUsedModuleId;
     private Module currentModule;
+    private Module lastUsedModule;
     private boolean isOmitModule;
     private boolean overrideSecurity;
 
@@ -114,8 +116,8 @@ public class ScarabLink extends TemplateLink
         label = null;
         attributeText = null;
         alternateText = null;
-        currentModuleId = null;
-        currentModule = null;
+        lastUsedModuleId = null;
+        lastUsedModule = null;
         super.setPage(null);
         super.removePathInfo(ScarabConstants.TEMPLATE);
         isOmitModule = false;
@@ -294,11 +296,15 @@ public class ScarabLink extends TemplateLink
      */
     protected TemplateLink setPage(String t, String moduleid)
     {
-        currentModuleId = moduleid;
+
+        this.currentModuleId   = moduleid;
+        this.lastUsedModuleId  = moduleid;
+
         if (isSet(moduleid) && !isOmitModule)
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
         }
+
         String issueKey = data.getParameters()
             .getString(ScarabConstants.REPORTING_ISSUE);
         if (isSet(issueKey))
@@ -547,7 +553,7 @@ public class ScarabLink extends TemplateLink
         if (t == null) 
         {
             //check pathinfo for "id"
-            final int count = pathInfo.size();
+            int count = pathInfo.size();
             for (int i = 0; i < count; i++)
             {
                 Object[] pair = (Object[]) pathInfo.get(i);
@@ -557,24 +563,24 @@ public class ScarabLink extends TemplateLink
                     break;
                 }
             }
-        }
-        if (t == null) 
-        {
-            //check querydata for "id"
-            final int count = queryData.size();
-            for (int i = 0; i < count; i++)
+            if (t == null) 
             {
-                Object[] pair = (Object[]) queryData.get(i);
-                if ("id".equals(pair[0])) 
+                //check querydata for "id"
+                count = queryData.size();
+                for (int i = 0; i < count; i++)
                 {
-                    t = "ViewIssue.vm";
-                    break;
+                    Object[] pair = (Object[]) queryData.get(i);
+                    if ("id".equals(pair[0])) 
+                    {
+                        t = "ViewIssue.vm";
+                        break;
+                    }
+                }
+                if (t == null)
+                {
+                    return false;
                 }
             }
-        }
-        if (t == null)
-        {
-            return false;
         }
         boolean allowed = false;
         try
@@ -595,8 +601,9 @@ public class ScarabLink extends TemplateLink
                     }
                 }
                 ScarabUser user = (ScarabUser)data.getUser();
-                allowed = currentModule != null && user.hasLoggedIn() 
-                    && user.hasPermission(perm, currentModule);
+                allowed = currentModule != null 
+                          && (user.hasLoggedIn() || AnonymousUserUtil.isUserAnonymous(user))
+                          && user.hasPermission(perm, currentModule);
             }
             else 
             {

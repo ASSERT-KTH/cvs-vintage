@@ -55,6 +55,7 @@ import org.apache.turbine.RunData;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.security.util.DataBackendException;
 import org.apache.fulcrum.security.util.UnknownEntityException;
 import org.apache.fulcrum.security.util.PasswordMismatchException;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
@@ -65,6 +66,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.util.AnonymousUserUtil;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
@@ -76,7 +78,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.56 2004/12/09 22:05:37 dabbous Exp $
+ * @version $Id: Login.java,v 1.57 2005/01/04 01:31:01 dabbous Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -247,10 +249,10 @@ public class Login extends ScarabTemplateAction
      * sets the template to the passed in template
      */
     private boolean failAction(RunData data, String template)
-        throws UnknownEntityException
+        throws DataBackendException, UnknownEntityException
     {
         // Retrieve an anonymous user
-        data.setUser (TurbineSecurity.getAnonymousUser());
+        AnonymousUserUtil.anonymousLogin(data);
         setTarget(data, template);
         return false;
     }

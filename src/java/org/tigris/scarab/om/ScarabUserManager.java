@@ -52,9 +52,11 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.util.AnonymousUserUtil;
 import org.tigris.scarab.util.ScarabException;
 
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.util.DataBackendException;
 import org.apache.fulcrum.security.util.UnknownEntityException;
 
 /** 
@@ -62,7 +64,7 @@ import org.apache.fulcrum.security.util.UnknownEntityException;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserManager.java,v 1.14 2004/10/06 15:05:26 dep4b Exp $
+ * @version $Id: ScarabUserManager.java,v 1.15 2005/01/04 01:31:02 dabbous Exp $
  */
 public class ScarabUserManager
     extends BaseScarabUserManager
@@ -87,9 +89,12 @@ public class ScarabUserManager
         ScarabUser user = null;
         try
         {
-            user = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            user = (ScarabUser) AnonymousUserUtil.getAnonymousUser();
         }
         catch (UnknownEntityException uee)
+        {
+        }
+        catch (DataBackendException e)
         {
         }
         return user;

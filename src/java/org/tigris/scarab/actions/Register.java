@@ -67,6 +67,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.util.AnonymousUserUtil;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
@@ -86,7 +87,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.48 2004/12/09 22:05:38 dabbous Exp $
+ * @version $Id: Register.java,v 1.49 2005/01/04 01:31:01 dabbous Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -179,7 +180,7 @@ public class Register extends ScarabTemplateAction
             }
 
             // get an anonymous user
-            ScarabUser su = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            ScarabUser su = (ScarabUser) (ScarabUser) AnonymousUserUtil.getAnonymousUser();
             try
             {
                 register.setProperties(su);

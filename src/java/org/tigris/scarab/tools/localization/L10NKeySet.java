@@ -61,7 +61,7 @@ package org.tigris.scarab.tools.localization;
  * Note: The velocity templates use much more resource keys, which are NOT
  * defined here, because they are not relevant for the java-part of this software.
  * 
- * @version $Id: L10NKeySet.java,v 1.11 2004/12/27 22:43:35 jorgeuriarte Exp $
+ * @version $Id: L10NKeySet.java,v 1.12 2005/01/04 01:31:05 dabbous Exp $
  *
  * Default implementation of a Localization Key.
  * <p>
@@ -158,7 +158,8 @@ public class L10NKeySet
     public static final LocalizationKey DupeCheckSkippedBecauseComplexity    = new L10NKey("DupeCheckSkippedBecauseComplexity");
     public static final LocalizationKey UserChangesSaved                     = new L10NKey("UserChangesSaved");
     public static final LocalizationKey UserDeleted                          = new L10NKey("UserDeleted");
-
+    public static final LocalizationKey YouHaveBeenLoggedOut                 = new L10NKey("YouHaveBeenLoggedOut");
+    
     // The following set is originally been generated from the java sources.
     
     public static final LocalizationKey PasswordsDoNotMatch = new L10NKey("PasswordsDoNotMatch");

@@ -46,29 +46,14 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-
-// Turbine Stuff 
-import org.apache.turbine.RunData;
-import org.apache.turbine.TemplateContext;
-
 /**
  * This class adds a special link tool that should only be used
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.10 2005/01/04 01:31:05 dabbous Exp $
+ * @version $Id: Logout.java,v 1.1 2005/01/04 01:31:05 dabbous Exp $
  */
-public class SelectModule extends Default
+public class Logout extends ScarabDefault
 {
-    /**
-     * builds up the context for display of variables on the page.
-     */
-    public void doBuildTemplate(RunData data, TemplateContext context)
-        throws Exception 
-    {
-        super.doBuildTemplate(data, context);
-        context.put("modulelink", new ModuleSwitchingLink(data));
-    }
-
 }
 
