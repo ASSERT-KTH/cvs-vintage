@@ -27,7 +27,7 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -55,6 +55,10 @@ public class StatefulSessionInstanceCache
 
    public void destroy()
    {
+      synchronized( this )
+      {
+         this.m_container = null;
+      }
       m_passivated.clear();
       super.destroy();
    }
@@ -62,7 +66,10 @@ public class StatefulSessionInstanceCache
     // Z implementation ----------------------------------------------
 
     // Y overrides ---------------------------------------------------
-    protected Container getContainer() {return m_container;}
+    protected synchronized Container getContainer()
+    {
+       return m_container;
+    }
     protected void passivate(EnterpriseContext ctx) throws RemoteException
     {
         m_container.getPersistenceManager().passivateSession((StatefulSessionEnterpriseContext)ctx);

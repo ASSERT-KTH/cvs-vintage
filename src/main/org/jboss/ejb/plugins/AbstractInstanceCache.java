@@ -48,7 +48,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -319,9 +319,12 @@ public abstract class AbstractInstanceCache
    /* From Service interface*/
    public void destroy()
    {
-      getCache().destroy();
+      synchronized (getCacheLock())
+      {
+         getCache().destroy();
+         m_passivationHelper.clear();
+      }
       this.m_cache = null;
-      m_passivationHelper.clear();
       m_passivationHelper = null;
       m_buffer.setLength(0);
    }
@@ -494,6 +497,19 @@ public abstract class AbstractInstanceCache
                {
                   public void execute() throws Exception
                   {
+                     // Validate that the container has not been destroyed
+                     Container container = null;
+                     BeanLock lock = null;
+                     Object id = this.getKey();
+                     synchronized (getCacheLock())
+                     {
+                        container = getContainer();
+                        if( container != null )
+                           lock = container.getLockManager().getLock(id);
+                     }
+                     if( container == null )
+                        return;
+
                      if (ctx.getId() == null)
                      {
                         // If this happens, then a passivation request for this bean was issued
@@ -501,7 +517,6 @@ public abstract class AbstractInstanceCache
                         return;
                      }
 
-                     Object id = this.getKey();
                      /**
                       * Synchronization / Passivation explanations:
                       * The instance interceptor (II) first acquires the Sync object associated
@@ -522,10 +537,9 @@ public abstract class AbstractInstanceCache
                       * marcf: this is still very valid but the first lock is on the ctx directly
                       * this is part of the rework of the buzy wait bug
                       */
-                     BeanLock lock = getContainer().getLockManager().getLock(id);
                      lock.sync();
                      ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                     ClassLoader beanCL = getContainer().getClassLoader();
+                     ClassLoader beanCL = container.getClassLoader();
                      try
                      {
                         Thread.currentThread().setContextClassLoader(beanCL);
@@ -613,7 +627,7 @@ public abstract class AbstractInstanceCache
                      {
                         Thread.currentThread().setContextClassLoader(cl);
                         lock.releaseSync();
-                        getContainer().getLockManager().removeLockRef(id);
+                        container.getLockManager().removeLockRef(id);
                      }
                   }//execute
                };// Passivation job definition
@@ -625,11 +639,7 @@ public abstract class AbstractInstanceCache
             {
                if (m_passivationJobs.get(key) == null)
                {
-                  // Register job
-                  m_passivationJobs.put(key, job);
 
-                  // Schedule the job for passivation
-                  m_passivator.putJob(job);
                }
                else
                {

@@ -20,7 +20,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -81,7 +81,10 @@ public class EntityInstanceCache
 
    public void destroy()
    {
-      this.m_container = null;
+      synchronized( this )
+      {
+         this.m_container = null;
+      }
       super.destroy();
    }
 
@@ -95,7 +98,10 @@ public class EntityInstanceCache
 		ctx.setId(id);
 	}
 
-	protected Container getContainer() {return m_container;}
+	protected synchronized Container getContainer()
+   {
+      return m_container;
+   }
 
 	protected void passivate(EnterpriseContext ctx) throws RemoteException
 	{
