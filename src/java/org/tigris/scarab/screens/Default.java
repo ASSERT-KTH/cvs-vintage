@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.67 2003/02/06 00:29:20 jon Exp $
+ * @version $Id: Default.java,v 1.68 2003/02/10 08:18:00 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -197,11 +197,6 @@ public class Default extends TemplateSecureScreen
             {
                 setTargetSelectModule(data);
                 return true;
-            }
-            else
-            {
-                setTargetLogin(data);
-                return false;
             }
         }
         return true;
