@@ -7,9 +7,9 @@
 	<property name="build" value="build"/>
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
-	<property name="version" value="0.9.11-cvs"/>
+	<property name="version" value="cvs"/>
 	<property name="dest" value="../columba-${version}"/>
-  <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar"/>
+  <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar:${src}/ext/junit.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
@@ -97,7 +97,7 @@
       <exclude name="**/*.zip"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar ext/jython.jar"/>
+				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar ext/jython.jar ext/junit.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
