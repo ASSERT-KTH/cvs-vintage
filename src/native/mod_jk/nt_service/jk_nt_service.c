@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                           *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -535,6 +535,11 @@ static void start_jk_service(char *name)
                         /* 
                          * Tomcat died !!!
                          */ 
+                        CloseHandle(hServerStopEvent);
+                        CloseHandle(hTomcat);
+                        exit(0); // exit ungracefully so
+                                 // Service Control Manager 
+                                 // will attempt a restart.
                         break;
                     default:
                         /* 
