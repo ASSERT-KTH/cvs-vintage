@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.21 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelGeneralization.java,v 1.22 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import javax.swing.JScrollPane;
 import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
 import org.argouml.swingext.LabelledLayout;
-import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -227,11 +227,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
                             gen.setChild(newElement);
                         }
                         _newButton.setEnabled(false);
-                        navigateTo(newElement);
-                        // 2002-07-15
-            			// Jaap Branderhorst
-            			// Force an update of the navigation pane to solve issue 323
-            			ProjectBrowser.getInstance().getNavigatorPane().forceUpdate();
+                        TargetManager.getInstance().setTarget(newElement);                       
                     }
                     catch(Exception e) {
                         cat.error(e.toString() + " in PropPanelGeneralization.newElement", e);
@@ -246,7 +242,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
         if(target instanceof MModelElement) {
             MNamespace ns = ((MModelElement) target).getNamespace();
             if(ns != null) {
-                navigateTo(ns);
+                TargetManager.getInstance().setTarget(ns);
             }
         }
     }

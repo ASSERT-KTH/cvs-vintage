@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociation.java,v 1.27 2003/04/11 21:46:18 kataka Exp $
+// $Id: PropPanelAssociation.java,v 1.28 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,9 +71,7 @@ public class PropPanelAssociation extends PropPanelRelationship {
     addField(Argo.localize("UMLMenu", "label.association-roles"), _associationRoleScroll);
     addField(Argo.localize("UMLMenu", "label.association-links"), _linksScroll);
 
-    new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
-    new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-    new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+    new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);  
     // new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.add-association-end"),"addAssociationEnd",null);
     new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-association"),"removeElement",null);
     

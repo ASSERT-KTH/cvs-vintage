@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.24 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelDataType.java,v 1.25 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.foundation.core.CoreFactory;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLAttributesListModel;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -131,7 +132,7 @@ public class PropPanelDataType extends PropPanelClassifier {
             }
 
             MAttribute attr = CoreFactory.getFactory().buildAttribute(classifier);
-            navigateTo(attr);
+            TargetManager.getInstance().setTarget(attr);
         }
         
     }
@@ -143,7 +144,7 @@ public class PropPanelDataType extends PropPanelClassifier {
             MNamespace ns = dt.getNamespace();
             MDataType newDt = CoreFactory.getFactory().createDataType();
             ns.addOwnedElement(newDt);
-            navigateTo(newDt);
+            TargetManager.getInstance().setTarget(newDt);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.19 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.20 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.19 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.20 2003/05/04 10:50:15 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -39,6 +39,7 @@ import javax.swing.JScrollPane;
 import org.argouml.application.api.Argo;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLReflectionListModel;
@@ -119,7 +120,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
             MModelElement elem = (MModelElement) target;
             MNamespace ns = elem.getNamespace();
             if(ns != null) {
-                navigateTo(ns);
+                TargetManager.getInstance().setTarget(ns);
             }
         }
     }
@@ -204,7 +205,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
                 
        UmlFactory.getFactory().delete(target);
 		if(newTarget != null) { 
-			navigateTo(newTarget);
+            TargetManager.getInstance().setTarget(newTarget);
 		}
             
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.13 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelDiagram.java,v 1.14 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.uml.ui.UMLTextField;
 import org.argouml.uml.ui.UMLTextProperty;
@@ -71,7 +72,7 @@ public class PropPanelDiagram extends PropPanel {
                 //
                 Object newTarget = project.getModel();
                 project.moveToTrash(diagram);
-                navigateTo(newTarget);
+                TargetManager.getInstance().setTarget(newTarget);
             } catch (Exception e) {
                 e.printStackTrace();
             }

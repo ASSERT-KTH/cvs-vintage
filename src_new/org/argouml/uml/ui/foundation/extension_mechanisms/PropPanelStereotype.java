@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.18 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelStereotype.java,v 1.19 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
 import org.argouml.uml.ui.UMLGeneralizationListModel;
@@ -95,7 +96,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
     public void newStereotype() {
         Object target = getTarget();
         MStereotype newStereo = ExtensionMechanismsFactory.getFactory().buildStereotype((MModelElement)null, (String)null);
-        navigateTo(newStereo);
+        TargetManager.getInstance().setTarget(newStereo);
         /*
         if(target instanceof MStereotype) {
             MNamespace ns = ((MStereotype) target).getNamespace();

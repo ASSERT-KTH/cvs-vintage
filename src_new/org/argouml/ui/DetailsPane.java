@@ -70,7 +70,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.26 2003/05/03 10:13:43 kataka Exp $
+ * $Id: DetailsPane.java,v 1.27 2003/05/04 10:50:15 kataka Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -404,33 +404,9 @@ public class DetailsPane
         return null;
     }
 
-    /**
-     * only added to the TabProps instance.
-     */
-    public void addNavigationListener(NavigationListener navListener) {
-        Iterator iter = _tabPanels.iterator();
-        Object panel;
-        while (iter.hasNext()) {
-            panel = iter.next();
-            if (panel instanceof TabProps) {
-                ((TabProps) panel).addNavigationListener(navListener);
-            }
-        }
-    }
+    
 
-    /**
-     * only removed from the TabProps instance.
-     */
-    public void removeNavigationListener(NavigationListener navListener) {
-        Iterator iter = _tabPanels.iterator();
-        Object panel;
-        while (iter.hasNext()) {
-            panel = iter.next();
-            if (panel instanceof TabProps) {
-                ((TabProps) panel).removeNavigationListener(navListener);
-            }
-        }
-    }
+    
 
     ////////////////////////////////////////////////////////////////
     // event handlers

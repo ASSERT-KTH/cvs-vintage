@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.33 2003/04/29 19:25:09 kataka Exp $
+// $Id: PropPanelClassifier.java,v 1.34 2003/05/04 10:50:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.swingext.GridLayout2;
 import org.argouml.swingext.Orientation;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLReflectionListModel;
 
@@ -152,7 +153,7 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
             MNamespace ns = (MNamespace) target;
             MModelElement ownedElem = CoreFactory.getFactory().createDataType();
             ns.addOwnedElement(ownedElem);
-            navigateTo(ownedElem);
+            TargetManager.getInstance().setTarget(ownedElem);
         }
     }
 
