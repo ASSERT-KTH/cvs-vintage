@@ -16,12 +16,14 @@
 package org.columba.mail.pgp;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.PGPItem;
-import org.columba.mail.gui.util.PGPPassphraseDialog;
+import org.columba.mail.gui.util.PasswordDialog;
 
 public class PGPController {
 	public final static int GPG = 0;
@@ -46,6 +48,8 @@ public class PGPController {
 
 	private String pgpMessage;
 	
+	private Map passwords;
+	
 	/**
 	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
 	 * at the moment there are only one tool - gpg, the gnu pgp programm which
@@ -60,6 +64,8 @@ public class PGPController {
 	 */
 	protected PGPController() {
 		exitVal = 0;
+		
+		passwords = new HashMap();
 	}
 	/**
 	 * Gives back an Instance of PGPController. This function controls, that only
@@ -99,7 +105,6 @@ public class PGPController {
 			exitVal = utils[GPG].decrypt(item, cryptMessage);
 
 			error = utils[GPG].parse(utils[GPG].getErrorString());
-			output = utils[GPG].parse(utils[GPG].getOutputString());
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -135,7 +140,7 @@ public class PGPController {
 			exitVal = utils[GPG].verify(item, message, signature);
 
 			error = utils[GPG].parse(utils[GPG].getErrorString());
-			output = utils[GPG].parse(utils[GPG].getOutputString());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -143,6 +148,8 @@ public class PGPController {
 		}
 
 		pgpMessage = error;
+		
+		if ( exitVal == 1 ) throw new VerificationException(error);
 		
 		if (exitVal == 2)
 			throw new MissingPublicKeyException(error);
@@ -256,16 +263,18 @@ public class PGPController {
 		boolean save = false;
 		boolean ret = false;
 
+		PasswordDialog dialog = new PasswordDialog();
 		if (passphrase.length() == 0) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-
-			if (dialog.success()) {
+			//PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
+			
+			dialog.showDialog(item.get("id"), "", false);
+			
+			if (dialog.success()) {				
 				passphrase =
 					new String(
 						dialog.getPassword(),
 						0,
-						dialog.getPassword().length);
+						dialog.getPassword().length);									
 				item.setPassphrase(passphrase);
 				save = dialog.getSave();
 				ret = true;

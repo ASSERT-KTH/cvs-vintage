@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.columba.core.io.StreamUtils;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.mail.config.PGPItem;
 
 /**
@@ -100,7 +102,7 @@ public abstract class DefaultUtil {
 		//return new ByteArrayInputStream(this.outputString.getBytes());
 		return this.outputStream;
 	}
-	
+
 	public InputStream getErrorStream() {
 		return this.errorStream;
 	}
@@ -112,6 +114,33 @@ public abstract class DefaultUtil {
 	*/
 	protected abstract String[] getRawCommandString(int type);
 
+	/**
+	 * Gets the path to the commandline tool.
+	 * 
+	 * @see org.columba.core.plugin.ExternalToolsPluginHandler
+	 * 
+	 * @param type		id of commandline tool
+	 * 
+	 * @return			absolut path of tool
+	 */
+	protected String getPath(String type) {
+		ExternalToolsPluginHandler handler = null;
+
+		try {
+			handler =
+				(
+					ExternalToolsPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.core.externaltools");
+			return handler.getLocationOfExternalTool(type).getPath();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 	/**
 	 * Returns the command-line that should be given for the pgp-tool, like gpg. In the command-line all items in
 	 * % chatacters are replaced with the source from item, if there is a item entry with the id in the % characters. If there
@@ -126,7 +155,23 @@ public abstract class DefaultUtil {
 	protected String[] getCommandString(int type, PGPItem item) {
 		String[] rawCommand = getRawCommandString(type);
 		List commandList = new ArrayList();
-		commandList.add(item.get("path"));
+
+		// !!!
+		// This has changed. Configuration of external tools like gpg
+		// is not handled on a per account basis anymore. Instead it
+		// it is globally handled, through the external tools plugin
+		// handler.
+		//
+		// @see org.columba.core.plugin.ExternalToolsPluginHandler
+		//
+		//
+		//commandList.add(item.get("path"));
+
+		// Note: This is atm the only PGP tool we support, if we want
+		// to support other tools, too, we have to add an additional
+		// attribute to PGPItem to make this configurable
+		commandList.add(getPath("gpg"));
+
 		for (int i = 0; i < rawCommand.length; i++) {
 			StringBuffer command = new StringBuffer();
 			String rawArg = rawCommand[i];
@@ -224,7 +269,8 @@ public abstract class DefaultUtil {
 
 		p.getOutputStream().write(item.getPassphrase().getBytes());
 		p.getOutputStream().write(
-			System.getProperty("line.separator").getBytes()); // send return after passphrase
+			System.getProperty("line.separator").getBytes());
+		// send return after passphrase
 		//write the pgpMessage out
 		StreamUtils.streamCopy(pgpMessage, p.getOutputStream());
 		p.getOutputStream().close();
@@ -234,7 +280,7 @@ public abstract class DefaultUtil {
 		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
 		this.outputStream = StreamUtils.streamClone(p.getInputStream());
 		p.destroy();
-		
+
 		return exitVal;
 
 	}
@@ -267,7 +313,7 @@ public abstract class DefaultUtil {
 		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
 		this.outputStream = StreamUtils.streamClone(p.getInputStream());
 		p.destroy();
-		
+
 		return exitVal;
 	}
 
@@ -292,21 +338,25 @@ public abstract class DefaultUtil {
 		p.getOutputStream().close();
 
 		exitVal = p.waitFor();
-		
+
 		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
 		this.outputStream = StreamUtils.streamClone(p.getInputStream());
 		p.destroy();
-		
+
 		return exitVal;
 	}
-	
-	public int decrypt(PGPItem item, InputStream cryptMessage) throws Exception {
+
+	public int decrypt(PGPItem item, InputStream cryptMessage)
+		throws Exception {
 		int exitVal = -1;
-		Process p = executeCommand( getCommandString(PGPController.DECRYPT_ACTION, item));
+		Process p =
+			executeCommand(
+				getCommandString(PGPController.DECRYPT_ACTION, item));
 
 		p.getOutputStream().write(item.getPassphrase().getBytes());
 		p.getOutputStream().write(
-			System.getProperty("line.separator").getBytes()); // send return after passphrase
+			System.getProperty("line.separator").getBytes());
+		// send return after passphrase
 		StreamUtils.streamCopy(cryptMessage, p.getOutputStream());
 		p.getOutputStream().close();
 
@@ -315,8 +365,8 @@ public abstract class DefaultUtil {
 		this.errorStream = StreamUtils.streamClone(p.getErrorStream());
 		this.outputStream = StreamUtils.streamClone(p.getInputStream());
 		p.destroy();
-				
-		return  exitVal;
-	} 
+
+		return exitVal;
+	}
 
 }

@@ -34,6 +34,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.ConfigPluginHandler;
+import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
@@ -115,7 +116,10 @@ public class Main {
     MainInterface.processor.start();
 
     MainInterface.pluginManager = new PluginManager();
+    
     MainInterface.pluginManager.registerHandler(new InterpreterHandler());
+    
+	MainInterface.pluginManager.registerHandler(new ExternalToolsPluginHandler());
 
     MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
 

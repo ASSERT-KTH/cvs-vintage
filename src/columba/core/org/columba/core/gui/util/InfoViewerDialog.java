@@ -1,14 +1,24 @@
-/*
- * Created on 07.08.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-package org.columba.core.gui.plugin;
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+package org.columba.core.gui.util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,18 +37,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author frd
+ * Dialg showing information to the user. This can be either a URL to document
+ * or a string.
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author fdietz
  */
 public class InfoViewerDialog extends JDialog implements ActionListener {
 
@@ -47,6 +59,37 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
 	JTextPane textPane;
 	URL url;
+
+	public InfoViewerDialog(String message) {
+		//		modal dialog
+		super(new JFrame(), true);
+
+		initComponents();
+
+		pack();
+		setLocationRelativeTo(null);
+
+		HTMLEditorKit editorKit = new HTMLEditorKit();
+		StyleSheet styles = new StyleSheet();
+
+		Font font = UIManager.getFont("Label.font");
+		String name = font.getName();
+		int size = font.getSize();
+		String css =
+			"<style type=\"text/css\"><!--p {font-family:\""
+				+ name
+				+ "\"; font-size:\""
+				+ size
+				+ "pt\"}--></style>";
+		styles.addRule(css);
+		editorKit.setStyleSheet(styles);
+
+		textPane.setEditorKit(editorKit);
+		textPane.setText(message);
+		textPane.setEditable(false);
+		setVisible(true);
+	}
+
 	/**
 	 * @throws java.awt.HeadlessException
 	 */
@@ -65,13 +108,15 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
 			textPane.setPage(url);
 		} catch (IOException ex) {
-			
+
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
-			
-			return;	
+
+			return;
 		}
-		
+
+		textPane.setEditable(false);
+
 		setVisible(true);
 	}
 

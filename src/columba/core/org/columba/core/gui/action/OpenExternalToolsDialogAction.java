@@ -13,25 +13,35 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.plugin;
+package org.columba.core.gui.action;
+
+import java.awt.event.ActionEvent;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.externaltools.ExternalToolsDialog;
+import org.columba.core.gui.frame.AbstractFrameController;
 
 /**
- * ConfigPluginHandler provides an easy way for plugins to have
- * their own configuration file. 
+ * Opens external tools configuration dialog.
  *
  * @author fdietz
  */
-public class ConfigPluginHandler extends AbstractPluginHandler {
+public class OpenExternalToolsDialogAction extends FrameAction {
 
 	/**
-	 * @param id
-	 * @param config
+	 * @param frameController
+	 * @param name
 	 */
-	public ConfigPluginHandler() {
-		super("org.columba.core.config", "org/columba/core/plugin/config.xml");
+	public OpenExternalToolsDialogAction(AbstractFrameController frameController) {
+		super(frameController, "External Tools...");
 
-		parentNode = getConfig().getRoot().getElement("configlist");
-		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		new ExternalToolsDialog();
 	}
 
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tools version="1.0">
+ <tool name="aspell" first_time="true" />
+ <tool name="gpg" first_time="true" />
+</tools>

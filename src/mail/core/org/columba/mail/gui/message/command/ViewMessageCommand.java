@@ -44,6 +44,7 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.MissingPublicKeyException;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pgp.PGPException;
+import org.columba.mail.pgp.VerificationException;
 import org.columba.mail.pgp.WrongPassphraseException;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -116,20 +117,33 @@ public class ViewMessageCommand extends FolderCommand {
 
 		try {
 			decryptedStream = controller.decrypt(encryptedPart, pgpItem);
-
+			
 			pgpMode = SecurityIndicator.DECRYPTION_SUCCESS;
 
 			pgpMessage = controller.getPgpMessage();
 
 		} catch (WrongPassphraseException e) {
 			e.printStackTrace();
+
+			// you most probably entered a wrong passpharse
 			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
+
+			pgpMessage = e.getMessage();
 			
+			// just show the encrypted raw message
+			decryptedStream = encryptedPart;
+
 		} catch (PGPException e) {
+
+			// generic pgp error
 
 			e.printStackTrace();
 
 			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
+			pgpMessage = e.getMessage();
+			
+			// just show the encrypted raw message
+			decryptedStream = encryptedPart;
 		}
 
 		try {
@@ -137,7 +151,6 @@ public class ViewMessageCommand extends FolderCommand {
 			String decryptedBodyPart =
 				StreamUtils.readInString(decryptedStream).toString();
 			ColumbaLogger.log.debug(decryptedBodyPart);
-			//String decryptedBodyPart = PGPController.getInstance().decrypt(encryptedBodyPart, pgpItem);
 
 			// construct new Message from decrypted string
 			ColumbaMessage message;
@@ -147,7 +160,7 @@ public class ViewMessageCommand extends FolderCommand {
 					MessageParser.parse(
 						new CharSequenceSource(decryptedBodyPart)));
 			mimePartTree = message.getMimePartTree();
-
+			
 			//header = (ColumbaHeader) message.getHeaderInterface();
 		} catch (ParserException e) {
 			e.printStackTrace();
@@ -199,7 +212,15 @@ public class ViewMessageCommand extends FolderCommand {
 
 			System.out.println("comand-message=" + pgpMessage);
 
+		} catch (VerificationException e) {
+
+			// this probably means that the signature could'nt
+			// be verified successfully
+			pgpMode = SecurityIndicator.VERIFICATION_FAILURE;
+			pgpMessage = e.getMessage();
+
 		} catch (PGPException e) {
+
 			e.printStackTrace();
 
 			// something really got wrong here -> show error dialog

@@ -42,7 +42,8 @@ public class Config {
 	private static Hashtable templatePluginList;
 
 	private static File optionsFile;
-
+	private static File toolsFile;
+	
 	/**
 	 * @see java.lang.Object#Object()
 	 */
@@ -58,6 +59,9 @@ public class Config {
 			optionsFile.getName(),
 			new OptionsXmlConfig(optionsFile));
 
+		toolsFile = new File(ConfigPath.getConfigDirectory(), "external_tools.xml");
+		
+		DefaultConfig.registerPlugin("core", toolsFile.getName(), new DefaultXmlConfig(toolsFile));
 		/*
 		File file = new File(ConfigPath.getConfigDirectory(), "mail");
 		

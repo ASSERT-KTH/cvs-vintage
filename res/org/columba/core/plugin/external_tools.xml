@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tools>
+ <tool name="aspell" class="org.columba.core.externaltools.ASpellPlugin" />
+ <tool name="gpg" class="org.columba.core.externaltools.GPGPlugin" />
+</tools>

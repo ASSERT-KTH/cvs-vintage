@@ -51,6 +51,7 @@
 	
 	<menu name="menu_utilities">
 	 <menuitem action="PluginManagerDialog" />
+	 <menuitem action="OpenExternalToolsDialog" />
 	 <extensionpoint name="bottom"/>
 	</menu>
 

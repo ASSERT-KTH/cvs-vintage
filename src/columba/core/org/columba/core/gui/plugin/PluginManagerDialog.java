@@ -48,6 +48,7 @@ import javax.swing.event.TreeSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.ConfigPath;
+import org.columba.core.gui.util.*;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
