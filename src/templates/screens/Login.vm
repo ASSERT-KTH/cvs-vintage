@@ -1,11 +1,14 @@
+$page.setTitle("Welcome to Scarab") 
+
 <div id="login" class="app">
- $page.setTitle("Welcome to Scarab") 
- <h2>$page.getTitle()</h2>
+
+ <h2>$page.Title</h2>
  <p>Welcome to Scarab, a Bug Tracking and Issue Reporting Tool</p>
  <ul>
   <li>New users, <a href="$link.setPage("Register.vm")">register here</a>.</li>
  </ul>
- <form action="$link.setPage("Login.vm").addPathInfo($data.Parameters)" method="post" name="login">
+
+ <form action="$link.setPage("Login.vm")" method="post" name="login">
   <input type="hidden" name="action" value="Login" /> 
 #if ($nextTemplate && $nextTemplate.length() > 0)
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
@@ -14,26 +17,41 @@
 <input type="hidden" name="id" value="1" /> 
 #end 
 <div class="axial">
+
+#set ( $loginGroup = $intake.Login.Default )
+
 <table cellpadding="3" cellspacing="2" border="1">
-<tr>
-<th>Email Address:</th><td>
-#set ( $login = $intake.Login.Default )
-#if ( !$login.Username.isValid() )
-    $login.Username.Message
-#end
-<input name="$login.Username.Key" value="$!login.Username.Value" size="25" type="text" /></td>
+<tr><th>Email Address:</th>
+<td>
+<input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
+</td>
 </tr>
-<tr>
-<th>Password: 
-#if ( !$login.Password.isValid() )
-    $login.Password.Message
-#end
-</th><td><input name="$login.Password.Key" value="" size="25" type="password" /> <!-- onchange="document.login.submit();"> --></td>
+
+<tr><th>Password:</th>
+<td>
+<input name="$loginGroup.Password.Key" value="" size="25" type="password" />
+</td>
 </tr>
+
+#if ( !$loginGroup.Username.isValid() )
+<tr><td colspan="2">
+    #fieldErrorMsg ($loginGroup.Username "")
+</td></tr>
+#end
+
+#if ( !$loginGroup.Password.isValid() )
+<tr><td colspan="2">
+    #fieldErrorMsg ($loginGroup.Password "")
+</td></tr>
+#end
+
 <tr>
-<td></td><td><input type="submit" name="eventSubmit_doLogin" value="Login" /> $intake.declareGroups()</td>
+<td colspan="2"><input type="submit" name="eventSubmit_doLogin" value="Login" /></td>
 </tr>
 </table>
 </div>
+
+$intake.declareGroups()
  </form>
+
 </div>
