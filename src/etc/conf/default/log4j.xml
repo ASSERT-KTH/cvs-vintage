@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.20 2003/09/23 15:46:14 slaboure Exp $ -->
+<!-- $Id: log4j.xml,v 1.21 2003/11/28 10:03:53 cgjung Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -156,6 +156,12 @@
    <category name="org.apache.commons">
       <priority value="INFO"/>
    </category>
+
+   <!-- Limit apache axis to INFO as its DEBUG is even more verbose -->
+   <category name="org.apache.axis">
+      <priority value="INFO"/>
+   </category>
+
 
    <!-- Limit JBoss categories to INFO
    <category name="org.jboss">
