@@ -160,7 +160,8 @@ public final class Context implements LogAware {
 
     // Absolute path to docBase if file-system based
     private String absPath;
-
+    private Hashtable properties=new Hashtable();
+    
     private int state=STATE_NEW;
     
     // internal state / related objects
@@ -310,7 +311,7 @@ public final class Context implements LogAware {
 	map.setPath( path );
 
 	// Notify interceptors that a new container is added
-	BaseInterceptor cI[]=map.getInterceptors();
+	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContainer( map );
 	}
@@ -456,6 +457,7 @@ public final class Context implements LogAware {
 	by interceptors ( DefaultCMSetter )
     */
     public final  void setContextManager(ContextManager cm) {
+	if( contextM != null ) return;
 	contextM=cm;
     }
 
@@ -476,6 +478,95 @@ public final class Context implements LogAware {
     void setState( int state ) {
 	this.state=state;
     }
+
+    /**
+     * Initializes this context to be able to accept requests. This action
+     * will cause the context to load it's configuration information
+     * from the webapp directory in the docbase.
+     *
+     * <p>This method must be called
+     * before any requests are handled by this context. It will be called
+     * after the context was added, typically when the engine starts
+     * or after the admin adds a new context.
+     *
+     * After this call, the context will be in READY state and will
+     * be able to server requests.
+     * 
+     * @exception if any interceptor throws an exception the error
+     *   will prevent the context from becoming READY
+     */
+    public final void init() throws TomcatException {
+	if( state==STATE_READY ) {
+	    log( "Already initialized " );
+	    return;
+	}
+	// make sure we see all interceptors added so far
+	getContainer().resetInterceptorCache(Container.H_engineInit);
+
+	// initialize all local-interceptors
+	BaseInterceptor cI[]=getContainer().getInterceptors();
+	for( int i=0; i<cI.length ; i++ ) {
+	    if( this !=cI[i].getContext()) continue;
+	    cI[i].setContextManager( contextM );
+	    try {
+		for( int j=0; j<cI.length ; j++ ) {
+		    cI[j].addInterceptor( contextM, this, cI[i] );
+		}
+
+		cI[i].engineInit( contextM );
+	    } catch( TomcatException ex ) {
+		log( "Error initializing " + cI[i] + " for " + this );
+	    }
+	}
+
+	
+	// no action if ContextManager is not initialized
+	if( contextM==null ||
+	    contextM.getState() == ContextManager.STATE_CONFIG ) {
+	    log( "ContextManager is not yet initialized ");
+	    return;
+	}
+
+	if( state==STATE_NEW ) {
+	    // this context was not added yet
+	    // throw new TomcatException("Context not added yet " + this );
+	    contextM.addContext( this );
+	}
+	
+	cI=getContainer().getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].contextInit( this );
+	}
+	
+	// Only if all init methods succeed an no ex is thrown
+	setState( Context.STATE_READY );
+    }
+
+
+    /** Stop the context. After the call the context will be disabled,
+	( DISABLED state ) and it'll not be able to serve requests.
+	The context will still be available and can be enabled later
+	by calling initContext(). Requests mapped to this context
+	should report a "temporary unavailable" message.
+	
+	
+	All servlets will be destroyed, and resources held by the
+	context will be freed.
+
+	The contextShutdown callbacks can wait until the running serlvets
+	are completed - there is no way to force the shutdown.
+     */
+    public void shutdown() throws TomcatException {
+	setState( Context.STATE_DISABLED ); // called before
+	// the hook, no more request should be allowed in unstable state
+
+	BaseInterceptor cI[]= getContainer().getInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].contextShutdown( this );
+	}
+    }
+
+
     
     // -------------------- Basic properties --------------------
 
@@ -544,6 +635,14 @@ public final class Context implements LogAware {
      */
     public final  void setAbsolutePath(String s) {
 	absPath=s;
+    }
+
+    public String getProperty( String n ) {
+	return (String)properties.get( n );
+    }
+
+    public void setProperty( String n, String v ) {
+	properties.put( n, v );
     }
     
     // -------------------- Tomcat specific properties --------------------
@@ -930,9 +1029,10 @@ public final class Context implements LogAware {
     public final  int getDebug( ) {
 	return debug;
     }
-    
+
     public final  String toString() {
-	return "Ctx(" + (vhost==null ? "" : vhost + ":" )  +  path +  ")";
+	return "Ctx( " +  (vhost==null ? "" :
+					    vhost + ":" )  +  path +  ")";
     }
 
     // ------------------- Logging ---------------
@@ -1071,8 +1171,26 @@ public final class Context implements LogAware {
      *  contextMap hook is not called ( since the context is not
      *	known at that time
      */
-    public final  void addInterceptor( BaseInterceptor ri ) {
-        defaultContainer.addInterceptor(ri);
+    public final  void addInterceptor( BaseInterceptor ri )
+	throws TomcatException
+    {
+	// the interceptor can be added before or after the
+	// context is added.
+	if( contextM!=null ) {
+	    // make sure the interceptor is properly initialized
+	    ri.setContextManager( contextM );
+
+	    BaseInterceptor existingI[]=defaultContainer.getInterceptors();
+	    for( int i=0; i<existingI.length; i++ ) {
+		existingI[i].addInterceptor( contextM, this, ri );
+	    }
+
+	    // if we are already added, make sure engine init is called
+	    ri.engineInit( contextM );
+	}
+
+	defaultContainer.addInterceptor(ri);
+
     }
 
 }
