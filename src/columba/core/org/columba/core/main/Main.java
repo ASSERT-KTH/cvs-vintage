@@ -17,6 +17,7 @@
 package org.columba.core.main;
 
 import org.columba.addressbook.main.AddressbookMain;
+
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -27,6 +28,7 @@ import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.help.HelpManager;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.plugin.ExternalToolsPluginHandler;
@@ -35,14 +37,15 @@ import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailMain;
 
 public class Main {
+    private Main() {}
     
     public static void main(String[] args) {
-       	
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         cmdLineParser.initCmdLine(args);
 
@@ -120,11 +123,10 @@ public class Main {
             try {
                 new AccountWizardLauncher().launchWizard();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                ColumbaLogger.log.severe(ex.getMessage());
             }
         }
 
-        new CmdLineArgumentHandler(args);
+        new CmdLineArgumentHandler(cmdLineParser);
     }
-     // main
 }

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
 import org.columba.core.config.ConfigPath;
@@ -29,10 +30,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
-
 
 /**
  * Opens a server socket to manage multiple sessions of Columba
@@ -48,7 +48,6 @@ import java.util.Vector;
  * Basic idea taken from www.jext.org (author Roman Guy)
  *
  * @author fdietz
- *
  */
 public class ColumbaServer implements Runnable {
     /**
@@ -241,21 +240,18 @@ public class ColumbaServer implements Runnable {
      * @param argumentString String which holds any arguments seperated by <br>%</br> character
      */
     protected void handleArgs(String argumentString) {
-        List v = new Vector();
-
         // remove trailing "columba:"
         argumentString = argumentString.substring(8, argumentString.length());
+        List list = new LinkedList();
 
         StringTokenizer st = new StringTokenizer(argumentString, "%");
-
         while (st.hasMoreTokens()) {
             String tok = (String) st.nextToken();
-            v.add(tok);
+            list.add(tok);
         }
 
-        String[] args = new String[v.size()];
-        v.toArray((String[]) args);
-
-        new CmdLineArgumentHandler(args);
+        ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+        cmdLineParser.initCmdLine((String[])list.toArray(new String[0]));
+        new CmdLineArgumentHandler(cmdLineParser);
     }
 }

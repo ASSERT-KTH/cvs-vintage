@@ -37,11 +37,7 @@ public class CmdLineArgumentHandler {
      * is printed out to the error console and the system will exit.
      * @param args Commandline Arguments to be parsed.
      */
-    public CmdLineArgumentHandler(String[] args) {
-        ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-        cmdLineParser.initCmdLine(args);
-        ColumbaLogger.log.info("cmdLineArgumentHandler");
-
+    public CmdLineArgumentHandler(ColumbaCmdLineParser cmdLineParser) {
         String mailURL = cmdLineParser.getMailurlOption();
 
         if (mailURL != null) {
