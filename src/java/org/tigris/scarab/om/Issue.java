@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.304 2003/06/03 20:23:28 elicia Exp $
+ * @version $Id: Issue.java,v 1.305 2003/06/09 17:03:34 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1363,7 +1363,7 @@ public class Issue
      * The date the issue was created.
      *
      * @return a <code>Date</code> value
-     * @exception Exception if an error occurs
+     * @exception TorqueException if an error occurs
      */
     public Date getCreatedDate()
         throws TorqueException

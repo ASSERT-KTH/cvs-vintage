@@ -61,7 +61,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  *    
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: Logout.java,v 1.13 2003/05/13 15:57:48 dlr Exp $
+ * @version $Id: Logout.java,v 1.14 2003/06/09 17:03:34 jmcnally Exp $
  */
 public class Logout extends ScarabTemplateAction
 {
@@ -83,7 +83,7 @@ public class Logout extends ScarabTemplateAction
     }
 
     /**
-     * @see #doLogout(RunDate, TemplateContext)
+     * @see #doLogout(RunData, TemplateContext)
      */
     public void doPerform(RunData data, TemplateContext context)
         throws Exception

@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.82 2003/05/15 18:42:23 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.83 2003/06/09 17:03:34 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -348,7 +348,7 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getCopyToModules()
+     * @see org.tigris.scarab.om.ScarabUser#getCopyToModules(Module)
      */
     public List getCopyToModules(Module currentModule)
         throws Exception
@@ -357,7 +357,7 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getCopyToModules()
+     * @see org.tigris.scarab.om.ScarabUser#getCopyToModules(Module, String)
      */
     public List getCopyToModules(Module currentModule, String action)
         throws Exception
