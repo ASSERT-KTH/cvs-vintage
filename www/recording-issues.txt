@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.10 2002/12/17 14:58:00 jon Exp $
+$Id: recording-issues.txt,v 1.11 2002/12/17 21:26:06 jmcnally Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -27,6 +27,11 @@ RULE #2:
 The reason is that, based on the UI, a change to a URL or File could
 generate more than one activity record in the activity set with multiple
 attachments.
+
+I (JDM) consider RULE #1 to be incorrect.  All comments, urls, and files should be 
+added to the Activity record.  The only attachment that should be associated
+with an ActivitySet is the "reason" that ties the activities together.  What is
+the justification for overloading the attachment_id in the ActivitySet table?
 
 
 Attributes:
