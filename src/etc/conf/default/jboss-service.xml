@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.131 2005/03/14 15:54:48 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.132 2005/04/01 13:56:13 andd Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -554,7 +554,7 @@
          <!-- Files starting with theses strings are ignored -->
          <property name="prefixes">#,%,\,,.,_$</property>
          <!-- Files ending with theses strings are ignored -->
-         <property name="suffixes">#,$,%,.BAK,.old,.orig,.rej,.bak,.sh,\,v,~</property>
+         <property name="suffixes">#,$,%,~,\,v,.BAK,.bak,.old,.orig,.tmp,.rej,.sh</property>
          <!-- Files matching with theses strings are ignored -->
          <property name="matches">.make.state,.nse_depinfo,CVS,CVS.admin,RCS,RCSLOG,SCCS,TAGS,core,tags</property>
       </attribute>
