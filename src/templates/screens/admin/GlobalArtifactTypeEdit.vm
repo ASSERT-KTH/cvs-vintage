@@ -23,6 +23,10 @@
 
 <h2>$page.Title</h2>
 
+<p>
+<small>"<strong>*</strong>" indicates required fields</small>
+</p>
+
 <form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalArtifactTypeShow.vm"))
@@ -38,7 +42,7 @@
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>Name</th>
+    <th>* Name</th>
     <td>
        #fieldErrorMsg($itGroup.Name "")  
        <input type="text" size="25" name="$itGroup.Name.Key" value="$!itGroup.Name.Value"/>
