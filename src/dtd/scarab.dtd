@@ -1,44 +1,36 @@
-<!ELEMENT scarab (module+)>
-
-<!ELEMENT module (name, owner-id, url*, domain*, description, code, issue*)>
-<!ATTLIST module id CDATA #IMPLIED>
-<!ATTLIST module parent CDATA #IMPLIED>
-  <!ELEMENT owner-id (#PCDATA)>
-  <!ELEMENT url (#PCDATA)>
-  <!ELEMENT domain (#PCDATA)>
-
-<!ELEMENT issue (artifact-type, activity-set+, dependency*, attachment*)>
-<!ATTLIST issue id CDATA #REQUIRED>
-
-<!ELEMENT dependency (type, (child | parent))>
-
-<!ELEMENT attachment (name, type, (path | data), mimetype, created-date, modified-date, created-by, modified-by)>
-  <!ELEMENT modified-date (#PCDATA)>
-  <!ATTLIST modified-date format CDATA #REQUIRED>
-
-  <!ELEMENT created-date (#PCDATA)>
-  <!ATTLIST created-date format CDATA #REQUIRED>
-
-<!ELEMENT activity-set (type, committed-by, created-date, attachment*, activity+)>
-<!ATTLIST activity-set id CDATA #REQUIRED>
-
-<!ELEMENT activity (attribute, description, end-date)>
-
-<!ELEMENT attribute (name, value, old-value?, type)>
-
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT code (#PCDATA)>
-<!ELEMENT artifact-type (#PCDATA)>
-<!ELEMENT type (#PCDATA)>
-<!ELEMENT child (#PCDATA)>
-<!ELEMENT parent (#PCDATA)>
-<!ELEMENT path (#PCDATA)>
-<!ELEMENT data (#PCDATA)>
-<!ELEMENT mimetype (#PCDATA)>
-<!ELEMENT created-by (#PCDATA)>
-<!ELEMENT modified-by (#PCDATA)>
-<!ELEMENT committed-by (#PCDATA)>
-<!ELEMENT description (#PCDATA)>
-<!ELEMENT end-date (#PCDATA)>
-<!ELEMENT value (#PCDATA)>
-<!ELEMENT old-value (#PCDATA)>
+<!ELEMENT activities ( activity+ ) >
+<!ELEMENT activity ( attribute | description | id | new-option | new-value | old-option | old-value )* >
+<!ELEMENT activity-set ( id, type, created-by, created-date, activities, attachment? ) >
+<!ELEMENT activity-sets ( activity-set+ ) >
+<!ELEMENT artifact-type ( #PCDATA ) >
+<!ELEMENT attachment ( id, name, type, data, mimetype, created-date, modified-date, created-by ) >
+<!ELEMENT attribute ( #PCDATA ) >
+<!ELEMENT child ( #PCDATA ) >
+<!ELEMENT code ( #PCDATA ) >
+<!ELEMENT created-by ( #PCDATA ) >
+<!ELEMENT created-date ( format, timestamp ) >
+<!ELEMENT data ( #PCDATA ) >
+<!ELEMENT dependencies ( dependency ) >
+<!ELEMENT dependency ( type, child, parent? ) >
+<!ELEMENT description ( #PCDATA ) >
+<!ELEMENT domain EMPTY >
+<!ELEMENT format ( #PCDATA ) >
+<!ELEMENT id ( #PCDATA ) >
+<!ELEMENT import-type ( #PCDATA ) >
+<!ELEMENT issue ( id, artifact-type, activity-sets, dependencies ) >
+<!ELEMENT issues ( issue+ ) >
+<!ELEMENT mimetype ( #PCDATA ) >
+<!ELEMENT modified-date ( format, timestamp ) >
+<!ELEMENT module ( id, parent-id, name, owner, description, url, domain, code ) >
+<!ELEMENT name ( #PCDATA ) >
+<!ELEMENT new-option ( #PCDATA ) >
+<!ELEMENT new-value ( #PCDATA ) >
+<!ELEMENT old-option ( #PCDATA ) >
+<!ELEMENT old-value ( #PCDATA ) >
+<!ELEMENT owner ( #PCDATA ) >
+<!ELEMENT parent ( #PCDATA ) >
+<!ELEMENT parent-id ( #PCDATA ) >
+<!ELEMENT scarab-issues ( import-type, module, issues+ ) >
+<!ELEMENT timestamp ( #PCDATA ) >
+<!ELEMENT type ( #PCDATA ) >
+<!ELEMENT url EMPTY >
