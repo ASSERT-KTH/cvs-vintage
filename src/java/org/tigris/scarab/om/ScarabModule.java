@@ -148,8 +148,7 @@ public class ScarabModule
     public Attribute[] getAttributes(Criteria criteria)
         throws Exception
     {
-        List moduleAttributes =
-            getRModuleAttributes(criteria);
+        List moduleAttributes = getRModuleAttributes(criteria);
 
         Attribute[] attributes = new Attribute[moduleAttributes.size()];
         for ( int i=0; i<moduleAttributes.size(); i++ )
@@ -159,6 +158,30 @@ public class ScarabModule
         }
         return attributes;
     }
+
+
+    /**
+     * Overridden method.  Calls the super method and if no results are
+     * returned the call is passed on to the parent module.
+     */
+    public Vector getRModuleAttributes(Criteria crit)
+        throws Exception
+    {
+        Vector rModAtts = super.getRModuleAttributes(crit);
+
+        if ( rModAtts == null || rModAtts.size() == 0 ) 
+        {
+            ModuleEntity parent = 
+                (ModuleEntity) this.getModuleRelatedByParentIdCast();
+            if ( !ROOT_ID.equals(this.getModuleId()) ) 
+            {
+                rModAtts = parent.getRModuleAttributes(crit);
+            }
+        }
+
+        return rModAtts;
+    }
+
 
     /**
      * Array of Attributes used for deduping.
