@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "JNI_CONNECT_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /I "..\jk" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "JNI_CONNECT_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32" /I "..\common" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "JNI_CONNECT_EXPORTS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -96,15 +96,15 @@ SOURCE=.\jk_jnicb.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_map.c
+SOURCE=..\common\jk_map.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_pool.c
+SOURCE=..\common\jk_pool.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_util.c
+SOURCE=..\common\jk_util.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -112,11 +112,11 @@ SOURCE=..\jk\jk_util.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp12_worker.h
+SOURCE=..\common\jk_ajp12_worker.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_global.h
+SOURCE=..\common\jk_global.h
 # End Source File
 # Begin Source File
 
@@ -124,23 +124,23 @@ SOURCE=.\jk_jnicb.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_logger.h
+SOURCE=..\common\jk_logger.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_map.h
+SOURCE=..\common\jk_map.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_pool.h
+SOURCE=..\common\jk_pool.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_service.h
+SOURCE=..\common\jk_service.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_util.h
+SOURCE=..\common\jk_util.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
