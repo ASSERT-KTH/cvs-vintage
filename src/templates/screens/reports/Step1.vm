@@ -1,11 +1,15 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
-#set ($action = $link.setPage("reports,Step1.vm").setAction("GenerateReport").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "reports,Step2.vm").toString())
+
 <div class="app" id="div2-4-1-step1">
 
-<h2>Define report (2.4.1)</h2>
-#wizardLinks("Step1.vm" $reportParameters $link)
-<form method="get" action="$action">
+<h2>Define report</h2>
+
+#wizardLinks("reports,Step1.vm" $reportParameters $link)
+
+<form method="get" action="$link.setPage("reports,Step1.vm")">
+<input type="hidden" name="action" value="GenerateReport"/>
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="reports,Step2.vm"/>
 
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
 #if ($reports.size() > 0 && !$data.Parameters.getString("report_id"))
@@ -22,9 +26,12 @@
 #end
 
 <h3>Summary information</h3>
-<p><strong>Considering saving this report?</strong> If so, enter the following information (it can be edited later).</p>
+<p><strong>Considering saving this report?</strong> If so,
+enter the following information (it can be edited
+later).</p>
+
 <div class="axial">
- <table border="0" cellspacing="2" cellpadding="3">
+ <table cellpadding="3" cellspacing="2" border="0">
   <tr>
    <th width="120">Report name</th>
    <td>
@@ -36,10 +43,10 @@
    <th width="120">Report description (optional)</th>
    <td>
      <textarea name="$intakeReport.Description.Key" rows="3" cols="30">$intakeReport.Description</textarea>
- </td>
+   </td>
   </tr>
  </table>
- </div>
+</div>
 
 <h3>Type of report</h3>
 <h4>Comparative analysis</h4>
@@ -48,23 +55,25 @@
 <h4>Rate of change</h4>
 <p>map attributes, attribute options, or users to multiple dates in an
    array</p>
+
 <div class="axial">
  <table border="1" cellspacing="2" cellpadding="3">
   <tr>
    <th width="120">Type of report</th>
    <td>
-#if ($data.Parameters.getString($intakeReport.Type.Key))
-    #set ( $reporttype = $data.Parameters.getInt($intakeReport.Type.Key) )
-#end
-       <select name="$intakeReport.Type.Key">
+    #if ($data.Parameters.getString($intakeReport.Type.Key))
+      #set ( $reporttype = $data.Parameters.getInt($intakeReport.Type.Key) )
+    #end
+    <select name="$intakeReport.Type.Key">
     #foreach ( $option in $scarabR.Report.ReportTypes )
         #option($option)
     #end
-        </select>
+    </select>
    </td>
   </tr>
  </table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>

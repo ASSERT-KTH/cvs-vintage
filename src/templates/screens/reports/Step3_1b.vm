@@ -1,14 +1,19 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
-#set ($action = $link.setPage("reports,Step3_1b.vm").setAction("GenerateReport").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "reports,Report_1.vm").toString())
 
 <div class="app" id="div2-4-1-step3_1b">
-<h2>Define report (2.4.1)</h2>
+
+<h2>Define report</h2>
+
 #wizardLinks("reports,Step3_1b.vm" $reportParameters $link)
 #subWizardLinks("reports,Step3_1b.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")
 
 <h3>Select row/column content</h3>
-<form method="get" action="$action">
+
+<form method="get" action="$link.setPage("reports,Step3_1b.vm")">
+<input type="hidden" name="action" value="GenerateReport" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="reports,Report_1.vm" />
+
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
@@ -26,6 +31,7 @@
 #end
    </td>
   </tr>
+
   <tr>
    <th>Column content</th>
    <td>
@@ -43,6 +49,7 @@
   </tr>
  </table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
@@ -51,10 +58,11 @@
             name="eventSubmit_doStep3_1b" />
     &nbsp;
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-   </tr>
-   </table>
-  </div>
+  </td>
+ </tr>
+</table>
+</div>
+
 #addReportHiddenInputs($report "reports,Step3_1b.vm")
 $intake.declareGroups()
 </form>

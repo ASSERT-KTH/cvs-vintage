@@ -1,9 +1,8 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
-#set ($action = $link.setPage("reports,Step2.vm").setAction("GenerateReport").toString())
 
 <div class="app" id="div2-4-1-step2">
-<h2>Define report (2.4.1)</h2>
+<h2>Define report</h2>
 #wizardLinks("reports,Step2.vm" $reportParameters $link)
 #subWizardLinks("reports,Step2.vm" $reportParameters $link "2a: Select PFA(s)" "reports,Step2.vm" "2b: PFA display options" "reports,Step2b.vm")
 
@@ -18,7 +17,10 @@ these options.</p>
 options within that attribute. If you choose to "continue", without defining
 PFA groups, each selected Attribute and/or Attribute Option will appear as a
 seperate column (i.e. side-by-side comparison).</p>
-<form method="get" action="$action">
+
+<form method="get" action="$link.setPage("reports,Step2.vm")">
+<input type="hidden" name="action" value="GenerateReport" />
+
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
@@ -32,13 +34,14 @@ seperate column (i.e. side-by-side comparison).</p>
   </tr>
  </table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />
-    &nbsp;
+    &#160;
     <input type="submit" value="Define PFA/Option(s) group(s)"
-        name="eventSubmit_doStep2agoto2b" />&nbsp;
+        name="eventSubmit_doStep2agoto2b" />&#160;
     <input type="submit" value="Cancel"  name="eventSubmit_doCancel" /></td>
  </tr>
 </table>

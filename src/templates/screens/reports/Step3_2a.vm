@@ -1,6 +1,5 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
-#set ($action = $link.setPage("reports,Step3_2a.vm").setAction("GenerateReport").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "reports,Step3_2b.vm").toString())
 
 <div class="app" id="div2-4-1-step4b">
 <h2>Define report (2.4.1)</h2>
@@ -8,36 +7,42 @@
 #subWizardLinks("reports,Step3_2a.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_2a.vm" "3b: Select row/column content" "reports,Step3_2b.vm")
 
 <h3>Report content: Rate of change analysis</h3>
-<form method="get" action="$action">
+
+<form method="get" action="$link.setPage("reports,Step3_2a.vm")">
+<input type="hidden" name="action" value="GenerateReport" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="reports,Step3_2b.vm" />
+
 <div class="axial">
- <table cellpadding="3" cellspacing="2" border="0">
-     <tr>
+<table cellpadding="3" cellspacing="2" border="0">
+ <tr>
    <th width="120">Rows: criteria</th>
    <td>
-<select name="$intakeReport.Axis1Category.Key">
-    <option value="">select criteria</option>
-#foreach ( $option in $scarabR.Report.Axis1Categories )
-    #option($option)
-#end
-</select>
+   <select name="$intakeReport.Axis1Category.Key">
+     <option value="">select criteria</option>
+     #foreach ($option in $scarabR.Report.Axis1Categories)
+       #option($option)
+     #end
+   </select>
 </td>
-  </tr>
-  <tr>
-   <th width="120">Columns: date(s)</th>
-   <td>Added during next step</td>
-  </tr>
- </table>
+</tr>
+<tr>
+ <th width="120">Columns: date(s)</th>
+ <td>Added during next step</td>
+</tr>
+</table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><input type="submit" value="Continue" name="eventSubmit_doStep3_2a" />
     &nbsp;
     <!-- <input type="submit" value="back" /> -->
-</td>
-  </tr>
- </table>
+  </td>
+ </tr>
+</table>
 </div>
+
 #addReportHiddenInputs($report "reports,Step3_2a.vm")
 $intake.declareGroups()
 </form>

@@ -1,60 +1,66 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
-#set ($action = $link.setPage("reports,Step3_1a.vm").setAction("GenerateReport").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "reports,Step3_1b.vm").toString())
 
 <div class="app" id="div2-4-1-step4">
-<h2>Define report (2.4.1)</h2>
+
+<h2>Define report</h2>
+
 #wizardLinks("reports,Step3_1a.vm" $reportParameters $link)
 #subWizardLinks("reports,Step3_1a.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")
 
 <h3>Report content: Comparative analysis</h3>
-<form method="get" action="$action">
+<form method="get" action="$link.setPage("reports,Step3_1a.vm")">
+<input type="hidden" name="action" value="GenerateReport" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="reports,Step3_1b.vm" />
+
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th width="120">report date</th>
- <td>
+  <th width="120">report date</th>
+  <td>
     #fieldErrorMsg($intakeReport.NewDate "")
     <input type="text" size="20" name="$intakeReport.NewDate.Key"
         value="$intakeReport.NewDate" /> Leave blank for current date/time
-</td>
+  </td>
 </tr>
 <tr>
-<th>rows: criteria</th>
-<td>
-  <select name="$intakeReport.Axis1Category.Key">
+  <th>rows: criteria</th>
+  <td>
+    <select name="$intakeReport.Axis1Category.Key">
       <option value="">select criteria</option>
-#set ($options = $scarabR.Report.Axis1Categories)
-#foreach ( $option in $options )
-    #option($option)
-#end
-  </select>
-</td>
+      #set ($options = $scarabR.Report.Axis1Categories)
+      #foreach ( $option in $options )
+        #option($option)
+      #end
+    </select>
+  </td>
 </tr>
 <tr>
-<th>Columns: criteria</th>
-<td>
-  <select name="$intakeReport.Axis2Category.Key">
+  <th>Columns: criteria</th>
+  <td>
+    <select name="$intakeReport.Axis2Category.Key">
       <option value="">select criteria</option>
-#set ($options = $scarabR.Report.Axis2Categories)
-#foreach ( $option in $options )
-    #option($option)
-#end
-  </select>
-</td>
+      #set ($options = $scarabR.Report.Axis2Categories)
+      #foreach ( $option in $options )
+        #option($option)
+      #end
+    </select>
+  </td>
 </tr>
 </table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><input type="submit" value="Continue" name="eventSubmit_doStep3_1a" />
-    &nbsp;
+    &#160;
     <!-- <input type="submit" value="back" /> -->
         </td>
  </tr>
 </table>
 </div>
+
 #addReportHiddenInputs($report "reports,Step3_1a.vm")
 $intake.declareGroups()
 </form>
