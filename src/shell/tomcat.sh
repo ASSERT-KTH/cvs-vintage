@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.18 2000/07/25 03:21:20 craigmcc Exp $
+# $Id: tomcat.sh,v 1.19 2000/08/15 14:25:06 glenn Exp $
 
 # Shell script to start and stop the server
 
@@ -90,9 +90,13 @@ fi
 
 oldCP=$CLASSPATH
  
-CLASSPATH=.
+unset CLASSPATH
 for i in ${TOMCAT_HOME}/lib/* ; do
-  CLASSPATH=${CLASSPATH}:$i
+  if [ "$CLASSPATH" != "" ]; then
+    CLASSPATH=${CLASSPATH}:$i
+  else
+    CLASSPATH=$i
+  fi
 done
 
 if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
