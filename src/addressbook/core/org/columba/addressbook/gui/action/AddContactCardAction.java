@@ -25,7 +25,9 @@ import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 
 /**
  * Add new contact card to selected addressbook.
@@ -48,7 +50,7 @@ public class AddContactCardAction extends DefaultTreeAction {
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
-		
+
 		setEnabled(false);
 	}
 
@@ -73,14 +75,12 @@ public class AddContactCardAction extends DefaultTreeAction {
 				// add contact to folder
 				folder.add(card);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if (MainInterface.DEBUG)
+					e.printStackTrace();
+
+				new ErrorDialog(e.getMessage(), e);
 			}
 
-			/*
-			 *  // update table // TODO: fire event of table model instead
-			 * mediator.getTable().getAddressbookModel().update();
-			 */
 		}
 	}
 }

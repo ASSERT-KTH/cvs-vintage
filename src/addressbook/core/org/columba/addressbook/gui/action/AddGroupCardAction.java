@@ -88,11 +88,6 @@ public class AddGroupCardAction extends DefaultTreeAction {
 			AddressbookInterface.addressbookTreeModel
 					.nodeStructureChanged(parent);
 
-			//folder.add(groupFolder);
-
-			// update table
-			// TODO: fire event of table model instead
-			//mediator.getTable().getAddressbookModel().update();
 		}
 	}
 }

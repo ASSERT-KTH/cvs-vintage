@@ -35,10 +35,10 @@ import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.Group;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
@@ -105,8 +105,12 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				card = (Contact) folder.get(uids[0]);
 			} catch (Exception e) {
 
-				e.printStackTrace();
+				if (MainInterface.DEBUG)
+					e.printStackTrace();
+
+				new ErrorDialog(e.getMessage(), e);
 			}
+
 			ContactDialog dialog = new ContactDialog(mediator.getView()
 					.getFrame(), card);
 
@@ -116,8 +120,10 @@ public class EditPropertiesAction extends DefaultTableAction implements
 					// modify card properties in folder
 					folder.modify(uids[0], card);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					if (MainInterface.DEBUG)
+						e1.printStackTrace();
+
+					new ErrorDialog(e1.getMessage(), e1);
 				}
 
 				if (folder instanceof GroupFolder)
@@ -142,13 +148,6 @@ public class EditPropertiesAction extends DefaultTableAction implements
 				// re-select folder
 				mediator.getTree().setSelectedFolder(folder);
 
-				// modify card properties in folder
-				//folder.modify(card, uids[0]);
-
-				/*
-				 * // update table // TODO: fire event of table model instead
-				 * mediator.getTable().getAddressbookModel().update();
-				 */
 			}
 
 		}

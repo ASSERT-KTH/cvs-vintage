@@ -34,6 +34,7 @@ import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
@@ -96,8 +97,10 @@ public class RemoveCardAction extends DefaultTableAction implements
 				try {
 					folder.remove(uids[i]);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (MainInterface.DEBUG)
+						e.printStackTrace();
+
+					new ErrorDialog(e.getMessage(), e);
 				}
 			}
 
@@ -106,19 +109,21 @@ public class RemoveCardAction extends DefaultTableAction implements
 				mediator.getTree().setSelectedFolder(folder);
 		} else {
 			// tree has focus
-			
+
 			// get selected folder
 			AbstractFolder folder = (AbstractFolder) mediator.getTree()
 					.getSelectedFolder();
-			
+
 			// get parent
-			AddressbookTreeNode parent = (AddressbookTreeNode) folder.getParent();
-			
+			AddressbookTreeNode parent = (AddressbookTreeNode) folder
+					.getParent();
+
 			// remove folder from parent
 			folder.removeFromParent();
-			
+
 			// notify model
-			AddressbookInterface.addressbookTreeModel.nodeStructureChanged(parent);
+			AddressbookInterface.addressbookTreeModel
+					.nodeStructureChanged(parent);
 
 			mediator.getTree().setSelectedFolder((AbstractFolder) parent);
 		}
