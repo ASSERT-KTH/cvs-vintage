@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.14 2000/04/07 00:43:55 craigmcc Exp $
- * $Revision: 1.14 $
- * $Date: 2000/04/07 00:43:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.15 2000/04/08 22:16:24 rubys Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/04/08 22:16:24 $
  *
  * ====================================================================
  * 
@@ -849,7 +849,6 @@ public class JspParseEventListener extends BaseJspListener {
 	    cdg = new CharDataGenerator(chars);
 
         
-        // FIXME: change null
         Generator gen
             = new GeneratorWrapper(cdg,
                                    start, stop);
