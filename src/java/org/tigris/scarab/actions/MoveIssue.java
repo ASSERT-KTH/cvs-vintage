@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.41 2002/11/26 18:59:07 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.42 2002/11/26 20:04:02 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -127,7 +127,7 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         catch (Exception e)
         {
-            scarabR.setAlertMessage("Please select a module and issue type.");
+            scarabR.setAlertMessage(l10n.get("SelectModuleAndIssueType"));
             return;
         }
           
@@ -146,7 +146,7 @@ public class MoveIssue extends RequireLoginFirstAction
             && newModuleId.equals(oldModule.getModuleId())
             && newIssueTypeId.equals(issue.getIssueType().getIssueTypeId()))
         {
-            scarabR.setAlertMessage("You cannot move an issue to the same module/issue type.");
+            scarabR.setAlertMessage(l10n.get("CannotMoveToSameModule"));
             return;
         }
        
