@@ -155,7 +155,7 @@ public final class PathSetter extends BaseInterceptor {
 	    cm.setInstallDir( home );
 	}
 
-	System.setProperty("tomcat.home", cm.getHome());
+	System.getProperties().put("tomcat.home", cm.getHome());
     }
 
     /** After server.xml is read - make sure the workDir is absolute,
