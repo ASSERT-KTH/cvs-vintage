@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.29 2001/11/09 22:46:19 jon Exp $
+ * @version $Id: Default.java,v 1.30 2001/11/18 21:22:05 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -133,7 +133,7 @@ public class Default extends TemplateSecureScreen
                 }
                 else if (currentIssueType == null)
                 {
-                    data.setMessage("Please select the Issue Type " +
+                    data.setMessage("Please select the Artifact Type " +
                                     "that you would like to work " +
                                     "in.");
                     setTargetSelectIssueType(data);

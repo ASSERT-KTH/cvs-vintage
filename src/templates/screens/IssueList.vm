@@ -1,4 +1,4 @@
-$page.setTitle("Queue list")
+$page.setTitle("Artifact List")
 
 <div class="app" id="issuelist">
 
@@ -79,11 +79,9 @@ $page.setTitle("Queue list")
 
 <h3>Search results</h3>
 
-<p>(<a href="$link.setPage("ConfigureIssueList.vm")">Add/remove attributes from view</a>)</p>
-
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th>
+  <th nowrap="nowrap">
    <img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
    <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
@@ -120,6 +118,9 @@ $page.setTitle("Queue list")
   </tr>
 #end
   </table>
+
+<p>(<a href="$link.setPage("ConfigureIssueList.vm")">Add/remove attribute columns
+ from view</a>)</p>
 
 <p class="paginate">
  issues per page:&#160;

@@ -4759,6 +4759,8 @@ insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID,
 insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID, DESCRIPTION)
        values (2, 1, 3, 1, 2, 'Issue 1 had Status set to New');
 
+update ID_TABLE set NEXT_ID='2' where TABLE_NAME='PACS';
+
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, TYPE_ID, ID_PREFIX, ID_COUNT) 
        values (2, 2, 1, 'PACD', 1);
 /* description */
@@ -4791,8 +4793,7 @@ insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID,
 insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID, NEW_OPTION_ID, DESCRIPTION)
        values (4, 2, 3, 2, 2, "Issue 2 had status set to New");
 
+update ID_TABLE set NEXT_ID='2' where TABLE_NAME='PACD';
 
 /* make this issue a child issue of issue 1 */
 insert into SCARAB_DEPEND values (1, 2, 3, "No");
-
-

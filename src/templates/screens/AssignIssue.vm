@@ -1,4 +1,4 @@
-$page.setTitle("Assign users to issue")
+$page.setTitle("Assign users to artifact")
 
 <div class="app" id="assignissue">
 <h2>$page.Title</h2>
@@ -26,22 +26,12 @@ $page.setTitle("Assign users to issue")
 
 #end
 
-#if ( !$actionLink )
- #set ($actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "Index.vm").toString())
+#if (!$actionLink)
+  #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
 #end
-<form action="$actionLink" method="get">
-
-<div class="functnbar">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doSubmit" value="Submit" />&#160; 
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
-  <input type="reset" value="Reset" />
-  </td>
- </tr>
- </table>
-</div>
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="AssignIssue" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 
 #set ($issueGroup = $intake.Issue.Default)
 #if ($multiple)
@@ -58,9 +48,21 @@ $page.setTitle("Assign users to issue")
    <input type="hidden" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
   #end
  #end
-#else $issueGroup.Id.Key
+#else
  <input type="hidden" name="$issueGroup.Id.Key" value="$issue.UniqueId" />
 #end
+
+<div class="functnbar">
+ <table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doSubmit" value="Submit" />&#160; 
+  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
+  <input type="reset" value="Reset" />
+  </td>
+ </tr>
+ </table>
+</div>
 
 <div class="sidebyside">
  <table cellpadding="3" cellspacing="2" border="1" width="100%">

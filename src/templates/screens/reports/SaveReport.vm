@@ -1,12 +1,13 @@
-#set ( $report = $scarabR.Report )
+$page.setTitle("Save Report")
+
+#set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
 #set ($module = $scarabR.CurrentModule)
-#set ($action = '$link.setPage("Links.vm").setAction("GenerateReport")')
 
-$page.setTitle("Save Report")
 <div id="savereport" class="app">
 
-<form method="post" action="$action" >
+<form method="post" action="$link.setPage("Index.vm")" >
+<input type="hidden" name="action" value="GenerateReport" />
 ##set ($queryString = $data.Parameters.getString("queryString"))
 ## <input type="hidden" name="$intakeReport.QueryString.Key" value="$queryString" />
 

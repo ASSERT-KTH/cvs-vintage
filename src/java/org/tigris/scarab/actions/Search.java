@@ -82,7 +82,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.44 2001/11/08 19:25:54 elicia Exp $
+    @version $Id: Search.java,v 1.45 2001/11/18 21:22:05 jon Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -122,7 +122,14 @@ public class Search extends RequireLoginFirstAction
                 }                
             }
 
-            List matchingIssues = search.getMatchingIssues();
+            List matchingIssues = null;
+            try
+            {
+                matchingIssues = search.getMatchingIssues();
+            }
+            catch (Exception e)
+            {
+            }
             if ( matchingIssues != null && matchingIssues.size() > 0 )
             {
                 List issueIdList = new ArrayList();
@@ -331,7 +338,7 @@ public class Search extends RequireLoginFirstAction
     {
         setTarget(data, Turbine
                     .getConfiguration()
-                    .getString("template.homepage","Start.vm"));
+                    .getString("template.homepage","Index.vm"));
     }
 
     /**

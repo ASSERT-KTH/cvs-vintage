@@ -4,6 +4,7 @@
 &copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
 <a href="http://scarab.tigris.org/">Scarab</a> |
 <a href="$link.setPage("Links.vm")">Links</a> |
+<a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a> | 
 
 #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>

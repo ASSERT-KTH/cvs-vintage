@@ -2,7 +2,7 @@
 
 <div class="app" id="div2-4-1-a-output">
 
-<form method="get" action="$link.setPage("Links.vm")">
+<form method="get" action="$link.setPage("Index.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
 
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))

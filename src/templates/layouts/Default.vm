@@ -43,9 +43,7 @@
     #else
     <a href="$link.setPage("Login.vm")">Login</a>
     #end
-  | <a href="$link.setPage("Links.vm")">Links</a>
-  | <a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a>
-  | <a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a>
+  | <a href="$link.setPage("entry,Wizard1.vm")">Enter Artifact</a>
    </div>
   </div>
   </td>
@@ -99,7 +97,7 @@ $renderer.render("navigations", $data, $template, "Default.vm")
      #end
         <input type="text" name="id" size="15" maxlength="255" />&#160;
         <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
-        <input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&#160;
+        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
      <small>
       <a href="$link.setPage("AdvancedQuery.vm")">Advanced</a>&#160;|&#160;

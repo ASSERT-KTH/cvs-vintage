@@ -1,7 +1,6 @@
 $page.setTitle("Enter issue")
 
 #set ($issue = $scarabR.ReportingIssue)
-#set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").toString())
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
@@ -28,7 +27,9 @@ $page.setTitle("Enter issue")
 
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
-<form method="get" action="$action">
+<form method="get" action="$link.setPage("entry,Wizard3.vm")">
+<input type="hidden" name="action" value="ReportIssue" />
+
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
 #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
@@ -58,6 +59,17 @@ $page.setTitle("Enter issue")
 
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
 <input type="hidden" name="action" value="ReportIssue" />
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doEnterissue" value="Save" />
+  </td>
+ </tr>
+</table>
+</div>
+
 <div class="axial">
 <h3>Input your issue</h3>
     <table cellpadding="3" cellspacing="2" border="0">
@@ -81,7 +93,6 @@ $page.setTitle("Enter issue")
             <th>
     #if ($attVal.isRequired())*#end
     $attVal.RModuleAttribute.DisplayValue:
-    #attrValueErrorMsg ($attVal $field)<br />
             </th>
             <td>
     #if ($attVal.Attribute.isUserAttribute())
@@ -107,6 +118,7 @@ $page.setTitle("Enter issue")
                 value="$!currentValue" size="45" type="text" />
         #end
     #end
+    #attrValueErrorMsg ($attVal $field)
             </td>
         </tr>
   ##end
@@ -152,7 +164,7 @@ $page.setTitle("Enter issue")
       Workflow options</th>
      <td>
     return to&#160;
-   <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE"
+   <input type="radio" checked="checked" name="$scarabG.Constant.NEXT_TEMPLATE"
       value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")" />
       Enter New Issue
   <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />

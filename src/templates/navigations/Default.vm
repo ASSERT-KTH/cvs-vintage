@@ -2,6 +2,7 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes.size() > 0)
 
+<div><small><strong><a href="$link.setPage("Index.vm")">Index</a></strong></small></div>
 <div><small><strong><a href="$link.setPage("SelectArtifactType.vm")">Artifact types</a></strong></small>
 #foreach($issueType in $issueTypes)
   #if ($issueType.equals($scarabR.CurrentIssueType))
