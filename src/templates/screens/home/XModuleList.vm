@@ -226,6 +226,7 @@ There are no more issue types to select.
 
 #if ($isAddPagination)
   #paginateXModuleList()
+#end
 
 #if (!$searchableRMITs.isEmpty())
 <div class="functnbar3">
@@ -247,7 +248,6 @@ There are no more issue types to select.
      </tr>
   </table>
 </div>
-#end
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value
