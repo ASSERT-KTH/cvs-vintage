@@ -1,4 +1,4 @@
-// $Id: SplashPanel.java,v 1.8 2004/08/18 18:57:54 mvw Exp $
+// $Id: SplashPanel.java,v 1.9 2004/08/23 20:53:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.argouml.application.helpers.ResourceLoaderWrapper;
 
 class SplashPanel extends JPanel {
 
-    ImageIcon splashImage = null;
+    private ImageIcon splashImage = null;
     public SplashPanel(String iconName) {
 	super();
 	splashImage =
