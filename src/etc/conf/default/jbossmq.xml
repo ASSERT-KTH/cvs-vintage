@@ -17,6 +17,7 @@
 
 	<!-- The physical queues known by the server -->
 	<Queue><Name>testQueue</Name></Queue>
+	<Queue><Name>testObjectMessage</Name></Queue>
 	<Queue><Name>controlQueue</Name></Queue>
 	<Queue><Name>A</Name></Queue>
 	<Queue><Name>B</Name></Queue>
