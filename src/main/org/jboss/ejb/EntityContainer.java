@@ -40,7 +40,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.98 $
+ * @version $Revision: 1.99 $
  */
 public class EntityContainer
    extends Container implements
@@ -657,7 +657,7 @@ public class EntityContainer
       if (metaData.isClustered())
       {
          boolean clusteredProxyFactoryFound = false;
-         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         for (java.util.Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
             EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);

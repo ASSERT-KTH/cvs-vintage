@@ -6,7 +6,7 @@ REM  This is the main entry point for the build system.
 REM
 REM  ======================================================================
 REM
-REM $Id: build.bat,v 1.7 2002/10/05 01:10:16 user57 Exp $
+REM $Id: build.bat,v 1.8 2003/08/16 15:04:41 slaboure Exp $
 REM
 REM Authors:
 REM     Jason Dillon <jason@planet57.com>
@@ -100,4 +100,4 @@ call %*
 
 :end
 
-pause
+if "%NOPAUSE%" == "" pause
