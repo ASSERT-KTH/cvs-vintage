@@ -3,12 +3,9 @@
 ##                                                                          ##
 ##  This is the main entry point for the build system.                      ##
 ##                                                                          ##
-##  Users should be sure to execute this file rather than 'ant' to ensure   ##
-##  the correct version is being used with the correct configuration.       ##
-##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.13 2002/09/10 22:07:57 d_jencks Exp $
+# $Id: build.sh,v 1.14 2002/10/03 11:34:53 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -19,11 +16,7 @@ ROOT="/"
 ANT_HOME=""
 
 # the default search path for ant
-ANT_SEARCH_PATH="\
-    tools
-    tools/ant \
-    tools/apache/ant \
-    ant"
+ANT_SEARCH_PATH="$DIRNAME/tools $DIRNAME/../tools `pwd`/tools"
 
 # the default build file name
 ANT_BUILD_FILE="build.xml"
@@ -82,7 +75,7 @@ maybe_source() {
 search() {
     search="$*"
     for d in $search; do
-	ANT_HOME="`pwd`/$d"
+	ANT_HOME="$d"
 	ANT="$ANT_HOME/bin/ant"
 	if [ -x "$ANT" ]; then
 	    # found one
@@ -144,6 +137,9 @@ main() {
 	fi
     fi
 
+    # make sure it is absolute yo
+    ANT_HOME=`cd $ANT_HOME; pwd`
+
     # make sure we have one
     ANT=$ANT_HOME/bin/ant
     if [ ! -x "$ANT" ]; then
@@ -161,6 +157,10 @@ main() {
 	    JAXP_DOM_FACTORY="org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"
 	    JAXP_SAX_FACTORY="org.apache.xerces.jaxp.SAXParserFactoryImpl"
 	    ;;
+
+        *)
+	    die "Unknown JAXP impl: $JAXP; define JAXP_DOM_FACTORY and JAXP_SAX_FACTORY"
+	    ;;
     esac
 
     if [ "x$JAXP_DOM_FACTORY" != "x" ]; then
@@ -169,12 +169,6 @@ main() {
     if [ "x$JAXP_SAX_FACTORY" != "x" ]; then
 	ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
     fi
-
-    # need to specify planet57/buildmagic protocol handler package
-    ANT_OPTS="$ANT_OPTS -Djava.protocol.handler.pkgs=org.jboss.net.protocol"
-
-    # setup some build properties
-    ANT_OPTS="$ANT_OPTS -Dbuild.script=$0"
 
     # setup some build properties
     ANT_OPTS="$ANT_OPTS -Xmx640m"
@@ -185,6 +179,8 @@ main() {
 
     # export some stuff for ant
     export ANT ANT_HOME ANT_OPTS
+
+    echo "Executing: $ANT $ANT_OPTIONS $@"
 
     # execute in debug mode, or simply execute
     if [ "x$ANT_DEBUG" != "x" ]; then
