@@ -1,4 +1,4 @@
-// $Id: Decision.java,v 1.13 2005/03/10 10:32:34 mkl Exp $
+// $Id: Decision.java,v 1.14 2005/03/11 10:04:10 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ package org.argouml.cognitive;
  * designer is interested in making particular decisions, whereas a critic can
  * support relevant information which help making a particular decision (aka a
  * decision which lies in the domain specified by this class).
- * 
+ *  
  */
 public class Decision {
     ////////////////////////////////////////////////////////////////
@@ -81,7 +81,8 @@ public class Decision {
     }
 
     /**
-     * @see java.lang.Object#equals(java.lang.Object)
+     * Two decisions are considered to be equal if their names are equal. The
+     * priority is not considered.
      */
     public boolean equals(Object d2) {
         if (!(d2 instanceof Decision)) {
