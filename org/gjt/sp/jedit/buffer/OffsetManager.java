@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.25 2002/03/10 04:12:49 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.26 2002/03/17 03:05:24 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -251,23 +251,29 @@ public class OffsetManager
 	public void expandFolds(int foldLevel)
 	{
 		int newVirtualLineCount = 0;
-		foldLevel = (foldLevel - 1) * buffer.getIndentSize() + 1;
 
-		/* this ensures that the first line is always visible */
-		boolean seenVisibleLine = false;
-
-		for(int i = 0; i < getLineCount(); i++)
+		if(foldLevel == 0)
 		{
-			if(!seenVisibleLine || buffer.getFoldLevel(i) < foldLevel)
+			newVirtualLineCount = lineCount;
+		}
+		else
+		{
+			foldLevel = (foldLevel - 1) * buffer.getIndentSize() + 1;
+
+			/* this ensures that the first line is always visible */
+			boolean seenVisibleLine = false;
+
+			for(int i = 0; i < lineCount; i++)
 			{
-				seenVisibleLine = true;
-				// Since only called on load, it already has
-				// the VISIBLE_MASK set
-				//lineInfo[i] |= VISIBLE_MASK;
-				newVirtualLineCount++;
+				if(!seenVisibleLine || buffer.getFoldLevel(i) < foldLevel)
+				{
+					seenVisibleLine = true;
+					lineInfo[i] |= VISIBLE_MASK;
+					newVirtualLineCount++;
+				}
+				else
+					lineInfo[i] &= ~VISIBLE_MASK;
 			}
-			else
-				lineInfo[i] &= ~VISIBLE_MASK;
 		}
 
 		for(int i = 0; i < virtualLineCounts.length; i++)

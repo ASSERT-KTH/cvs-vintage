@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.15 2002/02/10 04:47:17 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.16 2002/03/17 03:05:24 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -326,30 +326,6 @@ public class BufferOptions extends EnhancedDialog
 		buffer.setBooleanProperty("indentOnEnter",indentOnEnter.isSelected());
 
 		buffer.propertiesChanged();
-
-		// this must be called after buffer.propertiesChanged() so that
-		// we have the new fold handler set up
-		if(!oldFoldMode.equals(foldMode))
-		{
-			FoldVisibilityManager foldVisibilityManager
-				 = view.getTextArea().getFoldVisibilityManager();
-			int collapseFolds = buffer.getIntegerProperty(
-				"collapseFolds",0);
-			if(collapseFolds != 0)
-				foldVisibilityManager.expandFolds(collapseFolds);
-			else
-				foldVisibilityManager.expandAllFolds();
-		}
-
-		View[] views = jEdit.getViews();
-		for(int i = 0; i < views.length; i++)
-		{
-			EditPane[] panes = views[i].getEditPanes();
-			for(int j = 0; j < panes.length; j++)
-			{
-				panes[j].getTextArea().propertiesChanged();
-			}
-		}
 
 		dispose();
 	} //}}}
