@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.14 2000/09/30 04:03:47 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/09/30 04:03:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.15 2000/11/11 15:19:42 larryi Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/11/11 15:19:42 $
  *
  * ====================================================================
  *
@@ -270,6 +270,22 @@ public class FileUtil {
             patchPath = sb.toString();
         }
 
+	// fix path on NetWare - all '/' become '\\' and remove duplicate '\\'
+	if (System.getProperty("os.name").startsWith("NetWare") &&
+	    path.length() >=3 &&
+	    path.indexOf(':') > 0) {
+	    char[] ca = patchPath.replace('/', '\\').toCharArray();
+	    StringBuffer sb = new StringBuffer();
+
+	    for (int i = 0; i < ca.length; i++) {
+		if ((ca[i] != '\\') ||
+		    (ca[i] == '\\' && i > 0 && ca[i - 1] != '\\')) {
+		    sb.append(ca[i]);
+		}
+	    }
+	    patchPath = sb.toString();
+	}
+
         return patchPath;
     }
 
@@ -284,6 +300,13 @@ public class FileUtil {
             Character.isLetter(path.charAt(0)) &&
             path.charAt(1) == ':')
 	    return true;
+
+	// NetWare volume:
+	if (System.getProperty("os.name").startsWith("NetWare") &&
+	    path.length() >=3 &&
+	    path.indexOf(':') > 0)
+	    return true;
+
 	return false;
     }
     
