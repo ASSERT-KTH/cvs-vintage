@@ -63,7 +63,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.28 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: RModuleIssueType.java,v 1.29 2003/06/06 00:33:02 jmcnally Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
@@ -152,14 +152,14 @@ public  class RModuleIssueType
             List rmas = module.getRModuleAttributes(issueType);
             for (int i=0; i<rmas.size(); i++)
             {
-                ((RModuleAttribute)rmas.get(i)).delete(user);
+                ((RModuleAttribute)rmas.get(i)).delete();
             }
             // Delete mappings with user attributes for template type
             IssueType templateType = issueType.getTemplateIssueType();
             rmas = module.getRModuleAttributes(templateType);
             for (int i=0; i<rmas.size(); i++)
             {
-                ((RModuleAttribute)rmas.get(i)).delete(user);
+                ((RModuleAttribute)rmas.get(i)).delete();
             }
  
             // delete workflows

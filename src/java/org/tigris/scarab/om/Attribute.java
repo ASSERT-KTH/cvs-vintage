@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.66 2003/05/05 23:54:07 elicia Exp $
+  * @version $Id: Attribute.java,v 1.67 2003/06/06 00:33:02 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -739,7 +739,7 @@ public class Attribute
     /* 
      * Delete mappings with all modules and issue types.
      */
-    public void deleteModuleMappings(ScarabUser user)
+    public void deleteModuleMappings()
         throws Exception
     {
         Criteria crit = new Criteria();
@@ -751,7 +751,7 @@ public class Attribute
         List raags = RAttributeAttributeGroupPeer.doSelect(crit);
         for (Iterator i = raags.iterator(); i.hasNext();)
         {
-            ((RAttributeAttributeGroup)i.next()).delete(user);
+            ((RAttributeAttributeGroup)i.next()).delete();
         }
 
         crit = new Criteria();
@@ -761,7 +761,7 @@ public class Attribute
         for (int i=0; i<rmas.size(); i++)
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-            rma.delete(user);
+            rma.delete();
         }
         ScarabCache.clear();
     }
@@ -781,7 +781,7 @@ public class Attribute
         List raags = RAttributeAttributeGroupPeer.doSelect(crit);
         for (Iterator i = raags.iterator(); i.hasNext();)
         {
-            ((RAttributeAttributeGroup)i.next()).delete(user);
+            ((RAttributeAttributeGroup)i.next()).delete();
         }
 
         crit = new Criteria();

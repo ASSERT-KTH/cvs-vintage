@@ -17,7 +17,7 @@ public  class RAttributeAttributeGroup
     /**
      * Delete the record.
      */
-    public void delete(ScarabUser user) throws Exception 
+    public void delete() throws Exception 
     { 
         Criteria c = new Criteria()
             .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())

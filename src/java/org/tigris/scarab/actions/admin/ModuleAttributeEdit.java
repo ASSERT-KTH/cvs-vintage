@@ -72,7 +72,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.28 2003/03/28 01:23:34 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.29 2003/06/06 00:33:02 jmcnally Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -171,31 +171,13 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                   .getInstance(new Integer(optionId));
 
                RModuleOption rmo = module.getRModuleOption(option, issueType);
-//               List rmos = module.getRModuleOptions(option.getAttribute(),
-//                                                    issueType, false);
-               try
-               {
-                   rmo.delete(user);
-                   //rmos.remove(rmo);
-               }
-               catch (Exception e)
-               {
-                   scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-               }
+               rmo.delete();
 
                // Remove option - module mapping from template type
                RModuleOption rmo2 = module.getRModuleOption(option, 
                    scarabR.getIssueType(issueType.getTemplateId().toString()));
-               try
-               {
-                   rmo2.delete(user);
-                   //rmos.remove(rmo);
-                   scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
-               }
-               catch (Exception e)
-               {
-                   scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-               }
+               rmo2.delete();
+               scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                ScarabCache.clear();
                getIntakeTool(context).removeAll();
                data.getParameters().add("att_0id", option.getAttribute().getAttributeId().toString());

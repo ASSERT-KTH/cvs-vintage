@@ -69,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.39 2003/06/05 20:30:15 jmcnally Exp $
+ * @version $Id: RModuleOption.java,v 1.40 2003/06/06 00:33:02 jmcnally Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption
@@ -236,13 +236,11 @@ public class RModuleOption
         return descendants;
     }
         
-    public void delete(ScarabUser user)
+    public void delete()
          throws Exception
     {                
         Module module = getModule();
 
-        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
-        {
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);
             if (issueType.getLocked())
@@ -285,11 +283,6 @@ public class RModuleOption
             // notify module cache of this change
             ((ModuleManager)Torque.getManager(ModuleManager.MANAGED_CLASS))
                 .refreshedObject(this);
-        } 
-        else
-        {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }            
     }
 
     public void save(Connection con) throws TorqueException

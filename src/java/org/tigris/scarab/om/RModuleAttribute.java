@@ -68,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.39 2003/05/23 08:38:51 dlr Exp $
+ * @version $Id: RModuleAttribute.java,v 1.40 2003/06/06 00:33:02 jmcnally Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -189,13 +189,11 @@ public class RModuleAttribute
         return dispVal;
     }
 
-    public void delete(ScarabUser user)
+    public void delete()
          throws Exception
     {                
         Module module = getModule();
 
-        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
-        {
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);
             if (issueType.getLocked())
@@ -243,11 +241,6 @@ public class RModuleAttribute
                     }
                 }
             }
-        } 
-        else
-        {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
-        }            
     }
 
 

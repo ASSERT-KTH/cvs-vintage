@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.47 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.48 2003/06/06 00:33:02 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -425,29 +425,13 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                // Remove attribute - module mapping
                RModuleAttribute rma = module
                    .getRModuleAttribute(attribute, issueType);
-               try
-               {
-                   rma.delete(user);
-               }
-               catch (Exception e)
-               {
-                   scarabR.setAlertMessage(
-                       l10n.get(NO_PERMISSION_MESSAGE));
-               }
+               rma.delete();
 
                // Remove attribute - module mapping from template type
                RModuleAttribute rma2 = module
                    .getRModuleAttribute(attribute, 
                    scarabR.getIssueType(issueType.getTemplateId().toString()));
-               try
-               {
-                   rma2.delete(user);
-               }
-               catch (Exception e)
-               {
-                   scarabR.setAlertMessage(
-                       l10n.get(NO_PERMISSION_MESSAGE));
-               }
+               rma2.delete();
                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                ScarabCache.clear();
            }

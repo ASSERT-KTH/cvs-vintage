@@ -333,7 +333,7 @@ public  class AttributeGroup
                     for (int i=0; i<results.size(); i++)
                     {
                          RModuleAttribute rma = (RModuleAttribute)results.get(i);
-                         rma.delete(user);
+                         rma.delete();
                     }
                 }
 
@@ -526,7 +526,7 @@ public  class AttributeGroup
                                                             AttributePeer.NON_USER);    
                     RModuleAttribute rma = module
                         .getRModuleAttribute(attribute, issueType);
-                    rma.delete(user);
+                    rma.delete();
                     WorkflowFactory.getInstance().deleteWorkflowsForAttribute
                                                   (attribute, module, issueType);
                     rmas.remove(rma);
@@ -534,7 +534,7 @@ public  class AttributeGroup
                     // Remove attribute - module mapping from template type
                     RModuleAttribute rma2 = module
                                    .getRModuleAttribute(attribute, template);
-                    rma2.delete(user);
+                    rma2.delete();
                     rmas.remove(rma2);
                 }
             }
@@ -544,7 +544,7 @@ public  class AttributeGroup
                 // Remove attribute - group mapping
                 RAttributeAttributeGroup raag = 
                     getRAttributeAttributeGroup(attribute);
-                raag.delete(user);
+                raag.delete();
 
                 if (attribute.isOptionAttribute())
                 {
@@ -576,7 +576,7 @@ public  class AttributeGroup
                                  // with this module.  Will know by the first one.
                                  if (rmo.getModuleId().equals(module.getModuleId())) 
                                  {
-                                     rmo.delete(user);
+                                     rmo.delete();
                                  }
                                  else 
                                  {
