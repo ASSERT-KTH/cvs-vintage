@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.44 2004/08/14 15:26:11 mvw Exp $
+// $Id: FigUseCase.java,v 1.45 2004/09/27 21:18:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -394,9 +394,9 @@ public class FigUseCase extends FigNodeModelElement {
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
 
         if (epVec.isVisible()) {
-            showMenu.add(ActionCompartmentDisplay.HideExtPointCompartment);
+            showMenu.add(ActionCompartmentDisplay.hideExtPointCompartment());
         } else {
-            showMenu.add(ActionCompartmentDisplay.ShowExtPointCompartment);
+            showMenu.add(ActionCompartmentDisplay.showExtPointCompartment());
         }
 
         popUpActions.insertElementAt(showMenu,

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.73 2004/08/28 15:07:07 mvw Exp $
+// $Id: FigInterface.java,v 1.74 2004/09/27 21:18:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,9 +262,9 @@ public class FigInterface extends FigNodeModelElement
             popUpActions.size() - POPUP_ADD_OFFSET);
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
         if (operVec.isVisible()) {
-            showMenu.add(ActionCompartmentDisplay.HideOperCompartment);
+            showMenu.add(ActionCompartmentDisplay.hideOperCompartment());
         } else {
-            showMenu.add(ActionCompartmentDisplay.ShowOperCompartment);
+            showMenu.add(ActionCompartmentDisplay.showOperCompartment());
         }
 
         popUpActions.insertElementAt(showMenu,

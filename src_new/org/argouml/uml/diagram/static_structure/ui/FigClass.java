@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.112 2004/08/28 15:06:14 mvw Exp $
+// $Id: FigClass.java,v 1.113 2004/09/27 21:18:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -287,21 +287,21 @@ public class FigClass extends FigNodeModelElement
 
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
         if (isAttributesVisible() && isOperationsVisible()) {
-            showMenu.add(ActionCompartmentDisplay.HideAllCompartments);
+            showMenu.add(ActionCompartmentDisplay.hideAllCompartments());
         } else if (!isAttributesVisible() && !isOperationsVisible()) {
-            showMenu.add(ActionCompartmentDisplay.ShowAllCompartments);
+            showMenu.add(ActionCompartmentDisplay.showAllCompartments());
         }
 
         if (isAttributesVisible()) {
-            showMenu.add(ActionCompartmentDisplay.HideAttrCompartment);
+            showMenu.add(ActionCompartmentDisplay.hideAttrCompartment());
         } else {
-            showMenu.add(ActionCompartmentDisplay.ShowAttrCompartment);
+            showMenu.add(ActionCompartmentDisplay.showAttrCompartment());
         }
 
         if (isOperationsVisible()) {
-            showMenu.add(ActionCompartmentDisplay.HideOperCompartment);
+            showMenu.add(ActionCompartmentDisplay.hideOperCompartment());
         } else {
-            showMenu.add(ActionCompartmentDisplay.ShowOperCompartment);
+            showMenu.add(ActionCompartmentDisplay.showOperCompartment());
         }
 
         showMenu.add(ActionEdgesDisplay.getShowEdges());
