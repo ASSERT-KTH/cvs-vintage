@@ -21,7 +21,7 @@ import javax.ejb.SessionBean;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -76,7 +76,19 @@ public class StatelessSessionEnterpriseContext
    {
       public EJBObject getEJBObject()
       {
-         return ejbObject;
+		  if (ejbObject == null) {
+			  
+			  	try {
+					
+			        ejbObject = ((StatelessSessionContainer)con).getContainerInvoker().getStatelessSessionEJBObject(); 
+				}
+			 	catch (RemoteException re) {
+					// ...
+					throw new IllegalStateException();
+				}
+			} 	
+    
+	     	return ejbObject;
       }
    }
 }
