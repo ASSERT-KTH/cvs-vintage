@@ -102,9 +102,9 @@ $page.setTitle("Issue template")
   $attVal.RModuleAttribute.DisplayValue
  </th>
  <td>
- #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-       #userSelectBox ($attVal "")
- #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+    #if ($attVal.Attribute.isUserAttribute())
+      #userSelectBox ($attVal "3" "true") 
+    #elseif ($attVal.Attribute.isOptionAttribute())
       #attrValueLeafSelect ($attVal $field "")
  #else
      #attrValueErrorMsg($attVal "Value")
