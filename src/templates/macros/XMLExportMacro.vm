@@ -13,19 +13,20 @@
 
 #macro ( xmlExport $fids )
 #xmlScarabHeader()
+#set ($currentModuleId = -1)
 #foreach ($fid in $fids)
   #set ($issue = $scarabR.getIssue("${fid.Prefix}${fid.Count}"))
   #if ($issue)
     #set ($module = $scarabR.getModule("${issue.ModuleId}"))
-    #if ($currentModuleId)
+    #if ($currentModuleId == -1)
+      #xmlModuleHeader($module)
+      #set ($currentModuleId = $module.ModuleId)
+    #else
       #if ($currentModuleId != $module.ModuleId)
         #xmlModuleFooter()
         #xmlModuleHeader($module)
         #set ($currentModuleId = $module.ModuleId)
       #end
-    #else
-      #xmlModuleHeader($module)
-      #set ($currentModuleId = $module.ModuleId)
     #end
     #xmlIssue($issue)
   #end
@@ -90,16 +91,17 @@
         <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
       </attachment>
       #end
+      #set ($currentTransaction = -1)
       #foreach ($activity in $issue.getActivity(true))
-        #if ($currentTransaction)
+        #if ($currentTransaction == -1)
+          #xmlTransactionHeader($activity.Transaction)
+          #set ($currentTransaction = $activity.TransactionId)
+        #else
           #if ($currentTransaction != $activity.TransactionId)
             #xmlTransactionFooter()
             #xmlTransactionHeader($activity.Transaction)
             #set ($currentTransaction = $activity.TransactionId)
           #end
-        #else
-          #xmlTransactionHeader($activity.Transaction)
-          #set ($currentTransaction = $activity.TransactionId)
         #end
         #xmlTransactionActivity($activity)
       #end
