@@ -87,7 +87,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -486,6 +486,17 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       for(Iterator iter = joinPaths.iterator(); iter.hasNext(); ) {
          ASTPath path = (ASTPath)iter.next();
          for(int i=0; i < path.size(); i++) {
+            declareTables(path, i, buf);
+         }
+      }
+
+      // add all parent paths for collection member join paths
+      for(Iterator iter = collectionMemberJoinPaths.values().iterator(); 
+            iter.hasNext(); ) {
+
+         ASTPath path = (ASTPath)iter.next();
+         // don't declare the last one as the first path was left joined
+         for(int i=0; i < path.size()-1; i++) {
             declareTables(path, i, buf);
          }
       }
