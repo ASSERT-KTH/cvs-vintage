@@ -160,6 +160,7 @@
         <filter token="DATABASE_PORT" value="${scarab.database.port}"/>
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
+        <filter token="TURBINE_MODE" value="${scarab.mode}"/>
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
