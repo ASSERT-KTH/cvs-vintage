@@ -1,0 +1,62 @@
+#set ( $action = $link.setPage("SaveQuery.vm").setAction("SaveQuery").addPathInfo("nextTemplate", "IssueList.vm") )
+#set($query = $scarabR.Query)
+#set ( $queryGroup = $intake.Query.mapTo($query) ) 
+#set ($user = $scarabR.User)
+
+      <h2>Save Query</h2>
+
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+
+#if ($queryString)
+   
+<form method="post" action="$action" >
+<input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
+
+<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
+
+      <div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+         <th width="120">query name:</th>
+
+         <td><input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
+        </tr>
+
+        <tr>
+         <th width="120">query description:</th>
+
+         <td><textarea name="$queryGroup.Description.Key" value="$!queryGroup.Description" rows="4" cols="40"></textarea></td>
+        </tr>
+
+        <tr>
+         <th width="120">location:</th>
+
+         <td><input type="radio" name="$queryGroup.TypeId.Key" value="1"/> global&#160;&#160; 
+             <input type="radio" name="$queryGroup.TypeId.Key" value="2"/> project level &#160;&#160
+    #set ( $group = $intake.Query.mapTo($object) ) 
+    <select name="$queryGroup.ModuleId.Key" >
+    	<option value="">Choose...</option>
+    	#foreach ($module in $user.getModules())
+			#set ( $selected = "" )
+			#if ( $group.get($optionFieldName).Value && $module.ModuleId == $group.get($field).Value )
+					#set ( $selected = ' selected="selected"' )
+			#end
+		<option$selected value="$module.ModuleId">$module.Name</option>
+	    #end
+      </select>&#160;&#160; 
+           <input type="radio" name="$queryGroup.TypeId.Key" value="3" /> personal account level
+          </td>
+        </tr>
+       </table>
+      </div>
+
+<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSavequery"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+     </div></td>
+    </tr>
+   </table>
+$intake.declareGroups()
+  </form>
+
+#else
+  <p class="alert">No query to save. Please <a href="Search.vm">enter a query.</a>
+#end
