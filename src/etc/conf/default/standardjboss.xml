@@ -5,8 +5,9 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.56 2003/01/16 09:30:43 starksm Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.57 2003/03/19 16:18:06 mnewcomb Exp $ -->
 <jboss>
+  <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <invoker-proxy-bindings>
     <invoker-proxy-binding>
       <name>entity-rmi-invoker</name>
@@ -261,7 +262,6 @@
       </proxy-factory-config>
     </invoker-proxy-binding>
   </invoker-proxy-bindings>
-  <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <container-configurations>
     <container-configuration>
       <container-name>Standard CMP 2.x EntityBean</container-name>

@@ -9,8 +9,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.3 2003/03/19 14:26:25 mnewcomb Exp $
-$Revision: 1.3 $
+$Id: jboss_3_2.dtd,v 1.4 2003/03/19 16:18:10 mnewcomb Exp $
+$Revision: 1.4 $
 
 Overview of the architecture of jboss.xml
 
@@ -121,8 +121,8 @@ Overview of the architecture of jboss.xml
 
 -->
 <!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? ,
- unauthenticated-principal? , resource-managers? , invoker-proxy-bindings?,
- enterprise-beans?, container-configurations?)>
+ unauthenticated-principal? , enterprise-beans?, resource-managers? ,
+ invoker-proxy-bindings?, container-configurations?)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
