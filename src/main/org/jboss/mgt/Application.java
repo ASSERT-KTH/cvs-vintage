@@ -9,6 +9,8 @@ package org.jboss.mgt;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Contains the management information about
@@ -20,34 +22,39 @@ public class Application
    implements Serializable
 {
    // -------------------------------------------------------------------------
+   // Constants
+   // -------------------------------------------------------------------------  
+
+   public static final int EJBS = 1;
+   public static final int SERVLETS = 2;
+   public static final int RARS = 3;
+
+   // -------------------------------------------------------------------------
    // Members
    // -------------------------------------------------------------------------  
 
    private String mApplicationId;
    private String mDeploymentDescriptor;
-   private Collection mModules;
+   private Map mModules = new Hashtable();
 
    // -------------------------------------------------------------------------
    // Constructors
    // -------------------------------------------------------------------------
 
    /**
+    * Creates an empty application
+    *
     * @param pApplicationId Id of these Application which must be unique within
     *                       the node/server.
     * @param pDeploymentDescriptor Deployment Descriptor of this application
     *                              which maybe is not set.
-    * @param pModules Collection of modules deployed with the given application
-    *                 each item is of type {@link org.jboss.mgt.JBossModule
-    *                 JBossModule}.
     **/
    public Application(
       String pApplicationId,
-      String pDeploymentDescriptor,
-      Collection pModules
+      String pDeploymentDescriptor
    ) {
       mApplicationId = pApplicationId;
       setDeploymentDescriptor( pDeploymentDescriptor );
-      setModules( pModules );
    }
 
    // -------------------------------------------------------------------------
@@ -82,27 +89,39 @@ public class Application
    
    /**
     * @return Collection of Modules deployed with this application. Each
-    *         item is of type {@link org.jboss.mgt.JBossModule JBossModule}.
+    *         item is of type {@link org.jboss.mgt.Module Module}.
     **/
    public Collection getModules() {
-      return mModules;
+      return new ArrayList( mModules.values() );
    }
    
    /**
-    * Sets a new list of modules
+    * Saves the given Module either by registering as new Module
+    * or updating the registered Module
     *
-    * @param pModules New list of modules to be set
+    * @param pModuleId Id of the Module to be saved. Please use the
+    *                  constants provided in here.
+    * @param pModule Module to be saved
     **/
-   public void setModules( Collection pModules ) {
-      if( pModules == null ) {
-         // If null is passed then keep the list
-         mModules = new ArrayList();
-      }
-      else {
-         mModules = pModules;
-      }
+   public void saveModule(
+      int pModuleId,
+      Module pModule
+   ) {
+      mModules.put( new Integer( pModuleId ), pModule );
    }
-   
+
+   /**
+    * Removes the registered Module if found
+    *
+    * @param pModuleId Id of the Module to be removed. Please use the
+    *                  constants provided in here.
+    **/
+   public void removeModule(
+      int pModuleId
+   ) {
+      mModules.remove( new Integer( pModuleId ) );
+   }
+
    public String toString() {
       return "Application [ " + getId() +
          ", deployment descriptor : " + getDeploymentDescriptor() +

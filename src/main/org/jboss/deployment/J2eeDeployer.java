@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
 *   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.25 $
+*   @version $Revision: 1.26 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -215,16 +215,14 @@ implements J2eeDeployerMBean
 
 	  try
 	  {
-		  startApplication (d);
-		  log.log ("J2EE application: " + _url + " is deployed.");
         try {
             // Now the application is deployed add it to the server data collector
-            Application lApplication = convert2Application( _url, d );
+            Application lApplication = convert2Application( d.getName(), d );
             server.invoke(
                lCollector,
                "saveApplication",
                new Object[] {
-                  _url,
+                  d.getName(),
                   lApplication
                },
                new String[] {
@@ -236,6 +234,8 @@ implements J2eeDeployerMBean
         catch( Exception e ) {
            log.log ("Report of deployment of J2EE application: " + _url + " could not be reported.");
         }
+		  startApplication (d);
+		  log.log ("J2EE application: " + _url + " is deployed.");
       } 
       catch (Exception _e)
       {
@@ -475,7 +475,8 @@ implements J2eeDeployerMBean
          tmp.toArray( jarUrls );
          // Call the ContainerFactory that is loaded in the JMX server
          server.invoke(jarDeployer, "deploy",
-            new Object[]{ _d.localUrl.toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
+            new Object[]{ _d.localUrl.toString(), jarUrls, moduleName },
+            new String[]{ String.class.getName(), String[].class.getName(), String.class.getName() } );
 
          // Deploy the web application modules
          it = _d.webModules.iterator ();
@@ -495,7 +496,6 @@ implements J2eeDeployerMBean
             // since tomcat changes the context classloader...
             Thread.currentThread().setContextClassLoader (appCl);
          }
-
       }
       catch (MBeanException _mbe)
       {
@@ -713,40 +713,39 @@ implements J2eeDeployerMBean
       String pId,
       Deployment pDeployment
    ) {
-      Collection lModules = new ArrayList();
+      // Create Applications
+      Application lApplication = new Application(
+         pId,
+         "DD:FixeLater"
+      );
       // Go through web applications
       Iterator i = pDeployment.webModules.iterator();
       Collection lItems = new ArrayList();
       while( i.hasNext() ) {
          Deployment.Module lModule = (Deployment.Module) i.next();
          // Add a Web Module
-         lModules.add(
+         lApplication.saveModule(
+            Application.SERVLETS,
             new Module(
                lModule.webContext,
-               "DD:FixeLater",
-               null
+               "DD:FixeLater"
             )
          );
       }
       // Go through ejb applications
-      i = pDeployment.webModules.iterator();
+      i = pDeployment.ejbModules.iterator();
       lItems = new ArrayList();
       while( i.hasNext() ) {
          Deployment.Module lModule = (Deployment.Module) i.next();
          // Add an EJB Module
-         lModules.add(
+         lApplication.saveModule(
+            Application.EJBS,
             new Module(
                ( (URL) lModule.localUrls.firstElement() ).getFile(),
-               "DD:FixeLater",
-               null
+               "DD:FixeLater"
             )
          );
       }
-      // Create Applications
-      return new Application(
-         pId,
-         "DD:FixeLater",
-         lModules
-      );
+      return lApplication;
    }
 }

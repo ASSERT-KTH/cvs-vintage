@@ -7,6 +7,7 @@
 package org.jboss.mgt;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -24,7 +25,7 @@ public class Module
 
    private String mModuleId;
    private String mDeploymentDescriptor;
-   private Collection mItems;
+   private Collection mItems = new ArrayList();
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -33,16 +34,13 @@ public class Module
    /**
     * @param pModuleId Id of these module which must be unique within the application.
     * @param pDeploymentDescriptor Deployment Descriptor of this module
-    * @param pItems Collection of Entities
     **/
    public Module(
       String pModuleId,
-      String pDeploymentDescriptor,
-      Collection pItems
+      String pDeploymentDescriptor
    ) {
       mModuleId = pModuleId;
       setDeploymentDescriptor( pDeploymentDescriptor );
-      mItems = pItems;
    }
 
    // -------------------------------------------------------------------------

@@ -51,8 +51,6 @@ public interface ServerDataCollectorMBean
     * or updating the registered application
     *
     * @param pApplication Application to be saved
-    *
-    * @return Saved Application which maybe contains updated values
     **/
    public void saveApplication(
       String pApplicationId,
@@ -66,6 +64,31 @@ public interface ServerDataCollectorMBean
     **/
    public void removeApplication(
       String pApplicationId
+   );
+
+   /**
+    * Saves the given Module either by registering as new Module
+    * or updating the registered Module
+    *
+    * @param pApplicationId Id of the Application the Module is part of
+    * @param pModuleId Id of the Module to be saved
+    * @param pModule Module to be saved
+    **/
+   public void saveModule(
+      String pApplicationId,
+      int pModuleId,
+      Module pModule
+   );
+
+   /**
+    * Removes the registered Module if found
+    *
+    * @param pApplicationId Id of the Application the Module is part of
+    * @param pModuleId Id of the Module to be removed
+    **/
+   public void removeModule(
+      String pApplicationId,
+      int pModuleId
    );
 
 }

@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Juha Lindfors (jplindfo@helsinki.fi)
  *
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -32,14 +32,26 @@ public interface ContainerFactoryMBean
    /**
 	 *	Deploy an application
 	 *
-	 * @param   url
+	 * @param   url URL to the directory with the given EJBs to be deployed
+    * @param   appId Id of the application this EJBs belongs to
+    *                used for management
 	 * @exception   MalformedURLException
 	 * @exception   DeploymentException
 	 */
-   public void deploy(String url)
+   public void deploy(String url, String appId )
       throws MalformedURLException, DeploymentException;
 
-   public void deploy( String appUurl, String[] jarUrls )
+   /**
+	 *	Deploy an application
+	 *
+    * @param   appUrl Url to the application itself
+    * @param   jarUrls Array of URLs to the JAR files containing the EJBs
+    * @param   appId Id of the application this EJBs belongs to
+    *                used for management
+	 * @exception   MalformedURLException
+	 * @exception   DeploymentException
+	 */
+   public void deploy( String appUurl, String[] jarUrls, String appId )
       throws MalformedURLException, DeploymentException;
 
 	/**

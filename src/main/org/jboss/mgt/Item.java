@@ -28,6 +28,12 @@ public abstract class Item
    // -------------------------------------------------------------------------
 
    /**
+    * Default (no-args) constructor
+    **/
+   public Item() {
+   };
+   
+   /**
     * @param pName Name of the Item
     **/
    public Item(
@@ -45,6 +51,15 @@ public abstract class Item
     **/
    public String getName() {
       return mName;
+   }
+   
+   /**
+    * Sets the name of the Item
+    *
+    * @param pName Name to be set
+    **/
+   public void setName( String pName ) {
+      mName = pName;
    }
 
    public String toString() {

@@ -37,6 +37,12 @@ public class EJB
    // -------------------------------------------------------------------------
 
    /**
+    * Default (no-args) constructor
+    **/
+   public EJB() {
+   }
+   
+   /**
     * @param pName Name of the Servlet
     * @param pType Type of the EJB
     * @param pDeployed True if the EJB is deployed now
@@ -62,10 +68,28 @@ public class EJB
    }
 
    /**
+    * Sets the type of the Item
+    *
+    * @param pType Type to be set
+    **/
+   public void setType( int pType ) {
+      mType = pType;
+   }
+
+   /**
     * @return True if the EJB is deployed now
     **/
    public boolean isDeployed() {
       return mDeployed;
+   }
+
+   /**
+    * Defines if the given EJB is deployed or not
+    *
+    * @param pDeployed True if the EJB is delployed
+    **/
+   public void setDeployed( boolean pDeployed ) {
+      mDeployed = pDeployed;
    }
 
    public String toString() {
@@ -89,6 +113,7 @@ public class EJB
 
       return "EJB [ " + getName() + 
          ", " + lType +
+         ", is deployed " + isDeployed() +
          " ]";
    }
 }

@@ -65,6 +65,9 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.logging.Logger;
 
+import org.jboss.mgt.EJB;
+import org.jboss.mgt.Module;
+
 /**
 *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to
 *  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
@@ -79,7 +82,7 @@ import org.jboss.logging.Logger;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.67 $
+*   @version $Revision: 1.68 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -254,16 +257,16 @@ public class ContainerFactory
   * @exception   MalformedURLException
   * @exception   DeploymentException
   */
-  public void deploy( String url )
+  public void deploy( String url, String appId )
     throws MalformedURLException, DeploymentException
     {
     // Delegate to "real" deployment
-    deploy( new URL( url ) );
+    deploy( new URL( url ), appId );
     }
 //
 // Richard Gyger
 //
-  public void deploy( String appUrl, String[] jarUrls )
+  public void deploy( String appUrl, String[] jarUrls, String appId )
     throws MalformedURLException, DeploymentException
     {
     // Delegate to "real" deployment
@@ -272,7 +275,7 @@ public class ContainerFactory
     for( int i = 0; i < tmp.length; i++ )
       tmp[ i ] = new URL( jarUrls[ i ] );
 
-    deploy( new URL( appUrl ), tmp );
+    deploy( new URL( appUrl ), tmp, appId );
     }
 
   /**
@@ -301,15 +304,15 @@ public class ContainerFactory
   *
   * @exception   DeploymentException
   */
-  public synchronized void deploy( URL url )
+  public synchronized void deploy( URL url, String appId )
     throws DeploymentException
     {
-    deploy( url, new URL[]{ url } );
+    deploy( url, new URL[]{ url }, appId );
     }
 //
 // Richard Gyger
 //
-  public synchronized void deploy( URL appUrl, URL[] jarUrls )
+  public synchronized void deploy( URL appUrl, URL[] jarUrls, String appId )
     throws DeploymentException
     {
     // Create application
@@ -329,9 +332,11 @@ public class ContainerFactory
       // create the _real_ classloader for this app
       ClassLoader cl = new URLClassLoader( jarUrls, Thread.currentThread().getContextClassLoader() );
       app.setClassLoader( cl );
+      // Create data container for deployed EJBs management data
+      Module module = new Module( "EJB", "??" );
 
       for( int i = 0; i < jarUrls.length; i++ )
-       deploy( app, jarUrls[ i ], cl );
+       deploy( app, jarUrls[ i ], cl, module );
 
       // Init application
       app.init();
@@ -346,6 +351,22 @@ public class ContainerFactory
       log.log( "Deployed application: " + app.getName() );
       // Register deployment. Use the application name in the hashtable
       deployments.put( appUrl, app );
+      // Save EJBs management data: application
+      log.log( "Add module: " + module + ", to app: " + appId );
+      getServer().invoke(
+          new ObjectName( "Management", "service", "Collector" ),
+         "saveModule",
+         new Object[] {
+            appId,
+            new Integer( org.jboss.mgt.Application.EJBS ),
+            module
+         },
+         new String[] {
+            String.class.getName(),
+            Integer.TYPE.getName(),
+            module.getClass().getName()
+         }
+      );
       }
     catch( Exception e )
       {
@@ -370,7 +391,7 @@ public class ContainerFactory
       }
     }
 
-  private void deploy( Application app, URL url, ClassLoader cl )
+  private void deploy( Application app, URL url, ClassLoader cl, Module module )
     throws NamingException, Exception
     {
       // Create a file loader with which to load the files
@@ -435,7 +456,10 @@ public class ContainerFactory
         BeanMetaData bean = (BeanMetaData) beans.next();
 
         log.log( "Deploying " + bean.getEjbName() );
-        app.addContainer( createContainer( bean, cl, localCl ) );
+        EJB ejb = new EJB();
+        module.addItem( ejb );
+        ejb.setName( bean.getEjbName() );
+        app.addContainer( createContainer( bean, cl, localCl, ejb ) );
         }
     }
 
@@ -463,6 +487,25 @@ public class ContainerFactory
     log.log( "Undeploying:" + url );
     app.stop();
     app.destroy();
+    try
+    {
+       // Remove EJBs management data
+       getServer().invoke(
+          new ObjectName( "Management", "service", "Collector" ),
+          "removeModule",
+          new Object[] {
+             url.toString(),
+             new Integer( org.jboss.mgt.Application.EJBS )
+          },
+          new String[] {
+             "".getClass().getName(),
+             Integer.TYPE.getName()
+          }
+       );
+    }
+    catch( Exception e ) {
+       log.exception( e );
+    }
     try {
         if ( app.getClassLoader() != null ) {
             // Remove from webserver 
@@ -508,27 +551,38 @@ public class ContainerFactory
   // Container Creation
   // ******************
 
-  private Container createContainer( BeanMetaData bean, ClassLoader cl, ClassLoader localCl )
+  private Container createContainer( BeanMetaData bean, ClassLoader cl, ClassLoader localCl, EJB ejb )
     throws Exception
     {
     // Added message driven deployment
     if( bean.isMessageDriven() )
       {
+      ejb.setType( EJB.MESSAGE );
       return createMessageDrivenContainer( bean, cl, localCl );
       }
     else if( bean.isSession() )   // Is session?
       {
       if( ( (SessionMetaData) bean ).isStateless() )   // Is stateless?
         {
+        ejb.setType( EJB.STATELESS_SESSION );
         return createStatelessSessionContainer( bean, cl, localCl );
         }
       else   // Stateful
         {
+        ejb.setType( EJB.STATEFUL_SESSION );
         return createStatefulSessionContainer( bean, cl, localCl );
         }
       }
     else   // Entity
       {
+      if( ( (EntityMetaData) bean ).isBMP() )
+         {
+         ejb.setType( EJB.ENTITY_BMP );
+         }
+      else
+         {
+         ejb.setType( EJB.ENTITY_CMP );
+         }
       return createEntityContainer( bean, cl, localCl );
       }
     }

@@ -99,7 +99,7 @@ public class ServerDataCollector
    }
    
    public String getName() {
-      return "JBoss Server MBean";
+      return "JBoss Server Data Collector MBean";
    }
    
    public Application getApplication(
@@ -132,7 +132,35 @@ public class ServerDataCollector
          mApplications.remove( pApplicationId );
       }
    }
-   
+
+   public void saveModule(
+      String pApplicationId,
+      int pModuleId,
+      Module pModule
+   ) {
+      Application lApplication = getApplication( pApplicationId );
+      System.out.println( "ServerDataCollector.saveModule(), App. Id: " + pApplicationId + ", application: " + lApplication );
+      if( lApplication != null ) {
+         lApplication.saveModule( pModuleId, pModule );
+      }
+   }
+
+   /**
+    * Removes the registered Module if found
+    *
+    * @param pApplicationId Id of the Application the Module is part of
+    * @param pModuleId Id of the Module to be removed
+    **/
+   public void removeModule(
+      String pApplicationId,
+      int pModuleId
+   ) {
+      Application lApplication = getApplication( pApplicationId );
+      if( lApplication != null ) {
+         lApplication.removeModule( pModuleId );
+      }
+   }
+
    // -------------------------------------------------------------------------
    // ServiceMBean - Methods
    // -------------------------------------------------------------------------  

@@ -371,7 +371,8 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
                 tmp.toArray( jarUrls );
                 // Call the ContainerFactory that is loaded in the JMX server
                 server.invoke(jarDeployer, "deploy",
-                new Object[]{ _d.getLocalUrl().toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
+                new Object[]{ _d.getLocalUrl().toString(), jarUrls, moduleName },
+                new String[]{ String.class.getName(), String[].class.getName(), String.class.getName() } );
             }
             catch (MBeanException _mbe) {
                 log.error("Starting "+moduleName+" failed!");
