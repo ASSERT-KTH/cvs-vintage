@@ -1,0 +1,45 @@
+<document>
+  <properties>
+    <title>Roadmap to 1.0 Release of Scarab!</title>
+    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+  </properties>
+  <body>
+
+    <category name="Database Support" description="Database Related Tasks">
+    	<task creator="" assignedto="" status="New">Resolve Bug w/ Saving Queries</task>
+        <task creator="" assignedto="" status="New">Verify MySQL Support</task>
+        <task creator="" assignedto="" status="New">Verify Hypersonic Support</task>        
+        <task creator="" assignedto="" status="New">Verify PostgreSQL Support</task>
+        <task creator="" assignedto="" status="New">Document Oracle Problems</task>  
+        <task creator="epugh" assignedto="epugh" status="New">Document MSSQL Problems</task>          
+    </category>
+    
+    <category name="Languages" description="All I18N Tasks">
+    	<task creator="" assignedto="" status="New">Verify English locale</task>
+        <task creator="" assignedto="" status="New">Verify French locale</task>
+        <task creator="" assignedto="" status="New">Verify German locale</task> 
+        <task creator="hdabbous" assignedto="hdabbous" status="New">Complete I10N</task>           
+        <task creator="" assignedto="" status="New">Verify Scarab degrades gracefully with non supported languages</task>
+        <task creator="" assignedto="" status="New">Document how to download and install other languages</task>  
+    </category>    
+
+    <category name="Build Process" description="All tasks related to building and installing Scarab">
+    	<task creator="" assignedto="" status="New">Verify Out of Box install</task>
+        <task creator="" assignedto="" status="New">Resolve build/runtime/database configuration difficulties</task>
+        <task creator="" assignedto="" status="New">Does import/export XML work?  Document issues</task>        
+        <task creator="" assignedto="" status="New">Verify Scarab degrades gracefully with non supported languages</task>
+        <task creator="" assignedto="" status="New">Document how to download and install other languages</task>  
+    </category>  
+    
+    <category name="Running Scarab" description="All issues related with running scarab">
+    	<task creator="" assignedto="" status="New">Does import/export XML work?  Document issues</task>        
+        <task creator="" assignedto="" status="New">No-cache support.  It seems like the only way to use Scarab would be cache only?</task>
+        <task creator="" assignedto="" status="New">implement Delete user</task>        
+        <task creator="" assignedto="" status="New">Verify Move/copy issue</task>
+        <task creator="" assignedto="" status="In Progress">Complete Critical and major defects</task>  
+    </category>
+    
+    <category name="Enhancements" description="Enhancements for 1.0.  Only suggest them if you are committing to implement them!  Otherwise put them in tracker.">
+    </category>           
+  </body>
+</document>

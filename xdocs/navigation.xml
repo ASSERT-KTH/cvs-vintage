@@ -12,6 +12,7 @@
     <menu name="General Information">
       <item name="Overview"               href="/index.html"/>
       <item name="Howto Build"            href="/howto/build-howto.html"/>
+      <item name="1.0 Roadmap"            href="/tasks-report.html"/>
     </menu>
   
     <menu name="Documentation">
@@ -50,6 +51,15 @@
       <item name="Goals"                  href="/goals.html" />
       <item name="Properties"             href="/properties.html" />
     </menu> 
+
+    <menu name="Project Tools"  collapse="true">
+      <item name="Membership"             href="http://scarab.tigris.org/servlets/ProjectMemberList" />
+      <item name="Announcements"          href="http://scarab.tigris.org/servlets/ProjectNewsList" />
+      <item name="Mailing lists"          href="http://scarab.tigris.org/servlets/ProjectMailingListList" />
+      <item name="Documents &amp; files"  href="http://scarab.tigris.org/servlets/ProjectDocumentList" />
+      <item name="Version control"        href="http://scarab.tigris.org/source/browse/scarab/" />
+      <item name="Issue tracker"          href="http://scarab.collab.net/scarab/issues" />
+    </menu>     
 
   </body>
 </project>
