@@ -1,8 +1,8 @@
-$page.setTitle("Edit Module Attribute '$attribute.Name'")
 
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
+$page.setTitle("Edit Module Attribute '$attribute.Name'")
 
 <div class="app" id="div3-0-2-0">
 <h2>$page.Title</h2>
@@ -67,11 +67,18 @@ On this screen, one can modify a module's Attribute information.
 </table>
 </div>
 
-#if ($attType.AttributeClass.Name.equals("select-one"))
-#set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
+#set ($editIssueType = $scarabR.IssueType)
 #set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute, $editIssueType, false))
+#if ($attType.AttributeClass.Name.equals("select-one"))
 #set ($maxNum = $rmos.size())
 #datatitle ("Attribute Options")
+#if (!$rmos || $rmos.isEmpty())
+  There are no attribute options.
+  <div class="functnbar3">
+  <input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;
+  </div>
+#else
+
 <table width="70%" border="1" cellspacing="2" cellpadding="2">
 <tr>
  <th>&#160;</th>
@@ -107,6 +114,7 @@ On this screen, one can modify a module's Attribute information.
 <input type="submit" value="delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;
 <input type="submit" value="resort" name="eventSubmit_doSave" />
 </div>
+#end
 
 #end
 <div class="functnbar2">
