@@ -3,6 +3,7 @@ package org.tigris.scarab.om;
 import java.util.List;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.modules.ContextAdapter; 
+import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
@@ -78,6 +79,52 @@ public  class IssueTemplate
     {
         return IssueTemplateTypePeer.doSelect(new Criteria());
     }
+
+    /**
+     * Checks if user has permission to approve template. 
+     */
+    public void setApproved( ScarabUser user, ScarabModule module,
+                            boolean approved, RunData data)
+         throws Exception
+    {                
+        ScarabSecurity security = SecurityFactory.getInstance();
+
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
+                                   module))
+        {
+            super.setApproved(approved);
+            super.save();
+        } 
+        else
+        {
+            data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }
+            
+    }
+
+    /**
+     * Checks if user has permission to reject template.
+     */
+    public void setDeleted( ScarabUser user, ScarabModule module,
+                            boolean deleted, RunData data)
+         throws Exception
+    {                
+        boolean hasPerm = false;
+        ScarabSecurity security = SecurityFactory.getInstance();
+
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
+                                   module))
+        {
+            super.setDeleted(deleted);
+            super.save();
+        } 
+        else
+        {
+            data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }
+            
+    }
+
 
 
 }
