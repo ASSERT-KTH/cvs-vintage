@@ -26,14 +26,13 @@
   <!--======================================================
   load the following user properties from a file:
   - build.compiler: Which compiler do you want use ? (optional)
-  - build: Where do you want to generate compilate object ?
+  - build: Where do you want to generate compiled objects?
   - dist: Where do you want to put the distribution ?
-  - testResult: Where do you want to put the test results ?
   =======================================================-->
   <property file="${config}/configure.properties"/>
 
   <!-- carol meta information -->
-  <property name="carol.version" value="1.8.1" />
+  <property name="carol.version" value="1.8.9" />
   <property name="carol.name" value="Carol" />
   <property name="carol.package" value="org.objectweb.carol" />
   <property name="carol.cmi.name" value="Cluster Method Invokation (CMI) Compiler" />
@@ -290,35 +289,34 @@
   <!-- *********     PACKAGE (thanks Jeff!)      *******-->
   <!-- ***********************************************-->
   <target name="packages" depends="clean,package.src,package.jar"
-    if="version"
     description="--> create two packages (source and binaries)
     (version is specified by -Dversion=x.y.z)"/>
   
-  <target name="package.jar" depends="dist" if="version">
+  <target name="package.jar" depends="dist">
     <mkdir dir="${tmp}" />
-    <copy todir="${tmp}/carol-${version}" includeEmptyDirs="no">
+    <copy todir="${tmp}/carol-${carol.version}" includeEmptyDirs="no">
       <fileset dir="${dist}" />
     </copy>
-    <tar tarfile="${tmp}/carol-${version}.tar"
+    <tar tarfile="${tmp}/carol-${carol.version}.tar"
       longfile="gnu"
       basedir="${tmp}/"
-      includes="carol-${version}/**" />
-    <gzip zipfile="${dist}/../carol-${version}.tgz"
-      src="${tmp}/carol-${version}.tar" />
+      includes="carol-${carol.version}/**" />
+    <gzip zipfile="${dist}/../carol-${carol.version}.tgz"
+      src="${tmp}/carol-${carol.version}.tar" />
     <delete dir="${tmp}"/>
   </target>
   
   <target name="package.src" depends="clean" if="version">
     <mkdir dir="${tmp}" />
-    <copy todir="${tmp}/carol-${version}-src" includeEmptyDirs="no">
+    <copy todir="${tmp}/carol-${carol.version}-src" includeEmptyDirs="no">
       <fileset dir="${basedir}" />
     </copy>
-    <tar tarfile="${tmp}/carol-${version}-src.tar"
+    <tar tarfile="${tmp}/carol-${carol.version}-src.tar"
       longfile="gnu"
       basedir="${tmp}/"
-      includes="carol-${version}-src/**" />
-    <gzip zipfile="${dist}/../carol-${version}-src.tgz"
-      src="${tmp}/carol-${version}-src.tar" />
+      includes="carol-${carol.version}-src/**" />
+    <gzip zipfile="${dist}/../carol-${carol.version}-src.tgz"
+      src="${tmp}/carol-${carol.version}-src.tar" />
     <delete dir="${tmp}"/>
   </target>
 
