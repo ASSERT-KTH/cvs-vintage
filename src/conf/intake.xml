@@ -29,6 +29,14 @@
             <rule name="minLength" value="1">Attribute description is not allowed to be empty</rule>
             <rule name="maxLength" value="255">Attribute description must be less than 255 characters long</rule>
         </field>
+        <field name="Permission" key="perm" type="String"> 
+            <rule name="minLength" value="1">Permission is not allowed to be empty</rule>
+            <rule name="maxLength" value="255">Permission must be less than 255 characters long</rule>
+        </field>
+        <field name="Action" key="act" type="String"> 
+            <rule name="minLength" value="1">Action is not allowed to be empty</rule>
+            <rule name="maxLength" value="255">ActionPermission must be less than 255 characters long</rule>
+        </field>
         <field name="Deleted" key="del" type="boolean" />
 </group>
 
