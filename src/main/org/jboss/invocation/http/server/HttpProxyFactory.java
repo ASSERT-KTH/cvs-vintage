@@ -21,6 +21,7 @@ import org.jboss.naming.Util;
 import org.jboss.proxy.GenericProxyFactory;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.system.server.ServerConfigUtil;
 import org.jboss.util.StringPropertyReplacer;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
@@ -31,7 +32,7 @@ import org.w3c.dom.Element;
  * MarshalledValue with the Naming proxy as its content.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class HttpProxyFactory extends ServiceMBeanSupport
    implements HttpProxyFactoryMBean
@@ -241,17 +242,27 @@ public class HttpProxyFactory extends ServiceMBeanSupport
       HttpInvokerProxy delegateInvoker = new HttpInvokerProxy(invokerURL);
       return delegateInvoker;
    }
+
    /** Validate that the invokerURL is set, and if not build it from
-    * the invokerURLPrefix + host + invokerURLSuffix.
+    * the invokerURLPrefix + host + invokerURLSuffix. The host value will be
+    * taken from the jboss.bind.address system property if its a valid
+    * address, InetAddress.getLocalHost otherwise.
     */
    protected void checkInvokerURL() throws UnknownHostException
    {
       if( invokerURL == null )
       {
-         InetAddress addr = InetAddress.getLocalHost();
-         String host = useHostName ? addr.getHostName() : addr.getHostAddress();
+         // First check for a global bind address
+         String host = ServerConfigUtil.getSpecificBindAddress();
+         if( host == null )
+         {
+            InetAddress addr = InetAddress.getLocalHost();
+            host = useHostName ? addr.getHostName() : addr.getHostAddress();
+         }
          String url = invokerURLPrefix + host + invokerURLSuffix;
          setInvokerURL(url);
       }
    }
+
 }
+
