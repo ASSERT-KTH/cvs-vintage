@@ -54,10 +54,11 @@ $page.setTitle("Add/remove attributes from view")
   #set ($order = 1)
   #foreach ($moduleUserAttribute in $rmuas)
    #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
-    #set ($checked = "checked")
+    #set ($checked = 'checked="true"')
     #set ($order = $moduleUserAttribute.Order)
    #end
   #end
+
   <tr class="a">
    <td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
    <td>$attribute.Name</td>
