@@ -288,7 +288,8 @@ public  class ReportBridge
         reportDefn.setModuleIssueTypes(null);
         if (v == null) 
         {
-            torqueReport.setIssueTypeId((NumberKey)null);            
+            // issue type id cannot be null
+            torqueReport.setIssueTypeId(new NumberKey(0));            
         }
         else 
         {
@@ -478,7 +479,6 @@ public  class ReportBridge
                 mit.setIssueTypeId(new Integer(item.getIssueTypeId().toString()));
                 reportDefn.addModuleIssueType(mit);
             }
-
             if (mitList.isSingleModule()) 
             {
                 torqueReport.setModule(mitList.getModule());
@@ -487,7 +487,7 @@ public  class ReportBridge
             {
                 torqueReport.setIssueType(mitList.getIssueType());
             }
-        }        
+        }
     }
 
     public boolean isReadyForCalculation()

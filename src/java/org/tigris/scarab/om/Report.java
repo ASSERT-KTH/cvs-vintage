@@ -96,27 +96,6 @@ public  class Report
     extends org.tigris.scarab.om.BaseReport
     implements Persistent
 {
-    public void save(Connection dbCon) throws TorqueException
-    {
-       try
-       {
-           if (isNew())
-           {
-               super.save(dbCon);
-               setModified(true);
-               super.save(dbCon);
-            }
-            else
-            {
-               super.save(dbCon);
-            }
-        }
-        catch (Exception e)
-        {
-            log().error(e);
-         }
-    }
-
     public NumberKey getScopeId()
     {
         NumberKey id = super.getScopeId();
