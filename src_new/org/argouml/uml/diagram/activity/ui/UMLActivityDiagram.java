@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.1 2000/09/04 12:50:22 1sturm Exp $
+// $Id: UMLActivityDiagram.java,v 1.2 2000/09/21 14:00:32 1sturm Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -137,8 +137,15 @@ public class UMLActivityDiagram extends UMLDiagram {
     lay.setGraphEdgeRenderer(rend);
   }
 
-  public MStateMachine getStateMachine() {
-    return ((StateDiagramGraphModel)getGraphModel()).getMachine();
+    public MModelElement getOwner() {
+	StateDiagramGraphModel gm = (StateDiagramGraphModel)getGraphModel();
+	MStateMachine sm = gm.getMachine();
+	if (sm != null) return sm;
+	return gm.getNamespace();
+    }
+    
+    public MStateMachine getStateMachine() {
+	return ((StateDiagramGraphModel)getGraphModel()).getMachine();
   }
 
   public void setStateMachine(MStateMachine sm) {
