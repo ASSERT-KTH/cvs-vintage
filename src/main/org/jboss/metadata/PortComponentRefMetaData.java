@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: PortComponentRefMetaData.java,v 1.3 2004/05/14 18:34:20 tdiesler Exp $
+// $Id: PortComponentRefMetaData.java,v 1.4 2004/05/29 19:17:13 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -17,7 +17,7 @@ import java.io.Serializable;
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class PortComponentRefMetaData implements Serializable
 {
@@ -32,6 +32,11 @@ public class PortComponentRefMetaData implements Serializable
    public PortComponentRefMetaData(ServiceRefMetaData serviceRefMetaData)
    {
       this.serviceRefMetaData = serviceRefMetaData;
+   }
+
+   public ServiceRefMetaData getServiceRefMetaData()
+   {
+      return serviceRefMetaData;
    }
 
    public String getPortComponentLink()
