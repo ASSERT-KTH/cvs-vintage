@@ -9,61 +9,89 @@
         <xsl:for-each select="bug">
         <issue id="{bug_id}">
             <artifact-type>defect</artifact-type>
-            <committed-by><xsl:value-of select="reporter"/></committed-by>
-            <xsl:if test="bug_status">
-            <issue-attribute>
-                <name>Status</name>
-                <value><xsl:value-of select="bug_status"/></value>
-                <type>combo-box</type>
-            </issue-attribute>
-            </xsl:if>
-            <xsl:if test="bug_severity">
-            <issue-attribute>
-                <name>Severity</name>
-                <value><xsl:value-of select="bug_severity"/></value>
-                <type>combo-box</type>
-            </issue-attribute>
-            </xsl:if>
-            <xsl:if test="short_desc">
-            <issue-attribute>
-                <name>Summary</name>
-                <value><xsl:value-of select="short_desc"/></value>
-                <type>long-string</type>
-            </issue-attribute>
-            <issue-attribute>
-                <name>Description</name>
-                <value><xsl:value-of select="short_desc"/></value>
-                <type>long-string</type>
-            </issue-attribute>
-            </xsl:if>
-            <xsl:if test="rep_platform">
-            <issue-attribute>
-                <name>Platform</name>
-                <value><xsl:value-of select="rep_platform"/></value>
-                <type>combo-box</type>
-            </issue-attribute>
-            </xsl:if>
-            <xsl:if test="op_sys">
-            <issue-attribute>
-                <name>Operating System</name>
-                <value><xsl:value-of select="op_sys"/></value>
-                <type>combo-box</type>
-            </issue-attribute>
-            </xsl:if>
-            <xsl:if test="assigned_to">
-            <issue-attribute>
-                <name>Assigned To</name>
-                <value><xsl:value-of select="assigned_to"/></value>
-                <type>user</type>
-            </issue-attribute>
-            </xsl:if>
-            <xsl:if test="resolution">
-            <issue-attribute>
-                <name>Resolution</name>
-                <value><xsl:value-of select="resolution"/></value>
-                <type>combo-box</type>
-            </issue-attribute>
-            </xsl:if>
+
+            <transaction id="1">
+                <type>Create Issue</type>
+                <committed-by><xsl:value-of select="reporter"/></committed-by>
+                <xsl:if test="bug_status">
+                <activity>
+                    <attribute>
+                        <name>Status</name>
+                        <value><xsl:value-of select="bug_status"/></value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>Status set to <xsl:value-of select="bug_status"/></description>
+                </activity>
+                </xsl:if>
+                <xsl:if test="bug_severity">
+                <activity>
+                    <attribute>
+                        <name>Severity</name>
+                        <value><xsl:value-of select="bug_severity"/></value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>Severity set to <xsl:value-of select="bug_severity"/></description>
+                </activity>
+                </xsl:if>
+                <xsl:if test="short_desc">
+                <activity>
+                    <attribute>
+                        <name>Summary</name>
+                        <value><xsl:value-of select="short_desc"/></value>
+                        <type>long-string</type>
+                    </attribute>
+                    <description>Summary set to <xsl:value-of select="short_desc"/></description>
+                </activity>
+                <activity>
+                    <attribute>
+                        <name>Description</name>
+                        <value><xsl:value-of select="short_desc"/></value>
+                        <type>long-string</type>
+                    </attribute>
+                    <description>Description set to <xsl:value-of select="short_desc"/></description>
+                </activity>
+                </xsl:if>
+                <xsl:if test="rep_platform">
+                <activity>
+                    <attribute>
+                        <name>Platform</name>
+                        <value><xsl:value-of select="rep_platform"/></value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>Platform set to <xsl:value-of select="rep_platform"/></description>
+                </activity>
+                </xsl:if>
+                <xsl:if test="op_sys">
+                <activity>
+                    <attribute>
+                        <name>Operating System</name>
+                        <value><xsl:value-of select="op_sys"/></value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>Operating System set to <xsl:value-of select="op_sys"/></description>
+                </activity>
+                </xsl:if>
+                <xsl:if test="assigned_to">
+                <activity>
+                    <attribute>
+                        <name>Assigned To</name>
+                        <value><xsl:value-of select="assigned_to"/></value>
+                        <type>user</type>
+                    </attribute>
+                    <description>Assigned To set to <xsl:value-of select="assigned_to"/></description>
+                </activity>
+                </xsl:if>
+                <xsl:if test="resolution">
+                <activity>
+                    <attribute>
+                        <name>Resolution</name>
+                        <value><xsl:value-of select="resolution"/></value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>Resolution set to <xsl:value-of select="resolution"/></description>
+                </activity>
+                </xsl:if>
+            </transaction>
             
             <xsl:for-each select="dependson">
             <dependency>
