@@ -80,6 +80,8 @@ public  class AttributeGroup
         "getHighestOrderedAttribute";
     private static final String GET_R_ATTRIBUTE_ATTRGROUP = 
         "getRAttributeAttributeGroup";
+    private static final String GET_ATTRIBUTE_GROUPS = 
+        "getAttributeGroups";
 
     /**
      * Throws UnsupportedOperationException.  Use
@@ -280,6 +282,10 @@ public  class AttributeGroup
             c = new Criteria()
                 .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
             AttributeGroupPeer.doDelete(c);
+            List attrGroups = module.getAttributeGroups(getIssueType());
+            attrGroups.remove(this);
+            ScarabCache.put(attrGroups, module, GET_ATTRIBUTE_GROUPS, 
+                            getIssueType(), new Boolean(false));
         } 
         else
         {
