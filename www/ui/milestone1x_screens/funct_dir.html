@@ -1,172 +1,218 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
 "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
-
 <html>
- <head>
-  <title>Enter Issue (2.1.0)</title>
-  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />
-  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
-  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
- </head>
 
- <body>
-  <form action="#" method="get">
-   <div id="globalnav">
-    <p><a href="#">globalnav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
-   </div>
+<head>
+	<title>Home Screen</title>
+	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+</head>
 
-   <table border="0" cellspacing="0" cellpadding="0" width="95%">
-    <tr>
-     <td width="150" id="leftcol">
-      <div id="projnav">
+<body>
+<form action="#" method="get">
 
-<small><small>
-<a href="#">Start page</a><br>
-<a href="#">Projects</a>
-
-<p><small><small><a href="#">Project X.X home</a></small></small><br>
-<small><small><font color="#666666">Project Tools</font></small></small><br>
-<small><small><a href="#">Documents</a></small></small><br>
-<small><small>Issue tracking</small></small><br>
-		<ul>
-		<li><small><small><a href="#">Enter issue</a></small></small></li>
-		<li><small><small><a href="#">Enter issue</a></small></small></li>
-		<li><small><small><a href="#">Reports</a></small></small></li>
-		<li><small><small><a href="#">Vote management</a></small></small></li>
-		<li><small><small><a href="#">Workflow customization options</a></small></small></li>
-		</ul>
-	<small><small><a href="#">Mailing lists</a></small></small><br>
-	<small><small><a href="#">Members</a></small></small><br>
-	<small><small><a href="#">News</a></small></small><br>
-	<small><small><a href="#">Source code</small></small></a>
-<p>
-<small><small><a href="#">Admin Functions</a></small></small>
-</p>
-</small></small>
-
-      </div>
-     </td>
-
-     <td id="bodycol">
-
-<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="1" width="100%">
+	<!-- SourceCast -->
+	<div id="banner">
+		<table border="0" cellspacing="12" cellpadding="0" width="100%">
+		<tr>
+		
+		<td>
+		<div align="right" id="loginstatus">
+			<div>
+				Logged in as: <strong class="username">User XX</strong>
+			</div>
+			<div>
+				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
+			</div>
+		</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- Structural Elements -->
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
-<td BGCOLOR="#cccccc" ALIGN="LEFT" class="PlainText">
-
-<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="1">
-<tr>
-<td BGCOLOR="#cccccc" ALIGN="LEFT" class="PlainText">
-&nbsp;<select>
-          <option>
-           saved queries
-          </option>
-
-          <option>
-           query one
-          </option>
-
-          <option>
-           query two
-          </option>
-         </select>&nbsp;<input type="submit" name="query" value="go">&nbsp;</td>
-
-<td bgcolor="#333333"><br></td>
-<td BGCOLOR="#cccccc" ALIGN="LEFT" class="PlainText">
-&nbsp;<input type="text" size="15" name="">&nbsp;<input type="submit" name="query" value="query">&nbsp;
-
+<td id="leftcol" nowrap="nowrap" width="20%">
+<!-- Structural Elements -->
+	
+	<!-- SourceCast -->
+	<div id="navcol">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+			<th>
+			<a href="#">Start page</a>
+			</th>
+			</tr>
+			<tr>
+			<th>
+			<a href="#">Projects</a>/<a href="#">Categories</a>
+			</th>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			Project tools
+			</th>
+			</tr>
+			<tr>
+			<td>
+			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;<a href="#">News</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
+			</td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			&nbsp;<a href="#">Admin Functions</a>
+			</th>
+			</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- SourceCast -->
+	<div id="helptext">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+		<th>How do I...?</th>
+		</tr>
+		<tr>
+		<td>
+			<div> 
+				<a href="#">[Go to help index]</a>
+			</div>
+			<div> 
+				<a href="#">Use this page</a>...
+			</div>
+			<div>
+				<a href="#">Learn about a project</a>...
+			</div>
+			<div>
+				<a href="#">Join a project</a>...
+			</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+<!-- Structural Elements -->
 </td>
-<td bgcolor="#333333"><br></td>
-<td BGCOLOR="#cccccc" ALIGN="LEFT" class="PlainText">
-&nbsp;<a href="#">Advanced query</a>&nbsp;|&nbsp;<a href="#">Custom query</a>&nbsp;
+<td id="bodycol">
+<!-- Structural Elements -->
+	
+	<!-- Scarab - App -->
+	<div id="topmodule">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<td nowrap="nowrap">
+			<select>
+			<option>saved queries</option>
+			<option>query one</option>
+			<option>query two</option>
+			</select> 
+			<input type="submit" name="query" value="Go" class="bttn" />
+			&nbsp;
+			<input type="text" size="15" name="" />
+			<input type="submit" name="query" value="Query" class="bttn" />
+			&nbsp;
+			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
+			</td>			
+		</tr>
+		</table>
+	</div>
+	<!-- Scarab - App -->
+	
+	<!-- Scarab - App -->
+	<div class="app" id="divfunct_dir">
+		<h2>Scarab functions index</h2>
 
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		
+		<tr>
+		<td width="50%"><h3>General user functions</h3></td>
+		<td width="50%"><h3>Administrative functions</h3></td>
+		</tr>
+		
+		<tr>
+		<td width="50%">         
+		<p>
+		<a href="#"><strong>Enter issue template list</strong></a><br>
+		<small>List of all enter issue templates available to role. User can access template details, in order to view or edit, by clicking on the templates name. User selects to use a template via a pop-up menu at the top of the enter isse page. This template remains as the default until another selection is made.</small>
+		</p>
+		<p>
+		<a href="#"><strong>Saved query list</strong></a><br>
+		<small>List of all saved queries avaible to role. User can access saved query details , in order to view or edit, by clicking on the query's name, and execute a query by clicking on it's associated project. Saved queries are also available through a pop-up menu at the top of every screen within scarab.</small>
+		</p>
+		<p>
+		<a href="#"><strong>Vote management</strong></a><br>
+		<small>This list displays a user's current open votes, and a vote management interface they can use to rescind/reprioritize votes, or to append comments to votes.</small>
+		</p>
+		<p>
+		<a href="#"><strong>Auto alert email options</strong></a><br>
+		<small>Subscription/frequency options for auto alert emails available per project.</small>
+		</p>
+		</td>
+		
+		<td width="50%">
+		<p>
+		<a href="#"><strong>Approve / reject user submissions</strong></a><br>
+		<small>Review and respond interface for user submissions including, role promotions, saved queries, templates, automated alert emails, etc.</small>
+		</p>
+		<p>
+		<a href="#"><strong>Manage "enter issue" form</strong></a><br>
+		<small>Add, edit, create, group, and arrange attributes on the "enter issue form".</small></p>
+		<p>
+		<a href="#"><strong>Global attributes</strong></a><br>
+		<small>Master list of all attributes, both out of the box, and custom, available for use when creating/editing the enter "issue form".</small>
+		</p>
+		<p>
+		<a href="#"><strong>Vote management</strong></a><br>
+		<small>Project level settings for votes. Admin settings include determining when a vote is added to an issue (manual or automatic), how many votes are required to force a state change, etc.</small>
+		</p>
+		<p>
+		<a href="#"><strong>Auto alert email list</strong></a><br>
+		<small>Manage, edit, and create auto alert emails used for automated workflow management within a Scarab project.</small>
+		</p>
+		</td>
+		</tr>
+		
+		</table>
+	</div>
+	<!-- Scarab - App -->
+
+<!-- Structural Elements -->
 </td>
-
-
 </tr>
+</table>
+<!-- Structural Elements -->
 
-</TABLE>
+	<!-- SourceCast -->
+	<div id="footer">
+		<p>
+		<a href="#">Domain Home</a> |
+		<a href="#">Help</a> | 
+		<a href="#">Site FAQ</a> |
+		<a href="#">Feedback</a>
+		</p>
+	</div>
+	<!-- SourceCast -->
 
-</td>
-
-
-</tr>
-
-</TABLE>
-
-<br>
-	 
-      <div class="app" id="div2-1-0">
-      <h2>Scarab functions index</h2>
-
-<p>
-
-
- 
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
-        <tr>
-         <td width="50%">
-      		<h3>General user functions</h3>
-      	 </td>
-         <td width="50%">
-            <h3>Administrative functions</h3>
-         </td>
-        
-        </tr>
-        <tr>
-         <td width="50%">         
-<p>
-<a href="#"><strong>Enter issue template list</strong></a><br>
-<small>List of all enter issue templates available to role. User can access template details, in order to view or edit, by clicking on the templates name. User selects to use a template via a pop-up menu at the top of the enter isse page. This template remains as the default until another selection is made.</small>
-</p>
-<p>
-<a href="#"><strong>Saved query list</strong></a><br>
-<small>List of all saved queries avaible to role. User can access saved query details , in order to view or edit, by clicking on the query's name, and execute a query by clicking on it's associated project. Saved queries are also available through a pop-up menu at the top of every screen within scarab.</small>
-</p>
-<p>
-<a href="#"><strong>Vote management</strong></a><br>
-<small>This list displays a user's current open votes, and a vote management interface they can use to rescind/reprioritize votes, or to append comments to votes.</small>
-</p>
-<p>
-<a href="#"><strong>Auto alert email options</strong></a><br>
-<small>Subscription/frequency options for auto alert emails available per project.</small>
-</p>
-
-         </td>
-         <td width="50%">
-
-
-<p>
-<a href="#"><strong>Approve / reject user submissions</strong></a><br>
-<small>Review and respond interface for user submissions including, role promotions, saved queries, templates, automated alert emails, etc.</small>
-</p>
-<p>
-<a href="#"><strong>Manage "enter issue" form</strong></a><br>
-<small>Add, edit, create, group, and arrange attributes on the "enter issue form".</small></p>
-<p>
-<a href="#"><strong>Global attributes</strong></a><br>
-<small>Master list of all attributes, both out of the box, and custom, available for use when creating/editing the enter "issue form".</small>
-</p>
-<p>
-<a href="#"><strong>Vote management</strong></a><br>
-<small>Project level settings for votes. Admin settings include determining when a vote is added to an issue (manual or automatic), how many votes are required to force a state change, etc.</small>
-</p>
-<p>
-<a href="#"><strong>Auto alert email list</strong></a><br>
-<small>Manage, edit, and create auto alert emails used for automated workflow management within a Scarab project.</small>
-</p>
-
-         </td>
-        </tr>
-       </table>
-
-
-
-
-</td>
-    </tr>
-   </table>
-  </form>
- </body>
+</form>
+</body>
 </html>
-
-
