@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -466,7 +466,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTNot node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       buf.append(SQLUtil.NOT);
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
@@ -474,7 +474,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTConditionalParenthetical node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       buf.append('(');
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(')');
@@ -483,7 +483,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTBetween node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -498,7 +498,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTIn node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -517,7 +517,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTLike node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.not)
       {
@@ -602,7 +602,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTIsEmpty node, Object data)
    {
-      ASTPath path = (ASTPath)node.jjtGetChild(0);
+      ASTPath path = (ASTPath) node.jjtGetChild(0);
       if(!path.isCMRField())
       {
          throw new IllegalStateException("IS EMPTY can be applied only to collection valued CMR field.");
@@ -610,8 +610,8 @@ public final class EJBQLToSQL92Compiler
 
       addLeftJoinPath(path);
 
-      StringBuffer sql = (StringBuffer)data;
-      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
+      StringBuffer sql = (StringBuffer) data;
+      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) path.getCMRField();
       JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
       String alias = aliasManager.getAlias(path.getPath());
       SQLUtil.getIsNullClause(node.not, relatedEntity.getPrimaryKeyFields(), alias, sql);
@@ -622,21 +622,21 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTMemberOf node, Object data)
    {
       Node member = node.jjtGetChild(0);
-      ASTPath colPath = (ASTPath)node.jjtGetChild(1);
+      ASTPath colPath = (ASTPath) node.jjtGetChild(1);
       String colAlias = aliasManager.getAlias(colPath.getPath());
-      JDBCEntityBridge colEntity = (JDBCEntityBridge)colPath.getEntity();
+      JDBCEntityBridge colEntity = (JDBCEntityBridge) colPath.getEntity();
 
       addLeftJoinPath(colPath);
 
-      StringBuffer sql = (StringBuffer)data;
+      StringBuffer sql = (StringBuffer) data;
       if(node.not)
       {
-         sql.append(SQLUtil.NOT).append('(');
+         sql.append('(').append(SQLUtil.NOT).append('(');
       }
 
       if(member instanceof ASTParameter)
       {
-         ASTParameter toParam = (ASTParameter)member;
+         ASTParameter toParam = (ASTParameter) member;
          verifyParameterEntityType(toParam.number, colEntity);
          inputParameters.addAll(QueryParameter.createParameters(toParam.number - 1, colEntity));
 
@@ -644,13 +644,14 @@ public final class EJBQLToSQL92Compiler
       }
       else if(member instanceof ASTPath)
       {
-         ASTPath memberPath = (ASTPath)member;
-         JDBCEntityBridge memberEntity = (JDBCEntityBridge)memberPath.getEntity();
+         ASTPath memberPath = (ASTPath) member;
+         JDBCEntityBridge memberEntity = (JDBCEntityBridge) memberPath.getEntity();
 
          if(!memberEntity.equals(colEntity))
          {
             throw new IllegalStateException(
-               "Member must be if the same type as the collection, got: member=" + memberEntity.getEntityName()
+               "Member must be if the same type as the collection, got: member="
+               + memberEntity.getEntityName()
                + ", collection=" + colEntity.getEntityName()
             );
          }
@@ -663,11 +664,15 @@ public final class EJBQLToSQL92Compiler
       }
       else
       {
-         throw new IllegalStateException("Was expecting ASTPath or ASTParameter but got " + member.getClass().getName());
+         throw new IllegalStateException(
+            "Was expecting ASTPath or ASTParameter but got " + member.getClass().getName()
+         );
       }
 
       if(node.not)
       {
+         sql.append(')').append(SQLUtil.OR);
+         SQLUtil.getIsNullClause(false, colEntity.getPrimaryKeyFields(), colAlias, sql);
          sql.append(')');
       }
 
@@ -874,7 +879,8 @@ public final class EJBQLToSQL92Compiler
       StringBuffer buf = (StringBuffer) data;
       if(!node.isCMPField())
       {
-         throw new IllegalStateException("Can only visit cmp valued path node. "
+         throw new IllegalStateException(
+            "Can only visit cmp valued path node. "
             + "Should have been handled at a higher level."
          );
       }
@@ -900,8 +906,10 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTAbstractSchema node, Object data)
    {
-      throw new IllegalStateException("Can not visit abstract schema node. "
-         + " Should have been handled at a higher level.");
+      throw new IllegalStateException(
+         "Can not visit abstract schema node. "
+         + " Should have been handled at a higher level."
+      );
    }
 
    public Object visit(ASTIdentifier node, Object data)
