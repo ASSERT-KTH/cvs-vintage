@@ -48,7 +48,7 @@ package org.tigris.scarab.screens.admin;
  */
 
 // Core Java Stuff
-import java.util.List;
+import java.util.Collection;
 
 // Turbine & Apache Commons Stuff
 import org.apache.turbine.RunData;
@@ -69,7 +69,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Loads XML into Scarab via import, returning XML-formatted results
  *
  * @author <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
- * @version $Id: XMLImportIssuesResults.java,v 1.8 2003/07/04 11:27:13 mpoeschl Exp $
+ * @version $Id: XMLImportIssuesResults.java,v 1.9 2003/07/27 03:25:21 elicia Exp $
  */
 public class XMLImportIssuesResults extends Default
 {
@@ -93,7 +93,7 @@ public class XMLImportIssuesResults extends Default
     {
         String resultString = "";
         int resultCode = RESULT_OK;
-        List importErrors = null;
+        Collection importErrors = null;
         ScarabIssues si = null;
 
         super.doBuildTemplate(data, context);
@@ -119,11 +119,11 @@ public class XMLImportIssuesResults extends Default
                         resultString = l10n.get("ProcessingErrors");
                     }
                 }
-
                 catch (Exception e)
                 {
                     resultCode = RESULT_ERROR_EXCEPTION;
-                    resultString = l10n.get("ProcessingErrors") + "" 
+                    // TODO: Improve localizability of this text.
+                    resultString = l10n.get("ProcessingErrors") + ": "
                         + e.getMessage();
                 }
             }

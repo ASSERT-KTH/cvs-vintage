@@ -1,8 +1,9 @@
 <h3>$l10n.ImportResults</h3>
 <p>$l10n.Overall
-#if ($resultString.length()>0)
+#if ($resultString.length() > 0)
 $resultString
-    #if ($importErrors && $importErrors.size() > 0)
+<div>
+    #if ($importErrors && !$importErrors.isEmpty())
     <ul>
         #foreach ($error in $importErrors)
             <li>$error</li>
@@ -12,11 +13,12 @@ $resultString
 #else
     $l10n.NoErrors
 #end
+</div>
 </p>
 
 #if ($issues)
 #set ($issuesMap = $issues.getIDs())
-#if ($issuesMap.size()>0)
+#if (!$issuesMap.isEmpty())
 <table border="1" cellspacing="2" cellpadding="3">
 <tr><th>$l10n.OldID</th><th>$l10n.NewID</th></tr>
   #foreach ($key in $issuesMap.keySet())
