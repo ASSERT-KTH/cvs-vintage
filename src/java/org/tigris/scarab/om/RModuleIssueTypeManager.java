@@ -10,6 +10,9 @@ import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.SimpleKey;
+import org.apache.torque.om.ComboKey;
 
 /** 
  * This class manages RModuleIssueType objects.  
@@ -49,5 +52,26 @@ public class RModuleIssueTypeManager
     {
         ObjectKey key = module.getPrimaryKey();
         getManager().removeInstanceImpl(key);
+    }
+
+    public static RModuleIssueType getInstance(String key)
+        throws TorqueException
+    {
+        if (key == null) 
+        {
+            throw new NullPointerException(
+                "Cannot request a RModuleIssueType using a null key.");
+        }
+        int colonPos = key.indexOf(':');
+        if (colonPos == -1) 
+        {
+            throw new IllegalArgumentException(
+                "RModuleIssueType keys must be of the form 1:2, not " + key);
+        }
+        
+        NumberKey moduleId = new NumberKey(key.substring(0, colonPos));
+        NumberKey itId = new NumberKey(key.substring(colonPos+1));
+        SimpleKey[] keyArray = { moduleId, itId };
+        return getInstance(new ComboKey(keyArray));
     }
 }
