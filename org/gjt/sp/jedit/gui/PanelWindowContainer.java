@@ -39,7 +39,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.37 2002/06/18 06:55:59 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.38 2002/06/19 06:03:25 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -126,7 +126,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 		button.setRequestFocusEnabled(false);
 		button.setIcon(new RotatedTextIcon(rotation,button.getFont(),
 			entry.title));
-		button.setActionCommand(entry.name);
+		button.setActionCommand(entry.factory.name);
 		button.addActionListener(new ActionHandler());
 		//}}}
 
@@ -142,7 +142,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				wm.showDockableWindow(entry.name);
+				wm.showDockableWindow(entry.factory.name);
 			}
 		}); //}}}
 
@@ -154,7 +154,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 	//{{{ add() method
 	public void add(DockableWindowManager.Entry entry)
 	{
-		dockablePanel.add(entry.name,entry.win);
+		dockablePanel.add(entry.factory.name,entry.win);
 	} //}}}
 
 	//{{{ remove() method
@@ -200,7 +200,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			this.current = entry;
 
-			dockablePanel.showDockable(entry.name);
+			dockablePanel.showDockable(entry.factory.name);
 
 			int index = dockables.indexOf(entry);
 			((JToggleButton)buttons.getComponent(index + 2)).setSelected(true);
@@ -251,7 +251,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 		else
 		{
 			jEdit.setProperty("view.dock." + position + ".last",
-				current.name);
+				current.factory.name);
 		}
 	} //}}}
 
