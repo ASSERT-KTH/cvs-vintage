@@ -27,7 +27,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class SQLUtil
 {
@@ -260,25 +260,6 @@ public final class SQLUtil
    /**
     * Returns columnName0 [, columnName1 [AND columnName2 [...]]]
     */
-   public static StringBuffer getColumnNamesClause(JDBCEntityBridge entity, String eagerLoadGroup, StringBuffer sb)
-   {
-      return getColumnNamesClause(entity, eagerLoadGroup, "", sb);
-   }
-
-   /**
-    * Returns columnName0 [, columnName1 [AND columnName2 [...]]]
-    */
-   public static StringBuffer getColumnNamesClause(JDBCEntityBridge entity,
-                                                   String eagerLoadGroup,
-                                                   String alias,
-                                                   StringBuffer sb)
-   {
-      return getColumnNamesClause(entity.getTableFields(), entity.getLoadGroupMask(eagerLoadGroup), alias, sb);
-   }
-
-   /**
-    * Returns columnName0 [, columnName1 [AND columnName2 [...]]]
-    */
    public static StringBuffer getColumnNamesClause(JDBCEntityBridge.FieldIterator loadIter, StringBuffer sb)
    {
       if(loadIter.hasNext())
@@ -289,33 +270,6 @@ public final class SQLUtil
          getColumnNamesClause(loadIter.next(), sb);
       }
       return sb;
-   }
-
-   /**
-    * Returns columnName0 [, columnName1 [AND columnName2 [...]]]
-    */
-   public static StringBuffer getColumnNamesClause(JDBCFieldBridge[] fields,
-                                                   boolean[] mask,
-                                                   String identifier,
-                                                   StringBuffer buf)
-   {
-      boolean comma = false;
-      for(int i = 0; i < fields.length; ++i)
-      {
-         if(mask[i])
-         {
-            JDBCType type = getJDBCType(fields[i]);
-            if(type != null)
-            {
-               if(comma)
-                  buf.append(COMMA);
-               else
-                  comma = true;
-               getColumnNamesClause(type, identifier, buf);
-            }
-         }
-      }
-      return buf;
    }
 
    /**
@@ -334,6 +288,48 @@ public final class SQLUtil
    public static StringBuffer getColumnNamesClause(JDBCFieldBridge field, String identifier, StringBuffer sb)
    {
       return getColumnNamesClause(field.getJDBCType(), identifier, sb);
+   }
+
+   /**
+    * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
+    */
+   public static StringBuffer appendColumnNamesClause(JDBCEntityBridge entity, String eagerLoadGroup, StringBuffer sb)
+   {
+      return appendColumnNamesClause(entity, eagerLoadGroup, "", sb);
+   }
+
+   /**
+    * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
+    */
+   public static StringBuffer appendColumnNamesClause(JDBCEntityBridge entity,
+                                                   String eagerLoadGroup,
+                                                   String alias,
+                                                   StringBuffer sb)
+   {
+      return appendColumnNamesClause(entity.getTableFields(), entity.getLoadGroupMask(eagerLoadGroup), alias, sb);
+   }
+
+   /**
+    * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
+    */
+   public static StringBuffer appendColumnNamesClause(JDBCFieldBridge[] fields,
+                                                      boolean[] mask,
+                                                      String identifier,
+                                                      StringBuffer buf)
+   {
+      for(int i = 0; i < fields.length; ++i)
+      {
+         if(mask[i])
+         {
+            JDBCType type = getJDBCType(fields[i]);
+            if(type != null)
+            {
+               buf.append(COMMA);
+               getColumnNamesClause(type, identifier, buf);
+            }
+         }
+      }
+      return buf;
    }
 
    /**

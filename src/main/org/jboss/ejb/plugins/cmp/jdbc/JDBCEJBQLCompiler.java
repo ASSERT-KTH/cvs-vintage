@@ -71,7 +71,7 @@ import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  *
  * TODO: collecting join paths needs rewrite
  */
@@ -899,8 +899,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
             {
                String eagerLoadGroupName = readAhead.getEagerLoadGroup();
                boolean[] loadGroupMask = selectEntity.getLoadGroupMask(eagerLoadGroupName);
-               columnNamesClause.append(SQLUtil.COMMA);
-               SQLUtil.getColumnNamesClause(
+               SQLUtil.appendColumnNamesClause(
                   selectEntity.getTableFields(),
                   loadGroupMask,
                   alias,

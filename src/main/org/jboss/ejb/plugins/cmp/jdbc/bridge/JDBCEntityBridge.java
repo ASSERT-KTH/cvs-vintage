@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -982,6 +982,12 @@ public class JDBCEntityBridge implements EntityBridge
       boolean[] defaultLoadGroup = new boolean[tableFields.length];
       Arrays.fill(defaultLoadGroup, true);
       loadGroupMasks.put(DEFAULT_LOADGROUP_NAME, defaultLoadGroup);
+
+      for(int i = 0; i < primaryKeyFields.length; ++i)
+      {
+         int tableIndex = primaryKeyFields[i].getTableIndex();
+         defaultLoadGroup[tableIndex] = false;
+      }
 
       // put each group in the load groups map by group name
       Iterator groupNames = metadata.getLoadGroups().keySet().iterator();

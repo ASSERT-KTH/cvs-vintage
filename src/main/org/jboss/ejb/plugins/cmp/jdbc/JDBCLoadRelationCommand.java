@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -404,8 +404,7 @@ public final class JDBCLoadRelationCommand
 
       if(preloadMask != null)
       {
-         sql.append(SQLUtil.COMMA);
-         SQLUtil.getColumnNamesClause(
+         SQLUtil.appendColumnNamesClause(
             cmrField.getRelatedJDBCEntity().getTableFields(),
             preloadMask,
             relatedTableAlias,
@@ -480,8 +479,7 @@ public final class JDBCLoadRelationCommand
       SQLUtil.getColumnNamesClause(relatedKeyFields, relationTableAlias, columnNamesClause);
       if(preloadMask != null)
       {
-         columnNamesClause.append(SQLUtil.COMMA);
-         SQLUtil.getColumnNamesClause(
+         SQLUtil.appendColumnNamesClause(
             cmrField.getRelatedJDBCEntity().getTableFields(),
             preloadMask,
             relatedTableAlias,

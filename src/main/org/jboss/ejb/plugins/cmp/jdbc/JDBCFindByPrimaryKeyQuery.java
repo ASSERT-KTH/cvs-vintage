@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
 {
@@ -57,8 +57,7 @@ public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
       {
          StringBuffer columnNamesClause = new StringBuffer(200);
          SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), entity.getTableName(), columnNamesClause);
-         columnNamesClause.append(SQLUtil.COMMA);
-         SQLUtil.getColumnNamesClause(entity.getTableFields(), getEagerLoadMask(), entity.getTableName(), columnNamesClause);
+         SQLUtil.appendColumnNamesClause(entity.getTableFields(), getEagerLoadMask(), entity.getTableName(), columnNamesClause);
 
          if(rowLocking)
             forUpdate = new StringBuffer(" FOR UPDATE OF ").append(columnNamesClause);

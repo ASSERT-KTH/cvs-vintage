@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public final class JDBCLoadEntityCommand
 {
@@ -106,9 +106,7 @@ public final class JDBCLoadEntityCommand
       ReadAheadCache readAheadCache = manager.getReadAheadCache();
 
       // load any preloaded fields into the context
-      //log.info("###### calling loadFromLoadEntity " + entity.getMetaData().getName() + " pk = " + ctx.getId() +  "requiredField: " + requiredField + " thread=" + Thread.currentThread());
       readAheadCache.load(ctx);
-      //log.info("###### done calling loadFromLoadEntity " + entity.getMetaData().getName() + " pk = " + ctx.getId() + " thread=" + Thread.currentThread());
 
       // get the finder results associated with this context, if it exists
       ReadAheadCache.EntityReadAheadInfo info = readAheadCache.getEntityReadAheadInfo(id);
@@ -118,7 +116,6 @@ public final class JDBCLoadEntityCommand
       if(!loadIter.hasNext())
          return true;
 
-      //log.info("###### ejbLoading entity: " + entity.getMetaData().getName() + " thread=" + Thread.currentThread());
       // get the keys to load
       List loadKeys = info.getLoadKeys();
 

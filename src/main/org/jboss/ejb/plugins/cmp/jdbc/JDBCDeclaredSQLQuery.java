@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
 {
@@ -136,7 +136,7 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
 
          if(getEagerLoadGroup() != null)
          {
-            selectList += SQLUtil.COMMA + SQLUtil.getColumnNamesClause(
+            selectList += SQLUtil.appendColumnNamesClause(
                getSelectEntity(),
                getEagerLoadGroup(),
                tableAlias,

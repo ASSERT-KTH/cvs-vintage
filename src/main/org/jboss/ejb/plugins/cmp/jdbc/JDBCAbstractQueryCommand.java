@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -516,7 +516,6 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    {
       JDBCEntityBridge entity = manager.getEntityBridge();
       JDBCCMRFieldBridge[] cmrs = entity.getCMRFields();
-      JDBCCMPFieldBridge[] tableFields = entity.getTableFields();
       ArrayList polledCmrs = null;
       if(cmrs != null)
       {
