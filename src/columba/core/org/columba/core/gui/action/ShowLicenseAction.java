@@ -13,25 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.util.GlobalResourceLoader;
-
-import org.columba.mail.gui.util.URLController;
 
 import java.awt.event.ActionEvent;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-
 /**
- * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Shows the license tab in the about dialog.
  */
 public class ShowLicenseAction extends AbstractColumbaAction {
     public ShowLicenseAction(FrameMediator frameMediator) {
@@ -43,11 +36,9 @@ public class ShowLicenseAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        URLController c = new URLController();
-
-        try {
-            c.open(new URL("http://columba.sourceforge.net/license.php"));
-        } catch (MalformedURLException mue) {
-        }
+        AboutDialog dialog = AboutDialog.getInstance();
+        dialog.setVisible(true);
+        dialog.toFront();
+        dialog.showTab(2);
     }
 }

@@ -46,6 +46,8 @@ public class AboutDialog extends JDialog implements ActionListener {
     public static final String CMD_CLOSE = "CLOSE";
     private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
     protected static AboutDialog instance;
+    
+    protected JTabbedPane tabbedPane;
 
     /**
      * Creates a new dialog. This constructor is protected because it should
@@ -56,8 +58,7 @@ public class AboutDialog extends JDialog implements ActionListener {
             GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about",
                 "title") + MainInterface.version);
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setFocusable(false);
+        tabbedPane = new JTabbedPane();
 
         JPanel authorPanel = new JPanel(new GridBagLayout());
         authorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
@@ -180,12 +181,10 @@ public class AboutDialog extends JDialog implements ActionListener {
             tabbedPane.addTab("Memory", new MemoryPanel());
         }
 
-        ((JPanel)getContentPane()).setBorder(
-                BorderFactory.createEmptyBorder(12, 12, 12, 12));
         getContentPane().add(tabbedPane);
 
         JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 12, 11, 11));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
         ButtonWithMnemonic closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
                     "global", "global", "close"));
@@ -199,6 +198,13 @@ public class AboutDialog extends JDialog implements ActionListener {
             JComponent.WHEN_IN_FOCUSED_WINDOW);
         pack();
         setLocationRelativeTo(null);
+    }
+    
+    /**
+     * Shows the tab with the given index.
+     */
+    public void showTab(int index) {
+        tabbedPane.setSelectedIndex(index);
     }
 
     /**
