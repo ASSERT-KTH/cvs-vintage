@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.12 2001/12/30 19:09:39 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.13 2002/01/04 22:39:46 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -542,11 +542,16 @@
 	    <sql-type>TIMESTAMP</sql-type>
 	 </mapping>
 	 <mapping>
+	    <java-type>java.math.BigDecimal</java-type>
+	    <jdbc-type>NUMERIC</jdbc-type>
+	    <sql-type>NUMERIC</sql-type>
+	 </mapping>
+	 <mapping>
 	    <java-type>java.lang.Object</java-type>
 	    <jdbc-type>JAVA_OBJECT</jdbc-type>
 	    <sql-type>OID</sql-type>
 	 </mapping>
-      </type-mapping>
+   </type-mapping>
 
       <type-mapping>
 	 <name>Hypersonic SQL</name>
