@@ -2,8 +2,9 @@ $page.setTitle("Template list")
 
 #set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
+#set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
-#if (($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty()))
+#if (($module.getPrivateTemplates($user, $issueType).isEmpty()) && ($module.getGlobalTemplates($issueType).isEmpty()))
    #set ($noTemplates = "true")
 #end
 
@@ -49,13 +50,13 @@ $page.setTitle("Template list")
   <th>Initiated by</th>
   </tr>
 
-#foreach ( $template in $module.getPrivateTemplates($user) )
+#foreach ( $template in $module.getPrivateTemplates($user, $issueType) )
    #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
   #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
   <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
   <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &#160; #end</td>
-  <td>$template.IssueType.Name
+  <td>$template.templateInfo.Scope.Name
      #if (!$template.TemplateInfo.Approved)
        (until approved)
      #end
@@ -71,7 +72,7 @@ $page.setTitle("Template list")
   </tr>
 #end
 
-#foreach ( $template in $module.GlobalTemplates )
+#foreach ( $template in $module.getGlobalTemplates($issueType))
 #indexedRows($velocityCount)
 #if ($security.hasPermission("Item | Delete", $module))
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>

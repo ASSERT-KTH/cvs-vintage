@@ -35,8 +35,8 @@ $page.setTitle("Approve/reject user submitted items")
    <th>Date</th>
    <th>Type</th>
    <th>Submitted by</th>
-   <th>Project</th>
-   <th>User role</th>
+   ##<th>Project</th>
+  ## <th>User role</th>
    <th>Name</th>
    <th>Description</th>
    <th>Comments</th>
