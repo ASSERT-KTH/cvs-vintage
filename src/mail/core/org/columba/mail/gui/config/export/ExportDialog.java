@@ -76,6 +76,14 @@ import org.columba.mail.util.MailResourceLoader;
  * FolderTreeNode as key with Boolean as value. This Boolean value
  * represents the selection state of the checkbox of this folder.
  * 
+ * TODO: I really need to get rid of this HashMap.
+ * Instead, just wrap an FolderTreeNode in a TreeNode Interface which.
+ * This class should be called ExportTreeNode and has an additional
+ * attribute boolean enabled.
+ * Every method of ExportTreeNode should be passed to the underlying
+ * FolderTreeNode.
+ * 
+ * 
  * @author fdietz
  * 
  */
