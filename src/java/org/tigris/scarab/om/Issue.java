@@ -966,17 +966,18 @@ public class Issue
         int id = -1;
         String key = getIdTableKey();
         DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
+        IDBroker idbroker = null;
         try
         {
-            id = dbMap.getIDBroker().getIdAsInt(con, key);
+            id = idbroker.getIdAsInt(con, key);
         }
         catch (Exception e)
         {
-            synchronized (this)
+            synchronized (idbroker)
             {
                 try
                 {
-                    id = dbMap.getIDBroker().getIdAsInt(con, key);
+                    id = idbroker.getIdAsInt(con, key);
                 }
                 catch (Exception e3)
                 {
@@ -985,7 +986,7 @@ public class Issue
                     try
                     {
                         saveIdTableKey(dbMap.getName());
-                        id = dbMap.getIDBroker().getIdAsInt(con, key);
+                        id = idbroker.getIdAsInt(con, key);
                     }
                     catch (Exception e2)
                     {
