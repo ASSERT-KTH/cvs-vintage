@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  *
  *   Revisions:
  *   
@@ -207,6 +207,7 @@ public class WebServer
             if( codebase.endsWith("/") == false )
                 codebase += '/';
             codebase += key;
+            codebase += '/';
             try
             {
                 loaderURL = new URL(codebase);
@@ -267,19 +268,30 @@ public class WebServer
                 // Get the requested item from the HTTP header
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String rawPath = getPath(in);
-                // Parse the path into the class loader key and file path
-                int separator = rawPath.indexOf('/');
-                String filePath = rawPath.substring(separator+1);
-                String loaderKey = rawPath.substring(0, separator+1);
+
+                // Parse the path into the class loader key and file path.
+                //
+                // The class loader key is a string whose format is 
+                // "ClassName[oid]",  where the oid substring may contain '/'
+                // chars. The expected form of the raw path is:
+                //
+                //     "SomeClassName[some/object/id]/some/file/path"
+                //
+                // The class loader key is "SomeClassName[some/object/id]"
+                // and the file path is "some/file/path"
+
+                int endOfKey = rawPath.indexOf(']');
+                String filePath = rawPath.substring(endOfKey+2);
+                String loaderKey = rawPath.substring(0, endOfKey+1);
                 log.trace("loaderKey = "+loaderKey);
                 log.trace("filePath = "+filePath);
                 ClassLoader loader = (ClassLoader) loaderMap.get(loaderKey);
                 /* If we did not find a class loader check to see if the raw path
-                 begins with className + '@' + cl.hashCode() + '/' by looking for
-                 an '@' char. If it does not and downloadServerClasses is true use
+                 begins with className + '[' + class loader key + ']' by looking for
+                 an '[' char. If it does not and downloadServerClasses is true use
                  the thread context class loader and set filePath to the rawPath
                 */
-                if( loader == null && rawPath.indexOf('@') < 0 && downloadServerClasses )
+                if( loader == null && rawPath.indexOf('[') < 0 && downloadServerClasses )
                 {
                    filePath = rawPath;
                    log.trace("No loader, reset filePath = "+filePath);
@@ -397,7 +409,7 @@ public class WebServer
         int dot = className.lastIndexOf('.');
         if( dot >= 0 )
             className = className.substring(dot+1);
-        String key =  className + '@' + cl.hashCode() + '/';
+        String key =  className + '[' + cl.hashCode() + ']';
         return key;
     }
 

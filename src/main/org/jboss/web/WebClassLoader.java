@@ -29,7 +29,7 @@ as the WebClassLoader constructor.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
 @author  <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class WebClassLoader extends URLClassLoader
 {
@@ -54,7 +54,7 @@ public class WebClassLoader extends URLClassLoader
         int dot = className.lastIndexOf('.');
         if( dot >= 0 )
             className = className.substring(dot+1);
-        String key =  className + '@' + hashCode() + '/';
+        String key =  className + '[' + hashCode() + ']';
         return key;
     }
 
