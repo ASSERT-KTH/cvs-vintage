@@ -784,7 +784,8 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public Flags getFlags(Object uid) throws Exception {
 		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
-
+		if ( header == null ) return null;
+		
 		return header.getFlags();
 	}
 
