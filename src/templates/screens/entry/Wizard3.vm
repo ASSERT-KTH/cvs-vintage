@@ -1,27 +1,17 @@
-#set ( $action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard4.vm") )
+$page.setTitle("Enter Issue")
+
+#set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard4.vm"))
 #set ($module = $scarabR.CurrentModule)
 #set ($issue = $data.User.getReportingIssue($module))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
-<div id="entrywizard3">
-<form method="get" name="entryWizard3form" enctype="multipart/form-data" action="$action">
+<div class="app" id="wizard3">
+<form method="get" action="$action">
 
-      <h1>Enter Issue Verbose (2.1.2)</h1>
-
-      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
-
-      <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Input Your Issue:</td>
-         </tr>
-        </table>
-       </div>
-
-       <div class="listtable">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-
+<h3>Input your issue</h3>
+	
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="1">
 
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
@@ -38,38 +28,26 @@
   #if ( !$attVal.isSet() )
 
         <tr>
-            <td width="120" class="a">
-            <strong>
-
+            <th>
     #if ( $attVal.isRequired() )*#end
-
     $attVal.Attribute.Name:
     #attrValueErrorMsg ( $attVal $field )<br />
-
-            </strong>
-            </td>
-            <td class="b">
+            </th>
+            <td>
 
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-
           #userSelectBox ($attVal "")
-
     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-
           #attrValueLeafSelect ($attVal $field "")
-
     #else
 
-        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
-
+        #if ($attVal.Attribute.AttributeType.Name == "long-string" )
             <textarea name= "$attrInput.Value.Key" class="text" cols="40"
                rows="4">$!attrInput.Value</textarea>
         #else
-
            <input name= "$attrInput.Value.Key"
                 value="$!attrInput.Value" size="45" type="text" class="text" />
         #end
-
     #end
             </td>
         </tr>
@@ -77,70 +55,72 @@
 #end
 
         </table>
-       </div>
-      </div>
+</div>
 
+<h3>Add Attachment:</h3>
 
-
-      <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Add Attachment:</td>
-         </tr>
-        </table>
-       </div>
-
-       <div class="listtable">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td width="120" class="a"><strong>Attachment Description:</strong></td>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="1">
+     <tr>
+      <th>Attachment Description:</th>
 
 #set ( $atch = $scarabR.Attachment )
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
 
-          <td class="b">
-           <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2" 
-                class="text">$!intakeAttachment.Name</textarea>
-            <p>
-              Please provide a short (less than 250 characters) description 
-              of the attachment
-            </p>
-          </td>
-         </tr>
+      <td>
+       <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2" 
+            class="text">$!intakeAttachment.Name</textarea>
+        <p>
+          Please provide a short (less than 250 characters) description 
+          of the attachment
+        </p>
+      </td>
+     </tr>
 
-         <tr>
-          <td width="120" class="a"><strong>file path:</strong></td>
+     <tr>
+      <th>File path:</th>
 
-          <td class="b">
-           <input type="file" name="$intakeAttachment.File.Key" size="45" 
-                class="text" value="$!intakeAttachment.File.Value.FileName"/>
+      <td>
+       <input type="file" name="$intakeAttachment.File.Key" size="45" 
+            class="text" value="$!intakeAttachment.File.Value.FileName"/>
 
-           <p>Click Browse and select a file. If you do not see a Browse button, your browser does not support file uploads. (Windows users, set Files of Type: to be All Files (*.*) to get a complete file listing.) The File field cannot be used to rename files.</p>
+       <p>Click Browse and select a file. If you do not see a Browse
+       button, your browser does not support file uploads. Windows
+       users, set Files of Type: to be All Files (*.*) to get a
+       complete file listing. The File field cannot be used to
+       rename files.</p>
 
-<!-- why is this here? it should do the exact same thing as the submit button.
-           <p><input type="submit" value="add attachment" /></p>
--->
-          </td>
-         </tr>
-        </table>
-       </div>
-      </div>
+      </td>
+     </tr>
+    </table>
+</div>
 
-      <p>
-      workflow options:&#160 return to&#160; 
-      <input type="radio" name="nextTemplate" 
-          value="$data.User.ReportingIssueStartPoint"/> 
-          2.1.0 (Enter Issue) 
-      <input type="radio" name="nextTemplate" value="Index.vm" /> 
-          2.0.0 (Start Page) 
-      <input type="radio" name="nextTemplate" value="AssignIssue.vm"/> 
-          2.1.3 (Assign Issue)
-      </p>
+<br/>
 
-      <div class="grouper">
-       <p><input type="submit" name="eventSubmit_doEnterissue" value="Submit Issue" />&#160;<input type="reset" value="reset" /></p>
-      </div>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="1">
+     <tr>
+     <th>
+      workflow options:
+     </th>
+     <td>
+    return to&#160;
+   <input type="radio" name="nextTemplate" 
+      value="$data.User.ReportingIssueStartPoint"/> 
+      Enter New Issue 
+  <input type="radio" name="nextTemplate" value="Index.vm" /> 
+      Start Page 
+  <input type="radio" name="nextTemplate" value="AssignIssue.vm"/> 
+      Assign Issue
+      </td>
+      </tr>
+    </table>
+</div>
+
+<p class="functnbar">
+<input type="submit" name="eventSubmit_doEnterissue" value="Save Issue"/>&#160;
+<input type="reset" value="Reset"/>
+</p>
 
 $intake.declareGroups()
 </form>

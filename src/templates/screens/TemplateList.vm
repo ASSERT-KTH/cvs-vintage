@@ -33,11 +33,14 @@
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-        <th nowrap="nowrap"><a href="#"><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /><img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
-        <th><a href="#" title="sort">Template name</a></th>
-        <th><a href="#" title="sort">Template descr</a></th>
-        <th><a href="#" title="sort">Location</a></th>
-        <th><a href="#" title="sort">initiated by</a></th>
+        <th nowrap="nowrap">
+        <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
+        <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+        </th>
+        <th>Template name</th>
+        <th>Template desc</th>
+        <th>Location</th>
+        <th>initiated by</th>
         </tr>
         
 #foreach ( $template in $module.getPrivateTemplates($user) )
@@ -68,7 +71,7 @@
         <td>
           #if ($security.hasPermission("Item | Delete", $module))
             #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
-            <a href="$editLink">$template.TemplateInfo.Name </a>
+            <a href="$editLink">$template.TemplateInfo.Name</a>
           #else
             $template.TemplateInfo.Name 
           #end
@@ -87,8 +90,10 @@
         
  ##       <p>&#171; previous | 1 of 1 | next &#187;</p>
 
+   <p class="functnbar">
    #if ($user.UserId)
-        <p class="functnbar"><input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
+        <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
+        <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
    #end
       &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
 #end

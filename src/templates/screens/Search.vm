@@ -2,9 +2,6 @@
 
       <div class="app" id="search.vm">
        <h2>custom search (2.2.0.x)</h2>
-        (go to <a href="advancedsearch.html">advanced search</a>)
-
-       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
         <form action="$link.setPage("Search.vm")" method="get">
         <input type="hidden" name="nextTemplate" value="IssueList.vm" />

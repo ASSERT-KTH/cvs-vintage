@@ -66,8 +66,10 @@ $page.setTitle("Enter New Issue")
 </div>
 
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doSubmitattributes" value="next" />&#160;
-<input type="reset" value="reset" /></p>
+<input type="submit" name="eventSubmit_doSubmitattributes" value="Check For Duplicates"/>&#160;
+<input type="reset" value="reset"/>
+</p>
+
 $intake.declareGroups()
 </form>
 </div>
