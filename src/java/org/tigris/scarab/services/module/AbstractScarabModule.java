@@ -127,7 +127,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.40 2002/03/02 04:17:55 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.41 2002/03/10 19:01:30 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1009,7 +1009,7 @@ public abstract class AbstractScarabModule
      *
      * @param crit a <code>Criteria</code> value
      * @return a <code>List</code> value
-     * @exception Exception if an error occurs
+     * @exception TorqueException if an error occurs
      */
     protected abstract List getRModuleAttributesThisModuleOnly(Criteria crit)
         throws TorqueException;
@@ -1464,7 +1464,7 @@ if (allRModuleOptions != null)
      *
      * @param attribute an <code>Attribute</code> value
      * @return a <code>List</code> value
-     * @exception Exception if an error occurs
+     * @exception TorqueException if an error occurs
      */
     public List getOptionTree(Attribute attribute, IssueType issueType)
         throws TorqueException
@@ -1479,7 +1479,7 @@ if (allRModuleOptions != null)
      * @param attribute an <code>Attribute</code> value
      * @param activeOnly a <code>boolean</code> value
      * @return a <code>List</code> value
-     * @exception Exception if an error occurs
+     * @exception TorqueException if an error occurs
      */
     public List getOptionTree(Attribute attribute, IssueType issueType,
                               boolean activeOnly)
