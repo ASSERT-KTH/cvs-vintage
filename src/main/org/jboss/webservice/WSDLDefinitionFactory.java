@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.10 2004/06/15 20:46:43 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.11 2004/06/22 14:28:28 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -68,6 +68,9 @@ public class WSDLDefinitionFactory
     */
    public Definition parse(URL wsdlLocation) throws WSDLException
    {
+      if (wsdlLocation == null)
+         throw new IllegalArgumentException("URL cannot be null");
+
       // wsdl4j is quite noisy on system out, we swallow the output
       PrintStream out = System.out;
       ByteArrayOutputStream baos = new ByteArrayOutputStream(128);

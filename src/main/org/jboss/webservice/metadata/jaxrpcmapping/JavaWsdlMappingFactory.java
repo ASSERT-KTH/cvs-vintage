@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.7 2004/06/13 11:08:25 tdiesler Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.8 2004/06/22 14:28:29 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
@@ -46,6 +46,9 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
     */
    public JavaWsdlMapping parse(URL jaxrpcMappingFile) throws Exception
    {
+      if (jaxrpcMappingFile == null)
+         throw new IllegalArgumentException("URL cannot be null");
+
       // setup the XML binding Unmarshaller
       Unmarshaller unmarshaller = new Unmarshaller();
       InputStream is = jaxrpcMappingFile.openStream();
