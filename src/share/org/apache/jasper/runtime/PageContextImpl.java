@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.5 1999/12/08 23:48:06 bergsten Exp $
- * $Revision: 1.5 $
- * $Date: 1999/12/08 23:48:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.6 2000/02/04 01:22:12 mandar Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/04 01:22:12 $
  *
  * ====================================================================
  *
@@ -239,7 +239,7 @@ public class PageContextImpl extends PageContext {
 		if (session == null)
 		    throw new IllegalArgumentException("can't access SESSION_SCOPE without an HttpSession");
 		else
-                    session.setAttribute(name, null);
+                    session.removeAttribute(name);
                 // was:
                 //		    session.removeValue(name);
                 // REVISIT Verify this is correct - akv
