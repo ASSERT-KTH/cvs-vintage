@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.14 $
+*	@version $Revision: 1.15 $
 */
 public class TxManager
 implements TransactionManager
@@ -214,6 +214,9 @@ implements TransactionManager
         finally {
             // Disassociation
             threadTx.set(null);
+            
+            //Remove from the internal maps, txCapsule should be GC'ed
+            txCapsules.remove(tx);
         }
     }
     
@@ -265,6 +268,9 @@ implements TransactionManager
         finally {
             // Disassociation
             threadTx.set(null);
+            
+            //Remove from the internal maps, txCapsule should be GC'ed
+            txCapsules.remove(tx);
         }
     }
     
