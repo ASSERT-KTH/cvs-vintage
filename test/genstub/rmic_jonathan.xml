@@ -52,7 +52,7 @@
       <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
       <classpath refid="jonathan.classpath"/>
     </java>
-    <jar destfile="${test.dist.lib}/jeremie.jar" basedir="${test.build.stub}/jeremie" />
+    <jar destfile="${test.dist.lib}/jeremie_stub.jar" basedir="${test.build.stub}/jeremie" />
   </target>   
 
   <!-- Compile Remote Interface Stub/Skel target for David-->

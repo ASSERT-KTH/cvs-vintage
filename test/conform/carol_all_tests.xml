@@ -46,7 +46,7 @@
   <!-- ************************************-->
   <target name="single.jeremie">
     <ant antfile="conform/generic/carol_single.xml">
-      <property name="stub.jar.name" value="jeremie.jar"/>
+      <property name="stub.jar.name" value="jeremie_stub.jar"/>
       <property name="client.properties.file.name" value="jeremie_carol.properties"/>
       <property name="server.properties.file.name" value="jeremie_carol.properties"/>
       <property name="name.server.class.name" value="org.objectweb.jeremie.libs.services.registry.JRMIRegistry"/>
@@ -99,7 +99,7 @@
   <!-- ********************************************************-->
   <target name="single.nons.jeremie">
     <ant antfile="conform/generic/carol_single_nons.xml">
-      <property name="stub.jar.name" value="jeremie.jar"/>
+      <property name="stub.jar.name" value="jeremie_stub.jar"/>
       <property name="client.properties.file.name" value="jeremie_carol_nons.properties"/>
       <property name="server.properties.file.name" value="jeremie_carol_nons.properties"/>
       <property name="test.name"          value="jeremie.nons"/>
@@ -144,7 +144,7 @@
   <!-- ************************************-->
   <target name="multi.suniiop.jeremie" if="is.jvm.1.4">
     <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="jeremie.jar"/>
+      <property name="stub.jar.name1" value="jeremie_stub.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
@@ -242,7 +242,7 @@
   <!-- ********************************************************-->
   <target name="multi.nons.suniiop.jeremie" if="is.jvm.1.4">
     <ant antfile="conform/generic/carol_double_nons.xml">
-      <property name="stub.jar.name1" value="jeremie.jar"/>
+      <property name="stub.jar.name1" value="jeremie_stub.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>

@@ -41,9 +41,9 @@
 
 
   <!-- jonathan jar properties -->
-  <property name="jonathan.jar"   value="${externals}/jonathan.jar"/> 
+  <property name="jeremie.jar"   value="${externals}/jeremie.jar"/> 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
-  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
+  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jeremie.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
 
   <!-- externals classpath -->
   <path id="externals.classpath">
@@ -70,8 +70,8 @@
   <!-- **********************************-->
   <!-- compile all -->
   <target name="compile" description="Compiles carol">
-    <condition property="jonathan.jar.present">
-      <available file="${jonathan.jar}"/>
+    <condition property="jeremie.jar.present">
+      <available file="${jeremie.jar}"/>
     </condition>   
     <antcall target="compile.base"/>
     <antcall target="compile.stub"/>
@@ -173,7 +173,7 @@
     
   </target>
 
-  <target name="compile.jonathan" if="jonathan.jar.present">
+  <target name="compile.jonathan" if="jeremie.jar.present">
     <javac 
       srcdir="${src}"
       destdir="${build}/classes"
