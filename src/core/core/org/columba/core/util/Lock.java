@@ -53,4 +53,9 @@ public class Lock {
 	public Object getOwner() {
 		return owner;
 	}
+	
+	public boolean isLocked()
+	{
+		return locked;
+	}
 }

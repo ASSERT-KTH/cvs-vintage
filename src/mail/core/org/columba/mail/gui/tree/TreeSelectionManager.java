@@ -56,7 +56,7 @@ public class TreeSelectionManager extends SelectionManager {
 		ColumbaLogger.log.info("folder="+folder);
 		
 		FolderCommandReference[] references = new FolderCommandReference[1];
-		references[0] = new FolderCommandReference((Folder) folder);
+		references[0] = new FolderCommandReference(folder);
 
 		return references;
 	}

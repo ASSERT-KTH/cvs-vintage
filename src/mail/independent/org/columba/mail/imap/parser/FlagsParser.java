@@ -24,11 +24,11 @@ public class FlagsParser {
 				continue;
 
 			String data = responses[i].getSource();
-			ColumbaLogger.log.debug("answer=" + data);
+			//ColumbaLogger.log.debug("answer=" + data);
 
 			String uid = parseUidsLine(data);
 			//String source = responses[i].getSource();
-			ColumbaLogger.log.debug("index=" + uid);
+			//ColumbaLogger.log.debug("index=" + uid);
 
 			v.add(uid);
 			//System.out.println("line["+i+"]="+source);
@@ -49,7 +49,7 @@ public class FlagsParser {
 
 			// for example: * 149 FETCH (UID 149 FLAGS (\Seen \Answered))
 			String data = ImapParserUtils.parseData(responses[i].getSource());
-			ColumbaLogger.log.debug("answer=" + data);
+			//ColumbaLogger.log.debug("answer=" + data);
 			// answer=UID 149 FLAGS (\Seen \Answered)
 
 			// empty "()"
@@ -97,6 +97,11 @@ public class FlagsParser {
 		if (str.indexOf("Deleted") != -1) {
 			//System.out.println("deleted is true ");
 			flags.setDeleted(true);
+		}
+		
+		if (str.indexOf("Recent") != -1) {
+			//System.out.println("deleted is true ");
+			flags.setRecent(true);
 		}
 
 		return flags;

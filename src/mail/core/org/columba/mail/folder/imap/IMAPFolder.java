@@ -232,7 +232,11 @@ public class IMAPFolder extends RemoteFolder {
 
 		worker.setDisplayText("Fetching header list ");
 
-		getStore().fetchHeaderList(headerList, result, worker, getImapPath());
+		// if available -> fetch new headers
+		if ( result.size() > 0 )
+		{
+			getStore().fetchHeaderList(headerList, result, worker, getImapPath());
+		}
 
 		updateFlags(flags);
 
@@ -553,7 +557,19 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	public synchronized boolean tryToGetLock() {
-		return getRootFolder().tryToGetLock();
+		boolean result = getRootFolder().tryToGetLock();
+		
+		if ( result == false )
+		{
+			if ( ((IMAPRootFolder)getRootFolder()).isAlreadyLocked() == true )
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		return result;
 	}
 
 	public void releaseLock() {

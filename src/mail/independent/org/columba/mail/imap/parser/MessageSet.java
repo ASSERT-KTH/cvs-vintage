@@ -34,7 +34,7 @@ public class MessageSet {
 		char lastChar = 'p';
 
 		for (int i = 0; i < uids.length; i++) {
-			System.out.println("parsing="+uids[i]);
+			//System.out.println("parsing="+uids[i]);
 			
 			Integer uid = new Integer(Integer.parseInt((String) uids[i]));
 
@@ -108,7 +108,7 @@ public class MessageSet {
 
 		}
 
-		System.out.println("messageSet: "+ messageSetList );
+		//System.out.println("messageSet: "+ messageSetList );
 		
 		
 		return messageSetList.toString();

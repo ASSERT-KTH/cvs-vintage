@@ -1,12 +1,15 @@
 package org.columba.mail.imap;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.HeaderTableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.imap.parser.FlagsParser;
@@ -92,8 +95,7 @@ public class IMAPStore {
 	public int getState() {
 		return state;
 	}
-	
-	
+
 	public void login(WorkerStatusController worker) throws Exception {
 
 		/*
@@ -204,12 +206,11 @@ public class IMAPStore {
 		//System.out.println("isSelected");
 
 		if (getState() == STATE_SELECTED) {
-			
-			
-			if ( path.equals(getSelectedFolderPath() )) return true;
-			else
-			{
-				select( worker, path );
+
+			if (path.equals(getSelectedFolderPath()))
+				return true;
+			else {
+				select(worker, path);
 				return false;
 			}
 			/*
@@ -248,7 +249,7 @@ public class IMAPStore {
 		try {
 
 			getProtocol().select(path);
-			
+
 			state = STATE_SELECTED;
 			selectedFolderPath = path;
 		} catch (BadCommandException ex) {
@@ -256,6 +257,7 @@ public class IMAPStore {
 			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
+			state = STATE_AUTHENTICATE;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			select(worker, path);
@@ -275,8 +277,6 @@ public class IMAPStore {
 
 		return imap;
 	}
-
-	
 
 	public Vector convertIndexToUid(Vector v, WorkerStatusController worker)
 		throws Exception {
@@ -304,12 +304,6 @@ public class IMAPStore {
 
 		return result;
 	}
-
-
-
-
-
-
 
 	/**************************** authenticate state ************************/
 
@@ -511,17 +505,8 @@ public class IMAPStore {
 		return true;
 	}
 
-
-
-
-
-
-
-
-
 	/**************************** selected state ****************************/
-	
-	
+
 	public Vector fetchUIDList(WorkerStatusController worker, String path)
 		throws Exception {
 
@@ -554,12 +539,13 @@ public class IMAPStore {
 		return null;
 	}
 
-	public boolean expunge(WorkerStatusController worker, String path) throws Exception {
-		
+	public boolean expunge(WorkerStatusController worker, String path)
+		throws Exception {
+
 		isLogin(worker);
-		
-		isSelected(worker,path);
-		
+
+		isSelected(worker, path);
+
 		Object[] expungedUids = null;
 		try {
 
@@ -581,19 +567,23 @@ public class IMAPStore {
 
 		return true;
 	}
-	
-	public void copy(String destFolder, Object[] uids, WorkerStatusController worker, String path) throws Exception {
-		
+
+	public void copy(
+		String destFolder,
+		Object[] uids,
+		WorkerStatusController worker,
+		String path)
+		throws Exception {
+
 		isLogin(worker);
-		
-		isSelected(worker,path);
-		
-		
+
+		isSelected(worker, path);
+
 		try {
-			
+
 			MessageSet set = new MessageSet(uids);
 
-			IMAPResponse[] responses = imap.copy(destFolder, set.getString() );
+			IMAPResponse[] responses = imap.copy(set.getString(), destFolder);
 
 			//expungedUids = FlagsParser.parseFlags(responses);
 
@@ -604,12 +594,11 @@ public class IMAPStore {
 			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
-			
+
 		} finally {
 
 		}
 
-		
 	}
 
 	public IMAPFlags[] fetchFlagsList(
@@ -748,11 +737,12 @@ public class IMAPStore {
 
 	private ColumbaHeader fetchHeader(
 		Object uid,
-		WorkerStatusController worker, String path)
+		WorkerStatusController worker,
+		String path)
 		throws Exception {
-			
+
 		isLogin(worker);
-		
+
 		isSelected(worker, path);
 
 		boolean answer = false;
@@ -761,10 +751,27 @@ public class IMAPStore {
 		Vector v = new Vector();
 		String buffer = new String();
 
+		HeaderTableItem items =
+			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		StringBuffer headerFields = new StringBuffer();
+
+		for (int i = 0; i < items.count(); i++) {
+			String name = items.getName(i);
+			if ((!name.equals("Status"))
+				|| (!name.equals("Flagged"))
+				|| (!name.equals("Attachment"))
+				|| (!name.equals("Priority"))
+				|| (!name.equals("Size"))) {
+				headerFields.append(name + " ");
+			}
+		}
+
 		try {
 
 			IMAPResponse[] responses =
-				getProtocol().fetchHeaderList((String) uid);
+				getProtocol().fetchHeaderList(
+					(String) uid,
+					headerFields.toString().trim());
 
 			buffer = HeaderParser.parse(responses);
 			//System.out.println("buffer=" + buffer);
@@ -789,37 +796,121 @@ public class IMAPStore {
 
 	}
 
-	
-
 	public void fetchHeaderList(
 		HeaderList headerList,
 		Vector list,
-		WorkerStatusController worker, String path)
+		WorkerStatusController worker,
+		String path)
 		throws Exception {
 
-		isLogin(worker);
+		ColumbaLogger.log.debug("list-count="+list.size());
 		
-		isSelected(worker,path);
+		isLogin(worker);
+
+		isSelected(worker, path);
 		//System.out.println("fetchheaderList");
 
 		worker.setProgressBarMaximum(list.size());
+		MessageSet set = new MessageSet(list.toArray());
 
+		HeaderTableItem items =
+			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		StringBuffer headerFields = new StringBuffer();
+
+		for (int i = 0; i < items.count(); i++) {
+			String name = items.getName(i);
+			if ((!name.equals("Status"))
+				|| (!name.equals("Flagged"))
+				|| (!name.equals("Attachment"))
+				|| (!name.equals("Priority"))
+				|| (!name.equals("Size"))) {
+				headerFields.append(name + " ");
+			}
+		}
+
+		boolean finished = false;
+		String clientTag = null;
+		IMAPResponse imapResponse = null;
+
+		try {
+			clientTag =
+				getProtocol().sendString(
+					"UID FETCH "
+						+ set.getString()
+						+ " BODY[HEADER.FIELDS ("
+						+ headerFields.toString().trim()
+						+ ")] ",
+					null);
+		} catch (IOException ex) {
+			// disconnect exception
+			ex.printStackTrace();
+
+			//v.add(IMAPResponse.BYEResponse);
+		}
+
+		int i = 0;
+		while (!finished) {
+			try {
+				imapResponse = getProtocol().getResponse();
+			} catch (IOException ex) {
+				// disconnect exception	
+				ex.printStackTrace();
+
+				//imapResponse = IMAPResponse.BYEResponse;
+			}
+
+			//v.add(imapResponse);
+
+			if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
+				finished = true;
+
+			if (imapResponse.isTagged()
+				&& imapResponse.getTag().equals(clientTag))
+				finished = true;
+
+			if (!finished) {
+				IMAPResponse[] r = new IMAPResponse[1];
+				r[0] = imapResponse;
+				//System.out.println("header="+imapResponse.getSource());
+				
+				String buffer = imapResponse.getSource();
+
+				if (buffer.length() != 0) {
+					
+					Object uid = null;
+					ColumbaHeader header = parseMessage(buffer);
+					if (header != null) {
+						header.set("columba.uid", list.get(i));
+						headerList.add(header, list.get(i));
+					}
+
+					i++;
+					worker.setProgressBarValue(i);
+					worker.setDisplayText(item.getHost()+": Fetching "+i+"/"+list.size()+" headers..." );
+				}
+			}
+		}
+
+		//fetchHeader(set.getString(), worker, path);
+		/*
 		for (int i = 0; i < list.size(); i++) {
 			worker.setProgressBarValue(i);
-
+		
 			//System.out.println("trying to fetch header number=" + i);
-
+		
 			ColumbaHeader header = fetchHeader(list.get(i), worker, path);
 			if (header != null) {
 				header.set("columba.uid", list.get(i));
 				headerList.add(header, list.get(i));
 			}
 		}
+		*/
 
 	}
 
 	public boolean isLogin(WorkerStatusController worker) throws Exception {
-		if ( (getState() == STATE_AUTHENTICATE) || (getState() == STATE_SELECTED) )
+		if ((getState() == STATE_AUTHENTICATE)
+			|| (getState() == STATE_SELECTED))
 			return true;
 		else {
 			// we are in Imap4.STATE_NONAUTHENTICATE
@@ -830,11 +921,15 @@ public class IMAPStore {
 
 	}
 
-	public MimePartTree getMimePartTree(Object uid, WorkerStatusController worker, String path) throws Exception {
-		
+	public MimePartTree getMimePartTree(
+		Object uid,
+		WorkerStatusController worker,
+		String path)
+		throws Exception {
+
 		isLogin(worker);
-		
-		isSelected(worker,path);
+
+		isSelected(worker, path);
 		try {
 
 			IMAPResponse[] responses =
@@ -866,13 +961,14 @@ public class IMAPStore {
 	public MimePart getMimePart(
 		Object uid,
 		Integer[] address,
-		WorkerStatusController worker, String path)
+		WorkerStatusController worker,
+		String path)
 		throws Exception {
 
 		isLogin(worker);
-		
-		isSelected(worker,path);
-		
+
+		isSelected(worker, path);
+
 		String buffer = new String();
 
 		if (!aktMessageUid.equals(uid)) {
@@ -906,12 +1002,15 @@ public class IMAPStore {
 		return null;
 	}
 
-	public String getMessageSource(Object uid, WorkerStatusController worker, String path)
+	public String getMessageSource(
+		Object uid,
+		WorkerStatusController worker,
+		String path)
 		throws Exception {
-			
+
 		isLogin(worker);
-		
-		isSelected(worker,path);
+
+		isSelected(worker, path);
 
 		String buffer = new String();
 
@@ -943,13 +1042,14 @@ public class IMAPStore {
 	public void markMessage(
 		Object[] uids,
 		int variant,
-		WorkerStatusController worker, String path)
+		WorkerStatusController worker,
+		String path)
 		throws Exception {
 
 		isLogin(worker);
-		
-		isSelected(worker,path);
-		
+
+		isSelected(worker, path);
+
 		try {
 			MessageSet set = new MessageSet(uids);
 
@@ -973,8 +1073,7 @@ public class IMAPStore {
 		}
 
 	}
-	
-	
+
 	public Vector search(
 		Object[] uids,
 		String searchString,
@@ -1052,11 +1151,5 @@ public class IMAPStore {
 
 		return null;
 	}
-
-	
-
-	
-
-	
 
 }

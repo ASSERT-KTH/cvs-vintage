@@ -102,7 +102,7 @@ public class IMAPProtocol {
 		return id;
 	}
 
-	protected IMAPResponse getResponse() throws Exception {
+	public IMAPResponse getResponse() throws Exception {
 		String answer = in.readResponse();
 
 		ColumbaLogger.log.debug("SERVER:" + answer);
@@ -367,9 +367,9 @@ public class IMAPProtocol {
 		return responses;
 	}
 
-	public IMAPResponse[] fetchHeaderList(String messageSet) throws Exception {
+	public IMAPResponse[] fetchHeaderList(String messageSet, String headerFields) throws Exception {
 
-		IMAPResponse[] responses = fetch("RFC822.HEADER", messageSet, true);
+		IMAPResponse[] responses = fetch("BODY[HEADER.FIELDS ("+headerFields+")]", messageSet, true);
 		//IMAPResponse[] responses = fetch("ENVELOPE", messageSet, true);
 
 		notifyResponseHandler(responses);
@@ -486,7 +486,7 @@ public class IMAPProtocol {
 	}
 	
 	public IMAPResponse[] copy( String messageSet, String mailbox) throws Exception {
-
+		
 		Arguments args = new Arguments();
 		args.add(messageSet);
 		args.add(mailbox);

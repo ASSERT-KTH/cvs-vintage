@@ -212,7 +212,7 @@ public class IMAPInputStream extends BufferedInputStream {
 				}
 			}
 			while (i < end) {
-				// Accumulating negatively avoids surprises near MAX_VALUE
+				
 				digit = Character.digit((char) b[i++], radix);
 				if (digit < 0) {
 					throw new NumberFormatException("illegal number");

@@ -24,7 +24,7 @@ public abstract class FolderTreeNode
 	implements TreeNodeInterface {
 
 	protected AdapterNode node;
-	private Lock myLock;
+	protected Lock myLock;
 
 	public FolderTreeNode(AdapterNode node) {
 

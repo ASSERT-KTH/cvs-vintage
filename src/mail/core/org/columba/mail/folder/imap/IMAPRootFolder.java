@@ -72,6 +72,11 @@ public class IMAPRootFolder extends FolderTreeNode //implements ActionListener
 		store = new IMAPStore(item, this);
 
 	}
+	
+	public boolean isAlreadyLocked()
+	{
+		return myLock.isLocked();
+	}
 
 	public Hashtable getAttributes() {
 		Hashtable attributes = new Hashtable();

@@ -59,7 +59,7 @@ public class Config {
 			// convert to new config-schema
 			
 			Python.runResource(
-				"org/columba/modules/mail/config/convert.py",
+				"org/columba/mail/config/convert.py",
 				ConfigPath.getConfigDirectory().getPath());
 			
 
