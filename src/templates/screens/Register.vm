@@ -1,6 +1,6 @@
 <div id="register" class="app">
 
-<h3>Registration</h3>
+<h3>$l10n.Registration</h3>
 
 <form name="register" action="$link.setPage("Register.vm")" method="post">
 <input type="hidden" name="action" value="Register" />
@@ -21,41 +21,39 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th width="130">* First name</th>
+ <th width="130"> * $l10n.FirstName</th>
  <td>
   <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" tabindex="1" />
   #fieldErrorMsg($regGroup.FirstName "")
  </td>
 </tr>
 <tr>
- <th> *Last name</th>
+ <th> * $l10n.LastName</th>
  <td>
   <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" tabindex="2" />
   #fieldErrorMsg($regGroup.LastName "")
  </td>
 </tr>
 <tr>
- <th> *Email address</th>
+ <th> * $l10n.Email</th>
  <td>
   <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" tabindex="3" />
   #fieldErrorMsg($regGroup.Email "")
 <p><small>
- Note: Enter your valid email address - including your "@serviceprovider" domain.
- For example, if your AOL screen name is joecool, your email address is joecool@aol.com.
- If you enter an invalid email address, you will not be able to log in and use the system.
+ $l10n.EnterValidEmailAddress
 </small></p>
  </td>
 </tr>
 <tr>
- <th> *User name</th>
+ <th> * $l10n.Username</th>
  <td>
   <input name="$regGroup.UserName.Key" value="$regGroup.UserName" type="text" size="25" tabindex="4" />
   #fieldErrorMsg($regGroup.UserName "")
-<p><small>Note: For convenience, your user name can be the same as your email address.</small></p>
+<p><small>$l10n.UserNameCanBe</small></p>
  </td>
 </tr>
 <tr>
- <th> *Password</th>
+ <th> * $l10n.Password</th>
  <td>
   <input name="$regGroup.Password.Key" type="password" value="$password" size="25" tabindex="5" />
   #if ($password.Message)
@@ -64,7 +62,7 @@
  </td>
 </tr>
 <tr>
- <th> *Password confirm</th>
+ <th> * $l10n.ConfirmPassword</th>
  <td>
   <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" tabindex="6" />
   #fieldErrorMsg($regGroup.PasswordConfirm "")
