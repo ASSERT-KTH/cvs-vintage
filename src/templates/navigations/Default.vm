@@ -14,9 +14,9 @@
 <div><strong>
 $link.setPage("SelectArtifactType.vm").setLabel("Issue types")
 </strong>
-$renderer.render("navigations", $data, "ArtifactTypes.vm")
+$renderer.render("navigations", "ArtifactTypes.vm")
 </div>
 #end
 
 ## AMINISTRATION
-$renderer.render("navigations", $data, "Administration.vm")
+$renderer.render("navigations", "Administration.vm")

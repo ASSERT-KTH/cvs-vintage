@@ -671,7 +671,7 @@
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${turbine.dir}/bin">
+            <fileset dir="${turbine.dir}/target">
                 <include name="**/turbine*.jar"/>
             </fileset>
         </copy>

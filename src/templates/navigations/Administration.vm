@@ -35,7 +35,7 @@
 
 #if ($adminMenu.equals("3"))
 <div><strong>Global Data</strong>
-$renderer.render("navigations", $data, "GlobalAdmin.vm")
+$renderer.render("navigations", "GlobalAdmin.vm")
 #else
 <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global Data")
 #end
@@ -47,7 +47,7 @@ $renderer.render("navigations", $data, "GlobalAdmin.vm")
 
 #if ($adminMenu.equals("4"))
 <div><strong>Modules</strong>
-$renderer.render("navigations", $data, "ModuleAdmin.vm")
+$renderer.render("navigations", "ModuleAdmin.vm")
 #else
 <div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")
 #end

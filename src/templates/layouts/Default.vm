@@ -56,7 +56,7 @@
  <tr valign="top">
   <td id="leftcol" width="20%">
   <div id="navcolumn">
-$renderer.render("navigations", $data, $template, "Default.vm")
+$renderer.render("navigations", $template, "Default.vm")
   </div>
   <div id="helptext">
    <table border="0" cellspacing="0" cellpadding="3" width="100%">
@@ -74,17 +74,17 @@ $renderer.render("navigations", $data, $template, "Default.vm")
  </td>
  <td width="100%" id="bodycol">
  <!-- Scarab - App -->
-$renderer.render("layouts", $data, "MainContent.vm")
+$renderer.render("layouts", "MainContent.vm")
 <!-- Structural Elements -->
  </td>
 #if ($template.equals("SelectModule.vm"))
-  $renderer.render("layouts", $data, "/ModuleHelp.vm")
+  $renderer.render("layouts", "/ModuleHelp.vm")
 #elseif ($template.equals("SelectArtifactType.vm"))
-  $renderer.render("layouts", $data, "/ArtifactTypeHelp.vm")
+  $renderer.render("layouts", "/ArtifactTypeHelp.vm")
 #end
  </tr>
 </table>
 <!-- Structural Elements -->
-$renderer.render("navigations", $data, "/ScarabBottom.vm")
+$renderer.render("navigations", "/ScarabBottom.vm")
 </body>
 </html>
