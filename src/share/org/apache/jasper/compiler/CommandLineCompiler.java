@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.2 2000/02/09 06:50:48 shemnon Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/09 06:50:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.3 2000/02/14 06:15:11 shemnon Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 06:15:11 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -84,12 +84,21 @@ public class CommandLineCompiler extends Compiler implements Mangler {
 
         jsp = new File(ctxt.getJspFile());
         outputDir =  ctxt.getOptions().getScratchDir().getAbsolutePath();
+
+        setMangler(this);
+
+        computePackageName();
+        ctxt.setServletPackageName(pkgName);
+        className = getBaseClassName();
         // yes this is kind of messed up ... but it works
         if (ctxt.isOutputInDirs()) {
+            String pkgName = ctxt.getServletPackageName();
+            if (pkgName == null) {
+                pkgName = "";
+            }
             String tmpDir = outputDir
                    + File.separatorChar
-                   + ctxt.getServletPackageName()
-                         .replace('.', File.separatorChar);
+                   + pkgName.replace('.', File.separatorChar);
             File f = new File(tmpDir);
             if (!f.exists()) {
                 if (f.mkdirs()) {
@@ -99,11 +108,6 @@ public class CommandLineCompiler extends Compiler implements Mangler {
                 outputDir = tmpDir;
             }
         }
-
-        setMangler(this);
-
-        computePackageName();
-        className = getBaseClassName();
         computeClassFileName();
         computeJavaFileName();
     };
@@ -120,6 +124,9 @@ public class CommandLineCompiler extends Compiler implements Mangler {
 
     public final void computeJavaFileName() {
 	javaFileName = ctxt.getServletClassName() + ".java";
+	if ("null.java".equals(javaFileName)) {
+    	    javaFileName = getBaseClassName() + ".java";
+    	};
 	if (outputDir != null && !outputDir.equals(""))
 	    javaFileName = outputDir + File.separatorChar + javaFileName;
     }
@@ -158,14 +165,16 @@ public class CommandLineCompiler extends Compiler implements Mangler {
 	} else {
 	    for (int i = 0; i < keywords.length; i++) {
 		char fs = File.separatorChar;
-		int index1 = pathName.indexOf(fs + keywords[i]);
-		int index2 = pathName.indexOf(keywords[i]);
-		if (index1 == -1 && index2 == -1) continue;
-		int index = (index2 == -1) ? index1 : index2;
+		int index;
+		if (pathName.startsWith(keywords[i] + fs)) {
+		    index = 0;
+		} else {
+		    index = pathName.indexOf(fs + keywords[i] + fs);
+		}
 		while (index != -1) {
 		    String tmpathName = pathName.substring (0,index+1) + '%';
 		    pathName = tmpathName + pathName.substring (index+2);
-		    index = pathName.indexOf(fs + keywords[i]);
+		    index = pathName.indexOf(fs + keywords[i] + fs);
 		}
 	    }
 	
@@ -213,7 +222,14 @@ public class CommandLineCompiler extends Compiler implements Mangler {
             else
                 className = jsp.getName();
         }
-
+	
+	// since we don't mangle extensions like the servlet does,
+	// we need to check for keywords as class names
+	for (int i = 0; i < keywords.length; i++) {
+	    if (className.equals(keywords[i])) {
+		className += "%";
+	    };
+	};
 	
 	// Fix for invalid characters. If you think of more add to the list.
 	StringBuffer modifiedClassName = new StringBuffer();
