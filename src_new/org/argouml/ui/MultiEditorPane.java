@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.44 2005/01/29 15:25:57 mvw Exp $
+// $Id: MultiEditorPane.java,v 1.45 2005/01/29 15:36:24 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -331,7 +331,7 @@ public class MultiEditorPane
     /**
      * @return returns the upper right panel tabs (the diagram tabs)
      */
-    public JTabbedPane getTabs() {
+    protected JTabbedPane getTabs() {
         return tabs;
     }
 
