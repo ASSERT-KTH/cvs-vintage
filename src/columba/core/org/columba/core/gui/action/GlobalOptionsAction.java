@@ -14,15 +14,14 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.action;
+package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
+import org.columba.core.gui.config.GeneralOptionsDialog;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.config.general.GeneralOptionsDialog;
 import org.columba.mail.util.MailResourceLoader;
 
 public class GlobalOptionsAction extends FrameAction {
@@ -33,17 +32,18 @@ public class GlobalOptionsAction extends FrameAction {
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_edit_generaloptions"),
-			null,
+				"menu_edit_generaloptions"));
+
+		setLongDescription(
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_edit_generaloptions_tooltip"),
-			"GENERAL_OPTIONS",
-			ImageLoader.getSmallImageIcon("stock_preferences-16.png"),
-			ImageLoader.getImageIcon("stock_preferences.png"),
-			'0',
-			null);
+				"menu_edit_generaloptions_tooltip"));
+
+		setSmallIcon(ImageLoader.getSmallImageIcon("stock_preferences-16.png"));
+
+		setLargeIcon(ImageLoader.getImageIcon("stock_preferences.png"));
+
 	}
 
 	/* (non-Javadoc)
@@ -52,12 +52,12 @@ public class GlobalOptionsAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		GeneralOptionsDialog dialog =
 			new GeneralOptionsDialog(frameController.getView());
-		
+
 		dialog.setVisible(true);
 
-		if (dialog.getResult()){
-			ThemeSwitcher.updateFrame(frameController.getView());
-		}
+		/*
+		ThemeSwitcher.updateFrame(frameController.getView());
+		*/
 	}
 
 }

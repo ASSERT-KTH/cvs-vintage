@@ -22,7 +22,9 @@
 
 	<menu name="menu_edit" extensionpoint="bottom">
 		<menuitem action="SearchMessage"/>
-		
+		<separator/>
+		<menuitem action="MailAccount"/>
+		<menuitem action="MailOptions"/>
 	</menu>
 	
 	<menu name="menu_view" extensionpoint="show_hide">
@@ -101,8 +103,6 @@
 	
 	
 	<menu name="menu_utilities" extensionpoint="bottom">
-	 <menuitem action="MailAccount"/>
-	 <separator/>
 	 <menu name="menu_message_filteronmessage">
 	  <menuitem action="CreateFilterOnSubject"/>
 	  <menuitem action="CreateFilterOnFrom"/>

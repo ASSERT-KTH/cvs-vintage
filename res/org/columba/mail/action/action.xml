@@ -15,7 +15,8 @@
  <!-- edit menu -->
  <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
  <action name="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>
- <action name="GlobalOptions" class="org.columba.mail.gui.action.GlobalOptionsAction"/>
+ <action name="MailOptions" class="org.columba.mail.gui.action.MailOptionsAction"/>
+ 
  
  <!-- view menu -->
  <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>

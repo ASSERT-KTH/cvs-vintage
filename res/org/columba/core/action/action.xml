@@ -7,6 +7,7 @@
  <action name="OpenNewAddressbookWindow" class="org.columba.core.gui.action.OpenNewAddressbookWindowAction"/>
  <action name="OpenNewMessageFrameWindow" class="org.columba.core.gui.action.OpenNewMessageFrameWindowAction"/>
  <action name="PluginManagerDialog" class="org.columba.core.gui.action.PluginManagerAction" />
+ <action name="GlobalOptions" class="org.columba.core.gui.action.GlobalOptionsAction"/>
  
  <action name="Cut" singleton="true" class="org.columba.core.gui.action.CutAction"/>
  <action name="Copy" singleton="true" class="org.columba.core.gui.action.CopyAction"/>
