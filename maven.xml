@@ -13,6 +13,10 @@
     </j:if>   
   </preGoal>
 
+  <preGoal name="java:compile">
+    <attainGoal name="torque:om"/>
+  </preGoal>
+
   <postGoal name="war:webapp"> 
     <j:set var="warWebappBuildDir"
         value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>
