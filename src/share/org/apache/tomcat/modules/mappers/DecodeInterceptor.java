@@ -194,7 +194,10 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	// remove //
 	for( i=start, j=start; i<end-1; i++ ) {
 	    if( buff[i]== '/' && buff[i+1]=='/' ) {
-		while( buff[i+1]=='/' ) i++;
+                if (! (i == start + 5 && bc.startsWith(HTTP)) &&
+                    ! (i == start + 6 && bc.startsWith(HTTPS))) {
+		    while( buff[i+1]=='/' ) i++;
+                }
 	    } 
 	    buff[j++]=buff[i];
 	}
@@ -306,7 +309,10 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	// remove //
 	for( i=start, j=start; i<end-1; i++ ) {
 	    if( buff[i]== '/' && buff[i+1]=='/' ) {
-		while( buff[i+1]=='/' ) i++;
+                if (! (i == start + 5 && str.startsWith("http:")) &&
+                    ! (i == start + 6 && str.startsWith("https:"))) {
+		    while( buff[i+1]=='/' ) i++;
+                }
 	    } 
 	    buff[j++]=buff[i];
 	}
@@ -619,5 +625,8 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	}
 
     }
+
+    private static final byte[] HTTP = new byte[] { 'h','t','t','p',':'};
+    private static final byte[] HTTPS = new byte[] { 'h','t','t','p','s',':'};
 }
 
