@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.16 2002/08/13 23:53:21 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.17 2002/08/29 21:57:37 jon Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -114,9 +114,9 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                                                           rmo.getAttributeOption(),
                                                           me, issueType);
                         }
+                        rmoGroup.setProperties(rmo);
+                        rmo.save();
                     }
-                    rmoGroup.setProperties(rmo);
-                    rmo.save();
                     ScarabCache.clear();
                     data.setMessage(DEFAULT_MSG);  
                 }
@@ -180,7 +180,6 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         }        
     }
 
-
     /**
      * Selects option to add to attribute.
      */
@@ -212,7 +211,4 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             data.setMessage(DEFAULT_MSG);  
         }
     }
-
-
-
 }
