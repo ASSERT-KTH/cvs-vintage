@@ -65,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.340 2005/02/13 23:20:47 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.341 2005/02/15 00:16:40 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4828,13 +4828,13 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		setMaxLineLength(buffer.getIntegerProperty("maxLineLen",0));
 
 		if(displayManager != null && !bufferChanging
-			&&  buffer.isLoaded())
+			&& buffer.isLoaded())
 		{
 			displayManager.invalidateScreenLineCounts();
-			chunkCache.invalidateAll();
 			displayManager.notifyScreenLineChanges();
 		}
 
+		chunkCache.invalidateAll();
 		gutter.repaint();
 		painter.repaint();
 	} //}}}
