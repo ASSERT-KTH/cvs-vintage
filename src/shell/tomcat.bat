@@ -40,32 +40,32 @@ goto cleanup
 :startServer
 echo Starting tomcat in new window
 echo Using classpath: %CLASSPATH%
-start java -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+start java -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
 rem Start the Tomcat Server
 echo Using classpath: %CLASSPATH%
-java -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+java -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stop the Tomcat Server
 echo Using classpath: %CLASSPATH%
-java -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
+java -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 goto cleanup
 
 :runAnt
 rem Run ant
 echo Using classpath: %CLASSPATH%
-java -Dant.home=%TOMCAT_HOME%  -Dtomcat.home=%TOMCAT_HOME% org.apache.tools.ant.Main $@
+java -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runJspc
 rem Run ant
 echo Using classpath: %CLASSPATH%
-java -Dtomcat.home=%TOMCAT_HOME% org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
+java -Dtomcat.home="%TOMCAT_HOME%" org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :setupEnv
