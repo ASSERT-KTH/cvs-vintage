@@ -585,6 +585,7 @@ final class JasperLiaison {
 	    try {
 		Options options=new JasperOptionsImpl(args); 
 		JspCompilationContext ctxt=createCompilationContext(req,
+								    jspFile,
 								    options,
 								    mangler);
 		JavaCompiler javaC=createJavaCompiler( options );
@@ -747,12 +748,14 @@ final class JasperLiaison {
     }
 
     private JspCompilationContext createCompilationContext( Request req,
+							    String jspFile,
 							    Options opt,
 							    Mangler mangler)
     {
 	JasperEngineContext ctxt = new JasperEngineContext();
 	ctxt.setServletClassName( mangler.getClassName());
-	ctxt.setJspFile( req.servletPath().toString());
+	//	ctxt.setJspFile( req.servletPath().toString());
+	ctxt.setJspFile( jspFile );
 	ctxt.setClassPath( computeClassPath( req.getContext()) );
 //        System.out.println("computeClasspath:"+ctxt.getClassPath());
 	ctxt.setServletContext( req.getContext().getFacade());
