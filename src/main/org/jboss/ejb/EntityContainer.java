@@ -31,7 +31,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class EntityContainer
    extends Container
@@ -278,7 +278,7 @@ public class EntityContainer
       beanMapping = map;
    }
    
-   protected Interceptor createContainerInterceptor()
+   public Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }

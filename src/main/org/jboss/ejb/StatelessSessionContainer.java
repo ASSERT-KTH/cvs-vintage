@@ -24,7 +24,7 @@ import javax.ejb.RemoveException;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class StatelessSessionContainer
    extends Container
@@ -167,7 +167,7 @@ public class StatelessSessionContainer
       beanMapping = map;
    }
    
-   protected Interceptor createContainerInterceptor()
+   public Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }
