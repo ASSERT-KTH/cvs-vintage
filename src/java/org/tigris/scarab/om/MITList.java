@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.12 2002/11/12 22:13:24 jon Exp $
+ * @version $Id: MITList.java,v 1.13 2003/01/13 21:17:53 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -111,6 +111,16 @@ public  class MITList
             i = new ItemsIterator(items.iterator());
         }
         return i;
+    }
+
+    public boolean contains(MITListItem item)
+    {
+        boolean result = false;
+        for (Iterator i = iterator(); i.hasNext() && !result;) 
+        {
+            result = i.next().equals(item);
+        }
+        return result;
     }
 
     public class ItemsIterator

@@ -73,7 +73,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.60 2003/01/04 01:00:15 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.61 2003/01/13 21:17:51 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1076,7 +1076,10 @@ public abstract class AbstractScarabUser
                 MITListItem item = MITListItemManager.getInstance();
                 item.setModuleId(rmit.getModuleId());
                 item.setIssueTypeId(rmit.getIssueTypeId());
-                mitList.addMITListItem(item);
+                if (!mitList.contains(item)) 
+                {
+                    mitList.addMITListItem(item);        
+                }
             }
         }
     }
