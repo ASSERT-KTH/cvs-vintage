@@ -18,7 +18,7 @@ import javax.transaction.xa.Xid;
  *  @see TransactionImpl
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 class XidImpl
    implements Xid, java.io.Serializable
@@ -214,6 +214,36 @@ class XidImpl
       System.arraycopy(value.getBytes(), 0, b, 0, value.length());
       return b;
    }
+
+   static byte[] getNextBranchQualifier() {
+       int id = getNextId();
+       String ids = Integer.toString(id);
+       byte[] source = ids.getBytes();
+       byte[] result = new byte[MAXBQUALSIZE];
+       System.arraycopy(source, 0, result, 0, source.length);
+       return result;
+   }
+
+   static byte[] getNextBranchQualifier(byte[] previous) {
+       String ids = new String(previous).trim();
+       if(ids.length() == 0)
+          ids = "1";
+       else
+          ids = Integer.toString(Integer.parseInt(ids)+1);
+       byte[] source = ids.getBytes();
+       byte[] result = new byte[MAXBQUALSIZE];
+       System.arraycopy(source, 0, result, 0, source.length);
+       return result;
+   }
+
+   static String toString(Xid id) {
+       if(id == null)
+          return "[NULL XID!!]";
+       String s = id.getClass().getName();
+       s = s.substring(s.lastIndexOf('.')+1);
+       s = s+" [ID="+id.getFormatId()+", Global="+new String(id.getGlobalTransactionId()).trim()+", Branch="+new String(id.getBranchQualifier()).trim()+"]";
+       return s;
+    }
 
    // Inner classes -------------------------------------------------
 }
