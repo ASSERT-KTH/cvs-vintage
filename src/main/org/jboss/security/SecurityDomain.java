@@ -9,8 +9,8 @@ package org.jboss.security;
 import java.lang.SecurityException;
 import java.security.KeyStore;
 // JSSE key and trust managers
-import com.sun.net.ssl.KeyManagerFactory;
-import com.sun.net.ssl.TrustManagerFactory;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 /** The SecurityDomain interface combines the SubjectSecurityManager and
  RealmMapping interfaces and adds a keyStore and trustStore as well as
@@ -21,7 +21,7 @@ import com.sun.net.ssl.TrustManagerFactory;
 @see com.sun.net.ssl.TrustManagerFactory
 
  * @author  Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface SecurityDomain extends SubjectSecurityManager, RealmMapping
 {
