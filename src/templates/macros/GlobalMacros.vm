@@ -1,9 +1,10 @@
-#macro ( attrValueLeafSelect $attrValue $optionFieldName $size)
+
+#macro ( attrValueLeafSelect $attrValue $optionFieldName $size $multiple)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
 <select name="$attrInput.get($optionFieldName).Key"
-   #if($size.length())size="$size"#end>
+   #if($size.length())size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
    <option value="">Choose...</option>
   #end
@@ -18,7 +19,7 @@
 </select>
 #end
 
-#macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size)
+#macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size $multiple )
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
   #set ($attr = $attrValue.Attribute)
@@ -29,7 +30,7 @@
     #set( $currentValue = $templAttrInput.get($optionFieldName).Value)
   #end
 <select name="$attrInput.get($optionFieldName).Key"
-  #if($size.length())size="$size"#end>
+  #if($size.length())size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
   <option value="">Choose...</option>
   #end

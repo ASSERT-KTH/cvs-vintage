@@ -132,28 +132,30 @@ public abstract class AttributeValue
         }
         else 
         {        
-            if ( v.getAttributeId() == null ) 
+            if ( v.getAttributeId() == null && getAttributeId() != null ) 
             {
                 v.setAttributeId(getAttributeId());
             }
-            else if (!v.getAttributeId().equals(getAttributeId()))
+            else if (v.getAttribute() != null 
+                     && !v.getAttribute().equals(getAttribute()))
             {
                 throw new ScarabException(
                     "Values for different Attributes cannot be chained: " +
                     v.getAttributeId() + " and " + getAttributeId() );
             }
             
-            if ( v.getIssueId() == null ) 
+            if ( v.getIssueId() == null && getIssueId() != null ) 
             {
                 v.setIssueId(getIssueId());
             }
-            else if (!v.getIssueId().equals(getIssueId()))
+            else if ( v.getIssue() != null 
+                      && !v.getIssue().equals(getIssue()) )
             {
                 throw new ScarabException(
                     "Values for different Issues cannot be chained: " +
                     v.getIssueId() + " and " + getIssueId() );
             }
-            
+
             if ( this.chainedValue == null ) 
             {
                 this.chainedValue = v;
@@ -421,6 +423,37 @@ public abstract class AttributeValue
                 oldUserIdIsSet = true;
             }
             super.setUserId(value);
+        }
+    }
+
+    /**
+     * Not implemented always throws an exception
+     *
+     * @return a <code>NumberKey[]</code> value
+     * @exception Exception if an error occurs
+     */
+    public NumberKey[] getOptionIds()
+        throws Exception
+    {
+        throw new ScarabException("not implemented");
+    }
+
+    public void setOptionIds(NumberKey[] ids)
+        throws Exception
+    {
+        if ( ids != null && ids.length > 0 ) 
+        {
+            setOptionId(ids[0]);
+        }
+        if ( ids != null && ids.length > 1 ) 
+        {
+            for ( int i=1; i<ids.length; i++ ) 
+            {            
+                AttributeValue av = AttributeValue                
+                    .getNewInstance(getAttributeId(), getIssue());
+                setChainedValue(av);
+                av.setOptionId(ids[i]);
+            }
         }
     }
 

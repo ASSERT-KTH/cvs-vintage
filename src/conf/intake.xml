@@ -228,6 +228,7 @@
            <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
            <required-message>This module requires that you select an option for this attribute.</required-message>
         </field>
+        <field name="OptionIds" key="optids" type="NumberKey" multiValued="true"/>
         <field name="UserId" key="visid" type="NumberKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>

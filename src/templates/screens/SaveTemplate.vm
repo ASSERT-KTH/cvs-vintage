@@ -91,7 +91,7 @@ $page.setTitle("Save/edit template")
     #if ($attVal.Attribute.isUserAttribute())
       #userSelectBox ($attVal "3" "true") 
     #elseif ($attVal.Attribute.isOptionAttribute())
-      #attrValueLeafSelect ($attVal $field "")
+      #attrValueLeafSelect ($attVal $field "" false)
  #else
      #attrValueErrorMsg($attVal "Value")
      #if ($attVal.Attribute.AttributeType.Name == "long-string")

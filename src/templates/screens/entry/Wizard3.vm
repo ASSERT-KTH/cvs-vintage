@@ -85,9 +85,9 @@ $page.setTitle("Enter issue")
                  #userSelectBox ($attVal "3" "true") 
               #elseif ($attVal.Attribute.isOptionAttribute())
                  #if ($templ)
-                   #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
+                   #templateAttrValueLeafSelect ($attVal $templAttVal $field "" false )
                  #else
-                   #attrValueLeafSelect ($attVal $field "")
+                   #attrValueLeafSelect ($attVal $field "" false)
                  #end
               #else
                #if ($templ)

@@ -37,7 +37,7 @@
       <th>$attVal.RModuleAttribute.DisplayValue</th>
       <td>
     #if ($attr.isOptionAttribute())
-        #attrValueLeafSelect ($attVal $field "")
+        #attrValueLeafSelect ($attVal $field "" false)
         #attrValueErrorMsg ($attVal $field)
     #elseif ($attr.isUserAttribute())
       #listUsers($attr)

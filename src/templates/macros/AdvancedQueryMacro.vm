@@ -38,7 +38,7 @@ from:&#160;<input type="text" size="20"
   #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
   #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-        #set ( $field = "OptionId" )
+        #set ( $field = "OptionIds" )
   #else
         #set ( $field = "Value" )
   #end
@@ -49,7 +49,7 @@ from:&#160;<input type="text" size="20"
             <td>
                 #attrValueErrorMsg ( $attVal $field )
     #if ($attVal.Attribute.isOptionAttribute() )
-          #attrValueLeafSelect ($attVal $field "")
+          #attrValueLeafSelect ($attVal $field "4" true)
     #else
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )
              #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
