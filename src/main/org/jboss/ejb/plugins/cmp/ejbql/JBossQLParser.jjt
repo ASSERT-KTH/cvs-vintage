@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  * This class parses JBossQL into an abstract syntax tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class JBossQLParser {
    private Catalog catalog;
@@ -262,6 +262,8 @@ void ConditionalPrimary() #void :
    SimpleCondExpression()
 }
 
+////////////////////// New or changed elements /////////////////////////////
+
 void SimpleCondExpression() #void :
 {}
 {
@@ -273,10 +275,10 @@ void SimpleCondExpression() #void :
    LOOKAHEAD({ getToken(2).kind==MEMBER || getToken(3).kind==MEMBER })
       CollectionMemberExpression()
 |
-   LOOKAHEAD({ getToken(2).kind==LIKE || getToken(3).kind==LIKE })
+   LOOKAHEAD(StringValue() [<NOT>] <LIKE>)
       LikeExpression()
 |
-   LOOKAHEAD({ getToken(2).kind==IN || getToken(3).kind==IN })
+   LOOKAHEAD((StringValue() | ArithmeticValue() | DatetimeValue()) [<NOT>] <IN>)
       InExpression()
 | 
    ComparisonExpression()
@@ -285,26 +287,34 @@ void SimpleCondExpression() #void :
 void BetweenExpression() #Between :
 {}
 {
-   ArithmeticExpression() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
-      ArithmeticExpression() <AND> ArithmeticExpression()
+   (ArithmeticExpression() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
+      ArithmeticExpression() <AND> ArithmeticExpression())
+|
+   (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
+      DatetimeValue() <AND> DatetimeValue())
+|
+   (StringValue() [<NOT> { jjtThis.not=true; } ] <BETWEEN> 
+      StringValue() <AND> StringValue())
 }
-
-////////////////////// New or changed elements /////////////////////////////
 
 void InExpression() #In :
 {}
 {
-   StringValuedPath() [<NOT> { jjtThis.not=true; } ] <IN> 
-      <LPAREN> ( StringLiteral() | StringValuedParameter() )
-      ( <COMMA> ( StringLiteral() | StringValuedParameter() ) )* <RPAREN>
+   (StringValue() [<NOT> { jjtThis.not=true; } ] <IN> 
+      <LPAREN> StringValue() ( <COMMA> StringValue() )* <RPAREN>)
+|
+   (ArithmeticValue() [<NOT> { jjtThis.not=true; } ] <IN> 
+      <LPAREN>  ArithmeticValue() ( <COMMA> ArithmeticValue() )* <RPAREN>)
+|
+   (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <IN> 
+      <LPAREN> DatetimeValue() ( <COMMA> DatetimeValue() )* <RPAREN>)
 }
 
 void LikeExpression() #Like :
 {}
 {
-   StringValuedPath() [<NOT> { jjtThis.not=true; } ] <LIKE>
-      ( StringLiteral() | StringValuedParameter() )
-      [<ESCAPE> ( StringLiteral() | StringValuedParameter() ) ]
+   StringValue() [<NOT> { jjtThis.not=true; } ] <LIKE>
+      StringValue() [<ESCAPE> StringValue() ]
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -334,15 +344,23 @@ void CollectionMemberExpression() #MemberOf :
 void ComparisonExpression() #void :
 {}
 {
+////////////////////// New or changed elements /////////////////////////////
+   LOOKAHEAD(StringValue() ( <EQ> | <GT> | <GE> | <LT> | <LE> | <NE> ) )
    (
       StringValue() 
       (
          <EQ> { jjtThis.opp="="; } |
-         <NE> { jjtThis.opp="<>"; }
+         <GT> { jjtThis.opp=">"; } |
+         <GE> { jjtThis.opp=">="; } |
+         <LT> { jjtThis.opp="<"; } |
+         <LE> { jjtThis.opp="<="; } |
+         <NE> { jjtThis.opp="<>"; } 
       )
       StringExpression()
    ) #StringComparison
+////////////////////////////////////////////////////////////////////////////
 |
+   LOOKAHEAD(BooleanValue() ( <EQ> | <NE> ) )
    (
       BooleanValue()
       [
@@ -353,6 +371,8 @@ void ComparisonExpression() #void :
       ]
    ) #BooleanComparison
 |
+////////////////////// New or changed elements /////////////////////////////
+   LOOKAHEAD(DatetimeValue() ( <EQ> | <GT> | <GE> | <LT> | <LE> | <NE> ) )
    (
       DatetimeValue()
       (
@@ -365,8 +385,8 @@ void ComparisonExpression() #void :
       )
       DatetimeExpression()
    ) #DatetimeComparison
-////////////////////// New or changed elements /////////////////////////////
 |
+   LOOKAHEAD(ValueClassValue() ( <EQ> | <NE> ) )
    (
       ValueClassValue()
       (
@@ -377,6 +397,7 @@ void ComparisonExpression() #void :
    ) #ValueClassComparison
 ////////////////////////////////////////////////////////////////////////////
 |
+   LOOKAHEAD(EntityBeanValue() ( <EQ> | <NE> ) )
    (
       EntityBeanValue()
       (
@@ -403,11 +424,13 @@ void ComparisonExpression() #void :
    BetweenExpression() 
 }
 
+////////////////////// New or changed elements /////////////////////////////
 void ArithmeticValue() #void :
 {}
 {
-   NumericValuedPath() | FunctionsReturningNumerics()
+   NumericValuedPath() | FunctionsReturningNumerics() | NumericLiteral() 
 }
+////////////////////////////////////////////////////////////////////////////
 
 void SingleValueDesignator() #void :
 {}
@@ -467,11 +490,13 @@ void ArithmeticPrimary() #void :
    FunctionsReturningNumerics()
 }
 
+////////////////////// New or changed elements /////////////////////////////
 void StringValue() #void :
 {}
 {
-   StringValuedPath() | FunctionsReturningStrings()
+   StringValuedPath() | FunctionsReturningStrings() | StringLiteral()
 }
+////////////////////////////////////////////////////////////////////////////
 
 void StringExpression() #void :
 {}
@@ -488,55 +513,58 @@ void StringPrimary() #void :
    FunctionsReturningStrings()
 }
 
+////////////////////// New or changed elements /////////////////////////////
+
 void DatetimeValue() #void :
 {}
 {
-   DatetimeValuedPath() 
+   DatetimeValuedPath() | DatetimeValuedParameter()
 }
 
 void DatetimeExpression() #void :
 {}
 {
-   DatetimeValue() | DatetimeValuedParameter() 
+   DatetimeValue() 
 }
 
 void BooleanValue() #void :
 {}
 {
-   BooleanValuedPath() 
+   BooleanValuedPath() | BooleanValuedParameter() | BooleanLiteral()
 }
 
 void BooleanExpression() #void :
 {}
 {
-   BooleanValue() | BooleanValuedParameter() | BooleanLiteral()
+   BooleanValue() 
 }
 
-////////////////////// New or changed elements /////////////////////////////
 void ValueClassValue() #void :
 {}
 {
-   ValueClassValuedPath()
+   ValueClassValuedPath() | ValueClassValuedParameter() 
 }
 
 void ValueClassExpression() #void :
 {}
 {
-   ValueClassValue() | ValueClassValuedParameter() 
+   ValueClassValue() 
 }
-////////////////////////////////////////////////////////////////////////////
+
 
 void EntityBeanValue() #void :
 {}
 {
-   EntityValuedPath() | IdentificationVariable()
+   EntityValuedPath() | IdentificationVariable() | EntityValuedParameter() 
 }
 
 void EntityBeanExpression() #void :
 {}
 {
-   EntityBeanValue() | EntityValuedParameter() 
+   EntityBeanValue() 
 }
+
+////////////////////////////////////////////////////////////////////////////
 
 void FunctionsReturningStrings() #void :
 {}
@@ -583,6 +611,16 @@ void FunctionsReturningNumerics() #void :
    (
       <SQRT> <LPAREN> ArithmeticExpression() <RPAREN>
    ) #Sqrt
+////////////////////// New or changed elements /////////////////////////////
+/* Not implemented yet
+|
+   (
+      <MOD> <LPAREN> 
+         ArithmeticExpression() <COMMA>
+         ArithmeticExpression() <RPAREN>
+   ) #Mod
+*/
+////////////////////////////////////////////////////////////////////////////
 }
 
 Token CollectionValuedPath() #Path :
