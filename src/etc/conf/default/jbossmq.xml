@@ -38,6 +38,7 @@
 	<!-- The invokation layers the server will expose -->
 	<InvocationLayer>
 		<Name>OIL</Name>
+		<Port>2323</Port>
 		<TopicConnectionFactoryJNDI>TopicConnectionFactory</TopicConnectionFactoryJNDI>
 		<QueueConnectionFactoryJNDI>QueueConnectionFactory</QueueConnectionFactoryJNDI>
 		<XATopicConnectionFactoryJNDI>XATopicConnectionFactory</XATopicConnectionFactoryJNDI>
@@ -47,6 +48,7 @@
 	</InvocationLayer>
 	<InvocationLayer>
 		<Name>UIL</Name>
+		<Port>2324</Port>
 		<TopicConnectionFactoryJNDI>UILTopicConnectionFactory</TopicConnectionFactoryJNDI>
 		<QueueConnectionFactoryJNDI>UILQueueConnectionFactory</QueueConnectionFactoryJNDI>
 		<XATopicConnectionFactoryJNDI>UILXATopicConnectionFactory</XATopicConnectionFactoryJNDI>
