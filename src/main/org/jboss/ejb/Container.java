@@ -78,9 +78,8 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.72 $
-*
-* <p><b>Revisions:</b>
+* @version $Revision: 1.73 $
+** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
 * <ul>
@@ -540,19 +539,25 @@ public abstract class Container implements DynamicMBean
    }
    
    /**
-   * Handle a operation invocation.
-   */
-   public Object invoke(String actionName, Object[] params, String[] signature)
+    * Handle a operation invocation.
+    */
+   public Object invoke(String ignored, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
    {      
-      if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
-         throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
-
+      if (params != null && params.length == 1 && (params[0] instanceof Invocation) == false) {
+         log.error("Expected zero or single Invocation argument");
+         new IllegalArgumentException("Expected zero or single Invocation argument");
+      }
+      
       Object value = null;
-      Invocation mi = null;
-      if( params != null && params.length == 1 )
-         mi = (Invocation) params[0];
+      Invocation mi = (Invocation)params[0];
 
+      // Must have a valid Invocation to continue
+      if (mi == null) {
+         log.error("Method invocation object is null");
+         throw new IllegalArgumentException("Method invocation object is null");
+      }
+      
       ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
       boolean trace = log.isTraceEnabled();
       try
@@ -606,7 +611,7 @@ public abstract class Container implements DynamicMBean
             
             case Invocation.LOCAL:
                
-               throw new MBeanException(new UnsupportedOperationException("local is not supported yet"));
+               throw new UnsupportedOperationException("local is not supported yet");
                
             case Invocation.HOME:
                
@@ -657,7 +662,7 @@ public abstract class Container implements DynamicMBean
             
             case Invocation.LOCALHOME:
                
-               throw new MBeanException(new UnsupportedOperationException("localHome is not supported yet"));
+               throw new UnsupportedOperationException("localHome is not supported yet");
                
             case Invocation.GETHOME:
                
