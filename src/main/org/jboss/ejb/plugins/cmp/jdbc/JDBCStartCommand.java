@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCStartCommand {
 
@@ -211,14 +211,6 @@ public class JDBCStartCommand {
 
          // add a pk constraint
          if(entityMetaData.hasPrimaryKeyConstraint())  {
-/*
-            sql.append(", CONSTRAINT pk").append(entityMetaData.getTableName());
-            
-            sql.append(" PRIMARY KEY (");
-               sql.append(SQLUtil.getColumnNamesClause(
-                        entity.getJDBCPrimaryKeyFields()));
-            sql.append(")");
-*/
             JDBCFunctionMappingMetaData pkConstraint = 
                manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
             if(pkConstraint == null) {
@@ -254,18 +246,6 @@ public class JDBCStartCommand {
 
          // add a pk constraint
          if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())  {
-/*
-            sql.append(", CONSTRAINT pk").append(
-                  cmrField.getRelationMetaData().getTableName());
-            
-            sql.append(" PRIMARY KEY (");
-               sql.append(SQLUtil.getColumnNamesClause(
-                     cmrField.getTableKeyFields()));
-               sql.append(", ");      
-               sql.append(SQLUtil.getColumnNamesClause(
-                     cmrField.getRelatedCMRField().getTableKeyFields()));
-            sql.append(")");
-*/
             JDBCFunctionMappingMetaData pkConstraint = 
                manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
             if(pkConstraint == null) {
@@ -343,22 +323,6 @@ public class JDBCStartCommand {
          SQLUtil.getColumnNamesClause(referencesFields)};
       String sql = fkConstraint.getFunctionSql(args);
 
-/*
-      StringBuffer sql = new StringBuffer(100);
-
-      sql.append("ALTER TABLE ").append(tableName);
-      sql.append(" ADD CONSTRAINT fk").append(tableName);
-      
-      
-      sql.append(" FOREIGN KEY (");
-         sql.append(SQLUtil.getColumnNamesClause(fields));
-      sql.append(")");
-            
-      sql.append(" REFERENCES ").append(referencesTableName);
-      sql.append("(");
-         sql.append(SQLUtil.getColumnNamesClause(referencesFields));
-      sql.append(")");
-*/
       Connection con = null;
       Statement statement = null;
       try {
