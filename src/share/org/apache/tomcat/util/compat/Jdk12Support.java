@@ -118,6 +118,16 @@ public class Jdk12Support extends Jdk11Compat {
         return null;
     }
 
+    public java.util.ResourceBundle getBundle(String name, Locale loc, ClassLoader cl ) {
+	if( cl==null )
+	    cl=getContextClassLoader();
+	if( cl==null )
+	    return ResourceBundle.getBundle(name, loc);
+	else
+	    return ResourceBundle.getBundle(name, loc, cl);
+    }
+    
+
     // -------------------- Support --------------------
     static class PrivilegedProxy implements PrivilegedExceptionAction
     {

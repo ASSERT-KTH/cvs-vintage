@@ -14,6 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
+import org.apache.tomcat.util.compat.*;
 
 /**
  * SAX Handler - it will read the XML and construct java objects
@@ -75,7 +76,7 @@ public class XmlMapper
 	throws SAXException
     {
 	try {
-	    //	    if( debug>0) log(sp + "<" + tag + " " + attributes + ">");
+	    if( debug>5) log(sp + " <" + tag + " " + attributes + ">");
 	    attributeStack[sp]=attributes;
 	    tagStack[sp]=tag;
 	    sp++;
@@ -255,7 +256,14 @@ public class XmlMapper
     public XmlMapper getMapper() {
 	return this;
     }
+
+    boolean useLocalLoader=true;
     
+    public void useLocalLoader(boolean b ) {
+	useLocalLoader=b;
+    }
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+
     /** read an XML file, construct and return the object hierarchy
      */
     public Object readXml(File xmlFile, Object root)
@@ -266,12 +274,23 @@ public class XmlMapper
 	    this.pushObject( root );
 	}
 	try {
+	    // reset the context loader, so we find the parser in the current dir
+	    ClassLoader cl=null;
+	    if( useLocalLoader ) {
+		cl=jdk11Compat.getContextClassLoader();
+		jdk11Compat.setContextClassLoader( this.getClass().getClassLoader());
+	    }
+	    
 	    SAXParser parser=null;
 	    SAXParserFactory factory = SAXParserFactory.newInstance();
 	    factory.setNamespaceAware(false);
 	    factory.setValidating(validating);
 	    parser = factory.newSAXParser();
 	    parser.parse(xmlFile, this);
+
+	    if( useLocalLoader && cl!= null ) {
+		jdk11Compat.setContextClassLoader(cl);
+	    }
 
 	    return root;
 	    // assume the stack is in the right position.

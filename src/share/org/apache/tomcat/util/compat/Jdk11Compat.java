@@ -61,6 +61,8 @@ package org.apache.tomcat.util.compat;
 import org.apache.tomcat.util.depend.*;
 
 import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.Locale;
 
 /** General-purpose utility to provide backward-compatibility and JDK
     independence. This allow use of JDK1.2 ( or higher ) facilities if
@@ -124,7 +126,11 @@ public class Jdk11Compat {
     }
 
     // Other methods, as needed
-        
+
+    public java.util.ResourceBundle getBundle(String name, Locale loc, ClassLoader cl ) {
+	return ResourceBundle.getBundle(name, loc);
+    }
+    
 
     // -------------------- Factory -------------------- 
     /** Get a compatibiliy helper class.
