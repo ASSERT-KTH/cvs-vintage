@@ -542,6 +542,7 @@ public final class Parameters extends MultiMap {
 	    int nameStart=pos;
 	    int nameEnd=str.indexOf('=', nameStart );
 	    int nameEnd2=str.indexOf('&', nameStart );
+	    if( nameEnd2== -1 ) nameEnd2=end;
 	    if( (nameEnd2!=-1 ) &&
 		( nameEnd==-1 || nameEnd > nameEnd2) ) {
 		nameEnd=nameEnd2;
