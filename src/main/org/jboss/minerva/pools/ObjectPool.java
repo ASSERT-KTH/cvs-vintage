@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -733,7 +733,7 @@ public class ObjectPool implements PoolEventListener {
             Iterator it = new HashSet(objects.values()).iterator();
             while(it.hasNext()) {
                 ObjectRecord rec = (ObjectRecord)it.next();
-                if(!rec.isInUse() && rec.getMillisSinceLastUse() >= gcMinIdleMillis) {
+                if(rec.isInUse() && rec.getMillisSinceLastUse() >= gcMinIdleMillis) {
                     releaseObject(rec.getClientObject());
                 }
             }
