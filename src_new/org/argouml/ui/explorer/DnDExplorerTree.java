@@ -1,4 +1,4 @@
-// $Id: DnDExplorerTree.java,v 1.7 2005/01/09 14:58:13 linus Exp $
+// $Id: DnDExplorerTree.java,v 1.8 2005/01/16 09:16:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,7 @@ import java.awt.event.InputEvent;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -55,9 +56,14 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.ui.ActionSaveDiagramToClipboard;
 
 /**
- * This class extends the default Argo JTree with Drag and drop capabilities.
+ * This class extends the default Argo JTree with Drag and drop capabilities.<p>
+ * 
+ * And it adds the 'copy to clipboard' capability for diagrams. See: <p>
+ * http://java.sun.com/j2se/1.3/docs/guide/swing/KeyBindChanges.html
+ *
  *
  * @author  alexb
  * @since Created on 16 April 2003
@@ -68,6 +74,9 @@ public class DnDExplorerTree
 
     private static final Logger LOG = Logger.getLogger(DnDExplorerTree.class);
 
+    private static final String DIAGRAM_TO_CLIPBOARD_ACTION =
+        "export Diagram as GIF";
+    
     /** the selected node */
     private TreePath selectedTreePath;
 
@@ -97,6 +106,11 @@ public class DnDExplorerTree
         // Second argument: DropTargetListener
         DropTarget dropTarget =
 	    new DropTarget(this, new ArgoDropTargetListener());
+        
+        KeyStroke ctrlC = KeyStroke.getKeyStroke("control C");
+        this.getInputMap().put(ctrlC, DIAGRAM_TO_CLIPBOARD_ACTION);
+        this.getActionMap().put(DIAGRAM_TO_CLIPBOARD_ACTION,
+                new ActionSaveDiagramToClipboard());
     }
 
     /**

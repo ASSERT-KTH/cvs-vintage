@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.77 2005/01/09 14:58:13 linus Exp $
+// $Id: NavigatorPane.java,v 1.78 2005/01/16 09:16:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,16 +34,15 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.QuadrantPanel;
 import org.argouml.i18n.Translator;
+import org.argouml.ui.explorer.DnDExplorerTree;
 import org.argouml.ui.explorer.ExplorerTree;
 import org.argouml.ui.explorer.ExplorerTreeModel;
-import org.argouml.ui.explorer.ExportExplorer;
 import org.argouml.ui.explorer.NameOrder;
 import org.argouml.ui.explorer.PerspectiveComboBox;
+import org.argouml.ui.explorer.PerspectiveConfigurator;
 import org.argouml.ui.explorer.PerspectiveManager;
 import org.argouml.ui.explorer.TypeThenNameOrder;
-import org.argouml.ui.explorer.PerspectiveConfigurator;
 import org.argouml.uml.ui.UMLAction;
-
 import org.tigris.toolbar.ToolBar;
 
 /**
@@ -120,15 +119,15 @@ public class NavigatorPane
      */
     private NavigatorPane(boolean doSplash) {
 
-        JComboBox combo = new PerspectiveComboBox();
+        JComboBox perspectiveCombo = new PerspectiveComboBox();
         JComboBox orderByCombo = new JComboBox();
-        ExplorerTree tree = new ExportExplorer(); //DnDExplorerTree();
+        ExplorerTree tree = new DnDExplorerTree();
         ToolBar toolbar = new ToolBar();
 
         toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         toolbar.setFloatable(false);
         toolbar.add(new ActionPerspectiveConfig());
-        toolbar.add(combo);
+        toolbar.add(perspectiveCombo);
 
         ToolBar toolbar2 = new ToolBar();
 
@@ -156,7 +155,7 @@ public class NavigatorPane
             splash.getStatusBar().showProgress(25);
         }
 
-        combo.addItemListener((ExplorerTreeModel) tree.getModel());
+        perspectiveCombo.addItemListener((ExplorerTreeModel) tree.getModel());
         orderByCombo.addItemListener((ExplorerTreeModel) tree.getModel());
         PerspectiveManager.getInstance().loadUserPerspectives();
     }
