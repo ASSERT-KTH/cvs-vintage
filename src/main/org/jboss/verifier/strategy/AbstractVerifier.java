@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.23 2001/11/02 06:07:48 schaefera Exp $
+ * $Id: AbstractVerifier.java,v 1.24 2001/11/28 00:27:14 juhalindfors Exp $
  */
 
 // standard imports
@@ -70,7 +70,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -979,8 +979,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         if (Error.class.isAssignableFrom(type))
             return false;
 
-        if (RuntimeException.class.isAssignableFrom(type))
-            return false;
+// 28.3.4.4 (6)  java.rmi.RemoteException and its subclasses, and unchecked
+//               exception classes, are assumed to be mapped to the implicit
+//               CORBA system exception, and are therefore not explicitly
+//               declared in OMG IDL.
+//           
+//        if (RuntimeException.class.isAssignableFrom(type))
+//            return false;
 
         if (!isRMIIDLValueType(type))
             return false;
