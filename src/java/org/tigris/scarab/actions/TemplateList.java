@@ -88,7 +88,7 @@ import org.tigris.scarab.util.ScarabException;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.52 2003/08/14 10:11:50 parun Exp $
+ * @version $Id: TemplateList.java,v 1.53 2003/08/19 05:37:55 venkatesh Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -313,10 +313,13 @@ public class TemplateList extends RequireLoginFirstAction
                 success = false;
                 scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
             }
-            // Save template info
-            info.saveAndSendEmail(user, scarabR.getCurrentModule(), context);
-            data.getParameters().add("templateId", issue.getIssueId().toString());
-            scarabR.setConfirmMessage(l10n.get("TemplateModified"));
+            else
+            {
+                // Save template info
+                info.saveAndSendEmail(user, scarabR.getCurrentModule(), context);
+                data.getParameters().add("templateId", issue.getIssueId().toString());
+                scarabR.setConfirmMessage(l10n.get("TemplateModified"));
+            }
         } 
         else
         {
