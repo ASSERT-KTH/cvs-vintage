@@ -8,16 +8,18 @@
 #if ($issueList)
   #foreach ($issueId in $issueList)
      #set ($currentIssue = $scarabR.getIssue($issueId))
-     <h2>$currentIssue.UniqueId</h2>
-  <form method="post" action="$action">
-    #foreach ($issueId in $issueList)
-      <input type="hidden" name="issue_ids" value="$issueId" />
-    #end
-#printCollisionInfo()
-    $intake.newForm()
-    $renderer.render("screens", "ViewIssueBody.vm")
-    $intake.declareGroups()
-  </form>
+     #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
+       <h2>$currentIssue.UniqueId</h2>
+       <form method="post" action="$action">
+       #foreach ($issueId in $issueList)
+         <input type="hidden" name="issue_ids" value="$issueId" />
+       #end
+       #printCollisionInfo()
+       $intake.newForm()
+       $renderer.render("screens", "ViewIssueBody.vm")
+       $intake.declareGroups()
+       </form>
+     #end
   #end
 #else
    <p class="alert">$l10n.NoIssuesSelected</p>
