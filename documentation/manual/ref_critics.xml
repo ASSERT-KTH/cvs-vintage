@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_critics.xml,v 1.13 2003/11/09 09:16:47 mvw Exp $ -->
+<!-- $Id: ref_critics.xml,v 1.14 2004/07/17 13:40:56 mvw Exp $ -->
 
 <!--
 
@@ -562,11 +562,12 @@ you change that class at the same time (and think through the deployment).
     </sect2>
 
     <sect2 id="critics.CrInvalidBranch">
-      <title>Change Branch Transitions</title>
+      <title>Add Choice/Junction Transitions</title>
 
-      <para>Suggestion that the branch pseudostate has an invalid number of
-        transitions. Normally there should be one incoming and two or more
-        outgoing.</para>
+      <para>Suggestion that the branch (choice or junction) 
+        pseudostate has an invalid number of
+        transitions. Normally there should be at least one incoming transition
+        and at least one outgoing transition.</para>
     </sect2>
 
     <sect2 id="critics.CrNoGuard">
