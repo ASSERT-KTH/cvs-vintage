@@ -120,6 +120,16 @@ public class InvocationHelper {
 	    }
 	    return ;
 	}
+	if( "java.lang.Boolean".equals( paramType )||
+	    "boolean".equals( paramType ) ) {
+	    try {
+		Boolean vI=new Boolean(value);
+		setMethod.invoke( o, new Object[] {vI });
+	    } catch (NumberFormatException nfe) {
+		System.out.println("Error setting " + value + " to an boolean property");
+	    }
+	    return ;
+	}
 	System.out.println("Unknown type " + paramType );
 
 	return;
@@ -132,7 +142,7 @@ public class InvocationHelper {
 	try {
 	    Method setMethod = getPropertySetter(o, name);
 	    if( setMethod!= null ) {
-		//System.out.println("Set object " + name);
+		//System.out.println("Set attribute " + o + " " + name + " " + v);
 		// Avoid conflict with String (properties )
 		Class[] ma =setMethod.getParameterTypes();
 		if ( (ma.length == 1) && (! ma[0].getName().equals("java.lang.String"))) {

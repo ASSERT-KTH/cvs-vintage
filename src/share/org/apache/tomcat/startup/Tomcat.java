@@ -21,24 +21,59 @@ public class Tomcat {
     Tomcat() {
     }
 
+    // Set the mappings
+    void setHelper( XmlHelper xmlHelper ) {
+	xmlHelper.addMap( "module", "org.apache.tomcat.service.startup.Module", true);
+	xmlHelper.addMap( "contextManager", "org.apache.tomcat.core.ContextManager");
+	xmlHelper.addMap( "context", "org.apache.tomcat.core.Context");
+	xmlHelper.addMap( "adapter" , "httpAdapter", "org.apache.tomcat.service.http.HttpAdapter");
+	xmlHelper.addMap( "requestInterceptor" , "mapper", "org.apache.tomcat.request.MapperInterceptor");
+	xmlHelper.addMap( "requestInterceptor", "contextMapper", "org.apache.tomcat.request.ContextMapperInterceptor");
+	xmlHelper.addMap( "requestInterceptor", "session", "org.apache.tomcat.request.SessionInterceptor");
+	xmlHelper.addMap( "requestInterceptor", "simpleMapper", "org.apache.tomcat.request.SimpleMapper");
+    }
+    
     void startTomcat() throws Exception {
 	File f=new File(configFile);
-	
-	TagMap mapper=new TagMap( "org.apache.tomcat.core" );
-	mapper.addMap( "httpAdapter", "org.apache.tomcat.service.http.HttpAdapter");
-	mapper.addMap( "contextManager", "org.apache.tomcat.core.ContextManager");
-	mapper.addMap( "tomcat", "org.apache.tomcat.startup.Tomcat");
-	mapper.addMap( "mapperInterceptor", "org.apache.tomcat.request.MapperInterceptor");
-	mapper.addMap( "contextMapperInterceptor", "org.apache.tomcat.request.ContextMapperInterceptor");
-	mapper.addMap( "sessionInterceptor", "org.apache.tomcat.request.SessionInterceptor");
-	mapper.addMap( "simpleMapper", "org.apache.tomcat.request.SimpleMapper");
-	
-	//	    mapper.addMap( "project", "org.apache.tools.tomcat.Project");
 
-	Properties props=new Properties();
-	ContextManager cm=(ContextManager)XmlHelper.readXml(f, props, mapper, null);
-	cm.start();
+	XmlHelper xmlHelper=new XmlHelper();
+	setHelper( xmlHelper );
 	
+	ContextManager cm=(ContextManager)xmlHelper.readXml(f);
+	
+	cm.start();
+	System.out.println("Done with  " + cm);
+    }
+    
+    // Set the mappings
+    void setHelperOld( XmlHelper xmlHelper ) {
+	xmlHelper.addMap( "Server", "org.apache.tomcat.server.HttpServer");
+	xmlHelper.addMap( "ContextManager", "org.apache.tomcat.core.ContextManager");
+	xmlHelper.addMap( "Context", "org.apache.tomcat.core.Context");
+	xmlHelper.addMap( "Connector", "org.apache.tomcat.core.Context");
+
+	// special treatement - use name attribute as a property name in parent
+	xmlHelper.addPropertyTag( "Parameter" );
+
+	xmlHelper.addAttributeMap( "org.apache.tomcat.server.HttpServer",
+				   "ContextManager",
+				   "contextManager");
+	xmlHelper.addAttributeMap( "org.apache.tomcat.core.Context",
+				   "ContextManager",
+				   "contextManager");
+    }
+    
+    void startTomcatOld() throws Exception {
+	File f=new File(configFile);
+
+	XmlHelper xmlHelper=new XmlHelper();
+	xmlHelper.setDebug( 0 );
+	setHelperOld( xmlHelper );
+	
+	org.apache.tomcat.server.HttpServer cm=(org.apache.tomcat.server.HttpServer)xmlHelper.readXml(f);
+
+	// XXX use invocation to do start!
+	cm.start();
 	System.out.println("Done with  " + cm);
     }
 
@@ -53,7 +88,10 @@ public class Tomcat {
 		return;
 	    }
 
-	    tomcat.startTomcat();
+	    if( ! "server.xml".equals(tomcat.configFile) )
+		tomcat.startTomcat();
+	    else
+		tomcat.startTomcatOld();
 
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
@@ -62,7 +100,7 @@ public class Tomcat {
     }
 
     // -------------------- Command-line args processing --------------------
-    String configFile="tomcat.xml";
+    String configFile="server.xml";
     
     public static void printUsage() {
 	System.out.println("usage: ");
@@ -89,30 +127,3 @@ public class Tomcat {
 
 }
 
-/** Maps a tag name using a package prefix and a number of static mappings.
- *  That means <contextManager> will be mapped to
- *              org.apache.core.tomcat.ContextManager
- *  and all tags will use the given package, unless overriden with addMap
- */
-class TagMap   extends Hashtable {
-    String defaultPackage;
-    Hashtable maps=new Hashtable();
-    
-    
-    public TagMap(String defP) {
-	defaultPackage=defP + ".";
-    }
-
-    public void addMap( String tname, String jname ) {
-	maps.put( tname, jname );
-    }
-
-    public Object get( Object key ) {
-	String tname=(String)key;
-	String cName=(String)maps.get(tname);
-	if(cName!=null) return InvocationHelper.getInstance( cName );
-	// default
-	cName= defaultPackage + InvocationHelper.capitalize( tname );
-	return InvocationHelper.getInstance( cName); 
-    }
-}

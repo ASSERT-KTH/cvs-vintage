@@ -269,7 +269,7 @@ public class Startup {
      */
 
     protected Registry createRegistry(int port)
-    throws StartupException {
+	throws StartupException {
         Registry registry = null;
 	int numberAttempts = 0;
 

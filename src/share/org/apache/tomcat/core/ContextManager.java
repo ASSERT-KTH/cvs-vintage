@@ -207,6 +207,7 @@ public class ContextManager {
      * @param ctx context to be added.
      */
     public void addContext( Context ctx ) {
+	ctx.setContextManager( this );
 	// assert "valid path" 
 
 	// it will replace existing context - it's better than 
@@ -293,6 +294,7 @@ public class ContextManager {
      * WorkDir property - where all temporary files will be created
      */ 
     public void setWorkDir( String wd ) {
+	if( debug>0) log( "set work dir " + wd );
 	this.workDir=wd;
     }
 
@@ -461,6 +463,7 @@ public class ContextManager {
 
     // Debug ( to be replaced with the real thing )
     public void setDebug( int level ) {
+	log( "Setting debug " + level );
 	debug=level;
     }
 
