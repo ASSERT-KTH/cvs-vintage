@@ -24,7 +24,7 @@
 // File: PropPanelComponentInstance.java
 // Classes: PropPanelComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponentInstance.java,v 1.8 2002/10/10 21:34:31 kataka Exp $
+// $Id: PropPanelComponentInstance.java,v 1.9 2002/10/25 11:33:24 mkl Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -35,6 +35,7 @@ import javax.swing.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
+import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
 import org.argouml.application.api.*;
 import org.argouml.uml.ui.*;
@@ -50,6 +51,10 @@ public class PropPanelComponentInstance extends PropPanelModelElement {
 
     Class mclass = MComponentInstance.class;
 
+    Class[] namesToWatch = 
+    { MStereotype.class, MNamespace.class, MClassifier.class};
+    
+    setNameEventListening(namesToWatch);
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
     addField(nameField,1,0,0);
 
