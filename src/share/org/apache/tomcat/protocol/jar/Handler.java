@@ -1,4 +1,10 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/protocol/jar/Attic/Handler.java,v 1.2 1999/11/13 00:54:03 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/13 00:54:03 $
+ *
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -56,17 +62,14 @@
  */ 
 
 
-package org.apache.tomcat.protocol;
+package org.apache.tomcat.protocol.jar;
+
+import org.apache.tomcat.protocol.WARConnection;
 
 import java.net.URL;
 import java.net.URLConnection;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
+import java.net.URLStreamHandler;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  *
@@ -74,113 +77,16 @@ import java.net.MalformedURLException;
  * @author James Todd [gonzo@eng.sun.com]
  */
 
-public class WARConnection
-extends URLConnection {
-    private URL warURL = null;
-    private String path = null;
-    private byte[] buffer = null;
-    private long size = 0;
-    private long time = 0;
-
-    public WARConnection (URL url)
-    throws MalformedURLException {
-        super(url);
-
-	parseSpecs(url);
-    }
-
-    public void connect()
+public class Handler
+extends URLStreamHandler {
+    protected URLConnection openConnection(URL url)
     throws IOException {
-	// XXX
-	// create and cache hashtable of ZipFiles
-        // ZipFile.getEntry(String entry)
-
-	ZipInputStream zis = new ZipInputStream(warURL.openStream());
-	ZipEntry ze = null;
-
-	while ((ze = zis.getNextEntry()) != null) {
-	    if (path.equals(ze.getName())) {
-                this.size = ze.getSize();
-                this.time = ze.getTime();
-
-	        int bufferSize = 128;
-		byte[] buffer = new byte[bufferSize];
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		int length = 0;
-		int totalLength = 0;
-
-	        out:
-
-		while ((length = zis.read(buffer)) >= 0) {
-		    baos.write(buffer, 0, length);
-		    totalLength += length;
-		}
-
-		this.buffer = baos.toByteArray();
-
-                if (this.size < 0) {
-                    this.size = totalLength;
-                }
-
-                break;
-	    }
-	}
-
-	zis.close();
-    }
-
-    public InputStream getInputStream()
-    throws IOException {
-        if (! super.connected) {
-	    connect();
-	}
-
-        if (this.buffer != null) {
-	    return new ByteArrayInputStream(this.buffer);
+	if (url.getProtocol().equalsIgnoreCase("jar")) {
+	    return new WARConnection(url);
 	} else {
-	    String msg = "error";
+	    String msg = "not sure how to provide the requested handler";
 
 	    throw new IOException(msg);
-	}
-    }
-
-    public String getContentType() {
-        // XXX
-        // hmmm .. what about the mimeTypes associated with
-        // this context
-        return URLConnection.getFileNameMap().getContentTypeFor(path);
-    }
-
-    public int getContentLength() {
-        Long l = new Long(this.size);
-
-        return l.intValue();
-    }
-
-    public long getLastModified() {
-        return this.time;
-    }
-
-    private void parseSpecs(URL url)
-    throws MalformedURLException {
-        String spec = url.getFile();
-
-        if (spec.startsWith("/")) {
-            spec = spec.substring(1);
-        }
-
-	int separator = spec.indexOf('!');
-
-	if (separator == -1) {
-	    String msg = "bad url: " + url;
-
-	    throw new MalformedURLException(msg);
-	}
-
-	this.warURL = new URL(spec.substring(0, separator++));
-
-	if (++separator != spec.length()) {
-	    this.path = spec.substring(separator, spec.length());
 	}
     }
 }
