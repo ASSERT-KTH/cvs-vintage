@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class WebMetaData extends MetaData
 {
@@ -117,6 +117,12 @@ public class WebMetaData extends MetaData
    public static final int REPLICATION_GRANULARITY_ATTRIBUTE = 1;
    public static final int REPLICATION_GRANULARITY_FIELD = 2;
    private int replicationGranularity = REPLICATION_GRANULARITY_SESSION;
+
+   /**
+    * If the replication granularity is FIELD, specify whether to use batch mode
+    * for pojo replication or not.
+    */
+   private boolean replicationFieldBatchMode = true;
 
    /** Should the context use session cookies or use default */
    private int sessionCookies = SESSION_COOKIES_DEFAULT;
@@ -451,6 +457,11 @@ public class WebMetaData extends MetaData
    public int getReplicationGranularity()
    {
       return replicationGranularity;
+   }
+
+   public boolean getReplicationFieldBatchMode()
+   {
+      return replicationFieldBatchMode;
    }
 
    public void importXml(Element element) throws DeploymentException
@@ -910,9 +921,18 @@ public class WebMetaData extends MetaData
                this.replicationGranularity = REPLICATION_GRANULARITY_SESSION;
             else if ("ATTRIBUTE".equalsIgnoreCase(repType))
                this.replicationGranularity = REPLICATION_GRANULARITY_ATTRIBUTE;
+            else if ("FIELD".equalsIgnoreCase(repType))
+               this.replicationGranularity = REPLICATION_GRANULARITY_FIELD;
             else
                throw new DeploymentException("replication-granularity value set to a non-valid value: '" + repType
-                  + "' (should be ['SESSION', 'ATTRIBUTE']) in jboss-web.xml");
+                  + "' (should be ['SESSION', 'ATTRIBUTE', or 'FIELD'']) in jboss-web.xml");
+         }
+
+         Element batchModeElement = MetaData.getOptionalChild(sessionReplicationRootElement, "replication-field-batch-mode");
+         if (batchModeElement != null)
+         {
+            Boolean flag = Boolean.valueOf(batchModeElement.getAttribute("replication-field-batch-mode"));
+            replicationFieldBatchMode = flag.booleanValue();
          }
       }
 

@@ -4,7 +4,7 @@
 elements into a JBoss deployment. This version applies to the JBoss 3.2.x
 releases.
 
-$Id: jboss-web_4_0.dtd,v 1.11 2005/01/19 19:40:18 starksm Exp $
+$Id: jboss-web_4_0.dtd,v 1.12 2005/02/08 07:29:15 bwang00 Exp $
 
   <!DOCTYPE jboss-web PUBLIC
     "-//JBoss//DTD Web Application 2.4//EN"
@@ -285,7 +285,8 @@ Example:
 <!--
    HTTP Session clustering configuration (optional tags)
 -->
-<!ELEMENT replication-config (replication-trigger? , replication-type?)>
+<!ELEMENT replication-config (replication-trigger? , replication-type? , replication-granularity ,
+   replication-field-batch-mode?)>
 
 <!--
    Clustering only: Determines when the container should consider that a session
@@ -295,13 +296,15 @@ Example:
                     2 - "SET_AND_NON_PRIMITIVE_GET" (default value)
                     3 - "SET"
 
-    The first option is conservative but not optimal (performance-wise): it will replicate the
+   The first option is conservative but not optimal (performance-wise): it will replicate the
    session even if its content has not been modified but simply accessed. There is no deterministic
    way to know if the content of an attribute is not itself modified. Consequently, by default, not
    hypothesis can be done. It is up to the developer to tell us if we can trust this policy.
-    The second option is conservative but will only replicate if a non-primitive Object has been
+
+   The second option is conservative but will only replicate if a non-primitive Object has been
    accessed (Integer, Long, String, etc. which are immutables). It is the default value.
-    The third option considers that the developer will explicitely call setAttribute on the session
+
+   The third option considers that the developer will explicitely call setAttribute on the session
    if it has to be replicated.
 
 Examples:
@@ -314,6 +317,10 @@ Examples:
 <!ELEMENT replication-trigger (#PCDATA)>
 
 <!--
+
+   Deprecated since since 3.2.6! The mode is configured through cluster-wide tc5-cluster-service.xml
+   now (CacheMode)
+
    Clustering only: Determines how the container will replicate your sessions.
                     Possible values are:
                     1 - "SYNC" (default)
@@ -332,6 +339,40 @@ Examples:
          <replication-type>ASYNC</replication-type>
 -->
 <!ELEMENT replication-type (#PCDATA)>
+
+<!--
+    Specify the session replication granularity level:
+       session - whole session level (default),
+       attribute - per attribute change, replicate only the changed attribute,
+       field - fine grained user object level (not yet supported).
+
+Examples:
+         <replication-granularity>SESSION</replication-granularity>
+-->
+<!ELEMENT replication-granularity (#PCDATA)>
+
+<!--
+   Determine whether to batch the replication when the granularity level is set to FIELD.
+   Default is true.
+
+   If this is set to TRUE, that means we will replicate the pojo changes only during the
+   http request is finished. To use this, the JBossCacheAop transaction manager class will
+   need to be configured as BatchModeTransactionManager such that a user can still have
+   UserTransaction inside the http request. However, note that the cache will not particiapte
+   in the UserTransaction in this case.
+
+   If you want cache to participate in the UserTransaction, you can configure the transaction
+   manager class to JBossTransactionManager and set this option to FALSE. The result is for
+   those session attribute changes that are not under transaction will replicate instantaneously,
+   while those particiate under transaction will replicate only when the transaction is
+   completed.
+
+Examples:
+         <replication-field-batch-mode>TRUE</replication-field-batch-mode>
+      or
+         <replication-field-batch-mode>FALSE</replication-field-batch-mode>
+-->
+<!ELEMENT replication-field-batch-mode (true|false) 'true'>
 
 <!-- The service-ref element provides jboss specific deployment values to
 the web service reference in web.xml.
