@@ -67,6 +67,10 @@ public class SessionController {
             reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             return Integer.parseInt(line);
+	}catch (NumberFormatException nfe) {
+            IOException ioe = new IOException();
+	    ioe.initCause(nfe);
+            throw ioe;
         } finally {
             if (reader != null) {
                 reader.close();
