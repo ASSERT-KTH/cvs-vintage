@@ -112,6 +112,11 @@ public final class OutputBuffer extends Writer {
  	cbuf=new char[defaultCharBufferSize];
     }
 
+    public OutputBuffer(int size) {
+	buf=new byte[size];
+ 	cbuf=new char[size];
+    }
+
     public OutputBuffer(Response resp) {
 	buf=new byte[defaultBufferSize];
  	cbuf=new char[defaultCharBufferSize];
@@ -124,6 +129,23 @@ public final class OutputBuffer extends Writer {
 	cm=req.getContextManager();
     }
 
+    public byte[] getBuffer() {
+	return buf;
+    }
+
+    /** Return the first available position in the byte buffer
+	( or the number of bytes written ).
+    */
+    public int getByteOff() {
+	return count;
+    }
+
+    /** Set the write position in the byte buffer
+     */
+    public void setByteOff(int c) {
+	count=c;
+    }
+
     void log( String s ) {
 	System.out.println("OutputBuffer: " + s );
     }
@@ -134,6 +156,7 @@ public final class OutputBuffer extends Writer {
     private void realWrite(Request req, Response res, byte buf[], int off, int cnt )
 	throws IOException
     {
+	if( res==null ) return;
 	// If this is the first write ( or flush )
 	if (!res.isBufferCommitted()) {
 	    res.endHeaders();
@@ -386,6 +409,10 @@ public final class OutputBuffer extends Writer {
     Hashtable encoders=new Hashtable();
     WriteConvertor conv;
 
+    public void setEncoding(String s) {
+	enc=s;
+    }
+
     void cWrite( char c[], int off, int len ) throws IOException {
 	if( debug > 0 ) log("cWrite(c,o,l) " + ccount + " " + len);
 	if( !gotEnc ) setConverter();
@@ -396,7 +423,8 @@ public final class OutputBuffer extends Writer {
     }
 
     private void setConverter() {
-	enc = resp.getCharacterEncoding();
+	if( resp!=null ) 
+	    enc = resp.getCharacterEncoding();
 	gotEnc=true;
 	if(enc==null) enc="8859_1";
 	conv=(WriteConvertor)encoders.get(enc);
@@ -455,7 +483,8 @@ public final class OutputBuffer extends Writer {
 	bytesWritten=0;
         ccount=0;
         charsWritten=0;
-
+	gotEnc=false;
+	enc=null;
     }
 
     public int getBufferSize() {
