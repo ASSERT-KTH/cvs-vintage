@@ -7,7 +7,7 @@ public class PermanentlyUnavailable extends HttpServlet {
     public void init(ServletConfig conf)
         throws ServletException
     {
-        throw new UnavailableException("Permanently Unavailable",-1);
+        throw new UnavailableException("Permanently Unavailable");
     }
 
     public void service(HttpServletRequest req, HttpServletResponse res)
