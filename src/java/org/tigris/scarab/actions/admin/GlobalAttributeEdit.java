@@ -72,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.2 2002/01/01 02:49:52 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.3 2002/01/02 19:44:28 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -142,110 +142,115 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         {
             // get the Attribute that we are working on
             Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-            Group attributeTypeGroup = intake.get("AttributeType", IntakeTool.DEFAULT_KEY);
-            String attributeTypeId = attributeTypeGroup.get("AttributeTypeId").toString();
-            AttributeType attributeType = (AttributeType)AttributeTypePeer.retrieveByPK(new NumberKey(attributeTypeId));
+            Group attributeTypeGroup = intake.get("AttributeType", 
+                                                  IntakeTool.DEFAULT_KEY);
+            String attributeTypeId = attributeTypeGroup.get("AttributeTypeId")
+                                                       .toString();
+            AttributeType attributeType = (AttributeType)AttributeTypePeer
+                .retrieveByPK(new NumberKey(attributeTypeId));
 
-System.out.println(attributeType.getName());
-if (attributeType.getAttributeClass().getName().equals("select-one"))
-{
-            String attributeId = attGroup.get("Id").toString();
-
-            Attribute attribute = Attribute
-                .getInstance((ObjectKey)new NumberKey(attributeId));
-
-            // get the list of ParentChildAttributeOptions's used to display the page
-            List pcaoList = attribute.getParentChildAttributeOptions();
-            for (int i=pcaoList.size()-1; i>=0; i--) 
+            if (attributeType.getAttributeClass().getName()
+                                                 .equals("select-one"))
             {
-                ParentChildAttributeOption pcao = 
-                    (ParentChildAttributeOption)pcaoList.get(i);
+                String attributeId = attGroup.get("Id").toString();
+
+                Attribute attribute = Attribute
+                     .getInstance((ObjectKey)new NumberKey(attributeId));
+
+                // get the list of ParentChildAttributeOptions's 
+                // used to display the page
+                List pcaoList = attribute.getParentChildAttributeOptions();
+                for (int i=pcaoList.size()-1; i>=0; i--) 
+                {
+                    ParentChildAttributeOption pcao = 
+                        (ParentChildAttributeOption)pcaoList.get(i);
                 
-                Group pcaoGroup = intake.get("ParentChildAttributeOption", 
-                                         pcao.getQueryKey());
+                     Group pcaoGroup = intake.get("ParentChildAttributeOption", 
+                                                  pcao.getQueryKey());
 
-                // there could be errors here so catch and re-display
-                // the same screen again.
-                NumberKey currentParentId = null;
-                try
-                {
-                    // store the currentParentId
-                    currentParentId = pcao.getParentId();
-                    // map the form data onto the objects
-                    pcaoGroup.setProperties(pcao);
-
-                    // the UI prevents this from being true, but check
-                    // anyway just in case.
-                    if (pcao.getOptionId().equals(pcao.getParentId()))
-                    {
-                        data.setMessage("Sorry, a recursive Parent Child " + 
-                            "relationship is not allowed!");
-                        intake.remove(pcaoGroup);
-                        return;
-                    }
-                    
-                    // save the PCAO now..
-                    pcao.save();
-
-                    // if we are changing the parent id's, then we want
-                    // to remove the old one after the new one is created
-                    if (!pcao.getParentId().equals(currentParentId))
-                    {
-                        ROptionOption
-                            .doRemove(currentParentId, pcao.getOptionId());
-                    }
-
-                    // also remove the group because we are re-displaying
-                    // the form data and we want it fresh
-                    intake.remove(pcaoGroup);
-                }
-                catch (Exception se)
-                {
-                    // on error, reset to previous values
-                    intake.remove(pcaoGroup);
-                    data.setMessage(se.getMessage());
-                    se.printStackTrace();
-                    return;
-                }
-            }
-            
-            // handle adding the new line.
-            ParentChildAttributeOption newPCAO = 
-                ParentChildAttributeOption.getInstance();
-            Group newPCAOGroup = intake.get("ParentChildAttributeOption", 
-                                     newPCAO.getQueryKey());
-            if ( newPCAOGroup != null ) 
-            {
-                try
-                {
-                    // assign the form data to the object
-                    newPCAOGroup.setProperties(newPCAO);
-                }
-                catch (Exception se)
-                {
-                    intake.remove(newPCAOGroup);
-                    data.setMessage(se.getMessage());
-                    return;
-                }
-                // only add a new entry if there is a name defined
-                if (newPCAO.getName() != null && newPCAO.getName().length() > 0)
-                {
-                    // save the new PCAO
-                    newPCAO.setAttributeId(new NumberKey(attributeId));
+                    // there could be errors here so catch and re-display
+                    // the same screen again.
+                    NumberKey currentParentId = null;
                     try
                     {
-                        newPCAO.save();
+                        // store the currentParentId
+                        currentParentId = pcao.getParentId();
+                        // map the form data onto the objects
+                        pcaoGroup.setProperties(pcao);
+ 
+                        // the UI prevents this from being true, but check
+                        // anyway just in case.
+                        if (pcao.getOptionId().equals(pcao.getParentId()))
+                        {
+                            data.setMessage("Sorry, a recursive Parent " +
+                              " Child relationship is not allowed!");
+                            intake.remove(pcaoGroup);
+                            return;
+                         }
+                    
+                        // save the PCAO now..
+                        pcao.save();
+
+                        // if we are changing the parent id's, then we want
+                        // to remove the old one after the new one is created
+                        if (!pcao.getParentId().equals(currentParentId))
+                        {
+                            ROptionOption.doRemove(currentParentId, 
+                                                   pcao.getOptionId());
+                        }
+
+                       // also remove the group because we are re-displaying
+                       // the form data and we want it fresh
+                       intake.remove(pcaoGroup);
                     }
-                    catch (Exception e)
+                    catch (Exception se)
                     {
-                        data.setMessage(e.getMessage());
+                        // on error, reset to previous values
+                        intake.remove(pcaoGroup);
+                        data.setMessage(se.getMessage());
+                        se.printStackTrace();
+                        return;
                     }
                 }
+            
+                // handle adding the new line.
+                ParentChildAttributeOption newPCAO = 
+                ParentChildAttributeOption.getInstance();
+                Group newPCAOGroup = intake.get("ParentChildAttributeOption", 
+                                                newPCAO.getQueryKey());
+                if ( newPCAOGroup != null ) 
+                {
+                    try
+                    {
+                        // assign the form data to the object
+                        newPCAOGroup.setProperties(newPCAO);
+                    }
+                    catch (Exception se)
+                    {
+                        intake.remove(newPCAOGroup);
+                        data.setMessage(se.getMessage());
+                        return;
+                    }
+                    // only add a new entry if there is a name defined
+                    if (newPCAO.getName() != null 
+                        && newPCAO.getName().length() > 0)
+                    {
+                        // save the new PCAO
+                        newPCAO.setAttributeId(new NumberKey(attributeId));
+                        try
+                        {
+                            newPCAO.save();
+                        }
+                        catch (Exception e)
+                        {
+                            data.setMessage(e.getMessage());
+                        }
+                    }
 
-                // now remove the group to set the page stuff to null
-                intake.remove(newPCAOGroup);
+                    // now remove the group to set the page stuff to null
+                    intake.remove(newPCAOGroup);
+                }
             }
-        }
         }
     }
 

@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.1 2001/12/31 23:43:02 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.2 2002/01/02 19:44:28 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -98,12 +98,11 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 RModuleOption rmo = (RModuleOption)rmos.get(i);
                 Group rmoGroup = intake.get("RModuleOption", 
                                  rmo.getQueryKey(), false);
+System.out.println(rmo.getOptionId() + " " + rmoGroup.get("Active"));
                 rmoGroup.setProperties(rmo);
+rmo.setActive(true);
                 rmo.save();
             }
-            String nextTemplate = data.getParameters()
-                .getString(ScarabConstants.NEXT_TEMPLATE);
-            setTarget(data, nextTemplate);            
         } 
     }
 
