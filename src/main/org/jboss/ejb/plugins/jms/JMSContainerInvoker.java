@@ -60,7 +60,7 @@ import org.jboss.jms.asf.StdServerSessionPool;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class JMSContainerInvoker
 	 implements ContainerInvoker, XmlLoadable
@@ -110,6 +110,8 @@ public class JMSContainerInvoker
    protected ServerSessionPool pool;
    protected ExceptionListenerImpl exListener;
    protected String beanName;
+   protected DLQHandler dlqHandler;
+   protected Element mdbConfig;
 
    // Static --------------------------------------------------------
 
@@ -375,6 +377,11 @@ public class JMSContainerInvoker
    {
       log.debug("initializing");
 
+      // Set up Dead Letter Queue handler
+      dlqHandler = new DLQHandler();
+      dlqHandler.importXml(mdbConfig);
+      dlqHandler.init();
+
       // Store TM reference locally - should we test for CMT Required
       tm = container.getTransactionManager();
 
@@ -572,6 +579,9 @@ public class JMSContainerInvoker
    {
       log.debug("Destroying JMSContainerInvoker for bean " + beanName);
 
+      // Take down DLQ
+      dlqHandler.destroy();
+
       // close the connection consumer
       try {
 	 if (connectionConsumer != null) {
@@ -633,6 +643,9 @@ public class JMSContainerInvoker
 
       if (!serverSessionPoolFactoryJNDI.startsWith("java:/"))
 	 serverSessionPoolFactoryJNDI = "java:/"+serverSessionPoolFactoryJNDI;
+
+      // Get MDBConfig
+      mdbConfig = (Element)MetaData.getUniqueChild(element, "MDBConfig").cloneNode(true);
    }
 
    // Package protected ---------------------------------------------
@@ -685,8 +698,17 @@ public class JMSContainerInvoker
 	    id = "JMSContainerInvoker";
 	 }
 
+
+
 	 // Invoke, shuld we catch any Exceptions??
 	 try {
+	    // DLQHandling
+	    if (message.getJMSRedelivered() && dlqHandler.handleRedeliveredMessage(message)) {
+	       // Message will be placed on Dead Letter Queue, 
+	       // if redelivered to many times
+	       return;
+	    }
+
 	    invoker.invoke(id,                     // Object id - where used?
 			   ON_MESSAGE,             // Method to invoke
 			   new Object[] {message}, // argument
