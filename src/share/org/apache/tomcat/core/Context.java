@@ -954,11 +954,14 @@ public class Context {
 
 	    while (e.hasMoreElements()) {
 		String servletName = (String)e.nextElement();
-		LookupResult result =
-		    container.lookupServletByName(servletName);
-
+		ServletsWrapper  result = container.getServletByName(servletName);
+		
+		if(result==null)
+		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
+		
 		try {
-		    result.getWrapper().loadServlet();
+		    if(result!=null)
+			result.loadServlet();
 		} catch (Exception ee) {
 		    String msg = sm.getString("context.loadServlet.e",
 		        servletName);

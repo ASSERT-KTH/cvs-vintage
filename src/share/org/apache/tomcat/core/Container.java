@@ -332,6 +332,10 @@ public class Container {
         return lookupResult;
     }
 
+    ServletWrapper lookupServlet(String servletName) {
+	return (ServletWrapper)servlets.get(servletName);
+    }
+
     LookupResult lookupServletAndLoadByName(String servletName) {
 	// XXX
 	// make sure that we aren't tramping over ourselves!

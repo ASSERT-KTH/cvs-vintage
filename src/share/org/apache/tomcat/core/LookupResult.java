@@ -74,6 +74,9 @@ class LookupResult {
     private String pathInfo = null;
     private String resolvedServlet = null;
 
+    LookupResult() {
+    }
+    
     LookupResult(ServletWrapper wrapper, String servletPath,
         String pathInfo) {
         this(wrapper, servletPath, null, pathInfo, null);
@@ -96,20 +99,45 @@ class LookupResult {
     ServletWrapper getWrapper() {
 	return wrapper;
     }
+    
+    void setWrapper(ServletWrapper wrapper) {
+	this.wrapper=wrapper;
+    }
 
     String getServletPath() {
 	return servletPath;
+    }
+
+    void setServletPath( String p ) {
+	servletPath=p;
     }
 
     String getMappedPath() {
 	return mappedPath;
     }
 
+    void setMappedPath( String m ) {
+	mappedPath=m;
+    }
+
     String getPathInfo() {
 	return pathInfo;
     }
 
+    void setPathInfo( String pi ) {
+	pathInfo=pi;
+    }
+    
     String getResolvedServlet() {
 	return resolvedServlet;
+    }
+
+    void setResolvedServlet(String rs ) {
+	resolvedServlet=rs;
+    }
+
+    public String toString() {
+	return "LookupResult( SP=" + servletPath + " PI=" + pathInfo + " MP="+mappedPath
+	    + " RS=" + resolvedServlet + " SW=" + wrapper + ")";
     }
 }
