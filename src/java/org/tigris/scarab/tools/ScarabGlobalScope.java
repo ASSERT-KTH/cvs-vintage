@@ -69,7 +69,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.8 2001/11/28 18:45:16 dr Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.9 2001/11/28 21:04:10 dr Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -102,6 +102,12 @@ public interface ScarabGlobalScope extends ApplicationTool
      * Get a user based on the given username.
      */
     public ScarabUser getUserByUsername(String username)
+        throws Exception;
+
+    /**
+     * Get a role based on the given name.
+     */
+    public Role getRoleByName(String name)
         throws Exception;
         
     /** 

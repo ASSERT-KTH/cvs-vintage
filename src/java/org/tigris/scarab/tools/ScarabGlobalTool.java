@@ -80,7 +80,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.13 2001/11/28 20:15:07 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.14 2001/11/28 21:04:37 dr Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -108,9 +108,9 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public ScarabGlobalTool()
     {
         constant = new FieldMethodizer(
-            "org.tigris.scarab.util.ScarabConstants");
+                                       "org.tigris.scarab.util.ScarabConstants");
         security = new FieldMethodizer(
-            "org.tigris.scarab.services.security.ScarabSecurity");
+                                       "org.tigris.scarab.services.security.ScarabSecurity");
     }
     
     /**
@@ -121,7 +121,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return constant;
     }
-
+    
     /**
      * holds the Scarab permission constants.  It will be available to 
      * the template system as $scarabG..PERMISSION_NAME.
@@ -213,7 +213,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             lSearchField = ScarabUserImplPeer.getTableName() + '.' + lSearchField;
             
             criteria = criteria.add(lSearchField,
-                (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
+                                        (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
         }
         
         // sort the results
@@ -257,7 +257,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         }
         return (userSearchList);
     }
-
+    
     
     /** Returns a User object retrieved by specifying the username.
      *
@@ -283,6 +283,20 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return (user);
     }
     
+    /** Returns a Role object retrieved by specifying the name of the role.
+     *
+     * @param name the name of the role to retrieve
+     * @returns the specified Role, if found, or null otherwise
+     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     */
+    public Role getRoleByName(String name) throws Exception
+    {
+        Role role = null;
+        role = (Role)TurbineSecurity.getRole(name);   
+        
+        return (role);
+    }
+    
     /** 
      * Gets a list of all Groups
      */
@@ -298,7 +312,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return (TurbineSecurity.getAllPermissions().getPermissionsArray());
     }
-
+    
     /** 
      * Gets a list of all Roles.
      */
@@ -306,7 +320,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         return TurbineSecurity.getAllRoles().getRolesArray();
     }
-
+    
     /**
      * Gets an ACL object for a user
      */
