@@ -350,7 +350,6 @@
       </div>
     #end
 #end
-
 #if (!$currentIssue.Comments.isEmpty() || $canEdit)
 
 ## COMMENTS
@@ -367,7 +366,12 @@
          <a href="mailto:$commentUser.Email">$commentUser.UserName</a>
          </th>
 
-         <td>$comment.DataAsString</td>
+         <td>
+         #if ($security.hasPermission("admin_users"))
+           <textarea rows="2" cols="35" class="text" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea></td>
+         #else
+           $comment.DataAsString
+         #end
         </tr>
 
     #end
@@ -384,7 +388,10 @@
          </tr>
          <tr>
          <td colspan="2">
-           <input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"/>
+           <input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"/>&#160; 
+         #if ($security.hasPermission("admin_users"))
+           <input type="submit" value="edit comment(s)" name="eventSubmit_doEditcomment"/>
+         #end
          </td>
     #end
         </table>
@@ -397,7 +404,6 @@
 #else
   #set( $activity = $currentIssue.getActivity(false) )
 #end
-
 #if (!$activity.isEmpty() )
 
 ## ISSUE HISTORY
