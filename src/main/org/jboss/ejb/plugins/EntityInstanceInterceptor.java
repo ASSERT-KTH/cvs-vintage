@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.22 $
+*   @version $Revision: 1.23 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -89,18 +89,22 @@ extends AbstractInterceptor
             // Always unlock, no matter what
             ctx.unlock();
             
-            // Still free? Not free if create() was called successfully
-            if (ctx.getId() == null)
-            {
-                container.getInstancePool().free(ctx);
-            } 
-            else
-            {
-                // DEBUG           Logger.debug("Entity was created; not returned to pool");
-                synchronized (ctx) {
+            synchronized (ctx) {
+                
+                // Still free? Not free if create() was called successfully
+                if (ctx.getId() == null)
+                {
+                    container.getInstancePool().free(ctx);
+                
+                    // the pool will notify all everyone
+                } 
+                else
+                {
+                    // DEBUG           Logger.debug("Entity was created; not returned to pool");
                     
-                    //Let the waiters know
-                    ctx.notifyAll();
+                    //Let one waiter know
+                    ctx.notify();
+                    
                 }
             }
         }
@@ -146,7 +150,7 @@ extends AbstractInterceptor
                         Logger.debug("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
                         
                         try {
-                            ctx.wait();
+                            ctx.wait(5000);
                         } catch (InterruptedException ie) {}
                         
                         // Try your luck again
@@ -173,7 +177,7 @@ extends AbstractInterceptor
                                 Logger.debug("LOCKING-WAITING (CTX) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
                                 
                                 try{
-                                    ctx.wait();
+                                    ctx.wait(5000);
                                 } catch (InterruptedException ie) {}
                                 
                                 // Try your luck again
@@ -240,11 +244,21 @@ extends AbstractInterceptor
                         
                         // It has been removed -> send to the pool
                         container.getInstancePool().free(ctx);
+                        
+                        // The pool will notify everyone waiting on this
+                        
                     }
                 }
                 
-                // notify the thread waiting on ctx
-                synchronized (ctx) { ctx.notifyAll();}
+                else {
+                 
+                    // MF FIXME for speed reason I use notify
+                    // however we would need to lock on the tx and ctx so we can 
+                    // notify the right population, slightly more complicated...
+                    
+                    // notify the next thread waiting on ctx
+                    synchronized (ctx) { ctx.notify();}
+                }
             }
         }
     }

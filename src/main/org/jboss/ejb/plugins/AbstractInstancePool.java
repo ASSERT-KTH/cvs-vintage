@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable
@@ -128,7 +128,10 @@ public abstract class AbstractInstancePool
       // Pool it
 //DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
       
-      ctx.clear();      
+      ctx.clear();
+      
+      // Free everyone waiting on that ctx
+      synchronized (ctx) {ctx.notifyAll();}
       
       if (pool.size() < maxSize)
       {
@@ -153,16 +156,16 @@ public abstract class AbstractInstancePool
    
    // Z implementation ----------------------------------------------
    
-	// XmlLoadable implementation
-	public void importXml(Element element) throws DeploymentException {
-		String maximumSize = MetaData.getElementContent(MetaData.getUniqueChild(element, "MaximumSize"));
-	    try {
-			maxSize = Integer.parseInt(maximumSize);
-		} catch (NumberFormatException e) {
-			throw new DeploymentException("Invalid MaximumSize value for instance pool configuration");
-		}
-	}
-	
+    // XmlLoadable implementation
+    public void importXml(Element element) throws DeploymentException {
+       String maximumSize = MetaData.getElementContent(MetaData.getUniqueChild(element, "MaximumSize"));
+        try {
+         maxSize = Integer.parseInt(maximumSize);
+       } catch (NumberFormatException e) {
+         throw new DeploymentException("Invalid MaximumSize value for instance pool configuration");
+       }
+    }
+    
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
