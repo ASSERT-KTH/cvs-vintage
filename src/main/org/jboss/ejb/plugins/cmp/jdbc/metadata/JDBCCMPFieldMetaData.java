@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public final class JDBCCMPFieldMetaData
 {
@@ -199,19 +199,34 @@ public final class JDBCCMPFieldMetaData
          Field pkField = null;
          for(int i = 0; i < fields.length; i++)
          {
-            if(fields[i].getName().equals(fieldName))
+            final Field field = fields[i];
+            if(field.getName().equals(fieldName))
             {
-
                // verify field type
-               if(!fields[i].getType().equals(fieldType))
+               if(!field.getType().equals(fieldType))
                {
-                  throw new DeploymentException("Field " + fieldName +
-                     " in prim-key-class must be the same type");
+                  throw new DeploymentException("Field " + fieldName + " in prim-key-class must be the same type");
+               }
+
+               if(pkField != null)
+               {
+                  if(field.getDeclaringClass().equals(entity.getPrimaryKeyClass()))
+                  {
+                     pkField = field;
+                  }
+
+                  org.jboss.logging.Logger.getLogger(getClass().getName() + '.' + entity.getName()).warn(
+                     "PK field " + fieldName + " was found more than once in class hierarchy of " +
+                     entity.getPrimaryKeyClass().getName() + ". Will use the one from " + pkField.getDeclaringClass().getName()
+                  );
+               }
+               else
+               {
+                  pkField = field;
                }
 
                // we are a pk member
                pkMember = true;
-               pkField = fields[i];
             }
          }
          primaryKeyMember = pkMember;
