@@ -507,7 +507,7 @@ try{
     public ScarabUser getUserByUserName(String username)
      throws Exception
     {
-        return ScarabUserManager.getInstance(username, getIssue().getIdDomain());
+        return ScarabUserManager.getInstance(username, getIssue().getModule().getDomain());
     }
 
     /**
