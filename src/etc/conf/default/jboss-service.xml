@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.26 2002/02/03 20:22:15 azakkerman Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.27 2002/02/10 04:10:59 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -17,7 +17,6 @@
      | then there is no need to list the files and it should commented
    -->
   <classpath codebase="lib/ext" archives="*"/>
-  <classpath codebase="lib/jini" archives="*"/>
 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
