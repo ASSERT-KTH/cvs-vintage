@@ -1,4 +1,4 @@
-// $Id: NotationNameImpl.java,v 1.19 2004/10/02 13:29:42 mvw Exp $
+// $Id: NotationNameImpl.java,v 1.20 2004/10/21 06:56:15 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,11 +23,18 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.notation;
+import java.util.ArrayList;
+import java.util.ListIterator;
+
+import javax.swing.Icon;
+
 import org.apache.log4j.Logger;
-import org.argouml.application.api.*;
-import org.argouml.application.events.*;
-import java.util.*;
-import javax.swing.*;
+import org.argouml.application.api.NotationName;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoModuleEvent;
+import org.argouml.application.events.ArgoModuleEventListener;
+import org.argouml.application.events.ArgoNotationEvent;
 
 /**
  *   This class provides definition and manipulation of notation names.

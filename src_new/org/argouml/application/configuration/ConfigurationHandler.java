@@ -1,4 +1,4 @@
-// $Id: ConfigurationHandler.java,v 1.13 2004/03/09 20:33:19 mvw Exp $
+// $Id: ConfigurationHandler.java,v 1.14 2004/10/21 06:56:14 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,11 +24,14 @@
 
 
 package org.argouml.application.configuration;
-import org.argouml.application.api.*;
-import java.beans.*;
-import java.io.*;
-import java.net.*;
-import org.apache.log4j.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.net.URL;
+
+import org.apache.log4j.Logger;
+import org.argouml.application.api.Configuration;
+import org.argouml.application.api.ConfigurationKey;
 
 /**
  *   This class provides a user configuration based upon properties.

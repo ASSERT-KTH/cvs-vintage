@@ -1,4 +1,4 @@
-// $Id: ConfigurationKeyImpl.java,v 1.5 2004/03/09 20:33:19 mvw Exp $
+// $Id: ConfigurationKeyImpl.java,v 1.6 2004/10/21 06:56:14 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,9 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.configuration;
-import org.argouml.application.api.*;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+
+import org.argouml.application.api.ConfigurationKey;
 
 /**
  *   This class provides definition and manipulation of configuration keys.

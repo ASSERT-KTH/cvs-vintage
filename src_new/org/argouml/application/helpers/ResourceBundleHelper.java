@@ -1,4 +1,4 @@
-// $Id: ResourceBundleHelper.java,v 1.4 2004/09/11 09:25:58 mvw Exp $
+// $Id: ResourceBundleHelper.java,v 1.5 2004/10/21 06:56:15 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,9 +23,11 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.helpers;
-import org.argouml.application.api.*;
-import java.util.*;
-import org.tigris.gef.util.*;
+import java.util.ListResourceBundle;
+import java.util.Vector;
+
+import org.argouml.application.api.PluggableResourceBundle;
+import org.tigris.gef.util.Localizer;
 
 /** Helper object for Pluggable Resource Bundles
  *

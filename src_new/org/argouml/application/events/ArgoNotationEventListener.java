@@ -1,4 +1,4 @@
-// $Id: ArgoNotationEventListener.java,v 1.5 2003/09/17 00:53:42 thierrylach Exp $
+// $Id: ArgoNotationEventListener.java,v 1.6 2004/10/21 06:56:15 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.events;
-import org.argouml.application.api.*;
+import org.argouml.application.api.ArgoEventListener;
 
 /** An interface that objects interested in NotationEvent
  *  notifications must extend.

@@ -1,4 +1,4 @@
-// $Id: NotationProviderFactory.java,v 1.11 2004/09/11 09:25:57 mvw Exp $
+// $Id: NotationProviderFactory.java,v 1.12 2004/10/21 06:56:15 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,12 +28,20 @@
 
 package org.argouml.application.notation;
 
+import java.util.ArrayList;
+import java.util.ListIterator;
+
 import org.apache.log4j.Logger;
-import org.argouml.application.api.*;
-import org.argouml.application.events.*;
-
-import java.util.*;
-
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Notation;
+import org.argouml.application.api.NotationName;
+import org.argouml.application.api.NotationProvider2;
+import org.argouml.application.api.PluggableNotation;
+import org.argouml.application.events.ArgoEventPump;
+import org.argouml.application.events.ArgoEventTypes;
+import org.argouml.application.events.ArgoModuleEvent;
+import org.argouml.application.events.ArgoModuleEventListener;
+import org.argouml.application.events.ArgoNotationEvent;
 import org.argouml.uml.generator.GeneratorDisplay;
 
 /** Provides a factory for handling notation providers.
