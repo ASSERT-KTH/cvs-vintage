@@ -21,6 +21,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 
 /**
@@ -29,31 +30,31 @@ import org.columba.core.io.DiskIO;
  */
 public class PluginManagerTest extends TestCase {
 
-    private File file;
+	private File file;
 
-    /*
-     * @see TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        //      create config-folder
-        file = new File("test_config");
-        file.mkdir();
+	/*
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		//      create config-folder
+		file = new File("test_config");
+		file.mkdir();
 
-        // initialize configuration - core
-       // MainInterface.config = new Config(file);
-    }
+		// initialize configuration - core
+		new Config(file);
+	}
 
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        // remove configuration directory
-        DiskIO.deleteDirectory(file);
-    }
-    
-    public void test() {
-        PluginManager manager = new PluginManager();
-        manager.initPlugins();
-    }
+	/**
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		// remove configuration directory
+		DiskIO.deleteDirectory(file);
+	}
+
+	public void test() {
+		PluginManager manager = new PluginManager();
+		manager.initPlugins();
+	}
 
 }

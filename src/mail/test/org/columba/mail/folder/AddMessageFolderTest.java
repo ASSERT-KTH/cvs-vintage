@@ -18,6 +18,7 @@ package org.columba.mail.folder;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.MailboxInfo;
 
@@ -112,14 +113,14 @@ public class AddMessageFolderTest extends AbstractFolderTst {
         // add stream to folder
         Object uid = getSourceFolder().addMessage(inputStream);
         Flags flags = getSourceFolder().getFlags(uid);
-        flags.setSeen(true);
+        
+        // mark message as read
+        getSourceFolder().markMessage(new Object[] {uid}, MarkMessageCommand.MARK_AS_READ);
 
         MailboxInfo info = getSourceFolder().getMessageFolderInfo();
 
         assertEquals("message-folderinfo exists", 1, info.getExists());
         assertEquals("Number of unseen messages in folder", 0, info.getUnseen());
-        assertEquals("Number of seen messages in folder", 0, info.getExists()
-                - info.getUnseen());
 
         // close streams
         inputStream.close();
