@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.25 2001/11/08 11:25:36 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.26 2001/11/08 22:24:56 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -629,7 +629,6 @@ public class JEditTextArea extends JComponent
 
 		if(changed)
 		{
-			System.err.println("changed");
 			if(firstLine < 0)
 				firstLine = 0;
 
