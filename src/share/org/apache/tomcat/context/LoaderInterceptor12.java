@@ -80,10 +80,10 @@ import org.apache.tomcat.loader.*;
  *
  * @author costin@dnt.ro
  */
-public class LoaderInterceptor1 extends BaseInterceptor {
+public class LoaderInterceptor12 extends BaseInterceptor {
     String classLoaderName;
     
-    public LoaderInterceptor1() {
+    public LoaderInterceptor12() {
     }
 
     public void setClassLoaderName( String name ) {
