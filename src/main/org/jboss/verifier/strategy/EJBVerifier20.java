@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.16 2002/04/14 01:12:05 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.17 2002/04/14 12:00:07 jwalters Exp $
  */
 
 
@@ -49,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -1398,7 +1398,6 @@ public class EJBVerifier20 extends AbstractVerifier {
                     }
 
                     if (entity.isCMP() && hasMatchingEJBFind(bean, method)) {
-                        System.out.println("Method is "+method.getName());
                         fireSpecViolationEvent(entity, method, new Section("10.6.2.j"));
                         status = false;
                     } else if (entity.isBMP()) {
