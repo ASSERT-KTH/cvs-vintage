@@ -46,6 +46,7 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Calendar;
 
@@ -53,10 +54,13 @@ import org.xml.sax.Attributes;
 
 import org.apache.commons.util.GenerateUniqueId;
 
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScarabUserImpl;
 
+import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.TurbineSecurity;
 
 /**
@@ -101,12 +105,12 @@ public class UserRule extends BaseRule
         if (isUserInUserList(getImportBean()))
         {
             log().debug("(" + getImportBean().getState() + ") user: " + 
-                user.getEmail() + ", already defined; ignoring");
+                user.getEmail() + ", already defined previously in XML file; ignoring");
         }
         else
         {
             getImportBean().getUserList().add(user.getEmail());
-            log().debug("(" + getImportBean().getState() + ") new user: " + 
+            log().debug("(" + getImportBean().getState() + ") user element populated: " + 
                 user.getEmail());
             super.doInsertionOrValidationAtEnd();
         }
@@ -123,48 +127,71 @@ public class UserRule extends BaseRule
     protected void doInsertionAtEnd()
         throws Exception
     {
-        List roles = getImportBean().getRoleList();
-        ScarabUser user = getImportBean().getScarabUser();
-        String email = user.getEmail();
-        String lastName = user.getLastName();
-        if (lastName == null)
-        {
-            lastName = "";
-        }
-        String firstName = user.getFirstName();
-        if (firstName == null)
-        {
-            firstName = "";
-        }
+        ScarabUser userElement = getImportBean().getScarabUser();
 
         try
         {
-            ScarabUser existingUser = (ScarabUser)TurbineSecurity.getUser(email);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            TurbineSecurity.saveUser(user);
-            log().debug("(" + getImportBean().getState() + ") updated user: " + email);
+            ScarabUser existingUser = (ScarabUser)TurbineSecurity.getUser(userElement.getEmail());
+            existingUser.setFirstName(userElement.getFirstName());
+            existingUser.setLastName(userElement.getLastName());
+            TurbineSecurity.saveUser(existingUser);
+
+            TurbineSecurity.revokeAll(existingUser);
+            grantRoles(existingUser);
+            
+            log().info("(" + getImportBean().getState() + ") updated user: " + userElement.getEmail());
+        }
+        catch (org.apache.fulcrum.security.util.UnknownEntityException e)
+        {
+            addNewUser(userElement);
+            grantRoles(userElement);
         }
         catch (Exception e)
         {
-            String tempPassword = GenerateUniqueId.getIdentifier();
-            if (tempPassword.length() > UNIQUE_ID_MAX_LEN)
-            {
-                tempPassword = tempPassword.substring(0, UNIQUE_ID_MAX_LEN);
-            }
-            user = ScarabUserManager.getInstance();
-            user.setUserName(email);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setPassword(tempPassword);
-            user.createNewUser();
-            ScarabUserImpl.confirmUser(email);
-            user.setPasswordExpire(Calendar.getInstance());
-            log().debug("(" + getImportBean().getState() + ") added user: " + email);
+            throw new Exception ("Error processing user element: " + e);
         }
     }
 
+    private void addNewUser(ScarabUser newUser)
+        throws Exception
+    {
+        String tempPassword = GenerateUniqueId.getIdentifier();
+        if (tempPassword.length() > UNIQUE_ID_MAX_LEN)
+        {
+            tempPassword = tempPassword.substring(0, UNIQUE_ID_MAX_LEN);
+        }
+        ScarabUser user = ScarabUserManager.getInstance();
+        user.setUserName(newUser.getEmail());
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setEmail(newUser.getEmail());
+        user.setPassword(tempPassword);
+        user.createNewUser();
+        user.setPasswordExpire(Calendar.getInstance());
+        ScarabUserImpl.confirmUser(newUser.getEmail());
+        log().info("(" + getImportBean().getState() + ") added user: " + newUser.getEmail());
+    }
+
+    private void grantRoles(ScarabUser user)
+        throws Exception
+    {
+        List roles = getImportBean().getRoleList();
+        org.apache.fulcrum.security.entity.Group module = 
+            (org.apache.fulcrum.security.entity.Group) getImportBean().getModule();
+
+        Iterator itr = roles.iterator();
+        while (itr.hasNext())
+        {
+            Role role = TurbineSecurity.getRole((String)itr.next());
+            module.grant((User)user, role);
+        }
+        if (roles.size() > 0)
+        {
+            ((Module)module).save();
+        }
+        log().info("(" + getImportBean().getState() + ") granted roles: " + roles.toString());
+    }
+    
     /**
      * handle the validation.  
      */
@@ -174,7 +201,7 @@ public class UserRule extends BaseRule
         // pop off the stack in reverse order!
         ScarabUser user = getImportBean().getScarabUser();
         List roles = getImportBean().getRoleList();
-        log().debug("(" + getImportBean().getState() + ") user has: " + roles.size() + " roles");
+//        log().debug("(" + getImportBean().getState() + ") user has: " + roles.size() + " roles");
     }
 
     public static boolean isUserInUserList(ImportBean ib)

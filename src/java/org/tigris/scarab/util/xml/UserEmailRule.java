@@ -54,7 +54,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Handler for the xpath "scarab/module/user/email".
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UserEmailRule.java,v 1.1 2002/04/11 02:51:07 jon Exp $
+ * @version $Id: UserEmailRule.java,v 1.2 2002/04/23 01:06:27 jon Exp $
  */
 public class UserEmailRule extends BaseRule 
 {
@@ -76,6 +76,8 @@ public class UserEmailRule extends BaseRule
         {
             ScarabUser user = getImportBean().getScarabUser();
             user.setEmail(text);
+            log().debug("(" + getImportBean().getState() + ") user set email: " + 
+                user.getEmail());
         }
     }
 }

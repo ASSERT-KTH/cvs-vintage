@@ -54,7 +54,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Handler for the xpath "scarab/module/user/lastname".
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UserLastNameRule.java,v 1.1 2002/04/11 02:51:07 jon Exp $
+ * @version $Id: UserLastNameRule.java,v 1.2 2002/04/23 01:06:27 jon Exp $
  */
 public class UserLastNameRule extends BaseRule 
 {
@@ -72,10 +72,14 @@ public class UserLastNameRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
+        ScarabUser user = getImportBean().getScarabUser();
         if (text != null && text.length() > 0)
         {
-            ScarabUser user = getImportBean().getScarabUser();
             user.setLastName(text);
+        }
+        else
+        {
+            user.setLastName("");
         }
     }
 }
