@@ -92,7 +92,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.46 2003/08/01 20:45:26 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.47 2003/08/02 02:48:50 elicia Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -508,7 +508,14 @@ public class ScarabIssues implements java.io.Serializable
                 "CouldNotFindIssueType", issue.getArtifactType());
             addImportError(error);
         }
-
+        if (issueTypeOM.getLocked())
+        {
+            String error = Localization.format(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                getLocale(),
+                "IssueTypeLocked", issue.getArtifactType());
+            addImportError(error);
+        }
         List moduleAttributeList = null;
         if (moduleOM != null)
         {
