@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.71 2002/02/05 23:30:20 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.72 2002/02/06 00:37:06 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -573,147 +573,91 @@ public class ModifyIssue extends RequireLoginFirstAction
 
     /**
     *  Modifies the dependency type between the current issue
-    *  And its child issue.
+    *  And its parent or child issue.
     */
-    public void doUpdatechild (RunData data, TemplateContext context)
+    public void doUpdatedependencies (RunData data, TemplateContext context)
         throws Exception
     {                          
-        String id = data.getParameters().getString("id");
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        Issue currentIssue = Issue.getIssueById(id);
-        ScarabUser user = (ScarabUser)data.getUser();
-        String key;
-        String childId;
-        Depend depend;
-
-        for (int i =0; i<keys.length; i++)
+        IntakeTool intake = getIntakeTool(context);
+        if (intake.isAllValid())
         {
-            key = keys[i].toString();
-            if (key.startsWith("child_depend_type_id"))
+            ScarabUser user = (ScarabUser)data.getUser();
+            String id = data.getParameters().getString("id");
+            Issue currentIssue = Issue.getIssueById(id);
+
+            List dependencies = new ArrayList();
+            List children = currentIssue.getChildren();
+            List parents = currentIssue.getParents();
+            dependencies.addAll(children);
+            dependencies.addAll(parents);
+
+            for (int i=0; i< dependencies.size(); i++)
             {
-               String dependTypeId = params.getString(key);
-               
-               childId = key.substring(21);
-               Issue child = (Issue) IssuePeer
-                              .retrieveByPK(new NumberKey(childId));
-               depend = currentIssue.getDependency(child);
-               String oldValue = depend.getDependType().getName();
-               String newValue = null;
-
-               // User selected to remove the dependency
-               if (dependTypeId.equals("none"))
-               {
-                   depend.delete();
-                   newValue = "none";
-               } 
-               else
-               {
-                   DependType dependType = (DependType) DependTypePeer
-                              .retrieveByPK(new NumberKey(dependTypeId));
-                   depend.setDependType(dependType);
-                   newValue = dependType.getName();
-               }
-
-               depend.save();
-               currentIssue.save();
-
-               // Save transaction record
-               Transaction transaction = new Transaction();
-               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                  user, null);
-
-               // Save activity record
-               Activity activity = new Activity();
-               StringBuffer descBuf = new StringBuffer("changed dependency " + 
-                                                       "type on Issue ");
-               descBuf.append(child.getUniqueId());
-               descBuf.append(" from ").append(oldValue);
-               descBuf.append(" to ").append(newValue);
-               String desc = descBuf.toString();
-               activity.create(currentIssue, null, desc, transaction,
-                               oldValue, newValue);
-               if (!transaction.sendEmail(new ContextAdapter(context), 
-                                     currentIssue))
-               {
-                    data.setMessage("Your changes were saved, but could not send notification email "
-                                     + "due to a sendmail error.");
-               }
-  
-               break;
-            }
-         }
-    }
-
-    /**
-    *  Modifies the dependency type between the current issue
-    *  And its parent issue.
-    */
-    public void doUpdateparent (RunData data, TemplateContext context)
-        throws Exception
-    {                          
-        String id = data.getParameters().getString("id");
-        Issue issue = Issue.getIssueById(id);
-        ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        ScarabUser user = (ScarabUser)data.getUser();
-        String key;
-        String parentId;
-        Depend depend;
-
-        for (int i =0; i<keys.length; i++)
-        {
-            key = keys[i].toString();
-            if (key.startsWith("parent_depend_type_id"))
-            {
-                String dependTypeId = params.getString(key);
-                parentId = key.substring(22);
-                Issue parent = (Issue) IssuePeer
-                              .retrieveByPK(new NumberKey(parentId));
-                depend = parent.getDependency(issue);
+                Depend depend = (Depend)dependencies.get(i);
+                Group group = intake.get("Depend", depend.getQueryKey(), false);
                 String oldValue = depend.getDependType().getName();
+                group.setProperties(depend);
+                depend.save();
                 String newValue = null;
-
-                // User selected to remove the dependency
-                if (dependTypeId.equals("none"))
+      
+                // User is deleting dependency
+                if (group.get("Deleted").toString().equals("true"))
                 {
-                    depend.delete();
                     newValue = "none";
                 }
                 else
                 {
-                    depend.setTypeId(dependTypeId);
-                    DependType dependType = (DependType) DependTypePeer
-                              .retrieveByPK(new NumberKey(dependTypeId));
-                    newValue = dependType.getName();
+                    newValue = depend.getDependType().getName();
                 }
-                depend.save();
+               
+                // User is changing dependency type
+                if (!newValue.equals(oldValue))
+                {
+                   Issue otherIssue = null;
+                   if (currentIssue.getIssueId().toString()
+                       .equals(depend.getObservedId().toString()))
+                   {
+                       otherIssue = (Issue)IssuePeer.
+                                    retrieveByPK(depend.getObserverId());
+                   }
+                   else
+                   {
+                       otherIssue = (Issue)IssuePeer.
+                                    retrieveByPK(depend.getObservedId());
+                   }
 
-               // Save transaction record
-               Transaction transaction = new Transaction();
-               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                  user, null);
+                   // Save transaction record
+                   Transaction transaction = new Transaction();
+                   transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                      user, null);
 
-               // Save activity record
-               Activity activity = new Activity();
-               StringBuffer descBuf = new StringBuffer("changed dependency " + 
-                                                       "type on Issue ");
-               descBuf.append(issue.getUniqueId());
-               descBuf.append(" from ").append(oldValue);
-               descBuf.append(" to ").append(newValue);
-               String desc = descBuf.toString();
-               activity.create(issue, null, desc, transaction,
-                               oldValue, newValue);
-               issue.save();
-               if (!transaction.sendEmail(new ContextAdapter(context), issue))
-               {
-                    data.setMessage("Your changes were saved, but could not send notification email "
-                                     + "due to a sendmail error.");
+                   // Save activity record
+                   Activity activity = new Activity();
+                   StringBuffer descBuf = new StringBuffer("changed dependency " 
+                                                           + "type on Issue ");
+                   descBuf.append(otherIssue.getUniqueId());
+                   descBuf.append(" from ").append(oldValue);
+                   descBuf.append(" to ").append(newValue.toString());
+                   String desc = descBuf.toString();
+                   activity.create(currentIssue, null, desc, transaction,
+                                   oldValue, newValue.toString());
+                   currentIssue.save();
+                   if (!transaction.sendEmail(new ContextAdapter(context), 
+                                              currentIssue))
+                   {
+                        data.setMessage("Your changes were saved, but could "
+                                        + "not send notification "
+                                        + "email due to a sendmail error.");
+                   }
                }
-
             }
         }
+        else
+        {
+            data.setMessage(ERROR_MESSAGE);
+        }
     }
+
 
     /**
     *  Adds a dependency between this issue and another issue.
@@ -726,7 +670,94 @@ public class ModifyIssue extends RequireLoginFirstAction
         Issue issue = Issue.getIssueById(id);
         ScarabUser user = (ScarabUser)data.getUser();
         IntakeTool intake = getIntakeTool(context);
-        Group group = intake.get("Depend", "dependKey", false);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Group group = intake.get("Depend", IntakeTool.DEFAULT_KEY);
+        Issue childIssue = null;
+        boolean isValid = true;
+        Depend depend = new Depend();
+
+        // Check that dependency type entered is valid
+        Field type = group.get("TypeId");
+        type.setRequired(true);
+        if (!type.isValid())
+        {
+            type.setMessage("Please enter a valid dependency type.");
+        }
+
+        // Check that child ID entered is valid
+        Field childId = group.get("ObserverUniqueId");
+        childId.setRequired(true);
+        if (!childId.isValid())
+        {
+            childId.setMessage("Please enter a valid issue id.");
+        }
+        else
+        {
+            // Check that child ID entered corresponds to a valid issue
+            try
+            {
+                childIssue = scarabR.getIssue(childId.toString());
+            }
+            catch (Exception e)
+            {
+                childId.setMessage("The id you entered does " +
+                                   "not correspond to a valid issue.");
+                isValid = false;
+            }
+
+            // Check whether the entered issue is already dependant on this
+            // Issue. If so, and it had been marked deleted, mark as undeleted.
+            if (childIssue != null && issue.getDependency(childIssue) != null)
+            {
+                Depend prevDepend = issue.getDependency(childIssue);
+                if (prevDepend.getDeleted())
+                {
+                    depend = prevDepend;
+                    depend.setDeleted(false);
+                }
+                else
+                {
+                    childId.setMessage("This issue already has a dependency" 
+                                      + " on the issue id you entered.");
+                    isValid = false;
+                }
+            }
+            // Make sure issue is not being marked as dependant on itself.
+            if (childIssue.equals(issue))
+            {
+                childId.setMessage("You cannot add a dependency for an " 
+                                  + "issue on itself.");
+                isValid = false;
+            }
+        }
+        if (intake.isAllValid() && isValid)
+        {
+            depend.setDefaultModule(scarabR.getCurrentModule());
+            group.setProperties(depend);
+            depend.save();
+            intake.remove(group);
+        }
+        else
+        {
+            data.setMessage(ERROR_MESSAGE);
+        }
+    }
+
+
+    /**
+    *  Adds a dependency between this issue and another issue.
+    *  This issue will be the child issue. 
+    */
+    public void doAdddependencyold (RunData data, TemplateContext context)
+        throws Exception
+    {                          
+        String id = data.getParameters().getString("id");
+        Issue issue = Issue.getIssueById(id);
+        ScarabUser user = (ScarabUser)data.getUser();
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Depend depend = scarabR.getDepend();
+        Group group = intake.get("Depend", depend.getQueryKey());
         boolean isValid = true;
         Issue parentIssue = null;
 
@@ -735,6 +766,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         if (dependTypeId.toString().equals("0"))
         {
             dependTypeId.setMessage("Please select a dependency type.");
+            return;
         }
 
         // The parent issue id is required, and must be a valid issue.
@@ -750,18 +782,6 @@ public class ModifyIssue extends RequireLoginFirstAction
             {
                 parentIssue =  getScarabRequestTool(context)
                                .getIssue(observedId.toString());
-                if (parentIssue.getDependency(issue) != null)
-                {
-                    observedId.setMessage("This issue already has a dependency" 
-                                          + " on the issue id you entered.");
-                    isValid = false;
-                }
-                else if (parentIssue.equals(issue))
-                {
-                    observedId.setMessage("You cannot add a dependency for an " 
-                                          + "issue on itself.");
-                    isValid = false;
-                }
             }
             catch (Exception e)
             {
@@ -769,20 +789,35 @@ public class ModifyIssue extends RequireLoginFirstAction
                                       "not correspond to a valid issue.");
                 isValid = false;
             }
+            Depend prevDepend = parentIssue.getDependency(issue);
+            if (prevDepend != null)
+            {
+                if (prevDepend.getDeleted())
+                {
+                    prevDepend.setDeleted(false);
+                    depend = prevDepend;
+                }
+                else
+                {
+                    observedId.setMessage("This issue already has a dependency" 
+                                      + " on the issue id you entered.");
+                    isValid = false;
+                }
+            }
+            else if (parentIssue.equals(issue))
+            {
+                observedId.setMessage("You cannot add a dependency for an " 
+                                      + "issue on itself.");
+                isValid = false;
+            }
         }
 
         if (intake.isAllValid() && isValid)
         {
-            Depend depend = new Depend();
             depend.setObserverId(issue.getIssueId());
             depend.setObservedId(parentIssue.getIssueId());
             depend.setTypeId(new NumberKey(dependTypeId.toString()));
-
-            // FIXME: would like to set these properties using 
-            // group.setProperties, but getting errors. (John?)
-            //group.setProperties(depend);
             depend.save();
-            intake.remove(group);
 
             // Save transaction record
             Transaction transaction = new Transaction();
@@ -811,10 +846,6 @@ public class ModifyIssue extends RequireLoginFirstAction
         {
             data.setMessage(ERROR_MESSAGE);
         }
-
-        String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, nextTemplate);            
     }
 
     /**
