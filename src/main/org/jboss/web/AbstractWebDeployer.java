@@ -150,7 +150,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.15 $
+@version $Revision: 1.16 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -185,7 +185,7 @@ public abstract class AbstractWebDeployer
    /** Get the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @return true for parent first, false for the servlet 2.3 model
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public boolean getJava2ClassLoadingCompliance()
    {
@@ -194,7 +194,7 @@ public abstract class AbstractWebDeployer
    /** Set the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @param flag true for parent first, false for the servlet 2.3 model
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setJava2ClassLoadingCompliance(boolean flag)
    {
@@ -205,7 +205,7 @@ public abstract class AbstractWebDeployer
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
     * 
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     * @return true is war archives should be unpacked
     */ 
    public boolean getUnpackWars()
@@ -216,7 +216,7 @@ public abstract class AbstractWebDeployer
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
     * 
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     * @param flag , true is war archives should be unpacked
     */ 
    public void setUnpackWars(boolean flag)
@@ -230,7 +230,7 @@ public abstract class AbstractWebDeployer
      * in favour of trying the jndi-name in jboss-web.xml
      * @return a <code>boolean</code> value
      *    
-     * @jmx:managed-attribute
+     * @jmx.managed-attribute
      */
     public boolean getLenientEjbLink ()
     {
@@ -239,7 +239,7 @@ public abstract class AbstractWebDeployer
     /**
      * Set the flag indicating if ejb-link errors should be ignored
      * in favour of trying the jndi-name in jboss-web.xml
-     * @jmx:managed-attribute
+     * @jmx.managed-attribute
      */    
     public void setLenientEjbLink (boolean flag)
     {
@@ -250,7 +250,7 @@ public abstract class AbstractWebDeployer
     * does not declare a security-domain.
     *
     * @return jndi name of the security domain binding to use.
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public String getDefaultSecurityDomain()
    {
@@ -261,7 +261,7 @@ public abstract class AbstractWebDeployer
     *
     * @param defaultSecurityDomain - jndi name of the security domain binding
     * to use.
-    * @jmx:managed-attribute
+    * @jmx.managed-attribute
     */
    public void setDefaultSecurityDomain(String defaultSecurityDomain)
    {
@@ -342,7 +342,10 @@ public abstract class AbstractWebDeployer
 
          // Parse the web.xml and jboss-web.xml descriptors
          WebMetaData webMetaData = (WebMetaData) di.metaData;
-         parseMetaData(webContext, warURL, di.shortName, webMetaData);
+
+         // This is alrady done in AbstractWebContainer.init
+         // [todo] Which one is right?
+         //parseMetaData(webContext, warURL, di.shortName, webMetaData);
 
          // inherit the security setup from jboss-app.xml
          if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData)
