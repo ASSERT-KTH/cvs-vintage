@@ -22,11 +22,16 @@ elseif ($copyToModules.isEmpty())
      #set ($currentIssue = $scarabR.getIssue($issueId))
      #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
      <input type="hidden" name="issue_ids" value="$issueId"/>
+     <input type="hidden" name="id" value="$issueId"/>
      #end
  #end
 #end
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
+#if ($issueList && $scarabG.sizeOfArray($issueList) > 1)
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
+#else
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
+#end
 
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
