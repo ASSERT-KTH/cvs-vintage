@@ -71,13 +71,14 @@ public class OpenMessageWithMessageFrameAction
 		c.treeController.setSelected((Folder) r[0].getFolder());
 		c.setTreeSelection(r);
 
+		/*
 		c.tableController.setSelected(r[0].getUids());
 				c.setTableSelection(r);
-		MainInterface.processor.addOp(new ViewHeaderListCommand(c, r));
-
 		
-
-		MainInterface.processor.addOp(new ViewMessageCommand(c, r));
+		MainInterface.processor.addOp(new ViewHeaderListCommand(c, r));
+		*/
+		
+		MainInterface.processor.addOp(new ViewMessageCommand(c, r) );
 
 	}
 
