@@ -186,7 +186,7 @@ implements ServletContext {
 			    // need to support http docBase'd context
 			}
 		    } else {
-                        // realPath is null
+                        realPath = url.toString();
 		    }
 		} else if (url.getProtocol().equalsIgnoreCase("http")) {
                     // XXX
@@ -256,8 +256,6 @@ implements ServletContext {
 	    lr.getMappedPath().trim().length() > 0) {
 	    mappedPath = lr.getMappedPath();
 	}
-
-	mappedPath = mappedPath.substring(1, mappedPath.length());
 
 	if (path.equals("")) {
 	    url = docBase;
