@@ -10,6 +10,8 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 import java.math.BigDecimal;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -50,33 +52,62 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class JDBCCommand
 {
+    private final static HashMap rsTypes = new HashMap();
+    static {
+        Class[] arg = new Class[]{Integer.TYPE};
+        try {
+            rsTypes.put(java.util.Date.class.getName(),       ResultSet.class.getMethod("getTimestamp", arg));
+            rsTypes.put(java.sql.Date.class.getName(),        ResultSet.class.getMethod("getDate", arg));
+            rsTypes.put(java.sql.Time.class.getName(),        ResultSet.class.getMethod("getTime", arg));
+            rsTypes.put(java.sql.Timestamp.class.getName(),   ResultSet.class.getMethod("getTimestamp", arg));
+            rsTypes.put(java.math.BigDecimal.class.getName(), ResultSet.class.getMethod("getBigDecimal", arg));
+            rsTypes.put(java.sql.Ref.class.getName(),         ResultSet.class.getMethod("getRef", arg));
+            rsTypes.put(java.lang.String.class.getName(),     ResultSet.class.getMethod("getString", arg));
+            rsTypes.put(java.lang.Boolean.class.getName(),    ResultSet.class.getMethod("getBoolean", arg));
+            rsTypes.put(Boolean.TYPE.getName(),               ResultSet.class.getMethod("getBoolean", arg));
+            rsTypes.put(java.lang.Byte.class.getName(),       ResultSet.class.getMethod("getByte", arg));
+            rsTypes.put(Byte.TYPE.getName(),                  ResultSet.class.getMethod("getByte", arg));
+            rsTypes.put(java.lang.Double.class.getName(),     ResultSet.class.getMethod("getDouble", arg));
+            rsTypes.put(Double.TYPE.getName(),                ResultSet.class.getMethod("getDouble", arg));
+            rsTypes.put(java.lang.Float.class.getName(),      ResultSet.class.getMethod("getFloat", arg));
+            rsTypes.put(Float.TYPE.getName(),                 ResultSet.class.getMethod("getFloat", arg));
+            rsTypes.put(java.lang.Integer.class.getName(),    ResultSet.class.getMethod("getInt", arg));
+            rsTypes.put(Integer.TYPE.getName(),               ResultSet.class.getMethod("getInt", arg));
+            rsTypes.put(java.lang.Long.class.getName(),       ResultSet.class.getMethod("getLong", arg));
+            rsTypes.put(Long.TYPE.getName(),                  ResultSet.class.getMethod("getLong", arg));
+            rsTypes.put(java.lang.Short.class.getName(),      ResultSet.class.getMethod("getShort", arg));
+            rsTypes.put(Short.TYPE.getName(),                 ResultSet.class.getMethod("getShort", arg));
+        } catch(NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
    // Attributes ----------------------------------------------------
-   
+
    protected JDBCCommandFactory factory;
    protected MetaInfo metaInfo;
    protected Log log;
    protected String name;    // Command name, used for debug trace
-   
+
    private String sql;
    private static Map jdbcTypeNames;
-   
+
    /**
     * Gives compile-time control of tracing.
     */
    public static boolean debug = true;
-   
+
    // Constructors --------------------------------------------------
-   
+
    /**
     * Construct a JDBCCommand with given factory and name.
     *
-    * @param factory the factory which was used to create this JDBCCommand, 
+    * @param factory the factory which was used to create this JDBCCommand,
     *  which is also used as a common repository, shared by all an
-    *  entity's Commands. 
+    *  entity's Commands.
     * @param name the name to be used when tracing execution.
     */
    protected JDBCCommand(JDBCCommandFactory factory, String name)
@@ -86,9 +117,9 @@ public abstract class JDBCCommand
       this.log = factory.getLog();
       this.name = name;
    }
-   
+
    // Protected -----------------------------------------------------
-   
+
    /**
     * Template method handling the mundane business of opening
     * a database connection, preparing a statement, setting its parameters,
@@ -108,7 +139,7 @@ public abstract class JDBCCommand
       Connection con = null;
       PreparedStatement stmt = null;
       Object result = null;
-      
+
       try
       {
          con = getConnection();
@@ -120,6 +151,9 @@ public abstract class JDBCCommand
          stmt = con.prepareStatement(theSQL);
          setParameters(stmt, argOrArgs);
          result = executeStatementAndHandleResult(stmt, argOrArgs);
+      } catch(SQLException e) {
+          log.exception(e);
+          throw e;
       } finally
       {
          if (stmt != null)
@@ -143,10 +177,10 @@ public abstract class JDBCCommand
             }
          }
       }
-      
+
       return result;
    }
-   
+
    /**
     * Used to set static SQL in subclass constructors.
     *
@@ -160,7 +194,7 @@ public abstract class JDBCCommand
       }
       this.sql = sql;
    }
-   
+
    /**
     * Gets the SQL to be used in the PreparedStatement.
     * The default implementation returns the <code>sql</code> field value.
@@ -172,14 +206,14 @@ public abstract class JDBCCommand
     * @param argOrArgs argument or array of arguments passed in from
     *  subclass execute method.
     * @return the SQL to use in the PreparedStatement.
-    * @throws Exception if an attempt to generate dynamic SQL results in 
+    * @throws Exception if an attempt to generate dynamic SQL results in
     *  an Exception.
     */
    protected String getSQL(Object argOrArgs) throws Exception
    {
       return sql;
    }
-   
+
    /**
     * Default implementation does nothing.
     * Override if parameters need to be set.
@@ -193,7 +227,7 @@ public abstract class JDBCCommand
       throws Exception
    {
    }
-   
+
    /**
     * Executes the PreparedStatement and handles result of successful execution.
     * This is implemented in subclasses for queries and updates.
@@ -206,11 +240,11 @@ public abstract class JDBCCommand
     * @throws Exception if execution or result handling fails.
     */
    protected abstract Object executeStatementAndHandleResult(
-            PreparedStatement stmt, 
+            PreparedStatement stmt,
             Object argOrArgs) throws Exception;
-   
+
    // ---------- Utility methods for use in subclasses ----------
-   
+
    /**
     * Sets a parameter in this Command's PreparedStatement.
     * Handles null values, and provides tracing.
@@ -234,20 +268,30 @@ public abstract class JDBCCommand
                    ", value=" +
                    ((value == null) ? "NULL" : value));
       }
-      
+
       if (value == null) {
          stmt.setNull(idx, jdbcType);
       } else {
+          if(jdbcType == Types.DATE) {
+              if(value.getClass().getName().equals("java.util.Date"))
+                  value = new java.sql.Date(((java.util.Date)value).getTime());
+          } else if(jdbcType == Types.TIME) {
+              if(value.getClass().getName().equals("java.util.Date"))
+                  value = new java.sql.Time(((java.util.Date)value).getTime());
+          } else if(jdbcType == Types.TIMESTAMP) {
+              if(value.getClass().getName().equals("java.util.Date"))
+                  value = new java.sql.Timestamp(((java.util.Date)value).getTime());
+          }
           if (jdbcType == Types.JAVA_OBJECT) {
               ByteArrayOutputStream baos = new ByteArrayOutputStream();
-              
+
               try {
                   ObjectOutputStream oos = new ObjectOutputStream(baos);
-              
+
                   oos.writeObject(value);
-                  
+
                   oos.close();
-              
+
               } catch (IOException e) {
                   throw new SQLException("Can't write Java object type to DB: " + e);
               }
@@ -258,7 +302,7 @@ public abstract class JDBCCommand
           }
       }
    }
-   
+
    /**
     * Sets the PreparedStatement parameters for a primary key
     * in a WHERE clause.
@@ -269,7 +313,7 @@ public abstract class JDBCCommand
     * @param id the entity's ID
     * @return the index of the next unset parameter
     * @throws SQLException if parameter setting fails
-    * @throws IllegalAccessException if accessing a field in the PK class fails 
+    * @throws IllegalAccessException if accessing a field in the PK class fails
     */
    protected int setPrimaryKeyParameters(PreparedStatement stmt,
                                          int parameterIndex,
@@ -277,7 +321,7 @@ public abstract class JDBCCommand
       throws IllegalAccessException, SQLException
    {
       Iterator it = metaInfo.getPkFieldInfos();
-      
+
       if (metaInfo.hasCompositeKey())
       {
          while (it.hasNext())
@@ -293,18 +337,18 @@ public abstract class JDBCCommand
          int jdbcType = pkFieldInfo.getJDBCType();
          setParameter(stmt, parameterIndex++, jdbcType, id);
       }
-      
+
       return parameterIndex;
    }
-   
+
    /**
-    * Sets parameter(s) representing a foreign key in this 
+    * Sets parameter(s) representing a foreign key in this
     * Command's PreparedStatement.
     * TODO: (JF) tighten up the typing of the value parameter.
     *
     * @param stmt the PreparedStatement whose parameters need to be set.
     * @param idx the index (1-based) of the first parameter to be set.
-    * @param fieldInfo the CMP meta-info for the field containing the 
+    * @param fieldInfo the CMP meta-info for the field containing the
     *  entity reference.
     * @param value the entity (EJBObject) referred to by the reference
     *  (may be null).
@@ -320,7 +364,7 @@ public abstract class JDBCCommand
    {
       JawsCMPField[] pkInfo = fieldInfo.getForeignKeyCMPFields();
       Object pk = null;
-      
+
       if (value != null)
       {
          try
@@ -331,7 +375,7 @@ public abstract class JDBCCommand
             throw new SQLException("Could not extract primary key from EJB reference:"+e);
          }
       }
-      
+
       if (!((JawsEntity)pkInfo[0].getBeanContext()).getPrimaryKeyField().equals(""))
       {
          // Primitive key
@@ -358,93 +402,73 @@ public abstract class JDBCCommand
          return idx+pkInfo.length;
       }
    }
-   
+
    /**
     * Used for all retrieval of results from <code>ResultSet</code>s.
     * Implements tracing, and allows some tweaking of returned types.
     *
     * @param rs the <code>ResultSet</code> from which a result is being retrieved.
     * @param idx index of the result column.
-    * @param jdbcType the JDBC type which this result is expected to be 
-    *        compatible with.
+    * @param destination The class of the variable this is going into
     */
-   protected Object getResultObject(ResultSet rs, int idx, int jdbcType)
-       throws SQLException{
+    protected Object getResultObject(ResultSet rs, int idx, Class destination)
+        throws SQLException{
 
-       Object result = null;
+        Object result = null;
 
-       if (jdbcType != Types.JAVA_OBJECT) {
-           result = rs.getObject(idx);
-       } else {
-           // Also we should detect the EJB references here
-           
-           // Get the underlying byte[]
-           
-           byte[] bytes = rs.getBytes(idx);
-           
-           if( bytes == null ) {
-               result = null;
-           } else {
-               // We should really reuse these guys
-               
-               ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-               
-               // Use the class loader to deserialize
-               
-               try {
-                   ObjectInputStream ois = new ObjectInputStream(bais);
-                   result = ois.readObject();
-                   
-                   ois.close();
-               } catch (IOException e) {
-                   throw new SQLException("Can't read Java object try from DB: " + e);
-               } catch (ClassNotFoundException e) {
-                   throw new SQLException("Can't read Java object try from DB: " + e);
-               }
-           }
-       }
-       
-      // Result transformation required by Oracle, courtesy of Jay Walters
-      
-      if (result instanceof BigDecimal)
-      {
-         BigDecimal bigDecResult = (BigDecimal)result;
-         
-         switch (jdbcType)
-         {
-            case Types.INTEGER:
-               result = new Integer(bigDecResult.intValue());
-               break;
-            
-            case Types.BIT:
-               result = new Boolean(bigDecResult.intValue() > 0);
-               break;
-            
-            case Types.DOUBLE:
-               result = new Double(bigDecResult.doubleValue());
-               break;
-            
-            case Types.FLOAT:
-               result = new Float(bigDecResult.floatValue());
-               break;
-            
-            case Types.BIGINT:
-               result = new Long(bigDecResult.longValue());
-               break;
-         }
-      }
+        Method method = (Method)rsTypes.get(destination.getName());
+        if(method != null) {
+            try {
+                result = method.invoke(rs, new Object[]{new Integer(idx)});
+                if(rs.wasNull()) return null;
+                return result;
+            } catch(IllegalAccessException e) {
+                System.out.println("Unable to read from ResultSet: "+e);
+            } catch(InvocationTargetException e) {
+                System.out.println("Unable to read from ResultSet: "+e);
+            }
+        }
 
-      if (debug) {
-         String className = result == null ? "null" : result.getClass().getName();
-         log.debug("Got result: idx=" + idx +
-                   ", value=" + result +
-                   ", class=" + className +
-                   ", JDBCtype=" + getJDBCTypeName(jdbcType));
-      }
-      
-      return result;
-   }
-   
+        result = rs.getObject(idx);
+        if(result == null)
+            return null;
+        if(destination.isAssignableFrom(result.getClass()))
+            return result;
+
+        // Also we should detect the EJB references here
+
+        // Get the underlying byte[]
+
+        byte[] bytes = rs.getBytes(idx);
+
+        if( bytes == null ) {
+            result = null;
+        } else {
+           // We should really reuse these guys
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+
+           // Use the class loader to deserialize
+
+            try {
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                result = ois.readObject();
+                if(!destination.isAssignableFrom(result.getClass())) {
+                    result = null;
+                    System.out.println("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"'");
+                }
+
+                ois.close();
+            } catch (IOException e) {
+                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"'");
+            } catch (ClassNotFoundException e) {
+                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"'");
+            }
+        }
+
+        return result;
+    }
+
    /**
     * Gets the integer JDBC type code corresponding to the given name.
     *
@@ -465,7 +489,7 @@ public abstract class JDBCCommand
          return Types.OTHER;
       }
    }
-   
+
    /**
     * Gets the JDBC type name corresponding to the given type code.
     *
@@ -479,10 +503,10 @@ public abstract class JDBCCommand
       {
          setUpJDBCTypeNames();
       }
-      
+
       return (String)jdbcTypeNames.get(new Integer(jdbcType));
    }
-   
+
    /**
     * Returns the comma-delimited list of primary key column names
     * for this entity.
@@ -504,7 +528,7 @@ public abstract class JDBCCommand
       }
       return sb.toString();
    }
-   
+
    /**
     * Returns the string to go in a WHERE clause based on
     * the entity's primary key.
@@ -528,7 +552,7 @@ public abstract class JDBCCommand
       }
       return sb.toString();
    }
-   
+
    // MF: PERF!!!!!!!
    protected Object[] getState(EntityEnterpriseContext ctx)
    {
@@ -547,17 +571,17 @@ public abstract class JDBCCommand
             return null;
          }
       }
-   
+
       return state;
    }
-   
+
    protected Object getCMPFieldValue(Object instance, CMPFieldInfo fieldInfo)
       throws IllegalAccessException
    {
       Field field = fieldInfo.getField();
       return field.get(instance);
    }
-   
+
    protected void setCMPFieldValue(Object instance,
                                    CMPFieldInfo fieldInfo,
                                    Object value)
@@ -566,23 +590,23 @@ public abstract class JDBCCommand
       Field field = fieldInfo.getField();
       field.set(instance, value);
    }
-   
+
    protected Object getPkFieldValue(Object pk, PkFieldInfo pkFieldInfo)
       throws IllegalAccessException
    {
       Field field = pkFieldInfo.getPkField();
       return field.get(pk);
    }
-   
+
    // This is now only used in setForeignKey
-   
+
    protected int getJawsCMPFieldJDBCType(JawsCMPField fieldInfo)
    {
       return getJDBCType(fieldInfo.getJdbcType());
    }
-   
+
    // Private -------------------------------------------------------
-   
+
    /** Get a database connection */
    private Connection getConnection() throws SQLException
    {
@@ -596,11 +620,11 @@ public abstract class JDBCCommand
          return DriverManager.getConnection(url,"sa","");
       }
    }
-   
+
    private final void setUpJDBCTypeNames()
    {
       jdbcTypeNames = new HashMap();
-      
+
       Field[] fields = Types.class.getFields();
       int length = fields.length;
       for (int i = 0; i < length; i++) {
