@@ -14,7 +14,7 @@ Have fun ... your Columba Team!
 	<property name="version" value="1.0-M2"/>
 	<property name="dest" value="${basedir}/classes"/>
 	<property name="test-dest" value="${basedir}/test-classes"/>
-	<property name="ownclasspath" value="${dest}:${src}/lib/lucene-1.3-final.jar:${src}/lib/junit.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.1.jar:${src}/lib/plastic-1.2.0.jar:${src}/lib/jhall.jar:${src}/lib/forms-1.0.3.jar:${src}/lib/ristretto-1.0_RC1.jar:${src}/lib/jscf-0.1.jar:${src}/lib/macchiato-1.0pre1.jar:${src}/lib/frappucino-1.0pre1.jar:${src}/lib/jniwrap-2.4.jar:${src}/lib/winpack.jar:${src}/lib/jdom.jar"/>
+	<property name="ownclasspath" value="${dest}:${src}/lib/lucene-1.3-final.jar:${src}/lib/junit.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.1.jar:${src}/lib/plastic-1.2.0.jar:${src}/lib/jhall.jar:${src}/lib/forms-1.0.3.jar:${src}/lib/ristretto-1.0_RC2.jar:${src}/lib/jscf-0.1.jar:${src}/lib/macchiato-1.0pre1.jar:${src}/lib/frappucino-1.0pre1.jar:${src}/lib/jniwrap-2.4.jar:${src}/lib/winpack.jar:${src}/lib/jdom.jar"/>
 	<property name="java-src-dir" value="${src}\src\addressbook\core:${src}\src\columba\core:${src}\src\mail\core"/>
 	<property name="java-test-src-dir" value="${src}\src\columba\test:${src}\src\mail\test"/>
 
@@ -181,7 +181,7 @@ Have fun ... your Columba Team!
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
-				<attribute name="Class-Path" value="lib/junit.jar lib/lucene-1.3-final.jar lib/jargs.jar lib/jwizz-0.1.1.jar lib/plastic-1.2.0.jar lib/jhall.jar lib/usermanual.jar lib/forms-1.0.3.jar lib/ristretto-1.0_RC1.jar lib/jscf-0.1.jar lib/macchiato-1.0pre1.jar lib/frappucino-1.0pre1.jar lib/winpack.jar lib/jniwrap-2.4.jar lib/jdom.jar"/>
+				<attribute name="Class-Path" value="lib/junit.jar lib/lucene-1.3-final.jar lib/jargs.jar lib/jwizz-0.1.1.jar lib/plastic-1.2.0.jar lib/jhall.jar lib/usermanual.jar lib/forms-1.0.3.jar lib/ristretto-1.0_RC2.jar lib/jscf-0.1.jar lib/macchiato-1.0pre1.jar lib/frappucino-1.0pre1.jar lib/winpack.jar lib/jniwrap-2.4.jar lib/jdom.jar"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -391,7 +391,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	   <include name="lib/jwizz-0.1.1.jar"/>
 	   <!-- never sign JavaHelp, its already signed by SUN -->
 	   <!--<include name="lib/jhall.jar"/>-->
-	   <include name="lib/ristretto-1.0pre1.jar" />
+	   <include name="lib/ristretto-1.0_RC2.jar" />
 	   <include name="lib/usermanual.jar"/>
 	   <include name="lib/frappucino-1.0pre1.jar"/>
           </fileset>

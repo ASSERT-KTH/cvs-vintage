@@ -21,7 +21,7 @@
 	<classpathentry kind="lib" path="lib/jscf-0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jniwrap-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/winpack.jar"/>
-	<classpathentry kind="lib" path="lib/ristretto-1.0_RC1.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
+	<classpathentry kind="lib" path="lib/ristretto-1.0_RC2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
