@@ -58,7 +58,7 @@
  *              several workers.                                           *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -112,30 +112,30 @@ typedef struct lb_endpoint lb_endpoint_t;
 
 /* ========================================================================= */
 /* Retrieve the parameter with the given name                                */
-static char *get_param(jk_ws_service_t *s,
-                       const char *name)
+static char *get_path_param(jk_ws_service_t *s,
+                            const char *name)
 {
-
-    /* XXX XXX XXX need to fix - jsession id is path param, not query string.
-       Gal, please take a look ! */
-    if(s->query_string) {
-        char *id_start = NULL;
-        for(id_start = strstr(s->query_string, name) ; 
-            id_start ; 
-            id_start = strstr(id_start + 1, name)) {
-            if('=' == id_start[strlen(name)]) {
-                /*
-                 * Session cookie was found, get it's value
+    char *id_start = NULL;
+    for(id_start = strstr(s->req_uri, name) ; 
+        id_start ; 
+        id_start = strstr(id_start + 1, name)) {
+        if('=' == id_start[strlen(name)]) {
+            /*
+             * Session path-cookie was found, get it's value
+             */
+            id_start += (1 + strlen(name));
+            if(strlen(id_start)) {
+                char *id_end;
+                id_start = jk_pool_strdup(s->pool, id_start);
+                /* 
+                 * The query string is not part of req_uri, however
+                 * to be on the safe side lets remove the trailing query 
+                 * string if appended...
                  */
-                id_start += (1 + strlen(name));
-                if(strlen(id_start)) {
-                    char *id_end;
-                    id_start = jk_pool_strdup(s->pool, id_start);
-                    if(id_end = strchr(id_start, '&')) {
-                        id_end = NULL;
-                    }
-                    return id_start;
+                if(id_end = strchr(id_start, '?')) { 
+                    id_end = NULL;
                 }
+                return id_start;
             }
         }
     }
@@ -185,7 +185,7 @@ static char *get_cookie(jk_ws_service_t *s,
 static char *get_sessionid(jk_ws_service_t *s)
 {
     char *val;
-    val = get_param(s, JK_SESSION_IDENTIFIER);
+    val = get_path_param(s, JK_PATH_SESSION_IDENTIFIER);
     if(!val) {
         val = get_cookie(s, JK_SESSION_IDENTIFIER);
     }
