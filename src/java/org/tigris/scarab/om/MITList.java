@@ -44,7 +44,7 @@ package org.tigris.scarab.om;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
 import java.util.Set;
 import java.util.HashSet;
@@ -70,9 +70,9 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.40 2003/12/08 00:43:46 thierrylach Exp $
+ * @version $Id: MITList.java,v 1.41 2003/12/27 10:17:17 dep4b Exp $
  */
-public  class MITList 
+public class MITList
     extends org.tigris.scarab.om.BaseMITList
     implements Persistent
 {
@@ -98,22 +98,40 @@ public  class MITList
     {
         int size = 0;
         List items = getExpandedMITListItems();
-        if (items != null) 
+        if (items != null)
         {
             size = items.size();
         }
         return size;
     }
 
+    /**
+     * tests if the list is empty
+     * 
+     * @return true if the list is empty, otherwise false
+     */
     public boolean isEmpty()
     {
         boolean empty = true;
         List items = getExpandedMITListItems();
-        if (items != null) 
+        if (items != null)
         {
             empty = items.isEmpty();
         }
         return empty;
+    }
+
+    /**
+     * asserts that the list is not empty
+     * 
+     * @throws IllegalStateException if the list is empty
+     */
+    private void assertNotEmpty()
+    {
+        if (isEmpty())
+        {
+            throw new IllegalStateException("method should not be called on an empty list.");
+        }
     }
 
     public Iterator iterator()
@@ -122,9 +140,9 @@ public  class MITList
         List items = getExpandedMITListItems();
         if (items == null)
         {
-            Collections.EMPTY_LIST.iterator();
+            i = Collections.EMPTY_LIST.iterator();
         }
-        else 
+        else
         {
             i = new ItemsIterator(items.iterator());
         }
@@ -134,15 +152,14 @@ public  class MITList
     public boolean contains(MITListItem item)
     {
         boolean result = false;
-        for (Iterator i = iterator(); i.hasNext() && !result;) 
+        for (Iterator i = iterator(); i.hasNext() && !result;)
         {
             result = i.next().equals(item);
         }
         return result;
     }
 
-    public class ItemsIterator
-        implements Iterator
+    public class ItemsIterator implements Iterator
     {
         private Iterator i;
         private Object currentObject;
@@ -161,7 +178,7 @@ public  class MITList
             currentObject = i.next();
             return currentObject;
         }
-        
+
         public void remove()
         {
             List rawList = null;
@@ -174,16 +191,17 @@ public  class MITList
                 throw new TorqueRuntimeException(e);
             }
 
-            if (rawList.contains(currentObject)) 
+            if (rawList.contains(currentObject))
             {
                 rawList.remove(currentObject);
                 i.remove();
                 expandedList = null;
             }
-            else 
+            else
             {
-                throw new UnsupportedOperationException("Removing items " +
-                    "from a list containing wildcards is not supported.");
+                throw new UnsupportedOperationException(
+                    "Removing items "
+                        + "from a list containing wildcards is not supported.");
             }
         }
     }
@@ -218,7 +236,7 @@ public  class MITList
         copyObj.setUserId(getUserId());
 
         List v = getMITListItems();
-        for (int i=0; i<v.size(); i++)
+        for (int i = 0; i < v.size(); i++)
         {
             MITListItem obj = (MITListItem) v.get(i);
             copyObj.addMITListItem(obj.copy());
@@ -238,7 +256,7 @@ public  class MITList
     public MITList getPermittedSublist(String permission, ScarabUser user)
         throws Exception
     {
-        String[] perms = {permission};
+        String[] perms = { permission };
         return getPermittedSublist(perms, user);
     }
 
@@ -255,7 +273,7 @@ public  class MITList
     {
         MITList sublist = new MITList();
         ScarabUser userB = getScarabUser();
-        if (userB != null) 
+        if (userB != null)
         {
             sublist.setScarabUser(userB);
         }
@@ -264,25 +282,24 @@ public  class MITList
         Module[] validModules = user.getModules(permissions);
 
         Set moduleIds = new HashSet();
-        for (int j=0; j<validModules.length; j++) 
+        for (int j = 0; j < validModules.length; j++)
         {
             moduleIds.add(validModules[j].getModuleId());
         }
-        
-        for (Iterator i = items.iterator(); i.hasNext();) 
+
+        for (Iterator i = items.iterator(); i.hasNext();)
         {
-            MITListItem item = (MITListItem)i.next();
-            if (moduleIds.contains(item.getModuleId())) 
+            MITListItem item = (MITListItem) i.next();
+            if (moduleIds.contains(item.getModuleId()))
             {
                 // use a copy of the item here to avoid changing the the
                 // list_id of the original
                 sublist.addMITListItem(item.copy());
             }
         }
-        
+
         return sublist;
     }
-
 
     public MITListItem getFirstItem()
     {
@@ -290,62 +307,58 @@ public  class MITList
         List items = getExpandedMITListItems();
         if (items != null)
         {
-            i = (MITListItem)items.get(0);
+            i = (MITListItem) items.get(0);
         }
         return i;
     }
 
     public boolean isSingleModuleIssueType()
     {
-        return size() == 1 
-            && getFirstItem().isSingleModuleIssueType();
+        return size() == 1 && getFirstItem().isSingleModuleIssueType();
     }
 
-    public boolean isSingleModule()
-        throws TorqueException
+    public boolean isSingleModule() throws TorqueException
     {
         List ids = getModuleIds();
         return ids.size() == 1;
     }
 
-    public boolean isSingleIssueType()
-        throws TorqueException
+    public boolean isSingleIssueType() throws TorqueException
     {
         List ids = getIssueTypeIds();
         return ids.size() == 1;
     }
 
-    public Module getModule()
-        throws Exception
+    public Module getModule() throws Exception
     {
-        if (!isSingleModule()) 
+        if (!isSingleModule())
         {
-            throw new IllegalStateException("method should not be called on" +
-                " a list including more than one module.");
+            throw new IllegalStateException(
+                "method should not be called on"
+                    + " a list including more than one module.");
         }
         return getModule(getFirstItem());
     }
 
-    public IssueType getIssueType()
-        throws Exception
+    public IssueType getIssueType() throws Exception
     {
-        if (!isSingleIssueType()) 
+        if (!isSingleIssueType())
         {
-            throw new IllegalStateException("method should not be called on" +
-                " a list including more than one issue type.");
+            throw new IllegalStateException(
+                "method should not be called on"
+                    + " a list including more than one issue type.");
         }
         return getFirstItem().getIssueType();
     }
 
-    Module getModule(MITListItem item)
-        throws Exception
+    Module getModule(MITListItem item) throws Exception
     {
         Module module = null;
-        if (item.getModuleId() == null) 
+        if (item.getModuleId() == null)
         {
             module = getScarabUser().getCurrentModule();
         }
-        else 
+        else
         {
             module = item.getModule();
         }
@@ -357,25 +370,22 @@ public  class MITList
      *
      * @param v
      */
-    public void setScarabUser(ScarabUser v) 
-        throws TorqueException
+    public void setScarabUser(ScarabUser v) throws TorqueException
     {
-        if (v == null) 
+        if (v == null)
         {
             throw new IllegalArgumentException("cannot set user to null.");
         }
-        
+
         super.setScarabUser(v);
         aScarabUser = v;
         expandedList = null;
     }
 
-                 
-    public ScarabUser getScarabUser()
-        throws TorqueException
+    public ScarabUser getScarabUser() throws TorqueException
     {
         ScarabUser user = null;
-        if (aScarabUser == null) 
+        if (aScarabUser == null)
         {
             user = super.getScarabUser();
         }
@@ -386,29 +396,27 @@ public  class MITList
         return user;
     }
 
-    public List getCommonAttributes(boolean activeOnly)
-        throws Exception
+    public List getCommonAttributes(boolean activeOnly) throws Exception
     {
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
-        
-        List rmas = getModule(item)
-            .getRModuleAttributes(item.getIssueType());
-        for (Iterator i = rmas.iterator(); i.hasNext();) 
+
+        List rmas = getModule(item).getRModuleAttributes(item.getIssueType());
+        for (Iterator i = rmas.iterator(); i.hasNext();)
         {
-            RModuleAttribute rma = (RModuleAttribute)i.next();
+            RModuleAttribute rma = (RModuleAttribute) i.next();
             Attribute att = rma.getAttribute();
-            if ((!activeOnly || rma.getActive()) && (size() == 1 || isCommon(att, activeOnly)))
+            if ((!activeOnly || rma.getActive())
+                && (size() == 1 || isCommon(att, activeOnly)))
             {
                 matchingAttributes.add(att);
             }
-        }             
-        
+        }
+
         return matchingAttributes;
     }
 
-    public List getCommonAttributes()
-        throws Exception
+    public List getCommonAttributes() throws Exception
     {
         return getCommonAttributes(true);
     }
@@ -423,10 +431,11 @@ public  class MITList
         throws Exception
     {
         Criteria crit = new Criteria();
-        addToCriteria(crit, RModuleAttributePeer.MODULE_ID, 
-                      RModuleAttributePeer.ISSUE_TYPE_ID);
-        crit.add(RModuleAttributePeer.ATTRIBUTE_ID, 
-                 attribute.getAttributeId());            
+        addToCriteria(
+            crit,
+            RModuleAttributePeer.MODULE_ID,
+            RModuleAttributePeer.ISSUE_TYPE_ID);
+        crit.add(RModuleAttributePeer.ATTRIBUTE_ID, attribute.getAttributeId());
         if (activeOnly)
         {
             crit.add(RModuleAttributePeer.ACTIVE, true);
@@ -455,107 +464,93 @@ public  class MITList
         */
     }
 
-    public boolean isCommon(Attribute attribute)
-        throws Exception
+    public boolean isCommon(Attribute attribute) throws Exception
     {
-       return isCommon(attribute, true);
+        return isCommon(attribute, true);
     }
 
-
-    public List getCommonNonUserAttributes()
-        throws Exception
+    public List getCommonNonUserAttributes() throws Exception
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
-        
+        assertNotEmpty();
+
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
-        
-        List rmas = getModule(item)
-            .getRModuleAttributes(item.getIssueType());
+
+        List rmas = getModule(item).getRModuleAttributes(item.getIssueType());
         Iterator i = rmas.iterator();
-        while (i.hasNext()) 
+        while (i.hasNext())
         {
-            RModuleAttribute rma = (RModuleAttribute)i.next();
+            RModuleAttribute rma = (RModuleAttribute) i.next();
             Attribute att = rma.getAttribute();
             if (!att.isUserAttribute() && rma.getActive() && isCommon(att))
             {
                 matchingAttributes.add(att);
             }
-        }             
-        
+        }
+
         return matchingAttributes;
     }
 
-    public List getCommonOptionAttributes()
-        throws Exception
+    public List getCommonOptionAttributes() throws Exception
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
-        
+        assertNotEmpty();
+
         List matchingAttributes = new ArrayList();
         MITListItem item = getFirstItem();
-        
-        List rmas = getModule(item)
-            .getRModuleAttributes(item.getIssueType());
+
+        List rmas = getModule(item).getRModuleAttributes(item.getIssueType());
         Iterator i = rmas.iterator();
-        while (i.hasNext()) 
+        while (i.hasNext())
         {
-            RModuleAttribute rma = (RModuleAttribute)i.next();
+            RModuleAttribute rma = (RModuleAttribute) i.next();
             Attribute att = rma.getAttribute();
             if (att.isOptionAttribute() && rma.getActive() && isCommon(att))
             {
                 matchingAttributes.add(att);
             }
-        }             
-        
+        }
+
         return matchingAttributes;
     }
-
 
     /**
      * gets a list of all of the User Attributes common to all modules in 
      * the list.
      */
-    public List getCommonUserAttributes(boolean activeOnly)
-        throws Exception
+    public List getCommonUserAttributes(boolean activeOnly) throws Exception
     {
         List attributes = null;
-        if (isSingleModuleIssueType()) 
+        if (isSingleModuleIssueType())
         {
-            attributes = getModule().getUserAttributes(getIssueType(), activeOnly);
+            attributes =
+                getModule().getUserAttributes(getIssueType(), activeOnly);
         }
-        else 
+        else
         {
             List matchingAttributes = new ArrayList();
             MITListItem item = getFirstItem();
-            List rmas = getModule(item)
-                .getRModuleAttributes(item.getIssueType(), activeOnly, 
-                                      Module.USER);
+            List rmas =
+                getModule(item).getRModuleAttributes(
+                    item.getIssueType(),
+                    activeOnly,
+                    Module.USER);
             Iterator i = rmas.iterator();
-            while (i.hasNext()) 
+            while (i.hasNext())
             {
-                RModuleAttribute rma = (RModuleAttribute)i.next();
+                RModuleAttribute rma = (RModuleAttribute) i.next();
                 Attribute att = rma.getAttribute();
-                if ((!activeOnly || rma.getActive()) && 
-                    isCommon(att, activeOnly)) 
+                if ((!activeOnly || rma.getActive())
+                    && isCommon(att, activeOnly))
                 {
-                    matchingAttributes.add(att);   
-                }            
+                    matchingAttributes.add(att);
+                }
             }
             attributes = matchingAttributes;
         }
         return attributes;
     }
 
-    public List getCommonUserAttributes()
-        throws Exception
+    public List getCommonUserAttributes() throws Exception
     {
         return getCommonUserAttributes(false);
     }
@@ -573,32 +568,32 @@ public  class MITList
         {
             perms.add(ScarabSecurity.ISSUE__ENTER);
         }
-        if (isSingleModule()) 
+        if (isSingleModule())
         {
             ScarabUser[] userArray = getModule().getUsers(perms);
-            for (int i=0;i<userArray.length; i++)
+            for (int i = 0; i < userArray.length; i++)
             {
                 users.add(userArray[i]);
-            }            
+            }
         }
-        else 
+        else
         {
             MITListItem item = getFirstItem();
             ScarabUser[] userArray = getModule(item).getUsers(perms);
             List modules = getModules();
-            for (int i=0;i<userArray.length; i++)
+            for (int i = 0; i < userArray.length; i++)
             {
                 boolean validUser = false;
                 ScarabUser user = userArray[i];
-                for (Iterator j=perms.iterator(); j.hasNext() && !validUser;) 
-                {                    
-                    validUser = user.hasPermission((String)j.next(), modules); 
-                }
-                if (validUser) 
+                for (Iterator j = perms.iterator(); j.hasNext() && !validUser;)
                 {
-                    users.add(user);       
+                    validUser = user.hasPermission((String) j.next(), modules);
                 }
-            }            
+                if (validUser)
+                {
+                    users.add(user);
+                }
+            }
         }
         return users;
     }
@@ -607,14 +602,13 @@ public  class MITList
      * gets a list of permissions associated with the User Attributes
      * that are active for this Module.
      */
-    public List getUserAttributePermissions()
-        throws Exception
+    public List getUserAttributePermissions() throws Exception
     {
         List userAttrs = getCommonUserAttributes();
         List permissions = new ArrayList();
         for (int i = 0; i < userAttrs.size(); i++)
         {
-            String permission = ((Attribute)userAttrs.get(i)).getPermission();
+            String permission = ((Attribute) userAttrs.get(i)).getPermission();
             if (!permissions.contains(permission))
             {
                 permissions.add(permission);
@@ -623,9 +617,7 @@ public  class MITList
         return permissions;
     }
 
-
-    public List getCommonRModuleUserAttributes()
-        throws Exception
+    public List getCommonRModuleUserAttributes() throws Exception
     {
         List matchingRMUAs = new ArrayList();
         List rmuas = getSavedRMUAs();
@@ -633,22 +625,22 @@ public  class MITList
         ScarabUser user = getScarabUser();
         while (i.hasNext())
         {
-            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+            RModuleUserAttribute rmua = (RModuleUserAttribute) i.next();
             Attribute att = rmua.getAttribute();
             if (isCommon(att, false))
             {
-                matchingRMUAs.add(rmua);   
+                matchingRMUAs.add(rmua);
             }
         }
-        
+
         // None of the saved RMUAs are common for these pairs
         // Delete them and seek new ones.
-        if (matchingRMUAs.isEmpty()) 
+        if (matchingRMUAs.isEmpty())
         {
             i = rmuas.iterator();
             while (i.hasNext())
             {
-                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                RModuleUserAttribute rmua = (RModuleUserAttribute) i.next();
                 rmua.delete(user);
             }
             int sizeGoal = 3;
@@ -667,43 +659,45 @@ public  class MITList
 
             // Loop through these and if find common ones, save the RMUAs
             i = rmuas.iterator();
-            while (i.hasNext() && moreAttributes > 0) 
+            while (i.hasNext() && moreAttributes > 0)
             {
-                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                RModuleUserAttribute rmua = (RModuleUserAttribute) i.next();
                 Attribute att = rmua.getAttribute();
-                if (isCommon(att, false) && !matchingRMUAs.contains(rmua)) 
+                if (isCommon(att, false) && !matchingRMUAs.contains(rmua))
                 {
-                    RModuleUserAttribute newRmua = getNewRModuleUserAttribute(att);
+                    RModuleUserAttribute newRmua =
+                        getNewRModuleUserAttribute(att);
                     newRmua.setOrder(1);
                     newRmua.save();
-                    matchingRMUAs.add(rmua);   
+                    matchingRMUAs.add(rmua);
                     moreAttributes--;
-                }            
+                }
             }
 
             // if nothing better, go with random common attributes
             moreAttributes = sizeGoal - matchingRMUAs.size();
-            if (moreAttributes > 0) 
+            if (moreAttributes > 0)
             {
                 Iterator attributes = getCommonAttributes(false).iterator();
-                int k=1;
-                while (attributes.hasNext() && moreAttributes > 0) 
+                int k = 1;
+                while (attributes.hasNext() && moreAttributes > 0)
                 {
-                    Attribute att = (Attribute)attributes.next();
+                    Attribute att = (Attribute) attributes.next();
                     boolean isInList = false;
                     i = matchingRMUAs.iterator();
-                    while (i.hasNext()) 
+                    while (i.hasNext())
                     {
-                        RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                        if (rmua.getAttribute().equals(att)) 
+                        RModuleUserAttribute rmua =
+                            (RModuleUserAttribute) i.next();
+                        if (rmua.getAttribute().equals(att))
                         {
                             isInList = true;
                             break;
                         }
                     }
-                    if (!isInList) 
+                    if (!isInList)
                     {
-                        RModuleUserAttribute rmua = 
+                        RModuleUserAttribute rmua =
                             getNewRModuleUserAttribute(att);
                         rmua.setOrder(k++);
                         rmua.save();
@@ -711,36 +705,62 @@ public  class MITList
                         moreAttributes--;
                     }
                 }
-            } 
+            }
         }
-        
+
         return matchingRMUAs;
     }
 
-    protected RModuleUserAttribute getNewRModuleUserAttribute(
-        Attribute attribute)
+    protected RModuleUserAttribute getNewRModuleUserAttribute(Attribute attribute)
         throws Exception
     {
         RModuleUserAttribute result = RModuleUserAttributeManager.getInstance();
         result.setUserId(getUserId());
         result.setAttributeId(attribute.getAttributeId());
-        
-            if (isSingleModuleIssueType())
-            {
-                result.setModuleId(getModule().getModuleId());
-                result.setIssueTypeId(getIssueType().getIssueTypeId());
-            }
-        
-        if (!isNew()) 
+
+        if (isSingleModuleIssueType())
+        {
+            result.setModuleId(getModule().getModuleId());
+            result.setIssueTypeId(getIssueType().getIssueTypeId());
+        }
+
+        if (!isNew())
         {
             result.setListId(getListId());
         }
         return result;
     }
 
+    /**
+    * get common and active RMOs.
+    * 
+    * @param rmos a list of RModuleOptions
+    * @return the sublist of common and active RMOs
+    * @throws TorqueException
+    * @throws Exception
+    * 
+    * TODO write a more generic search routine (e.g. for getCommonAttributes,
+    * getCommonNonUserAttributes, getCommonOptionAttributes, ...)
+    */
+    private List getMatchingRMOs(List rmos) throws TorqueException, Exception
+    {
+        List matchingRMOs = new ArrayList();
+        if (rmos != null)
+        {
+            for (Iterator i = rmos.iterator(); i.hasNext();)
+            {
+                RModuleOption rmo = (RModuleOption) i.next();
+                AttributeOption option = rmo.getAttributeOption();
+                if (rmo.getActive() && isCommon(option))
+                {
+                    matchingRMOs.add(rmo);
+                }
+            }
+        }
+        return matchingRMOs;
+    }
 
-    protected List getSavedRMUAs()
-        throws Exception
+    protected List getSavedRMUAs() throws Exception
     {
         Criteria crit = new Criteria();
         crit.add(RModuleUserAttributePeer.USER_ID, getUserId());
@@ -748,117 +768,82 @@ public  class MITList
         {
             crit.add(RModuleUserAttributePeer.LIST_ID, getListId());
         }
-        else if (isSingleModuleIssueType())        
+        else if (isSingleModuleIssueType())
         {
             crit.add(RModuleUserAttributePeer.LIST_ID, null);
-            crit.add(RModuleUserAttributePeer.MODULE_ID, 
-                     getModule().getModuleId());
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID,
-                     getIssueType().getIssueTypeId());
+            crit.add(
+                RModuleUserAttributePeer.MODULE_ID,
+                getModule().getModuleId());
+            crit.add(
+                RModuleUserAttributePeer.ISSUE_TYPE_ID,
+                getIssueType().getIssueTypeId());
         }
-        else 
+        else
         {
             crit.add(RModuleUserAttributePeer.LIST_ID, null);
             crit.add(RModuleUserAttributePeer.MODULE_ID, null);
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);            
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);
         }
-        crit.addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
-                
+        crit.addAscendingOrderByColumn(
+            RModuleUserAttributePeer.PREFERRED_ORDER);
+
         return RModuleUserAttributePeer.doSelect(crit);
     }
 
     public List getCommonLeafRModuleOptions(Attribute attribute)
         throws Exception
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
-        
+        assertNotEmpty();
+
         List matchingRMOs = new ArrayList();
         MITListItem item = getFirstItem();
-        List rmos = getModule(item)
-            .getLeafRModuleOptions(attribute, item.getIssueType());
-        if (rmos != null)
-        {
-            for (Iterator i = rmos.iterator(); i.hasNext(); )
-            {
-                RModuleOption rmo = (RModuleOption)i.next();
-                AttributeOption option = rmo.getAttributeOption();
-                if (rmo.getActive() && isCommon(option))
-                {
-                    matchingRMOs.add(rmo);
-                }
-            }
-        }
-        return matchingRMOs;
+        List rmos =
+            getModule(item).getLeafRModuleOptions(
+                attribute,
+                item.getIssueType());
+        return getMatchingRMOs(rmos);
     }
 
     public List getCommonRModuleOptionTree(Attribute attribute)
         throws Exception
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
-        
-        List matchingRMOs = new ArrayList();
+        assertNotEmpty();
         MITListItem item = getFirstItem();
-        List rmos = getModule(item)
-            .getOptionTree(attribute, item.getIssueType());
-        if (rmos != null)
-        {
-            for (Iterator i = rmos.iterator(); i.hasNext(); )
-            {
-                RModuleOption rmo = (RModuleOption)i.next();
-                AttributeOption option = rmo.getAttributeOption();
-                if (rmo.getActive() && isCommon(option))
-                {
-                    matchingRMOs.add(rmo);
-                }
-            }
-        }
-        return matchingRMOs;
+        List rmos =
+            getModule(item).getOptionTree(attribute, item.getIssueType());
+        return getMatchingRMOs(rmos);
     }
 
-    public List getDescendantsUnion(AttributeOption option)
-        throws Exception
+    public List getDescendantsUnion(AttributeOption option) throws Exception
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
-        
+        assertNotEmpty();
+
         List matchingRMOs = new ArrayList();
         Iterator items = iterator();
-        while (items.hasNext()) 
+        while (items.hasNext())
         {
-            MITListItem item = (MITListItem)items.next();
+            MITListItem item = (MITListItem) items.next();
             IssueType issueType = item.getIssueType();
-            RModuleOption parent = getModule(item)
-                .getRModuleOption(option, issueType);
-            if (parent != null) 
+            RModuleOption parent =
+                getModule(item).getRModuleOption(option, issueType);
+            if (parent != null)
             {
                 Iterator i = parent.getDescendants(issueType).iterator();
-                while (i.hasNext()) 
+                while (i.hasNext())
                 {
-                    RModuleOption rmo = (RModuleOption)i.next();
-                    if (!matchingRMOs.contains(rmo)) 
+                    RModuleOption rmo = (RModuleOption) i.next();
+                    if (!matchingRMOs.contains(rmo))
                     {
                         matchingRMOs.add(rmo);
                     }
                 }
             }
         }
-        
+
         return matchingRMOs;
     }
 
-    public boolean isCommon(AttributeOption option)
-        throws Exception
+    public boolean isCommon(AttributeOption option) throws Exception
     {
         return isCommon(option, true);
     }
@@ -874,34 +859,30 @@ public  class MITList
         throws Exception
     {
         Criteria crit = new Criteria();
-        addToCriteria(crit, RModuleOptionPeer.MODULE_ID, 
-                      RModuleOptionPeer.ISSUE_TYPE_ID);
-        crit.add(RModuleOptionPeer.OPTION_ID, 
-                 option.getOptionId());            
+        addToCriteria(
+            crit,
+            RModuleOptionPeer.MODULE_ID,
+            RModuleOptionPeer.ISSUE_TYPE_ID);
+        crit.add(RModuleOptionPeer.OPTION_ID, option.getOptionId());
         if (activeOnly)
         {
             crit.add(RModuleOptionPeer.ACTIVE, true);
-        }            
+        }
 
         return size() == RModuleOptionPeer.count(crit);
     }
 
-    public List getModuleIds()
-        throws TorqueException
+    public List getModuleIds() throws TorqueException
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
+        assertNotEmpty();
 
         List items = getExpandedMITListItems();
         ArrayList ids = new ArrayList(items.size());
         Iterator i = items.iterator();
-        while (i.hasNext()) 
+        while (i.hasNext())
         {
-            Integer id = ((MITListItem)i.next()).getModuleId();
-            if (!ids.contains(id)) 
+            Integer id = ((MITListItem) i.next()).getModuleId();
+            if (!ids.contains(id))
             {
                 ids.add(id);
             }
@@ -909,22 +890,17 @@ public  class MITList
         return ids;
     }
 
-    public List getModules()
-        throws TorqueException
+    public List getModules() throws TorqueException
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
+        assertNotEmpty();
 
         List items = getExpandedMITListItems();
         ArrayList modules = new ArrayList(items.size());
         Iterator i = items.iterator();
-        while (i.hasNext()) 
+        while (i.hasNext())
         {
-            Module m = ((MITListItem)i.next()).getModule();
-            if (!modules.contains(m)) 
+            Module m = ((MITListItem) i.next()).getModule();
+            if (!modules.contains(m))
             {
                 modules.add(m);
             }
@@ -932,22 +908,17 @@ public  class MITList
         return modules;
     }
 
-    public List getIssueTypeIds()
-        throws TorqueException
+    public List getIssueTypeIds() throws TorqueException
     {
-        if (size() < 1) 
-        {
-            throw new IllegalStateException("method should not be called on" +
-                " an empty list.");
-        }
+        assertNotEmpty();
 
         List items = getExpandedMITListItems();
         ArrayList ids = new ArrayList(items.size());
         Iterator i = items.iterator();
-        while (i.hasNext()) 
+        while (i.hasNext())
         {
-            Integer id = ((MITListItem)i.next()).getIssueTypeId();
-            if (!ids.contains(id)) 
+            Integer id = ((MITListItem) i.next()).getIssueTypeId();
+            if (!ids.contains(id))
             {
                 ids.add(id);
             }
@@ -955,52 +926,57 @@ public  class MITList
         return ids;
     }
 
-    public void addToCriteria(Criteria crit)
-        throws Exception
+    public void addToCriteria(Criteria crit) throws Exception
     {
         addToCriteria(crit, IssuePeer.MODULE_ID, IssuePeer.TYPE_ID);
     }
 
-    private void addToCriteria(Criteria crit, 
-                               String moduleField, String issueTypeField)
+    private void addToCriteria(
+        Criteria crit,
+        String moduleField,
+        String issueTypeField)
         throws Exception
     {
-        if (!isSingleModule() && isSingleIssueType()) 
+        if (!isSingleModule() && isSingleIssueType())
         {
             crit.addIn(moduleField, getModuleIds());
             crit.add(issueTypeField, getIssueType().getIssueTypeId());
         }
-        else if (isSingleModule() && !isSingleIssueType()) 
+        else if (isSingleModule() && !isSingleIssueType())
         {
             crit.add(moduleField, getModule().getModuleId());
             crit.addIn(issueTypeField, getIssueTypeIds());
         }
-        else if (isAllMITs) 
+        else if (isAllMITs)
         {
             crit.addIn(moduleField, getModuleIds());
             // we do this to avoid including templates in results
             crit.addIn(issueTypeField, getIssueTypeIds());
         }
-        else if (size() > 0) 
+        else if (size() > 0)
         {
             List items = getExpandedMITListItems();
             Iterator i = items.iterator();
             Criteria.Criterion c = null;
-            while (i.hasNext()) 
+            while (i.hasNext())
             {
-                MITListItem item = (MITListItem)i.next();
-                Criteria.Criterion c1 = 
-                    crit.getNewCriterion(moduleField, 
-                        item.getModuleId(), Criteria.EQUAL);
-                Criteria.Criterion c2 = 
-                    crit.getNewCriterion(issueTypeField, 
-                        item.getIssueTypeId(), Criteria.EQUAL);
+                MITListItem item = (MITListItem) i.next();
+                Criteria.Criterion c1 =
+                    crit.getNewCriterion(
+                        moduleField,
+                        item.getModuleId(),
+                        Criteria.EQUAL);
+                Criteria.Criterion c2 =
+                    crit.getNewCriterion(
+                        issueTypeField,
+                        item.getIssueTypeId(),
+                        Criteria.EQUAL);
                 c1.and(c2);
-                if (c == null) 
+                if (c == null)
                 {
                     c = c1;
                 }
-                else 
+                else
                 {
                     c.or(c1);
                 }
@@ -1009,23 +985,22 @@ public  class MITList
         }
     }
 
-    public void addAll(MITList list)
-        throws TorqueException
+    public void addAll(MITList list) throws TorqueException
     {
         List currentList = getExpandedMITListItems();
-        for (Iterator i = list.getExpandedMITListItems().iterator(); 
-             i.hasNext();)
+        for (Iterator i = list.getExpandedMITListItems().iterator();
+            i.hasNext();
+            )
         {
-            MITListItem item = (MITListItem)i.next();
-            if (!currentList.contains(item)) 
+            MITListItem item = (MITListItem) i.next();
+            if (!currentList.contains(item))
             {
                 addMITListItem(item);
             }
         }
     }
 
-    public void addMITListItem(MITListItem item)
-        throws TorqueException
+    public void addMITListItem(MITListItem item) throws TorqueException
     {
         super.addMITListItem(item);
         expandedList = null;
@@ -1034,114 +1009,115 @@ public  class MITList
 
     private void calculateIsAllMITs(MITListItem item)
     {
-        isAllMITs |= (MITListItem.MULTIPLE_KEY.equals(item.getModuleId())
+        isAllMITs
+            |= (MITListItem.MULTIPLE_KEY.equals(item.getModuleId())
                 && MITListItem.MULTIPLE_KEY.equals(item.getIssueTypeId()));
     }
 
     public List getExpandedMITListItems()
     {
-        if (expandedList == null) 
+        if (expandedList == null)
         {
-        List items = new ArrayList();
-        try
-        {
-            for (Iterator rawItems = getMITListItems().iterator();
-                 rawItems.hasNext();) 
+            List items = new ArrayList();
+            try
             {
-                MITListItem item = (MITListItem)rawItems.next();
-                calculateIsAllMITs(item);
-                if (!item.isSingleModule()) 
+                for (Iterator rawItems = getMITListItems().iterator();
+                    rawItems.hasNext();
+                    )
                 {
-                    Module[] modules = getScarabUser()
-                        .getModules(ScarabSecurity.ISSUE__SEARCH);
-                    for (int i=0; i< modules.length; i++) 
+                    MITListItem item = (MITListItem) rawItems.next();
+                    calculateIsAllMITs(item);
+                    if (!item.isSingleModule())
                     {
-                        Module module = modules[i];
-                        if (item.isSingleIssueType()) 
+                        Module[] modules =
+                            getScarabUser().getModules(
+                                ScarabSecurity.ISSUE__SEARCH);
+                        for (int i = 0; i < modules.length; i++)
                         {
-                            IssueType type = item.getIssueType();
-                            if (module.getRModuleIssueType(type) != null) 
+                            Module module = modules[i];
+                            if (item.isSingleIssueType())
                             {
-                                MITListItem newItem = 
-                                    MITListItemManager.getInstance();
-                                newItem.setModule(module);
-                                newItem.setIssueType(type);
-                                newItem.setListId(getListId());
-                                items.add(newItem);
+                                IssueType type = item.getIssueType();
+                                if (module.getRModuleIssueType(type) != null)
+                                {
+                                    MITListItem newItem =
+                                        MITListItemManager.getInstance();
+                                    newItem.setModule(module);
+                                    newItem.setIssueType(type);
+                                    newItem.setListId(getListId());
+                                    items.add(newItem);
+                                }
+                            }
+                            else
+                            {
+                                addIssueTypes(module, items);
                             }
                         }
-                        else 
-                        {
-                            addIssueTypes(module, items);
-                        }
-                    }                    
-                }
-                else if (!item.isSingleIssueType()) 
-                {
-                    addIssueTypes(getModule(item), items);
-                }
-                else 
-                {
-                    items.add(item);
+                    }
+                    else if (!item.isSingleIssueType())
+                    {
+                        addIssueTypes(getModule(item), items);
+                    }
+                    else
+                    {
+                        items.add(item);
+                    }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            throw new TorqueRuntimeException(e);
-        }
+            catch (Exception e)
+            {
+                throw new TorqueRuntimeException(e);
+            }
             expandedList = items;
         }
-        
+
         return expandedList;
     }
 
     /**
      * Adds all the active issue types in module to the items List
      */
-    private void addIssueTypes(Module module, List items)
-        throws Exception
+    private void addIssueTypes(Module module, List items) throws Exception
     {
         Iterator rmits = module.getRModuleIssueTypes().iterator();
-        while (rmits.hasNext()) 
+        while (rmits.hasNext())
         {
             MITListItem newItem = MITListItemManager.getInstance();
             newItem.setModuleId(module.getModuleId());
             newItem.setIssueTypeId(
-                ((RModuleIssueType)rmits.next()).getIssueTypeId());
+                ((RModuleIssueType) rmits.next()).getIssueTypeId());
             newItem.setListId(getListId());
             items.add(newItem);
-        }                            
+        }
     }
-
 
     public void scheduleItemForDeletion(MITListItem item)
     {
-        if (itemsScheduledForDeletion == null) 
+        if (itemsScheduledForDeletion == null)
         {
             itemsScheduledForDeletion = new ArrayList();
         }
         itemsScheduledForDeletion.add(item);
     }
 
-    public void save(Connection con)
-        throws TorqueException
+    public void save(Connection con) throws TorqueException
     {
         super.save(con);
-        if (itemsScheduledForDeletion != null 
-            && !itemsScheduledForDeletion.isEmpty()) 
+        if (itemsScheduledForDeletion != null
+            && !itemsScheduledForDeletion.isEmpty())
         {
             List itemIds = new ArrayList(itemsScheduledForDeletion.size());
-            for (Iterator iter = itemsScheduledForDeletion.iterator(); 
-                 iter.hasNext();) 
+            for (Iterator iter = itemsScheduledForDeletion.iterator();
+                iter.hasNext();
+                )
             {
-                MITListItem item = (MITListItem)iter.next();
-                if (!item.isNew()) 
+                MITListItem item = (MITListItem) iter.next();
+                if (!item.isNew())
                 {
                     itemIds.add(item.getItemId());
-                }                
+                }
             }
-            if (!itemIds.isEmpty()) 
+            if (!itemIds.isEmpty())
             {
                 Criteria crit = new Criteria();
                 crit.addIn(MITListItemPeer.ITEM_ID, itemIds);
@@ -1154,31 +1130,37 @@ public  class MITList
     {
         StringBuffer sb = new StringBuffer(100);
         sb.append(super.toString()).append(':');
-        sb.append( (getListId() == null) ? "New" : getListId().toString() ); 
-        if (getName() != null) 
+        sb.append((getListId() == null) ? "New" : getListId().toString());
+        if (getName() != null)
         {
             sb.append(" name=").append(getName());
         }
         sb.append('[');
         boolean addComma = false;
-        try 
-        {        
+        try
+        {
             for (Iterator rawItems = getMITListItems().iterator();
-                 rawItems.hasNext();) 
+                rawItems.hasNext();
+                )
             {
-                if (addComma) 
+                if (addComma)
                 {
                     sb.append(", ");
                 }
-                else 
+                else
                 {
                     addComma = true;
                 }
-                
-                MITListItem item = (MITListItem)rawItems.next();
-                sb.append('(').append(item.getModuleId()).append(',')
-                    .append(item.getIssueTypeId()).append(',')
-                    .append(item.getListId()).append(')');
+
+                MITListItem item = (MITListItem) rawItems.next();
+                sb
+                    .append('(')
+                    .append(item.getModuleId())
+                    .append(',')
+                    .append(item.getIssueTypeId())
+                    .append(',')
+                    .append(item.getListId())
+                    .append(')');
             }
         }
         catch (Exception e)
