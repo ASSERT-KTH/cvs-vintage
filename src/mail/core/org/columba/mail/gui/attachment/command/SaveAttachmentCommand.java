@@ -93,27 +93,20 @@ public class SaveAttachmentCommand extends FolderCommand {
 		fileChooser.setDialogTitle("Save Attachment as ...");
 		if (fileName != null)
 			fileChooser.forceSelectedFile(new File(fileName));
-
 		fileChooser.setSelectFilter(fileFilter);
-		int returnVal = fileChooser.showSaveDialog(null);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			tempFile = fileChooser.getSelectedFile();
-		}
-
-		lastDir = tempFile.getParentFile();
-
-		if (tempFile.exists()) {
-			Object[] options = { "OK", "CANCEL" };
-			JOptionPane.showOptionDialog(
-				null,
-				"Overwrite File?",
-				"Warning",
-				JOptionPane.DEFAULT_OPTION,
-				JOptionPane.WARNING_MESSAGE,
-				null,
-				options,
-				options[0]);
+                
+                while (true) {
+                        if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+                                return;
+                        }
+                        tempFile = fileChooser.getSelectedFile();
+                        lastDir = tempFile.getParentFile();
+                        if (tempFile.exists() && JOptionPane.showConfirmDialog(
+                                null, "Overwrite File?", "Warning",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                                    break;
+                        }
 		}
 
 		Decoder decoder;
@@ -142,5 +135,4 @@ public class SaveAttachmentCommand extends FolderCommand {
 			//setCancel(true);
 		}
 	}
-
 }
