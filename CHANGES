@@ -15,7 +15,15 @@ New features:
 - #986558, Dbl-click in contact table should open edit dialog (cliffb53)
 - #1011978, Reply All- Keyboard Command (fdietz)
 - #999748, in preview panel,full emailadress should be displayed beside (fdietz)
-
+- added a debug-class to easily track down awt-event-dispatcher problems (fdietz)
+- added complete sorting and filtering support for contact JTable (fdietz)
+- added framemediator caching, this way switching between mail/addressbook
+  is now really fast (fdietz)
+- added facade access to mailbox folders (fdietz)
+- cleanup of the frame package, removed all circular dependencies, simplified design, 
+  using only one level of inheritance now. This makes adding new frames very easy. 
+  Also introduced the paradigm of a container which encapsulates views. (fdietz)
+  
 Fixed bugs:
 - #773118 é in name of Directory (tstich)
 - #1014346 IMAP rename problems (tstich)
@@ -36,7 +44,12 @@ Fixed bugs:
 - check auth methods now use whatever is configured on screen instead of 
   using stored account settings (cliffb53)
 - #1011038, Save password security warning (cliffb53)
-
+- Moves the cursor to the SMTP field at startup, as the other 
+  wizard dialog does (redsolo)
+- dnd selection in JTree changes fixed (fdietz)
+- shutdown-thread could be started twice times, which lead to 
+  config-file corruption, etc. (fdietz) 
+- do not try to disable internal plugin, its not possible anyway! (fdietz)
  
 Columba v1.0 RC1-final
 
