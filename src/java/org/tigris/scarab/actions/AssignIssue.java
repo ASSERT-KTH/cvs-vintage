@@ -80,7 +80,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.104 2004/10/11 08:52:46 dep4b Exp $
+ * @version $Id: AssignIssue.java,v 1.105 2004/11/02 10:22:37 dabbous Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -389,9 +389,13 @@ public class AssignIssue extends BaseModifyIssue
                                                    assigner, oldAttVal, attachment);
                 }
             }
-            if (activitySet != null && !emailNotify(activitySet, issue))
-            {
-                scarabR.setAlertMessage(EMAIL_ERROR);
+            if (activitySet != null) {
+                Exception e = emailNotify(activitySet, issue);
+                if(e != null)
+                {
+                    L10NMessage l10nMessage = new L10NMessage(EMAIL_ERROR,e);
+                    scarabR.setAlertMessage(l10nMessage);
+                }
             }
         }
         if (isUserAttrRemoved)
@@ -411,17 +415,17 @@ public class AssignIssue extends BaseModifyIssue
 
     /**
      * Takes care of giving an email notice about an issue to a list of users 
-     * with a comment.
+     * with a comment. If an exception occured, the Exception instance is
+     * returned. Otherwise null is returned.
      *
      * @param issue a <code>Issue</code> to notify users about being assigned to.
      * @param action <code>String</code> text to email to others.
      */
-    private boolean emailNotify(ActivitySet activitySet, Issue issue)
-        throws Exception
+    private Exception emailNotify(ActivitySet activitySet, Issue issue)
     {
         if (issue == null)
         {
-            return false;
+            return null;
         }
 
         String template = Turbine.getConfiguration().
@@ -430,7 +434,16 @@ public class AssignIssue extends BaseModifyIssue
 
         EmailContext ectx = new EmailContext();
         ectx.setSubjectTemplate("AssignIssueModifyIssueSubject.vm");
-        return activitySet.sendEmail(ectx, issue, template);
+        Exception exception;
+        try{
+            activitySet.sendEmail(ectx, issue, template);
+            exception=null;
+        }
+        catch(Exception e)
+        {
+            exception = e;
+        }
+        return exception;
     }
 
 

@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.28 2004/05/10 21:04:45 dabbous Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.29 2004/11/02 10:22:38 dabbous Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo
@@ -96,7 +96,7 @@ public  class IssueTemplateInfo
         return canDelete(user);
     }
 
-    public boolean saveAndSendEmail(ScarabUser user, Module module, 
+    public void saveAndSendEmail(ScarabUser user, Module module, 
                                     TemplateContext context)
         throws Exception
     {
@@ -140,16 +140,24 @@ public  class IssueTemplateInfo
                 ectx.setDefaultTextKey("NewTemplateRequiresApproval");
 
                 String fromUser = "scarab.email.default";
-                if (!Email.sendEmail(ectx, module, 
-                    fromUser, module.getSystemEmail(), Arrays.asList(toUsers),
-                    null, template))
+                try
                 {
-                    success = false;
+                    Email.sendEmail(ectx, 
+                        module, 
+                        fromUser,
+                        module.getSystemEmail(),
+                        Arrays.asList(toUsers),
+                        null, template);
+                }
+                catch(Exception e)
+                {
+                    save();  // Not shure about this, but i think it's ok,
+                             // because we already did an issue.save(), see above
+                    throw e; 
                 }
             }
         }
         save();
-        return success;
     }
 
     /*

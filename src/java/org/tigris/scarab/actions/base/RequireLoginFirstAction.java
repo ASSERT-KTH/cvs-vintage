@@ -74,7 +74,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.56 2004/10/16 12:31:40 dep4b Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.57 2004/11/02 10:22:38 dabbous Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -84,6 +84,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     protected static final LocalizationKey NO_PERMISSION_MESSAGE = L10NKeySet.YouDoNotHavePermissionToAction;
     protected static final LocalizationKey DEFAULT_MSG           = L10NKeySet.YourChangesWereSaved;
     protected static final LocalizationKey EMAIL_ERROR           = L10NKeySet.CouldNotSendEmail;
+    protected static final LocalizationKey EMAIL_ERROR2          = L10NKeySet.CouldNotSendEmail2;
     protected static final LocalizationKey NO_CHANGES_MADE       = L10NKeySet.NoChangesMade;
 
 

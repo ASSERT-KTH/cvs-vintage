@@ -64,6 +64,8 @@ import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.util.EmailContext;
@@ -105,14 +107,18 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                     TurbineSecurity.grant(user, module, 
                         TurbineSecurity.getRole(role));
                     getScarabRequestTool(context).setConfirmMessage(
-                        l10n.get("RoleRequestGranted"));    
+                            L10NKeySet.RoleRequestGranted);    
                 }
                 else 
                 {
-                    if (!sendNotification(module, user, role)) 
+                    try
                     {
-                        scarabR.setAlertMessage(
-                            l10n.get("CouldNotSendNotification"));
+                        sendNotification(module, user, role); 
+                    }
+                    catch(Exception e)
+                    {
+                        L10NMessage l10nMessage = new L10NMessage(L10NKeySet.CouldNotSendNotification,e);
+                        scarabR.setAlertMessage(l10nMessage);
                     } 
 
                     PendingGroupUserRole pend = new PendingGroupUserRole();
@@ -120,8 +126,7 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                     pend.setUserId(user.getUserId());
                     pend.setRoleName(role);
                     pend.save();
-                    scarabR.setInfoMessage(
-                        l10n.get("RoleRequestAwaiting"));
+                    scarabR.setInfoMessage(L10NKeySet.RoleRequestAwaiting);
                 }                
             }
         }
@@ -144,7 +149,7 @@ public class HandleRoleRequests extends RequireLoginFirstAction
      * users with roles in the module are notified.
      * Returns true if everything is OK, and false in case of error.
      */
-    private boolean sendNotification(ScarabModule module, ScarabUser user, 
+    private void sendNotification(ScarabModule module, ScarabUser user, 
                                   String role)
         throws Exception
     {
@@ -175,7 +180,7 @@ public class HandleRoleRequests extends RequireLoginFirstAction
             approvers = approversWithRole;
         }
 
-        return Email.sendEmail(econtext, module, 
+        Email.sendEmail(econtext, module, 
                                "scarab.email.default", module.getSystemEmail(),
                                approvers, null,
                                "RoleRequest.vm");        

@@ -61,7 +61,7 @@ package org.tigris.scarab.tools.localization;
  * Note: The velocity templates use much more resource keys, which are NOT
  * defined here, because they are not relevant for the java-part of this software.
  * 
- * @version $Id: L10NKeySet.java,v 1.5 2004/10/13 15:12:55 dep4b Exp $
+ * @version $Id: L10NKeySet.java,v 1.6 2004/11/02 10:22:38 dabbous Exp $
  *
  * Default implementation of a Localization Key.
  * <p>
@@ -108,7 +108,7 @@ public class L10NKeySet
     public static final LocalizationKey ExceptionDependInternalWorkflow      = new L10NKey("ExceptionDependInternalWorkflow");
     public static final LocalizationKey ExceptionMultipleVoteForUnallowed    = new L10NKey("ExceptionMultipleVoteForUnallowed");
     public static final LocalizationKey ExceptionCommentSavedButErrors       = new L10NKey("ExceptionCommentSavedButErrors");
-    public static final LocalizationKey ExceptionSavedButErrors              = new L10NKey("ExceptionSavedButErrors");
+    public static final LocalizationKey SavedButErrors                       = new L10NKey("SavedButErrors");
     public static final LocalizationKey ExceptionTemplateTypeForIssueType    = new L10NKey("ExceptionTemplateTypeForIssueType");    
     public static final LocalizationKey ExceptionInvalidIssueType            = new L10NKey("ExceptionInvalidIssueType");
     public static final LocalizationKey ExceptionMultipleReports             = new L10NKey("ExceptionMultipleReports");
@@ -132,6 +132,7 @@ public class L10NKeySet
     public static final LocalizationKey ScarabBundle                         = new L10NKey("ScarabBundle");
     public static final LocalizationKey NoDataInComment                      = new L10NKey("NoDataInComment");
     public static final LocalizationKey CouldNotSendEmail                    = new L10NKey("CouldNotSendEmail");
+    public static final LocalizationKey CouldNotSendEmail2                   = new L10NKey("CouldNotSendEmail2");
     public static final LocalizationKey DependencyExists                     = new L10NKey("DependencyExists");
     public static final LocalizationKey UrlDescChangedDesc                   = new L10NKey("UrlDescChangedDesc");
     public static final LocalizationKey UrlChangedDesc                       = new L10NKey("UrlChangedDesc");
@@ -149,7 +150,8 @@ public class L10NKeySet
     public static final LocalizationKey AttachmentDeletedDesc                = new L10NKey("AttachmentDeletedDesc");
     public static final LocalizationKey FileDeletedDesc                      = new L10NKey("FileDeletedDesc");
     public static final LocalizationKey FileNotDeletedDesc                   = new L10NKey("FileNotDeletedDesc");
-    
+    public static final LocalizationKey DupeCheckSkippedForLackOfResources   = new L10NKey("DupeCheckSkippedForLackOfResources");
+    public static final LocalizationKey DupeCheckSkippedBecauseComplexity    = new L10NKey("DupeCheckSkippedBecauseComplexity");
     // The following set is originally been generated from the java sources.
     
     public static final LocalizationKey PasswordsDoNotMatch = new L10NKey("PasswordsDoNotMatch");

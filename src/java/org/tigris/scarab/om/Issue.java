@@ -99,7 +99,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.338 2004/06/04 22:08:43 dabbous Exp $
+ * @version $Id: Issue.java,v 1.339 2004/11/02 10:22:38 dabbous Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -630,10 +630,14 @@ public class Issue
             .createTextActivity(this, activitySet,
                                 comment, attachment);
 
-        if (!activitySet.sendEmail(this))
+        try
+        {
+            activitySet.sendEmail(this);
+        }
+        catch (Exception e)
         {   Localizable commentSaved = new L10NMessage(L10NKeySet.CommentSaved);
-            Localizable sendFailed   = new L10NMessage(L10NKeySet.CouldNotSendEmail);
-            throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
+            Localizable sendFailed   = new L10NMessage(L10NKeySet.CouldNotSendEmail,e);
+            throw new ScarabException(L10NKeySet.SavedButErrors,
                     commentSaved,
                     sendFailed);
         }
@@ -3350,13 +3354,17 @@ public class Issue
                 .createTextActivity(this, activitySet,
                                     desc, attachment,
                                     oldDescription, newDescription);
-            if (!activitySet.sendEmail(this))
+            try
+            {
+                activitySet.sendEmail(this);
+            }
+            catch (Exception e)
             {
                 Localizable urlDescSaved = new L10NMessage(L10NKeySet.UrlDescChangedDesc);
-                Localizable emailError   = new L10NMessage(L10NKeySet.CouldNotSendEmail);
-                throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
-                                       urlDescSaved,
-                                       emailError);
+                Localizable emailError   = new L10NMessage(L10NKeySet.CouldNotSendEmail,e);
+                throw new ScarabException(L10NKeySet.SavedButErrors,
+                    urlDescSaved,
+                    emailError);
             }
         }
         return activitySet;
@@ -3397,13 +3405,17 @@ public class Issue
                 .createTextActivity(this, activitySet,
                                     desc, attachment,
                                     oldUrl, newUrl);
-            if (!activitySet.sendEmail(this))
+            try
+            {
+                activitySet.sendEmail(this);
+            }
+            catch (Exception e)
             {
                 Localizable urlChanged = new L10NMessage(L10NKeySet.UrlChangedDesc, oldUrl, newUrl);
-                Localizable emailError = new L10NMessage(L10NKeySet.CouldNotSendEmail);
-                throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
-                                          urlChanged,
-                                          emailError);
+                Localizable emailError = new L10NMessage(L10NKeySet.CouldNotSendEmail, e);
+                throw new ScarabException(L10NKeySet.SavedButErrors,
+                    urlChanged,
+                    emailError);
             }
         }
         return activitySet;
@@ -3758,13 +3770,17 @@ public class Issue
                                     desc, attachment,
                                     oldComment, newComment);
              
-            if (!activitySet.sendEmail(this))
+            try
+            {
+                activitySet.sendEmail(this);
+            }
+            catch (Exception e)
             {
                 Localizable commentSaved = new L10NMessage( L10NKeySet.CommentSaved,oldComment,newComment);
-                Localizable emailError   = new L10NMessage( L10NKeySet.CouldNotSendEmail);
-                throw new ScarabException(L10NKeySet.ExceptionSavedButErrors,
-                                          commentSaved,
-                                          emailError);
+                Localizable emailError   = new L10NMessage( L10NKeySet.CouldNotSendEmail,e);
+                throw new ScarabException(L10NKeySet.SavedButErrors,
+                    commentSaved,
+                    emailError);
             }
         }
         return activitySet;

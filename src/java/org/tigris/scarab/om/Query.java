@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * This class manages the Query table.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Query.java,v 1.64 2004/05/10 21:04:45 dabbous Exp $
+ * @version $Id: Query.java,v 1.65 2004/11/02 10:22:38 dabbous Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery
@@ -200,13 +200,24 @@ public class Query
         return canDelete(user);
     }
 
+    /**
+     * Either returns true, if no email problem occured,
+     * or throws an appropriate Exception. Note: If an email
+     * exception occured, the query is still saved.
+     * @param user
+     * @param module
+     * @param context
+     * @return
+     * @throws Exception
+     */
     public boolean saveAndSendEmail(ScarabUser user, Module module, 
                                     TemplateContext context)
         throws Exception
     {
         // If it's a module scoped query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
-        boolean success = true;
+        Exception exception=null; // temporary store a thrown exception
+
         if (getScopeId().equals(Scope.PERSONAL__PK) 
             || user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
@@ -249,11 +260,19 @@ public class Query
                 ectx.setDefaultTextKey("NewQueryRequiresApproval");
 
                 String fromUser = "scarab.email.default";
-                if (!Email.sendEmail(ectx, module, 
-                    fromUser, module.getSystemEmail(), Arrays.asList(toUsers),
-                    null, template))
+                try
                 {
-                    success = false;
+                    Email.sendEmail(ectx,
+                        module, 
+                        fromUser,
+                        module.getSystemEmail(),
+                        Arrays.asList(toUsers),
+                        null,
+                        template);
+                }
+                catch (Exception e)
+                {
+                    exception = e;
                 }
             }
         }
@@ -265,7 +284,11 @@ public class Query
             setMITList(getMITList());            
         }
         save();
-        return success;
+        if(exception != null)
+        {
+            throw exception;
+        }
+        return true;
     }
 
     public MITList getMITList()

@@ -86,6 +86,8 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.MutableBoolean;
 import org.tigris.scarab.util.ScarabException;
@@ -100,7 +102,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.188 2004/10/16 12:31:40 dep4b Exp $
+ * @version $Id: ModifyIssue.java,v 1.189 2004/11/02 10:22:37 dabbous Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -292,8 +294,8 @@ public class ModifyIssue extends BaseModifyIssue
                 ActivitySet activitySet = issue.setAttributeValues(null, 
                                                 newAttVals, attachment, user);
                 intake.removeAll();
-                sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
                 scarabR.setConfirmMessage(L10NKeySet.ChangesSaved);
+                sendEmail(activitySet, issue, DEFAULT_MSG, context);
             }
             catch (Exception se)
             {
@@ -397,8 +399,8 @@ public class ModifyIssue extends BaseModifyIssue
 
                 // remove the group
                 intake.remove(newGroup);
-                sendEmail(activitySet, issue, l10n.get(L10NKeySet.UrlSaved), context);
                 scarabR.setConfirmMessage(L10NKeySet.UrlSaved);
+                sendEmail(activitySet, issue, L10NKeySet.UrlSaved, context);
             }
         }
     }
@@ -531,8 +533,8 @@ public class ModifyIssue extends BaseModifyIssue
             ActivitySet activitySet = issue.doSaveFileAttachments(user);
             if (activitySet != null)
             {
-                sendEmail(activitySet, issue, l10n.get(L10NKeySet.FileSaved), context);
                 scarabR.setConfirmMessage(L10NKeySet.FileSaved);
+                sendEmail(activitySet, issue, L10NKeySet.FileSaved, context);
             }
             else
             {
@@ -641,18 +643,18 @@ public class ModifyIssue extends BaseModifyIssue
      * Eventually, this should be moved somewhere else once we can figure
      * out how to separate email out of the request context scope.
      */
-    private void sendEmail(ActivitySet activitySet, Issue issue, String msg,
+    private void sendEmail(ActivitySet activitySet, Issue issue, LocalizationKey msg,
                            TemplateContext context)
         throws Exception
     {
-        if (!activitySet.sendEmail(issue))
+        try
         {
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            String emailError = l10n.get(EMAIL_ERROR);
-            StringBuffer sb = 
-                new StringBuffer(msg.length() + emailError.length());
-            sb.append(msg).append(emailError);
-            getScarabRequestTool(context).setConfirmMessage(sb.toString());
+            activitySet.sendEmail(issue);
+        }
+        catch (Exception e)
+        {
+            L10NMessage l10nMessage = new L10NMessage(EMAIL_ERROR2,msg,e);
+            getScarabRequestTool(context).setConfirmMessage(l10nMessage);
         }
     }
 
@@ -764,7 +766,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (activitySet != null)
         {
             scarabR.setConfirmMessage(DEFAULT_MSG);
-            sendEmail(activitySet, issue, l10n.get(L10NKeySet.UrlDeleted), 
+            sendEmail(activitySet, issue, L10NKeySet.UrlDeleted, 
                       context);
         }
         else
@@ -843,7 +845,7 @@ public class ModifyIssue extends BaseModifyIssue
             {
                 scarabR.setAlertMessage(L10NKeySet.FilesPartiallyDeleted);
             }
-            sendEmail(activitySet, issue, l10n.get(L10NKeySet.FileDeleted), context);
+            sendEmail(activitySet, issue, L10NKeySet.FileDeleted, context);
 
         }
         else
@@ -1014,15 +1016,15 @@ public class ModifyIssue extends BaseModifyIssue
                 return false;
             }
 
+            scarabR.setConfirmMessage(DEFAULT_MSG);
             if (activitySet != null)
             {
                 // FIXME: I think that we are sending too many emails here
-                sendEmail(activitySet, childIssue, l10n.get(DEFAULT_MSG), 
+                sendEmail(activitySet, childIssue, DEFAULT_MSG, 
                           context);
-                sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), 
+                sendEmail(activitySet, issue, DEFAULT_MSG, 
                           context);
             }
-            scarabR.setConfirmMessage(DEFAULT_MSG);
             return true;
         }
         else
@@ -1113,7 +1115,7 @@ public class ModifyIssue extends BaseModifyIssue
             // but here we are not...should we? it almost seems like 
             // to much email. We need someone to define this behavior
             // better. (JSS)
-            sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
+            sendEmail(activitySet, issue, DEFAULT_MSG, context);
             return true;
         }
         else // nothing changed

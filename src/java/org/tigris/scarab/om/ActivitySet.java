@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.17 2004/09/15 14:12:21 legout Exp $
+ * @version $Id: ActivitySet.java,v 1.18 2004/11/02 10:22:38 dabbous Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -137,29 +137,29 @@ public class ActivitySet
         return getScarabUser();
     }
 
-    public boolean sendEmail(Issue issue)
+    public void sendEmail(Issue issue)
          throws Exception
     {
-        return sendEmail(null, issue, null, null, null);
+        sendEmail(null, issue, null, null, null);
     }
 
-    public boolean sendEmail(EmailContext context, Issue issue)
+    public void sendEmail(EmailContext context, Issue issue)
          throws Exception
     {
-        return sendEmail(context, issue, null, null, null);
+        sendEmail(context, issue, null, null, null);
     }
 
-    public boolean sendEmail(Issue issue, String template)
+    public void sendEmail(Issue issue, String template)
          throws Exception
     {
-        return sendEmail(null, issue, null, null, template);
+        sendEmail(null, issue, null, null, template);
     }
 
-    public boolean sendEmail(EmailContext context, Issue issue, 
+    public void sendEmail(EmailContext context, Issue issue, 
                              String template)
          throws Exception
     {
-        return sendEmail(context, issue, null, null, template);
+        sendEmail(context, issue, null, null, template);
     }
 
     /** 
@@ -171,7 +171,7 @@ public class ActivitySet
      * @param context Any contextual information for the message.
      * @param issue The issue 
      */
-    public boolean sendEmail(EmailContext context, Issue issue, 
+    public void sendEmail(EmailContext context, Issue issue, 
                              Collection toUsers, Collection ccUsers,
                              String template)
          throws Exception
@@ -219,13 +219,13 @@ public class ActivitySet
 
         if(Turbine.getConfiguration().getString("scarab.email.replyto.sender").equals("true"))
           {
-            return Email.sendEmail(context, issue.getModule(), getCreator(), 
-                                   getCreator(), toUsers, ccUsers, template);
+            Email.sendEmail(context, issue.getModule(), getCreator(), 
+                            getCreator(), toUsers, ccUsers, template);
           } 
         else 
           {
-            return Email.sendEmail(context, issue.getModule(), getCreator(), 
-                                   replyToUser, toUsers, ccUsers, template);
+            Email.sendEmail(context, issue.getModule(), getCreator(), 
+                            replyToUser, toUsers, ccUsers, template);
           }
     }
 }

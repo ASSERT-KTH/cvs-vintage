@@ -72,8 +72,6 @@ import org.apache.fulcrum.localization.Localization;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
-import org.tigris.scarab.om.AttributeOptionPeer;
-import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
@@ -95,15 +93,15 @@ import org.tigris.scarab.util.word.ComplexQueryException;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
-import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.185 2004/10/11 23:11:55 jorgeuriarte Exp $
+ * @version $Id: ReportIssue.java,v 1.186 2004/11/02 10:22:37 dabbous Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -135,8 +133,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
         if (!isValid)
         {
-          scarabR.setAlertMessage(
-              getLocalizationTool(context).get("IssueTypeUnavailable"));
+          scarabR.setAlertMessage(L10NKeySet.IssueTypeUnavailable);
           data.setTarget( ((ScarabUser)data.getUser()).getHomePage());
           cleanup(data, context);
         }
@@ -174,8 +171,8 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         catch (Exception e)
         {
-            scarabR.setAlertMessage(
-                l10n.format("ErrorExceptionMessage", e.getMessage()));
+            L10NMessage l10nMessage = new L10NMessage(L10NKeySet.ErrorExceptionMessage,e);
+            scarabR.setAlertMessage(l10nMessage);
             Log.get().error("Error while checking for duplicates", e);
             setTarget(data, "entry,Wizard1.vm");
             return;
@@ -283,14 +280,12 @@ public class ReportIssue extends RequireLoginFirstAction
         catch (MaxConcurrentSearchException e)
         {
             getScarabRequestTool(context).setInfoMessage(
-                getLocalizationTool(context)
-                .get("DupeCheckSkippedForLackOfResources"));            
+                L10NKeySet.DupeCheckSkippedForLackOfResources);            
         }
         catch (ComplexQueryException e)
         {
             getScarabRequestTool(context).setInfoMessage(
-                getLocalizationTool(context)
-                .get("DupeCheckSkippedBecauseComplexity"));            
+                    L10NKeySet.DupeCheckSkippedBecauseComplexity);            
         }
         finally
         {
@@ -446,8 +441,7 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         else
         {
-            getScarabRequestTool(context).setAlertMessage(
-                getLocalizationTool(context).get(ERROR_MESSAGE));
+            getScarabRequestTool(context).setAlertMessage(ERROR_MESSAGE);
         }
         return success;
     }
@@ -573,21 +567,26 @@ public class ReportIssue extends RequireLoginFirstAction
                     doRedirect(data, context, templateCode, issue);
                 
                     // send email
-                    if (!activitySet.sendEmail(issue, 
-                                               "NewIssueNotification.vm"))
+                    try
                     {
-                        scarabR.setInfoMessage(
-                            l10n.get("IssueSavedButEmailError"));
+                        activitySet.sendEmail(issue, "NewIssueNotification.vm");
+                    }
+                    catch(Exception e)
+                    {
+                        L10NMessage l10nMessage = new L10NMessage(L10NKeySet.IssueSavedButEmailError,e);
+                        scarabR.setInfoMessage(l10nMessage);
                     }
                     cleanup(data, context);
                     data.getParameters().add("id", issue.getUniqueId().toString());
-                    scarabR.setConfirmMessage(l10n.format("IssueAddedToModule",
-                        issue.getUniqueId(), getScarabRequestTool(context)
-                        .getCurrentModule().getRealName()));
+                    L10NMessage l10nMessage = 
+                        new L10NMessage(L10NKeySet.IssueAddedToModule,
+                            issue.getUniqueId(), 
+                            getScarabRequestTool(context).getCurrentModule().getRealName());
+                    scarabR.setConfirmMessage(l10nMessage);
                 }
                 else
                 {
-                    scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                    scarabR.setAlertMessage(ERROR_MESSAGE);
                 }
             }
             else 
@@ -615,7 +614,7 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         if (scarabR.getAlertMessage() == null)
         {
-            scarabR.setConfirmMessage(l10n.get("FileAdded"));
+            scarabR.setConfirmMessage(L10NKeySet.FileAdded);
         }
 
         SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
@@ -650,11 +649,11 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         if (fileDeleted)
         {
-            scarabR.setConfirmMessage(l10n.get("FileDeleted"));
+            scarabR.setConfirmMessage(L10NKeySet.FileDeleted);
         }
         else
         {
-            scarabR.setConfirmMessage(l10n.get("NoFilesChanged"));
+            scarabR.setConfirmMessage(L10NKeySet.NoFilesChanged);
         }
         SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
         // set any attribute values that were entered before adding the file.
@@ -683,7 +682,7 @@ public class ReportIssue extends RequireLoginFirstAction
                  List issues = scarabR.getIssues();
                  if (issues == null || issues.size() == 0)
                  {
-                     scarabR.setAlertMessage(l10n.get("NoIssuesSelectedToAddComment"));
+                     scarabR.setAlertMessage(L10NKeySet.NoIssuesSelectedToAddComment);
                      searchAndSetTemplate(data, context, 0, MAX_RESULTS, issue, "entry,Wizard2.vm");
                      return;
                  }
@@ -700,20 +699,21 @@ public class ReportIssue extends RequireLoginFirstAction
                           activitySet = 
                              prevIssue.addComment(activitySet, attachment, 
                             (ScarabUser)data.getUser());
-                          if (!activitySet.sendEmail(prevIssue))
+                          try
                           {
-                              scarabR.setInfoMessage(
-                                 l10n.get("CommentAddedButEmailError"));
+                              activitySet.sendEmail(prevIssue);
+                              scarabR.setConfirmMessage(L10NKeySet.CommentAdded);
                           }
-                          else
+                          catch(Exception e)
                           {
-                              scarabR.setConfirmMessage(l10n.get("CommentAdded"));
+                              L10NMessage l10nMessage = new L10NMessage(L10NKeySet.CommentAddedButEmailError,e);
+                              scarabR.setInfoMessage(l10nMessage);
                           }
                      }
                     else
                     {
                         scarabR.setAlertMessage(
-                           l10n.get("NoTextInCommentTextArea"));
+                           L10NKeySet.NoTextInCommentTextArea);
                         searchAndSetTemplate(data, context, 0, MAX_RESULTS,
                                              issue, "entry,Wizard2.vm");
                         return;
@@ -846,7 +846,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        l10n.get("InsufficientPermissionsToEnterIssues"));
+                        L10NKeySet.InsufficientPermissionsToEnterIssues);
                 }
                 break;
             case 2: 
@@ -867,7 +867,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        l10n.get("InsufficientPermissionsToAssignIssues"));
+                        L10NKeySet.InsufficientPermissionsToAssignIssues);
                 }
                 break;
             case 3: 
@@ -882,7 +882,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        l10n.get("InsufficientPermissionsToViewIssues"));
+                        L10NKeySet.InsufficientPermissionsToViewIssues);
                 }
                 break;
             case 4: 
@@ -903,7 +903,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        l10n.get("InsufficientPermissionsToViewIssues"));
+                        L10NKeySet.InsufficientPermissionsToViewIssues);
                 }
                 break;
         } 

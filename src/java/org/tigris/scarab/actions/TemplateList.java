@@ -78,6 +78,7 @@ import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.util.ScarabException;
@@ -89,7 +90,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.64 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: TemplateList.java,v 1.65 2004/11/02 10:22:37 dabbous Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -169,44 +170,39 @@ public class TemplateList extends RequireLoginFirstAction
                     info.setIssueId(issue.getIssueId());
 
                     // Save template info
-                    boolean success = info.saveAndSendEmail(user, 
-                                      scarabR.getCurrentModule(), context);
-                    if (success)
+                    info.saveAndSendEmail(user, 
+                        scarabR.getCurrentModule(),
+                        context);
+
+                    // For a module-scoped template which is now
+                    // pending approval, the user may not have
+                    // permission to edit the new issue template.
+                    if (info.canEdit(user))
                     {
-                        // For a module-scoped template which is now
-                        // pending approval, the user may not have
-                        // permission to edit the new issue template.
-                        if (info.canEdit(user))
-                        {
-                            data.getParameters().add
-                                ("templateId", issue.getIssueId().toString());
-                            scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
-                        }
-                        else
-                        {
-                            // Display the list of issue templates.
-                            scarabR.setInfoMessage(
-                                l10n.format("NotifyPendingApproval",
-                                l10n.get("Template").toLowerCase()));
-                            setTarget(data, "TemplateList.vm");
-                            doPerform(data, context);
-                        }
+                        data.getParameters().add
+                            ("templateId", issue.getIssueId().toString());
+                        scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
                     }
                     else
                     {
-                        scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                        // Display the list of issue templates.
+                        scarabR.setInfoMessage(
+                            l10n.format("NotifyPendingApproval",
+                            l10n.get("Template").toLowerCase()));
+                        setTarget(data, "TemplateList.vm");
+                        doPerform(data, context);
                     }
                 }
                 else
                 {
                     scarabR.setAlertMessage(
-                                l10n.get("AtLeastOneAttributeForTemplate"));
+                                L10NKeySet.AtLeastOneAttributeForTemplate);
                 }
             }
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 
