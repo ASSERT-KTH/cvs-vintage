@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.2 2003/09/09 18:11:53 thierrylach Exp $
+// $Id: TestAgainstUmlModel.java,v 1.3 2003/09/09 19:19:58 thierrylach Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -311,7 +311,7 @@ public class TestAgainstUmlModel extends TestCase {
         assertEquals(refs.size(), list.getLength());
 
         for (int i = 0; i < list.getLength(); i++) {
-            suite.addTest(new TestModelFacade(list.item(i).getAttributes().getNamedItem("name").getNodeValue()));
+            suite.addTest(new TestAgainstUmlModel(list.item(i).getAttributes().getNamedItem("name").getNodeValue()));
         }
         return suite;
     }
@@ -320,8 +320,7 @@ public class TestAgainstUmlModel extends TestCase {
      *  @see junit.framework.TestCase#runTest()
      */
     protected void runTest() throws Throwable {
-        String umlclass =
-            getName();
+        String umlclass = getName();
         Object factory = refs.get(umlclass);
         assertNotNull("Unable to find factory '" + umlclass + "' in references",
                       factory);
