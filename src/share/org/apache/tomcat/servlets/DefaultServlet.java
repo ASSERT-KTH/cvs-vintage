@@ -106,6 +106,13 @@ public class DefaultServlet extends HttpServlet {
         return "DefaultServlet";
     }
 
+    public void doPost(HttpServletRequest request,
+		       HttpServletResponse response)
+	throws ServletException, IOException
+    {
+	doGet(request, response);
+    }
+
     public void doGet(HttpServletRequest request,
 		      HttpServletResponse response)
 	throws ServletException, IOException
