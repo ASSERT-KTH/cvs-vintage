@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.57 2004/07/23 17:53:51 linus Exp $
+// $Id: FigEdgeModelElement.java,v 1.58 2004/07/25 15:21:03 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,6 +66,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.UmlHelper;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.ActionAutoResize;
@@ -855,7 +856,7 @@ public abstract class FigEdgeModelElement
      */
     protected Object getSource() {
         if (getOwner() != null) {
-            return CoreHelper.getHelper().getSource(getOwner());
+            return UmlHelper.getHelper().getSource(getOwner());
         }
         return null;
     }

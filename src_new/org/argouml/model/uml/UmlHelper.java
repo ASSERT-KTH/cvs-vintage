@@ -1,4 +1,4 @@
-// $Id: UmlHelper.java,v 1.18 2004/05/20 11:12:21 linus Exp $
+// $Id: UmlHelper.java,v 1.19 2004/07/25 15:21:02 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.model.uml.foundation.datatypes.DataTypesHelper;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 import ru.novosoft.uml.MBase;
 
@@ -242,6 +243,56 @@ public class UmlHelper {
         while (it.hasNext()) {
             UmlFactory.getFactory().delete(it.next());
         }        
+    }
+    
+    /**
+     * Returns the source of some relationship. This is the element in binary relations from which a relation 'departs'.
+     * @param relationShip 
+     * @return the source of the relationship
+     */
+    public Object getSource(Object relationShip) {
+        if (relationShip == null) {
+            throw new IllegalArgumentException("Argument relationship is null");
+        }
+        if (!(ModelFacade.isAModelElement(relationShip) || relationShip instanceof CommentEdge)) {
+           throw new IllegalArgumentException("Argument relationship of class " + relationShip.getClass().toString() + " is not a valid relationship"); 
+        }     
+        if (relationShip instanceof CommentEdge) {
+            return ((CommentEdge)relationShip).getSource();
+        }
+        if (ModelFacade.isARelationship(relationShip)) { 
+            // handles all children of relationship including extend and include which are not members of core 
+            return CoreHelper.getHelper().getSource(relationShip);
+        }
+        if (ModelFacade.isATransition(relationShip)) {
+            return StateMachinesHelper.getHelper().getSource(relationShip);
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the destination of some relationship. This is the element in binary relations at which a relation 'arrives'.
+     * @param relationShip 
+     * @return the destination of the relationship
+     */
+    public Object getDestination(Object relationShip) {
+        if (relationShip == null) {
+            throw new IllegalArgumentException("Argument relationship is null");
+        }
+        if (!(ModelFacade.isAModelElement(relationShip) || relationShip instanceof CommentEdge)) {
+           throw new IllegalArgumentException("Argument relationship of class " + relationShip.getClass().toString() + " is not a valid relationship"); 
+        }     
+        if (relationShip instanceof CommentEdge) {
+            return ((CommentEdge)relationShip).getDestination();
+        }
+        if (ModelFacade.isARelationship(relationShip)) { 
+            // handles all children of relationship including extend and include which are not members of core 
+            return CoreHelper.getHelper().getDestination(relationShip);
+        }
+        if (ModelFacade.isATransition(relationShip)) {
+            return StateMachinesHelper.getHelper().getDestination(relationShip);
+        }
+        return null;
     }
     
 }

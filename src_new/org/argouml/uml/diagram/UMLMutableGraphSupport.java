@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.8 2004/07/18 18:56:03 kataka Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.9 2004/07/25 15:21:03 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,6 +194,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
      * @see org.tigris.gef.graph.MutableGraphModel#canAddNode(java.lang.Object)
      */
     public boolean canAddNode(Object node) {
+        if (node == null) return false;
         if (ModelFacade.isAComment(node)) return true;
         return false;
     }
@@ -206,6 +207,6 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         if (edge == null) {
             return false;
         }
-       return (UmlFactory.getFactory().isConnectionValid(edge.getClass(), CoreHelper.getHelper().getSource(edge), CoreHelper.getHelper().getDestination(edge)));
+       return (UmlFactory.getFactory().isConnectionValid(edge.getClass(), UmlHelper.getHelper().getSource(edge), UmlHelper.getHelper().getDestination(edge)));
     }
 }
