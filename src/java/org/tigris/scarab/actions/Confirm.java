@@ -48,7 +48,7 @@ package org.tigris.scarab.actions;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
-import org.apache.turbine.services.template.TemplateContext;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.11 2001/07/17 01:38:40 jmcnally Exp $
+    @version $Id: Confirm.java,v 1.12 2001/07/17 07:46:05 jon Exp $
 */
 public class Confirm extends TemplateAction
 {

@@ -48,7 +48,7 @@ package org.tigris.scarab.actions;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
-import org.apache.turbine.services.template.TemplateContext;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.turbine.util.Log;
@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.14 2001/07/17 01:38:40 jmcnally Exp $
+    @version $Id: RegisterConfirm.java,v 1.15 2001/07/17 07:46:05 jon Exp $
 */
 public class RegisterConfirm extends TemplateAction
 {

@@ -49,7 +49,7 @@ package org.tigris.scarab.actions;
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
-import org.apache.turbine.services.template.TemplateContext;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 import org.apache.turbine.services.security.entity.User;
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.13 2001/07/17 01:38:40 jmcnally Exp $
+    @version $Id: Login.java,v 1.14 2001/07/17 07:46:05 jon Exp $
 */
 public class Login extends TemplateAction
 {

@@ -48,7 +48,7 @@ package org.tigris.scarab.screens.entry;
 
 // Turbine Stuff 
 import org.apache.turbine.RunData;
-import org.apache.turbine.services.template.TemplateContext;
+import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
 import org.apache.turbine.services.template.TurbineTemplate;
 
@@ -62,7 +62,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.6 2001/07/17 01:41:55 jmcnally Exp $
+    @version $Id: Default.java,v 1.7 2001/07/17 07:46:05 jon Exp $
 */
 public class Default extends TemplateSecureScreen
 {
