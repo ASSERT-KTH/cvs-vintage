@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.99 2004/11/09 15:39:12 mkl Exp $
+// $Id: Modeller.java,v 1.100 2004/12/10 18:51:32 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1182,8 +1182,8 @@ public class Modeller
 	    }
 	}
         if (mAttribute == null) {
-            mAttribute = 
-                UmlFactory.getFactory().getCore().buildAttribute(parseState.getClassifier());
+            mAttribute = UmlFactory.getFactory().getCore()
+                .buildAttribute(parseState.getClassifier());
             ModelFacade.setName(mAttribute, name);
         }
         return mAttribute;
@@ -1203,8 +1203,8 @@ public class Modeller
                 .iterator(); i.hasNext();) {
             Object ae = i.next();
             if (name.equals(ModelFacade.getName(ae))
-                    && ModelFacade.getType(ModelFacade.getOppositeEnd(ae)) == parseState
-                            .getClassifier()) {
+                && ModelFacade.getType(ModelFacade.getOppositeEnd(ae)) 
+                    == parseState.getClassifier()) {
                 mAssociationEnd = ae;
             }
         }
