@@ -1,4 +1,4 @@
-// $Id: UMLDiagramNameDocument.java,v 1.1 2004/07/17 17:19:44 mkl Exp $
+// $Id: UMLDiagramNameDocument.java,v 1.2 2004/09/20 15:28:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,9 @@ public class UMLDiagramNameDocument extends UMLPlainTextDocument {
     protected String getProperty() {
         Object target = ProjectManager.getManager().getCurrentProject()
                 .getActiveDiagram();
-        if (target instanceof ArgoDiagram) { return ((ArgoDiagram) target).getName(); }
+        if (target instanceof ArgoDiagram) { 
+            return ((ArgoDiagram) target).getName(); 
+        }
         return "";
     }
 

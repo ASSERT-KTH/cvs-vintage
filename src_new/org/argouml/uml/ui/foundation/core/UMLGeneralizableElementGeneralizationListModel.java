@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizableElementGeneralizationListModel.java,v 1.7 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLGeneralizableElementGeneralizationListModel.java,v 1.8 2004/09/20 15:28:44 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLGeneralizableElementGeneralizationListModel.java,v 1.7 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLGeneralizableElementGeneralizationListModel.java,v 1.8 2004/09/20 15:28:44 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -56,7 +56,8 @@ public class UMLGeneralizableElementGeneralizationListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return org.argouml.model.ModelFacade.isAGeneralization(element) && ModelFacade.getGeneralizations(getTarget()).contains(element);
+        return org.argouml.model.ModelFacade.isAGeneralization(element) 
+            && ModelFacade.getGeneralizations(getTarget()).contains(element);
     }
 
 }

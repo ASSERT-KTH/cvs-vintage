@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.15 2004/08/11 20:24:56 mvw Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.16 2004/09/20 15:28:44 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,8 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLModelElementNamespaceComboBoxModel() {
         super("namespace", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, (Class)ModelFacade.NAMESPACE, "ownedElement");
+        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+                (Class) ModelFacade.NAMESPACE, "ownedElement");
     }
     
     /**

@@ -1,4 +1,4 @@
-// $Id: UMLClassifierParameterListModel.java,v 1.6 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.7 2004/09/20 15:28:44 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
@@ -46,7 +47,8 @@ public class UMLClassifierParameterListModel
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            setAllElements(org.argouml.model.ModelFacade.getParameters(getTarget()));
+            setAllElements(org.argouml.model.ModelFacade
+                    .getParameters(getTarget()));
         }
     }
 
@@ -54,7 +56,7 @@ public class UMLClassifierParameterListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return org.argouml.model.ModelFacade.getParameters(getTarget()).contains(element);
+        return ModelFacade.getParameters(getTarget()).contains(element);
     }
 
 }

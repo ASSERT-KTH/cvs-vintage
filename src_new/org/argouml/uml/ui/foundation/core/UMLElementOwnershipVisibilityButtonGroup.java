@@ -1,4 +1,4 @@
-// $Id: UMLElementOwnershipVisibilityButtonGroup.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLElementOwnershipVisibilityButtonGroup.java,v 1.10 2004/09/20 15:28:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +33,16 @@ import org.argouml.uml.ui.UMLUserInterfaceContainer;
  * @since Oct 12, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class UMLElementOwnershipVisibilityButtonGroup extends UMLVisibilityButtonGroup {
+public class UMLElementOwnershipVisibilityButtonGroup 
+    extends UMLVisibilityButtonGroup {
         
     /**
      * Constructor for UMLVisibilityButtonGroup.
+     *
+     * @param container the container for this buttongroup
      */
-    public UMLElementOwnershipVisibilityButtonGroup(UMLUserInterfaceContainer container) {
+    public UMLElementOwnershipVisibilityButtonGroup(
+            UMLUserInterfaceContainer container) {
         super(container);
     }
     
@@ -64,12 +68,16 @@ public class UMLElementOwnershipVisibilityButtonGroup extends UMLVisibilityButto
      */
     protected void setActions() {
         add(getPublicButton(), new ActionSetElementOwnershipVisibility(this));
-        add(getProtectedButton(), new ActionSetElementOwnershipVisibility(this));
+        add(getProtectedButton(), 
+                new ActionSetElementOwnershipVisibility(this));
         add(getPrivateButton(), new ActionSetElementOwnershipVisibility(this));
         
-        getPublicButton().setActionCommand(ActionSetElementOwnershipVisibility.PUBLIC_ACTION_COMMAND);
-        getProtectedButton().setActionCommand(ActionSetElementOwnershipVisibility.PROTECTED_ACTION_COMMAND);
-        getPrivateButton().setActionCommand(ActionSetElementOwnershipVisibility.PRIVATE_ACTION_COMMAND);
+        getPublicButton().setActionCommand(
+                ActionSetElementOwnershipVisibility.PUBLIC_ACTION_COMMAND);
+        getProtectedButton().setActionCommand(
+                ActionSetElementOwnershipVisibility.PROTECTED_ACTION_COMMAND);
+        getPrivateButton().setActionCommand(
+                ActionSetElementOwnershipVisibility.PRIVATE_ACTION_COMMAND);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.5 2004/02/08 12:45:28 mvw Exp $
+// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.6 2004/09/20 15:28:44 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.5 2004/02/08 12:45:28 mvw Exp $
+// $Id: UMLStructuralFeatureMultiplicityComboBoxModel.java,v 1.6 2004/09/20 15:28:44 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -33,7 +33,8 @@ import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 6, 2003
  */
-public class UMLStructuralFeatureMultiplicityComboBoxModel extends UMLMultiplicityComboBoxModel {
+public class UMLStructuralFeatureMultiplicityComboBoxModel 
+    extends UMLMultiplicityComboBoxModel {
 
     /**
      * Constructor for UMLStructuralFeatureMultiplicityComboBoxModel.
@@ -46,7 +47,8 @@ public class UMLStructuralFeatureMultiplicityComboBoxModel extends UMLMultiplici
      * @see org.argouml.uml.ui.UMLComboBoxModel2#getSelectedModelElement()
      */
     protected Object getSelectedModelElement() {
-        if (getTarget() != null && (org.argouml.model.ModelFacade.isAStructuralFeature(getTarget()))) 
+        if (getTarget() != null 
+                && (ModelFacade.isAStructuralFeature(getTarget()))) 
             return ModelFacade.getMultiplicity(getTarget());
         return null;
     }
