@@ -28,13 +28,10 @@ import org.jboss.metadata.RelationMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCApplicationMetaData
 {
-   public final static String JDBC_PM = 
-         "org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager";
-
    /**
     * The class loader for this application.  The class loader is used to 
     * load all classes used by this application.
@@ -117,7 +114,7 @@ public final class JDBCApplicationMetaData
             EntityMetaData entity = (EntityMetaData)bean;
 
             // only take jbosscmp-jdbc-managed CMP entities
-            if(entity.isCMP() && entity.getContainerConfiguration().getPersistenceManager().equals(JDBC_PM)) {
+            if(entity.isCMP()) {
 
                JDBCEntityMetaData jdbcEntity = 
                      new JDBCEntityMetaData(this, entity);
