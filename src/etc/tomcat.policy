@@ -9,6 +9,10 @@ grant codeBase "file:${tomcat.home}/lib/-" {
         permission java.security.AllPermission;
 };
 
+grant codeBase "file:${tomcat.home}/classes/-" {
+	permission java.security.AllPermission;
+};
+
 // default permissions granted to all domains
 
 grant { 

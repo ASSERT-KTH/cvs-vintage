@@ -216,10 +216,12 @@ public class DefaultCMSetter extends BaseInterceptor {
                 // Clone the Permissions to overcome readonly status
                 Permissions perms = (Permissions)cm.getPermissions();
                 p = new Permissions();
-                Enumeration enum=perms.elements();
-                while(enum.hasMoreElements()) {
-                    p.add((Permission)enum.nextElement());
-                }
+		if( perms!= null ) {
+		    Enumeration enum=perms.elements();
+		    while(enum.hasMoreElements()) {
+			p.add((Permission)enum.nextElement());
+		    }
+		}
                 // Add default read "-" FilePermission for docBase, classes, lib
                 FilePermission fp;
                 fp = new FilePermission(base + "-", "read");

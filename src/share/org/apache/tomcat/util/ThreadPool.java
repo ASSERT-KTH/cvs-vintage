@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.5 2000/05/01 12:29:09 shachor Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/01 12:29:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.6 2000/05/26 23:06:39 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/05/26 23:06:39 $
  *
  * ====================================================================
  *
@@ -78,8 +78,8 @@ public class ThreadPool  {
     /*
      * Default values ...
      */
-    public static final int MAX_THREADS = 50;
-    public static final int MAX_SPARE_THREADS = 25;
+    public static final int MAX_THREADS = 100;
+    public static final int MAX_SPARE_THREADS = 50;
     public static final int MIN_SPARE_THREADS = 10;
     public static final int WORK_WAIT_TIMEOUT = 60*1000;
 
@@ -174,7 +174,7 @@ public class ThreadPool  {
     /**
      * Executes a given Runnable on a thread in the pool, block if needed.
      */
-    public void runIt(Runnable r) {
+    public void runIt(ThreadPoolRunnable r) {
 
         if(null == r) {
             throw new NullPointerException();
@@ -334,6 +334,8 @@ public class ThreadPool  {
         currentThreadCount = toOpen;
     }
 
+    /** Periodically execute an action - cleanup in this case
+     */
     class MonitorRunnable implements Runnable {
         ThreadPool p;
         Thread     t;
@@ -369,19 +371,43 @@ public class ThreadPool  {
             }
         }
 
+	/** Stop the monitor
+	 */
         public synchronized void terminate() {
             shouldTerminate = true;
             this.notify();
         }
     }
 
+    /** A Thread object that executes various actions ( ThreadPoolRunnable )
+     *  under control of ThreadPool
+     */
     class ControlRunnable implements Runnable {
+	/** ThreadPool where this thread will be returned
+	 */
         ThreadPool p;
+	/** The thread that executes the actions
+	 */
         Thread     t;
-        Runnable   toRun;
-        boolean    shouldTerminate;
-        boolean    shouldRun;
+	
+	/** The method that is executed in this thread
+	 */
+        ThreadPoolRunnable   toRun;
 
+	/** Stop this thread */
+	boolean    shouldTerminate;
+	/** Activate the execution of the action */
+        boolean    shouldRun;
+	/** Per thread data - can be used only if all actions are
+	 *  of the same type.
+	 *  A better mechanism is possible ( that would allow association of
+	 *  thread data with action type ), but right now it's enough.
+	 */
+	boolean noThData;
+	Object thData[]=null;
+	
+	/** Start a new thread, with no method in it
+	 */
         ControlRunnable(ThreadPool p) {
             toRun = null;
             shouldTerminate = false;
@@ -389,6 +415,8 @@ public class ThreadPool  {
             this.p = p;
             t = new Thread(this);
             t.start();
+	    noThData=true;
+	    thData=null;
         }
 
         public void run() {
@@ -403,14 +431,18 @@ public class ThreadPool  {
 
                     // Check if should execute a runnable.
                     try {
+			if( noThData ) {
+			    thData=toRun.getInitData();
+			    noThData=false;
+			}
                         if(shouldRun) {
-                            toRun.run();
+                            toRun.runIt(thData);
                         }
                     } finally {
                         if(shouldRun) {
                             shouldRun = false;
 
-                            // Notify the pool that the thread is now idel.
+                            // Notify the pool that the thread is now idle.
                             p.returnController(this);
                         }
                     }
@@ -427,7 +459,7 @@ public class ThreadPool  {
             }
         }
 
-        public synchronized void runIt(Runnable toRun) {
+        public synchronized void runIt(ThreadPoolRunnable toRun) {
             this.toRun = toRun;
             shouldRun = true;
             this.notify();

@@ -56,75 +56,30 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */
-package org.apache.tomcat.loader;
 
-import java.lang.*;
+package org.apache.tomcat.util;
+
+import java.util.zip.*;
+import java.net.*;
 import java.util.*;
-import java.lang.reflect.*;
-import java.security.*;
+import java.io.*;
 
-/*
- * Installs a SecurityManager if one was configured in server.xml
+/** Implemented if you want to run a piece of code inside a thread pool.
  */
-public class SetSecurityManager {
-    // Default Security Permissions for webapps and jsp
-    private Permissions perms = new Permissions();
+public interface ThreadPoolRunnable {
+    // XXX use notes or a hashtable-like
+    // Important: ThreadData in JDK1.2 is implemented as a Hashtable( Thread -> object ),
+    // expensive.
+    
+    /** Called when this object is first loaded in the thread pool.
+     *  Important: all workers in a pool must be of the same type,
+     *  otherwise the mechanism becomes more complex.
+     */
+    public Object[] getInitData();
 
-    public void setClassName(String className) {
-        if( System.getSecurityManager() == null ) {
-            System.out.println("Not started with a SecurityManager, ignoring SecurityManager and Permissions");
-            return;
-        }
-	// Use of a SecurityManager requires java 1.2 or greater
-	String jv = System.getProperty("java.version");
-	if( jv.startsWith("1.0") || jv.startsWith("1.1") ) {
-	    // For now just print an error, then exit.
-	    // org.apache.tomcat.util.xml.XmlMapper.SetProperty() is
-	    // catching Exceptions but not rethrowing them.
-	    System.out.println("Use of a SecurityManager requires Java version 1.2 or greater");
-	    System.exit(1);
-	}
-	try {
-	    Class c=Class.forName(className);
-	    Object o=c.newInstance();
-	    System.setSecurityManager((SecurityManager)o);
-	} catch( ClassNotFoundException ex ) {
-	    System.out.println("SecurityManager Class not found: " + className);
-	    System.exit(1);
-	} catch( Exception ex ) {
-            System.out.println("SecurityManager Class could not be loaded: " + className);
-            System.exit(1);
-	}
-	
-	SecurityManager sm = System.getSecurityManager();
-	if (sm == null) {
-	    System.out.println("Could not install SecurityManager: " + className);
-	    System.exit(1);
-	}
-	System.out.println("Security Manager set to: " + className);
-    }
+    /** This method will be executed in one of the pool's threads. The
+     *  thread will be returned to the pool.
+     */
+    public void runIt(Object thData[]);
 
-    public void setPermission(String className, String attr, String value) {
-        try {
-            Class c=Class.forName(className);
-            Constructor con=c.getConstructor(new Class[]{String.class,String.class});
-	    Object [] args=new Object[2];
-	    args[0] = attr;
-	    args[1] = value;
-	    Permission p = (Permission)con.newInstance(args);
-	    perms.add(p);
-        } catch( ClassNotFoundException ex ) {           
-            System.out.println("SecurityManager Class not found: " + className);
-            System.exit(1);                                    
-        } catch( Exception ex ) {                              
-            System.out.println("SecurityManager Class could not be loaded: " + className);
-	    ex.printStackTrace();
-            System.exit(1);                                    
-        }
-//	System.out.println("SecurityManager, " + className + ", \"" + attr + "\", \"" + value + "\" added");
-    }
-
-    public Permissions getPermissions() {
-	return perms;
-    }
 }
