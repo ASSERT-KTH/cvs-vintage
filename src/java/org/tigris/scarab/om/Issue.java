@@ -88,8 +88,13 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.apache.commons.lang.Strings;
 
 /** 
-  * This class represents an Issue.
-  */
+ * This class represents an Issue.
+ *
+ * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: Issue.java,v 1.157 2002/06/14 00:35:59 jon Exp $
+ */
 public class Issue 
     extends BaseIssue
     implements Persistent
