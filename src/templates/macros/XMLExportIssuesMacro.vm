@@ -18,10 +18,11 @@
     <domain>$!module.Domain</domain>
     <code>$module.Code</code>
   </module>
+#if ($issueIdList.size() > 0)
+<issues>
 #foreach ($issueId in $issueIdList)
   #set ($issue = $scarabR.getIssue($issueId))
   #if ($issue)
-  <issues>
     <issue>
       <id>$issue.IdCount</id>
       <artifact-type>$issue.IssueType.Name</artifact-type>
@@ -74,15 +75,21 @@
 
               <description>$activity.Description</description>
 
-              #set ($attachment = $activity.Attachment)
-              #attachment ($attachment)
+              #set ($activityAttachment = $activity.Attachment)
+              #attachment ($activityAttachment)
 
             </activity>
           #end
 
           </activities>
-          #set ($attachment = $activitySet.Attachment)
-          #attachment ($attachment)
+          #set ($activitySetAttachment = $activitySet.Attachment)
+          A: $activitySetAttachment.AttachmentId.toString()
+          B: $activityAttachment.AttachmentId.toString()
+
+          #if (!$activitySetAttachment.AttachmentId.equals($activityAttachment.AttachmentId))
+
+          #attachment ($activitySetAttachment)
+          #end
 
         </activity-set>
       #end
@@ -114,7 +121,7 @@
 
     </issue>
   #end
-
+#end
   </issues>
 #end
 
