@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.4 2005/01/06 23:04:52 linus Exp $
+// $Id: CoreFactory.java,v 1.5 2005/01/08 22:03:07 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.model;
 import java.util.Collection;
 
 import org.argouml.application.api.NotationName;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 
 /**
@@ -561,20 +560,6 @@ public interface CoreFactory {
      * @return MComment
      */
     Object buildComment(Object element, Object model);
-
-    /**
-     * Builds the model behind a connection between a comment and
-     * the annotated modelelement.
-     *
-     * @param from The comment or annotated element.
-     * @param to The comment or annotated element.
-     * @return A commentEdge representing the model behind the connection
-     *         between a comment and an annotated modelelement.
-     *
-     * TODO: What shall we do about this one? CommentEdge is not part
-     * of the Model subsystem. Should it be?
-     */
-    CommentEdge buildCommentConnection(Object from, Object to);
 
     /**
      * Builds a constraint that constraints the given modelelement.
