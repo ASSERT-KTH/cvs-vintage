@@ -35,7 +35,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -145,8 +145,6 @@ public class NamingService
       boolean debug = log.isDebugEnabled();
 
       // Read jndi.properties into system properties
-      // RO: this is necessary because some components (=Tomcat servlets) use a
-      // buggy classloader that disallows finding the resource properly
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       InputStream is = loader.getResourceAsStream("jndi.properties");
       Properties props = new Properties();
@@ -198,6 +196,8 @@ public class NamingService
       ctx.rebind("comp", envRef);
       if (log.isInfoEnabled())
          log.info("Listening on port "+naming.getPort());
+      ctx.close();
+      iniCtx.close();
 
       // Build the Naming interface method map
       HashMap tmpMap = new HashMap(13);
