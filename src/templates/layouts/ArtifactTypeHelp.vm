@@ -4,8 +4,8 @@
         <p><img src="$data.Request.ContextPath/images/artifact.gif"
         width="113" height="72" alt="" border="0" /></p>
         
-        <small>An artifact type is a unique instance of a Scarab
-        database, including the following attributes:</small>
+        <p><small>An artifact type is a unique instance of a Scarab
+        database, including the following attributes:</small></p>
         
         <ul>
         <li><small>a customizable set of attributes</small></li>
@@ -23,11 +23,10 @@
         <li><small>query the database</small></li>
         <li><small>run reports on database activity</small></li>
         </ul>
-        
-        <small>
-        <p>The user's input remains confined to the selected artifact
-        type until they select another artifact type from the left
-        side-bar navigation, or from the artifact type index.</p>
-        </small>
+
+        <p><small>The user's input remains confined to the selected
+        artifact type until they select another artifact type from the
+        left side-bar navigation, or from the artifact type
+        index.</small></p>
     </div>    
 </td>
