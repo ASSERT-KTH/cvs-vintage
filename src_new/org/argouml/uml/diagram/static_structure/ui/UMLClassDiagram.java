@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.57 2004/10/07 14:59:58 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.58 2004/10/10 14:59:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,6 +63,8 @@ public class UMLClassDiagram extends UMLDiagram {
     private Action actionUniAssociation;
     private Action actionUniAggregation;
     private Action actionUniComposition;
+    private Action actionAttribute;
+    private Action actionOperation;
 
     private static int classDiagramSerial = 1;
 
@@ -131,29 +133,26 @@ public class UMLClassDiagram extends UMLDiagram {
             null,
             getDependencyActions(), 
             null,
-            ActionAddAttribute.getSingleton(),
-            ActionAddOperation.getSingleton()
+            getActionAttribute(),
+            getActionOperation()
         };
 
         return actions;
     }
     
-    // remove the comment marks to enable models and subsystems.
-    // also replace _actionPackage with getPackageActions() in getUmlActions().
+    // To enable models and subsystems,
+    // replace getActionPackage() in the function getUmlActions() above 
+    // with getPackageActions().
     private Object[] getPackageActions() {
-        /* subsystem, model enabled 
-	   Object actions[] = 
-	   { _actionPackage , 
-	   _actionModel,
-	   _actionSubsystem };
-        */
-        /* subsystem. model disabled */
-        Object actions[] = {
-            getActionPackage() 
+        Object actions[] = 
+        { 
+                getActionPackage(), 
+                getActionModel(),
+                getActionSubsystem() 
         };
-       
         return actions;
     }
+    
     /**
      * Return an array of dependency actions in the
      * pattern of which to build a popup toolbutton
@@ -405,7 +404,26 @@ public class UMLClassDiagram extends UMLDiagram {
         if (actionUsage == null) {
             actionUsage = makeCreateEdgeAction(ModelFacade.USAGE, "Usage");
         }
-
         return actionUsage;
+    }
+
+    /**
+     * @return Returns the actionAttribute.
+     */
+    private Action getActionAttribute() {
+        if (actionAttribute == null) {
+            actionAttribute = ActionAddAttribute.getSingleton();
+        }
+        return actionAttribute;
+    }
+
+    /**
+     * @return Returns the actionOperation.
+     */
+    private Action getActionOperation() {
+        if (actionOperation == null) {
+            actionOperation = ActionAddOperation.getSingleton();
+        }
+        return actionOperation;
     }
 } /* end class UMLClassDiagram */
