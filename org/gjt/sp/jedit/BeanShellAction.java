@@ -26,7 +26,7 @@ import org.gjt.sp.util.Log;
 /**
  * An action that evaluates BeanShell code when invoked.
  * @author Slava Pestov
- * @version $Id: BeanShellAction.java,v 1.9 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: BeanShellAction.java,v 1.10 2003/02/17 01:04:27 spestov Exp $
  */
 public class BeanShellAction extends EditAction
 {
@@ -58,7 +58,7 @@ public class BeanShellAction extends EditAction
 			{
 				Log.log(Log.ERROR,this,e);
 
-				new BeanShellErrorDialog(null,e.toString());
+				new BeanShellErrorDialog(null,e);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class BeanShellAction extends EditAction
 		{
 			Log.log(Log.ERROR,this,e);
 
-			new BeanShellErrorDialog(view,e.toString());
+			new BeanShellErrorDialog(view,e);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class BeanShellAction extends EditAction
 		{
 			Log.log(Log.ERROR,this,e);
 
-			new BeanShellErrorDialog(view,e.toString());
+			new BeanShellErrorDialog(view,e);
 
 			return false;
 		}
