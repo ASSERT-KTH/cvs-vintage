@@ -23,7 +23,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.9 2002/09/03 15:51:59 kataka Exp $
+// $Id: FigMessage.java,v 1.10 2002/09/03 16:19:21 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -228,10 +228,12 @@ public class FigMessage extends FigNodeModelElement {
     if (mes == null) return;
     _name.setText(Notation.generate(this, mes));
 	updateArrow();	
+	
   }
   
 /**
- * Determines the direction of the message arrow.
+ * Determines the direction of the message arrow. Deetermination of the 
+ * type of arrow happens in modelchanged
  */
   protected void updateArrow() {
   	MMessage mes = (MMessage) getOwner();
