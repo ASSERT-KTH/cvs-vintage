@@ -7,11 +7,6 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
-import java.sql.PreparedStatement;
-
 import org.jboss.ejb.DeploymentException;
 
 import org.jboss.ejb.Container;
@@ -22,9 +17,6 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
 
 /**
  * JDBCDefinedFinderCommand finds entities based on an xml sql specification.
- * This class needs more work and I will clean it up in CMP 2.x phase 3.
- * The only thing to to note is the seperation of query into a from and where
- * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
@@ -33,13 +25,16 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand {
    
    private JDBCDeclaredQueryMetaData metadata;
-   private int[] parameterArray;
 
+   /**
+    * Creted a defined finder command based on the information
+    * in a declared-sql declaration.
+    */
    public JDBCDefinedFinderCommand(JDBCStoreManager manager, 
          JDBCQueryMetaData q) throws DeploymentException {
 
@@ -52,22 +47,8 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand {
       String sql = buildSQL();
 
       setSQL(parseParameters(sql));
-
     }
  
-   protected void setParameters(PreparedStatement ps, Object argOrArgs) 
-         throws Exception {
-
-      Object[] args = (Object[])argOrArgs;
-   
-      for(int i = 0; i < parameterArray.length; i++) {
-         Object arg = args[parameterArray[i]];
-         int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(
-               arg.getClass());
-         JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
-      }
-   }
-   
    /**
     * Initializes the entity or field to be selected.
     * @throws DeploymentException if the specified object is invalid or
@@ -176,61 +157,5 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand {
          sql.append(other);
       }
       return sql.toString();
-   }
-
-   /**
-    * Replaces the parameters in the specifiec sql with question marks, and 
-    * initializes the parameter setting code. Parameters are encoded in curly
-    * brackets use a zero based index.
-    * @param sql the sql statement that is parsed for parameters
-    * @return the original sql statement with the parameters replaced with a 
-    *    question mark
-    * @throws DeploymentException if a error occures while parsing the sql
-    */
-   private String parseParameters(String sql) throws DeploymentException {
-      StringBuffer sqlBuf = new StringBuffer();
-      ArrayList parameters = new ArrayList();      
-      
-      // Replace placeholders {0} with ?
-      if(sql != null) {
-         sql = sql.trim();
-
-         StringTokenizer tokens = new StringTokenizer(sql,"{}", true);
-         while(tokens.hasMoreTokens()) {
-            String token = tokens.nextToken();
-            if(token.equals("{")) {
-               
-               token = tokens.nextToken();
-               try {
-                  Integer parameterIndex = new Integer(token);
-                  
-                  // of if we are here we can assume that we have 
-                  // a parameter and not a function
-                  sqlBuf.append("?");
-                  parameters.add(parameterIndex);
-                  
-                  if(!tokens.nextToken().equals("}")) {
-                     throw new DeploymentException("Invalid parameter - " +
-                           "missing closing '}' : " + sql);
-                  }
-               } catch(NumberFormatException e) {
-                  // ok we don't have a parameter, we have a function
-                  // push the tokens on the buffer and continue
-                  sqlBuf.append("{").append(token);                  
-               }   
-            } else {
-               // not parameter... just append it
-               sqlBuf.append(token);
-            }
-         }
-      }
-
-      // save out the parameter order
-      parameterArray = new int[parameters.size()];
-      for(int i=0; i<parameterArray.length; i++) {
-         parameterArray[i] = ((Integer)parameters.get(i)).intValue();
-      }
-      
-      return sqlBuf.toString().trim();
    }
 }
