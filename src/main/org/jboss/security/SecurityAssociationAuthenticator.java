@@ -14,14 +14,14 @@ import java.security.Principal;
  * from the current SecurityAssociation state.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class SecurityAssociationAuthenticator extends Authenticator
 {
    protected PasswordAuthentication getPasswordAuthentication()
    {
-      Principal principal = SecurityAssociation.getPrincipal();
-      Object credential = SecurityAssociation.getCredential();
+      Principal principal = GetPrincipalInfoAction.getPrincipal();
+      Object credential = GetPrincipalInfoAction.getCredential();
       String name = principal != null ? principal.getName() : null;
       char[] password = {};
       if( credential != null )
