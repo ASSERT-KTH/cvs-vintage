@@ -60,7 +60,7 @@ import org.apache.turbine.TurbineConfig;
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineInitialization.java,v 1.1 2001/12/13 00:38:23 jon Exp $
+ * @version $Id: TurbineInitialization.java,v 1.2 2001/12/13 23:12:08 jon Exp $
  */
 public class TurbineInitialization
 {
@@ -72,6 +72,11 @@ public class TurbineInitialization
         TurbineConfig tc = new TurbineConfig(configDir, TR_PROPS);
         tc.init();
     }
+
+    public static void setTurbineResources(String trprops)
+    {
+        TR_PROPS = trprops;
+    }
     
     public static void setUp(String configDir, String configFile)
         throws Exception
@@ -80,27 +85,27 @@ public class TurbineInitialization
         // configFile
         System.getProperties().setProperty("configDir", configDir);
 
-        if (configDir != null)
-        {
-            initTurbine(configDir);
-            
-            InputStream is = new File(configDir + configFile).toURL()
-                .openStream();
-            Properties props = new Properties();
-            try
-            {
-                props.load(is);
-                PropertyConfigurator.configure(props);
-            }
-            catch (Exception e)
-            {
-                System.err.println("Can't read the properties file (" + 
-                    configDir + configFile + "). ");
-            }
-        }
-        else
+        if (configDir == null || configFile == null)
         {
             System.err.println("config.dir System property was not defined");
+            throw new Exception ("configDir or configFile was null");
+        }
+
+        initTurbine(configDir);
+        
+        InputStream is = new File(configDir + configFile).toURL()
+            .openStream();
+        Properties props = new Properties();
+        try
+        {
+            props.load(is);
+            // init Log4J
+            PropertyConfigurator.configure(props);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Can't read the properties file (" + 
+                configDir + configFile + "). ");
         }
     }
 }

@@ -1,18 +1,87 @@
 <?xml version="1.0"?>
 
-<!-- Bugzilla -> Scarab Import -->
-<project name="main" default="import" basedir=".">
+<!-- Scarab XML Import -->
+<project name="main" default="xml-validate" basedir=".">
+
+  <property file="${user.home}/build.properties" />
+  <property file="${basedir}/build.properties" />
+
+  <property name="XMLImport.class" value="org.tigris.scarab.util.xml.XMLImport"/>
+  <property name="import.xml" value="../src/dtd/scarab-sample.xml"/>
 
   <!-- Build classpath -->
   <path id="classpath">
-    <pathelement location="../target/webapps/scarab/WEB-INF/classes"/>
-    <fileset dir="../target/common/lib">
+    <pathelement location="${build.dest.scarab}"/>
+    <fileset dir="${build.dir}/common/lib">
       <include name="*.jar"/>
     </fileset>
-    <fileset dir="../target/webapps/scarab/WEB-INF/lib">
+    <fileset dir="${build.project.webinf.lib}">
       <include name="*.jar"/>
     </fileset>
   </path>
+
+  <target name="prepare">    
+    <available classname="${XMLImport.class}" 
+               property="XMLImport.present">
+      <classpath refid="classpath"/>
+    </available>
+  </target>
+
+  <target name="prepare-error" depends="prepare" unless="XMLImport.present">
+    <echo>
+        XMLImport is not present! Please check to make sure that 
+        Scarab has been built properly.
+    </echo>
+  </target>
+
+  <target name="taskdef" depends="prepare-error">
+    <taskdef name="XMLImport" 
+             classname="${XMLImport.class}">
+            <classpath refid="classpath"/>
+    </taskdef>
+  </target>
+
+  <target name="xml-validate" depends="taskdef"
+          description="Validate that the XML is correctly defined">
+
+    <XMLImport
+        xmlValidation="true"
+        dbValidation="false"
+        dbInsertion="false"
+        xmlFile="${import.xml}"
+        configDir="${build.project}"
+        configFile="/WEB-INF/conf/xmlimport.properties"
+        turbineResources="/WEB-INF/conf/TurbineResourcesTest.properties"
+        />
+  </target>
+
+  <target name="db-validate" depends="taskdef"
+          description="Validate that the XML import will go into the database correctly">
+
+    <XMLImport
+        xmlValidation="true"
+        dbValidation="true"
+        dbInsertion="false"
+        xmlFile="${import.xml}"
+        configDir="${build.project}"
+        configFile="/WEB-INF/conf/xmlimport.properties"
+        turbineResources="/WEB-INF/conf/TurbineResourcesTest.properties"
+        />
+  </target>
+
+  <target name="db-insertion" depends="taskdef"
+          description="Insert the XML into the database">
+
+    <XMLImport
+        xmlValidation="false"
+        dbValidation="true"
+        dbInsertion="true"
+        xmlFile="${import.xml}"
+        configDir="${build.project}"
+        configFile="/WEB-INF/conf/xmlimport.properties"
+        turbineResources="/WEB-INF/conf/TurbineResourcesTest.properties"
+        />
+  </target>
 
   <target name="import">
     <java classname="org.tigris.scarab.util.xml.DBImport" fork="yes">

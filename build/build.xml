@@ -8,8 +8,6 @@
         (and without typing -D each time it compiles it -->
     <property file="${user.home}/build.properties" />
     <property file="${basedir}/build.properties" />
-    <property file="${user.home}/.ant.properties" />
-    <property file="${basedir}/.ant.properties" />
 
     <property name="ant.home" value="."/>
 
@@ -28,14 +26,6 @@
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
     
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
-
-    <property name="build.webapps" value="${build.dir}/webapps"/>
-    <property name="build.project" value="${build.webapps}/${project}"/>
-    <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
-    <property name="build.project.webinf.lib" value="${build.project}/WEB-INF/lib"/>
-    <property name="build.src.scarab" value="${build.project.webinf}/src"/>
-    <property name="build.dest.scarab"
-             value="${build.project.webinf}/classes"/>
 
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
