@@ -42,6 +42,9 @@
     <property name="scarab.ear.file.dir" value="${build.webapps}"/>
     <property name="scarab.ear.file.name" value="${scarab.context}.ear"/>
 
+    <property name="extensions.lib.dir" value="${extensions.dir}/lib"/>
+    <property name="extensions.templates.dir" value="${extensions.dir}/templates"/>
+
     <!-- Build classpath -->
     <path id="classpath">
         <fileset dir="${lib.dir}">
@@ -202,6 +205,7 @@
         <copy todir="${build.project}" filtering="yes">
             <fileset dir="${src.html.dir}">
                 <include name="**/*.html"/>
+                <include name="**/*.jsp"/>
                 <include name="**/*.js"/>
             </fileset>
         </copy>
@@ -335,6 +339,7 @@
             value="${scarab.email.forgotpassword.fromName}"/>
         <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMADDRESS" 
             value="${scarab.email.forgotpassword.fromAddress}"/>
+        <filter token="SCARAB_MODULE_PACKAGES" value="${scarab.module.packages}"/>
 
         <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
             <fileset dir="${src.conf.dir}/">
@@ -352,6 +357,14 @@
                 <exclude name="**/*mysql*.jar"/>
                 <exclude name="**/*postgresql*.jar"/>
                 <exclude name="**/*oracle*.jar"/>
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${build.project.webinf}/lib" filtering="no"
+              overwrite="true"
+              verbose="true">
+            <fileset dir="${extensions.lib.dir}/">
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
@@ -445,6 +458,11 @@
     <target name="copy-templates" if="scarab.copy.templates">
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}"/>
+        </copy>
+        <copy todir="${build.project.webinf}/templates" filtering="no"
+              overwrite="true"
+              verbose="true">
+            <fileset dir="${extensions.templates.dir}"/>
         </copy>
     </target>
 
