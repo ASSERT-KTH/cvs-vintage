@@ -24,7 +24,7 @@ public class PlaySound
 {
 	public static void play( String filename )
 	{
-        play( DiskIO.getResourceURL( "org/columba/modules/mail/sound/"+filename ) );
+        play( DiskIO.getResourceURL( "org/columba/mail/sound/"+filename ) );
 	}
 
 	public static void play( URL url )

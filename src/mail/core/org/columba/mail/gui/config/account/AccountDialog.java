@@ -383,7 +383,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 
 				int uid = accountItem.getUid();
 				POP3ServerController c = MainInterface.popServerCollection.uidGet(uid);
-				//c.restartTimer();
+				c.restartTimer();
 
 				//MainInterface.popServerCollection.enableMailCheckIcon();
 			}

@@ -5,9 +5,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.action.BasicAction;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -17,29 +20,29 @@ import org.columba.mail.gui.action.BasicAction;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class POP3ServerController implements ActionListener{
+public class POP3ServerController implements ActionListener {
 
 	private final static int ONE_SECOND = 1000;
-	
+
 	protected POP3Server server;
-	
+
 	private boolean hide;
-	
+
 	public BasicAction checkAction;
 	private BasicAction manageAction;
 
 	private Timer timer;
-	
+
 	private int uid;
 	/**
 	 * Constructor for POP3ServerController.
 	 */
 	public POP3ServerController(AccountItem accountItem) {
 		server = new POP3Server(accountItem);
-		
+
 		hide = true;
 
-	uid = accountItem.getUid();
+		uid = accountItem.getUid();
 		checkAction =
 			new BasicAction(
 				accountItem.getName()
@@ -69,19 +72,17 @@ public class POP3ServerController implements ActionListener{
 		manageAction.addActionListener(this);
 
 		restartTimer();
-		
+
 	}
-	
-	public POP3Server getServer()
-	{
+
+	public POP3Server getServer() {
 		return server;
 	}
-	
-	public AccountItem getAccountItem()
-	{
+
+	public AccountItem getAccountItem() {
 		return getServer().getAccountItem();
 	}
-	
+
 	public void restartTimer() {
 		PopItem item = getAccountItem().getPopItem();
 
@@ -101,7 +102,7 @@ public class POP3ServerController implements ActionListener{
 			}
 		}
 	}
-	
+
 	public void updateAction() {
 		checkAction.setName(
 			getAccountItem().getName()
@@ -115,7 +116,7 @@ public class POP3ServerController implements ActionListener{
 				+ ")");
 		uid = getAccountItem().getUid();
 	}
-	
+
 	public BasicAction getCheckAction() {
 		return checkAction;
 	}
@@ -123,12 +124,12 @@ public class POP3ServerController implements ActionListener{
 	public BasicAction getManageAction() {
 		return manageAction;
 	}
-	
+
 	public void enableActions(boolean b) {
 		getCheckAction().setEnabled(b);
 		getManageAction().setEnabled(b);
 	}
-	
+
 	public void setHide(boolean b) {
 		hide = b;
 	}
@@ -136,15 +137,38 @@ public class POP3ServerController implements ActionListener{
 	public boolean getHide() {
 		return hide;
 	}
+
+	public void fetch() {
+		POP3ServerController controller = (POP3ServerController) this;
+
+		POP3CommandReference[] r = new POP3CommandReference[1];
+		r[0] = new POP3CommandReference(controller.getServer());
+
+		FetchNewMessagesCommand c =
+			new FetchNewMessagesCommand(MainInterface.frameController, r);
+
+		MainInterface.processor.addOp(c);
+	}
 	
+	public void check() {
+		POP3ServerController controller = (POP3ServerController) this;
+
+		POP3CommandReference[] r = new POP3CommandReference[1];
+		r[0] = new POP3CommandReference(controller.getServer());
+
+		CheckForNewMessagesCommand c =
+			new CheckForNewMessagesCommand(MainInterface.frameController, r);
+
+		MainInterface.processor.addOp(c);
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
-	
-		/*
+
 		if (src.equals(timer)) {
 			if ((checkAction.isEnabled() == true)
 				&& (manageAction.isEnabled() == true))
-				fetchAll(true);
+				check();
 			else
 				timer.restart();
 
@@ -158,19 +182,20 @@ public class POP3ServerController implements ActionListener{
 
 		if (action.equals(checkAction.getActionCommand())) {
 			//System.out.println("check");
-			boolean result = fetchAll(false);
+			//boolean result = fetchAll(false);
 			//System.out.println("result collection: "+result );
+
+			fetch();
+
 		} else if (action.equals(manageAction.getActionCommand())) {
 			//System.out.println("manage");
-
-			showWindow(true);
+			ColumbaLogger.log.info("not yet implemented");
+			//showWindow(true);
 		}
-		*/
+
 	}
 	public int getUid() {
 		return uid;
 	}
-
-
 
 }
