@@ -15,36 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import org.columba.core.charset.CharsetEvent;
-import org.columba.core.charset.CharsetListener;
-import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.util.URLController;
-import org.columba.mail.message.ColumbaHeader;
-
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.CharsetDecoderInputStream;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
-
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import java.io.InputStream;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
@@ -61,6 +37,26 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
+
+import org.columba.core.charset.CharsetEvent;
+import org.columba.core.charset.CharsetListener;
+import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.attachment.AttachmentController;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.util.URLController;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
 
 
 /**
@@ -160,16 +156,20 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
         InputStream bodyStream = ((StreamableMimePart) bodyPart).getInputStream();
 
-        String encoding = bodyPart.getHeader().getContentTransferEncoding();
+        int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
-        if (encoding != null) {
-            if (encoding.equals("quoted-printable")) {
-                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-            } else if (encoding.equals("base64")) {
-                bodyStream = new Base64DecoderInputStream(bodyStream);
-            }
+        switch( encoding ) {
+            case MimeHeader.QUOTED_PRINTABLE : {
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                    break;
+                } 
+                
+               case MimeHeader.BASE64 : {
+                       bodyStream = new Base64DecoderInputStream(bodyStream);
+                       break;
+                   }
         }
-
+        
         if (charsetName != null) {
             Charset charset;
 

@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
@@ -35,14 +37,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of
+ * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class OpenWithAttachmentCommand extends FolderCommand {
     LocalMimePart part;
@@ -56,8 +56,8 @@ public class OpenWithAttachmentCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
     public void updateGUI() throws Exception {
         MimeHeader header = part.getHeader();
 
@@ -66,8 +66,8 @@ public class OpenWithAttachmentCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
     public void execute(Worker worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Folder folder = (Folder) r[0].getFolder();
@@ -92,14 +92,21 @@ public class OpenWithAttachmentCommand extends FolderCommand {
             }
 
             InputStream bodyStream = part.getInputStream();
-            String encoding = header.getContentTransferEncoding();
+            int encoding = header.getContentTransferEncoding();
 
-            if (encoding != null) {
-                if (encoding.equals("quoted-printable")) {
-                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-                } else if (encoding.equals("base64")) {
-                    bodyStream = new Base64DecoderInputStream(bodyStream);
-                }
+            switch (encoding) {
+                case MimeHeader.QUOTED_PRINTABLE :
+                    {
+                        bodyStream =
+                            new QuotedPrintableDecoderInputStream(bodyStream);
+                        break;
+                    }
+
+                case MimeHeader.BASE64 :
+                    {
+                        bodyStream = new Base64DecoderInputStream(bodyStream);
+                        break;
+                    }
             }
 
             // *20031019, karlpeder* Closing output stream after copying

@@ -40,10 +40,9 @@ import java.io.InputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-
 /**
  * @author freddy
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
@@ -54,24 +53,24 @@ public class SaveAttachmentCommand extends FolderCommand {
     LocalMimePart part;
 
     /**
-     * Constructor for SaveAttachmentCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+	 * Constructor for SaveAttachmentCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
     public SaveAttachmentCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+	 * @see org.columba.core.command.Command#updateGUI()
+	 */
     public void updateGUI() throws Exception {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
     public void execute(Worker worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Folder folder = (Folder) r[0].getFolder();
@@ -113,7 +112,8 @@ public class SaveAttachmentCommand extends FolderCommand {
         fileChooser.setSelectFilter(fileFilter);
 
         while (true) {
-            if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(null)
+                != JFileChooser.APPROVE_OPTION) {
                 return;
             }
 
@@ -121,9 +121,14 @@ public class SaveAttachmentCommand extends FolderCommand {
             lastDir = tempFile.getParentFile();
 
             if (tempFile.exists()) {
-                if (JOptionPane.showConfirmDialog(null, "Overwrite File?",
-                            "Warning", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (JOptionPane
+                    .showConfirmDialog(
+                        null,
+                        "Overwrite File?",
+                        "Warning",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE)
+                    == JOptionPane.YES_OPTION) {
                     break;
                 }
             } else {
@@ -135,14 +140,21 @@ public class SaveAttachmentCommand extends FolderCommand {
         header = part.getHeader();
 
         InputStream bodyStream = part.getInputStream();
-        String encoding = header.getContentTransferEncoding();
+        int encoding = header.getContentTransferEncoding();
 
-        if (encoding != null) {
-            if (encoding.equals("quoted-printable")) {
-                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-            } else if (encoding.equals("base64")) {
-                bodyStream = new Base64DecoderInputStream(bodyStream);
-            }
+        switch (encoding) {
+            case MimeHeader.QUOTED_PRINTABLE :
+                {
+                    bodyStream =
+                        new QuotedPrintableDecoderInputStream(bodyStream);
+                    break;
+                }
+
+            case MimeHeader.BASE64 :
+                {
+                    bodyStream = new Base64DecoderInputStream(bodyStream);
+                    break;
+                }
         }
 
         StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));

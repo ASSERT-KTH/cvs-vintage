@@ -17,33 +17,29 @@
 //All Rights Reserved.
 package org.columba.mail.composer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.Iterator;
+import java.util.List;
+
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
-
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.text.BodyTextParser;
-
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -304,15 +300,19 @@ public class MessageBuilderHelper {
 
         StreamableMimePart bodyPart = (StreamableMimePart) mimePart;
         String charsetName = bodyPart.getHeader().getContentParameter("charset");
-        String encoding = bodyPart.getHeader().getContentTransferEncoding();
+        int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
         InputStream body = bodyPart.getInputStream();
 
-        if (encoding != null) {
-            if (encoding.equals("quoted-printable")) {
+        switch( encoding ) {
+            case MimeHeader.QUOTED_PRINTABLE : {
                 body = new QuotedPrintableDecoderInputStream(body);
-            } else if (encoding.equals("base64")) {
+                break;
+            }   
+                
+        case MimeHeader.BASE64 :{
                 body = new Base64DecoderInputStream(body);
+                break;
             }
         }
 

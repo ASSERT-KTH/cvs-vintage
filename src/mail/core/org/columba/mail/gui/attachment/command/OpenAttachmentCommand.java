@@ -133,13 +133,17 @@ public class OpenAttachmentCommand extends FolderCommand {
                 }
 
                 InputStream bodyStream = part.getInputStream();
-                String encoding = header.getContentTransferEncoding();
+                int encoding = header.getContentTransferEncoding();
 
-                if (encoding != null) {
-                    if (encoding.equals("quoted-printable")) {
+                switch( encoding ) {
+                    case MimeHeader.QUOTED_PRINTABLE : {
                         bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-                    } else if (encoding.equals("base64")) {
+                        break;
+                    } 
+                    
+                    case MimeHeader.BASE64 : {
                         bodyStream = new Base64DecoderInputStream(bodyStream);
+                        break;
                     }
                 }
 
