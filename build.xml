@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.99 2002/06/15 16:58:16 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.100 2002/06/27 15:08:23 fbrier Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -84,15 +84,6 @@
       <pathelement path="${sun.jndi.lib}/jndi.jar"/>
     </path>
 
-    <!-- Java API for XML Processing (JAXP) -->
-    <property name="sun.jaxp.root" value="${project.thirdparty}/sun/jaxp"/>
-    <property name="sun.jaxp.lib" value="${sun.jaxp.root}/lib"/>
-    <path id="sun.jaxp.classpath">
-      <fileset dir="${sun.jaxp.lib}">
-        <include name="*.jar"/>
-      </fileset>
-    </path>
-
     <!-- Java Authentication and Authorization Service (JAAS) -->
     <property name="sun.jaas.root" value="${project.thirdparty}/sun/jaas"/>
     <property name="sun.jaas.lib" value="${sun.jaas.root}/lib"/>
@@ -116,11 +107,19 @@
       <pathelement path="${sun.jts.lib}/jts.jar"/>
     </path>
 
+    <!-- Apache Crimson (XML/DOM) -->
+    <property name="apache.crimson.root" value="${project.thirdparty}/apache/crimson"/>
+    <property name="apache.crimson.lib" value="${apache.crimson.root}/lib"/>
+    <path id="apache.crimson.classpath">
+      <pathelement path="${apache.crimson.lib}/crimson.jar"/>
+    </path>
+
     <!-- Log4j -->
     <property name="apache.log4j.root" value="${project.thirdparty}/apache/log4j"/>
     <property name="apache.log4j.lib" value="${apache.log4j.root}/lib"/>
     <path id="apache.log4j.classpath">
       <pathelement path="${apache.log4j.lib}/log4j.jar"/>
+      <pathelement path="${apache.log4j.lib}/commons-logging.jar"/>
     </path>
 
     <!-- BCEL -->
@@ -172,10 +171,10 @@
     <!-- The combined library classpath -->
     <path id="library.classpath">
       <path refid="sun.jndi.classpath"/>
-      <path refid="sun.jaxp.classpath"/>
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
       <path refid="sun.jts.classpath"/>
+      <path refid="apache.crimson.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="apache.bcel.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
@@ -318,9 +317,10 @@
     <!-- xdoclet -->
     <path id="xdoclet.task.classpath">
       <path refid="javac.classpath"/>
-      <pathelement location="${project.tools}/lib/xdoclet.jar"/>
-      <pathelement location="${project.tools}/lib/xjavadoc.jar"/>
-      <pathelement location="${project.tools}/lib/ant.jar"/>
+      <fileset dir="${project.thirdparty}/xdoclet/xdoclet/lib">
+        <include name="**/*.jar"/>
+      </fileset>
+      <pathelement path="${project.tools}/lib/ant.jar"/>
     </path>
     <property name="xdoclet.task.classpath" 
 	      refid="xdoclet.task.classpath"/>
@@ -399,7 +399,7 @@
 
   <!-- Compile mbeans with XDoclet -->
   <target name="compile-mbean-sources" depends="init">
-    <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask"/>
+    <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.gen-src}"/>
     <xdoclet sourcepath="${source.java}"
@@ -421,7 +421,7 @@
 
   <!-- Compile EJB beans with XDoclet -->
   <target name="compile-bean-sources" depends="init">
-    <taskdef name="xdoclet" classname="xdoclet.ejb.EjbDocletTask"/>
+    <taskdef name="xdoclet" classname="xdoclet.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.beans}/ejbadaptor"/>
     <xdoclet sourcepath="${source.java}"
