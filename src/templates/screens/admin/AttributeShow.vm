@@ -38,12 +38,11 @@ Attribute" button:
     <option value="$attribute.AttributeId"$selected>$attribute.Name</option>
 
     ## this moves forward in the list, in case of editting multiple attributes
-    #if ($selectedId == $attribute.AttributeId)
+    #if ($selectedId && $selectedId == $attribute.AttributeId)
         #set ($selected = " selected")
     #else
         #set ($selected = "")
     #end
-
 #end
     </select>
 
