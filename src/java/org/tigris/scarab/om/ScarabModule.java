@@ -170,16 +170,15 @@ public class ScarabModule
     {
         if ( dedupeAttributes == null )
         {
-            Criteria dedupeCriteria = new Criteria(3)
-                .add(RModuleAttributePeer.DEDUPE, true)
-                .add(RModuleAttributePeer.ACTIVE, true)
-                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
-                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
-            dedupeAttributes = getAttributes(dedupeCriteria);
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.DEDUPE, true);
+            addActiveAndOrderByClause(crit);
+            dedupeAttributes = getAttributes(crit);
         }
 
         return dedupeAttributes;
     }
+
 
     /**
      * Array of Attributes used for quick search.
@@ -191,20 +190,19 @@ public class ScarabModule
     {
         if ( quicksearchAttributes == null )
         {
-            Criteria quicksearchCriteria = new Criteria(3)
-                .add(RModuleAttributePeer.QUICK_SEARCH, true)
-                .add(RModuleAttributePeer.ACTIVE, true)
-                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
-                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
-            quicksearchAttributes = getAttributes(quicksearchCriteria);
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.QUICK_SEARCH, true);
+            addActiveAndOrderByClause(crit);
+            quicksearchAttributes = getAttributes(crit);
         }
-
         return quicksearchAttributes;
     }
 
+
     /**
-     * Array of Attributes used for quick search.
+     * Array of Attributes which are active and required by this module.
      *
+     * @param inOrder flag determines whether the attribute order is important
      * @return an <code>Attribute[]</code> value
      */
     public Attribute[] getRequiredAttributes()
@@ -213,13 +211,10 @@ public class ScarabModule
         if ( requiredAttributes == null )
         {
             Criteria crit = new Criteria(3)
-                .add(RModuleAttributePeer.REQUIRED, true)
-                .add(RModuleAttributePeer.ACTIVE, true)
-                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
-                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+                .add(RModuleAttributePeer.REQUIRED, true);
+            addActiveAndOrderByClause(crit);
             requiredAttributes = getAttributes(crit);
         }
-
         return requiredAttributes;
     }
 
@@ -233,14 +228,18 @@ public class ScarabModule
     {
         if ( activeAttributes == null )
         {
-            Criteria activeCriteria = new Criteria(2)
-                .add(RModuleAttributePeer.ACTIVE, true)
-                .addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER)
-                .addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
-            activeAttributes = getAttributes(activeCriteria);
+            Criteria crit = new Criteria(2);
+            addActiveAndOrderByClause(crit);
+            activeAttributes = getAttributes(crit);
         }
-
         return activeAttributes;
+    }
+
+    private void addActiveAndOrderByClause(Criteria crit)
+    {
+        crit.add(RModuleAttributePeer.ACTIVE, true);
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
     }
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute)
