@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -180,6 +180,10 @@ public class ObjectPool implements PoolEventListener {
         if(objects != null)
             throw new IllegalStateException(INITIALIZED);
         minSize = size;
+        if(maxSize != 0 && minSize > maxSize) {
+            maxSize = minSize;
+            log("WARNING: pool max size set to "+maxSize+" to stay >= min size");
+        }
     }
 
     /**
@@ -206,6 +210,10 @@ public class ObjectPool implements PoolEventListener {
         if(objects != null)
             throw new IllegalStateException(INITIALIZED);
         maxSize = size;
+        if(maxSize != 0 && minSize > maxSize) {
+            minSize = maxSize;
+            log("WARNING: pool min size set to "+minSize+" to stay <= max size");
+        }
     }
 
     /**
@@ -640,6 +648,8 @@ public class ObjectPool implements PoolEventListener {
                 rec.close();
                 deadObjects.remove(object);
                 removed = true;
+                if(objects.size() < minSize)
+                    createNewObject(false);
             } else {
                 rec.setInUse(false);
                 removed = false;

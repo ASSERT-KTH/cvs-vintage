@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -47,7 +47,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
     private String userName;
     private String password;
     private String tmJndiName;
-    private ConnectionEventListener listener;
+    private ConnectionEventListener listener, errorListener;
     private TransactionListener transListener;
     private ObjectPool pool;
     private PrintWriter log;
@@ -61,9 +61,21 @@ public class XAConnectionFactory extends PoolObjectFactory {
     public XAConnectionFactory() throws NamingException {
         ctx = new InitialContext();
         wrapperTx = new HashMap();
-        listener = new ConnectionEventListener() {
-        
+        errorListener = new ConnectionEventListener() {
             public void connectionErrorOccurred(ConnectionEvent evt) {
+                if(pool.isInvalidateOnError()) {
+                    pool.markObjectAsInvalid(evt.getSource());
+                }
+            }
+            public void connectionClosed(ConnectionEvent evt) {}
+        };
+
+        listener = new ConnectionEventListener() {
+
+            public void connectionErrorOccurred(ConnectionEvent evt) {
+                if(pool.isInvalidateOnError()) {
+                    pool.markObjectAsInvalid(evt.getSource());
+                }
                 closeConnection(evt, XAResource.TMFAIL);
             }
 
@@ -97,12 +109,16 @@ public class XAConnectionFactory extends PoolObjectFactory {
                             pool.markObjectAsInvalid(con);
                         }
                         pool.releaseObject(con);
+                    } else {
+                        // Still track errors, but don't try to close again.
+                        con.addConnectionEventListener(errorListener);
                     }
                 }
             }
         };
         transListener = new TransactionListener() {
             public void transactionFinished(XAConnectionImpl con) {
+                con.removeConnectionEventListener(errorListener);
                 con.clearTransactionListener();
                 Object tx = wrapperTx.remove(con);
                 if(tx != null)
@@ -111,6 +127,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
             }
 
             public void transactionFailed(XAConnectionImpl con) {
+                con.removeConnectionEventListener(errorListener);
                 con.clearTransactionListener();
                 Object tx = wrapperTx.remove(con);
                 if(tx != null)

@@ -18,7 +18,7 @@ import javax.sql.*;
  * XAResource are responsible for closing the connection when appropriate.
  * Note that the underlying driver may perform pooling, but need not.  This
  * class does not add any pooling capabilities.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceImpl implements XADataSource {
@@ -129,6 +129,7 @@ public class XADataSourceImpl implements XADataSource {
         } catch(SQLException e) {
             if(logWriter != null)
                 logWriter.println("XADataSource unable to disable auto-commit on "+con.getClass().getName());
+e.printStackTrace();
         }
 
         XAResourceImpl res = new XAResourceImpl(con);
