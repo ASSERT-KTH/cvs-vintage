@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<!-- Bugzilla -> Scarab Import -->
+<project name="main" default="import" basedir=".">
+
+  <!-- Build classpath -->
+  <path id="classpath">
+    <pathelement location="../target/webapps/scarab/WEB-INF/classes"/>
+    <fileset dir="../target/common/lib">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="../target/webapps/scarab/WEB-INF/lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="import">
+    <java classname="org.tigris.scarab.util.xml.DBImport" fork="yes">
+      <arg value="DBINSERTION"/>
+      <arg value="../src/dtd/scarab-sample.xml"/>
+      <classpath refid="classpath"/>
+    </java>
+  </target>
+
+</project>
