@@ -2,12 +2,15 @@ package org.columba.mail.folder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Enumeration;
 
 import javax.swing.JOptionPane;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexReader;
@@ -59,7 +62,7 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 
 		MainInterface.shutdownManager.register(this);
 
-		analyzer = new SimpleAnalyzer();
+		analyzer = new StandardAnalyzer();
 
 		File folderDir = folder.getDirectoryFile();
 
@@ -72,13 +75,6 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 				indexWriter.close();
 				indexWriter = null;
 			}
-			
-			// If there is an existing lock then it must be from a
-			// previous crash -> remove it!
-			luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
-			if( IndexReader.isLocked(luceneIndexDir))
-				IndexReader.unlock(luceneIndexDir);
-				
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -86,6 +82,23 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 				"Error while creating Lucene Index",
 				JOptionPane.ERROR_MESSAGE);
 		}
+
+			
+			try {
+				// If there is an existing lock then it must be from a
+				// previous crash -> remove it!
+				luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
+				if( IndexReader.isLocked(luceneIndexDir))
+					IndexReader.unlock(luceneIndexDir);
+			} catch (IOException e) {
+				// Remove of lock didn't work -> delete by hand
+				File commitLock = new File(indexDir,"commit.lock");
+				if( commitLock.exists()) commitLock.delete();
+
+				File writeLock = new File(indexDir,"write.lock");
+				if( writeLock.exists()) writeLock.delete();
+			}
+				
 
 	}
 	
@@ -125,10 +138,11 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 		return indexReader;
 	}
 
-	private Query getLuceneQuery(FilterRule filterRule) {
+	private Query getLuceneQuery(FilterRule filterRule, Analyzer analyzer) {
 		FilterCriteria criteria;
 		String field;
 		int mode;
+
 
 		Query result = new BooleanQuery();
 		Query subresult = null;
@@ -144,21 +158,39 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 			required = false;
 		}
 
+		BooleanQuery termQuery = null;
+
 		for (int i = 0; i < filterRule.count(); i++) {
 
 			criteria = filterRule.get(i);
 			mode = criteria.getCriteria();
 			field = criteria.getHeaderItemString().toLowerCase();
+			
+			TokenStream tokenStream = analyzer.tokenStream(field,new StringReader(criteria.getPattern()));
+			
+			termQuery = new BooleanQuery();
+
+			try {
+				Token token = tokenStream.next();
+				
+				while( token != null) {
+					termQuery.add(new TermQuery(new Term(field,token.termText())),
+					true,
+					false);
+					
+					token = tokenStream.next();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 
 			switch (mode) {
 				case FilterCriteria.CONTAINS :
 					{
 						subresult = new BooleanQuery();
 						((BooleanQuery) subresult).add(
-							new TermQuery(
-								new Term(
-									field,
-									criteria.getPattern().toLowerCase())),
+							termQuery,
 							true,
 							false);
 						break;
@@ -172,10 +204,7 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 							true,
 							false);
 						((BooleanQuery) subresult).add(
-							new TermQuery(
-								new Term(
-									field,
-									criteria.getPattern().toLowerCase())),
+							termQuery,
 							false,
 							true);
 						break;
@@ -209,7 +238,7 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 			indexWriter = null;
 		}
 
-		Query query = getLuceneQuery(filter.getFilterRule());
+		Query query = getLuceneQuery(filter.getFilterRule(), analyzer);
 
 		Object[] result;
 		Searcher searcher = new IndexSearcher(getReader());
@@ -243,7 +272,7 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 
 		messageDoc.add(Field.Keyword("uid", message.getUID().toString()));
 
-		messageDoc.add(Field.Text("qall", "on"));
+		messageDoc.add(Field.UnStored("qall", "on"));
 
 		if (message.getMimePartTree() == null) {
 			String source = message.getSource();
@@ -258,13 +287,13 @@ public class LuceneSearchEngine implements SearchEngineInterface, ShutdownPlugin
 		while (headerEntries.hasMoreElements()) {
 			key = (String) headerEntries.nextElement();
 			if ((key != "Return-Path") && !(key.startsWith("columba."))) {
-				messageDoc.add(Field.Text(key, header.get(key).toString()));
+				messageDoc.add(Field.UnStored(key, header.get(key).toString()));
 			}
 		}
 
 		MimePart body = message.getMimePartTree().getFirstTextPart("plain");
 		if (body != null)
-			messageDoc.add(Field.Text("body", body.getBody()));
+			messageDoc.add(Field.UnStored("body", body.getBody()));
 
 		try {
 			getWriter().addDocument(messageDoc);
