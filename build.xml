@@ -529,7 +529,7 @@
           file="${jtc.http11.lib}/tomcat33-coyote.jar"/>
 
     <copy todir="${tomcat.build}/lib/container"
-          file="${jakarta-tomcat-connectors}/jk/build/WEB-INF/lib/tomcat-jk2.jar"/>
+          file="${jakarta-tomcat-connectors}/jk/build/lib/tomcat-jk2.jar"/>
 
   </target>
 
