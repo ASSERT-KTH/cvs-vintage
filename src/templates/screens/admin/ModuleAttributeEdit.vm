@@ -84,7 +84,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
  <th>$l10n.DisplayName</th>
  <th>$l10n.Active</th>
  <th>$l10n.PreferredOrder</th>
- <th>$l10n.Weight</th>
+ ## hiding until implemented <th>$l10n.Weight</th>
 </tr>
 #foreach ($rmo in $rmos)
     #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
@@ -123,6 +123,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
           #numericSelect($rmoGroup.Order.Key 1 $maxNum $rmoGroup.Order.Value 1)
         #end
      </td>
+#* hiding until implemented
      <td>
         #if ($locked)
           $rmo.Order
@@ -130,6 +131,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
           #numericSelect($rmoGroup.Weight.Key 1 $maxNum $rmoGroup.Weight.Value 1)
         #end
      </td>
+*#
     </tr>
 #end
 </table>

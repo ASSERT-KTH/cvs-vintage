@@ -107,7 +107,7 @@
  <th>$l10n.ParentAttributeOption</th>
  <th>$l10n.AttributeOption</th>
  <th>$l10n.PreferredOrder</th>
- <th>$l10n.Weight</th>
+ ## hiding until implemented<th>$l10n.Weight</th>
 </tr>
 #foreach ($pcao in $pcaos)
     #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
@@ -136,9 +136,11 @@
      <td>
         #numericSelect($pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1)
      </td>
+#* Hiding until implemented
      <td>
         #numericSelect($pcaoGroup.Weight.Key 1 $maxNum $pcaoGroup.Weight.Value 1)
      </td>
+*#
     </tr>
 #end
 #set ($newPCAO = $scarabR.ParentChildAttributeOption)
@@ -165,6 +167,7 @@
 #end
 #numericSelect($newPCAOGroup.PreferredOrder.Key 1 $maxNum $selected 1)
      </td>
+#* Hide until implemented
      <td>
 #if ($newPCAOGroup.Weight.Value != 0)
     #set ($selected = $newPCAOGroup.Weight.Value)
@@ -173,6 +176,7 @@
 #end
 #numericSelect($newPCAOGroup.Weight.Key 1 $maxNum $selected 1)
      </td>
+*#
 </tr>
 </table>
 
