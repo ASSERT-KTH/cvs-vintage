@@ -24,8 +24,6 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
 
-import javax.swing.tree.TreeNode;
-
 
 /**
  * A Command for moving a folder to another folder.
@@ -38,43 +36,50 @@ import javax.swing.tree.TreeNode;
  * @author redsolo
  */
 public class MoveFolderCommand extends Command {
-    private TreeNode parentDestFolder;
-    private TreeNode parentSourceFolder;
+
+    private AbstractFolder destParentFolder;
+    private int[] destChildIndicies;
+
+    private MessageFolder srcParentFolder;
+    private int[] srcChildIndicies;
+    private Object[] srcChildObjects;
 
     /**
- * @param references the folder references.
- */
+     * @param references the folder references.
+     */
     public MoveFolderCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /** {@inheritDoc} */
     public void updateGUI() throws Exception {
+
         // update treemodel
-        if (parentDestFolder != null) {
-            MailInterface.treeModel.nodeStructureChanged(parentDestFolder);
+        if (srcParentFolder != null) {
+            MailInterface.treeModel.nodesWereRemoved(srcParentFolder, srcChildIndicies, srcChildObjects);
         }
 
-        if (parentSourceFolder != null) {
-            MailInterface.treeModel.nodeStructureChanged(parentSourceFolder);
+        if (destParentFolder != null) {
+            MailInterface.treeModel.nodesWereInserted(destParentFolder, destChildIndicies);
         }
     }
 
     /** {@inheritDoc} */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
         MessageFolder movedFolder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
-        parentSourceFolder = movedFolder.getParent();
 
         // get destination folder
-        AbstractFolder destFolder = ((FolderCommandReference) getReferences()[1]).getFolder();
-        parentDestFolder = destFolder.getParent();
+        destParentFolder = ((FolderCommandReference) getReferences()[1]).getFolder();
 
-        //System.out.println("Removing leaf from parent. Leaf=" + movedFolder.getName() +", parent=" + parentSourceFolder);
+        srcParentFolder = (MessageFolder) movedFolder.getParent();
+        srcChildIndicies = new int[] {srcParentFolder.getIndex(movedFolder)};
+        srcChildObjects = new Object[] {movedFolder};
+
         movedFolder.removeFromParent();
 
-        //System.out.println("Appending leaf to parent. Leaf=" + movedFolder.getName() +", parent=" + destFolder);
-        destFolder.append(movedFolder);
+        destParentFolder.append(movedFolder);
+
+        destChildIndicies = new int[] {destParentFolder.getIndex(movedFolder)};
     }
 }
