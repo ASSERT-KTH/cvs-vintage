@@ -285,12 +285,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	Object old_servlet_path=realRequest.
 	    getAttribute("javax.servlet.include.servlet_path");
 	realRequest.setAttribute("javax.servlet.include.servlet_path",
-				 subRequest.getServletPath());
+				 subRequest.servletPath().toString());
 	
 	Object old_path_info=realRequest.
 	    getAttribute("javax.servlet.include.path_info");
 	realRequest.setAttribute("javax.servlet.include.path_info",
-				 subRequest.getPathInfo());
+				 subRequest.pathInfo().toString());
 
 	Object old_query_string=realRequest.
 	    getAttribute("javax.servlet.include.query_string");
@@ -302,8 +302,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 			       old_context_path + " " + old_servlet_path +
 			       " " + old_path_info + " " + old_query_string);
 	    System.out.println("NEW: " + context.getPath() + " " + path + " "
-			       + subRequest.getServletPath() + " " +
-			       subRequest.getPathInfo() + " " + queryString);
+			       + subRequest.servletPath().toString() + " " +
+			       subRequest.pathInfo().toString() + " " +
+			       queryString);
 	}
 	
 	// Not explicitely stated, but we need to save the old parameters

@@ -88,7 +88,8 @@ public class WebXmlReader extends BaseInterceptor {
     }
     
     public void contextInit(Context ctx) throws TomcatException {
-	if( ctx.getDebug() > 0 ) ctx.log("XmlReader - init  " + ctx.getPath() + " " + ctx.getDocBase() );
+	if( debug > 0 )
+	    log("contextInit  " + ctx.getPath() + " " +ctx.getDocBase() );
 	ContextManager cm=ctx.getContextManager();
 	
 	try {

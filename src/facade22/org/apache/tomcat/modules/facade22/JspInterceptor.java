@@ -189,7 +189,7 @@ public class JspInterceptor extends BaseInterceptor {
 
 	// if it's an extension mapped file, construct and map a handler
 	if( "jsp".equals( wrapper.getName())) {
-	    jspFile=req.getServletPath();
+	    jspFile=req.servletPath().toString();
 	    // extension mapped jsp - define a new handler,
 	    // add the exact mapping to avoid future overhead
 	    handler= mapJspPage( req.getContext(), jspFile );
@@ -688,7 +688,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * the context rooted URI of the JSP file. 
      */
     public String getJspFile() {
-	String sP=req.getServletPath();
+	String sP=req.servletPath().toString();
 	Context ctx=req.getContext();
 	if( debug>0 ) log.log("getJspFile " +
 			   sP);//   ctx.getRealPath( sP ) );

@@ -244,7 +244,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public String getPathInfo() {
-        return request.getPathInfo();
+        return request.pathInfo().toString();
     }
 
     public String getPathTranslated() {
@@ -261,7 +261,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public String getProtocol() {
-        return request.getProtocol();
+        return request.protocol().toString();
     }
 
     public String getQueryString() {
@@ -337,11 +337,12 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	if (! path.startsWith("/")) {
 	    // The original implementation returned that RD relative
 	    // to lookupPath, which is RequestPath + PathInfo
-	    String pI= request.getPathInfo();
+	    String pI= request.pathInfo().toString();
 	    if( pI == null ) 
-		path= FileUtil.catPath( request.getServletPath(), path );
+		path= FileUtil.catPath( request.servletPath().toString(),
+					path );
 	    else
-		path= FileUtil.catPath( request.getServletPath() + pI,
+		path= FileUtil.catPath( request.servletPath().toString() + pI,
 					path);
 	    if( path==null) return null;
 	}
@@ -369,7 +370,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getServletPath() {
-        return request.getServletPath();
+        return request.servletPath().toString();
     }
 
     /**
