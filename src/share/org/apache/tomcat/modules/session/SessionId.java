@@ -263,6 +263,9 @@ public class SessionId extends  BaseInterceptor
             } else { // First time, save the SSL session ID
               sess.setAttribute("javax.servlet.session.ssl_session",idr);
             }
+          } else { // Check requested by no SSL session ID, scream about it!
+            cm.log("SECURITY WARNING: checkSSLSessionId requested, "+
+                                     "but no SSL session ID available!");
           }
         }
 
