@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.214 2004/11/01 19:56:07 mvw Exp $
+// $Id: ModelFacade.java,v 1.215 2004/11/04 14:41:27 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5648,6 +5648,15 @@ public class ModelFacade {
      */
     public static void setName(Object handle, String name) {
         if ((handle instanceof MModelElement) && (name != null)) {
+            // This is to aid trapping the bug in issue 
+            // http://argouml.tigris.org/issues/show_bug.cgi?id=2847
+            // Once that issue is resolved this check _could_ be
+            // removed.
+            if (name.indexOf(0xffff) >= 0) {
+                throw new IllegalArgumentException(
+                        "An attempt has been made to set the model element"
+                        + " name to contain the illegal character 0xFFFF");
+            }
             ((MModelElement) handle).setName(name);
             return;
         }
