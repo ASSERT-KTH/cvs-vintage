@@ -20,29 +20,9 @@ import java.lang.reflect.InvocationHandler;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 
-/*
-import javax.transaction.TransactionManager;
-import java.security.Principal;
-import javax.transaction.Transaction;
-import javax.transaction.SystemException;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
-import java.rmi.RemoteException;
-
-import org.jboss.proxy.ejb.ReadAheadBuffer;
-import org.jboss.proxy.ejb.ListEntityProxy;
-import org.jboss.invocation.Invocation;
-import org.jboss.invocation.Invoker;
-import org.jboss.tm.TransactionPropagationContextFactory;
-import org.jboss.security.SecurityAssociation;
-*/
-
 /**
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -50,7 +30,7 @@ import org.jboss.security.SecurityAssociation;
  * </ol>
  */
 public class ClientContainer
-implements Externalizable, InvocationHandler
+   implements Externalizable, InvocationHandler
 {
       
    // the "static" information that gets attached to every invocation
@@ -104,7 +84,7 @@ implements Externalizable, InvocationHandler
    }
    
    public void writeExternal(final ObjectOutput out)
-   throws IOException
+      throws IOException
    {
       out.writeObject(next);
       out.writeObject(context);
@@ -119,7 +99,7 @@ implements Externalizable, InvocationHandler
    * @throws ClassNotFoundException
    */
    public void readExternal(final ObjectInput in)
-   throws IOException, ClassNotFoundException
+      throws IOException, ClassNotFoundException
    {
       next = (Interceptor) in.readObject();
       context = (InvocationContext) in.readObject();
