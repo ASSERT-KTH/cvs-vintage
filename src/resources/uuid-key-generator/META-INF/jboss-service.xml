@@ -16,7 +16,56 @@
      | UUIDKeyGeneratorFactoryService
   -->
   <mbean code="org.jboss.ejb.plugins.keygenerator.uuid.UUIDKeyGeneratorFactoryService"
-         name="jboss:service=UUIDKeyGeneratorFactory">
+         name="jboss:service=KeyGeneratorFactory,type=UUID">
+  </mbean>
+
+  <!--
+     | HiLoKeyGeneratorFactory
+  -->
+  <mbean code="org.jboss.ejb.plugins.keygenerator.hilo.HiLoKeyGeneratorFactory"
+         name="jboss:service=KeyGeneratorFactory,type=HiLo">
+
+     <depends>jboss:service=TransactionManager</depends>
+     <depends>jboss.jca:name=DefaultDS,service=LocalTxCM</depends>
+
+     <!--
+        | Attributes common to HiLo factory instances
+     -->
+
+     <!-- DataSource JNDI name -->
+     <attribute name="DataSource">java:/DefaultDS</attribute>
+
+     <!-- table name -->
+     <attribute name="TableName">HILOSEQUENCES</attribute>
+
+     <!-- Column that contains sequence name -->
+     <attribute name="SequenceColumn">SEQUENCENAME</attribute>
+
+     <!-- Column that contains hi values -->
+     <attribute name="IdColumnName">HIGHVALUES</attribute>
+
+     <!-- Create table DDL -->
+     <attribute name="CreateTableDdl">
+        create table HILOSEQUENCES (
+           SEQUENCENAME varchar(50) not null,
+           HIGHVALUES integer not null,
+           constraint hilo_pk primary key (SEQUENCENAME)
+        )
+     </attribute>
+
+
+     <!--
+        | Instance-specific attributes
+     -->
+
+     <!-- JNDI name -->
+     <attribute name="FactoryName">HiLoKeyGeneratorFactory</attribute>
+
+     <!-- Sequence name which this factory will use -->
+     <attribute name="SequenceName">general</attribute>
+
+     <!-- Block size -->
+     <attribute name="BlockSize">10</attribute>
   </mbean>
 
 </server>

@@ -6,17 +6,13 @@
 */
 package org.jboss.ejb.plugins.keygenerator.uuid;
 
-import javax.management.JMException;
-import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.naming.Util;
 
 import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
-import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
 
 /**
  * Implements UUID key generator factory service
@@ -26,7 +22,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
  *
  * @author <a href="mailto:loubyansky@ukr.net">Alex Loubyansky</a>
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class UUIDKeyGeneratorFactoryService
    extends ServiceMBeanSupport
