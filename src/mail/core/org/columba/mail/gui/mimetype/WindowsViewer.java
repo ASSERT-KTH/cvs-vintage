@@ -42,11 +42,12 @@ public class WindowsViewer extends AbstractViewer {
 	public Process openURL(URL url) {
 		if (OSInfo.isWin2K() || OSInfo.isWinXP()) {
 			Process proc = null;
-
+             
 			try {
+                //BUG 980606 fixed. 20040630 SWITT: '"' removed from cmd[2] 			
 				String[] cmd = new String[]{"rundll32",
 						"url.dll,FileProtocolHandler",
-						'"' + url.toString() + '"'};
+						 url.toString() };
 				Runtime rt = Runtime.getRuntime();
 				LOG.fine("Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
 				proc = rt.exec(cmd);
