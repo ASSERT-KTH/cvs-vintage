@@ -20,6 +20,7 @@ import java.io.BufferedWriter;
 import java.io.CharArrayWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -40,18 +41,19 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlIO extends DefaultHandler {
-	// List of sub-elements
-	List elements;
+	private static final String ROOT_XML_ELEMENT_NAME = "__COLUMBA_XML_TREE_TOP__";
+    // List of sub-elements
+    private List elements;
 	// Top level element (Used to hold everything else)
-	XmlElement rootElement;
+    private XmlElement rootElement;
 	// The current element you are working on
-	XmlElement currentElement;
+    private XmlElement currentElement;
 
 	// For writing out the data
 	// Indent for each level
-	int writeIndent = 2;
+    private int writeIndent = 2;
 	// Maximum data to put on a "one liner"
-	int maxOneLineData = 20;
+    private int maxOneLineData = 20;
 
 	// The SAX 2 parser...
 	private XMLReader xr;
@@ -60,7 +62,7 @@ public class XmlIO extends DefaultHandler {
 	// the "characters" SAX event.
 	private CharArrayWriter contents = new CharArrayWriter();
 
-	protected URL url = null;
+    private URL url = null;
 
 	/*
 	// Default constructor
@@ -79,16 +81,24 @@ public class XmlIO extends DefaultHandler {
 
 	public XmlIO(URL url) {
 		super();
-
 		this.url = url;
 	}
 
-	// setup and load constructor
-	public XmlIO() {
-		currentElement = null;
+    // setup and load constructor
+    public XmlIO() {
+        currentElement = null;
+    }
 
-	}
-
+    // setup and load constructor
+    /**
+     * Creates a XmlIO object with the specified element at the top.
+     * @param element the element at the top.
+     */
+    public XmlIO(XmlElement element) {
+        rootElement = new XmlElement(ROOT_XML_ELEMENT_NAME);
+        rootElement.addElement(element);
+    }
+    
 	public void setURL(URL url) {
 		this.url = url;
 	}
@@ -99,51 +109,104 @@ public class XmlIO extends DefaultHandler {
 		return load(url);
 	}
 
-	// Load a file. This is what starts things off.
-	public boolean load(URL inputURL) {
-		elements = new Vector();
-		rootElement = new XmlElement("__COLUMBA_XML_TREE_TOP__");
-		currentElement = rootElement;
+    // Load a file. This is what starts things off.
+    /**
+     * Loads from the InputStream into the root Xml Element.
+     * @param input the input stream to load from.
+     */
+    public boolean load(InputStream input) {
+        elements = new Vector();
+        rootElement = new XmlElement(ROOT_XML_ELEMENT_NAME);
+        currentElement = rootElement;
 
-		try {
-			// Create the XML reader...
-			//      xr = XMLReaderFactory.createXMLReader();
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			// Set the ContentHandler...
-			//      xr.setContentHandler( this );
+        try {
+            // Create the XML reader...
+            //      xr = XMLReaderFactory.createXMLReader();
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            // Set the ContentHandler...
+            //      xr.setContentHandler( this );
 
-			SAXParser saxParser = factory.newSAXParser();
+            SAXParser saxParser = factory.newSAXParser();
 
-			saxParser.parse(inputURL.toString(), this);
+            saxParser.parse(input, this);
 
-		} catch (javax.xml.parsers.ParserConfigurationException ex) {
-			ColumbaLogger.log.error(
-				"XML config error while attempting to read XML file \n'"
+        } catch (javax.xml.parsers.ParserConfigurationException ex) {
+            ColumbaLogger.log.error(
+                "XML config error while attempting to read from the input stream \n'"
+                +input+"'");
+            ColumbaLogger.log.error(ex.toString());
+            ex.printStackTrace();
+            return (false);
+        } catch (SAXException ex) {
+            // Error
+            ColumbaLogger.log.error(
+                "XML parse error while attempting to read from the input stream \n'"
+                +input+"'");
+            ColumbaLogger.log.error(ex.toString());
+            ex.printStackTrace();
+            return (false);
+        } catch (IOException ex) {
+            ColumbaLogger.log.error(
+                "I/O error while attempting to read from the input stream \n'" +
+                input+"'");
+            ColumbaLogger.log.error(ex.toString());
+            ex.printStackTrace();
+            return (false);
+        }
+
+        //XmlElement.printNode( getRoot(), "");
+
+        return (true);
+    }
+
+    /**
+     * Load a file. This is what starts things off.
+     * @param inputURL the URL to load XML from.
+     */
+    public boolean load(URL inputURL) {
+        elements = new Vector();
+        rootElement = new XmlElement(ROOT_XML_ELEMENT_NAME);
+        currentElement = rootElement;
+
+        try {
+            // Create the XML reader...
+            //      xr = XMLReaderFactory.createXMLReader();
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            // Set the ContentHandler...
+            //      xr.setContentHandler( this );
+
+            SAXParser saxParser = factory.newSAXParser();
+
+            saxParser.parse(inputURL.toString(), this);
+
+        } catch (javax.xml.parsers.ParserConfigurationException ex) {
+            ColumbaLogger.log.error(
+                "XML config error while attempting to read XML file \n'"
                 +inputURL+"'");
-			ColumbaLogger.log.error(ex.toString());
-			ex.printStackTrace();
-			return (false);
-		} catch (SAXException ex) {
-			// Error
-			ColumbaLogger.log.error(
-				"XML parse error while attempting to read XML file \n'"
+            ColumbaLogger.log.error(ex.toString());
+            ex.printStackTrace();
+            return (false);
+        } catch (SAXException ex) {
+            // Error
+            ColumbaLogger.log.error(
+                "XML parse error while attempting to read XML file \n'"
                 +inputURL+"'");
-			ColumbaLogger.log.error(ex.toString());
-			ex.printStackTrace();
-			return (false);
-		} catch (IOException ex) {
-			ColumbaLogger.log.error(
-				"I/O error while attempting to read XML file \n'"
+            ColumbaLogger.log.error(ex.toString());
+            ex.printStackTrace();
+            return (false);
+        } catch (IOException ex) {
+            ColumbaLogger.log.error(
+                "I/O error while attempting to read XML file \n'"
                 +inputURL+"'");
-			ColumbaLogger.log.error(ex.toString());
-			ex.printStackTrace();
-			return (false);
-		}
+            ColumbaLogger.log.error(ex.toString());
+            ex.printStackTrace();
+            return (false);
+        }
 
-		//XmlElement.printNode( getRoot(), "");
+        //XmlElement.printNode( getRoot(), "");
 
-		return (true);
-	}
+        return (true);
+    }
 
 	// Implement the content hander methods that
 	// will delegate SAX events to the tag tracker network.
@@ -165,20 +228,22 @@ public class XmlIO extends DefaultHandler {
 		// at once.
 		try {
 			contents.reset();
-			String Name = localName; // element name
-			if (Name.equals(""))
-				Name = qName; // namespaceAware = false
+			String name = localName; // element name
+			if (name.equals("")) {
+				name = qName; // namespaceAware = false
+            }
 
-			XmlElement P = currentElement;
+			XmlElement p = currentElement;
 
-			currentElement = currentElement.addSubElement(Name);
-			currentElement.setParent(P);
+			currentElement = currentElement.addSubElement(name);
+			currentElement.setParent(p);
 
 			if (attrs != null) {
 				for (int i = 0; i < attrs.getLength(); i++) {
 					String aName = attrs.getLocalName(i); // Attr name
-					if (aName.equals(""))
+					if (aName.equals("")) {
 						aName = attrs.getQName(i);
+                    }
 
 					currentElement.addAttribute(aName, attrs.getValue(i));
 				}
@@ -204,7 +269,16 @@ public class XmlIO extends DefaultHandler {
 		// accumulate the contents into a buffer.
 		contents.write(ch, start, length);
 	}
-
+    
+    /**
+     * Returns the root for the XmlElement hiearchy.
+     * Note that this Xml Element will always have the name <code>__COLUMBA_XML_TREE_TOP__</code>.
+     * <p>
+     * Methods that want to retrieve elements from this root should use
+     * the {@link XmlElement#getElement(String)} in order to get the wanted
+     * element.
+     * @return a XmlElement if it has been loaded or initialized with it; null otherwise.
+     */
 	public XmlElement getRoot() {
 		return (rootElement);
 	}
@@ -292,8 +366,9 @@ public class XmlIO extends DefaultHandler {
 
 	private void _writeSpace(Writer out, int numSpaces)
 		throws IOException {
-		for (int i = 0; i < numSpaces; i++)
+		for (int i = 0; i < numSpaces; i++) {
 			out.write(" ");
+        }
 	}
 
 } // End class XmlIO
