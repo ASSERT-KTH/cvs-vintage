@@ -34,8 +34,8 @@ Fixed bugs:
 - #972475, doesn't start if ".columba" directory missing
 - added missing ForwardInline action to message-frame
 - #982766, daylight savings bug (kastanie)
-- .html or .htm Links weren't able to launch (kastanie)
-- changed default mimetype to RFC1521 conform type Application/octet-stream (kastanie)
+- #980606, .html or .htm Links weren't able to launch (kastanie)
+- #982663, changed default mimetype to RFC1521 conform type Application/octet-stream (kastanie)
 
 Columba v1.0 RC1-test3
 
