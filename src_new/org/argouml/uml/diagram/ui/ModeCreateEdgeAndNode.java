@@ -24,7 +24,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.2 2000/09/14 09:39:00 toby Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.3 2000/09/14 09:42:46 toby Exp $
 
 package org.argouml.uml.diagram.ui;
 
