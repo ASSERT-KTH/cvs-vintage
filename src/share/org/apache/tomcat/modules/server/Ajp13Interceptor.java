@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.3 2000/09/29 07:01:16 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/09/29 07:01:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.4 2000/11/30 07:36:03 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/11/30 07:36:03 $
  *
  * ====================================================================
  *
@@ -233,10 +233,16 @@ class Ajp13Request extends Request
 class Ajp13Response extends Response 
 {
     Ajp13 ajp13;
+    boolean finished=false;
     
     public Ajp13Response() 
     {
 	super();
+    }
+
+    public void recycle() {
+	super.recycle();
+	finished=false;
     }
 
     public void setSocket( Socket s ) {
@@ -257,8 +263,10 @@ class Ajp13Response extends Response
          
     public void finish() throws IOException 
     {
-        super.finish();
-	ajp13.finish();
+	if(!finished) {
+	    super.finish();
+	    ajp13.finish();
+	}
     }
     
     public void doWrite(  byte b[], int off, int len) throws IOException 
