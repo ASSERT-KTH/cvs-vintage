@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.20 2002/02/08 20:24:53 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.21 2002/02/24 03:47:16 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -864,13 +864,55 @@ files will re-deploy automatically while Tomcat 3.3 is running.</p>
   </tr>
   <tr valign="top">
     <td>host</td>
-    <td>Virtual host into which each application will be deployed.</td>
+    <td>Virtual host into which each application will be deployed.<br>
+        <b>Note:</b> If this attribute is specified in <code>server.xml</code>,
+        the handling for <code>hostChar</code> and <code>hostDotChar</code> is
+        disabled.</td>
     <td>DEFAULT</td>
+  </tr>
+  <tr valign="top">
+    <td>hostChar<br><b>[Tomcat 3.3.1]</td>
+    <td>Character used to designate the end of the host portion of the
+      directory name. For example, a directory named &quot;mydomain@myapp&quot;
+      would deploy to virtual host &quot;mydomain&quot; as the &quot;/myapp&quot;
+      context.  Deriving a host name from the directory name is disabled if
+      the <code>host</code> attribute is specified in <code>server.xml</code>.
+      Also see the <code>hostDotChar</code> attribute for including periods in
+      the host name.<br>
+      <b>Note:</b> This attribute was implemented, but not configurable in
+      Tomcat 3.3. However, a bug in Tomcat 3.3 makes this feature unusable.  The
+      '@' character is incorrectly included in the context name.  This bug has
+      been corrected in Tomcat 3.3.1.</td>
+    <td>@</td>
+  </tr>
+  <tr valign="top">
+    <td>hostDotChar<br><b>[Tomcat 3.3.1]</td>
+    <td>Character used as a substitute for periods in the host portion of the
+      directory name.  For example, a directory named
+      &quot;www_mydomain_com@myapp&quot; would deploy to virtual host
+      &quot;www.mydomain.com&quot; as the &quot;/myapp&quot; context.  Also see
+      the <code>hostChar</code> attribute for designating the end of the host
+      name.<br>
+      <b>Note:</b> This attribute was implemented, but not configurable in
+      Tomcat 3.3. However, a bug in the handing for <code>hostChar</code> in
+      Tomcat 3.3 makes this feature unusable. It is fully funtional in
+      Tomcat 3.3.1.</td>
+    <td>_</td>
   </tr>
   <tr valign="top">
     <td>ignoreDot</td>
     <td>Ignore dirs starting with '.'</td>
     <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>pathSlashChar<br><b>[Tomcat 3.3.1]</td>
+    <td>Character used as a substitute for slashes in the context path portion
+      of the directory name.  For example, a directory named
+      &quot;my_app&quot; would deploy to the default host as the
+      &quot;/my/app&quot; context.<br>
+      <b>Note:</b> This attribute was implemented, but not configurable in
+      Tomcat 3.3.</td>
+    <td>_</td>
   </tr>
   <tr valign="top">
     <td>prefix<br><b>[Tomcat 3.3.1]</b></td>
@@ -888,11 +930,18 @@ files will re-deploy automatically while Tomcat 3.3 is running.</p>
   </tr>
 </table>
 
+<p><b>Note:</b> The special directory name handling controlled by
+<code>hostChar</code>, <code>hostDotChar</code>, and <code>pathSlashChar</code>
+is always enabled. If you wish to include '_' characters in a web application
+directory name, disable the feature by redefining the <code>pathSlashChar</code>
+to an empty string.</p>
+
 <h4>Example(s)</h4>
 
 <pre>
   &lt;AutoWebApp dir=&quot;webapps&quot; host=&quot;DEFAULT&quot; /&gt;
   &lt;AutoWebApp dir=&quot;myhost&quot; host=&quot;myhost.com&quot; /&gt;
+  &lt;AutoWebApp dir=&quot;webapps&quot; pathSlashChar="" /&gt;
 </pre>
 
 <hr size="5">
