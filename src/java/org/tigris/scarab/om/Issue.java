@@ -1012,6 +1012,12 @@ public class Issue
         return result;
     }
 
+    public boolean isCreatingUser( ScarabUser user)
+         throws Exception
+    {                
+         return (getCreatedBy().getUserId().equals(user.getUserId()));
+    }
+
     /**
      * The last modification made to the issue.
      *
