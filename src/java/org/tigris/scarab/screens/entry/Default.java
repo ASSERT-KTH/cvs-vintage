@@ -56,13 +56,14 @@ import org.tigris.scarab.security.ScarabSecurityPull;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.pages.ScarabPage;
+import org.tigris.scarab.om.ScarabUser;
 
 /**
     This class is responsible for building the Context up
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.14 2001/08/03 15:19:28 jmcnally Exp $
+    @version $Id: Default.java,v 1.15 2001/08/16 00:16:17 elicia Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -82,12 +83,11 @@ public class Default extends TemplateSecureScreen
         TemplateContext context = getTemplateContext(data);
         ScarabSecurityPull security = (ScarabSecurityPull)context
             .get(ScarabConstants.SECURITY_TOOL);
-        ScarabRequestTool scarab = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabUser user = (ScarabUser)data.getUser();
 
-        if ( !(scarab.getUser().hasLoggedIn()
+        if ( !(data.getUser().hasLoggedIn()
                && security.hasPermission(ScarabSecurityPull.ISSUE__ENTER, 
-                                         scarab.getUser().getCurrentModule())))
+                                         user.getCurrentModule())))
         {
             // Note: we need to replace '/' with ',' so that 
             //       the hidden input field will have the right
