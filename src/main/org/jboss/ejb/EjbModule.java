@@ -4,14 +4,9 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb;
 
-
-
-
-
-
-//import org.jboss.system.UnifiedClassLoader;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,7 +80,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -755,7 +750,7 @@ public class EjbModule
          {
             if( confSecurityDomain == null )
                confSecurityDomain = securityDomain;
-            //System.out.println("lookup securityDomain manager name: "+confSecurityDomain);
+            //log.debug("lookup securityDomain manager name: "+confSecurityDomain);
             Object securityMgr = iniCtx.lookup(confSecurityDomain);
             AuthenticationManager ejbS = (AuthenticationManager) securityMgr;
             RealmMapping rM = (RealmMapping) securityMgr;
@@ -777,7 +772,7 @@ public class EjbModule
             Class proxyClass = cl.loadClass(securityProxyClassName);
             Object proxy = proxyClass.newInstance();
             container.setSecurityProxy(proxy);
-            //System.out.println("setSecurityProxy, "+proxy);
+            //log.debug("setSecurityProxy, "+proxy);
          }
          catch(Exception e)
          {
@@ -910,7 +905,7 @@ public class EjbModule
       {
          String invoker = (String)it.next();
          String jndiBinding = (String)conf.getInvokerBinding(invoker);
-         System.out.println("_________ creating binding for " + jndiBinding + ":" + invoker);
+         log.debug("creating binding for " + jndiBinding + ":" + invoker);
          InvokerProxyBindingMetaData imd = (InvokerProxyBindingMetaData)conf.getApplicationMetaData().getInvokerProxyBindingMetaDataByName(invoker);
          EJBProxyFactory ci = null;
 

@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 
 package org.jboss.ejb;
 
@@ -85,7 +85,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.87 $
+* @version $Revision: 1.88 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -698,12 +698,10 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
          String jndiBinding = (String)mi.getValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME);
          if (jndiBinding == null)
          {
-            System.out.println("***************** jndiBInding is null ********");
-            new Throwable().printStackTrace();
-            System.out.println("*************************");
+            log.debug("JNDI Binding is null", new Throwabel());
          }
          Object proxyFactory = Registry.lookup(jndiBinding + "/proxyFactory");
-         if (proxyFactory == null) System.out.println("***************** proxyFactory is null ********");
+         if (proxyFactory == null) log.debug("***************** proxyFactory is null ********");
 	 proxyFactoryTL.set(proxyFactory);
          */
 
@@ -996,7 +994,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
                         throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
                      }
                      StringRefAddr addr = new StringRefAddr(invokerBinding, name);
-                     System.out.println("******* adding " + invokerBinding + ":" + name + " to Reference");
+                     log.debug("adding " + invokerBinding + ":" + name + " to Reference");
                      if (reference == null)
                      {
                         reference = new Reference("javax.naming.LinkRef", ENCThreadLocalKey.class.getName(), null);

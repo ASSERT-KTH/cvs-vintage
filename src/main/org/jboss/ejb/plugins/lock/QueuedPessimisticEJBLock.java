@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 
 package org.jboss.ejb.plugins.lock;
 
@@ -43,7 +43,7 @@ import org.jboss.ejb.EntityContainer;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/03: billb</b>
@@ -411,7 +411,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          // The new transaction is the next one, important to set it up to avoid race with 
          // new incoming calls
          this.tx = thelock.tx;
-         //         System.out.println(Thread.currentThread()+" handing off to "+lock.threadName);
+         //         log.debug(Thread.currentThread()+" handing off to "+lock.threadName);
          synchronized(thelock) 
          { 
             // notify All threads waiting on this transaction.
@@ -421,7 +421,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       }
       else
       {
-         //         System.out.println(Thread.currentThread()+" handing off to empty queue");
+         //         log.debug(Thread.currentThread()+" handing off to empty queue");
       }
    }
    
@@ -469,7 +469,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          throw new IllegalStateException("removing bean lock and it has tx set!");
       }
       /*      else if (refs == 0)
-         System.out.println(Thread.currentThread() + " removing lock!");
+         log.debug(Thread.currentThread() + " removing lock!");
       */
    }
 

@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.proxy.ejb;
 
+package org.jboss.proxy.ejb;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -68,7 +68,7 @@ import org.w3c.dom.NodeList;
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -218,7 +218,7 @@ public class ProxyFactory
       }
       else
       {
-         System.out.println("************* client interceptors element is null ******************");
+         log.debug("client interceptors element is null");
       }
       Element homeInterceptorConf = (Element)interceptors.get(HOME_INTERCEPTOR);
       loadInterceptorClasses(homeInterceptorClasses, homeInterceptorConf);
@@ -344,7 +344,7 @@ public class ProxyFactory
          }
 
          // Bind the home in the JNDI naming space
-         System.out.println("-------Binding Home " + jndiBinding);
+         log.debug("Binding Home " + jndiBinding);
          Util.rebind(
             // The context
             new InitialContext(),
@@ -409,7 +409,7 @@ public class ProxyFactory
       context.setCacheId(id);
       context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiBinding);
       context.setInvoker(beanInvoker);
-      System.out.println("____________ seting invoker proxy binding for stateful session: " + invokerMetaData.getName());
+      log.debug("seting invoker proxy binding for stateful session: " + invokerMetaData.getName());
       context.setInvokerProxyBinding(invokerMetaData.getName());
       
       ClientContainer client = new ClientContainer(context);

@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.metadata;
 
 import java.net.URL;
@@ -20,23 +21,20 @@ import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentException;
 
-
-/** The top level meta data from the jboss.xml descriptor.
+/**
+ * The top level meta data from the jboss.xml descriptor.
  *
- *   MessageDriven Bean added
- *   @see <related>
- *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.27 $
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @version $Revision: 1.28 $
  */
-public class ApplicationMetaData extends MetaData
+public class ApplicationMetaData
+   extends MetaData
 {
-   // Constants -----------------------------------------------------
    public static final int EJB_1x = 1;
    public static final int EJB_2x = 2;
    
-   // Attributes ----------------------------------------------------
    private URL url;
    
    // verion of the dtd used to create ejb-jar.xml
@@ -61,9 +59,6 @@ public class ApplicationMetaData extends MetaData
    private String  unauthenticatedPrincipal;
    private boolean enforceEjbRestrictions;
    
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
    public ApplicationMetaData(URL u)
    {
       url = u;
@@ -73,7 +68,6 @@ public class ApplicationMetaData extends MetaData
    {
    }
    
-   // Public --------------------------------------------------------
    public URL getUrl()
    { return url; }
    
@@ -479,7 +473,6 @@ public class ApplicationMetaData extends MetaData
             {
                invokerMetaData = new InvokerProxyBindingMetaData(invokerName);
                invokerBindings.put(invokerName, invokerMetaData);
-               System.out.println("***** putting invoker " + invokerName + " into ApplicationMetaData");
             }
             
             try
@@ -622,12 +615,4 @@ public class ApplicationMetaData extends MetaData
          }
       }
    }
-   
-   // Package protected ---------------------------------------------
-   
-   // Protected -----------------------------------------------------
-   
-   // Private -------------------------------------------------------
-   
-   // Inner classes -------------------------------------------------
 }
