@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.86 2002/08/26 22:52:44 spestov Exp $
+ * @version $Id: jEdit.java,v 1.87 2002/08/28 20:51:28 spestov Exp $
  */
 public class jEdit
 {
@@ -2487,7 +2487,7 @@ public class jEdit
 	{
 		try
 		{
-			Log.log(Log.DEBUG,jEdit.class,"Loading actions from " + path);
+			//Log.log(Log.DEBUG,jEdit.class,"Loading actions from " + path);
 
 			ActionListHandler ah = new ActionListHandler(path,actionSet);
 			XmlParser parser = new XmlParser();

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.17 2002/08/10 20:05:31 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.18 2002/08/28 20:51:28 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -330,9 +330,8 @@ public class JARClassLoader extends ClassLoader
 			jar.getActions().setLabel(jEdit.getProperty(
 				"action-set.plugin",
 				new String[] { label }));
-
 			Log.log(Log.NOTICE,this,"Starting plugin " + label
-					+ " (version " + version + ")");
+				+ " (version " + version + ")");
 
 			jar.addPlugin((EditPlugin)clazz.newInstance());
 		}

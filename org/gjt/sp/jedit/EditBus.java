@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
  * their own messages.
  *
  * @author Slava Pestov
- * @version $Id: EditBus.java,v 1.4 2002/06/19 05:30:08 spestov Exp $
+ * @version $Id: EditBus.java,v 1.5 2002/08/28 20:51:28 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -83,6 +83,36 @@ public class EditBus
 			return copyComponents;
 		}
 	} //}}}
+
+	//{{{ timeTest() method
+	/*static long timeTest(int msgCount)
+	{
+		EBMessage msg = new EBMessage(null) {};
+
+		// To avoid any problems if components are added or removed
+		// while the message is being sent
+		EBComponent[] comps = getComponents();
+
+		long start = System.currentTimeMillis();
+		for(int i = 0; i < msgCount; i++)
+		{
+			for(int j = 0; j < comps.length; j++)
+			{
+				try
+				{
+					comps[j].handleMessage(msg);
+				}
+				catch(Throwable t)
+				{
+					Log.log(Log.ERROR,EditBus.class,"Exception"
+						+ " while sending message on EditBus:");
+					Log.log(Log.ERROR,EditBus.class,t);
+				}
+			}
+		}
+
+		return System.currentTimeMillis() - start;
+	}*/ //}}}
 
 	//{{{ send() method
 	/**
