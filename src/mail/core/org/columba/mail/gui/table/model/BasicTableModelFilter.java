@@ -20,181 +20,181 @@ package org.columba.mail.gui.table.model;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.ristretto.message.Flags;
 
-
 /**
  * @author fdietz
- *
+ * 
  * Adds basic filter capabilities to the TableModel
- *
- * Items which can be filtered are:
- *  - unseen flag
- *  - answered flag
- *  - flagged flag
- *  - expunged flag
- *  - has attachment
- *  - String in Subject or Sender
- *
+ * 
+ * Items which can be filtered are: - unseen flag - answered flag - flagged flag -
+ * expunged flag - has attachment - String in Subject or Sender
+ *  
  */
 public class BasicTableModelFilter extends TreeTableModelDecorator {
-    protected boolean newFlag = false;
+	protected boolean newFlag = false;
 
-    //protected boolean oldFlag = true;
-    protected boolean answeredFlag = false;
-    protected boolean flaggedFlag = false;
-    protected boolean expungedFlag = false;
-    protected boolean attachmentFlag = false;
+	//protected boolean oldFlag = true;
+	protected boolean answeredFlag = false;
 
-    //protected String patternItem = new String("subject");
-    protected String patternString = "";
-    protected boolean dataFiltering = false;
+	protected boolean flaggedFlag = false;
 
-    public BasicTableModelFilter(TreeTableModelInterface tableModel) {
-        super(tableModel);
-    }
+	protected boolean expungedFlag = false;
 
-    /************** filter view *********************/
-    public void setDataFiltering(boolean b) {
-        dataFiltering = b;
-    }
+	protected boolean attachmentFlag = false;
 
-    public boolean isEnabled() {
-        return dataFiltering;
-    }
+	//protected String patternItem = new String("subject");
+	protected String patternString = "";
 
-    public void setNewFlag(boolean b) {
-        newFlag = b;
-    }
+	protected boolean dataFiltering = false;
 
-    public boolean getNewFlag() {
-        return newFlag;
-    }
+	public BasicTableModelFilter(TreeTableModelInterface tableModel) {
+		super(tableModel);
+	}
 
-    public void setAnsweredFlag(boolean b) {
-        answeredFlag = b;
-    }
+	/** ************ filter view ******************** */
+	public void setDataFiltering(boolean b) {
+		dataFiltering = b;
+	}
 
-    public boolean getAnsweredFlag() {
-        return answeredFlag;
-    }
+	public boolean isEnabled() {
+		return dataFiltering;
+	}
 
-    public void setFlaggedFlag(boolean b) {
-        flaggedFlag = b;
-    }
+	public void setNewFlag(boolean b) {
+		newFlag = b;
+	}
 
-    public boolean getFlaggedFlag() {
-        return flaggedFlag;
-    }
+	public boolean getNewFlag() {
+		return newFlag;
+	}
 
-    public void setExpungedFlag(boolean b) {
-        expungedFlag = b;
-    }
+	public void setAnsweredFlag(boolean b) {
+		answeredFlag = b;
+	}
 
-    public boolean getExpungedFlag() {
-        return expungedFlag;
-    }
+	public boolean getAnsweredFlag() {
+		return answeredFlag;
+	}
 
-    public void setAttachmentFlag(boolean b) {
-        attachmentFlag = b;
-    }
+	public void setFlaggedFlag(boolean b) {
+		flaggedFlag = b;
+	}
 
-    public boolean getAttachmentFlag() {
-        return attachmentFlag;
-    }
+	public boolean getFlaggedFlag() {
+		return flaggedFlag;
+	}
 
-    public void setPatternString(String s) {
-        patternString = s;
-    }
+	public void setExpungedFlag(boolean b) {
+		expungedFlag = b;
+	}
 
-    public String getPatternString() {
-        return patternString;
-    }
+	public boolean getExpungedFlag() {
+		return expungedFlag;
+	}
 
-    protected boolean testString(ColumbaHeader header) {
-        String subject = (String) header.get("Subject");
+	public void setAttachmentFlag(boolean b) {
+		attachmentFlag = b;
+	}
 
-        if (subject != null) {
-            String pattern = getPatternString().toLowerCase();
+	public boolean getAttachmentFlag() {
+		return attachmentFlag;
+	}
 
-            if (subject.toLowerCase().indexOf(pattern.toLowerCase()) != -1) {
-                return true;
-            }
-        }
+	public void setPatternString(String s) {
+		patternString = s;
+	}
 
-        String from = (String) header.get("From");
+	public String getPatternString() {
+		return patternString;
+	}
 
-        if (from != null) {
-            String pattern = getPatternString().toLowerCase();
+	protected boolean testString(ColumbaHeader header) {
+		String pattern = getPatternString().toLowerCase();
 
-            if (from.toLowerCase().indexOf(pattern.toLowerCase()) != -1) {
-                return true;
-            }
-        }
+		String subject = (String) header.get("Subject");
 
-        return false;
-    }
+		if (subject != null) {
+			subject = subject.toLowerCase();
 
-    public boolean addItem(ColumbaHeader header) {
-        boolean result = true;
-        boolean result2 = false;
+			if (subject.indexOf(pattern) != -1)
+				return true;
 
-        //boolean result3 = true;
-        boolean flags1 = false;
-        boolean flags2 = false;
+		}
 
-        Flags flags = ((ColumbaHeader) header).getFlags();
+		String from = (String) header.get("From");
 
-        if (flags == null) {
-            System.out.println("flags is null");
+		if (from != null) {
+			from = from.toLowerCase();
 
-            return false;
-        }
+			if (from.indexOf(pattern) != -1)
+				return true;
 
-        if (getNewFlag()) {
-            if (flags.getSeen()) {
-                result = false;
-            }
-        }
+		}
 
-        if (getAnsweredFlag()) {
-            if (!flags.getAnswered()) {
-                result = false;
-            }
-        }
+		return false;
+	}
 
-        if (getFlaggedFlag()) {
-            if (!flags.getFlagged()) {
-                result = false;
-            }
-        }
+	public boolean addItem(ColumbaHeader header) {
+		boolean result = true;
+		boolean result2 = false;
 
-        if (getExpungedFlag()) {
-            if (!flags.getDeleted()) {
-                result = false;
-            }
-        }
+		//boolean result3 = true;
+		boolean flags1 = false;
+		boolean flags2 = false;
 
-        if (getAttachmentFlag()) {
-            Boolean attach = (Boolean) header.get("columba.attachment");
-            boolean attachment = attach.booleanValue();
+		Flags flags = ((ColumbaHeader) header).getFlags();
 
-            if (!attachment) {
-                result = false;
-            }
-        }
+		if (flags == null) {
+			System.out.println("flags is null");
 
-        if (!(getPatternString().equals(""))) {
-            flags2 = true;
-            result2 = testString(header);
-        } else {
-            result2 = true;
-        }
+			return false;
+		}
 
-        if (result2) {
-            if (result) {
-                return true;
-            }
-        }
+		if (getNewFlag()) {
+			if (flags.getSeen()) {
+				result = false;
+			}
+		}
 
-        return false;
-    }
+		if (getAnsweredFlag()) {
+			if (!flags.getAnswered()) {
+				result = false;
+			}
+		}
+
+		if (getFlaggedFlag()) {
+			if (!flags.getFlagged()) {
+				result = false;
+			}
+		}
+
+		if (getExpungedFlag()) {
+			if (!flags.getDeleted()) {
+				result = false;
+			}
+		}
+
+		if (getAttachmentFlag()) {
+			Boolean attach = (Boolean) header.get("columba.attachment");
+			boolean attachment = attach.booleanValue();
+
+			if (!attachment) {
+				result = false;
+			}
+		}
+
+		if (!(getPatternString().equals(""))) {
+			flags2 = true;
+			result2 = testString(header);
+		} else {
+			result2 = true;
+		}
+
+		if (result2) {
+			if (result) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
