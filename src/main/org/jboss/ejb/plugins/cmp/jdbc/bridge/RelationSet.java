@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -42,7 +42,11 @@ public class RelationSet implements Set {
    // CMR field sets my referance to the set to null, so that I know that
    // this set is no longer valid. See the ejb spec for more info.
    //
-   public RelationSet(JDBCCMRFieldBridge cmrField, EntityEnterpriseContext ctx, List[] setHandle) {
+   public RelationSet(
+         JDBCCMRFieldBridge cmrField, 
+         EntityEnterpriseContext ctx, 
+         List[] setHandle) {
+
       this.cmrField = cmrField;
       this.ctx = ctx;
       this.setHandle = setHandle;
@@ -51,7 +55,8 @@ public class RelationSet implements Set {
    
    private List getIdList() {
       if(setHandle[0] == null) {
-         throw new IllegalStateException("A CMR collection may only be used within the transction in which it was created");
+         throw new IllegalStateException("A CMR collection may only be used " +
+               "within the transction in which it was created");
       }
       return setHandle[0];
    }
@@ -74,7 +79,8 @@ public class RelationSet implements Set {
       }
 
       if(!relatedLocalInterface.isInstance(o)) {
-         throw new IllegalArgumentException("Object must be an instance of " + relatedLocalInterface.getName());
+         throw new IllegalArgumentException("Object must be an instance of " +
+               relatedLocalInterface.getName());
       }
       
       Object id = ((EJBLocalObject)o).getPrimaryKey();
@@ -93,7 +99,7 @@ public class RelationSet implements Set {
       }
 
       if(c == null) {
-         throw new IllegalArgumentException("Collection is null");
+         return false;
       }
       
       boolean isModified = false;
@@ -113,7 +119,8 @@ public class RelationSet implements Set {
       }
 
       if(!relatedLocalInterface.isInstance(o)) {
-         throw new IllegalArgumentException("Object must be an instance of " + relatedLocalInterface.getName());
+         throw new IllegalArgumentException("Object must be an instance of " +
+               relatedLocalInterface.getName());
       }
 
       Object id = ((EJBLocalObject)o).getPrimaryKey();
@@ -132,7 +139,7 @@ public class RelationSet implements Set {
       }
 
       if(c == null) {
-         throw new IllegalArgumentException("Collection is null");
+         return false;
       }
       
       boolean isModified = false;
@@ -165,7 +172,11 @@ public class RelationSet implements Set {
       }
 
       if(c == null) {
-         throw new IllegalArgumentException("Collection is null");
+         if(idList.size() == 0) {
+            return false;
+         }
+         clear();
+         return true;
       }
       
       // get a set of the argument collection's ids
@@ -192,7 +203,8 @@ public class RelationSet implements Set {
       List idList = getIdList();
 
       if(!relatedLocalInterface.isInstance(o)) {
-         throw new IllegalArgumentException("Object must be an instance of " + relatedLocalInterface.getName());
+         throw new IllegalArgumentException("Object must be an instance of " +
+               relatedLocalInterface.getName());
       }
       
       Object id = ((EJBLocalObject)o).getPrimaryKey();
@@ -203,7 +215,7 @@ public class RelationSet implements Set {
       List idList = getIdList();
 
       if(c == null) {
-         throw new IllegalArgumentException("Collection is null");
+         return true;
       }
       
       // get a set of the argument collection's ids
@@ -219,14 +231,16 @@ public class RelationSet implements Set {
    public Object[] toArray(Object a[]) {
       List idList = getIdList();
 
-      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(idList);
+      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(
+            idList);
       return c.toArray(a);
    }
 
    public Object[] toArray() {
       List idList = getIdList();
 
-      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(idList);
+      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(
+            idList);
       return c.toArray();
    }
    
@@ -235,7 +249,8 @@ public class RelationSet implements Set {
 
       return new Iterator() {
          private final Iterator idIterator = getIdList().iterator();
-         private final LocalContainerInvoker containerInvoker = cmrField.getRelatedInvoker();
+         private final LocalContainerInvoker containerInvoker = 
+               cmrField.getRelatedInvoker();
          private Object currentId;
 
          public boolean hasNext() {
@@ -244,7 +259,8 @@ public class RelationSet implements Set {
             try {
                return idIterator.hasNext();
             } catch(ConcurrentModificationException e) {
-               throw new IllegalStateException("Underlying collection has been modified");
+               throw new IllegalStateException("Underlying collection has " +
+                     "been modified");
             }
          }
          
@@ -255,7 +271,8 @@ public class RelationSet implements Set {
                currentId = idIterator.next();
                return containerInvoker.getEntityEJBLocalObject(currentId);   
             } catch(ConcurrentModificationException e) {
-               throw new IllegalStateException("Underlying collection has been modified");
+               throw new IllegalStateException("Underlying collection has " +
+                     "been modified");
             }
          }
          
@@ -270,13 +287,16 @@ public class RelationSet implements Set {
                idIterator.remove();
                cmrField.destroyRelationLinks(ctx, currentId, false);
             } catch(ConcurrentModificationException e) {
-               throw new IllegalStateException("Underlying collection has been modified");
+               throw new IllegalStateException("Underlying collection has " +
+                     "been modified");
             }
          }
          
          private void verifyIteratorIsValid() {
             if(setHandle[0] == null) {
-               throw new IllegalStateException("The iterator of a CMR collection may only be used within the transction in which it was created");
+               throw new IllegalStateException("The iterator of a CMR " +
+                     "collection may only be used within the transction in " +
+                     "which it was created");
             }
          }            
       };
