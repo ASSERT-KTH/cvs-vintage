@@ -89,10 +89,10 @@ import org.apache.commons.lang.Strings;
 /** 
  * This class represents an Issue.
  *
- * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.161 2002/06/20 18:13:37 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.162 2002/06/24 21:42:18 jon Exp $
  */
 public class Issue 
     extends BaseIssue

@@ -60,9 +60,9 @@ import org.tigris.scarab.services.cache.ScarabCache;
 /** 
  * This class manages TransactionType objects.  
  *
- * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TransactionTypeManager.java,v 1.2 2002/06/20 22:05:12 jon Exp $
+ * @version $Id: TransactionTypeManager.java,v 1.3 2002/06/24 21:43:20 jon Exp $
  */
 public class TransactionTypeManager
     extends BaseTransactionTypeManager

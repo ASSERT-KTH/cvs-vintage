@@ -54,9 +54,9 @@ import org.apache.torque.om.Persistent;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  *
- * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TransactionType.java,v 1.5 2002/06/20 22:05:12 jon Exp $
+ * @version $Id: TransactionType.java,v 1.6 2002/06/24 21:42:43 jon Exp $
  */
 public  class TransactionType 
     extends org.tigris.scarab.om.BaseTransactionType
