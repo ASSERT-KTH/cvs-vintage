@@ -306,16 +306,8 @@ public final class DefaultServlet extends TomcatInternalServlet {
 	response.setContentType(mimeType);
 	response.setContentLength((int)file.length());
 	response.setDateHeader("Last-Modified", file.lastModified());
-  /// XXX can be multiple locale try in order,
-  /// now only the first or default Locale
 
-/*  if (
-  Enumeration enumLoc=request.getLocales();
-
-  while (enumLoc.hasMoreElements()){
-    (Locale)enumLoc.nextElement();
-  }
-*/	FileInputStream in=null;
+	FileInputStream in=null;
 	try {
 	    in = new FileInputStream(file);
 	    serveStream(in, request, response);
