@@ -3090,6 +3090,15 @@ e.printStackTrace();
         return AttributeOptionPeer.getSortedAttributeOptions();
     }
 
+    /**
+     * Returns if the system is configurated to allow anonymous login.
+     *
+     */
+    public boolean isAnonymousLoginAllowed()
+    {
+        return Turbine.getConfiguration().getProperty("scarab.anonymous.username")!=null;
+    }
+
     public Transition getTransition(Integer pk)
     {
         Transition tran = null;

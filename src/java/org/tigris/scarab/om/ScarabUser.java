@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.96 2004/10/14 11:33:16 dep4b Exp $
+ * @version $Id: ScarabUser.java,v 1.97 2004/12/29 00:29:47 jorgeuriarte Exp $
  */
 public interface ScarabUser extends User
 {
@@ -513,4 +513,11 @@ public interface ScarabUser extends User
      */
     public void setShowOtherModulesInIssueTypeList(
         boolean newShowOtherModulesInIssueTypeList);
+
+    /**
+     * Returns true if the user is the one set in scarab.anonymous.username, and
+     * false otherwise.
+     * @return
+     */
+    public boolean isUserAnonymous();
 }

@@ -12,6 +12,7 @@
     <org.apache.turbine.pipeline.DetermineActionValve/>
     <org.tigris.scarab.pipeline.DetermineTargetValve/>
     <org.apache.turbine.pipeline.DefaultSessionTimeoutValve/>
+    <org.tigris.scarab.pipeline.AnonymousLoginValve/>
     <org.apache.turbine.pipeline.DefaultLoginValve/>
     <org.apache.turbine.pipeline.DefaultSessionValidationValve/>
     <!-- This one valve is in addition to the standard pipeline -->

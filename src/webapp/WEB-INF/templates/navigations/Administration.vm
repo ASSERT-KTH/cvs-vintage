@@ -7,7 +7,7 @@
 #set ($allowGAS = $link.isAllowed("admin,GlobalAttributeShow.vm"))
 #set ($allowMAT = $link.isAllowed("admin,ManageArtifactTypes.vm"))
 #set ($allowMM = $link.isAllowed("admin,ManageModules.vm"))
-#set ($allowCP = $link.isAllowed("ChangePassword.vm"))
+#set ($allowCP = $link.isAllowed("ChangePassword.vm")&& $scarabR.User.isUserAnonymous()) 
 #set ($allowUSI = $link.isAllowed("admin,UpdateSearchIndex.vm"))
 
 #if ($allowMUS || $allowAU || $allowMR || $allowAR || $allowGATS || $allowGAS || $allowMAT || $allowMM || $allowA || $allowCP || $allowUSI)

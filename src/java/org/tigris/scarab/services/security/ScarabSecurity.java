@@ -58,7 +58,7 @@ import org.apache.fulcrum.TurbineServices;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.24 2004/11/23 08:32:05 dep4b Exp $
+ * @version $Id: ScarabSecurity.java,v 1.25 2004/12/29 00:29:49 jorgeuriarte Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -183,6 +183,14 @@ public class ScarabSecurity
      */
     public static final String VOTE__MANAGE = 
         getService().getPermissionImpl("Vote__Manage");
+
+    /** 
+     * Specifies that a User can change its password.
+     * This permission is not stored in the database, and not
+     * shown in GUI, but rather is managed by properties file.       
+     */
+    public static final String USER__CHANGE_PASSWORD = 
+        getService().getPermissionImpl("User__Change_Password");
 
 
     private Configuration props;

@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.121 2004/11/14 21:06:54 dep4b Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.122 2004/12/29 00:29:48 jorgeuriarte Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -313,6 +313,11 @@ public class ScarabUserImpl
             String name = (module == null) ? null : module.getName();
             TORQUE_LOG.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
                             name + ") started");
+        }
+    
+        if (perm.equals(ScarabSecurity.USER__CHANGE_PASSWORD) && isUserAnonymous())
+        {
+            return false;
         }
         
         // Cache permission check results internally, so that we do not have
@@ -707,6 +712,12 @@ public class ScarabUserImpl
     public boolean isPasswordExpired()
         throws Exception
     {
+        // Password for anonymous never expires.
+        if (isUserAnonymous())
+        {
+            return false;
+        }
+        
         Integer userid = getUserId();
         if (userid == null)
         {
@@ -721,6 +732,22 @@ public class ScarabUserImpl
         return result.size() == 1 ? true : false;
     }
 
+    /**
+     * Returns true if the user is the one set in scarab.anonymous.username, and
+     * false otherwise.
+     * @return
+     */
+    public boolean isUserAnonymous()
+    {
+        boolean brdo = false;
+        String anonymous = Turbine.getConfiguration().getString("scarab.anonymous.username", null);
+        if (anonymous != null && getUserName().equals(anonymous))
+        {
+            brdo = true;
+        }
+        return brdo;
+    }
+    
     /**
      * Returns integer representing user preference for
      * Which screen to return to after entering an issue.

@@ -40,7 +40,9 @@
  </tr>
 </table>
 </div>
-
+#if ($scarabR.anonymousLoginAllowed)
+  <div>$l10n.format("AnonymousAccess", $link.omitModule().setPage("SelectModule.vm"))</div>
+#end
 <div class="functnbar2">
 <input type="submit" name="eventSubmit_doLogin" value="$l10n.Login" onclick="document.login.eventSubmit_doLogin.disabled=true;document.login.submit()" />
 </div>

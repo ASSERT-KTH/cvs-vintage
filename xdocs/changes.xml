@@ -8,6 +8,9 @@
   <body>
     <release version="b20" date="in dev">
       <action dev="jorgeuriarte" type="add">
+       Based in work by Vladimir Prus, anonymous login is now possible using an ad-hoc user defined in the properties, and assigning it the roles you want it to have. http://www.saxess.de/scarab-wiki/Wiki.jsp?page=ConfiguringAnonymousAccess
+      </action>
+      <action dev="jorgeuriarte" type="add">
         Expanded the workflow functionalities to allow conditions on both requirement of attributes and enabling of state-transitions.
       </action>
       <action dev="epugh" type="add">
