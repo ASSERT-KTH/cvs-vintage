@@ -54,14 +54,22 @@
 
     <issue id="$issue.IdCount">
       <artifact-type>$issue.IssueType.Name</artifact-type>
-      <committed-by>$issue.CreatedBy.UserName</committed-by>
-      #foreach ($attributeValue in $issue.AttributeValues)
-            
-      <issue-attribute>
-        <name>$attributeValue.Attribute.Name</name>
-        <value>$attributeValue.Value</value>
-        <type>$attributeValue.Attribute.AttributeType.Name</type>
-      </issue-attribute>
+      #set ($currentTransaction = -1)
+      #foreach ($activity in $issue.getActivity(true))
+        #if ($currentTransaction == -1)
+          #xmlTransactionHeader($activity.Transaction)
+          #set ($currentTransaction = $activity.TransactionId)
+        #else
+          #if ($currentTransaction != $activity.TransactionId)
+            #xmlTransactionFooter()
+            #xmlTransactionHeader($activity.Transaction)
+            #set ($currentTransaction = $activity.TransactionId)
+          #end
+        #end
+        #xmlTransactionActivity($activity)
+      #end
+      #if ($currentTransaction)
+        #xmlTransactionFooter()
       #end
       #foreach ($depend in $issue.DependsRelatedByObserverId)
             
@@ -91,23 +99,6 @@
         <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
       </attachment>
       #end
-      #set ($currentTransaction = -1)
-      #foreach ($activity in $issue.getActivity(true))
-        #if ($currentTransaction == -1)
-          #xmlTransactionHeader($activity.Transaction)
-          #set ($currentTransaction = $activity.TransactionId)
-        #else
-          #if ($currentTransaction != $activity.TransactionId)
-            #xmlTransactionFooter()
-            #xmlTransactionHeader($activity.Transaction)
-            #set ($currentTransaction = $activity.TransactionId)
-          #end
-        #end
-        #xmlTransactionActivity($activity)
-      #end
-      #if ($currentTransaction)
-        #xmlTransactionFooter()
-      #end
       
     </issue>
 #end
@@ -122,12 +113,12 @@
 #macro ( xmlTransactionActivity $activity )
 
         <activity>
-          <activity-attribute>
+          <attribute>
             <name>$activity.Attribute.Name</name>
             <value>$activity.NewValue</value>
             <old-value>$!activity.OldValue</old-value>
             <type>$activity.Attribute.AttributeType.Name</type>
-          </activity-attribute>
+          </attribute>
           <description>$activity.Description</description>
         </activity>
 #end
