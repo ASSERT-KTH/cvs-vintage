@@ -9,7 +9,7 @@
    <property name="Inbox" accessrights="system" subfolder="true" />
    <filterlist>
     <filter description="new filter" enabled="true">
-     <rules condition="match_all">
+     <rules condition="matchall">
 	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
 	 </rules>
 	 <actionlist>
@@ -17,20 +17,56 @@
 	 </actionlist>
     </filter>
    </filterlist>
-   <folder type="VirtualFolder" uid="19">
+   <folder type="VirtualFolder" uid="110">
     <property name="Recent Messages" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />	
     <filter>
-     <rules condition="match_all">
+     <rules condition="matchall">
 	  <criteria type="Flags" criteria="is" pattern="Recent" />
 	 </rules>
     </filter>
    </folder>
    
-   <folder type="VirtualFolder" uid="20">
+   <folder type="VirtualFolder" uid="111">
     <property name="Subject contains Columba" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
  	<filter>
-	 <rules condition="match_all">
+	 <rules condition="matchall">
 	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="Columba" />
+	 </rules>
+	</filter>
+   </folder>
+   
+   <folder type="VirtualFolder" uid="112">
+    <property name="From Bill Gates" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="matchall">
+	  <criteria type="From" headerfield="From" criteria="contains" pattern="billgates@microsoft.com" />
+	 </rules>
+	</filter>
+   </folder>
+   
+   <folder type="VirtualFolder" uid="113">
+    <property name="Messages bigger than 50KB" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="matchall">
+	  <criteria type="Size" criteria="bigger" pattern="50" />
+	 </rules>
+	</filter>
+   </folder>
+   
+   <folder type="VirtualFolder" uid="114">
+    <property name="Marked as flagged" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="matchall">
+	  <criteria type="Flags" criteria="is" pattern="Flagged" />
+	 </rules>
+	</filter>
+   </folder>
+   
+   <folder type="VirtualFolder" uid="115">
+    <property name="Highest Priority" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="matchall">
+	  <criteria type="Priority" criteria="is" pattern="Highest" />
 	 </rules>
 	</filter>
    </folder>
@@ -65,7 +101,7 @@
   <folder type="VirtualFolder" uid="106">
     <property name="Search Result" accessrights="system" subfolder="true" include_subfolders="true" source_uid="101" />
 	<filter>
-	 <rules condition="match_all">
+	 <rules condition="matchall">
 	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
 	 </rules>
 	</filter>
