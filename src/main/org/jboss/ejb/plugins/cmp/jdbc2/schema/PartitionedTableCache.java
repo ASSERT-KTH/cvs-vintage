@@ -7,15 +7,12 @@
 package org.jboss.ejb.plugins.cmp.jdbc2.schema;
 
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.metadata.MetaData;
-import org.jboss.deployment.DeploymentException;
-import org.w3c.dom.Element;
 
 import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class PartitionedTableCache
@@ -31,30 +28,10 @@ public class PartitionedTableCache
 
    private final TableCache[] partitions;
 
-   public PartitionedTableCache(int initialCapacity, int maxCapacity, int partitionsTotal)
+   public PartitionedTableCache(int minCapacity, int maxCapacity, int partitionsTotal)
    {
-      this.minCapacity = initialCapacity;
+      this.minCapacity = minCapacity;
       this.maxCapacity = maxCapacity;
-
-      minPartitionCapacity = initialCapacity / partitionsTotal + 1;
-      maxPartitionCapacity = maxCapacity / partitionsTotal + 1;
-      partitions = new TableCache[partitionsTotal];
-      for(int i = 0; i < partitions.length; ++i)
-      {
-         partitions[i] = new TableCache(i, minPartitionCapacity, maxPartitionCapacity);
-      }
-   }
-
-   public PartitionedTableCache(Element conf) throws DeploymentException
-   {
-      String str = MetaData.getOptionalChildContent(conf, "min-capacity");
-      minCapacity = (str == null ? 1000 : Integer.parseInt(str));
-
-      str = MetaData.getOptionalChildContent(conf, "max-capacity");
-      maxCapacity = (str == null ? 10000 : Integer.parseInt(str));
-
-      str = MetaData.getOptionalChildContent(conf, "partitions");
-      int partitionsTotal = (str == null ? 10 : Integer.parseInt(str));
 
       minPartitionCapacity = minCapacity / partitionsTotal + 1;
       maxPartitionCapacity = maxCapacity / partitionsTotal + 1;
@@ -62,6 +39,11 @@ public class PartitionedTableCache
       for(int i = 0; i < partitions.length; ++i)
       {
          partitions[i] = new TableCache(i, minPartitionCapacity, maxPartitionCapacity);
+      }
+
+      if(log.isTraceEnabled())
+      {
+         log.trace("min-capacity=" + minCapacity + ", max-capacity=" + maxCapacity + ", partitions=" + partitionsTotal);
       }
    }
 

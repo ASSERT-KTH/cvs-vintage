@@ -49,7 +49,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.14 $</tt>
+ * @version <tt>$Revision: 1.15 $</tt>
  */
 public class EntityTable
    implements Table
@@ -115,17 +115,40 @@ public class EntityTable
 
       // create cache
       final Element cacheConf = containerConf.getContainerCacheConf();
-      final Element batchCommitStrategy;
-      if(cacheConf == null)
+      final Element cachePolicy = cacheConf == null ? null : MetaData.getOptionalChild(cacheConf, "cache-policy-conf");
+
+      int minCapacity;
+      int maxCapacity;
+      if(cachePolicy != null)
       {
-         cache = new PartitionedTableCache(500, 1000, 10);
-         batchCommitStrategy = null;
+         String str = MetaData.getOptionalChildContent(cachePolicy, "min-capacity");
+         minCapacity = (str == null ? 1000 : Integer.parseInt(str));
+         str = MetaData.getOptionalChildContent(cachePolicy, "max-capacity");
+         maxCapacity = (str == null ? 10000 : Integer.parseInt(str));
       }
       else
       {
-         cache = new PartitionedTableCache(cacheConf);
-         batchCommitStrategy = MetaData.getOptionalChild(cacheConf, "batch-commit-strategy");
+         minCapacity = 1000;
+         maxCapacity = 10000;
       }
+
+      final Element otherConf = cacheConf == null ? null : MetaData.getOptionalChild(cacheConf, "cache-policy-conf-other");
+
+      int partitionsTotal;
+      final Element batchCommitStrategy;
+      if(otherConf != null)
+      {
+         String str = MetaData.getOptionalChildContent(otherConf, "partitions");
+         partitionsTotal = (str == null ? 10 : Integer.parseInt(str));
+         batchCommitStrategy = MetaData.getOptionalChild(otherConf, "batch-commit-strategy");
+      }
+      else
+      {
+         partitionsTotal = 10;
+         batchCommitStrategy = null;
+      }
+
+      cache = new PartitionedTableCache(minCapacity, maxCapacity, partitionsTotal);
 
       if(batchCommitStrategy == null)
       {
