@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.78 2004/05/14 01:26:17 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.79 2004/06/07 20:33:45 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -264,6 +264,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -309,6 +310,7 @@
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -351,6 +353,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -396,6 +399,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -440,6 +444,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -484,6 +489,7 @@
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -527,6 +533,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -571,6 +578,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <!-- CMT -->
+        <interceptor transaction="Container">org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -604,6 +612,7 @@
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
         <!-- CMT -->
+        <interceptor transaction="Container">org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -636,6 +645,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <!-- CMT -->
+        <interceptor transaction="Container">org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -681,6 +691,7 @@
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <!-- CMT -->
+        <interceptor transaction="Container">org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor transaction="Container">org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -726,6 +737,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -770,6 +782,7 @@
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
@@ -813,6 +826,7 @@
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+        <interceptor>org.jboss.proxy.ejb.NoTxPropagationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor>org.jboss.ejb.plugins.CallValidationInterceptor</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
