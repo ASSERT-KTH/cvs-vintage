@@ -1,4 +1,8 @@
+<div id="savequery" class="app">
+
 <h2>$page.Title</h2>
+
+<h3>Saved query information</h3>
 
 #set ($query = $scarabR.Query)
 #set ($queryGroup = $intake.Query.mapTo($query))
@@ -6,18 +10,11 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($queryString = $data.Parameters.getString("queryString",""))
 
-<div id="savequery" class="app">
-
 #if (!$queryString.equals(""))
 <form method="post" action="$link.setPage("SaveQuery.vm").setAction("Search")" >
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
-<p>
-Go to the $link.setPage("QueryList.vm").setLabel("Saved query list").
-</p>
-
-<h3>Saved query information</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
