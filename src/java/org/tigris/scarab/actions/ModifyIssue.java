@@ -95,7 +95,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.153 2003/04/09 22:55:30 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.154 2003/04/10 22:35:47 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -283,7 +283,7 @@ public class ModifyIssue extends BaseModifyIssue
         IntakeTool intake = getIntakeTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
 
-        List urls = issue.getAttachments();
+        List urls = issue.getUrls();
         ActivitySet activitySet = null;
         for (int i = 0; i<urls.size(); i++)
         {

@@ -220,7 +220,7 @@ public class IssueManager
         if (om instanceof AttributeValue) 
         {
             AttributeValue castom = (AttributeValue)om;
-            ObjectKey key = castom.getPrimaryKey();
+            Long key = castom.getIssueId();
             try
             {
                 Serializable obj = getInstance(key);
@@ -238,10 +238,9 @@ public class IssueManager
         else if (om instanceof Attachment) 
         {
             Attachment castom = (Attachment)om;
-            ObjectKey key = castom.getPrimaryKey();
             try
             {
-                Serializable obj = getInstance(key);
+                Serializable obj = getInstance(castom.getIssueId());
                 if (obj != null) 
                 {
                     getMethodResult().remove(obj, Issue.GET_URLS);
