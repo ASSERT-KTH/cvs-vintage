@@ -560,6 +560,25 @@ public final class ByteChunk implements Cloneable, Serializable {
 	}
 	return true;
     }
+
+    public int indexOf( String src, int srcOff, int srcLen, int myOff ) {
+	char first=src.charAt( srcOff );
+
+	// Look for first char 
+	int srcEnd=srcOff + srcLen;
+	
+	for( int i=myOff; i< end - srcLen ; i++ ) {
+	    if( buff[i] != first ) continue;
+	    // found first char, now look for a match
+	    int myPos=i+1;
+	    for( int srcPos=srcOff; srcPos< srcEnd; ) {
+		if( buff[myPos++] != src.charAt( srcPos++ ))
+		    break;
+		if( srcPos==srcEnd ) return i; // found it
+	    }
+	}
+	return -1;
+    }
     
     // -------------------- Hash code  --------------------
 
@@ -615,7 +634,7 @@ public final class ByteChunk implements Cloneable, Serializable {
 	return -1;
     }
 
-        /** Find a character, no side effects.
+    /** Find a character, no side effects.
      *  @returns index of char if found, -1 if not
      */
     public static int findChar( byte buf[], int start, int end, char c ) {
