@@ -50,6 +50,7 @@ package org.tigris.scarab.attribute;
 import java.util.List;
 
 import org.apache.turbine.Log;
+import org.apache.torque.TorqueException;
 
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
@@ -60,7 +61,7 @@ import org.tigris.scarab.om.ScarabUserManager;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.16 $ $Date: 2002/03/14 01:13:10 $
+ * @version $Revision: 1.17 $ $Date: 2002/04/05 00:30:13 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -81,8 +82,7 @@ public class UserAttribute extends AttributeValue
         setUserIdOnly(user.getUserId());
     }
 
-    public void setValue(String username)
-  
+    public void setValue(String username)  
     {
         // can't throw an exception, so just log it
         try
@@ -103,9 +103,38 @@ public class UserAttribute extends AttributeValue
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             Log.error(e);
         }
     }
+
+
+    /**
+     * Overrides super method to make sure up-to-date username is provided.
+     */
+    public String getValue()
+    {
+        String value = null;
+        try
+        {
+            if (getUserId() != null) 
+            {
+                ScarabUser user = ScarabUserManager.getInstance(getUserId());
+                value = user.getUserName();
+            }
+            else 
+            {
+                value = super.getValue();
+            }
+        }
+        catch (TorqueException e)
+        {
+            Log.error(e);
+            value="Error. Please see logs.";
+        }
+        return value;
+    }
+    
 
     public void init() throws Exception
     {
