@@ -47,7 +47,7 @@ package org.tigris.scarab.actions.admin;
  */ 
 
 import java.util.List;
-
+import java.util.Iterator;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.55 2003/08/22 18:20:51 venkatesh Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.56 2003/08/25 19:54:49 venkatesh Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -277,44 +277,58 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
+        Module module = null;
+        List rmas = null;
+        boolean success = true;
+
         if (issueType.isSystemDefined())
         {
             scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
-            return false;
+            success = false;
         }
-        if (issueType.getLocked())
+        else if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
-            return false;
+            success = false;
         }
-
-        Module module = scarabR.getCurrentModule();
-        List rmas = module.getRModuleAttributes(issueType, false,"user");
-        if (areThereDupeSequences(rmas, intake, "RModuleAttribute", "Order", 0))
+        else
         {
-            scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
-                l10n.get("UserAttributes").toLowerCase()));
-            return false;
-        }
-        for (int i=0; i < rmas.size(); i++)
-        {
-            // Set properties for module-attribute mapping
-            RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-            Group rmaGroup = intake.get("RModuleAttribute",
-                             rma.getQueryKey(), false);
-            // if attribute gets set to inactive, delete dependencies
-            String newActive = rmaGroup.get("Active").toString();
-            String oldActive = String.valueOf(rma.getActive());
-            if (newActive.equals("false") && oldActive.equals("true"))
+            module = scarabR.getCurrentModule();
+            rmas = module.getRModuleAttributes(issueType, false, "user");
+            if (areThereDupeSequences(rmas, intake, "RModuleAttribute",
+                                                             "Order", 0))
             {
-                WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                              rma.getAttribute(), module, issueType);
+                scarabR.setAlertMessage(
+                    l10n.format("DuplicateSequenceNumbersFound",
+                    l10n.get("UserAttributes").toLowerCase()));
+                success = false;
             }
-            rmaGroup.setProperties(rma);
-            rma.save();
+            else
+            {
+                for (Iterator itr = rmas.iterator(); itr.hasNext(); )
+                {
+                    // Set properties for module-attribute mapping
+                    RModuleAttribute rma = (RModuleAttribute)itr.next();
+                    Group rmaGroup = intake.get("RModuleAttribute",
+                             rma.getQueryKey(), false);
+                    // if attribute gets set to inactive, delete dependencies
+                    boolean newActive = Boolean.valueOf(rmaGroup.get("Active").
+                                                    toString()).booleanValue();
+                    boolean oldActive = rma.getActive();
+                    if (!newActive && oldActive)
+                    {
+                        WorkflowFactory.getInstance().
+                            deleteWorkflowsForAttribute(
+                                      rma.getAttribute(), module, issueType);
+                    }
+                    rmaGroup.setProperties(rma);
+                    rma.save();
+                }
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            }
+
         }
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-        return true;
+        return success;
     }
 
     /**
