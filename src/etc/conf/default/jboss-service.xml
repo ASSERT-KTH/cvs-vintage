@@ -3,12 +3,11 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!--  JBoss Server Configuration        
-<!--  NOTE: THIS COULD BE CALLED "jboss-service.xml"                       -->
+<!--  JBoss Server Configuration                                           -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss.jcml,v 1.62 2001/08/29 22:34:32 mnf999 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.1 2001/08/30 05:19:07 mnf999 Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -31,6 +30,7 @@
 	 we need to list all the archives that the server needs at boot
 	 if the installation is local and the configuration is from file
 	 then there is no need to list the files and it should commented
+-->
 
   <classpath archives="
   	 castor.jar,
@@ -74,9 +74,6 @@
 	 tyrex.jar,
 	 tyrex-tm-plugin.jar,
 	 xalan.jar"/>
-	 
-	 -->
-	 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
   <!-- ==================================================================== -->
