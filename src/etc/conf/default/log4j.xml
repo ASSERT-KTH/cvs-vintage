@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.1 2002/02/22 02:48:23 user57 Exp $ -->
+<!-- $Id: log4j.xml,v 1.2 2002/02/24 10:16:52 user57 Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -136,10 +136,10 @@
      | turns on TRACE level msgs for the org.jboss.ejb.plugins package and its
      | subpackages. This will produce A LOT of logging output.
   <category name="org.jboss.system">
-    <priority value="TRACE" class="org.jboss.logging.TracePriority"/>
+    <priority value="TRACE" class="org.jboss.logging.XPriority"/>
   </category>
   <category name="org.jboss.ejb.plugins">
-    <priority value="TRACE" class="org.jboss.logging.TracePriority"/>
+    <priority value="TRACE" class="org.jboss.logging.XPriority"/>
   </category>
   -->
 
