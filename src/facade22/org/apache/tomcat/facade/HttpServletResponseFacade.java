@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.21 2001/11/08 03:48:02 billbarker Exp $
- * $Revision: 1.21 $
- * $Date: 2001/11/08 03:48:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.22 2001/11/14 02:57:08 larryi Exp $
+ * $Revision: 1.22 $
+ * $Date: 2001/11/14 02:57:08 $
  *
  * ====================================================================
  *
@@ -413,7 +413,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 		return (location);	// Give up
 	    }
 	}
-	return (url.toString());
+	return (url.toExternalForm());
 
     }
 
