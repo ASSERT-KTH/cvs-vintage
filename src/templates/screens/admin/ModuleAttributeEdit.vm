@@ -21,7 +21,6 @@ On this screen, one can modify a module's Attribute information.
 
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
-<input type="hidden" name=$scarabG.Constant.CANCEL_TEMPLATE value="$data.Parameters.getString($scarabG.Constant.CANCEL_TEMPLATE)">
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />
