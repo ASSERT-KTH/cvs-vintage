@@ -1,12 +1,12 @@
-$page.setTitle("Admin Approval")
+$page.setTitle("Approval")
 #set ( $module = $scarabR.CurrentModule )
 
   <div id="div2-6-0" class="app">
-       <h2>approve reject user submitted items</h2>
+       <h3>Approve/Reject User Submitted Items</h3>
 
-<form action="$link.setPage("admin,Approval.vm")" method="get">
+<form action="$link.setPage("Approval.vm")" method="get">
 <input type="hidden" name="action" value="admin.Approval"/>
-<input type="hidden" name="nextTemplate" value="admin,Approval.vm"/>
+<input type="hidden" name="nextTemplate" value="Approval.vm"/>
 
 #if( ($module.UnapprovedQueries.isEmpty()) && ($module.UnapprovedTemplates.isEmpty()) )
   <div class="alert">There are no items to approve.</div>

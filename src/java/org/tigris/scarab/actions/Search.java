@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 // Turbine Stuff 
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
@@ -81,7 +82,7 @@ import org.tigris.scarab.security.ScarabSecurityPull;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.33 2001/09/19 22:55:34 elicia Exp $
+    @version $Id: Search.java,v 1.34 2001/09/30 00:14:26 jon Exp $
 */
 public class Search extends TemplateAction
 {
@@ -359,7 +360,9 @@ public class Search extends TemplateAction
     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
-        setTarget(data, "Start.vm");
+        setTarget(data, Turbine
+                    .getConfiguration()
+                    .getString("template.homepage","Start.vm"));
     }
 
     /**

@@ -53,11 +53,14 @@ import org.apache.turbine.RunData;
 
 import org.apache.fulcrum.security.TurbineSecurity;
 
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.ScarabConstants;
+
 /**
     This class is responsible for Logging a user out of the system.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Logout.java,v 1.7 2001/08/02 07:11:36 jon Exp $
+    @version $Id: Logout.java,v 1.8 2001/09/30 00:14:26 jon Exp $
 */
 public class Logout extends TemplateAction
 {
@@ -66,6 +69,10 @@ public class Logout extends TemplateAction
     */
     public void doLogout( RunData data, TemplateContext context ) throws Exception
     {
+        ScarabRequestTool scarabR = (ScarabRequestTool)
+            context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        scarabR.setCurrentModule(null);
+        data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
         data.setACL(null);
         data.setUser (TurbineSecurity.getAnonymousUser());
         data.save();

@@ -52,6 +52,7 @@ import java.util.Vector;
 import java.util.HashMap;
 
 // Turbine Stuff 
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
@@ -94,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.35 2001/09/28 01:26:58 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.36 2001/09/30 00:14:26 jon Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -681,7 +682,9 @@ public class ModifyIssue extends TemplateAction
     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
-        setTarget(data, "Start.vm");
+        setTarget(data, Turbine
+                    .getConfiguration()
+                    .getString("template.homepage","Start.vm"));
     }
     /**
         calls doCancel()

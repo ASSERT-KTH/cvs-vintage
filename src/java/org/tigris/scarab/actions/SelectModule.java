@@ -47,6 +47,7 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
@@ -58,7 +59,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will allow you to set the selected Module for a user.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: SelectModule.java,v 1.1 2001/09/28 22:41:28 jon Exp $
+    @version $Id: SelectModule.java,v 1.2 2001/09/30 00:14:26 jon Exp $
 */
 public class SelectModule extends TemplateAction
 {
@@ -67,11 +68,28 @@ public class SelectModule extends TemplateAction
     */
     public void doSelect( RunData data, TemplateContext context ) throws Exception
     {
+        // set the next module
+        String newModule = 
+            data.getParameters().getString(ScarabConstants.NEW_MODULE);
+        if (newModule == null)
+        {
+            setTarget(data, "SelectModule.vm");
+            return;
+        }
         data.getParameters().setString(ScarabConstants.CURRENT_MODULE, 
-            data.getParameters().getString(ScarabConstants.NEW_MODULE));
+            newModule);
+
+        // set the next template
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE, 
+            Turbine.getConfiguration()
+                       .getString("template.homepage", "SelectModule.vm") );
+
+        setTarget(data, nextTemplate);
     }
+
     /**
-        does nothing.
+        calls doSelect().
     */
     public void doPerform( RunData data, TemplateContext context ) throws Exception
     {

@@ -137,7 +137,13 @@ public class ScarabRequestTool
     private IssueTemplateInfo templateInfo = null;
 
     /**
-     * A ModuleEntity object for use within the Scarab API.
+     * A ModuleEntity object which represents the current module
+     * selected by the user within a request.
+     */
+    private ModuleEntity currentModule = null;
+
+    /**
+     * A ModuleEntity object
      */
     private ModuleEntity module = null;
 
@@ -595,8 +601,21 @@ try{
      */
     public ModuleEntity getCurrentModule()
     {
-        return getModule(
-            data.getParameters().getString(ScarabConstants.CURRENT_MODULE));
+        if (currentModule == null)
+        {
+            currentModule = getModule(
+                data.getParameters()
+                .getString(ScarabConstants.CURRENT_MODULE));
+        }
+        return currentModule;
+    }
+
+    /**
+     * Sets the current ModuleEntity
+     */
+    public void setCurrentModule(ModuleEntity me)
+    {
+        currentModule = me;
     }
 
     /**

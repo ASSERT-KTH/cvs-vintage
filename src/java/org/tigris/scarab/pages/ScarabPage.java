@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUserImpl;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.12 2001/08/28 02:55:56 jon Exp $
+    @version $Id: ScarabPage.java,v 1.13 2001/09/30 00:14:26 jon Exp $
 */
 public class ScarabPage extends ClassicPipeline
 {
@@ -106,13 +106,14 @@ public class ScarabPage extends ClassicPipeline
             scarabR.setUser(user);
             data.setUser(user);
         }
-          
+/*
         if ( scarabR.getCurrentModule() == null ) 
         {
             // put the module number into the query string
             data.getParameters()
                 .setString(ScarabConstants.CURRENT_MODULE, "5");
         }
+*/
     }
 
     // a temporary fix for losing TemplateInfo !FIXME!

@@ -17,6 +17,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("MoveIssue.vm").addPathInfo("id",1)">Move/Copy Issue?id=1</a></li>
 <li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
 <li><a href="$link.setPage("reports,Step1.vm")">Reports (not working)</a></li>
+<li><a href="$link.setPage("Approval.vm")">Approval.vm</a></li>
 </ul>
 
 <h3>Admin Pages</h3>
@@ -32,9 +33,6 @@ href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
     <a 
 href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a> 
 (not working currently)</li>
-<li>
-    <a href="$link.setPage("admin,Approval.vm")">admin,Approval.vm</a>
-</li>
 <li>
     <a href="$link.setPage("FluxIndex.vm")">Flux</a>
 </li>

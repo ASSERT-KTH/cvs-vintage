@@ -3,6 +3,7 @@
 
 <h3>Module Selection Page</h3>
 
+#if ($currentModule)
 <table border="0">
 <tr>
     <td><b>Current Module Name:</b></td>
@@ -13,11 +14,16 @@
     <td>$currentModule.Description</td>
 </tr>
 </table>
-
+#end
 <br/>
 
 #if ($userModules.size() > 0)
 <form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
+#if ($nextTemplate && $nextTemplate.length() > 0)
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
+#else 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" /> 
+#end
 <select name="newmodule">
 #foreach ($module in $userModules)
  #if ($module.Name.equals($currentModule.Name))
@@ -29,7 +35,7 @@
 #end
 </select>
 <p>
-<input type="submit" name="eventSubmit_doSelect" value="Change Module">
+<input type="submit" name="eventSubmit_doSelect" value="Select Module">
 </p>
 </form>
 #else
