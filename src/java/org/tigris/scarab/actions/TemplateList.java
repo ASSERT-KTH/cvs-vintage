@@ -75,13 +75,14 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
+import org.tigris.scarab.util.ScarabException;
 
 
 /**
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.37 2003/02/01 21:16:56 jon Exp $
+ * @version $Id: TemplateList.java,v 1.38 2003/02/01 21:59:08 jmcnally Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {

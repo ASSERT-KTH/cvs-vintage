@@ -86,7 +86,7 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.3 2003/02/01 21:37:50 jon Exp $
+    @version $Id: ConfigureReport.java,v 1.4 2003/02/01 21:57:09 jmcnally Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -567,7 +567,8 @@ public class ConfigureReport
         }
         else 
         {
-            getScarabRequestTool(context).setAlertMessage(l10n.get("NoHeadingSelected"));
+            getScarabRequestTool(context).setAlertMessage(
+                getLocalizationTool(context).get("NoHeadingSelected"));
         }
     }
 
