@@ -11,7 +11,7 @@
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 
 <div class="functnbar">
-#if (!$issueTypes || !$issueTypes.isEmpty())
+#if ($issueTypes && !$issueTypes.isEmpty())
   <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissueType" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
