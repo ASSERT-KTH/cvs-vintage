@@ -58,7 +58,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.3 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: ActivitySetManager.java,v 1.4 2002/12/20 00:56:38 jon Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager
@@ -128,7 +128,9 @@ public class ActivitySetManager
         activitySet.setTypeId(typeId);
         activitySet.setCreatedBy(user.getUserId());
         activitySet.setCreatedDate(new Date());
-        if (attachment != null)
+        if (attachment != null && 
+            attachment.getData() != null &&
+            attachment.getData().length() > 0)
         {
             activitySet.setAttachment(attachment);
         }
