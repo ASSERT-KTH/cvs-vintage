@@ -156,6 +156,11 @@ public class TableController
 		
 	}
 	
+	public boolean isAscending()
+	{
+		return getHeaderTableModel().getTableModelSorter().getSortingOrder();
+	}
+	
 	
 	
 	public void addTableChangedListener( TableChangeListener l )

@@ -15,7 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.command;
 
-import java.awt.Rectangle;
+import java.awt.Container;
+
+import javax.swing.JScrollPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
@@ -23,6 +25,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
@@ -73,43 +76,66 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 		MailFrameController.tableChanged(ev);
 
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		boolean ascending =
+			((MailFrameController) frameController)
+				.tableController
+				.isAscending();
+		ColumbaLogger.log.debug("ascending=" + ascending);
 
+		Container c =
+			((MailFrameController) frameController)
+				.tableController
+				.getView()
+				.getParent()
+				.getParent();
+
+		
+		JScrollPane scrollPane = (JScrollPane) c;
+		scrollPane.revalidate();
+		if (!ascending)
+			scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
+		else
+			scrollPane.getVerticalScrollBar().setValue(
+				scrollPane.getVerticalScrollBar().getMaximum());
+		
+		scrollPane.repaint();
+		
+		/*
+		JTree tree =
+			((MailFrameController) frameController)
+				.tableController
+				.getView()
+				.getTree();
+
+		if (!ascending)
+			((MailFrameController) frameController)
+				.tableController
+				.getView()
+				.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
+		else
+		{
+			int height = ((MailFrameController) frameController)
+			.tableController
+			.getView().getHeight();
+			
+			((MailFrameController) frameController)
+				.tableController
+				.getView()
+				.scrollRectToVisible(new Rectangle(0, height-1, 0, height-1));
+		}
+		*/
 		boolean enableThreadedView =
 			folder.getFolderItem().getBoolean(
 				"property",
 				"enable_threaded_view",
 				false);
 
-		/*
-		((MailFrameController) frameController)
-			.tableController.getHeaderTableModel().getTableModelThreadedView().toggleView( enableThreadedView );
-			
-			
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.enableThreadedView(enableThreadedView);
-		*/
-
 		((MailFrameController) frameController)
 			.tableController
 			.getView()
 			.clearSelection();
 
-		/*
-		((MailFrameController) frameController)
-			.tableController
-			.getActionListener()
-			.changeMessageActions();
-		*/
-
 		MainInterface.treeModel.nodeChanged(folder);
-
-		//((MailFrameController)frameController).treeController.getView().makeVisible(folder.getSelectionTreePath());
 
 	}
 
@@ -128,7 +154,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 					"property",
 					"automatically_apply_filter",
 					false);
-			if (applyFilter==true) {
+			if (applyFilter == true) {
 				FilterList list = folder.getFilterList();
 
 				worker.setDisplayText(

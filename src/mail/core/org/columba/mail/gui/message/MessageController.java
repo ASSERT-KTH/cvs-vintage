@@ -235,7 +235,8 @@ public class MessageController
 		getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
 
 		getView().getVerticalScrollBar().setValue(0);
-
+		
+		
 	}
 
 	public void showMessageSource(String rawText) throws Exception {

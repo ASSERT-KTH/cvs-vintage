@@ -255,8 +255,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 		bodyPart = null;
 
-		// get RFC822-header
-		header = srcFolder.getMessageHeader(uid, wsc);
+		
 
 		// get attachment structure
 		try
@@ -268,6 +267,9 @@ public class ViewMessageCommand extends FolderCommand {
 			// message doesn't exist anymore
 			return;
 		}
+		
+		//	get RFC822-header
+		header = srcFolder.getMessageHeader(uid, wsc);
 
 		// if this message is signed/encrypted we have to use
 		// GnuPG to extract the decrypted bodypart
