@@ -458,7 +458,7 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT container-invoker-conf (Optimized , RMIObjectPort)>
+<!ELEMENT container-invoker-conf (Optimized , RMIObjectPort, RMIClientSocketFactory?, RMIServerSocketFactory?)>
 
 <!-- 
         This element is only valid if the container invoker is 
@@ -489,6 +489,40 @@ default if metricsEnabled is not explicitly given.
         Used in: container-invoker-conf for JRMPContainerInvoker
 	-->
 <!ELEMENT RMIObjectPort (#PCDATA)>
+
+<!--
+	The RMIClientSocketFactory element indicates the use of a custom
+	socket factory that should be used by RMI objects created by
+	this container. The combination of socket factory type and port
+	must be unique but more than one container can use the same
+	socket factory, port combination.
+
+        Its value must be the fully qualified name of the class that
+	implements the java.rmi.server.RMIClientSocketFactory interface,
+	and the class must be available to the JBoss class loader.
+	If this element is not specified the default VM client socket
+	factory will be used.
+
+        Used in: container-invoker-conf for JRMPContainerInvoker
+	-->
+<!ELEMENT RMIClientSocketFactory (#PCDATA)>
+
+<!--
+	The RMIServerSocketFactory element indicates the use of a custom
+	socket factory that should be used by RMI objects created by
+	this container. The combination of socket factory type and port
+	must be unique but more than one container can use the same
+	socket factory, port combination.
+
+        Its value must be the fully qualified name of the class that
+	implements the java.rmi.server.RMIServerSocketFactory interface,
+	and the class must be available to the JBoss class loader.
+	If this element is not specified the default VM server socket
+	factory will be used.
+
+        Used in: container-invoker-conf for JRMPContainerInvoker
+	-->
+<!ELEMENT RMIServerSocketFactory (#PCDATA)>
 
 <!-- 
       The container-cache-conf element holds dynamic configuration data 
