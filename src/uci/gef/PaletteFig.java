@@ -28,7 +28,7 @@
 // File: PaletteFig.java
 // Classes: PaletteFig
 // Original Author: ics125 spring 1996
-// $Id: PaletteFig.java,v 1.5 1998/04/13 22:48:01 jrobbins Exp $
+// $Id: PaletteFig.java,v 1.6 1998/04/18 01:26:43 jrobbins Exp $
 
 package uci.gef;
 
@@ -40,6 +40,9 @@ import com.sun.java.swing.*;
  *  rounded rectangles, circles, and text. Also a select button is
  *  provided to switch back to ModeSelect.
  *
+ *  Needs-more-work: sticky mode buttons are not supported right
+ *  now. They should be in the next release.
+ *
  * @see ModeSelect
  * @see ModeCreateFigLine
  * @see ModeCreateFigRect
@@ -50,25 +53,16 @@ import com.sun.java.swing.*;
 
 public class PaletteFig extends uci.ui.ToolBar {
 
-  
-  
-  /** Construct a new PaletteFig and set the name of the Frame to
-   * "Shape" (if applicable). */
+  public PaletteFig() { defineButtons(); }
 
-  public PaletteFig() {
-    defineButtons();
-  }
-
+  
   /** Defined the buttons in this palette. Each of these buttons is
-   * associated with an CmdSetMode, and that Cmd sets the next
-   * global Mode to somethign appropriate. All the buttons can stick
-   * except 'select'. If the user unclicks the sticky checkbox, the
-   * 'select' button is automatically pressed. */
+   *  associated with an CmdSetMode, and that Cmd sets the next
+   *  global Mode to somethign appropriate. All the buttons can stick
+   *  except 'select'. If the user unclicks the sticky checkbox, the
+   *  'select' button is automatically pressed. */
   public void defineButtons() {
     add(new CmdSetMode(ModeSelect.class, "Select"));
-    addSeparator();
-    add(new CmdCreateNode(uci.gef.demo.SampleNode.class, "Node One"));
-    add(new CmdCreateNode(uci.gef.demo.SampleNode2.class, "Node Two"));
     addSeparator();
     add(new CmdSetMode(ModeCreateFigCircle.class, "Circle"));
     add(new CmdSetMode(ModeCreateFigRect.class, "Rectangle"));

@@ -28,7 +28,7 @@
 // File: Enum.java
 // Classes: Enum
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Enum.java,v 1.2 1998/04/14 00:41:31 jrobbins Exp $
+// $Id: Enum.java,v 1.3 1998/04/18 01:27:49 jrobbins Exp $
 
 package uci.util;
 

@@ -28,7 +28,7 @@
 // File: CmdAdjustGrid.java
 // Classes: CmdAdjustGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustGrid.java,v 1.3 1998/04/13 22:46:58 jrobbins Exp $
+// $Id: CmdAdjustGrid.java,v 1.4 1998/04/18 01:25:50 jrobbins Exp $
 
 package uci.gef;
 

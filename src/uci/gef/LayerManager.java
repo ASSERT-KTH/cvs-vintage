@@ -28,7 +28,7 @@
 // File: LayerManager.java
 // Classes: LayerManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerManager.java,v 1.2 1998/04/13 22:47:44 jrobbins Exp $
+// $Id: LayerManager.java,v 1.3 1998/04/18 01:26:27 jrobbins Exp $
 
 package uci.gef;
 

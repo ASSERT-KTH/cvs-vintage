@@ -24,11 +24,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 // ENHANCEMENTS, OR MODIFICATIONS.
 
-
 // File: ArrowHeadNone.java
 // Classes: ArrowHeadNone
-// Original Author: Adam Bonner
-// $Id: ArrowHeadNone.java,v 1.3 1998/04/13 22:46:56 jrobbins Exp $
+// Original Author: abonner@ics.uci.ed
+// $Id: ArrowHeadNone.java,v 1.4 1998/04/18 01:25:48 jrobbins Exp $
 
 package uci.gef;
 
@@ -37,8 +36,8 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-public class ArrowHeadNone extends ArrowHead
-{
-	public void paint(Graphics g, Point start, Point end) {
-	}
+/** Draws no arrow head at the end of a FigEdge. */
+public class ArrowHeadNone extends ArrowHead {
+  public void paint(Graphics g, Point start, Point end) {
+  }
 }

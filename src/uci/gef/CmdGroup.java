@@ -28,7 +28,7 @@
 // File: CmdGroup.java
 // Classes: CmdGroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdGroup.java,v 1.3 1998/04/13 22:47:04 jrobbins Exp $
+// $Id: CmdGroup.java,v 1.4 1998/04/18 01:25:56 jrobbins Exp $
 
 package uci.gef;
 

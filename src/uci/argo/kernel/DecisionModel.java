@@ -19,7 +19,7 @@
 // File: DecisionModel.java
 // Classes: DecisionModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DecisionModel.java,v 1.4 1998/04/14 00:39:59 jrobbins Exp $
+// $Id: DecisionModel.java,v 1.5 1998/04/18 01:25:39 jrobbins Exp $
 
 package uci.argo.kernel;
 

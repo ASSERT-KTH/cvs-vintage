@@ -27,7 +27,7 @@
 // File: CmdAlign.java
 // Classes: CmdAlign
 // Original Author: ics125 spring 1996
-// $Id: CmdAlign.java,v 1.3 1998/04/13 22:47:00 jrobbins Exp $
+// $Id: CmdAlign.java,v 1.4 1998/04/18 01:25:52 jrobbins Exp $
 
 package uci.gef;
 

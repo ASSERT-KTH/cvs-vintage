@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.6 1998/04/13 22:47:31 jrobbins Exp $
+// $Id: FigNode.java,v 1.7 1998/04/18 01:26:18 jrobbins Exp $
 
 package uci.gef;
 

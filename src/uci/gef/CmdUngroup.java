@@ -28,7 +28,7 @@
 // File: CmdUngroup.java
 // Classes: CmdUngroup
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUngroup.java,v 1.3 1998/04/13 22:47:17 jrobbins Exp $
+// $Id: CmdUngroup.java,v 1.4 1998/04/18 01:26:08 jrobbins Exp $
 
 package uci.gef;
 

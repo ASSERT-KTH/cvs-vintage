@@ -19,7 +19,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.1 1998/04/14 01:45:26 jrobbins Exp $
+// $Id: CrConsiderSingleton.java,v 1.2 1998/04/18 01:27:43 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 

@@ -28,7 +28,7 @@
 // File: CmdScroll.java
 // Classes: CmdSroll
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdScroll.java,v 1.3 1998/04/13 22:47:11 jrobbins Exp $
+// $Id: CmdScroll.java,v 1.4 1998/04/18 01:26:03 jrobbins Exp $
 
 package uci.gef;
 

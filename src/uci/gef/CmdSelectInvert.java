@@ -28,7 +28,7 @@
 // File: CmdSelectInvert.java
 // Classes: CmdSelectInvert
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectInvert.java,v 1.3 1998/04/13 22:47:12 jrobbins Exp $
+// $Id: CmdSelectInvert.java,v 1.4 1998/04/18 01:26:04 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.6 1998/04/13 22:48:32 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.7 1998/04/18 01:26:52 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -54,7 +54,7 @@ public class BasicApplication {
 
   public BasicApplication() {
     _jgf = new JGraphFrame();
-    //_jgf.setToolBar(new SamplePalette()); //needs-more-work
+    _jgf.setToolBar(new SamplePalette()); //needs-more-work
 
     // make the delete key remove elements from the underlying GraphModel
     _jgf.getGraph().bindKey(new CmdDispose(), KeyEvent.VK_DELETE, 0);

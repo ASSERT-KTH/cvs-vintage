@@ -27,7 +27,7 @@
 // File: ModeCreateFigPoly.java
 // Classes: ModeCreateFigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigPoly.java,v 1.4 1998/04/13 22:47:52 jrobbins Exp $
+// $Id: ModeCreateFigPoly.java,v 1.5 1998/04/18 01:26:34 jrobbins Exp $
 
 package uci.gef;
 

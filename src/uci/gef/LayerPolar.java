@@ -27,7 +27,7 @@
 // File: LayerPolar.java
 // Classes: LayerPolar
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPolar.java,v 1.4 1998/04/13 22:47:46 jrobbins Exp $
+// $Id: LayerPolar.java,v 1.5 1998/04/18 01:26:29 jrobbins Exp $
 
 package uci.gef;
 
@@ -97,6 +97,9 @@ public class LayerPolar extends Layer {
   public Color lineColor() { return _lineColor; }
   public void bgColor(Color c) { _bgColor = c; }
   public Color bgColor() { return _bgColor; }
+
+  public Vector getContents() { return null; }
+  public Fig presentationFor(Object obj) { return null; }
 
   ////////////////////////////////////////////////////////////////
   // Painting methods

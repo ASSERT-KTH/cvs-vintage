@@ -28,7 +28,7 @@
 // File: FigRect.java
 // Classes: FigRect
 // Original Author: ics125 spring 1996
-// $Id: FigRect.java,v 1.3 1998/04/13 22:47:34 jrobbins Exp $
+// $Id: FigRect.java,v 1.4 1998/04/18 01:26:20 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.5 1998/04/13 22:47:42 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.6 1998/04/18 01:26:26 jrobbins Exp $
 
 package uci.gef;
 
@@ -130,7 +130,7 @@ public class LayerDiagram extends Layer {
   public Enumeration elements() { return _contents.elements(); }
 
   /** Reply the contents of this layer. Do I really want to do this? */
-  public Vector contents() { return _contents; }
+  public Vector getContents() { return _contents; }
 
   /** Reply the 'top' Fig under the given (mouse)
    *  coordinates. Needs-More-Work: For now, just do a linear search.

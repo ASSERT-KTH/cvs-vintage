@@ -27,7 +27,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.5 1998/04/13 22:47:35 jrobbins Exp $
+// $Id: FigText.java,v 1.6 1998/04/18 01:26:20 jrobbins Exp $
 
 package uci.gef;
 

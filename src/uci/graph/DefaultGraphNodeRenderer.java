@@ -27,7 +27,7 @@
 // File: DefaultGraphNodeRenderer.java
 // Classes: DefaultGraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphNodeRenderer.java,v 1.5 1998/04/14 00:40:14 jrobbins Exp $
+// $Id: DefaultGraphNodeRenderer.java,v 1.6 1998/04/18 01:27:06 jrobbins Exp $
 
 package uci.graph;
 
@@ -36,8 +36,10 @@ import uci.gef.FigNode;
 import uci.gef.Layer;
 
 /** An interface for FigNode factories. Similiar in concept to the
- *  Swing class TreeCellRenderer.
+ *  Swing class TreeCellRenderer.  This Default class asks the NetNode
+ *  to make its own FigNode.
  *
+ * @see uci.gef.NetNode#presentationFor 
  * @see uci.graph.demo.WordNodeRenderer */
 
 public class DefaultGraphNodeRenderer

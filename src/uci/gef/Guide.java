@@ -28,7 +28,7 @@
 // File: Guide.java
 // Classes: Guide
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Guide.java,v 1.2 1998/04/13 22:47:37 jrobbins Exp $
+// $Id: Guide.java,v 1.3 1998/04/18 01:26:22 jrobbins Exp $
 
 package uci.gef;
 
@@ -42,7 +42,6 @@ import java.awt.*;
  * @see GuideGrid */
 
 public abstract class Guide implements java.io.Serializable {
-  //implements GEF {
 
   ////////////////////////////////////////////////////////////////
   // geometric constraints

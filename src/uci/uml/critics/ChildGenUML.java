@@ -1,7 +1,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.2 1998/04/14 00:40:42 jrobbins Exp $
+// $Id: ChildGenUML.java,v 1.3 1998/04/18 01:27:24 jrobbins Exp $
 
 package uci.uml.critics;
 

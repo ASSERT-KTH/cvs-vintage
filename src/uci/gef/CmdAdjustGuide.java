@@ -28,7 +28,7 @@
 // File: CmdAdjustGuide.java
 // Classes: CmdAdjustGuide
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustGuide.java,v 1.3 1998/04/13 22:46:59 jrobbins Exp $
+// $Id: CmdAdjustGuide.java,v 1.4 1998/04/18 01:25:50 jrobbins Exp $
 
 package uci.gef;
 

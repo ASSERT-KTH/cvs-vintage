@@ -28,7 +28,7 @@
 // File: CmdInsertPoint.java
 // Classes: CmdInsertPoint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdInsertPoint.java,v 1.3 1998/04/13 22:47:05 jrobbins Exp $
+// $Id: CmdInsertPoint.java,v 1.4 1998/04/18 01:25:57 jrobbins Exp $
 
 package uci.gef;
 

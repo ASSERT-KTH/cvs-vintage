@@ -19,7 +19,7 @@
 // File: PathConvPercent.java
 // Classes: PathConvPercent
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercent.java,v 1.4 1998/04/13 22:30:28 abonner Exp $
+// $Id: PathConvPercent.java,v 1.5 1998/04/18 01:26:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -46,7 +46,7 @@ public class PathConvPercent extends PathConv
 
     Point linePoint = pathFigure.pointAlongPerimeter(pointToGet);
 
-    //System.out.println("lP=" + linePoint + " ptG=" + pointToGet + " figLen=" + figLength);
+    System.out.println("lP=" + linePoint + " ptG=" + pointToGet + " figLen=" + figLength);
 
     Point offsetAmount = getOffsetAmount(pathFigure.pointAlongPerimeter(pointToGet + 5), pathFigure.pointAlongPerimeter(pointToGet - 5), offset);
 

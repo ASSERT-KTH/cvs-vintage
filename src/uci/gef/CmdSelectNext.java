@@ -28,7 +28,7 @@
 // File: CmdSelectNext.java
 // Classes: CmdSelectNext
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSelectNext.java,v 1.3 1998/04/13 22:47:13 jrobbins Exp $
+// $Id: CmdSelectNext.java,v 1.4 1998/04/18 01:26:05 jrobbins Exp $
 
 package uci.gef;
 

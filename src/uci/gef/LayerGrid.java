@@ -28,7 +28,7 @@
 // File: LayerGrid.java
 // Classes: LayerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerGrid.java,v 1.4 1998/04/13 22:47:43 jrobbins Exp $
+// $Id: LayerGrid.java,v 1.5 1998/04/18 01:26:26 jrobbins Exp $
 
 package uci.gef;
 
@@ -105,6 +105,13 @@ public class LayerGrid extends Layer {
     _color = fore; _bgColor = back; _spacing = spacing; _paintLines = lines;
   }
 
+  ////////////////////////////////////////////////////////////////
+  // accessors
+
+  public Vector getContents() { return null; }
+  public Fig presentationFor(Object obj) { return null; }
+
+  
   ////////////////////////////////////////////////////////////////
   // painting methods
 

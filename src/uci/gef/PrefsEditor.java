@@ -28,7 +28,7 @@
 // File: PrefsEditor.java
 // Classes: PrefsEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PrefsEditor.java,v 1.2 1998/04/13 22:48:04 jrobbins Exp $
+// $Id: PrefsEditor.java,v 1.3 1998/04/18 01:26:46 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.7 1998/04/13 22:47:24 jrobbins Exp $
+// $Id: FigEdge.java,v 1.8 1998/04/18 01:26:14 jrobbins Exp $
 
 package uci.gef;
 

@@ -29,7 +29,7 @@
 // File: FigInk.java
 // Classes: FigInk
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigInk.java,v 1.2 1998/04/13 22:47:29 jrobbins Exp $
+// $Id: FigInk.java,v 1.3 1998/04/18 01:26:17 jrobbins Exp $
 
 package uci.gef;
 

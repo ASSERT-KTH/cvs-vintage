@@ -28,7 +28,7 @@
 // File: CmdUseRotate.java
 // Classes: CmdUseRotate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUseRotate.java,v 1.3 1998/04/13 22:47:19 jrobbins Exp $
+// $Id: CmdUseRotate.java,v 1.4 1998/04/18 01:26:10 jrobbins Exp $
 
 package uci.gef;
 

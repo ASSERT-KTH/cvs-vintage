@@ -29,7 +29,7 @@
 // File: FigImage.java
 // Classes: FigImage
 // Original Author: brw@tusc.com.au
-// $Id: FigImage.java,v 1.2 1998/04/13 22:47:27 jrobbins Exp $
+// $Id: FigImage.java,v 1.3 1998/04/18 01:26:16 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: FunctorIdentity.java
 // Classes: FunctorIdentity
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FunctorIdentity.java,v 1.2 1998/04/14 00:41:37 jrobbins Exp $
+// $Id: FunctorIdentity.java,v 1.3 1998/04/18 01:27:52 jrobbins Exp $
 
 package uci.util;
 

@@ -28,7 +28,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphSupport.java,v 1.3 1998/04/14 00:40:19 jrobbins Exp $
+// $Id: MutableGraphSupport.java,v 1.4 1998/04/18 01:27:12 jrobbins Exp $
 
 package uci.graph;
 
@@ -38,10 +38,11 @@ import uci.gef.NetNode;
 import uci.gef.NetPort;
 import uci.gef.NetEdge;
 
-/** This interface provides a facade to a net-level
- *  representation. Similiar in concept to the Swing class TreeModel.
+/** An abstract class that makes it easier to implement your own
+ *  version of MutableGraphModel. This class basically includes the
+ *  code for event notifications, so that you don't have to write
+ *  that.  It also provides a few utility methods.
  *
- * @see 
  * @see AdjacencyMatrixGraphModel
  * @see uci.graph.demo.WordTransforms */
 

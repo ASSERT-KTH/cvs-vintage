@@ -28,7 +28,7 @@
 // File: LayerPerspective.java
 // Classes: LayerPerspective
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPerspective.java,v 1.5 1998/04/13 22:47:45 jrobbins Exp $
+// $Id: LayerPerspective.java,v 1.6 1998/04/18 01:26:29 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: CmdUseReshape.java
 // Classes: CmdUseReshape
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdUseReshape.java,v 1.3 1998/04/13 22:47:17 jrobbins Exp $
+// $Id: CmdUseReshape.java,v 1.4 1998/04/18 01:26:09 jrobbins Exp $
 
 package uci.gef;
 

@@ -29,7 +29,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.6 1998/04/13 22:47:32 jrobbins Exp $
+// $Id: FigPoly.java,v 1.7 1998/04/18 01:26:19 jrobbins Exp $
 
 package uci.gef;
 

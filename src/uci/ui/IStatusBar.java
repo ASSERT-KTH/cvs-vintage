@@ -28,7 +28,7 @@
 // File: IStatusBar.java
 // Interfaces: IStatusBar
 // Original Author: jrobbins@ics.uci.edu
-// $Id: IStatusBar.java,v 1.2 1998/04/14 00:40:20 jrobbins Exp $
+// $Id: IStatusBar.java,v 1.3 1998/04/18 01:27:13 jrobbins Exp $
 
 package uci.ui;
 

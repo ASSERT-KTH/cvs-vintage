@@ -28,7 +28,7 @@
 // File: Functor.java
 // Interfaces: Functor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Functor.java,v 1.2 1998/04/14 00:41:36 jrobbins Exp $
+// $Id: Functor.java,v 1.3 1998/04/18 01:27:51 jrobbins Exp $
 
 package uci.util;
 

@@ -28,7 +28,7 @@
 // File: CmdSequence.java
 // Classes: CmdSequence
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSequence.java,v 1.3 1998/04/13 22:47:13 jrobbins Exp $
+// $Id: CmdSequence.java,v 1.4 1998/04/18 01:26:05 jrobbins Exp $
 
 package uci.gef;
 

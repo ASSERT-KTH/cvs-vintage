@@ -28,7 +28,7 @@
 // File: Set.java
 // Classes: Set
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Set.java,v 1.2 1998/04/14 00:41:42 jrobbins Exp $
+// $Id: Set.java,v 1.3 1998/04/18 01:27:54 jrobbins Exp $
 
 package uci.util;
 

@@ -28,7 +28,7 @@
 // File: ExecuteCmdWindow.java
 // Classes: ExecuteCmdWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ExecuteCmdWindow.java,v 1.2 1998/04/13 22:47:22 jrobbins Exp $
+// $Id: ExecuteCmdWindow.java,v 1.3 1998/04/18 01:26:12 jrobbins Exp $
 
 package uci.gef;
 

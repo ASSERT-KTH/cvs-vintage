@@ -28,7 +28,7 @@
 // File: FlexibleApplet.java
 // Classes: FlexibleApplet
 // Original Author: ics125b spring 1996
-// $Id: FlexibleApplet.java,v 1.5 1998/04/13 22:48:35 jrobbins Exp $
+// $Id: FlexibleApplet.java,v 1.6 1998/04/18 01:26:55 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -135,9 +135,6 @@ public class FlexibleApplet extends Applet {
 
      if (_spawnFrame) {
        System.out.println("spawning frame");
-//        JGraphFrame jgf = new JGraphFrame(gm);
-//        jgf.setToolBar(palette);
-//        jgf.show();
        JFrame f = new JFrame();
        f.getContentPane().setLayout(new BorderLayout());
        f.getContentPane().add(palette, BorderLayout.NORTH);
@@ -173,7 +170,7 @@ public class FlexibleApplet extends Applet {
     Cmd.register(new CmdDelete());
     Cmd.register(new CmdSpawn());
     Cmd.register(new CmdAdjustGrid());
-    Cmd.register(new CmdEditNode());
+    Cmd.register(new CmdShowProperties());
     Cmd.register(new CmdCreateNode(uci.gef.demo.SampleNode.class,
 				   "Sample Node"));
     Cmd.register(new CmdExit());
@@ -197,7 +194,7 @@ public class FlexibleApplet extends Applet {
       "FlexibleApplet a very simple demonstration of how GEF can \n" +
       "be used. " + "\n\n" +
       "Author: Jason Robbins\n" +
-      "Copyright (c) 1995, 1996 Regents of the University of California.\n"+
+      "Copyright (c) 1996-1998 Regents of the University of California.\n"+
       "All rights reserved.\n\n";
   }
 

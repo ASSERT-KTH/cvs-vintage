@@ -28,7 +28,7 @@
 // File: EquipmentPalette.java
 // Classes: EquipmentPalette
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EquipmentPalette.java,v 1.4 1998/04/13 22:48:34 jrobbins Exp $
+// $Id: EquipmentPalette.java,v 1.5 1998/04/18 01:26:55 jrobbins Exp $
 
 package uci.gef.demo;
 

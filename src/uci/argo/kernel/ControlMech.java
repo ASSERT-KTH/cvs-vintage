@@ -19,7 +19,7 @@
 // File: ControlMech.java
 // Classes: ControlMech EnabledCM NotHushedCM CompositeCM
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ControlMech.java,v 1.4 1998/04/14 00:39:57 jrobbins Exp $
+// $Id: ControlMech.java,v 1.5 1998/04/18 01:25:38 jrobbins Exp $
 
 // TO DO: Do all these classes need to be in their own files? public?
 

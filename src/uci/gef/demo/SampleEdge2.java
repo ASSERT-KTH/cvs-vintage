@@ -28,17 +28,13 @@
 // File: SampleEdge2.java
 // Classes: SampleEdge2
 // Original Author: ics125b spring 1996
-// $Id: SampleEdge2.java,v 1.2 1998/04/13 22:48:40 jrobbins Exp $
+// $Id: SampleEdge2.java,v 1.3 1998/04/18 01:27:00 jrobbins Exp $
 
 package uci.gef.demo;
 
 import uci.gef.*;
 
-/** A sample NetEdge subclass for use in the Example application. There
- * are no real details here yet. If I was to expand this Example more
- * the Edge could have its own attributes, e.g. bandwidth... and it
- * could have its own subclasses of FigEdge to make it look a
- * certain way. */
+/** A sample NetEdge subclass for use in the Example application. */
 
 public class SampleEdge2 extends NetEdge {
   /** Construct a new SampleEdge2. */

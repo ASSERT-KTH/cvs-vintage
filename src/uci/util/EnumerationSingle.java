@@ -28,7 +28,7 @@
 // File: EnumerationSingle.java
 // Classes: EnumerationSingle
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationSingle.java,v 1.2 1998/04/14 00:41:35 jrobbins Exp $
+// $Id: EnumerationSingle.java,v 1.3 1998/04/18 01:27:51 jrobbins Exp $
 
 package uci.util;
 

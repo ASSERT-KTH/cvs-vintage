@@ -27,7 +27,7 @@
 // File: GraphEvent.java
 // Interfaces: GraphEvent
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphEvent.java,v 1.2 1998/04/14 00:40:17 jrobbins Exp $
+// $Id: GraphEvent.java,v 1.3 1998/04/18 01:27:08 jrobbins Exp $
 
 package uci.graph;
 

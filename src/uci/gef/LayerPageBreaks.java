@@ -28,7 +28,7 @@
 // File: LayerPageBreaks.java
 // Classes: LayerPageBreaks
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPageBreaks.java,v 1.2 1998/04/13 22:47:44 jrobbins Exp $
+// $Id: LayerPageBreaks.java,v 1.3 1998/04/18 01:26:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -64,6 +64,9 @@ public class LayerPageBreaks extends Layer {
 
   /** Set the size of the page in pixels. */
   public void setPageSize(Dimension d) { _pageSize = d; }
+
+  public Vector getContents() { return null; }
+  public Fig presentationFor(Object obj) { return null; }
 
   ////////////////////////////////////////////////////////////////
   // painting methods

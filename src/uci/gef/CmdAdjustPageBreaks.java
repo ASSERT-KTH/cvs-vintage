@@ -28,7 +28,7 @@
 // File: CmdAdjustPageBreaks.java
 // Classes: CmdAdjustPageBreaks
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdAdjustPageBreaks.java,v 1.3 1998/04/13 22:46:59 jrobbins Exp $
+// $Id: CmdAdjustPageBreaks.java,v 1.4 1998/04/18 01:25:51 jrobbins Exp $
 
 package uci.gef;
 

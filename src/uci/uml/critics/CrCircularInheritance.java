@@ -19,7 +19,7 @@
 // File: CrCircularInheritance.java.java
 // Classes: CrCircularInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.1 1998/04/14 00:40:51 jrobbins Exp $
+// $Id: CrCircularInheritance.java,v 1.2 1998/04/18 01:27:26 jrobbins Exp $
 
 package uci.uml.critics;
 

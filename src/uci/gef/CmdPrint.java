@@ -28,7 +28,7 @@
 // File: CmdPrint.java
 // Classes: CmdPrint
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdPrint.java,v 1.3 1998/04/13 22:47:08 jrobbins Exp $
+// $Id: CmdPrint.java,v 1.4 1998/04/18 01:26:00 jrobbins Exp $
 
 package uci.gef;
 

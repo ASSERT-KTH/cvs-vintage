@@ -19,7 +19,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.4 1998/04/14 00:39:58 jrobbins Exp $
+// $Id: Critic.java,v 1.5 1998/04/18 01:25:39 jrobbins Exp $
 
 package uci.argo.kernel;
 

@@ -27,7 +27,7 @@
 // File: CmdDelete.java
 // Classes: CmdDelete
 // Original Author: ics125 spring 1996
-// $Id: CmdDelete.java,v 1.3 1998/04/13 22:47:01 jrobbins Exp $
+// $Id: CmdDelete.java,v 1.4 1998/04/18 01:25:54 jrobbins Exp $
 
 package uci.gef;
 

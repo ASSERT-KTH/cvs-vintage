@@ -19,7 +19,7 @@
 // File: Poster.java
 // Classes: Poster
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Poster.java,v 1.4 1998/04/14 00:40:05 jrobbins Exp $
+// $Id: Poster.java,v 1.5 1998/04/18 01:25:43 jrobbins Exp $
 
 package uci.argo.kernel;
 

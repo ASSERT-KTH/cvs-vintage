@@ -28,7 +28,7 @@
 // File: NodeWall.java
 // Classes: NodeWall
 // Original Author: ics125b spring 1996
-// $Id: NodeWall.java,v 1.3 1998/04/13 22:48:37 jrobbins Exp $
+// $Id: NodeWall.java,v 1.4 1998/04/18 01:26:57 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -37,9 +37,11 @@ import java.io.*;
 import java.util.*;
 import uci.gef.*;
 
-/** An example subclass of NetNode for use in the Example application.
+/** An example subclass of NetNode for use in the EquipmentApplet
+ *  demo. This class resents a wall outlet that can power computers
+ *  and printers. 
  *
- * @see Example */
+ * @see EquipmentApplet */
 public class NodeWall extends NetNode implements Serializable {
 
   ////////////////////////////////////////////////////////////////
@@ -47,17 +49,7 @@ public class NodeWall extends NetNode implements Serializable {
 
   PortPower powerPort1, powerPort2;
   
-   /** Initialize a new NodeWall from the given default node and
-    *  application specific model. <p>
-    *
-    *  Needs-More-Work: for now we construct the FigNode
-    *  programatically, but eventually we will store it in a class
-    *  variable and just refer to it, or copy it(?). That way the user
-    *  can edit the FigNode(s) stored in the class variable and
-    *  have those changes shown for all existing nodes, or for all
-    *  future nodes. Maybe I should think about doing virtual
-    *  copies?<p> */
-
+   /** Initialize a new NodeWall. */
   public void initialize(Hashtable args) {
     addPort(powerPort1 = new PortPower(this, PortPower.SOCKET));
     addPort(powerPort2 = new PortPower(this, PortPower.SOCKET));

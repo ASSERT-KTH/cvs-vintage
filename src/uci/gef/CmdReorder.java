@@ -28,7 +28,7 @@
 // File: CmdReorder.java
 // Classes: CmdReorder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdReorder.java,v 1.3 1998/04/13 22:47:09 jrobbins Exp $
+// $Id: CmdReorder.java,v 1.4 1998/04/18 01:26:01 jrobbins Exp $
 
 package uci.gef;
 

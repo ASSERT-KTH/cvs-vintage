@@ -27,7 +27,7 @@
 // File: ModeCreateFigInk.java
 // Classes: ModeCreateFigInk
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateFigInk.java,v 1.4 1998/04/13 22:47:50 jrobbins Exp $
+// $Id: ModeCreateFigInk.java,v 1.5 1998/04/18 01:26:33 jrobbins Exp $
 
 package uci.gef;
 

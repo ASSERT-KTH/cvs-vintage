@@ -27,7 +27,7 @@
 // File: PredFigInRect.java
 // Classes: PredFigInRect
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PredFigInRect.java,v 1.2 1998/04/13 22:48:02 jrobbins Exp $
+// $Id: PredFigInRect.java,v 1.3 1998/04/18 01:26:44 jrobbins Exp $
 
 package uci.gef;
 

@@ -27,7 +27,7 @@
 // File: ModeCreateEdge.java
 // Classes: ModeCreateEdge
 // Original Author: ics125 spring 1996
-// $Id: ModeCreateEdge.java,v 1.1 1998/04/13 22:47:49 jrobbins Exp $
+// $Id: ModeCreateEdge.java,v 1.2 1998/04/18 01:26:31 jrobbins Exp $
 
 package uci.gef;
 

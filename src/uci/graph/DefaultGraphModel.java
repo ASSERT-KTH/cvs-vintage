@@ -27,7 +27,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphModel.java,v 1.5 1998/04/14 00:40:12 jrobbins Exp $
+// $Id: DefaultGraphModel.java,v 1.6 1998/04/18 01:27:06 jrobbins Exp $
 
 package uci.graph;
 
@@ -38,9 +38,15 @@ import uci.gef.NetPort;
 import uci.gef.NetEdge;
 
 /** This interface provides a facade to a net-level
- *  representation. Similiar in concept to the Swing class TreeModel.
+ *  representation. Similiar in concept to the Swing class
+ *  TreeModel. This implementation of GraphModel uses the GEF classes
+ *  NetList, NetNode, NetPort, and NetEdge.  If you implement your own
+ *  GraphModel, you can use your own application-specific classes.
  *
- * @see 
+ * @see uci.gef.NetList
+ * @see uci.gef.NetNode
+ * @see uci.gef.NetPort
+ * @see uci.gef.NetEdge
  * @see AdjacencyMatrixGraphModel
  * @see uci.graph.demo.WordTransforms */
 

@@ -28,7 +28,7 @@
 // File: Predicate.java
 // Classes: Predicate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Predicate.java,v 1.2 1998/04/14 00:41:39 jrobbins Exp $
+// $Id: Predicate.java,v 1.3 1998/04/18 01:27:53 jrobbins Exp $
 
 package uci.util;
 

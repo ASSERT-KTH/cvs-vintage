@@ -28,7 +28,7 @@
 // File: CmdNull.java
 // Classes: CmdNull
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdNull.java,v 1.3 1998/04/13 22:47:06 jrobbins Exp $
+// $Id: CmdNull.java,v 1.4 1998/04/18 01:25:58 jrobbins Exp $
 
 package uci.gef;
 

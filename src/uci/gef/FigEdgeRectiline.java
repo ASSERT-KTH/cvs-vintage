@@ -27,7 +27,7 @@
 // File: FigEdgeRectiline.java
 // Classes: FigEdgeRectiline
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdgeRectiline.java,v 1.3 1998/04/13 22:47:25 jrobbins Exp $
+// $Id: FigEdgeRectiline.java,v 1.4 1998/04/18 01:26:15 jrobbins Exp $
 
 package uci.gef;
 

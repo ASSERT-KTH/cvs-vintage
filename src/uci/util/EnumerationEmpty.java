@@ -28,7 +28,7 @@
 // File: EnumerationEmpty.java
 // Classes: EnumerationEmpty
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationEmpty.java,v 1.2 1998/04/14 00:41:32 jrobbins Exp $
+// $Id: EnumerationEmpty.java,v 1.3 1998/04/18 01:27:50 jrobbins Exp $
 
 package uci.util;
 

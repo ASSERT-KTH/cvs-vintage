@@ -28,7 +28,7 @@
 // File: PropsGridLayout.java
 // Interfaces: PropsGridLayout
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropsGridLayout.java,v 1.2 1998/04/14 00:40:27 jrobbins Exp $
+// $Id: PropsGridLayout.java,v 1.3 1998/04/18 01:27:16 jrobbins Exp $
 
 package uci.ui;
 import java.awt.*;
@@ -79,7 +79,7 @@ public class PropsGridLayout implements LayoutManager {
     int h = 0;
     for (int i = 0 ; i < ncomponents ; i++) {
       Component comp = parent.getComponent(i);
-      Dimension d = comp.preferredSize();
+      Dimension d = comp.getPreferredSize();
       h += d.height + vgap;
     }
     return new Dimension(insets.left + insets.right + w,
@@ -100,7 +100,7 @@ public class PropsGridLayout implements LayoutManager {
     int h = 0;
     for (int i = 0 ; i < ncomponents ; i++) {
       Component comp = parent.getComponent(i);
-      Dimension d = comp.minimumSize();
+      Dimension d = comp.getMinimumSize();
       h += d.height + vgap;
     }
     return new Dimension(insets.left + insets.right + w,
@@ -117,13 +117,13 @@ public class PropsGridLayout implements LayoutManager {
     int ncomponents = parent.countComponents();
     if (ncomponents == 0) return;
     int used = insets.left + insets.right + hgap + _labelWidth;
-    int propWidth = Math.max(parent.size().width - used,
+    int propWidth = Math.max(parent.getSize().width - used,
 			     _minPropWidth);
     Graphics g = parent.getGraphics();
     int h = 0;
     for (int i = 0 ; i < ncomponents ; i++) {
       Component comp = parent.getComponent(i);
-      Dimension d = comp.preferredSize();
+      Dimension d = comp.getPreferredSize();
       if (i %2 == 0) comp.reshape(0, h, _labelWidth, _labelHeight);
       else {
 	comp.move(_labelWidth + hgap, h);

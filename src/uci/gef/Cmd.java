@@ -28,7 +28,7 @@
 // File: Action.java
 // Classes: Action
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Cmd.java,v 1.3 1998/04/13 22:46:57 jrobbins Exp $
+// $Id: Cmd.java,v 1.4 1998/04/18 01:25:49 jrobbins Exp $
 
 package uci.gef;
 

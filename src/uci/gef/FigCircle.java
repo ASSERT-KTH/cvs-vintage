@@ -27,7 +27,7 @@
 // File: FigCircle.java
 // Classes: FigCircle
 // Original Author: ics125 spring 1996
-// $Id: FigCircle.java,v 1.2 1998/04/13 22:47:24 jrobbins Exp $
+// $Id: FigCircle.java,v 1.3 1998/04/18 01:26:13 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: CrDupParamName.java.java
 // Classes: CrDupParamName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.1 1998/04/14 00:40:55 jrobbins Exp $
+// $Id: CrDupParamName.java,v 1.2 1998/04/18 01:27:28 jrobbins Exp $
 
 package uci.uml.critics;
 

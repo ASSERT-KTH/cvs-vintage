@@ -27,7 +27,7 @@
 // File: CmdSpawn.java
 // Classes: CmdSpawn
 // Original Author: ics125 spring 1996
-// $Id: CmdSpawn.java,v 1.3 1998/04/13 22:47:16 jrobbins Exp $
+// $Id: CmdSpawn.java,v 1.4 1998/04/18 01:26:08 jrobbins Exp $
 
 package uci.gef;
 

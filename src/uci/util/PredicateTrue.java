@@ -28,7 +28,7 @@
 // File: PredicateTrue.java
 // Classes: PredicateTrue
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PredicateTrue.java,v 1.2 1998/04/14 00:41:40 jrobbins Exp $
+// $Id: PredicateTrue.java,v 1.3 1998/04/18 01:27:53 jrobbins Exp $
 
 package uci.util;
 

@@ -27,7 +27,7 @@
 // File: CmdDispose.java
 // Classes: CmdDispose
 // Original Author: ics125 spring 1996
-// $Id: CmdDispose.java,v 1.3 1998/04/13 22:47:02 jrobbins Exp $
+// $Id: CmdDispose.java,v 1.4 1998/04/18 01:25:54 jrobbins Exp $
 
 package uci.gef;
 

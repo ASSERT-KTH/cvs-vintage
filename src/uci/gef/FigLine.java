@@ -27,7 +27,7 @@
 // File: FigLine.java
 // Classes: FigLine
 // Original Author: ics125 spring 1996
-// $Id: FigLine.java,v 1.6 1998/04/13 22:47:29 jrobbins Exp $
+// $Id: FigLine.java,v 1.7 1998/04/18 01:26:17 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: CmdCreateNode.java
 // Classes: CmdCreateNode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdCreateNode.java,v 1.3 1998/04/13 22:47:01 jrobbins Exp $
+// $Id: CmdCreateNode.java,v 1.4 1998/04/18 01:25:52 jrobbins Exp $
 
 package uci.gef;
 

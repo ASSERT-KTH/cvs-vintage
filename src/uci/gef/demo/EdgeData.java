@@ -28,7 +28,7 @@
 // File: EdgeData.java
 // Classes: EdgeData
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EdgeData.java,v 1.4 1998/04/13 22:48:32 jrobbins Exp $
+// $Id: EdgeData.java,v 1.5 1998/04/18 01:26:53 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -39,7 +39,7 @@ import uci.util.*;
 import uci.gef.*;
 
 /** A sample NetEdge subclass for use in the Example application.  There
- *  are no real details here yet.  If I was to expand this Example more
+ *  are no real details here yet.  If I was to expand this example more
  *  the Edge could have more attributes, e.g. bandwidth... and it
  *  could have its own subclasses of FigEdge to make it look a
  *  certain way. */

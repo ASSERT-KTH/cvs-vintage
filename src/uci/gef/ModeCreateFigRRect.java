@@ -27,7 +27,7 @@
 // File: ModeCreateFigRRect.java
 // Classes: ModeCreateFigRRect
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigRRect.java,v 1.4 1998/04/13 22:47:52 jrobbins Exp $
+// $Id: ModeCreateFigRRect.java,v 1.5 1998/04/18 01:26:35 jrobbins Exp $
 
 package uci.gef;
 

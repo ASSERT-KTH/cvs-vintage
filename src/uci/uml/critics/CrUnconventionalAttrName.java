@@ -19,7 +19,7 @@
 // File: CrUnconventionalAttrName.java.java
 // Classes: CrUnconventionalAttrName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.1 1998/04/14 00:41:15 jrobbins Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.2 1998/04/18 01:27:40 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -54,7 +54,7 @@ public class CrUnconventionalAttrName extends CrUML {
     if (nameStr.length() == 0) return NO_PROBLEM;
     char initalChar = nameStr.charAt(0);
     ChangeableKind ck = attr.getChangeable();
-    if (ck.equals(ChangeableKind.FROZEN)) return NO_PROBLEM;
+    if (ck != null && ck.equals(ChangeableKind.FROZEN)) return NO_PROBLEM;
     if (!Character.isLowerCase(initalChar)) return PROBLEM_FOUND;
     return NO_PROBLEM;
   }

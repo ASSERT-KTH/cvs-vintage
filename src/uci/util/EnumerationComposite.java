@@ -28,7 +28,7 @@
 // File: EnumerationComposite.java
 // Classes: EnumerationComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: EnumerationComposite.java,v 1.2 1998/04/14 00:41:32 jrobbins Exp $
+// $Id: EnumerationComposite.java,v 1.3 1998/04/18 01:27:49 jrobbins Exp $
 
 package uci.util;
 

@@ -27,7 +27,7 @@
 // File: DefaultGraphEdgeRenderer.java
 // Classes: DefaultGraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphEdgeRenderer.java,v 1.5 1998/04/14 00:40:11 jrobbins Exp $
+// $Id: DefaultGraphEdgeRenderer.java,v 1.6 1998/04/18 01:27:05 jrobbins Exp $
 
 package uci.graph;
 
@@ -38,6 +38,7 @@ import uci.gef.Layer;
 /** An interface for FigEdge factories. Similiar in concept to the
  *  Swing class TreeCellRenderer.
  *
+ * @see uci.gef.NetEdge#presentationFor 
  * @see uci.graph.demo.TranscriptionRenderer */
 
 public class DefaultGraphEdgeRenderer

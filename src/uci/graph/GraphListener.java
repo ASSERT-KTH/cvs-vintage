@@ -27,12 +27,20 @@
 // File: GraphListener.java
 // Interfaces: GraphListener
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphListener.java,v 1.1 1998/02/05 04:03:42 jrobbins Exp $
+// $Id: GraphListener.java,v 1.2 1998/04/18 01:27:09 jrobbins Exp $
 
 package uci.graph;
 
 import java.util.EventObject;
 import java.util.EventListener;
+
+/** This defines a set of event notifications that objects can
+ *  register for if they are interested in changes to the connected
+ *  graph.  For example, LayerPerspective implements this interface to
+ *  update the Figs it contains whenever a node or edge is added or
+ *  removed from the GraphModel.
+ *
+ * @see uci.gef.LayerPerspective */
 
 public interface GraphListener extends EventListener {
   void nodeAdded(GraphEvent e);
