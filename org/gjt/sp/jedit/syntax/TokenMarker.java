@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.8 2001/12/01 05:48:48 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.9 2001/12/30 07:35:03 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  */
@@ -658,7 +658,7 @@ public class TokenMarker
 		int len = end - start;
 
 		//{{{ do digits.
-		
+
 		/* right now, this is hardcoded to handle these cases:
 		 * 1234
 		 * 0x1234abcf
@@ -698,16 +698,12 @@ loop:			for(int i = 0; i < len; i++)
 					else
 						break;
 				case 'd': case 'D':
+				case 'f': case 'F':
 					if(hex)
 						continue loop;
 					else if(i == len -1 && seenSomeDigits)
 						continue loop;
 					else
-						break;
-				case 'f': case 'F':
-					if(hex)
-						continue loop;
-					else if(i == len -1 && seenSomeDigits)
 						break;
 				case 'l': case 'L':
 					if(i == len -1 && seenSomeDigits)
