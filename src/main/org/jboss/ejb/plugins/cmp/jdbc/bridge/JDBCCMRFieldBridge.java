@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.70 $
+ * @version $Revision: 1.71 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -1265,9 +1265,22 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       // set the foreign key, if we have one.
       if(hasForeignKey())
       {
+         // update the states and locked values of FK fields
+         if(!values.isEmpty())
+         {
+            Object loadedValue = values.iterator().next();
+            for(int i = 0; i < foreignKeyFields.length; ++i)
+            {
+               JDBCCMP2xFieldBridge fkField = foreignKeyFields[i];
+               Object fieldValue = fkField.getPrimaryKeyValue(loadedValue);
+               fkField.updateState(myCtx, fieldValue);
+            }
+         }
+
+         // set the real FK value
          List realValue = fieldState.getValue();
          Object fk = realValue.isEmpty() ? null : realValue.get(0);
-         setForeignKey(myCtx, fk, true);
+         setForeignKey(myCtx, fk);
       }
    }
 
@@ -1275,18 +1288,6 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
     * Sets the foreign key field value.
     */
    public void setForeignKey(EntityEnterpriseContext myCtx, Object fk)
-   {
-      setForeignKey(myCtx, fk, false);
-   }
-
-   /**
-    * Updated foreign key fields with values and, if <code>updateState</code> is true,
-    * updates states and locked values.
-    * @param myCtx entity's context
-    * @param fk foreign key value
-    * @param updateState if true, updates foreign key field states and locked values.
-    */
-   private void setForeignKey(EntityEnterpriseContext myCtx, Object fk, boolean updateState)
    {
       if(!hasForeignKey())
          throw new EJBException(getFieldName() + " CMR field does not have a foreign key to set.");
@@ -1296,8 +1297,6 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          JDBCCMP2xFieldBridge fkField = foreignKeyFields[i];
          Object fieldValue = fkField.getPrimaryKeyValue(fk);
          fkField.setInstanceValue(myCtx, fieldValue);
-         if(updateState)
-            fkField.updateState(myCtx, fieldValue);
       }
    }
 
