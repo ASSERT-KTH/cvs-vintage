@@ -18,9 +18,9 @@ package org.columba.mail.folder.command;
 
 import java.text.MessageFormat;
 
-import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.main.MailInterface;
@@ -39,10 +39,15 @@ import org.columba.mail.util.MailResourceLoader;
  * <p>
  * @author redsolo
  */
-public class MarkFolderAsReadCommand extends Command {
+public class MarkFolderAsReadCommand extends FolderCommand {
 
     /** The folder that is supposed to be marked as read. */
     private MessageFolder folderToBeRead;
+    
+    /**
+     * Command doing the actual work.
+     */
+    private MarkMessageCommand markMessageCommand;
 
     /**
      * @param references folder references
@@ -70,16 +75,14 @@ public class MarkFolderAsReadCommand extends Command {
             markCommandRefs[0].setUids(uids);
             markCommandRefs[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
-            MarkMessageCommand c = new MarkMessageCommand(markCommandRefs);
-            c.execute(worker);
+            markMessageCommand = new MarkMessageCommand(markCommandRefs);
+            markMessageCommand.execute(worker);
         }
     }
 
     /** {@inheritDoc} */
     public void updateGUI() throws Exception {
-        super.updateGUI();
-        if (folderToBeRead != null) {
-            MailInterface.treeModel.nodeChanged(folderToBeRead);
-        }
+    	// MarkMessageCommand updates everything
+    	markMessageCommand.updateGUI();
     }
 }
