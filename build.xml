@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.101 2002/07/05 06:10:55 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.102 2002/07/09 23:08:53 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -413,7 +413,7 @@
         <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/jms/**/*.java"/>
         <include name="org/jboss/jmx/**/*.java"/>
-        <include name="org/jboss/logging/Log4jService.java"/>
+        <include name="org/jboss/logging/**/*.java"/>
         <include name="org/jboss/naming/**/*.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
