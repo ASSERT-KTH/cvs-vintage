@@ -11,8 +11,14 @@ Version CVS (upcoming 0.9.10)
     
  - addressbook-component:
     * address parser fixes
+    * address list parser fixes
     * dnd support for addressbook JList-component
-    * address auto-completion
+    * address auto-completion (shivchow)
+    
+    
+ - core:
+    * new default icon set (gnome2 stock icons - artist: tigert@ximian.com)
+    
     
 Version 0.9.9
 
