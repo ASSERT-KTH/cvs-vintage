@@ -70,7 +70,7 @@
     #foreach ($option in $module.getOptionTree($attr))
       #set ( $selected = "" )
       #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
-        #set ( $selected = " selected" )
+        #set ( $selected = " selected\=\"selected\"" )
       #end
       <option$selected value="$option.OptionId">
 #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end

@@ -8,7 +8,7 @@
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
 <th width="120">
-    Issue ID# range:
+    Issue ID# range
     #fieldErrorMsg($query.MinId "")
     #fieldErrorMsg($query.MaxId "")
 </th>
@@ -21,7 +21,7 @@ from:&#160;<input type="text" size="20"
 </tr>
 <tr>
 <th width="120">
-    Issue creation date range:
+    Issue creation date range
     #fieldErrorMsg($query.MinDate "")
     #fieldErrorMsg($query.MaxDate "")
 </th>
@@ -70,7 +70,7 @@ from:&#160;<input type="text" size="20"
  </tr>
 </table>
 </div>
-<h3>Personnel Search</h3>
+<h3>Personnel search</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
      <tr>
@@ -168,7 +168,7 @@ from:&#160;<input type="text" size="20"
  </tr>
  <tr>
     <th width="120">
-        Date range:
+        Date range
         #fieldErrorMsg($query.StateChangeFromDate "")
         #fieldErrorMsg($query.StateChangeToDate "")
     </th>

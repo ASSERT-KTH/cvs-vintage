@@ -1,9 +1,10 @@
-
 #macro (viewIssue $currentIssue )
     #set ($module = $scarabR.CurrentModule)
     #set ( $canEdit = $security.hasPermission("Issue | Edit", $module) )
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
        #datatitle ("Issue ID #$currentIssue.UniqueId")
+
+<div class="app" id="viewissue">
       <div class="axial">
        <table cellpadding="3" cellspacing="2" border="0">
         <tr>
@@ -113,7 +114,7 @@ Please add a comment to explain your change(s)
       </div>
 ## URLS
 #if (!$currentIssue.Urls.isEmpty() || $canEdit)
-       #datatitle ("Related Links")
+       #datatitle ("Related links")
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
           <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
@@ -162,7 +163,7 @@ Please add a comment to explain your change(s)
 #if ($canEdit)
 #set( $dependGroup = $intake.Depend.setKey("dependKey") )
 <input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId" />
-#datatitle ("Add Dependency")
+#datatitle ("Add dependency")
  #if (!$dependGroup.ObservedId.Message.equals(""))
  <p><strong class="alert">$dependGroup.ObservedId.Message</strong></p>
  #end
@@ -190,12 +191,12 @@ Please add a comment to explain your change(s)
 </div>
 ## PARENT ISSUES
 #if (!$currentIssue.Parents.isEmpty() )
-      #datatitle ("Parent Issues")
+      #datatitle ("Parent issues")
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <th width="20%">issue id#</th>
-          <th width="40%">issue summary</th>
-          <th>dependency type</th>
+          <th width="20%">Issue id#</th>
+          <th width="40%">Issue summary</th>
+          <th>Dependency type</th>
          </tr>
        #foreach( $parent in $currentIssue.Parents )
          #if( $velocityCount % 2 > 0 )
@@ -215,7 +216,7 @@ Please add a comment to explain your change(s)
             #foreach ($dependType in $currentIssue.getAllDependencyTypes())
               #set ( $selected = "" )
               #if ( $parent.getDependency($currentIssue).TypeId.equals($dependType.DependTypeId))
-                #set ( $selected = " selected" )
+                #set ( $selected = " selected\=\"selected\"" )
               #end
               <option$selected value="$dependType.DependTypeId">
                   $dependType.Name</option>
@@ -235,12 +236,12 @@ Please add a comment to explain your change(s)
 #end
 ## CHILD ISSUES
 #if (!$currentIssue.Children.isEmpty() )
-       #datatitle ("Child Issues")
+       #datatitle ("Child issues")
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <th width="20%">issue id#</th>
-          <th width="40%">issue summary</th>
-          <th>dependency type</th>
+          <th width="20%">Issue id#</th>
+          <th width="40%">Issue summary</th>
+          <th>Dependency type</th>
          </tr>
        #foreach( $child in $currentIssue.Children )
          #if( $velocityCount % 2 > 0 )
@@ -261,12 +262,12 @@ Please add a comment to explain your change(s)
             #foreach ($dependType in $currentIssue.getAllDependencyTypes())
               #set ( $selected = "" )
               #if ( $currentIssue.getDependency($child).TypeId.equals($dependType.DependTypeId) )
-                #set ( $selected = " selected" )
+                #set ( $selected = " selected\=\"selected\"" )
               #end
               <option$selected value="$dependType.DependTypeId">
                   $dependType.Name</option>
             #end
-            <option value="none">remove dependency </option>
+            <option value="none">Remove dependency </option>
    #else
          $currentIssue.getDependency($child).DependType.Name
    #end
@@ -327,12 +328,12 @@ Please add a comment to explain your change(s)
 #end
 #if (!$activity.isEmpty() )
 ## ISSUE HISTORY
-       #datatitle ("Issue History (up to first ten)")
+       #datatitle ("Issue history (up to first ten)")
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
          <tr>
-          <th width="120">date stamp</th>
-          <th>action</th>
-          <th>note</th>
+          <th width="120">Date stamp</th>
+          <th>Action</th>
+          <th>Note</th>
          </tr>
        #foreach( $act in $activity )
          #if( $velocityCount % 2 > 0 )
@@ -366,11 +367,12 @@ Please add a comment to explain your change(s)
 #if ($currentIssue.isHistoryLong())
    #if ($fullHistory.equals("true"))
         #set ( $historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false") )
-        <p><a href="$historyLink">hide complete history</a></p>
+        <p><a href="$historyLink">Hide complete history</a></p>
    #else
         #set ( $historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true") )
-        <p><a href="$historyLink">show complete history</a></p>
+        <p><a href="$historyLink">Show complete history</a></p>
    #end
 #end
 #end
 #end
+</div>

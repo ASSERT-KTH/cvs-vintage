@@ -44,7 +44,7 @@
   #if ($selectedIds)
       #foreach ( $id in $selectedIds )
           #if ($id == $att.PrimaryKey)
-              #set ($selected = " selected")
+              #set ($selected = " selected\=\"selected\"")
           #end
       #end
   #end
