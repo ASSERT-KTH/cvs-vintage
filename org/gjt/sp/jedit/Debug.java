@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.3 2003/04/11 00:59:48 spestov Exp $
+ * @version $Id: Debug.java,v 1.4 2003/04/11 17:41:03 spestov Exp $
  */
 public class Debug
 {
@@ -41,7 +41,7 @@ public class Debug
 	 * Print messages when text area and display manager perform scroll
 	 * updates.
 	 */
-	public static boolean SCROLL_DEBUG = true;
+	public static boolean SCROLL_DEBUG = false;
 
 	/**
 	 * Print messages when screen line counts change.

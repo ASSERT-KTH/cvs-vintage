@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.22 2003/04/11 00:59:49 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.23 2003/04/11 17:41:04 spestov Exp $
  */
 public class DisplayManager
 {
@@ -185,7 +185,6 @@ public class DisplayManager
 			int newCount;
 			if(softWrap && wrapMargin != 0.0f)
 			{
-				System.err.println("this is what lifpl got");
 				newCount = textArea.chunkCache.getLineInfosForPhysicalLine(line).length;
 			}
 			else
@@ -556,7 +555,6 @@ public class DisplayManager
 
 		firstLine = new FirstLine(index);
 		offsetMgr.addAnchor(firstLine);
-		System.err.println("created display mgr");
 	} //}}}
 
 	//{{{ dispose() method

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.55 2003/04/11 00:59:48 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.56 2003/04/11 17:41:03 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -607,7 +607,6 @@ public class OffsetManager
 	 * one before line n. */
 	public void addAnchor(Anchor anchor)
 	{
-		System.err.println("adding " + anchor);
 		Anchor prev = null;
 		Anchor current = anchors;
 		for(;;)
@@ -632,12 +631,12 @@ public class OffsetManager
 			prev.next = anchor;
 		else
 			anchors = anchor;
+		anchor.next = null;
 	} //}}}
 
 	//{{{ removeAnchor() method
 	public void removeAnchor(Anchor anchor)
 	{
-		System.err.println("removing " + anchor);
 		Anchor current = anchors;
 		Anchor prev = null;
 		while(current != null)
