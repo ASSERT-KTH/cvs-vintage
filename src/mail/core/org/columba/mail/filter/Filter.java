@@ -186,4 +186,16 @@ public class Filter extends DefaultItem {
 	public Object clone() {
 		return super.clone();
 	}
+	
+	
+	/** {@inheritDoc} */
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Filter[name=");
+		sb.append(getName());
+		sb.append(", enabled=");
+		sb.append(getEnabled());
+		sb.append("]");
+		return sb.toString();
+	}
 }
