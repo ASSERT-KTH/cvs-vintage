@@ -12,8 +12,6 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.InstancePool;
-import org.jboss.ejb.BeanLock;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -30,7 +28,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class EntityMultiInstanceSynchronizationInterceptor
         extends EntitySynchronizationInterceptor
@@ -100,6 +98,8 @@ public class EntityMultiInstanceSynchronizationInterceptor
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
 
+         ctx.hasTxSynchronization(false);
+         ctx.setTransaction(null);
          try
          {
             try
@@ -119,7 +119,7 @@ public class EntityMultiInstanceSynchronizationInterceptor
                      case ConfigurationMetaData.C_COMMIT_OPTION:
                         break;
                      case ConfigurationMetaData.D_COMMIT_OPTION:
-                        throw new IllegalStateException("Commit option A not allowed with this Interceptor");
+                        throw new IllegalStateException("Commit option D not allowed with this Interceptor");
                   }
                }
                try
@@ -130,7 +130,6 @@ public class EntityMultiInstanceSynchronizationInterceptor
                catch (Exception ignored)
                {
                }
-
                container.getInstancePool().free(ctx);
             }
             finally
