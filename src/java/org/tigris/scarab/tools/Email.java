@@ -81,7 +81,7 @@ public class Email
         if (fromUser instanceof ScarabUser)
         {
             ScarabUser u = (ScarabUser)fromUser;
-            te.setFrom(u.getFirstName() + u.getLastName(), u.getEmail());
+            te.setFrom(u.getName(), u.getEmail());
         }
         else
         {
