@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.27 2002/02/10 04:10:59 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.28 2002/02/15 08:11:01 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -182,18 +182,6 @@
     <attribute name="CommonClassPath">false</attribute>
   </mbean>
   -->
-
-  <!-- ==================================================================== -->
-  <!-- Mail Connection Factory                                              -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.mail.MailService"
-         name="jboss:service=Mail">
-    <attribute name="JNDIName">Mail</attribute>
-    <attribute name="ConfigurationFile">mail.properties</attribute>
-    <attribute name="User">user_id</attribute>
-    <attribute name="Password">password</attribute>
-  </mbean>
 
   <!-- ==================================================================== -->
   <!-- Invokers to the JMX node                                             -->
