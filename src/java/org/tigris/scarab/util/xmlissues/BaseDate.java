@@ -47,16 +47,28 @@ package org.tigris.scarab.util.xmlissues;
  */
 
 import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
  * <p><code>BaseDate</code> is a base class for Modified and Created dates.</p>
  *
  * @author <a href="mailto:jon@latchkey.com">Jon Scott Stevens</a>
- * @version $Id: BaseDate.java,v 1.4 2003/03/15 21:56:59 jon Exp $
+ * @version $Id: BaseDate.java,v 1.5 2003/07/26 05:17:04 dlr Exp $
  */
 public class BaseDate implements java.io.Serializable
 {
+    /**
+     * The default date format which we'll try to parse with if a
+     * format is not specified.
+     */
+    private static final String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss z";
+
+    /**
+     * The default date.
+     */
+    private static final Date DEFAULT_DATE = new Date(0L);
+
     private String format = null;
     private String timestamp = null;
 
@@ -81,14 +93,34 @@ public class BaseDate implements java.io.Serializable
     }
 
     public Date getDate()
-        throws java.text.ParseException
+        throws ParseException
     {
-        SimpleDateFormat sdf = new SimpleDateFormat(getFormat());
-        return sdf.parse(getTimestamp());
+        Date date = null;
+        String ts = getTimestamp();
+        if (ts != null) 
+        {
+            String format = getFormat();
+            try
+            {
+                SimpleDateFormat sdf = new SimpleDateFormat
+                    (format != null ? format : DEFAULT_FORMAT);
+                date = sdf.parse(getTimestamp());
+            }
+            catch (ParseException e)
+            {
+                if (format != null)
+                {
+                    // When a format was explicitly specified,
+                    // propogate any parsing problems.
+                    throw e;
+                }
+            }
+        }
+        return (date != null ? date : DEFAULT_DATE);
     }
 
     public String toString()
     {
-        return "format=" + format + ";timestamp=" + timestamp;
+        return "format=" + format + "; timestamp=" + timestamp;
     }
 }
