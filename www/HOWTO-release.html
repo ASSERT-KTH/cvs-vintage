@@ -1,4 +1,4 @@
-<!-- $Id: HOWTO-release.html,v 1.6 2003/05/09 22:57:20 dlr Exp $ -->
+<!-- $Id: HOWTO-release.html,v 1.7 2003/10/07 23:36:22 jmcnally Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -12,19 +12,26 @@ This documents the process for doing a release of Scarab.
 </p>
 
 <ol>
+<li>Make sure your working copy has no local modifications and is up-to-date. 
+(Starting with a fresh copy is preferred.)  
+<li>Build and execute tests.<br /><br />
+
+    cd scarab/build<br />
+    ant clean tests<br /><br />
+</li>
+<li>Fix any unexpected failures and commit changes.
 <li>Check out a fresh copy of Scarab.<br><br>
 
     cvs co scarab</li>
 
 <li>Edit scarab/build/default.properties and change the 
     version number from the -dev to the final version number for the
-    release and check this file back into CVS.</li>
+    release.</li>
 
 <li>Update the scarab/www/index.html file to announce the new release
     as well as update the scarab/www/changelog.html file.</li>
 
-<li>Check both the default.propertis and index.html files back into
-    CVS.</li>
+<li>Check both the default.properties and index.html files back into CVS.</li>
 
 <li>Tag cvs with the release tag. Mail the dev@scarab mailing list to
     let people know that they should hold off on commits until the message
@@ -33,7 +40,7 @@ This documents the process for doing a release of Scarab.
     current release.<br><br>
 
     cd scarab<br>
-    cvs tag SCARAB_1_0_B15</li>
+    cvs tag SCARAB_1_0_B17</li>
 
 <li>Build a release. This will create a .tar.gz and a .zip file in
     the scarab directory.<br><br>
@@ -55,10 +62,10 @@ This documents the process for doing a release of Scarab.
     users@scarab.tigris.org, dev@scarab.tigris.org lists that there is
     a new release available:
     <pre>
-    Subject: [ANNOUNCEMENT] Scarab 1.0 beta 15 released
+    Subject: [ANNOUNCEMENT] Scarab 1.0 beta 17 released
 
     The Scarab team is pleased to announce the release of version 1.0
-    beta 15 of the Scarab issue tracking system.
+    beta 17 of the Scarab issue tracking system.
 
     This is primarily bug fix release.
 
