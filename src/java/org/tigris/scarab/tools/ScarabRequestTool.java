@@ -890,19 +890,17 @@ try{
             }
             else 
             {
-                issue = IssuePeer
-                    .retrieveByPK(new NumberKey(issueId));
+                issue = getIssue(issueId);
             }
         }
         return issue;
     }
 
     /**
-     * The id may be a primary key or an issue id.
+     * The id may only be the issue's unique id.
      *
      * @param key a <code>String</code> value
      * @return a <code>Issue</code> value
-     */
     public Issue getIssue(String key)
     {
         Issue issue = null;
@@ -929,16 +927,15 @@ try{
         }
         return issue;
     }
+     */
 
     /**
      * Takes unique id, and returns issue.
      */
-    public Issue getIssueByUniqueId() throws Exception
+    public Issue getIssue(String id) throws Exception
     {
         Issue issue = null;
-        String uniqueId = data.getParameters()
-            .getString("unique_id"); 
-        if (uniqueId == null)
+        if (id == null)
         {
             data.setMessage("Please enter an id.");
         }
@@ -946,12 +943,12 @@ try{
         {
 	    try
             {
-	        issue = Issue.getIssueById(uniqueId);
+	        issue = Issue.getIssueById(id);
 	        if (issue == null)
 	        {
 	           String code = getCurrentModule().getCode();
-                   uniqueId = code + uniqueId;
-	           issue = Issue.getIssueById(uniqueId);
+                   id = code + id;
+	           issue = Issue.getIssueById(id);
 	        }
 	    }        
 	    catch (Exception e)
