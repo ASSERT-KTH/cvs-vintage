@@ -24,7 +24,7 @@
 // File: Project.java
 // Classes: Project
 // Original Author: not known
-// $Id: Project.java,v 1.19 2002/07/15 11:26:24 linus Exp $
+// $Id: Project.java,v 1.20 2002/07/15 19:58:32 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to remove
 // include and extend relationships when deleting a use case.
@@ -699,8 +699,11 @@ public class Project implements java.io.Serializable {
                     // Jaap Branderhorst
                     // zipentry is not closed properly. Added next two lines.
                     // could be patch for issues 893 and 925
+                    // OUCH didn't work
+                    /*
                     writer.flush();
                     stream.closeEntry();
+                    */
                     // end patch
                 }
             }
