@@ -64,27 +64,31 @@ import org.tigris.scarab.om.*;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
- * This class manages the validation and importing of issues.
+ * <p>This class manages the validation and importing of issues.</p>
  *
- * This classes has a format dictated by the betwixt parser. This class is 
- * given to the betwixt parser and as betwixt parses elements of the xml file,
- * it looks for the public getters and setters in this class's signature and
- * thereby makes determinations on what to call in this class. What this means
- * in effect is that you can not read this file in isolation: Doing so would
- * make you do things like remove the data member 'issue' and its accessor
- * methods because it looks as though they are unused whereas in fact they are
- * signals to the betwixt parser: It reads them and interprets their presence
- * and instruction to create instances of issues from the xml being parsed.
+ * <p>This classes has a format dictated by the <a
+ * href="http://jakarta.apache.org/commons/betwixt/">Betwixt</a>
+ * parser. As the parser extracts elements out of the XML file, it
+ * looks for the public getters and setters in this class's signature
+ * and thereby makes determinations on what JavaBean methods to call
+ * in this class. Reading this source file in isolation: Doing so
+ * would make it look like you could do things like remove the data
+ * member 'issue' and its accessor methods because it looks as though
+ * they are unused, whereas they are in fact signals to the Betwixt
+ * parser: It reads them and interprets their presence and instruction
+ * to create instances of issues from the XML being parsed.</p>
  *
- * <p>Also, of note, the design of this class is that, it has two modes based
- * off the setting of the inValidationMode class.  When parsing w/ the
- * inValidationMode flag set, the db is not touched. The code just validates
- * the xml's data content checking the users exist in the db, that the 
- * attributes and modules referenced already exit.  A parse w/ the 
- * inValidationMode set to false will do actual insert of the xml issues.
+ * <p>Also, of note, the design of this class is that, it has two
+ * modes based off the setting of the inValidationMode class.  When
+ * parsing w/ the {@link #inValidationMode} flag set, the db is not
+ * touched. The code just validates the XML's data content checking
+ * the users exist in the db, that the attributes and modules
+ * referenced already exit.  A parse with the {@link
+ * #inValidationMode} set to false will do actual insert of the XML
+ * issues.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.42 2003/07/26 05:23:15 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.43 2003/07/26 18:38:44 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
