@@ -5,40 +5,66 @@
 <!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-settings.dtd")">
 <scarab>
 #set ($allAttributes = $scarabG.AllAttributes)
+#if ($allAttributes && !$allAttributes.isEmpty())
+  <global-attributes>
 #foreach ($attribute in $allAttributes)
-  <global-attribute>
-    <name>$attribute.Name</name>
-    <type>$attribute.AttributeType.Name</type>
-    <description>$attribute.Description</description>
-    <created-date format="yyyy-MM-dd HH:mm:ss">$attribute.CreatedDate</created-date>
-    #set ($allPCAO = $attribute.ParentChildAttributeOptions)
-    #foreach ($pcao in $allPCAO)
-    #set ($attributeOption = $pcao.ParentOption)
-    <global-attribute-option>
-      <name>$attributeOption.Name</name>
-      <deleted>$attributeOption.Deleted</deleted>
-      <child-option>$pcao.ChildOption.Name</child-option>
-      <weight>$pcao.Weight</weight>
-      <preferred-order>$pcao.PreferredOrder</preferred-order>
-    </global-attribute-option>
-    #end
-  </global-attribute>
+    <global-attribute>
+      <name>$attribute.Name</name>
+      <type>$attribute.AttributeType.Name</type>
+      <description>$attribute.Description</description>
+      <created-date>
+        <format>$sdf.toPattern()</format>
+        <timestamp>$sdf.format($attribute.CreatedDate)</timestamp>
+      </created-date>
+      #set ($allPCAO = $attribute.ParentChildAttributeOptions)
+      #if (!$allPCAO.isEmpty())
+      <global-attribute-options>
+      #foreach ($pcao in $allPCAO)
+        #set ($attributeOption = $pcao.ParentOption)
+        <global-attribute-option>
+          <name>$attributeOption.Name</name>
+          <deleted>$attributeOption.Deleted</deleted>
+          <child-option>$pcao.ChildOption.Name</child-option>
+          <weight>$pcao.Weight</weight>
+          <preferred-order>$pcao.PreferredOrder</preferred-order>
+        </global-attribute-option>
+      #end
+      </global-attribute-options>
+      #end
+
+    </global-attribute>
 #end
 
-#set ($allIssueTypes = $scarabG.AllIssueTypes)
-#foreach ($issueType in $allIssueTypes)
-  <global-issue-type>
-    <name>$issueType.Name</name>
-    <description>$issueType.Description</description>
-    #if ($issueType.ParentId && ! $issueType.ParentId.toString().equals("0"))
-    <parent>$scarabR.getIssueType($issueType.ParentId).Name</parent>
-    #end
-    <template>$issueType.TemplateIssueType.Name</template>
-  </global-issue-type>
+  </global-attributes>
 #end
 
+  #set ($allIssueTypes = $scarabG.AllIssueTypes)
+  #if ($allIssueTypes && !$allIssueTypes.isEmpty())
+
+  <global-issue-types>
+  #foreach ($issueType in $allIssueTypes)
+
+    <global-issue-type>
+      <name>$issueType.Name</name>
+      <description>$issueType.Description</description>
+      #if ($issueType.ParentId && ! $issueType.ParentId.toString().equals("0"))
+      <parent>$scarabR.getIssueType($issueType.ParentId).Name</parent>
+      #end
+
+      <template>$issueType.TemplateIssueType.Name</template>
+    </global-issue-type>
+
+  #end
+
+  </global-issue-types>
+
+  #end
+  
   #set ($module = $scarabR.CurrentModule)
-  <module id="$module.ModuleId" parent="$module.ParentId">
+
+  <module>
+    <id>$module.ModuleId</id>
+    <parent-id>$module.ParentId</parent-id>
     <name>$module.RealName</name>
     <owner-id>$scarabR.getUser($module.OwnerId).UserName</owner-id>
     <description>$module.Description</description>
@@ -47,70 +73,120 @@
     <code>$module.Code</code>
 
     #if ($includeUsers)
-    #foreach ($user in $module.getUsers($securityAdmin.getPermissionsAsStrings()))
-    #set ($roles = $securityAdmin.getACL($user).getRoles($module).getRolesArray())
-    <user>
-      <firstname>$user.FirstName</firstname>
-      <lastname>$user.LastName</lastname>
-      <email>$user.Email</email>
-      <username>$user.UserName</username>
-      #foreach ($role in $roles)
-<role>$role.Name</role>
-      #end</user>
+    #set ($moduleUsers = $module.getUsers($securityAdmin.getPermissionsAsStrings()))
+    #if ($moduleUsers && !$moduleUsers.isEmpty())
+
+    <users>
+      #foreach ($user in $moduleUsers)
+      #set ($roles = $securityAdmin.getACL($user).getRoles($module).getRolesArray())
+
+      <user>
+        <firstname>$user.FirstName</firstname>
+        <lastname>$user.LastName</lastname>
+        <email>$user.Email</email>
+        <username>$user.UserName</username>
+        #if (!$roles.isEmpty())
+
+        <roles>
+          #foreach ($role in $roles)
+
+          <role>$role.Name</role>
+          #end
+
+        </roles>
+        #end
+
+      </user>
+    #end
+
+    </users>
     #end
     #end
 
     #set ($allModuleIssueTypes = $module.RModuleIssueTypes)
-    #foreach ($moduleIssueType in $allModuleIssueTypes)
-    #set ($issueType = $scarabR.getIssueType($moduleIssueType.IssueTypeId.toString()))
-    <module-issue-type>
-      <name>$issueType.Name</name>
-      <active>$moduleIssueType.Active</active>
-      <display>$moduleIssueType.Display</display>
-      <preferred-order>$moduleIssueType.Order</preferred-order>
-      <dedupe>$moduleIssueType.Dedupe</dedupe>
-      <history>$moduleIssueType.History</history>
-      <comments>$moduleIssueType.Comments</comments>
-      <display-name>$moduleIssueType.DisplayName</display-name>
-      <display-description>$moduleIssueType.DisplayDescription</display-description>
+    #if ($allModuleIssueTypes && !$allModuleIssueTypes.isEmpty())
 
-      #set ($allModuleAttributeGroups = $module.getAttributeGroups($issueType))
-      #foreach ($moduleAttributeGroup in $allModuleAttributeGroups)
-      <module-attribute-group>
-        <name>$moduleAttributeGroup.Name</name>
-        <description>$moduleAttributeGroup.Description</description>
-        <active>$moduleAttributeGroup.Active</active>
-        <dedupe>$moduleAttributeGroup.Dedupe</dedupe>
-        <preferred-order>$moduleAttributeGroup.Order</preferred-order>
-        #foreach ($attribute in $moduleAttributeGroup.Attributes)
-        #set ($rAAG = $moduleAttributeGroup.getRAttributeAttributeGroup($attribute))
-        <module-attribute>
-          <name>$attribute.Name</name>
-          <attribute-group-preferred-order>$rAAG.Order</attribute-group-preferred-order>
-          ## FROM SCARAB_R_MODULE_ATTRIBUTE
-          #set ($rma = $module.getRModuleAttribute($attribute, $issueType))
-          <display-name>$rma.DisplayValue</display-name>
-          <active>$rma.Active</active>
-          <required>$rma.Required</required>
-          <module-preferred-order>$rma.Order</module-preferred-order>
-          <quick-search>$rma.QuickSearch</quick-search>
-          <default-text-flag>$rma.DefaultTextFlag</default-text-flag>
+    <module-issue-types>
+      #foreach ($moduleIssueType in $allModuleIssueTypes)
+      #set ($issueType = $scarabR.getIssueType($moduleIssueType.IssueTypeId.toString()))
 
-          #foreach ($mo in $module.getRModuleOptions($attribute, $issueType))
-          <module-attribute-option>
-            <display>$mo.DisplayValue</display>
-            <active>$mo.Active</active>
-            <preferred-order>$mo.Order</preferred-order>
-            <weight>$mo.Weight</weight>
-          </module-attribute-option>
+      <module-issue-type>
+        <name>$issueType.Name</name>
+        <active>$moduleIssueType.Active</active>
+        <display>$moduleIssueType.Display</display>
+        <preferred-order>$moduleIssueType.Order</preferred-order>
+        <dedupe>$moduleIssueType.Dedupe</dedupe>
+        <history>$moduleIssueType.History</history>
+        <comments>$moduleIssueType.Comments</comments>
+        <display-name>$moduleIssueType.DisplayName</display-name>
+        <display-description>$moduleIssueType.DisplayDescription</display-description>
+
+        #set ($allModuleAttributeGroups = $module.getAttributeGroups($issueType))
+        #if ($allModuleAttributeGroups && !$allModuleAttributeGroups.isEmpty())
+
+        <module-attribute-groups>
+          #foreach ($moduleAttributeGroup in $allModuleAttributeGroups)
+
+          <module-attribute-group>
+            <name>$moduleAttributeGroup.Name</name>
+            <description>$!moduleAttributeGroup.Description</description>
+            <active>$moduleAttributeGroup.Active</active>
+            <dedupe>$moduleAttributeGroup.Dedupe</dedupe>
+            <preferred-order>$moduleAttributeGroup.Order</preferred-order>
+            #set ($moduleAttributeGroupAttributes = $moduleAttributeGroup.Attributes)
+            #if ($moduleAttributeGroupAttributes && !$moduleAttributeGroupAttributes.isEmpty())
+
+            <module-attributes>
+              #foreach ($attribute in $moduleAttributeGroupAttributes)
+              #set ($rAAG = $moduleAttributeGroup.getRAttributeAttributeGroup($attribute))
+
+              <module-attribute>
+                <name>$attribute.Name</name>
+                <attribute-group-preferred-order>$rAAG.Order</attribute-group-preferred-order>
+                ## FROM SCARAB_R_MODULE_ATTRIBUTE
+                #set ($rma = $module.getRModuleAttribute($attribute, $issueType))
+
+                <display-name>$rma.DisplayValue</display-name>
+                <active>$rma.Active</active>
+                <required>$rma.Required</required>
+                <module-preferred-order>$rma.Order</module-preferred-order>
+                <quick-search>$rma.QuickSearch</quick-search>
+                <default-text-flag>$rma.DefaultTextFlag</default-text-flag>
+                #set ($moduleRModuleOptions = $module.getRModuleOptions($attribute, $issueType))
+                #if ($moduleRModuleOptions && !$moduleRModuleOptions.isEmpty())
+
+                <module-attribute-options>
+                  #foreach ($mo in $moduleRModuleOptions)
+                  <module-attribute-option>
+                    <display>$mo.DisplayValue</display>
+                    <active>$mo.Active</active>
+                    <preferred-order>$mo.Order</preferred-order>
+                    <weight>$mo.Weight</weight>
+                  </module-attribute-option>
+
+                  #end
+                </module-attribute-options>
+
+                #end
+
+              </module-attribute>
+              #end
+
+            </module-attributes>
+            #end
+
+          </module-attribute-group>
           #end
-          
-        </module-attribute>
+
+        </module-attribute-groups>
         #end
-      </module-attribute-group>
+
+      </module-issue-type>
       #end
-    </module-issue-type>
+
+    </module-issue-types>
     #end
+
   </module>
 </scarab>
 #end
