@@ -58,7 +58,7 @@ $page.setTitle("Enter issue")
 </form>
 #end
 
-<form method="get" action="$link.setPage("entry,Wizard3.vm")">
+<form method="post" enctype="multipart/form-data" action="$link.setPage("entry,Wizard3.vm")"> 
 <input type="hidden" name="action" value="ReportIssue" />
 
 <p class="functnbar"><input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;<input type="reset" value="Reset form" />&#160;<input type="reset" value="Cancel" /></p>
