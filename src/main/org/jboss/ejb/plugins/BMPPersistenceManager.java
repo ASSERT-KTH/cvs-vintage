@@ -24,19 +24,19 @@ import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityInstanceCache;
+import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
 
 
 /**
-*   <description> 
-*      
+*   <description>
+*
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -115,7 +115,7 @@ implements EntityPersistenceManager
       Method postCreateMethod = (Method)postCreateMethods.get(m);
 
       Object id = null;
-      try 
+      try
       {
          // Call ejbCreate
          id = createMethod.invoke(ctx.getInstance(), args);
@@ -123,7 +123,7 @@ implements EntityPersistenceManager
       {
          // Throw this as a bean exception...(?)
          throw new EJBException(e);
-      } catch (InvocationTargetException ite) 
+      } catch (InvocationTargetException ite)
       {
 		 	Throwable e = ite.getTargetException();
          if (e instanceof CreateException)
@@ -151,18 +151,18 @@ implements EntityPersistenceManager
             throw (Exception)e;
          }
       }
-         
+
       // set the id
       ctx.setId(id);
 
       // Create a new CacheKey
-      Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
+      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
 
       // Give it to the context
       ctx.setCacheKey(cacheKey);
 
       // Insert in cache, it is now safe
-      ((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
+      con.getInstanceCache().insert(ctx);
 
       // Create EJBObject
       ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
@@ -211,7 +211,7 @@ implements EntityPersistenceManager
       Object objectId = callFinderMethod(finderMethod, args, ctx);
 
       // get the cache, create a new key and return this new key
-      return ((EntityInstanceCache)con.getInstanceCache()).createCacheKey( objectId );
+      return ((EntityCache)con.getInstanceCache()).createCacheKey( objectId );
    }
 
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
@@ -236,7 +236,7 @@ implements EntityPersistenceManager
          while (enum.hasMoreElements() == true)
          {
             // Wrap a cache key around the given object id/primary key
-            array.add(((EntityInstanceCache) con.getInstanceCache()).createCacheKey(enum.nextElement()));
+            array.add(((EntityCache) con.getInstanceCache()).createCacheKey(enum.nextElement()));
          }
          return array;
       }
@@ -248,7 +248,7 @@ implements EntityPersistenceManager
          while (enum.hasNext())
          {
             // Wrap a cache key around the given object id/primary key
-            array.add(((EntityInstanceCache) con.getInstanceCache()).createCacheKey(enum.next()));
+            array.add(((EntityCache) con.getInstanceCache()).createCacheKey(enum.next()));
          }
          return array;
       }
@@ -417,7 +417,7 @@ implements EntityPersistenceManager
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
-         } 
+         }
       }
    }
    // Z implementation ----------------------------------------------
@@ -427,7 +427,7 @@ implements EntityPersistenceManager
    // Protected -----------------------------------------------------
 
    // Private -------------------------------------------------------
-   private Object callFinderMethod(Method finderMethod, Object[] args, EntityEnterpriseContext ctx) 
+   private Object callFinderMethod(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
    throws Exception
    {
       // Check if findByPrimaryKey
@@ -448,14 +448,14 @@ implements EntityPersistenceManager
 
       // invoke the finder method
       Object result = null;
-      try 
+      try
       {
          result = callMethod.invoke(ctx.getInstance(), args);
       } catch (IllegalAccessException e)
 		{
 			// Throw this as a bean exception...(?)
 			throw new EJBException(e);
-      } catch (InvocationTargetException ite) 
+      } catch (InvocationTargetException ite)
 		{
 			Throwable e = ite.getTargetException();
          if (e instanceof FinderException)
@@ -483,7 +483,7 @@ implements EntityPersistenceManager
             throw (Exception)e;
          }
       }
-       
+
       return result;
    }
 
