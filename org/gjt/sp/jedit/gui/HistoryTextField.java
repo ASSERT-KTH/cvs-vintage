@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text field with an arrow-key accessable history.
  * @author Slava Pestov
- * @version $Id: HistoryTextField.java,v 1.5 2001/12/23 05:37:00 spestov Exp $
+ * @version $Id: HistoryTextField.java,v 1.6 2002/03/30 04:25:34 spestov Exp $
  */
 public class HistoryTextField extends JTextField
 {
@@ -233,9 +233,9 @@ public class HistoryTextField extends JTextField
 		if(!isEnabled())
 			return;
 
-		evt = KeyEventWorkaround.processKeyEvent(evt);
+		/*evt = KeyEventWorkaround.processKeyEvent(evt);
 		if(evt == null)
-			return;
+			return;*/
 
 		if(evt.getID() == KeyEvent.KEY_PRESSED)
 		{
