@@ -1,4 +1,4 @@
-<!-- $Id: scarab-design.html,v 1.2 2000/12/19 01:22:58 artem Exp $ -->
+<!-- $Id: scarab-design.html,v 1.3 2000/12/22 02:51:16 artem Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -7,7 +7,7 @@
 </head>
 <body text="#000000" bgcolor="#FFFFFF" link="#0000FF" vlink="#551A8B" alink="#0000FF">
 <h2>Scarab Design Document </h2>
-<p><font size="-3">$Id: scarab-design.html,v 1.2 2000/12/19 01:22:58 artem Exp $</font></p>
+<p>Last Updated: $Date: 2000/12/22 02:51:16 $</p>
 <p>This document is broken up into several different &quot;chapters.&quot; 
 <ul>
     <li><a href="#goals">Goals</a></li>
@@ -175,10 +175,6 @@ to insure that this is a reality.
         <td width="72%">This is where the Ant build system lives</td>
     </tr>
     <tr> 
-        <td width="28%">conf</td>
-        <td width="72%">Various Configuration files</td>
-    </tr>
-    <tr> 
         <td width="28%">lib</td>
         <td width="72%">.jar libraries</td>
     </tr>
@@ -213,7 +209,11 @@ to insure that this is a reality.
             screens/
             layouts/
             navigations/
-   sql/</pre>
+   sql/
+   html/
+   images/
+   conf/
+   tomcat-X.X/</pre>
         </td>
     </tr>
 </table>
@@ -230,7 +230,15 @@ to insure that this is a reality.
 <p>The <i>templates/</i> directory is where all the Velocity templates will live. 
     The directory structure is similar to what is in the java directory structure 
     which mirrors the Turbine module layout.</p>
-<p>The <i>sql/</i> directory is for the generated schema's.</p>
+<p>The <i>sql/</i> directory contains definition of database schema.</p>
+<p>The <i>html/</i> directory contains static web files belonging to project's web 
+    application structure.</p>
+<p>The <i>images/</i> directory contains static images belonging to project's web 
+    application structure.</p>
+<p>The <i>conf/</i> directory contains configuration files for application server 
+    and other tools that are running project's web application.</p>
+<p>The <i>tomcat-X.X/</i> directory contains an appropriate version of <a href="http://jakarta.apache.org/tomcat/">Tomcat</a> 
+    application server that is used to run project's web application.</p>
 <hr noshade size="0">
 <p><b><a name="system">System Design</a></b></p>
 <p>Scarab is being designed to be an <u>Issue Tracking System</u>. The primary goal 
