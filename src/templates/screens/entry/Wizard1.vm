@@ -1,5 +1,34 @@
-#set ( $action = $link.setPage("Report.vm").setAction("ReportIssue").addPathInfo("nextScreen", "Report2.vm") )
-#set ($user = $scarab.User)
+#macro ( attrValueSelect $issue $attKey )
+    #set ( $attrValue = $issue.AllAttributeValuesMap.get($attKey) )
+    #set ( $attr = $attrValue.Attribute )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+        <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+
+        <select name="$attrInput.OptionId.Key">
+            <option value="">Choose...</option>
+            #foreach ($option in $attr.AttributeOptions)
+              #set ( $selected = "" )
+              #if ( $option.OptionId == $attrInput.OptionId.Value.Value )
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$option.OptionId">
+                  $option.DisplayValue</option>
+            #end    
+        </select>
+#end
+
+#macro ( attrSelectErrorMsg $issue $attKey )
+    #set ( $attrValue = $issue.AllAttributeValuesMap.get($attKey) )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+    #if ( !$attrInput.OptionId.isValid() )
+        $attrInput.OptionId.Message
+    #end
+#end
+
+
+## skip the dedupe for now
+#set ( $action = $link.setPage("entry/Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard3.vm") )
+#set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $user.ReportingIssue)
 
@@ -61,8 +90,12 @@
 #set ( $attributes = $issue.AllAttributeValuesMap )
 #set ( $descAttr = $attributes.get("DESCRIPTION") )
 <p>
-    Summary:
 #set ( $attrInput = $intake.AttributeValue.mapTo($descAttr) ) 
+<input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+#if ( !$attrInput.Value.isValid() )
+    $attrInput.Value.Message <br>
+#end
+    Summary:
    <input name= "$attrInput.Value.Key"
         value="$!attrInput.Value.Value" size="20" type="text">
     <br>
@@ -85,26 +118,13 @@
         </SELECT>
      </TD>
       <TD>
-        <SPAN CLASS="SectionHeader">Platform:<BR>
-#macro ( attrValueSelect $issue $attKey )
-    #set ( $attrValue = $issue.AllAttributeValuesMap.get($attKey) )
-    #set ( $attr = $attrValue.Attribute )
-    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
-        <SELECT NAME="$attrInput.Id.Key">
-            <option value="">Choose...</option>
-            #foreach ($option in $attr.AttributeOptions)
-              #set ( $selected = "" )
-              #if ( $option.DisplayValue == $attrInput.Value )
-                #set ( $selected = " selected" )
-              #end
-              <option$selected value="$option.Id">$option.DisplayValue</option>
-            #end    
-        </SELECT>
-#end
+          <SPAN CLASS="SectionHeader">Platform:<BR>
+          #attrSelectErrorMsg ($issue "PLATFORM") <br>
           #attrValueSelect ($issue "PLATFORM")
       </TD>
       <TD>
-        <SPAN CLASS="SectionHeader">OS:<BR>
+          <SPAN CLASS="SectionHeader">OS:<BR>
+          #attrSelectErrorMsg ($issue "OPERATING SYSTEM") <br>
           #attrValueSelect ($issue "OPERATING SYSTEM")
       </TD>
   </tr>

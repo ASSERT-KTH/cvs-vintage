@@ -11,10 +11,10 @@
 <li><a href="$link.setPage("Register.vm")">Register.vm</a>
 <li><a href="$link.setPage("RegisterConfirm.vm")">RegisterConfirm.vm</a>
 
-<li><a href="$link.setPage("Report.vm")">Report.vm</a>
-<li><a href="$link.setPage("Report2.vm")">Report2.vm</a>
-<li><a href="$link.setPage("Report3.vm")">Report3.vm</a>
-<li><a href="$link.setPage("Report4.vm")">Report4.vm</a>
+<li><a href="$link.setPage("entry/Wizard1.vm")">EnterIssue.vm</a>
+<li><a href="$link.setPage("entry/Wizard2.vm")">EnterIssue2.vm</a>
+<li><a href="$link.setPage("entry/Wizard3.vm")">EnterIssue3.vm</a>
+<li><a href="$link.setPage("entry/Wizard4.vm")">EnterIssue4.vm</a>
 <li><a href="$link.setPage("Search.vm")">Search.vm</a>
 <li><a href="$link.setPage("Start.vm")">Start.vm</a>
 <li><a href="$link.setPage("Start2.vm")">Start2.vm</a>

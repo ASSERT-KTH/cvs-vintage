@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.actions;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -46,49 +46,63 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Velocity Stuff 
+import org.apache.turbine.services.velocity.*; 
+import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
+// Turbine Stuff 
+import org.apache.turbine.util.*;
+import org.apache.turbine.om.security.*;
+import org.apache.turbine.om.security.peer.*;
+import org.apache.turbine.services.resources.*;
+import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.modules.*;
+import org.apache.turbine.modules.actions.*;
+
+// Scarab Stuff
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserPeer;
+import org.tigris.scarab.util.*;
+
 /**
-    A place to put public final static strings.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.5 2001/03/27 06:22:36 jmcnally Exp $
+    This class is responsible for report issue forms.
+    ScarabIssueAttributeValue
+    @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+    @version $Id: ReportIssue.java,v 1.1 2001/03/27 06:22:35 jmcnally Exp $
 */
-
-public interface ScarabConstants
+public class ReportIssue extends VelocityAction
 {
-    /** 
-     * the registration code uses this in order to store an object
-     * into the data.getUser().getTemp() hashtable. this is the key 
-     * value and is used across several classes.
-     */
-    public static final String SESSION_REGISTER = "scarab.newUser";
 
-    /**
-     * This is the key value that stores the name of the template to 
-     * execute next.
-     */
-    public static final String NEXT_TEMPLATE = "nextTemplate";
+    public void doSubmitattributes( RunData data, Context context ) 
+        throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+        
+        if ( intake.isAllValid() ) 
+        {
+            String template = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE, "Report2.vm");
+            setTemplate(data, template);            
+        }
 
+    }
     /**
-     * This is the key value that stores the name of the template to 
-     * cancel to.
-     */
-    public static final String CANCEL_TEMPLATE = "cancelTemplate";
+        This manages clicking the Cancel button
+    */
+    public void doCancel( RunData data, Context context ) throws Exception
+    {
+        setTemplate(data, "Start.vm");
+    }
+    /**
+        calls doCancel()
+    */
+    public void doPerform( RunData data, Context context ) throws Exception
+    {
+        doCancel(data, context);
+    }
 
-    /**
-     * This is the key value that stores the name of the template
-     * that is currently being executed.
-     */
-    public static final String TEMPLATE = "template";
-    
-    /**
-     * Primary System Object
-     */
-    public static final String SCARAB_REQUEST_TOOL = "scarabR";
+}
 
-    /**
-     * The name used for the Intake tool
-     */
-    public static final String INTAKE_TOOL = "intake";
-    
-}    
+
 

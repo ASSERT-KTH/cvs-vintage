@@ -60,59 +60,36 @@
           <TD VALIGN="top" CLASS="SectionHeader" bgcolor="#cccccc">Issue ID#</TD>
           <TD VALIGN="top" CLASS="SectionHeader" bgcolor="#cccccc">Issue Summary</TD>
         </TR>
+
+#foreach ($issue in $issueList)
+    #set ( $issueLink = $link.setPage($link.currentTemplate) )
+    #set ( $issueLink = $issueLink.addData("currentIssueId", $issue.UniqueId) )
+
+    #if ($data.Parameters.getString("currentIssueId") == $issue.UniqueId)
         <TR>
-          <TD VALIGN="top" CLASS="TableData"><a href="">1021</a></TD>
-          <TD VALIGN="top" CLASS="TableData">Broken html link</TD>
+          <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">
+            $issue.UniqueId</TD>
+          <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">
+            $issue.Summary</TD>
+        </TR>
+    #else
+        <TR>
+          <TD VALIGN="top" CLASS="TableData">
+            <a href="$issueLink">$issue.UniqueId</a></TD>
+          <TD VALIGN="top" CLASS="TableData">$issue.Summary</TD>
         </TR>
         <TR>
           <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
         </TR>
         <TR>
-          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
+                <SPACER TYPE="block" HEIGHT="1"></TD>
         </TR>			
         <TR>
           <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
         </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableData"><a href="">1031</a></TD>
-          <TD VALIGN="top" CLASS="TableData">Bad variable name causes server to think page doesn't exist</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>			
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableData"><a href="">1121</a></TD>
-          <TD VALIGN="top" CLASS="TableData">Button isn't really clickable</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>			
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableData"><a href="">23476</a></TD>
-          <TD VALIGN="top" CLASS="TableData">Table cell bgcolor makes text unreadable</TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD HEIGHT="2" COLSPAN="2"><SPACER TYPE="block" HEIGHT="2"></TD>
-        </TR>
-        <TR>
-          <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">34678</TD>
-          <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">UI widgets don't accurately reflect the native widgets found on each wireless delivery platform</TD>
-        </TR>
+    #end
+#end
       </TABLE>
 
     </TD>

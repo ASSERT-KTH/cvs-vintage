@@ -1,4 +1,10 @@
-  <FORM METHOD="post" NAME="Report3Form" action="">
+#set ( $action = $link.setPage("Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "Wizard4.vm") )
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
+#set ($issue = $user.ReportingIssue)
+
+
+  <FORM METHOD="post" NAME="Report3Form" action="$action">
   <input type="hidden" name="action" value="Report3">
   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
     <TR>
@@ -7,7 +13,7 @@
 <!-- top nav bar -->
         <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0">
           <TR>
-            <TD NOWRAP CLASS="NavHeader">SCARAB:</TD>
+            <TD NOWRAP CLASS="NavHeader">S C A R A B:</TD>
             <TD NOWRAP CLASS="NavHeader"><A HREF="/">My Bugs</A>&nbsp;</TD>
             <TD CLASS="NavHeaderOn" BGCOLOR="#cccccc">&nbsp;</TD>
             <TD CLASS="NavHeaderOn" NOWRAP BGCOLOR="#cccccc">Report</TD>
@@ -85,10 +91,19 @@
  </tr>
  <tr>
   <td valign="top" class="TableDataHeader">Platform:</td>
-  <td valign="top" class="TableData">PC</td>
+  <td valign="top" class="TableData">
+
+          #attrSelectErrorMsg ( $issue "PLATFORM" )
+          #attrValueSelect ($issue "PLATFORM")
+
+
+  </td>
   <td valign="top">&nbsp;</td>
   <td valign="top" class="TableDataHeader">OS:</td>
-  <td valign="top" class="TableData">Linux</td>
+  <td valign="top" class="TableData">
+          #attrSelectErrorMsg ( $issue "OPERATING SYSTEM" )
+          #attrValueSelect ($issue "OPERATING SYSTEM")
+  </td>
  </tr>
  <tr>
   <td height="2" colspan="5"><spacer type="block" height="2"></td>
@@ -101,7 +116,19 @@
  </tr>
  <tr>
   <td valign="top" class="TableDataHeader">Summary:</td>
-  <td valign="top" colspan="4" class="TableData">UI widgets don't accurately reflect the native widgets found on each wireless delivery platform</td>
+  <td valign="top" colspan="4" class="TableData">
+
+#set ( $attributes = $issue.AllAttributeValuesMap )
+#set ( $descAttr = $attributes.get("DESCRIPTION") )
+#set ( $attrInput = $intake.AttributeValue.mapTo($descAttr) ) 
+<input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+#if ( !$attrInput.Value.isValid() )
+    $attrInput.Value.Message <br>
+#end
+   <input name= "$attrInput.Value.Key"
+        value="$!attrInput.Value.Value" size="20" type="text">
+
+</td>
  </tr>
  <tr>
   <td height="2" colspan="5"><spacer type="block" height="2"></td>

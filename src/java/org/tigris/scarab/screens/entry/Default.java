@@ -1,4 +1,4 @@
-package org.tigris.scarab.util;
+package org.tigris.scarab.screens.entry;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -46,49 +46,52 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.*;
+
+// Velocity  Stuff 
+import org.apache.turbine.services.velocity.*; 
+import org.apache.velocity.*; 
+import org.apache.velocity.context.*; 
+
+// Turbine Stuff 
+import org.apache.turbine.om.*; 
+import org.apache.turbine.modules.*; 
+import org.apache.turbine.modules.screens.*; 
+import org.apache.turbine.util.*; 
+
+// Scarab Stuff
+import org.tigris.scarab.om.*;
+import org.tigris.scarab.util.*;
+import org.tigris.scarab.tools.*;
+
 /**
-    A place to put public final static strings.
-    
+    This class is responsible for building the Context up
+    for the Issue Entry templates.
+
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.5 2001/03/27 06:22:36 jmcnally Exp $
+    @version $Id: Default.java,v 1.1 2001/03/27 06:22:35 jmcnally Exp $
 */
-
-public interface ScarabConstants
+public class Default extends VelocityScreen
 {
-    /** 
-     * the registration code uses this in order to store an object
-     * into the data.getUser().getTemp() hashtable. this is the key 
-     * value and is used across several classes.
-     */
-    public static final String SESSION_REGISTER = "scarab.newUser";
+    /**
+        builds up the context for display of variables on the page.
+    */
+    public void doBuildTemplate( RunData data, Context context ) 
+        throws Exception 
+    {   
+          Module module = ModulePeer.retrieveByPK(new NumberKey("5"));
+          
+          ScarabRequestTool scarab = (ScarabRequestTool)
+              context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+          
+          ScarabUser user = new ScarabUser();
+          user.setPrimaryKey(new NumberKey("2"));
+          user.setCurrentModule(module);
+          scarab.setUser(user);
+   
+    }
+}
 
-    /**
-     * This is the key value that stores the name of the template to 
-     * execute next.
-     */
-    public static final String NEXT_TEMPLATE = "nextTemplate";
 
-    /**
-     * This is the key value that stores the name of the template to 
-     * cancel to.
-     */
-    public static final String CANCEL_TEMPLATE = "cancelTemplate";
 
-    /**
-     * This is the key value that stores the name of the template
-     * that is currently being executed.
-     */
-    public static final String TEMPLATE = "template";
-    
-    /**
-     * Primary System Object
-     */
-    public static final String SCARAB_REQUEST_TOOL = "scarabR";
-
-    /**
-     * The name used for the Intake tool
-     */
-    public static final String INTAKE_TOOL = "intake";
-    
-}    
 
