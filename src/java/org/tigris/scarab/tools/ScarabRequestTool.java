@@ -1057,6 +1057,8 @@ try{
             if (rmit == null)
             {
                 nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
+                setAlertMessage("A module and issue type must be selected " +
+                                "before entering a new issue.");
             }
         }
         catch (Exception e)
