@@ -351,10 +351,4 @@ public class RequestUtil {
         return encoding;
     }
 
-    static  StringManager sm = StringManager.getManager(Constants.Package);
-
-    public static String getStatusString(int status ) {
-	return sm.getString("sc."+ status );
-    }
-
 }

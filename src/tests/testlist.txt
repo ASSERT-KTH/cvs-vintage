@@ -12,7 +12,9 @@ tests.dispatch.IncludeMismatch1
 tests.dispatch.IncludeMismatch2
 tests.dispatch.SimpleRedirect
 tests.dispatch.PrintWriterTest
-tests.y2k.HttpDateTest
+## Y2K is over, we can now rewrite this test - it
+## shouldn't depend on tomcat internals on the client side
+## tests.y2k.HttpDateTest
 tests.request.Get
 tests.request.Post
 tests.request.RequestMap

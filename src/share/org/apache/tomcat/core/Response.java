@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.5 1999/12/21 03:15:20 bergsten Exp $
- * $Revision: 1.5 $
- * $Date: 1999/12/21 03:15:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.6 2000/01/08 14:50:39 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/08 14:50:39 $
  *
  * ====================================================================
  *
@@ -396,7 +396,8 @@ public class Response {
     public void writeHeaders() throws IOException {
 	if(omitHeaders)
 	    return;
-	resA.setStatus( status, RequestUtil.getStatusString(status));
+
+	resA.setStatus( status, sm.getString("sc."+ status ));
 	fixHeaders();
 	resA.addMimeHeaders( headers );
     }

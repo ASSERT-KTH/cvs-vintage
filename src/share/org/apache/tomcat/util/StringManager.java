@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.2 1999/12/08 01:37:20 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/08 01:37:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.3 2000/01/08 14:50:41 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/08 14:50:41 $
  *
  * ====================================================================
  *
@@ -134,6 +134,7 @@ public class StringManager {
 	    str = bundle.getString(key);
         } catch (MissingResourceException mre) {
             str = "cannot find message associated with key : " + key;
+	    mre.printStackTrace();
         }
 
         return str;
