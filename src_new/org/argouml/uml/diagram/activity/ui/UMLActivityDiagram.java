@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.14 2002/09/22 10:28:20 kataka Exp $
+// $Id: UMLActivityDiagram.java,v 1.15 2002/09/22 10:34:32 kataka Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -207,7 +207,8 @@ public class UMLActivityDiagram extends UMLDiagram {
     _toolBar.add(_actionBranchPseudoState);
     _toolBar.add(_actionForkPseudoState);
     _toolBar.add(_actionJoinPseudoState);
-    //_toolBar.add(ActionAddNote.SINGLETON); // removed until issue 529 resolved
+    _toolBar.addSeparator();
+    _toolBar.add(ActionAddNote.SINGLETON);
     _toolBar.addSeparator();
 
     _toolBar.add(_actionRectangle);
