@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.20 2001/12/10 01:01:09 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.21 2001/12/28 06:42:41 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -245,6 +245,7 @@ public class AssignIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
+        Attribute attribute = scarabR.getAttribute();
         Attachment attachment = new Attachment();
         Group group = intake.get("Attachment", 
                                      attachment.getQueryKey(), false);
@@ -272,7 +273,7 @@ public class AssignIssue extends RequireLoginFirstAction
                 Issue issue = scarabR.getIssue();
                 List users = UserManager
                     .getUsers(newUsernames, issue.getIdDomain());
-                issue.assignUsers(users, comment, modifyingUser);
+                issue.assignUsers(users, comment, modifyingUser, attribute);
                 emailAssignIssueToUsers(scarabR.getIssue(), users, 
                     comment, context);
 
@@ -286,7 +287,7 @@ public class AssignIssue extends RequireLoginFirstAction
                     Issue issue = (Issue)issues.get(i);
                     List users = UserManager
                         .getUsers(newUsernames, issue.getIdDomain());
-                    issue.assignUsers(users, comment, modifyingUser);
+                    issue.assignUsers(users, comment, modifyingUser, attribute);
                     emailAssignIssueToUsers((Issue)issues.get(i), users, 
                         comment, context);
                 }
