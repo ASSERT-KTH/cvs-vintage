@@ -79,7 +79,6 @@ public class Http10 {
     int bufSize=2048; // default
     int off=0;
     int count=0;
-    public static final String DEFAULT_CHARACTER_ENCODING = "8859_1";
 
     protected static final int DEFAULT_HEAD_BUFFER_SIZE = 1024;
     protected byte[] oBuffer = new byte[DEFAULT_HEAD_BUFFER_SIZE];

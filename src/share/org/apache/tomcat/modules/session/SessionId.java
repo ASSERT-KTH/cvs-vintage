@@ -117,7 +117,7 @@ public class SessionId extends  BaseInterceptor
      * similar with the priority in apache hooks, right now it's just
      * a config issue.
      */
-    public int contextMap(Request request ) {
+    public int postReadRequest(Request request ) {
 	if( request.getRequestedSessionId() != null ) {
 	    // probably Apache already did that for us
 	    return 0;
@@ -131,10 +131,10 @@ public class SessionId extends  BaseInterceptor
 	// the request.
 	String sig=";jsessionid=";
 	int foundAt=-1;
-	String uri=request.requestURI().toString();
 	String sessionId;
 	
-	if ((foundAt=uri.indexOf(sig))!=-1){
+	if ((foundAt=request.requestURI().indexOf(sig))!=-1){
+	    String uri=request.requestURI().toString();
 	    sessionId=uri.substring(foundAt+sig.length());
 	    // rewrite URL, do I need to do anything more?
 	    request.requestURI().setString(uri.substring(0, foundAt));
