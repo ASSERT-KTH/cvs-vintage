@@ -346,44 +346,29 @@ public class IMAPStore {
 	 * If its not selected -> select it.
 	 * 
 	 * @param path	mailbox path
-	 * @return	
 	 * @throws Exception
 	 */
-	public boolean isSelected(String path) throws Exception {
-		//System.out.println("isSelected");
+	public void ensureSelectedState(String path) throws Exception {
+
+		// ensure that we are logged in already
+		ensureLoginState();
 
 		if (getState() == STATE_SELECTED) {
-
-			if (path.equals(getSelectedFolderPath()))
-				return true;
-			else {
+			// we are already in selected state
+			if (path.equals(getSelectedFolderPath())) {
+				// correct folder selected
+				// -> do nothing
+			} else {
+				// force selection of correct folder
 				select(path);
-				return false;
+
 			}
 
-		} else if (getState() == STATE_AUTHENTICATE) {
-			select(path);
-			return false;
 		} else {
-			// we are in Imap4.STATE_NONAUTHENTICATE
-
+			// force selection of correct folder
 			select(path);
-
-			return false;
 		}
-	}
 
-	/**
-	 * Ensure that we are in login state.
-	 * 
-	 * @param state
-	 * @throws Exception
-	 */
-	private void ensureState(int state) throws Exception {
-		if (state == state)
-			return;
-
-		login();
 	}
 
 	/**
@@ -394,24 +379,11 @@ public class IMAPStore {
 	 * @throws Exception
 	 */
 	public boolean select(String path) throws Exception {
-		ensureState(STATE_AUTHENTICATE);
+
+		// make sure we are already logged in
+		ensureLoginState();
 
 		ColumbaLogger.log.info("selecting path=" + path);
-
-		if (getSelectedFolderPath() != null) {
-			// if another folder is selected, close this one first
-			// -> this is necessary, because the close command
-			// -> also deletes are messages that are marked as expunged
-			try {
-				getProtocol().close();
-			} catch (CommandFailedException ex) {
-			} catch (DisconnectedException ex) {
-				state = STATE_NONAUTHENTICATE;
-				selectedFolderPath = null;
-				select(path);
-
-			}
-		}
 
 		try {
 
@@ -422,6 +394,14 @@ public class IMAPStore {
 						"message",
 						"select_path"),
 					new Object[] { path }));
+
+			if (getSelectedFolderPath() != null) {
+				// if another folder is selected, close this one first
+				// -> this is necessary, because the close command
+				// -> also deletes all messages that are marked as expunged
+
+				getProtocol().close();
+			}
 			IMAPResponse[] responses = getProtocol().select(path);
 
 			StringBuffer buf = new StringBuffer();
@@ -504,7 +484,8 @@ public class IMAPStore {
 	 * 
 	 */
 	protected String fetchDelimiter() throws Exception {
-		isLogin();
+		// make sure we are already logged in
+		ensureLoginState();
 
 		try {
 			printStatusMessage(
@@ -538,7 +519,7 @@ public class IMAPStore {
 	 */
 	public ListInfo[] lsub(String reference, String pattern) throws Exception {
 
-		isLogin();
+		ensureLoginState();
 
 		try {
 			printStatusMessage(
@@ -587,7 +568,8 @@ public class IMAPStore {
 	public void append(String mailboxName, String messageSource)
 		throws Exception {
 
-		isLogin();
+		// make sure we are already logged in
+		ensureLoginState();
 
 		try {
 			getProtocol().append(mailboxName, messageSource);
@@ -607,8 +589,14 @@ public class IMAPStore {
 	 * @throws Exception
 	 */
 	public boolean createFolder(String mailboxName) throws Exception {
+
+		//		make sure we are already logged in
+		ensureLoginState();
+
 		try {
 			getProtocol().create(mailboxName);
+			// if we don't subscribe to this folder
+			// it won't be visible in Columba
 			getProtocol().subscribe(mailboxName);
 		} catch (BadCommandException ex) {
 		} catch (CommandFailedException ex) {
@@ -633,30 +621,22 @@ public class IMAPStore {
 	 * @throws Exception
 	 */
 	public boolean deleteFolder(String mailboxName) throws Exception {
-		// we need to ensure that this folder is closed
+
+		// make sure we are already logged in
+		ensureLoginState();
+
 		try {
+			// we need to ensure that this folder is closed
 			getProtocol().close();
-		} catch (BadCommandException ex) {
-		} catch (CommandFailedException ex) {
-		} catch (DisconnectedException ex) {
-			state = STATE_NONAUTHENTICATE;
-			deleteFolder(mailboxName);
-		}
 
-		try {
+			// delete folder
 			getProtocol().delete(mailboxName);
-		} catch (BadCommandException ex) {
-		} catch (CommandFailedException ex) {
-			return false;
-		} catch (DisconnectedException ex) {
-			state = STATE_NONAUTHENTICATE;
-			deleteFolder(mailboxName);
-		}
 
-		try {
+			// unsubscribe 
 			getProtocol().unsubscribe(mailboxName);
 		} catch (BadCommandException ex) {
 		} catch (CommandFailedException ex) {
+			return false;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			deleteFolder(mailboxName);
@@ -676,10 +656,13 @@ public class IMAPStore {
 	public boolean renameFolder(String oldMailboxName, String newMailboxName)
 		throws Exception {
 
-		ensureState(STATE_AUTHENTICATE);
+		// make sure we are already logged in
+		ensureLoginState();
 
-		// we need to ensure that this folder is closed
 		try {
+			// we need to ensure that this folder is closed
+			getProtocol().close();
+
 			getProtocol().rename(oldMailboxName, newMailboxName);
 		} catch (BadCommandException ex) {
 		} catch (CommandFailedException ex) {
@@ -699,7 +682,10 @@ public class IMAPStore {
 	 * @throws Exception
 	 */
 	public boolean subscribeFolder(String mailboxName) throws Exception {
-		ensureState(STATE_AUTHENTICATE);
+
+		// make sure we are already logged in
+		ensureLoginState();
+
 		try {
 			getProtocol().subscribe(mailboxName);
 		} catch (BadCommandException ex) {
@@ -720,7 +706,10 @@ public class IMAPStore {
 	 * @throws Exception
 	 */
 	public boolean unsubscribeFolder(String mailboxName) throws Exception {
-		ensureState(STATE_AUTHENTICATE);
+
+		// make sure we are already logged in
+		ensureLoginState();
+
 		try {
 			getProtocol().unsubscribe(mailboxName);
 		} catch (BadCommandException ex) {
@@ -744,13 +733,7 @@ public class IMAPStore {
 	 */
 	public List fetchUIDList(String path) throws Exception {
 
-		isLogin();
-		isSelected(path);
-
-		// selection of mailbox failed
-		// -> don't try to go any further
-		if (state == STATE_AUTHENTICATE)
-			return null;
+		ensureSelectedState(path);
 
 		try {
 			int count = messageFolderInfo.getExists();
@@ -785,8 +768,8 @@ public class IMAPStore {
 	 */
 	public boolean expunge(String path) throws Exception {
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		//Object[] expungedUids = null;
 		try {
@@ -815,8 +798,8 @@ public class IMAPStore {
 	public void copy(String destFolder, Object[] uids, String path)
 		throws Exception {
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		//Object[] expungedUids = null;
 		try {
@@ -844,8 +827,8 @@ public class IMAPStore {
 
 		Flags[] result = null;
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		try {
 			printStatusMessage(
@@ -939,10 +922,10 @@ public class IMAPStore {
 		throws Exception {
 
 		// make sure we are logged in
-		isLogin();
+		ensureLoginState();
 
 		// make sure this mailbox is selected
-		isSelected(path);
+		ensureSelectedState(path);
 
 		//	get list of user-defined headerfields
 		String[] headercacheList =
@@ -965,9 +948,10 @@ public class IMAPStore {
 		if (list.size() < 100) {
 			int startIndex = 0;
 			int endIndex = list.size();
-			
-			if ( list.size() == 1) endIndex = 1;
-			
+
+			if (list.size() == 1)
+				endIndex = 1;
+
 			ColumbaLogger.log.debug(
 				"fetching from " + startIndex + " to " + endIndex);
 
@@ -993,7 +977,7 @@ public class IMAPStore {
 
 				// check for boundary
 				if (endIndex > list.size())
-					endIndex = list.size()-1;
+					endIndex = list.size() - 1;
 
 				ColumbaLogger.log.debug(
 					"fetching from " + startIndex + " to " + endIndex);
@@ -1022,17 +1006,20 @@ public class IMAPStore {
 	/**
 	 * Ensure that we are in login state.
 	 * 
-	 * @return
+	
 	 * @throws Exception
 	 */
-	public boolean isLogin() throws Exception {
+	public void ensureLoginState() throws Exception {
 		if ((getState() == STATE_AUTHENTICATE)
-			|| (getState() == STATE_SELECTED))
-			return true;
-		else {
+			|| (getState() == STATE_SELECTED)) {
+			// ok, we are logged in
+		} else {
 			// we are in Imap4.STATE_NONAUTHENTICATE
+			// -> force new login
 			login();
-			return false;
+
+			// synchronize folder list with server
+			parent.syncSubscribedFolders();
 		}
 	}
 
@@ -1046,8 +1033,8 @@ public class IMAPStore {
 	 */
 	public MimeTree getMimePartTree(Object uid, String path) throws Exception {
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 		try {
 
 			IMAPResponse[] responses =
@@ -1080,8 +1067,8 @@ public class IMAPStore {
 	public MimePart getMimePart(Object uid, Integer[] address, String path)
 		throws Exception {
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		if (!aktMessageUid.equals(uid)) {
 			getMimePartTree(uid, path);
@@ -1118,8 +1105,8 @@ public class IMAPStore {
 	 */
 	public String getMessageSource(Object uid, String path) throws Exception {
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		try {
 			IMAPResponse[] responses =
@@ -1150,8 +1137,8 @@ public class IMAPStore {
 	public void markMessage(Object[] uids, int variant, String path)
 		throws Exception {
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		try {
 			MessageSet set = new MessageSet(uids);
@@ -1195,8 +1182,8 @@ public class IMAPStore {
 		throws Exception {
 		LinkedList result = new LinkedList();
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		try {
 			printStatusMessage(
@@ -1271,8 +1258,8 @@ public class IMAPStore {
 		throws Exception {
 		LinkedList result = new LinkedList();
 
-		isLogin();
-		isSelected(path);
+		ensureLoginState();
+		ensureSelectedState(path);
 
 		try {
 			//MessageSet set = new MessageSet(uids);

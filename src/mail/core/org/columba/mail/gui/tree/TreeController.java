@@ -25,7 +25,6 @@ import javax.swing.tree.TreePath;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -34,7 +33,6 @@ import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.dnd.MessageTransferHandler;
-import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**
@@ -149,6 +147,7 @@ public class TreeController implements TreeWillExpandListener {
 		if (treeNode == null)
 			return;
 
+		/*
 		// fetch new sub folder list
 		// -> this is a hack for imap folder:
 		// -> when expanding the IMAPRootFolder the
@@ -157,7 +156,8 @@ public class TreeController implements TreeWillExpandListener {
 		cr[0] = new FolderCommandReference(treeNode);
 
 		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
-
+		*/
+		
 		// save expanded state
 		saveExpandedState(treeNode, e.getPath());
 	}
