@@ -55,7 +55,7 @@ $l10n.NoAttachments
 #if ($canEdit)
 <h4>$l10n.AddAttachment</h4>
 <div class="colbar">
-* attachment fields are only required if the $l10n.Path is set
+*&nbsp;$l10n.format('AttachmentFieldRequired', $l10n.Path)
 </div>
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
