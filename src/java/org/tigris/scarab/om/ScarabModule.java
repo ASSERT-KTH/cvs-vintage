@@ -97,7 +97,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.74 2001/11/26 23:19:11 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.75 2001/12/04 17:39:58 kminshull Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -351,5 +351,29 @@ public class ScarabModule
             name = getClass().getName();
         }
         return name;
+    }
+    
+    public static ScarabModule findModuleByCode(String moduleCode) throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(ScarabModulePeer.MODULE_CODE, moduleCode);
+        List modules =  ScarabModulePeer.doSelect(crit);
+        if(modules != null)
+        {
+            return (ScarabModule)modules.get(0);
+        }
+        return null;
+    }
+    
+    public static ScarabModule findModuleById(NumberKey idKey) throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(ScarabModulePeer.MODULE_ID, idKey);
+        List modules =  ScarabModulePeer.doSelect(crit);
+        if(modules != null && modules.size() > 0)
+        {
+            return (ScarabModule)modules.get(0);
+        }
+        return null;
     }
 }
