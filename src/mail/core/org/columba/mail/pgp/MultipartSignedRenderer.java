@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Vector;
 
+import org.columba.core.io.CloneStreamMaster;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.ristretto.composer.MimePartRenderer;
@@ -69,9 +70,11 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 
 		// Add the MimePart that will be signed
 		streams.add(new ByteArrayInputStream(startBoundary));
+		CloneStreamMaster signedPartCloneModel = new CloneStreamMaster(MimeTreeRenderer.getInstance().renderMimePart(
+		part.getChild(0)));
+		
 		streams.add(
-			MimeTreeRenderer.getInstance().renderMimePart(
-				part.getChild(0)));
+			signedPartCloneModel.getClone());
 
 		// Add the signature
 		streams.add(new ByteArrayInputStream(startBoundary));
@@ -85,8 +88,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 			new InputStreamMimePart(
 				signatureHeader,
 				controller.sign(
-					MimeTreeRenderer.getInstance().renderMimePart(
-						part.getChild(0)),
+		signedPartCloneModel.getClone(),
 					pgpItem));
 
 		streams.add(
