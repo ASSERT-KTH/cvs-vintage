@@ -134,8 +134,6 @@ interceptors that are shared by multiple contexts )
 
 - better integration for form login with apache
 
-- This is the living To-Do list for Tomcat 3.3
-
 - Optimize error handling. For example, we can use int IDs for error 
 messages ( needs enhancements in StringManager ) 
 - Cache the error page handler ( instead of doing a second mapping 
@@ -155,3 +153,24 @@ unused strings, make sure all the messages are localized.
 - Merge JMX code from catalina
 
 - Merge JNDI code from catalina
+
+- Experiment and implement "sendFile" for chunks of static JSP, cache the
+static region as byte[] on the server ( integrated mode )
+
+- Fix mod_jk for Apache2.0 !!!
+
+- Add callbacks to mod_jk, integrate authentication ( user Apache's user db)
+
+- Experiment with mixed applications, integrate the session and auth 
+representation of mod_perl and php
+
+- Implement the profiling web app ( that allows you to get a profile of a 
+servlet container, how expensive is each API call )
+
+- Expose more internals via /admin ( number of threads, memory, etc)
+
+- Experiment with Apache2.0 config ( and IIS ? ), try to integrate
+
+- Make sure the  request parsed by Apache is not parsed again.
+
+- Interceptor == Module == SAF ( will this ever happen ?)

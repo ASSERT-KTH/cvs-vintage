@@ -79,11 +79,13 @@ public class ServerCookie implements Serializable {
 
     private int maxAge = -1;	// ;Max-Age=VALUE
 				// ;Discard ... implied by maxAge < 0
+    // RFC2109: maxAge=0 will end a session
     private MessageBytes path=new MessageBytes();	// ;Path=VALUE .
     private boolean secure;	// ;Secure
     private int version = 0;	// ;Version=1
 
-
+    //XXX CommentURL, Port -> use notes ?
+    
     public ServerCookie() {
 
     }
@@ -200,10 +202,19 @@ public class ServerCookie implements Serializable {
      *  version
      */
     public String getCookieHeaderName() {
+	return getCookieHeaderName(version);
+    }
+
+    /** Return the header name to set the cookie, based on cookie
+     *  version
+     */
+    public static String getCookieHeaderName(int version) {
         if (version == 1) {
+	    // RFC2965
 	    return "Set-Cookie2";
         } else {
-            return "Set-Cookie";
+	    // Old Netscape
+	    return "Set-Cookie";
         }
     }
 
@@ -226,6 +237,7 @@ public class ServerCookie implements Serializable {
         buf.append("=");
         maybeQuote(version, buf, cookie.getValue().toString());
 
+	// XXX Netscape cookie: "; "
  	// add version 1 specific information
 	if (version == 1) {
 	    // Version=1 ... required
@@ -248,7 +260,10 @@ public class ServerCookie implements Serializable {
 	// Max-Age=secs/Discard ... or use old "Expires" format
 	if (cookie.getMaxAge() >= 0) {
 	    if (version == 0) {
+		// XXX XXX XXX We need to send both, for
+		// interoperatibility (long word )
 		buf.append (";Expires=");
+		// Wdy, DD-Mon-YY HH:MM:SS GMT ( Expires netscape format )
 		DateTool.oldCookieFormat.
 		    format(new Date( System.currentTimeMillis() +
 				     cookie.getMaxAge() *1000L) ,buf,

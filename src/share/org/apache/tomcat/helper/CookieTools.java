@@ -59,6 +59,7 @@
 
 package org.apache.tomcat.helper;
 import  org.apache.tomcat.util.*;
+import  org.apache.tomcat.util.http.*;
 import  org.apache.tomcat.core.*;
 import  org.apache.tomcat.session.*;
 import java.text.*;
@@ -157,114 +158,114 @@ public class CookieTools {
     }  
     
     
-    /** Return the header name to set the cookie, based on cookie
-     *  version
-     */
-    public static String getCookieHeaderName(int version) {
-        if (version == 1) {
-	    return "Set-Cookie2";
-        } else {
-            return "Set-Cookie";
-        }
-    }
+//     /** Return the header name to set the cookie, based on cookie
+//      *  version
+//      */
+//     public static String getCookieHeaderName(int version) {
+//         if (version == 1) {
+// 	    return "Set-Cookie2";
+//         } else {
+//             return "Set-Cookie";
+//         }
+//     }
 
-    /** Return the header value used to set this cookie
-     *  @deprecated Use StringBuffer version
-     */
-    public static String getCookieHeaderValue(ServerCookie cookie) {
-        StringBuffer buf = new StringBuffer();
-	getCookieHeaderValue( cookie, buf );
-	return buf.toString();
-    }
+//     /** Return the header value used to set this cookie
+//      *  @deprecated Use StringBuffer version
+//      */
+//     public static String getCookieHeaderValue(ServerCookie cookie) {
+//         StringBuffer buf = new StringBuffer();
+// 	getCookieHeaderValue( cookie, buf );
+// 	return buf.toString();
+//     }
 
-    /** Return the header value used to set this cookie
-     */
-    public static void getCookieHeaderValue(ServerCookie cookie,
-					    StringBuffer buf) {
-        int version = cookie.getVersion();
+//     /** Return the header value used to set this cookie
+//      */
+//     public static void getCookieHeaderValue(ServerCookie cookie,
+// 					    StringBuffer buf) {
+//         int version = cookie.getVersion();
 
-        // this part is the same for all cookies
+//         // this part is the same for all cookies
 
-        buf.append(cookie.getName());
-        buf.append("=");
-        maybeQuote(version, buf, cookie.getValue().toString());
+//         buf.append(cookie.getName());
+//         buf.append("=");
+//         maybeQuote(version, buf, cookie.getValue().toString());
 
- 	// add version 1 specific information
-	if (version == 1) {
-	    // Version=1 ... required
-	    buf.append ("; Version=1");
+//  	// add version 1 specific information
+// 	if (version == 1) {
+// 	    // Version=1 ... required
+// 	    buf.append ("; Version=1");
 
-	    // Comment=comment
-	    if (cookie.getComment() != null) {
-		buf.append ("; Comment=");
-		maybeQuote (version, buf, cookie.getComment().toString());
-	    }
-	}
+// 	    // Comment=comment
+// 	    if (cookie.getComment() != null) {
+// 		buf.append ("; Comment=");
+// 		maybeQuote (version, buf, cookie.getComment().toString());
+// 	    }
+// 	}
 
-	// add domain information, if present
+// 	// add domain information, if present
 
-	if (!cookie.getDomain().isNull()) {
-	    buf.append("; Domain=");
-	    maybeQuote (version, buf, cookie.getDomain().toString());
-	}
+// 	if (!cookie.getDomain().isNull()) {
+// 	    buf.append("; Domain=");
+// 	    maybeQuote (version, buf, cookie.getDomain().toString());
+// 	}
 
-	// Max-Age=secs/Discard ... or use old "Expires" format
-	if (cookie.getMaxAge() >= 0) {
-	    if (version == 0) {
-		buf.append ("; Expires=");
-		DateTool.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000L) ,buf,
-						new FieldPosition(0));
+// 	// Max-Age=secs/Discard ... or use old "Expires" format
+// 	if (cookie.getMaxAge() >= 0) {
+// 	    if (version == 0) {
+// 		buf.append ("; Expires=");
+// 		DateTool.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000L) ,buf,
+// 						new FieldPosition(0));
 
-	    } else {
-		buf.append ("; Max-Age=");
-		buf.append (cookie.getMaxAge());
-	    }
-	} else if (version == 1)
-	  buf.append ("; Discard");
+// 	    } else {
+// 		buf.append ("; Max-Age=");
+// 		buf.append (cookie.getMaxAge());
+// 	    }
+// 	} else if (version == 1)
+// 	  buf.append ("; Discard");
 
-	// Path=path
-	if (! cookie.getPath().isNull()) {
-	    buf.append ("; Path=");
-	    maybeQuote (version, buf, cookie.getPath().toString());
-	}
+// 	// Path=path
+// 	if (! cookie.getPath().isNull()) {
+// 	    buf.append ("; Path=");
+// 	    maybeQuote (version, buf, cookie.getPath().toString());
+// 	}
 
-	// Secure
-	if (cookie.getSecure()) {
-	  buf.append ("; Secure");
-	}
-    }
+// 	// Secure
+// 	if (cookie.getSecure()) {
+// 	  buf.append ("; Secure");
+// 	}
+//     }
 
-    public static void maybeQuote (int version, StringBuffer buf,
-                                    String value)
-    {
-	if (version == 0 || isToken (value))
-	  buf.append (value);
-	else {
-	    buf.append ('"');
-	    buf.append (value);
-	    buf.append ('"');
-	}
-    }
+//     public static void maybeQuote (int version, StringBuffer buf,
+//                                     String value)
+//     {
+// 	if (version == 0 || isToken (value))
+// 	  buf.append (value);
+// 	else {
+// 	    buf.append ('"');
+// 	    buf.append (value);
+// 	    buf.append ('"');
+// 	}
+//     }
 
-        //
-    // from RFC 2068, token special case characters
-    //
-    private static final String tspecials = "()<>@,;:\\\"/[]?={} \t";
+//         //
+//     // from RFC 2068, token special case characters
+//     //
+//     private static final String tspecials = "()<>@,;:\\\"/[]?={} \t";
 
-    /*
-     * Return true iff the string counts as an HTTP/1.1 "token".
-     */
-    private static boolean isToken (String value) {
-	int len = value.length ();
+//     /*
+//      * Return true iff the string counts as an HTTP/1.1 "token".
+//      */
+//     private static boolean isToken (String value) {
+// 	int len = value.length ();
 
-	for (int i = 0; i < len; i++) {
-	    char c = value.charAt (i);
+// 	for (int i = 0; i < len; i++) {
+// 	    char c = value.charAt (i);
 
-	    if (c < 0x20 || c >= 0x7f || tspecials.indexOf (c) != -1)
-	      return false;
-	}
-	return true;
-    }
+// 	    if (c < 0x20 || c >= 0x7f || tspecials.indexOf (c) != -1)
+// 	      return false;
+// 	}
+// 	return true;
+//     }
 
 
 }

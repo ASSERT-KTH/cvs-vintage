@@ -62,7 +62,6 @@ package org.apache.tomcat.util.http;
 import org.apache.tomcat.util.collections.*;
 import org.apache.tomcat.util.MessageBytes;
 import org.apache.tomcat.util.MimeHeaders;
-import org.apache.tomcat.util.ServerCookie;
 import org.apache.tomcat.util.DateTool;
 
 import java.io.*;
@@ -71,6 +70,7 @@ import java.text.*;
 
 /**
  * A collection of cookies - reusable and tuned for server side performance.
+ * Based on RFC2965 ( and 2109 )
  * 
  * @author Costin Manolache
  */
@@ -139,19 +139,22 @@ public final class Cookies { // extends MultiMap {
 	// process each "cookie" header
 	int pos=0;
 	while( pos>=0 ) {
+	    // Cookie2: version ? not needed
 	    pos=headers.findHeader( "Cookie", pos );
 	    // no more cookie headers headers
 	    if( pos<0 ) break;
 
 	    MessageBytes cookieValue=headers.getValue( pos );
 	    if( cookieValue==null || cookieValue.isNull() ) continue;
-	    if( cookieValue.getType() == MessageBytes.T_BYTES ) {
-		processCookieHeader( cookieValue.getBytes(),
-				     cookieValue.getOffset(),
-				     cookieValue.getLength());
-	    } else {
-		processCookieHeader( cookieValue.toString() );
-	    }
+
+	    // Uncomment to test the new parsing code
+	    // 	    if( cookieValue.getType() == MessageBytes.T_BYTES ) {
+	    // 		processCookieHeader( cookieValue.getBytes(),
+	    // 				     cookieValue.getOffset(),
+	    // 				     cookieValue.getLength());
+	    // 	    } else {
+	    processCookieHeader( cookieValue.toString() );
+	    // 	    }
 	}
     }
 
@@ -167,14 +170,19 @@ public final class Cookies { // extends MultiMap {
 	    int startName=skipSpaces(bytes, pos, end);
 	    if( pos>=end )
 		return; // only spaces
-	    
+
+	    // Version should be the first token
 	    boolean isSpecial=false;
 	    if(bytes[pos]=='$') { pos++; isSpecial=true; }
-	    
+
 	    int endName= findDelim1( bytes, startName, end); // " =;,"
-	    if(endName >= end )
-		return; // invalid
-	
+	    if(endName >= end ) {
+		// it's a name-only cookie ( valid in RFC2109 )
+		// XXX todo
+		return; 
+	    }
+	    // XXX it's a , or a ; ?
+	    
 	    // current = "=" or " " 
 	    pos= skipSpaces( bytes, endName, end );
 	    if(endName >= end )
@@ -198,6 +206,7 @@ public final class Cookies { // extends MultiMap {
 	    pos++;
 	    int startValue=skipSpaces( bytes, pos, end);
 	    int endValue=startValue;
+	    // XXX quote is valid only in version=1 cookies
 	    if( bytes[pos]== '\'' || bytes[pos]=='"' ) {
 		startValue++;
 		endValue=indexOf( bytes, startValue, end, bytes[startValue] );
@@ -212,7 +221,7 @@ public final class Cookies { // extends MultiMap {
 		sc.getValue().setBytes( bytes, startValue, endValue );
 		continue;
 	    }
-	    // special - Path, Version, Domain
+	    // special - Path, Version, Domain, Port
 	    // XXX TODO
 	}
     }

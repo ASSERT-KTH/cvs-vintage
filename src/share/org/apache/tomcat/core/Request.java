@@ -61,6 +61,7 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.session.ServerSession;
 import java.io.IOException;

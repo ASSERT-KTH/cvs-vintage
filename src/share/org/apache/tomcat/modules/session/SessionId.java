@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.session;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.session.ServerSessionManager;
 import org.apache.tomcat.session.ServerSession;
@@ -245,7 +246,7 @@ public class SessionId extends  BaseInterceptor
 	buf.append( "JSESSIONID=" ).append( reqSessionId );
 	buf.append( ";Version=1" );
 	buf.append( ";Path=" );
-	CookieTools.maybeQuote( 1 , buf, sessionPath ); // XXX ugly 
+	ServerCookie.maybeQuote( 1 , buf, sessionPath ); // XXX ugly 
 	buf.append( ";Discard" );
 	// discard results from:    	cookie.setMaxAge(-1);
 	

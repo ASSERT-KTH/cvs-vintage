@@ -61,6 +61,7 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
 import java.io.*;
@@ -113,19 +114,8 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	// frequent operation ( for example sc can be reused )
 	ServerCookie sc=new ServerCookie();
 	cookie2serverCookie( cookie, sc);
-	addHeader( CookieTools.getCookieHeaderName(cookie.getVersion()),
-		   CookieTools.getCookieHeaderValue(sc));
-	// This shouldn't be done - if the user asks for a specific
-	// version, only that version should be set !!!
-// 	if( cookie.getVersion() == 1 ) {
-// 	    // sc is not reused
-// 	    sc.setVersion(0);
-// 	    addHeader( CookieTools.getCookieHeaderName(sc.getVersion()),
-// 		       CookieTools.getCookieHeaderValue(sc));
-// 	}
-	// Is it needed ? ( result of refactoring, that's how the code
-	// worked) 
-	//response.addUserCookie(cookie);
+	addHeader( sc.getCookieHeaderName(),
+		   sc.getCookieHeaderValue());
     }
 
     public boolean containsHeader(String name) {
