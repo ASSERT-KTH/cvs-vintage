@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.18 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: FindDialog.java,v 1.19 2004/02/11 21:20:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -187,8 +187,9 @@ public class FindDialog extends ArgoDialog
         JLabel locLabel = new JLabel("Find In:");
 
         _location.addItem("Entire Project");
-
-        _typeDetails.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
+        /*      MVW: The following panel is not used at all. So let's not show it. 
+                See issue 2502. */
+        // _typeDetails.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
         initTypes();
 
         _typeDetails.setMinimumSize(new Dimension(200, 100));
