@@ -13,6 +13,8 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
+import org.jboss.security.RunAsIdentity;
+import org.jboss.security.SecurityAssociation;
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 
 import javax.ejb.*;
@@ -36,7 +38,7 @@ import java.util.*;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.69 $
+ * @version $Revision: 1.70 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -506,19 +508,24 @@ public abstract class EnterpriseContext
       { 
          throw new EJBException("Deprecated"); 
       }
-   
-      // TODO - how to handle this best?
-      public boolean isCallerInRole(String id) 
-      { 
-         if (principal == null)
+
+      /**
+       * Checks if the current caller has a given role.
+       * The current caller is either the principal associated with the method invocation
+       * or the current run-as principal.
+       */ 
+      public boolean isCallerInRole(String id)
+      {
+         RunAsIdentity runAs = SecurityAssociation.peekRunAsIdentity();
+         if (principal == null && runAs == null)
             return false;
 
          RealmMapping rm = con.getRealmMapping();
-         if( rm == null )
+         if (rm == null)
          {
             String msg = "isCallerInRole() called with no security context. "
-               + "Check that a security-domain has been set for the application.";
-            throw new IllegalStateException(msg); 
+                    + "Check that a security-domain has been set for the application.";
+            throw new IllegalStateException(msg);
          }
 
          // Map the role name used by Bean Provider to the security role
@@ -531,27 +538,29 @@ public abstract class EnterpriseContext
          //             security ref is found.           
          Iterator it = getContainer().getBeanMetaData().getSecurityRoleReferences();
          boolean matchFound = false;
-         
+
          while (it.hasNext())
          {
-            SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData)it.next();
+            SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData) it.next();
             if (meta.getName().equals(id))
             {
-               id = meta.getLink();                 
+               id = meta.getLink();
                matchFound = true;
-                 
                break;
             }
          }
 
          if (!matchFound)
             log.warn("no match found for security role " + id +
-                     " in the deployment descriptor.");
-             
+                    " in the deployment descriptor.");
+
          HashSet set = new HashSet();
-         set.add( new SimplePrincipal(id) );
-         
-         return rm.doesUserHaveRole( principal, set );
+         set.add(new SimplePrincipal(id));
+
+         Principal callerPrincipal = (runAs != null ? runAs : principal);
+         boolean ret = rm.doesUserHaveRole(callerPrincipal, set);
+
+         return ret;
       }
    
       public UserTransaction getUserTransaction() 
