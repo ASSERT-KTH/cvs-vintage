@@ -29,7 +29,6 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.spi.ObjectFactory;
 
-import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.util.multi.ProtocolCurrent;
@@ -148,60 +147,9 @@ public class JRMPLocalContext implements Context {
 		throws NamingException {
 		try {
 			if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
-				RemoteReference irw =
-					new ReferenceWrapper(
-						((Referenceable) o).getReference());
-				ProtocolCurrent
-					.getCurrent()
-					.getCurrentPortableRemoteObject()
-					.exportObject(
-					irw);
-				Remote oldObj = (Remote) wrapperHash.put(name, irw);
-				if (oldObj != null) {
-					if (replace) {
-						ProtocolCurrent
-							.getCurrent()
-							.getCurrentPortableRemoteObject()
-							.unexportObject(
-							(Remote) oldObj);
-					} else {
-						ProtocolCurrent
-							.getCurrent()
-							.getCurrentPortableRemoteObject()
-							.unexportObject(
-							irw);
-						wrapperHash.put(name, oldObj);
-						throw new NamingException("Object already bind");
-					}
-				}
-				return irw;
+				return new ReferenceWrapper(((Referenceable) o).getReference());
 			} else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
-				ReferenceWrapper irw =
-					new ReferenceWrapper((Reference) o);
-				ProtocolCurrent
-					.getCurrent()
-					.getCurrentPortableRemoteObject()
-					.exportObject(
-					irw);
-				Remote oldObj = (Remote) wrapperHash.put(name, irw);
-				if (oldObj != null) {
-					if (replace) {
-						ProtocolCurrent
-							.getCurrent()
-							.getCurrentPortableRemoteObject()
-							.unexportObject(
-							oldObj);
-					} else {
-						ProtocolCurrent
-							.getCurrent()
-							.getCurrentPortableRemoteObject()
-							.unexportObject(
-							irw);
-						wrapperHash.put(name, oldObj);
-						throw new NamingException("Object already bind");
-					}
-				}
-				return irw;
+				return new ReferenceWrapper((Reference) o);
 			} else if (
 				(!(o instanceof Remote)) && (o instanceof Serializable)) {
 				JNDIResourceWrapper irw =
