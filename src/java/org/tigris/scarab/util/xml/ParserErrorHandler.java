@@ -48,7 +48,7 @@ package org.tigris.scarab.util.xml;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.apache.log4j.Category;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class takes care of handling the errors returned from the parse
@@ -66,7 +66,7 @@ public class ParserErrorHandler
     public void warning (SAXParseException e)
         throws SAXException
     {
-        log().info("Warning Line: " +
+        Log.get().info("Warning Line: " +
                      e.getLineNumber() +
                      ", Column: " +
                      e.getColumnNumber() +
@@ -81,7 +81,7 @@ public class ParserErrorHandler
     public void error (SAXParseException e)
         throws SAXException
     {
-        log().warn("Error Line: " +
+        Log.get().warn("Error Line: " +
                      e.getLineNumber() +
                      ", Column: " +
                      e.getColumnNumber() +
@@ -96,17 +96,12 @@ public class ParserErrorHandler
     public void fatalError (SAXParseException e)
         throws SAXException
     {
-        log().error("Fatal Error Line: " +
+        Log.get().error("Fatal Error Line: " +
                       e.getLineNumber() +
                       ", Column: " +
                       e.getColumnNumber() +
                       ", Message: " +
                       e.getMessage()
                  );
-    }
-
-    private Category log()
-    {
-        return Category.getInstance(getClass().getName());
     }
 }

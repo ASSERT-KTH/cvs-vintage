@@ -66,6 +66,7 @@ import org.apache.commons.collections.StringStack;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.Log;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -77,13 +78,11 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Hits;
 
-import org.apache.log4j.Category;
-
 /**
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.11 2002/04/26 20:24:48 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.12 2002/04/26 23:34:53 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -127,7 +126,7 @@ public class LuceneAdapter
         
         if (createIndex)
         {
-            log().info("Creating index at '" + path + '\'');
+            Log.get().info("Creating index at '" + path + '\'');
             IndexWriter indexer = 
                 new IndexWriter(path, new PorterStemAnalyzer(), true);
             indexer.close();   
@@ -194,10 +193,10 @@ public class LuceneAdapter
                 Query q = null;
                 try
                 {
-                    log().debug("Querybefore=" + fullQuery);
+                    Log.get().debug("Querybefore=" + fullQuery);
                     q = QueryParser.parse(fullQuery.toString(), TEXT, 
                                           new PorterStemAnalyzer());
-                    log().debug("Queryafter=" + q.toString("text"));
+                    Log.get().debug("Queryafter=" + q.toString("text"));
                 }
                 catch (Throwable t)
                 {
@@ -212,7 +211,7 @@ public class LuceneAdapter
                 for ( int i=0; i<hits.length(); i++) 
                 {
                     deduper.put( hits.doc(i).get(ISSUE_ID), null );
-                    log().debug("Possible issueId from search: " + 
+                    Log.get().debug("Possible issueId from search: " + 
                                   hits.doc(i).get(ISSUE_ID));
                 }
                 is.close();
@@ -224,7 +223,7 @@ public class LuceneAdapter
                     while (iter.hasNext()) 
                     {
                         issueIds.add( new NumberKey((String)iter.next()) );
-                        log().debug("Adding issueId from search: " + 
+                        Log.get().debug("Adding issueId from search: " + 
                                   issueIds.get(issueIds.size()-1));
                     }
                 }
@@ -236,7 +235,7 @@ public class LuceneAdapter
                         Object obj = issueIds.get(i);
                         if ( !deduper.containsKey(obj.toString()) ) 
                         {
-                        log().debug("removing issueId from search: " + obj);
+                        Log.get().debug("removing issueId from search: " + obj);
 
                             issueIds.remove(i);
                         }
@@ -365,10 +364,5 @@ public class LuceneAdapter
             new IndexWriter(path, new PorterStemAnalyzer(), false);
         indexer.addDocument(doc);
         indexer.close();
-    }
-
-    private Category log()
-    {
-        return Category.getInstance(getClass().getName());
     }
 }

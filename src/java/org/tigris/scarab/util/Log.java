@@ -1,4 +1,4 @@
-package org.tigris.scarab.screens;
+package org.tigris.scarab.util;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -46,76 +46,22 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-
-// Turbine Stuff 
-import java.io.*;
-import javax.servlet.ServletOutputStream;
-import org.apache.turbine.RunData;
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.tool.TemplateLink;
-import org.apache.torque.om.NumberKey;
-
-// Scarab Stuff
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttachmentManager;
+import org.apache.log4j.Category;
 
 /**
- * Sends file contents directly to the output stream.
+ * A simple wrapper around a logger object to use to log to the
+ * org.tigris.scarab category.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.7 2002/04/26 23:34:52 jmcnally Exp $
+ * @version $Id: Log.java,v 1.1 2002/04/26 23:34:53 jmcnally Exp $
  */
-public class ViewAttachment extends Default
+public abstract class Log
 {
-    /**
-     * builds up the context for display of variables on the page.
-     */
-    public void doBuildTemplate( RunData data, TemplateContext context )
-        throws Exception 
+    private static final Category log = 
+        Category.getInstance("org.tigris.scarab");
+
+    public static final Category get()
     {
-        super.doBuildTemplate(data, context);
-        
-        String attachId = data.getParameters().getString("attachId");
-        Attachment attachment = AttachmentManager
-            .getInstance(new NumberKey(attachId), false);
-        data.getResponse().setContentType(attachment.getMimeType());
-        
-        File f = new File(attachment.getFullPath());
-        data.getResponse().setContentLength((int)f.length());
-
-        BufferedInputStream bis = 
-             new BufferedInputStream(new FileInputStream(f));
-        OutputStream os = data.getResponse().getOutputStream();        
-        try
-        {
-            byte[] bytes = new byte[2048];
-            int s = 0;
-            while ( (s = bis.read(bytes)) != -1 )
-            {
-                try
-                {
-                    os.write(bytes,0,s);
-                }
-                catch (java.io.IOException ioe)
-                {
-                    Log.get().debug("File download was aborted: " + 
-                                    attachment.getFullPath());
-                    break;
-                }
-            }
-        }
-        finally
-        {
-            if (bis != null)
-            {
-                bis.close();
-            }
-        }
-
-        // we already sent the response, there is no target to render
-        data.setTarget(null);
-    }
+        return log;
+    } 
 }
-

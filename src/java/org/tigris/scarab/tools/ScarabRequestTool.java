@@ -55,7 +55,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Hashtable;
-import org.apache.log4j.Category;
 
 // Turbine
 import org.apache.commons.lang.Strings;
@@ -118,6 +117,7 @@ import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.util.ScarabException;  
+import org.tigris.scarab.util.Log;
 
 /**
  * This class is used by the Scarab API
@@ -940,7 +940,7 @@ try{
             }
             catch (Exception e)
             {
-                log().info("[ScarabRequestTool] Unable to retrieve Module: " +
+                Log.get().info("[ScarabRequestTool] Unable to retrieve Module: " +
                          key, e);
             }
         }
@@ -1442,7 +1442,7 @@ try{
                 String queryError = e.getMessage();
                 if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
                 {
-                    log().info(queryError);
+                    Log.get().info(queryError);
                     setAlertMessage(queryError);
                 }
                 else 
@@ -1902,7 +1902,7 @@ try{
         catch (Exception e)
         {
             hasPermission = false;
-            log().error("Permission check failed on:" + permission, e);
+            Log.get().error("Permission check failed on:" + permission, e);
         }
         return hasPermission;
     }
@@ -1928,7 +1928,7 @@ try{
         catch (Exception e)
         {
             hasPermission = false;
-            log().error("Permission check failed on:" + permission, e);
+            Log.get().error("Permission check failed on:" + permission, e);
         }
         return hasPermission;
     }
@@ -2111,12 +2111,6 @@ try{
         this.alertMessage = v;
     }
     
-
-    private Category log()
-    {
-        return Category.getInstance(getClass().getName());
-    }
-
     // ****************** Recyclable implementation ************************
 
     /**

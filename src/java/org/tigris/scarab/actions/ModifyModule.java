@@ -66,6 +66,7 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
@@ -75,7 +76,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.22 2002/04/26 20:24:45 jmcnally Exp $
+ * @version $Id: ModifyModule.java,v 1.23 2002/04/26 23:34:51 jmcnally Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -192,7 +193,7 @@ public class ModifyModule extends RequireLoginFirstAction
             catch (Exception e)
             {
                 setTarget(data, template);
-                log().error(e);
+                Log.get().error(e);
                 getScarabRequestTool(context).setAlertMessage(e.getMessage());
                 return;
             }

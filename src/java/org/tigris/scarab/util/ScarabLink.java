@@ -48,7 +48,6 @@ package org.tigris.scarab.util;
 
 import java.util.Enumeration;
 
-import org.apache.log4j.Category;
 // Turbine
 import org.apache.turbine.tool.TemplateLink;
 import org.apache.turbine.RunData;
@@ -64,6 +63,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.util.Log;
 
 /**
     This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.41 2002/04/26 20:24:48 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.42 2002/04/26 23:34:53 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -394,7 +394,7 @@ public class ScarabLink extends TemplateLink
         catch (Exception e)
         {
             allowed = false;
-            log().info("Could not check permission due to: ", e);
+            Log.get().info("Could not check permission due to: ", e);
         }
         return allowed;
     }
@@ -432,12 +432,6 @@ public class ScarabLink extends TemplateLink
     protected RunData getRunData()
     {
         return data;
-    }
-
-
-    protected Category log()
-    {
-        return Category.getInstance(getClass().getName());
     }
 
     // ****************************************************************

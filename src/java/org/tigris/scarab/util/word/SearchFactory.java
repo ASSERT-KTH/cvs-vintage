@@ -47,13 +47,14 @@ package org.tigris.scarab.util.word;
  */ 
 
 import org.apache.turbine.Turbine;
-import org.apache.log4j.Category;
+import org.tigris.scarab.util.Log;
+
 
 /**
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.13 2002/04/26 20:24:49 jmcnally Exp $
+ * @version $Id: SearchFactory.java,v 1.14 2002/04/26 23:34:53 jmcnally Exp $
  */
 public class SearchFactory
 {
@@ -80,7 +81,7 @@ public class SearchFactory
                 err = "Unable to to create '" + className + '\'';
             }
             err += ": Text will not be searchable: " + e;
-            log().warn(err);
+            Log.get().warn(err);
         }
         searchIndex = si;
     }
@@ -101,16 +102,11 @@ public class SearchFactory
                     "Could be a result of insufficient permission " +
                     "to write the Index to the disk. The default is to " +
                     "write the Index into the WEB-INF/index directory.";
-                log().error(str, e);
+                Log.get().error(str, e);
                 throw new InstantiationException(str);
             }
         }
         return si;
-    }
-
-    private static Category log()
-    {
-        return Category.getInstance("org.tigris.scarab.util.word");
     }
 }
 

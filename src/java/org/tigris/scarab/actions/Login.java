@@ -62,6 +62,7 @@ import org.apache.fulcrum.security.util.TurbineSecurityException;
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
@@ -70,7 +71,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.30 2002/04/26 20:24:45 jmcnally Exp $
+ * @version $Id: Login.java,v 1.31 2002/04/26 23:34:51 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -117,7 +118,7 @@ public class Login extends ScarabTemplateAction
         catch (TurbineSecurityException e)
         {
             scarabR.setAlertMessage("Invalid username or password.");
-            log().error ("Login: ", e);
+            Log.get().error ("Login: ", e);
             return failAction(data, "Login.vm");
         }
         

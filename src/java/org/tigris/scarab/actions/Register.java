@@ -69,6 +69,7 @@ import org.apache.fulcrum.template.TemplateEmail;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 // FIXME: remove the methods that reference this
@@ -82,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.21 2002/04/26 20:24:45 jmcnally Exp $
+ * @version $Id: Register.java,v 1.22 2002/04/26 23:34:51 jmcnally Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -241,7 +242,7 @@ public class Register extends ScarabTemplateAction
         {
             setTarget(data, template);
             getScarabRequestTool(context).setAlertMessage (e.getMessage());
-            log().error(e);
+            Log.get().error(e);
             return;
         }
     }
@@ -442,7 +443,7 @@ public class Register extends ScarabTemplateAction
             catch (TurbineSecurityException e)
             {
                 scarabR.setAlertMessage("Invalid username.");
-                log().error ("RegisterConfirm: ", e);
+                Log.get().error ("RegisterConfirm: ", e);
                 return;
             }
         
@@ -460,7 +461,7 @@ public class Register extends ScarabTemplateAction
         {
             setTarget(data, template);
             getScarabRequestTool(context).setAlertMessage (e.getMessage());
-            log().error(e);
+            Log.get().error(e);
             return;
         }
     }
