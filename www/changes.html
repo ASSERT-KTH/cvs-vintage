@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.144 2002/05/09 20:36:03 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.145 2002/05/10 16:42:33 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -24,7 +24,11 @@
                 <li>User's choice of where to go after entering an issue
                     now gets saved. Bug Report
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=307">307</a>. (EWD)</li>
-                 <li>Storing Issue View tab setting in user session. (EWD) </li>
+                <li>Urls associated with an issue were limited to 255
+                    characters, while the description was unlimited.  These 
+                    size limitations have been reversed.(JDM)</li>
+                 <li>Storing Issue View tab setting in user session. (EWD)</li>
+
             </ul>
          </td>
     </tr>
@@ -35,6 +39,9 @@
                 <li>Dedupe was not getting set properly. Fixed that.(EWD)</li>
                 <li>Default text attribute was not getting saved. Fixed that.
                     Bug Report#<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=317">317</a>. (EWD)</li>
+                <li>Fileupload of zip mimetype was not possible due to
+                    artificially small size constraints in the database.
+                    This size limitation has been increased.(JDM)</li>
             </ul>
          </td>
     </tr>
