@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.1 1999/10/09 00:20:35 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.2 1999/10/15 00:11:07 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 00:11:07 $
  *
  * ====================================================================
  * 
@@ -164,12 +164,16 @@ public abstract class Compiler {
             }
         }
 
+        // I'm nuking
+        //          System.getProperty("jsp.class.path", ".") 
+        // business. If anyone badly needs this we can talk. -akv
+
         String sep = System.getProperty("path.separator");
         String[] argv = new String[] 
         {
             "-classpath",
-            System.getProperty("java.class.path")+ sep + classpath + sep +
-            System.getProperty("jsp.class.path", ".") + sep + ctxt.getOutputDir(),
+            System.getProperty("java.class.path")+ sep + classpath 
+            + sep + ctxt.getOutputDir(),
             "-d", ctxt.getOutputDir(),
             javaFileName
         };
