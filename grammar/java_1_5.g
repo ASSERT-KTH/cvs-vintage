@@ -2093,8 +2093,7 @@ MemberValuePair ::= SimpleName '=' MemberValue
 
 MemberValue -> ConditionalExpression_NotName
 /:$compliance 1.5:/
-MemberValue ::= Name
-/.$putCase consumeMemberValueAsName() ; $break ./
+MemberValue -> Name
 /:$compliance 1.5:/
 MemberValue -> Annotation
 /:$compliance 1.5:/
