@@ -86,7 +86,9 @@ public class AutoWebApp extends BaseInterceptor {
     String defaultHost=null; 
     boolean flat=true;
     boolean ignoreDot=true;
-
+    String profile=null;
+    boolean trusted=false;
+    
     // encoding scheme - XXX review, customize, implement
     char hostSeparator='@'; // if support for vhost configuration is enabled
     // instead of one-dir-per-host, this char will separate the host part.
@@ -131,6 +133,24 @@ public class AutoWebApp extends BaseInterceptor {
     */
     public void setFlat( boolean b ) {
 	flat=b;
+    }
+
+    /** Set the "profile" attribute on each context. This
+	can be used by a profile module to configure the
+	context with special settings.
+    */
+    public void setProfile( String s ) {
+	profile=s;
+    }
+
+    /** Set the trusted attribute to all apps. This is
+	used for "internal" apps, to reduce the number 
+	of manual configurations. It works by creating
+	a special directory and using <AutoWebApp> to
+	add all the apps inside with a trusted attribute.
+    */
+    public void setTrusted( boolean b ) {
+	trusted=b;
     }
     
     //-------------------- Implementation --------------------
@@ -240,6 +260,11 @@ public class AutoWebApp extends BaseInterceptor {
 		ctx.setDocBase( dir.getAbsolutePath());
 	    }
 
+	    if( trusted ) 
+		ctx.setTrusted( true );
+	    if( profile!=null )
+		ctx.setProperty( "profile", profile );
+	    
 	    if( debug > 0 )
 		log("automatic add " + host + ":" + ctx.toString() + " " +
 		    path);
