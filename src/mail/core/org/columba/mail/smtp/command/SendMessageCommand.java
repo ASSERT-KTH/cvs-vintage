@@ -78,7 +78,7 @@ public class SendMessageCommand extends FolderCommand {
 	{
 	  
 	  String message = 
-	    MailResourceLoader.getString("dialog","error","invalid_recipient");
+	    MailResourceLoader.getString("dialog","error",recipient);
 	  
 	  String title = 
 	    MailResourceLoader.getString("dialog","error","invalid_recipient_title");
