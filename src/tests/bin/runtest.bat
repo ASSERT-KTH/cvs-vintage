@@ -1,5 +1,5 @@
 @echo off
-rem $Id: runtest.bat,v 1.2 1999/10/14 23:50:34 akv Exp $
+rem $Id: runtest.bat,v 1.1 1999/10/15 21:37:44 costin Exp $
 rem Startup batch file for servlet runner.
 
 rem This batch file written and tested under Windows NT

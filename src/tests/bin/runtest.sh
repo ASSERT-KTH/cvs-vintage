@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# $Id: runtest.sh,v 1.2 1999/10/15 03:20:35 harishp Exp $
+# $Id: runtest.sh,v 1.1 1999/10/15 21:37:45 costin Exp $
 
 # Shell script to run test harness
  
