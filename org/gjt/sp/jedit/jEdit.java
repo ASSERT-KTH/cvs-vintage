@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.235 2004/08/11 07:48:00 spestov Exp $
+ * @version $Id: jEdit.java,v 1.236 2004/08/12 22:42:43 spestov Exp $
  */
 public class jEdit
 {
@@ -1736,6 +1736,9 @@ public class jEdit
 	 */
 	public static boolean closeAllBuffers(View view, boolean isExiting)
 	{
+		if(view != null)
+			view.getEditPane().saveCaretInfo();
+
 		boolean dirty = false;
 
 		Buffer buffer = buffersFirst;

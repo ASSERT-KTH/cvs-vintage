@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.15 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.16 2004/08/12 22:42:43 spestov Exp $
  */
 public class BufferHistory
 {
@@ -393,6 +393,11 @@ public class BufferHistory
 			this.caret = caret;
 			this.selection = selection;
 			this.encoding = encoding;
+		}
+
+		public String toString()
+		{
+			return path + ": " + caret;
 		}
 	} //}}}
 
