@@ -1,4 +1,4 @@
-// $Id: ActionExecSilk.java,v 1.4 2003/06/29 23:16:08 linus Exp $
+// $Id: ActionExecSilk.java,v 1.5 2003/09/04 19:37:10 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ public class ActionExecSilk extends UMLAction
     // main methods
 
     public void actionPerformed(ActionEvent event) {
-        ProjectBrowser pb = ProjectBrowser.TheInstance;
+        ProjectBrowser pb = ProjectBrowser.getInstance();
 	Object target = pb.getDetailsTarget();
 	
 	// if (!(target instanceof MClassifier)) return;
