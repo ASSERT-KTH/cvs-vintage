@@ -3,7 +3,7 @@ rem -------------------------------------------------------------------------
 rem JBoss Bootstrap Script for Win32
 rem -------------------------------------------------------------------------
 
-rem $Id: run.bat,v 1.30 2002/02/07 00:46:07 user57 Exp $
+rem $Id: run.bat,v 1.31 2002/02/09 16:12:58 slaboure Exp $
 
 if exist "run.jar" goto FOUND_RUN_JAR
 echo Could not locate run.jar. Please check that you are in the
@@ -19,7 +19,7 @@ goto SKIP_TOOLS
 
 :ADD_TOOLS
 
-if exist "%JAVA_HOME%\lib\tools.jar" goto javaHomeOk
+if exist "%JAVA_HOME%\lib\tools.jar" goto SKIP_TOOLS
 echo Could not locate %JAVA_HOME%\lib\tools.jar. Unexpected results may occur.
 echo Make sure that JAVA_HOME points to a JDK and not a JRE.
 
