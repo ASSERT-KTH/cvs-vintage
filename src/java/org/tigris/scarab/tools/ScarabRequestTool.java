@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Hashtable;
 import java.util.TimeZone;
+import java.util.Arrays;
 
 // Turbine
 import org.apache.turbine.RunData;
@@ -113,6 +114,7 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.TransactionPeer;
@@ -1259,27 +1261,56 @@ try{
                 issueGroup.get("Ids").getValue();
             if ( issueIds != null ) 
             {            
-                issues = new ArrayList(issueIds.length);
-                for ( int i=0; i<issueIds.length; i++ ) 
-                {
-                    issues.add(IssueManager.getInstance(issueIds[i], false));
-                }
+                issues = getIssues(Arrays.asList(issueIds));
             }
         }
         else if ( data.getParameters().getString("issue_ids") != null ) 
         {                
-            String[] issueIdStrings = data.getParameters()
-                .getStrings("issue_ids");
-            issues = new ArrayList(issueIdStrings.length);
-            for ( int i=0; i<issueIdStrings.length; i++ ) 
-            {
-                issues.add(getIssue(issueIdStrings[i]));
-                //issues.add(IssueManager
-                //    .getInstance(new NumberKey(issueIdStrings[i]), false));
-            }
+            issues = getIssues(
+                Arrays.asList(data.getParameters().getStrings("issue_ids")));
         }
         return issues;
     }
+
+    /**
+     * Get a list of Issue objects from a list of issue ids.  The list
+     * can contain Strings or NumberKeys, but all ids must be of the same type
+     * (String or NumberKey).
+     *
+     * @param issueIds a <code>List</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getIssues(List issueIds)
+        throws Exception
+    {
+        List issues = null;
+        if (issueIds.get(0) instanceof String) 
+        {
+            issues = new ArrayList(issueIds.size());
+            Iterator i = issueIds.iterator();
+            while (i.hasNext()) 
+            {
+                issues.add(getIssue((String)i.next()));
+            }            
+        }
+        else if (issueIds.get(0) instanceof NumberKey)
+        {
+            issues = new ArrayList(issueIds.size());
+            Iterator i = issueIds.iterator();
+            while (i.hasNext()) 
+            {
+                issues.add(IssueManager.getInstance((NumberKey)i.next()));
+            }
+        }
+        else 
+        {
+            throw new IllegalArgumentException(
+                "issue ids must be Strings or NumberKeys");
+        }
+        return issues;
+    }
+        
 
     /**
      * Get all scopes.
@@ -2209,6 +2240,32 @@ try{
             Log.get().debug("Error: ", e);
         }
         return true;
+    }
+
+    /**
+     * Gets a list of Attributes or the user type that are in common
+     * between the issues in the given list.
+     *
+     * @param issues a <code>List</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getUserAttributes(List issues)
+        throws Exception
+    {        
+        MITList mitList = MITListManager
+            .getInstanceFromIssueList(issues, (ScarabUser)data.getUser());
+        List attributes = null;
+        if (mitList.isSingleModuleIssueType()) 
+        {
+            attributes = mitList.getModule()
+                .getUserAttributes(mitList.getIssueType());
+        }
+        else 
+        {
+            attributes = mitList.getCommonUserAttributes();
+        }
+        return attributes;
     }
 
     // --------------------

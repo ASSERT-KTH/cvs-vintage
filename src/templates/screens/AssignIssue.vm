@@ -1,10 +1,10 @@
 <div class="app" id="viewissue">
 
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
-#set ($userAttrs = $module.getUserAttributes($issueType)) 
-#set ($issueList = $data.Parameters.getStrings("issue_ids"))
-#set ($issueListSize = $scarabG.sizeOfArray($issueList))
+#set ($issueIdList = $data.Parameters.getStrings("issue_ids"))
+#set ($issueList = $scarabR.Issues)
+#set ($userAttrs = $scarabR.getUserAttributes($issueList)) 
+#set ($modules = $scarabG.getModulesFromIssueList($issueList)) 
+#set ($issueListSize = $scarabG.sizeOfArray($issueIdList))
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 
@@ -25,7 +25,7 @@
 #set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 ## pass issue id's
-#foreach ($issueId in $issueList)
+#foreach ($issueId in $issueIdList)
   <input type="hidden" name="issue_ids" value="$issueId" />
 #end
 ## pass user id's of users in temporary working list
@@ -55,8 +55,7 @@
 
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
-#foreach ($issueId in $issueList)
- #set ($issue = $scarabR.getIssue($issueId))
+#foreach ($issue in $issueList)
  #if ($issue)
 
 <h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
@@ -127,7 +126,7 @@
 				#if ($attrId.equals($selectUserAttr.AttributeId.toString())) 
                     #set ($selected = true)
                 #end
-                #if ($assignedUser.hasPermission($selectUserAttr.Permission, $module))
+                #if ($assignedUser.hasPermission($selectUserAttr.Permission, $modules))
 				  <option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
                 #end
 			 #end
@@ -179,20 +178,20 @@
      #if ($sortColumn.equals($shortName))
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
-          #foreach ($issueId in $issueList)
+          #foreach ($issueId in $issueIdList)
               #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
           #end
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
            #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
-          #foreach ($issueId in $issueList)
+          #foreach ($issueId in $issueIdList)
               #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
           #end
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
         #end $longName
      #else
         #set ($sortLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
-        #foreach ($issueId in $issueList)
+        #foreach ($issueId in $issueIdList)
             #set ($sortLink = $sortLink.addPathInfo("issue_ids", $issueId))
         #end
         <a href="$sortLink">$longName</a>
@@ -217,7 +216,7 @@
 
  #if($scarabR.PrevPage != 0)
   #set ($prevLink = $pagLink.setPathInfo("pageNum", "$scarabR.PrevPage"))
-      #foreach ($issueId in $issueList)
+      #foreach ($issueId in $issueIdList)
           #set ($prevLink = $prevLink.addPathInfo("issue_ids", $issueId))
       #end
   <a href="$prevLink">&laquo;</a> previous |
@@ -226,7 +225,7 @@
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
       #set ($nextLink = $pagLink.setPathInfo("pageNum", "$scarabR.NextPage"))
-      #foreach ($issueId in $issueList)
+      #foreach ($issueId in $issueIdList)
           #set ($nextLink = $nextLink.addPathInfo("issue_ids", $issueId))
       #end
   | <a href="$nextLink">&raquo;</a> next
@@ -288,7 +287,7 @@
     <td><a href="mailTo:$user.Email">$user.UserName</a></td>
     <td><select name="user_attr_$user.UserId">
      #foreach ($userAttr in $userAttrs)
-      #if ($user.hasPermission($userAttr.Permission, $module))
+      #if ($user.hasPermission($userAttr.Permission, $modules))
         <option value="$userAttr.AttributeId">$userAttr.Name</option>
       #end
      #end

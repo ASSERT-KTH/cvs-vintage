@@ -3,19 +3,19 @@
 #set ($user = $data.User)
 #set ($search = $scarabR.Search)
 #set ($searchType = $data.Parameters.getString("searchType",""))
-
-#if ($user.CurrentMITList.isSingleModule())
-    #set ($module = $user.CurrentMITList.Module)
-#else
-    #set ($module = $scarabR.CurrentModule)
+#if (!$issueIdList)
+   #set ($issueIdList = $scarabR.CurrentSearchResults)
 #end
-#if (!$issueList)
-   #set ($issueList = $scarabR.CurrentSearchResults)
-#end
-#set ($issueListSize = $issueList.size())
-
+#set ($issueListSize = $issueIdList.size())
+#set ($modules = $scarabG.getModulesFromIssueList($scarabR.getIssues($issueIdList)))
 #if ($issueListSize == 0)
-  <h3>$page.Title for $scarabR.CurrentRModuleIssueType.DisplayName</h3>
+<h3>
+#if ($user.CurrentMITList)
+  $page.Title  
+#else
+  $page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
+#end
+</h3>
   <p class="alert">There are no matching issues.</p>
 #else
 
@@ -23,7 +23,7 @@
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
-#foreach ($issueId in $issueList)
+#foreach ($issueId in $issueIdList)
    <input type="hidden" name="all_issue_ids" value="$issueId" />
 #end
 ## if results exceed limit, get subset list
@@ -37,9 +37,9 @@
 #end
 #if ($issueListSize > $resultsPerPage)
  #set ($paginated = "true")
- #set ($pagList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage.toString()))
+ #set ($pagList = $scarabR.getPaginatedList($issueIdList, $pageNum.toString(), $resultsPerPage.toString()))
  #if ($pagList)
-   #set ($issueList = $pagList)
+   #set ($issueIdList = $pagList)
  #end
 #end
 
@@ -131,7 +131,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #end
   </tr>
 
-#foreach ($issueId in $issueList)
+#foreach ($issueId in $issueIdList)
  #set ($issue = $scarabR.getIssue($issueId))
  #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()).setPathInfo("issueList", "true"))
  #indexedRows($velocityCount)
@@ -179,12 +179,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 </div>
 
 <div class="functnbar3">
-#if ((!$user.CurrentMITList || $user.CurrentMITList.isSingleModule()) && $scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+#if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
    <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
 #end
 <input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;
 <small>selected</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
-#if ((!$user.CurrentMITList || $user.CurrentMITList.isSingleModule()) && $scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
+#if ($user.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $modules))
   <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
 #end
 <input type="submit" value="View verbose" name="eventSubmit_doViewall" />&#160;
