@@ -85,13 +85,13 @@ public class HttpClient {
 
     String id;
     // Instance variables
-    String host=defaultHost;
-    int port=defaultPort;
+    String host=null;
+    int port=-1;
 
     int debug=defaultDebug;
 
     String method="GET";
-    String protocol=defaultProtocol;
+    String protocol=null;
     String path;
     
     String requestLine;
@@ -131,12 +131,14 @@ public class HttpClient {
     /** The port used to send the request
      */
     public void setPort(String portS) {
+	System.out.println("HttpClient.setPort " + portS + " " + port);
 	this.port=Integer.valueOf( portS).intValue();
     }
 
     /** Set the port as int - different name to avoid confusing introspection
      */
     public void setPortInt(int i) {
+	System.out.println("HttpClient.setPort " + i + " " + port );
 	this.port=i;
     }
 
@@ -289,6 +291,9 @@ public class HttpClient {
 		contentL=h.getValue();
 	    }
 	}
+	if( requestHeaders.get("Host") == null ) {
+	    sb.append("Host: ").append(host ).append( CRLF );
+	}
 	
 	// If we have a body
 	if( body != null) {
@@ -318,6 +323,11 @@ public class HttpClient {
 	throws Exception
     {
 	// connect
+	if( host==null ) host=defaultHost;
+	if( port==-1) port=defaultPort;
+
+	if( protocol==null ) protocol=defaultProtocol;
+
 	Socket s = new Socket( host, port);
 	s.setSoLinger( true, 1000);
 

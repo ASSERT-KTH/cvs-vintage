@@ -152,6 +152,18 @@ public class Header {
 	}
     }
 
-    
+    public static String toString( Hashtable headers ) {
+	StringBuffer sb=new StringBuffer();
+	sb.append("{");
+	Enumeration eH=headers.keys();
+	while(eH.hasMoreElements() ) {
+	    String k=(String)eH.nextElement();
+	    sb.append( k ).append("=");
+	    sb.append( ((Header)headers.get(k)).getValue());
+	    if( eH.hasMoreElements()) sb.append(",");
+	}
+	sb.append("}");
+	return sb.toString();
+    }
 
 }

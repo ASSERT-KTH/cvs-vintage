@@ -281,8 +281,8 @@ public class DefaultMatcher {
 		String respValue=h.getValue();
 		if( respValue==null || respValue.indexOf( value ) <0 ) {
 		    log("ERROR expecting header " + key + ":" +
-			value + " GOT: " + respValue+ " HEADERS(" +
-			headers + ")");
+			value + " \nGOT: " + respValue+ " HEADERS(" +
+			Header.toString(headers) + ")");
 		    
 		    return false;
 		}
