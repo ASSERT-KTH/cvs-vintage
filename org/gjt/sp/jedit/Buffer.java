@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.60 2002/01/28 11:40:33 spestov Exp $
+ * @version $Id: Buffer.java,v 1.61 2002/01/30 08:06:40 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2094,7 +2094,7 @@ public class Buffer implements EBComponent
 		// when the auto indent is rewritten.
 		if(lineBrackets == 3)
 		{
-			closeBracketIndex = 0;
+			closeBracketIndex = -1;
 			lineBrackets = 0;
 		}
 

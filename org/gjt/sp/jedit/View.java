@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.11 2002/01/16 09:21:51 spestov Exp $
+ * @version $Id: View.java,v 1.12 2002/01/30 08:06:40 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -233,7 +233,22 @@ public class View extends JFrame implements EBComponent
 		if(isClosed())
 			return;
 
-		// JTextComponents don't consume events...
+		if(getFocusOwner() instanceof JComponent)
+		{
+			JComponent comp = (JComponent)getFocusOwner();
+			InputMap map = comp.getInputMap();
+			ActionMap am = comp.getActionMap();
+
+			if(map != null && am != null && comp.isEnabled())
+			{
+				Object binding = map.get(KeyStroke.getKeyStrokeForEvent(evt));
+				if(binding != null && am.get(binding) != null)
+				{
+					return;
+				}
+			}
+		}
+
 		if(getFocusOwner() instanceof JTextComponent)
 		{
 			// fix for the bug where key events in JTextComponents

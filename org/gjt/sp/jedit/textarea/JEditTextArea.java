@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.76 2002/01/28 11:40:33 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.77 2002/01/30 08:06:41 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -274,7 +274,9 @@ public class JEditTextArea extends JComponent
 
 			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
 
-			// just in case, maybe not necessary?...
+			maxHorizontalScrollWidth = 0;
+
+			chunkCache.setFirstLine(0);
 			physFirstLine = foldVisibilityManager.virtualToPhysical(0);
 
 			propertiesChanged();

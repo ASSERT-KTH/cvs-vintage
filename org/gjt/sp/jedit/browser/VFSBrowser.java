@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.29 2002/01/28 11:40:33 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.30 2002/01/30 08:06:40 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -351,7 +351,13 @@ public class VFSBrowser extends JPanel implements EBComponent
 				}
 				finally
 				{
-					requestRunning = false;
+					VFSManager.runInAWTThread(new Runnable()
+					{
+						public void run()
+						{
+							requestRunning = false;
+						}
+					});
 				}
 			}
 		}

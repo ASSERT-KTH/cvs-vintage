@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.11 2002/01/22 09:34:27 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.12 2002/01/30 08:06:41 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -114,9 +114,15 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			searchForward.setSelected(true);
 
 		if(SearchAndReplace.getBeanShellReplace())
+		{
+			replace.setModel("replace.script");
 			beanShellReplace.setSelected(true);
+		}
 		else
+		{
+			replace.setModel("replace");
 			stringReplace.setSelected(true);
+		}
 
 		if(searchIn == CURRENT_BUFFER)
 		{
