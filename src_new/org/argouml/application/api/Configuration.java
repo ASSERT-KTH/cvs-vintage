@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.13 2003/09/16 20:07:59 thierrylach Exp $
+// $Id: Configuration.java,v 1.14 2003/09/17 00:09:41 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ public class Configuration {
     // Instance variables
 
     /** Define a static log4j category variable for ArgoUML configuration.
+     * @deprecated in favor of {@link #getLogger() }
      */
     public static final Logger cat = 
 	Logger.getLogger("org.argouml.application.configuration");
@@ -163,6 +164,9 @@ public class Configuration {
      *  If the method is not allowed or it fails, the implementation
      *  must return false.
      *
+     * @param force the file to save even if it would not normally
+     * be saved.
+     * 
      * @return true if the save is successful, otherwise false
      */
     public static final boolean save(boolean force) {
@@ -207,6 +211,7 @@ public class Configuration {
     /** Returns the numeric value of a configuration property.
      *
      * @param key the key to retrieve the value of
+     * @param defaultValue if the key is not found
      *
      * @return the string value of the parameter if it exists,
      *         otherwise the default value
@@ -338,30 +343,48 @@ public class Configuration {
     }
 
     /** Create a single component configuration key.
+     * @param k1 key component 1.
+     * @return the new <code>ConfigurationKey</code>.
+     * 
      */
     public static ConfigurationKey makeKey(String k1) {
 	return new ConfigurationKeyImpl(k1);
     }
 
     /** Create a sub-component of an existing configuration key.
+     * @param ck existing key to extend.
+     * @param k1 key component 1.
+     * @return the new <code>ConfigurationKey</code>.
      */
     public static ConfigurationKey makeKey(ConfigurationKey ck, String k1) {
 	return new ConfigurationKeyImpl(ck, k1);
     }
 
     /** Create a two-component configuration key.
+     * @param k1 key component 1.
+     * @param k2 key component 2.
+     * @return the new <code>ConfigurationKey</code>.
      */
     public static ConfigurationKey makeKey(String k1, String k2) {
 	return new ConfigurationKeyImpl(k1, k2);
     }
 
     /** Create a three-component configuration key.
+     * @param k1 key component 1.
+     * @param k2 key component 2.
+     * @param k3 key component 3.
+     * @return the new <code>ConfigurationKey</code>.
      */
     public static ConfigurationKey makeKey(String k1, String k2, String k3) {
 	return new ConfigurationKeyImpl(k1, k2, k3);
     }
 
     /** Create a four-component configuration key.
+     * @param k1 key component 1.
+     * @param k2 key component 2.
+     * @param k3 key component 3.
+     * @param k4 key component 4.
+     * @return the new <code>ConfigurationKey</code>.
      */
     public static ConfigurationKey makeKey(String k1, String k2, 
 					   String k3, String k4) 
@@ -370,6 +393,12 @@ public class Configuration {
     }
 
     /** Create a five-component configuration key.
+     * @param k1 key component 1.
+     * @param k2 key component 2.
+     * @param k3 key component 3.
+     * @param k4 key component 4.
+     * @param k5 key component 5.
+     * @return the new <code>ConfigurationKey</code>.
      */
     public static ConfigurationKey makeKey(String k1, String k2, 
 					   String k3, String k4, 
@@ -378,5 +407,11 @@ public class Configuration {
 	return new ConfigurationKeyImpl(k1, k2, k3, k4, k5);
     }
 
+    /** Returns the logger.
+     * @return the logger.
+     */
+    public final static Logger getLogger() {
+        return cat;
+    }
 }
 
