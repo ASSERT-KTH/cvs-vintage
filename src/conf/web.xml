@@ -68,6 +68,11 @@
         <url-pattern>/servlets/@SCARAB_CONTEXT@/*</url-pattern>
     </servlet-mapping>
 
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+ 
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>templates</web-resource-name>
