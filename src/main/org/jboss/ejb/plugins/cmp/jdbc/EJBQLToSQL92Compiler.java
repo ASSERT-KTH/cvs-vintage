@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -272,6 +272,11 @@ public final class EJBQLToSQL92Compiler
 
       // assemble sql
       StringBuffer sql = (StringBuffer) data;
+      sql.append(SQLUtil.SELECT);
+      if(((ASTSelect)selectNode).distinct || returnType == Set.class || forceDistinct)
+      {
+         sql.append(SQLUtil.DISTINCT);
+      }
       sql.append(selectClause)
          .append(fromClause);
 
@@ -369,12 +374,6 @@ public final class EJBQLToSQL92Compiler
    {
       StringBuffer sql = (StringBuffer) data;
 
-      sql.append(SQLUtil.SELECT);
-      if(select.distinct)
-      {
-         sql.append(SQLUtil.DISTINCT);
-      }
-
       final Node child0 = select.jjtGetChild(0);
       final ASTPath path;
       if(child0 instanceof ASTPath)
@@ -398,6 +397,18 @@ public final class EJBQLToSQL92Compiler
                alias,
                sql
             );
+
+            if(readAhead.isOnFind())
+            {
+               String eagerLoadGroupName = readAhead.getEagerLoadGroup();
+               boolean[] loadGroupMask = selectEntity.getLoadGroupMask(eagerLoadGroupName);
+               SQLUtil.appendColumnNamesClause(
+                  selectEntity.getTableFields(),
+                  loadGroupMask,
+                  alias,
+                  sql
+               );
+            }
 
             addLeftJoinPath(path);
          }
