@@ -35,8 +35,8 @@
 
           <td class="b">#$currentIssue.UniqueId</td>
          </tr>
-#foreach ( $attKey in $attrValues )
-  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()))
+#foreach ( $attKey in $attrValues.sequence() )
+  #set ( $attVal = $attrValues.get($attKey))
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
 
@@ -368,6 +368,7 @@ $atchgroup.Name.Key
            </table>
        </div>
       </div>
+$intake.declareGroups()
 </form>
 
 #else     ## issue id was not valid

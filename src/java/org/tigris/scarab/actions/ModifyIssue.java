@@ -74,16 +74,13 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.1 2001/06/27 23:43:41 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.2 2001/06/28 01:08:25 jmcnally Exp $
 */
 public class ModifyIssue extends VelocityAction
 {
     public void doSubmitattributes( RunData data, Context context )
         throws Exception
     {
-        //until we get the user and module set through normal application
-        BaseScarabObject.tempWorkAround(data,context);
-
         String id = data.getParameters().getString("id");
         Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
         IntakeTool intake = (IntakeTool)context

@@ -470,9 +470,7 @@ public class Issue
         throws Exception
     {
         // remove unset AttributeValues before saving
-        Criteria crit = new Criteria(2)
-            .add(AttributeValuePeer.DELETED, false);        
-        List attValues = getAttributeValues(crit);
+        List attValues = getAttributeValues();
         // reverse order since removing from list
         for ( int i=attValues.size()-1; i>=0; i-- ) 
         {
