@@ -19,6 +19,7 @@ package org.columba.mail.pop3;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -35,7 +36,6 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -127,8 +127,10 @@ public class POP3Server {
         }
 
         // Get the list of the uids on the server
-        List newUids = store.getUIDList();
-
+        // Important: Use a clone of the List since
+        // we must not change it!
+        List newUids = new ArrayList(store.getUIDList());
+        
         // substract the uids that we already downloaded ->
         // newUids contains all uids to fetch from the server
         ListTools.substract(newUids, headerUids);
