@@ -13,7 +13,7 @@ import javax.naming.NamingException;
  *   
  *      
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public interface JNDIViewMBean extends org.jboss.util.ServiceMBean
 {
@@ -27,4 +27,9 @@ public interface JNDIViewMBean extends org.jboss.util.ServiceMBean
     @param verbose, 
     */
     public String list(boolean verbose);
+
+    /**
+     * List the JBoss JNDI namespace in XML Format
+     **/
+    public String listXML();
 }

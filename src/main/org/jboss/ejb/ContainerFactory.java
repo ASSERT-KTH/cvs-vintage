@@ -23,6 +23,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Properties;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
@@ -56,8 +57,6 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.mgt.EJB;
-import org.jboss.mgt.Module;
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.util.MBeanProxy;
@@ -82,7 +81,7 @@ import org.jboss.web.WebServiceMBean;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott.Stark@jboss.org)
 *
-*   @version $Revision: 1.76 $
+*   @version $Revision: 1.77 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -369,6 +368,11 @@ public class ContainerFactory
       app.init();
       // Start application
       app.start();
+      // Startup the Management MBean Wrapper for the containers
+      Iterator i = app.containers.values().iterator();
+      while( i.hasNext() ) {
+         handleContainerManagement( (Container) i.next(), true );
+      }
 
       // Add to webserver so client can access classes through dynamic class downloading
       WebServiceMBean webServer = (WebServiceMBean) MBeanProxy.create( WebServiceMBean.class, WebServiceMBean.OBJECT_NAME );
@@ -401,6 +405,20 @@ public class ContainerFactory
       {
       Log.unsetLog();
       }
+      // Inform the Data Collector that new/old EJBs were deployed
+      try
+        {
+        getServer().invoke(
+          new ObjectName( "Management", "service", "Collector" ),
+          "refresh",
+          new Object[] {},
+          new String[] {}
+        );
+        }
+      catch( Exception e )
+        {
+        e.printStackTrace();
+        }
     }
 
   private void deploy( Application app, URL url, ClassLoader cl )
@@ -470,20 +488,6 @@ public class ContainerFactory
         log.log( "Deploying " + bean.getEjbName() );
         app.addContainer( createContainer( bean, cl, localCl ) );
         }
-      // Inform the Data Collector that new/old EJBs were deployed
-      try
-        {
-        getServer().invoke(
-          new ObjectName( "Management", "service", "Collector" ),
-          "refresh",
-          new Object[] {},
-          new String[] {}
-        );
-        }
-      catch( Exception e )
-        {
-        e.printStackTrace();
-        }
     }
 
   /**
@@ -508,28 +512,13 @@ public class ContainerFactory
     // Undeploy application
     Log.setLog( log );
     log.log( "Undeploying:" + url );
+    // Shutdown the Management MBean Wrapper for the containers
+    Iterator i = app.containers.values().iterator();
+    while( i.hasNext() ) {
+       handleContainerManagement( (Container) i.next(), false );
+    }
     app.stop();
     app.destroy();
-    try
-       {
-       // Remove EJBs management data
-       getServer().invoke(
-          new ObjectName( "Management", "service", "Collector" ),
-          "removeModule",
-          new Object[] {
-             url.toString(),
-             new Integer( org.jboss.mgt.Application.EJBS )
-          },
-          new String[] {
-             "".getClass().getName(),
-             Integer.TYPE.getName()
-          }
-       );
-       }
-    catch( Exception e )
-       {
-       log.exception( e );
-       }
     try {
         if ( app.getClassLoader() != null ) {
             // Remove from webserver 
@@ -615,9 +604,6 @@ public class ContainerFactory
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
 
-    //AS Test the exposure of the Container through a MBean
-    registerContainer( container );
-
     return container;
     }
 
@@ -635,9 +621,6 @@ public class ContainerFactory
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
     
-    //AS Test the exposure of the Container through a MBean
-    registerContainer( container );
-
     return container;
     }
 
@@ -658,9 +641,6 @@ public class ContainerFactory
     container.setInstancePool( new StatefulSessionInstancePool() );
     // Set persistence manager
     container.setPersistenceManager( (StatefulSessionPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
-
-    //AS Test the exposure of the Container through a MBean
-    registerContainer( container );
 
     return container;
     }
@@ -696,8 +676,6 @@ public class ContainerFactory
       // Set the manager on the container
       container.setPersistenceManager( persistenceManager );
       }
-    //AS Test the exposure of the Container through a MBean
-    registerContainer( container );
       
     return container;
     }
@@ -705,18 +683,32 @@ public class ContainerFactory
   // **************
   // Helper Methods
   // **************
+
   /**
-   * Register the created container at the JMX server to make the container
-   * available for outside management
+   * Either creates the Management MBean wrapper for a container and start
+   * it or it destroy it.
    **/
-  private void registerContainer( Container container ) {
+  private void handleContainerManagement( Container container, boolean doStart ) {
      try {
         // Create and register the ContainerMBean
-        ObjectName name = new ObjectName( "Management", "container", container.getBeanMetaData().getEjbName() );
-        getServer().createMBean( "org.jboss.mgt.ContainerMgt", name );
-        getServer().invoke( name, "init", new Object[] {}, new String[] {} );
-        getServer().invoke( name, "start", new Object[] {}, new String[] {} );
-        getServer().setAttribute( name, new javax.management.Attribute( "Container", container ) );
+        ObjectName name = new ObjectName( "Management", "jnidName", container.getBeanMetaData().getJndiName() );
+        if( doStart ) {
+           getServer().createMBean(
+              "org.jboss.management.ContainerManagement",
+              name,
+              new Object[] { container },
+              new String[] { "org.jboss.ejb.Container" }
+           );
+           getServer().invoke( name, "init", new Object[] {}, new String[] {} );
+           getServer().invoke( name, "start", new Object[] {}, new String[] {} );
+        }
+        else {
+           // If not startup then assume that the MBean is there
+           getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
+           getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
+           // Unregister the MBean to avoid future name conflicts
+           getServer().unregisterMBean( name );
+        }
      }
      catch( Exception e )
      {

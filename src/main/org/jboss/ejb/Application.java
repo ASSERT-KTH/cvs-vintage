@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 import javax.ejb.EJBLocalHome;
 
@@ -22,7 +23,7 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class Application
 	implements Service

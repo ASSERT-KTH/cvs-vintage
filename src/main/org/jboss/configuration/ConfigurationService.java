@@ -9,6 +9,7 @@ package org.jboss.configuration;
 
 import java.io.*;
 import java.beans.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -45,7 +46,7 @@ import org.jboss.util.XmlHelper;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  Scott_Stark@displayscape.com
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class ConfigurationService
     extends ServiceMBeanSupport
@@ -405,6 +406,9 @@ public class ConfigurationService
     /**
      * Provides a wrapper around the information about which constructor
      * that MBeanServer should use to construct a MBean.
+     * Please note that only basic datatypes (type is then the same as
+     * you use to declare it "short", "int", "float" etc.) and any class
+     * having a constructor taking a single "String" as only parameter.
      *
      * <p>XML syntax for contructor:
      *   <pre>
@@ -467,6 +471,10 @@ public class ConfigurationService
                     String value = arg.getAttribute("value");
                     Object realValue = value;
                     if( signature != null ) {
+                       if( signature.equals( "short" ) ) {
+                          signature = Short.TYPE.getName();
+                          realValue = new Short( value );
+                       } else
                        if( signature.equals( "int" ) ) {
                           signature = Integer.TYPE.getName();
                           realValue = new Integer( value );
@@ -494,6 +502,22 @@ public class ConfigurationService
                        if( signature.equals( "boolean" ) ) {
                           signature = Boolean.TYPE.getName();
                           realValue = new Boolean( value );
+                       }
+                       else
+                       {
+                          try {
+                             // Check if there is a constructor with a single String as
+                             // only parameter
+                             Class signatureClass =
+                                Thread.currentThread().getContextClassLoader().loadClass( signature );
+                             Constructor signatureConstructor =
+                                signatureClass.getConstructor( new Class[] { String.class } );
+                             realValue = signatureConstructor.newInstance(
+                                new Object[] { value }
+                             );
+                          }
+                          catch( Exception e ) {
+                          }
                        }
                     }
                     info.signature[j] = signature;
@@ -817,3 +841,9 @@ public class ConfigurationService
         }
     }
 }
+
+/* Log
+6/13/2001 Andreas Schaefer Added type "short" for constructor argument and
+                           any class having a constructor taking a "String"
+                           as only parameter
+*/

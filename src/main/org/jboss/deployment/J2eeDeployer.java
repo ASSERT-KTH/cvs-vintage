@@ -41,9 +41,6 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
-import org.jboss.mgt.Application;
-import org.jboss.mgt.Module;
-import org.jboss.mgt.ServerDataCollector;
 import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
 import org.jboss.util.ServiceMBeanSupport;
@@ -71,7 +68,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
 *   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.30 $
+*   @version $Revision: 1.31 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
