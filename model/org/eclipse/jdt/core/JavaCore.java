@@ -323,8 +323,9 @@ public final class JavaCore extends Plugin {
 	 * Possible  configurable option ID.
 	 * @see #getDefaultOptions()
 	 * @since 3.0
-	 */
-	public static final String COMPILER_PB_EMPTY_STATEMENT = PLUGIN_ID + ".compiler.problem.emptyStatement"; //$NON-NLS-1$
+	 */ // TODO (philippe) change pref value before M9
+	public static final String COMPILER_PB_EMPTY_STATEMENT = PLUGIN_ID + ".compiler.problem.superfluousSemicolon"; //$NON-NLS-1$
+	//public static final String COMPILER_PB_EMPTY_STATEMENT = PLUGIN_ID + ".compiler.problem.emptyStatement"; //$NON-NLS-1$
 	/**
 	 * Possible  configurable option ID.
 	 * @see #getDefaultOptions()
@@ -337,6 +338,12 @@ public final class JavaCore extends Plugin {
 	 * @since 3.0
 	 */
 	public static final String COMPILER_PB_UNNECESSARY_TYPE_CHECK = PLUGIN_ID + ".compiler.problem.unnecessaryTypeCheck"; //$NON-NLS-1$
+	/**
+	 * Possible  configurable option ID.
+	 * @see #getDefaultOptions()
+	 * @since 3.0
+	 */
+	public static final String COMPILER_PB_UNNECESSARY_ELSE = PLUGIN_ID + ".compiler.problem.unnecessaryElse"; //$NON-NLS-1$
 	/**
 	 * Possible  configurable option ID.
 	 * @see #getDefaultOptions()
@@ -1623,6 +1630,13 @@ public final class JavaCore extends Plugin {
 	 *    When enabled, the compiler will issue an error or a warning when a cast or an instanceof operation 
 	 *    is unnecessary.
 	 *     - option id:         "org.eclipse.jdt.core.compiler.problem.unnecessaryTypeCheck"
+	 *     - possible values:   { "error", "warning", "ignore" }
+	 *     - default:           "ignore"
+	 * 
+	 * COMPILER / Reporting Unnecessary Else
+	 *    When enabled, the compiler will issue an error or a warning when a statement is unnecessarily
+	 *    nested within an else clause (in situation where then clause is not completing normally).
+	 *     - option id:         "org.eclipse.jdt.core.compiler.problem.unnecessaryElse"
 	 *     - possible values:   { "error", "warning", "ignore" }
 	 *     - default:           "ignore"
 	 * 
