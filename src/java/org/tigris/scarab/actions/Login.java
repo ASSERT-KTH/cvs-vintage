@@ -73,7 +73,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.45 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: Login.java,v 1.46 2003/05/19 15:38:44 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -151,6 +151,13 @@ public class Login extends ScarabTemplateAction
             // Authenticate the user and get the object.
             user = (ScarabUser) TurbineSecurity
                 .getAuthenticatedUser(username, password);
+        }
+        catch (UnknownEntityException e)
+        {
+            scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
+            Log.get().info("org.tigris.scarab.actions.Login: " 
+                           + e.getMessage());
+            return failAction(data, "Login.vm");            
         }
         catch (TurbineSecurityException e)
         {
