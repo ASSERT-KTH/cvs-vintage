@@ -55,6 +55,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 
 import org.apache.torque.om.NumberKey; 
 
@@ -74,10 +75,13 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.5 2001/11/28 21:54:37 elicia Exp $
+    @version $Id: QueryList.java,v 1.6 2001/12/14 01:56:28 elicia Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {
+    private static final String ERROR_MESSAGE = "More information was " +
+                                "required to submit your request. Please " +
+                                "scroll down to see error messages."; 
 
     public void doSave( RunData data, TemplateContext context )
         throws Exception
@@ -87,43 +91,48 @@ public class QueryList extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         ModuleEntity me = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getCurrentIssueType();
-        Query query;
-
-        Object[] keys = data.getParameters().getKeys();
-        String key;
-        String queryId;
-        String frequencyId;
-        int defaultCount = 0;
-
-        // Delete previous defaults
-        user.resetDefaultQuery(me, issueType);
-
-        for (int i =0; i<keys.length; i++)
+       
+        if (intake.isAllValid())
         {
-            key = keys[i].toString();
-            // Save frequency id's.
-            if (key.startsWith("frequency_"))
-            {
-               queryId = key.substring(10);
-               query = (Query) QueryPeer
-                      .retrieveByPK(new NumberKey(queryId));
-               frequencyId = data.getParameters()
-                            .getString(key);
-               RQueryUser rqu = query.getRQueryUser(user);
-               if (rqu != null && rqu.getIsSubscribed())
-               {
-                   rqu.setSubscriptionFrequency(frequencyId);
-                   rqu.save();
-               }
+            List queries = me.getAllUserQueries(user, issueType);
+            for (int i = 0; i < queries.size(); i++)
+            {    
+                Query query = (Query)queries.get(i);
+                RQueryUser rqu = query.getRQueryUser(user);
+                Group queryGroup = intake.get("RQueryUser",
+                                              rqu.getQueryKey(), false);
+                Field sub = queryGroup.get("Subscribed");
+                if (sub.toString().equals("true"))
+                {
+                    Field freq = queryGroup.get("Frequency");
+                    freq.setRequired(true);
+                    if (freq.isValid())
+                    {
+                       queryGroup.setProperties(rqu);
+                       rqu.save();
+                    }
+                    else
+                    {
+                       freq.setMessage("more");
+                    }
+                }
             }
-        }
+       }
+       else
+       {
+           data.setMessage(ERROR_MESSAGE);
+       }
 
-        // Save default query.
-        queryId = data.getParameters().getString("default");
-        query = (Query) QueryPeer.retrieveByPK(new NumberKey(queryId));
-        RQueryUser rqu = query.getRQueryUser(user);
-        rqu.setIsdefault(true);
-        rqu.save();
+       // Delete previous default
+       user.resetDefaultQuery(me, issueType);
+
+       // Save default query.
+       String queryId = data.getParameters().getString("default");
+       Query defaultQuery = (Query) QueryPeer
+                            .retrieveByPK(new NumberKey(queryId));
+       RQueryUser rqu = defaultQuery.getRQueryUser(user);
+       rqu.setIsdefault(true);
+       rqu.save();
     } 
 
     public void doDeletequeries( RunData data, TemplateContext context )
@@ -155,54 +164,6 @@ public class QueryList extends RequireLoginFirstAction
             }
         } 
     } 
-
-    public void doSubscribe( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Object[] keys = data.getParameters().getKeys();
-        String key;
-        String queryId;
-        String frequencyId;
-        Query query;
-        ScarabUser user = (ScarabUser)data.getUser();
-
-        for (int i =0; i<keys.length; i++)
-        {
-            key = keys[i].toString();
-            if (key.startsWith("action_"))
-            {
-               queryId = key.substring(7);
-               frequencyId = data.getParameters()
-                            .getString("frequency_" + queryId);
-               query = (Query) QueryPeer
-                              .retrieveByPK(new NumberKey(queryId));
-               query.subscribe(user, frequencyId);
-            }
-        } 
-    } 
-
-    public void doUnsubscribe( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Object[] keys = data.getParameters().getKeys();
-        String key;
-        String queryId;
-        Query query;
-        ScarabUser user = (ScarabUser)data.getUser();
-
-        for (int i =0; i<keys.length; i++)
-        {
-            key = keys[i].toString();
-            if (key.startsWith("action_"))
-            {
-               queryId = key.substring(7);
-               query = (Query) QueryPeer
-                       .retrieveByPK(new NumberKey(queryId));
-               query.unSubscribe(user);
-            }
-        } 
-    } 
-
 
     public void doNewquery( RunData data, TemplateContext context )
         throws Exception
