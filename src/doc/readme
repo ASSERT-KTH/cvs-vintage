@@ -1,4 +1,4 @@
-$Id: readme,v 1.17 2001/07/20 18:42:33 larryi Exp $
+$Id: readme,v 1.18 2001/08/02 17:15:47 larryi Exp $
         
                            Release Notes for:
                            ====================
@@ -188,7 +188,7 @@ for the Servlet 2.3 and JSP 1.2 specifications.
 
 
 =============================================================================
-5.  NEW FEATURES IN THIS RELEASE
+5.  NEW FEATURES AND CHANGES IN THIS RELEASE
 
 Many new features have been added to Tomcat since the 3.2.x release.  Among the
 most important are:
@@ -208,7 +208,25 @@ most important are:
 
   See conf/server.xml for more information.
 
+- The Tomcat documentation directory (i.e. TOMCAT_HOME/doc) is now included
+  in the ROOT webapp and is available from a link in the root's index.html.
+
 - (more to be added)
+
+
+In addition, numerous changes have occured since the 3.2.x release.  Among the
+primary changes are:
+
+- The Tomcat Users Guide (i.e. tomcat-ug.html) is now in the TOMCAT_HOME/doc
+  directory instead of the TOMCAT_HOME/doc/uguide directory as it Tomcat 3.2.x.
+
+- The writing of the connector configuration files, such as tomcat-apache.conf
+  is not enabled by default.  Each config file may be enabled by modifying the
+  server.xml file.  For details, see the information in section 2 of this
+  document or refer to the Tomcat documentation.
+
+- (more to be added)
+
 
 =============================================================================
 6.  KNOWN BUGS AND ISSUES
