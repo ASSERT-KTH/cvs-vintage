@@ -32,10 +32,10 @@ public class FilterToolbar extends JToolBar implements ActionListener {
     public JButton searchButton;
     private JComboBox comboBox;
     private JTextField textField;
-    private TableView table;
+    private TableController table;
     private ResourceBundle toolbarLabels;
 
-    public FilterToolbar(TableView table) {
+    public FilterToolbar(TableController table) {
         super();
 
         this.table = table;
@@ -122,7 +122,7 @@ public class FilterToolbar extends JToolBar implements ActionListener {
     }
 
     public void update() {
-        table.getTableModel().update();
+        table.getAddressbookModel().update();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -130,7 +130,7 @@ public class FilterToolbar extends JToolBar implements ActionListener {
 
         try {
             //TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
-            TableModelFilteredView model = table.getTableModelFilteredView();
+            TableModelFilteredView model = table.getFilteredView();
 
             if (action.equals("COMBO")) {
                 JComboBox cb = (JComboBox) e.getSource();

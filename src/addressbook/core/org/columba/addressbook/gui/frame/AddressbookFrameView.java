@@ -1,127 +1,83 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
 package org.columba.addressbook.gui.frame;
 
-import org.columba.addressbook.main.AddressbookInterface;
+import java.awt.BorderLayout;
+import java.awt.Container;
+
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.TableView;
 import org.columba.addressbook.gui.tree.TreeView;
-
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
-
-import java.awt.BorderLayout;
-import java.awt.Container;
-
-import javax.swing.JSplitPane;
+import org.columba.core.gui.util.UIFSplitPane;
 
 public class AddressbookFrameView extends AbstractFrameView {
-    //private AddressbookInterface addressbookInterface;
-    //private TreeView tree;
-    //private TableView table;
-    public AddressbookFrameView(FrameMediator frameController) {
-        super(frameController);
 
-        //super("Columba v" + MainInterface.version + " - Addressbook");
+	public AddressbookFrameView(FrameMediator frameController) {
+		super(frameController);
 
-        /*
-        this.setIconImage(
-                ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
-        */
-        /*
-        addressbookInterface = MainInterface.addressbookInterface;
-        addressbookInterface.frame = this;
-        */
+	}
 
-        // FIXME
+	/**
+	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+	 */
+	protected Menu createMenu(FrameMediator controller) {
+		Menu menu =
+			new AddressbookMenu("org/columba/core/action/menu.xml", controller);
+		menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
 
-        /*
-        addressbookInterface.actionListener =
-                new AddressbookActionListener(addressbookInterface);
-        addressbookInterface.menu = new AddressbookMenu(addressbookInterface);
-        */
+		return menu;
+	}
 
-        //init();
-    }
+	/**
+	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+	 */
+	protected ToolBar createToolbar(FrameMediator controller) {
+		return new ToolBar(
+			AddressbookInterface.config.get("main_toolbar").getElement(
+				"toolbar"),
+			controller);
+	}
 
-    /* (non-Javadoc)
-             * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
-             */
-    protected Menu createMenu(FrameMediator controller) {
-        Menu menu = new AddressbookMenu("org/columba/core/action/menu.xml",
-                controller);
-        menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
+	public void init(TreeView tree, TableView table) {
+		Container c = getContentPane();
 
-        return menu;
-    }
+		table.setupRenderer();
 
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
-     */
-    protected ToolBar createToolbar(FrameMediator controller) {
-        return new ToolBar(AddressbookInterface.config.get("main_toolbar")
-                .getElement("toolbar"), controller);
-    }
+		JScrollPane treeScrollPane = new JScrollPane(tree);
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		
+		JScrollPane tableScrollPane = new JScrollPane(table);
+		
+		JSplitPane splitPane =
+			new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, tableScrollPane);
+		splitPane.setBorder(null);
 
-    public void init(TreeView tree, TableView table) {
-        Container c = getContentPane();
+		c.add(splitPane, BorderLayout.CENTER);
 
-        //setJMenuBar(addressbookInterface.menu.getMenuBar());
-        /*
-        AddressbookToolBar toolbar =
-                new AddressbookToolBar(addressbookInterface);
-
-        c.add(toolbar, BorderLayout.NORTH);
-        */
-        table.setupRenderer();
-
-        //addressbookInterface.table = table;
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                tree.scrollPane, table);
-        splitPane.setBorder(null);
-
-        c.add(splitPane, BorderLayout.CENTER);
-
-        /*
-        StatusBar statusbar = new StatusBar(addressbookInterface.taskManager);
-        addressbookInterface.statusbar = statusbar;
-
-        c.add(statusbar, BorderLayout.SOUTH);
-        */
-
-        //pack();
-
-        /*
-        Dimension size = getSize();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(
-                (screenSize.width - size.width) / 2,
-                (screenSize.height - size.height) / 2);
-        */
-
-        //setVisible(true);
-    }
-
-    /*
-    protected AddressbookTree createTree(AddressbookInterface addressbookInterface) {
-            AddressbookTree tree = new AddressbookTree(addressbookInterface);
-            return tree;
-    }
-    */
+	}
 }

@@ -1,29 +1,28 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
 package org.columba.addressbook.gui.table;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -35,88 +34,40 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.table.util.AddressbookCommonHeaderRenderer;
 import org.columba.addressbook.gui.table.util.HeaderColumn;
 import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
-import org.columba.addressbook.gui.table.util.TableModelFilteredView;
-import org.columba.addressbook.gui.table.util.TableModelSorter;
 import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.TableItem;
-import org.columba.core.gui.frame.FrameMediator;
 
-public class TableView extends JPanel {
-	//private AddressbookInterface addressbookInterface;
-	//private AddressbookXmlConfig config;
-	private JTable table;
-	private AddressbookTableModel addressbookModel;
-	private GroupTableModel groupModel;
-	public JScrollPane scrollPane;
+public class TableView extends JTable {
+
 	private AdapterNode node;
-	private TableModelFilteredView filteredView;
-	private TableModelSorter sorter;
-	private FilterToolbar toolbar;
-	AddressbookFrameController frameController;
 
-	public TableView(AddressbookFrameController frameController) {
-		this.frameController= frameController;
+	private TableController controller;
 
-		//this.addressbookInterface = i;
-		//	config = AddressbookInterface.config.getAddressbookConfig();
-		addressbookModel = new AddressbookTableModel();
+	private AddressbookTableModel addressbookModel;
 
-		filteredView = new TableModelFilteredView(addressbookModel);
-		sorter = new TableModelSorter(addressbookModel);
+	public TableView(TableController controller) {
+		this.controller = controller;
 
-		addressbookModel.registerPlugin(filteredView);
-		addressbookModel.registerPlugin(sorter);
+		this.addressbookModel = controller.getAddressbookModel();
 
-		table = new JTable(addressbookModel);
-		table.setIntercellSpacing(new Dimension(0, 0));
-		table.setShowGrid(false);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		setIntercellSpacing(new Dimension(0, 0));
+		setShowGrid(false);
+		setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		addMouseListenerToHeaderInTable();
 
 		setLayout(new BorderLayout());
 
-		scrollPane = new JScrollPane(table);
-		scrollPane.getViewport().setBackground(Color.white);
-
-		add(scrollPane, BorderLayout.CENTER);
-
-		toolbar = new FilterToolbar(this);
-		add(toolbar, BorderLayout.NORTH);
 	}
 
-	public AddressbookTableModel getTableModel() {
-		return addressbookModel;
-	}
-
-	public TableModelFilteredView getTableModelFilteredView() {
-		return filteredView;
-	}
-
-	public JTable getTableView() {
-		JTable table = new JTable(addressbookModel);
-
-		return table;
-	}
-
-	/*
-	public JList getListView()
-	{
-	        JList list = new JList();
-	        list.setModel( addressbookModel );
-	
-	        return list;
-	}
-	*/
 	public void setupColumn(String name) {
 		try {
-			TableColumn tc = table.getColumn(name);
+			TableColumn tc = getColumn(name);
 
 			if (tc != null) {
 				HeaderColumnInterface column =
@@ -129,18 +80,21 @@ public class TableView extends JPanel {
 					tc.setHeaderRenderer(
 						new AddressbookCommonHeaderRenderer(
 							column.getValueString(),
-							sorter));
+							controller.getSorter()));
 				} else {
 					tc.setHeaderRenderer(
 						new AddressbookCommonHeaderRenderer(
 							column.getName(),
-							sorter));
+							controller.getSorter()));
 				}
 
 				if (column.getColumnSize() != -1) {
-					//System.out.println("size is locked:" + column.getColumnSize());
+					//System.out.println("size is locked:" +
+					// column.getColumnSize());
 					tc.setHeaderRenderer(
-						new AddressbookCommonHeaderRenderer("", sorter));
+						new AddressbookCommonHeaderRenderer(
+							"",
+							controller.getSorter()));
 
 					tc.setMaxWidth(column.getColumnSize());
 					tc.setMinWidth(column.getColumnSize());
@@ -152,18 +106,18 @@ public class TableView extends JPanel {
 	}
 
 	protected void addMouseListenerToHeaderInTable() {
-		final JTable tableView = table;
+		final JTable tableView = this;
 
 		tableView.setColumnSelectionAllowed(false);
 
-		MouseAdapter listMouseListener= new MouseAdapter() {
+		MouseAdapter listMouseListener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				TableColumnModel columnModel = tableView.getColumnModel();
 				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
 				int column = tableView.convertColumnIndexToModel(viewColumn);
 
 				if ((e.getClickCount() == 1) && (column != -1)) {
-					sorter.sort(column);
+					controller.getSorter().sort(column);
 					addressbookModel.update();
 
 					//mainInterface.mainFrame.getMenu().updateSortMenu();
@@ -173,13 +127,6 @@ public class TableView extends JPanel {
 
 		JTableHeader th = tableView.getTableHeader();
 		th.addMouseListener(listMouseListener);
-	}
-
-	public TableItem getHeaderTableItem() {
-		// FIXME
-		return null;
-
-		//return AddressbookInterface.config.getAddressbookOptionsConfig().getHeaderTableItem();
 	}
 
 	public void setupRenderer() {
@@ -217,16 +164,16 @@ public class TableView extends JPanel {
 						"header",
 						name.substring(index + 1, name.length()));
 
-				c= new HeaderColumn(name, prefix + "(" + suffix + ")");
+				c = new HeaderColumn(name, prefix + "(" + suffix + ")");
 			} else if (name.equals("type")) {
-				c=
+				c =
 					new TypeHeaderColumn(
 						name,
 						AddressbookResourceLoader.getString("header", name));
 
 				//System.out.println("typeHeadercolumn created");
 			} else {
-				c=
+				c =
 					new HeaderColumn(
 						name,
 						AddressbookResourceLoader.getString("header", name));
@@ -235,7 +182,7 @@ public class TableView extends JPanel {
 			addressbookModel.addColumn(c);
 		}
 
-		for (int i= 0; i < headerItemList.count(); i++) {
+		for (int i = 0; i < headerItemList.count(); i++) {
 			org.columba.core.config.HeaderItem e =
 				headerItemList.getHeaderItem(i);
 
@@ -264,114 +211,19 @@ public class TableView extends JPanel {
 
 		addressbookModel.setHeaderList(list);
 
-		/*
-		if (item.getType().equals("root"))
-		        addressbookModel.setHeaderList(null);
-		else
-		{
-		        HeaderItemList list = folder.getHeaderItemList();
-		
-		        addressbookModel.setHeaderList(list);
-		}
-		*/
 	}
 
 	public void setHeaderItemList(HeaderItemList list) {
 		addressbookModel.setHeaderList(list);
 	}
 
-	/*
-	public void setNode(AdapterNode n)
-	{
-	        if (n.getName().equals("addressbook"))
-	        {
-	                HeaderItemList list = new HeaderItemList();
-	
-	                AdapterNode nameNode = n.getChild(0);
-	                System.out.println("nameNode:" + nameNode.getName());
-	
-	                AdapterNode listNode = n.getChild(1);
-	                System.out.println("listNode:" + listNode.getName());
-	
-	                for (int j = 0; j < listNode.getChildCount(); j++)
-	                {
-	                        AdapterNode child = (AdapterNode) listNode.getChild(j);
-	                        System.out.println("child:" + child.getName());
-	
-	                        HeaderItem item = new HeaderItem();
-	                        for (int x = 0; x < child.getChildCount(); x++)
-	                        {
-	                                AdapterNode node = child.getChild(x);
-	                                System.out.println("child:" + node.getValue());
-	
-	                                item.add(node.getName(), node.getValue());
-	                        }
-	                        list.add(item);
-	
-	                }
-	
-	                addressbookModel.setHeaderList(list);
-	                //addressbookModel.setNode( n );
-	
-	                //addressbookModel.update();
-	                //table.setModel( addressbookModel );
-	                //setupRenderer();
-	
-	                //node = n.getChild("list");
-	        }
-	        else
-	        {
-	                groupModel.setNode(n);
-	                groupModel.update();
-	
-	                table.setModel(groupModel);
-	                setupRenderer();
-	
-	                node = n;
-	
-	        }
-	
-	}
-	*/
 	public void update() {
 		addressbookModel.update();
 
-		/*
-		if ( isGroup() == true )
-		{
-		    groupModel.update();
-		      //table.setModel( groupModel );
-		}
-		else
-		{
-		    addressbookModel.update();
-		      //table.setModel( addressbookModel );
-		}
-		*/
-	}
-
-	/*
-	protected boolean isGroup()
-	{
-	    if ( node.getName().equals("group") )
-	        return true;
-	    else
-	        return false;
-	}
-	*/
-	public HeaderItem[] getSelectedItems() {
-		int[] rows = table.getSelectedRows();
-		HeaderItem[] nodes = new HeaderItem[rows.length];
-
-		for (int i= 0; i < rows.length; i++) {
-			nodes[i] = addressbookModel.getHeaderItem(rows[i]);
-		}
-
-		return nodes;
 	}
 
 	public HeaderItem getSelectedItem() {
-		int row = table.getSelectedRow();
+		int row = getSelectedRow();
 
 		HeaderItem item = addressbookModel.getHeaderItem(row);
 
@@ -380,7 +232,7 @@ public class TableView extends JPanel {
 
 	public Object getSelectedUid() {
 		//AdapterNode child = null;
-		int row = table.getSelectedRow();
+		int row = getSelectedRow();
 
 		if (row == -1) {
 			return null;
@@ -392,72 +244,4 @@ public class TableView extends JPanel {
 		return uid;
 	}
 
-	public Object[] getSelectedUids() {
-		int[] rows = table.getSelectedRows();
-		Object[] uids = new Object[rows.length];
-
-		HeaderItem item;
-
-		for (int i= 0; i < rows.length; i++) {
-			item = addressbookModel.getHeaderItem(rows[i]);
-
-			Object uid = item.getUid();
-			uids[i] = uid;
-		}
-
-		return uids;
-	}
-
-	public void remove() {
-		/*
-		AdapterNode[] nodes = getSelectedNodes();
-		
-		
-		for ( int i=0; i<nodes.length; i++ )
-		{
-		nodes[i].remove();
-		}
-		
-		//if ( isGroup() == true ) groupModel.setNode( node );
-		
-		update();
-		
-		addressbookInterface.tree.update();
-		*/
-	}
-
-	/*
-	public AdapterNode getPropertiesNode()
-	{
-	    AdapterNode child = null;
-	
-	    int row = table.getSelectedRow();
-	
-	    if ( row != -1 )
-	    {
-	        if ( node.getName().equals("group") )
-	        {
-	            GroupItem item = config.getGroupItem( node );
-	            int uid = item.getUid( row );
-	
-	            child = config.getNode( uid );
-	
-	        }
-	        else
-	        {
-	            child = node.getChild(row);
-	        }
-	    }
-	
-	
-	    return child;
-	}
-	*/
-
-	/**
-	 * @return FrameController
-	 */
-	public FrameMediator getFrameController() {
-		return frameController;
-	}
 }
