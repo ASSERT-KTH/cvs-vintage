@@ -94,6 +94,8 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
         taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
         taskButton.setToolTipText("Show list of running tasks");
         taskButton.setRolloverEnabled(true);
+        taskButton.setActionCommand("TASKMANAGER");
+        taskButton.addActionListener(this);
 
         //taskButton.setMargin(new Insets(0, 0, 0, 0));
         taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -114,7 +116,7 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
 
         taskPanel.add(taskButton, BorderLayout.CENTER);
 
-        //leftMainPanel.add(taskPanel, BorderLayout.WEST);
+        leftMainPanel.add(taskPanel, BorderLayout.WEST);
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BorderLayout());
         margin = new EmptyBorder(0, 10, 0, 10);
@@ -383,6 +385,11 @@ public class StatusBar extends JComponent implements WorkerListChangeListener,
                 online = false;
             }
         }
+        else if ( command.equals("TASKMANAGER"))
+        {
+            TaskManagerDialog.createInstance();
+        }
+        
 
         /*
         if (command.equals(left.getActionCommand())) {

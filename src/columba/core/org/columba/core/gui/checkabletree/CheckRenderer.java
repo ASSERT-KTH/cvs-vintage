@@ -4,18 +4,14 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package org.columba.mail.gui.config.export;
+package org.columba.core.gui.checkabletree;
 
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.LocalRootFolder;
-import org.columba.mail.folder.imap.IMAPRootFolder;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
-import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
@@ -34,12 +30,12 @@ import javax.swing.tree.TreeCellRenderer;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class CheckRenderer extends JPanel implements TreeCellRenderer {
-    protected JCheckBox check;
-    protected TreeLabel label;
-    Map map;
+    private JCheckBox check;
+    private TreeLabel label;
 
-    public CheckRenderer(Map map) {
-        this.map = map;
+   
+    public CheckRenderer() {
+       
         setLayout(null);
 
         check = new JCheckBox();
@@ -54,42 +50,32 @@ public class CheckRenderer extends JPanel implements TreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value,
         boolean isSelected, boolean expanded, boolean leaf, int row,
         boolean hasFocus) {
+        /*    
         String stringValue = tree.convertValueToText(value, isSelected,
                 expanded, leaf, row, hasFocus);
-
-        //setEnabled(tree.isEnabled());
-        if (map.containsKey(value)) {
-            Boolean bool = (Boolean) map.get(value);
-
-            if (bool.equals(Boolean.TRUE)) {
-                check.setSelected(true);
-            } else {
-                check.setSelected(false);
-            }
-        } else {
-            // no entry in map for this node
-            // -> add default one
-            map.put(value, Boolean.FALSE);
-        }
-
-        //check.setSelected(((CheckNode) value).isSelected());
+        */
+        
+        System.out.println("value="+value);
+        //System.out.println("stringvalue="+stringValue);
+        
+        CheckableItem item = (CheckableItem) value;
+       
+        check.setSelected(item.isSelected());
+        
         label.setFont(tree.getFont());
-        label.setText(stringValue);
+        
+        label.setText(item.getName());
+
         label.setSelected(isSelected);
         label.setFocus(hasFocus);
 
-        FolderTreeNode node = (FolderTreeNode) value;
+        //FolderTreeNode node = (FolderTreeNode) value;
 
-        label.setIcon(node.getCollapsedIcon());
+        label.setIcon(item.getIcon());
 
-        // only enable folders which contain messages
-        if (node instanceof LocalRootFolder) {
-            check.setEnabled(false);
-        } else if (node instanceof IMAPRootFolder) {
-            check.setEnabled(false);
-        } else {
-            check.setEnabled(true);
-        }
+        
+            check.setSelected(item.isSelected());
+       
 
         //check.setText(node.getName());
         return this;

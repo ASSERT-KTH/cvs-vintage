@@ -17,7 +17,6 @@
 package org.columba.core.main;
 
 import org.columba.addressbook.main.AddressbookMain;
-
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -38,24 +37,21 @@ import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
-
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailMain;
 
-import java.io.PrintWriter;
-
-import java.net.Socket;
-
 public class Main {
     
     public static void main(String[] args) {
-        ColumbaLogger.log.info("Starting up Columba...");
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
         cmdLineParser.initCmdLine(args);
 
         MainInterface.DEBUG = cmdLineParser.isDebugOption();
 
+        // initialize logger has to happen here, because we need the MainInterface.DEBUG
+        new ColumbaLogger();
+        
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
         ColumbaClient.loadInVMInstance(args);
 

@@ -17,6 +17,7 @@ package org.columba.mail.gui.config.export;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.checkabletree.*;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.main.MainInterface;
 
@@ -71,47 +72,28 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-
 /**
  * ExportDialog lets you select a number of folders for exporting
  * messages.
  *
- * I'm using here a rather ugly way of storing the selected state
- * of a checkbox in the tree:
- * First I just re-use the treemodel to be able to easily create
- * a new JTree instance. Then have a HashMap which associates
- * FolderTreeNode as key with Boolean as value. This Boolean value
- * represents the selection state of the checkbox of this folder.
- *
- * TODO: I really need to get rid of this HashMap.
- * Instead, just wrap an FolderTreeNode in a TreeNode Interface which.
- * This class should be called ExportTreeNode and has an additional
- * attribute boolean enabled.
- * Every method of ExportTreeNode should be passed to the underlying
- * FolderTreeNode.
- *
- *
+
  * @author fdietz
  *
  */
-public class ExportDialog extends JDialog implements ActionListener,
-    TreeSelectionListener {
+public class ExportDialog
+    extends JDialog
+    implements ActionListener, TreeSelectionListener {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-    JButton exportButton;
-    JButton selectAllButton;
-    JButton helpButton;
-    JButton closeButton;
-
-    //FolderTreeTable table;
-    JTree tree;
-    Map map;
-    protected DefaultMutableTreeNode selectedNode;
+    private JButton exportButton;
+    private JButton selectAllButton;
+    private JButton helpButton;
+    private JButton closeButton;
+    private JTree tree;
+    private DefaultMutableTreeNode selectedNode;
 
     public ExportDialog() {
         // modal JDialog
         super(new JFrame(), true);
-
-        map = new HashMap();
 
         initComponents();
 
@@ -120,6 +102,19 @@ public class ExportDialog extends JDialog implements ActionListener,
         setLocationRelativeTo(null);
 
         setVisible(true);
+    }
+
+    private void initTree(CheckableTreeNode root, FolderTreeNode parent) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
+
+            CheckableTreeNode c = new CheckableTreeNode(child.getName());
+            c.setIcon(child.getCollapsedIcon());
+            c.setNode(child);
+            root.addChild(c);
+
+            initTree(c, child);
+        }
     }
 
     protected void initComponents() {
@@ -138,12 +133,17 @@ public class ExportDialog extends JDialog implements ActionListener,
         selectAllButton.setActionCommand("SELECTALL");
         selectAllButton.addActionListener(this);
 
-        tree = new JTree(MailInterface.treeModel);
-        tree.setRootVisible(false);
-        tree.setCellRenderer(new CheckRenderer(map));
+        FolderTreeNode parent =
+            (FolderTreeNode) MailInterface.treeModel.getRoot();
+        CheckableTreeNode root = new CheckableTreeNode(parent.getName());
+        root.setNode(parent);
+        initTree(root, parent);
 
-        //tree.setCellEditor(new CheckEditor());
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree = new CheckableTree(root);
+        tree.setRootVisible(false);
+
+        tree.getSelectionModel().setSelectionMode(
+            TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addMouseListener(new NodeSelectionListener(tree));
         tree.expandRow(0);
         tree.expandRow(1);
@@ -220,28 +220,46 @@ public class ExportDialog extends JDialog implements ActionListener,
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
+        ButtonWithMnemonic closeButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton =
+            new ButtonWithMnemonic(
+                MailResourceLoader.getString("global", "help"));
         helpButton.setActionCommand("HELP");
         helpButton.addActionListener(this);
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
+        getRootPane().registerKeyboardAction(
+            this,
+            "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        getRootPane().registerKeyboardAction(this, "HELP",
+        getRootPane().registerKeyboardAction(
+            this,
+            "HELP",
             KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
+    private void getTreeNodeIteration(CheckableTreeNode parent, Vector v)
+    {
+        v.add(parent);
+        
+        for ( int i=0; i<parent.getChildCount(); i++)
+        {
+            v.add(parent.getChildAt(i));
+            getTreeNodeIteration((CheckableTreeNode) parent.getChildAt(i), v);
+                
+        }
+    }
+    
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
@@ -278,17 +296,21 @@ public class ExportDialog extends JDialog implements ActionListener,
             setVisible(false);
 
             // get list of all folders
-            Iterator it = map.keySet().iterator();
+       
+            Vector list = new Vector();
+            getTreeNodeIteration( (CheckableTreeNode) tree.getModel().getRoot(), list);
 
+            Iterator it = list.iterator();
+            
             Vector v = new Vector();
 
             // get list of all selected folders
             while (it.hasNext()) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) it.next();
+                CheckableItem node = (CheckableItem) it.next();
 
-                Boolean export = (Boolean) map.get(node);
+                boolean export = (boolean) node.isSelected();
 
-                if (export.equals(Boolean.TRUE)) {
+                if (export) {
                     v.add(node);
                 }
             }
@@ -297,7 +319,7 @@ public class ExportDialog extends JDialog implements ActionListener,
             FolderCommandReference[] r = new FolderCommandReference[v.size()];
 
             for (int i = 0; i < v.size(); i++) {
-                FolderTreeNode node = (FolderTreeNode) v.get(i);
+                FolderTreeNode node = (FolderTreeNode) ((CheckableTreeNode)v.get(i)).getNode();
 
                 r[i] = new FolderCommandReference(node);
                 r[i].setDestFile(destFile);
@@ -312,8 +334,8 @@ public class ExportDialog extends JDialog implements ActionListener,
      * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
      */
     public void valueChanged(TreeSelectionEvent arg0) {
-        selectedNode = (DefaultMutableTreeNode) arg0.getPath()
-                                                    .getLastPathComponent();
+        selectedNode =
+            (DefaultMutableTreeNode) arg0.getPath().getLastPathComponent();
 
         if (selectedNode == null) {
             return;
@@ -342,21 +364,10 @@ public class ExportDialog extends JDialog implements ActionListener,
 
             //TreePath  path = tree.getSelectionPath();
             if (path != null) {
-                FolderTreeNode node = (FolderTreeNode) path.getLastPathComponent();
+                CheckableItem node =
+                    (CheckableItem) path.getLastPathComponent();
 
-                if (map.containsKey(node)) {
-                    Boolean bool = (Boolean) map.get(node);
-
-                    if (bool.equals(Boolean.TRUE)) {
-                        map.put(node, Boolean.FALSE);
-                    } else {
-                        map.put(node, Boolean.TRUE);
-                    }
-                } else {
-                    // no entry in map for this node
-                    // -> add default one
-                    map.put(node, Boolean.TRUE);
-                }
+                node.setSelected(!node.isSelected());
 
                 ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
 
