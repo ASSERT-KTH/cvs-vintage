@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.92 2003/04/01 02:50:44 jon Exp $
+ * @version $Id: IssueSearch.java,v 1.93 2003/04/10 02:00:22 jon Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -153,7 +153,9 @@ public class IssueSearch
     private static final String ON = " ON (";
     private static final String IN = " IN (";
     private static final String IS_NULL = " IS NULL";
-
+    private static final String LEFT_OUTER_JOIN = " LEFT OUTER JOIN ";
+    private static final String SELECT_DISTINCT = "select DISTINCT ";
+    
     private static final String ACT_TRAN_ID = 
         ActivityPeer.TRANSACTION_ID.substring(
         ActivityPeer.TRANSACTION_ID.indexOf('.')+1);
@@ -161,19 +163,19 @@ public class IssueSearch
         ActivitySetPeer.TRANSACTION_ID.substring(
         ActivitySetPeer.TRANSACTION_ID.indexOf('.')+1);
     private static final String ACTIVITYALIAS_TRANSACTION_ID =
-        ACTIVITYALIAS + "." + ACT_TRAN_ID;
+        ACTIVITYALIAS + '.' + ACT_TRAN_ID;
     private static final String 
         ACTIVITYALIAS_TRAN_ID__EQUALS__ACTIVITYSETALIAS_TRAN_ID =
-        ACTIVITYALIAS_TRANSACTION_ID + "=" + 
-        ACTIVITYSETALIAS + "." + ACTSET_TRAN_ID;
+        ACTIVITYALIAS_TRANSACTION_ID + '=' + 
+        ACTIVITYSETALIAS + '.' + ACTSET_TRAN_ID;
 
     private static final String ACT_ISSUE_ID = 
         ActivityPeer.ISSUE_ID.substring(ActivityPeer.ISSUE_ID.indexOf('.')+1);
     private static final String ACTIVITYALIAS_ISSUE_ID =
-        ACTIVITYALIAS + "." + ACT_ISSUE_ID;
+        ACTIVITYALIAS + '.' + ACT_ISSUE_ID;
     private static final String 
         ACTIVITYALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID =
-        ACTIVITYALIAS_ISSUE_ID + "=" + IssuePeer.ISSUE_ID;
+        ACTIVITYALIAS_ISSUE_ID + '=' + IssuePeer.ISSUE_ID;
     private static final String END_DATE = 
         ActivityPeer.END_DATE.substring(
         ActivityPeer.END_DATE.indexOf('.')+1);
@@ -185,29 +187,29 @@ public class IssueSearch
         AttributeValuePeer.ATTRIBUTE_ID.substring(
         AttributeValuePeer.ATTRIBUTE_ID.indexOf('.')+1);
     private static final String ACTIVITYALIAS_ATTRIBUTE_ID =
-        ACTIVITYALIAS + "." + ACT_ATTR_ID;
+        ACTIVITYALIAS + '.' + ACT_ATTR_ID;
     private static final String 
         ACTIVITYALIAS_ATTR_ID__EQUALS__USERAVALIAS_ATTR_ID =
-        ACTIVITYALIAS_ATTRIBUTE_ID + "=" + USERAVALIAS + "." + AV_ATTR_ID;
+        ACTIVITYALIAS_ATTRIBUTE_ID + '=' + USERAVALIAS + '.' + AV_ATTR_ID;
 
     private static final String USERAVALIAS_ISSUE_ID =
-        USERAVALIAS + "." + AV_ISSUE_ID;
+        USERAVALIAS + '.' + AV_ISSUE_ID;
     private static final String 
         USERAVALIAS_ISSUE_ID__EQUALS__ISSUEPEER_ISSUE_ID =
-        USERAVALIAS_ISSUE_ID + "=" + IssuePeer.ISSUE_ID;
+        USERAVALIAS_ISSUE_ID + '=' + IssuePeer.ISSUE_ID;
 
     private static final String 
         ACTIVITYALIAS_ISSUE_ID__EQUALS__USERAVALIAS_ISSUE_ID =
-        ACTIVITYALIAS_ISSUE_ID + "=" + USERAVALIAS + "." + AV_ISSUE_ID;
+        ACTIVITYALIAS_ISSUE_ID + '=' + USERAVALIAS + '.' + AV_ISSUE_ID;
 
     private static final String ACT_NEW_USER_ID = 
         ActivityPeer.NEW_USER_ID.substring(
         ActivityPeer.NEW_USER_ID.indexOf('.')+1);
     private static final String ACTIVITYALIAS_NEW_USER_ID =
-        ACTIVITYALIAS + "." + ACT_NEW_USER_ID;
+        ACTIVITYALIAS + '.' + ACT_NEW_USER_ID;
     private static final String 
         ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID =
-        ACTIVITYALIAS_NEW_USER_ID + "=" + USERAVALIAS + "." + AV_USER_ID;
+        ACTIVITYALIAS_NEW_USER_ID + '=' + USERAVALIAS + '.' + AV_USER_ID;
 
     private static final String WHERE = " WHERE ";
     private static final String FROM = " FROM ";
@@ -1876,7 +1878,7 @@ public class IssueSearch
             {            
                 // Get matching issues, with sort criteria
                 StringBuffer sql = new StringBuffer(255);
-                sql.append("select DISTINCT ")
+                sql.append(SELECT_DISTINCT)
                     .append(IssuePeer.ISSUE_ID).append(',')
                     .append(IssuePeer.MODULE_ID).append(',')
                     .append(IssuePeer.TYPE_ID).append(',')
@@ -2002,9 +2004,9 @@ public class IssueSearch
                 // add it as an outer join
                 if (!tableAliases.contains(alias))
                 {
-                    outerJoin.append(" LEFT OUTER JOIN ")
+                    outerJoin.append(LEFT_OUTER_JOIN)
                         .append(AttributeValuePeer.TABLE_NAME).append(' ')
-                        .append(alias).append(" ON (")
+                        .append(alias).append(ON)
                         .append(IssuePeer.ISSUE_ID).append('=')
                         .append(alias).append(".ISSUE_ID AND ").append(alias)
                         .append(".DELETED=0 AND ").append(alias)
