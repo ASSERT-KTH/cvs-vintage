@@ -112,7 +112,8 @@ public class Dependency implements java.io.Serializable
     {
         if (child.equals(dependency.getChild()) &&
             parent.equals(dependency.getParent()) &&
-            type.equals(dependency.getType()))
+            type.equals(dependency.getType()) && 
+            deleted == dependency.getDeleted())
         {
             return true;
         }
