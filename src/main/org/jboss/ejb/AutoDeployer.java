@@ -40,7 +40,7 @@ import org.jboss.deployment.J2eeDeployerMBean;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -262,7 +262,7 @@ public class AutoDeployer
       // Add URLs to list
       while (urls.hasMoreTokens())
       {
-         String url = urls.nextToken();
+         String url = urls.nextToken().trim();
 
          // Check if directory
          File urlFile = new File(url.startsWith ("file:") ? url.substring (5) : url);
