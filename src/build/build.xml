@@ -463,6 +463,37 @@
   </target>
     
   <!-- =================================================================== -->
+  <!-- Creates the JBoss base lib.  - used by jbossmq                      -->
+  <!-- =================================================================== -->
+  <target name="jboss.base" depends="init">
+
+    <mkdir dir="${build.util.classes.dir}"/>
+   
+    <javac srcdir="${src.dir}"
+           destdir="${build.util.classes.dir}"
+           debug="on"
+           deprecation="off"
+           optimize="off"
+           includes="org/jboss/configuration/**/*.java,
+                     org/jboss/util/**/*.java,
+                     org/jboss/naming/**/*.java,
+                     org/jboss/logging/**/*.java"
+    >
+            <classpath refid="classpath"/>
+    </javac>
+    
+    <mkdir dir="${external.dir}"/>
+    
+    <jar jarfile="${dist.dir}/external/jboss_base.jar"
+         basedir="${build.util.classes.dir}"
+         includes="org/jboss/util/**,
+                   org/jboss/logging/**,
+                   org/jboss/configuration/**,
+                   org/jboss/naming/**"
+    />
+  </target>
+    
+  <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
   <target name="clean" depends="init">
