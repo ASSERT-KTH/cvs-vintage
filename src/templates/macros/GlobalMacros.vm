@@ -3,7 +3,7 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
-  #set ($issueType = $scarabR.CurrentIssueType)
+  #set ($issueType = $attrValue.Issue.IssueType)
   #set ($values = $attrInput.get($optionFieldName).Value)
 
 <select name="$attrInput.get($optionFieldName).Key"
