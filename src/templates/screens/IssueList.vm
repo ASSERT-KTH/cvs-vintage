@@ -14,6 +14,7 @@ $page.setTitle("Artifact List")
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 #set ($issueList = $scarabR.IssueList)
 
+
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
 #if ($searchType.equals("advanced"))
@@ -28,12 +29,15 @@ $page.setTitle("Artifact List")
 #else
 
 #if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 25)
+  #set ($resultsPerPage = "25")
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = "1")
 #end
 
 #if ($issueList.size() > $resultsPerPage)
  #set ($paginated = "true")
- #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
+ #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum.toString(), $resultsPerPage.toString()))
 #end
 
 <form action="$action" method="post">
