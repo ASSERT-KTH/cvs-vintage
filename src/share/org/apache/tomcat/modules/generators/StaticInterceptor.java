@@ -78,6 +78,7 @@ public class StaticInterceptor extends BaseInterceptor {
     int realFileNote=-1;
     boolean useAcceptLanguage=true;
     String charset=null;
+    private boolean extraSafety=false;
 
     public StaticInterceptor() {
     }
@@ -103,7 +104,13 @@ public class StaticInterceptor extends BaseInterceptor {
     public void setUseCharset(String charset) {
         this.charset=charset;
     }
-
+    /** Request extra safety checks.
+     *  Defaults to <code>false</code> since it also prevents
+     *  certain include/forwards from working.
+     */
+    public void setExtraSafety(boolean safe) {
+	extraSafety = safe;
+    }
     public void engineInit(ContextManager cm) throws TomcatException {
 	//	if( debug>0 ) log("Engine init " );
 	
@@ -125,6 +132,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	fileHandler.setModule( this );
 	fileHandler.setContext( ctx );
 	fileHandler.setNoteId( realFileNote );
+	fileHandler.setExtraSafety(extraSafety);
 	ctx.addServlet( fileHandler );
 
 	dirHandler.setNoteId( realFileNote );
@@ -268,6 +276,7 @@ public class StaticInterceptor extends BaseInterceptor {
 final class FileHandler extends Handler  {
     int realFileNote;
     Context context;
+    private boolean extraSafety=false;
 
     FileHandler() {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
@@ -278,6 +287,9 @@ final class FileHandler extends Handler  {
 	this.context=ctx;
     }
 
+    public void setExtraSafety(boolean safe) {
+	extraSafety = safe;
+    }
     public void setNoteId( int n ) {
 	realFileNote=n;
     }
@@ -379,17 +391,19 @@ final class FileHandler extends Handler  {
 	    log("Ends with \\/. " + absPath);
 	    return null;
 	}
-	if (absPath.length() > base.length())
-	{
-		String relPath=absPath.substring( base.length() + 1);
-		if( debug>0) log( "RelPath = " + relPath );
+	if(extraSafety) {
+	    if (absPath.length() > base.length())
+		{
+		    String relPath=absPath.substring( base.length() + 1);
+		    if( debug>0) log( "RelPath = " + relPath );
 
-		String relPathU=relPath.toUpperCase();
-		if ( relPathU.startsWith("WEB-INF") ||
-		     relPathU.startsWith("META-INF") ||
-                    (relPathU.indexOf("/WEB-INF/") >= 0) ||
-                    (relPathU.indexOf("/META-INF/") >= 0) ) {
+		    String relPathU=relPath.toUpperCase();
+		    if ( relPathU.startsWith("WEB-INF") ||
+			 relPathU.startsWith("META-INF") ||
+			 (relPathU.indexOf("/WEB-INF/") >= 0) ||
+			 (relPathU.indexOf("/META-INF/") >= 0) ) {
 			return null;
+		    }
 		}
 	}
 	return absPath;
