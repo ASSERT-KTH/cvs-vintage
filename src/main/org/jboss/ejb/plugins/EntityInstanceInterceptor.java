@@ -58,7 +58,7 @@ import org.jboss.util.Sync;
  *    
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -77,7 +77,6 @@ import org.jboss.util.Sync;
  * <ol>
  *   <li>Handle a race condition when there is no ctx transaction
  * </ol>
-
  */
 public class EntityInstanceInterceptor
    extends AbstractInterceptor
@@ -89,6 +88,7 @@ public class EntityInstanceInterceptor
    protected EntityContainer container;
 	
    // Static --------------------------------------------------------
+
    /** Use a JBoss custom log4j category for trace level logging */
    static JBossCategory log = (JBossCategory) JBossCategory.getInstance(EntityInstanceInterceptor.class);
 
