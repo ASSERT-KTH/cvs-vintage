@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.27 2002/06/13 12:43:35 spestov Exp $
+ * @version $Id: View.java,v 1.28 2002/06/17 09:30:36 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1171,11 +1171,11 @@ public class View extends JFrame implements EBComponent
 
 		if(jEdit.getBooleanProperty("view.showSearchbar"))
 		{
-			if(searchBar == null)
-			{
-				addToolBar(TOP_GROUP,SEARCH_BAR_LAYER,
-					new SearchBar(this,false));
-			}
+			if(searchBar != null)
+				removeToolBar(searchBar);
+
+			addToolBar(TOP_GROUP,SEARCH_BAR_LAYER,
+				new SearchBar(this,false));
 		}
 		else if(searchBar != null)
 		{

@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.135 2002/06/14 10:06:53 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.136 2002/06/17 09:30:37 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2824,7 +2824,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 	 */
 	public void smartHome(boolean select)
 	{
-		if(!jEdit.getBooleanProperty("view.homeEnd"))
+		if(!jEdit.getBooleanProperty("view.smartHome"))
 			goToStartOfLine(select);
 		else
 		{
@@ -2852,7 +2852,7 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 	 */
 	public void smartEnd(boolean select)
 	{
-		if(!jEdit.getBooleanProperty("view.homeEnd"))
+		if(!jEdit.getBooleanProperty("view.smartEnd"))
 			goToEndOfLine(select);
 		else
 		{
