@@ -54,4 +54,8 @@
  	name="Account" 
  	main_class="org.columba.mail.filter.plugins.AccountFilter" 
  	gui_class="org.columba.mail.gui.config.filter.plugins.AccountCriteriaRow" />
+ <filter 
+ 	name="Match all" 
+ 	main_class="org.columba.mail.filter.plugins.MatchAllFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow" />
 </filterlist>
