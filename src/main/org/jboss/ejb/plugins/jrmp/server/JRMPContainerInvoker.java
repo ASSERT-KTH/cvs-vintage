@@ -53,7 +53,7 @@ import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
-import org.jboss.system.SecurityAssociation;
+import org.jboss.security.SecurityAssociation;
 
 import org.jboss.logging.Logger;
 
@@ -73,7 +73,7 @@ import org.w3c.dom.Element;
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.31 $
+ *      @version $Revision: 1.32 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer

@@ -23,11 +23,14 @@
   </mbean>
 
   <!-- Security -->  
-  <mbean code="org.jboss.security.JaasSecurityManagerService" name="DefaultDomain:service=JaasSecurityManager" />
+  <!-- JAAS security manager and realm mapping -->
+  <mbean code="org.jboss.security.plugins.JaasSecurityManagerService" name="DefaultDomain:service=JaasSecurityManager" />
 
-  <mbean code="org.jboss.security.SimpleRealmMappingService" name="DefaultDomain:service=SimpleRealmMappingFactory" />
+  <!-- Direct implementation of realm mapping (sample) -->
+  <mbean code="org.jboss.security.plugins.samples.SimpleRealmMappingService" name="DefaultDomain:service=SimpleRealmMappingFactory" />
 
-  <mbean code="org.jboss.security.EJBSecurityManagerService" name="DefaultDomain:service=EJBSecurityManager" />
+  <!-- Direct implementation of security manager (sample) -->
+  <mbean code="org.jboss.security.plugins.samples.EJBSecurityManagerService" name="DefaultDomain:service=EJBSecurityManager" />
 
   <!-- JDBC -->
   <mbean code="org.jboss.jdbc.JdbcProvider" name="DefaultDomain:service=JdbcProvider">

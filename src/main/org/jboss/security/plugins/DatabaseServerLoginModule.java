@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
  
-package org.jboss.security;
+package org.jboss.security.plugins;
 
 
 import java.util.Map;

@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
-package org.jboss.security;
+
+package org.jboss.security.plugins.samples;
 
 import java.io.File;
 import java.net.URL;
@@ -21,6 +21,7 @@ import javax.naming.Context;
 import javax.naming.Reference;
 import javax.naming.Name;
 import javax.naming.spi.ObjectFactory;
+import javax.naming.CommunicationException;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -29,75 +30,85 @@ import javax.management.ObjectName;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
+import org.jboss.security.EJBSecurityManager;
+
 /**
- *   This is a JMX service which manages access to security realms for a bean.
+ *   This is a JMX service which manages the EJBSecurityManager.
  *	  The service creates it and binds a Reference to it into JNDI.
+ *	  The EJBSecurityManager is responsible for validating credentials
+ *	  associated with principals.
  *      
  *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
+ *   @author <a href="mailto:hugo@hugopinto.com">Hugo Pinto</a>
  */
-public class SimpleRealmMappingService
+public class DatabaseSecurityManagerService
    extends ServiceMBeanSupport
-   implements SimpleRealmMappingServiceMBean, ObjectFactory
+   implements DatabaseSecurityManagerServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "java:/SimpleRealmMapping";
-   private static SimpleRealmMapping srm;
+   public static String JNDI_NAME = "java:/DatabaseSecurityManager";
     
    // Attributes ----------------------------------------------------
-	MBeanServer server;
+    MBeanServer server;
    
    // Static --------------------------------------------------------
+   static EJBSecurityManager sm;
 
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "Simple Realm Mapping";
-   }
+      return "Database Security manager";
+    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-   	this.server = server;
+    this.server = server;
       return new ObjectName(OBJECT_NAME);
    }
-	
+    
    protected void initService()
       throws Exception
    {
-      // Create a new SM
-      srm = new SimpleRealmMapping();
+       // Create a new SM
+       sm = new EJBSecurityManagerDatabaseImpl();
+       
+       // Bind reference to SM in JNDI
+       Reference ref = new Reference(sm.getClass().toString(), getClass().getName(), null);
+       new InitialContext().bind(JNDI_NAME, ref);
    }
-   
+    
    protected void startService()
       throws Exception
    {
-	   // Bind reference to JNDI
-	   Reference ref = new Reference(SimpleRealmMapping.class.toString(), getClass().getName(), null);
-	   new InitialContext().bind(JNDI_NAME, ref);
    }
-
+   
    protected void stopService()
    {
-		try
-		{
-			// Remove mapping from JNDI
-			new InitialContext().unbind(JNDI_NAME);
-		} catch (Exception e)
-		{
-			log.exception(e);
-		}
+       try
+       {
+         // Remove SM from JNDI
+         new InitialContext().unbind(JNDI_NAME);
+        } catch (CommunicationException e) {
+            // Do nothing, the naming services is already stopped   
+        }
+        
+       catch (Exception e)
+       {
+         log.exception(e);
+       }
    }
-	
-	// ObjectFactory implementation ----------------------------------
-	public Object getObjectInstance(Object obj,
+    
+    // ObjectFactory implementation ----------------------------------
+    public Object getObjectInstance(Object obj,
                                 Name name,
                                 Context nameCtx,
                                 Hashtable environment)
                          throws Exception
-	{
-		// Return the simple realm mapping manager
-		return srm;
-	}
+    {
+       // Return the security manager
+       return sm;
+    }
 }
 

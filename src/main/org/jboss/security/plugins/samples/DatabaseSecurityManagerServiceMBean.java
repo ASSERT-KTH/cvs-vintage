@@ -5,13 +5,13 @@
  * See terms of license at gnu.org.
  */
 
-package org.jboss.security;
+package org.jboss.security.plugins.samples;
 
-public interface DatabaseRealmMappingServiceMBean
+public interface DatabaseSecurityManagerServiceMBean
 	extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = ":service=DatabaseRealmMappingFactory";
+   public static final String OBJECT_NAME = ":service=DatabaseSecurityManager";
     
    // Public --------------------------------------------------------
 }

@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
  
-package org.jboss.system;
+package org.jboss.security.plugins.samples;
 
 import java.io.File;
 import java.net.URL;
@@ -32,14 +32,21 @@ import javax.transaction.TransactionManager;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
+import org.jboss.security.EJBSecurityManager;
+
 /**
  *	  The EJBSecurityManager is responsible for validating credentials
- *	  associated with principals.
+ *	  associated with principals. Right now it is a "demo" that just
+ *    ensures name == credential
  *      
+ *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
  */
-public interface EJBSecurityManager
+public class EJBSecurityManagerDefaultImpl implements EJBSecurityManager
 {
-	public boolean isValid( Principal principal, Object credential );
+	public boolean isValid( Principal principal, Object credential )
+	{
+		return credential != null && principal.getName().equals( credential.toString() );
+	}
 }
 

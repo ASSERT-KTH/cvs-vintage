@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
-package org.jboss.security;
+
+package org.jboss.security.plugins.samples;
 
 import java.io.File;
 import java.net.URL;
@@ -36,12 +36,13 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
  */
-public class CacheRealmMappingService
+public class DatabaseRealmMappingService
    extends ServiceMBeanSupport
-   implements EJBSecurityManagerServiceMBean, ObjectFactory
+   implements DatabaseRealmMappingServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "java:/CacheRealmMapping";
+   public static String JNDI_NAME = "java:/DatabaseRealmMapping";
+   private static DatabaseRealmMapping drm;
     
    // Attributes ----------------------------------------------------
 	MBeanServer server;
@@ -51,7 +52,7 @@ public class CacheRealmMappingService
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "Cache Realm Mapping";
+      return "Database Realm Mapping";
    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
@@ -64,15 +65,16 @@ public class CacheRealmMappingService
    protected void initService()
       throws Exception
    {
+ 	   // Create a new SM
+	   drm = new DatabaseRealmMapping();
+	   // Bind reference to JNDI
+	   Reference ref = new Reference(DatabaseRealmMapping.class.toString(), getClass().getName(), null);
+	   new InitialContext().bind(JNDI_NAME, ref);
    }
-	
+
    protected void startService()
       throws Exception
    {
-		
-	   // Bind reference to JNDI
-	   Reference ref = new Reference(CacheRealmMapping.class.toString(), getClass().getName(), null);
-	   new InitialContext().bind(JNDI_NAME, ref);
    }
    
    protected void stopService()
@@ -94,8 +96,8 @@ public class CacheRealmMappingService
                                 Hashtable environment)
                          throws Exception
 	{
-		// Return the cache realm mapping manager
-		return new CacheRealmMapping();
+		// Return the database realm mapping manager
+		return drm;
 	}
 }
 

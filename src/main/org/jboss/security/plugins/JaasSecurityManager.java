@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
  
-package org.jboss.security;
+package org.jboss.security.plugins;
 
 import java.io.File;
 import java.io.Serializable;
@@ -43,15 +43,13 @@ import javax.transaction.TransactionManager;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
-import org.jboss.system.EJBSecurityManager;
-import org.jboss.system.RealmMapping;
+import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.RealmMapping;
 
 /**
- * The EJBSecurityManager is responsible for validating credentials
- * associated with principals. Right now it is a "demo" that just
- * ensures name == credential
- *      
- * @see EJBSecurityManager
+ * The JaasSecurityManager is responsible both for validating credentials
+ * associated with principals and for role mapping.
+ *
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  */
 public class JaasSecurityManager

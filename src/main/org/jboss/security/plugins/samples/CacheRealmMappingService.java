@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
-package org.jboss.security;
+
+package org.jboss.security.plugins.samples;
 
 import java.io.File;
 import java.net.URL;
@@ -32,17 +32,16 @@ import org.jboss.util.ServiceMBeanSupport;
 /**
  *   This is a JMX service which manages access to security realms for a bean.
  *	  The service creates it and binds a Reference to it into JNDI.
- *      
+ *
  *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
  */
-public class DatabaseRealmMappingService
+public class CacheRealmMappingService
    extends ServiceMBeanSupport
-   implements DatabaseRealmMappingServiceMBean, ObjectFactory
+   implements CacheRealmMappingServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "java:/DatabaseRealmMapping";
-   private static DatabaseRealmMapping drm;
+   public static String JNDI_NAME = "java:/CacheRealmMapping";
     
    // Attributes ----------------------------------------------------
 	MBeanServer server;
@@ -52,7 +51,7 @@ public class DatabaseRealmMappingService
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "Database Realm Mapping";
+      return "Cache Realm Mapping";
    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
@@ -65,16 +64,15 @@ public class DatabaseRealmMappingService
    protected void initService()
       throws Exception
    {
- 	   // Create a new SM
-	   drm = new DatabaseRealmMapping();
-	   // Bind reference to JNDI
-	   Reference ref = new Reference(DatabaseRealmMapping.class.toString(), getClass().getName(), null);
-	   new InitialContext().bind(JNDI_NAME, ref);
    }
-
+	
    protected void startService()
       throws Exception
    {
+		
+	   // Bind reference to JNDI
+	   Reference ref = new Reference(CacheRealmMapping.class.toString(), getClass().getName(), null);
+	   new InitialContext().bind(JNDI_NAME, ref);
    }
    
    protected void stopService()
@@ -96,8 +94,8 @@ public class DatabaseRealmMappingService
                                 Hashtable environment)
                          throws Exception
 	{
-		// Return the database realm mapping manager
-		return drm;
+		// Return the cache realm mapping manager
+		return new CacheRealmMapping();
 	}
 }
 

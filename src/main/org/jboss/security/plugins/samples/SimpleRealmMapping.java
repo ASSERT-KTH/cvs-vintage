@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
-package org.jboss.security;
+
+package org.jboss.security.plugins.samples;
 
 import java.io.File;
 import java.net.URL;
@@ -28,7 +28,7 @@ import javax.management.ObjectName;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
-import org.jboss.system.RealmMapping;
+import org.jboss.security.RealmMapping;
 
 /**
  *  SimpleRealmMapping removes the level of indirection

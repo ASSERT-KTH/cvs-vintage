@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
  
-package org.jboss.security;
+package org.jboss.security.plugins;
 
 import java.io.File;
 import java.net.URL;
@@ -35,7 +35,7 @@ import javax.security.auth.login.Configuration;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
-import org.jboss.system.EJBSecurityManager;
+import org.jboss.security.EJBSecurityManager;
 
 import org.jnp.server.NamingServer;
 import org.jnp.interfaces.NamingContext;

@@ -51,8 +51,8 @@ import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
 
-import org.jboss.system.EJBSecurityManager;
-import org.jboss.system.RealmMapping;
+import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.RealmMapping;
 
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -79,7 +79,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
 *
-*   @version $Revision: 1.61 $
+*   @version $Revision: 1.62 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport

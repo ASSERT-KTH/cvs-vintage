@@ -32,21 +32,14 @@ import javax.transaction.TransactionManager;
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
-import org.jboss.system.EJBSecurityManager;
-
 /**
  *	  The EJBSecurityManager is responsible for validating credentials
- *	  associated with principals. Right now it is a "demo" that just
- *    ensures name == credential
+ *	  associated with principals.
  *      
- *   @see EJBSecurityManager
  *   @author Daniel O'Connor docodan@nycap.rr.com
  */
-public class EJBSecurityManagerDefaultImpl implements EJBSecurityManager
+public interface EJBSecurityManager
 {
-	public boolean isValid( Principal principal, Object credential )
-	{
-		return credential != null && principal.getName().equals( credential.toString() );
-	}
+	public boolean isValid( Principal principal, Object credential );
 }
 

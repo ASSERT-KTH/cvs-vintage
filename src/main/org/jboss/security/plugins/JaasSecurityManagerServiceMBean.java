@@ -5,13 +5,13 @@
  * See terms of license at gnu.org.
  */
 
-package org.jboss.security;
+package org.jboss.security.plugins;
 
-public interface EJBSecurityManagerServiceMBean
-	extends org.jboss.util.ServiceMBean
+public interface JaasSecurityManagerServiceMBean
+    extends org.jboss.util.ServiceMBean
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = ":service=EJBSecurityManager";
+   public static final String OBJECT_NAME = ":service=JaasSecurityManager";
     
    // Public --------------------------------------------------------
 }

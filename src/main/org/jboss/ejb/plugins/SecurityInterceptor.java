@@ -32,9 +32,9 @@ import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
 import org.jboss.logging.Log;
 
-import org.jboss.system.EJBSecurityManager;
-import org.jboss.system.RealmMapping;
-import org.jboss.system.SecurityAssociation;
+import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.RealmMapping;
+import org.jboss.security.SecurityAssociation;
 
 import com.dreambean.ejx.ejb.AssemblyDescriptor;
 
@@ -45,7 +45,7 @@ import com.dreambean.ejx.ejb.AssemblyDescriptor;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
@@ -85,34 +85,33 @@ public class SecurityInterceptor
     throws Exception
    {
       // if this isn't ok, bean shouldn't deploy
-      if ((securityManager == null) || (realmMapping == null))
-        return;
+      if (securityManager == null) {
+          return;
+      }
+      if (realmMapping == null) {
+          throw new java.rmi.RemoteException("Role mapping manager has not been set");
+      }
 
       Principal principal = SecurityAssociation.getPrincipal();
       Object credential = SecurityAssociation.getCredential();
       if (principal == null)
       {
-        principal = mi.getPrincipal();
-        credential = mi.getCredential();
-        if (!(principal == null)) // for now, security is optional
-        {
-          if (!securityManager.isValid( principal, credential ))
-          {
+         principal = mi.getPrincipal();
+         credential = mi.getCredential();
+         if (principal == null || !securityManager.isValid( principal, credential ))
+         {
             // should log illegal access
             throw new java.rmi.RemoteException("Authentication exception");
-          }
-          else
-          {
+         }
+         else
+         {
             SecurityAssociation.setPrincipal( principal );
             SecurityAssociation.setCredential( credential );
-          }
-        }
-        else
-          return; // security not enabled
+         }
       }
       Set methodPermissions = container.getMethodPermissions( mi.getMethod(), home );
 
-      if (!realmMapping.doesUserHaveRole( principal, methodPermissions ))
+      if (methodPermissions != null && !realmMapping.doesUserHaveRole( principal, methodPermissions ))
       {
         // should log illegal access
         throw new java.rmi.RemoteException("Illegal access exception");

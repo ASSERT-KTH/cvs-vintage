@@ -4,8 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
-package org.jboss.security;
+
+package org.jboss.security.plugins.samples;
 
 
 import java.util.Map;

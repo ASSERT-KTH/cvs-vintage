@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
 
-package org.jboss.system;
+package org.jboss.security;
 
 import java.security.Principal;
 

@@ -16,7 +16,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 import org.jboss.tm.TxManager;
 
 import java.util.HashMap;
-import org.jboss.system.SecurityAssociation;
+import org.jboss.security.SecurityAssociation;
 
 
 /**
@@ -24,7 +24,7 @@ import org.jboss.system.SecurityAssociation;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.8 $
+ *      @version $Revision: 1.9 $
  */
 public abstract class GenericProxy
    implements java.io.Externalizable

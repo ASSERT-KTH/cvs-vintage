@@ -40,8 +40,8 @@ import javax.transaction.TransactionManager;
 import javax.sql.DataSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.system.EJBSecurityManager;
-import org.jboss.system.RealmMapping;
+import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.RealmMapping;
 
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.33 $
+ *   @version $Revision: 1.34 $
  */
 public abstract class Container
 {
@@ -219,9 +219,11 @@ public abstract class Container
    */
    public Set getMethodPermissions( Method m, boolean home )
    {
-      Set permissions = (Set) methodPermissionsCache.get( m );
-      if (permissions == null)
-      {
+      Set permissions;
+
+      if (methodPermissionsCache.containsKey(m)) {
+         permissions = (Set) methodPermissionsCache.get( m );
+      } else {
          permissions = getBeanMetaData().getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
          methodPermissionsCache.put(m, permissions);
       }
