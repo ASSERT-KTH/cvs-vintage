@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.13 2002/12/29 21:18:25 kataka Exp $
+// $Id: FigClassifierRole.java,v 1.14 2003/01/21 13:11:04 mkl Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -45,10 +45,12 @@ import org.argouml.application.api.Notation;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
+
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
+import org.tigris.gef.base.Selection;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
@@ -502,6 +504,10 @@ public class FigClassifierRole extends FigNodeModelElement {
             updateNameText();
         } else
             super.modelChanged(mee);
+    }
+
+    public Selection makeSelection() {
+        return new SelectionClassifierRole(this);
     }
 
 } /* end class FigClassifierRole */
