@@ -452,6 +452,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 
     private void cookie2serverCookie( Cookie cookie, ServerCookie sc ) {
 	sc.getName().setString( cookie.getName() );
+	sc.setVersion( cookie.getVersion());
 	sc.getValue().setString( cookie.getValue() );
 	sc.getPath().setString(cookie.getPath());
 	sc.getDomain().setString( cookie.getDomain());

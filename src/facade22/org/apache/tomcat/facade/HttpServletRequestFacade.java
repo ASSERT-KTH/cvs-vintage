@@ -155,7 +155,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public Cookie[] getCookies() {
-	int count=request.getCookieCount();
+	Cookies cookies=request.getCookies();
+	int count=cookies.getCookieCount();
 	Cookie[] cookieArray = new Cookie[ count ];
 
 	// Convert from ServerCookie to Cookie.
@@ -163,7 +164,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	// ( if you don't call it no allocation happens for cookies )
 	// ( well, it happens, the code to reuse have to be written )
 	for (int i = 0; i < count; i ++) {
-	    ServerCookie sC=request.getCookie(i);
+	    ServerCookie sC=cookies.getCookie(i);
 	    cookieArray[i] = new CookieFacade(sC);
 	}
 

@@ -168,6 +168,7 @@ public class ServerCookie implements Serializable {
      *				if it is not
      */
     public static boolean isToken(String value) {
+	if( value==null) return true;
 	int len = value.length();
 
 	for (int i = 0; i < len; i++) {
@@ -209,9 +210,14 @@ public class ServerCookie implements Serializable {
      *  version
      */
     public static String getCookieHeaderName(int version) {
+	if( dbg>0 ) log( (version==1) ? "Set-Cookie2x" : "Set-Cookie");
         if (version == 1) {
-	    // RFC2965
-	    return "Set-Cookie2";
+	    // RFC2109
+	    return "Set-Cookie";
+	    // XXX RFC2965 is not standard yet, and Set-Cookie2
+	    // is not supported by Netscape 4, 6, IE 3, 5 .
+	    // It is supported by Lynx, and there is hope 
+	    //	    return "Set-Cookie2";
         } else {
 	    // Old Netscape
 	    return "Set-Cookie";
@@ -224,6 +230,7 @@ public class ServerCookie implements Serializable {
     public String getCookieHeaderValue() {
         StringBuffer buf = new StringBuffer();
 	getCookieHeaderValue( buf );
+	if( dbg > 0 ) log( buf.toString());
 	return buf.toString();
     }
 
@@ -241,19 +248,19 @@ public class ServerCookie implements Serializable {
  	// add version 1 specific information
 	if (version == 1) {
 	    // Version=1 ... required
-	    buf.append (";Version=1");
+	    buf.append ("; Version=1");
 
 	    // Comment=comment
-	    if (cookie.getComment() != null) {
-		buf.append (";Comment=");
+	    if (! cookie.getComment().isNull()) {
+		buf.append ("; Comment=");
 		maybeQuote (version, buf, cookie.getComment().toString());
 	    }
 	}
 
 	// add domain information, if present
 
-	if (cookie.getDomain().isNull()) {
-	    buf.append(";Domain=");
+	if (! cookie.getDomain().isNull()) {
+	    buf.append("; Domain=");
 	    maybeQuote (version, buf, cookie.getDomain().toString());
 	}
 
@@ -262,7 +269,7 @@ public class ServerCookie implements Serializable {
 	    if (version == 0) {
 		// XXX XXX XXX We need to send both, for
 		// interoperatibility (long word )
-		buf.append (";Expires=");
+		buf.append ("; Expires=");
 		// Wdy, DD-Mon-YY HH:MM:SS GMT ( Expires netscape format )
 		DateTool.oldCookieFormat.
 		    format(new Date( System.currentTimeMillis() +
@@ -270,21 +277,22 @@ public class ServerCookie implements Serializable {
 			   new FieldPosition(0));
 
 	    } else {
-		buf.append (";Max-Age=");
+		buf.append ("; Max-Age=");
 		buf.append (cookie.getMaxAge());
 	    }
-	} else if (version == 1)
-	  buf.append (";Discard");
+	}
+// 	else if (version == 1)
+// 	  buf.append ("; Discard");
 
 	// Path=path
-	if (cookie.getPath().isNull()) {
-	    buf.append (";Path=");
+	if (! cookie.getPath().isNull()) {
+	    buf.append ("; Path=");
 	    maybeQuote (version, buf, cookie.getPath().toString());
 	}
 
 	// Secure
 	if (cookie.getSecure()) {
-	  buf.append (";Secure");
+	  buf.append ("; Secure");
 	}
     }
 
@@ -298,6 +306,12 @@ public class ServerCookie implements Serializable {
 	    buf.append (value);
 	    buf.append ('"');
 	}
+    }
+
+    // log
+    static final int dbg=1;
+    public static void log(String s ) {
+	System.out.println("ServerCookie: " + s);
     }
 
 }

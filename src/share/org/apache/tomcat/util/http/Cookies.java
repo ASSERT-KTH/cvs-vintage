@@ -84,9 +84,12 @@ public final class Cookies { // extends MultiMap {
     MimeHeaders headers;
     
     /**
-     * 
+     *  Construct a new cookie collection, that will extract
+     *  the information from headers.
+     *
      */
-    public Cookies() {
+    public Cookies(MimeHeaders headers) {
+	this.headers=headers;
     }
 
     public void recycle() {
@@ -155,6 +158,7 @@ public final class Cookies { // extends MultiMap {
 	    // 	    } else {
 	    processCookieHeader( cookieValue.toString() );
 	    // 	    }
+	    pos++;// search from the next position
 	}
     }
 
@@ -286,7 +290,7 @@ public final class Cookies { // extends MultiMap {
     
     private void processCookieHeader(  String cookieString )
     {
-	
+	if( dbg>0 ) log( "Parsing cookie header " + cookieString );
 	// normal cookie, with a string value.
 	// This is the original code, un-optimized - it shouldn't
 	// happen in normal case
@@ -310,6 +314,7 @@ public final class Cookies { // extends MultiMap {
 		
 		cookie.getName().setString(name);
 		cookie.getValue().setString(value);
+		if( dbg > 0 ) log( "Add cookie " + name + "=" + value);
 	    } else {
 		// we have a bad cookie.... just let it go
 	    }
@@ -341,5 +346,10 @@ public final class Cookies { // extends MultiMap {
     }  
 
 
+    // log
+    static final int dbg=1;
+    public void log(String s ) {
+	System.out.println("Cookies: " + s);
+    }
 
 }

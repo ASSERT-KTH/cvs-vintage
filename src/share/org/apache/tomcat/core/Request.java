@@ -176,9 +176,10 @@ public class Request {
     protected Handler handler = null;
     Container container;
 
-    ServerCookie scookies[]=new ServerCookie[4];
+    Cookies scookies;
+    //    ServerCookie scookies[]=new ServerCookie[4];
     // -1 = cookies not processed yet
-    int cookieCount=-1;
+    //    int cookieCount=-1;
 
     // sub-request support 
     Request top;
@@ -193,6 +194,7 @@ public class Request {
 
     public Request() {
  	headers = new MimeHeaders();
+	scookies = new Cookies( headers );
 	initRequest(); 	
     }
 
@@ -581,34 +583,38 @@ public class Request {
     }
 
     // -------------------- Cookies --------------------
+
+    public Cookies getCookies() {
+	return scookies;
+    }
     
-    public int getCookieCount() {
-	if( cookieCount == -1 ) {
-	    cookieCount=0;
-	    // compute cookies
-	    CookieTools.processCookies( this );
-	}
-	return cookieCount;
-    }
+//     public int getCookieCount() {
+// 	if( cookieCount == -1 ) {
+// 	    cookieCount=0;
+// 	    // compute cookies
+// 	    CookieTools.processCookies( this );
+// 	}
+// 	return cookieCount;
+//     }
 
-    public ServerCookie getCookie( int idx ) {
-	if( cookieCount == -1 ) {
-	    getCookieCount(); // will also update the cookies
-	}
-	return scookies[idx];
-    }
+//     public ServerCookie getCookie( int idx ) {
+// 	if( cookieCount == -1 ) {
+// 	    getCookieCount(); // will also update the cookies
+// 	}
+// 	return scookies[idx];
+//     }
 
-    public void addCookie( ServerCookie c ) {
-	// not really needed - happen in 1 thread
-	synchronized ( this ) {
-	    if( cookieCount >= scookies.length  ) {
-		ServerCookie scookiesTmp[]=new ServerCookie[2*cookieCount];
-		System.arraycopy( scookies, 0, scookiesTmp, 0, cookieCount);
-		scookies=scookiesTmp;
-	    }
-	    scookies[cookieCount++]=c;
-	}
-    }
+//     public void addCookie( ServerCookie c ) {
+// 	// not really needed - happen in 1 thread
+// 	synchronized ( this ) {
+// 	    if( cookieCount >= scookies.length  ) {
+// 		ServerCookie scookiesTmp[]=new ServerCookie[2*cookieCount];
+// 		System.arraycopy( scookies, 0, scookiesTmp, 0, cookieCount);
+// 		scookies=scookiesTmp;
+// 	    }
+// 	    scookies[cookieCount++]=c;
+// 	}
+//     }
 
     // -------------------- LookupResult
 
@@ -858,12 +864,13 @@ public class Request {
         sessionIdSource = null;
 	sessionId=null;
 	
-	for( int i=0; i< cookieCount; i++ ) {
-	    if( scookies[i]!=null )
-		scookies[i].recycle();
-	}
-	cookieCount=-1;
-
+// 	for( int i=0; i< cookieCount; i++ ) {
+// 	    if( scookies[i]!=null )
+// 		scookies[i].recycle();
+// 	}
+// 	cookieCount=-1;
+	scookies.recycle();
+	
 	// counters and notes
         cntr.recycle();
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;

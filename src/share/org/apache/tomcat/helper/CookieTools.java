@@ -75,87 +75,87 @@ import java.util.*;
  */
 public class CookieTools {
 
-    // -------------------- Cookie parsing tools
-    /** Process all Cookie headers of a request, setting them
-     *  in a cookie vector
-     */
-    public static void processCookies( Request request ) {
-	// XXX bug in original RequestImpl - might not work if multiple
-	// cookie headers.
-	//
-	// XXX need to use the cookies hint in RequestAdapter
-    	MimeHeaders mh=request.getMimeHeaders();
-	MessageBytes cookieMB= mh.getValue( "cookie" );
+//     // -------------------- Cookie parsing tools
+//     /** Process all Cookie headers of a request, setting them
+//      *  in a cookie vector
+//      */
+//     public static void processCookies( Request request ) {
+// 	// XXX bug in original RequestImpl - might not work if multiple
+// 	// cookie headers.
+// 	//
+// 	// XXX need to use the cookies hint in RequestAdapter
+//     	MimeHeaders mh=request.getMimeHeaders();
+// 	MessageBytes cookieMB= mh.getValue( "cookie" );
 
-	if( cookieMB==null ) return;
-	if( cookieMB.isNull() ) return;
+// 	if( cookieMB==null ) return;
+// 	if( cookieMB.isNull() ) return;
 
-	// XXX XXX XXX TODO TODO TODO
-	// byte b[]=cookieMB.getBytes();
-	// 	if( b!=null ) {
-	// 	    // this is a byte header 
-	// 	    parseCookie( request, b, cookieMB.getLength());
-	// 	    return;
-	// 	}
+// 	// XXX XXX XXX TODO TODO TODO
+// 	// byte b[]=cookieMB.getBytes();
+// 	// 	if( b!=null ) {
+// 	// 	    // this is a byte header 
+// 	// 	    parseCookie( request, b, cookieMB.getLength());
+// 	// 	    return;
+// 	// 	}
 
-	// normal cookie, with a string value.
-	// This is the original code, un-optimized - it shouldn't
-	// happen in normal case
-	String cookieString=cookieMB.toString();
-	StringTokenizer tok = new StringTokenizer(cookieString,
-						  ";", false);
-	while (tok.hasMoreTokens()) {
-	    String token = tok.nextToken();
-	    int i = token.indexOf("=");
-	    if (i > -1) {
+// 	// normal cookie, with a string value.
+// 	// This is the original code, un-optimized - it shouldn't
+// 	// happen in normal case
+// 	String cookieString=cookieMB.toString();
+// 	StringTokenizer tok = new StringTokenizer(cookieString,
+// 						  ";", false);
+// 	while (tok.hasMoreTokens()) {
+// 	    String token = tok.nextToken();
+// 	    int i = token.indexOf("=");
+// 	    if (i > -1) {
 		
-		// XXX
-		// the trims here are a *hack* -- this should
-		// be more properly fixed to be spec compliant
+// 		// XXX
+// 		// the trims here are a *hack* -- this should
+// 		// be more properly fixed to be spec compliant
 		
-		String name = token.substring(0, i).trim();
-		String value = token.substring(i+1, token.length()).trim();
-		// RFC 2109 and bug 
-		value=stripQuote( value );
-		ServerCookie cookie = new ServerCookie();
-		cookie.getName().setString(name);
-		cookie.getValue().setString(value);
-		request.addCookie( cookie );
-	    } else {
-		// we have a bad cookie.... just let it go
-	    }
-	}
-    }
+// 		String name = token.substring(0, i).trim();
+// 		String value = token.substring(i+1, token.length()).trim();
+// 		// RFC 2109 and bug 
+// 		value=stripQuote( value );
+// 		ServerCookie cookie = new ServerCookie();
+// 		cookie.getName().setString(name);
+// 		cookie.getValue().setString(value);
+// 		request.addCookie( cookie );
+// 	    } else {
+// 		// we have a bad cookie.... just let it go
+// 	    }
+// 	}
+//     }
 
-    /** Parse a cookie from a byte[]
-     */
-    public void parseCookie( Request req, byte b[], int len ) {
+//     /** Parse a cookie from a byte[]
+//      */
+//     public void parseCookie( Request req, byte b[], int len ) {
 	
-    }
+//     }
 
-    /**
-     *
-     * Strips quotes from the start and end of the cookie string
-     * This conforms to RFC 2109
-     * 
-     * @param value            a <code>String</code> specifying the cookie 
-     *                         value (possibly quoted).
-     *
-     * @see #setValue
-     *
-     */
-    private static String stripQuote( String value )
-    {
-	//	log("Strip quote from " + value );
-	if (((value.startsWith("\"")) && (value.endsWith("\""))) ||
-	    ((value.startsWith("'") && (value.endsWith("'"))))) {
-	    try {
-		return value.substring(1,value.length()-1);
-	    } catch (Exception ex) { 
-	    }
-	}
-	return value;
-    }  
+//     /**
+//      *
+//      * Strips quotes from the start and end of the cookie string
+//      * This conforms to RFC 2109
+//      * 
+//      * @param value            a <code>String</code> specifying the cookie 
+//      *                         value (possibly quoted).
+//      *
+//      * @see #setValue
+//      *
+//      */
+//     private static String stripQuote( String value )
+//     {
+// 	//	log("Strip quote from " + value );
+// 	if (((value.startsWith("\"")) && (value.endsWith("\""))) ||
+// 	    ((value.startsWith("'") && (value.endsWith("'"))))) {
+// 	    try {
+// 		return value.substring(1,value.length()-1);
+// 	    } catch (Exception ex) { 
+// 	    }
+// 	}
+// 	return value;
+//     }  
     
     
 //     /** Return the header name to set the cookie, based on cookie

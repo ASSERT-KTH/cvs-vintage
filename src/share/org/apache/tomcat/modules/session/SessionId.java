@@ -165,12 +165,12 @@ public class SessionId extends  BaseInterceptor
 	}
 
 
-	int count=request.getCookieCount();
+	int count=request.getCookies().getCookieCount();
 
 	// Give priority to cookies. I don't know if that's part
 	// of the spec - XXX
 	for( int i=0; i<count; i++ ) {
-	    ServerCookie cookie = request.getCookie(i);
+	    ServerCookie cookie = request.getCookies().getCookie(i);
 	    
 	    if (cookie.getName().equals("JSESSIONID")) {
 		sessionId = cookie.getValue().toString();
