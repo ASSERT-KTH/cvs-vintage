@@ -122,8 +122,8 @@ public class Tomcat3Precompiler extends DefaultJspCompilerAdapter {
                 java.createArg().setValue(args[i]);
             }
             java.setFailonerror(getJspc().getFailonerror());
-            //don't fork
-            java.setFork(false);
+            //fork to catch JspC CompileExceptions
+            java.setFork(true);
             java.execute();
             return true;
         } catch (Exception ex) {
