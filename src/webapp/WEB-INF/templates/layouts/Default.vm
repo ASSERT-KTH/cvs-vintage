@@ -22,13 +22,14 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
 <script src="$staticLink.setPath("/scripts/inputs.js")" type="text/javascript"></script>
 <script src="$staticLink.setPath("/scripts/main.js")" type="text/javascript"></script>
 <script src="$staticLink.setPath("/scripts/cal2.js")" type="text/javascript"></script>
-<script language="Javascript">
+<script src="$staticLink.setPath("/scripts/CalendarPopup.js")"></script>
+<script language="Javascript" id="js1">
+var calPopup = new CalendarPopup("datePopupDiv");
+calPopup.showNavigationDropdowns();
 setMonthNames("$l10n.January", "$l10n.February", "$l10n.March", "$l10n.April", "$l10n.May", "$l10n.June", "$l10n.July", "$l10n.August", "$l10n.September", "$l10n.October", "$l10n.November", "$l10n.December");
 setWeekDay($l10n.DateFirstWeekDay);
 setDayNames($l10n.DateWeekDays);
-setLinkNames("$l10n.DateClose", "$l10n.DateClean");
 </script>
-
 #set ($hide_bars = $scarabG.getTurbineConfiguration().getString("scarab.dhtml.hide_bars").toLowerCase().equals("true"))
 #set ($autoresize = $scarabG.getTurbineConfiguration().getString("scarab.dhtml.autoresize_textarea").toLowerCase().equals("true"))
 
@@ -164,6 +165,7 @@ function initializeAll() {
  </head>
 
  <body marginwidth="0" marginheight="0" class="composite" #if($hide_bars || $autoresize) onload="initializeAll()" #end>
+<DIV ID="datePopupDiv" STYLE="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"></DIV>
  <div id="banner" #if($hide_bars) ondblclick="hideBanner()" #end>
   <table border="0" cellspacing="0" cellpadding="8" width="100%">
   <tr>
