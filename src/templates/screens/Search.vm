@@ -10,16 +10,6 @@ $page.setTitle("Custom Search")
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="custom" />
 
-<div class="tabs">
-<table cellpadding="3" cellspacing="0" border="0">
-<tr>
-	<td><a href="$link.setPage("AdvancedQuery.vm")" title="view advanced query information">Avanced query</a></td>
-	<th>Custom</th>
-	<td><a href="$link.setPage("QueryList.vm")" title="view saved queries">Saved queries</a></td>
-</tr>
-</table>
-</div>
-		
 <p class="functnbar"><input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
 		
 
@@ -28,6 +18,8 @@ $page.setTitle("Custom Search")
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
 #set ($searchValues = $search.QuickSearchOptionAttributeValues)
+#set ($attrValues = $search.ModuleAttributeValuesMap)
+
 #if ($searchTextAttributes.size() != 0)
 <h3>Text search</h3>
 
@@ -75,11 +67,11 @@ $page.setTitle("Custom Search")
 </div>
 #end
 
+#if (!$searchValues.isEmpty())
 <h3>Multiple/single choice search</h3>
  <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
 #foreach ($attVal in $searchValues)
-  ##set ($attrInput = $intake.AttributeValue.mapTo($attVal))
   #if ($attVal.Attribute.AttributeType.ValidationKey)
     #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
   #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
@@ -95,33 +87,32 @@ $page.setTitle("Custom Search")
 #end
  </table>
  </div>
+#end
 
 <h3>Results display options</h3>
 		
 <div class="axial">
 <table  cellpadding="3" cellspacing="2" border="1">
-#* 
- FIXME - implement sort
-	<tr>
-	<th width="120">sort by</th>
-	<td><select>
-	<option>
-	attriute X
-	</option>
-	</select>&nbsp;<select>
-	<option>
-	ascending
-	</option>
-	<option>
-	descending
-	</option>
-	</select></td>
+  <tr>
+    <th width="120">sort by</th>
+	<td><select name="sortAttrId">
+           <option value="">Choose..</option>
+           #foreach ($attKey in $attrValues.sequence())
+              #set ($attVal = $attrValues.get($attKey))
+       	      <option value="$attVal.AttributeId">$attVal</option>
+           #end
+	</select>
+        &nbsp;
+        <select name="sortPolarity">
+          <option value="asc"> ascending </option>
+          <option value="desc"> descending </option>
+        </select>
+         </td>
 	</tr>
-*#
      <tr>
-       <th>Max items per page</th>
+       <th>Issues per page</th>
 <input type="hidden" name="pageNum" value="1" />
-       <td><input type="radio" name="resultsPerPage" checked="checked" /> 25 <input type="radio" name="resultsPerPage" /> 50 <input type="radio" name="resultsPerPage" /> 75 <input type="radio" name="resultsPerPage" /></td>
+       <td><input type="radio" name="resultsPerPage"   value="25" checked="checked" /> 25 <input type="radio" name="resultsPerPage"   value="50" /> 50 <input type="radio" name="resultsPerPage"   value="75" /> 75 <input type="radio" name="resultsPerPage" value="100" /> 100</td>
      </tr>
       </table>
 </div>

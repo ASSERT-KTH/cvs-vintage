@@ -56,9 +56,9 @@ $page.setTitle("Advanced query")
 		
 #advancedQuery($scarabR.CurrentModule)
 
+
 <div class="functnbar2"><input type="Submit"  name="eventSubmit_doSearch" value="Submit" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;<input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" />&#160;<input type="Submit" value="Clear form" /></div>
+</div>
 
 $intake.declareGroups()
 </form>
-
-</div>
