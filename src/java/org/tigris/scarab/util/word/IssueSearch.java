@@ -65,12 +65,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.workingdogs.village.Record;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.adapter.DB;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.util.BasePeer;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.SimpleKey;
@@ -92,7 +90,6 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.ActivitySetPeer;
-import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.RModuleIssueType;
@@ -116,7 +113,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.105 2003/07/17 17:57:13 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.106 2003/07/25 17:34:38 thierrylach Exp $
  */
 public class IssueSearch 
     extends Issue
