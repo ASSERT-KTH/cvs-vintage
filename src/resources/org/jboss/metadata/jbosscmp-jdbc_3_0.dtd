@@ -20,7 +20,7 @@ entities, and relationships.
 <!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?, 
          remove-table?, read-only?, read-time-out?, row-locking?, 
          pk-constraint?, fk-constraint?, preferred-relation-mapping?, 
-         read-ahead?, list-cache-max?, fetch-size?)>
+         read-ahead?, list-cache-max?, fetch-size?, unknown-pk?)>
 
 
 <!--
@@ -609,8 +609,13 @@ follows:
 <!--
 Unknown primary key configuration
 -->
-<!ELEMENT unknown-pk ( key-generator-factory, read-only?, read-time-out?, 
-   column-name?, (jdbc-type, sql-type)? )>
+<!ELEMENT unknown-pk ( key-generator-factory, unknown-pk-class,
+   read-only?, read-time-out?, column-name?, (jdbc-type, sql-type)? )>
+
+<!--
+The unknown primary key class.
+-->
+<!ELEMENT unknown-pk-class (#PCDATA)>
 
 <!--
 The name of the key factory.
