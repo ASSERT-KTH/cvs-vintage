@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: marcf</b>
@@ -147,23 +147,29 @@ public abstract class BeanLockSupport
    
    protected boolean isCallAllowed(MethodInvocation mi)
    {
+      // is this a reentrant bean
       if (reentrant)
       {
          return true;
       }
-      else
+
+      // is this a known non-entrant method
+      Method m = mi.getMethod();
+      if (m.equals(getEJBHome) ||
+          m.equals(getHandle) ||
+          m.equals(getPrimaryKey) ||
+          m.equals(isIdentical) ||
+          m.equals(remove))
       {
-         Method m = mi.getMethod();
-         if (m.equals(getEJBHome) ||
-             m.equals(getHandle) ||
-             m.equals(getPrimaryKey) ||
-             m.equals(isIdentical) ||
-             m.equals(remove))
-         {
-            return true;
-         }
+         return true;
       }
-      
+
+      // if this is a non-entrant message to the container let it through
+      if(NonentrantMessage.class.isAssignableFrom( m.getDeclaringClass() )) 
+      {
+         return true;
+      }
+  
       return false;
    }
 }
