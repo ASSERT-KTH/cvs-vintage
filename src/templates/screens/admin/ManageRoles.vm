@@ -1,13 +1,13 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.14 2002/08/28 21:59:49 csjank Exp $
+@version $Id: ManageRoles.vm,v 1.15 2003/12/01 22:50:42 mpoeschl Exp $
 *#
 
 <div id="manageRoles" class="app">
 
 <h3>$l10n.RoleList</h3>
 
-<form action="admin%2CManageRoles.vm" method="post">
+<form action="$link.setPage("admin,ManageRoles.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageRoles" />
 
 <table cellpadding="3" cellspacing="2" border="1" width="100%">

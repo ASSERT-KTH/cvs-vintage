@@ -31,7 +31,7 @@
   
   </tr>
 
-  <form method="post" action="admin,ManageUserSearch.vm">
+  <form method="post" action="$link.setPage("admin,ManageUserSearch.vm")">
     <input type="hidden" name="action" value="admin.ManageUser" />
     <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
     <input type="hidden" name="state" value="showedituser" />

@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddPermission.vm,v 1.8 2003/04/15 23:39:44 beril Exp $
+@version $Id: AddPermission.vm,v 1.9 2003/12/01 22:50:42 mpoeschl Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
@@ -9,7 +9,7 @@
 
 <h3>$l10n.AddPermission</h3>
 
-<form name="EditUserForm" action="admin%2cAddPermission.vm" method="post">
+<form name="EditUserForm" action="$link.setPage("admin,AddPermission.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManagePermissions" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManagePermissions.vm" />
   <input type="hidden" name="lastAction" value="" />
