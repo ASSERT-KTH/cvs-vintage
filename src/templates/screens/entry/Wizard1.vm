@@ -48,9 +48,13 @@ $link.setPage("TemplateList.vm").setLabel("View all $scarabR.CurrentIssueType.Na
  </table>
  </div>
 #end
-
+</form>
 #asterisk()
 
+<form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
+#if ($templateId)
+ <input type="hidden" name="templateId" value="$templateId"/>
+#end
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))
     #if ($group.Dedupe && !$group.Attributes.isEmpty())
