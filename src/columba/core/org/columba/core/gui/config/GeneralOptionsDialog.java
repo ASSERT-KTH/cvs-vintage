@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.config;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -23,10 +24,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.gui.util.FontSelectionDialog;
+import org.columba.core.gui.util.*;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ConfigPluginHandler;
@@ -44,58 +42,44 @@ import java.awt.event.KeyEvent;
 
 import java.util.Locale;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-
+import javax.swing.*;
 
 public class GeneralOptionsDialog extends JDialog implements ActionListener {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
     // button panel
-    JButton okButton;
-    JButton cancelButton;
-    JButton helpButton;
+    protected JButton okButton;
+    protected JButton cancelButton;
+    protected JButton helpButton;
 
     // look and feel
-    JLabel lfLabel;
-    JComboBox lfComboBox;
-    JButton lfButton;
+    protected JLabel lfLabel;
+    protected JComboBox lfComboBox;
+    protected JButton lfButton;
     private String theme = null;
     private ThemePluginHandler handler;
 
     // fonts
-    JCheckBox overwriteCheckBox;
-    JLabel mainFontLabel;
-    JLabel textFontLabel;
-    JButton mainFontButton;
-    JButton textFontButton;
+    protected JCheckBox overwriteCheckBox;
+    protected JLabel mainFontLabel;
+    protected JLabel textFontLabel;
+    protected JButton mainFontButton;
+    protected JButton textFontButton;
     private Font mainFont;
     private Font textFont;
 
     // toolbar
-    JLabel toolbarLabel;
-    JComboBox toolbarComboBox;
+    protected JLabel toolbarLabel;
+    protected JComboBox toolbarComboBox;
 
     // language
-    JLabel languageLabel;
-    JComboBox languageComboBox;
-    JFrame frame;
-    ConfigPluginHandler configHandler;
+    protected JLabel languageLabel;
+    protected JComboBox languageComboBox;
+    protected JFrame frame;
+    protected ConfigPluginHandler configHandler;
 
     // ID of configuration plugin of this theme plugin
-    String configID;
+    protected String configID;
 
     public GeneralOptionsDialog(JFrame frame) {
         super(frame,
@@ -359,7 +343,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
     }
 
     protected void initComponents() {
-        lfLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_PATH,
+        lfLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(RESOURCE_PATH,
                     "general", "look_feel"));
 
         String[] plugins = handler.getPluginIdList();
@@ -367,26 +351,30 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         lfComboBox.setRenderer(new ThemeComboBoxRenderer());
         lfComboBox.setActionCommand("THEME");
         lfComboBox.addActionListener(this);
+        lfLabel.setLabelFor(lfComboBox);
 
-        lfButton = new JButton(GlobalResourceLoader.getString(RESOURCE_PATH,
+        lfButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(RESOURCE_PATH,
                     "general", "look_feel_options"));
         lfButton.setActionCommand("THEME_OPTIONS");
         lfButton.addActionListener(this);
 
-        overwriteCheckBox = new JCheckBox(GlobalResourceLoader.getString(
+        overwriteCheckBox = new CheckBoxWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "override_fonts"));
         overwriteCheckBox.addActionListener(this);
-        mainFontLabel = new JLabel(GlobalResourceLoader.getString(
+        
+        mainFontLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "main_font"));
-        textFontLabel = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_PATH, "general", "text_font"));
-
         mainFontButton = new JButton("main font");
         mainFontButton.addActionListener(this);
+        mainFontLabel.setLabelFor(mainFontButton);
+        
+        textFontLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
+                    RESOURCE_PATH, "general", "text_font"));
         textFontButton = new JButton("text font");
         textFontButton.addActionListener(this);
+        textFontLabel.setLabelFor(textFontButton);
 
-        toolbarLabel = new JLabel(GlobalResourceLoader.getString(
+        toolbarLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "toolbar"));
         toolbarComboBox = new JComboBox(new String[] {
                     GlobalResourceLoader.getString(RESOURCE_PATH, "general",
@@ -398,9 +386,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
                 });
         toolbarLabel.setLabelFor(toolbarComboBox);
 
-        languageLabel = new JLabel(GlobalResourceLoader.getString(
+        languageLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "locale"));
         languageComboBox = new JComboBox();
+        languageLabel.setLabelFor(languageComboBox);
         languageComboBox.setRenderer(new DefaultListCellRenderer() {
                 public Component getListCellRendererComponent(JList list,
                     Object value, int index, boolean isSelected,

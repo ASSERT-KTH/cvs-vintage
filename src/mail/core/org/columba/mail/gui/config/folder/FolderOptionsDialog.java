@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.folder;
 
 import java.awt.BorderLayout;
@@ -27,20 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -49,6 +37,7 @@ import org.columba.core.gui.checkablelist.CheckableItemListTableModel;
 import org.columba.core.gui.checkablelist.CheckableList;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CTabbedPane;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
@@ -260,7 +249,7 @@ public class FolderOptionsDialog
 		Font boldFont= (Font) UIManager.get("Label.font"); //$NON-NLS-1$
 		boldFont= boldFont.deriveFont(Font.BOLD);
 
-		nameLabel= new JLabel(MailResourceLoader.getString("dialog", "folderoptions", "name")); //$NON-NLS-1$
+		nameLabel= new LabelWithMnemonic(MailResourceLoader.getString("dialog", "folderoptions", "name")); //$NON-NLS-1$
 		nameLabel.setFont(boldFont);
 		nameTextField= new JTextField();
 
@@ -284,7 +273,7 @@ public class FolderOptionsDialog
 		locationLabel.setFont(boldFont);
 		locationLabel2= new JLabel(""); //$NON-NLS-1$
 
-		exportButton= new JButton(MailResourceLoader.getString("dialog", "folderoptions", "export")); //$NON-NLS-1$
+		exportButton= new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "folderoptions", "export")); //$NON-NLS-1$
 		exportButton.setActionCommand("EXPORT"); //$NON-NLS-1$
 		exportButton.addActionListener(this);
 
@@ -614,6 +603,5 @@ public class FolderOptionsDialog
 			pt.translate(-1, -2);
 			return pt;
 		}
-
 	}
 }
