@@ -87,8 +87,8 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
 	try {
-	    Method unexportO = unicastClass.getMethod("unexportObject",  new Class [] { Remote.class, Boolean.class });
-	    unexportO.invoke(unicastClass, (new Object[] { obj, new Boolean(true) } ));
+	    Method unexportO = unicastClass.getMethod("unexportObject",  new Class [] { Remote.class, Boolean.TYPE });
+	    unexportO.invoke(unicastClass, (new Object[] { obj, Boolean.TRUE } ));
 	} catch (Exception e) {
 	    throw new NoSuchObjectException (e.toString());
 	}
