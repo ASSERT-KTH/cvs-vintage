@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.15 2002/01/18 22:26:12 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.16 2002/01/20 20:33:49 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -889,8 +889,11 @@ public abstract class AbstractScarabModule
                                   boolean activeOnly)
         throws Exception
     {
-        List allRModuleOptions = getAllRModuleOptions(attribute, issueType);
+        List allRModuleOptions = null;
+        allRModuleOptions = getAllRModuleOptions(attribute, issueType);
 
+if (allRModuleOptions != null)
+{
         if ( activeOnly )
         {
             List activeRModuleOptions =
@@ -904,12 +907,10 @@ public abstract class AbstractScarabModule
                     activeRModuleOptions.add(rmo);
                 }
             }
-            return activeRModuleOptions;
+            allRModuleOptions =  activeRModuleOptions;
         }
-        else
-        {
-            return allRModuleOptions;
-        }
+}
+        return allRModuleOptions;
     }
 
     private List getAllRModuleOptions(Attribute attribute, IssueType issueType)
@@ -1018,7 +1019,10 @@ public abstract class AbstractScarabModule
                                       boolean activeOnly)
         throws Exception
     {
-        List rModOpts = getRModuleOptions(attribute, issueType, activeOnly);
+        List rModOpts = null;
+        rModOpts = getRModuleOptions(attribute, issueType, activeOnly);
+        if (rModOpts != null)
+     {
 
         // put options in a map for searching
         Map optionsMap = new HashMap((int)(rModOpts.size()*1.5));
@@ -1048,6 +1052,7 @@ public abstract class AbstractScarabModule
                 }
             }
         }
+}
         return rModOpts;
     }
 
