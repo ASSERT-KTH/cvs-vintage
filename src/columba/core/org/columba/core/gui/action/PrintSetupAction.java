@@ -20,21 +20,19 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.util.MailResourceLoader;
 
 public class PrintSetupAction extends FrameAction {
 
 	public PrintSetupAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_printsetup"));
+		super(controller, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_file_printsetup"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_printsetup"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_printsetup").replaceAll("&", ""));
 		
 		setEnabled(false);
 	}
@@ -43,6 +41,6 @@ public class PrintSetupAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		ColumbaLogger.log.info("not yet implemented");
+		//TODO: implement
 	}
 }

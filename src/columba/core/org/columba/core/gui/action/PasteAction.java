@@ -30,34 +30,27 @@ import org.columba.core.util.GlobalResourceLoader;
 public class PasteAction extends FrameAction {
 
 	public PasteAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null,	"menu_edit_paste"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_paste"));
 
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null,	"menu_edit_paste_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_paste_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("stock_paste-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_paste-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_paste.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 		
 		// disable toolbar text
 		setShowToolBarText(false);
-		
-		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
-					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);
 		MainInterface.focusManager.setPasteAction(this);

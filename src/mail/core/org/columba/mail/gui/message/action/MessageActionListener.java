@@ -54,7 +54,7 @@ public class MessageActionListener implements ActionListener
                         }
                 };
 		
-		dictAction.setTooltipText(
+		dictAction.putValue(FrameAction.SHORT_DESCRIPTION,
 				"Look up definition of selection with online dictionary...");
 	}
 
@@ -98,5 +98,4 @@ public class MessageActionListener implements ActionListener
 		c.selectAll();
 		*/
 	}
-
 }

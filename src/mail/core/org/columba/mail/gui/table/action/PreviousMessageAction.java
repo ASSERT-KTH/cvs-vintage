@@ -41,21 +41,20 @@ public class PreviousMessageAction
 	implements SelectionListener {
 
 	public PreviousMessageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_prevmessage"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_view_prevmessage"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_prevmessage_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_view_prevmessage_tooltip").replaceAll("&", ""));
 
 		// icons
-		setLargeIcon(ImageLoader.getSmallImageIcon("previous-message.png"));
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("previous-message.png"));
 		
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke("B"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("B"));
 		
 		// disable toolbar text
 		setShowToolBarText(false);
@@ -70,8 +69,6 @@ public class PreviousMessageAction
 			this);
 		*/
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -101,9 +98,10 @@ public class PreviousMessageAction
 		}
 		*/
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

@@ -40,17 +40,14 @@ public class ReplyAsAttachmentAction
 	implements SelectionListener {
 
 	public ReplyAsAttachmentAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_replyasattachment"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_replyasattachment"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", 
-					"mainframe",
-					"menu_message_replyasattachment_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu", 
+                        "mainframe",
+                        "menu_message_replyasattachment_tooltip").replaceAll("&", ""));
 					
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

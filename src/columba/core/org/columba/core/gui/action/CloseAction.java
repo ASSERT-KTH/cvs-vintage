@@ -34,21 +34,18 @@ import org.columba.core.util.GlobalResourceLoader;
 public class CloseAction extends FrameAction {
 
 	public CloseAction(FrameMediator frameController) {
-		super(
-				frameController,
-				GlobalResourceLoader.getString(
-					null, null, "close"));
+		super(frameController, GlobalResourceLoader.getString(
+			null, null, "close"));
 
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "close"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "close").replaceAll("&", ""));
 					
 		// short cut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-		
 	}
 
 	/* (non-Javadoc)

@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
@@ -44,21 +45,18 @@ public class ReplyWithTemplateAction
 	 *  
 	 */
 	public ReplyWithTemplateAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_replywithtemplate"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_replywithtemplate"));
 
-		//		tooltip text
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_replywithtemplate_tooltip"));
+		//tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_replywithtemplate_tooltip").replaceAll("&", ""));
 
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_news.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
 
 		setEnabled(false);
 		(
@@ -66,7 +64,6 @@ public class ReplyWithTemplateAction
 				AbstractMailFrameController) frameController)
 					.registerTableSelectionListener(
 			this);
-
 	}
 
 	/*
@@ -75,7 +72,6 @@ public class ReplyWithTemplateAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		FolderCommandReference[] r1 =
 			((AbstractMailFrameController) getFrameMediator())
 				.getTableSelection();
@@ -91,5 +87,4 @@ public class ReplyWithTemplateAction
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}
-
 }

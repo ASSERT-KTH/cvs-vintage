@@ -45,23 +45,20 @@ public class SendAllMessagesAction extends FrameAction {
 	 * @param controller
 	 */
 	public SendAllMessagesAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_sendunsentmessages"));
+		super(controller, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_file_sendunsentmessages"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_file_sendunsentmessages_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_file_sendunsentmessages_tooltip").replaceAll("&", ""));
 		
 		// icon
-		setLargeIcon(ImageLoader.getImageIcon("send-24.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
 		
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
 	}
 
 	

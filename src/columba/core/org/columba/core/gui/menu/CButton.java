@@ -16,13 +16,12 @@
 
 package org.columba.core.gui.menu;
 
-import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.help.HelpManager;
-
 
 /**
  * Default Button which automatically sets a JavaHelp topic ID
@@ -40,18 +39,18 @@ public class CButton extends JButton {
 		super();
 	}
 	
-	public CButton( Icon icon )
+	public CButton(Icon icon)
 	{
 		super(icon);
 	}
 	
-	public CButton( AbstractAction action )
+	public CButton(Action action)
 	{
 		super(action);
 		
-		FrameAction basicAction = (FrameAction) action;
-		
-		if ( basicAction.getTopicID() != null )
-			HelpManager.enableHelpOnButton(this, basicAction.getTopicID());
+                String topicID = (String)action.getValue(FrameAction.TOPIC_ID);
+		if (topicID != null) {
+			HelpManager.enableHelpOnButton(this, topicID);
+                }
 	}
 }

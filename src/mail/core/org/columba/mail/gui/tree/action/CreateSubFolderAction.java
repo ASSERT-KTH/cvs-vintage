@@ -45,23 +45,21 @@ public class CreateSubFolderAction
 	implements SelectionListener {
 
 	public CreateSubFolderAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_newfolder"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_newfolder"));
 					
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_newfolder"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_newfolder").replaceAll("&", ""));
 					
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("folder.png"));
-		setLargeIcon(ImageLoader.getImageIcon("folder.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("folder.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_N, ActionEvent.ALT_MASK));
 			
 		setEnabled(false);
@@ -86,11 +84,12 @@ public class CreateSubFolderAction
 			selection[0].setFolderName(dialog.getName());
 
 			MainInterface.processor.addOp(new CreateSubFolderCommand(selection));
-		}		
+		}
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

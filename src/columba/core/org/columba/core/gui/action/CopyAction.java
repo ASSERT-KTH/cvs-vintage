@@ -30,25 +30,23 @@ import org.columba.core.util.GlobalResourceLoader;
 public class CopyAction extends FrameAction {
 
 	public CopyAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null,	"menu_edit_copy"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_copy"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_copy_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_copy_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_copy-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_copy-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_copy.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_copy.png"));
 
 		// short cut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
 		// disable toolbar text

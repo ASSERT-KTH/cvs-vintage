@@ -30,32 +30,31 @@ import org.columba.core.util.GlobalResourceLoader;
 public class DeleteAction extends FrameAction {
 
 	public DeleteAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_delete"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_delete"));
 					
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_delete_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_delete_tooltip").replaceAll("&", ""));
 					
 		// small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("stock_delete-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
 		
 		// disable toolbar text
 		setShowToolBarText(false);
 		
 		// short cut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		
 		setEnabled(false);
 		MainInterface.focusManager.setDeleteAction(this);
 	}
+        
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */

@@ -33,25 +33,23 @@ import org.columba.mail.util.MailResourceLoader;
 public class SearchMessageAction extends FrameAction {
 
 	public SearchMessageAction(FrameMediator controller) {
-		super(		
-				controller,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_edit_searchmessages"));
+		super(controller, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_edit_searchmessages"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_edit_searchmessages"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_edit_searchmessages").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("virtualfolder.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("virtualfolder.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 
 	}
@@ -63,8 +61,7 @@ public class SearchMessageAction extends FrameAction {
 		Folder searchFolder =
 			(Folder) MailInterface.treeModel.getFolder(106);
 			
-		SearchFrame frame =
-			new SearchFrame(
+		SearchFrame frame = new SearchFrame(
 				(AbstractMailFrameController) getFrameMediator(),
 				searchFolder);				
 	}

@@ -40,15 +40,14 @@ public class CreateVFolderOnSubjectAction
 	implements SelectionListener {
 
 	public CreateVFolderOnSubjectAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_vfolderonsubject"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_vfolderonsubject"));
 					
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_vfolderonsubject_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_vfolderonsubject_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
 

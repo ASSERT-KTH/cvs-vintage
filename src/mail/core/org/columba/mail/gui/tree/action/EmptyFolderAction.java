@@ -36,15 +36,14 @@ public class EmptyFolderAction
 	implements SelectionListener {
 
 	public EmptyFolderAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_emptyfolder"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_emptyfolder"));
 					
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_emptyfolder"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_emptyfolder").replaceAll("&", ""));
 		
 		setEnabled(false);
 		// FIXME
@@ -59,11 +58,12 @@ public class EmptyFolderAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
+                //TODO: implementation
 	}
+        
 	/* (non-Javadoc)
-					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-					 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

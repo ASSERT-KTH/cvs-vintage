@@ -27,18 +27,19 @@ import org.columba.mail.util.MailResourceLoader;
 public class MailAccountAction extends FrameAction {
 
 	public MailAccountAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu",	"mainframe", "menu_edit_accountconfig"));
+		super(controller, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_edit_accountconfig"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu",	"mainframe", "menu_edit_accountconfig"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_edit_accountconfig").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("configure_16_mail.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("configure_16_mail.png"));
 	}
 
 	/* (non-Javadoc)

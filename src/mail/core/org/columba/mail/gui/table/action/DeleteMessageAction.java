@@ -48,30 +48,28 @@ public class DeleteMessageAction
 	implements SelectionListener {
 
 	public DeleteMessageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_delete"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_delete"));
 					
 		// toolbar text
-		setToolBarName(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_delete_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_delete_toolbar"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_delete_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_delete_tooltip").replaceAll("&", ""));
 		
 		// icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		
 		// icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_D, ActionEvent.ALT_MASK));
 
 		// disable toolbar text
 		setShowToolBarText(false);
@@ -121,6 +119,7 @@ public class DeleteMessageAction
 			MainInterface.processor.addOp(c);
 		}
 	}
+        
 	/* (non-Javadoc)
          * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
          */

@@ -35,13 +35,11 @@ import org.columba.mail.gui.util.URLController;
 public class ShowHomepageAction extends FrameAction {
 
 	public ShowHomepageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				GlobalResourceLoader.getString(
-					null, null, "menu_help_homepage"));
+		super(frameController, GlobalResourceLoader.getString(
+			null, null, "menu_help_homepage"));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("stock_home_16.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_home_16.png"));
 	}
 
 	/* (non-Javadoc)

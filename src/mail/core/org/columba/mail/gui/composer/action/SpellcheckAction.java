@@ -35,27 +35,27 @@ import org.columba.mail.util.MailResourceLoader;
 public class SpellcheckAction extends FrameAction {
 
 	public SpellcheckAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "composer",	"menu_message_spellCheck"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "composer", "menu_message_spellCheck"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer",	"menu_message_spellCheck_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_message_spellCheck_tooltip").replaceAll("&", ""));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_spellcheck_24.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_spellcheck_24.png"));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
 		
 		// disable text in toolbar
 		setShowToolBarText(false);
 		
                 //shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_L, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 	}
 
 	/* (non-Javadoc)

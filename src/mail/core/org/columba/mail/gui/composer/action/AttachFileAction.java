@@ -34,28 +34,26 @@ import org.columba.mail.util.MailResourceLoader;
 public class AttachFileAction extends FrameAction {
 
 	public AttachFileAction(ComposerController composerController) {
-		super(
-				composerController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_attachFile"));
+		super(composerController, MailResourceLoader.getString(
+			"menu", "composer", "menu_message_attachFile"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_attachFile_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_message_attachFile_tooltip").replaceAll("&", ""));
 		
 		// toolbar text
-		setToolBarName(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_attachFile_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+			"menu", "composer", "menu_message_attachFile_toolbar"));
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_attach.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_attach.png"));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("stock_attach-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_attach-16.png"));
 		
                 //shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
 	}
 
 	
@@ -66,6 +64,5 @@ public class AttachFileAction extends FrameAction {
 		ComposerController composerController = ((ComposerController)getFrameMediator());
 
 		composerController.getAttachmentController().addFileAttachment();
-		
 	}
 }

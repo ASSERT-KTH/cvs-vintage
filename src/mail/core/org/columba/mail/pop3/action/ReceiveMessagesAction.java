@@ -35,12 +35,9 @@ import org.columba.mail.util.MailResourceLoader;
 public class ReceiveMessagesAction extends FrameAction {
 
 	public ReceiveMessagesAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_receive"));
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		super(controller, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_file_receive"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 	}
 
@@ -71,7 +68,6 @@ public class ReceiveMessagesAction extends FrameAction {
 			FetchNewMessagesCommand c =
 				new FetchNewMessagesCommand(r);
 
-			
 			MainInterface.processor.addOp(c);
 		}		
 	}

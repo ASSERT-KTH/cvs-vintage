@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -51,26 +52,22 @@ public class ItalicFormatAction
 	 * @param name
 	 */
 	public ItalicFormatAction(FrameMediator frameController) {
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_italic"));
 
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_italic"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_italic_tooltip").replaceAll("&", ""));
 
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_italic_tooltip"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_italic.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_text_italic-16.png"));
 
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_italic.png"));
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_text_italic-16.png"));
-
-		//		shortcut key
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
+		//shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_I, ActionEvent.CTRL_MASK));
 
 		// register for text selection changes
 		ComposerController ctrl = (ComposerController) getFrameMediator();
@@ -101,7 +98,6 @@ public class ItalicFormatAction
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-
 		if (arg0 instanceof HtmlEditorController) {
 			// check if current text is italic or not - and set state
 			// accordingly
@@ -162,5 +158,4 @@ public class ItalicFormatAction
 	 */
 	public void componentRemoved(ContainerEvent e) {
 	}
-
 }

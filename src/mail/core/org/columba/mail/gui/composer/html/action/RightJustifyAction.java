@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -46,23 +47,18 @@ public class RightJustifyAction extends CheckBoxAction
 	 * @param name
 	 */
 	public RightJustifyAction(FrameMediator frameController) {
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_right_justify"));
 
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_right_justify"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_right_justify_tooltip").replaceAll("&", ""));
 
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_right_justify_tooltip"));
-
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_align_right.png"));
-		setSmallIcon(
-			ImageLoader.getSmallImageIcon("stock_text_align_right-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_align_right.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_text_align_right-16.png"));
 
 		// register for text selection changes
 		ComposerController ctrl =
@@ -94,7 +90,6 @@ public class RightJustifyAction extends CheckBoxAction
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		
 		if (arg0 instanceof HtmlEditorController) {
 			// check if current text is right aligned - and set state accordingly
 			FormatInfo info = (FormatInfo) arg1;
@@ -147,5 +142,4 @@ public class RightJustifyAction extends CheckBoxAction
 	 * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
 	 */
 	public void componentRemoved(ContainerEvent e) {}
-
 }

@@ -29,25 +29,23 @@ import org.columba.core.util.GlobalResourceLoader;
 public class FindAction extends FrameAction {
 
 	public FindAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null,	"menu_edit_find"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_find"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_find_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_find_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_search-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_search-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_search.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_search.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);

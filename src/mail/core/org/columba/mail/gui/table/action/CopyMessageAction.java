@@ -44,24 +44,22 @@ public class CopyMessageAction
 	implements SelectionListener {
 
 	public CopyMessageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_copy"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_copy"));
 		
 		// toolbar text
-		setToolBarName(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_copy_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_copy_toolbar"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_copy_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_copy_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("copymessage_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("copy-message.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("copymessage_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("copy-message.png"));
 		
 		// disable toolbar text
 		setShowToolBarText(false);

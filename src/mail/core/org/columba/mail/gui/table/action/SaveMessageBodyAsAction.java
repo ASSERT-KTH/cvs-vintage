@@ -42,14 +42,14 @@ public class SaveMessageBodyAsAction
 	implements SelectionListener {
 
 	public SaveMessageBodyAsAction(FrameMediator frameController) {
-		super(frameController,
-				MailResourceLoader.getString(
-						"menu", "mainframe", "menu_message_save"));
-		setTooltipText(
-				MailResourceLoader.getString(
-						"menu", "mainframe", "menu_message_save_tooltip"));
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_save"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_save_tooltip").replaceAll("&", ""));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
 
 		// *20030614, karlpeder* only enabled when message(s) selected
 		setEnabled(false);
@@ -76,7 +76,6 @@ public class SaveMessageBodyAsAction
 		SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
 		MainInterface.processor.addOp(c);
 	}
-	
 	
 	/**
 	 * Ensures that the action is only enabled when at least 

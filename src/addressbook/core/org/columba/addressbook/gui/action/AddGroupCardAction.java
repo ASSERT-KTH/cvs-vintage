@@ -36,29 +36,26 @@ import org.columba.core.gui.util.ImageLoader;
 public class AddGroupCardAction extends FrameAction {
 
 	public AddGroupCardAction(FrameMediator frameController) {
-		super(
-				frameController,
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addgroup"));
+		super(frameController, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_addgroup"));
 					
 		// tooltip text
-		setTooltipText(
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addgroup_tooltip"));
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_addgroup_tooltip").replaceAll("&", ""));
 					
-		setToolBarName(
-						AddressbookResourceLoader.getString(
-							"menu", "mainframe", "menu_file_addgroup_toolbar"));
+		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_addgroup_toolbar"));
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("group_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("group.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("group_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("group.png"));
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
 		AddressbookFrameController addressbookFrameController =
 				(AddressbookFrameController) frameMediator;
 		

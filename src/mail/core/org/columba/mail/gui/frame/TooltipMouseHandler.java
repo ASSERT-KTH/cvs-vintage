@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.frame;
 
 import java.awt.event.MouseAdapter;
@@ -37,7 +38,6 @@ public class TooltipMouseHandler extends MouseAdapter {
 	 */
 	public TooltipMouseHandler(StatusBar statusBar) {
 		super();
-
 		this.statusBar = statusBar;
 	}
 
@@ -50,14 +50,9 @@ public class TooltipMouseHandler extends MouseAdapter {
 	public void mouseEntered(MouseEvent evt) {
 		if (evt.getSource() instanceof AbstractButton) {
 			AbstractButton button = (AbstractButton) evt.getSource();
-			Action action = button.getAction(); // getAction is new in JDK 1.3
+			Action action = button.getAction();
 			if (action != null) {
-				String message;
-				if ( action instanceof FrameAction ) {
-					message = ((FrameAction) action).getTooltipText();
-				} else {
-					message = (String) action.getValue(Action.SHORT_DESCRIPTION); 
-				}
+				String message = (String)action.getValue(Action.SHORT_DESCRIPTION);
 				statusBar.displayTooltipMessage(message);
 			}
 		}
@@ -80,6 +75,4 @@ public class TooltipMouseHandler extends MouseAdapter {
 		// clear the tooltip message previously displayed in the status bar
 		statusBar.displayTooltipMessage("");
 	}
-
-
 }

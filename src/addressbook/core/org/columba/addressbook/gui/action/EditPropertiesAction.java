@@ -40,29 +40,26 @@ import org.columba.core.gui.util.ImageLoader;
 public class EditPropertiesAction extends FrameAction {
 
 	public EditPropertiesAction(FrameMediator frameController) {
-		super(
-				frameController,
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_properties"));
+		super(frameController, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_properties"));
 					
 		// tooltip text
-		setTooltipText(
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_properties_tooltip"));
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_properties_tooltip").replaceAll("&", ""));
 					
-		setToolBarName(
-						AddressbookResourceLoader.getString(
-							"menu", "mainframe", "menu_file_properties_toolbar"));
+		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_properties_toolbar"));
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		AddressbookFrameController addressbookFrameController =
 			(AddressbookFrameController) frameMediator;
 

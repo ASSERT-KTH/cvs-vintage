@@ -53,36 +53,32 @@ public class ForwardAction
 	private String forwardStyle;
 
 	public ForwardAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_forward"));
 
 		// tooltip text
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_forward_tooltip").replaceAll("&", ""));
 
 		// icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("forward_small.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("forward_small.png"));
 
 		// icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("forward.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("forward.png"));
 
 		// shortcut key
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 
 		// toolbar text is usually a bit shorter
-		setToolBarName(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_forward_toolbar"));
 		setEnabled(false);
 		(
 			(
@@ -103,7 +99,6 @@ public class ForwardAction
 		forward.addObserver(this);
 
 		forwardStyle = forward.getAttribute("style", "attachment");
-
 	}
 
 	/* (non-Javadoc)
@@ -120,9 +115,10 @@ public class ForwardAction
 			MainInterface.processor.addOp(new ForwardInlineCommand(r));
 
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}
@@ -136,6 +132,5 @@ public class ForwardAction
 	 */
 	public void update(Observable arg0, Object arg1) {
 		forwardStyle = forward.getAttribute("style", "attachment");
-
 	}
 }

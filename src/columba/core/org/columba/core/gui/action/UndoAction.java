@@ -32,25 +32,23 @@ import org.columba.core.util.GlobalResourceLoader;
 public class UndoAction extends FrameAction implements WorkerListChangeListener {
 
 	public UndoAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_undo"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_undo"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_undo_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_undo_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_undo-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_undo-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_undo.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_undo.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 
 		// disable toolbar text

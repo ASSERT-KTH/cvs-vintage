@@ -44,24 +44,23 @@ public class ApplyFilterAction
 	implements SelectionListener {
 
 	public ApplyFilterAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_folder_applyfilter"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_folder_applyfilter"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_applyfilter"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu", 
+                        "mainframe",
+                        "menu_folder_applyfilter").replaceAll("&", ""));
 
 		// icon
-		setSmallIcon(ImageLoader.getSmallImageIcon("apply-filters-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("apply-filters-16.png"));
 
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_A, ActionEvent.ALT_MASK));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
@@ -80,8 +79,8 @@ public class ApplyFilterAction
 	}
 
 	/* (non-Javadoc)
-		 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-		 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

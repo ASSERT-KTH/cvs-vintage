@@ -36,22 +36,20 @@ import org.columba.core.gui.util.ImageLoader;
 public class AddContactCardAction extends FrameAction {
 
 	public AddContactCardAction(FrameMediator frameController) {
-		super(
-				frameController,
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addcontact"));
+		super(frameController, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_addcontact"));
 		
 		// tooltip text
-		setTooltipText(
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addcontact_tooltip"));
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_addcontact_tooltip").replaceAll("&", ""));
 					
-		setToolBarName(
-						AddressbookResourceLoader.getString(
-							"menu", "mainframe", "menu_file_addcontact_toolbar"));
+		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_addcontact_toolbar"));
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("contact_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("contact.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
 	}
 
 	/* (non-Javadoc)

@@ -44,24 +44,22 @@ public class MoveMessageAction
 	implements SelectionListener {
 
 	public MoveMessageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_move"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_move"));
 		
 		// toolbar text
-		setToolBarName(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_move_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_move_toolbar"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_move_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_move_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("movemessage_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("move-message.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("movemessage_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("move-message.png"));
 		
 		// disable toolbar text
 		setShowToolBarText(false);
@@ -93,9 +91,10 @@ public class MoveMessageAction
 			MainInterface.processor.addOp(c);
 		}
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

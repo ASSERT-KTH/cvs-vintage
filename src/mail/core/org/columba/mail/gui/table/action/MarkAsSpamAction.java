@@ -39,15 +39,14 @@ public class MarkAsSpamAction
 	implements SelectionListener {
 
 	public MarkAsSpamAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasspam"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_markasspam"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasspam_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_markasspam_tooltip").replaceAll("&", ""));
 		
 		// icons
 		//setSmallIcon(ImageLoader.getSmallImageIcon("mail-read.png"));

@@ -40,15 +40,14 @@ import org.columba.core.gui.frame.FrameMediator;
 public class AddVCardAction extends FrameAction {
 
 	public AddVCardAction(FrameMediator frameController) {
-		super(
-				frameController,
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addvcard"));
+		super(frameController, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_file_addvcard"));
 		
 		// tooltip text
-		setTooltipText(
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_file_addvcard"));
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_addvcard").replaceAll("&", ""));
 	}
 
 	/* (non-Javadoc)

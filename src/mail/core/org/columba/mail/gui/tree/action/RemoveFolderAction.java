@@ -46,19 +46,18 @@ public class RemoveFolderAction
 	implements SelectionListener {
 
 	public RemoveFolderAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_removefolder"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_removefolder"));
 
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_removefolder"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_removefolder").replaceAll("&", ""));
 
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
 					
 		setEnabled(false);
 		(
@@ -100,9 +99,10 @@ public class RemoveFolderAction
 
 		MainInterface.processor.addOp(new RemoveFolderCommand(r));
 	}
+        
 	/* (non-Javadoc)
-					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-					 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
 			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];

@@ -44,22 +44,21 @@ public class MarkAsReadAction
 	implements SelectionListener {
 
 	public MarkAsReadAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasread"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_markasread"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasread_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_markasread_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("mail-read.png"));
-		setLargeIcon(ImageLoader.getImageIcon("mail-read.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-read.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("mail-read.png"));
 		
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

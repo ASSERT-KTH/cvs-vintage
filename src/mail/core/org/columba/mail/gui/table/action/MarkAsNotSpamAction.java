@@ -41,19 +41,16 @@ public class MarkAsNotSpamAction
 	implements SelectionListener {
 
 	public MarkAsNotSpamAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasnotspam"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_markasnotspam"));
 
 		// tooltip text
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasnotspam_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_markasnotspam_tooltip").replaceAll("&", ""));
 
 		setEnabled(false);
 		(

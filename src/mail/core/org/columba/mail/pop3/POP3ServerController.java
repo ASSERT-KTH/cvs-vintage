@@ -116,12 +116,12 @@ public class POP3ServerController implements ActionListener {
 	}
 
 	public void updateAction() {
-		checkAction.setName(
+		checkAction.putValue(FrameAction.NAME,
 			getAccountItem().getName()
 				+ " ("
 				+ getAccountItem().getIdentityItem().get("address")
 				+ ")");
-		manageAction.setName(
+		manageAction.putValue(FrameAction.NAME,
 			getAccountItem().getName()
 				+ " ("
 				+ getAccountItem().getIdentityItem().get("address")

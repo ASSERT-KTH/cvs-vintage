@@ -21,6 +21,7 @@ package org.columba.core.gui.toolbar;
 import java.awt.Insets;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 import org.columba.core.action.FrameAction;
@@ -30,10 +31,8 @@ import org.columba.core.gui.menu.CButton;
 import org.columba.core.gui.util.ImageUtil;
 
 public class ToolbarButton extends CButton {
-	String buttonText;
-
-	static boolean WITH_TEXT = false;
-	static boolean ALIGNMENT = true;
+	protected static boolean WITH_TEXT = false;
+	protected static boolean ALIGNMENT = true;
 
 	public ToolbarButton() {
 		super();
@@ -56,17 +55,19 @@ public class ToolbarButton extends CButton {
 		WITH_TEXT = item.getBoolean("toolbar", "enable_text");
 		ALIGNMENT = item.getBoolean("toolbar", "text_position");
 
-		setIcon(a.getLargeIcon());
-		
-		// apply transparent icon
-		setDisabledIcon(ImageUtil.createTransparentIcon(a.getLargeIcon()));
+		ImageIcon icon = (ImageIcon)a.getValue(FrameAction.LARGE_ICON);
+		if (icon != null) {
+                        setIcon(icon);
+                        // apply transparent icon
+                        setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+                }
 
 		if (WITH_TEXT) {
 			boolean showText = (a.isShowToolBarText() || ALIGNMENT);
 			if (!showText)
 				setText("");
 			else
-				setText(a.getToolBarName());
+				setText((String)a.getValue(FrameAction.TOOLBAR_NAME));
 
 			if (ALIGNMENT) {
 				setVerticalTextPosition(SwingConstants.BOTTOM);

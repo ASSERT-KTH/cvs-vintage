@@ -46,19 +46,17 @@ public class ExpungeFolderAction
 	implements SelectionListener {
 
 	public ExpungeFolderAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_expungefolder"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_expungefolder"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_expungefolder"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_expungefolder").replaceAll("&", ""));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_E, ActionEvent.ALT_MASK));
 
 		setEnabled(false);
@@ -79,9 +77,10 @@ public class ExpungeFolderAction
 
 		MainInterface.processor.addOp(c);
 	}
+        
 	/* (non-Javadoc)
-					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-					 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
 			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];

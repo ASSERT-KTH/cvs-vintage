@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -50,25 +51,21 @@ public class BoldFormatAction
 	 * @param frameMediator
 	 */
 	public BoldFormatAction(FrameMediator frameController) {
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_bold"));
 
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_bold"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_bold.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_text_bold-16.png"));
 
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_bold.png"));
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_text_bold-16.png"));
-
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_bold_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_bold_tooltip").replaceAll("&", ""));
 		//	shortcut key
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_B, ActionEvent.CTRL_MASK));
 
 		// register for text selection changes
 		ComposerController ctrl = (ComposerController) getFrameMediator();
@@ -88,7 +85,6 @@ public class BoldFormatAction
 
 		// set initial enabled state
 		setEnabled(Boolean.valueOf(enableHtml).booleanValue());
-
 	}
 
 	/**
@@ -100,7 +96,6 @@ public class BoldFormatAction
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-
 		if (arg0 instanceof HtmlEditorController) {
 			// check if current text is bold or not - and set state accordingly
 			FormatInfo info = (FormatInfo) arg1;
@@ -135,7 +130,6 @@ public class BoldFormatAction
 				.getEditorController();
 
 		editorController.toggleBold();
-
 	}
 
 	/**
@@ -161,5 +155,4 @@ public class BoldFormatAction
 	 */
 	public void componentRemoved(ContainerEvent e) {
 	}
-
 }

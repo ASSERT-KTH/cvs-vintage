@@ -40,15 +40,14 @@ public class AddAllSendersToAddressbookAction
 	implements SelectionListener {
 
 	public AddAllSendersToAddressbookAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_addallsenders"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_addallsenders"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_addallsenders"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_addallsenders").replaceAll("&", ""));
 		
 		setEnabled(false);
 		((AbstractMailFrameController)frameController).registerTableSelectionListener(this);

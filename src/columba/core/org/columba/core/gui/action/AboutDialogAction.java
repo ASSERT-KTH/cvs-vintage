@@ -33,14 +33,11 @@ import org.columba.core.util.GlobalResourceLoader;
 public class AboutDialogAction extends FrameAction {
 
 	public AboutDialogAction(FrameMediator frameController) {
- 		super(
- 				frameController,
- 				GlobalResourceLoader.getString(
- 					null, null, "menu_help_about"));
+ 		super(frameController, GlobalResourceLoader.getString(
+ 			null, null, "menu_help_about"));
 
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_about-16.png"));
-
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_about-16.png"));
 	}
 
 	/* (non-Javadoc)

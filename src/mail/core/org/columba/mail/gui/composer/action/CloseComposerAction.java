@@ -36,25 +36,23 @@ public class CloseComposerAction extends FrameAction {
 
 	public CloseComposerAction(ComposerController composerController) {
 		
-		super(
-				composerController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_close"));
+		super(composerController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_file_close"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_close"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_close").replaceAll("&", ""));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_exit.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_exit.png"));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_exit-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_exit-16.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 		
 	}
@@ -64,7 +62,6 @@ public class CloseComposerAction extends FrameAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		//getFrameController().close();
-		
 		
 		/*
 		composerInterface.composerController.saveWindowPosition();

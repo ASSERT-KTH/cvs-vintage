@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.tree.action;
 
 import java.awt.event.ActionEvent;
@@ -44,13 +45,11 @@ public class FolderOptionsAction
 	 * @param name
 	 */
 	public FolderOptionsAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_folderoptions"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_folderoptions"));
 
 		// icon for menu
-		setSmallIcon( ImageLoader.getSmallImageIcon("16_configure_folder.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_configure_folder.png"));
 		
 		setEnabled(false);
 
@@ -73,7 +72,6 @@ public class FolderOptionsAction
 		
 		// only use the first selected folder		
 		FolderTreeNode folder = r[0].getFolder();
-		
 		
 		// cast to Folder
 		new FolderOptionsDialog( (Folder) folder);

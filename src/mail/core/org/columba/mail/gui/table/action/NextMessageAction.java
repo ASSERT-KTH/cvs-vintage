@@ -17,6 +17,7 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
@@ -44,21 +45,20 @@ public class NextMessageAction
 	implements SelectionListener {
 
 	public NextMessageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_nextmessage"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_view_nextmessage"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_nextmessage_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_view_nextmessage_tooltip").replaceAll("&", ""));
 
 		// icons
-		setLargeIcon(ImageLoader.getSmallImageIcon("next-message.png"));
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("next-message.png"));
 
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke("F"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
 		
 		// disable toolbar text
 		setShowToolBarText(false);
@@ -115,9 +115,10 @@ public class NextMessageAction
 		}
 
 	}
+        
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

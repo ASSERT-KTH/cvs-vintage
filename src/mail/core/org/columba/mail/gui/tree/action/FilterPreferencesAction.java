@@ -40,15 +40,14 @@ public class FilterPreferencesAction
 	implements SelectionListener {
 
 	public FilterPreferencesAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_filterconfig"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_filterconfig"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_filterconfig"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_filterconfig").replaceAll("&", ""));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
@@ -75,9 +74,10 @@ public class FilterPreferencesAction
 
 		folder.showFilterDialog(((AbstractMailFrameController) getFrameMediator()));
 	}
+        
 	/* (non-Javadoc)
-					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-					 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

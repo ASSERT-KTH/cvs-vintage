@@ -45,23 +45,21 @@ public class CreateVirtualFolderAction
 	implements SelectionListener {
 
 	public CreateVirtualFolderAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_newvirtualfolder"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_newvirtualfolder"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_newvirtualfolder"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_newvirtualfolder").replaceAll("&", ""));
 
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("virtualfolder.png"));
-		setLargeIcon(ImageLoader.getImageIcon("virtualfolder.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_V, ActionEvent.ALT_MASK));
 
 		setEnabled(false);
@@ -111,8 +109,8 @@ public class CreateVirtualFolderAction
 	}
 
 	/* (non-Javadoc)
-				 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-				 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

@@ -38,22 +38,20 @@ public class ViewMessageSourceAction
 	implements SelectionListener {
 
 	public ViewMessageSourceAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_source"));
+		super(controller, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_view_source"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_source_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_view_source_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("viewsource.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("viewsource.png"));
 			 
 		// short cut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);

@@ -32,28 +32,26 @@ import org.columba.core.util.GlobalResourceLoader;
 public class RedoAction extends FrameAction implements WorkerListChangeListener {
 
 	public RedoAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_redo"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_redo"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_redo_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_redo_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_redo-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_redo-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_redo.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_redo.png"));
 		
 		// disable toolbar text
 		setShowToolBarText(false);
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);

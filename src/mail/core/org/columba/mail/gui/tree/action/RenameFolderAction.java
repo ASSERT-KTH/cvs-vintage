@@ -44,22 +44,19 @@ public class RenameFolderAction
 	implements SelectionListener {
 
 	public RenameFolderAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_renamefolder"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_folder_renamefolder"));
 
 		// tooltip text
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_renamefolder"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_folder_renamefolder").replaceAll("&", ""));
 
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		setEnabled(false);
 		(

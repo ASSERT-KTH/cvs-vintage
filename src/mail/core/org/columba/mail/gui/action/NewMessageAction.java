@@ -39,19 +39,19 @@ public class NewMessageAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_message_new"));
-		setToolBarName(
+		putValue(TOOLBAR_NAME,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
 				"menu_message_new_toolbar"));
-		setTooltipText(
+		putValue(SHORT_DESCRIPTION,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_message_new_tooltip"));
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
-		setAcceleratorKey(
+				"menu_message_new_tooltip").replaceAll("&", ""));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
+		putValue(ACCELERATOR_KEY,
 			KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
 	}
 
@@ -61,13 +61,11 @@ public class NewMessageAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		// Open a new composer. Choice btw. text and html will be based on
 		// stored option
 		
 		// only open composer when at least one account exists
 		if (MailConfig.getAccountList().count() != 0)
 			new ComposerController();
-
 	}
 }

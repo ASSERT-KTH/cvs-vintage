@@ -41,28 +41,25 @@ public class MarkAsFlaggedAction
 	implements SelectionListener {
 
 	public MarkAsFlaggedAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasflagged"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_markasflagged"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasflagged_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_markasflagged_tooltip").replaceAll("&", ""));
 					
 		// icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
 		
 		// icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("mark-as-important-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("mark-as-important-16.png"));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
 			this);
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

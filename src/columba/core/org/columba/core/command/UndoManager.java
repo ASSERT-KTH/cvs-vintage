@@ -58,13 +58,12 @@ public class UndoManager implements WorkerListChangeListener {
                                 undoLast();
                         }
                 };
-		undoAction.setSmallIcon(
+		undoAction.putValue(FrameAction.SMALL_ICON,
 				ImageLoader.getSmallImageIcon("stock_undo-16.png"));
-		undoAction.setLargeIcon(
+		undoAction.putValue(FrameAction.LARGE_ICON,
 				ImageLoader.getImageIcon("stock_undo.png"));
-		undoAction.setAcceleratorKey(
+		undoAction.putValue(FrameAction.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-		undoAction.setMnemonic('T');
 		undoAction.setEnabled(false);
 
 		// Initialize redo
@@ -74,13 +73,12 @@ public class UndoManager implements WorkerListChangeListener {
                                 redoLast();
                          }
                 };
-		redoAction.setSmallIcon(
+		redoAction.putValue(FrameAction.SMALL_ICON,
 		 		ImageLoader.getSmallImageIcon("stock_redo-16.png"));
-		redoAction.setLargeIcon(
+		redoAction.putValue(FrameAction.LARGE_ICON,
 				ImageLoader.getImageIcon("stock_redo.png"));
-		redoAction.setAcceleratorKey(
+		redoAction.putValue(FrameAction.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
-		redoAction.setMnemonic('T');
 		redoAction.setEnabled(false);
 	}
 

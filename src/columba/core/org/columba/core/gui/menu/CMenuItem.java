@@ -16,7 +16,8 @@
 
 package org.columba.core.gui.menu;
 
-import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
 import org.columba.core.action.FrameAction;
@@ -47,22 +48,25 @@ public class CMenuItem extends JMenuItem {
 	 *  
 	 * @param action	The action to attach to the menu item
 	 */
-	public CMenuItem( AbstractAction action )
+	public CMenuItem(Action action)
 	{
 		super(action);
 
-		FrameAction basicAction = (FrameAction) action;
-		
 		// Enable JavaHelp support if topic id is defined
-		if ( basicAction.getTopicID() != null )
-			HelpManager.enableHelpOnButton(this, basicAction.getTopicID());
+                String topicID = (String)action.getValue(FrameAction.TOPIC_ID);
+		if (topicID != null) {
+			HelpManager.enableHelpOnButton(this, topicID);
+                }
 		
 		// Set text, possibly with a mnemonic if defined using &
-		MnemonicSetter.setTextWithMnemonic(this, basicAction.getName());
+		MnemonicSetter.setTextWithMnemonic(this,
+                        (String)action.getValue(Action.NAME));
 
 		// apply transparent icon
-		if ( basicAction.getSmallIcon() != null )
-			setDisabledIcon(ImageUtil.createTransparentIcon(basicAction.getSmallIcon()));
+                ImageIcon icon = (ImageIcon)action.getValue(Action.SMALL_ICON);
+		if (icon != null) {
+			setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+                }
 	}
 	
 	/**

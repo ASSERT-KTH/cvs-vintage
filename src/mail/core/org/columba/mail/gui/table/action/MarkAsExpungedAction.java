@@ -41,21 +41,20 @@ public class MarkAsExpungedAction
 	implements SelectionListener {
 
 	public MarkAsExpungedAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasexpunged"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_markasexpunged"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_markasexpunged_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_markasexpunged_tooltip").replaceAll("&", ""));
 		
 		// icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		
 		// icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_delete-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

@@ -41,19 +41,18 @@ public class SaveMessageSourceAsAction
 	implements SelectionListener {
 
 	public SaveMessageSourceAsAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_save"));
+		super(controller, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_file_save"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_file_save_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_file_save_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_save.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
 
 		setEnabled(false);
 		((AbstractMailFrameController) frameMediator)

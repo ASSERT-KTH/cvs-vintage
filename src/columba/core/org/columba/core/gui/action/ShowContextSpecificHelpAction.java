@@ -42,20 +42,14 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 	 * @param name
 	 */
 	public ShowContextSpecificHelpAction(FrameMediator frameController) {
-		super(
-				frameController,
-				GlobalResourceLoader.getString(
-					null, null, "menu_help_context"));
+		super(frameController, GlobalResourceLoader.getString(
+			null, null, "menu_help_context"));
 		
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_extended-help.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_extended-help.png"));
 		
-		/*
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_help-agent-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_help-agent.png"));
-		*/
-		
-		setTooltipText("Context-specific help");
+                //TODO: i18n
+		putValue(SHORT_DESCRIPTION, "Context-specific help".replaceAll("&", ""));
 		
 		setShowToolBarText(false);
 		

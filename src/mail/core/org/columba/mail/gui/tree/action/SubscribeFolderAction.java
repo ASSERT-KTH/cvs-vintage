@@ -40,23 +40,22 @@ public class SubscribeFolderAction
 	implements SelectionListener {
 
 	public SubscribeFolderAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_subscribe"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_folder_subscribe"));
 
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_subscribe"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_folder_subscribe").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("remotehost.png"));
-		setLargeIcon(ImageLoader.getImageIcon("remotehost.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("remotehost.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("remotehost.png"));
 
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_S, ActionEvent.ALT_MASK));
 		
 		setEnabled(false);
 		// FIXME
@@ -71,11 +70,12 @@ public class SubscribeFolderAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
+                //TODO: implementation
 	}
+        
 	/* (non-Javadoc)
-					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-					 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

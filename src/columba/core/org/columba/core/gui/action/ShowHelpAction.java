@@ -33,26 +33,17 @@ import org.columba.core.util.GlobalResourceLoader;
 public class ShowHelpAction extends FrameAction {
 
 	public ShowHelpAction(FrameMediator frameController) {
-		super(
-			frameController,
-			GlobalResourceLoader.getString(
-				null, null, "menu_help_help"));
+		super(frameController, GlobalResourceLoader.getString(
+			null, null, "menu_help_help"));
 				
 		// small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("stock_help_16.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_help_16.png"));
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		/*
-		URLController c = new URLController();
-		try {
-			c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual"));
-		} catch (MalformedURLException mue) {
-		}
-		*/
 		HelpManager.openHelpFrame();
 	}
 }

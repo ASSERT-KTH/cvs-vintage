@@ -34,21 +34,20 @@ import org.columba.mail.util.MailResourceLoader;
 public class AddressbookAction extends FrameAction {
 
 	public AddressbookAction(ComposerController composerController) {
-		super(
-				composerController, 
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_addressbook"));
+		super(composerController, MailResourceLoader.getString(
+			"menu", "composer", "menu_message_addressbook"));
 
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_addressbook_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_message_addressbook_tooltip").replaceAll("&", ""));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("contact.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("contact_small.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("contact_small.png"));
 		
 		// disable text in toolbar
 		setShowToolBarText(false);
@@ -78,6 +77,5 @@ public class AddressbookAction extends FrameAction {
 
 		composerController.getHeaderController().setHeaderItemLists(
 			dialog.getHeaderItemLists());
-
 	}
 }

@@ -40,27 +40,17 @@ public class ForwardAsAttachmentAction
 
 	/**
 	 * @param frameMediator
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
 	 */
 	public ForwardAsAttachmentAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward_as_attachment"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_forward_as_attachment"));
 
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward_as_attachment_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_forward_as_attachment_tooltip").replaceAll("&", ""));
 
 		setEnabled(false);
 		(

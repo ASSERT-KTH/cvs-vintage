@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -47,23 +48,18 @@ public class LeftJustifyAction extends CheckBoxAction
 	 * @param name
 	 */
 	public LeftJustifyAction(FrameMediator frameController) {
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_left_justify"));
 
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_left_justify"));
-
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_left_justify_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_left_justify_tooltip").replaceAll("&", ""));
 				
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_align_left.png"));
-		setSmallIcon(
-			ImageLoader.getSmallImageIcon("stock_text_align_left-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_align_left.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_text_align_left-16.png"));
 
 		// register for text selection changes
 		ComposerController ctrl =
@@ -95,7 +91,6 @@ public class LeftJustifyAction extends CheckBoxAction
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		
 		if (arg0 instanceof HtmlEditorController) {
 			// check if current text is left aligned - and set state accordingly
 			FormatInfo info = (FormatInfo) arg1;
@@ -148,5 +143,4 @@ public class LeftJustifyAction extends CheckBoxAction
 	 * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
 	 */
 	public void componentRemoved(ContainerEvent e) {}
-
 }

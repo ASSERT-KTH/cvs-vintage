@@ -42,34 +42,30 @@ import org.columba.mail.util.MailResourceLoader;
 public class ReplyAction extends FrameAction implements SelectionListener {
 
 	public ReplyAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_reply"));
 
 		// tooltip text
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_reply_tooltip").replaceAll("&", ""));
 
 		// toolbar text is usually a bit shorter
-		setToolBarName(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_reply_toolbar"));
 
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("reply_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("reply.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("reply_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("reply.png"));
 
 		// shortcut key
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);
 		(

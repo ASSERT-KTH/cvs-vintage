@@ -41,17 +41,16 @@ import org.columba.mail.util.MailResourceLoader;
 public class SaveAsTemplateAction extends FrameAction {
 
 	public SaveAsTemplateAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_savetemplate"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "composer", "menu_file_savetemplate"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_savetemplate"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_file_savetemplate").replaceAll("&", ""));
 		
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_news.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
 	}
 
 	/* (non-Javadoc)

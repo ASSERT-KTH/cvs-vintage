@@ -40,15 +40,14 @@ public class ReplyToListAction
 	implements SelectionListener {
 
 	public ReplyToListAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_replyto"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_replyto"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_replyto_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_replyto_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

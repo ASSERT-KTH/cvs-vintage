@@ -38,19 +38,18 @@ public class SignMessageAction extends CheckBoxAction {
     private ComposerController composerController;
 
 	public SignMessageAction(ComposerController composerController) {
-		super(
-				composerController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_sign"));
-        this.composerController = composerController;
+		super(composerController, MailResourceLoader.getString(
+			"menu", "composer", "menu_message_sign"));
+                this.composerController = composerController;
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_sign"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_message_sign").replaceAll("&", ""));
 					
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("16_sign.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_sign.png"));
 			 
 		//setEnabled(false);
 	}

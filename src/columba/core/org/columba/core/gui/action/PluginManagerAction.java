@@ -31,15 +31,14 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class PluginManagerAction extends FrameAction {
 	public PluginManagerAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null,	"menu_edit_pluginmanager"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_pluginmanager"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_pluginmanager"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_pluginmanager").replaceAll("&", ""));
 	}
 
 	/* (non-Javadoc)

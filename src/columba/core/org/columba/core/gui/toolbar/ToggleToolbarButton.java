@@ -20,8 +20,9 @@ import java.awt.Insets;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
 import org.columba.core.action.FrameAction;
@@ -62,7 +63,7 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
 	/**
 	 * @param action
 	 */
-	public ToggleToolbarButton(AbstractAction action) {
+	public ToggleToolbarButton(Action action) {
 		super(action);
 		setRequestFocusEnabled(false);
 		setMargin(new Insets(1, 1, 1, 1));
@@ -70,12 +71,13 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
 		// no text!
 		setText("");
 
-		setIcon(((FrameAction) action).getSmallIcon());
+                ImageIcon icon = (ImageIcon)action.getValue(FrameAction.SMALL_ICON);
+                if (icon != null) {
+                        setIcon(icon);
+                        // apply transparent icon
+                        setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon)icon));
+                }
 		
-		// apply transparent icon
-		if ( ((FrameAction) action).getSmallIcon() != null )
-		setDisabledIcon(ImageUtil.createTransparentIcon(((FrameAction) action).getSmallIcon()));
-			 
 		//setToolTipText(((BasicAction) action).getTooltipText());
 		((CheckBoxAction) getAction()).getObservable().addObserver(this);
 	}
@@ -92,6 +94,5 @@ public class ToggleToolbarButton extends JToggleButton implements Observer {
 
 		boolean selectionState = o.isSelected();
 		setSelected(selectionState);
-
 	}
 }

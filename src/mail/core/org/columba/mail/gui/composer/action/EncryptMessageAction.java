@@ -35,17 +35,16 @@ public class EncryptMessageAction extends CheckBoxAction {
 
 	public EncryptMessageAction(ComposerController composerController) {
 		
-		super(
-				composerController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_encrypt"));
+		super(composerController, MailResourceLoader.getString(
+			"menu", "composer", "menu_message_encrypt"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_message_encrypt"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_message_encrypt").replaceAll("&", ""));
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("encrypt_small.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("encrypt_small.png"));
 		
 		//setEnabled(false);
 	}

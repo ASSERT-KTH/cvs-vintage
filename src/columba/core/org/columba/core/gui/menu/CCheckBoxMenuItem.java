@@ -52,9 +52,6 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer{
 	 *  
 	 * @param action	The action to attach to the menu item
 	 */
-	/**
-	 * @param arg0
-	 */
 	public CCheckBoxMenuItem(Action action) {
 		super(action);
 		
@@ -64,11 +61,10 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer{
 		cbAction.getObservable().addObserver(this);
 		
 		// Set text, possibly with a mnemonic if defined using &
-		MnemonicSetter.setTextWithMnemonic(this, cbAction.getName());
-		
+		MnemonicSetter.setTextWithMnemonic(this,
+                        (String)cbAction.getValue(Action.NAME));
 	}
 	
-
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
@@ -78,5 +74,4 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer{
 		boolean selectionState = o.isSelected();
 		setSelected(selectionState);
 	}
-
 }

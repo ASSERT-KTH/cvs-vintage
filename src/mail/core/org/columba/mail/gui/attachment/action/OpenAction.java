@@ -37,21 +37,20 @@ import org.columba.mail.util.MailResourceLoader;
 public class OpenAction extends FrameAction implements SelectionListener {
 
 	public OpenAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "attachmentopen"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "attachmentopen"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "attachmentopen_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "attachmentopen_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_open.png"));
-		setLargeIcon(ImageLoader.getSmallImageIcon("stock_open.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
 		
-		if ( frameController.getSelectionManager() != null )
+		if (frameController.getSelectionManager() != null)
 			frameController.getSelectionManager().
 					registerSelectionListener(
 						"mail.attachment", 
@@ -73,11 +72,11 @@ public class OpenAction extends FrameAction implements SelectionListener {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
 	 */
-	public void selectionChanged( SelectionChangedEvent e) {
-		if( ((AttachmentSelectionChangedEvent)e).getAddress() != null ) {
-			setEnabled( true );
+	public void selectionChanged(SelectionChangedEvent e) {
+		if(((AttachmentSelectionChangedEvent)e).getAddress() != null) {
+			setEnabled(true);
 		} else {
-			setEnabled( false );
+			setEnabled(false);
 		}
 	}
 }

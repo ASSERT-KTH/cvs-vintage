@@ -27,15 +27,14 @@ import org.columba.core.util.GlobalResourceLoader;
 public class ViewToolbarAction extends CheckBoxAction implements Observer{
 
 	public ViewToolbarAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_view_showtoolbar"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_view_showtoolbar"));
 					
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_view_showtoolbar"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_view_showtoolbar").replaceAll("&", ""));
 	}
 
 	/* (non-Javadoc)

@@ -17,6 +17,7 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
@@ -50,19 +51,17 @@ public class NextUnreadMessageAction
 	 * @param keyStroke
 	 */
 	public NextUnreadMessageAction(FrameMediator frameController) {
-
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_nextunreadmessage"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_view_nextunreadmessage"));
 					
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_nextunreadmessage_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_view_nextunreadmessage_tooltip").replaceAll("&", ""));
 		
 		// Shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke("N"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, 0));
 			
 		setEnabled(false);
 		// uncomment to enable action
@@ -74,8 +73,6 @@ public class NextUnreadMessageAction
 			this);
 		*/
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

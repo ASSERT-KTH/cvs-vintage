@@ -41,18 +41,17 @@ import org.columba.mail.util.MailResourceLoader;
 public class SendLaterAction extends FrameAction {
 
 	public SendLaterAction(FrameMediator FrameController) {
-		super(
-				FrameController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_sendlater"));
+		super(FrameController, MailResourceLoader.getString(
+			"menu", "composer", "menu_file_sendlater"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_sendlater"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_file_sendlater").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("send-later-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-later-16.png"));
 	}
 
 	/* (non-Javadoc)

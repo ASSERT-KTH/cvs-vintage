@@ -41,29 +41,26 @@ import org.columba.mail.util.MailResourceLoader;
 public class SendAction extends FrameAction {
 
 	public SendAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_send"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "composer", "menu_file_send"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_send_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_file_send_tooltip").replaceAll("&", ""));
 
 		// toolbar text
-		setToolBarName(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_send_toolbar"));
+		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
+			"menu", "composer", "menu_file_send_toolbar"));
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("send-24.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("send-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-16.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK));
 	}
 

@@ -41,15 +41,14 @@ public class OpenMessageWithMessageFrameAction
 	implements SelectionListener {
 
 	public OpenMessageWithMessageFrameAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_opennew"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_opennew"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_opennew_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_opennew_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

@@ -25,15 +25,14 @@ import org.columba.core.util.GlobalResourceLoader;
 public class FindAgainAction extends FrameAction {
 
 	public FindAgainAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_findagain"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_findagain"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_findagain_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_findagain_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
 	}

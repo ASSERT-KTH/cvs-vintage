@@ -29,19 +29,15 @@ import org.columba.core.util.GlobalResourceLoader;
 public class SelectAllAction extends FrameAction {
 
 	public SelectAllAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_selectall"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_selectall"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_selectall_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null, null, "menu_edit_selectall_tooltip"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);

@@ -17,6 +17,7 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
@@ -38,18 +39,17 @@ public class PreviousUnreadMessageAction
 	implements SelectionListener {
 
 	public PreviousUnreadMessageAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_prevunreadmessage"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_view_prevunreadmessage"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe","menu_view_prevunreadmessage_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_view_prevunreadmessage_tooltip").replaceAll("&", ""));
 		
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke("P"));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 
 		setEnabled(false);
 		// uncomment to enable action

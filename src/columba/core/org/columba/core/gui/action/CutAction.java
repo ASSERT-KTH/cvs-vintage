@@ -30,28 +30,26 @@ import org.columba.core.util.GlobalResourceLoader;
 public class CutAction extends FrameAction {
 
 	public CutAction(FrameMediator controller) {
-		super(
-				controller,
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_cut"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_edit_cut"));
 		
 		// tooltip text
-		setTooltipText(
-				GlobalResourceLoader.getString(
-					null, null, "menu_edit_cut_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+                        null,
+                        "menu_edit_cut_tooltip").replaceAll("&", ""));
 					
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_cut-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_cut-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_cut.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_cut.png"));
 
 		// disable toolbar text
 		setShowToolBarText(false);
 		
 		// short cut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);	

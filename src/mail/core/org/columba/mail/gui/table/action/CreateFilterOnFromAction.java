@@ -40,15 +40,14 @@ public class CreateFilterOnFromAction
 	implements SelectionListener {
 
 	public CreateFilterOnFromAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_filteronfrom"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_filteronfrom"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_filteronfrom_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_filteronfrom_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
 

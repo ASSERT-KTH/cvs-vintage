@@ -53,19 +53,17 @@ public class ThreadedViewAction
 	 * @param frameMediator
 	 */
 	public ThreadedViewAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_viewthreaded"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_view_viewthreaded"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_viewthreaded_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_view_viewthreaded_tooltip").replaceAll("&", ""));
 					
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
 		(
@@ -108,13 +106,11 @@ public class ThreadedViewAction
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		
 		}
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if ((frameMediator instanceof TableViewOwner) == false)
+		if (!(frameMediator instanceof TableViewOwner))
 			return;
 
 		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();

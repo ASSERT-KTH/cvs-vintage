@@ -41,19 +41,18 @@ public class ReplyToAllAction
 	implements SelectionListener {
 
 	public ReplyToAllAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_replytoall"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_replytoall"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_replytoall_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_replytoall_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("replytoall_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("reply-to-all.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("replytoall_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("reply-to-all.png"));
 
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

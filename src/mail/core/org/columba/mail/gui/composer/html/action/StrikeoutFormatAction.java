@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -45,23 +46,18 @@ public class StrikeoutFormatAction extends CheckBoxAction
 	 * @param name
 	 */
 	public StrikeoutFormatAction(FrameMediator frameController) {
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_strike"));
 
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_strike"));
-
-		setTooltipText(
-					MailResourceLoader.getString(
-						"menu",
-						"composer",
-						"menu_format_strike_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_strike_tooltip").replaceAll("&", ""));
 						
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_strikethrough.png"));
-		setSmallIcon(
-			ImageLoader.getSmallImageIcon("stock_text_strikethrough-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_strikethrough.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_text_strikethrough-16.png"));
 
 		// register for text selection changes
 		ComposerController ctrl =
@@ -93,7 +89,6 @@ public class StrikeoutFormatAction extends CheckBoxAction
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		
 		if (arg0 instanceof HtmlEditorController) {
 			// check if current text is striked out - and set state accordingly
 			FormatInfo info = (FormatInfo) arg1;
@@ -126,7 +121,6 @@ public class StrikeoutFormatAction extends CheckBoxAction
 				.getEditorController();
 
 		editorController.toggleStrikeout();
-
 	}
 
 	/**

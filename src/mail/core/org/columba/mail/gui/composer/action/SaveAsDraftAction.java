@@ -40,15 +40,14 @@ import org.columba.mail.util.MailResourceLoader;
 public class SaveAsDraftAction extends FrameAction {
 
 	public SaveAsDraftAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_savedraft"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "composer", "menu_file_savedraft"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "composer", "menu_file_savedraft"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "composer",
+                        "menu_file_savedraft").replaceAll("&", ""));
 	}
 
 	/* (non-Javadoc)

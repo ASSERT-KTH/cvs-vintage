@@ -39,15 +39,14 @@ public class ForwardInlineAction
 	implements SelectionListener {
 
 	public ForwardInlineAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_forwardinline"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_forwardinline"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_forwardinline_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_forwardinline_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

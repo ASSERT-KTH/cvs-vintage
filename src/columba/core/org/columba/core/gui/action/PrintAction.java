@@ -39,25 +39,23 @@ public class PrintAction
 		implements SelectionListener {
 
 	public PrintAction(FrameMediator controller) {
-		super(
-				controller,
-				MailResourceLoader.getString(
-					"menu",	"mainframe", "menu_message_print"));
+		super(controller, MailResourceLoader.getString(
+			"menu",	"mainframe", "menu_message_print"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_print_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_message_print_tooltip").replaceAll("&", ""));
 		
 		// small icon for menu
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_print-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_print-16.png"));
 		
 		// large icon for toolbar
-		setLargeIcon(ImageLoader.getImageIcon("stock_print.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_print.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		
 		// *20030614, karlpeder* In main view only enabled when 

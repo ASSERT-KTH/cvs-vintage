@@ -35,23 +35,21 @@ import org.columba.core.gui.util.ImageLoader;
 public class DeleteAction extends FrameAction {
 
 	public DeleteAction(FrameMediator frameController) {
-		super(
-				frameController,
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_edit_delete"));
+		super(frameController, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_edit_delete"));
 		
 		// tooltip text
-		setTooltipText(
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_edit_delete"));
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_edit_delete").replaceAll("&", ""));
 					
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_paste-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_paste.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_paste-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
 		
 		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
 					KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 	}
 

@@ -46,25 +46,17 @@ public class MarkAsUnreadAction
 
 	/**
 	 * @param frameMediator
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
 	 */
 	public MarkAsUnreadAction(FrameMediator frameController) {
 
 		// TODO: i18n missing here
-
 		super(frameController, "As Unread");
-		setSmallIcon(ImageLoader.getSmallImageIcon("mail-new.png"));
-		setLargeIcon(ImageLoader.getImageIcon("mail-new.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("mail-new.png"));
 
 		// shortcut key
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_K, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 		
 		setEnabled(false);
 		(

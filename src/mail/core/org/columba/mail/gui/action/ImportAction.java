@@ -34,18 +34,19 @@ import org.columba.mail.util.MailResourceLoader;
 public class ImportAction extends FrameAction implements ActionListener {
 
 	public ImportAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_utilities_importmailbox"));
+		super(frameController, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_utilities_importmailbox"));
 
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_utilities_importmailbox"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                       "menu",
+                       "mainframe",
+                       "menu_utilities_importmailbox").replaceAll("&", ""));
 		
 		// set small icon for menu
-		setSmallIcon(ImageLoader.getImageIcon("stock_convert-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_convert-16.png"));
 	}
 
 	/* (non-Javadoc)

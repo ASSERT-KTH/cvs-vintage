@@ -37,19 +37,18 @@ import org.columba.mail.util.MailResourceLoader;
 public class SaveAsAction extends FrameAction implements SelectionListener {
 
 	public SaveAsAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "attachmentsaveas"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "attachmentsaveas"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "attachmentsaveas_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "attachmentsaveas_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_save_as.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save_as.png"));
 
 		frameController.getSelectionManager().registerSelectionListener("mail.attachment", this);
 	}

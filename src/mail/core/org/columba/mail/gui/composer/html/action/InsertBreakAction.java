@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -39,16 +40,14 @@ public class InsertBreakAction extends FrameAction
 	 * @param frameMediator
 	 */
 	public InsertBreakAction(FrameMediator frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_break"));
-		setTooltipText(MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_break_tooltip"));
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_break"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_break_tooltip").replaceAll("&", ""));
 
 		// register for changes to editor type (text / html)
 		XmlElement optionsElement =
@@ -96,5 +95,4 @@ public class InsertBreakAction extends FrameAction
 
 		editorController.insertBreak();
 	}
-
 }

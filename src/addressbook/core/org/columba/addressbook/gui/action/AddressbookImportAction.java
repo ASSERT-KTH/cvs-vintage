@@ -32,15 +32,14 @@ import org.columba.core.gui.frame.FrameMediator;
 public class AddressbookImportAction extends FrameAction {
 
 	public AddressbookImportAction(FrameMediator frameController) {
-		super(
-				frameController,
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_utilities_addressbook"));
+		super(frameController, AddressbookResourceLoader.getString(
+			"menu", "mainframe", "menu_utilities_addressbook"));
 		
 		// tooltip text
-		setTooltipText(
-				AddressbookResourceLoader.getString(
-					"menu", "mainframe", "menu_utilities_addressbook"));
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
+			"menu",
+                        "mainframe",
+                        "menu_utilities_addressbook").replaceAll("&", ""));
 	}
 
 	/* (non-Javadoc)

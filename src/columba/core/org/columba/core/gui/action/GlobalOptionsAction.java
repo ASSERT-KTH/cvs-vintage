@@ -27,23 +27,19 @@ import org.columba.mail.util.MailResourceLoader;
 public class GlobalOptionsAction extends FrameAction {
 
 	public GlobalOptionsAction(FrameMediator controller) {
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_generaloptions"));
+		super(controller, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_edit_generaloptions"));
 
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_edit_generaloptions_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_edit_generaloptions_tooltip").replaceAll("&", ""));
 
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_preferences-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_preferences-16.png"));
 
-		setLargeIcon(ImageLoader.getImageIcon("stock_preferences.png"));
-
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_preferences.png"));
 	}
 
 	/* (non-Javadoc)
@@ -57,5 +53,4 @@ public class GlobalOptionsAction extends FrameAction {
 		ThemeSwitcher.updateFrame(frameMediator.getView());
 		*/
 	}
-
 }

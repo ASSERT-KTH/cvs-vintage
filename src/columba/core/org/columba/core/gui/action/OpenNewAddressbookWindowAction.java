@@ -35,21 +35,16 @@ import org.columba.core.util.GlobalResourceLoader;
 public class OpenNewAddressbookWindowAction extends FrameAction {
 
 	public OpenNewAddressbookWindowAction(FrameMediator controller) {
-		super(
-			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_file_new_addressbook"));
+		super(controller, GlobalResourceLoader.getString(
+			null, null, "menu_file_new_addressbook"));
 
-		setTooltipText(GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_file_new_addressbook_tooltip"));
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
+			null,
+			null,
+			"menu_file_new_addressbook_tooltip").replaceAll("&", ""));
 		
-		setSmallIcon(
-			ImageLoader.getSmallImageIcon("stock_book-16.png"));
-		setLargeIcon(ImageLoader.getImageIcon("stock_book.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_book-16.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_book.png"));
 	}
 
 	/*

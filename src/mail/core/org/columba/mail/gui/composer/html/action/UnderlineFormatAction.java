@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
@@ -51,27 +52,22 @@ public class UnderlineFormatAction
 	 * @param name
 	 */
 	public UnderlineFormatAction(FrameMediator frameController) {
+		super(frameController, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_underline"));
 
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_underline"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "composer",
+                        "menu_format_underline_tooltip").replaceAll("&", ""));
 
-		setTooltipText(
-			MailResourceLoader.getString(
-				"menu",
-				"composer",
-				"menu_format_underline_tooltip"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_text_underline.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_text_underline-16.png"));
 
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_underline.png"));
-		setSmallIcon(
-			ImageLoader.getSmallImageIcon("stock_text_underline-16.png"));
-
-		//		shortcut key
-		setAcceleratorKey(
-			KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+		//shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
+                        KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 
 		// register for text selection changes
 		ComposerController ctrl = (ComposerController) getFrameMediator();
@@ -123,7 +119,6 @@ public class UnderlineFormatAction
 				setEnabled(Boolean.valueOf(enableHtml).booleanValue());
 			}
 		}
-
 	}
 
 	/*
@@ -139,7 +134,6 @@ public class UnderlineFormatAction
 				.getEditorController();
 
 		editorController.toggleUnderline();
-
 	}
 
 	/**
@@ -165,5 +159,4 @@ public class UnderlineFormatAction
 	 */
 	public void componentRemoved(ContainerEvent e) {
 	}
-
 }

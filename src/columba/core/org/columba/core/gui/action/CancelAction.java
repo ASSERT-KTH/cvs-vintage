@@ -34,17 +34,16 @@ public class CancelAction
 	implements WorkerListChangeListener {
 
 	public CancelAction(FrameMediator controller) {
-		super(
-			controller,
-			GlobalResourceLoader.getString(null, null, "menu_file_cancel"));
+		super(controller, GlobalResourceLoader.getString(
+                        null, null, "menu_file_cancel"));
 
 		// small icon for JMenuItem
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_stop-16.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_stop-16.png"));
 		
 		// big icon for JToolBar
-		setLargeIcon(ImageLoader.getImageIcon("stock_stop.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_stop.png"));
 		
-		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
 		
 		// set JavaHelp topic ID
 		//setTopicID("cancel");
@@ -52,7 +51,6 @@ public class CancelAction
 		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
 			this);
-
 	}
 
 	/* (non-Javadoc)

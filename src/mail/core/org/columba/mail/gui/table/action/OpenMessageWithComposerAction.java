@@ -41,21 +41,18 @@ public class OpenMessageWithComposerAction
 	implements SelectionListener {
 
 	public OpenMessageWithComposerAction(FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_message_openwithcomposer"));
+		super(frameController, MailResourceLoader.getString(
+			"menu", "mainframe", "menu_message_openwithcomposer"));
 		
 		// tooltip text
-		setTooltipText(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_message_openwithcomposer_tooltip"));
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
+                        "menu",
+                        "mainframe",
+                        "menu_message_openwithcomposer_tooltip").replaceAll("&", ""));
 		
 		// icons
-		setSmallIcon(ImageLoader.getSmallImageIcon("openmessage_small.png"));
-		setLargeIcon(ImageLoader.getImageIcon("compose-message.png"));
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("openmessage_small.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("compose-message.png"));
 
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
