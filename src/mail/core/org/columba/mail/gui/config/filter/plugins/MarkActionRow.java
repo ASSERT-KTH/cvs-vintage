@@ -45,7 +45,7 @@ public class MarkActionRow extends DefaultActionRow {
 		super.updateComponents(b);
 
 		if (b) {
-			String variant = ((MailFilterAction) filterAction).getMarkVariant();
+			String variant = new MailFilterAction(filterAction).getMarkVariant();
 
 			// use "mark as read" as default fallback mechanism
 			if (variant == null) {
@@ -54,7 +54,7 @@ public class MarkActionRow extends DefaultActionRow {
 
 			variantComboBox.setSelectedItem(variant);
 		} else {
-			((MailFilterAction) filterAction)
+			new MailFilterAction(filterAction)
 					.setMarkVariant((String) variantComboBox.getSelectedItem());
 		}
 	}

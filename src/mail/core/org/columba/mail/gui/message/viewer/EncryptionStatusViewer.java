@@ -33,12 +33,12 @@ import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * Viewer displays security status information.
+ * IViewer displays security status information.
  * 
  * @author fdietz
  *  
  */
-public class EncryptionStatusViewer extends JPanel implements Viewer,
+public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
         SecurityStatusListener {
 
 	
@@ -187,7 +187,7 @@ public class EncryptionStatusViewer extends JPanel implements Viewer,
     }
 
     /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#view(IMailbox,
+     * @see org.columba.mail.gui.message.viewer.IViewer#view(IMailbox,
      *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
      */
     public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
@@ -196,7 +196,7 @@ public class EncryptionStatusViewer extends JPanel implements Viewer,
     }
 
     /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+     * @see org.columba.mail.gui.message.viewer.IViewer#getView()
      */
     public JComponent getView() {
         return this;
@@ -218,14 +218,14 @@ public class EncryptionStatusViewer extends JPanel implements Viewer,
     }
 
     /**
-     * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+     * @see org.columba.mail.gui.message.viewer.IViewer#isVisible()
      */
     public boolean isVisible() {
         return visible;
     }
     
     /**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		

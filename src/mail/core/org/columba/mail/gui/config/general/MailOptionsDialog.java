@@ -38,6 +38,7 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -68,6 +69,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
     protected JCheckBox emptyTrashCheckBox;
     protected CheckBoxWithMnemonic emptySubjectCheckBox;
     protected CheckBoxWithMnemonic sendHtmlMultipartCheckBox;
+    protected CheckBoxWithMnemonic showAttachmentsInlineCheckBox;
     protected LabelWithMnemonic forwardLabel;
     protected JComboBox forwardComboBox;
 
@@ -98,7 +100,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             if (messageviewer == null) {
                 messageviewer = gui.addSubElement("messageviewer");
             }
-
+            
+    		showAttachmentsInlineCheckBox.setSelected(new DefaultItem(messageviewer).getBoolean("inline_attachments", false));
+    		
             XmlElement markasread = options.getElement("markasread");
 
             String delay = markasread.getAttribute("delay", "2");
@@ -214,9 +218,14 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             } else {
                 smilies.addAttribute("enabled", "false");
             }
+            
+            if ( showAttachmentsInlineCheckBox.isSelected()) {
+            	messageviewer.addAttribute("inline_attachments", "true");
+            } else
+            	messageviewer.addAttribute("inline_attachments", "false");
 
             // send notification event
-            // @see org.columba.mail.gui.message.BodyTextViewer
+            // @see org.columba.mail.gui.message.TextViewer
             smilies.notifyObservers();
 
             XmlElement quote = messageviewer.getElement("quote");
@@ -230,7 +239,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             }
 
             // send notifaction event
-            // @see org.columba.mail.gui.message.BodyTextViewer
+            // @see org.columba.mail.gui.message.TextViewer
             quote.notifyObservers();
 
             XmlElement html = options.getElement("html");
@@ -332,6 +341,10 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
         forwardComboBox = new JComboBox(items);
 
+        showAttachmentsInlineCheckBox = new CheckBoxWithMnemonic("Show Attachments &Inline");
+        showAttachmentsInlineCheckBox.setActionCommand("ATTACHMENTS_INLINE");
+        showAttachmentsInlineCheckBox.addActionListener(this);
+        
         // button panel
         okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "ok"));
@@ -380,9 +393,13 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
         builder.append(preferHtmlCheckBox, 4);
         builder.nextLine();
-        builder.append(disableHtmlCheckBox, 4);        builder.nextLine();
+        builder.append(disableHtmlCheckBox, 4);       
+        builder.nextLine();
         builder.append(enableSmiliesCheckBox, 4);
         builder.nextLine();
+        builder.append(showAttachmentsInlineCheckBox, 4);
+        builder.nextLine();
+        
 
         // its maybe better to leave this option out of the dialog
         // -> make it configurable in the xml file anyway

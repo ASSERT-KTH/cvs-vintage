@@ -39,12 +39,15 @@ import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.core.gui.util.FontProperties;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.composer.ComposerController;
@@ -53,25 +56,27 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
 import org.columba.mail.gui.message.util.ColumbaURL;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
 
 /**
- * Viewer for a complete RFC822 message.
+ * IViewer for a complete RFC822 message.
  * 
  * @author fdietz
  */
-public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
+public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scrollable {
 
 	protected AttachmentsViewer attachmentsViewer;
 
+	private InlineAttachmentsViewer inlineAttachmentsViewer;
+
 	private EncryptionStatusViewer securityInformationController;
 
-	private BodyTextViewer bodytextViewer;
+	private TextViewer bodytextViewer;
 
 	private SpamStatusViewer spamStatusController;
 
 	private HeaderViewer headerController;
-
-	private InlineAttachmentsViewer inlineAttachmentsViewer;
 
 	private PGPMessageFilter pgpFilter;
 
@@ -80,6 +85,7 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 	private ColumbaPopupMenu menu;
 
 	private MailFrameMediator mediator;
+
 
 	/**
 	 *  
@@ -94,9 +100,22 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 		layoutComponents();
 
 	}
+	
+	private boolean showAttachmentsInlineEnabled() {
+		XmlElement gui = MailConfig.getInstance().get("options").getElement(
+				"/options/gui");
+		XmlElement messageviewer = gui.getElement("messageviewer");
+
+		if (messageviewer == null) {
+			messageviewer = gui.addSubElement("messageviewer");
+		}
+		
+		DefaultItem item = new DefaultItem(messageviewer);
+		return item.getBoolean("inline_attachments", false);
+	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.IMailbox,
+	 * @see org.columba.mail.gui.message.viewer.IViewer#view(org.columba.mail.folder.IMailbox,
 	 *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
 	 */
 	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
@@ -105,30 +124,39 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 		//		 if necessary decrypt/verify message
 		IMailFolderCommandReference newRefs = filterMessage(folder, uid);
 
-		// pass work along to MessageController
+		// map to new reference
 		if (newRefs != null) {
 			folder = (AbstractMessageFolder) newRefs.getSourceFolder();
 			uid = newRefs.getUids()[0];
-			//mimePartTree = srcFolder.getMimePartTree(uid);
 		}
 
-		getBodytextViewer().view(folder, uid, mediator);
+		MimeTree mimePartTree = folder.getMimePartTree(uid);
+		MimePart mp = chooseBodyPart(mimePartTree);
+		if ( mp != null) 
+			getBodytextViewer().view(folder, uid, mp.getAddress(), mediator);
+		
 		getHeaderController().view(folder, uid, mediator);
-		attachmentsViewer.view(folder, uid, mediator);
-		inlineAttachmentsViewer.view(folder, uid, mediator);
+
+		if (showAttachmentsInlineEnabled())
+			inlineAttachmentsViewer.view(folder, uid, mediator);
+		else
+			attachmentsViewer.view(folder, uid, mediator);
 
 		getSpamStatusViewer().view(folder, uid, mediator);
 		getSecurityInformationViewer().view(folder, uid, mediator);
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		getBodytextViewer().updateGUI();
 		getHeaderController().updateGUI();
-		attachmentsViewer.updateGUI();
-		inlineAttachmentsViewer.updateGUI();
+
+		if (showAttachmentsInlineEnabled())
+			inlineAttachmentsViewer.updateGUI();
+		else
+			attachmentsViewer.updateGUI();
 		getSpamStatusViewer().updateGUI();
 		getSecurityInformationViewer().updateGUI();
 
@@ -137,15 +165,15 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */
 	public JComponent getView() {
 
-		return null;
+		return this;
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#isVisible()
 	 */
 	public boolean isVisible() {
 		return true;
@@ -161,7 +189,7 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 	/**
 	 * @return Returns the bodytextViewer.
 	 */
-	public BodyTextViewer getBodytextViewer() {
+	public TextViewer getBodytextViewer() {
 		return bodytextViewer;
 	}
 
@@ -217,7 +245,7 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 
 	private void initComponents() {
 		spamStatusController = new SpamStatusViewer(mediator);
-		bodytextViewer = new BodyTextViewer(mediator);
+		bodytextViewer = new TextViewer(mediator);
 		securityInformationController = new EncryptionStatusViewer(mediator);
 		headerController = new HeaderViewer(mediator);
 
@@ -227,7 +255,7 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 
 		attachmentsViewer = new AttachmentsViewer(mediator);
 
-		inlineAttachmentsViewer = new InlineAttachmentsViewer();
+		inlineAttachmentsViewer = new InlineAttachmentsViewer(mediator);
 
 		pgpFilter = new PGPMessageFilter(mediator, this);
 		pgpFilter.addSecurityStatusListener(securityInformationController);
@@ -253,7 +281,8 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 
 		add(top, BorderLayout.NORTH);
 
-		add(bodytextViewer, BorderLayout.CENTER);
+		if (!showAttachmentsInlineEnabled()) 
+			add(bodytextViewer, BorderLayout.CENTER);
 
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
@@ -262,8 +291,10 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 			bottom.add(securityInformationController.getView(),
 					BorderLayout.NORTH);
 
-		bottom.add(attachmentsViewer, BorderLayout.CENTER);
-		//bottom.add(inlineAttachmentsViewer, BorderLayout.CENTER);
+		if (showAttachmentsInlineEnabled())
+			bottom.add(inlineAttachmentsViewer, BorderLayout.CENTER);
+		else
+			bottom.add(attachmentsViewer, BorderLayout.CENTER);
 
 		add(bottom, BorderLayout.SOUTH);
 	}
@@ -273,9 +304,9 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 	}
 
 	public void createPopupMenu() {
-		if ( menu == null)
-		menu = new ColumbaPopupMenu(mediator,
-				"org/columba/mail/action/message_contextmenu.xml");
+		if (menu == null)
+			menu = new ColumbaPopupMenu(mediator,
+					"org/columba/mail/action/message_contextmenu.xml");
 	}
 
 	protected void processPopup(MouseEvent ev) {
@@ -472,6 +503,62 @@ public class Rfc822MessageViewer extends JPanel implements Viewer, Scrollable {
 	 */
 	public boolean getScrollableTracksViewportHeight() {
 		return false;
+	}
+
+	private MimePart chooseBodyPart(MimeTree mimePartTree) {
+		MimePart bodyPart = null;
+
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
+
+		//ensure that there is an HTML part in the email, otherwise JTextPanel
+		//throws a RuntimeException
+
+		// Which Bodypart shall be shown? (html/plain)
+		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
+				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
+			bodyPart = mimePartTree.getFirstTextPart("html");
+		} else {
+			bodyPart = mimePartTree.getFirstTextPart("plain");
+		}
+
+		return bodyPart;
+
+	}
+	
+	private boolean hasHtmlPart(MimePart mimeTypes) {
+
+		if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
+			return true; //exit immediately
+
+		java.util.List children = mimeTypes.getChilds();
+
+		for (int i = 0; i < children.size(); i++) {
+			if (hasHtmlPart(mimeTypes.getChild(i)))
+				return true;
+		}
+
+		return false;
+
+	}
+	
+	/**
+	 * @param mimePartTree
+	 */
+	private Integer[] getBodyPartAddress(MimeTree mimePartTree) {
+		MimePart bodyPart = null;
+		XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
+
+		// Which Bodypart shall be shown? (html/plain)
+		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
+				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
+			bodyPart = mimePartTree.getFirstTextPart("html");
+		} else {
+			bodyPart = mimePartTree.getFirstTextPart("plain");
+		}
+
+		return bodyPart.getAddress();
 	}
 
 }

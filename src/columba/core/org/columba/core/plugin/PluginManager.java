@@ -92,7 +92,7 @@ public class PluginManager {
     /**
      * Constructor for PluginManager.
      */
-    public PluginManager() {
+    private PluginManager() {
         super();
 
         // init map
@@ -164,7 +164,13 @@ public class PluginManager {
 
             if (extension.getName().equals("extension")) {
                 extensionPoint = extension.getAttribute("name");
-
+                if ( extensionPoint == null ) {
+                	LOG.severe("no extension point specified in plugin.xml");
+                	if ( Main.DEBUG )
+                		XmlElement.printNode(extension, " ");
+                	continue;
+                }
+                
                 if (pluginHandlers.containsKey(extensionPoint)) {
                     // we have a plugin-handler for this kind of plugin
                     try {

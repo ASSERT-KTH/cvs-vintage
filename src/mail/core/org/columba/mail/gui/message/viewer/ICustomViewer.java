@@ -15,46 +15,30 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.plugin;
+package org.columba.mail.gui.message.viewer;
 
-import java.io.File;
-
-import junit.framework.TestCase;
-
-import org.columba.core.config.Config;
-import org.columba.core.io.DiskIO;
+import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.frame.MailFrameMediator;
 
 /**
  * @author fdietz
- *  
+ *
  */
-public class PluginManagerTest extends TestCase {
-
-	private File file;
-
-	/*
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		//      create config-folder
-		file = new File("test_config");
-		file.mkdir();
-
-		// initialize configuration - core
-		new Config(file);
-	}
+public interface ICustomViewer extends IViewer {
 
 	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		// remove configuration directory
-		DiskIO.deleteDirectory(file);
-	}
-
-	public void test() {
-		PluginManager manager = PluginManager.getInstance();
-		manager.initPlugins();
-	}
-
+     * Use passed parameters to retrieve information from folder.
+     * <p>
+     * This method should be called from Command.execute() or a 
+     * background thread.
+     * <p>
+     * 
+     * @param folder			selected folder
+     * @param uid				selected message
+     * @param mediator			top-level mediator
+     * @throws Exception
+     */
+    void view(IMailbox folder, Object uid, MailFrameMediator mediator) throws Exception;
+ 
+    
 }

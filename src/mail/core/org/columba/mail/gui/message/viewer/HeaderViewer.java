@@ -64,7 +64,7 @@ import org.columba.ristretto.message.Header;
  * 
  * @author fdietz
  */
-public class HeaderViewer extends JPanel implements Viewer {
+public class HeaderViewer extends JPanel implements ICustomViewer {
 
 	//  contains headerfields which are to be displayed
 	private Map map;
@@ -111,7 +111,7 @@ public class HeaderViewer extends JPanel implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#view(IMailbox,
+	 * @see org.columba.mail.gui.message.viewer.IViewer#view(IMailbox,
 	 *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
 	 */
 	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
@@ -191,7 +191,7 @@ public class HeaderViewer extends JPanel implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */
 	public JComponent getView() {
 		return this;
@@ -252,14 +252,14 @@ public class HeaderViewer extends JPanel implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#isVisible()
 	 */
 	public boolean isVisible() {
 		return visible;
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		getHeaderTextPane().setHeader(map);
@@ -290,7 +290,7 @@ public class HeaderViewer extends JPanel implements Viewer {
 	}
 
 	/**
-	 * Viewer displays the message headers, including From:, To:, Subject:, etc.
+	 * IViewer displays the message headers, including From:, To:, Subject:, etc.
 	 * 
 	 * @author fdietz
 	 */
@@ -363,6 +363,8 @@ public class HeaderViewer extends JPanel implements Viewer {
 		}
 
 		public void setHeader(Map keys) {
+			if ( keys == null ) throw new IllegalArgumentException("keys == null");
+			
 			//      border #949494
 			// background #989898
 			// #a0a0a0

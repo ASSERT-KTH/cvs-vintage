@@ -457,7 +457,7 @@ public class SaveMessageBodyAsCommand extends Command {
     /**
      * Defines and returns a default stylesheet for use when text messages are
      * saved as html. <br>This stylesheet should be the same as the one
-     * defined in BodyTextViewer for use when displaying text messages.
+     * defined in TextViewer for use when displaying text messages.
      */
     private String getDefaultStyleSheet() {
         // read configuration from options.xml file

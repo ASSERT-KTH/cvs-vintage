@@ -250,7 +250,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
             // notify all listeners
             // @see org.columba.core.gui.util.FontProperties
-            // @see org.columba.mail.gui.message.BodyTextViewer
+            // @see org.columba.mail.gui.message.TextViewer
             // @see org.columba.mail.gui.composer.text.TextEditorController
             fonts.notifyObservers();
 

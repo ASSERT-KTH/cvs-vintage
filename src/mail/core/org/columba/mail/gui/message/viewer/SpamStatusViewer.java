@@ -38,12 +38,12 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
 /**
- * Viewer displaying spam status information.
+ * IViewer displaying spam status information.
  * 
  * @author fdietz
  *  
  */
-public class SpamStatusViewer extends JPanel implements Viewer,
+public class SpamStatusViewer extends JPanel implements ICustomViewer,
 		ActionListener {
 
 
@@ -154,14 +154,14 @@ public class SpamStatusViewer extends JPanel implements Viewer,
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */
 	public JComponent getView() {
 		return label;
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#isVisible()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#isVisible()
 	 */
 	public boolean isVisible() {
 		// only show view if message is marked as spam
@@ -185,7 +185,7 @@ public class SpamStatusViewer extends JPanel implements Viewer,
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		setSpam(visible);

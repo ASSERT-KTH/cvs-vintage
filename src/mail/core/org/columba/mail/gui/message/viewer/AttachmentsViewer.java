@@ -51,7 +51,7 @@ import org.frapuccino.swing.DynamicFileTransferHandler;
  * @author fdietz
  *  
  */
-public class AttachmentsViewer extends IconPanel implements Viewer {
+public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	private MimeTree mimePartTree;
 
@@ -152,7 +152,7 @@ public class AttachmentsViewer extends IconPanel implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.IMailbox,
+	 * @see org.columba.mail.gui.message.viewer.IViewer#view(org.columba.mail.folder.IMailbox,
 	 *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
 	 */
 	public void view(IMailbox folder, Object uid, MailFrameMediator mediator)
@@ -166,14 +166,14 @@ public class AttachmentsViewer extends IconPanel implements Viewer {
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
 		setMimePartTree(mimePartTree);
 	}
 
 	/**
-	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
+	 * @see org.columba.mail.gui.message.viewer.IViewer#getView()
 	 */
 	public JComponent getView() {
 		return this;

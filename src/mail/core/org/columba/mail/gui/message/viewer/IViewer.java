@@ -19,6 +19,7 @@ package org.columba.mail.gui.message.viewer;
 
 import javax.swing.JComponent;
 
+import org.columba.core.plugin.Plugin;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
@@ -31,22 +32,9 @@ import org.columba.mail.gui.frame.MailFrameMediator;
  * 
  * @author fdietz
  */
-public interface Viewer {
+public interface IViewer extends Plugin{
 
-    /**
-     * Use passed parameters to retrieve information from folder.
-     * <p>
-     * This method should be called from Command.execute() or a 
-     * background thread.
-     * <p>
-     * 
-     * @param folder			selected folder
-     * @param uid				selected message
-     * @param mediator			top-level mediator
-     * @throws Exception
-     */
-    void view(IMailbox folder, Object uid, MailFrameMediator mediator) throws Exception;
- 
+    
     /**
      * Update ui to reflect the changes.
      *

@@ -264,9 +264,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						"splitpanes", "header", 100));
 		}
 
-		getContainer().extendMenuFromFile(this,
-				"org/columba/mail/action/menu.xml");
-
 		try {
 			((MenuPluginHandler) PluginManager.getInstance().getHandler(
 					"org.columba.mail.menu")).insertPlugins(getContainer()
@@ -274,6 +271,11 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
 		}
+		
+		getContainer().extendMenuFromFile(this,
+				"org/columba/mail/action/menu.xml");
+
+		
 
 		getContainer().extendToolbar(
 				this,

@@ -15,50 +15,27 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.filter;
+package org.columba.mail.plugin;
 
-import org.columba.core.filter.FilterAction;
-import org.columba.core.xml.XmlElement;
+import org.columba.core.plugin.AbstractPluginHandler;
 
 /**
  * @author fdietz
- *  
+ *
  */
-public class MailFilterAction extends FilterAction {
+public class ViewerPluginHandler extends AbstractPluginHandler {
 
 	/**
-	 * @param root
+	 * @param id
+	 * @param config
 	 */
-	public MailFilterAction(XmlElement root) {
-		super(root);
+	public ViewerPluginHandler() {
+		super("org.columba.mail.viewer", "org/columba/mail/plugin/viewer.xml");
+		
+		parentNode = getConfig().getRoot().getElement("viewerlist");
+		
 	}
 	
-	public MailFilterAction(FilterAction parent) {
-		this(parent.getRoot());
-	}
-
-	/**
-	 * Mark message variant can be of value: <br>
-	 * <ul>
-	 * <li>read</li>
-	 * <li>unread</li>
-	 * <li>flagged</li>
-	 * <li>not_flagged</li>
-	 * <li>expunged</li>
-	 * <li>not_expunged</li>
-	 * <li>answered</li>
-	 * <li>spam</li>
-	 * <li>no_spam</li>
-	 * </ul>
-	 * 
-	 * @param s
-	 */
-	public void setMarkVariant(String s) {
-		set("markvariant", s);
-	}
-
-	public String getMarkVariant() {
-		return get("markvariant");
-	}
+	
 
 }
