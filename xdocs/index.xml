@@ -45,21 +45,11 @@
 <section name="Where do I get releases?">
 
   <p>
-    There are two types of downloads.  There is the source download available from 
-    <a href="http://scarab.tigris.org/servlets/ProjectSource">CVS</a>.  
+    There are two types of downloads. There is the source download available from <a href="http://scarab.tigris.org/servlets/ProjectSource">CVS</a> and the stable releases from the <a href="http://scarab.tigris.org/servlets/ProjectDownloadList">Project Download List</a>.  
   </p>
   <p>
-    You can
-    also download the latest beta from the <a href="http://scarab.tigris.org/servlets/ProjectDownloadList">Project
-    Download List</a>.  
+    You can also download a nightly built from <a href="http://apache.org/~jon/scarab/nightly/">here</a>.  
   </p>
-
-  <p>
-    You can
-        also download the latest beta from the <a href="http://scarab.tigris.org/servlets/ProjectDownloadList">Project
-    Download List</a>  Download the file marked all in one..  
-  </p>
-
 </section>
 
 <section name="How do I contribute, give feedback, fix bugs and so on?">

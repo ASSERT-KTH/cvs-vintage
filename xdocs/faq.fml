@@ -44,20 +44,6 @@ Scarab eats your database, then we hope you have good backups.
     </faq>   
     <faq id="3">
       <question>
-        Is Scarab ready for production use?
-      </question>
-      <answer>
-Scarab is in pre-1.0 beta. It has been in development for over
-two years now and there is quite a lot of features in it. On
-July 9th, 2002, we became self hosting. This means that we now
-use Scarab to track Scarab so we feel it is ready enough for
-usage. We also know that there are several large corporations
-using Scarab. Please note that we do not promise anything. If
-Scarab eats your database, then we hope you have good backups.
-      </answer>
-    </faq>    
-    <faq id="4">
-      <question>
         What are Scarab's disadvantages over Bugzilla?
       </question>
       <answer>
@@ -91,7 +77,7 @@ are not going to get into here, but the primary disadvantages are:
 </p>
       </answer>
     </faq>    
-    <faq id="5">
+    <faq id="4">
       <question>
         What problems might arise if I deploy Scarab now?
       </question>
@@ -132,7 +118,7 @@ heavy development.
 </p>
       </answer>
     </faq>   
-    <faq id="6">
+    <faq id="5">
       <question>
         What documentation is available?
       </question>
@@ -142,7 +128,7 @@ There is three types of documentation for Scarab.
 <ol>
 <li>This page.</li>
 <li>There is <a
-href="http://scarab.tigris.org/project_docs.html">what is available on
+href="http://scarab-gen.tigris.org/nonav/HEAD/index.html">what is available on
 the website</a> (which tends towards administration and other
 questions).</li>
 <li>There is user level documentation that is built into the
@@ -151,7 +137,7 @@ application itself and is available in the left side navigation.</li>
 </p>
       </answer>
     </faq>    
-    <faq id="7">
+    <faq id="6">
       <question>
         Why am I getting an error connecting to MySQL?
       </question>
@@ -213,7 +199,7 @@ NOTE: Sometimes it may be useful to use "ant create-db" rather than "create-db.s
 </p>
       </answer>
     </faq>    
-    <faq id="8">
+    <faq id="7">
       <question>
         How can I contribute to Scarab and why?
       </question>
@@ -228,7 +214,7 @@ is open source is badly needed.
 </p>
       </answer>
     </faq>    
-    <faq id="9">
+    <faq id="8">
       <question>
         How do I hook Scarab up to (or behind) Apache?
       </question>
@@ -264,7 +250,7 @@ in the VirtualHost declaration.
 </p>
       </answer>
     </faq> 
-    <faq id="10">
+    <faq id="9">
       <question>
         How do I populate the database with my own issue types, attributes
 and attribute options?
@@ -336,7 +322,7 @@ and attribute options have been defined.
 </p>
       </answer>
     </faq>  
-    <faq id="11">
+    <faq id="10">
       <question>
         How do I setup Scarab so that it will send a copy of each issue
 change to a particular email address (ie: a mailing list or the project leader)?
@@ -352,7 +338,7 @@ a mailing list and subscribe the people to that mailing list and then
 set the 'Archive email' address to be the address of the mailing list.
       </answer>
     </faq>  
-    <faq id="12">
+    <faq id="11">
       <question>
        When I receive notification email from scarab, the url to the
        issue starts with http://localhost:8080/. Clearly that is bad because I
@@ -367,7 +353,7 @@ http://foo.com:8080/ instead of http://localhost:8080/ will generate the
 right url in the emails.
       </answer>
     </faq>  
-    <faq id="13">
+    <faq id="12">
       <question>
         How can I set defaults for the various attributes on
 issue entry?
@@ -382,7 +368,7 @@ administration screen that denotes which one should be automatically
 applied.
       </answer>
     </faq>  
-    <faq id="14">
+    <faq id="13">
       <question>
         What is the process for upgrading Scarab?
       </question>
@@ -437,7 +423,7 @@ so that when you build again, your settings remain intact.
 </p>
       </answer>
     </faq>  
-    <faq id="15">
+    <faq id="14">
       <question>
         I tried to register for Scarab's issue tracker and got the following error:
       </question>
@@ -462,7 +448,7 @@ The fix is simple, create an A or MX record for your domain entry.
 </p>
       </answer>
     </faq> 
-    <faq id="16">
+    <faq id="15">
       <question>
         Can I see Scarab in action without installing it myself?
       </question>
@@ -482,7 +468,7 @@ rebuilt nightly from CVS:
 </p>
       </answer>
     </faq> 
-    <faq id="17">
+    <faq id="16">
       <question>
         I get a funny error when trying to run Scarab on Tomcat 4.1.x:
       </question>
@@ -520,7 +506,7 @@ issue, but we are not quite there yet.
 </p>
       </answer>
     </faq> 
-    <faq id="18">
+    <faq id="17">
       <question>
         I want the Velocity templates to be copied into the webapp directory so that
 I can deploy Scarab as a WAR.
@@ -531,7 +517,7 @@ In your build.properties, add the line: <code>scarab.copy.templates=true</code>
 </p>
   </answer>
     </faq> 
-    <faq id="19">
+    <faq id="18">
       <question>
 What is the best way to make duplicate installations of Scarab on multiple
 machines/databases? In other words, I want to have multiple installations
@@ -546,7 +532,7 @@ Eventually, we will have the ability to export/import the Scarab
 </p>
       </answer>
     </faq> 
-    <faq id="20">
+    <faq id="19">
       <question>
         I see a lot of little temp files created on disk.
       </question>
@@ -573,7 +559,7 @@ you can most likely safely remove them.
 </p>
       </answer>
     </faq>     
-    <faq id="21">
+    <faq id="20">
       <question>
         Is there a way to turn off the auto-logoff feature or
         extend the amount of time before it automatically
@@ -602,7 +588,7 @@ a very high number.
 <part id="xml">
     <title>XML Import</title>
    
-    <faq id="22">
+    <faq id="21">
       <question>
         I need to add issues to scarab. How do I begin? 
       </question>
@@ -618,7 +604,7 @@ that many elements have subtly different representations in the UI than they
 do in the dtd.      
       </answer>
     </faq>
-<faq id="23">    
+<faq id="22">    
 <question>
         Can running an import break my scarab instance?
       </question>
@@ -639,7 +625,7 @@ its coherent with respect to scarab.
 </p>
       </answer>
 </faq>      
-<faq id="24">      
+<faq id="23">      
 <question>
         What can I do via xml import?
       </question>
@@ -651,7 +637,7 @@ in need of testing, and has some limitations and requirements if included
 as part of an initial issue import.
       </answer>
 </faq>      
-<faq id="25">       
+<faq id="24">       
 <question>
         Does import support the import of inter-issue dependencies?
       </question>
@@ -668,7 +654,7 @@ exist. At this time, it does not seem as though you can add dependencies
 via the xml import update mechanism.
       </answer>
 </faq>      
-<faq id="26"> 
+<faq id="25"> 
 <question>
         I want to import users and attributes. Can I?
       </question>      
@@ -677,7 +663,7 @@ You cannot currently import nor export modules, users, attributes nor
 attribute options. This facility is to be added soon.
       </answer>
 </faq>      
-<faq id="27"> 
+<faq id="26"> 
 <question>
         When would I start a new activity set?
       </question>
@@ -694,7 +680,7 @@ attribute options. This facility is to be added soon.
 </p>
       </answer>
 </faq>      
-<faq id="28">       
+<faq id="27">       
 <question>
         How does workflow affect xml import?
       </question>
@@ -703,7 +689,7 @@ Workflow is disabled in the importing thread so there should be no
  possibility for conflict.
       </answer>
 </faq>      
-<faq id="29">       
+<faq id="28">       
 <question>
         Are there sample xml issues that I can study?
       </question>
@@ -716,7 +702,7 @@ Workflow is disabled in the importing thread so there should be no
 </ul>
       </answer>
 </faq>      
-<faq id="30">       
+<faq id="29">       
 <question>
         Why when I import is issue 'created-by' not respected?
       </question>
