@@ -53,6 +53,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
@@ -67,7 +68,7 @@ import org.tigris.scarab.om.AttachmentManager;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.9 2003/01/23 23:46:18 jon Exp $
+ * @version $Id: ViewAttachment.java,v 1.10 2003/01/27 17:34:33 jmcnally Exp $
  */
 public class ViewAttachment extends Default
 {
@@ -82,10 +83,20 @@ public class ViewAttachment extends Default
         String attachId = data.getParameters().getString("attachId");
         Attachment attachment = AttachmentManager
             .getInstance(new NumberKey(attachId), false);
-        data.getResponse().setContentType(attachment.getMimeType());
+        String contentType = attachment.getMimeType();
+        HttpServletResponse res = data.getResponse();
+        res.setContentType(contentType);
+        // disposition header does not seem to have that much value, but
+        // adding it in a blind attempt to help win2K, IE client
+        // to handle the downloads better
+        if (!contentType.startsWith("text")) 
+        {
+            res.setHeader("Content-Disposition", 
+                          "attachment; filename=" + attachment.getFileName());
+        }
         
         File f = new File(attachment.getFullPath());
-        data.getResponse().setContentLength((int)f.length());
+        res.setContentLength((int)f.length());
 
         BufferedInputStream bis = null;
         OutputStream os = data.getResponse().getOutputStream();
