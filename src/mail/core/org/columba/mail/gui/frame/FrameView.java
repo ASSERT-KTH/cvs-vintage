@@ -130,8 +130,7 @@ public class FrameView extends JFrame {
 		tablePanel.setLayout(new BorderLayout());
 
 		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
-		System.out.println(
-			"toolbar=" + item.getBoolean("toolbars", "show_filter"));
+		
 
 		if (item.getBoolean("toolbars", "show_filter") == true)
 			tablePanel.add(filterToolbar, BorderLayout.NORTH);

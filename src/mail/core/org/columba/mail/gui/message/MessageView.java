@@ -15,6 +15,7 @@
 package org.columba.mail.gui.message;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
 
@@ -50,7 +51,7 @@ public class MessageView extends CScrollPane {
 		super();
 		this.messageController = c;
 		
-		
+		getViewport().setBackground(Color.white);
 		
 		panel = new MessagePanel();
 		panel.setLayout( new BorderLayout() );
