@@ -1,13 +1,14 @@
 <div class="app" id="editquery">
-$page.setTitle("Edit Query '$currentQuery.Name'")
+$page.setTitle("Edit Query")
 
-<h2>$page.Title</h2>
 
 #set ( $queryId = $data.Parameters.getString("queryId"))
 #set ( $currentQuery = $scarabR.getQuery() )
 #set ( $queryGroup = $intake.Query.mapTo($currentQuery)) 
 #set ($module = $scarabR.CurrentModule)
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm"))
+
+<h2>Edit Query $currentQuery.Name</h2>
 
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />

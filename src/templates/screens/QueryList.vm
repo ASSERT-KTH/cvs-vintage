@@ -6,10 +6,6 @@ $page.setTitle("Stored Query List")
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 #set ($noQueries = "false")
-#if (!$module)
- <div class="alert">Please choose a module.</div>
- #set ($noQueries = "true")
-#end
 
 #if (($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
  #set ($noQueries = "true")
