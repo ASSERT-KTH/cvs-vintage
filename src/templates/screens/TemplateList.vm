@@ -1,6 +1,5 @@
-
+$page.setTitle("Template List")
 #set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm").toString())
-
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
@@ -8,7 +7,7 @@
    #set ($noTemplates = "true")
 #end
 
-<p>
+<div class="app" id="templateList">
 
 <form method="post" action="$action" >
 
@@ -17,13 +16,17 @@
    <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
       &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
 
+<h3>$page.Title</h3>
+
 #if ($noTemplates.equals("true"))
-    <div class="alert">There are no stored templates.</div>
+    <div class="alert">
+    There are no stored templates, click <a
+    href="$link.setPage("SaveTemplate.vm")">here</a> to create a new
+    one.
+    </div>
 #else
 
-<h3>Enter Issue Templates</h3>
-
-##        <p>&#171; previous | 1 of 1 | next &#187;</p>
+##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
@@ -39,9 +42,9 @@
         
 #foreach ( $template in $module.getPrivateTemplates($user) )
 
-         #rows ()
+         #indexedRows($velocityCount)
         <td><input type="checkbox" name="delete_$template.IssueId"/></td>
-    #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+        #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
         <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
         <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
         <td>$template.IssueType.Name
@@ -56,7 +59,7 @@
 
 #foreach ( $template in $module.GlobalTemplates )
 
-         #rows ()
+         #indexedRows($velocityCount)
       #if ($security.hasPermission("Item | Delete", $module))
         <td><input type="checkbox" name="delete_$template.IssueId"/></td>
       #else
@@ -64,7 +67,7 @@
       #end
         <td>
           #if ($security.hasPermission("Item | Delete", $module))
-            #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+            #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
             <a href="$editLink">$template.TemplateInfo.Name</a>
           #else
             $template.TemplateInfo.Name 
@@ -82,7 +85,7 @@
 #end
         </table>
         
- ##       <p>&#171; previous | 1 of 1 | next &#187;</p>
+##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
 
    <p class="functnbar">
    #if ($user.UserId)
@@ -91,4 +94,5 @@
    #end
       &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
 #end
-    </div>
+
+</div>
