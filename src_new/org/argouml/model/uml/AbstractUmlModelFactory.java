@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.16 2003/09/29 18:51:52 alexb Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.17 2003/10/26 13:13:06 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,7 +110,7 @@ public abstract class AbstractUmlModelFactory {
             
             ((MBase)base).addMElementListener(pump);
             pump.addModelEventListener(ExplorerNSUMLEventAdaptor.getInstance(),base);
-            ((MBase)base).addMElementListener(UmlModelListener.getInstance());
+            pump.addModelEventListener(UmlModelListener.getInstance(),base);
         }
     }
 }

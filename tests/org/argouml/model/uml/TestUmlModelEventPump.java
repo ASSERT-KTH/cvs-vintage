@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.12 2003/08/25 14:03:10 bobtarling Exp $
+// $Id: TestUmlModelEventPump.java,v 1.13 2003/10/26 13:13:44 alexb Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -451,6 +451,12 @@ public class TestUmlModelEventPump extends TestCase {
      * Tests if a listener that is legally added and then removed, really is removed.
      */
     public void testRemoveLegalListener() {
+        
+        int existingListeners = UmlModelEventPump.getPump()
+                                    .getEventListenerMap().getListeners(
+                                        elem,
+					new EventKey(2, "isRoot")).length;
+        
         UmlModelEventPump.getPump().addModelEventListener(
 							  listener2,
 							  elem,
@@ -463,8 +469,7 @@ public class TestUmlModelEventPump extends TestCase {
 							     new String[] {
 								 "isRoot"
 							     });
-        assertEquals(
-		     0,
+        assertEquals(existingListeners,
 		     UmlModelEventPump.getPump().getEventListenerMap().getListeners(
 										    elem,
 										    new EventKey(2, "isRoot")).length);
