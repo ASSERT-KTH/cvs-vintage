@@ -67,8 +67,13 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 
 /**
+ * This action handles associating issue types to modules.  It should probably
+ * have 'Module' in its name, but regardless, the base permission for this
+ * class is Module | Configure, so global artifact type actions do not belong
+ * here. 
+ *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.23 2002/10/24 17:59:52 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.24 2003/01/08 18:49:04 jmcnally Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
