@@ -24,6 +24,7 @@
 package org.gjt.sp.jedit.search;
 
 //{{{ Imports
+import bsh.BshMethod;
 import javax.swing.text.Segment;
 import javax.swing.JOptionPane;
 import java.awt.Component;
@@ -38,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.27 2002/04/12 03:49:45 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.28 2002/05/29 08:35:58 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -287,11 +288,11 @@ public class SearchAndReplace
 		// replace must not be null
 		String replace = (SearchAndReplace.replace == null ? "" : SearchAndReplace.replace);
 
-		String replaceMethod;
+		BshMethod replaceMethod;
 		if(beanshell && replace.length() != 0)
 		{
 			replaceMethod = BeanShell.cacheBlock("replace","return ("
-				+ replace + ");",false);
+				+ replace + ");");
 		}
 		else
 			replaceMethod = null;

@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.84 2002/05/21 09:52:27 spestov Exp $
+ * @version $Id: Buffer.java,v 1.85 2002/05/29 08:35:58 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1735,6 +1735,24 @@ public class Buffer implements EBComponent
 	public KeywordMap getKeywordMapAtOffset(int offset)
 	{
 		return getRuleSetAtOffset(offset).getKeywords();
+	} //}}}
+
+	//{{{ getRuleSetAtOffset() method
+	/**
+	 * Returns the syntax highlighting ruleset at the specified offset.
+	 * @since jEdit 4.1pre1
+	 */
+	public ParserRuleSet getRuleSetAtOffset(int offset)
+	{
+		int line = getLineOfOffset(offset);
+		offset -= getLineStartOffset(line);
+		if(offset != 0)
+			offset--;
+
+		DefaultTokenHandler tokens = new DefaultTokenHandler();
+		markTokens(line,tokens);
+		Token token = TextUtilities.getTokenAtOffset(tokens.getFirstToken(),offset);
+		return token.rules;
 	} //}}}
 
 	//{{{ getContextSensitiveProperty() method
@@ -3554,20 +3572,6 @@ loop:		for(int i = 0; i < seg.count; i++)
 		{
 			setFlag(INSIDE_INSERT,false);
 		}
-	} //}}}
-
-	//{{{ getRuleSetAtOffset() method
-	private ParserRuleSet getRuleSetAtOffset(int offset)
-	{
-		int line = getLineOfOffset(offset);
-		offset -= getLineStartOffset(line);
-		if(offset != 0)
-			offset--;
-
-		DefaultTokenHandler tokens = new DefaultTokenHandler();
-		markTokens(line,tokens);
-		Token token = TextUtilities.getTokenAtOffset(tokens.getFirstToken(),offset);
-		return token.rules;
 	} //}}}
 
 	//{{{ Event firing methods

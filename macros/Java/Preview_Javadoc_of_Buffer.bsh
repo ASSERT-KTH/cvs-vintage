@@ -52,7 +52,7 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Preview_Javadoc_of_Buffer.bsh,v 1.1 2001/11/24 03:23:19 jgellene Exp $
+ * $Id: Preview_Javadoc_of_Buffer.bsh,v 1.2 2002/05/29 08:35:57 spestov Exp $
  */
 
 
@@ -165,7 +165,7 @@ String _returnCommandInConsole(View view, String shell, String command)
   manager.addDockableWindow("console");
   // Obtain the console instance
   console.Shell _shell = console.Shell.getShell(shell);
-  _console = manager.getDockableWindow("console");
+  _console = manager.getDockable("console");
   // Ensure we are using the console shell
   _console.setShell(_shell);
   // Call its run() method
