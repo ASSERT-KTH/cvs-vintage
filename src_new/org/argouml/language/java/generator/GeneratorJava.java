@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.51 2002/11/26 20:06:13 kataka Exp $
+// $Id: GeneratorJava.java,v 1.52 2002/12/13 21:28:12 thn Exp $
 
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
@@ -1442,9 +1442,9 @@ implements PluggableNotation, FileGenerator {
   public String generateMultiplicityRange(MMultiplicityRange mr) {
     Integer lower = new Integer(mr.getLower());
     Integer upper = new Integer(mr.getUpper());
-    if (lower == null && upper == null) return ANY_RANGE;
-    if (lower == null) return "*.."+ upper.toString();
-    if (upper == null) return lower.toString() + "..*";
+    if (lower.intValue() == -1 && upper.intValue() == -1) return ANY_RANGE;
+    if (lower.intValue() == -1) return "*.."+ upper.toString();
+    if (upper.intValue() == -1) return lower.toString() + "..*";
     if (lower.intValue() == upper.intValue()) return lower.toString();
     return lower.toString() + ".." + upper.toString();
 
