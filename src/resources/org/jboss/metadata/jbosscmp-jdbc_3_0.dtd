@@ -17,9 +17,10 @@ The root element of JBossCMP-JDBC configuration files.
 The optional defaults elements contains the default values for 
 entities, and relationships.
 -->
-<!ELEMENT defaults (datasource?, type-mapping?, create-table?, remove-table?,
-         read-only?, time-out?, row-locking?, pk-constraint?, fk-constraint?,
-         preferred-relation-mapping?, read-ahead?, max-list-cache?)>
+<!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?, 
+         remove-table?, read-only?, time-out?, row-locking?, pk-constraint?, 
+         fk-constraint?, preferred-relation-mapping?, read-ahead?, 
+         max-list-cache?)>
 
 
 <!--
@@ -27,6 +28,13 @@ The optional datasource element contains the jndi-name used to lookup
 the datasource.  All database connections used by an entity or relation table are obtained from the datasource. 
 -->
 <!ELEMENT datasource (#PCDATA)>
+
+
+<!--
+The optional datasource-mapping element contains the name of the type mapping
+that will be used for this datasource.
+-->
+<!ELEMENT datasource-mapping (#PCDATA)>
 
 
 <!--
@@ -152,7 +160,7 @@ be configured.
 <!--
 The entity element contains the configuration of an entity
 -->
-<!ELEMENT entity (ejb-name, datasource?, type-mapping?, create-table?, 
+<!ELEMENT entity (ejb-name, (datasource, datasource-mapping)?, create-table?, 
          remove-table?, read-only?, time-out?, row-locking?, pk-constraint?,
          read-ahead?, list-cache-max?, table-name?, cmp-field*, load-groups?,
          eager-load-group?, lazy-load-groups?, query*)>
@@ -234,6 +242,11 @@ A named group of fields that will be loaded together.
 -->
 <!ELEMENT load-group (load-group-name, description?, field-name+)>
 
+<!--
+Contains the name of a load group.
+-->
+<!ELEMENT load-group-name (#PCDATA)>
+
 
 <!--
 Contains the name of the load group that will eager loaded for this entity.
@@ -295,10 +308,9 @@ Explicitly declared sql fragments.
 <!ELEMENT declared-sql (select?, from?, where?, order?)>
 
 <!--
-Delcares what is to be selected.  This element is only allowed
-for ejbSelect methods.
+Delcares what is to be selected.  A finder may only have the distinct element.
 -->
-<!ELEMENT select (distinct?, ejb-name, field-name?)>
+<!ELEMENT select (distinct?, (ejb-name, field-name?)?)>
 
 
 <!--
@@ -344,7 +356,8 @@ The ejb-relation element contains the configuration of an
 ejb-relation.
 -->
 <!ELEMENT ejb-relation (ejb-relation-name, read-only?,
-         (foreign-key-mapping | table-mapping))>
+         (foreign-key-mapping | relation-table-mapping),
+         (ejb-relationship-role, ejb-relationship-role)?)>
 
 
 <!--
@@ -358,8 +371,14 @@ ejb-relation declared in the ejb-jar.xml file.
 Specifies that the ejb-relation should be mapped with foreign-keys.
 This mapping is not available for many-to-many relationships.
 -->
-<!ELEMENT foreign-key-mapping
-         (ejb-relationship-role, ejb-relationship-role)?>
+<!ELEMENT foreign-key-mapping EMPTY>
+
+
+<!--
+Specifies that the ejb-relation should be mapped with a relation-table.
+-->
+<!ELEMENT relation-table-mapping (table-name?, datasource?, create-table?, 
+         remove-table?, row-locking?, pk-constraint?)>
 
 
 <!--
@@ -367,8 +386,7 @@ The ejb-rejationship-role element contains the configuration of an
 ejb-relationship-role.
 -->
 <!ELEMENT ejb-relationship-role (ejb-relationship-role-name,
-         fk-constraint, (foreign-key-fields | table-key-fields),
-         read-ahead?)>
+         fk-constraint?, key-fields?, read-ahead?)>
 
 
 <!--
@@ -380,50 +398,19 @@ ejb-jar.xml file.
 
 
 <!--
-Contains the foreign key fields.
+Contains the key fields. The interperation of the key fields depends
+on the mapping style of the relationship.
 -->
-<!ELEMENT foreign-key-fields (foreign-key-field*)>
+<!ELEMENT key-fields (key-field*)>
 
 <!--
-The foreign-key-field element declared the configuration of a foreign
-key. The field-name element must match the field-name of one of the 
-primary key fields of the related element. This is similar to the 
-REFERANCES clause of a SQL foreign key declaration. 
+The key-field element declared the configuration of a key field.
+The field-name element must match the field-name of one of the 
+primary key fields of the this entity.
 -->
-<!ELEMENT foreign-key-field (field-name, 
+<!ELEMENT key-field (field-name, 
          ((column-name, (jdbc-type, sql-type)?) | (property*))
          )>
-
-
-<!--
-Specifies that the ejb-relation should be mapped with a 
-relation-table. This is the only mapping available for many-to-many
-relationships.
--->
-<!ELEMENT table-mapping (table-name?, datasource?, create-table?, 
-         remove-table?, row-locking?, pk-constraint?,
-         (ejb-relationship-role, ejb-relationship-role)?)>
-
-
-<!--
-Contains the table key fields.
--->
-<!ELEMENT table-key-fields (table-key-field+)>
-
-
-<!--
-The table-key-field element declared the configuration of a table
-key. The field-name element must match the field-name of one of the 
-primary key fields of this element.
--->
-<!ELEMENT table-key-field (field-name, 
-         ((column-name, (jdbc-type, sql-type)?) | (property*))
-         )>
-
-
-<!--There is a problem.  The table/foreign key mapping choice is 
-correlated with the table-key-fields/foreign-key-fields choices in
-ejb-relationship-role,-->
 
 
 <!--
@@ -454,13 +441,9 @@ The type-mappings element contains the java to sql mappings.
 <!--
 The type-mapping element contains a named java to sql mapping.
 This includes both type mapping and function mapping.
-
-
-Should be:
+-->
 <!ELEMENT type-mapping (name, row-locking-template, fk-constraint-template, 
       fk-constraint-template, (function-mapping, mapping)+)>
--->
-<!ELEMENT type-mapping ANY>
 
 <!--
 Name of the type-mapping.
