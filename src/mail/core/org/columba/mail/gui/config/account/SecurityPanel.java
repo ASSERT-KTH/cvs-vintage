@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -35,7 +36,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-
 public class SecurityPanel extends DefaultPanel implements ActionListener {
     private JLabel idLabel;
     private JTextField idTextField;
@@ -50,7 +50,6 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
     public SecurityPanel(PGPItem item) {
         super();
-        System.out.println("call Security Panel");
         this.item = item;
 
         initComponents();
@@ -81,7 +80,6 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
             item.set("always_sign", alwaysSignCheckBox.isSelected());
             item.set("always_encrypt", alwaysEncryptCheckBox.isSelected());
-            System.out.println("update components saving " + item.get("id"));
         }
     }
 
@@ -116,7 +114,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
         builder.append(alwaysSignCheckBox, 3);
         builder.nextLine();
 
-        //      TODO: reactivate if feature is supported
+        //      TODO: reactivate when feature is supported
 
         /*
         builder.append(alwaysEncryptCheckBox, 3);
