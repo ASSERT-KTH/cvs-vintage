@@ -35,31 +35,25 @@ import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.gui.util.AddressbookListRenderer;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
 import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 import org.columba.core.gui.util.wizard.WizardTopBorder;
 
 public class EditGroupDialog extends JDialog implements ActionListener
 {
-	private JDialog dialog;
-
 	//private AddressbookXmlConfig config;
 	//private AddressbookTable addressbook;
 	private AddressbookDNDListView addressbook;
 	//private DefaultListModel addressbookModel;
 
 	private AddressbookDNDListView list;
-	private JButton addButton,removeButton;
-	private JLabel nameLabel;
-	private JTextField nameTextField;
-	private JLabel descriptionLabel;
-	private JTextField descriptionTextField;
+	private JButton addButton,removeButton,okButton,cancelButton;
+	private JLabel nameLabel,descriptionLabel;
+	private JTextField nameTextField,descriptionTextField;
 	//private AdapterNode groupNode;
 
-	private AddressbookListModel members;
-
-	private JButton cancelButton,okButton;
 	private AddressbookInterface addressbookInterface;
-
+	private AddressbookListModel members;
 	private AddressbookListRenderer renderer;
 	
 	boolean result;
@@ -260,8 +254,11 @@ public class EditGroupDialog extends JDialog implements ActionListener
 				addressbookInterface.tree.getSelectAddressbookFolderDialog();
 
 			Folder selectedFolder = dialog.getSelectedFolder();
-			HeaderItemList list = selectedFolder.getHeaderItemList();
-			setHeaderList(list);
+			if (folder != null)
+			{
+				HeaderItemList list = selectedFolder.getHeaderItemList();
+				setHeaderList(list);
+			}
 		}
 		else if (command.equals("OK"))
 		{
