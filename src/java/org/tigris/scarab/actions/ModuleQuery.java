@@ -99,7 +99,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.3 2002/07/11 00:53:31 jon Exp $
+ * @version $Id: ModuleQuery.java,v 1.4 2002/07/11 01:09:16 jon Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -153,9 +153,25 @@ public class ModuleQuery extends RequireLoginFirstAction
         String queryType = data.getParameters().getString("querytype");
         if ("custom".equals(queryType)) 
         {
-            setTarget(data, "AdvancedQuery.vm");            
+            try
+            {
+                // we do this here because getSearch() can throw an exception
+                // if it does throw an exception, then we want to show the 
+                // ModuleQuery page again. if it doesn't, then we put the result
+                // into the context so that AdvancedQueryMacro can access it 
+                // instead of having to call the method yet again which would
+                // have a performance impact. kind of ugly, but it is in the 
+                // name of performance and not throwing exceptions. =) (JSS)
+                IssueSearch is = scarabR.getSearch();
+                context.put("searchPutInContext", is);
+                setTarget(data, "AdvancedQuery.vm");
+            }
+            catch (java.lang.IllegalArgumentException e)
+            {
+                scarabR.setAlertMessage("No matching issues.");
+            }
         }
-        else if ("all".equals(queryType) || "my".equals(queryType) ) 
+        else if ("all".equals(queryType) || "my".equals(queryType)) 
         {
             String query = null; 
             if ("all".equals(queryType)) 
