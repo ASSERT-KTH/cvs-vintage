@@ -1,6 +1,7 @@
 Columba v1.0 RC2
 
 New features:
+- updated forms library to v1.0.4 (mlivingstone)
 - international IMAP mailbox naming using UTF-7 encoding/decoding (tstich)
 - added show next/previous message and unread message actions (fdietz)
 - #999257, show/hide message preview panel (fdietz)
