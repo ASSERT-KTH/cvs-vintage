@@ -52,7 +52,7 @@
 
 #macro (reportLabel $model $cellLabel $singleAttribute)
   #if ($model.isReportDate($cellLabel))
-      $format.getDate('yyyy MMM dd - HH:mm', $cellLabel.dateValue())
+      $format.getDate('yyyy-MM-dd HH:mm', $cellLabel.dateValue())
   #elseif ($model.isOption($cellLabel))
       #if ($singleAttribute)
           $model.displayOption($cellLabel)
@@ -159,7 +159,7 @@
      #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
      <td>
      #if ($model.isDate($cell))
-        $format.getDate('MM/dd/yyyy HH:mm', $cell)
+        $format.getDate('yyyy-MM-dd HH:mm', $cell)
      #else
         $cell
      #end
@@ -245,7 +245,7 @@
     #foreach ($date in $report.ReportDates)
         #set ($intakeDate = $intake.ReportDate.mapTo($date))
         <input type="hidden" name="$intakeDate.Date.Key"
-            value="$format.getDate("MM/dd/yy HH:mm", $date.Date)" />
+            value="$format.getDate("yyyy-MM-dd HH:mm", $date.Date)" />
     #end
 #end
 #end
