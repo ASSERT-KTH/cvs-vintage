@@ -51,7 +51,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Calendar;
-import java.util.Vector;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
@@ -91,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.59 2002/04/26 20:24:46 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.60 2002/04/30 06:58:19 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -151,7 +150,7 @@ public class ScarabUserImpl
                 return getPrivateLastName();
             }
 
-            protected Vector getRModuleUserAttributes(Criteria crit)
+            protected List getRModuleUserAttributes(Criteria crit)
                 throws TorqueException
             {
                 return getPrivateRModuleUserAttributes(crit);
@@ -204,7 +203,7 @@ public class ScarabUserImpl
     {
         return internalUser.getName();
     }
-    private Vector getPrivateRModuleUserAttributes(Criteria crit)
+    private List getPrivateRModuleUserAttributes(Criteria crit)
         throws TorqueException
     {
         return getRModuleUserAttributes(crit);

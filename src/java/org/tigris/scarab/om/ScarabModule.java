@@ -49,7 +49,6 @@ package org.tigris.scarab.om;
 // JDK classes
 import java.io.Serializable;
 import java.util.List;
-import java.util.Vector;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Map;
@@ -105,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.107 2002/04/26 20:24:46 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.108 2002/04/30 06:58:19 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -299,10 +298,10 @@ public class ScarabModule
     }
 
 
-    public Vector getRModuleIssueTypes()
+    public List getRModuleIssueTypes()
         throws TorqueException
     {
-        Vector result = null;
+        List result = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
         if ( obj == null ) 
         {        
@@ -319,7 +318,7 @@ public class ScarabModule
         }
         else 
         {
-            result = (Vector)obj;
+            result = (List) obj;
         }
         return result;
     }

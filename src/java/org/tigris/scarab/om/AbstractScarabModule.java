@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.util.List;
-import java.util.Vector;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ArrayList;
@@ -128,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.24 2002/04/28 17:35:46 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.25 2002/04/30 06:58:19 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -984,7 +983,7 @@ public abstract class AbstractScarabModule
      * Overridden method.  Calls the super method and if no results are
      * returned the call is passed on to the parent module.
      */
-    public Vector getRModuleAttributes(Criteria crit)
+    public List getRModuleAttributes(Criteria crit)
         throws TorqueException
     {
         List rModAtts = null;
@@ -1006,7 +1005,7 @@ public abstract class AbstractScarabModule
         while ( rModAtts.size() == 0 &&
                !ROOT_ID.equals(prevModule.getModuleId()));
 
-        return (Vector) rModAtts;
+        return rModAtts;
     }
 
     /**
@@ -1024,7 +1023,7 @@ public abstract class AbstractScarabModule
     /**
      * Overridden method.
      */
-    public abstract Vector getRModuleOptions(Criteria crit)
+    public abstract List getRModuleOptions(Criteria crit)
         throws TorqueException;
 
     /**
@@ -1548,16 +1547,16 @@ try{
     }
 
 
-    public Vector getRModuleIssueTypes() throws TorqueException
+    public List getRModuleIssueTypes() throws TorqueException
     {
         return  getRModuleIssueTypes("sequence", "asc", 25, 1);
     }
 
-    public Vector getRModuleIssueTypes( String sortColumn, String sortPolarity,
+    public List getRModuleIssueTypes( String sortColumn, String sortPolarity,
                                         int resultsPerPage, int pageNum)
         throws TorqueException
     {
-        Vector types = null;
+        List types = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
         if ( obj == null ) 
         {        
@@ -1597,7 +1596,7 @@ try{
         }
         else 
         {
-            types = (Vector)obj;
+            types = (List) obj;
         }
         return types;
 

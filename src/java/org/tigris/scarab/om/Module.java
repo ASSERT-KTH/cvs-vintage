@@ -48,7 +48,6 @@ package org.tigris.scarab.om;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Vector;
 
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.RModuleAttribute;
@@ -70,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.40 2002/04/12 22:59:42 jmcnally Exp $
+ * @version $Id: Module.java,v 1.41 2002/04/30 06:58:19 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -227,7 +226,7 @@ public interface Module
     public List getRModuleAttributes(IssueType issueType)
         throws Exception;
 
-    public Vector getRModuleAttributes(Criteria criteria)
+    public List getRModuleAttributes(Criteria criteria)
         throws Exception;
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute,
@@ -265,7 +264,7 @@ public interface Module
     public Issue getNewIssue(IssueType issueType)
         throws Exception;
 
-    public Vector getRModuleIssueTypes()
+    public List getRModuleIssueTypes()
         throws TorqueException;
         
     public List getRModuleOptions(Attribute attribute, IssueType issueType)
@@ -275,7 +274,7 @@ public interface Module
                                   boolean activeOnly)
         throws Exception;
 
-    public Vector getRModuleOptions(Criteria crit)
+    public List getRModuleOptions(Criteria crit)
         throws Exception;
 
     public List getLeafRModuleOptions(Attribute attribute, IssueType issueType)

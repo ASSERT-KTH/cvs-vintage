@@ -51,7 +51,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Vector;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
@@ -79,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.21 2002/03/15 04:07:59 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.22 2002/04/30 06:58:19 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -276,7 +275,7 @@ public abstract class AbstractScarabUser
      * Should return a list of <code>RModuleUserAttribute</code>'s that
      * meet the given criteria. 
      */
-    protected abstract Vector getRModuleUserAttributes(Criteria crit)
+    protected abstract List getRModuleUserAttributes(Criteria crit)
         throws TorqueException;
 
     /**
