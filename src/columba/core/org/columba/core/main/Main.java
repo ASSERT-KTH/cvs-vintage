@@ -17,7 +17,6 @@
 package org.columba.core.main;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.columba.addressbook.main.AddressbookMain;
 
@@ -40,6 +39,7 @@ import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.session.SessionController;
 
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
@@ -57,32 +57,12 @@ public class Main {
             System.exit(2);
         }
         
-        //create new client and try to connect to server
-        ColumbaClient client = new ColumbaClient();
-        if (client.connect()) {
-            try {
-                client.sendCommandLine(args);
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-                //display error message
-            } finally {
-                client.close();
-            }
-            System.exit(5);
-        }
-        //no server running, start our own
-        try {
-            ColumbaServer.getColumbaServer().start();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            //display error message
-            System.exit(1);
-        }
-
         // initialize configuration backend
         String path = cmdLineParser.getPathOption();
         MainInterface.config = new Config(path == null ? null : new File(path));
 
+        SessionController.passToRunningSessionAndExit(args);
+        
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);
 

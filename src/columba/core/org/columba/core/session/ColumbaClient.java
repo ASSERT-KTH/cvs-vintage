@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.main;
+package org.columba.core.session;
 
 import java.io.*;
 
@@ -45,7 +45,8 @@ public class ColumbaClient {
      */
     public boolean connect() {
         try {
-            socket = new Socket("127.0.0.1", ColumbaServer.PORT);
+            socket = new Socket("127.0.0.1",
+                    SessionController.deserializePortNumber());
             writer = new PrintWriter(socket.getOutputStream());
             writer.write("Columba " + MainInterface.version);
             writer.write(NEWLINE);

@@ -31,7 +31,6 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.ColumbaServer;
 import org.columba.core.main.MainInterface;
 
 /**
@@ -92,9 +91,6 @@ public class ShutdownManager {
     protected ShutdownManager() {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                // stop columba server
-                ColumbaServer.getColumbaServer().stop();
-
                 // stop background-manager so it doesn't interfere with
                 // shutdown manager
                 MainInterface.backgroundTaskManager.stop();

@@ -14,10 +14,13 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.main;
+package org.columba.core.session;
 
+import org.columba.core.main.CmdLineArgumentHandler;
+import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.shutdown.ShutdownManager;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,6 +36,7 @@ import java.net.SocketTimeoutException;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 /**
@@ -49,19 +53,24 @@ import java.util.StringTokenizer;
 public class ColumbaServer {
     
     /**
-     * The port the Columba server runs on.
-     */
-    public final static int PORT = 50000;
-    
-    /**
      * The anonymous user for single-user systems without user name.
      */
-    public final static String ANONYMOUS_USER = "anonymous";
+    protected final static String ANONYMOUS_USER = "anonymous";
     
     /**
      * The singleton instance of this class.
      */
     private static ColumbaServer instance;
+    
+    /**
+     * Random number generator for port numbers.
+     */
+    private static Random random = new Random();
+    
+    /**
+     * The port range Columba should use is between LOWEST_PORT and 65536.
+     */
+    private static final int LOWEST_PORT = 30000;
 
     /**
      * Server runs in its own thread.
@@ -91,10 +100,18 @@ public class ColumbaServer {
                 }
                 try {
                     serverSocket.close();
+                    SessionController.serializePortNumber(-1);
                 } catch (IOException ioe) {}
+                serverSocket = null;
             }
         }, "ColumbaServer");
         thread.setDaemon(true);
+        
+        ShutdownManager.getShutdownManager().register(new Runnable() {
+            public void run() {
+                stop();
+            }
+        });
     }
 
     /**
@@ -102,7 +119,14 @@ public class ColumbaServer {
      */
     public synchronized void start() throws IOException {
         if (!isRunning()) {
-            serverSocket = new ServerSocket(PORT);
+            int port;
+            while (serverSocket == null) {
+                port = random.nextInt(65536 - LOWEST_PORT) + LOWEST_PORT;
+                try {
+                    serverSocket = new ServerSocket(port);
+                    SessionController.serializePortNumber(port);
+                } catch (SocketException se) {}
+            }
             serverSocket.setSoTimeout(2000);
             thread.start();
         }
@@ -130,6 +154,7 @@ public class ColumbaServer {
             if (!(host.equals("127.0.0.1"))) {
                 // client isn't from local machine
                 client.close();
+                return;
             }
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -137,14 +162,17 @@ public class ColumbaServer {
             String line = reader.readLine();
             if (!line.startsWith("Columba ")) {
                 client.close();
+                return;
             }
             
             line = reader.readLine();
             if (!line.startsWith("User ")) {
                 client.close();
+                return;
             }
             if (!line.substring(5).equals(System.getProperty("user.name", ANONYMOUS_USER))) {
                 client.close();
+                return;
             }
             
             line = reader.readLine();

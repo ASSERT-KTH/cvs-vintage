@@ -85,15 +85,6 @@ public class Config {
         if (!pop3Directory.exists()) {
             pop3Directory.mkdir();
         }
-        ShutdownManager.getShutdownManager().register(new Runnable() {
-            public void run() {
-                try {
-                    save();
-                } catch (Exception e) {
-                    ColumbaLogger.log.severe(e.getMessage());
-                }
-            }
-        });
     }
     
     /**
@@ -107,6 +98,16 @@ public class Config {
      * Method init.
      */
     public void init() {
+        ShutdownManager.getShutdownManager().register(new Runnable() {
+            public void run() {
+                try {
+                    save();
+                } catch (Exception e) {
+                    ColumbaLogger.log.severe(e.getMessage());
+                }
+            }
+        });
+        
         ColumbaLogger.log.info("Loading configuration from " + path.toString());
         
         DefaultConfig.registerPlugin("core", optionsFile.getName(),
