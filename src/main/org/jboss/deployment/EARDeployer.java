@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -189,7 +189,7 @@ implements EARDeployerMBean
       {
          // Register with the main deployer
          server.invoke(
-            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
             "addDeployer",
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});
@@ -211,7 +211,7 @@ implements EARDeployerMBean
       {
          // Register with the main deployer
          server.invoke(
-            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
             "removeDeployer",
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});

@@ -12,6 +12,8 @@ import javax.management.ObjectName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import org.jboss.util.SafeObjectNameFactory;
+
 /** 
  * This is the main Service Controller API.
  * 
@@ -21,7 +23,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -37,7 +39,9 @@ import org.w3c.dom.NodeList;
 public interface ServiceControllerMBean
 {
    /** The default object name. */
-   String OBJECT_NAME = "jboss.system:service=ServiceController";
+    ObjectName OBJECT_NAME = SafeObjectNameFactory.create("jboss.system", 
+							  "service", 
+							  "ServiceController");
 
    /** Install a service, create the MBean and configure it**/
    ObjectName install(Element mbean) throws Exception;

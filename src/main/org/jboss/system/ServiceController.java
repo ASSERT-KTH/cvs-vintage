@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
 * @see org.jboss.system.Service
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.25 $ <p>
+* @version $Revision: 1.26 $ <p>
 *
 * <b>Revisions:</b> <p>
 *
@@ -505,7 +505,7 @@ implements ServiceControllerMBean, MBeanRegistration
       configurator = new ServiceConfigurator(server);
       
       log.info("Controller MBean online");
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
+      return name == null ? OBJECT_NAME : name;
    }
    
    public void postRegister(Boolean registrationDone)

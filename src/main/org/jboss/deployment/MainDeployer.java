@@ -37,49 +37,54 @@ import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
 
 import org.jboss.system.ServiceMBeanSupport;
+
 import org.jboss.util.DirectoryBuilder;
+import org.jboss.util.MBeanProxy;
+
 
 /**
- * MainDeployer
- *
- * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
- *
+ * Takes a series of URL to watch, detects changes and calls the appropriate Deployers.
+ * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.12 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.13 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
    implements MainDeployerMBean, Runnable
 {
    /** JMX Server **/
-   MBeanServer server;
+   private MBeanServer server;
    
    /** Deployers **/
-   Set deployers = new HashSet();
+   private Set deployers = new HashSet();
    
    /** Scanned Directories **/
-   ArrayList directories = new ArrayList();
+   private ArrayList directories = new ArrayList();
    
    /** I always feel like somebody is watching me, contains DeploymentInfo **/
-   Map deployments = new HashMap();
-   ArrayList deploymentsList = new ArrayList();
+   private Map deployments = new HashMap();
+   private ArrayList deploymentsList = new ArrayList();
    
    /** Thread running **/
-   boolean running = false;
+   private boolean running = false;
    
    /** period of scanning **/
-   int period = 5000;
+   private int period = 5000;
    
    /** an increment for tmp files **/
-   int id = 0;
+   private int id = 0;
    
    /** Given a flat set of files, this is the order of deployment **/
-   String[] order = {"sar", "service.xml", "rar", "jar", "war", "ear", "zip"};
+   private String[] order = { "sar", "service.xml", "rar", "jar", "war", "ear", "zip" };
    
-   /** Get on period **/
-   public void setPeriod(int period) { this.period = period; }
-   public int getPeriod() {return period;}
-   
+   public void setPeriod(int period) {
+      this.period = period; 
+   }
+
+   public int getPeriod() { 
+      return period; 
+   }
    
    /** 
     * Directory get set logic, these are "scanning" directories
@@ -101,23 +106,27 @@ public class MainDeployer
       // We are dealing with a relative path URL 
       if (!( url.startsWith("file:") || url.startsWith("http:")))
       {
-         url = "file:"+System.getProperty("jboss.system.home")+File.separator+url;
+         url = "file:" + System.getProperty("jboss.system.home") + "/" + url;
       }
+
       // Only one entry
       try 
       { 
          URL dir = new URL(url);
-         
-         if (!directories.contains(dir)) directories.add(dir); 
+         if (!directories.contains(dir)) {
+	    directories.add(dir); 
+	 }
       }
       catch (MalformedURLException bad)
       { 
-         log.warn("Failed to add directory scan "+url); 
+         log.warn("Failed to add directory scan " + url); 
          return;
       }
       
-      if (log.isDebugEnabled())
+
+      if (log.isDebugEnabled()) {
          log.debug("Added directory scan "+url);
+      }
    }
    
    public void removeDirectory(String url) 
@@ -125,13 +134,15 @@ public class MainDeployer
       // We are dealing with a relative path URL 
       if (!( url.startsWith("file:") || url.startsWith("http:")))
       {
-         url = System.getProperty("jboss.system.home")+url;
+         url = System.getProperty("jboss.system.home") + url;
       }
       
       try 
       { 
          int index = directories.lastIndexOf(new URL(url));
-         if (index != -1) directories.remove(index); 
+         if (index != -1) {
+	    directories.remove(index); 
+	 }
       }
       catch (MalformedURLException bad)
       { 
@@ -139,8 +150,9 @@ public class MainDeployer
          return;
       }
       
-      if (log.isDebugEnabled())
+      if (log.isDebugEnabled()) {
          log.debug("Removed directory scan "+url);
+      }
    }
 
    public String[] getDeployed()
@@ -156,9 +168,13 @@ public class MainDeployer
       return urls;
    }
    
-   public void addDeployer(DeployerMBean deployer) { deployers.add(deployer); }
+   public void addDeployer(DeployerMBean deployer) {
+      deployers.add(deployer);
+   }
    
-   public void removeDeployer(DeployerMBean deployer) { deployers.remove(deployer); }
+   public void removeDeployer(DeployerMBean deployer) {
+      deployers.remove(deployer);
+   }
    
    
    // ServiceMBeanSupport overrides ---------------------------------
@@ -170,29 +186,31 @@ public class MainDeployer
     */
    public String getName()
    {
+      //
+      // What is this used for?  Should this method be depricated?
+      //
+
       return "Main Deployer";
    }
    
    /**
     * Gets the ObjectName attribute of the AutoDeployer object
-    *
-    * @param server Description of Parameter
-    * @param name Description of Parameter
-    * @return The ObjectName value
-    * @exception MalformedObjectNameException Description of Exception
     */
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-       throws MalformedObjectNameException
+      throws MalformedObjectNameException
    {
       this.server = server;
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
+      return name == null ? OBJECT_NAME : name;
    }
    
    protected void startService()
-       throws Exception
+      throws Exception
    {
       // watch the deploy directory, it is a set so multiple adds 
       // (start/stop) only one entry is present
+
+      // FIXME: Should pull this from ServerConfig
+
       addDirectory("deploy");
       
       // Do a first pass
@@ -211,8 +229,13 @@ public class MainDeployer
       running = false;
    }
    
-   public boolean getScan() { return running; }
-   public void setScan(boolean scan) { running = scan; }
+   public boolean getScan() { 
+      return running; 
+   }
+
+   public void setScan(boolean scan) { 
+      running = scan; 
+   }
    
    /**
     * Main processing method for the MainDeployer object
@@ -221,6 +244,8 @@ public class MainDeployer
    {
       do
       {   
+         scan();
+
          // Sleep
          try
          {
@@ -230,7 +255,6 @@ public class MainDeployer
          {
             log.debug("interrupted");
          }
-         scan();
       } 
       while (running);
    }
@@ -239,23 +263,27 @@ public class MainDeployer
    {   
       try 
       {
+	 Iterator iter;
+
          // Scan diretories for new deployments 
-         Iterator newDeployments = scanNew().listIterator();
-         while (newDeployments.hasNext())
+         iter = scanNew().listIterator();
+         while (iter.hasNext())
          {
-            deploy((URL) newDeployments.next());     
+            deploy((URL)iter.next());     
          }
 
-         // Undeploy and redeployto the modified ones
-         Iterator modified = scanModified().listIterator();
+         // Undeploy and redeploy to the modified ones
+	 iter = scanModified().listIterator();
          
-         while (modified.hasNext())
+         while (iter.hasNext())
          {
-            DeploymentInfo di = (DeploymentInfo) modified.next();
+            DeploymentInfo di = (DeploymentInfo)iter.next();
             try
             {
                // if the url is a file that doesn't exist, it was removed -> undeploy
+
                // TODO: check connection on http protocol and see if it is removed.
+
                if (di.url.getProtocol().startsWith("file") && !new File(di.url.getFile()).exists())
                {   
                   undeploy(di);
@@ -284,8 +312,9 @@ public class MainDeployer
       {
          DeploymentInfo sdi = (DeploymentInfo) deployments.get(new URL(url));
          
-         if (sdi!= null)
+         if (sdi!= null) {
             undeploy(sdi);
+	 }
       }  
       catch (Exception e)
       {
@@ -296,9 +325,7 @@ public class MainDeployer
    
    public void undeploy(DeploymentInfo di)
    {
-      boolean infoEnabled = log.isInfoEnabled();
-      if (infoEnabled)
-         log.info("Undeploying "+di.url);
+      log.info("Undeploying "+di.url);
 
       // First remove all sub-deployments
       Iterator subs = di.subDeployments.iterator();
@@ -321,15 +348,14 @@ public class MainDeployer
 
          // remove from local maps
          deployments.remove(di.url);
-         if (deploymentsList.lastIndexOf(di) != -1)
+         if (deploymentsList.lastIndexOf(di) != -1) {
             deploymentsList.remove(deploymentsList.lastIndexOf(di));
+	 }
             
          // Nuke my stuff, this includes the class loader
          di.cleanup(log);
          
-         if (infoEnabled)
-            log.info("Undeployed "+di.url);
-      
+	 log.info("Undeployed "+di.url);
       }
       catch (Exception e)
       {
@@ -372,7 +398,7 @@ public class MainDeployer
       }
       catch (DeploymentException e)
       {
-         log.error("Couldn't deploy URL "+url, e);
+         log.error("Could not deploy URL "+url, e);
       }
    }
 
@@ -387,8 +413,7 @@ public class MainDeployer
          if (deployments.containsKey(deployment.url))
             return;
 
-         if (log.isInfoEnabled());
-           log.info("Deploying: " + deployment.url.toString());
+	 log.info("Deploying: " + deployment.url.toString());
 
          // Create a local copy of that File, the sdi keeps track of the copy directory
          makeLocalCopy(deployment);
@@ -399,24 +424,27 @@ public class MainDeployer
          // What deployer is able to deploy this file
          findDeployer(deployment);
          
-         if(deployment.deployer != null)
+         if(deployment.deployer != null) {
             deployment.deployer.init(deployment); 
+	 }
 
          // create subdeployments as needed
          deploySubPackages(deployment);
          
          // Deploy this SDI, if it is a deployable type
-         if (deployment.deployer != null)
+         if (deployment.deployer != null) {
             deployment.deployer.deploy(deployment);
+	 }
 
-         deployment.status="Deployed";
+         deployment.status = "Deployed";
 
-         if (debug)
+         if (debug) {
             log.debug("Done deploying " + deployment.shortName);
+	 }
       }  
       catch (DeploymentException e) 
       { 
-         deployment.status="Deployment FAILED reason: "+e.getMessage();         
+         deployment.status = "Deployment FAILED reason: " + e.getMessage();         
          throw e;
       }
       finally 
@@ -424,15 +452,19 @@ public class MainDeployer
          // whether you do it or not, for the autodeployer
          deployment.lastDeployed = System.currentTimeMillis();
          
-         //watch it, it will be picked up as modified below, deployments is a map duplicates are ok
+         // watch it, it will be picked up as modified below, deployments is a map duplicates are ok
          deployments.put(deployment.url, deployment);
          
          // Do we watch it?
-         if (!deployment.url.toString().startsWith("file:"+System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy"))
+
+	 // FIXME: Should not hardcode deployment tmp dir
+	 
+         if (!deployment.url.toString().startsWith("file:"+System.getProperty("jboss.system.home")+ "/tmp/deploy"))
          {
             deploymentsList.add(deployment);
-            if (debug)
+            if (debug) {
                log.debug("Watching new file: " + deployment.url);  
+	    }
          }
       }
    }
@@ -448,10 +480,11 @@ public class MainDeployer
       // To deploy directories of beans one should just name the directory
       // mybean.ear/bla...bla, so that the directory gets picked up by the right deployer
       //
-      Iterator iterator = deployers.iterator();
-      while (iterator.hasNext())
+
+      Iterator iter = deployers.iterator();
+      while (iter.hasNext())
       {
-         DeployerMBean deployer = (DeployerMBean) iterator.next();
+         DeployerMBean deployer = (DeployerMBean) iter.next();
          if (deployer.accepts(sdi))
          {
             sdi.deployer = deployer;
@@ -483,10 +516,10 @@ public class MainDeployer
          HashSet newDeployments = new HashSet();
          boolean trace = log.isTraceEnabled();
          // Scan directories
-         Iterator iterator = directories.listIterator();
-         while (iterator.hasNext()) 
+         Iterator iter = directories.listIterator();
+         while (iter.hasNext()) 
          {
-            File dir = new File(((URL) iterator.next()).getFile());
+            File dir = new File(((URL) iter.next()).getFile());
             if (trace)
                log.trace("Scanning directory: " + dir);
             File[] files = dir.listFiles();
@@ -528,12 +561,11 @@ public class MainDeployer
             log.trace("Scanning installed deployments");
 
          // People already deployed, scan for modifications  
-         Iterator it = deploymentsList.listIterator();
+         Iterator iter = deploymentsList.listIterator();
          
-         while (it.hasNext())
+         while (iter.hasNext())
          {
-            DeploymentInfo deployment = (DeploymentInfo) it.next();
-            
+            DeploymentInfo deployment = (DeploymentInfo) iter.next();
             long lastModified = 0;
             
             // Get lastModified of file from file system
@@ -611,11 +643,11 @@ public class MainDeployer
          // b- a class in a normal directory structure
          // is a "package" and will be deployed
          if (name.endsWith(".jar")
-            || name.endsWith(".sar")
-            || name.endsWith(".ear")
-            || name.endsWith(".rar")
-            || name.endsWith(".war")
-            || name.endsWith(".zip"))
+             || name.endsWith(".sar")
+             || name.endsWith(".ear")
+             || name.endsWith(".rar")
+             || name.endsWith(".war")
+             || name.endsWith(".zip"))
          {
             // Make sure the name is flat no directory structure in subs name
             // example war's WEBINF/lib/myjar.jar appears as myjar.jar in 
@@ -626,7 +658,7 @@ public class MainDeployer
             try 
             {
                DirectoryBuilder builder = 
-               new DirectoryBuilder(System.getProperty("jboss.system.home"));
+                  new DirectoryBuilder(System.getProperty("jboss.system.home"));
                File localCopyDir = builder.cd("tmp").cd("deploy").get();
                
                // We use the name of the entry as the name of the file under deploy 
@@ -656,7 +688,7 @@ public class MainDeployer
             { 
                log.error("Error in subDeployment with name "+name, ex);
                throw new DeploymentException
-               ("Could not deploy sub deployment "+name+" of deployment "+di.url);
+                  ("Could not deploy sub deployment "+name+" of deployment "+di.url);
             }
          }
       
@@ -673,14 +705,14 @@ public class MainDeployer
       }
       
       // Order the deployments
-      Iterator lt = sortDeployments(subDeployments).listIterator();
+      Iterator iter = sortDeployments(subDeployments).listIterator();
       
       // Deploy them all 
-      while (lt.hasNext()) 
+      while (iter.hasNext()) 
       { 
          try
          { 
-            deploy((DeploymentInfo) lt.next());
+            deploy((DeploymentInfo)iter.next());
          }
          catch (DeploymentException e)
          {
@@ -708,8 +740,9 @@ public class MainDeployer
       {
          ArrayList tmp = new ArrayList();
          StringTokenizer st = new StringTokenizer(classPath);
-         if (debug)
-            log.debug("resolveLibraries: "+classPath);
+         if (debug) {
+            log.debug("resolveLibraries: " + classPath);
+	 }
 
          while (st.hasMoreTokens())
          {
@@ -719,8 +752,9 @@ public class MainDeployer
             
             DeploymentInfo sub = null;
 
-            if (debug)
+            if (debug) {
                log.debug("new manifest entry for sdi at "+sdi.shortName+" entry is "+tk);
+	    }
 
             try
             {   
@@ -737,7 +771,7 @@ public class MainDeployer
             catch (Exception ignore)
             { 
                log.warn("The manifest entry in "+sdi.url+" references URL "+lib+ 
-                  " which could not be opened, entry ignored");
+			" which could not be opened, entry ignored");
             } 
          }
       }
@@ -767,10 +801,13 @@ public class MainDeployer
             sdi.localUrl = sdi.url;
             
             return;
-            // FIXME TODO add support for Directory copying over
          }
          
          // Are we already in the localCopyDir?
+
+	 // FIXME: Should not hard code deploy tmp dir, should also reference it as a URL, instead
+	 //        of this mixed mode crap (is this a file or a URL, url should not use File.sep)
+
          else if (sdi.url.toString().indexOf(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy") != -1) 
          {
             sdi.localUrl = sdi.url;
@@ -778,15 +815,13 @@ public class MainDeployer
          }
          else
          {
-            // return new URL("file:"+f.getCanonicalPath());
-            
             sdi.localUrl =  new File (localCopyDir, getNextID ()+"."+sdi.shortName).toURL();
             copy(sdi.url, sdi.localUrl);
          }
       }
       catch (Exception e)
       {
-         log.error("Could not make local copy for "+sdi.url.toString(), e);
+         log.error("Could not make local copy for " + sdi.url, e);
       }
    }
    
@@ -801,10 +836,10 @@ public class MainDeployer
       }
    }
    
-   protected void copy (URL _src, URL _dest) throws IOException
+   protected void copy(URL _src, URL _dest) throws IOException
    {
       if (!_dest.getProtocol ().equals ("file"))
-         throw new IOException ("only file: protocol is allowed as destination!");
+         throw new IOException("only file: protocol is allowed as destination!");
       
       InputStream in;
       OutputStream out;
@@ -886,20 +921,22 @@ public class MainDeployer
    public boolean isDeployed(String url) 
       throws MalformedURLException
    {
-      URL deployURL = new URL(url);
-      DeploymentInfo di = getDeployment(deployURL);
-      return ( di != null );
+      DeploymentInfo di = getDeployment(new URL(url));
+
+      return (di != null);
    }
 
    public DeploymentInfo getDeployment(URL url)  
    { 
-      return (DeploymentInfo) deployments.get(url); 
+      return (DeploymentInfo)deployments.get(url); 
    }
    
    public DeploymentInfo removeDeployment(DeploymentInfo di) 
    { 
-      return (DeploymentInfo) deployments.remove(di.url); 
+      return (DeploymentInfo)deployments.remove(di.url); 
    } 
    
-   private int getNextID() { return id++;}
+   private int getNextID() { 
+      return id++;
+   }
 }

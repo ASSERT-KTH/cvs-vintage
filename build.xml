@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.53 2002/02/04 21:27:07 patriot1burke Exp $ -->
+<!-- $Id: build.xml,v 1.54 2002/02/12 03:22:02 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -480,6 +480,9 @@
         
         <!-- Exclude command line utilities -->
         <exclude name="org/jboss/*"/>
+
+        <!-- Exclude utilities, they are now in jboss-util.jar -->
+        <exclude name="org/jboss/util/*"/>
         
         <!-- Exclude JMX Connector stuff we will use the connector SAR for that -->
         <exclude name="org/jboss/jmx/**"/>
@@ -501,6 +504,16 @@
       </fileset>
     </jar>
 
+    <!-- Build jboss-util.jar -->
+    <jar jarfile="${build.lib}/jboss-util.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/util/**"/>
+
+        <!-- MBeanProxy needs this.  This compiler stuff should be moved under util -->
+        <include name="org/jboss/proxy/compiler/**"/>
+      </fileset>
+    </jar>
+
     <!-- 
        | Build jboss-boot.jar
        |
@@ -511,16 +524,10 @@
       <fileset dir="${build.classes}">
         <include name="org/jboss/Version.class"/>
         <include name="org/jboss/system/BootstrapLogger.class"/>
-        <include name="org/jboss/system/UnifiedClassLoader.class"/>
-        <include name="org/jboss/system/UnifiedClassLoaderMBean.class"/>
-        <include name="org/jboss/system/MBeanClassLoader.class"/>
-        <include name="org/jboss/system/MBeanClassLoaderMBean.class"/>
-        <include name="org/jboss/system/ServiceLibraries.class"/>
-        <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
-        <include name="org/jboss/system/Server.class"/>
-        <include name="org/jboss/system/Server**.class"/>
-        <include name="org/jboss/system/ServerMBean.class"/>
-        <include name="org/jboss/system/ServerConfig.class"/>
+        <include name="org/jboss/system/UnifiedClassLoader*.class"/>
+        <include name="org/jboss/system/MBeanClassLoader*.class"/>
+        <include name="org/jboss/system/ServiceLibraries*.class"/>
+        <include name="org/jboss/system/Server*.class"/>
         <include name="org/jboss/deployment/DeploymentException.class"/>
       </fileset>
       <fileset dir="${build.resources}">
@@ -535,23 +542,16 @@
         <include name="org/jboss/system/Service.class"/>
         <include name="org/jboss/system/ServiceMBean.class"/>
         <include name="org/jboss/system/ServiceMBeanSupport.class"/>
-        <include name="org/jboss/system/ServiceController**.class"/>
-        <include name="org/jboss/system/ServiceCreator**.class"/>
+        <include name="org/jboss/system/ServiceController*.class"/>
+        <include name="org/jboss/system/ServiceCreator*.class"/>
         <include name="org/jboss/system/ServiceConfigurator.class"/>
-        <include name="org/jboss/system/ServiceControllerMBean.class"/>
+        <include name="org/jboss/system/ServiceContext.class"/>
         <include name="org/jboss/system/ConfigurationException.class"/>
         <include name="org/jboss/system/Info*"/>
-        <include name="org/jboss/system/ServiceContext.class"/>
-        <include name="org/jboss/deployment/MainDeployer.class"/>
-        <include name="org/jboss/deployment/MainDeployerMBean.class"/>
-        <include name="org/jboss/deployment/SARDeployer.class"/>
-        <include name="org/jboss/deployment/SARDeployerMBean.class"/>
-        <include name="org/jboss/deployment/SARDeployer**.class"/>
+        <include name="org/jboss/deployment/MainDeployer*.class"/>
+        <include name="org/jboss/deployment/SARDeployer*.class"/>
         <include name="org/jboss/deployment/DeploymentInfo.class"/>
-        <include name="org/jboss/deployment/DeployerMBean.class"/>
-        <include name="org/jboss/deployment/DeployerMBeanSupport.class"/>
-        <include name="org/jboss/deployment/DeployerMBeanSupport**.class"/>
-        <include name="org/jboss/deployment/DeploymentException.class"/>
+        <include name="org/jboss/deployment/DeployerMBean*.class"/>
       </fileset>
     </jar>
 	 

@@ -32,14 +32,14 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class Server
-    implements ServerMBean
+   implements ServerMBean
 {
    /** Class logger */
    private static final BootstrapLogger log = 
-       BootstrapLogger.getLogger(Server.class);
+      BootstrapLogger.getLogger(Server.class);
    
    /** Container for version information. */
    private final Version version = Version.getInstance();
@@ -71,11 +71,11 @@ public class Server
 
       this.config = config;
       if (debug) {
-	  log.debug("Using config: " + config);
+	 log.debug("Using config: " + config);
       }
       
       log.info("JBoss (MX MicroKernel) " + 
-         version + " [" + version.getName() + "]");
+               version + " [" + version.getName() + "]");
       
       // remeber when we we started
       started = new Date();
@@ -84,35 +84,35 @@ public class Server
       // Create the MBeanServer
       server = MBeanServerFactory.createMBeanServer(config.getDomain());
       if (debug) {
-	  log.debug("Created MBeanServer: " + server);
+	 log.debug("Created MBeanServer: " + server);
       }
       
       String systemDomain = server.getDefaultDomain() + ".system";
       if (debug) {
-	  log.debug("Using system domain: " + systemDomain);
+	 log.debug("Using system domain: " + systemDomain);
       }
       
       // Register server components
       server.registerMBean(this,
-         new ObjectName(systemDomain,"service", "Server"));
+                           new ObjectName(systemDomain,"service", "Server"));
       server.registerMBean(config,
-         new ObjectName(systemDomain,"service", "ServerConfig"));
+                           new ObjectName(systemDomain,"service", "ServerConfig"));
       
       // Initialize the MBean libraries repository
       server.registerMBean(ServiceLibraries.getLibraries(),
-         new ObjectName(systemDomain, "service", "ServiceLibraries"));
+                           new ObjectName(systemDomain, "service", "ServiceLibraries"));
       
       // Initialize spine boot libraries
       initBootLibraries();
       
       // Create MBeanClassLoader for the base system
       ObjectName loaderName = 
-	  new ObjectName(systemDomain, "service", "ServiceClassLoader");
+	 new ObjectName(systemDomain, "service", "ServiceClassLoader");
       
       MBeanClassLoader mcl = new MBeanClassLoader(loaderName);
       server.registerMBean(mcl, loaderName);
       if (debug) {
-	  log.debug("Registered service classloader: " + loaderName);
+	 log.debug("Registered service classloader: " + loaderName);
       }
       
       // Set ServiceClassLoader as classloader for the construction of
@@ -121,8 +121,8 @@ public class Server
       
       // Setup logging
       server.createMBean("org.jboss.logging.Log4jService", 
-         new ObjectName(systemDomain, "service", "Logging"),
-         loaderName);
+                         new ObjectName(systemDomain, "service", "Logging"),
+                         loaderName);
       
       log.debug("Logging has been initialized");
       
@@ -136,33 +136,33 @@ public class Server
       
       // General Purpose Architecture information
       server.createMBean("org.jboss.system.Info",
-         new ObjectName(systemDomain, "service", "Info"),
-         loaderName);
+                         new ObjectName(systemDomain, "service", "Info"),
+                         loaderName);
       
       // Service Controller
       ObjectName controllerName = 
-      server.createMBean("org.jboss.system.ServiceController", 
-         new ObjectName(systemDomain, "service", "ServiceController"),
-         loaderName).getObjectName();
+         server.createMBean("org.jboss.system.ServiceController", 
+                            new ObjectName(systemDomain, "service", "ServiceController"),
+                            loaderName).getObjectName();
       
       if (debug) {
-	  log.debug("Registered service controller: " + controllerName);
+	 log.debug("Registered service controller: " + controllerName);
       }
       
       // Install the shutdown hook
       shutdownHook = new ShutdownHook(controllerName);
       try {
-	  Runtime.getRuntime().addShutdownHook(shutdownHook);
-	  log.debug("Shutdown hook added");
+	 Runtime.getRuntime().addShutdownHook(shutdownHook);
+	 log.debug("Shutdown hook added");
       }
       catch (Exception e) {
-	  log.warn("Failed to add shutdown hook", e);
+	 log.warn("Failed to add shutdown hook", e);
       }
       
       // Deployer
       ObjectName mainDeployer = 
 	 server.createMBean("org.jboss.deployment.MainDeployer",
-			    new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+			    null,
 			    loaderName).getObjectName();
       
       // SAR Deployer
@@ -173,9 +173,9 @@ public class Server
       
       // Ok, now do a first deploy of JBoss' jboss-service.xml
       server.invoke(mainDeployer, 
-         "deploy", 
-         new Object[] {config.getConfigURL() + "jboss-service.xml"},
-         new String[] {"java.lang.String"});
+                    "deploy", 
+                    new Object[] {config.getConfigURL() + "jboss-service.xml"},
+                    new String[] {"java.lang.String"});
       
       // Start the main deployer thread
       server.invoke(mainDeployer, "start", new Object[]{}, new String[] {});
@@ -197,6 +197,8 @@ public class Server
     * Initialize the boot libraries.
     */
    private void initBootLibraries() throws Exception {
+      boolean debug = log.isDebugEnabled();
+      
       // Build the list of URL for the spine to boot
       List list = new ArrayList();
       
@@ -219,6 +221,7 @@ public class Server
                         return name.endsWith(".jar") || name.endsWith(".zip");
                      }
                   });
+               
                for (int j = 0; jars != null && j < jars.length; j++)
                {
                   list.add(jars[j].getCanonicalFile().toURL());
@@ -234,14 +237,21 @@ public class Server
       list.add(config.getConfigURL());
       
       // Add the local path stuff
-      list.add(new URL(config.getLibraryURL(), "log4j.jar"));
-      list.add(new URL(config.getLibraryURL(), "jboss-spine.jar"));
+      URL libURL = config.getLibraryURL();
+      list.add(new URL(libURL, "log4j.jar"));
+      list.add(new URL(libURL, "jboss-spine.jar"));
+      list.add(new URL(libURL, "jboss-util.jar"));
+      
+      // list.add(new URL(config.getLibraryURL(), "jboss-proxy.jar"));
       
       // Create loaders for each URL
       Iterator iter = list.iterator();
+      
       while (iter.hasNext()) {
          URL url = (URL)iter.next();
-         log.debug("Creating loader for URL: " + url);
+         if (debug) {
+            log.debug("Creating loader for URL: " + url);
+         }
          
          // Construction of URLClassLoader also registers with ServiceLibraries
          // Should probably remove this "side-effect" and make this more explicit
@@ -263,22 +273,22 @@ public class Server
 
       boolean exitOnShutdown = config.getExitOnShutdown();
       if (log.isDebugEnabled()) {
-	  log.debug("exitOnShutdown: " + exitOnShutdown);
+         log.debug("exitOnShutdown: " + exitOnShutdown);
       }
 
       if (exitOnShutdown) {
-	  server.exit(0);
+         server.exit(0);
       }
       else {
-	  // start in new thread to give positive
-	  // feedback to requesting client of success.
-	  new Thread() {
-	      public void run() {
-		// just run the hook, don't call System.exit, as we may
-		// be embeded in a vm that would not like that very much
-		shutdownHook.run();
-	      }
-	  }.start();
+         // start in new thread to give positive
+         // feedback to requesting client of success.
+         new Thread() {
+            public void run() {
+               // just run the hook, don't call System.exit, as we may
+               // be embeded in a vm that would not like that very much
+               shutdownHook.run();
+            }
+         }.start();
       }
    }
    
@@ -303,7 +313,7 @@ public class Server
     * code 1. 
     */
    public void exit() {
-       exit(1);
+      exit(1);
    }
 
    /** 
@@ -385,8 +395,8 @@ public class Server
    }
    
    public Long getMaxMemory() {
-       // Uncomment when JDK 1.4 is the base JVM
-       // return new Long(Runtime.getRuntime().maxMemory());
+      // Uncomment when JDK 1.4 is the base JVM
+      // return new Long(Runtime.getRuntime().maxMemory());
       return new Long(-1);
    }
    
@@ -416,7 +426,7 @@ public class Server
    ///////////////////////////////////////////////////////////////////////////
    
    private class ShutdownHook
-       extends Thread
+      extends Thread
    {
       /** The ServiceController which we will ask to shut things down with. */
       private ObjectName contollerName;
@@ -448,9 +458,9 @@ public class Server
          {
             // get the deployed objects from ServiceController
             server.invoke(contollerName,
-               "shutdown",
-               new Object[0],
-               new String[0]);
+                          "shutdown",
+                          new Object[0],
+                          new String[0]);
          }
          catch (MBeanException e)
          {

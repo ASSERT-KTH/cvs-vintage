@@ -128,7 +128,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.22 $
+@version $Revision: 1.23 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -613,7 +613,7 @@ implements AbstractWebContainerMBean
       {
          // Register with the main deployer
          server.invoke(
-            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
             "addDeployer",
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});
@@ -630,7 +630,7 @@ implements AbstractWebContainerMBean
       {
          // Register with the main deployer
          server.invoke(
-            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
             "removeDeployer",
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});

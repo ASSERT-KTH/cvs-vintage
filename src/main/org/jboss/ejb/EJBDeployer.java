@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.3 $ 
+* @version $Revision: 1.4 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -163,7 +163,7 @@ implements EJBDeployerMBean
       {
          // Register with the main deployer
          server.invoke(
-            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
             "addDeployer",
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});
@@ -188,7 +188,7 @@ implements EJBDeployerMBean
       {
          // Register with the main deployer
          server.invoke(
-            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
             "removeDeployer",
             new Object[] {this},
             new String[] {"org.jboss.deployment.DeployerMBean"});
