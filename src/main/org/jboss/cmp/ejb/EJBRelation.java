@@ -9,8 +9,8 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.cmp.schema.AbstractAssociation;
-import org.jboss.cmp.schema.AbstractAssociationEnd;
+import org.jboss.persistence.schema.AbstractAssociation;
+import org.jboss.persistence.schema.AbstractAssociationEnd;
 
 public class EJBRelation implements AbstractAssociation
 {

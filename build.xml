@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.140 2003/03/05 16:50:42 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.141 2003/03/09 00:23:10 jboynes Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -94,6 +94,7 @@
       <path refid="jboss.management.classpath"/>
       <path refid="jboss.transaction.classpath"/>
       <path refid="jboss.connector.classpath"/>
+      <path refid="jboss.persistence.classpath"/>
     </path>
 
     <!--+=======================================+-->

@@ -9,8 +9,8 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.cmp.schema.AbstractAssociationEnd;
-import org.jboss.cmp.schema.AbstractAttribute;
+import org.jboss.persistence.schema.AbstractAssociationEnd;
+import org.jboss.persistence.schema.AbstractAttribute;
 
 public class BMPEntity extends Entity
 {

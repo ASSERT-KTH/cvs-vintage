@@ -9,8 +9,8 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.cmp.schema.AbstractClass;
-import org.jboss.cmp.schema.AbstractType;
+import org.jboss.persistence.schema.AbstractClass;
+import org.jboss.persistence.schema.AbstractType;
 
 public abstract class Entity implements AbstractClass
 {

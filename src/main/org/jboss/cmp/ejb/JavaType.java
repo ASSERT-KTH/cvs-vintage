@@ -9,7 +9,7 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.cmp.schema.AbstractType;
+import org.jboss.persistence.schema.AbstractType;
 
 public class JavaType implements AbstractType
 {

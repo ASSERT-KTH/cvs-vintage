@@ -9,9 +9,9 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.cmp.schema.AbstractAssociation;
-import org.jboss.cmp.schema.AbstractAssociationEnd;
-import org.jboss.cmp.schema.AbstractClass;
+import org.jboss.persistence.schema.AbstractAssociation;
+import org.jboss.persistence.schema.AbstractAssociationEnd;
+import org.jboss.persistence.schema.AbstractClass;
 
 public class CMRField implements AbstractAssociationEnd
 {
