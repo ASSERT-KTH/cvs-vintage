@@ -14,7 +14,7 @@ import java.net.URL;
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public interface WebServiceMBean
    extends org.jboss.util.ServiceMBean
@@ -30,4 +30,10 @@ public interface WebServiceMBean
 	public void setPort(int port);
 	
    public int getPort();
+   /** A flag indicating if the server should attempt to download classes from
+    thread context class loader when a request arrives that does not have a
+    class loader key prefix.
+    */
+   public boolean getDownloadServerClasses();
+   public void setDownloadServerClasses(boolean flag);
 }

@@ -36,32 +36,38 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  *
  *   Revisions:
  *   
  *   20010619 scott.stark: Use log4j JBossCategory to enable trace level msgs
  *   20010618 scott.stark: Fixed extraction of mime-type from file extension in getMimeType
+ *   20010627 scott.stark: Restore ability to download from the server classpath if no loader key is found
+      amd downloadServerClasses is true
  */
 public class WebServer
 	implements Runnable
 {
-    // Constants -----------------------------------------------------
+   // Constants -----------------------------------------------------
 
-    // Attributes ----------------------------------------------------
+   // Attributes ----------------------------------------------------
    private static JBossCategory category = (JBossCategory)JBossCategory.getInstance(WebServer.class);
-    /** The port the web server listens on */
-    private int port = 8080;
-    /** The map of class loaders registered with the web server */
-    private HashMap loaderMap = new HashMap();
-    /** The web server http listening socket */
-    private ServerSocket server = null;
-
-    /** The class wide mapping of type suffixes(class, txt) to their mime
-     type string used as the Content-Type header for the vended classes/resources */
-    private static Properties mimeTypes = new Properties();
-    /** The thread pool used to manage listening threads */
-    private ThreadPool threadPool = new ThreadPool();
+   /** The port the web server listens on */
+   private int port = 8080;
+   /** The map of class loaders registered with the web server */
+   private HashMap loaderMap = new HashMap();
+   /** The web server http listening socket */
+   private ServerSocket server = null;
+   /** A flag indicating if the server should attempt to download classes from
+    thread context class loader when a request arrives that does not have a
+    class loader key prefix.
+    */
+   private boolean downloadServerClasses = true;
+   /** The class wide mapping of type suffixes(class, txt) to their mime
+   type string used as the Content-Type header for the vended classes/resources */
+   private static Properties mimeTypes = new Properties();
+   /** The thread pool used to manage listening threads */
+   private ThreadPool threadPool = new ThreadPool();
 
    // Public --------------------------------------------------------
     /** Set the http listening port
@@ -77,6 +83,15 @@ public class WebServer
     {
         return port; 
     }
+
+   public boolean getDownloadServerClasses()
+   {
+      return downloadServerClasses;
+   }
+   public void setDownloadServerClasses(boolean flag)
+   {
+      downloadServerClasses = flag;
+   }
 
     /** Augment the type suffix to mime type mappings
      @param extension, the type extension without a
@@ -214,19 +229,30 @@ public class WebServer
                 int separator = rawPath.indexOf('/');
                 String filePath = rawPath.substring(separator+1);
                 String loaderKey = rawPath.substring(0, separator+1);
-                trace("WebServer: loaderKey = "+loaderKey);
-                trace("WebServer: filePath = "+filePath);
+                trace("loaderKey = "+loaderKey);
+                trace("filePath = "+filePath);
                 ClassLoader loader = (ClassLoader) loaderMap.get(loaderKey);
-                trace("WebServer: loader = "+loader);
+                /* If we did not find a class loader check to see if the raw path
+                 begins with className + '@' + cl.hashCode() + '/' by looking for
+                 an '@' char. If it does not and downloadServerClasses is true use
+                 the thread context class loader and set filePath to the rawPath
+                */
+                if( loader == null && rawPath.indexOf('@') < 0 )
+                {
+                   filePath = rawPath;
+                   trace("No loader, reset filePath = "+filePath);
+                   loader = Thread.currentThread().getContextClassLoader();
+                }
+                trace("loader = "+loader);
                 byte[] bytes;
                 if( filePath.endsWith(".class") )
                 {
                     // A request for a class file
                     String className = filePath.substring(0, filePath.length()-6).replace('/','.');
-                    trace("WebServer: loading className = "+className);
+                    trace("loading className = "+className);
                     Class clazz = loader.loadClass(className);
                     URL clazzUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
-                    trace("WebServer: clazzUrl = "+clazzUrl);
+                    trace("clazzUrl = "+clazzUrl);
                     if (clazzUrl.getFile().endsWith(".jar"))
                        clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
                     else
@@ -240,7 +266,7 @@ public class WebServer
                 else // Resource
                 {
                     // Try getting resource
-                    trace("WebServer: loading resource = "+filePath);
+                    trace("loading resource = "+filePath);
                     URL resourceUrl = loader.getResource(filePath);             
                     if (resourceUrl == null)
                         throw new FileNotFoundException("Resource not found:"+filePath);
@@ -333,7 +359,7 @@ public class WebServer
     protected String getPath(BufferedReader in) throws IOException
     {
         String line = in.readLine();
-        trace("WebServer: raw path="+line);
+        trace("raw request="+line);
         // Find the request path by parsing the 'REQUEST_TYPE filePath HTTP_VERSION' string
         int start = line.indexOf(' ')+1;
         int end = line.indexOf(' ', start+1);

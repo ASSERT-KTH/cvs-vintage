@@ -24,7 +24,7 @@ import org.jboss.util.ServiceMBeanSupport;
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -124,6 +124,20 @@ public class WebService
    {
    	return server.getPort();
    }
+ 
+   /** A flag indicating if the server should attempt to download classes from
+    * thread context class loader when a request arrives that does not have a
+    * class loader key prefix.
+    */
+   public boolean getDownloadServerClasses()
+   {
+      return server.getDownloadServerClasses();
+   }
+   public void setDownloadServerClasses(boolean flag)
+   {
+      server.setDownloadServerClasses(flag);
+   }
+   
    // Protected -----------------------------------------------------
 }
 
