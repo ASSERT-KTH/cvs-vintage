@@ -288,7 +288,7 @@
 
   <!-- ==================== Tomcat.jar ( starter )  ==================== -->
 
-  <target name="tomcat.jar" depends="init">
+  <target name="tomcat.jar" depends="init,tomcat_modules">
     <javac destdir="${tomcat.build}/classes"
            debug="${debug}"
            optimize="${optimize}"
@@ -305,6 +305,8 @@
          basedir="${tomcat.build}/classes"
          manifest="src/build/manifests/manifest">
       <include name="org/apache/tomcat/startup/Main.class"/>
+      <include name="org/apache/tomcat/modules/server/JNIEndpoint**"/>
+      <include name="org/apache/tomcat/modules/server/StartupThread**"/>
       <include name="org/apache/tomcat/startup/Main$*.class"/>
       <include name="org/apache/tomcat/util/depend/**"/>
       <include name="org/apache/tomcat/util/compat/**"/>
@@ -527,7 +529,7 @@
     </jar>
   </target>
 
-  <target name="tomcat-jars" depends="prepare,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat-startup">
+  <target name="tomcat-jars" depends="prepare,tomcat_util,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,tomcat.jar,facade22,tomcat-startup">
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat-jars">
