@@ -199,7 +199,7 @@ public class AutoCompleter implements KeyListener, ItemListener {
 			}
 
 		} else {
-			System.out.println("not selected state");
+			//System.out.println("not selected state");
 		}
 	}
 

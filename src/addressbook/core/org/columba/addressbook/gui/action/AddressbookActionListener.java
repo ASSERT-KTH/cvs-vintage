@@ -24,14 +24,13 @@ import java.io.FileReader;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.EditGroupDialog;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizard;
 import org.columba.addressbook.gui.util.AddAddressbookDialog;
@@ -41,12 +40,7 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.action.BasicAction;
 
-
-
-
-
-public class AddressbookActionListener implements ActionListener
-{
+public class AddressbookActionListener implements ActionListener {
 	public BasicAction cutAction;
 	public BasicAction copyAction;
 	public BasicAction pasteAction;
@@ -64,24 +58,19 @@ public class AddressbookActionListener implements ActionListener
 
 	private AddressbookInterface addressbookInterface;
 
-	public AddressbookActionListener(AddressbookInterface i)
-	{
+	public AddressbookActionListener(AddressbookInterface i) {
 		this.addressbookInterface = i;
 		initAction();
 	}
 
-	public void changeActions()
-	{
+	public void changeActions() {
 		Object[] items = addressbookInterface.table.getSelectedItems();
-		if (items.length > 0)
-		{
+		if (items.length > 0) {
 			// enable
 
 			removeAction.setEnabled(true);
 			propertiesAction.setEnabled(true);
-		}
-		else
-		{
+		} else {
 			// disable
 			removeAction.setEnabled(false);
 			propertiesAction.setEnabled(false);
@@ -94,13 +83,13 @@ public class AddressbookActionListener implements ActionListener
 		{
 			if (item.getType().equals("addressbook"))
 			{
-
+		
 				// enable
-
+		
 				addContactAction.setEnabled(true);
 				addGroupAction.setEnabled(true);
 				addvcardAction.setEnabled(true);
-
+		
 			}
 			else
 			{
@@ -114,13 +103,18 @@ public class AddressbookActionListener implements ActionListener
 		*/
 	}
 
-	public void initAction()
-	{
+	public void initAction() {
 
 		cutAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_cut"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_cut"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_cut"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_cut"),
 				"CUT_FOR_FUN",
 				ImageLoader.getSmallImageIcon("stock_cut-16.png"),
 				ImageLoader.getImageIcon("stock_cut.png"),
@@ -130,8 +124,14 @@ public class AddressbookActionListener implements ActionListener
 
 		copyAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_copy"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_copy"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_copy"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_copy"),
 				"COPY_FOR_FUN",
 				ImageLoader.getSmallImageIcon("stock_copy-16.png"),
 				ImageLoader.getImageIcon("stock_copy.png"),
@@ -141,8 +141,14 @@ public class AddressbookActionListener implements ActionListener
 
 		pasteAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_paste"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_paste"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_paste"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_paste"),
 				"PASTE",
 				ImageLoader.getSmallImageIcon("stock_paste-16.png"),
 				ImageLoader.getImageIcon("stock_paste.png"),
@@ -152,8 +158,14 @@ public class AddressbookActionListener implements ActionListener
 
 		deleteAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_delete"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_delete"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_delete"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_delete"),
 				"DELETE",
 				ImageLoader.getSmallImageIcon("stock_paste-16.png"),
 				ImageLoader.getImageIcon("stock_paste.png"),
@@ -163,8 +175,14 @@ public class AddressbookActionListener implements ActionListener
 
 		selectAllAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_selectall"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_edit_selectall"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_selectall"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_edit_selectall"),
 				"SELECTALL",
 				null,
 				null,
@@ -174,8 +192,14 @@ public class AddressbookActionListener implements ActionListener
 
 		closeAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_close"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_close"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_close"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_close"),
 				"CLOSE",
 				ImageLoader.getSmallImageIcon("stock_exit-16.png"),
 				ImageLoader.getImageIcon("stock_exit.png"),
@@ -186,8 +210,14 @@ public class AddressbookActionListener implements ActionListener
 
 		addContactAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addcontact"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addcontact"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addcontact"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addcontact"),
 				"ADDCONTACT",
 				ImageLoader.getSmallImageIcon("contact_small.png"),
 				ImageLoader.getImageIcon("contact.png"),
@@ -198,8 +228,14 @@ public class AddressbookActionListener implements ActionListener
 
 		addGroupAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addgroup"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addgroup"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addgroup"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addgroup"),
 				"ADDGROUP",
 				ImageLoader.getSmallImageIcon("group_small.png"),
 				ImageLoader.getImageIcon("group.png"),
@@ -210,8 +246,14 @@ public class AddressbookActionListener implements ActionListener
 
 		removeAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_remove"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_remove"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_remove"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_remove"),
 				"REMOVE",
 				ImageLoader.getSmallImageIcon("stock_delete-16.png"),
 				ImageLoader.getImageIcon("stock_delete.png"),
@@ -222,8 +264,14 @@ public class AddressbookActionListener implements ActionListener
 
 		propertiesAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_properties"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_properties"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_properties"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_properties"),
 				"PROPERTIES",
 				ImageLoader.getSmallImageIcon("stock_edit-16.png"),
 				ImageLoader.getImageIcon("stock_edit.png"),
@@ -234,8 +282,14 @@ public class AddressbookActionListener implements ActionListener
 
 		addAddressbookAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addaddressbook"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addaddressbook"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addaddressbook"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addaddressbook"),
 				"ADDADDRESSBOOK",
 				ImageLoader.getSmallImageIcon("stock_book-16.png"),
 				ImageLoader.getImageIcon("stock_book.png"),
@@ -246,8 +300,14 @@ public class AddressbookActionListener implements ActionListener
 
 		addressbookImportAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_utilities_addressbook"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_utilities_addressbook"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_utilities_addressbook"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_utilities_addressbook"),
 				"ADDRESSBOOK_IMPORT",
 				null,
 				null,
@@ -258,8 +318,14 @@ public class AddressbookActionListener implements ActionListener
 
 		addvcardAction =
 			new BasicAction(
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addvcard"),
-				AddressbookResourceLoader.getString("menu","mainframe", "menu_file_addvcard"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addvcard"),
+				AddressbookResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_addvcard"),
 				"ADD_VCARD",
 				null,
 				null,
@@ -270,37 +336,30 @@ public class AddressbookActionListener implements ActionListener
 
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		String command;
 
 		command = e.getActionCommand();
 
-		if (command.equals(closeAction.getActionCommand()))
-		{
+		if (command.equals(closeAction.getActionCommand())) {
 			addressbookInterface.frame.setVisible(false);
-		}
-		else if (command.equals(addAddressbookAction.getActionCommand()))
-		{
+		} else if (command.equals(addAddressbookAction.getActionCommand())) {
 			AddAddressbookDialog dialog =
 				new AddAddressbookDialog(addressbookInterface.frame);
 			dialog.showDialog("New Addressbook");
 
-			if (dialog.success())
-			{
+			if (dialog.success()) {
 				// Ok
 
 				String name = dialog.getName();
 				System.out.println("name:" + name);
 			}
-		}
-		else if (command.equals(addContactAction.getActionCommand()))
-		{
-			ContactDialog dialog = new ContactDialog(addressbookInterface.frame);
+		} else if (command.equals(addContactAction.getActionCommand())) {
+			ContactDialog dialog =
+				new ContactDialog(addressbookInterface.frame);
 
 			dialog.setVisible(true);
-			if (dialog.getResult() == true)
-			{
+			if (dialog.getResult() == true) {
 				System.out.println("saving contact");
 
 				// Ok
@@ -309,26 +368,18 @@ public class AddressbookActionListener implements ActionListener
 
 				dialog.updateComponents(card, false);
 
-				Folder folder =
-					 addressbookInterface.tree.getSelectedFolder();
+				Folder folder = addressbookInterface.tree.getSelectedFolder();
 
 				folder.add(card);
 
 				addressbookInterface.table.setFolder(folder);
-			}
-			else
-			{
+			} else {
 				// cancel
 				System.out.println("cancelled");
 			}
 
-		}
-		else if (command.equals(addGroupAction.getActionCommand()))
-		{
-			// FIXME
-			/*
-			AddressbookXmlConfig config =
-				AddressbookConfig.getAddressbookConfig();
+		} else if (command.equals(addGroupAction.getActionCommand())) {
+
 			Folder folder =
 				(Folder) addressbookInterface.tree.getSelectedFolder();
 
@@ -336,15 +387,13 @@ public class AddressbookActionListener implements ActionListener
 				new EditGroupDialog(
 					addressbookInterface.frame,
 					addressbookInterface,
-					config,
 					null);
 
 			dialog.setHeaderList(folder.getHeaderItemList());
 
 			dialog.setVisible(true);
 
-			if (dialog.getResult())
-			{
+			if (dialog.getResult()) {
 				// Ok
 				GroupListCard card = new GroupListCard();
 
@@ -355,45 +404,43 @@ public class AddressbookActionListener implements ActionListener
 			}
 
 			//dialog.showDialog();
-			*/
-			
-		}
-		else if (command.equals(removeAction.getActionCommand()))
-		{
-			Object[] uids= addressbookInterface.table.getSelectedUids();
-			AddressbookFolder folder =
-				(AddressbookFolder) addressbookInterface.tree.getSelectedFolder();
 
-			for ( int i=0; i<uids.length; i++ )
-			{
+		} else if (command.equals(removeAction.getActionCommand())) {
+			Object[] uids = addressbookInterface.table.getSelectedUids();
+			AddressbookFolder folder =
+				(AddressbookFolder) addressbookInterface
+					.tree
+					.getSelectedFolder();
+
+			for (int i = 0; i < uids.length; i++) {
 				folder.remove(uids[i]);
 			}
 			addressbookInterface.table.setFolder(folder);
 
-		}
-		else if (command.equals(propertiesAction.getActionCommand()))
-		{
-			/*
+		} else if (command.equals(propertiesAction.getActionCommand())) {
+
 			Object uid = addressbookInterface.table.getSelectedUid();
 			HeaderItem item = addressbookInterface.table.getSelectedItem();
+			/*
 			AddressbookXmlConfig config =
 				AddressbookConfig.getAddressbookConfig();
-
+			*/
 			AddressbookFolder folder =
-				(AddressbookFolder) addressbookInterface.tree.getSelectedFolder();
+				(AddressbookFolder) addressbookInterface
+					.tree
+					.getSelectedFolder();
 
-			if (item.isContact() == true)
-			{
+			if (item.isContact() == true) {
 				ContactCard card = (ContactCard) folder.get(uid);
 				System.out.println("card:" + card);
 
-				ContactDialog dialog = new ContactDialog(addressbookInterface.frame);
+				ContactDialog dialog =
+					new ContactDialog(addressbookInterface.frame);
 
 				dialog.updateComponents(card, true);
 				dialog.setVisible(true);
 
-				if (dialog.getResult() == true)
-				{
+				if (dialog.getResult() == true) {
 					System.out.println("saving contact");
 
 					// Ok
@@ -402,22 +449,18 @@ public class AddressbookActionListener implements ActionListener
 					folder.modify(card, uid);
 
 					addressbookInterface.table.setFolder(folder);
-				}
-				else
-				{
+				} else {
 					// cancel
 					System.out.println("cancelled");
 				}
-			}
-			else
-			{
+			} else {
+
 				GroupListCard card = (GroupListCard) folder.get(uid);
 
 				EditGroupDialog dialog =
 					new EditGroupDialog(
 						addressbookInterface.frame,
 						addressbookInterface,
-						config,
 						null);
 
 				dialog.setHeaderList(folder.getHeaderItemList());
@@ -427,8 +470,7 @@ public class AddressbookActionListener implements ActionListener
 
 				dialog.setVisible(true);
 
-				if (dialog.getResult())
-				{
+				if (dialog.getResult()) {
 					// Ok
 
 					dialog.updateComponents(card, null, false);
@@ -436,25 +478,21 @@ public class AddressbookActionListener implements ActionListener
 					addressbookInterface.table.setFolder(folder);
 
 				}
-			}
-			*/
 
-		}
-		else if (command.equals(addressbookImportAction.getActionCommand()))
-		{
+			}
+
+		} else if (
+			command.equals(addressbookImportAction.getActionCommand())) {
 			ImportWizard dialog = new ImportWizard(addressbookInterface);
 
-		}
-		else if (command.equals(addvcardAction.getActionCommand()))
-		{
+		} else if (command.equals(addvcardAction.getActionCommand())) {
 			addvcard();
 
 		}
 
 	}
 
-	protected void addvcard()
-	{
+	protected void addvcard() {
 		Folder destinationFolder =
 			(Folder) addressbookInterface.tree.getSelectedFolder();
 
@@ -463,21 +501,18 @@ public class AddressbookActionListener implements ActionListener
 		fc.setMultiSelectionEnabled(true);
 		int returnVal = fc.showOpenDialog(addressbookInterface.frame);
 
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-		{
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File[] files = fc.getSelectedFiles();
 
-			for (int i = 0; i < files.length; i++)
-			{
-				try
-				{
+			for (int i = 0; i < files.length; i++) {
+				try {
 					StringBuffer strbuf = new StringBuffer();
 
-					BufferedReader in = new BufferedReader(new FileReader(files[i]));
+					BufferedReader in =
+						new BufferedReader(new FileReader(files[i]));
 					String str;
 
-					while ((str = in.readLine()) != null)
-					{
+					while ((str = in.readLine()) != null) {
 						strbuf.append(str + "\n");
 					}
 
@@ -486,9 +521,7 @@ public class AddressbookActionListener implements ActionListener
 					ContactCard card = VCardParser.parse(strbuf.toString());
 
 					destinationFolder.add(card);
-				}
-				catch (Exception ex)
-				{
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -498,6 +531,5 @@ public class AddressbookActionListener implements ActionListener
 		addressbookInterface.table.setFolder(destinationFolder);
 
 	}
-
 
 }

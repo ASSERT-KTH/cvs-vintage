@@ -30,6 +30,7 @@ import javax.swing.text.Keymap;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.main.AddressbookMain;
+import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
@@ -231,6 +232,7 @@ public class Main {
 				MainInterface.shutdownManager.register( new SaveAllFoldersPlugin() );
 				MainInterface.shutdownManager.register( new SaveConfigPlugin() );
 				MainInterface.shutdownManager.register( new SavePOP3CachePlugin() );
+				MainInterface.shutdownManager.register( new SaveAllAddressbooksPlugin() );
 				
 				return null;
 			}

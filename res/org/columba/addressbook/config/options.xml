@@ -4,7 +4,7 @@
  <gui>
   <table selected="Date" ascending="true"> 
    <columnlist >
-    <column name="name" position="0" size="23" enabled="true" />
+    <column name="type" position="0" size="23" enabled="true" />
     <column name="displayname" position="1" size="23" enabled="true" />
    	<column name="email;internet" position="2" size="23" enabled="true" />
    	<column name="adr;postal" position="3" size="23" enabled="true" />

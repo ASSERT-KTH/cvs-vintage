@@ -14,8 +14,49 @@
 
 package org.columba.addressbook.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-/*
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
+import javax.swing.border.AbstractBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+
+import org.columba.addressbook.config.AdapterNode;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.gui.util.AddressbookDNDListView;
+import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.addressbook.gui.util.AddressbookListRenderer;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.addressbook.main.AddressbookInterface;
+
+
+
 public class EditGroupDialog extends JDialog implements ActionListener
 {
 	private JDialog dialog;
@@ -47,14 +88,14 @@ public class EditGroupDialog extends JDialog implements ActionListener
 	public EditGroupDialog(
 		JFrame frame,
 		AddressbookInterface i,
-		AddressbookXmlConfig config,
+		
 		AdapterNode groupNode)
 	{
 		super(frame, true);
 
 		this.addressbookInterface = i;
 
-		this.config = config;
+		
 		//this.groupNode = groupNode;
 
 		result = false;
@@ -327,4 +368,4 @@ public class EditGroupDialog extends JDialog implements ActionListener
 	}
 	
 }
-*/
+

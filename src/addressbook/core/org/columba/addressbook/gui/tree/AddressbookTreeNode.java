@@ -30,6 +30,11 @@ import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 
 public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
+	
+
+	protected ImageIcon icon = ImageLoader.getSmallImageIcon("stock_book-16.png");
+	
+	
 	private String name;
 
 	protected FolderItem node;
@@ -61,6 +66,13 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 		return node;
 	
 	}
+	
+	
+	
+	public ImageIcon getIcon()
+		{
+			return icon;
+		}
 
 	public final static FolderItem getDefaultItem(
 		String className,

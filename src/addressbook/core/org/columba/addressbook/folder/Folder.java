@@ -29,6 +29,7 @@ import org.columba.mail.folder.FolderTreeNode;
 
 public abstract class Folder extends AddressbookTreeNode {
 
+
 	protected Vector folderListeners;
 
 	/**
@@ -266,6 +267,8 @@ public abstract class Folder extends AddressbookTreeNode {
 
 		return false;
 	}
+	
+	
 
 	public String getName() {
 		String name = null;

@@ -14,10 +14,12 @@
 
 package org.columba.addressbook.main;
 
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.gui.frame.AddressbookView;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.command.TaskManager;
 import org.columba.core.main.MainInterface;
-import org.columba.addressbook.gui.frame.AddressbookView;
-import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
  * @author frd
@@ -33,6 +35,7 @@ public class AddressbookMain {
 		new AddressbookResourceLoader();
 		
 		MainInterface.addressbookInterface.taskManager = new TaskManager();
+		MainInterface.addressbookInterface.treeModel = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
 		MainInterface.addressbookInterface.frame =
 					new AddressbookView();
 		//new AddressbookFrame();

@@ -23,11 +23,13 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.columba.addressbook.AddressBookIC;
+import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.config.WindowItem;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;
@@ -36,7 +38,6 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.action.ComposerActionListener;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.AddressCollector;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author frd
@@ -87,12 +88,12 @@ public class ComposerController
 		composerInterface.composerSpellCheck =
 			new ComposerSpellCheck(composerInterface);
 
-		/*
+		
 		composerInterface.addressbookFrame =
 			AddressBookIC.createAddressbookListFrame(composerInterface);
 
 		composerInterface.addressbookFrame.addComponentListener(this);
-		*/
+		
 		
 		composerInterface.composerFrame.addComponentListener(this);
 
@@ -201,9 +202,9 @@ public class ComposerController
 
 		view.setVisible(true);
 
-		/*
+		
 		initAddressCompletion();
-		*/
+		
 		
 		composerInterface.headerController.appendRow();
 	}
@@ -211,7 +212,7 @@ public class ComposerController
 	protected void initAddressCompletion() {
 		AddressCollector.clear();
 		
-		HeaderItemList list = MainInterface.addressbookInterface.tree.getFolder(101).getHeaderItemList();
+		HeaderItemList list = ((Folder) MainInterface.addressbookInterface.treeModel.getFolder(101)).getHeaderItemList();
 		
 		for ( int i=0; i<list.count(); i++ )
 		{
@@ -221,7 +222,7 @@ public class ComposerController
 			if ( item.contains("email;internet") ) AddressCollector.addAddress( (String) item.get("email;internet"), item ); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		
-		list = MainInterface.addressbookInterface.tree.getFolder(102).getHeaderItemList();
+		list = ((Folder)MainInterface.addressbookInterface.treeModel.getFolder(102)).getHeaderItemList();
 		
 		for ( int i=0; i<list.count(); i++ )
 		{
@@ -270,11 +271,11 @@ public class ComposerController
 	}
 
 	public void componentMoved(ComponentEvent e) {
-		/*
+		
 		if (composerInterface.addressbookFrame.isVisible()) {
 			updateAddressbookFrame();
 		}
-		*/
+		
 	}
 
 	protected void updateAddressbookFrame() {

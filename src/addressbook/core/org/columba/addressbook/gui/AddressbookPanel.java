@@ -167,7 +167,7 @@ public class AddressbookPanel
 		panel.add(topPanel, BorderLayout.NORTH);
 
 		Folder folder =
-			MainInterface.addressbookInterface.tree.getFolder(uid);
+			(Folder) MainInterface.addressbookInterface.treeModel.getFolder(uid);
 
 		setHeaderList(folder.getHeaderItemList());
 

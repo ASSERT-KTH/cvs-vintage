@@ -25,6 +25,7 @@ import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 import org.columba.addressbook.gui.table.util.TableModelPlugin;
 import org.columba.addressbook.gui.table.util.TableModelSorter;
+import org.columba.core.logging.ColumbaLogger;
 
 public class AddressbookTableModel extends AbstractTableModel {
 
@@ -161,12 +162,15 @@ public class AddressbookTableModel extends AbstractTableModel {
 
 	public void setHeaderList(HeaderItemList list) {
 		if (list == null) {
+			ColumbaLogger.log.debug("list == null");
 			rows = new HeaderItemList();
 
 			fireTableDataChanged();
 
 			return;
 		}
+		
+		ColumbaLogger.log.debug("list size="+list.count());
 
 		Vector clone = (Vector) list.getVector().clone();
 		rows = new HeaderItemList(clone);

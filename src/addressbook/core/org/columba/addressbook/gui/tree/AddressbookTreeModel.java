@@ -24,7 +24,7 @@ import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.xml.XmlElement;
 import org.columba.addressbook.folder.Root;
 
-class TreeModel extends DefaultTreeModel {
+public class AddressbookTreeModel extends DefaultTreeModel {
 	//private AddressbookTreeNode rootNode;
 
 	protected DefaultXmlConfig folderXmlConfig;
@@ -32,7 +32,7 @@ class TreeModel extends DefaultTreeModel {
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-	public TreeModel(XmlElement root) {
+	public AddressbookTreeModel(XmlElement root) {
 		super(null);
 		//rootNode = root;
 
@@ -239,7 +239,8 @@ class TreeModel extends DefaultTreeModel {
 			e.hasMoreElements();
 			) {
 			AddressbookTreeNode node = (AddressbookTreeNode) e.nextElement();
-
+			if ( node instanceof Root ) continue;
+			
 			int id = node.getUid();
 
 			if (uid == id) {

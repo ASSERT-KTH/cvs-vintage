@@ -21,7 +21,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.gui.tree.util.EditAddressbookFolderDialog;
@@ -33,7 +32,7 @@ public class AddressbookTree implements TreeSelectionListener
 	private AddressbookTreeNode root;
 	private JTree tree;
 	private AddressbookInterface addressbookInterface;
-	private TreeModel model;
+	private AddressbookTreeModel model;
 
 	public JScrollPane scrollPane;
 
@@ -47,9 +46,10 @@ public class AddressbookTree implements TreeSelectionListener
 
 		
 		
-		model = new TreeModel( AddressbookConfig.get("tree").getElement("/tree") );
-
-		tree = new JTree(model);
+		//model = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
+		
+		model = addressbookInterface.treeModel;
+		tree = new JTree( model );
 		//tree.setPreferredSize( new Dimension( 200,300 ) );
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
@@ -59,9 +59,9 @@ public class AddressbookTree implements TreeSelectionListener
 
 		AddressbookTreeCellRenderer renderer = new AddressbookTreeCellRenderer(true);
 
-		// FIXME
 		
-		//tree.setCellRenderer(renderer);
+		
+		tree.setCellRenderer(renderer);
 
 		update();
 
@@ -217,11 +217,13 @@ public class AddressbookTree implements TreeSelectionListener
 	public void valueChanged(TreeSelectionEvent e)
 	{
 
-		/*
+		
 		Folder folder = (Folder) tree.getLastSelectedPathComponent();
 		if (folder == null)
 			return;
 
+		addressbookInterface.table.setFolder(folder);
+		/*
 		FolderItem item = folder.getFolderItem();
 		String type = item.getType();
 		int uid = item.getUid();
@@ -241,6 +243,7 @@ public class AddressbookTree implements TreeSelectionListener
 			addressbookInterface.actionListener.changeActions();
 		}
 		*/
+		
 	}
 
 }

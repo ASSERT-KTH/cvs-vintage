@@ -19,6 +19,7 @@ import org.columba.addressbook.gui.frame.AddressbookView;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
 import org.columba.addressbook.gui.tree.AddressbookTree;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.core.command.TaskManager;
 import org.columba.core.gui.statusbar.StatusBar;
 
@@ -29,6 +30,8 @@ public class AddressbookInterface
     
     public AddressbookTable table;
     public AddressbookTree tree;
+    
+    public AddressbookTreeModel treeModel;
     //public AddressbookConfig config;
     public StatusBar statusbar;
 	public TaskManager taskManager;

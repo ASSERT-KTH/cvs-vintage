@@ -14,8 +14,10 @@
 
 package org.columba.addressbook.folder;
 
+import javax.swing.ImageIcon;
+
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.gui.util.ImageLoader;
 
 
 /**
@@ -32,6 +34,8 @@ import org.columba.addressbook.main.AddressbookInterface;
  */
 public abstract class LocalFolder extends Folder
 {
+	
+	
 	protected DataStorage dataStorage;
 	
 	/**
@@ -56,7 +60,7 @@ public abstract class LocalFolder extends Folder
 
 	public abstract DataStorage getDataStorageInstance();
 
-
+	
 	/*
 	public void add(ContactCard item)
 	{

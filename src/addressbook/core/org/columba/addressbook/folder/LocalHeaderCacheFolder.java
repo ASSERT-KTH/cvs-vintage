@@ -145,8 +145,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 		super.modify(card, uid);
 
-		// FIXME
-		/*
+	
 		
 		HeaderItem item = headerList.uidGet(uid);
 
@@ -155,9 +154,10 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 			String column;
 			Object o;
 			for (int j = 0; j < headerTableItemList.count(); j++) {
-
+				org.columba.core.config.HeaderItem h = headerTableItemList.getHeaderItem(j);
 				//item.setUid(uid);
-				column = (String) headerTableItemList.getName(j);
+				column = (String) h.get("name");
+				
 				int index = column.indexOf(";");
 
 				if (index != -1) {
@@ -183,11 +183,11 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 			item.add("displayname", card.get("displayname"));
 
 		}
-		*/
+		
 		
 		/*
 		File file =
-				new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+				new File(directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
 				
 		try
 			{
@@ -201,15 +201,15 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 				
 				if ( parser.isContact() == true )
 				{
-					ContactCard card = parser.createContactCard();
+					ContactCard newCard = parser.createContactCard();
 		
-					addHeaderItem(card, new Integer(i) );
+					addHeaderItem(newCard, new Integer(i) );
 				}
 				else
 				{
-					GroupListCard card = parser.createGroupListCard();
+					GroupListCard newCard = parser.createGroupListCard();
 					
-					addHeaderItem( card, new Integer(i) );
+					addHeaderItem( newCard, new Integer(i) );
 				}
 		
 			}
@@ -217,8 +217,8 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 			{
 				ex.printStackTrace();
 			}
-			
-		*/
+			*/	
+		
 	}
 
 	public DataStorage getDataStorageInstance() {

@@ -1,8 +1,11 @@
 package org.columba.addressbook.folder;
 
+import javax.swing.ImageIcon;
+
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author freddy
@@ -14,9 +17,16 @@ import org.columba.core.command.WorkerStatusController;
  */
 public class LocalRootFolder extends AddressbookTreeNode {
 	
+	protected ImageIcon localIcon = ImageLoader.getSmallImageIcon("localhost.png");
+	
 	public LocalRootFolder(FolderItem item) {
 		super(item);
 	}
+	
+	public ImageIcon getIcon()
+		{
+			return localIcon;
+		}
 		
 	/**
 	 * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#createChildren(org.columba.core.command.WorkerStatusController)

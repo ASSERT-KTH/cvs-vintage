@@ -21,8 +21,7 @@ import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.core.gui.util.ImageLoader;
 
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer
@@ -76,9 +75,13 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer
 			row,
 			hasFocus);
 
-		Folder folder = (Folder) value;
+		AddressbookTreeNode folder = (AddressbookTreeNode) value;
 		if ( folder==null ) return this;
 		
+		setText( folder.getName() );
+		setIcon( folder.getIcon() );
+		
+		/*
 		FolderItem item = folder.getFolderItem();
 		if ( item==null ) return this;
 		
@@ -97,6 +100,7 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer
 		{
 			setIcon(image1);
 		}
+		*/
 		
 		/*
 		if (value instanceof AddressbookFolder)
