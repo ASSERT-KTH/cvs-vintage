@@ -49,7 +49,6 @@ import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.message.menu.MessageMenu;
 import org.columba.mail.gui.table.selection.MessageSelectionListener;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.HeaderInterface;
@@ -83,12 +82,12 @@ public class MessageController
 	private MessageView view;
 	private MessageActionListener actionListener;
 
-	protected AbstractFrameController abstractFrameController;
+	protected AbstractMailFrameController abstractFrameController;
 	protected AttachmentController attachmentController;
 	//private MessageSelectionManager messageSelectionManager;
 
 	public MessageController(
-		AbstractFrameController abstractFrameController,
+		AbstractMailFrameController abstractFrameController,
 		AttachmentController attachmentController) {
 
 		this.abstractFrameController = abstractFrameController;
@@ -96,57 +95,23 @@ public class MessageController
 		activeCharset = "auto";
 
 		view = new MessageView(this, attachmentController.getView());
-		view.addHyperlinkListener(this);
+		//view.addHyperlinkListener(this);
 		view.addMouseListener(this);
-
-		//messageSelectionManager = new MessageSelectionManager();
 
 		actionListener = new MessageActionListener(this);
 
-		/*
-		String[] keys = new String[4];
-		keys[0] = new String("Subject");
-		keys[1] = new String("From");
-		keys[2] = new String("Date");
-		keys[3] = new String("To");
-		*/
-
-		
-		((CharsetOwnerInterface) getFrameController()).getCharsetManager().addCharsetListener(this);
-		
+		((CharsetOwnerInterface) getFrameController())
+			.getCharsetManager()
+			.addCharsetListener(this);
 
 		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
-		menu = new MessageMenu(this);
+		
 
 	}
 
 	public void messageSelectionChanged(Object[] newUidList) {
-		//System.out.println("received new message-selection changed event");
-
-		/*
-		FolderCommandReference[] reference = (FolderCommandReference[]) MainInterface.frameController.tableController.getTableSelectionManager().getSelection();
 		
-		FolderTreeNode treeNode = reference[0].getFolder();
-		Object[] uids = reference[0].getUids();
-		
-		// this is no message-viewing action,
-		// but a selection of multiple messages
-		if ( uids.length > 1 ) return;
-		
-		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setFolder(treeNode);
-		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setUids(uids);
-		
-		MainInterface.processor.addOp(
-			new ViewMessageCommand(
-				mailFrameController,
-				reference));
-		*/
-
-		/*
-		MainInterface.crossbar.operate(
-				new GuiOperation(Operation.MESSAGEBODY, 4, (Folder) selectionManager.getFolder(), newUidList[0]));
-				*/
 	}
 
 	public MessageActionListener getActionListener() {
@@ -155,13 +120,17 @@ public class MessageController
 
 	public MessageView getView() {
 
-		//new MessageActionListener( view );
 
 		return view;
 	}
 
+	/**
+		* return the PopupMenu for the table
+		*/
 	public JPopupMenu getPopupMenu() {
-		return menu.getPopupMenu();
+		if (menu == null)
+			menu = new MessageMenu(abstractFrameController);
+		return menu;
 	}
 
 	public void setViewerFont(Font font) {
@@ -251,81 +220,10 @@ public class MessageController
 
 	}
 
-	public void showMessageSource(String rawText) throws Exception {
-		getView().setDoc(null, rawText, false, false);
-
-		getView().getVerticalScrollBar().setValue(0);
-
-	}
-	/*
-	 *
-	public MessageActionListener getActionListener()
-	{
-		return actionListener;
-	}
 	
-	public MessageFocusListener getFocusListener()
-	{
-		return focusListener;
-	}
-	
-	public String getAddress()
-	{
-		HyperlinkTextViewer viewer =
-			(HyperlinkTextViewer) view.getViewer(MessageView.ADVANCED);
-	
-		if (viewer != null)
-			return viewer.getAddress();
-		else
-			return new String();
-	}
-	
-	public String getLink()
-	{
-		HyperlinkTextViewer viewer =
-			(HyperlinkTextViewer) view.getViewer(MessageView.ADVANCED);
-	
-		if (viewer != null)
-			return viewer.getLink();
-		else
-			return new String();
-	}
-	*/
-
-	/*
-	public void charsetChanged( CharsetEvent e ) {
-		activeCharset = e.getValue();
-	}
-	*/
 
 	public void hyperlinkUpdate(HyperlinkEvent e) {
-		/*
-		if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-			JEditorPane pane = (JEditorPane) e.getSource();
-			if (e instanceof HTMLFrameHyperlinkEvent) {
-				HTMLFrameHyperlinkEvent evt = (HTMLFrameHyperlinkEvent) e;
-				HTMLDocument doc = (HTMLDocument) pane.getDocument();
-				doc.processHTMLFrameHyperlinkEvent(evt);
-			} else {
-				URL url = e.getURL();
-				if (url != null) {
 		
-					if (url.getProtocol().equalsIgnoreCase("mailto")) {
-						// found email address
-						URLController c = new URLController();
-						JPopupMenu menu = c.createContactMenu(url.getFile());
-						menu.setVisible(true);
-		
-					} else {
-		
-						URLController c = new URLController();
-						c.open(url);
-					}
-				}
-			}
-		}
-		*/
-
 	}
 
 	public void mousePressed(MouseEvent event) {
@@ -347,9 +245,10 @@ public class MessageController
 	}
 
 	public void mouseClicked(MouseEvent event) {
+		
 		if (!SwingUtilities.isLeftMouseButton(event))
 			return;
-
+		
 		URL url = extractURL(event);
 		if (url == null)
 			return;
@@ -358,44 +257,10 @@ public class MessageController
 			c.compose(url.getFile());
 		else
 			c.open(url);
+			
 	}
 
-	/*
-	    private String getMapHREF(JEditorPane html, HTMLDocument hdoc,
-	                              Element elem, AttributeSet attr, int offset,
-	                              int x, int y) {
-	        Object useMap = attr.getAttribute(HTML.Attribute.USEMAP);
-	        if (useMap != null && (useMap instanceof String)) {
-	            Map m = hdoc.getMap((String)useMap);
-	            if (m != null && offset < hdoc.getLength()) {
-	                Rectangle bounds;
-	                TextUI ui = html.getUI();
-	                try {
-	                    Shape lBounds = ui.modelToView(html, offset,
-	                                               Position.Bias.Forward);
-	                    Shape rBounds = ui.modelToView(html, offset + 1,
-	                                               Position.Bias.Backward);
-	                    bounds = lBounds.getBounds();
-	                    bounds.add((rBounds instanceof Rectangle) ?
-	                                (Rectangle)rBounds : rBounds.getBounds());
-	                } catch (BadLocationException ble) {
-	                    bounds = null;
-	                }
-	                if (bounds != null) {
-	                    AttributeSet area = m.getArea(x - bounds.x,
-	                                                  y - bounds.y,
-	                                                  bounds.width,
-	                                                  bounds.height);
-	                    if (area != null) {
-	                        return (String)area.getAttribute(HTML.Attribute.
-	                                                         HREF);
-	                    }
-	                }
-	            }
-	        }
-	        return null;
-	    }
-	*/
+	
 
 	protected URL extractURL(MouseEvent event) {
 		JEditorPane pane = (JEditorPane) event.getSource();
@@ -404,10 +269,7 @@ public class MessageController
 		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
 		AttributeSet a = e.getAttributes();
 		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-		/*
-		if ( anchor == null )
-			s = getMapHREF(pane, doc, e, a, pane.viewToModel(event.getPoint()), event.getX(), event.getY() );
-		*/
+		
 		if (anchor == null)
 			return null;
 
@@ -415,6 +277,7 @@ public class MessageController
 		try {
 			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
 		} catch (MalformedURLException mue) {
+			return null;
 		}
 		return url;
 	}
@@ -422,8 +285,22 @@ public class MessageController
 	protected void processPopup(MouseEvent event) {
 		URL url = extractURL(event);
 		if (url == null)
+		{
+			// no URL, this means opening the default context menu
+			// with actions like reply/forward/delete/etc.
+			
+			// TODO: open table-view contextmenu here
+			// -> problem: actions listen for table-selection events
+			// ->          not message selection
+			
+			/*
+			getPopupMenu().show((JEditorPane)event.getSource(), event.getX(), event.getY());
+			*/
 			return;
+		}
+			
 
+		// open context-menu with open/open with actions
 		URLController c = new URLController();
 		JPopupMenu menu = c.createMenu(url);
 		menu.show(getView(), event.getX(), event.getY());
