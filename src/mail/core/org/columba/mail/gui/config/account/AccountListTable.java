@@ -18,11 +18,11 @@ package org.columba.mail.gui.config.account;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.columba.core.config.Config;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.gui.config.account.util.AccountHeaderRenderer;
 import org.columba.mail.gui.config.account.util.NameRenderer;
 import org.columba.mail.gui.config.account.util.StringAccountRenderer;
 import org.columba.mail.util.MailResourceLoader;
@@ -51,6 +51,9 @@ class AccountListTable extends JTable
         tc.setCellRenderer( new StringAccountRenderer(true) );
 
         sizeColumnsToFit( AUTO_RESIZE_NEXT_COLUMN );
+        DefaultTableCellRenderer renderer = 
+                    (DefaultTableCellRenderer)tableHeader.getDefaultRenderer();
+        renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
     }
 
     public void update()

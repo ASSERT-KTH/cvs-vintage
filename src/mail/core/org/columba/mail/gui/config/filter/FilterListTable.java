@@ -17,6 +17,7 @@ package org.columba.mail.gui.config.filter;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.columba.core.config.Config;
@@ -36,6 +37,9 @@ class FilterListTable extends JTable {
                 TableColumn tc = getColumnModel().getColumn(1);
                 tc.setMaxWidth(80);
                 tc.setMinWidth(80);
+                DefaultTableCellRenderer renderer = 
+                        (DefaultTableCellRenderer)tableHeader.getDefaultRenderer();
+                renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
 	}
 
 	public void update() {
