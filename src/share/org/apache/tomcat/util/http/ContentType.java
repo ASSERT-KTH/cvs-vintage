@@ -90,6 +90,10 @@ public class ContentType {
             return null;
         }
         String afterCharset = type.substring(charsetLocation + 8);
+        // The charset value in a Content-Type header is allowed to be quoted
+        // and charset values can't contain quotes.  Just convert any quote
+        // chars into spaces and let trim clean things up.
+        afterCharset = afterCharset.replace('"', ' ');
         String encoding = afterCharset.trim();
         return encoding;
     }
