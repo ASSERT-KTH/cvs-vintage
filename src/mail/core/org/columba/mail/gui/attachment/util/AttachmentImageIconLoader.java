@@ -49,8 +49,9 @@ public final class AttachmentImageIconLoader {
      */
     public static ImageIcon getImageIcon(String contentType, String contentSubtype) {
         StringBuffer buf = new StringBuffer();
+        buf.append("mime/gnome-");
         buf.append(contentType);
-        buf.append("_");
+        buf.append("-");
         buf.append(contentSubtype);
         buf.append(".png");
 
@@ -61,7 +62,7 @@ public final class AttachmentImageIconLoader {
         ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
 
         if (icon == null) {
-            icon = ImageLoader.getUnsafeImageIcon(contentType + ".png");
+            icon = ImageLoader.getUnsafeImageIcon("mime/gnome-"+contentType + ".png");
         }
 
         if (icon == null) {
