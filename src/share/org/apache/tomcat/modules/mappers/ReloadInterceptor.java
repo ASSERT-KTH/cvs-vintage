@@ -108,8 +108,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    Dependency dep=new Dependency();
 	    dep.setTarget("web.xml");
 	    dep.setOrigin( inf_xml );
-	    // if change after now, we'll reload the context
-	    dep.setLastModified( System.currentTimeMillis() );
+	    dep.setLastModified( inf_xml.lastModified() );
 	    dm.addDependency( dep );
 	}
     }
