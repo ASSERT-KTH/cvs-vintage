@@ -78,6 +78,9 @@ public final class LogDaemon implements Runnable {
     }
 
     public void start() {
+	// already running
+	if( logDaemonThread!=null) return;
+	
 	logQueue = new Queue();
 	logDaemonThread=new Thread(this);
 	logDaemonThread.setName("QueueLogDaemon");
