@@ -51,7 +51,6 @@ import org.columba.mail.gui.message.action.MessageActionListener;
 import org.columba.mail.gui.message.action.MessageFocusListener;
 import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.selection.TableSelectionListener;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -67,7 +66,6 @@ import org.columba.ristretto.message.StreamableMimePart;
 
 public class MessageController
 	implements
-		TableSelectionListener,
 		HyperlinkListener,
 		MouseListener,
 		CharsetListener,
@@ -117,10 +115,6 @@ public class MessageController
 		MainInterface.focusManager.registerComponent(this);
 
 		view.bodyTextViewer.addCaretListener(this);
-
-	}
-
-	public void tableSelectionChanged(Object[] newUidList) {
 
 	}
 
@@ -187,26 +181,26 @@ public class MessageController
 			charsetName = activeCharset;
 		}
 
-
 		// Shall we use the HTML-Viewer?
 
 		boolean htmlViewer =
 			bodyPart.getHeader().getContentSubtype().equals("html");
 
-		InputStream bodyStream = ((StreamableMimePart) bodyPart).getInputStream();
+		InputStream bodyStream =
+			((StreamableMimePart) bodyPart).getInputStream();
 
 		String encoding = bodyPart.getHeader().getContentTransferEncoding();
-		if( encoding != null ) {
-			if( encoding.equals("quoted-printable")) {
-				bodyStream = new QuotedPrintableDecoderInputStream( bodyStream );
-			} else if( encoding.equals("base64") ) {
-				bodyStream = new Base64DecoderInputStream( bodyStream );				
+		if (encoding != null) {
+			if (encoding.equals("quoted-printable")) {
+				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			} else if (encoding.equals("base64")) {
+				bodyStream = new Base64DecoderInputStream(bodyStream);
 			}
-		}		
-		
-		if( charsetName != null ) {
-			Charset charset	= Charset.forName( charsetName );
-			bodyStream = new CharsetDecoderInputStream( bodyStream, charset );
+		}
+
+		if (charsetName != null) {
+			Charset charset = Charset.forName(charsetName);
+			bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
 		}
 		boolean hasAttachments = false;
 
