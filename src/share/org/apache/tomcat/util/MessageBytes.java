@@ -643,27 +643,31 @@ public final class MessageBytes implements Cloneable, Serializable {
 	return code;
     }
 
+    public int indexOf(char c) {
+	return indexOf( c, 0);
+    }
+    
     /**
      * Returns true if the message bytes starts with the specified string.
      * @param s the string
      */
-    public int indexOf(char c) {
+    public int indexOf(char c, int starting) {
 	switch (type) {
 	case T_INT:
 	case T_DATE:
 	    String s1=toString();
 	    // continue with T_STR - it now have a strValue
 	case T_STR:
-	    return strValue.indexOf( c );
+	    return strValue.indexOf( c, starting );
 	case T_CHARS:
-	    for (int i = charsOff; i < charsOff + charsLen; i++) {
+	    for (int i = charsOff+starting; i < charsOff + charsLen; i++) {
 		if( c == chars[i] ) return i;
 	    }
 	    return -1;
 	case T_BYTES:
 	    int max=bytesOff+bytesLen;
 	    byte bb[]=bytes;
-	    for (int i = bytesOff; i < max ; i++) {
+	    for (int i = bytesOff+starting; i < max ; i++) {
 		if( (byte)c == bb[i]) return i;
 	    }
 	    return -1;

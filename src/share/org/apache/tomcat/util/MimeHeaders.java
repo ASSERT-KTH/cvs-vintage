@@ -1,7 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.15 2000/09/22 20:31:43 nacho Exp $
- * $Revision: 1.15 $
- * $Date: 2000/09/22 20:31:43 $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1

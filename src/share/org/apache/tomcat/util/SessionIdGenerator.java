@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.4 2000/08/23 20:21:49 jiricka Exp $
- * $Revision: 1.4 $
- * $Date: 2000/08/23 20:21:49 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -64,6 +60,8 @@
 
 package org.apache.tomcat.util;
 
+import java.util.Random;
+
 /**
  * This class generates a unique 10+ character id. This is good
  * for authenticating users or tracking users around.
@@ -89,7 +87,7 @@ public class SessionIdGenerator {
      */
     static private int session_count = 0;
     static private long lastTimeVal = 0;
-    static private java.util.Random randomSource;
+    static private java.util.Random globalRandomSource;
 
     // MAX_RADIX is 36
     /*
@@ -115,12 +113,16 @@ public class SessionIdGenerator {
 
     // ** NOTE that this must work together with get_jserv_session_balance()
     // ** in jserv_balance.c
-    static synchronized public String getIdentifier (String jsIdent)
+    static synchronized public String getIdentifier (Random randomSource,
+						     String jsIdent)
     {
         StringBuffer sessionId = new StringBuffer();
-        
+	if( randomSource==null)
+	    randomSource= globalRandomSource;
+	
         if (randomSource == null) {
-            String className = System.getProperty("tomcat.sessionid.randomclass");
+            String className = System.
+		getProperty("tomcat.sessionid.randomclass");
             if (className != null) {
                 try {
                     Class randomClass = Class.forName(className);
@@ -132,6 +134,8 @@ public class SessionIdGenerator {
             }
             if (randomSource == null)
                 randomSource = new java.security.SecureRandom();
+	    
+	    globalRandomSource = randomSource;
         }
 
         // random value ..
@@ -172,7 +176,17 @@ public class SessionIdGenerator {
         return sessionId.toString();
     }
 
-    public static synchronized String generateId() {
-        return getIdentifier(null);
+    static synchronized public String getIdentifier (String jsIdent)
+    {
+	return getIdentifier( globalRandomSource, jsIdent);
+    }
+    
+    static synchronized public String getIdentifier ()
+    {
+	return getIdentifier( globalRandomSource, null);
+    }
+    
+    public static synchronized String generateId(Random randomSource) {
+        return getIdentifier(randomSource, null);
     }
 }
