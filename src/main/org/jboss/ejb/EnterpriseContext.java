@@ -52,36 +52,21 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.56 $
- *
- * Revisions:
- * 2001/06/29: marcf
- *      - Added txLock to permit locking and most of all notifying on tx
- *        demarcation only
+ * @version $Revision: 1.57 $
  */
 public abstract class EnterpriseContext
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
    /** Instance logger. */
    protected Logger log = Logger.getLogger(this.getClass());
 
    /** The EJB instance */
-   Object instance;
+   protected Object instance;
 
    /** The container using this context */
-   Container con;
-
-   /**
-    * Set to the synchronization currently associated with this context.
-    * May be null
-    */
-   Synchronization synch;
+   protected Container container;
 
    /** The transaction associated with the instance */
-   Transaction transaction;
+   private Transaction transaction;
 
    /** The principal associated with the call */
    private Principal principal;
@@ -90,38 +75,29 @@ public abstract class EnterpriseContext
    private Principal beanPrincipal;
 
    /** Only StatelessSession beans have no Id, stateful and entity do */
-   Object id;
+   protected Object id;
 
    /** The instance is being used.  This locks it's state */
-   int locked = 0;
+   private int locked = 0;
 
    /** The instance is used in a transaction, synchronized methods on the tx */
-   Object txLock = new Object();
+   private final Object txLock = new Object();
 
    private final UserTransaction userTransaction;
 
-
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   public EnterpriseContext(Object instance, Container con)
+   public EnterpriseContext(Object instance, Container container)
    {
       this.instance = instance;
-      this.con = con;
-      if (isContainerManagedTx())
+      this.container = container;
+      if(isContainerManagedTx())
       {
          userTransaction = null;
-      } // end of if ()
+      }
       else
       {
-         userTransaction = con.getUserTransaction();
-      } // end of else
+         userTransaction = container.getUserTransaction();
+      }
    }
-
-
-   // Public --------------------------------------------------------
 
    public Object getInstance()
    {
@@ -131,40 +107,46 @@ public abstract class EnterpriseContext
    /**
     * Gets the container that manages the wrapped bean.
     */
-   public Container getContainer() {
-      return con;
+   public Container getContainer()
+   {
+      return container;
    }
 
-   public abstract void discard()
-      throws RemoteException;
+   public abstract void discard() throws RemoteException;
 
    /**
     * Get the EJBContext object
     */
    public abstract EJBContext getEJBContext();
 
-   public void setId(Object id) {
+   public void setId(Object id)
+   {
       this.id = id;
    }
 
-   public Object getId() {
+   public Object getId()
+   {
       return id;
    }
 
-   public Object getTxLock() {
+   public Object getTxLock()
+   {
       return txLock;
    }
 
-   public void setTransaction(Transaction transaction) {
+   public void setTransaction(Transaction transaction)
+   {
       // DEBUG log.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode())));
       this.transaction = transaction;
    }
 
-   public Transaction getTransaction() {
+   public Transaction getTransaction()
+   {
       return transaction;
    }
 
-   public void setPrincipal(Principal principal) {
+   public void setPrincipal(Principal principal)
+   {
       this.principal = principal;
       this.beanPrincipal = null;
    }
@@ -172,17 +154,16 @@ public abstract class EnterpriseContext
    public void lock()
    {
       locked ++;
-      //new Exception().printStackTrace();
       //DEBUG log.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
    }
 
-   public void unlock() {
-
+   public void unlock()
+   {
       // release a lock
       locked --;
 
-      //new Exception().printStackTrace();
-      if (locked <0) {
+      if(locked <0)
+      {
          // new Exception().printStackTrace();
          log.error("locked < 0", new Throwable());
       }
@@ -190,8 +171,8 @@ public abstract class EnterpriseContext
       //DEBUG log.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
    }
 
-   public boolean isLocked() {
-
+   public boolean isLocked()
+   {
       //DEBUG log.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
       return locked != 0;
    }
@@ -200,34 +181,23 @@ public abstract class EnterpriseContext
     * before reusing this context we clear it of previous state called
     * by pool.free()
     */
-   public void clear() {
+   public void clear()
+   {
       this.id = null;
       this.locked = 0;
       this.principal = null;
       this.beanPrincipal = null;
-      this.synch = null;
       this.transaction = null;
    }
 
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
    protected boolean isContainerManagedTx()
    {
-      BeanMetaData md = (BeanMetaData)con.getBeanMetaData();
+      BeanMetaData md = (BeanMetaData)container.getBeanMetaData();
       return md.isContainerManagedTx();
    }
 
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
-
-   protected class EJBContextImpl
-      implements EJBContext
+   protected class EJBContextImpl implements EJBContext
    {
-
       /**
        * @deprecated
        */
@@ -236,57 +206,74 @@ public abstract class EnterpriseContext
          throw new EJBException("Deprecated");
       }
 
-      /** Get the Principal for the current caller. This method
-          cannot return null according to the ejb-spec.
-      */
+      /**
+       * Get the Principal for the current caller. This method 
+       * cannot return null according to the ejb-spec.
+       */
       public Principal getCallerPrincipal()
       {
-         if( beanPrincipal == null )
+         if(beanPrincipal == null)
          {
-            RealmMapping rm = con.getRealmMapping();
-            if( principal != null )
+            RealmMapping realmMapping = container.getRealmMapping();
+            if(principal != null)
             {
-               if( rm != null )
-                  beanPrincipal = rm.getPrincipal(principal);
+               if(realmMapping != null)
+               {
+                  beanPrincipal = realmMapping.getPrincipal(principal);
+               }
                else
+               {
                   beanPrincipal = principal;
+               }
             }
-            else if( rm != null )
-            {  // Let the RealmMapping map the null principal
-               beanPrincipal = rm.getPrincipal(principal);
+            else if(realmMapping != null)
+            {
+               // Let the RealmMapping map the null principal
+               beanPrincipal = realmMapping.getPrincipal(principal);
             }
             else
-            {  // Check for a unauthenticated principal value
-               ApplicationMetaData appMetaData = con.getBeanMetaData().getApplicationMetaData();
+            {  
+               // Check for a unauthenticated principal value
+               ApplicationMetaData appMetaData = container.getBeanMetaData().getApplicationMetaData();
                String name = appMetaData.getUnauthenticatedPrincipal();
-               if( name != null )
+               if(name != null)
+               {
                   beanPrincipal = new SimplePrincipal(name);
+               }
             }
          }
-         if( beanPrincipal == null )
+         if(beanPrincipal == null)
+         {
             throw new IllegalStateException("No security context set");
+         }
          return beanPrincipal;
       }
 
       public EJBHome getEJBHome()
       {
-         if (con instanceof EntityContainer)
+         if(container instanceof EntityContainer)
          {
-            if (((EntityContainer)con).getProxyFactory()==null)
-               throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome)((EntityContainer)con).getProxyFactory().getEJBHome();
+            if(((EntityContainer)container).getProxyFactory()==null)
+            {
+               throw new IllegalStateException("No remote home defined.");
+            }
+            return (EJBHome)((EntityContainer)container).getProxyFactory().getEJBHome();
          }
-         else if (con instanceof StatelessSessionContainer)
+         else if(container instanceof StatelessSessionContainer)
          {
-            if (((StatelessSessionContainer)con).getProxyFactory()==null)
-               throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome) ((StatelessSessionContainer)con).getProxyFactory().getEJBHome();
+            if(((StatelessSessionContainer)container).getProxyFactory()==null)
+            {
+               throw new IllegalStateException("No remote home defined.");
+            }
+            return (EJBHome) ((StatelessSessionContainer)container).getProxyFactory().getEJBHome();
          }
-         else if (con instanceof StatefulSessionContainer)
+         else if(container instanceof StatefulSessionContainer)
          {
-            if (((StatefulSessionContainer)con).getProxyFactory()==null)
-               throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome) ((StatefulSessionContainer)con).getProxyFactory().getEJBHome();
+            if(((StatefulSessionContainer)container).getProxyFactory()==null)
+            {
+               throw new IllegalStateException("No remote home defined.");
+            }
+            return (EJBHome) ((StatefulSessionContainer)container).getProxyFactory().getEJBHome();
          }
 
          // Should never get here
@@ -295,23 +282,29 @@ public abstract class EnterpriseContext
 
       public EJBLocalHome getEJBLocalHome()
       {
-         if (con instanceof EntityContainer)
+         if(container instanceof EntityContainer)
          {
-            if (((EntityContainer)con).getLocalHomeClass()==null)
-               throw new IllegalStateException( "No local home defined." );
-            return ((EntityContainer)con).getLocalProxyFactory().getEJBLocalHome();
+            if(((EntityContainer)container).getLocalHomeClass()==null)
+            {
+               throw new IllegalStateException("No local home defined.");
+            }
+            return ((EntityContainer)container).getLocalProxyFactory().getEJBLocalHome();
          }
-         else if (con instanceof StatelessSessionContainer)
+         else if(container instanceof StatelessSessionContainer)
          {
-            if (((StatelessSessionContainer)con).getLocalHomeClass()==null)
-               throw new IllegalStateException( "No local home defined." );
-            return ((StatelessSessionContainer)con).getLocalProxyFactory().getEJBLocalHome();
+            if(((StatelessSessionContainer)container).getLocalHomeClass()==null)
+            {
+               throw new IllegalStateException("No local home defined.");
+            }
+            return ((StatelessSessionContainer)container).getLocalProxyFactory().getEJBLocalHome();
          }
-         else if (con instanceof StatefulSessionContainer)
+         else if(container instanceof StatefulSessionContainer)
          {
-            if (((StatefulSessionContainer)con).getLocalHomeClass()==null)
-               throw new IllegalStateException( "No local home defined." );
-            return ((StatefulSessionContainer)con).getLocalProxyFactory().getEJBLocalHome();
+            if(((StatefulSessionContainer)container).getLocalHomeClass()==null)
+            {
+               throw new IllegalStateException("No local home defined.");
+            }
+            return ((StatefulSessionContainer)container).getLocalProxyFactory().getEJBLocalHome();
          }
 
          // Should never get here
@@ -329,12 +322,17 @@ public abstract class EnterpriseContext
       public boolean getRollbackOnly()
       {
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
-         if (con.getBeanMetaData().isBeanManagedTx())
+         if(container.getBeanMetaData().isBeanManagedTx())
+         {
             throw new IllegalStateException("ctx.getRollbackOnly() not allowed for BMT beans.");
+         }
 
-         try {
-            return con.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK;
-         } catch (SystemException e) {
+         try 
+         {
+            return container.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK;
+         }
+         catch (SystemException e) 
+         {
             log.warn("failed to get tx manager status; ignoring", e);
             return true;
          }
@@ -343,13 +341,21 @@ public abstract class EnterpriseContext
       public void setRollbackOnly()
       {
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
-         if (con.getBeanMetaData().isBeanManagedTx())
+         if(container.getBeanMetaData().isBeanManagedTx())
+         {
             throw new IllegalStateException("ctx.setRollbackOnly() not allowed for BMT beans.");
+         }
 
-         try {
-            con.getTransactionManager().setRollbackOnly();
-         } catch (IllegalStateException e) {
-         } catch (SystemException e) {
+         try 
+         {
+            container.getTransactionManager().setRollbackOnly();
+         } 
+         catch (IllegalStateException e)
+         {
+            // ignore
+         }
+         catch (SystemException e)
+         {
             log.warn("failed to set rollback only; ignoring", e);
          }
       }
@@ -365,14 +371,16 @@ public abstract class EnterpriseContext
       // TODO - how to handle this best?
       public boolean isCallerInRole(String id)
       {
-         if (principal == null)
-            return false;
-         RealmMapping rm = con.getRealmMapping();
-         if( rm == null )
+         if(principal == null)
          {
-            String msg = "isCallerInRole() called with no security context. "
-               + "Check that a security-domain has been set for the application.";
-            throw new IllegalStateException(msg);
+            return false;
+         }
+         RealmMapping realmMapping = container.getRealmMapping();
+         if(realmMapping == null)
+         {
+            throw new IllegalStateException("isCallerInRole() called " +
+                  "with no security context. Check that a " +
+                  "security-domain has been set for the application.");
          }
 
          // Map the role name used by Bean Provider to the security role
@@ -386,10 +394,10 @@ public abstract class EnterpriseContext
          Iterator it = getContainer().getBeanMetaData().getSecurityRoleReferences();
          boolean matchFound = false;
 
-         while (it.hasNext())
+         while(it.hasNext())
          {
             SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData)it.next();
-            if (meta.getName().equals(id))
+            if(meta.getName().equals(id))
             {
                id = meta.getLink();
                matchFound = true;
@@ -398,19 +406,21 @@ public abstract class EnterpriseContext
             }
          }
 
-         if (!matchFound)
+         if(!matchFound)
+         {
             log.warn("no match found for security role " + id +
                      " in the deployment descriptor.");
+         }
 
          HashSet set = new HashSet();
          set.add( new SimplePrincipal(id) );
 
-         return rm.doesUserHaveRole( principal, set );
+         return realmMapping.doesUserHaveRole( principal, set );
       }
 
       public UserTransaction getUserTransaction()
       {
-         if (isContainerManagedTx())
+         if(isContainerManagedTx())
          {
             throw new IllegalStateException
                ("CMT beans are not allowed to get a UserTransaction");
@@ -418,13 +428,9 @@ public abstract class EnterpriseContext
          return userTransaction;
       }
 
-      public TimerService getTimerService()
-         throws IllegalStateException
+      public TimerService getTimerService() throws IllegalStateException
       {
          return getContainer().getTimerService( null );
       }
    }
-
-   // Inner classes -------------------------------------------------
-
 }
