@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.26 2002/11/18 04:38:27 jmcnally Exp $
+@version $Id: AdminIndex.vm,v 1.27 2003/03/20 00:57:33 jon Exp $
 *#
 
 <div id="adminIndex" class="app">
@@ -39,6 +39,9 @@
 #end
 #if ($link.isAllowed("admin,ManageModules.vm"))
  <li>$link.setPage("admin,ManageModules.vm").setLabel("$l10n.ManageModules")</li>
+#end
+#if ($link.isAllowed("admin,XMLImportIssues.vm"))
+ <li>$link.setPage("admin,XMLImportIssues.vm").setLabel("$l10n.XMLImport")</li>
 #end
 #if ($link.isAllowed("admin,XMLExportIssues.vm"))
  <li>$link.setPage("admin,XMLExportIssues.vm").setLabel("$l10n.XMLExport")</li>

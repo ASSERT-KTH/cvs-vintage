@@ -4,6 +4,8 @@
 
 <form method="post" action="$link.setPage("EditXModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" 
+    value="$data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE)" />
         
 #if ($mitList)
 

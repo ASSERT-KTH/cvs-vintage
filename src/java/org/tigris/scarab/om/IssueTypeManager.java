@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.HashMap;
 import org.apache.torque.TorqueException;
 import org.apache.torque.manager.CacheListener;
 import org.apache.torque.om.Persistent;
@@ -55,7 +56,7 @@ import org.apache.torque.om.Persistent;
 /** 
  * This class manages IssueType objects.  
  *
- * @version $Id: IssueTypeManager.java,v 1.5 2003/02/11 00:08:18 elicia Exp $
+ * @version $Id: IssueTypeManager.java,v 1.6 2003/03/20 00:57:31 jon Exp $
  */
 public class IssueTypeManager
     extends BaseIssueTypeManager
@@ -71,6 +72,17 @@ public class IssueTypeManager
     {
         super();
         setRegion(getClassName().replace('.', '_'));
+        validFields = new HashMap();
+        validFields.put(IssueTypePeer.ISSUE_TYPE_ID, null);
+    }
+
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        List listeners = (List)listenersMap.get(IssueTypePeer.ISSUE_TYPE_ID);
+        notifyListeners(listeners, oldOm, om);
+        return oldOm;
     }
 
     /**

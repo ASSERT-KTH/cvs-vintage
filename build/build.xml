@@ -308,7 +308,9 @@
         <filter token="LOG_FILE_JCS" value="${scarab.log.file.jcs}"/>
         <filter token="LOG_APPEND_JCS" value="${scarab.log.append.jcs}"/>
         <filter token="LOG_LEVEL_BEANUTILS" value="${scarab.log.level.beanutils}"/>
+        <filter token="LOG_LEVEL_VELOCITY" value="${scarab.log.level.velocity}"/>
         <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
+        <filter token="LOG_APPEND_VELOCITY" value="${scarab.log.append.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <filter token="EMAIL_ENCODING" value="${scarab.email.encoding}"/>
         <filter token="LOCALE_DEFAULT_LANGUAGE" 

@@ -91,7 +91,6 @@ public  class ReportBridge
 
     private ScarabUser generatedBy;
     private Date generatedDate;
-    private List dates;
 
     /** used to store query key as part of Retrievable interface */
     private String queryKey;

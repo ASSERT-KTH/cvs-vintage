@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Hashtable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.Arrays;
 
@@ -111,6 +112,8 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListItem;
+import org.tigris.scarab.om.MITListItemManager;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.ReportManager;
@@ -122,6 +125,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;  
+import org.tigris.scarab.util.ScarabPaginatedList;
 import org.tigris.scarab.util.SnippetRenderer;  
 import org.tigris.scarab.util.SimpleSkipFiltering;  
 import org.tigris.scarab.util.word.IssueSearch;
@@ -605,6 +609,22 @@ try{
     {
         return getAttributeOption(new NumberKey(key));
     }    
+
+    public MITList getCurrentMITList()
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        MITList mitList = user.getCurrentMITList();
+        if (mitList == null)
+        {
+            mitList = new MITList();
+            MITListItem item = MITListItemManager.getInstance();
+            item.setModuleId(getCurrentModule().getModuleId());
+            item.setIssueTypeId(getCurrentIssueType().getIssueTypeId());
+            mitList.addMITListItem(item);        
+        }
+        return mitList;
+    }
 
     /**
      * First attempts to get the RModuleUserAttributes from the user.
@@ -1543,6 +1563,7 @@ try{
     {
         // query.getValue() begins with a &
         link = link + "?queryId=" + query.getQueryId()
+            + "&refine=true"
             + "&action=Search&eventSubmit_doGotoEditQuery=foo" 
             + query.getValue();
 
@@ -1588,16 +1609,17 @@ try{
     {
         if (issueSearch == null) 
         {
-            MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
+            ScarabUser user = (ScarabUser)data.getUser();
+            MITList mitList = user.getCurrentMITList();
             if (mitList == null)
             {
                 IssueType it = getCurrentIssueType();
                 Module cum = getCurrentModule();
-                issueSearch = new IssueSearch(cum, it);
+                issueSearch = new IssueSearch(cum, it, user);
             }
             else 
             {
-                issueSearch = new IssueSearch(mitList);
+                issueSearch = new IssueSearch(mitList, user);
             }
         }
         return issueSearch; 
@@ -1681,8 +1703,8 @@ try{
         if (searchSuccess) 
         {        
             NumberKey oldOptionId = search.getStateChangeFromOptionId();
-            if (oldOptionId != null && oldOptionId
-                .equals(search.getStateChangeToOptionId())) 
+            if (oldOptionId != null && !oldOptionId.equals(new NumberKey("0"))
+                 && oldOptionId.equals(search.getStateChangeToOptionId())) 
             {
                 searchSuccess = false;
                 setAlertMessage(l10n.get("StateChangeOldEqualNew"));
@@ -1781,18 +1803,21 @@ try{
         throws Exception
     {
         // normally we would use "this" as the first arg to ScarabCache.get,
-        // but SRT is not serializable.  Might want to change the interface,
-        // but getSearchResults wraps an IssueSearch so we can get around it
-        // that way
-        IssueSearch search = getNewSearch();
+        // but SRT is not serializable.  The result is a mix of a query string
+        // and an MITList and the two should not vary over the course of one
+        // request so use the query string as the key. We were using the 
+        // IssueSearch returned by getNewSearch as the key, but we have to
+        // call user.getMostRecentQuery prior to getNewSearch, so using
+        // that instead.
+        String queryString = ((ScarabUser)data.getUser()).getMostRecentQuery();
         List results = null;
         Object obj = 
-            ScarabCache.get(search, "getUnprotectedCurrentSearchResults"); 
+            ScarabCache.get(queryString, "getUnprotectedCurrentSearchResults");
         if (obj == null) 
         {       
             results = getUncachedCurrentSearchResults();
-            ScarabCache
-                .put(results, search, "getUnprotectedCurrentSearchResults");
+            ScarabCache.put(results, queryString, 
+                            "getUnprotectedCurrentSearchResults");
         }
         else 
         {
@@ -1869,16 +1894,16 @@ try{
     }
 
     /**
-     * Returns index of issue's position in current issue list.
+     * Returns the issue's position (1-based) in current issue list.
     */
     public int getIssuePosInList()
         throws Exception, ScarabException
     {
         int issuePos = -1;
+        String id = getIssue().getUniqueId();
         String[] prevNextList = data.getParameters().getStrings("issueList");
         if (prevNextList != null) 
         {
-            String id = getIssue().getUniqueId();
             int listOffset = Math.max(0, Integer.parseInt(prevNextList[0]));
             for (int i=2; i<prevNextList.length; i++)
             {
@@ -1893,10 +1918,9 @@ try{
         if (issuePos == -1) 
         {
             List srchResults = getCurrentSearchResults();
-            Issue issue = getIssue();
             for (int i = 0; i<srchResults.size(); i++)
             {
-                if (srchResults.get(i).equals(issue.getUniqueId()))
+                if (srchResults.get(i).equals(id))
                 {
                     issuePos = i + 1;
                     break;
@@ -2235,6 +2259,88 @@ try{
         return getUsers(module, issueType);
     }
 
+
+    /**
+     *  Full featured, paginated, sorted method for returning the results 
+     *  of user search.  Returns all users (no search criteria). 
+     */
+    public ScarabPaginatedList UserSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
+                                                 String sortColumn, String sortPolarity)
+        throws Exception
+    {
+        return userFilteredSearchResults(mitList, pageNum, resultsPerPage, 
+                                         sortColumn, sortPolarity, "", "");
+
+    }
+
+    /**
+     * Full featured, paginated, sorted version for returning results 
+     * of a user search.
+     */
+    public ScarabPaginatedList UserFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
+                                                         String sortColumn, String sortPolarity)
+        throws Exception
+    {
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        String searchString = data.getParameters()
+               .getString("searchString"); 
+        String searchField = data.getParameters()
+               .getString("searchField"); 
+
+        if (searchField == null)
+        {
+            setInfoMessage(l10n.get("SearchFieldPrompt"));
+            return null ;
+        }
+        
+        return userFilteredSearchResults(mitList, pageNum, resultsPerPage, 
+                                         sortColumn, sortPolarity, 
+                                         searchString, searchField);
+
+    }
+
+    private ScarabPaginatedList userFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage,
+                                                          String sortColumn, String sortPolarity, 
+                                                          String searchString, String searchField)
+        throws Exception
+    {
+
+        String name = null;
+        String userName = null;
+        Module module = getCurrentModule();  
+        ScarabPaginatedList list = null;
+
+        if (searchField.equals("FullName"))
+        {
+            name = searchString;
+        }
+        else if (searchField.equals("Username"))
+        {
+            userName = searchString;
+        }
+
+        try 
+        {
+            list =  module.getUsers(name, userName, mitList,
+                                    (pageNum-1)*resultsPerPage, resultsPerPage, 
+                                    sortColumn, sortPolarity);
+        } 
+        catch (Exception e)
+        {
+            list = new ScarabPaginatedList();
+            Log.get().error("", e);
+        }
+
+        // these are object members are used by GlobalMacros.vm via the bean interface.
+        // leave them here until all users of the paginate macro can be updated. 
+        this.nbrPages = list.getNumberOfPages();
+        this.nextPage = list.getNextPageNumber();
+        this.prevPage = list.getPrevPageNumber();
+
+        return list;
+    }
+                                
+
     /**
      * Return results of user search.
      */
@@ -2546,12 +2652,17 @@ try{
             ((ScarabUser)data.getUser()).setAssociatedUsersMap(assoUsers);
         }
     }
+    public void resetSelectedUsers() throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        user.setSelectedUsersMap(null);
+    }
 
     public List getAssignIssuesList()
         throws Exception
     {        
         List issues = null;
-        HashMap userMap = ((ScarabUser)data.getUser()).getAssociatedUsersMap();
+        Map userMap = ((ScarabUser)data.getUser()).getAssociatedUsersMap();
         if (userMap != null && userMap.size() > 0)
         {
             issues = new ArrayList();

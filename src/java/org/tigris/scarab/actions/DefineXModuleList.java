@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.15 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.16 2003/03/20 00:57:30 jon Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -300,6 +300,8 @@ public class DefineXModuleList extends RequireLoginFirstAction
             }
             
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            setTarget(data, data.getParameters()
+                      .getString(ScarabConstants.LAST_TEMPLATE));
         }
     }
 

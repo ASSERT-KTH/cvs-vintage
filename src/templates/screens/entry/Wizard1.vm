@@ -86,9 +86,8 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTempaltes", $scar
         #if ( $templ.getAttributeValue($att))   
             #set ($templAttVal = $templ.getAttributeValue($att))
         #else
-            #set ($templAttVal = "")
+            #set ($templAttVal = $scarabR.getNewAttributeValue($att, $templ))
         #end
-        #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
         #if ($attVal.Attribute.AttributeType.ValidationKey)
            #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
         #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)

@@ -17,7 +17,7 @@
 <form method="get" action="$link.setPage("reports,XModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
  <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" 
-     value="reports,XModuleList" />
+     value="reports,XModuleList.vm" />
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
      value="reports,Info.vm" />
 

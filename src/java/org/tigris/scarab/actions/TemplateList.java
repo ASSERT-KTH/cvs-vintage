@@ -85,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.42 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: TemplateList.java,v 1.43 2003/03/20 00:57:30 jon Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -108,51 +108,56 @@ public class TemplateList extends RequireLoginFirstAction
         IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
         Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey());
         Group issueGroup = intake.get("Issue", issue.getQueryKey());
-        issueGroup.setProperties(issue);
-        infoGroup.setProperties(info);
+        Field name = infoGroup.get("Name");
+        name.setRequired(true);
 
-        if (checkForDupes(info, infoGroup.get("Name").toString(), 
-                          user, scarabR.getCurrentModule(), 
-                          scarabR.getCurrentIssueType()))
+        if (intake.isAllValid()) 
         {
-            scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
-        }
-        else if (intake.isAllValid()) 
-        {
-            // Save activitySet record
-            ActivitySet activitySet = ActivitySetManager
-                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
-            activitySet.save();
-
-            Iterator iter = avMap.iterator();
-            while (iter.hasNext()) 
+            issueGroup.setProperties(issue);
+            infoGroup.setProperties(info);
+            if (checkForDupes(info, infoGroup.get("Name").toString(), 
+                              user, scarabR.getCurrentModule(), 
+                              scarabR.getCurrentIssueType()))
             {
-                aval = (AttributeValue)avMap.get(iter.next());
-                group = intake.get("AttributeValue", aval.getQueryKey(),false);
-                if (group != null)
-                {
-                    aval.startActivitySet(activitySet);
-                    group.setProperties(aval);
-                }                
-            }
-
-            // get issue type id = the child type of the current issue type
-            issue.save();
-            info.setIssueId(issue.getIssueId());
-
-            // Save template info
-            boolean success = info.saveAndSendEmail(user, 
-                              scarabR.getCurrentModule(), context);
-            if (success)
-            {
-                data.getParameters().add("templateId", issue.getIssueId().toString());
-                scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
+                scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
             }
             else
             {
-                scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
-            }
-        } 
+                // Save activitySet record
+                ActivitySet activitySet = ActivitySetManager
+                    .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+                activitySet.save();
+
+                Iterator iter = avMap.iterator();
+                while (iter.hasNext()) 
+                {
+                    aval = (AttributeValue)avMap.get(iter.next());
+                    group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                    if (group != null)
+                    {
+                        aval.startActivitySet(activitySet);
+                        group.setProperties(aval);
+                    }                
+                }
+
+                // get issue type id = the child type of the current issue type
+                issue.save();
+                info.setIssueId(issue.getIssueId());
+
+                // Save template info
+                boolean success = info.saveAndSendEmail(user, 
+                                  scarabR.getCurrentModule(), context);
+                if (success)
+                {
+                    data.getParameters().add("templateId", issue.getIssueId().toString());
+                    scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
+                }
+                else
+                {
+                    scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
+                }
+            } 
+        }
         else
         {
             scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
@@ -254,18 +259,18 @@ public class TemplateList extends RequireLoginFirstAction
         IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
         Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey());
 
-        if (checkForDupes(info, infoGroup.get("Name").toString(), 
-                          user, scarabR.getCurrentModule(), 
-                          scarabR.getCurrentIssueType()))
+        if (intake.isAllValid()) 
         {
-            success = false;
-            scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
-        }
-        else if (intake.isAllValid()) 
-        {
-            // Save template info
             infoGroup.setProperties(info);
             info.setIssueId(issue.getIssueId());
+            if (checkForDupes(info, infoGroup.get("Name").toString(), 
+                              user, scarabR.getCurrentModule(), 
+                              scarabR.getCurrentIssueType()))
+            {
+                success = false;
+                scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
+            }
+            // Save template info
             info.saveAndSendEmail(user, scarabR.getCurrentModule(), context);
             data.getParameters().add("templateId", issue.getIssueId().toString());
             scarabR.setConfirmMessage(l10n.get("TemplateModified"));

@@ -56,11 +56,13 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.CacheListener;
 
+import org.tigris.scarab.util.Log;
+
 /** 
  * This class manages AttributeGroup objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AttributeGroupManager.java,v 1.6 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: AttributeGroupManager.java,v 1.7 2003/03/20 00:57:31 jon Exp $
  */
 public class AttributeGroupManager
     extends BaseAttributeGroupManager
@@ -111,12 +113,18 @@ public class AttributeGroupManager
         if (om instanceof RAttributeAttributeGroup)
         {
             RAttributeAttributeGroup castom = (RAttributeAttributeGroup)om;
-            ObjectKey key = castom.getGroupId();
-            Serializable obj = (Serializable)cacheGet(key);
-            if (obj != null) 
+            ObjectKey key = castom.getGroupId();            
+            try
             {
-                getMethodResult().remove(obj, 
-                    AttributeGroup.GET_ATTRIBUTES);
+                Serializable obj = getInstance(key);
+                if (obj != null) 
+                {
+                    getMethodResult().remove(obj, AttributeGroup.GET_ATTRIBUTES);
+                }
+            }
+            catch(TorqueException e)
+            {
+                Log.get().warn("Invalid AttributeGroup id ", e);
             }
         }
         else if (om instanceof Attribute) 

@@ -393,7 +393,7 @@
 #foreach ($num in [25, 50, 75, 100])
  <input type="radio" value="$num" name="resultsPerPage" #if ($resultsPerPage == $num) checked="checked" #end /> $num
 #end
- <input type="radio" value="-1" name="resultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
+ ##<input type="radio" value="-1" name="resultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
 
 #end
 
@@ -412,15 +412,15 @@
  </p>
 #end
 
-#macro (paginateWithSearch $resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
+#macro (paginateWithSearch $resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("headingtype","$headingType"))
   <a href="$prevLink">&laquo; previous</a> |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("headingtype","$headingType"))
   | <a href="$nextLink">&raquo; next</a>
  #end
  </p>
@@ -550,15 +550,20 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <p><small>"<strong>*</strong>" $l10n.RequiredFields</small></p>
 #end
 
-#macro (userList $mitList)
+#macro (userList $mitList $includeAny $includeCommittedBy)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity","asc"))
 
-## USER SEARCH
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
+#set ($headingType = $data.Parameters.getInt("headingtype", 1))
 
+## USER SEARCH
 <a name="add"><h3>$l10n.Users</h3></a> 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
@@ -566,8 +571,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
    <th>$l10n.FilterThisList</th>
    <td><input type="text" name="searchString" value="$!searchString" />&nbsp;
      <select name="searchField">
-      <option value="First Name" #if($searchField.equals("First Name")) selected="selected"#end>$l10n.FirstName</option>
-      <option value="Last Name" #if($searchField.equals("Last Name")) selected="selected"#end>$l10n.LastName</option>
+      <option value="FullName" #if($searchField.equals("FullName")) selected="selected"#end>$l10n.FullName</option>
       <option value="Username" #if($searchField.equals("Username")) selected="selected"#end>$l10n.Username</option>
      </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
   </tr>
@@ -575,24 +579,21 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 </div>
 
 #if ($searchString && $searchString.length() > 0)
-   #set ($searchResults = $scarabR.UserSearchResults) 
-   #if ( $searchResults.isEmpty())
-      <p class="alert">$l10n.NoUsersMatch</p>
-      #set ($searchResults = $scarabR.sortUsers($mitList.PotentialAssignees))
-   #end
+    #set ($searchResults = $scarabR.UserFilteredSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+    #if ( $searchResults.getList().isEmpty())
+        <p class="alert">$l10n.NoUsersMatch</p>
+        #set ($searchResults = $scarabR.UserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+    #end 
 #else
-      #set ($searchResults = $scarabR.sortUsers($mitList.PotentialAssignees))
-#end
+    #set ($searchResults = $scarabR.UserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
+#end 
 
-## PAGINATION
-## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-#set ($paginated = ($resultsPerPage > 0 && $searchResults.size() > $resultsPerPage))
+#set ($searchResultsSize = $searchResults.getTotalListSize())
+#set ($searchResultsList = $searchResults.getList())
 
+#set ($paginated = ($resultsPerPage > 0 && $searchResultsSize > $resultsPerPage))
 #if ($paginated)
-  #set ($searchResults = $scarabR.getPaginatedList($searchResults, $pageNum, $resultsPerPage))
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
 #end
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -602,12 +603,18 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
     <th>#userSort ("name" "$l10n.FullName" "AssignIssue.vm")</th>
 	<th>$l10n.Association</th>
 	</tr>
-   #foreach ($user in $searchResults)
+   #foreach ($user in $searchResultsList)
     #indexedRows($velocityCount)
     <td><input type="checkbox" name="add_user" value="$user.UserId" /></td>
     <td><a href="mailTo:$user.Email">$user.UserName</a></td>
     <td>$user.Name</td>
     <td><select name="user_attr_$user.UserId">
+    #if ($includeAny)
+       <option value="any">$l10n.Any</option>
+    #end
+    #if ($includeCommittedBy)
+       <option value="created_by">$l10n.CommittedBy</option>
+    #end
      #foreach ($userAttr in $userAttrs)
       #if ($user.hasPermission($userAttr.Permission, $mitList.Modules))
        <option value="$userAttr.AttributeId">$userAttr.Name</option>
@@ -619,7 +626,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
    </table>
 
 #if ($paginated)
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">

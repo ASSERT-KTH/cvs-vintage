@@ -29,22 +29,21 @@
   <h3><a name="top" id="top">$l10n.ManagingIssues$l10n.Colon $l10n.Overview</a></h3>
   <p>$l10n.OverviewPara</p>
 
-<ul>
-  <li> 
+  <ul>
+    <li> 
   <strong>$l10n.Relationships</strong> $l10n.RelationshipsDef
    
   </li>
-  <li> 
+    <li> 
  <strong>$l10n.Voting</strong> $l10n.VotingDef
   </li>
-  <li> 
-    <strong>$l10n.ChangeTracking</strong> $l10n.ChangeTracking
-  </li>
-  <li> 
+    <li> 
+    <strong>$l10n.ChangeTracking</strong> $l10n.ChangeTrackingDef  </li>
+    <li> 
   <strong>$l10n.CommentViewing</strong> $l10n.CommentViewingDef
   </li>
-  <li><strong>$l10n.SaveFrequentInfo</strong> $l10n.SaveFrequentInfoDef</li>
-</ul>
+    <li><strong>$l10n.SaveFrequentInfo</strong> $l10n.SaveFrequentInfoDef</li>
+  </ul>
 
   <h3><a name="types" id="types"></a>$l10n.IssueTypes </h3>
   <p>$l10n.IssueTypesP1</p>

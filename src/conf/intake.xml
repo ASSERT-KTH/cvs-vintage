@@ -100,7 +100,7 @@
         <field name="Name" key="name" type="String">
             <rule name="required" value="true">intake_IssueTypeNameNotAllowedEmpty</rule>
             <rule name="mask" value="\S">intake_IssueTypeNameNotAllowedEmpty</rule>
-            <rule name="maxLength" value="255">intake_IssueTypeNameMustBeLessThan255Characters</rule>    
+            <rule name="maxLength" value="100">intake_IssueTypeNameMustBeLessThan100Characters</rule>    
         </field>
         <field name="Description" key="desc" type="String">
             <rule name="maxLength" value="255">intake_IssueTypeDescriptionMustBeLessThan255Characters</rule>    
@@ -336,7 +336,6 @@
         <field name="SortPolarity" key="sp" type="String"/>
         <field name="NullUser" key="nu" type="boolean"  mapToProperty=""/>
         <field name="NullUserAttr" key="nua" type="String"  mapToProperty=""/>
-        <field name="ResultsPerPage" key="rpp" type="int"/> 
 </group>
 
 <group name="Module" key="mod" mapToObject="om.ScarabModule">
@@ -520,9 +519,6 @@
 </group>
 
 <group name="Report" key="rep" mapToObject="reports.ReportBridge">
-        <field name="Type" key="type" type="int">
-            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
-        </field>
         <field name="Name" key="name" type="String">
             <rule name="maxLength" value="255">intake_NameMustBeLessThan256Characters</rule>
         </field>
@@ -530,17 +526,7 @@
             <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
         </field>
         <field name="ScopeId" key="scp" type="NumberKey"/>
-        <field name="NewDate" key="date" type="DateString">
-           <rule name="format1" value="MM/dd/yy HH:mm"/>
-           <rule name="format2" value="MM/dd/yy"/>
-           <rule name="flexible" value="true"/>
-        </field>
         <field name="DefaultDate" key="dd" type="DateString">
-           <rule name="format1" value="MM/dd/yy HH:mm"/>
-           <rule name="format2" value="MM/dd/yy"/>
-           <rule name="flexible" value="true"/>
-        </field>
-        <field name="Dates" key="dates" type="DateString" multiValued="true">
            <rule name="format1" value="MM/dd/yy HH:mm"/>
            <rule name="format2" value="MM/dd/yy"/>
            <rule name="flexible" value="true"/>

@@ -1,5 +1,7 @@
 #set ($mitList = $scarabR.Report.MITList)
 #set ($userAttrs = $mitList.CommonUserAttributes)
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+#set ($searchField = $data.Parameters.getString("searchField" , ""))
 <p>
   $l10n.ClickHereReportMessage
 </p>
@@ -61,7 +63,7 @@
 </div>
 #end						
 
-#userList($mitList)
+#userList($mitList false false)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />

@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.31 2003/02/05 06:59:22 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.32 2003/03/20 00:57:31 jon Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -90,15 +90,16 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = getScarabRequestTool(context).getIssueType();
         Group group = intake.get("IssueType", issueType.getQueryKey());
+        Field field = group.get("Name");
+        String name = field.toString();
+        NumberKey id = issueType.getIssueTypeId();
 
         if (intake.isAllValid()) 
         {
-            if (issueType.getIssueTypeId() == null)
+            if (id == null)
             {
                 // Create new issue type
                 // make sure name is unique
-                Field field = group.get("Name");
-                String name = field.toString();
                 if (IssueTypePeer.isUnique(name, null)) 
                 {
                     group.setProperties(issueType);
@@ -122,9 +123,29 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             else
             {
                 // Edit existing issue type
-                group.setProperties(issueType);
-                issueType.save();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                if (IssueTypePeer.isUnique(name, id)) 
+                {
+                    // Cannot delete an issue type that has issues 
+                    Field deleted = group.get("Deleted");
+                    if (deleted != null && deleted.toString().equals("true") 
+                        && issueType.hasIssues())
+                    {
+                        scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                        deleted.setMessage("IssueTypeHasIssues");
+                        success = false;
+                    }
+                    else
+                    {
+                        group.setProperties(issueType);
+                        issueType.save();
+                        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                    }
+                }
+                else 
+                {
+                    success = false;
+                    scarabR.setAlertMessage(l10n.get("IssueTypeNameExists"));
+                }
             }
         }
         else
@@ -360,12 +381,14 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         Object[] keys = params.getKeys();
         String key;
         String attributeId;
+        boolean atLeastOne = false;
 
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
             if (key.startsWith("att_delete_"))
             {
+               atLeastOne = true;
                attributeId = key.substring(11);
                Attribute attribute = AttributeManager
                    .getInstance(new NumberKey(attributeId), false);
@@ -386,6 +409,10 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                ScarabCache.clear();
            }
         }        
+        if (!atLeastOne)
+        {
+           scarabR.setAlertMessage(l10n.get("NoAttributesSelected"));
+        }
     }
 
     /**
@@ -424,11 +451,15 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         throws Exception
     {
         boolean infoSuccess = doSaveinfo(data, context);
-        boolean groupSuccess = doSavegroups(data, context);
-        doSaveuserattributes(data, context);
-        if (infoSuccess && groupSuccess)
+        boolean groupSuccess = true;
+        if (infoSuccess)
         {
-            doCancel(data, context);
+            groupSuccess = doSavegroups(data, context);
+            doSaveuserattributes(data, context);
+            if (groupSuccess)
+            {
+                doCancel(data, context);
+            }
         }
     }
 }

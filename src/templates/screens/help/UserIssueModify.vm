@@ -45,11 +45,12 @@
       <p>$l10n.AssociatingUsersP1</p>
       <p>$l10n.AssociatingUsersP2<strong>$l10n.Assign</strong> $l10n.AssociatingUsersP2S1 <strong>$l10n.EditList</strong> $l10n.AssociatingUsersP2S2 <strong>$l10n.Assign</strong> $l10n.AssociatingUsersP2S3</p>
       <p><strong>$l10n.AssociatingUsersP3Head</strong> $l10n.AssociatingUsersP3 <strong>$l10n.AssociateSelectedUserWithIssue</strong> $l10n.IssueEntryP26S2</p>
-      <p><strong>$l10n.AssociatingUsersP4Head</strong> $l10n.AssociatingUsersP4 <strong>$l10n.RemoveSelectedAssignee</strong> $l10n.IssueEntryP26S2</p>
-      <p><strong>$l10n.AssociatingUsersP5Head</strong> $l10n.AssociatingUsersP5</p>
+      
+  <p><strong>$l10n.AssociatingUsersP4Head</strong> $l10n.AssociatingUsersP4 <strong>$l10n.RemoveSelected</strong> $l10n.IssueEntryP26S2</p>
+  <p><strong>$l10n.AssociatingUsersP5Head</strong> $l10n.AssociatingUsersP5 <strong>$l10n.UpdateSelected</strong> $l10n.IssueEntryP26S2</p>
       <p>$l10n.AssociatingUsersP6</p>
     
     <h3><a name="move" id="move">$l10n.MovingIssues</a></h3>
-    <p>$l10n.MovingIssuesP1 $l10n.ToAnotherModule $l10n.MovingIssuesP1S2 $l10n.InOriginalModule
+    <p>$l10n.MovingIssuesP1 $l10n.ToAnotherModule $l10n.MovingIssuesP1S2 $l10n.InOriginalModule $l10n.MovingIssuesP1S3 $l10n.MovingIssuesP1S4
 <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
   </div>

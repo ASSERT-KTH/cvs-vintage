@@ -192,50 +192,78 @@ public class IssueManager
         {
             AttributeValue castom = (AttributeValue)om;
             ObjectKey key = castom.getIssueId();
-            Serializable obj = (Serializable)cacheGet(key);
-            if (obj != null) 
+            try
             {
-                getMethodResult().remove(obj, Issue.GET_MODULE_ATTRVALUES_MAP);
-                getMethodResult().remove(obj, Issue.GET_USER_ATTRIBUTEVALUES);
+                Serializable obj = getInstance(key);
+                if (obj != null) 
+                {
+                    getMethodResult().remove(obj, Issue.GET_MODULE_ATTRVALUES_MAP);
+                    getMethodResult().remove(obj, Issue.GET_USER_ATTRIBUTEVALUES);
+                }
+            }
+            catch(TorqueException e)
+            {
+                Log.get().warn("Invalid Issue id ", e);
             }
         }
         else if (om instanceof Attachment) 
         {
             Attachment castom = (Attachment)om;
             ObjectKey key = castom.getIssueId();
-            Serializable obj = (Serializable)cacheGet(key);
-            if (obj != null) 
+            try
             {
-                getMethodResult().remove(obj, Issue.GET_URLS);
-                getMethodResult().removeAll(obj, Issue.GET_COMMENTS);
-                getMethodResult().removeAll(obj, 
-                    Issue.GET_EXISTING_ATTACHMENTS);
+                Serializable obj = getInstance(key);
+                if (obj != null) 
+                {
+                    getMethodResult().remove(obj, Issue.GET_URLS);
+                    getMethodResult().removeAll(obj, Issue.GET_COMMENTS);
+                    getMethodResult().removeAll(obj, 
+                        Issue.GET_EXISTING_ATTACHMENTS);
+                }
+            }
+            catch(TorqueException e)
+            {
+                Log.get().warn("Invalid Issue id ", e);
             }
         }
         else if (om instanceof Depend) 
         {
             Depend castom = (Depend)om;
             ObjectKey key = castom.getObserverId();
-            Serializable obj = (Serializable)cacheGet(key);
-            if (obj != null) 
+            try
             {
-                getMethodResult().removeAll(obj, Issue.GET_PARENTS);
+                Serializable obj = getInstance(key);
+                if (obj != null) 
+                {
+                    getMethodResult().removeAll(obj, Issue.GET_PARENTS);
+                }
+                key = castom.getObservedId();
+                obj = getInstance(key);
+                if (obj != null) 
+                {
+                    getMethodResult().removeAll(obj, Issue.GET_CHILDREN);
+                }
             }
-            key = castom.getObservedId();
-            obj = (Serializable)cacheGet(key);
-            if (obj != null) 
+            catch(TorqueException e)
             {
-                getMethodResult().removeAll(obj, Issue.GET_CHILDREN);
+                Log.get().warn("Invalid Issue id ", e);
             }
         }
         else if (om instanceof Activity) 
         {
             Activity castom = (Activity)om;
             ObjectKey key = castom.getIssueId();
-            Serializable obj = (Serializable)cacheGet(key);
-            if (obj != null) 
+            try
             {
-                getMethodResult().removeAll(obj, Issue.GET_ACTIVITY);
+                Serializable obj = getInstance(key);
+                if (obj != null) 
+                {
+                    getMethodResult().removeAll(obj, Issue.GET_ACTIVITY);
+                }
+            }
+            catch(TorqueException e)
+            {
+                Log.get().warn("Invalid Issue id ", e);
             }
         }
         else if (om instanceof Attribute) 

@@ -48,7 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -79,7 +79,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.85 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.86 2003/03/20 00:57:30 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -95,7 +95,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        HashMap userMap = user.getAssociatedUsersMap();
+        Map userMap = user.getAssociatedUsersMap();
         ValueParser params = data.getParameters();
         String[] userIds = params.getStrings(ADD_USER);
         if (userIds != null && userIds.length > 0) 
@@ -220,7 +220,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = scarabR.getAssignIssuesList();
-        HashMap userMap = user.getAssociatedUsersMap();
+        Map userMap = user.getAssociatedUsersMap();
         String actionString = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
         String reason = data.getParameters().getString("reason", "");

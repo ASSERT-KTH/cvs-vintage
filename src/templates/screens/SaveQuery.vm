@@ -56,7 +56,9 @@ $intake.declareGroups()
 
 #else
   <p class="alert">$l10n.NoQueryToSave
-  <a href="$link.setPage("AdvancedQuery.vm")">$l10n.EnterAQuery</a></p>
+<div class="functnbar3">
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoadvancedquery" />
+</div>
 #end
 
 </div>

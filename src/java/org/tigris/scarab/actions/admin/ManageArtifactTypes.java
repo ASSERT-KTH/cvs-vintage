@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.27 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.28 2003/03/20 00:57:31 jon Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -118,6 +118,13 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                                  rmit.getQueryKey(), false);
                 rmitGroup.setProperties(rmit);
                 rmit.save();
+                // reset the current issue type, if it has been marked inactive
+                if (!rmit.getActive() && rmit.getIssueTypeId().equals(
+                    scarabR.getCurrentIssueType().getIssueTypeId())) 
+                {
+                    scarabR.setCurrentIssueType(null);
+                }
+                
                 String pageNum = data.getParameters().getString("pageNum","1");
                 data.getParameters().add("pageNum", pageNum);
             }

@@ -17,7 +17,7 @@
 <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 #else
   #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
-    <p class="alert">$l10n.TemplateWarning</p>
+    <p class="alert">$l10n.QueryWarning</p>
   #end
 
 <div class="functnbar">
@@ -58,7 +58,6 @@
   <input type="submit" name="eventSubmit_doEditqueryinfo" value="$l10n.Save" />&#160; 
 </div>
 
-#set ($refine = true)
 #advancedQuery()
 
 #if ($currentQuery.QueryType.Name.equals("All users"))

@@ -82,7 +82,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.46 2003/03/15 21:56:57 jon Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.47 2003/03/20 00:57:30 jon Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -134,6 +134,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        String msg = DEFAULT_MSG;
 
         if (!ag.isGlobal() && issueType.getLocked())
         {
@@ -143,7 +144,6 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         List attributes = ag.getAttributes();
         Module module = scarabR.getCurrentModule();
-        String msg = DEFAULT_MSG;
         ArrayList lockedAttrs = new ArrayList();
 
         if (intake.isAllValid())
@@ -193,6 +193,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                         if (!rma.getRequired())
                         {
                             msg = "ChangesSavedButDefaultTextAttributeRequired";
+                            intake.remove(rmaGroup);
                         }
                         rma.setIsDefaultText(true);
                         rma.setRequired(true);
@@ -220,8 +221,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     setLockedMessage(lockedAttrs, context);
                 }
             }
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-            intake.removeAll();
+            scarabR.setConfirmMessage(l10n.get(msg));
             ScarabCache.clear();
         } 
         else
@@ -272,6 +272,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     }
                     ria.setIsDefaultText(true);
                     ria.setRequired(true);
+                    intake.remove(riaGroup);
                 }
                 ria.save();
 
@@ -289,7 +290,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         else
         {
             success = false;
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(l10n.get(msg));
         }
         return success;
     }

@@ -69,91 +69,64 @@ import org.tigris.scarab.om.GlobalParameterManager;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.21 2003/03/15 21:56:59 jon Exp $
+ * @version $Id: Email.java,v 1.22 2003/03/20 00:57:31 jon Exp $
  */
 public class Email
 {
-    private static boolean enableEmail = true;
-
-    /**
-     * Quick way to turn off sending of emails. By default
-     * emails can be sent.
-     */
-    public static void setEnable(boolean value)
-    {
-        enableEmail = value;
-    }
-
     public static boolean sendEmail(EmailContext context, Module module, 
                                     Object fromUser, Object replyToUser,
                                     Collection toUsers, Collection ccUsers,
                                     String template)
         throws Exception
     {
-        if (!enableEmail || !GlobalParameterManager
+        if (!GlobalParameterManager
             .getBoolean(GlobalParameterManager.EMAIL_ENABLED, module))
         {
             return true;
         }
-        VelocityService vs = null;
+
+        boolean success = true;
+
+        TemplateEmail te = getTemplateEmail(context, fromUser, 
+                                            replyToUser, template);
+
+        for (Iterator iter = toUsers.iterator(); iter.hasNext();) 
+        {
+            ScarabUser toUser = (ScarabUser)iter.next();
+            te.addTo(toUser.getEmail(),
+                     toUser.getName());
+            // remove any CC users that are also in the To
+            if (ccUsers != null && ccUsers.contains(toUser))
+            {
+                ccUsers.remove(toUser);
+            }
+        }
+            
+        if (ccUsers != null)
+        {
+            for (Iterator iter = ccUsers.iterator(); iter.hasNext();) 
+            {
+                ScarabUser ccUser = (ScarabUser)iter.next();
+                te.addCc(ccUser.getEmail(),
+                         ccUser.getName());
+            }
+        }
+
+        String archiveEmail = module.getArchiveEmail();
+        if (archiveEmail != null && archiveEmail.trim().length() > 0)
+        {
+            te.addCc(archiveEmail, null);
+        }
+
         try
         {
-            // turn off the event cartridge handling so that when
-            // we process the email, the html codes are escaped.
-            vs = (VelocityService) TurbineServices
-                .getInstance().getService(VelocityService.SERVICE_NAME);
-            vs.setEventCartridgeEnabled(false);
-
-            boolean success = true;
-
-            TemplateEmail te = getTemplateEmail(context, fromUser, 
-                replyToUser, template);
-
-            for (Iterator iter = toUsers.iterator(); iter.hasNext();) 
-            {
-                ScarabUser toUser = (ScarabUser)iter.next();
-                te.addTo(toUser.getEmail(),
-                         toUser.getName());
-                // remove any CC users that are also in the To
-                if (ccUsers != null && ccUsers.contains(toUser))
-                {
-                    ccUsers.remove(toUser);
-                }
-            }
-            
-            if (ccUsers != null)
-            {
-                for (Iterator iter = ccUsers.iterator(); iter.hasNext();) 
-                {
-                    ScarabUser ccUser = (ScarabUser)iter.next();
-                    te.addCc(ccUser.getEmail(),
-                             ccUser.getName());
-                }
-            }
-
-            String archiveEmail = module.getArchiveEmail();
-            if (archiveEmail != null && archiveEmail.trim().length() > 0)
-            {
-                te.addCc(archiveEmail, null);
-            }
-
-            try
-            {
-                te.sendMultiple();
-            }
-            catch (SendFailedException e)
-            {
-                success = false;
-            }
-            return success;
+            te.sendMultiple();
         }
-        finally
+        catch (SendFailedException e)
         {
-            if (vs != null)
-            {
-                vs.setEventCartridgeEnabled(true);
-            }
+            success = false;
         }
+        return success;
     }
 
     /**

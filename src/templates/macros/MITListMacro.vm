@@ -73,7 +73,7 @@ $l10n.NoIssueTypeSelected
     </td>
     <td>$item.Module.Name</td>
     <td>$item.IssueType.Name</td>
-    <td>$item.IssueCount</td>
+    <td>$item.getIssueCount($data.User)</td>
     <td>$item.IssueType.Description</td>
   </tr>        
  #end

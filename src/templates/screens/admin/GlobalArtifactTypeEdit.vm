@@ -93,7 +93,7 @@
 
 #set ($issueDedupeSequence = $issueType.DedupeSequence)
 #foreach ($group in $groups)
- #if ($velocityCount == $issueDedupeSequence && $issueType.getAttributeGroups(false).size() > 1)
+ #if ($velocityCount == $issueDedupeSequence && $groups.size() > 1)
  <tr>
    <td>&#160;</td>
    <td>$l10n.DuplicateCheck</td>
@@ -115,10 +115,11 @@
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
+#if ($groups.size() > 0)
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSavegroups" />
+#end
 </div>
 
 

@@ -138,7 +138,7 @@
 
 <h4>$l10n.AddAttachment</h4>
 <div class="colbar">
-* $l10n.format("AttachmentFieldRequired", $l10n.Path)
+*&nbsp;$l10n.format("AttachmentFieldRequired", $l10n.Path)
 </div>
 
 <div class="axial">
@@ -153,14 +153,14 @@
       </td>
     </tr>
     <tr>
-      <th>* $l10n.Description</th>
+      <th>*&nbsp;$l10n.Description</th>
       <td>
        #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
        #fieldErrorMsg($intakeAttachment.Name "")
       </td>
     </tr>    
     <tr>
-      <th>* $l10n.Type</th>
+      <th>*&nbsp;$l10n.Type</th>
       <td>
         <select name="$intakeAttachment.MimeTypeA.Key" class="select">
         #if ($intakeAttachment.MimeTypeA)

@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.22 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: QueryList.java,v 1.23 2003/03/20 00:57:30 jon Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -91,6 +91,7 @@ public class QueryList extends RequireLoginFirstAction
        
         if (intake.isAllValid())
         {
+            boolean valid = true;
             List queries = scarabR.getAllQueries();
             for (int i = 0; i < queries.size(); i++)
             {    
@@ -103,15 +104,16 @@ public class QueryList extends RequireLoginFirstAction
                 {
                     Field freq = queryGroup.get("Frequency");
                     freq.setRequired(true);
-                    if (freq.isValid())
+                    if (!freq.isValid())
                     {
-                       queryGroup.setProperties(rqu);
-                       rqu.save();
+                        valid = false;
+                        freq.setMessage("EnterSubscriptionFrequency");
                     }
-                    else
-                    {
-                       freq.setMessage("EnterSubscriptionFrequency");
-                    }
+                }                
+                if (valid) 
+                {
+                    queryGroup.setProperties(rqu);
+                    rqu.save();
                 }
             }
        }
@@ -197,4 +199,11 @@ public class QueryList extends RequireLoginFirstAction
          }
      }
 
+    public void doGotoadvancedquery(RunData data, TemplateContext context)
+        throws Exception
+    {
+        // reset selected users map
+        getScarabRequestTool(context).resetSelectedUsers();
+        setTarget(data, "AdvancedQuery.vm");
+    }
 }

@@ -1,77 +1,108 @@
-<div id="userlist" class="app">
+<div class="app" id="viewissue">
 
-## USER SEARCH
-<form action="$link.setPage("UserList.vm")" method="post">
-<input type="hidden" name="action" value="Search" />
-#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "AdvancedQuery.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 #set ($queryId = $data.Parameters.getString("queryId"))
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
+#set ($searchField = $data.Parameters.getString("searchField" , ""))
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "AdvancedQuery.vm"))
+#set ($selectedUsers =  $data.User.SelectedUsersMap)
+#set ($reason = $data.Parameters.getString("reason" , ""))
+#set ($mitList = $scarabR.CurrentMITList)
+#set ($userAttrs = $mitList.getCommonUserAttributes())
+#if ($userAttrs.isEmpty())
+ <p class="alert">$l10n.NoAssignableUserAttributes</p>
+#elseif ($issueListSize == 0)
+ <p class="alert">$l10n.AssociateUsersAndIssues</p>
+#else
+
+#printCollisionInfo()
+
+#if (!$actionLink)
+  #set ($actionLink = $link.setPage("UserList.vm").toString())
+#end
+
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="Search" />
+<input type="hidden" name="refine" value="$data.Parameters.getString("refine","")"/>
+<input type="hidden" name="sortPolarity" value="$data.Parameters.getString("sortPolarity","")"/>
+<input type="hidden" name="sortColumn" value="$data.Parameters.getString("sortColumn","")"/>
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 #if ($queryId)
 <input type="hidden" name="queryId" value="$queryId" />
 #end
-
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
-#set ($searchString = $data.Parameters.getString("searchString" , ""))
-
-<h3>$l10n.Users</h3>
-
+  
 <div class="functnbar">
-  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancelUserList" />
+<input type="submit" value="$l10n.Done" name="eventSubmit_doCancel" />
 </div>
 
-<div class="axial">
-<table border="0" cellspacing="2" cellpadding="3">
-  <tr>
-   <th>$l10n.FilterThisList</th>
-   <td><input type="text" name="searchString" />&nbsp;
-     <select name="searchField" >
-      <option value="First Name">$l10n.FirstName</option>
-      <option value="Last Name">$l10n.LastName</option>
-      <option value="Email">$l10n.Email</option>
-     </select>&nbsp;<input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
-  </tr>
-</table>
+
+##ASSIGNEE LIST
+## Determine if there are any users to show up in the added/assigned list
+<h3>$l10n.Personnel</h3>
+
+<div class="colbar">
+<ul>
+<li>$l10n.format("ClickHereToSelectUsers", $issueListSize)</li>
+<li>$l10n.ChangesSavedOnDone</li>
+</ul>
 </div>
 
-#set ($searchString = $data.Parameters.getString("searchString" , ""))
-#if ($searchString && $searchString.length() > 0)
-   #set ($searchResults = $scarabR.UserSearchResults) 
-   #if ( $searchResults.isEmpty())
-      <p class="alert">$l10n.NoUserMatch</p>
-      #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
-   #end
-#else
-      #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+    #if (!$selectedUsers || $selectedUsers.size() == 0)
+     <p class="alert">$l10n.NoneAssigned.</p>
+    #else
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">$l10n.Select</th>
+		<th>$l10n.Username</th>
+		<th>$l10n.FullName</th>
+		<th>$l10n.Association</th>
+		</tr>
+#foreach ($userId in $selectedUsers.keySet())
+  #set ($user = $scarabR.getUser($userId))
+  #set ($attrId = $selectedUsers.get($userId))
+    #indexedRows($velocityCount)
+    <td>
+      <input type="checkbox" name="select_user" value="$userId" />
+      <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
+    </td>
+    <td><a href="mailto:$user.Email">$user.UserName</a></td>
+    <td>$!user.Name</td>
+    <td><select name="asso_user_{$userId}">
+      <option value="any"
+         #if ($attrId.equals("any")) selected="selected" #end
+         >$l10n.Any</option>
+      <option value="created_by"
+         #if ($attrId.equals("created_by")) selected="selected" #end
+         >$l10n.CommittedBy</option>
+     #foreach ($selectUserAttr in $userAttrs)
+      #if ($user.hasPermission($selectUserAttr.Permission, $mitList.Modules))
+        #set ($selected = false)
+        #if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
+            #set ($selected = true)
+        #end
+        <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
+      #end
+     #end
+       </select></td>
+    </tr>
 #end
 
-
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
-  <tr>
-    <th nowrap="nowrap">&#160;</th>
-    <th>$l10n.Name</th>
-    <th>$l10n.Username</th>
-  </tr>
-  ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
-    
-  #foreach ($user in $searchResults)
-    <tr class="a">
-    <td><input type="checkbox" name="user_list" value="$user.UserId" /></td>
-    <td><a href="mailTo:$user.Email"><strong>$!user.Name</strong></a></td>
-    <td>$user.UserName</td>
-    </tr>
-   #end
-</table>  
+   </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doAddUserList" value="$l10n.AssociateSelectedUserWithIssue" />
+ <input type="submit" name="eventSubmit_doRemoveusers" value="$l10n.RemoveSelected" />
+ <input type="submit" name="eventSubmit_doUpdateusers" value="$l10n.UpdateSelected" />
+</div>
+  #end
+
+#userList($mitList true true)
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />
 </div>
 
-<div class="functnbar2">
-  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancelUserList" />
-</div>
-		
 $intake.declareGroups()
-</form>
 
+#end
 </div>
+</form>

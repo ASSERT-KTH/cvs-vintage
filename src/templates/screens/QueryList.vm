@@ -39,8 +39,10 @@
 <h3>$l10n.SavedQueries</h3>
 
 #if ($queries.size() < 1)
- <p class="alert">$l10n.NoSavedQueries $link.setPage("AdvancedQuery.vm").setLabel("Advanced query").
- </p>
+ <p class="alert">$l10n.NoSavedQueries</p>
+<div class="functnbar3">
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoadvancedquery" />
+</div>
 
 #else
 #if ($paginated)

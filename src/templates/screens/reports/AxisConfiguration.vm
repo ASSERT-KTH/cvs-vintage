@@ -27,7 +27,7 @@
 </div>
 
 
-#if ($reportDefn.ReportAxisList.size() > 0)
+#if ($reportDefn.ReportAxisList && $reportDefn.ReportAxisList.size() > 0)
 <div class="colbar"><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "$axisIndex").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
 #end
 

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.124 2003/03/04 17:27:20 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.125 2003/03/20 00:57:32 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -132,6 +132,19 @@
     <index name="IX_NEW_USER_ISSUE">
         <index-column name="NEW_USER_ID"/>
         <index-column name="ISSUE_ID"/>
+    </index>
+     <!-- with only the above indices a search criteria containing several
+          attributes with multiple options per attribute was not able to 
+          make use of the common issue_id join condition which led to a
+          cross join of sorts.  We could replace the index above with those
+          below, but the optimum speed is obtained with both. -->
+    <index name="IX_ISSUE_NEW_OPTION">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="NEW_OPTION_ID"/>
+    </index>
+    <index name="IX_ISSUE_NEW_USER">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="NEW_USER_ID"/>
     </index>
 </table>
 
@@ -830,6 +843,26 @@
      <index name="IX_AV_INT_ISSUE_DEL">
         <index-column name="NUMERIC_VALUE"/>
         <index-column name="ISSUE_ID"/>
+        <index-column name="DELETED"/>
+     </index>
+     <!-- with only the above indices a search criteria containing several
+          attributes with multiple options per attribute was not able to 
+          make use of the common issue_id join condition which led to a
+          cross join of sorts.  We could replace the index above with those
+          below, but the optimum speed is obtained with both. -->
+     <index name="IX_AV_ISSUE_OPTION_DEL">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="OPTION_ID"/>
+        <index-column name="DELETED"/>
+     </index>
+     <index name="IX_AV_ISSUE_USER_DEL">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="USER_ID"/>
+        <index-column name="DELETED"/>
+     </index>
+     <index name="IX_AV_ISSUE_INT_DEL">
+        <index-column name="ISSUE_ID"/>
+        <index-column name="NUMERIC_VALUE"/>
         <index-column name="DELETED"/>
      </index>
 </table>

@@ -99,11 +99,13 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListItem;
 import org.tigris.scarab.om.RModuleUserAttribute;
+import org.tigris.scarab.om.ScarabUser;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 
 /** 
@@ -260,21 +262,25 @@ public class IssueSearch
     // a result set faster.
     private LRUMap moduleMap = new LRUMap(20);
     private LRUMap rmitMap = new LRUMap(20);
-    
-    public IssueSearch(Issue issue)
+
+    private boolean isSearchAllowed = true;
+
+    public IssueSearch(Issue issue, ScarabUser searcher)
         throws Exception
     {
-        this(issue.getModule(), issue.getIssueType());
+        this(issue.getModule(), issue.getIssueType(), searcher);
         getAttributeValues().addAll(issue.getAttributeValues());
     }
 
-    public IssueSearch(Module module, IssueType issueType)
+    public IssueSearch(Module module, IssueType issueType, ScarabUser searcher)
         throws Exception
     {
         super(module, issueType);
+        isSearchAllowed = 
+            searcher.hasPermission(ScarabSecurity.ISSUE__SEARCH, module); 
     }
 
-    public IssueSearch(MITList mitList)
+    public IssueSearch(MITList mitList, ScarabUser searcher)
         throws Exception
     {
         super();
@@ -283,22 +289,28 @@ public class IssueSearch
             throw new IllegalArgumentException("A non-null list with at" +
                " least one item is required.");
         }
-        if (mitList.isSingleModuleIssueType()) 
+
+        String[] perms = {ScarabSecurity.ISSUE__SEARCH};
+        MITList searchableList = mitList
+            .getPermittedSublist(perms, searcher);
+        isSearchAllowed = searchableList.size() > 0;
+
+        if (searchableList.isSingleModuleIssueType()) 
         {
-            MITListItem item = mitList.getFirstItem();
+            MITListItem item = searchableList.getFirstItem();
             setModuleId(item.getModuleId());
             setTypeId(item.getIssueTypeId());
         }
         else 
         {
-            this.mitList = mitList;   
-            if (mitList.isSingleModule()) 
+            this.mitList = searchableList;   
+            if (searchableList.isSingleModule()) 
             {
-                setModule(mitList.getModule());
+                setModule(searchableList.getModule());
             }
-            if (mitList.isSingleIssueType()) 
+            if (searchableList.isSingleIssueType()) 
             {
-                setIssueType(mitList.getIssueType());
+                setIssueType(searchableList.getIssueType());
             }
         }        
     }
@@ -1728,6 +1740,7 @@ public class IssueSearch
         Date minUtilDate = parseDate(getStateChangeFromDate(), false);
         Date maxUtilDate = parseDate(getStateChangeToDate(), true);
         if (oldOptionId != null || newOptionId != null 
+            || !oldOptionId.equals(new NumberKey(0)) || !newOptionId.equals(new NumberKey(0))
             || minUtilDate != null || maxUtilDate != null)
         {
             from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ON +
@@ -1740,12 +1753,12 @@ public class IssueSearch
             }
             else
             {
-                if (newOptionId != null) 
+                if (newOptionId != null && !newOptionId.equals(new NumberKey(0))) 
                 {
                     from.append(AND).append(ActivityPeer.NEW_OPTION_ID)
                         .append('=').append(newOptionId);
                 }
-                if (oldOptionId != null) 
+                if (oldOptionId != null && !oldOptionId.equals(new NumberKey(0)))
                 {
                     from.append(AND).append(ActivityPeer.OLD_OPTION_ID)
                         .append('=').append(oldOptionId);
@@ -1837,7 +1850,11 @@ public class IssueSearch
         throws Exception
     {
         checkModified();
-        if (lastQueryResults == null) 
+        if (!isSearchAllowed) 
+        {
+            lastQueryResults = Collections.EMPTY_LIST;            
+        }
+        else if (lastQueryResults == null) 
         {
             List rows = null;
             StringBuffer from = new StringBuffer();
@@ -1874,38 +1891,50 @@ public class IssueSearch
     {
         checkModified();
         int count = 0;
-        if (lastTotalIssueCount >= 0) 
+        if (isSearchAllowed) 
         {
-            count = lastTotalIssueCount;
-        }
-        else 
-        {
-            Criteria crit = new Criteria();
-            StringBuffer from = new StringBuffer();
-            StringBuffer where = new StringBuffer();
-            NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
-            if (matchingIssueIds == null || matchingIssueIds.length > 0) 
+            if (lastTotalIssueCount >= 0) 
             {
-                StringBuffer sql = new StringBuffer("SELECT count(DISTINCT ");
-                sql.append(IssuePeer.ISSUE_ID).append(')').append(" FROM ")
-                    .append(IssuePeer.TABLE_NAME);
-                if (from.length() > 0) 
-                {
-                    sql.append(' ').append(from);
-                }
-                if (where.length() > 0) 
-                {
-                    sql.append(WHERE).append(where);
-                }
-
-                List records = BasePeer.executeQuery(sql.toString());
-                count = ((Record)records.get(0)).getValue(1).asInt();
+                count = lastTotalIssueCount;
+            }
+            else 
+            {
+                count = countFromDB();
             }
             lastTotalIssueCount = count;
         }
 
         return count;
     }
+
+    private int countFromDB()
+        throws Exception
+    {
+        int count = 0;
+        Criteria crit = new Criteria();
+        StringBuffer from = new StringBuffer();
+        StringBuffer where = new StringBuffer();
+        NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
+        if (matchingIssueIds == null || matchingIssueIds.length > 0) 
+        {
+            StringBuffer sql = new StringBuffer("SELECT count(DISTINCT ");
+            sql.append(IssuePeer.ISSUE_ID).append(')').append(" FROM ")
+                .append(IssuePeer.TABLE_NAME);
+            if (from.length() > 0) 
+            {
+                sql.append(' ').append(from);
+            }
+            if (where.length() > 0) 
+            {
+                sql.append(WHERE).append(where);
+            }
+            
+            List records = BasePeer.executeQuery(sql.toString());
+            count = ((Record)records.get(0)).getValue(1).asInt();
+        }
+        return count;
+    }
+
 
     /**
      * FIXME: If we are sorting on an attribute column (determined by

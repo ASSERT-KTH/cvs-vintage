@@ -46,6 +46,8 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Set;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,11 +61,16 @@ import org.apache.torque.TorqueRuntimeException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /** 
- * FIXME: Please comment this class John! =)
+ * A class representing a list (not List) of MITListItems.  MIT stands for
+ * Module and IssueType.  This class contains corresponding methods to many
+ * in Module which take a single IssueType.  for example
+ * module.getAttributes(issueType) is replaced with 
+ * mitList.getCommonAttributes() in cases where several modules and issuetypes
+ * are involved.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.18 2003/03/04 17:27:18 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.19 2003/03/20 00:57:31 jon Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -206,6 +213,40 @@ public  class MITList
         }
 
         return copyObj;
+    }
+
+
+    /**
+     * Creates a new MITList containing only those items from this list
+     * for which the searcher has the given permission.
+     *
+     * @param permission a <code>String</code> value
+     * @param searcher a <code>ScarabUser</code> value
+     * @return a <code>MITList</code> value
+     */
+    public MITList getPermittedSublist(String[] permissions, ScarabUser user)
+        throws Exception
+    {
+        MITList sublist = new MITList();
+        List items = getExpandedMITListItems();
+        Module[] validModules = user.getModules(permissions);
+
+        Set moduleIds = new HashSet();
+        for (int j=0; j<validModules.length; j++) 
+        {
+            moduleIds.add(validModules[j].getModuleId());
+        }
+        
+        for (Iterator i = items.iterator(); i.hasNext();) 
+        {
+            MITListItem item = (MITListItem)i.next();
+            if (moduleIds.contains(item.getModuleId())) 
+            {
+                sublist.addMITListItem(item);
+            }
+        }
+        
+        return sublist;
     }
 
 
@@ -947,11 +988,12 @@ public  class MITList
         throws TorqueException
     {
         super.save(con);
-        if (itemsScheduledForDeletion != null) 
+        if (itemsScheduledForDeletion != null 
+            && !itemsScheduledForDeletion.isEmpty()) 
         {
             List itemIds = new ArrayList(itemsScheduledForDeletion.size());
-            Iterator iter = itemsScheduledForDeletion.iterator();
-            while (iter.hasNext()) 
+            for (Iterator iter = itemsScheduledForDeletion.iterator(); 
+                 iter.hasNext();) 
             {
                 MITListItem item = (MITListItem)iter.next();
                 if (!item.isNew()) 
@@ -959,10 +1001,12 @@ public  class MITList
                     itemIds.add(item.getPrimaryKey());   
                 }                
             }
-            
-            Criteria crit = new Criteria();
-            crit.addIn(MITListItemPeer.ITEM_ID, itemIds);
-            MITListItemPeer.doDelete(crit);
+            if (!itemIds.isEmpty()) 
+            {
+                Criteria crit = new Criteria();
+                crit.addIn(MITListItemPeer.ITEM_ID, itemIds);
+                MITListItemPeer.doDelete(crit);
+            }
         }
     }
 }

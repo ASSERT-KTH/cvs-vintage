@@ -13,6 +13,10 @@
    <td id="issueid">
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+## mozilla sends the button name, if there is only one button and you hit
+## enter instead of the button.  It appears IE does not, so passing as a hidden
+## field
+ <input type="hidden" name="eventSubmit_doGonext" value="foo" />
  <input type="text" name="id" size="15" maxlength="255" tabindex="1" />
     &#160;<input type="submit" value="$l10n.IssueId" name="eventSubmit_doGonext" tabindex="2" />
 </form>
@@ -42,7 +46,7 @@
 #end
 
 <td>
-<form action="$link.setPage("Index.vm").setAction("Search")" method="get">
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
   <select name="go" tabindex="3" onChange="this.form.submit();">
     <option value="AdvancedQuery.vm">$l10n.SelectQuery</option>

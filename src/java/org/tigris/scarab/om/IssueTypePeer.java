@@ -139,20 +139,20 @@ public class IssueTypePeer
     public static boolean isUnique(String name, ObjectKey id)
         throws Exception
     {
-        boolean unique = false;
-        Criteria crit = new Criteria().add(IssueTypePeer.NAME, name);
+        boolean unique = true;
+        Criteria crit = new Criteria().add(IssueTypePeer.NAME, name.trim());
         crit.setIgnoreCase(true);
         List types = IssueTypePeer.doSelect(crit);
-        if (types.size() == 0) 
+        if (types.size() > 0) 
         {
-            unique = true;
-        }
-        else 
-        {
-            IssueType it = (IssueType)types.get(0);
-            if (id != null && it.getPrimaryKey().equals(id)) 
+            for (int i =0; i<types.size();i++)
             {
-                unique = true;
+                IssueType it = (IssueType)types.get(i);
+                if (id != null && !it.getPrimaryKey().equals(id)
+                    && it.getName().trim().toLowerCase().equals(name.trim().toLowerCase()))
+                {
+                    unique = false;
+                }
             }
         }
         return unique;

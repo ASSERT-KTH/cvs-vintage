@@ -48,10 +48,15 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.io.Serializable;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 
+// Commons classes
+import org.apache.commons.lang.StringUtils;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -68,9 +73,11 @@ import org.apache.fulcrum.security.entity.Role;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ScarabPaginatedList;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 // FIXME! do not like referencing servlet inside of business objects
@@ -94,7 +101,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.124 2003/02/04 11:26:01 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.125 2003/03/20 00:57:31 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -180,6 +187,126 @@ public class ScarabModule
             result = (ScarabUser[])obj;
         }
         return result;
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.Module#getUsers(String, String, String, String, IssueType)
+     * TODO: fix this method so the result is being limited by the DB, not 
+     *       by the List operations. 
+     */
+    public ScarabPaginatedList getUsers(String name, String username, 
+                                        MITList mitList, 
+                                        int offset, int resultSize,
+                                        final String sortColumn, String sortPolarity)
+        throws Exception
+    {
+        final int polarity = sortPolarity.equals("asc") ? 1 : -1; 
+        List result = null;
+        List potential = null;
+        ScarabPaginatedList paginated = null; 
+
+        Comparator c = new Comparator() 
+        {
+            public int compare(Object o1, Object o2) 
+            {
+                int i = 0;
+                if ("username".equals(sortColumn))
+                {
+                    i =  polarity * ((ScarabUser)o1).getUserName()
+                              .compareTo(((ScarabUser)o2).getUserName());
+                }
+                else
+                {
+                    i =  polarity * ((ScarabUser)o1).getName()
+                             .compareTo(((ScarabUser)o2).getName());
+                }
+                return i;
+             }
+        };
+
+        try 
+        {
+            potential = mitList.getPotentialAssignees();
+        }
+        catch ( Exception e) 
+        {
+            log().error("getUsers Exception during MITList gathering: " + e);
+        }
+
+        if (potential == null || potential.size() == 0)
+        {
+            paginated = new ScarabPaginatedList();
+        }
+        else 
+        {
+            List userIds = new ArrayList();
+            for (Iterator it = potential.iterator(); it.hasNext(); )
+            {
+                userIds.add(((ScarabUser)it.next()).getUserId());
+            }
+            Criteria crit = new Criteria();
+            crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
+
+            if (name != null)
+            {
+                int nameSeparator = name.indexOf(" ");
+                if (nameSeparator != -1) 
+                {
+                    String firstName = name.substring(0, nameSeparator);
+                    String lastName = name.substring(nameSeparator+1, name.length());
+                    crit.add(ScarabUserImplPeer.FIRST_NAME, 
+                             addWildcards(firstName), Criteria.LIKE);
+                    crit.add(ScarabUserImplPeer.LAST_NAME, 
+                             addWildcards(lastName), Criteria.LIKE);
+                    
+                }
+                else 
+                {
+                    String[] tableAndColumn = StringUtils.split(ScarabUserImplPeer.FIRST_NAME, ".");
+                    Criteria.Criterion fn = crit.getNewCriterion(tableAndColumn[0],
+                                                                 tableAndColumn[1], 
+                                                                 addWildcards(name), 
+                                                                 Criteria.LIKE);
+                    tableAndColumn = StringUtils.split(ScarabUserImplPeer.LAST_NAME, ".");
+                    Criteria.Criterion ln = crit.getNewCriterion(tableAndColumn[0],
+                                                                 tableAndColumn[1], 
+                                                                 addWildcards(name), 
+                                                                 Criteria.LIKE);
+                    fn.or(ln);
+                    crit.add(fn);
+                }
+            }
+
+            if (username != null)
+            {
+                crit.add(ScarabUserImplPeer.LOGIN_NAME, 
+                         addWildcards(username), Criteria.LIKE);
+            }
+
+            result = ScarabUserImplPeer.doSelect(crit);
+
+            // if there are results, sort the result set
+            if (result == null || result.size() == 0)
+            {
+                paginated = new ScarabPaginatedList();
+            }
+            else 
+            {
+                Collections.sort(result, c);
+                List limitedResult = new ArrayList(resultSize);
+                int count = 0;
+                for (ListIterator li = result.listIterator(offset); 
+                     li.hasNext() && ++count <= resultSize;)
+                {
+                    limitedResult.add(li.next());
+                }
+                result = limitedResult;
+            }
+            paginated = new ScarabPaginatedList(result, result.size(), offset/resultSize, resultSize);
+        }        
+        
+        return paginated;
     }
 
 

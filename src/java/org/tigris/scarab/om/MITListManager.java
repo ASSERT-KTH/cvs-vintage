@@ -31,6 +31,22 @@ public class MITListManager
         super();
     }
 
+    public static MITList getSingleItemList(Module module, IssueType issueType,
+                                            ScarabUser user)
+        throws TorqueException
+    {
+        MITList list = getInstance();
+        if (user != null) 
+        {
+            list.setScarabUser(user);
+        }
+        MITListItem item = MITListItemManager.getInstance();
+        item.setModule(module);
+        item.setIssueType(issueType);
+        list.addMITListItem(item);
+        return list;
+    }
+
     public static MITList getCurrentModuleAllIssueTypesList(ScarabUser user)
         throws TorqueException
     {

@@ -47,6 +47,8 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -61,6 +63,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -69,6 +72,9 @@ import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -83,16 +89,15 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.114 2003/03/07 16:39:52 jmcnally Exp $
+ * @version $Id: Search.java,v 1.115 2003/03/20 00:57:30 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
-    public void doPerform(RunData data, TemplateContext context)
-        throws Exception
-    {
-        doGonext(data, context);
-    }
-
+    private static final String ADD_USER = "add_user";
+    private static final String ADD_USER_BY_USERNAME = "add_user_by_username";
+    private static final String SELECTED_USER = "select_user";
+    private static final String USER_LIST = "user_list";
+    
     public void doSearch(RunData data, TemplateContext context)
         throws Exception
     {
@@ -185,6 +190,7 @@ public class Search extends RequireLoginFirstAction
                 query.saveAndSendEmail(user, module, context);
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE);
+                scarabR.resetSelectedUsers();
                 setTarget(data, template);            
             }
         }
@@ -233,6 +239,7 @@ public class Search extends RequireLoginFirstAction
         String queryString = getQueryString(data);
         ((ScarabUser)data.getUser()).setMostRecentQuery(queryString);
         data.getParameters().setString("queryString", queryString);
+        getScarabRequestTool(context).resetSelectedUsers();
     }
 
     /**
@@ -247,6 +254,8 @@ public class Search extends RequireLoginFirstAction
         query.setValue(newValue);
         query.saveAndSendEmail((ScarabUser)data.getUser(), 
                  scarabR.getCurrentModule(), context);
+        scarabR.resetSelectedUsers();
+        ((ScarabUser)data.getUser()).setMostRecentQuery(newValue);
     }
 
     /**
@@ -288,6 +297,12 @@ public class Search extends RequireLoginFirstAction
             {
                 data.getParameters().setString("queryId", go);
                 doRunstoredquery(data, context);
+            }
+            else if (go.equals("AdvancedQuery.vm"))
+            {
+                // reset selected users map
+                getScarabRequestTool(context).resetSelectedUsers();
+                setTarget(data, go);
             }
             else
             {
@@ -406,118 +421,6 @@ public class Search extends RequireLoginFirstAction
         setTarget(data, "AdvancedQuery.vm");            
     }
 
-    /**
-        Removes users from the search form.
-    */
-    public void doRemoveusers(RunData data, TemplateContext context) 
-    {
-        List toRemove = new ArrayList();
-        Object[] keys =  data.getParameters().getKeys();
-        for (int i =0; i<keys.length; i++)
-        {
-            String key = keys[i].toString();
-            if (key.startsWith("delete_user"))
-            {
-                String userId = key.substring(12);
-                toRemove.add(userId);
-            }
-        }
-        String[] userList = data.getParameters().getStrings("user_list");
-        data.getParameters().remove("user_list");
-        for (int i=0; i < userList.length; i++)
-        { 
-            String userInList = userList[i];
-            if (!toRemove.contains(userInList))
-            {
-                data.getParameters().add("user_list", userInList);
-            }
-        }
-    }
-
-    /**
-        Adds user to the search form.
-    */
-    public void doAdduser(RunData data, TemplateContext context)  
-        throws Exception
-    {
-        String userName = data.getParameters().getString("add_user");
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        // we are only interested in users that can be assignees
-        MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
-        List potentialAssignees = null;
-        if (mitList == null) 
-        {
-            Module module = scarabR.getCurrentModule();
-            List perms = module.getUserPermissions(scarabR.getCurrentIssueType());
-            ScarabUser[] userArray =  module.getUsers(perms);
-            potentialAssignees = new ArrayList(userArray.length);
-            for (int i=0;i<userArray.length; i++)
-            {
-                potentialAssignees.add(userArray[i]);
-            }            
-        }
-        else
-        {
-            potentialAssignees = mitList.getPotentialAssignees();
-        }
-        ScarabUser user = null;
-        for (Iterator i = potentialAssignees.iterator(); i.hasNext() && user == null;) 
-        {
-            ScarabUser testUser = (ScarabUser)i.next();
-            if (userName.equals(testUser.getUserName())) 
-            {
-                user = testUser;
-            }
-        }
-        
-
-        ScarabLocalizationTool l10n = getLocalizationTool(context);        
-        if (user == null)
-        {
-            scarabR.setAlertMessage(l10n.get("UserNotPossibleAssignee"));
-        }
-        else
-        {
-            boolean alreadyInList = false;
-            String[] userList = data.getParameters().getStrings("user_list");
-            if (userList != null && userList.length > 0)
-            {
-                for (int i = 0; i<userList.length; i++)
-                {
-                    String userId = userList[i]; 
-                    if (userId.equals(user.getUserId().toString()))
-                    {
-                        alreadyInList = true;
-                        break;
-                    }
-                }
-            }
-            if (alreadyInList)
-            {
-                scarabR.setAlertMessage(l10n.get("UserInList"));
-            }
-            else
-            {
-                data.getParameters().add("user_list", user.getUserId().toString());
-            }
-        }
-    }
-
-    public void doAdduserlist(RunData data, TemplateContext context)
-        throws Exception
-    {
-        String cancelPage = getCancelTemplate(data, "AdvancedQuery.vm");
-        setTarget(data, cancelPage);
-    }
-
-    public void doCanceluserlist(RunData data, TemplateContext context)
-        throws Exception
-    {
-        data.getParameters().remove("user_list");
-        String cancelPage = getCancelTemplate(data, "AdvancedQuery.vm");
-        setTarget(data, cancelPage);
-    }
-
 
     /**
         Overrides base class.
@@ -628,4 +531,188 @@ public class Search extends RequireLoginFirstAction
         }        
         return newIssueIdList;
     }
+
+    public void doGotoeditlist(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ValueParser params = data.getParameters();
+        Map userMap = ((ScarabUser)data.getUser()).getSelectedUsersMap();
+        if (userMap == null || userMap.size() == 0)
+        {
+            userMap = new HashMap();
+            loadUsersFromUserList(data, userMap);
+        }
+        data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
+                                       getCurrentTemplate(data));
+        setTarget(data, "UserList.vm");            
+    } 
+
+    /**
+     * Adds users from temporary working list.
+     */
+    public void doAddusers(RunData data, TemplateContext context) 
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Map userMap = user.getSelectedUsersMap();
+        if (userMap == null)
+        {
+            userMap = new HashMap();
+        }
+        ValueParser params = data.getParameters();
+        String[] userIds = params.getStrings(ADD_USER);
+        if (userIds != null && userIds.length > 0) 
+        {
+            for (int i =0; i<userIds.length; i++)
+            {
+                List item = new ArrayList(2);
+                String userId = userIds[i];
+                String attrId = params.get("user_attr_" + userId);
+                userMap.put(userId, attrId);
+            } 
+            user.setSelectedUsersMap(userMap);
+            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
+        }
+    }
+
+    /**
+        Adds user to the search form.
+    */
+    public void doAdduserbyusername(RunData data, TemplateContext context)  
+        throws Exception
+    {
+        ValueParser params = data.getParameters();
+        String userName = params.getString("ADD_USER_BY_USERNAME");
+        String attrId = params.getString("add_user_attr");
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        Map userMap = user.getSelectedUsersMap();
+        if (userMap == null || userMap.size() == 0)
+        {
+            userMap = new HashMap();
+            loadUsersFromUserList(data, userMap);
+        }
+
+       ScarabUser newUser = scarabR.getUserByUserName(userName);
+       ScarabLocalizationTool l10n = getLocalizationTool(context);        
+       boolean success = true;
+       // we are only interested in users that can be assignees
+       if (newUser == null)
+       {
+          success = false;
+       }
+       else if (!attrId.equals("any") && !attrId.equals("created_by"))
+       {
+           Attribute attribute = scarabR.getAttribute(new NumberKey(attrId));
+           MITList mitList = scarabR.getCurrentMITList();
+           if (newUser == null || !newUser.hasPermission(attribute.getPermission(), 
+                                                         mitList.getModules()))
+           {
+               success = false;
+           }
+       }
+       if (success)
+       {
+           userMap.put(newUser.getUserId().toString(), attrId.toString());
+           user.setSelectedUsersMap(userMap);
+           scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
+       }
+       else
+       {
+           scarabR.setAlertMessage(l10n.get("UserNotPossibleAssignee"));
+       }
+    }
+
+    /**
+     * Removes users from temporary working list.
+     */
+    public void doRemoveusers(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context); 
+        Map userMap = user.getSelectedUsersMap();
+        if (userMap == null || userMap.size() == 0)
+        {
+            userMap = new HashMap();
+            loadUsersFromUserList(data, userMap);
+        }
+        ValueParser params = data.getParameters();
+        String[] userIds =  params.getStrings(SELECTED_USER);
+        if (userIds != null && userIds.length > 0) 
+        {
+            for (int i =0; i<userIds.length; i++)
+            {
+                List item = new ArrayList(2);
+                String userId = userIds[i];
+                userMap.remove(userId);
+            }
+            user.setSelectedUsersMap(userMap);
+            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereRemoved"));
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
+        }
+    }
+
+    /**
+     * Changes the user attribute a user is associated with.
+     */
+    public void doUpdateusers(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Map userMap = user.getSelectedUsersMap();
+        ValueParser params = data.getParameters();
+        String[] userIds =  params.getStrings(SELECTED_USER);
+        if (userIds != null && userIds.length > 0) 
+        {
+            for (int i =0; i<userIds.length; i++)
+            {
+                List item = new ArrayList(2);
+                List newItem = new ArrayList(2);
+                String userId = userIds[i];
+                String attrId = params.getString("asso_user_{" + userId + "}");
+                userMap.put(userId, attrId);
+            }
+            user.setSelectedUsersMap(userMap);
+            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereModified"));
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
+        }
+    }
+
+    /**
+     * In the case of a saved query, puts the saved query's users
+     * Into the selected users map
+     */
+    public void loadUsersFromUserList(RunData data, Map userMap)
+        throws Exception
+    {
+        ValueParser params = data.getParameters();
+        String[] userList = params.getStrings(USER_LIST);
+        if (userList !=null && userList.length > 0)
+        {
+            for (int i =0;i<userList.length;i++)
+            {
+                String userId = (String)userList[i];
+                String attrId = params.get("user_attr_" + userId);
+                userMap.put(userId, attrId);
+            }
+            ((ScarabUser)data.getUser()).setSelectedUsersMap(userMap);
+        }
+    }
+
 }

@@ -112,7 +112,7 @@
 </div>
 
 #set ($mitList = $scarabR.getMITList($issueList))
-#userList($mitList)
+#userList($mitList false false)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />

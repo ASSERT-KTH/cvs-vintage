@@ -91,7 +91,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.164 2003/03/19 01:10:04 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.165 2003/03/20 00:57:30 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -183,8 +183,8 @@ public class ReportIssue extends RequireLoginFirstAction
         }
 
         // search on the option attributes and keywords
-        IssueSearch search = new IssueSearch(issue);                
-
+        IssueSearch search = 
+            new IssueSearch(issue, (ScarabUser)data.getUser());
         // remove special characters from the text attributes
         for (Iterator textAVs = search.getTextAttributeValues().iterator();
              textAVs.hasNext();)

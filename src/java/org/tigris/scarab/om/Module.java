@@ -55,12 +55,14 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.util.ScarabPaginatedList; 
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
@@ -71,7 +73,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.61 2003/03/15 21:56:58 jon Exp $
+ * @version $Id: Module.java,v 1.62 2003/03/20 00:57:31 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -119,6 +121,20 @@ public interface Module
                          String email, IssueType issueType)
         throws Exception;
 
+    /**
+     * Gets users for a given criteria, starting at a particular offset, 
+     * for a given length, and have at least one permission that is 
+     * applicable to user attributes active in the given issue type. 
+     * This method handles the case where limiting the result size
+     * is best accomplished by limiting the database transaction 
+     * size, and not postfiltering the list. This is extremely helpful
+     * with large user datasets. 
+     */
+    public ScarabPaginatedList getUsers(String name, String username,  
+                                        MITList mitList,
+                                        int offset, int resultSize, 
+                                        String sortColumn, String sortPolarity)
+        throws Exception;
 
     /**
      * This method is only used by the Turbine Group interface.

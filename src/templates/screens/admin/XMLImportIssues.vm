@@ -1,0 +1,36 @@
+<div id="xmlimportissues" class="app">
+
+<h3>$page.Title</h3>
+
+<form action="$link.setPage("admin,XMLImportIssuesResults.vm")" method="post" name="xmlimportissues" enctype="multipart/form-data">
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Index.vm" />
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>$l10n.Issues</th>
+ <td>
+  <input type="file" name="issues" size="50" value="" />
+  <p><small>$l10n.SelectFile</small></p>
+ </td>
+</tr>
+
+<!--The "format" of the results can be 'html' or 'xml'. We always draw the 
+    results as 'html'.  If using a programmatic inteface, pass 'format=xml' 
+    to get results as xml instead.
+ -->
+
+</table>
+</div>
+
+<div class="functnbar2">
+  <input type="submit" name="eventSubmit_doXmlissues" value="$l10n.Import" />&#160;
+</div>
+
+<script>
+<!--
+document.xmlimportissues.issues.focus();
+// -->
+</script>
+</form>
+</div>

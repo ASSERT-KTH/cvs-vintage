@@ -42,9 +42,8 @@
     <li>$l10n.UQP8S1<strong>$l10n.Go</strong> $l10n.button.</li>
     <li>$l10n.The <strong>$l10n.IssueId</strong> $l10n.UQP9</li>
     <li>$l10n.The <em>$l10n.AdvancedQueries</em> $l10n.UQP10</li>
-    <li>$l10n.The<em>$l10n.CustomQueries</em> $l10n.UQP11</li>
-    <li>$l10n.The<em>$l10n.TextQueries</em> $l10n.UQP20</li>
-    <li>$l10n.The <em>$l10n.IssueList</em> $l10n.UQP12</li>
+    <li>$l10n.The <em>$l10n.CustomQueries</em> $l10n.UQP11</li>
+    <li>$l10n.The<em> $l10n.TextQueries</em> $l10n.UQP20</li>
   </ul>
   <h4><a name="issueid" id="issueid">$l10n.SearchIssue</a></h4>
   <p>$l10n.UQP13S1 <strong>$l10n.IssueId</strong> $l10n.UQP13S2</p>
