@@ -144,6 +144,7 @@ public final class JavaCore extends Plugin {
 	/**
 	 * Possible  configurable option ID.
 	 * @see #getDefaultOptions()
+	 * @deprecated - discontinued since turning off would violate language specs
 	 */
 	public static final String COMPILER_PB_UNREACHABLE_CODE = PLUGIN_ID + ".compiler.problem.unreachableCode"; //$NON-NLS-1$
 	/**
@@ -1387,13 +1388,6 @@ public final class JavaCore extends Plugin {
 	 *     - possible values:   { "1.1", "1.2", "1.3", "1.4", "1.5" }
 	 *     - default:           "1.1"
 	 *
-	 * COMPILER / Reporting Unreachable Code
-	 *    Unreachable code can optionally be reported as an error, warning or simply 
-	 *    ignored. The bytecode generation will always optimized it out.
-	 *     - option id:         "org.eclipse.jdt.core.compiler.problem.unreachableCode"
-	 *     - possible values:   { "error", "warning", "ignore" }
-	 *     - default:           "error"
-	 *
 	 * COMPILER / Reporting Attempt to Override Package-Default Method
 	 *    A package default method is not visible in a different package, and thus 
 	 *    cannot be overridden. When enabling this option, the compiler will signal 
@@ -1913,6 +1907,7 @@ public final class JavaCore extends Plugin {
 		defaultOptions.put(CORE_ENCODING, ResourcesPlugin.getEncoding()); 
 		// backward compatibility
 		defaultOptions.put(COMPILER_PB_INVALID_IMPORT, ERROR);		
+		defaultOptions.put(COMPILER_PB_UNREACHABLE_CODE, ERROR);
 		
 		return defaultOptions;
 	}
@@ -1945,7 +1940,8 @@ public final class JavaCore extends Plugin {
 			return ResourcesPlugin.getEncoding();
 		}
 		// backward compatibility
-		if (COMPILER_PB_INVALID_IMPORT.equals(optionName)) {
+		if (COMPILER_PB_INVALID_IMPORT.equals(optionName)
+				|| COMPILER_PB_UNREACHABLE_CODE.equals(optionName)) {
 			return ERROR;
 		}
 		if (JavaModelManager.OptionNames.contains(optionName)){
@@ -1996,6 +1992,7 @@ public final class JavaCore extends Plugin {
 			options.put(CORE_ENCODING, ResourcesPlugin.getEncoding());
 			// backward compatibility
 			options.put(COMPILER_PB_INVALID_IMPORT, ERROR);
+			options.put(COMPILER_PB_UNREACHABLE_CODE, ERROR);
 		}
 		return options;
 	}
