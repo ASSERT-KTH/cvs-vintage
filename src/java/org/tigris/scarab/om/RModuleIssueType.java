@@ -6,6 +6,7 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+import org.apache.torque.pool.DBConnection;
 import org.tigris.scarab.util.ScarabConstants;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -139,5 +140,22 @@ public  class RModuleIssueType
         rmit2.setHistory(getHistory());
         rmit2.setComments(getComments());
         return rmit2;
+    }
+
+    /**
+     * Adding to debug a problem with project creation
+     */
+    public void save(DBConnection dbCon) throws Exception
+    {
+        // If this object has been modified, then save it to the database.
+        if (isModified())
+        {
+            if (isNew())
+            {
+                getCategory().debug("[RMIT] Saving new template type: " + 
+                                    getModuleId() + "-" + getIssueTypeId());
+            }
+        }
+        super.save(dbCon);
     }
 }
