@@ -335,6 +335,11 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 					header = new ColumbaHeader(HeaderParser.parse(source));
 
+					// make sure that we have a Message-ID
+					String messageID = (String) header.get("Message-Id");
+					if (messageID != null)
+						header.set("Message-ID", header.get("Message-Id"));
+
 					header = CachedHeaderfields.stripHeaders(header);
 
 					if (isOlderThanOneWeek(today, ((Date) header

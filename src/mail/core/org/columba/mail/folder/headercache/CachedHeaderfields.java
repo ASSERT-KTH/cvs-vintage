@@ -116,7 +116,7 @@ public class CachedHeaderfields {
     // -> to be cached headerfields
     // -----> only for power-users who want to tweak their search speed
     public static final String[] DEFAULT_HEADERFIELDS = {
-        "Subject", "From", "To", "Cc", "Date", "Message-Id", "In-Reply-To",
+        "Subject", "From", "To", "Cc", "Date", "Message-ID", "In-Reply-To",
         "References", "Content-Type"
     };
     public static final String[] POP3_HEADERFIELDS = {

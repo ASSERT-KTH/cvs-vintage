@@ -34,234 +34,239 @@ import org.columba.ristretto.message.Header;
  * Abstract base class for handling headers and attributes. Used by
  * {@link AbstractFolder}.
  * 
- * @author fdietz 
+ * @author fdietz
  */
 public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 
-    protected Mutex mutex;
+	protected Mutex mutex;
 
-    /**
-     *  
-     */
-    public AbstractHeaderListStorage() {
-        super();
-        //mutex = new Mutex(getName());
-        mutex = new Mutex();
-    }
+	/**
+	 *  
+	 */
+	public AbstractHeaderListStorage() {
+		super();
+		//mutex = new Mutex(getName());
+		mutex = new Mutex();
+	}
 
-    public abstract AbstractHeaderCache getHeaderCacheInstance();
+	public abstract AbstractHeaderCache getHeaderCacheInstance();
 
-   
-    /**
-     * @see org.columba.mail.folder.HeaderStorage#exists(java.lang.Object)
-     */
-    public boolean exists(Object uid) throws Exception {
+	/**
+	 * @see org.columba.mail.folder.HeaderStorage#exists(java.lang.Object)
+	 */
+	public boolean exists(Object uid) throws Exception {
 
-        // check if message with UID exists
-        return getCachedHeaderList().containsKey(uid);
-    }
+		// check if message with UID exists
+		return getCachedHeaderList().containsKey(uid);
+	}
 
- 
-    /**
-     * @see org.columba.mail.folder.HeaderStorage#getHeaderFields(java.lang.Object, java.lang.String[])
-     */
-    public Header getHeaderFields(Object uid, String[] keys) throws Exception {
+	/**
+	 * @see org.columba.mail.folder.HeaderStorage#getHeaderFields(java.lang.Object,
+	 *      java.lang.String[])
+	 */
+	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 
-        //      all wanted headers are cached
-        // get header with UID
-        ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+		//      all wanted headers are cached
+		// get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
-        // copy fields
-        Header result = new Header();
+		// copy fields
+		Header result = new Header();
 
-        for (int i = 0; i < keys.length; i++) {
-            if (header.get(keys[i]) != null) {
-                // headerfield found
-                result.set(keys[i], header.get(keys[i]));
-            }
-        }
+		for (int i = 0; i < keys.length; i++) {
+			if (header.get(keys[i]) != null) {
+				// headerfield found
+				result.set(keys[i], header.get(keys[i]));
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-   
-    /**
-     * @see org.columba.mail.folder.HeaderStorage#getHeaderList()
-     */
-    public HeaderList getHeaderList() throws Exception {
+	/**
+	 * @see org.columba.mail.folder.HeaderStorage#getHeaderList()
+	 */
+	public HeaderList getHeaderList() throws Exception {
 
-        return getCachedHeaderList();
-    }
+		return getCachedHeaderList();
+	}
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#getAttribute(java.lang.Object, java.lang.String)
-     */
-    public Object getAttribute(Object uid, String key) throws Exception {
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#getAttribute(java.lang.Object,
+	 *      java.lang.String)
+	 */
+	public Object getAttribute(Object uid, String key) throws Exception {
 
-        //      get header with UID
-        ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+		//      get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
-        return header.getAttributes().get(key);
-    }
+		return header.getAttributes().get(key);
+	}
 
-   
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#getAttributes(java.lang.Object)
-     */
-    public Attributes getAttributes(Object uid) throws Exception {
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#getAttributes(java.lang.Object)
+	 */
+	public Attributes getAttributes(Object uid) throws Exception {
 
-        if (getHeaderList().containsKey(uid)) {
-            return getHeaderList().get(uid).getAttributes();
-        } else {
-            return null;
-        }
-    }
+		if (getHeaderList().containsKey(uid)) {
+			return getHeaderList().get(uid).getAttributes();
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#setAttribute(java.lang.Object, java.lang.String, java.lang.Object)
-     */
-    public void setAttribute(Object uid, String key, Object value)
-            throws Exception {
-        //      get header with UID
-        ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#setAttribute(java.lang.Object,
+	 *      java.lang.String, java.lang.Object)
+	 */
+	public void setAttribute(Object uid, String key, Object value)
+			throws Exception {
+		//      get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
-        header.getAttributes().put(key, value);
+		header.getAttributes().put(key, value);
 
-    }
+	}
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#addMessage(org.columba.ristretto.message.io.Source,
-     *      org.columba.ristretto.message.Attributes)
-     */
-    public Object addMessage(Object newUid, Header header, Attributes attributes, Flags flags)
-            throws Exception {
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#addMessage(org.columba.ristretto.message.io.Source,
+	 *      org.columba.ristretto.message.Attributes)
+	 */
+	public Object addMessage(Object newUid, Header header,
+			Attributes attributes, Flags flags) throws Exception {
 
-        ColumbaHeader h = new ColumbaHeader(header);
+		ColumbaHeader h = new ColumbaHeader(header);
 
-        h.setAttributes((Attributes) attributes.clone());
-        h.setFlags((Flags) flags.clone());
-        
-        // remove all unnecessary headerfields which doesn't
-        // need to be cached
-        // -> saves much memory
-        ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
+		h.setAttributes((Attributes) attributes.clone());
+		h.setFlags((Flags) flags.clone());
 
-        // free memory
-        h = null;
+		// make sure that we have a Message-ID
+		String messageID = (String) h.get("Message-Id");
+		if (messageID != null)
+			h.set("Message-ID", h.get("Message-Id"));
 
-        // set UID for new message
-        strippedHeader.getAttributes().put("columba.uid", newUid);
+		// remove all unnecessary headerfields which doesn't
+		// need to be cached
+		// -> saves much memory
+		ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
 
-        // add header to header-cache list
-        // -> using "columba.uid" as key internally
-        getHeaderList().add(strippedHeader,
-                strippedHeader.getAttributes().get("columba.uid"));
-        return null;
-    }
+		// free memory
+		h = null;
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#getFlags(java.lang.Object)
-     */
-    public Flags getFlags(Object uid) throws Exception {
+		// set UID for new message
+		strippedHeader.getAttributes().put("columba.uid", newUid);
 
-        if (getHeaderList().containsKey(uid)) {
-            return getHeaderList().get(uid).getFlags();
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#setFlags(java.lang.Object, org.columba.ristretto.message.Flags)
-     */
-    public void setFlags(Object uid, Flags flags) throws Exception {
-        if (getHeaderList().containsKey(uid)) {
-            ColumbaHeader h = getHeaderList().get(uid);
-            h.setFlags(flags);
-        } 
-    }
+		// add header to header-cache list
+		// -> using "columba.uid" as key internally
+		getHeaderList().add(strippedHeader,
+				strippedHeader.getAttributes().get("columba.uid"));
+		return null;
+	}
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#removeMessage(java.lang.Object)
-     */
-    public void removeMessage(Object uid) throws Exception {
-        //      remove message from headercache
-        getHeaderList().remove(uid);
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#getFlags(java.lang.Object)
+	 */
+	public Flags getFlags(Object uid) throws Exception {
 
-    }
+		if (getHeaderList().containsKey(uid)) {
+			return getHeaderList().get(uid).getFlags();
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * 
-     * Return headerlist from cache
-     * 
-     * This method is just another layer for getHeaderList() which adds a mutex
-     * to it.
-     * 
-     * We lock folders to be sure that only one <code>Command</code> at a
-     * time can modify the folder.
-     * 
-     * But we also allow to add messages at any time, because that doesn't
-     * interfere or causes problems ;-)
-     * 
-     * Adding the headercache here, makes it necessary to load the headercache,
-     * for the first time before we do any operation.
-     * 
-     * This is a speciality of the headercache implementation which has nothing
-     * to do with our MessageFolder locking system and is put here for this reason.
-     * 
-     * @return <class>HeaderList </class>
-     * @throws Exception
-     *             <class>Exception </class>
-     */
-    protected HeaderList getCachedHeaderList() throws Exception {
-        HeaderList result;
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#setFlags(java.lang.Object,
+	 *      org.columba.ristretto.message.Flags)
+	 */
+	public void setFlags(Object uid, Flags flags) throws Exception {
+		if (getHeaderList().containsKey(uid)) {
+			ColumbaHeader h = getHeaderList().get(uid);
+			h.setFlags(flags);
+		}
+	}
 
-        try {
-            mutex.lock();
-            result = getHeaderCacheInstance().getHeaderList();
-        } finally {
-            mutex.release();
-        }
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#removeMessage(java.lang.Object)
+	 */
+	public void removeMessage(Object uid) throws Exception {
+		//      remove message from headercache
+		getHeaderList().remove(uid);
 
-        return result;
-    }
+	}
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#getUids()
-     */
-    public Object[] getUids() throws Exception {
-        int count = getHeaderList().count();
+	/**
+	 * 
+	 * Return headerlist from cache
+	 * 
+	 * This method is just another layer for getHeaderList() which adds a mutex
+	 * to it.
+	 * 
+	 * We lock folders to be sure that only one <code>Command</code> at a time
+	 * can modify the folder.
+	 * 
+	 * But we also allow to add messages at any time, because that doesn't
+	 * interfere or causes problems ;-)
+	 * 
+	 * Adding the headercache here, makes it necessary to load the headercache,
+	 * for the first time before we do any operation.
+	 * 
+	 * This is a speciality of the headercache implementation which has nothing
+	 * to do with our MessageFolder locking system and is put here for this
+	 * reason.
+	 * 
+	 * @return <class>HeaderList </class>
+	 * @throws Exception
+	 *             <class>Exception </class>
+	 */
+	protected HeaderList getCachedHeaderList() throws Exception {
+		HeaderList result;
 
-        //Object[] uids = new Object[count];
-        List list = new Vector(count);
-        int i = 0;
+		try {
+			mutex.lock();
+			result = getHeaderCacheInstance().getHeaderList();
+		} finally {
+			mutex.release();
+		}
 
-        for (Enumeration e = getHeaderList().keys(); e.hasMoreElements();) {
-            //uids[i++] = e.nextElement();
-            list.add(e.nextElement());
-        }
+		return result;
+	}
 
-        Object[] uids = new Object[list.size()];
-        ((Vector) list).copyInto(uids);
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#getUids()
+	 */
+	public Object[] getUids() throws Exception {
+		int count = getHeaderList().count();
 
-        return uids;
-    }
+		//Object[] uids = new Object[count];
+		List list = new Vector(count);
+		int i = 0;
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#load()
-     */
-    public void load() throws Exception {
-        getHeaderCacheInstance().load();
+		for (Enumeration e = getHeaderList().keys(); e.hasMoreElements();) {
+			//uids[i++] = e.nextElement();
+			list.add(e.nextElement());
+		}
 
-    }
+		Object[] uids = new Object[list.size()];
+		((Vector) list).copyInto(uids);
 
-    /**
-     * @see org.columba.mail.folder.HeaderListStorage#save()
-     */
-    public void save() throws Exception {
-        getHeaderCacheInstance().save();
+		return uids;
+	}
 
-    }
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#load()
+	 */
+	public void load() throws Exception {
+		getHeaderCacheInstance().load();
 
-   
+	}
+
+	/**
+	 * @see org.columba.mail.folder.HeaderListStorage#save()
+	 */
+	public void save() throws Exception {
+		getHeaderCacheInstance().save();
+
+	}
+
 }

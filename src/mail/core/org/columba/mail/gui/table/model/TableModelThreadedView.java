@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -100,7 +101,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
 
         return list;
     }
-
+    
     protected boolean add(MessageNode node, MessageNode rootNode) {
         ColumbaHeader header = node.getHeader();
         String references = (String) header.get("References");
@@ -147,19 +148,37 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
 
         // for each element in the message-header-reference or in-reply-to
         // headerfield: - find a container whose message-id matches and add
-        // message, otherwise create empty container
-        for (int i = 0; i < rootNode.getChildCount(); i++) {
-            MessageNode node = (MessageNode) rootNode.getChildAt(i);
-            boolean result = add(node, rootNode);
-
-            if (result) {
-                i--;
-            }
-
+        // message, otherwise create empty container        
+        Iterator it = hashtable.keySet().iterator();
+        while (it.hasNext()) {
+        	String key = (String) it.next();
+        	
+        	MessageNode node = (MessageNode) hashtable.get(key);
+        	add(node, rootNode);
         }
 
         // go through whole tree and sort the siblings after date
         sort(rootNode);
+    }
+    
+    private String getMessageID(MessageNode node) {
+    	ColumbaHeader header = node.getHeader();
+
+        String id = (String) header.get("Message-ID");
+
+        if (id == null) {
+            id = (String) header.get("Message-Id");
+        }
+
+        // if no Message-Id: available create bogus
+        if (id == null) {
+            id = new String("<bogus-id:" + (idCount++) + ">");
+            header.set("Message-ID", id);
+        }
+
+        id = id.trim();
+
+        return id;
     }
 
     /**
@@ -171,27 +190,14 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
      *            root node
      */
     private void createHashmap(MessageNode rootNode) {
-        hashtable = new HashMap();
+        hashtable = new HashMap(rootNode.getChildCount());
 
         // save every message-id in hashtable for later reference
         for (Enumeration enum = rootNode.children(); enum.hasMoreElements();) {
             MessageNode node = (MessageNode) enum.nextElement();
-            ColumbaHeader header = node.getHeader();
+            String id = getMessageID(node);
 
-            String id = (String) header.get("Message-ID");
-
-            if (id == null) {
-                id = (String) header.get("Message-Id");
-            }
-
-            // if no Message-Id: available create bogus
-            if (id == null) {
-                id = new String("<bogus-id:" + (idCount++) + ">");
-            }
-
-            id = id.trim();
-
-            header.set("Message-ID", id);
+           
             hashtable.put(id, node);
 
         }
