@@ -42,7 +42,7 @@
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
-#if ($searchType.equals("advanced"))
+#if ($searchType.equals("advanced") &&  $queryString)
 <input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
 #end
@@ -173,7 +173,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
-#if ($searchType.equals("advanced"))
+#if ($searchType.equals("advanced") &&  $queryString)
 <input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
 #end
