@@ -57,7 +57,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon Scott Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: BaseDate.java,v 1.7 2003/07/29 23:29:09 dlr Exp $
+ * @version $Id: BaseDate.java,v 1.8 2003/07/30 22:36:22 dlr Exp $
  */
 public class BaseDate implements java.io.Serializable
 {
@@ -105,15 +105,16 @@ public class BaseDate implements java.io.Serializable
         if (StringUtils.isNotEmpty(ts))
         {
             String format = getFormat();
+            boolean haveFormat = StringUtils.isNotEmpty(format);
             try
             {
-                SimpleDateFormat sdf = new SimpleDateFormat
-                    (StringUtils.isNotEmpty(format) ? format : DEFAULT_FORMAT);
+                SimpleDateFormat sdf =
+                    new SimpleDateFormat(haveFormat ? format : DEFAULT_FORMAT);
                 date = sdf.parse(getTimestamp());
             }
             catch (ParseException e)
             {
-                if (format != null)
+                if (haveFormat)
                 {
                     // When a format was explicitly specified,
                     // propogate any parsing problems.
