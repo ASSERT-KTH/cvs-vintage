@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.17 2003/05/26 00:15:40 spestov Exp $
+ * @version $Id: Registers.java,v 1.18 2003/06/22 21:23:33 spestov Exp $
  */
 public class Registers
 {
@@ -219,11 +219,45 @@ public class Registers
 
 			if(vertical && textArea.getSelectionCount() == 0)
 			{
-				int caret = textArea.getCaretPosition();
-				int caretLine = textArea.getCaretLine();
-				Selection.Rect rect = new Selection.Rect(
-					caretLine,caret,caretLine,caret);
-				textArea.setSelectedText(rect,selection);
+				Buffer buffer = textArea.getBuffer();
+
+				try
+				{
+					buffer.beginCompoundEdit();
+
+					int caret = textArea.getCaretPosition();
+					int caretLine = textArea.getCaretLine();
+					Selection.Rect rect = new Selection.Rect(
+						caretLine,caret,caretLine,caret);
+					textArea.setSelectedText(rect,selection);
+					caretLine = textArea.getCaretLine();
+
+					if(caretLine != textArea.getLineCount() - 1)
+					{
+						int startColumn = rect.getStartColumn(
+							buffer);
+						int offset = buffer
+							.getOffsetOfVirtualColumn(
+							caretLine + 1,startColumn,null);
+						if(offset == -1)
+						{
+							buffer.insertAtColumn(caretLine + 1,startColumn,"");
+							textArea.setCaretPosition(
+								buffer.getLineEndOffset(
+								caretLine + 1) - 1);
+						}
+						else
+						{
+							textArea.setCaretPosition(
+								buffer.getLineStartOffset(
+								caretLine + 1) + offset);
+						}
+					}
+				}
+				finally
+				{
+					buffer.endCompoundEdit();
+				}
 			}
 			else
 				textArea.setSelectedText(selection);

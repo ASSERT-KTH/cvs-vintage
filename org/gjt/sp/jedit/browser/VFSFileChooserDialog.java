@@ -39,7 +39,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.39 2003/05/26 00:15:41 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.40 2003/06/22 21:23:33 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -88,31 +88,18 @@ public class VFSFileChooserDialog extends EnhancedDialog
 		box.add(filenameField);
 		box.add(Box.createGlue());
 
-		if(mode != VFSBrowser.CHOOSE_DIRECTORY_DIALOG)
-		{
-			JLabel label = new JLabel(jEdit.getProperty("vfs.browser.dialog.filename"));
-			label.setDisplayedMnemonic(jEdit.getProperty(
-				"vfs.browser.dialog.filename.mnemonic").charAt(0));
-			label.setLabelFor(filenameField);
-			panel.add(label);
-			panel.add(Box.createHorizontalStrut(12));
+		JLabel label = new JLabel(jEdit.getProperty("vfs.browser.dialog.filename"));
+		label.setDisplayedMnemonic(jEdit.getProperty(
+			"vfs.browser.dialog.filename.mnemonic").charAt(0));
+		label.setLabelFor(filenameField);
+		panel.add(label);
+		panel.add(Box.createHorizontalStrut(12));
 
-			panel.add(box);
+		panel.add(box);
 
-			panel.add(Box.createHorizontalStrut(12));
-		}
-		else
-			panel.add(Box.createGlue());
+		panel.add(Box.createHorizontalStrut(12));
 
-		if(mode == VFSBrowser.BROWSER || mode == VFSBrowser.OPEN_DIALOG
-			|| mode == VFSBrowser.CHOOSE_DIRECTORY_DIALOG)
-		{
-			GUIUtilities.requestFocus(this,browser.getBrowserView().getTable());
-		}
-		else
-		{
-			GUIUtilities.requestFocus(this,filenameField);
-		}
+		GUIUtilities.requestFocus(this,filenameField);
 
 		ok = new JButton();
 		getRootPane().setDefaultButton(ok);

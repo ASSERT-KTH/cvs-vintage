@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.14 2003/06/21 18:45:29 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.15 2003/06/22 21:23:33 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -178,7 +178,9 @@ class VFSFileNameField extends HistoryTextField
 
 					BrowserView view = browser.getBrowserView();
 					view.selectNone();
-					view.getTable().doTypeSelect(path,true);
+					view.getTable().doTypeSelect(path,
+						browser.getMode() == VFSBrowser
+						.CHOOSE_DIRECTORY_DIALOG);
 				}
 			}
 			else if(ch > 0x20 && ch != 0x7f && ch != 0xff)
@@ -188,7 +190,9 @@ class VFSFileNameField extends HistoryTextField
 
 				BrowserView view = browser.getBrowserView();
 				view.selectNone();
-				view.getTable().doTypeSelect(path,true);
+				view.getTable().doTypeSelect(path,
+					browser.getMode() == VFSBrowser
+					.CHOOSE_DIRECTORY_DIALOG);
 			}
 			else
 				super.processKeyEvent(evt);
@@ -203,7 +207,9 @@ class VFSFileNameField extends HistoryTextField
 	{
 		BrowserView view = browser.getBrowserView();
 		view.selectNone();
-		view.getTable().doTypeSelect(currentText,true);
+		view.getTable().doTypeSelect(currentText,
+			browser.getMode() == VFSBrowser
+			.CHOOSE_DIRECTORY_DIALOG);
 
 		VFS.DirectoryEntry[] files = view.getSelectedFiles();
 		if(files.length == 0)
@@ -244,7 +250,8 @@ class VFSFileNameField extends HistoryTextField
 			VFSManager.waitForRequests();
 			setText(name);
 			browser.getBrowserView().getTable().doTypeSelect(
-				name,true);
+				name,browser.getMode() == VFSBrowser
+				.CHOOSE_DIRECTORY_DIALOG);
 		}
 	} //}}}
 

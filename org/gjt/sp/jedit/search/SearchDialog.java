@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.39 2003/06/10 22:10:43 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.40 2003/06/22 21:23:33 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -158,6 +158,13 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
 			if(!save(false))
 				return;
+
+			if(searchSelection.isSelected()
+				&& view.getTextArea().getSelectionCount() == 0)
+			{
+				GUIUtilities.error(view,"search-no-selection",null);
+				return;
+			}
 
 			if(hyperSearch.isSelected() || searchSelection.isSelected())
 			{
@@ -860,6 +867,14 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			}
 			else if(source == replaceAllBtn)
 			{
+				if(searchSelection.isSelected() &&
+					view.getTextArea().getSelectionCount()
+					== 0)
+				{
+					GUIUtilities.error(view,"search-no-selection",null);
+					return;
+				}
+
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 				save(false);

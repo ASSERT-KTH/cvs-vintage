@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.10 2003/06/22 03:11:10 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.11 2003/06/22 21:23:33 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -216,7 +216,7 @@ public class PositionManager
 				boolean oldXRed = x.red;
 				PosBottomHalf b = z.restructure();
 				b.left.red = false;
-				bright.red = false;
+				b.right.red = false;
 				b.red = oldXRed;
 				r.red = false;
 			}

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.MiscUtilities;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Selection.java,v 1.18 2003/04/28 21:17:41 spestov Exp $
+ * @version $Id: Selection.java,v 1.19 2003/06/22 21:23:33 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -560,19 +560,6 @@ public abstract class Selection implements Cloneable
 			//{{{ Move the caret down a line
 			if(text == null || text.length() == 0)
 				return end;
-			if(lastLine != buffer.getLineCount() - 1
-				&& this.startLine == this.endLine)
-			{
-				int offset = buffer.getOffsetOfVirtualColumn(
-					lastLine + 1,startColumn,null);
-				if(offset == -1)
-				{
-					buffer.insertAtColumn(lastLine + 1,startColumn,"");
-					return buffer.getLineEndOffset(lastLine + 1) - 1;
-				}
-				else
-					return buffer.getLineStartOffset(lastLine + 1) + offset;
-			}
 			else
 				return endOffset;
 			//}}}
