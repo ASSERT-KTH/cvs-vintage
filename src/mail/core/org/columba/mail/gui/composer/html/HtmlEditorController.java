@@ -18,6 +18,10 @@ package org.columba.mail.gui.composer.html;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -27,6 +31,10 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.ChangedCharSetException;
+import javax.swing.text.Document;
+import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTML;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -75,7 +83,8 @@ public class HtmlEditorController
 	public void updateComponents(boolean b) {
 		if (b) {
 			if (this.getController().getModel().getBodyText() != null)
-				view.setText(controller.getModel().getBodyText());
+				this.setViewText(
+						this.getController().getModel().getBodyText());
 		} else {
 			if (view.getText() != null)
 				this.getController().getModel().setBodyText(view.getText());
@@ -278,7 +287,69 @@ public class HtmlEditorController
 	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewText(java.lang.String)
 	 */
 	public void setViewText(String text) {
-		view.setText(text);
+			
+		//// This doesn't handle ChangedCharsetExceptions correctly.	
+		//view.setText(text);
+
+		try
+		{
+			loadHtmlIntoView(text, false);
+		}
+		catch(ChangedCharSetException ccse)
+		{
+			// try again, but ignore charset specification in the html
+			try {
+				loadHtmlIntoView(text, true);
+			} catch (IOException e) {
+				ColumbaLogger.log.error("Error setting view content. " +
+						"Even after ignore charset spec.", e);
+			}
+		} catch (IOException e) {
+			// other IOExceptions than ChangedCharsetException
+			ColumbaLogger.log.error("Error setting view content" , e);
+		}
+	}
+	
+	/**
+	 * Private utility for loading html into the view. Is called from
+	 * setViewText.
+	 * <br>
+	 * The method works mostly as calling view.setText() directly, but is
+	 * necessary to be able to handle ChangedCharsetExceptions
+	 * 
+	 * @param	text			Text to load into the view
+	 * @param	ignoreCharset	If set to true, charset specifications
+	 * 							in the html will be ignore
+	 * @throws	IOException
+	 */
+	private void loadHtmlIntoView(String text, boolean ignoreCharset)
+			throws IOException {
+
+		// clear existing text
+		Document doc = view.getDocument();
+		try {
+			// delete old contents
+			doc.remove(0, doc.getLength());
+			
+			// if no text is specified, we are done now
+			if ((text == null) || (text.equals(""))) {
+				return;
+			}
+			
+			// load contents into document
+			if (ignoreCharset) {
+				view.getHtmlDoc().putProperty(
+						"IgnoreCharsetDirective", new Boolean(true));
+			}
+			Reader r = new StringReader(text);
+			EditorKit kit = view.getEditorKit();
+			kit.read(r, doc, 0);	// this can throw a ChangedCharsetException
+			
+			
+		} catch (BadLocationException e) {
+			ColumbaLogger.log.error("Error deleting old view content" , e);
+			return;
+		}
 	}
 
 	/* (non-Javadoc)
