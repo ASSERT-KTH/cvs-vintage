@@ -1,0 +1,292 @@
+<project name="TestRun" default="main" basedir="." init="init">
+
+   <target name="init">
+     <property name="test.hostname" value="localhost" />
+     <property name="test.port"     value="8080" />
+     <property name="gdir" value="jsp/Golden" />
+
+     <taskdef name="test" class="tests.Test" />
+     <taskdef name="gtest" class="tests.GTest" />
+   </target>
+
+   <target name="startup">
+     <java class="org.apache.tomcat.shell.Startup" args="" />
+   </target>
+
+  <target name="jsp">
+    <gtest request="GET /test/jsp/HelloWorld.jsp HTTP/1.0"
+           goldenFile="${gdir}/HelloWorld.txt"
+    />
+
+    <gtest request="GET /test/doesNotExist.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/ HTTP/1.0"
+           goldenFile="${gdir}/index.txt"  
+           description="Serves index.html"
+    />
+
+    <gtest request="GET /test/jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           description="Getting -- HTTP/1.0 302 Found"
+           magnitude="false" />
+
+    <gtest request="GET /test/.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/HelloWorld.jsp?????? HTTP/1.0"
+           goldenFile="${gdir}/HelloWorld.txt"
+    />
+
+    <gtest request="GET /test/jsp/HelloWorld.jsp?a=b&amp;c=d HTTP/1.0"
+           goldenFile="${gdir}/HelloWorld.txt"
+    />
+
+    <gtest request="GET /test/jsp/HelloWorld.jsp?&amp;&amp; HTTP/1.0"
+           goldenFile="${gdir}/HelloWorld.txt"
+    />
+
+    <gtest request="GET /test/jsp/declaration/IntegerOverflow.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 500 Internal Server Error"
+    />
+
+    <gtest request="GET /test/jsp/error/err.jsp HTTP/1.0"
+           goldenFile="${gdir}/Err.txt"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/forward/forward.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/jsptoserv/jsptoservlet.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/jsptoservlet.txt"
+    />
+
+    <gtest request="GET /test/jsp/initDestroy.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/classTest.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/classTest.txt"
+    />
+
+    <gtest request="GET /test/jsp/import.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/import.txt"
+    />
+
+    <gtest request="GET /test/jsp/buffer.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/buffer.txt"
+    />
+
+    <gtest request="GET /test/jsp/buffer1.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/buffer2.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/buffer3.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/buffer4.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/comments.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 500 Internal Server Error"
+    />
+
+    <gtest request="GET /test/jsp/parse.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/parse.txt"
+    />
+
+    <gtest request="GET /test/jsp/pageInfo.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageLanguage.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageIsThreadSafe.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageSession.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageAutoFlush.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageError.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/pageExtends.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageIsErrorPage.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageContentType.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/pageImport2.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageImport.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/pageImport.txt"
+    />
+
+    <gtest request="GET /test/jsp/beanTest1.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/beanTest.txt"
+    />
+
+    <gtest request="GET /test/jsp/beanTest2.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/beanScopePage.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/beanScopeSession.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/implicitOut.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitOut.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitConfig.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitConfig.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitException.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitException.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitPageContext.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitPageContext.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitContext.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitContext.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitRequest.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitRequest.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitResponse.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitResponse.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitSession.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitSession.txt"
+    />
+
+    <gtest request="GET /test/jsp/implicitPageContext.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/implicitPageContext.txt"
+    />
+
+    <gtest request="GET /test/jsp/pageInvalid.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageDouble.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/pageContent3.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/servlet/servletParam1 HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/servletParam1.txt"
+    />
+
+    <gtest request="GET /test/servlet/servletParam2 HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/servletParam2.txt"
+    />
+
+    <gtest request="GET /test/servlet/ServletParam HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/ServletParam.txt"
+    />
+
+    <gtest request="GET /test/jsp/bigDeclaration.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+    <gtest request="GET /test/jsp/include/include.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           goldenFile="${gdir}/Include.txt"
+    />
+
+   </target>
+
+  <target name="wrong_request">
+    <gtest request="GET /test/*.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET *jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+           magnitude="false" />
+
+    <gtest request="GET /test/jsp/HelloWorld.jsp HTTP"
+           returnCode="HTTP/1.0 400"
+    />
+
+    <gtest request="GET /test/jsp/HelloWorld.jsp 1.0"
+           returnCode="HTTP/1.0 400"
+    />
+
+    <gtest request="GET /test/jsp/HelloWorld.jsp /1.0"
+           returnCode="HTTP/1.0 400"
+    />
+
+  </target>
+
+
+
+   <target name="client" depends="jsp,wrong_request">
+   </target>
+
+   <target name="shutdown">
+     <java class="org.apache.tomcat.shell.Startup" args="" />
+   </target>
+
+   <target name="main" depends="startup,client,shutdown" />
+</project>
+
