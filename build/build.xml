@@ -26,7 +26,7 @@
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
     
-    <!--property name="torque.dir.scarab" value="${src.dir}/java"/-->
+    <property name="torque.dir.scarab" value="${basedir}/../target/torque"/>
     <property name="torque.java.dir" value="${build.src.scarab}/torque"/>
     
     <property name="torquedoc.destdir" value="${basedir}/target/torquedoc"/>
@@ -102,7 +102,7 @@
         <available property="extensions.conf.exist" 
             file="${extensions.conf.dir}"/>
         <antcall target="copy-conf-extensions"/>
-
+<!--
         <condition property="template.path" value="/WEB-INF">
             <equals arg1="${scarab.copy.templates}" arg2="true"/>
         </condition>
@@ -111,11 +111,13 @@
                 <equals arg1="${scarab.copy.templates}" arg2="true"/>
             </not>
         </condition>
+-->
         <!-- add custom template folders -->
+<!--        
         <available property="template.path" 
                       value="file://${scarab.template.path},${template.path}"
                        type="dir" file="${scarab.template.path}" />
-
+-->
         <!-- things to go into the web-inf directory -->
         <filter token="VERSION" value="${version}"/>
         <tstamp/>
@@ -134,13 +136,9 @@
         <filter token="DATABASE_PORT" value="${scarab.database.port}"/>
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
-        <filter token="DATABASE_LOADORDER" value="${scarab.database.loadorder}"/>
 
         <filter token="DATABASE_VALIDATION_QUERY" value="${scarab.database.validationQuery}"/>
-        <filter token="HTTP_DOMAIN" value="${scarab.http.domain}"/>
-        <filter token="HTTP_SCHEME" value="${scarab.http.scheme}"/>
-        <filter token="HTTP_SCRIPTNAME" value="${scarab.http.scriptname}"/>
-        <filter token="HTTP_PORT" value="${scarab.http.port}"/>
+
 
         <copy todir="${build.project.webinf}/lib" filtering="no" flatten="true">
             <fileset dir="${lib.dir}/">
