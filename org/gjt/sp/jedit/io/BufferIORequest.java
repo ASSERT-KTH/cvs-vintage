@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.14 2002/01/25 04:50:23 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.15 2002/01/26 01:36:24 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -228,6 +228,11 @@ public class BufferIORequest extends WorkRequest
 				Log.log(Log.ERROR,this,io);
 				Object[] pp = { io.toString() };
 				VFSManager.error(view,path,"ioerror.read-error",pp);
+			}
+			catch(OutOfMemoryError oom)
+			{
+				Log.log(Log.ERROR,this,oom);
+				VFSManager.error(view,path,"out-of-memory-error",null);
 			}
 
 			if(jEdit.getBooleanProperty("persistentMarkers"))

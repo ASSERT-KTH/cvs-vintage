@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.39 2002/01/22 10:34:04 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.40 2002/01/26 01:36:25 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -880,9 +880,13 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		}
 		else if(blockCaret)
 		{
-			gfx.setXORMode(bgColor);
-			gfx.fillRect(caretX,y,textArea.charWidth,height);
-			gfx.setPaintMode();
+			// Workaround for bug in Graphics2D in JDK1.4 under
+			// Windows; calling setPaintMode() does not reset
+			// graphics mode.
+			Graphics2D blockgfx = (Graphics2D)gfx.create();
+			blockgfx.setXORMode(bgColor);
+			blockgfx.fillRect(caretX,y,textArea.charWidth,height);
+			blockgfx.dispose();
 		}
 		else
 		{

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.25 2002/01/25 04:50:23 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.26 2002/01/26 01:36:24 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -165,8 +165,10 @@ public class BrowserView extends JPanel
 	} //}}}
 
 	//{{{ directoryLoaded() method
-	public void directoryLoaded(String path, Vector directory)
+	public void directoryLoaded(String path, String canonPath, Vector directory)
 	{
+		System.err.println("loaded " + path + ": "
+			+ currentlyLoading);
 		DefaultMutableTreeNode currentlyLoadingTreeNode
 			= (DefaultMutableTreeNode)currentlyLoading.get(path);
 

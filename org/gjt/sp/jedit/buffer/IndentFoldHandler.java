@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
 /**
  * A fold handler that folds lines based on their indent level.
  * @author Slava Pestov
- * @version $Id: IndentFoldHandler.java,v 1.2 2001/10/10 10:07:04 spestov Exp $
+ * @version $Id: IndentFoldHandler.java,v 1.3 2002/01/26 01:36:24 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class IndentFoldHandler implements FoldHandler
@@ -64,9 +64,6 @@ public class IndentFoldHandler implements FoldHandler
 		}
 		else
 		{
-			// this is so that lines consisting of only
-			// whitespace don't cause disruptions
-			boolean seenNonWhitespace = false;
 loop:			for(int i = 0; i < count; i++)
 			{
 				switch(seg.array[offset + i])
@@ -78,17 +75,8 @@ loop:			for(int i = 0; i < count; i++)
 					whitespace += (tabSize - whitespace % tabSize);
 					break;
 				default:
-					seenNonWhitespace = true;
 					break loop;
 				}
-			}
-
-			if(!seenNonWhitespace)
-			{
-				if(lineIndex != 0)
-					whitespace = buffer.getFoldLevel(lineIndex - 1);
-				else
-					whitespace = 0;
 			}
 		}
 
