@@ -46,6 +46,9 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
+// Java Stuff 
+import java.util.Stack;
+
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -70,17 +73,35 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.35 2001/12/07 20:18:45 jon Exp $
+ * @version $Id: Default.java,v 1.36 2001/12/31 23:45:07 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
+
     /**
      * builds up the context for display of variables on the page.
      */
     public void doBuildTemplate( RunData data, TemplateContext context )
         throws Exception 
     {
-        // Nothing needed here
+        ScarabUser user = (ScarabUser)data.getUser();
+        Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+        String lastTarget = null;
+        String currentTemplate = data.getTarget();
+        if ((cancelTargets == null) || (cancelTargets.empty()))
+        {
+            cancelTargets = new Stack();
+        }
+        else
+        {
+            lastTarget = (String)cancelTargets.peek();
+        }
+        if (!currentTemplate.equals(lastTarget) && 
+            !currentTemplate.equals("Error.vm"))
+        {
+            cancelTargets.push(data.getTarget());
+        }
+        user.setTemp("cancelTargets", cancelTargets);
     }
 
     /**
