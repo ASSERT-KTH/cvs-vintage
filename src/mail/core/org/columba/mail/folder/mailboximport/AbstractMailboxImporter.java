@@ -24,7 +24,6 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
@@ -99,19 +98,25 @@ public abstract class AbstractMailboxImporter {
      * and handles exceptions.
      */
     public void run(WorkerStatusController worker) {
+        //TODO: i18n
         worker.setDisplayText("Importing messages...");
 
         importMailbox(worker);
 
         if (getCount() == 0) {
-            NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog(
-                "Message import failed! No messages were added to the folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or the messagebox simply didn't contain any messages.");
+            //TODO: i18n
+            JOptionPane.showMessageDialog(null,
+                "Message import failed! No messages were added to the folder.\n" +
+                "This means that the parser didn't throw any exception even if " +
+                "it didn't recognize the mailbox format or the messagebox simply " +
+                "didn't contain any messages.",
+                "Warning", JOptionPane.WARNING_MESSAGE);
 
             return;
-        } else if (getCount() > 0) {
+        } else {
+            //TODO: i18n
             JOptionPane.showMessageDialog(null,
-                "Message import was successfull!", "Information",
+                "Message import was successful!", "Information",
                 JOptionPane.INFORMATION_MESSAGE,
                 ImageLoader.getImageIcon("stock_dialog_info_48.png"));
         }
@@ -134,9 +139,6 @@ public abstract class AbstractMailboxImporter {
 
             try {
                 importMailboxFile(listing[i], worker, getDestinationFolder());
-            } catch (FileNotFoundException fnfe) {
-                NotifyDialog dialog = new NotifyDialog();
-                dialog.showDialog("Source File not found:");
             } catch (Exception ex) {
                 new ExceptionDialog(ex);
             }
@@ -160,6 +162,7 @@ public abstract class AbstractMailboxImporter {
 
         counter++;
 
+        //TODO: i18n
         worker.setDisplayText("Importing messages: " + getCount());
     }
 
