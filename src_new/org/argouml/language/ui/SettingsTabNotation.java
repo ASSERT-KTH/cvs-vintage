@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.20 2004/10/19 05:40:05 linus Exp $
+// $Id: SettingsTabNotation.java,v 1.21 2004/12/27 23:34:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,14 +43,12 @@ import org.argouml.application.helpers.SettingsTabHelper;
 import org.argouml.ui.ShadowComboBox;
 
 /**
- * Action object for handling Notation settings.
+ * Settings tab panel for handling Notation settings.
  *
  * @author Thierry Lach
  * @since  0.9.4
  */
-public class SettingsTabNotation 
-    extends SettingsTabHelper
-    implements SettingsTabPanel {
+public class SettingsTabNotation extends SettingsTabHelper {
 
     private JCheckBox allowNotations = null;
     private JCheckBox useGuillemots = null;

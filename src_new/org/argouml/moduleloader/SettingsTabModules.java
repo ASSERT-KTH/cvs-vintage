@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.2 2004/10/11 06:00:55 linus Exp $
+// $Id: SettingsTabModules.java,v 1.3 2004/12/27 23:34:38 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,16 +46,15 @@ import org.argouml.application.api.SettingsTabPanel;
 import org.argouml.application.helpers.SettingsTabHelper;
 
 /**
- * Makes it possible to select the module that are to be enabled.
+ * Tab for the settings dialog that makes it possible to 
+ * select the modules that are to be enabled.
  *
  * TODO: Header for the table.
  *
  * @author Linus Tolke
  */
-public class SettingsTabModules
-    extends SettingsTabHelper
-    implements SettingsTabPanel
-{
+public class SettingsTabModules extends SettingsTabHelper {
+    
     private JTable table;
     private JPanel notYetLoadedPanel = null;
 

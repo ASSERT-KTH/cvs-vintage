@@ -1,4 +1,4 @@
-// $Id: SettingsTabLayout.java,v 1.8 2004/11/04 17:23:16 bobtarling Exp $
+// $Id: SettingsTabLayout.java,v 1.9 2004/12/27 23:34:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,14 +49,11 @@ import org.argouml.uml.ui.TabStyle;
 import org.argouml.uml.ui.TabTaggedValues;
 
 /**
- *  Tab pane for setting layout options.
+ *  Settings dialog tab panel for layout options.
  *
  *  @author Linus Tolke
  */
-public class SettingsTabLayout
-    extends SettingsTabHelper
-    implements SettingsTabPanel
-{
+public class SettingsTabLayout extends SettingsTabHelper {
 
     private Property	prpTodo;
     private Property	prpProperties;
