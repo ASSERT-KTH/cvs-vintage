@@ -1,4 +1,4 @@
-// $Id: CriticBrowserDialog.java,v 1.12 2003/06/29 23:53:43 linus Exp $
+// $Id: CriticBrowserDialog.java,v 1.13 2003/06/30 00:13:57 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -295,7 +295,7 @@ public class CriticBrowserDialog extends ArgoDialog
 	    _target.setPriority(ToDoItem.HIGH_PRIORITY);
 	if (p.equals(PRIORITIES[1]))
 	    _target.setPriority(ToDoItem.MED_PRIORITY);
-	if (p.equals(PRIORITIES[2])
+	if (p.equals(PRIORITIES[2]))
 	    _target.setPriority(ToDoItem.LOW_PRIORITY);
     }
 
