@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.72 2004/02/06 01:40:02 starksm Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.73 2004/02/06 15:06:00 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1137,6 +1137,11 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <java-type>java.lang.String</java-type>
             <jdbc-type>VARCHAR</jdbc-type>
             <sql-type>VARCHAR(255)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.util.Date</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>DATETIME</sql-type>
          </mapping>
          <mapping>
             <java-type>java.sql.Date</java-type>
