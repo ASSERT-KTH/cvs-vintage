@@ -346,7 +346,11 @@
      <copy todir="${dist.dir}/bin">
         <fileset dir="${src.bin.dir}"/>
      </copy>
-     <chmod file="${dist.dir}/bin/run.sh" perm="+x" />
+     <chmod perm="+x" >
+        <fileset dir="${dist.dir}/bin/"
+                 includes="*.sh"
+        />
+     </chmod>
      <copy todir="${dist.dir}/lib">
         <fileset dir="${src.lib.dir}"
                  includes="${bootstrap.jars}"
