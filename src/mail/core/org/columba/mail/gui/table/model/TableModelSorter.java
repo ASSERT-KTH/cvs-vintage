@@ -86,14 +86,11 @@ public class TableModelSorter extends BasicTableModelSorter {
 	public void setWindowItem(WindowItem item) {
 		this.config = item;
 
-		// FIXME
-		//sort = config.getSelectedHeader();
+	
 		if (sort == null)
 			sort = new String("Status");
 
-		// FIXME
-
-		//ascending = config.getHeaderAscending();
+	
 		ascending = true;
 
 		setSortingColumn(sort);
@@ -101,39 +98,15 @@ public class TableModelSorter extends BasicTableModelSorter {
 
 	}
 
-	/*
-	public void setDataSorting(boolean b)
-	    {
-	        dataSorting = b;
-	    }
-	
-	public boolean getDataSorting()
-	    {
-	        return dataSorting;
-	    }
-	
-	public String getSortingColumn()
-	    {
-	        return sort;
-	    }
-	
-	 public boolean getSortingOrder()
-	    {
-	        return ascending;
-	    }
-	    */
-
 	public void setSortingColumn(String str) {
 		sort = str;
-		// FIXME
-		//config.setSelectedHeader( sort );
+		
 
 	}
 
 	public void setSortingOrder(boolean b) {
 		ascending = b;
-		// FIXME
-		//config.setHeaderAscending( ascending );
+		
 
 	}
 
@@ -155,15 +128,18 @@ public class TableModelSorter extends BasicTableModelSorter {
 
 	}
 
-	public void sort(int column) {
-		super.sort(column);
+	
+	public void sort() {
+			super.sort();
 
-		// notify tree
-		getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
+			// notify tree
+			getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-		// notify table 
-		getRealModel().fireTableDataChanged();
-	}
+			// notify table 
+			getRealModel().fireTableDataChanged();
+		}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.table.model.TableModelModifier#update()
@@ -173,7 +149,7 @@ public class TableModelSorter extends BasicTableModelSorter {
 		super.update();
 
 		// sort table model data
-		sort(getSortInt());
+		sort();
 
 		// notify tree
 		getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
