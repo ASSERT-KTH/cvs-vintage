@@ -116,7 +116,7 @@ import java.util.zip.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 2000/02/09 20:36:11 $
+ * @version $Revision: 1.4 $ $Date: 2000/03/23 23:34:36 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -413,7 +413,7 @@ public class AdaptiveClassLoader extends ClassLoader {
         // Cache entry.
         ClassCacheEntry classCache = new ClassCacheEntry();
         while (repEnum.hasMoreElements()) {
-            byte[] classData;
+            byte[] classData=null;
 
             File file = (File) repEnum.nextElement();
             try {
@@ -421,14 +421,16 @@ public class AdaptiveClassLoader extends ClassLoader {
                     classData =
                         loadClassFromDirectory(file, name, classCache);
                 } else {
-                    classData =
+		    classData =
                         loadClassFromZipfile(file, name, classCache);
-                }
+		}
             } catch(IOException ioe) {
                 // Error while reading in data, consider it as not found
                 classData = null;
-            }
-    
+            } catch( Exception ex ) {
+		ex.printStackTrace();
+	    }
+
             if (classData != null) {
                 // Define the class
                 c = defineClass(name, classData, 0, classData.length);
@@ -439,8 +441,7 @@ public class AdaptiveClassLoader extends ClassLoader {
                 cache.put(name, classCache);
     
                 // Resolve it if necessary
-                if (resolve) resolveClass(c);
-                
+		if (resolve) resolveClass(c);
                 return c;
             }
         }
@@ -563,6 +564,7 @@ public class AdaptiveClassLoader extends ClassLoader {
 
         try {
             ZipEntry entry = zipfile.getEntry(classFileName);
+	    //	    System.out.println("XXX Found " + classFileName + " " + entry + " " + entry.getSize() );
             if (entry != null) {
                 cache.origin = file;
                 return loadBytesFromStream(zipfile.getInputStream(entry),
@@ -624,7 +626,7 @@ public class AdaptiveClassLoader extends ClassLoader {
                 } else {
                     s = loadResourceFromZipfile(file, name);
                 }
-
+		//		System.out.println("LOADING " + file + " "  + name + " " + s );
                 if (s != null) {
                     break;
                 }
@@ -663,20 +665,28 @@ public class AdaptiveClassLoader extends ClassLoader {
             ZipEntry entry = zipfile.getEntry(name);
 
             if (entry != null) {
-                return zipfile.getInputStream(entry);
-            } else {
-                return null;
+		// workaround - the better solution is to not close the
+		// zipfile !!!!
+		byte[] data= loadBytesFromStream(zipfile.getInputStream(entry),
+						 (int) entry.getSize());
+		if(data != null) {
+		    InputStream istream = new ByteArrayInputStream(data);
+		    return istream;
+		}
             }
         } catch(IOException e) {
-            return null;
         } finally {
-            if ( zipfile != null ) {
+	    // if we close the zipfile bad things will happen - we can't read the stream
+	    // on some VMs
+	    if ( zipfile != null ) {
                 try {
                     zipfile.close();
                 } catch ( IOException ignored ) {
                 }
             }
         }
+	// default case
+	return null;
     }
 
     /**

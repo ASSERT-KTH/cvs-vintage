@@ -195,8 +195,8 @@ public class InvokerServlet extends HttpServlet {
 	    // support
         }
 
-	// 	System.out.println("CL: " + context.getServletLoader().getClassLoader() +
-	// 			   " wrapper: " + wrapper);
+	// System.out.println("CL: " + context.getServletLoader().getClassLoader() +
+	//	   " wrapper: " + wrapper);
 	
 
 	// Can't be null - loadServlet creates a new wrapper .
@@ -255,7 +255,7 @@ public class InvokerServlet extends HttpServlet {
 	}
 
         wrapper.handleRequest(requestfacade, responsefacade);
-
+	
 	if (!inInclude) {
 	    realRequest.setServletPath( savedServletPath);
 	    realRequest.setPathInfo(savedPathInfo);
@@ -279,7 +279,8 @@ public class InvokerServlet extends HttpServlet {
     }
 
     public void doError(HttpServletResponse response, String msg)
-    throws ServletException, IOException {
-        response.sendError(404, msg);
+	throws ServletException, IOException
+    {
+	response.sendError(404, msg);
     }    
 }

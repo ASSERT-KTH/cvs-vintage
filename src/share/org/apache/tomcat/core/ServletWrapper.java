@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.32 2000/02/22 22:53:23 costin Exp $
- * $Revision: 1.32 $
- * $Date: 2000/02/22 22:53:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.33 2000/03/23 23:34:36 costin Exp $
+ * $Revision: 1.33 $
+ * $Date: 2000/03/23 23:34:36 $
  *
  * ====================================================================
  *
@@ -97,6 +97,8 @@ public class ServletWrapper {
     protected String description = null;
 
     boolean initialized=false;
+    boolean available=true;
+
     // Usefull info for class reloading
     protected boolean isReloadable = false;
     // information + make sure destroy is called when no other servlet
@@ -268,9 +270,17 @@ public class ServletWrapper {
 	}
 	
 	servlet = (Servlet)servletClass.newInstance();
+	//	System.out.println("Loading " + servletClassName + " " + servlet );
 	
 	config.setServletClassName(servlet.getClass().getName());
-	initServlet();
+	try {
+	    initServlet();
+	} catch( UnavailableException ex ) {
+	    available=false;
+	} catch( ServletException ex ) {
+	    available=false;
+	}
+	//	System.out.println("Init ok " + available);
     }
 
     
@@ -278,7 +288,7 @@ public class ServletWrapper {
 	throws ClassNotFoundException, InstantiationException,
 	IllegalAccessException, ServletException
     {
-	try {
+	//	try {
 	    final Servlet sinstance = servlet;
 	    final ServletConfigImpl servletConfig = config;
 	    
@@ -303,10 +313,10 @@ public class ServletWrapper {
 		
 	    }
 	    initialized=true;
-	} catch(Exception ioe) {
-	    ioe.printStackTrace();
+	    //	} catch(IOException ioe) {
+	    //	    ioe.printStackTrace();
 	    // Should never come here...
-	}
+	    //	}
     }
 
     // Reloading
@@ -357,18 +367,24 @@ public class ServletWrapper {
 	    }
 	    
 	    handleReload();
-
+	    //	    System.out.println(" SW " + initialized );
 	    if( ! initialized ) {
 		try {
 		    loadServlet();
 		} catch(Exception ex ) {
 		    // return not found
 		    res.setStatus( 404 );
-		    contextM.handleError( req, res, null, 404 );
+		    contextM.handleError( req, res, ex, 404 );
 		    return;
 		}
 	    }
-	    
+
+	    // If servlet was not initialized
+	    if( ! available ) {
+		// XXX ADD code to handle this case XXX BUG 67
+		// 		res.setStatus(404);
+		// 		contextM.handleError( req, res, ex, 404 );
+	    }
 	    // XXX to expensive  per/request, un-load is not so frequent and
 	    // the API doesn't require a special state for destroy
 	    // synchronized(this) {

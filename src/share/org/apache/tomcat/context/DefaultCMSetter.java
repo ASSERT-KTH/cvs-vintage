@@ -173,7 +173,8 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
-	    loader.addRepository( new File(f, jarfile ));
+	    File jarF=new File(f, jarfile );
+	    loader.addRepository( getAbsolute( jarF, context) );
 	}
     }
 
