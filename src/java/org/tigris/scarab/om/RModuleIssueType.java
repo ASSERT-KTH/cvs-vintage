@@ -150,6 +150,23 @@ public  class RModuleIssueType
         return this.getDisplayName();
     }
 
+    public String getDisplayDescription()
+    {
+        String display = super.getDisplayDescription();
+        if (display == null)
+        {
+            try
+            {
+                display = getIssueType().getDescription();
+            }
+            catch (TorqueException e)
+            {
+                log().error("Error getting the issue type description: ", e);
+            }
+        }
+        return display;
+    }
+
     /**
      * Copies object.
      */
