@@ -224,6 +224,7 @@
         <filter token="FILE_UPLOAD_PATH" value="${scarab.file.upload.path}"/>
         <filter token="EXTRA_TR_PROPERTIES" 
             value="${scarab.extra.tr.properties}"/>
+        <filter token="TIMEZONE" value="${scarab.timezone}"/>
         <filter token="LOG_PATTERN" value="${scarab.log.pattern}"/>
         <filter token="LOG_LEVEL_SCARAB" value="${scarab.log.level.scarab}"/>
         <filter token="LOG_FILE_SCARAB" value="${scarab.log.file.scarab}"/>
