@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.10 2003/06/30 18:00:28 linus Exp $
+// $Id: CrConstructorNeeded.java,v 1.11 2003/12/04 08:55:38 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,14 +32,15 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 
 /**
- * <p> A critic to detect when a class can never have instances (of itself or
- * any subclasses).</p>
+ * <p> A critic to detect when a class requires a constructor.</p>
  *
  * <p>The critic will trigger whenever a class has instance variables that are
- * uninitialised and there is no constructor.</p>
+ * uninitialised and there is no constructor. It will not trigger for certain stereotyped classes.</p>
+ * <p>this critic is part of a compound critic</p>
  *
  * @see <a
  * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_constructor_needed">ArgoUML
@@ -62,6 +63,7 @@ public class CrConstructorNeeded extends CrUML {
         setResource("CrConstructorNeeded");
 
         addSupportedDecision(CrUML.decSTORAGE);
+        addKnowledgeType(Critic.KT_CORRECTNESS);
 
         // These may not actually make any difference at present (the code
         // behind addTrigger needs more work).
@@ -94,7 +96,8 @@ public class CrConstructorNeeded extends CrUML {
         if (!(ModelFacade.isAClass(dm))) {
             return NO_PROBLEM;
         }
-
+        
+            
 	// We don't consider secondary stuff.
 	if (!(ModelFacade.isPrimaryObject(dm))) 
 	    return NO_PROBLEM;
@@ -103,13 +106,15 @@ public class CrConstructorNeeded extends CrUML {
         if (ModelFacade.isType(dm)) {
             return NO_PROBLEM;
         }
+        
+        // Utilities usually do not require a constructor either
+        if (ModelFacade.isUtility(dm)) {
+            return NO_PROBLEM;
+        }
 
         // Check for uninitialised instance variables and
         // constructor.
         Collection operations = ModelFacade.getOperations(dm);
-        if (operations.isEmpty()) {
-            return PROBLEM_FOUND;
-        }
 
         Iterator opers = operations.iterator();
 
