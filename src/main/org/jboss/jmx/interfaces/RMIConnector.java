@@ -81,7 +81,7 @@ public interface RMIConnector
 
 	public Object instantiate(
 		String pClassName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -91,7 +91,7 @@ public interface RMIConnector
 	public Object instantiate(
 		String pClassName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -126,7 +126,7 @@ public interface RMIConnector
 	public ObjectInstance createMBean(
 		String pClassName,
 		ObjectName pName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -140,7 +140,7 @@ public interface RMIConnector
 		String pClassName,
 		ObjectName pName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -190,6 +190,13 @@ public interface RMIConnector
 	) throws
 		RemoteException;
 
+	public boolean isInstanceOf(
+		ObjectName pName,
+		String pClassName
+	) throws
+		InstanceNotFoundException,
+		RemoteException;
+
 	public Integer getMBeanCount(
 	) throws
 		RemoteException;
@@ -223,7 +230,7 @@ public interface RMIConnector
 		ReflectionException,
 		RemoteException;
 
-	public void setAttributes(
+	public AttributeList setAttributes(
 		ObjectName pName,
 		AttributeList pAttributes
 	) throws
@@ -272,3 +279,4 @@ public interface RMIConnector
 		RemoteException;
 
 }
+

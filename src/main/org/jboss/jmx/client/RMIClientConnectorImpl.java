@@ -177,7 +177,7 @@ public class RMIClientConnectorImpl
 
 	public Object instantiate(
 		String pClassName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -195,7 +195,7 @@ public class RMIClientConnectorImpl
 	public Object instantiate(
 		String pClassName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -254,7 +254,7 @@ public class RMIClientConnectorImpl
 	public ObjectInstance createMBean(
 		String pClassName,
 		ObjectName pName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -276,7 +276,7 @@ public class RMIClientConnectorImpl
 		String pClassName,
 		ObjectName pName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -378,6 +378,21 @@ public class RMIClientConnectorImpl
 		}
 	}
 
+	public boolean isInstanceOf(
+		ObjectName pName,
+		String pClassName
+	) throws
+		InstanceNotFoundException
+	{
+		try {
+			return mRemoteConnector.isInstanceOf( pName, pClassName );
+		}
+		catch( RemoteException re ) {
+			//AS Not a good style but for now
+			return false;
+		}
+	}
+
 	public Integer getMBeanCount(
 	) {
 		try {
@@ -440,7 +455,7 @@ public class RMIClientConnectorImpl
 		}
 	}
 
-	public void setAttributes(
+	public AttributeList setAttributes(
 		ObjectName pName,
 		AttributeList pAttributes
 	) throws
@@ -448,9 +463,11 @@ public class RMIClientConnectorImpl
 		ReflectionException
 	{
 		try {
-			mRemoteConnector.setAttributes( pName, pAttributes );
+			return mRemoteConnector.setAttributes( pName, pAttributes );
 		}
 		catch( RemoteException re ) {
+			//AS Not a good style but for now
+			return null;
 		}
 	}
 
@@ -728,3 +745,4 @@ public class RMIClientConnectorImpl
 		}
 	}
 }	
+

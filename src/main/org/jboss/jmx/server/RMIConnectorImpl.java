@@ -125,7 +125,7 @@ public class RMIConnectorImpl
 
 	public Object instantiate(
 		String pClassName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -150,7 +150,7 @@ public class RMIConnectorImpl
 	public Object instantiate(
 		String pClassName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -207,7 +207,7 @@ public class RMIConnectorImpl
 	public ObjectInstance createMBean(
 		String pClassName,
 		ObjectName pName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -230,7 +230,7 @@ public class RMIConnectorImpl
 		String pClassName,
 		ObjectName pName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -315,6 +315,16 @@ public class RMIConnectorImpl
 		return mServer.isRegistered( pName );
 	}
 
+	public boolean isInstanceOf(
+		ObjectName pName,
+		String pClassName
+	) throws
+		InstanceNotFoundException,
+		RemoteException
+	{
+		return mServer.isInstanceOf( pName, pClassName );
+	}
+
 	public Integer getMBeanCount(
 	) throws
 		RemoteException
@@ -360,7 +370,7 @@ public class RMIConnectorImpl
 		mServer.setAttribute( pName, pAttribute );
 	}
 
-	public void setAttributes(
+	public AttributeList setAttributes(
 		ObjectName pName,
 		AttributeList pAttributes
 	) throws
@@ -368,7 +378,7 @@ public class RMIConnectorImpl
 		ReflectionException,
 		RemoteException
 	{
-		mServer.setAttributes( pName, pAttributes );
+		return mServer.setAttributes( pName, pAttributes );
 	}
 
 	public Object invoke(
@@ -581,3 +591,4 @@ public class RMIConnectorImpl
 		}
 	}
 }
+

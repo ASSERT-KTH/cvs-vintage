@@ -31,12 +31,12 @@ import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.jmx.interfaces.JMXAdaptor;
 
 /**
- *   <description> 
- *      
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
- */
+*   <description> 
+*      
+*   @see <related>
+*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @version $Revision: 1.3 $
+*/
 public class JMXAdaptorImpl
    extends UnicastRemoteObject
    implements JMXAdaptor

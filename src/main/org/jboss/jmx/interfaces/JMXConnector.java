@@ -117,7 +117,7 @@ public interface JMXConnector
 	**/
 	public Object instantiate(
 		String pClassName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -126,7 +126,7 @@ public interface JMXConnector
 	public Object instantiate(
 		String pClassName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -180,7 +180,7 @@ public interface JMXConnector
 	public ObjectInstance createMBean(
 		String pClassName,
 		ObjectName pNameToAssign,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -193,7 +193,7 @@ public interface JMXConnector
 		String pClassName,
 		ObjectName pName,
 		ObjectName pLoaderName,
-		String[] pParams,
+		Object[] pParams,
 		String[] pSignature
 	) throws
 		ReflectionException,
@@ -245,6 +245,12 @@ public interface JMXConnector
 	public boolean isRegistered(
 		ObjectName pName
 	);
+    
+	public boolean isInstanceOf(
+		ObjectName pName,
+  	String pClassName
+	) throws
+		InstanceNotFoundException;
 
 	public Integer getMBeanCount(
 	);
@@ -275,7 +281,7 @@ public interface JMXConnector
 		MBeanException,
 		ReflectionException;
 
-	public void setAttributes(
+	public AttributeList setAttributes(
 		ObjectName pName,
 		AttributeList pAttributes
 	) throws
