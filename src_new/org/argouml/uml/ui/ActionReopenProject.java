@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.3 2003/12/17 01:25:27 bobtarling Exp $
+// $Id: ActionReopenProject.java,v 1.4 2004/01/07 21:05:41 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,8 @@ public class ActionReopenProject extends UMLAction {
 					      t,
 					      JOptionPane.YES_NO_CANCEL_OPTION);
 
-            if (response == JOptionPane.CANCEL_OPTION)
+            if (response == JOptionPane.CANCEL_OPTION 
+	        || response == JOptionPane.CLOSED_OPTION)
                 return;
             if (response == JOptionPane.YES_OPTION) {
                 boolean safe = false;

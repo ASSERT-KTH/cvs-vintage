@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.14 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionExit.java,v 1.15 2004/01/07 21:05:41 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,8 @@ public class ActionExit extends UMLAction
 		JOptionPane.showConfirmDialog(pb, t, t, 
 					      JOptionPane.YES_NO_CANCEL_OPTION);
       
-	    if (response == JOptionPane.CANCEL_OPTION) {
+	    if (response == JOptionPane.CANCEL_OPTION 
+            	|| response == JOptionPane.CLOSED_OPTION) {
 		active = false;
 		return;
 	    }

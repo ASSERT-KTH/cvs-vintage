@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.20 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionNew.java,v 1.21 2004/01/07 21:05:41 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,8 @@ public class ActionNew extends UMLAction {
 					      JOptionPane.YES_NO_CANCEL_OPTION
 					      );
 
-	    if (response == JOptionPane.CANCEL_OPTION) return;
+	    if (response == JOptionPane.CANCEL_OPTION 
+	        || response == JOptionPane.CLOSED_OPTION) return;
 	    if (response == JOptionPane.YES_OPTION) {
 		boolean safe = false;
 
