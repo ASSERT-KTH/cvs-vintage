@@ -1,4 +1,4 @@
-<project name="TestRun" default="main">
+<project name="TestRun" default="client">
    <!-- 
         To test tomcat standalone, type:
           bin/tomcat.sh ant -f conf/test-tomcat.xml client
@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.11 $" />  
+     <property name="revision" value="$Revision: 1.12 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -44,12 +44,12 @@
 
   <!-- ==================== Defaults ==================== -->
   <target name="init" >
+    <echo message="Running test-tomcat ${port} ${host} ${http.protocol}"/>
     <gtestDefaults port="${port}" 
 		   host="${host}"
 		   debug="${debug}" 
 		   protocol="${http.protocol}"
 		   outputType="${outputType}" />
-    <echo message="Running test-tomcat ${port} ${host} ${http.protocol}"/>
   </target>
   <!-- ==================== File tests ==================== -->
   <target name="new-style" depends="init">
@@ -66,7 +66,10 @@
 
 
   <!-- ==================== File tests ==================== -->
+  <!-- File, directory and welcome tests -->
+
   <target name="file" depends="init">
+
     <gtest  description="Content Type Test"
            request="GET /test/binaries/image1.gif HTTP/1.0"
            expectHeaders="Content-Type:image/gif" />
@@ -75,42 +78,16 @@
            request="GET /test/binaries/image1.gif HTTP/1.0"
            goldenFile="${gdir}/image1.gif"
            exactMatch="true"  />
-
-  </target>
-
-  <target name="file-tomcat" depends="init,file">
     
     <gtest  description="Get a directory - expect redirect"
            request="GET /test/welcome HTTP/1.0"
            expectHeaders="Location:/welcome/" 
            returnCode="${http.protocol} 301" /> 
 
-    <!-- Difference in behavior between Apache and tomcat 
-         XXX IMHO the tomcat behavior is OK, but it would be a good idea
-         to match Apache and return 302
-    <gtest  description="Welcome File Test2"
+    <gtest  description="Get a dir without welcome file"
            request="GET /test/binaries HTTP/1.0"
-           returnCode="${http.protocol} 200" />
-    -->
+           returnCode="${http.protocol} 301" />
     
-    <!-- Yet another difference between Apache and tomcat. Not a
-       bug, but we should fix it anyway      -->
-    <gtest  description="Welcome File Test3"
-           request="GET /test/welcome/ HTTP/1.0"
-           returnCode="${http.protocol} 301" />
-<!--           goldenFile="${gdir}/movedwelcome.txt" />-->
-   </target>
-  
-   <target name="file-apache" depends="init,file">
-    <gtest  description="Welcome File Test2"
-           request="GET /test/binaries HTTP/1.0"
-           returnCode="${http.protocol} 301" />
-
-    <!-- Tomcat returns 302 --> 
-    <gtest  description="Welcome File Test3"
-           request="GET /test/welcome/ HTTP/1.0"
-           returnCode="${http.protocol} 200" 
-           goldenFile="${gdir}/welcome.txt" />
   </target>
 
   <!-- ==================== Dispatch tests ==================== -->
@@ -205,32 +182,56 @@
        />    
        -->
 
-    
+    <gtest  description="SimpleRedirect"
+           request="GET /test/servlet/dispatch.SimpleRedirectServlet?/index.html HTTP/1.0"
+	   expectHeaders="Location:http://${host}:${port}/index.html" 
+	   returnCode="${http.protocol} 302" 
+	   />
 
-    </target>
-
-    <target name="dispatch-tomcat" depends="init,dispatch">
-      <gtest  description="SimpleRedirect"
-             request="GET /test/servlet/dispatch.SimpleRedirectServlet?/index.html HTTP/1.0"
-             expectHeaders="Location:http://${host}:${port}/index.html" 
-             returnCode="${http.protocol} 302" 
-       />
       <gtest  description="SimpleRedirect2"
              request="GET /test/servlet/dispatch.SimpleRedirectServlet?index.html HTTP/1.0"
              expectHeaders="Location:http://${host}:${port}/test/servlet/index.html" 
              returnCode="${http.protocol} 302" 
        />
+
+    
+
     </target>
 
-    <target name="dispatch-apache" depends="init,dispatch">
-      <gtest  description="SimpleRedirect"
-             request="GET /test/servlet/dispatch.SimpleRedirectServlet?/index.html HTTP/1.0"
-             returnCode="${http.protocol} 302" 
-       />
-      <gtest  description="SimpleRedirect2"
-             request="GET /test/servlet/dispatch.SimpleRedirectServlet?index.html HTTP/1.0"
-             returnCode="${http.protocol} 302" 
-       />
+  <!-- ==================== Standalone specific ==================== -->
+  <!-- The standalone http and StaticInterceptor may have 
+       different behavior than Apache ( even if correct ) -->
+  <target name="tomcat-standalone" depends="init">
+
+    <gtest  request="GET /test/jsp/ HTTP/1.0"
+           returnCode="${http.protocol} 301"           
+	   description="Get a dir with static welcome file"  />
+
+    <gtest description="Get a dir with static welcome file"
+	   request="GET /test/welcome/ HTTP/1.0"
+	   returnCode="${http.protocol} 301"  />
+
+    <gtest request="GET /test/ HTTP/1.0"
+	   returnCode="${http.protocol} 302" />
+
+   </target>
+
+  <!-- ==================== Tomcat+Apache specific ==================== -->
+  <target name="tomcat-apache" depends="init">
+    <gtest  request="GET /test/jsp/ HTTP/1.0"
+           goldenFile="${gdir}/index.txt"  
+           returnCode="${http.protocol} 200" 
+           description="Get a dir with static welcome file"
+    />
+
+    <gtest  description="Get a dir with static welcome file"
+           request="GET /test/welcome/ HTTP/1.0"
+           returnCode="${http.protocol} 200" 
+           goldenFile="${gdir}/welcome.txt" />
+
+    <gtest request="GET /test/ HTTP/1.0"
+	   returnCode="${http.protocol} 200"  />
+
     </target>
 
   <!-- ==================== Jsp tests ==================== -->
@@ -505,26 +506,7 @@
 
    </target>
 
-  <target name="jsp-tomcat" depends="init,jsp">
-
-<!--
-     goldenFile="${gdir}/movedindex.txt"  
--->
-    <gtest  request="GET /test/jsp/ HTTP/1.0"
-           returnCode="${http.protocol} 302"           
-          description="Redirects to index.html"
-    />
-
-   </target>
-
-  <target name="jsp-apache" depends="init,jsp">
-    <gtest  request="GET /test/jsp/ HTTP/1.0"
-           goldenFile="${gdir}/index.txt"  
-           description="Serves index.html"
-    />
-
-   </target>
-
+  <!-- ==================== Bad Requests ==================== -->
   <target name="wrong_request" depends="init">
     <gtest  request="GET /test/*.jsp HTTP/1.0"
            returnCode="${http.protocol} 200"
@@ -551,15 +533,18 @@
 
   </target>
 
-  <target name="http09" depends="init">
-    <echo message="Testing HTTP 0.9 compatibility"/>
 
-
-  </target> 
-
+   <!-- ==================== Get tests ==================== -->
+  
    <target name="get" depends="init">
-      <!-- hit unavailable servlet 1st time -->
-      <gtest  request="GET /test/servlet/Unavailable HTTP/1.0"
+
+      <gtest description="First call to unavailable will fail, wait 10 sec"
+	     request="GET /test/servlet/Unavailable HTTP/1.0"
+             returnCode="${http.protocol} 503"
+      />
+
+      <gtest description="Calls before 10 sec will fail"
+	     request="GET /test/servlet/Unavailable HTTP/1.0"
              returnCode="${http.protocol} 503"
       />
 
@@ -590,30 +575,6 @@
              returnCode="Error: "
              magnitude="false" />
 
-      <!-- Hangs apache - it starts with " ", apache expects a 1.0 request
-           gtest  request="   GET   /   "
-             returnCode="Error: "
-             magnitude="false" / -->
-
-      <!-- tolerate bad request for now
-      <gtest  request="   GET   /   HTTP/1.0"
-             returnCode="${http.protocol} 200"
-      />
-      -->
-
-      <!-- tolerate bad request for now
-      <gtest  request="GET /test/index.ht ml HTTP/1.0"
-             returnCode="${http.protocol} 400"
-      />
-      -->
-
-      <!-- tolerate bad request for now
-      <gtest  request="   GET   /index.ht ml HTTP/1.0 "  
-             returnCode="${http.protocol} 400"
-      />
-      -->
-
-
       <gtest  request="GET /test/servlet HTTP/1.0"
              returnCode="${http.protocol} 404"
       />
@@ -626,28 +587,13 @@
              returnCode="${http.protocol} 404"
       />
 
-   </target>
-
-   <target name="get-tomcat" depends="init,get" >
-      <gtest  request="GET /test/ HTTP/1.0"
-             returnCode="${http.protocol} 302"
-      />
-
       <gtest  request="GET /test/welcome HTTP/1.0"
-             returnCode="${http.protocol} 302"
-      />
+	      returnCode="${http.protocol} 301"  />
+
    </target>
 
-   <target name="get-apache" depends="init,get">
-      <gtest  request="GET /test/ HTTP/1.0"
-             returnCode="${http.protocol} 200"
-      />
-
-      <gtest  request="GET /test/welcome HTTP/1.0"
-             returnCode="${http.protocol} 301"
-      />
-   </target>
-
+ 
+   <!-- ==================== Mappings ==================== -->
    <target name="requestMap" depends="init" >
       <gtest  description="/foo/bar/index.html : 1.0 : 200"
              request="GET /test/foo/bar/index.html HTTP/1.0"
@@ -695,13 +641,7 @@ mod_webapp into mod_jk )
             />
    </target>
 
-  <target name="post1" depends="init" > 
-    <gtest  description="Content Type Test"
-           request="POST /test/servlet/Post HTTP/1.0"
-           debug="10"
-           content="Test POST BODY" />
-   </target>
-   
+   <!-- ==================== POST tests ==================== -->
    <target name="post" depends="init" >
       <gtest  request="POST /test/servlet/request.NotThere HTTP/1.0"
              content="name=lightness of being"
@@ -810,6 +750,34 @@ mod_webapp into mod_jk )
              returnCode="${http.protocol} 200"
             / -->
    </target>
+ 
+   <!-- ==================== Special tests ==================== -->
+
+  <target name="special" depends="init" > 
+    <gtest  description="Content Type Test"
+           request="POST /test/servlet/Post HTTP/1.0"
+           debug="10"
+           content="Test POST BODY" />
+
+    <!-- Hangs with apache - it starts with " ", apache expects a 1.0 request
+         <gtest  request="   GET   /   "
+                 returnCode="Error: "
+                 magnitude="false" / -->
+
+      <gtest  request="   GET   /   HTTP/1.0"
+             returnCode="${http.protocol} 200"
+      />
+
+      <gtest  request="GET /test/index.ht ml HTTP/1.0"
+             returnCode="${http.protocol} 400"
+      />
+
+      <gtest  request="   GET   /index.ht ml HTTP/1.0 "  
+             returnCode="${http.protocol} 400"
+      />
+
+   </target>
+
 
    <!-- ============= unavailable servlet tests ============= -->
    <target name="unavailable" depends="init" >
@@ -826,8 +794,12 @@ mod_webapp into mod_jk )
       />
        -->
    
-      <!-- 2nd hit on the unavailable servlet should succeed -->
-      <gtest  request="GET /test/servlet/Unavailable HTTP/1.0"
+      <!-- 2nd hit on the unavailable servlet should succeed
+           Must be run 10 seconds after the first try, in get - 
+           we do it after jsp ( which will take more than 10 secs :-)
+        -->
+      <gtest description="Second call to Unavailable will succed if after 10s"
+	     request="GET /test/servlet/Unavailable HTTP/1.0"
              returnCode="${http.protocol} 200"
              responseMatch="Hello"
       />
@@ -835,7 +807,8 @@ mod_webapp into mod_jk )
 
    <!-- ============= restricted access tests ============= -->
    <target name="restricted" depends="init" >
-      <gtest  request="GET /test/WEB-INF HTTP/1.0"
+      <gtest description="normal redirect" 
+	     request="GET /test/WEB-INF HTTP/1.0"
              returnCode="${http.protocol} 4" />
 
       <gtest  request="GET /test/WEB-INF/ HTTP/1.0"
@@ -847,7 +820,13 @@ mod_webapp into mod_jk )
       <gtest  request="GET /test/../test/WEB-INF/ HTTP/1.0"
              returnCode="${http.protocol} 4" />
 
-      <gtest  request="GET /test/WEB-INF/classes HTTP/1.0"
+      <gtest  request="GET /test/WEB-INF/classes/ HTTP/1.0"
+             returnCode="${http.protocol} 4" />
+
+      <gtest  request="GET /test/WEB-INF/classes/Post.class HTTP/1.0"
+             returnCode="${http.protocol} 4" />
+
+      <gtest  request="GET /test/WEB-INF/classes/Post.java HTTP/1.0"
              returnCode="${http.protocol} 4" />
 
       <!-- For Windows systems, insure blocking is not case sensitive! -->
@@ -903,25 +882,20 @@ mod_webapp into mod_jk )
              returnCode="${http.protocol} 4" />
    </target>
 
+   <!-- ==================== All targets ====================  -->
+   <target name="client" depends="file,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable">
+   </target>
+
+   <!-- ==================== Aux targets ==================== -->
    <target name="startup">
      <java classname="org.apache.tomcat.startup.Tomcat" args="" />
-   </target>
-
-
-   <target name="client" depends="file-tomcat,dispatch-tomcat,get-tomcat,requestMap,post,jsp-tomcat,wrong_request,unavailable,restricted">
-   </target>
-
-   <target name="client-apache" depends="file-apache,dispatch-apache,get-apache,post,jsp-apache,wrong_request,unavailable,restricted">
    </target>
 
    <target name="shutdown">
      <java classname="org.apache.tomcat.startup.Tomcat" args="-stop" />
    </target>
 
-
    <target name="main" depends="startup,client,shutdown" />
-
-   <target name="apache" depends="startup,client-apache,shutdown" />
 
 </project>
 
