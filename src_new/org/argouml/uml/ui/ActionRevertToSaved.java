@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.3 2004/02/28 12:29:44 linus Exp $
+// $Id: ActionRevertToSaved.java,v 1.4 2004/07/22 20:17:25 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,17 +42,11 @@ import org.argouml.ui.ProjectBrowser;
 public class ActionRevertToSaved extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
-    // static variables
-
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Create your own action every
-     * time. This will be removed.
-     */
-    public static ActionRevertToSaved SINGLETON = new ActionRevertToSaved();
-
-    ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * Constructor.
+     */
     public ActionRevertToSaved() {
         super("action.revert-to-saved");
     }
@@ -97,11 +91,12 @@ public class ActionRevertToSaved extends UMLAction {
     }
     
     /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     *
      * Overridden to return true only if project has pending changes.
      */
     public boolean shouldBeEnabled() {
         super.shouldBeEnabled();
-        ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
         return (p != null && p.needsSave() && p.getURL() != null);
     }

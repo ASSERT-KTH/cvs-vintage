@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.35 2004/07/18 14:53:02 mkl Exp $
+// $Id: ActionOpenProject.java,v 1.36 2004/07/22 20:17:25 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,22 +64,6 @@ public class ActionOpenProject
 
     private static final Logger LOG =
         Logger.getLogger(ActionOpenProject.class);
-
-    ////////////////////////////////////////////////////////////////
-    // static variables
-
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use the constructor instead
-     * to build yourself an object of your own.
-     */
-    public static ActionOpenProject SINGLETON = new ActionOpenProject();
-
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. It is not used in this class
-     * and this class is not a file system resource interface so you should
-     * search for another solution.
-     */
-    public static final String separator = System.getProperty("file.separator");
 
     ////////////////////////////////////////////////////////////////
     // constructors

@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.22 2004/03/26 13:04:44 linus Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.23 2004/07/22 20:17:26 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,16 +39,7 @@ import ru.novosoft.uml.MBase;
 public abstract class AbstractUmlModelFactory {
 
     /**
-     * Flag to indicate if the gui is enabled. If the gui is
-     * enabled modelelements that are added should also be added to the
-     * navigatorpane.
-     *
-     * @deprecated by Linus Tolke as of 0.15.4. Thanks to Alex Bagehots work
-     * with the tree, this is no longer needed.
-     */
-    private static boolean guiEnabled = true;
-
-    /** Default constructor.
+     * Default constructor.
      */
     protected AbstractUmlModelFactory() {
     }
@@ -78,27 +69,6 @@ public abstract class AbstractUmlModelFactory {
         }
     }
 
-    /**
-     * Turns the flag for the gui on/off. Default the gui is on. Needed for test
-     * modus.
-     * @param gui flag to turn gui on off
-     * @deprecated by Linus Tolke as of 0.15.4. Thanks to Alex Bagehots work
-     * with the tree, this is no longer needed.
-     */
-    public void setGuiEnabled(boolean gui) {
-        guiEnabled = gui;
-    }
-
-    /**
-     * Checks if the gui is enabled.
-     *
-     * @return the gui flag
-     * @deprecated by Linus Tolke as of 0.15.4. Thanks to Alex Bagehots work
-     * with the tree, this is no longer needed.
-     */
-    public boolean isGuiEnabled() {
-        return guiEnabled;
-    }
 
     /**
      * Adds all interested (and centralized) listeners to the given

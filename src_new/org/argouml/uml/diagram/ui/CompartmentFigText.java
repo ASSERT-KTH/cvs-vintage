@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.17 2004/02/29 12:35:45 linus Exp $
+// $Id: CompartmentFigText.java,v 1.18 2004/07/22 20:17:26 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,13 +40,8 @@ import org.tigris.gef.presentation.FigText;
  *
  * @author thn
  */
-public class CompartmentFigText extends FigText
-{
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat =
+public class CompartmentFigText extends FigText {
+    private static final Logger LOG =
 	Logger.getLogger(CompartmentFigText.class);
 
     ///////////////////////////////////////////////////////////////////////////
@@ -109,7 +104,7 @@ public class CompartmentFigText extends FigText
         _refFig = aFig;
 
         if (_refFig == null) {
-            cat.warn(this.getClass().toString()
+            LOG.warn(this.getClass().toString()
 		     + ": Cannot create with null compartment fig");
         }
     }
