@@ -7,9 +7,13 @@
 package org.jboss.minerva.xa;
 
 import java.sql.*;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 import javax.sql.*;
 import javax.transaction.xa.XAResource;
+import org.jboss.minerva.jdbc.PreparedStatementInPool;
+import org.jboss.minerva.jdbc.PSCacheKey;
 
 /**
  * A transaction wrapper around a java.sql.Connection.  This provides access to
@@ -36,7 +40,7 @@ import javax.transaction.xa.XAResource;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection {
@@ -76,6 +80,14 @@ public class XAConnectionImpl implements XAConnection {
      * Shuts down this wrapper (and the underlying Connection) permanently.
      */
     public void close() {
+        Map map = (Map)PreparedStatementInPool.preparedStatementCache.clone();
+        Iterator it = map.keySet().iterator();
+        while(it.hasNext()) {
+            PSCacheKey key = (PSCacheKey)it.next();
+            if(key.con.equals(con))
+                PreparedStatementInPool.preparedStatementCache.remove(key);
+        }
+
         try {
             con.close();
         } catch(SQLException e) {}

@@ -6,9 +6,21 @@
  */
 package org.jboss.minerva.jdbc;
 
-import java.sql.*;
-import java.util.*;
-import org.jboss.minerva.pools.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+import org.jboss.minerva.pools.PooledObject;
+import org.jboss.minerva.pools.PoolEvent;
+import org.jboss.minerva.pools.PoolEventListener;
 
 /**
  * Wrapper for database connections in a pool.  Handles closing appropriately.
@@ -16,7 +28,7 @@ import org.jboss.minerva.pools.*;
  * outstanding statements are closed, and the connection is rolled back.  This
  * class is also used by statements, etc. to update the last used time for the
  * connection.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ConnectionInPool implements PooledObject, ConnectionWrapper {
@@ -143,7 +155,16 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
         try {
-            return con.prepareStatement(sql);
+            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.get(
+                                        new PSCacheKey(con, sql));
+            if(ps == null) {
+                ps = con.prepareStatement(sql);
+                PreparedStatementInPool.preparedStatementCache.put(
+                                        new PSCacheKey(con, sql), ps);
+            }
+            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this);
+            statements.add(wrapper);
+            return wrapper;
         } catch(SQLException e) {
             setError(e);
             throw e;
@@ -331,7 +352,16 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
         try {
-            return con.prepareStatement(sql, resultSetType, resultSetConcurrency);
+            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.get(
+                                        new PSCacheKey(con, sql));
+            if(ps == null) {
+                ps = con.prepareStatement(sql, resultSetType, resultSetConcurrency);
+                PreparedStatementInPool.preparedStatementCache.put(
+                                        new PSCacheKey(con, sql), ps);
+            }
+            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this);
+            statements.add(wrapper);
+            return wrapper;
         } catch(SQLException e) {
             setError(e);
             throw e;

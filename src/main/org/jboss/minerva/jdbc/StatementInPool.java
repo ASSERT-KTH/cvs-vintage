@@ -6,13 +6,18 @@
  */
 package org.jboss.minerva.jdbc;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+
 
 /**
  * Wraps a Statement to track errors and the last used time for the owning
  * connection. That time is updated every time a SQL action is performed
  * (executeQuery, executeUpdate, etc.).
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class StatementInPool implements Statement {
@@ -57,7 +62,7 @@ public class StatementInPool implements Statement {
 
     // ---- Implementation of java.sql.Statement ----
 
-    public void addBatch(String arg0) throws java.sql.SQLException {
+    public void addBatch(String arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.addBatch(arg0);
@@ -67,7 +72,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void cancel() throws java.sql.SQLException {
+    public void cancel() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.cancel();
@@ -77,7 +82,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void clearBatch() throws java.sql.SQLException {
+    public void clearBatch() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.clearBatch();
@@ -87,7 +92,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void clearWarnings() throws java.sql.SQLException {
+    public void clearWarnings() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.clearWarnings();
@@ -97,16 +102,20 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void close() throws java.sql.SQLException {
+    public void close() throws SQLException {
         if(impl != null) {
             impl.close();
             con.statementClosed(this);
         }
+        clearFields();
+    }
+
+    protected void clearFields() {
         con = null;
         impl = null;
     }
 
-    public boolean execute(String arg0) throws java.sql.SQLException {
+    public boolean execute(String arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             setLastUsed();
@@ -117,7 +126,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int[] executeBatch() throws java.sql.SQLException {
+    public int[] executeBatch() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             setLastUsed();
@@ -128,7 +137,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public ResultSet executeQuery(String arg0) throws java.sql.SQLException {
+    public ResultSet executeQuery(String arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             setLastUsed();
@@ -139,7 +148,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int executeUpdate(String arg0) throws java.sql.SQLException {
+    public int executeUpdate(String arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             setLastUsed();
@@ -150,12 +159,12 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public Connection getConnection() throws java.sql.SQLException {
+    public Connection getConnection() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         return con;
     }
 
-    public int getFetchDirection() throws java.sql.SQLException {
+    public int getFetchDirection() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getFetchDirection();
@@ -165,7 +174,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getFetchSize() throws java.sql.SQLException {
+    public int getFetchSize() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getFetchSize();
@@ -175,7 +184,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getMaxFieldSize() throws java.sql.SQLException {
+    public int getMaxFieldSize() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getMaxFieldSize();
@@ -185,7 +194,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getMaxRows() throws java.sql.SQLException {
+    public int getMaxRows() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getMaxRows();
@@ -195,7 +204,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public boolean getMoreResults() throws java.sql.SQLException {
+    public boolean getMoreResults() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getMoreResults();
@@ -205,7 +214,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getQueryTimeout() throws java.sql.SQLException {
+    public int getQueryTimeout() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getQueryTimeout();
@@ -215,7 +224,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public ResultSet getResultSet() throws java.sql.SQLException {
+    public ResultSet getResultSet() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return new ResultSetInPool(impl.getResultSet(), this);
@@ -225,7 +234,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getResultSetConcurrency() throws java.sql.SQLException {
+    public int getResultSetConcurrency() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getResultSetConcurrency();
@@ -235,7 +244,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getResultSetType() throws java.sql.SQLException {
+    public int getResultSetType() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getResultSetType();
@@ -245,7 +254,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public int getUpdateCount() throws java.sql.SQLException {
+    public int getUpdateCount() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getUpdateCount();
@@ -255,7 +264,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public java.sql.SQLWarning getWarnings() throws java.sql.SQLException {
+    public SQLWarning getWarnings() throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             return impl.getWarnings();
@@ -265,7 +274,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setCursorName(String arg0) throws java.sql.SQLException {
+    public void setCursorName(String arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setCursorName(arg0);
@@ -275,7 +284,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setEscapeProcessing(boolean arg0) throws java.sql.SQLException {
+    public void setEscapeProcessing(boolean arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setEscapeProcessing(arg0);
@@ -285,7 +294,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setFetchDirection(int arg0) throws java.sql.SQLException {
+    public void setFetchDirection(int arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setFetchDirection(arg0);
@@ -295,7 +304,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setFetchSize(int arg0) throws java.sql.SQLException {
+    public void setFetchSize(int arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setFetchSize(arg0);
@@ -305,7 +314,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setMaxFieldSize(int arg0) throws java.sql.SQLException {
+    public void setMaxFieldSize(int arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setMaxFieldSize(arg0);
@@ -315,7 +324,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setMaxRows(int arg0) throws java.sql.SQLException {
+    public void setMaxRows(int arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setMaxRows(arg0);
@@ -325,7 +334,7 @@ public class StatementInPool implements Statement {
         }
     }
 
-    public void setQueryTimeout(int arg0) throws java.sql.SQLException {
+    public void setQueryTimeout(int arg0) throws SQLException {
         if(impl == null) throw new SQLException(CLOSED);
         try {
             impl.setQueryTimeout(arg0);
@@ -335,5 +344,5 @@ public class StatementInPool implements Statement {
         }
     }
 
-    // ---- End Implementation of java.sql.Statement ----
+    // ---- End Implementation of Statement ----
 }

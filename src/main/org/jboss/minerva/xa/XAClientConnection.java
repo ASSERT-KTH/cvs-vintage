@@ -6,10 +6,22 @@
  */
 package org.jboss.minerva.xa;
 
-import java.sql.*;
-import java.util.*;
-import org.jboss.minerva.jdbc.*;
-import org.jboss.minerva.pools.*;
+import java.sql.Connection;
+import java.sql.CallableStatement;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Statement;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+import org.jboss.minerva.jdbc.ConnectionWrapper;
+import org.jboss.minerva.jdbc.PreparedStatementInPool;
+import org.jboss.minerva.jdbc.PSCacheKey;
+import org.jboss.minerva.jdbc.StatementInPool;
 
 /**
  * Wrapper for database connections used by an XAConnection.  When close is
@@ -18,7 +30,7 @@ import org.jboss.minerva.pools.*;
  * returned to the pool) until the transactional details are taken care of.
  * This instance only lives as long as one client is using it - though we
  * probably want to consider reusing it to save object allocations.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAClientConnection implements ConnectionWrapper {
@@ -101,7 +113,16 @@ public class XAClientConnection implements ConnectionWrapper {
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
         try {
-            return con.prepareStatement(sql);
+            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.get(
+                                        new PSCacheKey(con, sql));
+            if(ps == null) {
+                ps = con.prepareStatement(sql);
+                PreparedStatementInPool.preparedStatementCache.put(
+                                        new PSCacheKey(con, sql), ps);
+            }
+            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this);
+            statements.add(wrapper);
+            return wrapper;
         } catch(SQLException e) {
             setError(e);
             throw e;
@@ -296,7 +317,16 @@ public class XAClientConnection implements ConnectionWrapper {
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
         try {
-            return con.prepareStatement(sql, resultSetType, resultSetConcurrency);
+            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.get(
+                                        new PSCacheKey(con, sql));
+            if(ps == null) {
+                ps = con.prepareStatement(sql, resultSetType, resultSetConcurrency);
+                PreparedStatementInPool.preparedStatementCache.put(
+                                        new PSCacheKey(con, sql), ps);
+            }
+            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this);
+            statements.add(wrapper);
+            return wrapper;
         } catch(SQLException e) {
             setError(e);
             throw e;
