@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelperImpl.java,v 1.5 2005/01/20 23:20:36 linus Exp $
+// $Id: StateMachinesHelperImpl.java,v 1.6 2005/01/26 16:02:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.behavior.state_machines.MSubmachineState;
+import ru.novosoft.uml.behavior.state_machines.MSynchState;
 import ru.novosoft.uml.behavior.state_machines.MTimeEvent;
 import ru.novosoft.uml.behavior.state_machines.MTransition;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
@@ -345,6 +346,24 @@ class StateMachinesHelperImpl implements StateMachinesHelper {
         }
         throw new IllegalArgumentException("handle: " + handle
                 + " or subvertex: " + subvertex);
+    }
+
+    /**
+     * Sets the Bound of some SynchState.
+     * 
+     * @param handle Synch State
+     * @param bound A positive integer or the value “unlimited” specifying 
+     *              the maximal count of the SynchState. The count is the 
+     *              difference between the number of times the incoming 
+     *              and outgoing transitions of the synch state are fired.
+     */
+    public void setBound(Object handle, int bound) {
+        if (handle instanceof MSynchState) {
+            ((MSynchState) handle).setBound(bound);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle
+                + " or bound: " + bound);
     }
 
     /**

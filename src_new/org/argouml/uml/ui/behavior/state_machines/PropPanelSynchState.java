@@ -1,4 +1,4 @@
-// $Id: PropPanelSynchState.java,v 1.2 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelSynchState.java,v 1.3 2005/01/26 16:02:15 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,17 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
 import org.argouml.util.ConfigLoader;
+import org.argouml.uml.ui.UMLTextField2;
 
 /**
  * The properties panel for a SynchState.
  *
- * @author Michiel
- *
+ * @author mvw@tigris.org
  */
 public class PropPanelSynchState extends PropPanelStateVertex {
+
+    private static UMLSynchStateBoundDocument boundDocument =
+            new UMLSynchStateBoundDocument();
 
     /**
      * The constructor.
@@ -48,6 +51,8 @@ public class PropPanelSynchState extends PropPanelStateVertex {
                 getStereotypeBox());
         addField(Translator.localize("label.container"),
                 getContainerScroll());
+        addField(Translator.localize("label.bound"),
+                new UMLTextField2(boundDocument));
 
         addSeperator();
 

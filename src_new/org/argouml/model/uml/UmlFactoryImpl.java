@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.19 2005/01/22 22:08:43 bobtarling Exp $
+// $Id: UmlFactoryImpl.java,v 1.20 2005/01/26 16:02:15 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -446,6 +446,8 @@ class UmlFactoryImpl
             return getActivityGraphs().createSubactivityState();
         } else if (elementType == ModelFacade.COMPOSITESTATE) {
             return getStateMachines().createCompositeState();
+        } else if (elementType == ModelFacade.SYNCHSTATE) {
+            return getStateMachines().createSynchState();
         } else if (elementType == ModelFacade.STATE) {
             return getStateMachines().createState();
         } else if (elementType == ModelFacade.CLASSIFIER_ROLE) {
