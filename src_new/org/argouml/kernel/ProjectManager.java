@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.28 2004/03/03 01:10:06 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.29 2004/04/30 05:48:44 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,12 +91,19 @@ public final class ProjectManager {
     private EventListenerList _listenerList = new EventListenerList();
 
     /**
-     * The event to fire
+     * The event to fire.
+     * 
+     * TODO: Investigate! Is the purpose really to let the next call to
+     * {@link #firePropertyChanged(String, Object, Object)} fire the old 
+     * event again if the previous invocation resulted in an exception?
+     * If so, please document why. If not, fix it.
      */
     private PropertyChangeEvent _event;
 
     /**
-     * The singleton accessor method of this class
+     * The singleton accessor method of this class.
+     * 
+     * @return The singleton.
      */
     public static ProjectManager getManager() {
         if (_instance == null) {
@@ -113,8 +120,9 @@ public final class ProjectManager {
     }
 
     /**
-     * Adds an instance implementing propertychangelistener to the listener list
-     * @param listener
+     * Adds a listener to the listener list.
+     * 
+     * @param listener The listener to add.
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         _listenerList.add(PropertyChangeListener.class, listener);
@@ -122,12 +130,20 @@ public final class ProjectManager {
 
     /**
      * Removes a listener from the listener list.
-     * @param listener
+     * 
+     * @param listener The listener to remove.
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         _listenerList.remove(PropertyChangeListener.class, listener);
     }
 
+    /**
+     * Fire an event to all members of the listener list.
+     * 
+     * @param propertyName The name of the event.
+     * @param oldValue The old value.
+     * @param newValue The new value.
+     */
     private void firePropertyChanged(String propertyName,
 				     Object oldValue, Object newValue) 
     {
@@ -150,7 +166,6 @@ public final class ProjectManager {
             }
         }
         _event = null;
-
     }
 
     /**
@@ -180,8 +195,11 @@ public final class ProjectManager {
     }
 
     /**
-     * Returns the current project.
-     * @return Project
+     * Returns the current project.<p>
+     * 
+     * If there is no project, a new one is created.
+     * 
+     * @return Project The current project.
      */
     public Project getCurrentProject() {
         if (_currentProject == null && !_creatingCurrentProject) {
@@ -218,8 +236,13 @@ public final class ProjectManager {
      * throwing an exception or by having the
      * ArgoParser.SINGLETON.getLastLoadStatus() set to not true.
      * 
-     * TODO: The exception in the throws clause should be splitted
-     * in several other types of exceptions to handle errors better
+     * @param url The URL to load the project from.
+     * @return The newly loaded project.
+     * @throws IOException if the file cannot be read.
+     * @throws IllegalFormatException if we don't understand the contents.
+     * @throws SAXException if there is some syntax error in the file.
+     * @throws ParserConfigurationException if the XML parser is not 
+     *         configured properly - shouldn't happen.
      */
     public Project loadProject(URL url)
         throws IOException, IllegalFormatException, SAXException,
@@ -271,10 +294,13 @@ public final class ProjectManager {
 
     /**
      * Reads an url of the .zargo format.
-     * @param url
-     * @return Project
-     * @throws Exception if there is an exception during load. Should be handled
-     * by the GUI.
+     * 
+     * @param url The URL to load the project from.
+     * @return The newly created Project.
+     * @throws IOException if we cannot read the file.
+     * @throws SAXException if there is a syntax error in the file.
+     * @throws ParserConfigurationException if the parser is incorrectly 
+     *         configured. - Shouldn't happen.
      */
     private Project loadProjectFromZargo(URL url)
         throws IOException, SAXException, ParserConfigurationException {
@@ -373,24 +399,10 @@ public final class ProjectManager {
     }
 
     /**
-     * Loads a project from an url of the argo format.
-     * @param url
-     * @return Project
-     * @throws IOException
-     */
-    private Project loadProjectFromArgo(URL url)
-        throws IOException, ParserConfigurationException, SAXException {
-        ArgoParser.SINGLETON.readProject(url);
-        Project p = ArgoParser.SINGLETON.getProject();
-	ArgoParser.SINGLETON.setProject(null); // clear up project refs
-        p.loadAllMembers();
-        p.postLoad();
-        return p;
-    }
-    
-    /**
-     * notify the gui from the project manager that the
+     * Notify the gui from the project manager that the
      * current project's save state has changed.
+     * 
+     * @param newValue The new state.
      */
     public void notifySavePropertyChanged(boolean newValue) {
         
@@ -400,7 +412,9 @@ public final class ProjectManager {
     }
     
     /**
-     * prepare project for gc
+     * Remove the project.
+     * 
+     * @param oldProject The project to be removed.
      */
     public void removeProject(Project oldProject) {
         
