@@ -5,6 +5,7 @@
          work  -->
     <property name="ant.home" value="../jakarta-ant" />
     <property name="build.compiler" value="classic"/>
+    <property name="servlet.jar" value="../jakarta-servletapi/lib/servlet.jar"/>
     <property name="tomcat.build" value="../build/tomcat"/>
     <property name="tomcat.home" value="../dist/tomcat"/>
   </target>
@@ -36,9 +37,8 @@
     <!-- include ant, it is used for testing and will be used for
          configuration and few other tasks -->
     <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
-    <copyfile src="${ant.home}/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
     <copyfile src="${ant.home}/lib/ant.jar" dest="${tomcat.build}/lib/ant.jar"/>
-
+    <copyfile src="${servlet.jar}" dest="${tomcat.build}/lib/servlet.jar"/>
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
 
     <fixcrlf srcdir="${tomcat.build}" includes="*.sh" cr="remove"/>
@@ -55,9 +55,9 @@
   <!-- ==================== Build tomcat ==================== -->
   <target name="tomcat" depends="prepare">
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
-           classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
-
-    <copydir src="src/share" dest="${tomcat.build}/classes">
+           classpath="${servlet.jar}" debug="on" excludes="javax/**"/>
+    <copydir src="src/share" dest="${tomcat.build}/classes"
+             excludes="javax/**">
       <include name="**/*.properties" />
     </copydir>
   </target>
@@ -69,7 +69,7 @@
     <copydir src="src/examples" dest="${tomcat.build}/webapps/examples"/>
     <javac srcdir="src/examples/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
-           classpath="${tomcat.build}/classes"/>
+           classpath="${tomcat.build}/classes,${servlet.jar}"/>
     <javac srcdir="src/examples/jsp/plugin/applet"
            destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
@@ -78,21 +78,21 @@
     <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
     <javac srcdir="src/webpages/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
-           classpath="${tomcat.build}/classes"/>
+           classpath="${tomcat.build}/classes,${servlet.jar}"/>
 
     <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
     <copydir src="src/admin" dest="${tomcat.build}/webapps/admin"/>
     <javac srcdir="src/admin/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
-           classpath="${tomcat.build}/classes"/>
+           classpath="${tomcat.build}/classes,${servlet.jar}"/>
 
     <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
     <copydir src="src/tests/webpages" dest="${tomcat.build}/webapps/test"/>
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
-           classpath="${tomcat.build}/classes"/>
+           classpath="${tomcat.build}/classes,${servlet.jar}"/>
   </target>
 
 
@@ -101,19 +101,16 @@
 
     <mkdir dir="${tomcat.home}"/>
     <copydir src="${tomcat.build}" dest="${tomcat.home}"/>
-    <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
     <copydir src="src/share/org" dest="${tomcat.home}/src/org"/>
 
     <!-- create tomcat jar files -->
     <jar jarfile="${tomcat.home}/lib/webserver.jar"
          basedir="${tomcat.home}/classes"
          includes="org/apache/tomcat/**"/> 
-    <jar jarfile="${tomcat.home}/lib/servlet.jar"
-         basedir="${tomcat.home}/classes"
-         includes="javax/servlet/**"/>
     <jar jarfile="${tomcat.home}/lib/jasper.jar"
          basedir="${tomcat.home}/classes"
          includes="org/apache/jasper/**"/>
+    <copyfile src="${servlet.jar}" dest="${tomcat.home}/lib/servlet.jar"/>
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.home}/webapps/ROOT/javadoc" />

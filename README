@@ -1,3 +1,81 @@
+			Jakarta Tomcat Servlet Container
+			================================
+
+
+INSTALLING AND BUILDING TOMCAT
+------------------------------
+
+This subproject contains the source code for the Tomcat servlet container and
+JSP engine that conforms to the latest public versions of the Servlet and JSP
+APIs.  In order to build these sources successfully, you must do the following:
+
+* Download and install the Java API for XML Parsing implementation (current
+  version number is 1.0) from <http://java.sun.com/xml>.  Make sure that the
+  "jaxp.jar" and "parser.jar" files are on your class path.
+
+* Download and install the JAKARTA-ANT distribution.  If you have downloaded
+  the source distribution, you must create the executable version by
+  executing the following commands:
+
+	cd jakarta-ant
+	./bootstrap.sh		<-- Unix
+	bootstrap		<-- Windows
+
+  This should result in the creation of a file "ant.jar" in the "lib"
+  subdirectory, which will be used when building the Servlet API distribution.
+
+* Download and install the JAKARTA-SERVLETAPI distribution into the same
+  directory where you installed Ant.  If you have downloaded the source
+  distribution, you must create the executable version by executing the
+  following commands:
+
+	cd jakarta-servletapi
+	./build.sh dist		<-- Unix
+	build dist		<-- Windows
+
+* Download and install the JAKARTA-TOMCAT source code distribution (or check
+  them out via anonymous CVS) into the same directory where you installed
+  Ant and the Servlet API downloads.  To build an "unpacked" version of Tomcat
+  into directory "../build/tomcat", execute the following commands:
+
+	cd jakarta-tomcat
+	./build.sh		<-- Unix
+	build			<-- Windows
+
+  To run the unpacked version of Tomcat, execute the following:
+
+	cd ../build/tomcat	<-- Unix
+	./bin/startup.sh	<-- Unix
+
+	cd ..\build\tomcat	<-- Windows
+	.\bin\startup		<-- Windows
+
+  To shut down the unpacked version of Tomcat (from the same directory):
+
+	./bin/shutdown.sh	<-- Unix
+	.\bin\shutdown		<-- Windows
+
+* You can also build a distribution version of Tomcat as follows:
+
+	cd jakarta-tomcat
+	./build.sh dist		<-- Unix
+	build dist		<-- Windows
+
+  which will create the distribution in directory "../dist/tomcat".
+
+
+ source code, or check it out
+  from the CVS repository, into a directory parallel to the jakarta-ant
+  directory created above.  That is, if you downloaded both subprojects into
+  a directory named $JAKARTA_HOME, you would see the following two entries:
+
+	jakarta-ant/
+	jakarta-servletapi/
+
+  underneath it.
+
+
+
 How to Build
 ------------
 
@@ -62,7 +140,7 @@ To stop the server:
 	bin\shutdown		<-- Windows
 
 
-Testing the Build
+TESTING THE BUILD
 -----------------
 
 We have packaged a set of 'quick tests' that test out various parts of

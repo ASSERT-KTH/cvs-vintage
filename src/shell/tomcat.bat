@@ -28,7 +28,6 @@ set CLASSPATH=.
 set CLASSPATH=%TOMCAT_HOME%\classes
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\webserver.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jasper.jar
-set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xml.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet.jar
 set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
 

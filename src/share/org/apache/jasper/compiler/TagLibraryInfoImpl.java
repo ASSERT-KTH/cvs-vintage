@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.16 2000/03/28 04:29:48 akv Exp $
- * $Revision: 1.16 $
- * $Date: 2000/03/28 04:29:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.17 2000/05/01 15:46:48 craigmcc Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/05/01 15:46:48 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -499,7 +499,8 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   );
         }
         
-        return new TagAttributeInfo(name, required, rtexprvalue, type);
+	//     return new TagAttributeInfo(name, required, rtexprvalue, type);
+        return new TagAttributeInfo(name, required, type, rtexprvalue);
     }
 
     static void copy(InputStream in, String fileName) 
