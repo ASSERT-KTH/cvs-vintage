@@ -708,8 +708,12 @@ public final class ContextManager {
 	    handleError( req, res, ex );
 	}
 	finally {
-	    BaseInterceptor reqI[]= req.getContext().getContainer().
-		getInterceptors(Container.H_postRequest);
+	    BaseInterceptor reqI[];
+	    if( req.getContext()==null )
+		reqI=getContainer().getInterceptors( Container.H_handleError );
+	    else
+		reqI= req.getContext().getContainer().
+		    getInterceptors(Container.H_postRequest);
 
 	    for( int i=0; i< reqI.length; i++ ) {
 		reqI[i].postRequest( req, res );
@@ -756,8 +760,13 @@ public final class ContextManager {
 	    String roles[]=req.getRequiredRoles();
 	    if(roles != null ) {
 		status=0;
-		BaseInterceptor reqI[]= req.getContext().getContainer().
-                getInterceptors(Container.H_authorize);
+		BaseInterceptor reqI[];
+		if( req.getContext()==null )
+		    reqI=getContainer().
+			getInterceptors( Container.H_handleError );
+		else
+		    reqI = req.getContext().getContainer().
+			getInterceptors(Container.H_authorize);
 
 		// Call all authorization callbacks. 
 		for( int i=0; i< reqI.length; i++ ) {
@@ -808,7 +817,10 @@ public final class ContextManager {
 	    // the context is not fully initialized.
 	    req.setAttribute("javax.servlet.error.message",
 			     "Application not available");
-	    handleStatus( req, req.getResponse(), 503 ); // service unavailable
+	    // return error code - the caller will handle it
+	    // handleStatus( req, req.getResponse(), 503 );
+	    // service unavailable
+	    return 503;
 	}
 	
 	ri=req.getContext().getContainer().
@@ -918,8 +930,11 @@ public final class ContextManager {
 	
 	BaseInterceptor ri[];
 	int status;
-	ri=req.getContext().getContainer().
-	    getInterceptors( Container.H_handleError );
+	if( req.getContext()==null )
+	    ri=getContainer().getInterceptors( Container.H_handleError );
+	else
+	    ri=req.getContext().getContainer().
+		getInterceptors( Container.H_handleError );
 	
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, null );
