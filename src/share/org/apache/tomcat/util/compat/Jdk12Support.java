@@ -78,8 +78,14 @@ public class Jdk12Support extends Jdk11Compat {
 	return URLClassLoader.newInstance( urls, parent );
     }
 
-
-    public Object doPrivileged( Action action ) throws Exception {
+    public Object getAccessControlContext() throws Exception {
+	return AccessController.getContext();
+    }
+    
+    public Object doPrivileged( Action action, Object accO ) throws Exception {
+	AccessControlContext acc=(AccessControlContext)accO;
+	if( acc==null )
+	    throw new Exception("Invalid access control context ");
 	Object proxy=action.getProxy();
 	if( proxy==null ) {
 	    proxy=new PrivilegedProxy(action);
@@ -88,7 +94,7 @@ public class Jdk12Support extends Jdk11Compat {
 
 	try {
 	    return AccessController.
-		doPrivileged((PrivilegedExceptionAction)proxy);
+		doPrivileged((PrivilegedExceptionAction)proxy, acc);
 	} catch( PrivilegedActionException pe ) {
 	    Exception e = pe.getException();
 	    throw e;

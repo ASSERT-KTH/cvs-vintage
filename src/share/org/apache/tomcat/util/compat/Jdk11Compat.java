@@ -93,10 +93,14 @@ public class Jdk11Compat {
 	return new SimpleClassLoader( urls, parent );
     }
 
+    public Object getAccessControlContext() throws Exception {
+	return null;
+    }
+    
     /** Do a priviledged action. For java2 a wrapper will be provided
 	and the AccesscController will be called.
      */
-    public Object doPrivileged( Action action ) throws Exception {
+    public Object doPrivileged( Action action, Object acc ) throws Exception {
 	// ( using util's permissions !)
 	return action.run();
     }
