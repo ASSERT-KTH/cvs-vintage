@@ -75,7 +75,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.5 2001/04/11 05:23:58 jmcnally Exp $
+    @version $Id: ModifyAttributes.java,v 1.6 2001/04/11 19:19:50 jon Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -281,6 +281,7 @@ public class ModifyAttributes extends VelocityAction
                 // numeric values and resorting, so we do not want
                 // to show the actual value entered by the user.
                 intake.remove(group);
+
                 for (int i=attributeOptions.size()-1; i>=0; i--) 
                 {
                     option = (AttributeOption)attributeOptions.get(i);

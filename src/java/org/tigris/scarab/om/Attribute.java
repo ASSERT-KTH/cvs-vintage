@@ -30,7 +30,7 @@ public class Attribute
     extends BaseAttribute
     implements Persistent
 {
-    private static String className = "Attribute";
+    private static final String className = "Attribute";
 
     private static Criteria allOptionsCriteria;
 
