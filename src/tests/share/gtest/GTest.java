@@ -58,10 +58,17 @@
  */ 
 package org.apache.tomcat.task;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 
 /** Test a web application. Will send a http request and

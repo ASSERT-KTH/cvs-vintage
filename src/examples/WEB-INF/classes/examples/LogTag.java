@@ -1,10 +1,11 @@
 package examples;
 
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-
 import java.io.IOException;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.BodyTag;
 
 /**
  * Log the contents of the body. Could be used to handle errors etc. 

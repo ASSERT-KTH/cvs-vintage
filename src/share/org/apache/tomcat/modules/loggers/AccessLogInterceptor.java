@@ -2,9 +2,12 @@
 package org.apache.tomcat.modules.loggers;
 
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.apache.tomcat.core.BaseInterceptor;
 import org.apache.tomcat.core.ContextManager;

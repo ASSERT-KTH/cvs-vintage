@@ -59,13 +59,21 @@
 package org.apache.tomcat.modules.config;
 
 import java.io.IOException;
-import java.util.*;
-import java.lang.reflect.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.modules.aaa.*;
-import org.apache.tomcat.modules.server.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.io.Prompter;
+import org.apache.tomcat.util.io.PrompterException;
 import org.apache.tomcat.util.log.Log;
-import org.apache.tomcat.util.io.*;
 
 /**
  * <code>PasswordPrompter</code> is a add-on module for the Tomcat 3.3
@@ -102,7 +110,7 @@ import org.apache.tomcat.util.io.*;
  *
  * @author    Larry Isaacs
  * @author    Christopher Cain
- * @version   $Revision: 1.3 $ $Date: 2002/03/14 11:33:31 $
+ * @version   $Revision: 1.4 $ $Date: 2003/09/29 07:39:49 $
  */
 public class PasswordPrompter extends BaseInterceptor {
 
@@ -287,7 +295,8 @@ class UserPrompt
             return;
 
         this.spec = spec;
-        this.logger = logger;
+        // commented NO-OP 
+        // this.logger = logger;
         StringTokenizer st = new StringTokenizer(spec,"|");
         try {
             module = st.nextToken();

@@ -58,8 +58,8 @@
  */ 
 package cal;
 
-import java.text.DateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
 
 public class JspCalendar {
     Calendar  calendar = null;

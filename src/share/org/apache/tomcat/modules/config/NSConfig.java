@@ -58,11 +58,18 @@
  */
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.Enumeration;
+
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.log.*;
-import java.io.*;
-import java.util.*;
+import org.apache.tomcat.util.log.Log;
 
 
 /**
@@ -133,7 +140,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.10 $
+	@version $Revision: 1.11 $
  */
 public class NSConfig  extends BaseJkConfig { 
 

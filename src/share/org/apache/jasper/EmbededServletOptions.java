@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.8 2001/03/02 04:51:24 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2001/03/02 04:51:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.9 2003/09/29 07:41:50 hgomez Exp $
+ * $Revision: 1.9 $
+ * $Date: 2003/09/29 07:41:50 $
  *
  * ====================================================================
  * 
@@ -66,7 +66,7 @@ import java.io.File;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * A class to hold all init parameters specific to the JSP engine. 

@@ -56,19 +56,21 @@
  */ 
 package org.apache.tomcat.util.qlog;
 
-import org.apache.tomcat.util.log.*;
-import java.io.Writer;
-import java.io.PrintWriter;
-import java.io.FileWriter;
 import java.io.File;
-import java.io.OutputStreamWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.*;
-
-import java.util.*;
+import java.io.Writer;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.log.LogHandler;
 
 /**
  * Interface for a logging object. A logging object provides mechanism

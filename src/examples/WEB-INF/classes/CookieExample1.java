@@ -1,12 +1,16 @@
-/* $Id: CookieExample1.java,v 1.3 2003/02/16 23:13:59 larryi Exp $
+/* $Id: CookieExample1.java,v 1.4 2003/09/29 07:39:48 hgomez Exp $
  *
  */
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import util.HTMLFilter;
 

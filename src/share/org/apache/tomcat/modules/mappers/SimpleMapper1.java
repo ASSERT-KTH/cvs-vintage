@@ -59,12 +59,19 @@
 
 package org.apache.tomcat.modules.mappers;
 
-import org.apache.tomcat.core.*;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.collections.SimpleHashtable;
 import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.collections.*;
-import java.util.*;
-import java.io.*;
 /**
  *  This class will set up the data structures used by a simple patern matching
  *  algorithm and use it to extract the path components from the request URI.

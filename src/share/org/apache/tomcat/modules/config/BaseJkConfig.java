@@ -1,4 +1,4 @@
-/* $Id: BaseJkConfig.java,v 1.7 2001/10/21 15:43:04 nacho Exp $
+/* $Id: BaseJkConfig.java,v 1.8 2003/09/29 07:41:50 hgomez Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -58,11 +58,16 @@
  */
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.io.FileUtil;
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
 
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.modules.server.Ajp13Interceptor;
+import org.apache.tomcat.util.io.FileUtil;
 
 /**
     Base class for automatic jk based configurations based on
@@ -121,7 +126,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Larry Isaacs
-	@version $Revision: 1.7 $
+	@version $Revision: 1.8 $
  */
 public class BaseJkConfig  extends BaseInterceptor { 
     protected File configHome = null;

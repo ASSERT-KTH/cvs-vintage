@@ -57,14 +57,21 @@
  */
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.log.*;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-// Used to find Ajp1? connector port
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.modules.server.Ajp12Interceptor;
+import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.log.Log;
 
 /**
     Generates automatic apache mod_jserv configurations based on
@@ -122,7 +129,7 @@ import org.apache.tomcat.modules.server.Ajp12Interceptor;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-        @version $Revision: 1.5 $ $Date: 2001/12/17 05:24:09 $
+        @version $Revision: 1.6 $ $Date: 2003/09/29 07:41:50 $
  */
 public class JservConfig  extends BaseInterceptor { 
     

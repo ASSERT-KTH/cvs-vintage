@@ -58,7 +58,7 @@
  */ 
 package colors;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
 public class ColorGameBean {
 

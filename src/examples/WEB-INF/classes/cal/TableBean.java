@@ -58,10 +58,9 @@
  */ 
 package cal;
 
-import java.beans.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
 import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class TableBean {
 

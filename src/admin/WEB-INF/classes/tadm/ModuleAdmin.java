@@ -1,14 +1,12 @@
 package tadm;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.io.*;
-import java.net.URL;
-import javax.servlet.http.*;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.TagSupport;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
 
 /**
  * A context administration class. Contexts can be

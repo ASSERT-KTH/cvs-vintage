@@ -61,7 +61,7 @@
 
 package num;
 
-import java.util.*;
+import java.util.Random;
 
 public class NumberGuessBean {
 

@@ -61,12 +61,11 @@ package org.apache.tomcat.util.qlog;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogConfigurationException;
 import org.apache.commons.logging.LogFactory;
-
-
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.LogManager;
     
 /**
  *

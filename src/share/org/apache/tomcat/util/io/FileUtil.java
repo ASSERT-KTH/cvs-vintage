@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.11 2003/09/14 21:28:32 billbarker Exp $
- * $Revision: 1.11 $
- * $Date: 2003/09/14 21:28:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.12 2003/09/29 07:41:50 hgomez Exp $
+ * $Revision: 1.12 $
+ * $Date: 2003/09/29 07:41:50 $
  *
  * ====================================================================
  *
@@ -64,8 +64,13 @@
 
 package org.apache.tomcat.util.io;
 
-import java.io.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 /*

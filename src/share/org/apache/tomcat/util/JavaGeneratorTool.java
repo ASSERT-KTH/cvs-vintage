@@ -55,7 +55,9 @@
 
 package org.apache.tomcat.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /** General-purpose utilities to help generation of syntetic java
  *  classes

@@ -62,9 +62,15 @@
 package org.apache.tomcat.util.net;
 
 
-import java.net.*;
-import java.util.*;
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
 import org.apache.tomcat.util.compat.Jdk11Compat;
 
 /**

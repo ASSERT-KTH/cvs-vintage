@@ -58,8 +58,11 @@
  */
 package org.apache.tomcat.modules.config;
 
-import java.net.*;
-import org.apache.tomcat.core.*;
+import java.net.URL;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.net.StreamHandlerFactory;
 
 /** 
@@ -81,7 +84,7 @@ import org.apache.tomcat.util.net.StreamHandlerFactory;
  * 
  *
  * @author    Bill Barker
- * @version   $Revision: 1.2 $ $Date: 2002/01/12 07:08:40 $
+ * @version   $Revision: 1.3 $ $Date: 2003/09/29 07:39:49 $
  */
 public class StreamHandler extends BaseInterceptor {
 

@@ -1,8 +1,10 @@
 package tadm;
-import org.apache.tools.ant.*;
+import java.io.IOException;
+import java.io.PrintStream;
 
-import java.io.*;
-import javax.servlet.http.*;
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildLogger;
 
 public class AntServletLogger implements BuildLogger {
     protected java.io.Writer out;

@@ -1,10 +1,10 @@
 package examples;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.Hashtable;
-import java.io.Writer;
 import java.io.IOException;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.BodyTag;
 
 /**
  * Example1: the simplest tag

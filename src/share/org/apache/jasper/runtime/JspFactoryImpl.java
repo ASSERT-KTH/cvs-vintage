@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.14 2001/10/20 02:53:39 larryi Exp $
- * $Revision: 1.14 $
- * $Date: 2001/10/20 02:53:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.15 2003/09/29 07:41:50 hgomez Exp $
+ * $Revision: 1.15 $
+ * $Date: 2003/09/29 07:41:50 $
  *
  * ====================================================================
  * 
@@ -63,13 +63,12 @@ package org.apache.jasper.runtime;
 import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.JspEngineInfo;
+import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.tomcat.util.collections.SimplePool;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * Implementation of JspFactory from the spec. Helps create

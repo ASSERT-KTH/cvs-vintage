@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/RealmBase.java,v 1.2 2001/08/24 03:25:18 larryi Exp $
- * $Revision: 1.2 $
- * $Date: 2001/08/24 03:25:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/RealmBase.java,v 1.3 2003/09/29 07:41:51 hgomez Exp $
+ * $Revision: 1.3 $
+ * $Date: 2003/09/29 07:41:51 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -61,11 +61,16 @@
 
 package org.apache.tomcat.modules.aaa;
 
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.core.*;
-
 import java.security.MessageDigest;
 import java.security.Principal;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.res.StringManager;
 
 /*
 *  Abstract Base class for Realms.

@@ -58,10 +58,13 @@
  */
 package org.apache.tomcat.modules.loggers.log4j;
 
-import java.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.log4j.*;
-import org.apache.log4j.spi.*;
+import java.util.Hashtable;
+
+import org.apache.log4j.Hierarchy;
+import org.apache.log4j.Level;
+import org.apache.log4j.spi.LoggerRepository;
+import org.apache.log4j.spi.RepositorySelector;
+import org.apache.log4j.spi.RootCategory;
 
 /**
  * Implimentation to add context-seperation support for log4j logging.

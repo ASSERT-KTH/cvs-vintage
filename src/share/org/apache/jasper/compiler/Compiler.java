@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.24 2001/06/11 03:42:27 larryi Exp $
- * $Revision: 1.24 $
- * $Date: 2001/06/11 03:42:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.25 2003/09/29 07:41:50 hgomez Exp $
+ * $Revision: 1.25 $
+ * $Date: 2003/09/29 07:41:50 $
  *
  * ====================================================================
  * 
@@ -60,20 +60,18 @@
  */ 
 package org.apache.jasper.compiler;
 
-import java.util.Hashtable;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.PrintWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.Hashtable;
 
-import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
-import org.apache.jasper.compiler.ParseException;
-
-import org.apache.tomcat.util.log.*;
+import org.apache.jasper.JspCompilationContext;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * If you want to customize JSP compilation aspects, this class is

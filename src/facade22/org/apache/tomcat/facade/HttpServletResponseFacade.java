@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.30 2002/12/05 06:42:35 billbarker Exp $
- * $Revision: 1.30 $
- * $Date: 2002/12/05 06:42:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.31 2003/09/29 07:42:10 hgomez Exp $
+ * $Revision: 1.31 $
+ * $Date: 2003/09/29 07:42:10 $
  *
  * ====================================================================
  *
@@ -64,17 +64,25 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.net.URL;
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.util.*;
-import java.lang.IllegalArgumentException;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.util.Locale;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.OutputBuffer;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.ServerSession;
+import org.apache.tomcat.util.http.MimeHeaders;
+import org.apache.tomcat.util.http.ServerCookie;
+import org.apache.tomcat.util.net.URL;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  *

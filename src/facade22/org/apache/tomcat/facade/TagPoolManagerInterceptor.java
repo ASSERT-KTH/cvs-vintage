@@ -1,5 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/TagPoolManagerInterceptor.java,v 1.2 2001/05/11 18:45:25 clucas Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/TagPoolManagerInterceptor.java,v 1.3 2003/09/29 07:42:10 hgomez Exp $
  *
  * ====================================================================
  *
@@ -62,9 +62,11 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
 import org.apache.jasper.runtime.TagPoolManager;
 import org.apache.jasper.runtime.TagPoolManagerImpl;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.TomcatException;
 
 /**
  * This interceptor sets up tag pooling if it is enabled, it will

@@ -59,14 +59,26 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.io.FileUtil;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.security.*;
+import java.io.File;
+import java.io.FilePermission;
+import java.io.IOException;
+import java.net.URL;
+import java.security.AllPermission;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.PermissionCollection;
+import java.security.Permissions;
+import java.security.Policy;
+import java.security.ProtectionDomain;
+import java.util.Enumeration;
+import java.util.PropertyPermission;
 
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * Set policy-based access to tomcat.

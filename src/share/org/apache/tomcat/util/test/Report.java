@@ -58,8 +58,9 @@
  */ 
 package org.apache.tomcat.util.test;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class Report  {
     // Defaults

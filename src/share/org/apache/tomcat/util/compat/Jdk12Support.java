@@ -60,12 +60,20 @@
 package org.apache.tomcat.util.compat;
 
 import java.io.ByteArrayInputStream;
-import java.net.*;
-import java.util.*;
-import java.security.cert.X509Certificate;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.Policy;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.ProtectionDomain;
 import java.security.cert.CertificateFactory;
-import java.security.*;
-import org.apache.tomcat.util.depend.*;
+import java.security.cert.X509Certificate;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.apache.tomcat.util.depend.DependClassLoader;
 
 /**
  *  

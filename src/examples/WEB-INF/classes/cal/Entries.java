@@ -58,9 +58,9 @@
  */ 
 package cal;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class Entries {
 

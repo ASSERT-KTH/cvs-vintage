@@ -58,12 +58,12 @@
  */
 
 package org.apache.tomcat.util.compat;
-import org.apache.tomcat.util.depend.*;
-
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.ResourceBundle;
+import java.net.URL;
 import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.apache.tomcat.util.depend.DependClassLoader;
 
 /** General-purpose utility to provide backward-compatibility and JDK
     independence. This allow use of JDK1.2 ( or higher ) facilities if

@@ -60,14 +60,26 @@
 
 package org.apache.tomcat.facade;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.compat.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
+import org.apache.tomcat.util.res.StringManager;
 
 
 /**

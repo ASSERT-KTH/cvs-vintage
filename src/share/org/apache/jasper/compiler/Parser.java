@@ -54,18 +54,17 @@
  */ 
 package org.apache.jasper.compiler;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
 import java.io.CharArrayWriter;
-import org.apache.jasper.JasperException;
-import org.apache.jasper.Constants;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
 
-import org.apache.tomcat.util.log.*;
+import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * The class that parses the JSP input and calls the right methods on

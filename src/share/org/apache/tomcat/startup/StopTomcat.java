@@ -58,11 +58,20 @@
  */
 package org.apache.tomcat.startup;
 
-import org.apache.tomcat.util.res.StringManager;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Hashtable;
+import java.util.Properties;
+
 import org.apache.tomcat.util.IntrospectionUtils;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import org.apache.tomcat.util.res.StringManager;
 // Depends: StringManager, resources
 
 

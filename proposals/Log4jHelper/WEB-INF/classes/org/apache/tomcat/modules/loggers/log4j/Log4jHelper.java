@@ -58,9 +58,13 @@
  */
 package org.apache.tomcat.modules.loggers.log4j;
 
-import org.apache.tomcat.core.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
 
 /**
  * Interceptor to add context-seperation support for log4j logging.

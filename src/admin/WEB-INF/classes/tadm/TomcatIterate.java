@@ -1,15 +1,10 @@
 package tadm;
-import java.util.Vector;
 import java.util.Enumeration;
-import java.io.File;
-import java.net.URL;
-import javax.servlet.http.*;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.apache.tomcat.core.Request;
-import org.apache.tomcat.core.Context;
-import org.apache.tomcat.core.ContextManager;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.Tag;
 
 /**
  *

@@ -52,7 +52,13 @@
 
 package org.apache.tomcat.util.io;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 
 /** 
  * This utility class allows for command-line interaction with
@@ -95,7 +101,7 @@ import java.io.*;
  * messages to avoid any potential user confusion.
  *
  * @author    Christopher Cain
- * @version   $Revision: 1.1 $ $Date: 2001/10/08 05:23:57 $
+ * @version   $Revision: 1.2 $ $Date: 2003/09/29 07:39:50 $
  */
 public class Prompter {
 
