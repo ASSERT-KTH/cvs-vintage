@@ -1,4 +1,5 @@
 <project name="Tomcat" default="main" basedir=".">
+  <property name="ant.home" value="../jakarta-ant"/>
   <property name="build.compiler" value="classic"/>
   <property name="tomcat.build" value="../build/tomcat"/>
   <property name="tomcat.home" value="../dist/tomcat"/>
@@ -6,12 +7,14 @@
   <!-- ==================== Copy static files ==================== -->
   <!-- IF YOU CHANGE, sync dist.prepare !!! -->
   <target name="prepare">
+    <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="${tomcat.build}"/>
     <mkdir dir="${tomcat.build}/classes"/>
     <mkdir dir="${tomcat.build}/conf"/>
     <mkdir dir="${tomcat.build}/src"/>
     <mkdir dir="${tomcat.build}/lib"/>
     <mkdir dir="${tomcat.build}/bin"/>
+    <mkdir dir="${tomcat.build}/doc"/>
     <mkdir dir="${tomcat.build}/webapps"/>
 
     <copydir src="src/shell" dest="${tomcat.build}/bin" />
