@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.133 2005/01/30 20:48:00 linus Exp $
+// $Id: FigClass.java,v 1.134 2005/01/30 21:38:09 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1307,7 +1307,8 @@ public class FigClass extends FigNodeModelElement
                 Object feat = /*(MFeature)*/ it.next();
                 if (Model.getFacade().isAOperation(feat)) {
                     Object oper = /*(MOperation)*/ feat;
-                    Iterator it2 = Model.getFacade().getParameters(oper).iterator();
+                    Iterator it2 = 
+                        Model.getFacade().getParameters(oper).iterator();
                     while (it2.hasNext()) {
                         Object param = /*(MParameter)*/ it2.next();
                         Model.getPump()
@@ -1323,7 +1324,8 @@ public class FigClass extends FigNodeModelElement
                 Object feat = /*(MFeature)*/ it.next();
                 if (Model.getFacade().isAOperation(feat)) {
                     Object oper = /*(MOperation)*/ feat;
-                    Iterator it2 = Model.getFacade().getParameters(oper).iterator();
+                    Iterator it2 = 
+                        Model.getFacade().getParameters(oper).iterator();
                     while (it2.hasNext()) {
                         Object param = /*(MParameter)*/ it2.next();
                         // UmlModelEventPump.getPump()
