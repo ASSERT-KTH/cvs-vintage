@@ -1,3 +1,3 @@
-drop database if exists scarab;
-create database scarab;
+drop database if exists @DATABASE_NAME@;
+create database @DATABASE_NAME@;
 
