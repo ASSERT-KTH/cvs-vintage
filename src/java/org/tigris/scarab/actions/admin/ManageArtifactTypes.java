@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.29 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.30 2003/06/05 02:02:46 jmcnally Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -233,6 +233,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                                 // delete module-issue type mappings
                                 rmit.delete(user);
                                 success = true;
+                                // FIXME! need proper cache invalidation
                                 module.getNavIssueTypes().remove(issueType);
                                 // If all the active issue types are gone, 
                                 // No more current issue type
