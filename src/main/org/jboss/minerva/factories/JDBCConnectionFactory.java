@@ -8,6 +8,8 @@ package org.jboss.minerva.factories;
 
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import org.jboss.minerva.pools.*;
 import org.jboss.minerva.jdbc.*;
@@ -19,7 +21,7 @@ import org.jboss.logging.Logger;
  * you're interested in creating transactional-aware connections, see
  * XAConnectionFactory, which complies with the JDBC 2.0 standard extension.
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCConnectionFactory extends PoolObjectFactory {
@@ -144,6 +146,19 @@ public class JDBCConnectionFactory extends PoolObjectFactory {
         try {
             con.rollback();
         } catch(SQLException e) {}
+
+        // Removed all the cached PreparedStatements for this Connection
+        Iterator it = ((Map)PreparedStatementInPool.preparedStatementCache.clone()).keySet().iterator();
+        PreparedStatement ps;
+        while(it.hasNext()) {
+            PSCacheKey key = (PSCacheKey)it.next();
+            if(key.con.equals(con)) {
+                ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.remove(key);
+                if(ps != null) // Sanity check
+                    try {ps.close();} catch(SQLException e) {}
+            }
+        }
+
         try {
             con.close();
         } catch(SQLException e) {}

@@ -5,23 +5,27 @@
  * See terms of license at gnu.org.
  */
 package org.jboss.jdbc;
-
-import java.lang.reflect.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.Properties;
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.minerva.datasource.JDBCPoolDataSource;
-import org.jboss.util.*;
+import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
-
 
 /**
  * Service that loads a JDBC 1 connection pool.  The constructors are called by
  * the JMX engine based on your MLET tags.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDataSourceLoaderMBean {
@@ -29,24 +33,149 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
 
     public JDBCDataSourceLoader() {
     }
-    public JDBCDataSourceLoader(String poolName, String url, String username, String password, Integer minSize, Integer maxSize) {
-        this(poolName, url, username, password, minSize, maxSize, "");
-    }
-    public JDBCDataSourceLoader(String poolName, String url, String username, String password, Integer minSize, Integer maxSize, String poolParameters) {
+    public JDBCDataSourceLoader(String poolName) {
         source = new JDBCPoolDataSource();
         source.setPoolName(poolName);
-        source.setJDBCURL(url);
-        source.setJDBCUser(username);
-        source.setJDBCPassword(password);
-        source.setMinSize(minSize.intValue());
-        source.setMaxSize(maxSize.intValue());
-        setAdditionalProperties(parseProperties(poolParameters));
+    }
+
+    public void setURL(String jdbcURL) {
+        source.setJDBCURL(jdbcURL);
+    }
+
+    public String getURL() {
+        return source.getJDBCURL();
+    }
+
+    public void setProperties(String properties) {
+        Properties props = parseProperties(properties);
+        source.setJDBCProperties(props);
+    }
+
+    public String getProperties() {
+        return buildProperties(source.getJDBCProperties());
+    }
+
+    public void setJDBCUser(String userName) {
+        if(userName != null && userName.length() > 0)
+            source.setJDBCUser(userName);
+    }
+
+    public String getJDBCUser() {
+        return source.getJDBCUser();
+    }
+
+    public void setPassword(String password) {
+        if(password != null && password.length() > 0)
+            source.setJDBCPassword(password);
+    }
+
+    public String getPassword() {
+        return source.getJDBCPassword();
+    }
+
+    public void setLoggingEnabled(boolean enabled) {
+        PrintWriter writer = enabled ? new LogWriter(log) : null;
         try {
-            source.setLogWriter(new LogWriter(log));
-        }catch(java.sql.SQLException e) {
-            Logger.exception(e);
+            source.setLogWriter(writer);
+        } catch(Exception e) {
+            System.out.println("Unable to set logger for Minerva JDBC Pool!");
         }
-        source.initialize();
+    }
+
+    public boolean isLoggingEnabled() {
+        try {
+            return source.getLogWriter() != null;
+        } catch(Exception e) {
+            return false;
+        }
+    }
+
+    public void setMinSize(int minSize) {
+        source.setMinSize(minSize);
+    }
+
+    public int getMinSize() {
+        return source.getMinSize();
+    }
+
+    public void setMaxSize(int maxSize) {
+        source.setMaxSize(maxSize);
+    }
+
+    public int getMaxSize() {
+        return source.getMaxSize();
+    }
+
+    public void setBlocking(boolean blocking) {
+        source.setBlocking(blocking);
+    }
+
+    public boolean isBlocking() {
+        return source.isBlocking();
+    }
+
+    public void setGCEnabled(boolean gcEnabled) {
+        source.setGCEnabled(gcEnabled);
+    }
+
+    public boolean isGCEnabled() {
+        return source.isGCEnabled();
+    }
+
+    public void setGCInterval(long interval) {
+        source.setGCInterval(interval);
+    }
+
+    public long getGCInterval() {
+        return source.getGCInterval();
+    }
+
+    public void setGCMinIdleTime(long idleMillis) {
+        source.setGCMinIdleTime(idleMillis);
+    }
+
+    public long getGCMinIdleTime() {
+        return source.getGCMinIdleTime();
+    }
+
+    public void setShrinkingEnabled(boolean enabled) {
+        source.setShrinkingEnabled(enabled);
+    }
+
+    public boolean isShrinkingEnabled() {
+        return source.isShrinkingEnabled();
+    }
+
+    public void setShrinkMinIdleTime(long idleMillis) {
+        source.setShrinkMinIdleTime(idleMillis);
+    }
+
+    public long getShrinkMinIdleTime() {
+        return source.getShrinkMinIdleTime();
+    }
+
+    public void setShrinkPercent(float percent) {
+        source.setShrinkPercent(percent);
+    }
+
+    public float getShrinkPercent() {
+        return source.getShrinkPercent();
+    }
+
+    public void setInvalidateOnError(boolean invalidate) {
+        source.setInvalidateOnError(invalidate);
+    }
+
+    public boolean isInvalidateOnError() {
+        return source.isInvalidateOnError();
+    }
+
+    public void setTimestampUsed(boolean timestamp) {
+        source.setTimestampUsed(timestamp);
+    }
+
+    public boolean isTimestampUsed() {
+        return source.isTimestampUsed();
     }
 
     public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) throws javax.management.MalformedObjectNameException {
@@ -58,13 +187,7 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
     }
 
     public void startService() throws Exception {
-        // Bind in JNDI
-        bind(new InitialContext(), "jdbc."+source.getPoolName(), source);
-
-        log.log("JDBC Connection pool "+source.getPoolName()+" bound to jdbc."+source.getPoolName());
-
-        // Test database
-        source.getConnection().close();
+        initializePool();
     }
 
     public void stopService() {
@@ -78,6 +201,18 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
     }
 
 	// Private -------------------------------------------------------
+
+    private void initializePool() throws NamingException, SQLException {
+        source.initialize();
+
+        // Bind in JNDI
+        bind(new InitialContext(), "jdbc."+source.getPoolName(), source);
+
+        log.log("JDBC Connection pool "+source.getPoolName()+" bound to jdbc."+source.getPoolName());
+
+        // Test database
+        source.getConnection().close();
+    }
 
     private void bind(Context ctx, String name, Object val) throws NamingException {
         // Bind val to name in ctx, and make sure that all intermediate contexts exist
@@ -118,43 +253,16 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
         props.setProperty(property.substring(0, pos), property.substring(pos+1));
     }
 
-    private void setAdditionalProperties(Properties props) {
+    private static String buildProperties(Properties props) {
+        StringBuffer buf = new StringBuffer();
         Iterator it = props.keySet().iterator();
+        Object key;
         while(it.hasNext()) {
-            String property = (String)it.next();
-            String value = props.getProperty(property);
-            try {
-                Class cls = source.getClass();
-                Method list[] = cls.getMethods();
-                Method setter = null;
-                for(int i=0; i<list.length; i++)
-                    if(list[i].getName().equals("set"+property) && list[i].getParameterTypes().length == 1) {
-                        setter = list[i];
-                        break;
-                    }
-                if(setter == null) throw new NoSuchMethodException("Unable to find 1-arg setter for property '"+property+"'");
-                Class argClass = setter.getParameterTypes()[0];
-                if(argClass.isPrimitive())
-                    argClass = getPrimitiveClass(argClass);
-                Constructor con = argClass.getDeclaredConstructor(new Class[]{String.class});
-                Object arg = con.newInstance(new Object[]{value});
-                setter.invoke(source, new Object[]{arg});
-            } catch(Exception e) {
-                log.error("Unable to set pool property '"+property+"' to '"+value+"': "+e);
-                Logger.exception(e);
-            }
+            key = it.next();
+            if(buf.length() > 0)
+                buf.append(';');
+            buf.append(key).append('=').append(props.get(key));
         }
-    }
-
-    private static Class getPrimitiveClass(Class source) {
-        if(source.equals(Boolean.TYPE)) return Boolean.class;
-        if(source.equals(Integer.TYPE)) return Integer.class;
-        if(source.equals(Float.TYPE)) return Float.class;
-        if(source.equals(Long.TYPE)) return Long.class;
-        if(source.equals(Double.TYPE)) return Double.class;
-        if(source.equals(Character.TYPE)) return Character.class;
-        if(source.equals(Short.TYPE)) return Short.class;
-        if(source.equals(Byte.TYPE)) return Byte.class;
-        return null;
+        return buf.toString();
     }
 }

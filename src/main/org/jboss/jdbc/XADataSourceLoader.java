@@ -9,6 +9,7 @@ package org.jboss.jdbc;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Properties;
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
@@ -28,7 +29,7 @@ import org.jboss.logging.Logger;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -90,7 +91,18 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     }
 
     public String getProperties() {
-        return "";
+        XADataSource vendorSource = (XADataSource)source.getDataSource();
+        try {
+            Class cls = vendorSource.getClass();
+            Method getProperties = cls.getMethod("getProperties", new Class[0]);
+            Properties result = (Properties) getProperties.invoke(vendorSource, new Object[0]);
+            if(result == null)
+                return "";
+            else
+                return buildProperties(result);
+        } catch(Exception e) {
+            return "";
+        }
     }
 
     public void setJDBCUser(String userName) {
@@ -303,5 +315,18 @@ public class XADataSourceLoader extends ServiceMBeanSupport
             return;
         }
         props.setProperty(property.substring(0, pos), property.substring(pos+1));
+    }
+
+    private static String buildProperties(Properties props) {
+        StringBuffer buf = new StringBuffer();
+        Iterator it = props.keySet().iterator();
+        Object key;
+        while(it.hasNext()) {
+            key = it.next();
+            if(buf.length() > 0)
+                buf.append(';');
+            buf.append(key).append('=').append(props.get(key));
+        }
+        return buf.toString();
     }
 }
