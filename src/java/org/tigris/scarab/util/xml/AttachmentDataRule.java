@@ -72,18 +72,7 @@ public class AttachmentDataRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") attachment data body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-        throws Exception
-    {
-        Attachment attachment = (Attachment)getDigester().pop();
+        Attachment attachment = getImportBean().getAttachment();
         attachment.setDataAsString(text);
-        getDigester().push(attachment);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
     }
 }

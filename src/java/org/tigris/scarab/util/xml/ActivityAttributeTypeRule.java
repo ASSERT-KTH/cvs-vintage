@@ -76,8 +76,7 @@ public class ActivityAttributeTypeRule extends BaseRule
         log().debug("(" + getImportBean().getState() + 
             ") activity attribute type body: " + text);
         AttributeType issueType = AttributeType.getInstance(text);
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
         activityInfo.setType(issueType);
-        getDigester().push(activityInfo);
     }
 }

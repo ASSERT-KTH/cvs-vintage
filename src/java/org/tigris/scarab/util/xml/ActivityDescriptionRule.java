@@ -73,8 +73,7 @@ public class ActivityDescriptionRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") activity description body: " + text);
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
         activityInfo.setDescription(text);
-        getDigester().push(activityInfo);
     }
 }

@@ -73,8 +73,7 @@ public class ActivityAttributeNameRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") activity attribute name body: " + text);
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
         activityInfo.setName(text);
-        getDigester().push(activityInfo);
     }
 }

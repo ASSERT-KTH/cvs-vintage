@@ -70,8 +70,7 @@ public class ActivityAttributeValueRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") activity attribute value body: " + text);
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
         activityInfo.setValue(text);
-        getDigester().push(activityInfo);
     }
 }

@@ -85,10 +85,9 @@ public class AttachmentCreatedByRule extends BaseRule
     
     protected void doInsertionAtBody(String text) throws Exception
     {
-        Attachment attachment = (Attachment)getDigester().pop();
+        Attachment attachment = getImportBean().getAttachment();
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
         attachment.setCreatedBy(user.getUserId());
-        getDigester().push(attachment);
     }
     
     protected void doValidationAtBody(String text) throws Exception

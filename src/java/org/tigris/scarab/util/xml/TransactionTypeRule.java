@@ -69,30 +69,16 @@ public class TransactionTypeRule extends BaseRule
      * is encountered.  If the element has no body, this method is
      * not called at all.
      *
-     * @param text The text of the body of this element
+     * @param transactionTypeName The text of the body of this element
      */
-    public void body(String text) throws Exception
+    public void body(String transactionTypeName) throws Exception
     {
         log().debug("(" + getImportBean().getState() + 
-            ") transaction type body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String transactionTypeName)
-        throws Exception
-    {
+            ") transaction type body: " + transactionTypeName);
         TransactionType transactionType = 
             TransactionType.getInstance(transactionTypeName);
         checkCreateTransaction(transactionType);
-        getDigester().push(transactionType);
-    }
-    
-    protected void doValidationAtBody(String transactionTypeName)
-        throws Exception
-    {
-        TransactionType transactionType = 
-            TransactionType.getInstance(transactionTypeName);
-        checkCreateTransaction(transactionType);
+        getImportBean().setTransactionType(transactionType);
     }
     
     private void checkCreateTransaction(TransactionType transactionType)

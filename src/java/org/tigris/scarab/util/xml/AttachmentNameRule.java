@@ -71,17 +71,7 @@ public class AttachmentNameRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getImportBean().getState() + ") attachment type body");
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-    {
-        Attachment attachment = (Attachment)getDigester().pop();
+        Attachment attachment = getImportBean().getAttachment();
         attachment.setName(text);
-        getDigester().push(attachment);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
     }
 }

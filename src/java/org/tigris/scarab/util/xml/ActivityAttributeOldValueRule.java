@@ -73,8 +73,7 @@ public class ActivityAttributeOldValueRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") activity attribute old value body: " + text);
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
         activityInfo.setOldValue(text);
-        getDigester().push(activityInfo);
     }
 }

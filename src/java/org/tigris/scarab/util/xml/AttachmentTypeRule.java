@@ -69,28 +69,16 @@ public class AttachmentTypeRule extends BaseRule
      *
      * @param text The text of the body of this element
      */
-    public void body(String text) throws Exception
+    public void body(String attachmentTypeName) throws Exception
     {
-        log().debug("(" + getImportBean().getState() +") attachment type body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String attachmentTypeName)
-        throws Exception
-    {
-        Attachment attachment = (Attachment)getDigester().pop();
+        log().debug("(" + getImportBean().getState() +") attachment type body: " + 
+            attachmentTypeName);
+        Attachment attachment = getImportBean().getAttachment();
         AttachmentType attachmentType = AttachmentType.getInstance(attachmentTypeName);
         if (attachmentType == null)
         {
             throw new Exception("Invalid attachment type: " + attachmentTypeName);
         }
         attachment.setAttachmentType(attachmentType);
-        getDigester().push(attachment);
-    }
-
-    protected void doValidationAtBody(String attachmentTypeName)
-        throws Exception
-    {
-        AttachmentType.getInstance(attachmentTypeName);
-    }
+    }    
 }

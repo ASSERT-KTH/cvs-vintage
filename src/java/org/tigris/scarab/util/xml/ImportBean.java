@@ -49,6 +49,10 @@ package org.tigris.scarab.util.xml;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionType;
+import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.apache.commons.digester.Digester;
@@ -56,7 +60,7 @@ import org.apache.commons.digester.Digester;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportBean.java,v 1.2 2002/04/11 02:51:07 jon Exp $
+ * @version $Id: ImportBean.java,v 1.3 2002/05/01 01:18:07 jon Exp $
  */
 public class ImportBean
 {
@@ -67,6 +71,13 @@ public class ImportBean
     private List userList = null;
     private Module module = null;
     private ScarabUser user = null;
+    private ActivityInfo activityInfo = null;
+    private Issue issue = null;
+    private Transaction transaction = null;
+    private TransactionType transactionType = null;
+    private Attachment attachment = null;
+    private String attachmentDateFormat = null;
+
 
     public String getState()
     {
@@ -87,7 +98,7 @@ public class ImportBean
     {
         this.digester = value;
     }
-    
+
     public DependencyTree getDependencyTree()
     {
         return this.dependencyTree;
@@ -97,7 +108,37 @@ public class ImportBean
     {
         this.dependencyTree = value;
     }
+
+    public ActivityInfo getActivityInfo()
+    {
+        return this.activityInfo;
+    }
     
+    public void setActivityInfo(ActivityInfo value)
+    {
+        this.activityInfo = value;
+    }
+    
+    public Attachment getAttachment()
+    {
+        return this.attachment;
+    }
+    
+    public void setAttachment(Attachment value)
+    {
+        this.attachment = value;
+    }
+    
+    public String getAttachmentDateFormat()
+    {
+        return this.attachmentDateFormat;
+    }
+    
+    public void setAttachmentDateFormat(String value)
+    {
+        this.attachmentDateFormat = value;
+    }
+
     public List getRoleList()
     {
         if (this.roleList == null)
@@ -126,6 +167,26 @@ public class ImportBean
         this.userList = value;
     }
 
+    public Transaction getTransaction()
+    {
+        return this.transaction;
+    }
+    
+    public void setTransaction(Transaction value)
+    {
+        this.transaction = value;
+    }
+
+    public TransactionType getTransactionType()
+    {
+        return this.transactionType;
+    }
+    
+    public void setTransactionType(TransactionType value)
+    {
+        this.transactionType = value;
+    }
+
     public Module getModule()
     {
         return this.module;
@@ -134,6 +195,16 @@ public class ImportBean
     public void setModule(Module value)
     {
         this.module = value;
+    }
+
+    public Issue getIssue()
+    {
+        return this.issue;
+    }
+    
+    public void setIssue(Issue value)
+    {
+        this.issue = value;
     }
 
     public ScarabUser getScarabUser()

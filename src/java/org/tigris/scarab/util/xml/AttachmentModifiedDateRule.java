@@ -76,7 +76,7 @@ public class AttachmentModifiedDateRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") attachment modified date begin");
-        getDigester().push(attributes.getValue("format"));
+        getImportBean().setAttachmentDateFormat(attributes.getValue("format"));
     }
     
     /**
@@ -90,23 +90,10 @@ public class AttachmentModifiedDateRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") attachment modified date body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String date) throws Exception
-    {
-        String format = (String)getDigester().pop();
+        String format = getImportBean().getAttachmentDateFormat();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         sdf.setLenient(false);
-        Attachment attachment = (Attachment)getDigester().pop();
-        attachment.setModifiedDate(sdf.parse(date));
-        getDigester().push(attachment);
-    }
-
-    protected void doValidationAtBody(String date) throws Exception
-    {
-        String format = (String)getDigester().pop();
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        sdf.parse(date);
+        Attachment attachment = getImportBean().getAttachment();
+        attachment.setModifiedDate(sdf.parse(text));
     }
 }

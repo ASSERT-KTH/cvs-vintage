@@ -72,17 +72,7 @@ public class AttachmentMimetypeRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") attachment mime type body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-    {
-        Attachment attachment = (Attachment)getDigester().pop();
+        Attachment attachment = getImportBean().getAttachment();
         attachment.setMimeType(text);
-        getDigester().push(attachment);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
     }
 }

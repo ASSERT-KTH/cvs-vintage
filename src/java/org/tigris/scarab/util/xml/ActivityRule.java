@@ -88,13 +88,13 @@ public class ActivityRule extends BaseRule
     protected void doInsertionAtBegin(Attributes attributes)
     {
         ActivityInfo activityInfo = new ActivityInfo();
-        getDigester().push(activityInfo);
+        getImportBean().setActivityInfo(activityInfo);
     }
     
     protected void doValidationAtBegin(Attributes attributes)
     {
         ActivityInfo activityInfo = new ActivityInfo();
-        getDigester().push(activityInfo);
+        getImportBean().setActivityInfo(activityInfo);
     }
     
     /**
@@ -117,11 +117,11 @@ public class ActivityRule extends BaseRule
     protected void doInsertionAtEnd()
         throws Exception
     {
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
-        Transaction transaction = (Transaction)getDigester().pop();
-        Issue issue = (Issue)getDigester().pop();
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
+        Transaction transaction = getImportBean().getTransaction();
+        Issue issue = getImportBean().getIssue();
         Attribute attribute = Attribute.getInstance(activityInfo.getName());
-        if(attribute == null)
+        if (attribute == null)
         {
             // create attribute
             attribute = AttributeManager.getInstance();
@@ -180,16 +180,13 @@ public class ActivityRule extends BaseRule
                             transaction, activityInfo.getOldValue(), 
                             activityInfo.getValue());
         }
-        
-        getDigester().push(issue);
-        getDigester().push(transaction);
     }
     
     protected void doValidationAtEnd()
         throws Exception
     {
-        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
-        if (activityInfo.getName().equals("Assigned To"))
+        ActivityInfo activityInfo = getImportBean().getActivityInfo();
+        if (activityInfo.getName().equalsIgnoreCase("Assigned to"))
         {
             validateUser(activityInfo.getValue());
             if (activityInfo.getOldValue() != null)

@@ -84,10 +84,9 @@ public class TransactionCommittedByRule extends BaseRule
         throws Exception
     {
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
-        TransactionType transactionType = (TransactionType)getDigester().pop();
-        Transaction transaction = (Transaction)getDigester().pop();
+        TransactionType transactionType = getImportBean().getTransactionType();
+        Transaction transaction = getImportBean().getTransaction();
         transaction.create(transactionType.getTypeId(), user, null);
-        getDigester().push(transaction);
     }
     
     protected void doValidationAtBody(String committedByName)

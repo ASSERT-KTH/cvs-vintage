@@ -78,17 +78,8 @@ public class AttachmentRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") attachment begin");
-        super.doInsertionOrValidationAtBegin(attributes);
-    }
-    
-    protected void doInsertionAtBegin(Attributes attributes)
-    {
         Attachment attachment = new Attachment();
-        getDigester().push(attachment);
-    }
-    
-    protected void doValidationAtBegin(Attributes attributes)
-    {
+        getImportBean().setAttachment(attachment);
     }
     
     /**
@@ -107,10 +98,10 @@ public class AttachmentRule extends BaseRule
         // FIXME! I have probably messed this up, as I did not follow 
         // the logic. Are we taking an existing Attachment that has been
         // stored previously and assigning it to a new issue? -jdm
-        Attachment attachment = (Attachment)getDigester().pop();
+        Attachment attachment = getImportBean().getAttachment();
         String path = attachment.getFullPath();
 
-        Issue issue = (Issue)getDigester().pop();
+        Issue issue = getImportBean().getIssue();
         attachment.setIssueId(issue.getIssueId());
         String newPath = attachment.getFullPath();
 
@@ -142,7 +133,6 @@ public class AttachmentRule extends BaseRule
             }            
         }
         attachment.save();
-        getDigester().push(issue);
     }
     
     protected void doValidationAtEnd()

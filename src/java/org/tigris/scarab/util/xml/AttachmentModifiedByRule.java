@@ -81,10 +81,9 @@ public class AttachmentModifiedByRule extends BaseRule
     {
         if (text != null && !text.trim().equals(""))
         {
-            Attachment attachment = (Attachment)getDigester().pop();
+            Attachment attachment = getImportBean().getAttachment();
             ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
             attachment.setModifiedBy(user.getUserId());
-            getDigester().push(attachment);
         }
     }
     

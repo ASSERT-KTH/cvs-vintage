@@ -79,18 +79,7 @@ public class AttachmentPathRule extends BaseRule
         {
             throw new Exception("File: " + text + " does not exist.");
         }
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String text)
-        throws Exception
-    {
-        Attachment attachment = (Attachment)getDigester().pop();
+        Attachment attachment = getImportBean().getAttachment();
         attachment.setFileName(text);
-        getDigester().push(attachment);
-    }
-    
-    protected void doValidationAtBody(String text)
-    {
     }
 }
