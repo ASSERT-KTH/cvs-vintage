@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.52 2004/08/24 17:37:04 mvw Exp $
+// $Id: Notation.java,v 1.53 2004/10/06 15:25:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.application.api;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.Icon;
 
@@ -287,6 +289,18 @@ public final class Notation implements PropertyChangeListener {
     private static String generateObjectFlowState(NotationName notation,
           Object/*MObjectFlowState*/ m) {
         return getProvider(notation).generateObjectFlowState(m);
+    }
+
+    private static String generateClassifierInState(NotationName notation,
+            Object/*MObjectFlowState*/ m) {
+        Collection c = ModelFacade.getInStates(m);
+        // MVW: I have no idea how to handle multiple states, 
+        // so we go for the 1st one..
+        Iterator i = c.iterator();
+        if (i.hasNext()) {
+            return getProvider(notation).generateState(i.next());
+        }
+        return "";
     }
 
     private static String generateStateBody(NotationName notation,
@@ -734,6 +748,9 @@ public final class Notation implements PropertyChangeListener {
         }
         if (ModelFacade.isAObjectFlowState(o)) {
             return generateObjectFlowState(nn, o);
+        }
+        if (ModelFacade.isAClassifierInState(o)) {
+            return generateClassifierInState(nn, o);
         }
         if (ModelFacade.isAState(o)) {
             return generateState(nn, o);
