@@ -55,6 +55,8 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ReferenceInsertionFilter;
+import org.tigris.scarab.util.ScarabLink;
 
 /**
  * Scarab-specific localiztion tool.  Uses the following property
@@ -138,28 +140,7 @@ public class ScarabLocalizationTool
      */
     public String format(String key, Object arg1)
     {
-        String value = null;
-        try
-        {
-            value =super.format(key, arg1);
-        }
-        catch (MissingResourceException tryAgain)
-        {
-            String prefix = getPrefix(null);
-            setPrefix(DEFAULT_SCOPE + '.');
-            try
-            {
-                value = super.format(key, arg1);
-            }
-            catch (MissingResourceException itsNotThere)
-            {
-                value = "ERROR! Missing resource (" + key + ")";
-                Log.get().error(
-                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
-            }
-            setPrefix(prefix);
-        }
-        return value;
+        return format(key, new Object[] {arg1});
     }
 
     /**
@@ -173,28 +154,7 @@ public class ScarabLocalizationTool
      */
     public String format(String key, Object arg1, Object arg2)
     {
-        String value = null;
-        try
-        {
-            value =super.format(key, arg1, arg2);
-        }
-        catch (MissingResourceException tryAgain)
-        {
-            String prefix = getPrefix(null);
-            setPrefix(DEFAULT_SCOPE + '.');
-            try
-            {
-                value = super.format(key, arg1, arg2);
-            }
-            catch (MissingResourceException itsNotThere)
-            {
-                value = "ERROR! Missing resource (" + key + ")";
-                Log.get().error(
-                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
-            }
-            setPrefix(prefix);
-        }
-        return value;
+        return format(key, new Object[] {arg1, arg2});
     }
 
     /**
@@ -209,64 +169,7 @@ public class ScarabLocalizationTool
      */
     public String format(String key, Object arg1, Object arg2, Object arg3)
     {
-        String value = null;
-        Object[] args = new Object[] {arg1, arg2, arg3};
-        try
-        {
-            value =super.format(key, args);
-        }
-        catch (MissingResourceException tryAgain)
-        {
-            String prefix = getPrefix(null);
-            setPrefix(DEFAULT_SCOPE + '.');
-            try
-            {
-                value =super.format(key, args);
-            }
-            catch (MissingResourceException itsNotThere)
-            {
-                value = "ERROR! Missing resource (" + key + ")";
-                Log.get().error(
-                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
-            }
-            setPrefix(prefix);
-        }
-        return value;
-    }
-
-    /**
-     * Formats a localized value using the provided objects.
-     *
-     * @param key The identifier for the localized text to retrieve,
-     * @param args The <code>MessageFormat</code> data used when
-     * formatting the localized text.
-     * @return Formatted localized text.
-     * @see #format(String, List)
-     */
-    public String format(String key, Object[] args)
-    {
-        String value = null;
-        try
-        {
-            value =super.format(key, args);
-        }
-        catch (MissingResourceException tryAgain)
-        {
-            String prefix = getPrefix(null);
-            setPrefix(DEFAULT_SCOPE + '.');
-            try
-            {
-                value = super.format(key, args);
-            }
-            catch (MissingResourceException itsNotThere)
-            {
-                value = "ERROR! Missing resource (" + key + ")";
-                Log.get().error(
-                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
-            }
-            setPrefix(prefix);
-        }
-        return value;
+        return format(key, new Object[] {arg1, arg2, arg3});
     }
 
     /**
@@ -294,10 +197,43 @@ public class ScarabLocalizationTool
      */
     public String format(String key, List args)
     {
+        return format(key, args.toArray());
+    }
+
+
+    /**
+     * Formats a localized value using the provided objects.
+     *
+     * @param key The identifier for the localized text to retrieve,
+     * @param args The <code>MessageFormat</code> data used when
+     * formatting the localized text.
+     * @return Formatted localized text.
+     * @see #format(String, List)
+     */
+    public String format(String key, Object[] args)
+    {
         String value = null;
+
+        // we are going to allow html text within resource bundles.  This
+        // avoids problems in translations when links or other html tags 
+        // would result in an unnatural breakup of the text.  We need
+        // to apply the filtering here on the arguments which might contain
+        // user entered data, if we are going to skip the filtering later.
+        for (int i=0; i<args.length; i++) 
+        {
+            Object obj = args[i];
+            if (obj != null && 
+                !(obj instanceof ScarabLink) && 
+                !(obj instanceof Number) 
+                ) 
+            {
+                args[i] = ReferenceInsertionFilter.filter(obj.toString());
+            }
+        }
+
         try
         {
-            value = super.format(key, args);
+            value =super.format(key, args);
         }
         catch (MissingResourceException tryAgain)
         {

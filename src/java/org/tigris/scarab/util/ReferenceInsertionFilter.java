@@ -49,6 +49,10 @@ package org.tigris.scarab.util;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
 import org.apache.velocity.app.event.NullSetEventHandler;
 
+import org.tigris.scarab.util.ScarabLink;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.screens.SelectModule;
+
 /**
  * This is a Velocity EventCartridge Filter which is responsible
  * for processing $ variables when they are rendered in a template.
@@ -65,7 +69,7 @@ import org.apache.velocity.app.event.NullSetEventHandler;
  * showing up in the log files.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.12 2002/10/24 22:26:53 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.13 2002/10/30 00:14:26 jmcnally Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler, NullSetEventHandler
@@ -97,7 +101,9 @@ public class ReferenceInsertionFilter
                 // when the actual rendering is done.
                 !reference.startsWith("$renderer") && 
                 // don't want to filter this because it outputs HTML
-                !reference.startsWith("$intake.declare")
+                !reference.startsWith("$intake.declare") &&
+                // localization tool pre-filters data
+                !reference.startsWith("$l10n")
                )
             {
                 // we are already a String
@@ -106,8 +112,8 @@ public class ReferenceInsertionFilter
         }
         else if (
                 // don't filter links!
-                ! (value instanceof org.tigris.scarab.util.ScarabLink) &&
-                ! (value instanceof org.tigris.scarab.screens.SelectModule.ModuleSwitchingLink)
+                ! (value instanceof ScarabLink) &&
+                ! (value instanceof SelectModule.ModuleSwitchingLink)
                 )
         {
             // We convert the object to a string and output the result
@@ -128,7 +134,7 @@ public class ReferenceInsertionFilter
      * This method is borrowed from Struts. It converts
      * &lt; &gt; &amp; &quot; into the appropriate entities.
      */
-    private static String filter(String value)
+    public static String filter(String value)
     {
         if (value == null)
         {

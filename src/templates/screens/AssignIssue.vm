@@ -72,8 +72,7 @@
 
     #if ($noUsers.equals("true"))
      <p class="alert">$l10n.NoneAssigned.</p>
-     <p><a href="#add">$l10n.ClickHereToSelectUsersPart1</a> 
-        $l10n.format("ClickHereToSelectUsersPart2", $issueListSize)</p>
+     <p>$l10n.format("ClickHereToSelectUsers", $issueListSize)</p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">

@@ -1,10 +1,8 @@
 #set ($currentModule = $scarabR.CurrentModule)
 <div id="selectmodule" class="app">
 
-#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("$l10n.RequestRoles").isAllowed())
-<p>
-$link in modules which you are not currently associated.
-</p>
+#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").isAllowed())
+<p>$l10n.format("RequestRolesInOtherModules", $link)</p>
 #end
 
 #if ($currentModule)
@@ -57,7 +55,7 @@ $module.Description
 
 #else
 <p class="alert">
-$l10n.YouCannotAccessModules $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Login") $l10n.YouCannotAccessModules2 
+$l10n.format("YouCannotAccessModules", $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm"))
 </p>
 #end
 
