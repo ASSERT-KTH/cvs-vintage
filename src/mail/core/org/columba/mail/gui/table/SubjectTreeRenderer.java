@@ -105,7 +105,7 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
 		String subject = (String) header.get("columba.subject");
 		if (subject != null)
-			setText("test");//subject);
+			setText(subject);
 		else
 			setText("null");
 
