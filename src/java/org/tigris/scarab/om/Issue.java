@@ -2089,42 +2089,6 @@ public class Issue
     }
 
     /**
-     * Assigns user to issue, and creates attachment to hold reason.
-     */
-    public void assignUser(ScarabUser assignee, ScarabUser assigner,
-                           String attachmentText, Attribute attribute,
-                           String reason)
-        throws Exception
-    {                
-        UserAttribute attVal = new UserAttribute();
-        Attachment attachment = null;
-
-        // Save attachment, to hold reason for assignment
-        if (!reason.equals(""))
-        {
-            attachment = new Attachment();
-            attachment.setTextFields(assignee, this,
-                                     Attachment.MODIFICATION__PK);
-            attachment.setName("comment");
-            attachment.setDataAsString(reason);
-            attachment.save();
-        }
-
-        // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                       assigner, attachment);
-        attVal.startTransaction(transaction);
-
-        // Save user attribute values
-        attVal.setIssue(this);
-        attVal.setAttributeId(attribute.getAttributeId());
-        attVal.setUserId(assignee.getUserId());
-        attVal.setValue(assignee.getUserName());
-        attVal.save();
-    }
-
-    /**
      * Checks permission and approves or rejects issue template. If template
      * is approved, template type set to "module", else set to "personal".
      */
@@ -2301,6 +2265,42 @@ public class Issue
     }
 
     /**
+     * Assigns user to issue, and creates attachment to hold reason.
+     */
+    public void assignUser(ScarabUser assignee, ScarabUser assigner,
+                           String attachmentText, Attribute attribute,
+                           String reason)
+        throws Exception
+    {                
+        UserAttribute attVal = new UserAttribute();
+        Attachment attachment = null;
+
+        // Save attachment, to hold reason for assignment
+        if (!reason.equals(""))
+        {
+            attachment = new Attachment();
+            attachment.setTextFields(assignee, this,
+                                     Attachment.MODIFICATION__PK);
+            attachment.setName("comment");
+            attachment.setDataAsString(reason);
+            attachment.save();
+        }
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                       assigner, attachment);
+        attVal.startTransaction(transaction);
+
+        // Save user attribute values
+        attVal.setIssue(this);
+        attVal.setAttributeId(attribute.getAttributeId());
+        attVal.setUserId(assignee.getUserId());
+        attVal.setValue(assignee.getUserName());
+        attVal.save();
+    }
+
+    /**
      * Used to change a user attribute value from one user attribute
      * to a new one. This is generally used for creating the association
      * of user to an issue (through the oldAttributeValue).
@@ -2361,6 +2361,66 @@ public class Issue
         oldAttVal.setAttributeId(newUserAttribute.getAttributeId());
         oldAttVal.save();
         
+        String[] results = new String[2];
+        results[0] = userAction;
+        results[1] = othersAction;
+        return results;
+    }
+
+    /**
+     * Used to delete a user attribute value.
+     * Returns a string array (size 2) that contains the messages 
+     * used for sending the emails (first string: message to person who
+     * is being deleted; second string: message to everyone else associated
+     * to the issue).
+     */
+    public String[] deleteUser(ScarabUser assignee, ScarabUser assigner,
+                               AttributeValue attVal, String reason)
+        throws Exception
+    {
+        // Create attachments and email notification text
+        // For assigned user, and for other associated users
+        Attribute attribute = attVal.getAttribute();
+        String attrDisplayName = getModule()
+             .getRModuleAttribute(attribute, getIssueType())
+             .getDisplayValue();
+        StringBuffer buf1 = new StringBuffer("You have been "
+                                             + "removed from ");
+        buf1.append(attrDisplayName).append(".");
+        String userAction = buf1.toString();
+         
+        StringBuffer buf2 = new StringBuffer("User " );
+        buf2.append(assigner.getUserName() + " deleted user ");
+        buf2.append(assignee.getUserName()).append(" from ");
+        buf2.append(attrDisplayName);
+        String othersAction = buf2.toString();
+ 
+        Attachment attachment = null;
+        if (!reason.equals(""))
+        {
+            attachment = new Attachment();
+            attachment.setDataAsString(reason);
+            attachment.setName("comment");
+            attachment.setTextFields(assigner, attVal.getIssue(), 
+                                     Attachment.MODIFICATION__PK);
+            attachment.save();
+        }
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                           assigner, attachment);
+        attVal.startTransaction(transaction);
+
+        // Save activity record
+        Activity activity = new Activity();
+        activity.create(attVal.getIssue(), attVal.getAttribute(),
+                        othersAction, transaction, 
+                        assignee.getUserId(), null, attachment);
+
+        attVal.setDeleted(true);
+        attVal.save();
+
         String[] results = new String[2];
         results[0] = userAction;
         results[1] = othersAction;

@@ -102,7 +102,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.50 2002/06/13 22:05:05 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.51 2002/06/13 23:26:36 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -226,7 +226,8 @@ public class AssignIssue extends BaseModifyIssue
                               + attrDisplayName + ".");
                     userAction = ("You have been added to " 
                                    + attrDisplayName + ".");
-                    issue.assignUser(assignee, assigner, othersAction, newUserAttribute, reason);
+                    issue.assignUser(assignee, assigner, othersAction, 
+                                     newUserAttribute, reason);
                     
                     // Notification email
                     if (!notify(context, issue, assignee, 
@@ -255,7 +256,13 @@ public class AssignIssue extends BaseModifyIssue
                 if (!userStillAssigned)
                 {
                     ScarabUser assignee = scarabR.getUser(oldAttVal.getUserId());
-                    deleteUser(context, assignee, assigner, oldAttVal, reason);
+                    String[] results = issue.deleteUser(assignee, assigner, 
+                                                        oldAttVal, reason);
+                    if (!notify(context, oldAttVal.getIssue(), assignee, 
+                                userAction, othersAction))
+                    {
+                        getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
+                    }
                 }
             }
                 
@@ -268,65 +275,6 @@ public class AssignIssue extends BaseModifyIssue
         }
         doCancel(data, context);
     }
-
-
-    private void deleteUser(TemplateContext context, 
-                            ScarabUser assignee, ScarabUser assigner,
-                            AttributeValue attVal, String reason)
-        throws Exception
-    {
-        // Create attachments and email notification text
-        // For assigned user, and for other associated users
-        Attribute attribute = attVal.getAttribute();
-        Issue issue = attVal.getIssue();
-        String attrDisplayName = issue.getModule()
-             .getRModuleAttribute(attribute, issue.getIssueType())
-             .getDisplayValue();
-        StringBuffer buf1 = new StringBuffer("You have been "
-                                             + "removed from ");
-        buf1.append(attrDisplayName).append(".");
-        String userAction = buf1.toString();
-         
-        StringBuffer buf2 = new StringBuffer("User " );
-        buf2.append(assigner.getUserName() + " deleted user ");
-        buf2.append(assignee.getUserName()).append(" from ");
-        buf2.append(attrDisplayName);
-        String othersAction = buf2.toString();
- 
-        Attachment attachment = null;
-        if (!reason.equals(""))
-        {
-            attachment = new Attachment();
-            attachment.setDataAsString(reason);
-            attachment.setName("comment");
-            attachment.setTextFields(assigner, attVal.getIssue(), 
-                                     Attachment.MODIFICATION__PK);
-            attachment.save();
-        }
-
-        // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                           assigner);
-        attVal.startTransaction(transaction);
-
-        // Save activity record
-        Activity activity = new Activity();
-        activity.create(attVal.getIssue(), attVal.getAttribute(),
-                        othersAction, transaction, 
-                        assignee.getUserId(), null, attachment);
-
-        // remove the user from the List and reset the 
-        // index, so the next AttributeValue is not skipped
-        attVal.setDeleted(true);
-        attVal.save();
-
-        if (!notify(context, attVal.getIssue(), assignee, 
-                    userAction, othersAction))
-        {
-            getScarabRequestTool(context).setAlertMessage(EMAIL_ERROR);
-        }
-   }
 
 
     /**
