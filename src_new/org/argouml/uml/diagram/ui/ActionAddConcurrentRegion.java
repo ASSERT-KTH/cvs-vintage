@@ -1,4 +1,4 @@
-// $Id: ActionAddConcurrentRegion.java,v 1.2 2005/01/30 20:47:54 linus Exp $
+// $Id: ActionAddConcurrentRegion.java,v 1.3 2005/03/10 19:06:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class ActionAddConcurrentRegion extends UMLAction {
     // constructors
 
     private ActionAddConcurrentRegion() {
-        super("action.add-concurrent-region");
+        super("action.add-concurrent-region", true, true);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -76,7 +76,6 @@ public class ActionAddConcurrentRegion extends UMLAction {
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
-        super.shouldBeEnabled();
         int size = 0;
         try {
             Editor ce = Globals.curEditor();
@@ -84,7 +83,7 @@ public class ActionAddConcurrentRegion extends UMLAction {
             size = figs.size();
         } catch (Exception e) {
         }
-        return size > 0;
+        return super.shouldBeEnabled() & (size > 0);
     }
 
     /**
