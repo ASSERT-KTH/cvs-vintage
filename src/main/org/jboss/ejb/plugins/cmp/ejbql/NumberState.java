@@ -176,12 +176,46 @@ public class NumberState implements TokenizerState {
 			// chop off the suffix
 			number = number.substring(0, number.length()-1);
 			System.out.println("decode long number ["+number+"]");
-			return new ExactNumericToken(Long.decode(number).longValue()); 
-		} else { 
-			return new ExactNumericToken(Integer.decode(number.toUpperCase()).intValue()); 
+			return new ExactNumericToken(Long.decode(number).longValue());
+		} else {
+			return new ExactNumericToken(Integer.decode(number.toUpperCase()).intValue());
 		}
 	}
-	
+    private ExactNumericLiteral createExactNumericLiteral(String number) throws IOException {
+        byte first; // first digit
+
+        // long suffix
+        if(number.endsWith("l") || number.endsWith("L")) {
+            // chop off the suffix
+            number = number.substring(0, number.length() - 1);
+            System.out.println("decode long number [" + number + "]");
+            if (number.startsWith("0X") || number.startsWith("0x")) {  // hex
+                // handle literals from 0x8000000000000000L to 0xffffffffffffffffL:
+                // remove sign bit, parse as positive, then calculate the negative value with the sign bit
+                if (number.length() == 18) {
+                    first = Byte.decode(number.substring(0, 3)).byteValue();
+                    if (first >= 8) {
+                        number = "0x" + (first - 8) + number.substring(3);
+                        return new ExactNumericLiteral(Long.decode(number).longValue() - Long.MAX_VALUE - 1);
+                    }
+                }
+            } else if (number.startsWith("0")) {  // octal
+                // handle literals from 01000000000000000000000L to 01777777777777777777777L
+                // remove sign bit, parse as positive, then calculate the negative value with the sign bit
+                if (number.length() == 23) {
+                    if (number.charAt(1) == '1') {
+                        number = "0" + number.substring(2);
+                        return new ExactNumericLiteral(Long.decode(number).longValue() - Long.MAX_VALUE - 1);
+                    }
+                }
+            }
+            return new ExactNumericLiteral(Long.decode(number).longValue());
+        } else {
+            // integer hex and octal literals like 0xffffffff are handled by Long.decode()
+            return new ExactNumericLiteral(Long.decode(number).intValue());
+        }
+    }
+
 	private ApproximateNumericToken createApproximateNumericToken(String number) throws IOException {
 		// float suffix
 		if(number.endsWith("f") || number.endsWith("F")) {
