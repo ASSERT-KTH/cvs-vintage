@@ -67,7 +67,7 @@ import org.tigris.gef.presentation.Fig;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.19 2003/03/28 20:31:07 alexb Exp $
+ * $Id: DetailsPane.java,v 1.20 2003/03/29 17:20:51 alexb Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -140,7 +140,6 @@ public class DetailsPane
         setFont(new Font("Dialog", Font.PLAIN, 10));
         add(_tabs, BorderLayout.CENTER);
 
-        _tabs.addChangeListener(this);
         for (int i = 0; i < _tabPanels.size(); i++) {
             String title = "tab";
             JPanel t = (JPanel)_tabPanels.elementAt(i);
