@@ -1,34 +1,43 @@
-<div class="app" id="advancedquery">
 $page.setTitle("Advanced query")
+
+<div class="app" id="advancedquery">
 <h2>$page.Title</h2>
-#set ($module = $scarabR.CurrentModule)
-#if (!$module)
- <p><strong class="alert">
- The currently selected module is invalid. Please select another module.
- </strong></p>
-#else
+
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
 <input type="hidden" name="nextTemplate" value="IssueList.vm" />
 <input type="hidden" name="action" value="Search" />
 <input type="hidden" name="searchType" value="advanced" />
 <input type="hidden" name="pageNum" value="1" />
+
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSearch" value="Search" />&#160; <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this query" /></td>
+  <td class="firstchild">
+    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160; 
+    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
+    <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this query" />
+  </td>
  </tr>
 </table>
 </div>
+
 <h3>Search the Scarab knowledge base</h3>
+
 #advancedQuery()
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSearch" value="Search" />&#160; <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this query" /></td>
+  <td class="firstchild">
+    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160; 
+    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160; 
+    <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this query" />
+  </td>
  </tr>
 </table>
 </div>
+
 $intake.declareGroups()
 </form>
-#end
+
 </div>
