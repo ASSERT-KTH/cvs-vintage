@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.7 2002/01/23 06:11:55 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.8 2002/01/23 06:21:50 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -230,6 +230,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 }
             }
         }        
+
         // If there are no attributes in any of the dedupe
         // Attribute groups, turn off deduping in the module
         boolean areThereDedupeAttrs = false;

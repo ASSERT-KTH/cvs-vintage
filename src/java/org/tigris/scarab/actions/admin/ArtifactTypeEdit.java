@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.6 2002/01/23 06:11:55 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.7 2002/01/23 06:21:50 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -108,6 +108,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         Field order1 = null;
         Field order2 = null;
         int dupeOrder = 2;
+        boolean areThereDedupeAttrs = false;
 
         // Manage attribute groups
         if (attributeGroups.size() > 0)
@@ -158,11 +159,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         if (intake.isAllValid() && isValid) 
         {
-            // Set properties for module
-            Group modGroup = intake.get("Module", module.getQueryKey(), false);
-            modGroup.setProperties(module);
-            module.save();
-
             // Set properties for module-issue type info
             Group rmitGroup = intake.get("RModuleIssueType", 
                                         rmit.getQueryKey(), false);
@@ -185,6 +181,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 {
                     if (!attGroup.getAttributes().isEmpty())
                     {
+                         areThereDedupeAttrs = true;
                          attGroup.setDedupe(true);
                     }
                 }
@@ -195,6 +192,14 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 attGroup.save();
             }
 
+            // Set dedupe property for module
+            Group modGroup = intake.get("Module", module.getQueryKey(), false);
+            modGroup.setProperties(module);
+            if (!areThereDedupeAttrs)
+            {
+                module.setDedupe(false);
+            }
+            module.save();
         }
     }
 
