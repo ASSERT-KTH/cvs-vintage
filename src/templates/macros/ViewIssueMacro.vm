@@ -365,11 +365,13 @@
        #set ($atch = $scarabR.Attachment)
        #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
        #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
-       <tr>
-        <th> &nbsp; </th>
-        <th>File Name</th>
-        <th>File Description</th>
-       </tr> 
+       #if($attachments.size>0)
+           <tr>
+           <th> &nbsp; </th>
+           <th>File Name</th>
+           <th>File Description</th>
+           </tr>
+       #end 
        #foreach ($file in $currentIssue.ExistingAttachments)
            #indexedRows($velocityCount)
            #if ($file.TypeId.toString().equals("1"))
@@ -402,12 +404,12 @@
             </tr>
        #end
     </table>
-    </div>
-    <div class="functnbar3">
-        #if ($canEdit)
-            <input type="submit" value="Add file" name="eventSubmit_doSubmitfile"  />&#160;
-            <input type="submit" value="Delete file" name="eventSubmit_doDeletefile"  />&#160;
-        #end
+</div>
+<div class="functnbar3">
+    #if ($canEdit)
+        <input type="submit" value="Add file" name="eventSubmit_doSubmitfile"  />&#160;
+        <input type="submit" value="Delete file" name="eventSubmit_doDeletefile"  />&#160;
+    #end
 </div>
     
 
