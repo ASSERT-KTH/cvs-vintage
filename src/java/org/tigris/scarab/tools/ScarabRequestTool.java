@@ -956,7 +956,8 @@ try{
      *
      * @param key a <code>String</code> value
      * @return a <code>Issue</code> value
-    public Issue getIssue(String key)
+     */
+    public Issue getIssueByPk(String key)
     {
         Issue issue = null;
         try
@@ -965,24 +966,10 @@ try{
         }
         catch (Exception e)
         {
-            // was not a primary key, try fid
-            try
-            {
-                Issue.FederatedId fid = new Issue.FederatedId(key);
-                if ( fid.getDomain() == null ) 
-                {
-                    // handle null (always null right now)
-                }
-                issue = Issue.getIssueById(fid);
-            }
-            catch (NumberFormatException nfe)
-            {
-                // invalid id, just return null
-            }
+            data.setMessage("Issue id was invalid.");
         }
         return issue;
     }
-     */
 
     /**
      * Takes unique id, and returns issue.
