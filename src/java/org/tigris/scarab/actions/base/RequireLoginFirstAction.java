@@ -69,7 +69,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.42 2002/10/23 21:45:47 jon Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.43 2002/10/25 15:13:59 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -98,12 +98,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
 
         if (ScarabSecurity.NONE.equals(perm)) 
         {
-            if (currentModule == null)
-            {
-                scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
-                Default.setTargetSelectModule(data);
-            }
-            else if (!user.hasLoggedIn()) 
+            if (!user.hasLoggedIn()) 
             {
                 scarabR.setInfoMessage(
                      l10n.get("LoginToAccountWithPermissions"));
