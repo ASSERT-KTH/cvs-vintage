@@ -6,6 +6,7 @@
  */
 package org.jboss.jdbc;
 
+import java.io.PrintWriter;
 import java.lang.reflect.*;
 import java.util.*;
 import javax.management.ObjectName;
@@ -21,7 +22,7 @@ import org.jboss.util.*;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -73,7 +74,9 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         source.setTransactionManagerJNDIName("TransactionManager");
         setAdditionalProperties(parseProperties(poolParameters));
         try {
-            source.setLogWriter(new LogWriter(log));
+            PrintWriter writer = new LogWriter(log);
+            vendorSource.setLogWriter(writer);
+            source.setLogWriter(writer);
         } catch(java.sql.SQLException e) {
             e.printStackTrace();
         }
