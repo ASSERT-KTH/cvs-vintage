@@ -1,4 +1,4 @@
-// $Id: DataTypesFactory.java,v 1.12 2003/11/10 12:35:46 jhraigniac Exp $
+// $Id: DataTypesFactory.java,v 1.13 2003/12/17 14:40:09 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import ru.novosoft.uml.foundation.data_types.MActionExpression;
 import ru.novosoft.uml.foundation.data_types.MArgListsExpression;
 import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 import ru.novosoft.uml.foundation.data_types.MExpression;
+import ru.novosoft.uml.foundation.data_types.MExpressionEditor;
 import ru.novosoft.uml.foundation.data_types.MIterationExpression;
 import ru.novosoft.uml.foundation.data_types.MMappingExpression;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
@@ -100,6 +101,19 @@ public class DataTypesFactory extends AbstractUmlModelFactory {
         MBooleanExpression expression = new MBooleanExpression(language, body);
 	super.initialize(expression);
 	return expression;
+    }
+    
+    /** Create an UML ExpressionEditor.
+     *  
+     *  @return an initialized ExpressionEditor instance.
+     */
+    public Object/*MExpressionEditor */ createExpressionEditor(Object expr) {
+        MExpressionEditor editor = new MExpressionEditor();
+        MExpression expression = (MExpression) expr;
+	super.initialize(editor);
+        editor.setBody(expression.getBody());
+        editor.setLanguage(expression.getLanguage());
+	return editor;
     }
 
     /** Create an empty but initialized instance of a UML Expression.
