@@ -19,6 +19,7 @@ import javax.transaction.SystemException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityInstanceCache;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.InstancePoolContainer;
@@ -26,6 +27,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.util.FastKey;
+import org.jboss.ejb.CacheKey;
 
 import org.jboss.metadata.EntityMetaData;
 
@@ -34,19 +36,20 @@ import org.jboss.metadata.EntityMetaData;
 *      
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
-*  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.8 $
+*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*   @author <a href="mailto:andreas.schaefer@madplanet.com">Andy Schaefer</a>
+*	@version $Revision: 1.9 $
 */
 public class NoPassivationEntityInstanceCache
-implements InstanceCache
+implements EntityInstanceCache
 {
     // Constants -----------------------------------------------------
     
     // Attributes ----------------------------------------------------
     Container con;
     
-    Map fastCache = Collections.synchronizedMap(new HashMap());
-    Map fastKeys = Collections.synchronizedMap(new HashMap());
+    Map cache = Collections.synchronizedMap(new HashMap());
+    Map cacheKeys = Collections.synchronizedMap(new HashMap());
     boolean isReentrant;
     
     // Static --------------------------------------------------------
@@ -85,21 +88,18 @@ implements InstanceCache
     {
     }
     
+    public Object createCacheKey( Object id ) {
+		// If no fastkey then just return id
+		// Here is where you supply the implementation of the cache you need
+		// This could be done from configuration.
+		
+		return new FastKey( id );
+	}
+	
     /**
-    *  get(Object fastKey)
+    *  get(Object CacheKey)
     * 
-    * get works from the hack of the fastKey.
-    * The class contains a "fastCache" that hashes fastKeys representing
-    * EJBObjects on client to the context of an instance.
-    * In case the fastKey is not found in fastCache then the method goes on to find if 
-    * it is already loaded but under a different fastKey (I.e. an EJBOBject is already 
-    * working on this instance) in case it does, it adds the new pair fastKey, instance to the 
-    * cache.  In case it is not found it creates a new context and associates fastKey to instance
-    * in the cache.   Remove takes care of working from the DB primary Key and killing
-    * all the associations of fastKey to context. (can be many)
-    * This class relies on the proper implementation of the hash and equals for the 
-    * lookup by db key, but is lenient in case something screws up...
-    *
+	*
     * MF FIXME: The synchronization is probably very f*cked up, someone needs to think
     * through the use cases of this puppy.  I know it is most probably broken as is.
     */
@@ -108,24 +108,14 @@ implements InstanceCache
     throws RemoteException
     {
         
-        if (!(id instanceof FastKey)) {
-           
-            // That instance should be used by a FastKey already
-            // retrieve the List of Keys for that instance
-            LinkedList keysList = (LinkedList) fastKeys.get(id);
-            
-            // Get the context for the first one (they are all associated to that context)
-            return get((FastKey) keysList.getFirst());
-        }
-        
         // Use the FastKey for the rest of the method
-        FastKey fastKey = (FastKey) id;
+        CacheKey cacheKey = (CacheKey) id;
         
         // TODO: minimize synchronization of IM
         
         EntityEnterpriseContext ctx;
         InstanceInfo info = null;
-        while ((ctx = (EntityEnterpriseContext)fastCache.get(fastKey)) != null)
+        while ((ctx = (EntityEnterpriseContext)cache.get(cacheKey)) != null)
         {
             synchronized(ctx)
             {
@@ -176,38 +166,40 @@ implements InstanceCache
         
         if (ctx == null) // Not in fast cache under that fastKey
         {
-            //Maybe it is in the cache but under another fastKey, check for the DB id
-            if (fastKeys.containsKey(fastKey.id)) {
+            //Maybe it is in the cache but under another cacheKey, check for the DB id
+			// Also if cache is virtual work from the id
+            if (cacheKeys.containsKey(cacheKey.id) || cacheKey.isVirtual) {
                 
-                // Ok, the instance is in fastCache but under another fastKey
                 
+				// Ok, the instance is in Cache but under another cacheKey
+				
                 // retrieve the List of Keys for that instance
-                LinkedList keysList = (LinkedList) fastKeys.get(fastKey.id);
+                LinkedList keysList = (LinkedList) cacheKeys.get(cacheKey.id);
                 
                 // Get the context for the first one (they are all associated to that context)
-                ctx = (EntityEnterpriseContext) fastCache.get(keysList.getFirst());
+                ctx = (EntityEnterpriseContext) cache.get(keysList.getFirst());
                 
-                // Add the fastkey to the List
-                keysList.addLast(fastKey);
-                
-                // MF FIXME: I don't think we need this operation but just in case
-                fastKeys.put(fastKey.id, keysList);              
-                
-                // Store the context in the fastCache
-                fastCache.put(fastKey, ctx);
-                
+				// Only if we have a real cache key, corresponding to the client
+				if (!cacheKey.isVirtual) {
+                	// Add the fastkey to the List
+                	keysList.addLast(cacheKey);
+                	
+                	// Store the context in the cache under the new cacheKey
+                	cache.put(cacheKey, ctx);
+				}
+				
                 // Redo the call the previous cache will work the synchronization
-                return get(fastKey);
+                return get(cacheKey);
             }
             
-            // The instance is brand new and not know to the cache structures
+            // The instance is brand new and not known to the cache structures
             else {
                 
                 // Get new instance from pool
                 ctx = (EntityEnterpriseContext)((InstancePoolContainer)con).getInstancePool().get();
                 
                 // The context only knows about the Database id
-                ctx.setId(fastKey.id);
+                ctx.setId(cacheKey.id);
                 
                 // Activate it
                 ((EntityContainer)con).getPersistenceManager().activateEntity(ctx);
@@ -217,14 +209,14 @@ implements InstanceCache
                 LinkedList keysList = new LinkedList();
                 
                 // Add this fastKey at least
-                keysList.addLast(fastKey);
+                keysList.addLast(cacheKey);
                 
                 // Keep the list under the DB ID
-                fastKeys.put(fastKey.id, keysList);
+                cacheKeys.put(cacheKey.id, keysList);
                 
-                // implicit passing with the ctx
-                ctx.setFastKey(fastKey);
-                
+				// Give the cacheKey to the context
+				ctx.setCacheKey(cacheKey);
+				
                 // insert
                 insert(ctx);
             }
@@ -236,20 +228,24 @@ implements InstanceCache
         
         // At this point we own the instance with the given identity
         //      Logger.log("Got entity:"+ctx.getId());
+		
+		// Tell the context the key 
+		ctx.setCacheKey(cacheKey);
+		
         return ctx;
     }
     
-    public synchronized void insert( EnterpriseContext ctx)
-    {
-        InstanceInfo info = createInstanceInfo(ctx);
+	public synchronized void insert (EnterpriseContext ctx) {
+		
+		InstanceInfo info = createInstanceInfo(ctx);
         ((EntityEnterpriseContext)ctx).setCacheContext(info);
         info.lock();
         
         // Cache can know about the instance now
-        fastCache.put(((EntityEnterpriseContext)ctx).getFastKey(), ctx);
+        cache.put(((EntityEnterpriseContext) ctx).getCacheKey(), ctx);
     
-    }
-    
+	}
+	
     public void release(EnterpriseContext ctx)
     {
         // This context is now available for other threads
@@ -263,18 +259,15 @@ implements InstanceCache
     }
     
     /*
-    * unfortunately a f*cked up hash and equals will create leaks in 
-    * the maps :(((((
+	* This needs the id hash and equals to work
     *
-    * Actually that may be one way to diagnose bad behaviour of the stuff
-    * (I guess, MF)
     */
     public synchronized void remove(Object id)
     {
         // remote the List of keys from the ID map, it returns the list
-        LinkedList list = (LinkedList) fastKeys.remove(id);
+        LinkedList list = (LinkedList) cacheKeys.remove(id);
         
-        // If the fastKey wasn't used there is no link to a context
+        // If the cacheKey weren't used there is no link to a context
         if (list == null) return ;
             
         Iterator keysIterator = list.listIterator();
@@ -284,10 +277,10 @@ implements InstanceCache
         
         while (keysIterator.hasNext()) {
             
-            Object currentFastKey = keysIterator.next();
+            Object currentCacheKey = keysIterator.next();
             
-            // remove the fastKey from fastCache 
-            ctx = fastCache.remove(currentFastKey);
+            // remove the cacheKey from cache 
+            ctx = cache.remove(currentCacheKey);
         }
         
         
@@ -315,6 +308,8 @@ implements InstanceCache
     {
         int locked = 0; // 0 == unlocked, >0 == locked
         
+		CacheKey key ;
+		
         EntityEnterpriseContext ctx;
         
         InstanceInfo(EnterpriseContext ctx)
@@ -341,5 +336,15 @@ implements InstanceCache
         {
             return ctx;
         }
+		
+		public void setCacheKey(CacheKey key) {
+			
+			this.key = key;
+    	}
+		
+		public CacheKey getCacheKey() {
+			
+			return key;
+		}
     }
 }
