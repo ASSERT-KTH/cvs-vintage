@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.torque.om.NumberKey;
 
@@ -82,7 +83,8 @@ public class AttributePeer
     /**
      *  Gets a List of all of the Attribute objects in the database.
      */
-    public static List getAllAttributes()
+    public static List getAllAttributes(String sortColumn, 
+                                        String sortPolarity)
         throws Exception
     {
         List result = null;
@@ -91,16 +93,110 @@ public class AttributePeer
         {        
             Criteria crit = new Criteria();
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
+            if (sortColumn.equals("desc"))
+            {
+                addAttributeOrderBy(crit, AttributePeer.DESCRIPTION, 
+                                    sortPolarity);
+            }
+            else if (sortColumn.equals("date"))
+            {
+                addAttributeOrderBy(crit, AttributePeer.CREATED_DATE, 
+                                    sortPolarity);
+            }
+            else if (sortColumn.equals("type"))
+            {
+                crit.addJoin(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                             AttributeTypePeer.ATTRIBUTE_TYPE_ID);
+                if (sortPolarity.equals("desc"))
+                {
+                    crit.addDescendingOrderByColumn(AttributeTypePeer
+                                                   .ATTRIBUTE_TYPE_NAME);
+                }
+                else
+                {
+                    crit.addAscendingOrderByColumn(AttributeTypePeer
+                                                   .ATTRIBUTE_TYPE_NAME);
+                }
+            }
+            else
+            {
+                addAttributeOrderBy(crit, AttributePeer.ATTRIBUTE_NAME, 
+                                    sortPolarity);
+            }
             result = doSelect(crit);
-            ScarabCache.put(result, ATTRIBUTE_PEER, GET_ALL_ATTRIBUTES);
         }
         else 
         {
             result = (List)obj;
         }
+        if (sortColumn.equals("user"))
+        {
+            result = sortAttributesByCreatingUser(result, sortPolarity);
+        }
+                
+        ScarabCache.put(result, ATTRIBUTE_PEER, GET_ALL_ATTRIBUTES);
         return result;
     }
 
+    private static Criteria addAttributeOrderBy(Criteria crit, 
+                            String sortColumn, String sortPolarity)
+    {
+        if (sortPolarity.equals("desc"))
+        {
+            crit.addDescendingOrderByColumn(sortColumn);
+        }
+        else
+        {
+            crit.addAscendingOrderByColumn(sortColumn);
+        }
+        return crit;
+    }
+
+    private static List sortAttributesByCreatingUser(List result,
+                                               String sortPolarity)
+        throws Exception
+    {
+        // if sorting by creating user, must do sort in java
+        String[] names = new String[result.size()];
+        boolean inOrder= false;
+        Object[] temp = result.toArray();
+        while (!inOrder)
+        {
+            inOrder = true;
+            for  (int i = 1; i<temp.length; i++)
+            {
+                Attribute currentAttr = (Attribute)temp[i];
+                Attribute lastAttr = (Attribute)temp[i-1];
+                if ((sortPolarity.equals("asc") && 
+                    currentAttr.getCreatedUserName().compareTo(lastAttr.getCreatedUserName()) < 0)
+                   || (sortPolarity.equals("desc") &&
+                    currentAttr.getCreatedUserName().compareTo(lastAttr.getCreatedUserName()) > 0))
+                   
+
+                {
+                    inOrder = false;
+                    temp[i] = lastAttr;
+                    temp[i-1] = currentAttr;
+                }
+            }
+        }
+        List orderedList = new ArrayList(); 
+        for  (int j = 1; j<temp.length; j++)
+        {
+            orderedList.add(temp[j]);
+        }
+        return orderedList;
+    }
+
+    /**
+     *  Gets a List of all of the Attribute objects in the database.
+     *  Sorts on selected column.
+     */
+    public static List getAllAttributes()
+        throws Exception
+    {
+        return getAllAttributes(AttributePeer.ATTRIBUTE_NAME, "asc");
+    }
 
     /**
      *  Gets a List of all of the Attribute objects in the database.
