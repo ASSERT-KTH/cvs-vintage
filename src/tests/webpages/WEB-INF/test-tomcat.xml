@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.29 $" />  
+     <property name="revision" value="$Revision: 1.30 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1114,6 +1114,36 @@ mod_webapp into mod_jk )
    </target>
 
    <target name="security_chk">
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp. HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%2E HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%252E HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp/ HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%5C HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%255C HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%20 HTTP/1.0"
            returnCode="${http.protocol} 404" 
