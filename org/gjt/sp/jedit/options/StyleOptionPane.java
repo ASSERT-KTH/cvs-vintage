@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: StyleOptionPane.java,v 1.5 2001/10/10 10:07:05 spestov Exp $
+ * @version $Id: StyleOptionPane.java,v 1.6 2001/11/23 09:08:49 spestov Exp $
  */
 public class StyleOptionPane extends AbstractOptionPane
 {
@@ -143,6 +143,7 @@ class StyleTableModel extends AbstractTableModel
 		addStyleChoice("options.style.operatorStyle","view.style.operator");
 		addStyleChoice("options.style.digitStyle","view.style.digit");
 		addStyleChoice("options.style.invalidStyle","view.style.invalid");
+		MiscUtilities.quicksort(styleChoices,new MiscUtilities.StringCompare());
 	} //}}}
 
 	//{{{ getColumnCount() method
@@ -228,6 +229,12 @@ class StyleTableModel extends AbstractTableModel
 			this.label = label;
 			this.property = property;
 			this.style = style;
+		}
+
+		// for sorting
+		public String toString()
+		{
+			return label;
 		}
 	} //}}}
 

@@ -34,7 +34,7 @@ import org.gjt.sp.util.WorkThread;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.3 2001/11/16 05:32:11 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.4 2001/11/23 09:08:48 spestov Exp $
  */
 public class BrowserIORequest extends WorkRequest
 {
@@ -150,14 +150,7 @@ public class BrowserIORequest extends WorkRequest
 		try
 		{
 			setAbortable(true);
-			if(!MiscUtilities.isURL(path1) && !new File(path1).isAbsolute())
-			{
-				String parent = browser.getDirectory();
-				if(parent == null)
-					parent = System.getProperty("user.home");
-				path1 = vfs.constructPath(parent,path1);
-				path1 = vfs._canonPath(session,path1,browser);
-			}
+			path1 = vfs._canonPath(session,path1,browser);
 
 			directory = vfs._listDirectory(session,path1,browser);
 		}
@@ -200,6 +193,8 @@ public class BrowserIORequest extends WorkRequest
 			try
 			{
 				path1 = vfs._canonPath(session,path1,browser);
+
+
 				if(!vfs._delete(session,path1,browser))
 					VFSManager.error(browser,"vfs.browser.delete-error",args);
 			}
@@ -239,6 +234,7 @@ public class BrowserIORequest extends WorkRequest
 			{
 				path1 = vfs._canonPath(session,path1,browser);
 				path2 = vfs._canonPath(session,path2,browser);
+
 				VFS.DirectoryEntry file = vfs._getDirectoryEntry(
 					session,path2,browser);
 				if(file != null)

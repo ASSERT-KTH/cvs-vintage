@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.9 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.10 2001/11/23 09:08:49 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -68,13 +68,34 @@ public class FileVFS extends VFS
 		if(path.equals("/"))
 			return FileRootsVFS.PROTOCOL + ":";
 
-		return MiscUtilities.getParentOfPath(path);
+                return super.getParentOfPath(path);
 	} //}}}
 
 	//{{{ constructPath() method
 	public String constructPath(String parent, String path)
 	{
-		return MiscUtilities.constructPath(parent,path);
+		// have to handle these cases specially on windows.
+		if(File.separatorChar == '\\')
+		{
+			if(path.length() == 2 && path.charAt(1) == ':')
+				return path;
+			if(path.startsWith("\\"))
+				parent = parent.substring(0,2);
+		}
+
+		if(parent.endsWith(File.separator))
+			path = parent + path;
+		else
+			path = parent + File.separator + path;
+
+		try
+		{
+			return new File(path).getCanonicalPath();
+		}
+		catch(IOException io)
+		{
+			return path;
+		}
 	} //}}}
 
 	//{{{ getFileSeparator() method

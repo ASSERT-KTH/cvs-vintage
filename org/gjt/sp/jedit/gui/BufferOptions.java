@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.7 2001/10/25 07:35:24 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.8 2001/11/23 09:08:49 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -488,7 +488,6 @@ public class BufferOptions extends EnhancedDialog
 			+ ":tabSize=" + tabSize.getSelectedItem()
 			+ ":indentSize=" + indentSize.getSelectedItem()
 			+ ":maxLineLen=" + maxLineLen.getSelectedItem()
-			+ ":trailingEOL=" + trailingEOL.isSelected()
 			+ ":syntax=" + syntax.isSelected()
 			+ ":noTabs=" + noTabs.isSelected()
 			+ ":indentOnTab=" + indentOnTab.isSelected()

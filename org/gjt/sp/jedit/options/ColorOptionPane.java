@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Color option pane.
  * @author Slava Pestov
- * @version $Id: ColorOptionPane.java,v 1.5 2001/11/05 07:56:44 spestov Exp $
+ * @version $Id: ColorOptionPane.java,v 1.6 2001/11/23 09:08:49 spestov Exp $
  */
 public class ColorOptionPane extends AbstractOptionPane
 {
@@ -163,6 +163,7 @@ class ColorTableModel extends AbstractTableModel
 			"view.gutter.focusBorderColor");
 		addColorChoice("options.color.gutterNoFocusBorderColor",
 			"view.gutter.noFocusBorderColor");
+		MiscUtilities.quicksort(colorChoices,new MiscUtilities.StringCompare());
 	} //}}}
 
 	//{{{ getColumnCount() method
@@ -245,6 +246,12 @@ class ColorTableModel extends AbstractTableModel
 			this.label = label;
 			this.property = property;
 			this.color = color;
+		}
+
+		// for sorting
+		public String toString()
+		{
+			return label;
 		}
 	} //}}}
 

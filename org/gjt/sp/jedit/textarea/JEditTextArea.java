@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.30 2001/11/15 07:57:20 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.31 2001/11/23 09:08:49 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3036,11 +3036,31 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			return;
 		else if(ch == '\t')
 		{
-			if(selection.size() != 0)
+			if(selection.size() == 1)
+			{
+				Selection sel = (Selection)selection.elementAt(0);
+				if(sel.startLine == sel.endLine
+					&& sel.start != buffer.getLineStartOffset(sel.startLine)
+					&& sel.end != buffer.getLineEndOffset(sel.startLine) - 1)
+					setSelectedText("\t");
+				else
+					shiftIndentRight();
+			}
+			else if(selection.size() != 0)
 				shiftIndentRight();
-			else if(buffer.getBooleanProperty("indentOnTab")
-				&& buffer.indentLine(caretLine,true,false))
-				return;
+			else if(buffer.getBooleanProperty("indentOnTab"))
+			{
+				// if caret is inside leading whitespace, indent.
+				String text = buffer.getLineText(caretLine);
+				int start = buffer.getLineStartOffset(caretLine);
+				int whiteSpace = MiscUtilities.getLeadingWhiteSpace(text);
+
+				if(caret - start <= whiteSpace
+					&& buffer.indentLine(caretLine,true,false))
+					return;
+				else
+					setSelectedText("\t");
+			}
 			else if(buffer.getBooleanProperty("noTabs"))
 			{
 				int lineStart = getLineStartOffset(caretLine);

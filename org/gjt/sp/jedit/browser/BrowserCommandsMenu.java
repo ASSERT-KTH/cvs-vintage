@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.2 2001/11/16 06:30:38 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.3 2001/11/23 09:08:48 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -49,7 +49,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 		{
 			this.file = file;
 
-			VFS vfs = VFSManager.getVFSForPath(file.path);
+			VFS vfs = VFSManager.getVFSForPath(file.deletePath);
 
 			boolean delete = (vfs.getCapabilities() & VFS.DELETE_CAP) != 0;
 			boolean rename = (vfs.getCapabilities() & VFS.RENAME_CAP) != 0;

@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.34 2001/11/14 09:35:20 spestov Exp $
+ * @version $Id: Buffer.java,v 1.35 2001/11/23 09:08:48 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -403,11 +403,16 @@ public class Buffer implements EBComponent
 
 						contentMgr.insert(0,seg.toString());
 
-						parseBufferLocalProperties(
-							contentMgr.getText(0,
-								endOffsets.get(Math.min(
-								endOffsets.getSize() - 1,
-								10))));
+						int lineCount = endOffsets.getSize();
+						if(lineCount != 0)
+						{
+							parseBufferLocalProperties(
+								contentMgr.getText(0,
+									endOffsets.get(Math.min(
+									lineCount - 1,
+									10))));
+						}
+
 						setModeForFirstLine(contentMgr.getText(0,
 							endOffsets.get(0)));
 
@@ -434,7 +439,7 @@ public class Buffer implements EBComponent
 				if(reload)
 					setDirty(false);
 
-				if(newPath != null && !path.equals(newPath))
+				if(!loadAutosave && newPath != null && !path.equals(newPath))
 					setPath(newPath);
 
 				// if loadAutosave is false, we loaded an
@@ -489,8 +494,7 @@ public class Buffer implements EBComponent
 			return false;
 		}
 
-		if(!MiscUtilities.isURL(path))
-			path = MiscUtilities.constructPath(this.path,path);
+		path = MiscUtilities.constructPath(this.path,path);
 
 		Buffer buffer = jEdit.getBuffer(path);
 		if(buffer != null)
