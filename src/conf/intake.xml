@@ -21,6 +21,7 @@
             <rule mask="[0-9]+">badIdMessage</rule>
         </field>
         <field name="Name" key="name" type="String" />
+<!--        <field name="AttributeName" key="name" type="String" /> -->
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group class="AttributeOption" key="atto" mapToObject="om.AttributeOption">
@@ -38,7 +39,7 @@
         <field name="AttributeTypeId" key="atttid" type="NumberKey">
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
         </field>
-        <field name="AttributeTypeName" key="name" type="String">
+        <field name="Name" key="name" type="String">
             <rule maxLength="255"/>
         </field>
 </group>
