@@ -78,7 +78,6 @@ public class ServletInputStreamFacade extends ServletInputStream {
     private int limit = -1;
 
     private Request reqA;
-    //    private ByteBuffer inBuffer;
     
     ServletInputStreamFacade() {
     }
@@ -93,7 +92,6 @@ public class ServletInputStreamFacade extends ServletInputStream {
     
     void setRequest(Request reqA ) {
 	this.reqA=reqA;
-	//	inBuffer=reqA.getInputBuffer();
     }
 
     void recycle() {
@@ -104,12 +102,10 @@ public class ServletInputStreamFacade extends ServletInputStream {
      *  use the old method.
      */
     private int doRead() throws IOException {
-	//	if( inBuffer!=null ) return inBuffer.read();
 	return reqA.doRead();
     }
 
     private int doRead(byte[] b, int off, int len) throws IOException {
-	//	if( inBuffer!=null ) return inBuffer.read(b,off,len);
 	return reqA.doRead(b,off,len);
     }
 
@@ -152,7 +148,6 @@ public class ServletInputStreamFacade extends ServletInputStream {
     
 
     public int readLine(byte[] b, int off, int len) throws IOException {
-	// no changes - the default implementation is good
 	return super.readLine(b, off, len);
     }
 }

@@ -98,9 +98,6 @@ public class WorkDirInterceptor extends BaseInterceptor {
 	    log("Creating work dir " + ctx.getWorkDir());
 	    ctx.getWorkDir().mkdirs();
 	}
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
-
 	if ( cleanWorkDir ) {
 	    clearDir(ctx.getWorkDir() );
 	}

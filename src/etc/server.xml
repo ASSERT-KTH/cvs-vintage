@@ -4,6 +4,10 @@
     <!-- Debug low-level events in XmlMapper startup -->
     <xmlmapper:debug level="0" />
 
+    <!-- This config is used for JDK1.1 
+         server2.xml will be used for JDK1.2
+      -->
+
     <!-- 
 
     Logging:
@@ -247,7 +251,7 @@
              in the webapps dir and read/write in the workdir.
          -->
 
-        <Context path="/examples" 
+         <Context path="/examples" 
                  docBase="webapps/examples" 
                  debug="0" 
                  reloadable="true" > 

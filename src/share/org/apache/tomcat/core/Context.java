@@ -99,6 +99,23 @@ import javax.servlet.*;
  * @author Gal Shachor shachor@il.ibm.com
  */
 public class Context implements LogAware {
+    // Proprietary attribute names for contexts - defined
+    // here so we can document them.
+
+    /** Private tomcat attribute names
+     */
+    public static final String ATTRIB_PREFIX="org.apache.tomcat";
+
+    /** Workdir - a place where the servlets are allowed to write
+     */
+    public static final String ATTRIB_WORKDIR="org.apache.tomcat.workdir";
+
+    /** This attribute will return the real context ( org.apache.tomcat.core.Context).
+     *  Only "trusted" applications will get the value. Null if the application
+     * 	is not trusted.
+     */
+    public static final String ATTRIB_REAL_CONTEXT="org.apache.tomcat.context";
+
     // -------------------- internal properties
     // context "id"
     private String path = "";
@@ -364,11 +381,27 @@ public class Context implements LogAware {
         return initializationParameters.keys();
     }
 
+        
+    /** Workdir attribute - XXX is it specified anyway ? 
+     */
+    public static final String ATTRIB_WORKDIR1 = "javax.servlet.context.tempdir";
+    // XXX deprecated, is anyone in the world using it ?
+    public static final String ATTRIB_WORKDIR2 = "sun.servlet.workdir";
+    
     public Object getAttribute(String name) {
-        if (name.startsWith("org.apache.tomcat")) {
+	// deprecated 
+	if( name.equals( ATTRIB_WORKDIR1 ) ) 
+	    return getWorkDir();
+	if( name.equals( ATTRIB_WORKDIR2 ) ) 
+	    return getWorkDir();
+
+	
+	if (name.startsWith( ATTRIB_PREFIX )) {
 	    // XXX XXX XXX XXX Security - servlets may get too much access !!!
 	    // right now we don't check because we need JspServlet to
 	    // be able to access classloader and classpath
+	    if( name.equals( ATTRIB_WORKDIR ) ) 
+		return getWorkDir();
 	    
 	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
 		String separator = System.getProperty("path.separator", ":");
@@ -385,6 +418,10 @@ public class Context implements LogAware {
 	    }
 	    if(name.equals("org.apache.tomcat.classloader")) {
 		return this.getClassLoader();
+	    }
+	    if(name.equals(ATTRIB_REAL_CONTEXT)) {
+		if( ! allowAttribute(name) ) return null;
+		return this;
 	    }
 	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
 		if( ! allowAttribute(name) ) return null;

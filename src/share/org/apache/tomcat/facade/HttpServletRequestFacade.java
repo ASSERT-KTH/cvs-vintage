@@ -82,8 +82,8 @@ import org.apache.tomcat.core.Constants;
  * @author Costin Manolache
  */
 final class HttpServletRequestFacade implements HttpServletRequest {
-    // Use the strings from core
-    private static StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
+    private static StringManager sm =
+	StringManager.getManager("org.apache.tomcat.resources");
 
     private Request request;
 
@@ -116,6 +116,12 @@ final class HttpServletRequestFacade implements HttpServletRequest {
      */
     Request getRealRequest() {
 	return request;
+    }
+
+    /** Not public - is called only from FacadeManager
+     */
+    void setRequest( Request req ) {
+	request=req;
     }
     
     // -------------------- Public facade methods --------------------
@@ -194,19 +200,11 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	}
 	usingStream = true;
 
-	//if( isFacade!=null) return isFacade;
-	//if( request.getInputBuffer() != null ) {
-	//isFacade=new ServletInputStreamFacade();
-	//isFacade.setRequest( request );
 	if( ! isFacadeInitialized ) {
 	    isFacade.prepare();
 	    isFacadeInitialized=true;
 	}
 	return isFacade;
-	//	}
-
-	// old mechanism
-	//	return request.getInputStream();
     }
 
     /** Adapter: Tomcat Request doesn't deal with header to int conversion.
@@ -279,15 +277,6 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	}
 	usingReader = true;
 
-	// 	// old mechanism
-	// 	if( isFacade==null && request.getInputBuffer() == null )
-	// 	    return request.getReader();
-
-	// New mechanism, based on exposed Buffers
-	// 	if(  isFacade == null ) {
-	// 	    isFacade=new ServletInputStreamFacade();
-	// 	}
-
 	if( reader != null ) return reader; // method already called 
 
 	if( ! isFacadeInitialized ) {
@@ -295,10 +284,6 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	    isFacadeInitialized=true;
 	}
 
-	// isFacade.setRequest( request );
-
-	// from RequestUtil. Note that InputStreamFacade
-	// provide contentLength limiting
 	// XXX  provide recycleable objects
 	String encoding = request.getCharacterEncoding();
         if (encoding == null) {

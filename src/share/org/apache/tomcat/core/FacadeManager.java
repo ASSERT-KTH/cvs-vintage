@@ -88,17 +88,20 @@ public interface FacadeManager {
     
     public ServletContext createServletContextFacade(Context ctx);
     
+    public Context getRealContext( ServletContext ctx );
+
+    public  Request getRealRequest( HttpServletRequest req ); 
+
+
+
     public  HttpServletRequest createHttpServletRequestFacade(Request req);
 
     public  HttpServletResponse createHttpServletResponseFacade(Response res);
 
-    public ServletConfig createServletConfig(Handler sw);
+
+
 
     public  void recycle( Request req );
-
-    public  Request getRealRequest( HttpServletRequest req ); 
-
-    public Context getRealContext( ServletContext ctx );
 
 }
     

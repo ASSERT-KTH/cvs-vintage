@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.27 2000/08/12 04:55:46 costin Exp $
- * $Revision: 1.27 $
- * $Date: 2000/08/12 04:55:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.28 2000/08/14 17:49:13 costin Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/08/14 17:49:13 $
  *
  * ====================================================================
  *
@@ -82,17 +82,21 @@ import org.apache.tomcat.logging.*;
  * @author Hans Bergsten <hans@gefionsoftware.com>
  */
 public class Response {
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
+    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
+    public static final String LOCALE_DEFAULT="en";
+    
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
-    static final Locale DEFAULT_LOCALE=new Locale(Constants.LOCALE_DEFAULT, "");
+    static final Locale DEFAULT_LOCALE=new Locale(LOCALE_DEFAULT, "");
 
     protected Request request;
     protected HttpServletResponse responseFacade;
 
     protected Vector userCookies = new Vector();
-    protected String contentType = Constants.DEFAULT_CONTENT_TYPE;
+    protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
-    protected String characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
+    protected String characterEncoding = DEFAULT_CHAR_ENCODING;
     protected String sessionId;
     protected int contentLength = -1;
     protected int status = 200;
@@ -124,14 +128,6 @@ public class Response {
     StringBuffer body=null;
     
     public Response() {
-	// 	if( useBuffer ) {
-	// 	    bBuffer=new ByteBuffer();
-	// 	    bBuffer.setParent( this );
-	// 	    out=null;
-	// 	} else {
-	// 	    out=new BufferedServletOutputStream();
-	// 	    out.setResponse( this );
-	// 	}
     }
 
     void init() {
@@ -186,10 +182,10 @@ public class Response {
     
     public void recycle() {
 	userCookies.removeAllElements(); // XXX reuse !!!
-	contentType = Constants.DEFAULT_CONTENT_TYPE;
+	contentType = DEFAULT_CONTENT_TYPE;
 	contentLanguage = null;
         locale = DEFAULT_LOCALE;
-	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
+	characterEncoding = DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
 	usingWriter = false;
@@ -440,9 +436,9 @@ public class Response {
         // stream before resetting the output stream
         //
 	userCookies.removeAllElements();  // keep system (session) cookies
-	contentType = Constants.DEFAULT_CONTENT_TYPE;
+	contentType = DEFAULT_CONTENT_TYPE;
         locale = DEFAULT_LOCALE;
-	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
+	characterEncoding = DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
 
@@ -637,7 +633,7 @@ public class Response {
         if( body==null)
 	    body=new StringBuffer();
 	body.append(new String(buffer, pos, count, 
-			       Constants.DEFAULT_CHAR_ENCODING) );
+			       DEFAULT_CHAR_ENCODING) );
     }
 
     public StringBuffer getBody() {

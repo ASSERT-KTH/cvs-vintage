@@ -117,7 +117,7 @@ public class ServletWrapper extends Handler {
     public void setContext( Context context) {
 	super.setContext( context );
 	isReloadable=context.getReloadable();
-        configF = context.getFacadeManager().createServletConfig( this );
+        configF = new ServletConfigImpl(this);
     }
 
     public String toString() {
@@ -384,13 +384,31 @@ public class ServletWrapper extends Handler {
     protected void doService(Request req, Response res)
 	throws Exception
     {
+	// Get facades - each req have one facade per context
+	// the facade itself is very light.
+
+	// For big servers ( with >100s of webapps ) we can
+	// use a pool or other technique. Right now there
+	// are many other ( much more expensive ) resources
+	// associated with contexts ( like the session thread)
+
+	// XXX
+	HttpServletRequest reqF= req.getFacade();//new HttpServletRequestFacade( req );
+	HttpServletResponse resF= res.getFacade();//new HttpServletResponseFacade( res );
+	doService( reqF, resF );
+
+    }
+
+    protected void doService(HttpServletRequest req, HttpServletResponse res)
+	throws Exception
+    {
 	// We are initialized and fine
 	if (servlet instanceof SingleThreadModel) {
 	    synchronized(servlet) {
-		servlet.service(req.getFacade(), res.getFacade());
+		servlet.service(req, res);
 	    }
 	} else {
-	    servlet.service(req.getFacade(), res.getFacade());
+	    servlet.service(req, res);
 	}
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.6 2000/07/05 20:02:44 alex Exp $
- * $Revision: 1.6 $
- * $Date: 2000/07/05 20:02:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.7 2000/08/14 17:49:19 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/08/14 17:49:19 $
  *
  * ====================================================================
  *
@@ -67,7 +67,6 @@ package org.apache.tomcat.util;
 
 import javax.servlet.http.Cookie;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
 
 
 /**
@@ -75,10 +74,12 @@ import org.apache.tomcat.core.Constants;
  * <code>Session</code> implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.6 $ $Date: 2000/07/05 20:02:44 $
+ * @version $Revision: 1.7 $ $Date: 2000/08/14 17:49:19 $
  */
 
 public final class SessionUtil {
+    public static final String SESSION_COOKIE_NAME = "JSESSIONID";
+    public static final String SESSION_PARAMETER_NAME = "jsessionid";
 
 
     // ------------------------------------------------------- Static Variables
@@ -103,7 +104,7 @@ public final class SessionUtil {
      */
     public static Cookie createCookie(Request req, String id) {
 
-	Cookie cookie = new Cookie(Constants.SESSION_COOKIE_NAME, id);
+	Cookie cookie = new Cookie(SESSION_COOKIE_NAME, id);
 	String serverName = req.getServerName();
 	if (serverName != null)
 	    cookie.setDomain(serverName);
@@ -193,7 +194,7 @@ public final class SessionUtil {
 	if (cookies == null)
 	    return (null);
 	for (int i = 0; i < cookies.length; i++) {
-	    if (Constants.SESSION_COOKIE_NAME.equals(cookies[i].getName()))
+	    if (SESSION_COOKIE_NAME.equals(cookies[i].getName()))
 		return (cookies[i].getValue());
 	}
 	return (null);
@@ -212,7 +213,7 @@ public final class SessionUtil {
     public static String parseSessionId(String uri) {
 
 	// Search for the required match string in the URI
-	String match = ";" + Constants.SESSION_PARAMETER_NAME + "=";
+	String match = ";" + SESSION_PARAMETER_NAME + "=";
 	int m = uri.indexOf(match);
 	if (m < 0)
 	    return (null);
@@ -263,7 +264,7 @@ public final class SessionUtil {
 	else
 	    buf.append(url.substring(0, question));
 	buf.append(';');
-	buf.append(Constants.SESSION_PARAMETER_NAME);
+	buf.append(SESSION_PARAMETER_NAME);
 	buf.append('=');
 	buf.append(id);
 	if (question >= 0)

@@ -164,12 +164,5 @@ public final class SimpleFacadeManager implements FacadeManager {
 	return realSctx;
     }
 
-
-    public ServletConfig createServletConfig(Handler sw) {
-	//	if( sw.getContext() != ctx ) return null;
-	return new ServletConfigImpl((ServletWrapper)sw);
-    }
-
-
 }
     
