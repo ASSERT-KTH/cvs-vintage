@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -178,6 +178,32 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p);
 
 static void detach_from_jvm(jni_worker_t *p);
 
+
+#ifndef WIN32
+static void linux_signal_hack() {
+    sigset_t newM;
+    sigset_t old;
+    
+    sigemptyset(&newM);
+    pthread_sigmask( SIG_SETMASK, &newM, &old );
+    
+    sigdelset(&old, SIGUSR1 );
+    sigdelset(&old, SIGUSR2 );
+    sigdelset(&old, SIGUNUSED );
+    sigdelset(&old, SIGRTMIN );
+    sigdelset(&old, SIGRTMIN + 1 );
+    sigdelset(&old, SIGRTMIN + 2 );
+    pthread_sigmask( SIG_SETMASK, &old, NULL );
+}
+
+static void print_signals( sigset_t *sset) {
+    int sig;
+    for (sig = 1; sig < 20; sig++) 
+	{ if (sigismember(sset, sig)) {printf( " %d", sig);} }
+    printf( "\n");
+}
+#endif
+
 static int JK_METHOD service(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
                              jk_logger_t *l,
@@ -265,7 +291,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         char *str_config = NULL;
         JNIEnv *env;
 
-	jk_log(l, JK_LOG_DEBUG, "Into jni_validate\n"); 
+	    jk_log(l, JK_LOG_DEBUG, "Into jni_validate\n"); 
         if(p->was_verified) {
             return JK_TRUE;
         }
@@ -283,7 +309,7 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         }
 
         if(!p->tomcat_classpath) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> no classpath\n"); 
+	        jk_log(l, JK_LOG_EMERG, "Fail-> no classpath\n"); 
             return JK_FALSE;
         }
 
@@ -292,8 +318,8 @@ static int JK_METHOD validate(jk_worker_t *pThis,
         }
 
         if(!p->jvm_dll_path || 
-            !jk_file_exists(p->jvm_dll_path)) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> no jvm_dll_path\n"); 
+           !jk_file_exists(p->jvm_dll_path)) {
+	        jk_log(l, JK_LOG_EMERG, "Fail-> no jvm_dll_path\n"); 
             return JK_FALSE;
         }
 
@@ -317,35 +343,35 @@ static int JK_METHOD validate(jk_worker_t *pThis,
             jk_append_libpath(&p->p, str_config);
         }
 
+        if(!load_jvm_dll(p, l)) {
+	        jk_log(l, JK_LOG_EMERG, "Fail-> can't load jvm dll\n"); 
+	        detach_from_jvm(p);
+	        return JK_FALSE;
+	    }
 
-        if( ! load_jvm_dll(p, l)) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> can't load jvm dll\n"); 
-	    detach_from_jvm(p);
-	    return JK_FALSE;
-	}
+	    if(!open_jvm(p, &env, l)) {
+	        jk_log(l, JK_LOG_EMERG, "Fail-> can't open jvm\n"); 
+	        detach_from_jvm(p);
+	        return JK_FALSE;
+	    }
 
-	if( ! open_jvm(p, &env, l)) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> can't open jvm\n"); 
-	    detach_from_jvm(p);
-	    return JK_FALSE;
-	}
-
-	if( ! get_bridge_object(p, env, l)) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> can't get bridge object\n"); 
-	    detach_from_jvm(p);
-	    return JK_FALSE;
-	}
+	    if(!get_bridge_object(p, env, l)) {
+	        jk_log(l, JK_LOG_EMERG, "Fail-> can't get bridge object\n"); 
+	        detach_from_jvm(p);
+	        return JK_FALSE;
+	    }
 	
-	if( ! get_method_ids(p, env, l)) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> can't get method ids\n"); 
-	    detach_from_jvm(p);
-	    return JK_FALSE;
-	}
+	    if(!get_method_ids(p, env, l)) {
+	        jk_log(l, JK_LOG_EMERG, "Fail-> can't get method ids\n"); 
+	        detach_from_jvm(p);
+	        return JK_FALSE;
+	    }
 
-	p->was_verified = JK_TRUE;
-	return JK_TRUE;
+	    p->was_verified = JK_TRUE;
+	    return JK_TRUE;
     }
     
+    return JK_FALSE;
 }
 
 static int JK_METHOD init(jk_worker_t *pThis,
@@ -543,9 +569,9 @@ static int load_jvm_dll(jni_worker_t *p,
 #else 
     void *handle = dlopen(p->jvm_dll_path, RTLD_NOW | RTLD_GLOBAL);
     if(!handle) {
-	jk_log(l, JK_LOG_EMERG, "Can't log native library %s : %s\n", p->jvm_dll_path,
-	       dlerror() );  
-	return JK_FALSE;
+	    jk_log(l, JK_LOG_EMERG, "Can't log native library %s : %s\n", p->jvm_dll_path,
+	           dlerror() );  
+	    return JK_FALSE;
     }
     {
         jni_create_java_vm = dlsym(handle, "JNI_CreateJavaVM");
@@ -553,10 +579,11 @@ static int load_jvm_dll(jni_worker_t *p,
         if( jni_create_java_vm && jni_get_default_java_vm_init_args ) {
             return JK_TRUE;
         }
-	jk_log(l, JK_LOG_EMERG, "Can't find JNI_CreateJavaVM or JNI_GetDefaultJavaVMInitArgs\n");
+	    jk_log(l, JK_LOG_EMERG, "Can't find JNI_CreateJavaVM or JNI_GetDefaultJavaVMInitArgs\n");
         dlclose(handle);
     }
 #endif
+    return JK_FALSE;
 }
 
 static int open_jvm(jni_worker_t *p,
@@ -626,7 +653,6 @@ static int open_jvm2(jni_worker_t *p,
 {
     JavaVMInitArgs vm_args;
     JNIEnv *penv;
-    int err;
     JavaVMOption options[1];
 
     *env = NULL;
@@ -637,18 +663,17 @@ static int open_jvm2(jni_worker_t *p,
 
     /* Set classpath */
     {
-	unsigned len = strlen("-Djava.class.path=") + 
-	    strlen(p->tomcat_classpath) + 
-	    2;
-	char *tmp = jk_pool_alloc(&p->p, len);
-	if(tmp) {
-	    sprintf(tmp, "-Djava.class.path=%s", 
+	    unsigned len = strlen("-Djava.class.path=") + 
+	    strlen(p->tomcat_classpath) + 2;
+	    char *tmp = jk_pool_alloc(&p->p, len);
+	    if(tmp) {
+	        sprintf(tmp, "-Djava.class.path=%s", 
 		    p->tomcat_classpath );
-	    options[0].optionString = tmp;
-	} else {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> allocation error for classpath\n"); 
-	    return JK_FALSE;
-	}
+	        options[0].optionString = tmp;
+	    } else {
+	        jk_log(l, JK_LOG_EMERG, "Fail-> allocation error for classpath\n"); 
+	        return JK_FALSE;
+	    }
     }
 
     jk_log(l, JK_LOG_DEBUG, "Set classpath to %s\n", options[0].optionString); 
@@ -756,30 +781,6 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p)
     }
 
     return NULL;
-}
-
-
-static void linux_signal_hack() {
-    sigset_t newM;
-    sigset_t old;
-    
-    sigemptyset(&newM);
-    pthread_sigmask( SIG_SETMASK, &newM, &old );
-    
-    sigdelset(&old, SIGUSR1 );
-    sigdelset(&old, SIGUSR2 );
-    sigdelset(&old, SIGUNUSED );
-    sigdelset(&old, SIGRTMIN );
-    sigdelset(&old, SIGRTMIN + 1 );
-    sigdelset(&old, SIGRTMIN + 2 );
-    pthread_sigmask( SIG_SETMASK, &old, NULL );
-}
-
-static void print_signals( sigset_t *sset) {
-    int sig;
-    for (sig = 1; sig < 20; sig++) 
-	{ if (sigismember(sset, sig)) {printf( " %d", sig);} }
-    printf( "\n");
 }
 
 static void detach_from_jvm(jni_worker_t *p)
