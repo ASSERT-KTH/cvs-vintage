@@ -38,7 +38,7 @@ import java.util.Iterator;
  * @see InvalidationsTxGrouper.InvalidationSynchronization
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b>
  *
@@ -164,25 +164,13 @@ public class InvalidationsTxGrouper
          
          try
          {
-            int status = Status.STATUS_ROLLEDBACK;
-            try { 
-               status = tx.getStatus(); 
-            }
-            catch (javax.transaction.SystemException se)
+            try
             {
-               InvalidationsTxGrouper.log.error("Failed to get transaction status: ", se);
+               sendBatchInvalidations();
             }
-            if (status != Status.STATUS_ROLLEDBACK
-                || status != Status.STATUS_MARKED_ROLLBACK)
+            catch (Exception ex)
             {
-               try
-               {
-                  sendBatchInvalidations();
-               }
-               catch (Exception ex)
-               {
-                  InvalidationsTxGrouper.log.warn("Failed sending invalidations messages", ex);
-               }
+               InvalidationsTxGrouper.log.warn("Failed sending invalidations messages", ex);
             }
             synchronized (InvalidationsTxGrouper.synchronizations)
             {
