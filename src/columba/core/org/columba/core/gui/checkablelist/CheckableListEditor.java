@@ -82,7 +82,7 @@ public class CheckableListEditor
 	public void actionPerformed(ActionEvent e) {
 
 		//item.setSelected(checkbox.isSelected());
-		selected= new Boolean(checkbox.isSelected());
+		selected= Boolean.valueOf(checkbox.isSelected());
 
 		fireEditingStopped(); //Make the renderer reappear.
 

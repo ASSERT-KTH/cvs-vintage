@@ -62,7 +62,7 @@ public class CheckableItemListTableModel extends AbstractTableModel {
 		CheckableItem item= (CheckableItem) data.get(row);
 
 		if (column == 0)
-			return new Boolean(item.isSelected());
+			return Boolean.valueOf(item.isSelected());
 
 		else
 			return item.toString();

@@ -249,6 +249,6 @@ public class ColumbaHeader {
         MimeType mimeType = new MimeHeader(header).getMimeType();
         hasAttachments = !mimeType.getType().equals("text") && !mimeType.getSubtype().equals("alternative");
         
-        return new Boolean(hasAttachments);
+        return Boolean.valueOf(hasAttachments);
     }
 }
