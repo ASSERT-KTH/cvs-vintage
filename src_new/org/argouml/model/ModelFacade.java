@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.10 2003/01/25 16:25:26 linus Exp $
+// $Id: ModelFacade.java,v 1.11 2003/01/29 12:24:29 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,6 +136,24 @@ public class ModelFacade {
 	return handle instanceof MClassifier;
     }
 
+    /** Recognizer for Expression
+     *
+     * @param handle candidate
+     * @returns true if handle is an Expression
+     */
+    public static boolean isAExpression(Object handle) {
+	return handle instanceof MExpression;
+    }
+
+    /** Recognizer for Feature
+     *
+     * @param handle candidate
+     * @returns true if handle is a Feature
+     */
+    public static boolean isAFeature(Object handle) {
+	return handle instanceof MFeature;
+    }
+    
     /** Recognizer for GeneralizableElement
      *
      * @param handle candidate
@@ -152,6 +170,16 @@ public class ModelFacade {
      */
     public static boolean isAInterface(Object handle) {
 	return handle instanceof MInterface;
+    }
+
+
+    /** Recognizer for ModelElement
+     *
+     * @param handle candidate
+     * @returns true if handle is a ModelElement
+     */
+    public static boolean isAModelElement(Object handle) {
+	return handle instanceof MModelElement;
     }
 
     /** Recognizer for Package
@@ -430,6 +458,17 @@ public class ModelFacade {
 	throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /** Get the body of an Expression.
+     *
+     *
+     * @param handle expression.
+     * @return the body.
+     */
+    public static Object getBody(Object handle) {
+	if (handle instanceof MExpression) 
+	    return ((MExpression)handle).getBody();
+    throw new IllegalArgumentException("Unrecognized object " + handle);
+	}
 
     /** Get the child of a generalization.
      *
