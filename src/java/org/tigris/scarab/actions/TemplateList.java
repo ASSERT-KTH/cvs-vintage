@@ -52,6 +52,7 @@ import java.util.List;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.modules.ContextAdapter;
 import org.apache.torque.om.NumberKey; 
 
 import org.apache.turbine.tool.IntakeTool;
@@ -70,7 +71,7 @@ import org.tigris.scarab.om.IssueTemplatePeer;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.2 2001/09/12 21:25:32 jmcnally Exp $
+    @version $Id: TemplateList.java,v 1.3 2001/09/21 19:00:00 elicia Exp $
 */
 public class TemplateList extends TemplateAction
 {
@@ -104,8 +105,8 @@ public class TemplateList extends TemplateAction
         {
             templateGroup.setProperties(issueTemplate);
             issueTemplate.setUserId(user.getUserId());
-            issueTemplate
-                .saveAndSendEmail(user, scarab.getCurrentModule(), context);
+            issueTemplate.saveAndSendEmail(user, scarab.getCurrentModule(), 
+                                           new ContextAdapter(context));
 
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -138,4 +139,5 @@ public class TemplateList extends TemplateAction
             }
         } 
      } 
+
 }
