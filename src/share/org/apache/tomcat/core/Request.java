@@ -30,6 +30,7 @@ import org.apache.tomcat.util.buf.UDecoder;
 import org.apache.tomcat.util.http.Cookies;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.http.Parameters;
+import org.apache.tomcat.util.http.mapper.MappingData;
 
 /**
  * This is a low-level, efficient representation of a server request. Most fields
@@ -155,6 +156,7 @@ public class Request {
     protected ContextManager contextM;
     protected Context context;
     protected Object requestFacade;
+    protected MappingData mappingData = null;
 
     // Session
     protected String reqSessionId;
@@ -352,6 +354,14 @@ public class Request {
 	this.localHost = host;
     }
 
+    public MappingData getMappingData() {
+	if(mappingData == null) {
+	    mappingData = new MappingData();
+	    mappingData.wrapperPath = servletPathMB;
+	    mappingData.pathInfo = pathInfoMB;
+	}
+	return mappingData;
+    }
 
     // -------------------- Parameters --------------------
 
@@ -1045,7 +1055,7 @@ public class Request {
 	scookies.recycle();
 	
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
-
+	
 	// sub-req
 	parent=null;
 	child=null;

@@ -56,8 +56,8 @@ import org.apache.tomcat.util.http.mapper.MappingData;
 public class CoyoteMapper extends  BaseInterceptor  {
 
     public static final String DEFAULT_HOST = "DEFAULT";
-    Mapper map;
-    Hashtable hostData = new Hashtable();
+    private Mapper map;
+    private Hashtable hostData = new Hashtable();
 
     public CoyoteMapper() {
     }
@@ -190,13 +190,13 @@ public class CoyoteMapper extends  BaseInterceptor  {
 	    // This is a sub-request for the default host.
 	    hostMB.setString(DEFAULT_HOST);
 	}
-	MappingData mdata = new MappingData();
-	mdata.wrapperPath = req.servletPath();
-	mdata.pathInfo = req.pathInfo();
+	MappingData mdata = req.getMappingData();
+	mdata.recycle();
 	try {
 	    map.map(hostMB, pathMB, mdata);
 	} catch(Exception ex) {
 	    log("Error mapping "+pathMB,ex);
+	    req.getResponse().setErrorException(ex);
 	    return 500;
 	}
 	if(mdata.context != null) {
@@ -206,9 +206,9 @@ public class CoyoteMapper extends  BaseInterceptor  {
 	    req.setContainer( container );
 	    if(!mdata.redirectPath.isNull()) {
 		Response res = req.getResponse();
-		if(debug > 0)
+		if(debug > 9)
 		    log("Redirecting '"+req+"' to '"+
-			mdata.redirectPath+"'", new Exception());
+			mdata.redirectPath+"'");
 		res.setHeader("Location", mdata.redirectPath.toString());
 		return 302;
 	    } 
