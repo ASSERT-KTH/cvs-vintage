@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b>
  *
@@ -59,14 +59,14 @@ public class InvalidationManager
    {
       // bind us in system registry
       //
-      log.info ("Starting Invalidation Manager " + this.getServiceName ().toString ());
+      log.debug ("Starting Invalidation Manager " + this.getServiceName ().toString ());
       org.jboss.system.Registry.bind (this.getServiceName ().toString (), this);
       this.hashcode = this.getServiceName ().hashCode ();
    }
    
    public void stopService ()
    {
-      log.info ("Stoping Invalidation Manager " + this.getServiceName ().toString ());
+      log.debug ("Stoping Invalidation Manager " + this.getServiceName ().toString ());
       org.jboss.system.Registry.unbind (this.getServiceName ().toString ());
    }
    
@@ -94,7 +94,7 @@ public class InvalidationManager
 
    public synchronized BridgeInvalidationSubscription registerBridgeListener (InvalidationBridgeListener listener)
    {
-      log.info ("Subscribing a new cache-invalidation bridge");
+      log.debug ("Subscribing a new cache-invalidation bridge");
       BridgeInvalidationSubscription subs = new BridgeInvalidationSubscriptionImpl(listener);
 
       java.util.Vector newVector = new java.util.Vector (this.bridgeSubscribers);
@@ -147,7 +147,7 @@ public class InvalidationManager
       }
       catch (Exception e)
       {
-         log.info ("Problem while trying to register a new invalidation group in JMX", e);
+         log.debug ("Problem while trying to register a new invalidation group in JMX", e);
       }
 
       // warn bridges
@@ -175,7 +175,7 @@ public class InvalidationManager
          }
          catch (Exception e)
          {
-            log.info ("Problem while trying to un-register a new invalidation group in JMX", e);
+            log.debug ("Problem while trying to un-register a new invalidation group in JMX", e);
          }
 
          // warn bridges
@@ -190,7 +190,7 @@ public class InvalidationManager
    {
       // safe remove to avoid problems with iterators
       //
-      log.info ("Unsubscription of a cache-invalidation bridge");
+      log.debug ("Unsubscription of a cache-invalidation bridge");
       
       java.util.Vector newVector = new java.util.Vector (this.bridgeSubscribers);
       newVector.remove (bridgeSubscriber);

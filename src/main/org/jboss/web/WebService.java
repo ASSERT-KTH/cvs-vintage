@@ -32,7 +32,7 @@ import org.jboss.util.ThrowableHandler;
  *      extends="org.jboss.system.ServiceMBean"
  *      name="jboss:service=WebService"
  *
- * @version <tt>$Revision: 1.18 $</tt>
+ * @version <tt>$Revision: 1.19 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -284,7 +284,7 @@ public class WebService extends ServiceMBeanSupport implements WebServiceMBean
 
       // Start the WebServer running
       server.start();
-      log.info("Started WebServer with address: " + server.getBindAddress() + ":" + getPort());
+      log.debug("Started WebServer with address: " + server.getBindAddress() + ":" + getPort());
 
       // Set the rmi codebase if it is not already set
       String codebase = System.getProperty("java.rmi.server.codebase");

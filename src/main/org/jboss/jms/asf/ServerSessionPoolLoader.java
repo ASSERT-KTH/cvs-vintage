@@ -39,7 +39,7 @@ import org.jboss.tm.XidFactoryMBean;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -158,8 +158,7 @@ public class ServerSessionPoolLoader
       String jndiname = "java:/" + name;
       try {
          NonSerializableFactory.rebind(ctx, jndiname, poolFactory);
-         if (log.isInfoEnabled())
-            log.info("pool factory " + name + " bound to "  + jndiname);
+         log.debug("pool factory " + name + " bound to "  + jndiname);
       }
       finally {
          ctx.close();
@@ -182,8 +181,7 @@ public class ServerSessionPoolLoader
          
          ctx.unbind(jndiname);
          NonSerializableFactory.unbind(jndiname);
-         if (log.isInfoEnabled())
-            log.info("pool factory " + name + " unbound from " + jndiname);
+         log.debug("pool factory " + name + " unbound from " + jndiname);
       }
       catch (NamingException ignore) {}
       finally {

@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: WebserviceClientDeployer.java,v 1.3 2004/02/17 22:53:22 patriot1burke Exp $
+// $Id: WebserviceClientDeployer.java,v 1.4 2004/04/20 09:18:50 ejort Exp $
 
 package org.jboss.deployment;
 
@@ -27,7 +27,7 @@ import javax.management.ReflectionException;
  *
  * @since 10-Nov-2003
  * @author <a href="mailto:thomas.diesler@arcor.de">Thomas Diesler</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class WebserviceClientDeployer
 {
@@ -53,7 +53,7 @@ public class WebserviceClientDeployer
          }
          else
          {
-            log.warn ("This is a webservice client deployment, but '" + JSR109_CLIENT_SERVICE_NAME + "' is not registered: " + di.url);
+            log.warn ("This is a webservice client deployment, but '" + JSR109_CLIENT_SERVICE_NAME + "' is not registered (SO WHY DOESN'T THIS USE A DEPENDENCY?): " + di.url);
          }
       }
       catch (Exception e)

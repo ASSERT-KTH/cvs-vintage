@@ -35,7 +35,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -194,8 +194,7 @@ public class NamingService
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
       Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
-      if (log.isInfoEnabled())
-         log.info("Listening on port "+naming.getPort());
+      log.debug("Listening on port "+naming.getPort());
       ctx.close();
       iniCtx.close();
 
