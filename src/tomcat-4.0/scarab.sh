@@ -7,6 +7,10 @@ if [ "${1}" = "-h" ] ; then
     exit
 fi
 
+if [ ! -z ${CLASSPATH} ] ; then
+echo "Classpath: ${CLASSPATH}"
+fi
+
 if [ "${1}" != "-l" ] ; then
     CATALINA_OPTS="-Xms96M -Xmx256M"
     export CATALINA_OPTS
