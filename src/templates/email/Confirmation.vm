@@ -1,14 +1,14 @@
 
-Dear $user,
+Welcome $scarab.User.FirstName $scarab.User.LastName,
 
 Thank you for registering with the Scarab Issue Tracking System.
 
-Your confirmation code is: $confirm_value
+Your confirmation code is: $scarab.User.Confirmed
 
 In order to confirm your account, please visit the following
 url and enter in your confirmation value above.
 
-$link.setPage("Confirm.vm").addPathInfo("confirm", $confirm_value).addPathInfo("email",$email).setEncodeURLOff()
+<$link.setPage("Confirm.vm").addPathInfo("confirm", $scarab.User.Confirmed).addPathInfo("email",$scarab.User.Email).setEncodeURLOff()>
 
 
 Thanks,
