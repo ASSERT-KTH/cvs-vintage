@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE scarab SYSTEM "scarab.dtd">
+<scarab>
+<module parent="3" id="6">
+<name>Source</name>
+<description>Source</description>
+<code>TBNS</code>
+<issue id="3888">
+<artifact-type>defect</artifact-type>
+<activity-set id="1">
+<type>Create Issue</type>
+<committed-by>jon@latchkey.com</committed-by>
+<created-date format="yyyy-MM-dd HH:mm:ss"/>
+<activity>
+<attribute>
+<name>Status</name>
+<value>NEW</value>
+<type>Dropdown list</type>
+</attribute>
+<description>Status set to NEW</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+<activity>
+<attribute>
+<name>Severity</name>
+<value>Major</value>
+<type>combo-box</type>
+</attribute>
+<description>Severity set to Major</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+<activity>
+<attribute>
+<name>Summary</name>
+<value>WebappClassLoader: Lifecycle error : CL stopped</value>
+<type>long-string</type>
+</attribute>
+<description>Summary set to WebappClassLoader: Lifecycle error : CL stopped</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+<activity>
+<attribute>
+<name>Description</name>
+<value>WebappClassLoader: Lifecycle error : CL stopped</value>
+<type>long-string</type>
+</attribute>
+<description>Description set to WebappClassLoader: Lifecycle error : CL stopped</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+<activity>
+<attribute>
+<name>Platform</name>
+<value>Macintosh</value>
+<type>combo-box</type>
+</attribute>
+<description>Platform set to Macintosh</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+<activity>
+<attribute>
+<name>Operating System</name>
+<value>MacOS X</value>
+<type>combo-box</type>
+</attribute>
+<description>Operating System set to MacOS X</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+<activity>
+<attribute>
+<name>Assigned To</name>
+<value>tomcat-dev@jakarta.apache.org</value>
+<type>user</type>
+</attribute>
+<description>Assigned To set to tomcat-dev@jakarta.apache.org</description>
+<end-date format="yyyy-MM-dd HH:mm:ss"/>
+</activity>
+</activity-set>
+<attachment>
+<name>Bugzilla Comment</name>
+<type>COMMENT</type>
+<data>Every once and a while I will get this...
+
+WebappClassLoader:   Resource 
+&amp;apos;/WEB-INF/classes/org/tigris/scarab/screens/Default.class&amp;apos; was modified; 
+Date is now: Sun Sep 30 10:09:30 PDT 2001 Was: Sun Sep 30
+ 10:07:31 PDT 2001
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+WebappClassLoader: Lifecycle error : CL stopped
+...
+
+Here is the log file...
+
+2001-09-30 10:07:49 invoker: init
+2001-09-30 10:07:49 scarab: init
+2001-09-30 10:09:35 StandardContext[/scarab]: Reloading this Context 
+has started
+2001-09-30 10:09:37 StandardManager[/scarab]: Stopping
+2001-09-30 10:09:37 StandardManager[/scarab]: Unloading persisted 
+sessions
+2001-09-30 10:09:37 StandardManager[/scarab]: Saving persisted 
+sessions to SESSI
+ONS.ser
+2001-09-30 10:09:37 StandardManager[/scarab]: Unloading 1 sessions
+2001-09-30 10:09:37 StandardManager[/scarab]: writeObject() storing 
+session 8544
+C68035258287B9D54201D235D0F2
+2001-09-30 10:09:37 StandardManager[/scarab]: Expiring 1 persisted 
+sessions
+2001-09-30 10:09:37 StandardManager[/scarab]: Unloading complete
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploying class 
+repositories to work
+directory /Users/jon/checkout/scarab/target/work/localhost/scarab
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/activation-1.
+0.1.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib
+/activation-1.0.1.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/commons-colle
+ctions.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/
+lib/commons-collections.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/commons-email
+-0.1-dev.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-IN
+F/lib/commons-email-0.1-dev.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/commons-util-
+0.1-dev.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF
+/lib/commons-util-0.1-dev.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/ecs-1.4.1.jar
+ to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/ec
+s-1.
+4.1.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/flux-3.0-dev.
+jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/flu
+x-3.0-dev.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/fulcrum-1.0.j
+ar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/ful
+c
+rum-1.0.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/jakarta-regex
+p-1.3-dev.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-I
+NF/lib/jakarta-regexp-1.3-dev.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/jdbc2_0-stdex
+t.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/j
+dbc2_0-stdext.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/junit-3.7.jar
+ to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/jun
+it-
+3.7.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/log4j-1.1.jar
+ to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/log
+4j-
+1.1.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/lucene.jar to
+ 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/luc
+ene.ja
+r
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/mail-1.2.jar
+to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/m
+ail-1.
+2.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/mm.mysql-2.0.
+4.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/m
+m.mysql-2.0.4.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/torque-1.0.ja
+r to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/tor
+qu
+e-1.0.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/turbine-3.0-d
+ev.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/
+turbine-3.0-dev.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/velocity-1.2-
+dev.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib
+/velocity-1.2-dev.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/village-1.5.2
+.jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/vi
+llage-1.5.2.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Deploy JAR 
+/WEB-INF/lib/xerces-1.3.0.
+jar to 
+/Users/jon/checkout/scarab/target/./bin/../webapps/scarab/WEB-INF/lib/xer
+ces-1.3.0.jar
+2001-09-30 10:09:37 WebappLoader[/scarab]: Reloading checks are 
+enabled for this
+ Context
+2001-09-30 10:09:37 StandardWrapper[/scarab:default]: Loading 
+container servlet
+default
+2001-09-30 10:09:37 default: init
+2001-09-30 10:09:37 StandardWrapper[/scarab:invoker]: Loading 
+container servlet
+invoker
+2001-09-30 10:09:37 invoker: init
+2001-09-30 10:09:37 scarab: init
+2001-09-30 10:09:42 StandardManager[/scarab]: Starting
+2001-09-30 10:09:42 StandardManager[/scarab]: Force random number 
+initialization
+ starting
+2001-09-30 10:09:42 StandardManager[/scarab]: Seeding random 
+number generator cl
+ass java.security.SecureRandom
+2001-09-30 10:09:42 StandardManager[/scarab]: Seeding of random 
+number generator
+ has been completed
+2001-09-30 10:09:42 StandardManager[/scarab]: Force random number 
+initialization
+ completed
+2001-09-30 10:09:42 StandardManager[/scarab]: Start: Loading persisted 
+sessions
+2001-09-30 10:09:42 StandardManager[/scarab]: Loading persisted 
+sessions from SE
+SSIONS.ser
+2001-09-30 10:09:42 StandardManager[/scarab]: Creating custom object 
+input strea
+m for class loader WebappClassLoader
+  available:
+    Extension[org.apache.commons.collections, 
+implementationVendor=Apache Softwa
+re Foundation, implementationVersion=1.1-dev, 
+specificationVendor=Apache Softwar
+e Foundation, specificationVersion=1.0]
+    Extension[@name@, implementationVendor=Apache Software 
+Foundation, implement
+ationVersion=0.1-dev, specificationVendor=Apache Software Foundation, 
+specificat
+ionVersion=1.0]
+    Extension[@name@, implementationVendor=Apache Software 
+Foundation, implement
+ationVersion=0.1-dev, specificationVendor=Apache Software Foundation, 
+specificat
+ionVersion=1.0]
+    Extension[javax.mail, implementationVendor=Sun Microsystems, Inc., 
+implement
+ationVendorId=com.sun, implementationVersion=1.2, 
+specificationVendor=Sun Micros
+ystems, Inc., specificationVersion=1.2]
+  delegate: false
+  repositories:
+    /WEB-INF/classes/
+  required:
+----------&amp;gt; Parent Classloader:
+StandardClassLoader
+  available:
+  delegate: false
+  repositories:
+    file:/Users/jon/checkout/scarab/target/lib/naming-factory.jar
+  required:
+----------&amp;gt; Parent Classloader:
+StandardClassLoader
+  available:
+  delegate: false
+  repositories:
+    file:/Users/jon/checkout/scarab/target/common/lib/crimson.jar
+    file:/Users/jon/checkout/scarab/target/common/lib/jaxp.jar
+    file:/Users/jon/checkout/scarab/target/common/lib/naming-common.jar
+    
+file:/Users/jon/checkout/scarab/target/common/lib/naming-resources.jar
+    file:/Users/jon/checkout/scarab/target/common/lib/servlet.jar
+  required:
+----------&amp;gt; Parent Classloader:
+sun.misc.Launcher$AppClassLoader@33056f
+
+
+
+2001-09-30 10:09:42 StandardManager[/scarab]: Loading 1 persisted 
+sessions
+2001-09-30 10:09:42 StandardManager[/scarab]: readObject() loading 
+session 8544C
+68035258287B9D54201D235D0F2
+2001-09-30 10:09:42 StandardManager[/scarab]: Finish: Loading 
+persisted sessions
+2001-09-30 10:09:42 StandardContext[/scarab]: Reloading this Context is 
+complete
+d</data>
+<mimetype>text/plain</mimetype>
+<created-date format="yyyy-MM-dd HH:mm:ss">2001-09-30 11:39:19</created-date>
+<modified-date format="yyyy-MM-dd HH:mm:ss">2001-09-30 11:39:19</modified-date>
+<created-by>jon@latchkey.com</created-by>
+<modified-by>jon@latchkey.com</modified-by>
+</attachment>
+<attachment>
+<name>Bugzilla Comment</name>
+<type>COMMENT</type>
+<data>According to Remy, this one isn&amp;apos;t going to be easy to fix because it is so 
+hard to duplicate. I&amp;apos;m putting it in the system in the hopes that others may 
+help duplicate this error.</data>
+<mimetype>text/plain</mimetype>
+<created-date format="yyyy-MM-dd HH:mm:ss">2001-09-30 11:40:04</created-date>
+<modified-date format="yyyy-MM-dd HH:mm:ss">2001-09-30 11:40:04</modified-date>
+<created-by>jon@latchkey.com</created-by>
+<modified-by>jon@latchkey.com</modified-by>
+</attachment>
+</issue>
+</module>
+</scarab>
