@@ -50,7 +50,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -303,15 +303,12 @@ extends AbstractInterceptor
             // Reset user Tx
             userTransaction.set(oldUserTx);
             
-            if (t1 != null) {
+//DEBUG         Logger.debug("TxInterceptorBMT reassociating client tx " +
+//DEBUG                      t1.hashCode());
                 
-                // DEBUG Logger.debug("TxInterceptorBMT reassociating client tx " + t1.hashCode());
-//DEBUG             Logger.debug("TxInterceptorBMT reassociating client tx " + t1.hashCode());
-                
-                // reassociate the previous transaction before returning
-                tm.associateThread(t1);
-                
-            }
+            // reassociate the previous transaction before returning,
+            // even if it was null
+            tm.associateThread(t1);
             
             if (((SessionMetaData)container.getBeanMetaData()).isStateless()) {
 
