@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.48 2002/01/10 07:11:09 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.49 2002/01/15 21:09:49 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -156,6 +156,10 @@ public interface ModuleEntity
 
     public void save() throws Exception;
 
+    public List getRModuleAttributes(IssueType issueType, boolean activeOnly,
+                                     String attributeType)
+        throws Exception;
+
     public List getRModuleAttributes(IssueType issueType, boolean activeOnly)
         throws Exception;
 
@@ -166,10 +170,13 @@ public interface ModuleEntity
         throws Exception;
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute,
-                                                IssueType issueType)
+                            IssueType issueType, String attributeType)
         throws Exception;
 
-    public int getLastAttribute(IssueType issueType)
+    public RModuleAttribute getRModuleAttribute(Attribute attribute,
+                                                IssueType issueType)
+        throws Exception;
+    public int getLastAttribute(IssueType issueType, String attributeType)
         throws Exception;
 
     public int getLastAttributeOption(Attribute attribute, 
@@ -294,6 +301,9 @@ public interface ModuleEntity
     public Attribute[] getActiveAttributes(IssueType issueType)
         throws Exception;
 
+    public List getUserAttributes(IssueType issueType, boolean activeOnly)
+        throws Exception;
+
     public List getUserAttributes(IssueType issueType)
         throws Exception;
 
@@ -309,8 +319,11 @@ public interface ModuleEntity
     /**
      * Adds module-attribute mapping to module.
      */
-    public RModuleAttribute addRModuleAttribute(IssueType issueType, 
-                                                AttributeGroup attGroup)
+    public RModuleAttribute addRModuleAttribute(IssueType issueType)
+        throws Exception;
+
+    public RModuleAttribute addRModuleAttribute(IssueType issueType,
+                                                String attributeType)
         throws Exception;
 
     /**

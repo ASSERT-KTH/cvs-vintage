@@ -92,6 +92,7 @@ import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.AttributeTypePeer;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.ActivityPeer;
@@ -113,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.11 2002/01/11 01:48:48 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.12 2002/01/15 21:09:49 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -432,17 +433,22 @@ public abstract class AbstractScarabModule
     public List getUserAttributes(IssueType issueType)
         throws Exception
     {
-        Attribute[] attributes = getActiveAttributes(issueType);
+        return getUserAttributes(issueType, true);
+    }
+
+    /**
+     * gets a list of all of the User Attributes in a Module.
+     */
+    public List getUserAttributes(IssueType issueType, boolean activeOnly)
+        throws Exception
+    {
+        List rModuleAttributes = getRModuleAttributes(issueType, activeOnly, "user");
         List userAttributes = new ArrayList();
 
-        for ( int i=0; i<attributes.length; i++ )
+        for ( int i=0; i<rModuleAttributes.size(); i++ )
         {
-            Attribute att = attributes[i];
-            RModuleAttribute modAttr = getRModuleAttribute(att, issueType);
-            if (att.isUserAttribute() && modAttr.getActive())
-            {
-                userAttributes.add(att);
-            }
+            Attribute att = ((RModuleAttribute)rModuleAttributes.get(i)).getAttribute();
+            userAttributes.add(att);
         }
         return userAttributes;
     }
@@ -455,7 +461,7 @@ public abstract class AbstractScarabModule
     public List getUserPermissions(IssueType issueType)
         throws Exception
     {
-        List userAttrs = getUserAttributes(issueType);
+        List userAttrs = getUserAttributes(issueType, true);
         List permissions = new ArrayList();
         for (int i = 0; i < userAttrs.size(); i++)
         {
@@ -473,10 +479,10 @@ public abstract class AbstractScarabModule
      * gets highest sequence number for module-attribute map
      * so that a new RModuleAttribute can be added at the end.
      */
-    public int getLastAttribute(IssueType issueType)
+    public int getLastAttribute(IssueType issueType, String attributeType)
         throws Exception
     {
-        List moduleAttributes = getRModuleAttributes(issueType);
+        List moduleAttributes = getRModuleAttributes(issueType, false, attributeType);
         int last = 0;
 
         for ( int i=0; i<moduleAttributes.size(); i++ )
@@ -490,6 +496,7 @@ public abstract class AbstractScarabModule
         }
         return last;
     }
+
 
     /**
      * FIXME: can this be done more efficently?
@@ -519,10 +526,12 @@ public abstract class AbstractScarabModule
      * gets a list of all of the global Attributes that are not 
      * associated with this module and issue type
      */
-    public List getAvailableAttributes(IssueType issueType)
+    public List getAvailableAttributes(IssueType issueType, 
+                                       String attributeType)
         throws Exception
     {
-        List rModuleAttributes = getRModuleAttributes(issueType);
+        List rModuleAttributes = getRModuleAttributes(issueType, false,
+                                                      attributeType);
         List moduleAttributes = new ArrayList();
         for ( int i=0; i<rModuleAttributes.size(); i++ )
         {
@@ -530,7 +539,7 @@ public abstract class AbstractScarabModule
                ((RModuleAttribute) rModuleAttributes.get(i)).getAttribute());
         }
 
-        List allAttributes = AttributePeer.getAllAttributes();
+        List allAttributes = AttributePeer.getAttributes(attributeType);
         List availAttributes = new ArrayList();
 
         for ( int i=0; i<allAttributes.size(); i++ )
@@ -543,6 +552,7 @@ public abstract class AbstractScarabModule
         }
         return availAttributes;
     }
+
 
     /**
      * gets a list of all of the Attribute options that are not
@@ -689,14 +699,23 @@ public abstract class AbstractScarabModule
     /**
      * Adds module-attribute mapping to module.
      */
-    public RModuleAttribute addRModuleAttribute(IssueType issueType, 
-                                                AttributeGroup attGroup)
+    public RModuleAttribute addRModuleAttribute(IssueType issueType)
+        throws Exception
+    {
+        return addRModuleAttribute(issueType, "non-user");
+    }
+
+    /**
+     * Adds module-attribute mapping to module.
+     */
+    public RModuleAttribute addRModuleAttribute(IssueType issueType,
+                                                String attributeType)
         throws Exception
     {
         RModuleAttribute rma = new RModuleAttribute();
         rma.setModuleId(getModuleId());
         rma.setIssueTypeId(issueType.getIssueTypeId());
-        rma.setOrder(getLastAttribute(issueType) + 1);
+        rma.setOrder(getLastAttribute(issueType, attributeType) + 1);
         return rma;
     }
 
@@ -769,11 +788,18 @@ public abstract class AbstractScarabModule
     }
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute, 
-                                                IssueType issueType)
+                            IssueType issueType)
+        throws Exception
+    {
+        return getRModuleAttribute(attribute, issueType, "non-user");
+    }
+
+    public RModuleAttribute getRModuleAttribute(Attribute attribute, 
+                            IssueType issueType, String attributeType)
         throws Exception
     {
         RModuleAttribute rma = null;
-        List rmas = getRModuleAttributes(issueType, false);
+        List rmas = getRModuleAttributes(issueType, false, attributeType);
         Iterator i = rmas.iterator();
         while ( i.hasNext() )
         {
@@ -797,18 +823,44 @@ public abstract class AbstractScarabModule
         return getRModuleAttributes(issueType, false);
     }
 
+    /**
+     * Overridden method.  Calls the super method and if no results are
+     * returned the call is passed on to the parent module.
+     */
     public List getRModuleAttributes(IssueType issueType, boolean activeOnly)
         throws Exception
     {
+        return getRModuleAttributes(issueType, false, "non-user");
+    }
+
+    public List getRModuleAttributes(IssueType issueType, boolean activeOnly,
+                                     String attributeType)
+        throws Exception
+    {
         Criteria crit = new Criteria();
+        crit.add(RModuleAttributePeer.MODULE_ID, 
+                 getModuleId());
         crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
                  issueType.getIssueTypeId());
         crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+        crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, AttributePeer.ATTRIBUTE_ID);
 
         if ( activeOnly )
         {
             crit.add(RModuleAttributePeer.ACTIVE, true);
+        }
+
+        if (attributeType.equals("user"))
+        {
+           crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                    AttributeTypePeer.USER_TYPE_KEY);
+        }
+        else
+        {
+           crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                    AttributeTypePeer.USER_TYPE_KEY,
+                Criteria.NOT_EQUAL);
         }
 
         return getRModuleAttributes(crit);
