@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -170,8 +170,6 @@ int uri_worker_map_alloc(jk_uri_worker_map_t **uw_map,
 int uri_worker_map_free(jk_uri_worker_map_t **uw_map,
                         jk_logger_t *l)
 {
-    int rc = JK_FALSE;
-
     jk_log(l, JK_LOG_DEBUG, 
            "Into jk_uri_worker_map_t::uri_worker_map_free\n");    
 
@@ -179,11 +177,13 @@ int uri_worker_map_free(jk_uri_worker_map_t **uw_map,
         uri_worker_map_close(*uw_map, l);  
         free(*uw_map);
         *uw_map = NULL;
+	return JK_TRUE;
     }
-    
-    jk_log(l, JK_LOG_ERROR, 
+    else 
+    	jk_log(l, JK_LOG_ERROR, 
            "In jk_uri_worker_map_t::uri_worker_map_free, NULL parameters\n");    
-    return rc;
+
+    return JK_FALSE;
 }
 
 int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
@@ -321,20 +321,18 @@ int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
 int uri_worker_map_close(jk_uri_worker_map_t *uw_map,
                          jk_logger_t *l)
 {
-    int rc = JK_FALSE;
-
     jk_log(l, JK_LOG_DEBUG, 
            "Into jk_uri_worker_map_t::uri_worker_map_close\n"); 
 
     if(uw_map) {
         jk_close_pool(&uw_map->p);
-        rc = JK_TRUE;
+	return JK_TRUE;
     }
 
     jk_log(l, JK_LOG_ERROR, 
            "jk_uri_worker_map_t::uri_worker_map_close, NULL parameter\n"); 
 
-    return rc;
+    return JK_FALSE;
 }
 
 char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
