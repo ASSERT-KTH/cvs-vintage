@@ -82,7 +82,6 @@ public class MultiOrbInitialContext implements Context {
 	    activesInitialsContexts = pcur.getNewContextHashtable();
 	} catch (Exception e) {
 	    String msg = "MultiOrbInitialContext.MultiOrbInitialContext() failed: " + e; 
-	    TraceCarol.error(msg,e);
 	    throw new NamingException(msg);
 	}
     }

@@ -152,20 +152,14 @@ public class ProtocolCurrent {
     * Get the Context Hashtable
     * @return Hashtable the hashtable of Context 
     */
-    public Hashtable getNewContextHashtable() {
+    public Hashtable getNewContextHashtable() throws NamingException {
 
     	// build a new hashtable of context
 		Hashtable result = new Hashtable();
-		try {		
 		for (Enumeration e = icHashtable.keys() ; e.hasMoreElements() ;) {
 			String k= (String)e.nextElement();
 			result.put(k,new InitialContext((Properties)icHashtable.get(k)));
 		}
-    } catch (NamingException ne) {
-		if (TraceCarol.isDebugCarol()) {
-		TraceCarol.debugCarol("ProtocolCurrent.ProtocolCurrent() Exception:" + ne);
-		} 
-    }
 	return result;
     }    
 
