@@ -63,6 +63,7 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.log.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.xml.*;
 import java.io.*;
@@ -84,8 +85,8 @@ public class SimpleRealm extends  BaseInterceptor {
 
     MemoryRealm memoryRealm;
     ContextManager cm;
-    int reqRolesNote;
-    int reqRealmSignNote;
+    int reqRolesNote=-1;
+    int reqRealmSignNote=-1;
     String filename;
     public SimpleRealm() {
     }
@@ -93,15 +94,19 @@ public class SimpleRealm extends  BaseInterceptor {
     public void contextInit(Context ctx)
 	throws TomcatException
     {
-	if( memoryRealm==null) {
-	    memoryRealm = new MemoryRealm(ctx,filename);
-	    try {
-		memoryRealm.readMemoryRealm(ctx);
-	    } catch(Exception ex ) {
-		log("initting " + ctx, ex);
-		memoryRealm=null;
-	    }
-	}
+        super.contextInit(ctx);
+        ContextManager cm=ctx.getContextManager();
+        init(cm,ctx);
+        try {
+            // XXX make the name a "global" static -
+            reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+                         "required.roles");
+                reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                                       , "realm.sign");
+        } catch( TomcatException ex ) {
+            log("getting note for " + cm, ex);
+            throw new RuntimeException( "Invalid state ");
+        }
     }
 
     public int authenticate( Request req, Response response )
@@ -173,17 +178,19 @@ public class SimpleRealm extends  BaseInterceptor {
      */
     public void engineInit(ContextManager cm) throws TomcatException {
         super.engineInit(cm);
-        // set-up a per/container note for maps
-        try {
-            // XXX make the name a "global" static -
-            reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
-                         "required.roles");
-                reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
-                                       , "realm.sign");
-        } catch( TomcatException ex ) {
-            log("getting note for " + cm, ex);
-            throw new RuntimeException( "Invalid state ");
-        }
+        init(cm,null);
+    }
+
+    void init(ContextManager cm,Context ctx) {
+	if( memoryRealm==null) {
+	    memoryRealm = new MemoryRealm(cm,null,filename);
+	    try {
+		memoryRealm.readMemoryRealm();
+	    } catch(Exception ex ) {
+		log("initting " + cm, ex);
+		memoryRealm=null;
+	    }
+	}
     }
 }
 
@@ -196,11 +203,25 @@ class MemoryRealm {
     Hashtable userRoles= new Hashtable();
     String filename;
     Context ctx;
+    Logger log;
     int debug=0;
+    ContextManager cm;
 
     MemoryRealm(Context ctx,String fn) {
-	this.ctx=ctx;
+	this(ctx.getContextManager(),ctx,fn);
+    }
+
+    MemoryRealm(ContextManager cm,Context ctx,String fn) {
+	this.cm=cm;
         filename=fn;
+        if(ctx==null){
+                log=cm.getLogger();
+                debug=cm.getDebug();
+        }else {
+                log=ctx.getLog().getLogger();
+                debug=ctx.getDebug();
+        }
+
     }
 
     public Hashtable getRoles() {
@@ -208,7 +229,7 @@ class MemoryRealm {
     }
 
     public void addUser(String name, String pass, String groups ) {
-	if( ctx.getDebug() > 0 )  ctx.log( "Add user " + name + " " + pass + " " + groups );
+	if( debug > 0 )  log.log( "Add user " + name + " " + pass + " " + groups );
 	passwords.put( name, pass );
 	groups += ",";
 	while (true) {
@@ -238,7 +259,7 @@ class MemoryRealm {
 
     public boolean checkPassword( String user, String pass ) {
 	if( user==null ) return false;
-	if( debug > 0 ) ctx.log( "check " + user+ " " + pass + " " + passwords.get( user ));
+	if( debug > 0 ) log.log( "check " + user+ " " + pass + " " + passwords.get( user ));
 	return pass.equals( (String)passwords.get( user ) );
     }
 
@@ -254,25 +275,24 @@ class MemoryRealm {
 
     public boolean userInRole( String user, String role ) {
 	Vector users=(Vector)roles.get(role);
-	if( debug > 0 ) ctx.log( "check role " + user+ " " + role + " "  );
+	if( debug > 0 ) log.log( "check role " + user+ " " + role + " "  );
 	if(users==null) return false;
 	return users.indexOf( user ) >=0 ;
     }
-    void readMemoryRealm(Context ctx) throws Exception {
-	ContextManager cm=ctx.getContextManager();
+    void readMemoryRealm() throws Exception {
 	String home=cm.getHome();
         File f;
         if (filename != null)
             f=new File( home + File.separator + filename );
         else
             f=new File( home + "/conf/tomcat-users.xml");
-            
+
 	if( ! f.exists() ) {
-	    ctx.log( "File not found  " + f );
+	    log.log( "File not found  " + f );
 	    return;
 	}
 	XmlMapper xh=new XmlMapper();
-	if( ctx.getDebug() > 5 ) xh.setDebug( 2 );
+	if( debug > 5 ) xh.setDebug( 2 );
 
 	// call addUser using attributes as parameters
 	xh.addRule("tomcat-users/user",
