@@ -1,6 +1,4 @@
-
-
-// $Id: FigInitialState.java,v 1.10 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: FigInitialState.java,v 1.11 2003/09/01 21:49:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +25,11 @@
 // File: FigInitialState.java
 // Classes: FigInitialState
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.10 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: FigInitialState.java,v 1.11 2003/09/01 21:49:21 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
+import org.argouml.model.ModelFacade;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -44,8 +43,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigCircle;
 
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
-
 /** Class to display graphics for a UML State in a diagram. */
 
 public class FigInitialState extends FigStateVertex {
@@ -107,14 +104,14 @@ public class FigInitialState extends FigStateVertex {
             if (org.argouml.model.ModelFacade.isAActivityGraph(pstate.getContainer().getStateMachine())) {
                 sel = new SelectionActionState(this);
                 ((SelectionActionState) sel).setIncomingButtonEnabled(false);
-                Collection outs = ((MStateVertex) getOwner()).getOutgoings();
+                Collection outs = ModelFacade.getOutgoings(getOwner());
                 ((SelectionActionState) sel).
                     setOutgoingButtonEnabled(outs == null || outs.size() == 0);
             }
             else {
                 sel = new SelectionState(this);
                 ((SelectionState) sel).setIncomingButtonEnabled(false);
-                Collection outs = ((MStateVertex) getOwner()).getOutgoings();
+                Collection outs = ModelFacade.getOutgoings(getOwner());
                 ((SelectionState) sel).
                     setOutgoingButtonEnabled(outs == null || outs.size() == 0);
             }

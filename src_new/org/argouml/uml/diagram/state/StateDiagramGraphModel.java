@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.29 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.30 2003/09/01 21:49:21 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.29 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.30 2003/09/01 21:49:21 bobtarling Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -118,7 +118,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
     /** Return all edges going from given port */
     public Vector getOutEdges(Object port) {
 	if (org.argouml.model.ModelFacade.isAStateVertex(port)) {
-	    return new Vector(((MStateVertex) port).getOutgoings());
+	    return new Vector(ModelFacade.getOutgoings(port));
 	}
 	cat.debug("TODO getOutEdges of MState");
 	return new Vector(); //wasteful!
@@ -212,7 +212,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
 
     public void addNodeRelatedEdges(Object node) {
 	if ( org.argouml.model.ModelFacade.isAStateVertex(node) ) {
-	    Vector transen = new Vector(((MStateVertex) node).getOutgoings());
+	    Vector transen = new Vector(ModelFacade.getOutgoings(node));
 	    transen.addAll(ModelFacade.getIncomings(node));
 	    Iterator iter = transen.iterator();
 	    while (iter.hasNext()) {

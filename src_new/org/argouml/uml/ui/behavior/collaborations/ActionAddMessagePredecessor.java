@@ -1,4 +1,4 @@
-// $Id: ActionAddMessagePredecessor.java,v 1.6 2003/06/30 21:59:35 linus Exp $
+// $Id: ActionAddMessagePredecessor.java,v 1.7 2003/09/01 21:49:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 // $header$
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.model.ModelFacade;
 import java.util.Vector;
 
 import org.argouml.application.api.Argo;
@@ -68,7 +69,7 @@ public class ActionAddMessagePredecessor extends AbstractActionAddModelElement {
         if (getTarget() == null)
 	    throw new IllegalStateException("getSelected may not be called with null target");
         Vector vec = new Vector();
-        vec.addAll(((MMessage) getTarget()).getPredecessors());
+        vec.addAll(ModelFacade.getPredecessors(getTarget()));
         return vec;
     }
 

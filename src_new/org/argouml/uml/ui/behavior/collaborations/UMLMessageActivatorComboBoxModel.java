@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBoxModel.java,v 1.14 2003/09/01 20:30:12 bobtarling Exp $
+// $Id: UMLMessageActivatorComboBoxModel.java,v 1.15 2003/09/01 21:49:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
     protected boolean isValidElement(Object m) {
         return ((org.argouml.model.ModelFacade.isAMessage(m))  && 
             m != getTarget() && 
-            !((MMessage) (getTarget())).getPredecessors().contains(m) &&
+            !ModelFacade.getPredecessors((getTarget())).contains(m) &&
             ModelFacade.getInteraction(m) == ModelFacade.getInteraction((getTarget())));
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.30 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.31 2003/09/01 21:49:21 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -188,11 +188,11 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 
 
 
-    public MClassifier getPowertype() {
-        MClassifier ptype = null;
+    public Object getPowertype() {
+        Object ptype = null;
         Object target = getTarget();
         if (ModelFacade.isAGeneralization(target)) {
-            ptype = ((MGeneralization) target).getPowertype();
+            ptype = ModelFacade.getPowertype(target);
         }
         return ptype;
     }

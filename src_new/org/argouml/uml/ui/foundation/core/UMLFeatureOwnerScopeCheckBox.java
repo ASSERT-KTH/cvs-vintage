@@ -1,4 +1,4 @@
-// $Id: UMLFeatureOwnerScopeCheckBox.java,v 1.3 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLFeatureOwnerScopeCheckBox.java,v 1.4 2003/09/01 21:49:21 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,10 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.application.api.Argo;
 import org.argouml.uml.ui.UMLCheckBox2;
 
-import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 
 /**
@@ -51,7 +51,7 @@ public class UMLFeatureOwnerScopeCheckBox extends UMLCheckBox2 {
      * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
      */
     public void buildModel() {
-        MScopeKind scope = ((MFeature) getTarget()).getOwnerScope();
+        Object scope = ModelFacade.getOwnerScope(getTarget());
         if (scope != null && scope.equals(MScopeKind.CLASSIFIER)) {
             setSelected(true);
         } else
