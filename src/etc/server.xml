@@ -25,7 +25,8 @@
 
 	<Logger name="STARTUP_LOG"
 		path="logs/tomcat.log"
-		verbosityLevel = "DEBUG" />
+		verbosityLevel = "DEBUG"
+		timestamp = "no" />
 
 	<Logger name="JASPER_LOG" 
 	        path="logs/jasper.log"

@@ -274,6 +274,18 @@ public abstract class Logger {
     }
 
     /**
+     * Do we need to time stamp this or not?
+     *
+     * @param	value		"yes/no" or "true/false"
+     */
+    public void setTimestamp(String value) {
+	if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
+	    timeStamp = true;
+	else if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value))
+	    timeStamp = false;
+    }
+
+    /**
      * Set the default output stream that is used by all logging
      * channels. 
      * 
@@ -302,4 +314,5 @@ public abstract class Logger {
     protected static Hashtable loggers = new Hashtable(5);
 
     private int level = WARNING;
+    protected boolean timeStamp = true;
 }

@@ -104,7 +104,8 @@ public class TomcatLogger extends Logger {
 	    PrintWriter w = new PrintWriter(sw);
 
 	    w.print("<"+TomcatLogger.this.getName()+"> ");
-	    w.print(new Date(date).toString());
+	    if (TomcatLogger.this.timeStamp)
+		w.print(new Date(date).toString());
 	    w.print(' ');
 
 	    if (message != null)
