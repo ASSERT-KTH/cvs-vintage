@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.72 2003/04/21 23:38:03 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.73 2003/04/22 04:11:22 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -284,6 +284,8 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 			String defaultPath = jEdit.getProperty("vfs.browser.defaultPath");
 			if(defaultPath.equals("home"))
 				path = userHome;
+			else if(defaultPath.equals("working"))
+				path = System.getProperty("user.dir");
 			else if(defaultPath.equals("buffer"))
 			{
 				if(view != null)

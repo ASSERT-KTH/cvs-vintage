@@ -41,7 +41,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * stored elsewhere than the local filesystem, for example on an FTP
  * site.
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.7 2002/06/01 02:32:02 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.8 2003/04/22 04:11:23 spestov Exp $
  */
 public class VFSManager
 {
@@ -285,15 +285,16 @@ public class VFSManager
 
 			if(errors.size() == 1)
 			{
-				final String caption = jEdit.getProperty(
-					"ioerror.caption" + (errors.size() == 1
-					? "-1" : ""),new Integer[] {
-					new Integer(errors.size()) });
+				
 
 				VFSManager.runInAWTThread(new Runnable()
 				{
 					public void run()
 					{
+						String caption = jEdit.getProperty(
+							"ioerror.caption" + (errors.size() == 1
+							? "-1" : ""),new Integer[] {
+							new Integer(errors.size()) });
 						new ErrorListDialog(
 							frame.isShowing()
 							? frame

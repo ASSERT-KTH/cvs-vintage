@@ -30,7 +30,7 @@ import org.gjt.sp.jedit.*;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTableModel.java,v 1.3 2003/04/22 03:04:20 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTableModel.java,v 1.4 2003/04/22 04:11:22 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTableModel extends AbstractTableModel
@@ -39,9 +39,8 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 	public VFSDirectoryEntryTableModel()
 	{
 		extAttrs = new String[] {
-			VFS.EA_TYPE,
+			VFS.EA_SIZE_OR_TYPE,
 			VFS.EA_STATUS,
-			VFS.EA_SIZE,
 			VFS.EA_MODIFIED
 		};
 	} //}}}
@@ -142,7 +141,12 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 	//{{{ getColumnName() method
 	public String getColumnName(int col)
 	{
-		return null;
+		if(col == 0)
+			return null;
+		else if(col == 1)
+			return jEdit.getProperty("vfs.browser.name");
+		else
+			return jEdit.getProperty("vfs.browser." + getExtendedAttribute(col));
 	} //}}}
 
 	//{{{ getColumnClass() method

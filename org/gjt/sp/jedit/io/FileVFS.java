@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.32 2003/04/22 03:04:20 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.33 2003/04/22 04:11:23 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -76,39 +76,6 @@ public class FileVFS extends VFS
 	public char getFileSeparator()
 	{
 		return File.separatorChar;
-	} //}}}
-
-	//{{{ load() method
-	public boolean load(View view, Buffer buffer, String path)
-	{
-		File file = new File(path);
-
-		//{{{ Check if file is valid
-		if(!file.exists())
-		{
-			buffer.setNewFile(true);
-			return true;
-		}
-		else
-			buffer.setReadOnly(!file.canWrite());
-
-		if(file.isDirectory())
-		{
-			VFSManager.error(view,file.getPath(),
-				"ioerror.open-directory",null);
-			buffer.setNewFile(false);
-			return false;
-		}
-
-		if(!file.canRead())
-		{
-			VFSManager.error(view,file.getPath(),
-				"ioerror.no-read",null);
-			buffer.setNewFile(false);
-			return false;
-		} //}}}
-
-		return super.load(view,buffer,path);
 	} //}}}
 
 	//{{{ save() method

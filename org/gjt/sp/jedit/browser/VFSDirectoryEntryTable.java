@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.4 2003/04/22 03:04:20 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.5 2003/04/22 04:11:22 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -277,7 +277,10 @@ public class VFSDirectoryEntryTable extends JTable
 
 		for(int i = 0; i < widths.length; i++)
 		{
-			getColumnModel().getColumn(i).setPreferredWidth(widths[i] + (i == widths.length - 1 ? 0 : 10));
+			int width = widths[i];
+			if(i != 0 && i != widths.length - 1 && width != 0)
+				width += 10;
+			getColumnModel().getColumn(i).setPreferredWidth(width);
 		}
 
 		doLayout();
