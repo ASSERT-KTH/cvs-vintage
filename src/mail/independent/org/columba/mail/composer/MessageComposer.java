@@ -30,8 +30,10 @@ import java.util.List;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
@@ -451,9 +453,24 @@ public class MessageComposer {
 		if (model.isHtml()) {
 			// compose message body as multipart/alternative
 			
-			// TODO: Add option to chose btw. multipart/alternative and text/html
-			
-			body = composeMultipartAlternativeMimePart();
+			XmlElement composerOptions =
+				MailConfig.getComposerOptionsConfig().getRoot().getElement(
+					"/options");
+			XmlElement html = composerOptions.getElement("html");
+			if (html == null) {
+				html = composerOptions.addSubElement("html");
+			}
+			String multipart = html.getAttribute(
+					"send_as_multipart", "true");
+
+			if (multipart.equals("true")) {
+				// send as multipart/alternative
+				body = composeMultipartAlternativeMimePart();
+			} else {
+				// send as text/html
+				body = composeHtmlMimePart(); 
+			}
+				
 		} else {
 			// compose message body as text/plain
 			body = composeTextMimePart();

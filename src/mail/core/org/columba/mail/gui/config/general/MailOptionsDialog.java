@@ -74,6 +74,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 	JButton spellButton;
 
 	JCheckBox emptySubjectCheckBox;
+	JCheckBox sendHtmlMultipartCheckBox;
 
 	JLabel forwardLabel;
 	JComboBox forwardComboBox;
@@ -172,6 +173,19 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			else
 				emptySubjectCheckBox.setSelected(false);
 
+			XmlElement composerHtml = composerOptions.getElement("html");
+			if (composerHtml == null) {
+				composerHtml = composerOptions.addSubElement("html");
+			}
+			
+			String sendHtml = composerHtml.getAttribute(
+					"send_as_multipart", "true");
+			if (sendHtml.equals("true")) {
+				sendHtmlMultipartCheckBox.setSelected(true);
+			} else {
+				sendHtmlMultipartCheckBox.setSelected(false);
+			}
+
 			XmlElement forward = composerOptions.getElement("forward");
 			if (forward == null) {
 				forward = composerOptions.addSubElement("forward");
@@ -255,6 +269,16 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			// @see org.columba.mail.gui.composer.SubjectController
 			subject.notifyObservers();
 
+			XmlElement composerHtml = composerOptions.getElement("html");
+			if (sendHtmlMultipartCheckBox.isSelected()) {
+				composerHtml.addAttribute("send_as_multipart", "true");
+			} else {
+				composerHtml.addAttribute("send_as_multipart", "false");
+			}
+
+			// notify listeners
+			composerHtml.notifyObservers();
+
 			XmlElement forward = composerOptions.getElement("forward");
 			if (forwardComboBox.getSelectedIndex() == 0)
 				forward.addAttribute("style", "attachment");
@@ -279,22 +303,23 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		markCheckBox =
 			new JCheckBox(
 				MailResourceLoader.getString(
-					"dialog",
-					"general",
-					"mark_messages_read"));
+					"dialog", "general", "mark_messages_read"));
 
 		markSpinner = new JSpinner();
 		markSpinner.setModel(new SpinnerNumberModel(1, 0, 99, 1));
 
-		//TODO:LOCALIZE
-		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
+		emptyTrashCheckBox = new JCheckBox(
+				MailResourceLoader.getString(
+					"dialog", "general", "empty_trash"));
 		emptyTrashCheckBox.setEnabled(false);
 
-		//TODO:LOCALIZE
-		enableSmiliesCheckBox = new JCheckBox("Display emoticons as graphics");
+		enableSmiliesCheckBox = new JCheckBox(
+				MailResourceLoader.getString(
+					"dialog", "general", "enable_smilies"));
 
-		//TODO:LOCALIZE
-		quotedColorCheckBox = new JCheckBox("Color quoted text");
+		quotedColorCheckBox = new JCheckBox(
+				MailResourceLoader.getString(
+					"dialog", "general", "color_quoted_text"));
 		quotedColorButton = new JButton("..");
 		quotedColorButton.setActionCommand("COLOR");
 		quotedColorButton.addActionListener(this);
@@ -302,17 +327,13 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		preferHtmlCheckBox =
 			new JCheckBox(
 				MailResourceLoader.getString(
-					"dialog",
-					"general",
-					"prefer_html"));
+					"dialog", "general", "prefer_html"));
 
 		// composer
 		spellLabel =
 			new JLabel(
 				MailResourceLoader.getString(
-					"dialog",
-					"general",
-					"aspell_path"));
+					"dialog", "general", "aspell_path"));
 
 		spellButton = new JButton("aspell.exe");
 		spellButton.setActionCommand("PATH");
@@ -322,13 +343,22 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		emptySubjectCheckBox =
 			new JCheckBox(
 				MailResourceLoader.getString(
-					"dialog",
-					"general",
-					"ask_on_empty_subject"));
+					"dialog", "general", "ask_on_empty_subject"));
 
-		// TODO: LOCALIZE
-		forwardLabel = new JLabel("Forward message as");
-		String[] items = { "Attachment", "Quoted" };
+		sendHtmlMultipartCheckBox =
+			new JCheckBox(
+				MailResourceLoader.getString(
+					"dialog", "general", "send_html_multipart"));
+
+		forwardLabel = new JLabel(
+				MailResourceLoader.getString(
+					"dialog", "general", "forward_as"));
+		String[] items = {
+			MailResourceLoader.getString(
+					"dialog", "general", "forward_as_attachment"),
+			MailResourceLoader.getString(
+					"dialog", "general", "forward_as_quoted")
+		};
 
 		forwardComboBox = new JComboBox(items);
 
@@ -374,8 +404,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 		builder.setLeadingColumnOffset(1);
 
 		// Add components to the panel:
-		// TODO: LOCALIZE
-		builder.appendSeparator("General Options");
+		builder.appendSeparator(
+				MailResourceLoader.getString(
+					"dialog", "general", "general_options"));
 		builder.nextLine();
 
 		builder.append(preferHtmlCheckBox, 4);
@@ -391,11 +422,15 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
 		builder.nextLine();
 
-		// TODO: LOCALIZE
-		builder.appendSeparator("Composing Messages");
+		builder.appendSeparator(
+				MailResourceLoader.getString(
+					"dialog", "general", "composing_messages"));
 		builder.nextLine();
 
 		builder.append(emptySubjectCheckBox, 4);
+		builder.nextLine();
+		
+		builder.append(sendHtmlMultipartCheckBox, 4);
 		builder.nextLine();
 
 		builder.append(forwardLabel, forwardComboBox);
@@ -458,7 +493,8 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 			Color newColor =
 				JColorChooser.showDialog(
 					this,
-					"Choose Quoted Text Color",
+					MailResourceLoader.getString(
+							"dialog", "general", "choose_text_color"),
 					null);
 			if (newColor != null) {
 				quotedColorButton.setBackground(newColor);
