@@ -105,7 +105,6 @@ public class AccountList extends DefaultItem {
 
 		System.out.println("------>host: " + host);
 		XmlElement account, server, identity;
-		int result = -1;
 		if (address == null)
 			return get(0);
 
