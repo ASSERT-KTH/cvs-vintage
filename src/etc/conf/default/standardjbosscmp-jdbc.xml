@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.45 2002/09/16 20:31:33 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.46 2002/09/19 16:36:25 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -37,13 +37,8 @@
          <sql-type>VARCHAR(32)</sql-type>
       </unknown-pk>
 
-      <create-entity-command>default_create_command</create-entity-command>
-      <entity-commands>
-         <entity-command>
-            <command-name>default_create_command</command-name>
-            <command-class>org.jboss.ejb.plugins.cmp.jdbc.JDBCCreateEntityCommand</command-class>
-         </entity-command>
-      </entity-commands>
+      <entity-command name="default"/>
+
    </defaults>
 
    <type-mapping>
@@ -1453,13 +1448,6 @@
             <sql-type>BIGINT</sql-type>
          </mapping>
 
-         <entity-commands>
-            <entity-command>
-               <command-name>auto_increment</command-name>
-               <command-class>org.jboss.ejb.plugins.cmp.jdbc.mysql.MySQLCreateEntityCommand</command-class>
-            </entity-command>
-         </entity-commands>
-
       </type-mapping>
 
       <type-mapping>
@@ -2069,4 +2057,32 @@
       </type-mapping> 
 
    </type-mappings>
+
+   <entity-commands>
+      <!-- default command; doesn't support unknown-pk -->
+      <entity-command name="default"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.JDBCCreateEntityCommand"/>
+
+      <!-- fetches next key value with the specified sql statement -->
+      <entity-command name="pk-sql"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.JDBCPkSqlCreateCommand">
+         <attribute name="pk-sql">SELECT CURRENT_TIMESTAMP</attribute>
+      </entity-command>
+
+      <!-- this command requires auto-increment element for unknown-pk -->
+      <entity-command name="mysql-get-generated-keys"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.mysql.MySQLCreateEntityCommand"/>
+
+      <!-- uses key generator to fetch the next key value -->
+      <entity-command name="key-generator"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.JDBCKeyGeneratorCreateCommand">
+         <attribute name="key-generator-factory">UUIDKeyGeneratorFactory</attribute>
+      </entity-command>
+
+<!-- JDK1.4
+      <entity-command name="get-generated-keys"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.jdbc3.JDBCGetGeneratedKeysCreateCommand"/>
+-->
+   </entity-commands>
+
 </jbosscmp-jdbc>
