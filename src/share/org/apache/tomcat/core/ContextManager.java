@@ -651,10 +651,10 @@ public class ContextManager {
 		rrequest.getWrapper().service(rrequest, rresponse);
 	    } else {
 		// something went wrong
-		handleError( rrequest, rresponse, null, status );
+		handleStatus( rrequest, rresponse, status );
 	    }
 	} catch (Throwable t) {
-	    handleError( rrequest, rresponse, t, 0 );
+	    handleError( rrequest, rresponse, t );
 	}
 	try {
 	    rresponse.finish();
@@ -822,44 +822,33 @@ public class ContextManager {
      */
     public void handleStatus( Request req, Response res, int code ) {
 	String errorPath=null;
-	ServletWrapper errorServlet=null;
+	Handler errorServlet=null;
 	
 	res.reset();
-	res.setStatus(code);
 
-	Context ctx = req.getContext();
 	if( code==0 )
 	    code=res.getStatus();
-	if(ctx==null) 
-	    ctx=getContext("");
+	else
+	    res.setStatus(code);
 
-	if(ctx.getDebug() > 4 ) ctx.log("In error handler for code=" + code +  " / " + req );
+	Context ctx = req.getContext();
+	if(ctx==null) ctx=getContext("");
 
-	ServletWrapper dE = doubleError( ctx, req );
-	if( dE != null )
-	    errorServlet = dE;
+	ctx.log( "Status Handler: " + code + " req=" + req);
 
-	// normal redirects or non-errors
-	if( code!=0 && code < 400 ) 
-	    errorServlet=ctx.getServletByName("tomcat.errorPage");
-
-	// we can't support error pages for non-errors, it's to
-	// complex and insane
-	if( code >= 400 )
-	    errorPath = ctx.getErrorPage( code );
-	    
-	// Special case - unauthorized
-	
-	if( code==HttpServletResponse.SC_UNAUTHORIZED ) {
-	    // set extra info for login page
-	    if( errorServlet==null)
-		errorServlet=ctx.getServletByName("tomcat.authServlet");
-	    if( ctx.getDebug() > 0 ) ctx.log( "Calling auth servlet " + errorServlet );
+	errorPath = ctx.getErrorPage( code );
+	if( errorPath != null ) {
+	    errorServlet=getHandlerForPath( ctx, errorPath );
 	}
+
+	if( errorServlet==null )
+	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
+
 	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
 
-	//	System.out.println("XXX " + req + " " + res + " " + ctx );
-	callInternalError( req, res, ctx, errorServlet, errorPath );
+	req.setAttribute("tomcat.servlet.error.request", req);
+
+	errorServlet.service( req, res );
     }
 
     /** General error handling mechanism. It will try to find an error handler
@@ -870,15 +859,16 @@ public class ContextManager {
 	if(ctx==null) {
 	    ctx=getContext("");
 	}
-	if(ctx.getDebug() > 4 ) ctx.log("In error handler " +  t +  " / " + req );
 
-	String errorPath=null;
-	ServletWrapper errorServlet=null;
-
-	ServletWrapper dE = doubleError( ctx, req );
-	if( dE != null )
-	    errorServlet = dE;
+	/** The exception must be available to the user.
+	    Note that it is _WRONG_ to send the trace back to
+	    the client. AFAIK the trace is the _best_ debugger.
+	*/
+	ctx.log("Exception in: " + req , t );
 	
+	String errorPath=null;
+	Handler errorServlet=null;
+
 	// Scan the exception's inheritance tree looking for a rule
 	// that this type of exception should be forwarded
 	Class clazz = t.getClass();
@@ -887,88 +877,52 @@ public class ContextManager {
 	    errorPath = ctx.getErrorPage(name);
 	    clazz = clazz.getSuperclass();
 	}
+	
+	if( errorPath != null ) {
+	    errorServlet=getHandlerForPath( ctx, errorPath );
+	}
 
+	if( errorLoop( ctx, req ) || errorServlet==null) ;
+	    errorServlet = ctx.getServletByName("tomcat.exceptionHandler");
+	
 	req.setAttribute("javax.servlet.error.exception_type", t.getClass());
 	req.setAttribute("javax.servlet.error.message", t.getMessage());
 	req.setAttribute("tomcat.servlet.error.throwable", t);
-
-	callInternalError( req, res, ctx, errorServlet, errorPath );
-    }
-
-    private void callInternalError( Request req, Response res, Context ctx,
-			       ServletWrapper errorServlet, String errorPath )
-    {
-	// Save the original request, we want to report it
-	// and we need to use it in the "authentication" case to implement
-	// the strange requirements for login pages
 	req.setAttribute("tomcat.servlet.error.request", req);
 
-	// No error page or "Exception in exception handler", call internal servlet
-	if( errorPath==null && errorServlet==null) {
-	    // this is the default handler -  avoid loops
-	    req.setAttribute( "tomcat.servlet.error.defaultHandler", "true");
-	    errorServlet=ctx.getServletByName("tomcat.errorPage");
-	}
-		
-	// Try a normal "error page" ( path based )
-	if( errorServlet==null && errorPath != null ) {
-	    try {
-		RequestDispatcher rd = ctx.getFacade().getRequestDispatcher(errorPath);
-		// reset the response, keeping the status code if necessary
-		// try a forward if possible, otherwise an include
-		if (res.isBufferCommitted()) {
-		    rd.include(req.getFacade(), res.getFacade());
-                }
-		else {
-		    rd.forward(req.getFacade(), res.getFacade());
-                }
-		return ;
-	    } catch( Throwable t1 ) {
-		ctx.log(" Error in custom error handler " + t1 );
-		// nothing - we'll call DefaultErrorPage
-	    }
-	}
-	
-	// If No handler or an error happened in handler 
-	// loop control
-	if( req.getAttribute("tomcat.servlet.error.handler") != null ) {
-	    // error page for 404 doesn't exist... ( or watchdog tests :-)
-	    ctx.log( "Error/loop in default error handler " + req + " " +  errorPath );
-	    return;
-	}
-
-	if( ctx.getDebug() > 0 ) ctx.log( "Error: Calling servlet " + errorServlet );
-	req.setAttribute("tomcat.servlet.error.handler", errorServlet);
-	errorServlet.service(req,res);
-
-	return;
+	errorServlet.service( req, res );
     }
 
+    public Handler getHandlerForPath( Context ctx, String path ) {
+	if( ! path.startsWith( "/" ) ) {
+	    return ctx.getServletByName( path );
+	}
+	RequestImpl req1=new RequestImpl();
+	ResponseImpl res1=new ResponseImpl();
+	initRequest( req1, res1 );
+	
+	req1.setRequestURI( ctx.getPath() + path );
+	processRequest( req1 );
+	return req1.getWrapper();
+    }
+    
     /** Handle the case of error handler generating an error or special status
      */
-    private ServletWrapper doubleError( Context ctx, Request req ) {
+    private boolean errorLoop( Context ctx, Request req ) {
 	if( req.getAttribute("javax.servlet.error.status_code") != null
 	    || req.getAttribute("javax.servlet.error.exception_type")!=null) {
 
-	    if( ctx.getDebug() > 0 ) ctx.log( "Error: exception inside exception servlet " +
-					      req.getAttribute("javax.servlet.error.status_code") + " " +
-					      req.getAttribute("javax.servlet.error.exception_type"));
-
-	    return ctx.getServletByName("tomcat.errorPage");
+	    if( ctx.getDebug() > 0 )
+		ctx.log( "Error: exception inside exception servlet " +
+			 req.getAttribute("javax.servlet.error.status_code") +
+			 " " + req.
+			 getAttribute("javax.servlet.error.exception_type"));
+	    
+	    return true;
 	}
-	return null;
+	return false;
     }
     
-    /** @deprecated old method
-     */
-    void handleError( Request req, Response res , Throwable t, int code ) {
-	if( t!=null )
-	    handleError( req, res, t );
-	else
-	    handleStatus( req, res, code );
-    }
-
-	
 
     // -------------------- Support for notes --------------------
         

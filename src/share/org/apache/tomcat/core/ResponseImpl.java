@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.29 2000/05/30 06:16:46 costin Exp $
- * $Revision: 1.29 $
- * $Date: 2000/05/30 06:16:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.30 2000/06/19 21:53:12 costin Exp $
+ * $Revision: 1.30 $
+ * $Date: 2000/06/19 21:53:12 $
  *
  * ====================================================================
  *
@@ -368,6 +368,9 @@ public class ResponseImpl implements Response {
 
     public void setBufferCommitted( boolean v ) {
 	this.commited=v;
+	// 	System.out.println("Buffer commited " );
+	// 	/*DEBUG*/ try {throw new Exception(); }
+	//catch(Exception ex) {ex.printStackTrace();}
     }
     
     public void reset() throws IllegalStateException {

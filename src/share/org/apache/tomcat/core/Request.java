@@ -241,6 +241,8 @@ public interface Request  {
      */
     public String[] getParameterValues(String name) ;
 
+    public String getParameter(String name );
+    
     public Enumeration getParameterNames() ;
 
     // -------------------- Attributes --------------------

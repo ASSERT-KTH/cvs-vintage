@@ -475,6 +475,14 @@ public class Context {
 	return formErrorPage;
     }
 
+    public void setFormLoginPage( String page ) {
+	formLoginPage=page;
+    }
+    
+    public void setFormErrorPage( String page ) {
+	formErrorPage=page;
+    }
+
     public void setLoginConfig( String authMethod, String realmName,
 				String formLoginPage, String formErrorPage)
     {
@@ -625,6 +633,7 @@ public class Context {
     public void addServlet(ServletWrapper wrapper)
     	throws TomcatException
     {
+	wrapper.setContext( this );
 	String name=wrapper.getServletName();
 	//	System.out.println("Adding servlet " + name  + " " + wrapper);
 

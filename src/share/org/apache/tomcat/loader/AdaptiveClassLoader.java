@@ -118,7 +118,7 @@ import java.security.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000/06/15 18:50:43 $
+ * @version $Revision: 1.9 $ $Date: 2000/06/19 21:53:14 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -145,7 +145,7 @@ public class AdaptiveClassLoader extends ClassLoader {
      * Cache of the loaded classes. This contains ClassCacheEntry keyed
      * by class names.
      */
-    private Hashtable cache;
+    protected Hashtable cache;
 
     /**
      * The classpath which this classloader searches for class definitions.
@@ -211,14 +211,13 @@ public class AdaptiveClassLoader extends ClassLoader {
      *        a valid directory or a zip/jar file.
      */
     public AdaptiveClassLoader() {
+	// Create the cache of loaded classes
+	cache = new Hashtable();
     }
 
     public void setRepository( Vector classRepository ) 
 	throws IllegalArgumentException
     {
-	// Create the cache of loaded classes
-	cache = new Hashtable();
-	
 	// Verify that all the repository are valid.
 	Enumeration e = classRepository.elements();
 	while(e.hasMoreElements()) {
@@ -261,12 +260,6 @@ public class AdaptiveClassLoader extends ClassLoader {
                 }
             }
         }
-
-       // Install the SecurityManager if not already installed
-	//        if( generationCounter == 0 && sm == null ) {
-	//            sm = System.getSecurityManager();
-	// 	   //	   System.out.println("XXX AdaptiveClassLoader: " + sm );
-	//        }
 
         // Store the class repository for use
         this.repository = classRepository;
@@ -350,8 +343,12 @@ public class AdaptiveClassLoader extends ClassLoader {
         while (e.hasMoreElements()) {
             ClassCacheEntry entry = (ClassCacheEntry) e.nextElement();
 
-        if (entry.isSystemClass()) continue;
-
+	    if( entry.loadedClass==null )
+		continue;
+	    if( debug>5 )
+		log( "cache entry: " + entry.loadedClass.getName());
+	    if (entry.isSystemClass()) continue;
+	    
             // XXX: Because we want the classloader to be an accurate
             // reflection of the contents of the repository, we also
             // reload if a class origin file is now missing.  This
@@ -426,6 +423,7 @@ public class AdaptiveClassLoader extends ClassLoader {
         ClassCacheEntry entry = (ClassCacheEntry) cache.get(name);
 
         if (entry != null) {
+	    if( debug>0) log( "Found in cache " + name);
             // Class found in our cache
             c = entry.loadedClass;
             if (resolve) resolveClass(c);
@@ -435,13 +433,15 @@ public class AdaptiveClassLoader extends ClassLoader {
         // Make sure we can access this class when using a SecurityManager
         if (sm != null) {
             int i = name.lastIndexOf('.');
-            if (i >= 0)
-                sm.checkPackageAccess(name.substring(0,i));
-        }
+            if (i >= 0) {
+                sm.checkPackageAccess(name.substring(0,i)); 
+                sm.checkPackageDefinition(name.substring(0,i));
+	    }
+	}
 
 	if (parent != null) {
 	    try {
-		if( debug>0) log( "loadClass() from parent" + name);
+		if( debug>0) log( "loadClass() from parent " + name);
 		c = parent.loadClass(name);
 		if (c != null) {
 		    if (resolve) resolveClass(c);
@@ -455,7 +455,7 @@ public class AdaptiveClassLoader extends ClassLoader {
 	}
 
         // Attempt to load the class from the system
-	if( debug>0) log( "loadClass() from system" + name);
+	if( debug>0) log( "loadClass() from system " + name);
         try {
             c = loadSystemClass(name, resolve);
             if (c != null) {
@@ -465,14 +465,7 @@ public class AdaptiveClassLoader extends ClassLoader {
             c = null;
         }
 
-        // Make sure we can define this class when using a SecurityManager
-        if (sm != null) {
-            int i = name.lastIndexOf('.');
-            if (i >= 0)
-                sm.checkPackageDefinition(name.substring(0,i));
-        }
-
-		if( debug>0) log( "loadClass() from local repository " + name);
+	if( debug>0) log( "loadClass() from local repository " + name);
         // Try to load it from each repository
         Enumeration repEnum = repository.elements();
 
@@ -502,17 +495,27 @@ public class AdaptiveClassLoader extends ClassLoader {
 	    }
 
             if (classData != null) {
-                // Define the class with a ProtectionDomain if using a SecurityManager
-                c=doDefineClass(name, classData, cp.getProtectionDomain());
-                // Cache the result;
-                classCache.loadedClass = c;
+                // Define the class with a ProtectionDomain if using
+		// a SecurityManager
                 // Origin is set by the specific loader
                 classCache.lastModified = classCache.origin.lastModified();
-                cache.put(name, classCache);
-    
+		if( debug>0) log( "Add to cache() " + name + " " + classCache);
+		cache.put(name, classCache);
+		
+		if( debug>0) log( "Before define class " + name);
+		try {
+		    classCache.loadedClass = 
+			doDefineClass(name, classData,
+				      cp.getProtectionDomain());
+		} catch(Throwable t ) {
+		    t.printStackTrace();
+		}
+		if( debug>0) log( "Class defined " + classCache.loadedClass);
+                // Cache the result;
+
                 // Resolve it if necessary
-		if (resolve) resolveClass(c);
-                return c;
+		if (resolve) resolveClass(classCache.loadedClass);
+                return classCache.loadedClass;
             }
         }
 
@@ -540,12 +543,12 @@ public class AdaptiveClassLoader extends ClassLoader {
         Class c = findSystemClass(name);
         // Throws if not found.
 
-        // Add cache entry
-        ClassCacheEntry cacheEntry = new ClassCacheEntry();
-        cacheEntry.origin = null;
-        cacheEntry.loadedClass = c;
-        cacheEntry.lastModified = Long.MAX_VALUE;
-        cache.put(name, cacheEntry);
+//         // Add cache entry
+//         ClassCacheEntry cacheEntry = new ClassCacheEntry();
+//         cacheEntry.origin = null;
+//         cacheEntry.loadedClass = c;
+//         cacheEntry.lastModified = Long.MAX_VALUE;
+//         cache.put(name, cacheEntry);
 
         if (resolve) resolveClass(c);
 

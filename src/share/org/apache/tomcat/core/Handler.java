@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.2 2000/06/16 21:03:21 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/06/16 21:03:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.3 2000/06/19 21:53:11 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/19 21:53:11 $
  *
  * ====================================================================
  *
@@ -110,6 +110,7 @@ public class Handler {
     
     // who creates the servlet definition
     protected int origin;
+    protected boolean internal=false;
 
     public Handler() {
     }
@@ -123,6 +124,10 @@ public class Handler {
 	return context;
     }
 
+    public boolean isInternal() {
+	return internal;
+    }
+    
     public String getName() {
 	return name;
     }
@@ -209,14 +214,22 @@ public class Handler {
     {
 	try {
 	    if( initialized ) return;
+	    if( ! (this instanceof ServletWrapper) ) {
+		doInit();
+		return;
+	    }
 	    
 	    ContextInterceptor cI[]=context.getContextInterceptors();
 	    for( int i=0; i<cI.length; i++ ) {
 		try {
-		    cI[i].preServletInit( context, null);//this );
+		    cI[i].preServletInit( context, (ServletWrapper)this );
 		    // ignore the error - like in the original code
 		} catch( TomcatException ex) {
 		    ex.printStackTrace();
+		    if( ex.getRootCause() != null ) {
+			System.out.println("Original error " );
+			ex.getRootCause().printStackTrace();
+		    }
 		}
 	    }
 
@@ -227,7 +240,7 @@ public class Handler {
 		
 	    for( int i=cI.length-1; i>=0; i-- ) {
 		try {
-		    cI[i].postServletInit( context, null);//this);
+		    cI[i].postServletInit( context, (ServletWrapper)this);
 		    // ignore the error - like in the original code
 		} catch( TomcatException ex) {
 		    ex.printStackTrace();
@@ -257,6 +270,10 @@ public class Handler {
 		init();
 	    } catch( Exception ex ) {
 		initialized=false;
+		if( ex instanceof ClassNotFoundException ) {
+		    contextM.handleStatus( req, res, 404);
+		    return;
+		}
 		context.log("Exception in init  " + ex.getMessage(), ex );
 		contextM.handleError( req, res, ex );
 		return;
@@ -265,11 +282,13 @@ public class Handler {
 	
 	// We are initialized and fine
 	RequestInterceptor cI[]=context.getRequestInterceptors();
-	for( int i=0; i<cI.length; i++ ) {
-	    cI[i].preService( req, res );
-	    // ignore the error - like in the original code
+	if( ! internal ) {
+	    for( int i=0; i<cI.length; i++ ) {
+		cI[i].preService( req, res );
+		// ignore the error - like in the original code
+	    }
 	}
-
+	
 	Throwable t=null;
 	try {
 	    doService( req, res );
@@ -278,12 +297,17 @@ public class Handler {
 	}
 	
 	// continue with the postService
-
-	for( int i=cI.length-1; i>=0; i-- ) {
-	    cI[i].postService( req , res );
-	    // ignore the error - like in the original code
+	if( ! internal ) {
+	    for( int i=cI.length-1; i>=0; i-- ) {
+		cI[i].postService( req , res );
+		// ignore the error - like in the original code
+	    }
 	}
+	
+	handleError( req, res, t );
+    }
 
+    protected void handleError( Request req, Response res, Throwable t) {
 	if( t==null)
 	    return;
 	

@@ -106,7 +106,7 @@ public class ServletWrapper extends Handler {
     // is running ( this have to be revisited !) 
     protected long lastAccessed;
     protected int serviceCount = 0;
-
+    
     int loadOnStartup=0;
 
     Hashtable securityRoleRefs=new Hashtable();
@@ -138,8 +138,7 @@ public class ServletWrapper extends Handler {
     }
 
     public String getServletName() {
-	if( servletName != null ) return servletName;
-	if( servletClassName != null ) return servletClassName;
+	if(name!=null) return name;
 	return path;
     }
 
@@ -152,9 +151,9 @@ public class ServletWrapper extends Handler {
         return this.description;
     }
 
-//     public void setDescription( String d ) {
-// 	description=d;
-//     }
+    public void setDescription( String d ) {
+	description=d;
+    }
     
     public void setServletDescription(String description) {
         this.description = description;
@@ -194,8 +193,6 @@ public class ServletWrapper extends Handler {
 
     // -------------------- 
 
-    // XXX Doesn't seem to be used, shouldn't be part of interface -
-    // use init and service !!! 
     public Servlet getServlet() {
 	if(servlet==null) {
 	    try {

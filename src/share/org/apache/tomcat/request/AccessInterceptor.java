@@ -83,7 +83,7 @@ import java.util.*;
  *  concepts - I think we can do that, but need to experiment with that)
  */
 public class AccessInterceptor extends  BaseInterceptor  {
-    int debug=20;
+    int debug=0;
     ContextManager cm;
 
     // Security mapping note
@@ -98,7 +98,8 @@ public class AccessInterceptor extends  BaseInterceptor  {
 
     /* -------------------- Support functions -------------------- */
     public void setDebug( int i ) {
-	System.out.println("setDebug " + i );
+	if( debug > 0 || i>0)
+	    System.out.println("setDebug " + i );
     }
     
     void log( String msg ) {
@@ -137,42 +138,79 @@ public class AccessInterceptor extends  BaseInterceptor  {
     public void contextInit( Context ctx)
 	throws TomcatException
     {
-	// Set default session manager if none set
-	ServletWrapper authWrapper=new ServletWrapper();
-	authWrapper.setContext( ctx );
-	authWrapper.setServletName( "tomcat.authServlet");
 	String login_type=ctx.getAuthMethod();
+	if( debug > 0 ) log( "Init  " + ctx.getHost() + " " +
+			     ctx.getPath() + " " + login_type );
+	
 	if( "FORM".equals( login_type )) {
-	    authWrapper.setServletClass( "org.apache.tomcat.servlets.FormLoginServlet" );
+	    String page=ctx.getFormLoginPage();
+	    String errorPage = ctx.getFormErrorPage();
+	    
+	    if(page==null || errorPage==null) {
+		ctx.log( "Form login without form pages, defaulting to basic "
+			 + page + " " + errorPage);
+		ctx.addServlet( new BasicAuthHandler());
+		ctx.addErrorPage( "401", "tomcat.basicAuthHandler");
+		return;
+	    }
+
+	    // Workaround for common error - no "/" at start of page
+	    if( ! page.startsWith("/")) {
+		ctx.log("FORM: login page doesn't start with / " + page );
+		page="/" + page;
+	    }
+	    if( ! errorPage.startsWith("/")) {
+		ctx.log("FORM: error page doesn't start with / " + errorPage );
+		errorPage="/" + errorPage;
+	    }
+
+	    String cpath=ctx.getPath();
+	    
+	    // Workaround for common error - ctx path included
+	    if( ! page.startsWith( cpath ) )
+		page= cpath + page;
+	    else 
+		ctx.log("FORM: WARNING, login page starts with context path " +
+			page);
+	    
+
+	    if( ! errorPage.startsWith( cpath ) )
+		errorPage= cpath + errorPage;
+	    else 
+		ctx.log("FORM: WARNING, error page starts with context path " +
+			errorPage);
+
+	    // Adjust login and error paths - avoid computations in handlers
+	    ctx.setFormLoginPage( page );
+	    ctx.setFormErrorPage( errorPage );
+
+	    ctx.addServlet( new FormAuthHandler() );
+	    ctx.addServlet( new FormSecurityCheckHandler() );
+	    ctx.addErrorPage( "401", "tomcat.formAuthHandler");
+
+	    // Add mapping for the POST handler
+	    String pageP=page.substring( cpath.length());
+	    int lastS=pageP.lastIndexOf( "/" );
+	    String location="/j_security_check";
+	    if( lastS > 0 ) {
+		location=pageP.substring( 0, lastS) +
+		    "/j_security_check";
+	    }
+	    ctx.addServletMapping( location,
+				   "tomcat.formSecurityCheck");
+	    if( debug > 0 )
+		ctx.log( "Map " + location +
+			 " to tomcat.formSecurityCheck for " +
+			 page);
 	} else if( "BASIC".equals( login_type )) {
-	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
+	    ctx.addServlet( new BasicAuthHandler());
+	    ctx.addErrorPage( "401", "tomcat.basicAuthHandler");
 	} else {
 	    // if unknown, leave the normal 404 error handler to deal
 	    // with unauthorized access.
 	}
-
-	if( debug > 0 ) log( "Init  " + ctx.getHost() + " " +
-			     ctx.getPath() + " " + login_type );
-	ctx.addServlet( authWrapper );
     }
     
-    /** Called when a context is added.
-     */
-    public void addContext( ContextManager cm, Context ctx )
-	throws TomcatException
-    {
-    }
-
-    /** Called when a context is removed from a CM - we must ask the mapper to
-	remove all the maps related with this context
-     */
-    public void removeContext( ContextManager cm, Context ctx )
-	throws TomcatException
-    {
-	// nothing - will go away with the ctx
-    }
-    
-
     // XXX not implemented - will deal with that after everything else works.
     public void removeContainer( Container ct )
 	throws TomcatException
@@ -190,6 +228,10 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    getNote( secMapNote );
 	if( ctxSecurityC==null)
 	    ctxCt.setNote( secMapNote, new SecurityConstraints() );
+
+	log( "addContainer() " + ctx.getHost() + " " +
+	     ctx.getPath() + " " +
+	     ct.getPath() );
 	
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
 	    if( debug > 0 )
@@ -222,12 +264,15 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    Container ct=ctxSec.securityPatterns[i];
 	    if( match( ct, path, method ) ) {
 		String roles[]=ct.getRoles();
+		String methods[]=ct.getMethods();
 		String transport=ct.getTransport();
 		if( debug>0) {
 		    StringBuffer sb=new StringBuffer("ACCESS: matched ");
-		    sb.append(ct.getPath()).append(" ").
-			append(ct.getMethods()).append(" ").
-			append(transport).append(" ");
+		    sb.append(ct.getPath()).append(" ");
+		    if(methods!=null)
+			for( int j=0; j< methods.length; j++ )
+			    sb.append(methods[j]).append(" ");
+		    sb.append(transport).append(" ");
 		    if( roles!=null)
 			for( int j=0; j< roles.length; j++ )
 			    sb.append( roles[j]).append(" ");
@@ -292,5 +337,145 @@ class SecurityConstraints {
     public synchronized void addContainer(Container ct) {
 	securityPatterns[ patterns ]= ct;
 	patterns++;
+    }
+}
+
+class BasicAuthHandler extends ServletWrapper {
+    
+    BasicAuthHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.basicAuthHandler";
+    }
+
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	Context ctx=req.getContext();
+	String realm=ctx.getRealmName();
+	if(realm==null) realm="default";
+
+	res.setHeader( "WWW-Authenticate",
+		       "Basic realm=\"" + realm + "\"");
+    }
+}
+
+/** 401 - access denied. Will check if we have an authenticated user
+    or not.
+    XXX If we have user/pass, but still no permission  - display
+    error page.
+*/
+class FormAuthHandler extends ServletWrapper {
+    int debug=1;
+    
+    FormAuthHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.formAuthHandler";
+    }
+
+    void log( String s ) {
+	context.log( "FormAuthHandler: " + s );
+    }
+
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	Context ctx=req.getContext();
+
+	HttpSession session=req.getSession( false );
+	if( session == null ) {
+	}
+	
+	String page=ctx.getFormLoginPage();
+	String errorPage=ctx.getFormErrorPage();
+	// assert errorPage!=null ( AccessInterceptor will check
+	// that and enable form login only if everything is ok
+
+	session=req.getSession( true );
+	String username=(String)session.getAttribute( "j_username" );
+	if( username != null ) {
+	    // 401 with existing j_username - that means wrong credentials.
+	    // Next time we'll have a fresh start
+	    session.removeAttribute( "j_username");
+	    session.removeAttribute( "j_password");
+	    req.setAttribute("javax.servlet.error.message",
+			     errorPage );
+	    contextM.handleStatus( req, res, 302 ); // redirect
+	    return;
+	}
+
+	session.setAttribute( "tomcat.auth.originalLocation",
+			      req.getRequestURI());
+	if( debug > 0 )
+	    log("Redirect1: " + page  + " originalUri=" + req.getRequestURI());
+
+	req.setAttribute("javax.servlet.error.message",
+			 page );
+	contextM.handleStatus( req, res, 302 ); // redirect
+	return; 
+    }
+}
+
+/** 
+    j_security_check handler
+
+    This is called after the user POST the form login page.
+*/
+class FormSecurityCheckHandler extends ServletWrapper {
+    int debug=1;
+    
+    FormSecurityCheckHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.formSecurityCheck";
+    }
+
+    void log( String s ) {
+	context.log( "FormSecurityCheck: " + s );
+    }
+
+
+    /** Will set the j_username and j_password attributes
+	in the session, and redirect to the original
+	location.
+	No need to validate user/pass and display error page
+	if wrong user/pass. Will be done by normal 401 handler,
+	if user/pass are wrong.
+    */
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	String username=req.getParameter( "j_username" );
+	String password=req.getParameter( "j_password" );
+
+	Context ctx=req.getContext();
+	String errorPage=ctx.getFormErrorPage();
+	// assert errorPage!=null ( AccessInterceptor will check
+	// that and enable form login only if everything is ok
+	
+	if( debug > 0 )
+	    log( " user/pass= " + username + " " + password );
+	    
+	HttpSession session=req.getSession( false );
+	if( session == null ) {
+	    ctx.log("From login without a session ");
+	    req.setAttribute("javax.servlet.error.message",
+			     errorPage );
+	    contextM.handleStatus( req, res, 302 ); // redirect
+	    return;
+	}
+	session.setAttribute( "j_username", username );
+	session.setAttribute( "j_password", password );
+	    
+	String origLocation=(String)session.
+	    getAttribute( "tomcat.auth.originalLocation");
+
+	if( debug > 0)
+	    log("Redirect2: " + origLocation);
+	
+	req.setAttribute("javax.servlet.error.message",
+			 origLocation );
+	contextM.handleStatus( req, res, 302 ); // redirect
     }
 }

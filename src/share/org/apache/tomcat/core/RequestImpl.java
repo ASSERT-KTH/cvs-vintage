@@ -238,6 +238,16 @@ public class RequestImpl  implements Request {
 	lookupPath=l;
     }
 
+    // XXX optimize for common case ( single params )
+    public String getParameter(String name ) {
+	String[] values = getParameterValues(name);
+        if (values != null) {
+            return values[0];
+        } else {
+	    return null;
+        }
+    }
+    
     public String[] getParameterValues(String name) {
 	handleParameters();
         return (String[])parameters.get(name);

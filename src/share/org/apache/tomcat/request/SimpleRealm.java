@@ -102,8 +102,9 @@ public class SimpleRealm extends  BaseInterceptor {
 	this.cm=cm;
 	// set-up a per/container note for maps
 	try {
-	    // XXX make the name a "global" static - after everything is stable!
-	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE, "required.roles");
+	    // XXX make the name a "global" static - 
+	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+					 "required.roles");
 	} catch( TomcatException ex ) {
 	    ex.printStackTrace();
 	    throw new RuntimeException( "Invalid state ");
@@ -147,7 +148,8 @@ public class SimpleRealm extends  BaseInterceptor {
 	String user=(String)cred.get("username");
 	String password=(String)cred.get("password");
 	String userRoles[]=null;
-	if( debug > 0 ) log( "Controled access for " + user + " " + req + " " + req.getContainer() );
+	if( debug > 0 ) log( "Controled access for " + user + " " +
+			     req + " " + req.getContainer() );
 
 	if( memoryRealm.checkPassword( user, password ) ) {
 	    req.setRemoteUser( user );

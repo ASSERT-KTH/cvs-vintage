@@ -66,7 +66,8 @@ import java.security.*;
 /** Fixes for 1.2
  */
 public class AdaptiveClassLoader12 extends AdaptiveClassLoader {
-
+    public static int debug=0;
+    
     public AdaptiveClassLoader12()
     {
 	super();
@@ -79,12 +80,19 @@ public class AdaptiveClassLoader12 extends AdaptiveClassLoader {
 	return cl;
     }
 
+    void log( String s ) {
+	System.out.println("AdaptiveClassLoader12: "  + s );
+    }
+    
     protected Class doDefineClass(String name, byte classData[], Object pd )
     {
 	//	System.out.println("XXX defineClass12 " + pd );
 	// 	if( sm != null ) {
-	return defineClass(name, classData, 0, classData.length,
-			   (ProtectionDomain)pd);
+	if( debug > 0) log( name + " " +
+			    ((ProtectionDomain)pd).getCodeSource() );
+	Class c=defineClass(name, classData, 0, classData.length,
+			    (ProtectionDomain)pd);
+	return c;
 	// } else {
 	// 	    return  defineClass(name, classData, 0, classData.length);
 	// 	}

@@ -219,12 +219,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Adapter: Request doesn't deal with this servlet convention
      */
     public String getParameter(String name) {
-        String[] values = getParameterValues(name);
-        if (values != null) {
-            return values[0];
-        } else {
-	    return null;
-        }
+        return request.getParameter( name );
     }
 
     public String[] getParameterValues(String name) {

@@ -99,7 +99,8 @@ import javax.servlet.http.*;
  */
 final class RequestDispatcherImpl implements RequestDispatcher {
     // Use the strings from core
-    private static StringManager sm = StringManager.getManager("org.apache.tomcat.core");
+    private static StringManager sm = StringManager.
+	getManager("org.apache.tomcat.core");
     
     Context context;
     // path dispatchers

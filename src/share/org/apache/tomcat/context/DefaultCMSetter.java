@@ -69,8 +69,10 @@ import java.net.*;
 import java.util.*;
 import java.security.*;
 import javax.servlet.http.*;
+import javax.servlet.*;
 
 import org.apache.tomcat.logging.*;
+
 
 /**
  * Check ContextManager and set defaults for non-set properties
@@ -88,24 +90,15 @@ public class DefaultCMSetter extends BaseInterceptor {
 	setEngineHeader( ctx );
 
 
-	// XXX XXX this will go away - error handling needs to
-	// be re-writen !!!!!! 
-	ServletWrapper errorWrapper=new ServletWrapper();
-	errorWrapper.setContext( ctx );
-	errorWrapper.setServletClass( "org.apache.tomcat.servlets.DefaultErrorPage" );
-	errorWrapper.setServletName( "tomcat.errorPage");
-	ctx.addServlet( errorWrapper );
+	ctx.addServlet( new ExceptionHandler());
+	ctx.addServlet( new StatusHandler());
 
-	// Validation for error  servlet
- 	try {
-	    ServletWrapper errorWrapper1=ctx.getServletByName( "tomcat.errorPage");
-	    errorWrapper1.init();
-	} catch( Exception ex ) {
-	    System.out.println("Error loading default servlet ");
-            ex.printStackTrace();
-	    // XXX remove this context from CM
-	    throw new TomcatException( "Error loading default error servlet ", ex );
-	}
+	// Default status handlers
+	ctx.addServlet( new RedirectHandler());
+	ctx.addErrorPage( "302", "tomcat.redirectHandler");
+	ctx.addServlet( new NotFoundHandler());
+	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
+	
     }
 
     // -------------------- implementation
@@ -122,10 +115,13 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    // no longer use core.properties - the configuration comes from
 	    // server.xml or web.xml - no more properties.
 	    StringBuffer sb=new StringBuffer();
-	    sb.append(Constants.TOMCAT_NAME).append("/").append(Constants.TOMCAT_VERSION);
-	    sb.append(" (").append(Constants.JSP_NAME).append(" ").append(Constants.JSP_VERSION);
+	    sb.append(Constants.TOMCAT_NAME).append("/");
+	    sb.append(Constants.TOMCAT_VERSION);
+	    sb.append(" (").append(Constants.JSP_NAME).append(" ");
+	    sb.append(Constants.JSP_VERSION);
 	    sb.append("; ").append(Constants.SERVLET_NAME).append(" ");
-	    sb.append(Constants.SERVLET_MAJOR).append(".").append(Constants.SERVLET_MINOR);
+	    sb.append(Constants.SERVLET_MAJOR).append(".");
+	    sb.append(Constants.SERVLET_MINOR);
 	    sb.append( "; Java " );
 	    sb.append(System.getProperty("java.version")).append("; ");
 	    sb.append(System.getProperty("os.name") + " ");
@@ -137,4 +133,260 @@ public class DefaultCMSetter extends BaseInterceptor {
 	ctx.setEngineHeader( engineHeader );
     }
 
+}
+
+class NotFoundHandler extends ServletWrapper {
+    static StringManager sm=StringManager.
+	getManager("org.apache.tomcat.servlets");
+
+    NotFoundHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.notFoundHandler";
+    }
+
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	res.setContentType("text/html");	// ISO-8859-1 default
+
+	StringBuffer buf = new StringBuffer();
+	buf.append("<head><title>")
+	    .append(sm.getString("defaulterrorpage.notfound404"))
+	    .append("</title></head>\r\n");
+	buf.append("<body><h1>")
+	    .append(sm.getString("defaulterrorpage.notfound404"))
+	    .append("</h1>\r\n");
+	buf.append(sm.getString("defaulterrorpage.originalrequest"))
+	    .append( req.getRequestURI());
+	buf.append("</body>\r\n");
+
+	String body = buf.toString();
+
+	res.setContentLength(body.length());
+
+	if( res.isUsingStream() ) {
+	    ServletOutputStream out = res.getOutputStream();
+	    out.print(body);
+	    out.flush();
+	} else {
+	    PrintWriter out = res.getWriter();
+	    out.print(body);
+	    out.flush();
+	}
+    }
+}
+
+class ExceptionHandler extends ServletWrapper {
+    static StringManager sm=StringManager.
+	getManager("org.apache.tomcat.servlets");
+
+    ExceptionHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.exceptionHandler";
+    }
+
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	String msg=(String)req.getAttribute("javax.servlet.error.message");
+	
+	Throwable e= (Throwable)req.
+	    getAttribute("tomcat.servlet.error.throwable");
+	if( e==null ) {
+	    System.out.println("ASSERT: Exception handler without exception");
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    return;
+	}
+
+	res.setContentType("text/html");
+	res.setStatus( 500 );
+	
+	StringBuffer buf = new StringBuffer();
+	buf.append("<h1>");
+	if( res.isIncluded() ) {
+	    buf.append(sm.getString("defaulterrorpage.includedservlet") );
+	}  else {
+	    buf.append("Error: ");
+	}
+	
+	buf.append( 500 );
+	buf.append("</h1>\r\n");
+
+	// More info - where it happended"
+	buf.append("<h2>")
+	    .append(sm.getString("defaulterrorpage.location"))
+	    .append(req.getRequestURI())
+	    .append("</h2>");
+
+	buf.append("<b>")
+	    .append(sm.getString("defaulterrorpage.internalservleterror"))
+	    .append("</b><br>");
+        buf.append("<pre>");
+
+	StringWriter sw = new StringWriter();
+	PrintWriter pw = new PrintWriter(sw);
+	e.printStackTrace(pw);
+
+	buf.append(sw.toString());
+
+	buf.append("</pre>\r\n");
+
+        if (e instanceof ServletException) {
+	    Throwable cause = ((ServletException)e).getRootCause();
+	    if (cause != null) {
+		buf.append("<b>")
+		    .append(sm.getString("defaulterrorpage.rootcause"))
+		    .append("</b>\r\n");
+	    buf.append("<pre>");
+
+	    sw=new StringWriter();
+	    pw=new PrintWriter(sw);
+	    cause.printStackTrace( pw );
+	    buf.append( sw.toString());
+
+	    buf.append("</pre>\r\n");
+	    }
+	}
+	
+	buf.append("\r\n");
+	
+	if( res.isUsingStream() ) {
+	    ServletOutputStream out = res.getOutputStream();
+	    out.print(buf.toString());
+	} else {
+	    PrintWriter out = res.getWriter();
+	    out.print(buf.toString());
+	}
+    }
+}
+
+class StatusHandler extends ServletWrapper {
+    static StringManager sm=StringManager.
+	getManager("org.apache.tomcat.servlets");
+
+    StatusHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.statusHandler";
+    }
+    
+    // We don't want interceptors called for redirect
+    // handler
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	String msg=(String)req.getAttribute("javax.servlet.error.message");
+	
+	res.setContentType("text/html");
+	// res is reset !!!
+	// status is already set
+	int sc=res.getStatus();
+	
+	StringBuffer buf = new StringBuffer();
+	buf.append("<h1>");
+	if( res.isIncluded() ) {
+	    buf.append(sm.getString("defaulterrorpage.includedservlet") );
+	}  else {
+	    buf.append("Error: ");
+	}
+	
+	buf.append( sc );
+	buf.append("</h1>\r\n");
+
+	// More info - where it happended"
+	buf.append("<h2>")
+	    .append(sm.getString("defaulterrorpage.location"))
+	    .append(req.getRequestURI())
+	    .append("</h2>");
+
+	buf.append("<b>")
+	    .append(msg)
+	    .append("</b><br>");
+
+	if( res.isUsingStream() ) {
+	    ServletOutputStream out = res.getOutputStream();
+	    out.print(buf.toString());
+	} else {
+	    PrintWriter out = res.getWriter();
+	    out.print(buf.toString());
+	}
+    }
+}
+	
+class RedirectHandler extends ServletWrapper {
+    static StringManager sm=StringManager.
+	getManager("org.apache.tomcat.servlets");
+
+    RedirectHandler() {
+	initialized=true;
+	internal=true;
+	name="tomcat.redirectHandler";
+    }
+
+    // We don't want interceptors called for redirect
+    // handler
+    public void doService(Request req, Response res)
+	throws Exception
+    {
+	String location	= (String)
+	    req.getAttribute("javax.servlet.error.message");
+	Context ctx=req.getContext();
+	
+	location = makeAbsolute(req, location);
+
+	ctx.log("Redirect " + location + " " + req );
+
+	res.setContentType("text/html");	// ISO-8859-1 default
+	res.setHeader("Location", location);
+
+	StringBuffer buf = new StringBuffer();
+	buf.append("<head><title>").
+	    append(sm.getString("defaulterrorpage.documentmoved")).
+	    append("</title></head>\r\n<body><h1>").
+	    append(sm.getString("defaulterrorpage.documentmoved")).
+	    append("</h1>\r\n").
+	    append(sm.getString("defaulterrorpage.thisdocumenthasmoved")).
+	    append(" <a href=\"").
+	    append(location).
+	    append("\">here</a>.<p>\r\n</body>\r\n");
+
+	String body = buf.toString();
+
+	res.setContentLength(body.length());
+
+	if( res.isUsingStream() ) {
+	    ServletOutputStream out = res.getOutputStream();
+	    out.print(body);
+	    out.flush();
+	} else {
+	    PrintWriter out = res.getWriter();
+	    out.print(body);
+	    out.flush();
+	}
+    }
+
+    private String makeAbsolute(Request req, String location) {
+        URL url = null;
+        try {
+	    // Try making a URL out of the location
+	    // Throws an exception if the location is relative
+            url = new URL(location);
+	} catch (MalformedURLException e) {
+	    String requrl = HttpUtils.getRequestURL(req.getFacade()).
+		toString();
+	    try {
+	        url = new URL(new URL(requrl), location);
+	    }
+	    catch (MalformedURLException ignored) {
+	        // Give up
+	        return location;
+	    }
+	}
+        return url.toString();
+    }
+
+
+    
 }

@@ -143,7 +143,9 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader
     /** Return a real class loader
      */
     public ClassLoader getClassLoader() {
-	if( classL==null && jdk12 ) {
+	if( classL!=null)
+	    return classL;
+	if( jdk12 ) {
 	    try {
 		Class ld=Class.forName("org.apache.tomcat.loader.AdaptiveClassLoader12");
 		classL=(AdaptiveClassLoader)ld.newInstance();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.5 2000/06/10 19:05:10 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 2000/06/10 19:05:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.6 2000/06/19 21:53:13 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/06/19 21:53:13 $
  *
  * ====================================================================
  *
@@ -196,12 +196,18 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     }
     
     public void sendError(int sc, String msg) throws IOException {
-	if (isCommitted())
-	    throw new IllegalStateException(sm.getString("hsrf.error.ise"));
+	if (isCommitted()) {
+	    Context ctx=response.getRequest().getContext();
+	    ctx.log( "Servlet API error: sendError with commited buffer ");
+	    // 	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    throw new IllegalStateException(sm.
+					    getString("hsrf.error.ise"));
+	}
 
-	else if (sc != HttpServletResponse.SC_UNAUTHORIZED)	// CRM: FIXME
-	    response.resetBuffer(); // Keep headers and cookies that are set
-
+	// 	if (sc != HttpServletResponse.SC_UNAUTHORIZED)	// CRM: FIXME
+	// 	    response.resetBuffer();
+	// Keep headers and cookies that are set
+	
 	setStatus( sc );
 	Request request=response.getRequest();
 	request.setAttribute("javax.servlet.error.message", msg);
