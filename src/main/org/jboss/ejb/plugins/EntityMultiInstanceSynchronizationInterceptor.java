@@ -54,7 +54,7 @@ import org.jboss.util.Sync;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -85,21 +85,6 @@ public class EntityMultiInstanceSynchronizationInterceptor
  
    protected class MultiInstanceSynchronization extends EntitySynchronizationInterceptor.InstanceSynchronization
    {
-      /**
-       *  The transaction we follow.
-       */
-      private Transaction tx;
-  
-      /**
-       *  The context we manage.
-       */
-      private EntityEnterpriseContext ctx;
-  
-      /**
-       * The context lock
-       */
-      private BeanLock lock;
-  
       /**
        *  Create a new instance synchronization instance.
        */
