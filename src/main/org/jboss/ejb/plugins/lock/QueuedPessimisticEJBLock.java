@@ -42,7 +42,7 @@ import java.io.PrintStream;
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/03: billb</b>
@@ -156,10 +156,10 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    protected boolean doSchedule(MethodInvocation mi) 
       throws Exception
    {
-      this.sync();
       boolean wasThreadScheduled = false;
       Transaction miTx = mi.getTransaction();
       boolean trace = log.isTraceEnabled();
+      this.sync();
       try
       {
          if( trace ) log.trace("Begin schedule, key="+mi.getId());
@@ -249,9 +249,9 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       // We loop here until either until success or until transaction timeout
       // If we get out of the loop successfully, we can successfully
       // set the transaction on this puppy.
-      while (tx != null &&
+      while (this.tx != null &&
              // And are we trying to enter with another transaction?
-             !tx.equals(miTx))
+             !this.tx.equals(miTx))
       {
          wasScheduled = true;
          // That's no good, only one transaction per context
@@ -260,7 +260,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          
          TxLock txLock = getTxLock(miTx);
          
-         if( trace ) log.trace("Begin wait on Tx="+tx);
+         if( trace ) log.trace("Begin wait on Tx="+this.tx);
          
          // And lock the threads on the lock corresponding to the Tx in MI
          synchronized(txLock)
@@ -274,7 +274,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          
          this.sync();
          
-         if( trace ) log.trace("End wait on TxLock="+tx);
+         if( trace ) log.trace("End wait on TxLock="+this.tx);
          if (isTxExpired(miTx))
          {
             log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
@@ -289,7 +289,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
                txLocks.remove(txLock);
                txWaitQueue.remove(txLock);
             }
-            else if (tx != null && tx.equals(miTx))
+            else if (this.tx != null && tx.equals(miTx))
             {
                // We're not qu
                nextTransaction();
@@ -297,6 +297,9 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
          }
       } // end while(tx!=miTx)
+
+      // If we get here, this means that we have the txlock
+      this.tx = miTx;
       return wasScheduled;
    }
 
@@ -405,7 +408,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       if (numMethodLocks == 0)
       {
          synchronized(methodLock) {methodLock.notify();}
-      }
+      } 
    }
    
    /*
@@ -438,7 +441,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          //         saveStackTrace("****removing bean lock and it has tx's in QUEUE!***");
          throw new IllegalStateException("removing bean lock and it has tx's in QUEUE!");
       }
-      else if (refs == 0 && tx != null) 
+      else if (refs == 0 && this.tx != null) 
       {
          //         saveStackTrace("****removing bean lock and it has tx set!***");
          throw new IllegalStateException("removing bean lock and it has tx set!");
