@@ -128,7 +128,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.21 $
+@version $Revision: 1.22 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -245,7 +245,7 @@ implements AbstractWebContainerMBean
       
       // Do we have a jar file jar:<theURL>!/..
       try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
-         catch (Exception ignored) {throw new DeploymentException(ignored.getMessage());}
+         catch (Exception ignored) {log.warn("could not extract webinf classes", ignored); return;}
       
       boolean uclCreated = false;
       
