@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.31 2003/10/31 20:05:06 jjones Exp $
+// $Id: TabDiagram.java,v 1.32 2003/11/02 07:18:02 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.31 2003/10/31 20:05:06 jjones Exp $
+// $Id: TabDiagram.java,v 1.32 2003/11/02 07:18:02 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -438,6 +438,7 @@ class ArgoEditor extends Editor {
      * Overridden to set Argo-specific RenderingHints to determine whether
      * or not antialiasing should be turned on.
      */
+    /*
     public synchronized void paint(Graphics g) {
         if(!shouldPaint())
             return;
@@ -454,6 +455,7 @@ class ArgoEditor extends Editor {
             _modeManager.paint(g);
         }        
     }
+    */
     
     /**
      * Construct a new set of RenderingHints to reflect current user
