@@ -25,7 +25,7 @@
     <copyfile src="etc/web.xml" dest="${deploy.home}/WEB-INF/web.xml"/>
     <mkdir dir="${deploy.home}/WEB-INF/classes"/>
     <mkdir dir="${deploy.home}/WEB-INF/lib"/>
-    <copydir src="lib" dest="${deploy.home}/lib"/>
+    <copydir src="lib" dest="${deploy.home}/WEB-INF/lib"/>
     <mkdir dir="${javadoc.home}"/>
   </target>
 
