@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.*;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -161,15 +161,6 @@ public class ContainerFactory
                   con.setMetaData(bean);
 				  
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
-                  
-				  // Provide a default
-				  if (conf == null) {
-				  
-				       // Something went wrong probably a configuration problem
-                       log.log("No configuration. Using default configuration"); 
-                  
-				       conf = ContainerConfigurations.getDefaultStatelessBeanContainerConfiguration();
-			      }
                  
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
                   con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
@@ -198,23 +189,6 @@ public class ContainerFactory
                   con.setMetaData(bean);
                   
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
-                  
-				  // Provide a default
-                  if (conf == null) {
-			        
-					   // Something went wrong probably a configuration problem
-                       log.log("No configuration. Using default configuration"); 
-                  
-					  // BMP and CMP are different Default
-					  if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
-					      
-						  conf = ContainerConfigurations.getDefaultEntityBeanContainerConfiguration("BMP");
-					  }
-					  else {
-						
-						  conf = ContainerConfigurations.getDefaultEntityBeanContainerConfiguration("CMP");
-					  }
-				  }
                   
                   con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
                   ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
