@@ -157,8 +157,19 @@ public class UserTransactionSessionImpl
       if (tx == null)
          throw new IllegalStateException("No transaction.");
 
-      tx.commit();
-      activeTx.remove(tpc);
+      boolean finished = true;
+
+      try {
+         tx.commit();
+      } catch (java.lang.SecurityException ex) {
+         finished = false;
+         throw ex;
+      } catch (java.lang.IllegalStateException ex) {
+         finished = false;
+         throw ex;
+      } finally {
+         activeTx.remove(tpc);
+      }
    }
 
    /**
