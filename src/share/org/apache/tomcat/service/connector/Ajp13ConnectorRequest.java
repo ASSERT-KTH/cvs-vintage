@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.3 2000/06/06 07:13:43 shachor Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/06 07:13:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.4 2000/06/06 14:08:43 shachor Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/06 14:08:43 $
  *
  * ====================================================================
  *
@@ -180,15 +180,15 @@ public class Ajp13ConnectorRequest extends RequestImpl
                 case SC_A_SERVLET_PATH :
                     System.out.println("SC_A_SERVLET_PATH not in use " + msg.getString());
                 break;
-                                
+
                 case SC_A_REMOTE_USER  :
                     remoteUser = msg.getString();
                 break;
-                                
+
                 case SC_A_AUTH_TYPE    :
                     authType = msg.getString();
                 break;
-                                
+
                 case SC_A_QUERY_STRING :
                     queryString = msg.getString();
                 break;
@@ -199,23 +199,27 @@ public class Ajp13ConnectorRequest extends RequestImpl
 
                 case SC_A_SSL_CERT     :
                     isSSL = true;
-                    System.out.println("SC_A_SSL_CERT not in use " + msg.getString());
+		    attributes.put("javax.servlet.request.X509Certificate",
+	                           msg.getString());
                 break;
 
                 case SC_A_SSL_CIPHER   :
                     isSSL = true;
-                    System.out.println("SC_A_SSL_CIPHER not in use " + msg.getString());
+		    attributes.put("javax.servlet.request.cipher_suite",
+	                           msg.getString());
                 break;
 
                 case SC_A_SSL_SESSION  :
                     isSSL = true;
-                    System.out.println("SC_A_SSL_SESSION not in use " + msg.getString());
+		    attributes.put("javax.servlet.request.ssl_session",
+	                           msg.getString());
                 break;
 
                 default:
                     return -1;
             }
         }
+
         if(isSSL) {
             setScheme("https");
         }

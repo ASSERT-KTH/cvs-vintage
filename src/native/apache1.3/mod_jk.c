@@ -304,6 +304,7 @@ static int init_ws_service(apache_private_data_t *private_data,
                            jk_ws_service_t *s)
 {
     request_rec *r      = private_data->r;
+    char *ssl_temp      = NULL;
     s->jvm_route        = NULL;
     s->start_response   = ws_start_response;
     s->read             = ws_read;
@@ -328,12 +329,24 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->content_length = get_content_length(r);
     s->query_string = r->args;
     s->req_uri      = r->uri;
-    
+
     s->is_ssl       = JK_FALSE;
     s->ssl_cert     = NULL;
     s->ssl_cert_len = 0;
     s->ssl_cipher   = NULL;
     s->ssl_session  = NULL;
+    
+    ap_add_common_vars(r);
+    ssl_temp = (char *)ap_table_get(r->subprocess_env, "HTTPS");
+    if(ssl_temp && !strcasecmp(ssl_temp, "on")) {
+        s->is_ssl       = JK_TRUE;
+        s->ssl_cert     = (char *)ap_table_get(r->subprocess_env, "SSL_CLIENT_CERT");
+        if(s->ssl_cert) {
+	        s->ssl_cert_len = strlen(s->ssl_cert);
+        }
+        s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, "HTTPS_CIPHER");
+        s->ssl_session  = NULL;
+    }
 
     s->headers_names    = NULL;
     s->headers_values   = NULL;
@@ -458,7 +471,6 @@ static int jk_handler(request_rec *r)
 {   
     const char *worker_name = ap_table_get(r->notes, JK_WORKER_ID);
 
-    /* If this is a proxy request, we'll notify an error */
     if(r->proxyreq) {
         return HTTP_INTERNAL_SERVER_ERROR;
     }
@@ -613,7 +625,7 @@ static int jk_translate(request_rec *r)
                                              conf->log ? conf->log : main_log);
 
             if(worker) {
-                r->handler=ap_pstrdup(r->pool,JK_HANDLER);
+                r->handler = ap_pstrdup(r->pool,JK_HANDLER);
                 ap_table_setn(r->notes, JK_WORKER_ID, worker);
                 return OK;
             }
@@ -647,9 +659,7 @@ module MODULE_VAR_EXPORT jk_module = {
     NULL,                       /* [8] fixups */
     NULL,                       /* [10] logger */
     NULL,                       /* [3] header parser */
-#if MODULE_MAGIC_NUMBER > 19970622
     NULL,                       /* apache child process initializer */
     NULL,                       /* apache child process exit/cleanup */
     NULL                        /* [1] post read_request handling */
-#endif
 };

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -187,11 +187,26 @@ static int JK_METHOD ws_read(jk_ws_service_t *s,
             char *buf = b;
             unsigned i;
             netbuf *inbuf = p->sn->inbuf;
+
+#ifdef netbuf_getbytes
+            i = netbuf_getbytes(inbuf, b, l);
+            if(NETBUF_EOF == i || NETBUF_ERROR == i) {
+                return JK_FALSE;
+            }
+
+#else 
             int ch;
-        
             for(i = 0 ; i < l ; i++) {
-                ch = netbuf_getc(inbuf);              
-                if(IO_ERROR == ch || IO_EOF == ch) {
+                ch = netbuf_getc(inbuf);           
+                /*
+                 * IO_EOF is 0 (zero) which is a very reasonable byte
+                 * when it comes to binary data. So we are not breaking 
+                 * out of the read loop when reading it.
+                 *
+                 * We are protected from an infinit loop by the Java part of
+                 * Tomcat.
+                 */
+                if(IO_ERROR == ch) {
                     break;
                 }
 
@@ -201,8 +216,9 @@ static int JK_METHOD ws_read(jk_ws_service_t *s,
             if(0 == i) {
                 return JK_FALSE;
             }
-
+#endif
             *a = i;
+
         }
         return JK_TRUE;
     }
@@ -397,11 +413,20 @@ static int init_ws_service(nsapi_private_data_t *private_data,
     s->headers_values   = NULL;
     s->num_headers      = 0;
     
-    s->is_ssl       = security_active;
-    s->ssl_cert     = NULL;
-    s->ssl_cert_len = 0;
-    s->ssl_cipher   = NULL;
-    s->ssl_session  = NULL;
+    s->is_ssl           = security_active;
+    if(s->is_ssl) {
+        s->ssl_cert     = pblock_findval("auth-cert", private_data->rq->vars);
+        if(s->ssl_cert) {
+            s->ssl_cert_len = strlen(s->ssl_cert);
+        }
+        s->ssl_cipher   = pblock_findval("cipher", private_data->sn->client);
+        s->ssl_session  = pblock_findval("ssl-id", private_data->sn->client);
+    } else {
+        s->ssl_cert     = NULL;
+        s->ssl_cert_len = 0;
+        s->ssl_cipher   = NULL;
+        s->ssl_session  = NULL;
+    }
 
     return setup_http_headers(private_data, s);
 }

@@ -104,10 +104,6 @@ SOURCE=..\jk\jk_ajp13_worker.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\jk\jk_ajp23_worker.c
-# End Source File
-# Begin Source File
-
 SOURCE=..\jk\jk_connect.c
 # End Source File
 # Begin Source File
@@ -154,6 +150,78 @@ SOURCE=..\jk\jk_worker.c
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\jk\jk_ajp12_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_ajp13.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_ajp13_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_connect.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_global.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_jni_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_lb_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_logger.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_map.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_msg_buff.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_mt.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_pool.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_service.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_sockbuf.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_uri_worker_map.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_util.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_worker_list.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 
