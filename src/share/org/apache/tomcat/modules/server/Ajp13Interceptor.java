@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.12 2001/08/29 05:08:07 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2001/08/29 05:08:07 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.13 2001/09/12 21:35:46 nacho Exp $
+ * $Revision: 1.13 $
+ * $Date: 2001/09/12 21:35:46 $
  *
  * ====================================================================
  *
@@ -79,6 +79,7 @@ import org.apache.tomcat.util.log.*;
 public class Ajp13Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler
 {
+    private boolean tomcatAuthentication=true;
     public Ajp13Interceptor()
     {
         super();
@@ -99,10 +100,12 @@ public class Ajp13Interceptor extends PoolTcpConnector
         Object thData[]=new Object[3];
         Ajp13Request req=new Ajp13Request();
         Ajp13Response res=new Ajp13Response();
+        Ajp13 con=new Ajp13();
+        con.setTomcatAuthentication(isTomcatAuthentication());
         cm.initRequest(req, res);
         thData[0]=req;
         thData[1]=res;
-        thData[2]=new Ajp13();
+        thData[2]=con;
 
         return  thData;
     }
@@ -140,12 +143,13 @@ public class Ajp13Interceptor extends PoolTcpConnector
                 req = new Ajp13Request();
                 res = new Ajp13Response();
                 con = new Ajp13();
+                con.setTomcatAuthentication(isTomcatAuthentication());
                 cm.initRequest( req, res );
             }
 	    // XXX
 	    req.ajp13=con;
 	    res.ajp13=con;
-	    
+
             con.setSocket(socket);
 
             boolean moreRequests = true;
@@ -159,13 +163,13 @@ public class Ajp13Interceptor extends PoolTcpConnector
 				    socket.getInetAddress())) {
 			moreRequests = false;
 			continue;
-		    }                        
+		    }
 		}
 		if( status != 200 )
 		    break;
-		
+
 		cm.service(req, res);
-		
+
 		req.recycle();
 		res.recycle();
             }
@@ -181,13 +185,13 @@ public class Ajp13Interceptor extends PoolTcpConnector
     {
         this.cm=(ContextManager)contextM;
     }
-    
+
     protected boolean doShutdown(InetAddress serverAddr,
                                  InetAddress clientAddr)
     {
         try {
 	    // close the socket connection before handling any signal
-	    // but get the addresses first so they are not corrupted			
+	    // but get the addresses first so they are not corrupted
             if(Ajp12.isSameAddress(serverAddr, clientAddr)) {
 		cm.stop();
 		// same behavior as in past, because it seems that
@@ -201,7 +205,15 @@ public class Ajp13Interceptor extends PoolTcpConnector
 	log("Shutdown command ignored");
 	return false;
     }
-    
+
+    public boolean isTomcatAuthentication() {
+        return tomcatAuthentication;
+    }
+
+    public void setTomcatAuthentication(boolean newTomcatAuthentication) {
+        tomcatAuthentication = newTomcatAuthentication;
+    }
+
 }
 
 class Ajp13Request extends Request 

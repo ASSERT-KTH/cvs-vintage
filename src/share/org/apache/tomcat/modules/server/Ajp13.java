@@ -194,30 +194,40 @@ public class Ajp13
     Ajp13Packet inBuf  = new Ajp13Packet( MAX_PACKET_SIZE );
     // Boffer used for request head ( and headers )
     Ajp13Packet hBuf=new Ajp13Packet( MAX_PACKET_SIZE );
-    
+
     // Holds incoming reads of request body data (*not* header data)
     byte []bodyBuff = new byte[MAX_READ_SIZE];
-    
+
     int blen;  // Length of current chunk of body data in buffer
     int pos;   // Current read position within that buffer
 
     boolean end_of_stream; // true if we've received an empty packet
 
-    public Ajp13() 
+    // True to ignore HTTP server auth 
+    private boolean tomcatAuthentication=true;
+
+    public Ajp13()
     {
         super();
     }
 
-    public void recycle() 
+    public void recycle()
     {
       // This is a touch cargo-cultish, but I think wise.
-      blen = 0; 
+      blen = 0;
       pos = 0;
       end_of_stream = false;
       if( dL>0 ) d( "recycle()");
       headersWriter.recycle();
     }
-    
+
+    public boolean isTomcatAuthentication() {
+        return tomcatAuthentication;
+    }
+
+    public void setTomcatAuthentication(boolean newTomcatAuthentication) {
+        tomcatAuthentication = newTomcatAuthentication;
+    }
     /**
      * Associate an open socket with this instance.
      */
@@ -326,50 +336,54 @@ public class Ajp13
 	    case SC_A_CONTEXT      :
 		//		contextPath = msg.getString();
                 break;
-		
+
 	    case SC_A_SERVLET_PATH :
 		//log("SC_A_SERVLET_PATH not in use " + msg.getString());
                 break;
-		
+
 	    case SC_A_REMOTE_USER  :
-		req.setRemoteUser( msg.getString());
-		// XXX recycle ?
-		// Note that roles are not integrated with apache
-		req.setUserPrincipal( new SimplePrincipal( req.getRemoteUser() ));
+		if (isTomcatAuthentication()) {  // Ignore auth done by HTTP Server
+                    msg.getString();
+                } else { // Honor auth done by HTTP Server
+                    req.setRemoteUser( msg.getString());
+                    // XXX recycle ?
+                    // Note that roles are not integrated with apache
+                    req.setUserPrincipal( new SimplePrincipal( req.getRemoteUser() ));
+                } 
                 break;
-		
+
 	    case SC_A_AUTH_TYPE    :
 		req.setAuthType( msg.getString());
                 break;
-		
+
 	    case SC_A_QUERY_STRING :
 		msg.getMessageBytes( req.queryString());
                 break;
-		
+
 	    case SC_A_JVM_ROUTE    :
 		req.setJvmRoute(msg.getString());
                 break;
-		
+
 	    case SC_A_SSL_CERT     :
 		isSSL = true;
 		req.setAttribute("javax.servlet.request.X509Certificate",
 				 msg.getString());
                 break;
-		
+
 	    case SC_A_SSL_CIPHER   :
 		isSSL = true;
 		req.setAttribute("javax.servlet.request.cipher_suite",
 				 msg.getString());
                 break;
-		
+
 	    case SC_A_SSL_SESSION  :
 		isSSL = true;
 		req.setAttribute("javax.servlet.request.ssl_session",
 				  msg.getString());
                 break;
-		
+
 	    case SC_A_REQ_ATTRIBUTE :
-		req.setAttribute(msg.getString(), 
+		req.setAttribute(msg.getString(),
 				 msg.getString());
                 break;
 
@@ -734,4 +748,5 @@ public class Ajp13
     private void d(String s ) {
 	System.err.println( "Ajp13: " + s );
     }
+
 }
