@@ -74,7 +74,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.20 2002/11/04 23:43:03 elicia Exp $
+ * @version $Id: BaseTestCase.java,v 1.21 2003/12/07 21:06:34 thierrylach Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -109,6 +109,9 @@ public class BaseTestCase extends TestCase
         if (!initialized)
         {
             String configDir = System.getProperty("config.dir");
+            if (configDir == null) {
+            	configDir = "target/webapps/scarab";
+            }
             if (configDir != null)
             {
                 initTurbine(configDir);
