@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.10 2003/12/06 18:12:51 alexb Exp $
+// $Id: ItemUID.java,v 1.11 2003/12/19 22:53:54 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,32 @@ import org.apache.log4j.Logger;
  * and creating new ItemUIDs for any object with a method
  * <code>setItemUID(ItemUID)</code>
  * using reflection in java.
+ *
+ * A class intended to be tagged must at least provide a
+ * <code>ItemUID getItemUID()</code>
+ * method. It may also provide a
+ * <code>void setItemUID(ItemUID id)</code>
+ * such that getItemUID() will return id if a call returns successfully,
+ * and which is stored persistently should the tagged object be stored.
+ * This allows this class to automatically tag an object when necessary,
+ * but it is allowed to tag classes by other means and only provide the
+ * getItemUID() call.
+ *
+ * A critical requirement for this class is that the cognitive component
+ * is supposed to work with general objects. This class is a wrapper around
+ * places where the component needs persistent identities of objects, since
+ * I have said that some features cannot be implemented without that, such as
+ * ResolvedCritic, and so far noone has shown me wrong (though I wouldn't
+ * mind). It is for this reason that some perhaps ugly looking exceptions in
+ * this code must be considered perfectly normal conditions. Failure of some
+ * object to work with tagging must be handled by the cognitive component
+ * programmer and it is (see eg ResolvedCritic).
+ *
+ * A possible future change would be to allow tag handlers to be registered
+ * with this class to handle other preexisting tagging mechanisms, which
+ * could be used to remove the dependancy to the model component here, which
+ * I find a bit unaesthetic. So far, not enough to write it (though it is not
+ * much work).
  *
  * @author Michael Stockman
  */
@@ -147,16 +173,13 @@ public class ItemUID
 	}
 	catch (NoSuchMethodException nsme)
 	{
-	    cat.error("getItemUID for " + obj.getClass() +
-		      " threw: ",
-		      nsme);
+	    // Apparently this object had no getItemUID
 	    return null;
 	}
 	catch (SecurityException se)
 	{
-	    cat.error("getItemUID for " + obj.getClass() +
-		      " threw: ",
-		      se);
+	    // Apparently it had a getItemUID,
+	    // but we're not allowed to call it
 	    return null;
 	}
 	catch (InvocationTargetException tie)
@@ -168,9 +191,8 @@ public class ItemUID
 	}
 	catch (IllegalAccessException iace)
 	{
-	    cat.error("getItemUID for " + obj.getClass() +
-		      " threw: ",
-		      iace);
+	    // Apparently it had a getItemUID,
+	    // but we're not allowed to call it
 	    return null;
 	}
 	catch (IllegalArgumentException iare)
@@ -241,16 +263,13 @@ public class ItemUID
 	}
 	catch (NoSuchMethodException nsme)
 	{
-	    cat.error("setItemUID for " + obj.getClass() +
-		      " threw",
-		      nsme);
+	    // Apparently this object had no setItemUID
 	    return null;
 	}
 	catch (SecurityException se)
 	{
-	    cat.error("setItemUID for " + obj.getClass() +
-		      " threw",
-		      se);
+	    // Apparently it had a setItemUID,
+	    // but we're not allowed to call it
 	    return null;
 	}
 	catch (InvocationTargetException tie)
@@ -262,9 +281,8 @@ public class ItemUID
 	}
 	catch (IllegalAccessException iace)
 	{
-	    cat.error("setItemUID for " + obj.getClass() +
-		      " threw",
-		      iace);
+	    // Apparently it had a setItemUID,
+	    // but we're not allowed to call it
 	    return null;
 	}
 	catch (IllegalArgumentException iare)
