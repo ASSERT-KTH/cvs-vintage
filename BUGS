@@ -1,0 +1,22 @@
+The yardstick we are using to know what the bugs are is the Bugzilla system 
+that is installed on the Jakarta web site <http://jakarta.apache.org/bugs>.  
+You can help us out by keeping the following principles in mind:
+
+* If you think you've discovered a bug, please review the current list
+  of bugs to see if yours has already been found by someone else.
+
+* If this is a new bug, please record it in Bugzilla.  Bugs that are
+  described only in mailing list messages will likely get missed in
+  the heat of the bug-swatting battle.
+
+* Proposed patches (included in the bug report or as a separate
+  attachment) are deeply appreciated, because they speed up the
+  fixing process.  (Besides, you get your name recorded for posterity
+  as a contributor! :-).
+
+* Many bugs have been fixed in CVS. If you want to help find the remaining 
+  ones, you can grab the most recent nightly code drop and/or check out the 
+  code from anonymous CVS and build Tomcat yourself.
+
+Thanks for all the sharp eyes looking for problems (and contributing
+fixes)!
