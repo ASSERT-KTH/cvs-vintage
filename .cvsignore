@@ -11,3 +11,4 @@ junit*.properties
 .project
 local-*
 build.properties
+velocity.log.1
