@@ -33,7 +33,8 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
+ * @version $Revision: 1.7 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -111,7 +112,7 @@ public class JDBCLoadEntityCommand
          
          setCMPFieldValue(ctx.getInstance(), 
                           cmpField, 
-                          getResultObject(rs, idx++, cmpField.getField().getType()));
+                          getResultObject(rs, idx++, cmpField));
       }
 
       // Store state to be able to do tuned updates

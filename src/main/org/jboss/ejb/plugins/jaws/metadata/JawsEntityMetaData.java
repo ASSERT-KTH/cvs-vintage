@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins.jaws.metadata;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.HashMap;
 
 import java.lang.reflect.Field;
 
@@ -24,13 +25,16 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
+// TODO
+import org.jboss.logging.Logger;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.5 $
+ *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
+ *	@version $Revision: 1.6 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -78,7 +82,18 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// finders for this bean
 	private ArrayList finders = new ArrayList();
 	
+	/**
+	 * Here we store the basename of all detailed fields in jaws.xml
+	 * (e.g., "data" for "data.categoryPK").
+	 */
+	private HashMap detailedFieldDescriptions = new HashMap();
 	
+	/**
+	 * This is the Boolean we store as value in detailedFieldDescriptions.
+	 */
+	private static final Boolean detailedBoolean = new Boolean(true);
+
+
 	// Static --------------------------------------------------------
    
 	// Constructors --------------------------------------------------
@@ -229,9 +244,20 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 			String fieldName = getElementContent(getUniqueChild(cmpField, "field-name"));
 			
 			CMPFieldMetaData cmpFieldMetaData = getCMPFieldByName(fieldName);
-            if (cmpFieldMetaData == null) 
-				throw new DeploymentException("cmp-field '"+fieldName+"' found in jaws.xml but not in ejb-jar.xml");
-				
+			if (cmpFieldMetaData == null) {
+				// Before we throw an exception, we have to check for nested cmp-fields.
+				// We just add a new CMPFieldMetaData.
+				if (isDetailedFieldDescription(fieldName)) {
+					// We obviously have a cmp-field like "data.categoryPK" in jaws.xml
+					// and a cmp-field "data" in ejb-jar.xml.
+					// In this case, we assume the "data.categoryPK" as a detailed description for "data".
+					cmpFieldMetaData = new CMPFieldMetaData(fieldName, this);
+					cmpFields.put(fieldName, cmpFieldMetaData);		    
+				}
+				else {
+					throw new DeploymentException("cmp-field '"+fieldName+"' found in jaws.xml but not in ejb-jar.xml");
+				}
+			}
 			cmpFieldMetaData.importXml(cmpField);
 		}
 		
@@ -246,6 +272,28 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 			finders.add(finderMetaData);
 		}
 		
+	}
+
+	/**
+	 * @return true For a fieldname declared in jaws.xml like "data.categoryPK" if
+	 * there was a fieldname declared in ejb-jar.xml like "data".
+	 */
+	private boolean isDetailedFieldDescription(String fieldName) {
+		String fieldBaseName = CMPFieldMetaData.getFirstComponent(fieldName);
+
+		if (detailedFieldDescriptions.containsKey(fieldBaseName)) {
+			return true;
+		}
+
+		CMPFieldMetaData cmpFieldMetaData = getCMPFieldByName(fieldBaseName);
+		if (cmpFieldMetaData == null) {
+			return false;
+		}
+		else {
+			detailedFieldDescriptions.put(fieldBaseName, detailedBoolean);
+			cmpFields.remove(fieldBaseName);
+			return true;
+		}
 	}
 		
 		

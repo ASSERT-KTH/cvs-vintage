@@ -56,7 +56,8 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.21 $
+ * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
+ * @version $Revision: 1.22 $
  */
 public abstract class JDBCCommand
 {
@@ -103,7 +104,7 @@ public abstract class JDBCCommand
    /**
     * Gives compile-time control of tracing.
     */
-   public static boolean debug = false;
+   public static boolean debug = true;
 
    // Constructors --------------------------------------------------
 
@@ -469,6 +470,25 @@ public abstract class JDBCCommand
         return result;
     }
 
+	/**
+	 * Wrapper around getResultObject(ResultSet rs, int idx, Class destination).
+	 */
+	protected Object getResultObject(ResultSet rs, int idx, CMPFieldMetaData cmpField)
+		throws SQLException {
+		if (!cmpField.isNested()) {
+			// do it as before
+			return getResultObject(rs, idx, cmpField.getField().getType());
+		}
+		
+		// deal with composite object
+		log.warning("Using Inprise feature.");
+		
+		// Assuming no one will ever use BLOPS in composite objects.
+		// TODO Should be tested for BLOPability
+		return rs.getObject(idx);
+	}
+
+
    /**
     * Gets the integer JDBC type code corresponding to the given name.
     *
@@ -578,8 +598,7 @@ public abstract class JDBCCommand
    protected Object getCMPFieldValue(Object instance, CMPFieldMetaData fieldMetaData)
       throws IllegalAccessException
    {
-      Field field = fieldMetaData.getField();
-      return field.get(instance);
+		 return fieldMetaData.getValue(instance);
    }
 
    protected void setCMPFieldValue(Object instance,
@@ -587,8 +606,15 @@ public abstract class JDBCCommand
                                    Object value)
       throws IllegalAccessException
    {
-      Field field = fieldMetaData.getField();
-      field.set(instance, value);
+		 if (fieldMetaData.isNested()) {
+			 // we have a nested field
+			 fieldMetaData.set(instance, value);
+		 }
+		 else {
+			 // the usual way
+			 Field field = fieldMetaData.getField();
+			 field.set(instance, value);
+		 }
    }
 
    protected Object getPkFieldValue(Object pk, PkFieldMetaData pkFieldMetaData)
