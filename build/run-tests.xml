@@ -31,9 +31,7 @@
   </path>
 
   <target name="compile">
-    <exec executable="ant" dir="${basedir}">
-    <arg line="compile-tests"/>
-    </exec>  
+    <ant dir="${basedir}" target="compile-tests"/>
   </target>
 
   <target name="test-all" depends="compile">
