@@ -95,6 +95,7 @@ import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.DependTypePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
@@ -112,7 +113,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.120 2002/09/04 23:54:38 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.121 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -126,6 +127,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -140,8 +142,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -154,8 +155,8 @@ public class ModifyIssue extends BaseModifyIssue
         commentField.setRequired(true);
         if (commentGroup == null || !commentField.isValid())
         {
-            commentField.setMessage("An explanatory comment is required " + 
-                                    "to modify attributes.");
+            commentField.setMessage(l10n.get(
+                "ExplanatoryCommentRequiredToModifyAttributes"));
         }
 
         // Set any other required flags
@@ -237,7 +238,7 @@ public class ModifyIssue extends BaseModifyIssue
             } 
             if (!modifiedAttribute)
             {
-                scarabR.setAlertMessage("You need to modify an attribute.");
+                scarabR.setAlertMessage(l10n.get("MustModifyAttribute"));
                 return;
             }
             Attachment attachment = AttachmentManager.getInstance();
@@ -247,7 +248,7 @@ public class ModifyIssue extends BaseModifyIssue
                 ActivitySet activitySet = issue.setAttributeValues(newAttVals, attachment, user);
                 intake.removeAll();
                 sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
-                scarabR.setConfirmMessage("Your changes have been saved.");
+                scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
             }
             catch (Exception se)
             {
@@ -256,7 +257,7 @@ public class ModifyIssue extends BaseModifyIssue
         } 
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
     
@@ -272,6 +273,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -287,8 +289,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -343,6 +344,7 @@ public class ModifyIssue extends BaseModifyIssue
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -357,8 +359,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -377,6 +378,7 @@ public class ModifyIssue extends BaseModifyIssue
          throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -391,8 +393,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -411,6 +412,7 @@ public class ModifyIssue extends BaseModifyIssue
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -425,8 +427,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -457,6 +458,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
         // validate intake
         if (intake.isAllValid())
@@ -471,7 +473,7 @@ public class ModifyIssue extends BaseModifyIssue
                 addSuccess = addFileAttachment(issue, group, attachment, 
                               scarabR, data, intake);
                 issue.save();
-                message = "Your file was saved.";
+                message = "FileSaved";
             }
             else if (typeId == Attachment.URL__PK || typeId == Attachment.COMMENT__PK)
             {
@@ -479,11 +481,11 @@ public class ModifyIssue extends BaseModifyIssue
                 group.setProperties(attachment);
                 if (typeId == Attachment.URL__PK)
                 {
-                    message = "Your url was saved.";
+                    message = "UrlSaved";
                 }
                 else
                 {
-                    message = "Your comment was saved.";
+                    message = "CommentSaved";
                 }
                 addSuccess = true;
             }
@@ -498,13 +500,13 @@ public class ModifyIssue extends BaseModifyIssue
             {
                 // remove the group
                 intake.remove(group);
-                sendEmail(activitySet, issue, message, context, data);
-                scarabR.setConfirmMessage(message);
+                sendEmail(activitySet, issue, l10n.get(message), context, data);
+                scarabR.setConfirmMessage(l10n.get(message));
             }
         }
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -512,6 +514,9 @@ public class ModifyIssue extends BaseModifyIssue
         ScarabRequestTool scarabR, RunData data, IntakeTool intake)
         throws Exception
     {
+        ScarabLocalizationTool l10n = (ScarabLocalizationTool)
+            getTemplateContext(data).get(ScarabConstants.LOCALIZATION_TOOL);
+
         if (group != null)
         {
             Field nameField = group.get("Name");
@@ -546,12 +551,12 @@ public class ModifyIssue extends BaseModifyIssue
             }
             else
             {
-                scarabR.setAlertMessage(ERROR_MESSAGE);
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
             }
         }
         else
         {
-            scarabR.setAlertMessage("Could not locate attachment group");
+            scarabR.setAlertMessage(l10n.get("CouldNotLocateAttachmentGroup"));
         }
         return false;
     }
@@ -566,9 +571,11 @@ public class ModifyIssue extends BaseModifyIssue
     {
         if (!activitySet.sendEmail(new ContextAdapter(context), issue))
         {
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            String emailError = l10n.get(EMAIL_ERROR);
             StringBuffer sb = 
-                new StringBuffer(msg.length() + EMAIL_ERROR.length());
-            sb.append(msg).append(EMAIL_ERROR);
+                new StringBuffer(msg.length() + emailError.length());
+            sb.append(msg).append(emailError);
             getScarabRequestTool(context).setConfirmMessage(sb.toString());
         }
     }
@@ -586,6 +593,7 @@ public class ModifyIssue extends BaseModifyIssue
         
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -600,8 +608,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -622,12 +629,12 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(DEFAULT_MSG);  
-            sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context, data);
         }
         else
         {
-            scarabR.setInfoMessage("No comments were changed.");
+            scarabR.setInfoMessage(l10n.get("NoCommentsChanged"));
         }
     }
 
@@ -643,6 +650,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -658,8 +666,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -679,12 +686,13 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(DEFAULT_MSG);
-            sendEmail(activitySet, issue, "Url was deleted", context, data);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            sendEmail(activitySet, issue, l10n.get("UrlDeleted"), 
+                      context, data);
         }
         else
         {
-            scarabR.setInfoMessage("No urls were changed.");
+            scarabR.setInfoMessage(l10n.get("NoUrlsChanged"));
         }
     }
     
@@ -700,6 +708,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -715,8 +724,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -736,12 +744,13 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(DEFAULT_MSG);
-            sendEmail(activitySet, issue, "File was deleted", context, data);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            sendEmail(activitySet, issue, l10n.get("FileDeleted"), 
+                      context, data);
         }
         else
         {
-            scarabR.setInfoMessage("No files were changed.");
+            scarabR.setInfoMessage(l10n.get("NoFilesChanged"));
         }
     }
 
@@ -758,6 +767,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
@@ -776,8 +786,7 @@ public class ModifyIssue extends BaseModifyIssue
             if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                    issue.getModule()))
             {
-                scarabR.setAlertMessage(
-                    "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                 return;
             }
 
@@ -812,13 +821,13 @@ public class ModifyIssue extends BaseModifyIssue
             // something changed...
             if (activitySet != null)
             {
-                scarabR.setConfirmMessage(DEFAULT_MSG);
-                sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context, data);
             }
         }
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -835,6 +844,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -850,8 +860,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(
-                "Insufficient permission to edit this issue.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
@@ -865,7 +874,7 @@ public class ModifyIssue extends BaseModifyIssue
         type.setRequired(true);
         if (!type.isValid())
         {
-            type.setMessage("Please enter a valid dependency type.");
+            type.setMessage("EnterValidDependencyType");
             isValid = false;
         }
 
@@ -874,7 +883,7 @@ public class ModifyIssue extends BaseModifyIssue
         childId.setRequired(true);
         if (!childId.isValid())
         {
-            childId.setMessage("Please enter a valid issue id.");
+            childId.setMessage("EnterValidIssueId");
             isValid = false;
         }
         else
@@ -883,15 +892,13 @@ public class ModifyIssue extends BaseModifyIssue
             childIssue = scarabR.getIssue(childId.toString());
             if (childIssue == null)
             {
-                childId.setMessage("The id you entered does " +
-                                   "not correspond to a valid issue.");
+                childId.setMessage("EnterValidIssueId");
                 isValid = false;
             }
             // Make sure issue is not being marked as dependant on itself.
             else if (childIssue != null && childIssue.equals(issue))
             {
-                childId.setMessage("You cannot add a dependency for an " 
-                                  + "issue on itself.");
+                childId.setMessage("CannotAddSelfDependency");
                 isValid = false;
             }
         }
@@ -916,14 +923,16 @@ public class ModifyIssue extends BaseModifyIssue
             if (activitySet != null)
             {
                 // FIXME: I think that we are sending too many emails here
-                sendEmail(activitySet, childIssue, DEFAULT_MSG, context, data);
-                sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
+                sendEmail(activitySet, childIssue, l10n.get(DEFAULT_MSG), 
+                          context, data);
+                sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), 
+                          context, data);
             }
-            scarabR.setConfirmMessage(DEFAULT_MSG);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -936,6 +945,7 @@ public class ModifyIssue extends BaseModifyIssue
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = null;
         try
         {
@@ -955,8 +965,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         else
         {
-            scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
 

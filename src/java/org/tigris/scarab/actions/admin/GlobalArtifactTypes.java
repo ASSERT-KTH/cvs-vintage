@@ -57,6 +57,7 @@ import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.RModuleIssueType;
@@ -68,7 +69,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.17 2002/07/02 22:50:50 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.18 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -81,6 +82,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issueTypes = IssueTypePeer.getAllIssueTypes(true);
 
         if ( intake.isAllValid() )
@@ -100,8 +102,8 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                 else 
                 {
                     getScarabRequestTool(context).setAlertMessage(
-                        "Changes would result in duplicate names");
-                    field.setMessage("Duplicate");
+                        l10n.get("ChangesResultDuplicateNames"));
+                    field.setMessage(l10n.get("Duplicate"));
                 }
             }
          }
@@ -133,6 +135,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         if (((ScarabUser)data.getUser())
             .hasPermission(ScarabSecurity.DOMAIN__ADMIN,
                            scarabR.getCurrentModule()))
@@ -155,12 +158,11 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                    issueType.deleteModuleMappings(user);
                  }
              }
-             scarabR.setConfirmMessage("Global issue type(s) deleted.");
+             scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
          }
          else
          {
-             scarabR.setAlertMessage(
-                 "You do not have permission to perform this action.");
+             scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
          }
      }
 

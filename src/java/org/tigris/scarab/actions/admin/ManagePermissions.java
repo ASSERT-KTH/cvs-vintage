@@ -77,6 +77,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 
 /**
@@ -84,7 +85,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManagePermissions.java,v 1.4 2002/04/26 20:24:45 jmcnally Exp $
+ * @version $Id: ManagePermissions.java,v 1.5 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ManagePermissions extends RequireLoginFirstAction
 {

@@ -65,6 +65,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
@@ -73,7 +74,7 @@ import org.tigris.scarab.util.ScarabException;
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.3 2002/08/15 20:14:22 jon Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.4 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {
@@ -98,6 +99,7 @@ public class BaseModifyIssue extends RequireLoginFirstAction
     {
         boolean isCollision = false;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         long modTimestamp = data.getParameters().getLong("mod_ts");
 
         String id = data.getParameters().getString("id");
@@ -115,8 +117,7 @@ public class BaseModifyIssue extends RequireLoginFirstAction
                 {
                     isCollision = true;
                     scarabR.setAlertMessage(
-                        "At least one issue has been modified, please review" +
-                        " before submitting your changes.");
+                        l10n.get("MultiIssueChangeCollision"));
                     ActivitySet lastActivitySet = issue.getLastActivitySet();
                     List activities = lastActivitySet.getActivitys();
                     ArrayList objs = new ArrayList(2);
@@ -135,9 +136,7 @@ public class BaseModifyIssue extends RequireLoginFirstAction
             isCollision = modTimestamp < lastModTime;
             if (isCollision) 
             {
-                scarabR.setAlertMessage(
-                     "Issue has been modified, please review before " + 
-                     "submitting your changes.");
+                scarabR.setAlertMessage(l10n.get("IssueChangeCollision"));
                 ActivitySet lastActivitySet = issue.getLastActivitySet();
                 List activities = lastActivitySet.getActivitys();
                 ArrayList objs = new ArrayList(2);

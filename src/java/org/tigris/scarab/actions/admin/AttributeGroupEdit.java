@@ -78,6 +78,7 @@ import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.workflow.WorkflowFactory;
@@ -86,7 +87,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.31 2002/09/12 00:45:19 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.32 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -105,7 +106,8 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                     ag.getQueryKey(), false);
         agGroup.setProperties(ag);
         ag.save();
-        getScarabRequestTool(context).setConfirmMessage(DEFAULT_MSG);  
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        getScarabRequestTool(context).setConfirmMessage(l10n.get(DEFAULT_MSG));
     }
 
     /**
@@ -153,7 +155,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 {
                     if (!rma.getRequired())
                     {
-                        msg = "Your changes have been saved, but the default text attribute must be required. If you wish to set this attribute to not be required, please choose another text attribute to be the default.";
+                        msg = "ChangesSavedButDefaultTextAttributeRequired";
                     }
                     rma.setIsDefaultText(true);
                     rma.setRequired(true);
@@ -168,7 +170,8 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
-            scarabR.setConfirmMessage(msg);
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setConfirmMessage(l10n.get(msg));
             ScarabCache.clear();
         } 
 
@@ -183,6 +186,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
@@ -209,7 +213,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 {
                     if (!ria.getRequired())
                     {
-                        msg = "Your changes have been saved, but the default text attribute must be required. If you wish to set this attribute to not be required, please choose another text attribute to be the default.";
+                        msg = "ChangesSavedButDefaultTextAttributeRequired";
                     }
                     ria.setIsDefaultText(true);
                     ria.setRequired(true);
@@ -224,12 +228,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
-            scarabR.setConfirmMessage(msg);
+            scarabR.setConfirmMessage(l10n.get(msg));
             ScarabCache.clear();
         } 
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -240,13 +244,14 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
 
         if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
-            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
        
@@ -300,7 +305,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             }
        }
        ScarabCache.clear();
-       scarabR.setConfirmMessage(DEFAULT_MSG);  
+       scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
     }
 
     /**
@@ -326,12 +331,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String[] attributeIds = data.getParameters()
                                     .getStrings("attribute_ids");
  
         if (attributeIds == null || attributeIds.length <= 0)
         { 
-            scarabR.setAlertMessage("Please select an attribute.");
+            scarabR.setAlertMessage(l10n.get("SelectAttribute"));
             return;
         }
         else
@@ -344,7 +350,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 attGroup.addAttribute(attribute);
             }
             doCancel(data, context);
-            scarabR.setConfirmMessage(DEFAULT_MSG);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
     }
 

@@ -95,13 +95,14 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.137 2002/08/29 00:08:05 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.138 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -119,7 +120,9 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         catch (Exception e)
         {
-            scarabR.setAlertMessage("Error: " + e.getMessage());
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setAlertMessage(
+                l10n.format("ErrorExceptionMessage", e.getMessage()));
             setTarget(data, "entry,Wizard1.vm");
             return;
         }
@@ -351,6 +354,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = scarabR.getReportingIssue();
         IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
@@ -450,27 +454,28 @@ public class ReportIssue extends RequireLoginFirstAction
                         summary = summary.substring(0,60) + "...";
                     }                
                     summary = (summary.length() == 0) ? summary : " - " + summary;
-                    StringBuffer subj = new StringBuffer("[");
-                    subj.append(issue.getModule().getRealName().toUpperCase());
-                    subj.append("] Issue #").append(issue.getUniqueId());
-                    subj.append(summary);
+                    
+                    String[] args = { 
+                        issue.getModule().getRealName().toUpperCase(), 
+                        issue.getUniqueId(), summary};
+                    String subj = l10n.format("IssueAddedEmailSubject", args);
                 
-                    if (!activitySet.sendEmail(new ContextAdapter(context), issue, 
-                                     subj.toString(), "email/NewIssueNotification.vm"))
+                    if (!activitySet.sendEmail(
+                         new ContextAdapter(context), issue, 
+                         subj, "email/NewIssueNotification.vm"))
                     {
                         scarabR.setInfoMessage(
-                            "Your issue was saved, but could not send "
-                            + "notification email due to a sendmail error.");
+                            l10n.get("IssueSavedButEmailError"));
                     }
                     cleanup(data, context);
                     data.getParameters().add("id", issue.getUniqueId().toString());
-                    scarabR.setConfirmMessage("Issue " + issue.getUniqueId() +
-                         " added to module " + getScarabRequestTool(context)
-                          .getCurrentModule().getRealName());
+                    scarabR.setConfirmMessage(l10n.format("IssueAddedToModule",
+                        issue.getUniqueId(), getScarabRequestTool(context)
+                        .getCurrentModule().getRealName()));
                 }
                 else
                 {
-                    scarabR.setAlertMessage(ERROR_MESSAGE);
+                    scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
                 }
             }
             else 
@@ -495,8 +500,9 @@ public class ReportIssue extends RequireLoginFirstAction
 
         if (ModifyIssue.addFileAttachment(issue, group, attachment, 
                                   scarabR, data, intake))
-        {
-            scarabR.setConfirmMessage("Your file was added.");
+        {        
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setConfirmMessage(l10n.get("FileAdded"));
         }
 
         // set any attribute values that were entered before adding the file.
@@ -541,6 +547,7 @@ public class ReportIssue extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);        
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         if (intake.isAllValid())
         {
             // save the attachment
@@ -561,7 +568,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         issue.addComment(attachment, (ScarabUser)data.getUser());
                     }
                     
-                    scarabR.setConfirmMessage("Your comment has been added.");
+                    scarabR.setConfirmMessage(l10n.get("CommentAdded"));
                     // if there was only one duplicate issue and we just added
                     // a note to it, assume user is done
                     String nextTemplate = 
@@ -574,7 +581,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 else 
                 {
                     getScarabRequestTool(context).setAlertMessage(
-                        "No text was entered into the Notes textarea.");
+                        l10n.get("NoTextInNotesTextArea"));
                     searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
                 }
             }
@@ -595,6 +602,7 @@ public class ReportIssue extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         if (intake.isAllValid()) 
         {
             Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);        
@@ -605,8 +613,7 @@ public class ReportIssue extends RequireLoginFirstAction
             {
                 issue.addVote((ScarabUser)data.getUser());
                 scarabR.setConfirmMessage(
-                     "Your vote for issue #" + issue.getUniqueId() 
-                     + " has been accepted.");
+                    l10n.format("VoteForIssueAccepted", issue.getUniqueId()));
                 // if there was only one duplicate issue and the user just
                 // voted for it, assume user is done
                 String nextTemplate = 
@@ -619,7 +626,7 @@ public class ReportIssue extends RequireLoginFirstAction
             catch (ScarabException e)
             {
                 scarabR.setAlertMessage(
-                    "Vote could not be added.  Reason given: "+e.getMessage());
+                    l10n.format("VoteFailedException", e.getMessage()));
                 // User attempted to vote when they were not allowed.  This
                 // should probably not be allowed in the ui, but right now
                 // it is and we should protect against url hacking anyway.
@@ -674,6 +681,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String template = null;
         switch (templateCode)
         {
@@ -687,7 +695,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        "Insufficient permissions to enter issues.");
+                        l10n.get("InsufficientPermissionsToEnterIssues"));
                 }
                break;
             case 2: 
@@ -706,7 +714,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        "Insufficient permissions to assign users.");
+                        l10n.get("InsufficientPermissionsToAssignIssues"));
                 }
                break;
             case 3: 
@@ -721,7 +729,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 {
                     template = user.getHomePage();
                     scarabR.setAlertMessage(
-                        "Insufficient permissions to view issues.");
+                        l10n.get("InsufficientPermissionsToViewIssues"));
                 }
                break;
             case 4: 

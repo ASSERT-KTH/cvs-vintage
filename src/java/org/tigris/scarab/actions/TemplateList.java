@@ -76,6 +76,7 @@ import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 
@@ -84,7 +85,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.34 2002/07/30 22:48:14 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.35 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -97,6 +98,7 @@ public class TemplateList extends RequireLoginFirstAction
     {        
         IntakeTool intake = getIntakeTool(context);        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getIssueTemplate();
 
@@ -141,11 +143,11 @@ public class TemplateList extends RequireLoginFirstAction
             info.saveAndSendEmail(user, scarabR.getCurrentModule(),
                 new ContextAdapter(context));
             data.getParameters().add("templateId", issue.getIssueId().toString());
-            scarabR.setConfirmMessage("New template has been created.");
+            scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
         } 
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -157,6 +159,7 @@ public class TemplateList extends RequireLoginFirstAction
     {        
         IntakeTool intake = getIntakeTool(context);        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getIssueTemplate();
 
@@ -222,11 +225,11 @@ public class TemplateList extends RequireLoginFirstAction
                     }
                 }                
             }
-            scarabR.setConfirmMessage("Template has been modified.");
+            scarabR.setConfirmMessage(l10n.get("TemplateModified"));
         } 
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -239,6 +242,7 @@ public class TemplateList extends RequireLoginFirstAction
     {        
         IntakeTool intake = getIntakeTool(context);        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getIssueTemplate();
 
@@ -255,17 +259,18 @@ public class TemplateList extends RequireLoginFirstAction
             info.saveAndSendEmail(user, scarabR.getCurrentModule(),
                 new ContextAdapter(context));
             data.getParameters().add("templateId", issue.getIssueId().toString());
-            scarabR.setConfirmMessage("Template has been modified.");
+            scarabR.setConfirmMessage(l10n.get("TemplateModified"));
         } 
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
     public void doDeletetemplates( RunData data, TemplateContext context )
         throws Exception
     {
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Object[] keys = data.getParameters().getKeys();
         String key;
         String templateId;
@@ -286,12 +291,12 @@ public class TemplateList extends RequireLoginFirstAction
                catch (Exception e)
                {
                    getScarabRequestTool(context).setAlertMessage(
-                       ScarabConstants.NO_PERMISSION_MESSAGE);
+                       l10n.get(NO_PERMISSION_MESSAGE));
                }
             }
         } 
         getScarabRequestTool(context)
-            .setConfirmMessage("Template has been deleted.");
+            .setConfirmMessage(l10n.get("TemplateDeleted"));
     } 
 
     public void doUsetemplate(RunData data, TemplateContext context)

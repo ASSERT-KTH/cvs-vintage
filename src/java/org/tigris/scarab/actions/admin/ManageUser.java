@@ -75,13 +75,14 @@ import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabGlobalTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is responsible for dealing with the user management
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.12 2002/04/26 23:34:52 jmcnally Exp $
+ * @version $Id: ManageUser.java,v 1.13 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {

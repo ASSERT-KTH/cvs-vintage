@@ -71,12 +71,13 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.25 2002/07/10 00:50:02 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.26 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -89,6 +90,7 @@ public class ModifyModule extends RequireLoginFirstAction
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
 
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
@@ -108,7 +110,7 @@ public class ModifyModule extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 getScarabRequestTool(context).setAlertMessage(
-                    "Could not locate module group.");
+                    l10n.get("CouldNotLocateModuleGroup"));
                 return;
             }
             else
@@ -120,7 +122,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, me))
                 {
                     getScarabRequestTool(context).setAlertMessage(
-                        "You do not have permission to edit this module.");
+                        l10n.get(NO_PERMISSION_MESSAGE));
                     intake.remove(moduleGroup);
                     setTarget(data, nextTemplate);
                     return;
@@ -133,8 +135,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 if (newParent.getParent() == me)
                 {
                     getScarabRequestTool(context).setAlertMessage(
-                        "Circular parent/child relationship! " +
-                        "You can't do that!");
+                        l10n.get("CircularParentChildRelationship"));
                     intake.remove(moduleGroup);
                     setTarget(data, template);
                     return;
@@ -143,9 +144,7 @@ public class ModifyModule extends RequireLoginFirstAction
                     origParent.getModuleId() != newParent.getModuleId())
                 {
                     getScarabRequestTool(context).setAlertMessage(
-                        "You cannot change the parent module " +
-                        "id because you do not have permissions to edit " + 
-                        "the parent module.");
+                        l10n.get("NoPermissionInParentModule"));
                     setTarget(data, template);
                     return;
                 }
@@ -154,7 +153,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 intake.remove(moduleGroup);
                 setTarget(data, nextTemplate);
                 getScarabRequestTool(context)
-                    .setConfirmMessage("Module updated.");
+                    .setConfirmMessage(l10n.get("ModuleUpdated"));
             }
         }
     }
@@ -168,6 +167,7 @@ public class ModifyModule extends RequireLoginFirstAction
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
 
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
@@ -199,7 +199,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 data.save();
 
                 getScarabRequestTool(context).setConfirmMessage(
-                    "New module created!");
+                    l10n.get("NewModuleCreated"));
             }
             catch (Exception e)
             {

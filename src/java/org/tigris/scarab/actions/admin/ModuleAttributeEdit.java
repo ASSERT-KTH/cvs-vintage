@@ -73,11 +73,12 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache;  
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.20 2002/09/12 00:45:19 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.21 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -118,7 +119,8 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                         rmo.save();
                     }
                     ScarabCache.clear();
-                    scarabR.setConfirmMessage(DEFAULT_MSG);  
+                    ScarabLocalizationTool l10n = getLocalizationTool(context);
+                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                 }
             }
         } 
@@ -132,6 +134,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
@@ -159,7 +162,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                }
                catch (Exception e)
                {
-                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                }
 
                // Remove option - module mapping from template type
@@ -169,11 +172,11 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo2.delete(user);
                    //rmos.remove(rmo);
-                   scarabR.setConfirmMessage(DEFAULT_MSG);  
+                   scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                }
                catch (Exception e)
                {
-                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                }
                ScarabCache.clear();
                getIntakeTool(context).removeAll();
@@ -192,6 +195,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         IssueType templateType = 
@@ -201,7 +205,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
  
         if (optionIds == null || optionIds.length <= 0)
         { 
-            scarabR.setAlertMessage("Please select an option.");
+            scarabR.setAlertMessage(l10n.get("SelectOption"));
             return;
         }
         else
@@ -220,7 +224,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 }
             }
             doCancel(data, context);
-            scarabR.setConfirmMessage(DEFAULT_MSG);  
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
         }
     }
 }

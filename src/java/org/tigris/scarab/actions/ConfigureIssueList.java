@@ -77,13 +77,14 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 //import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.28 2002/07/25 17:13:31 jmcnally Exp $
+    @version $Id: ConfigureIssueList.java,v 1.29 2002/09/15 15:37:18 jmcnally Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -92,13 +93,14 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarab = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         // Add user's new selection of attributes
         ParameterParser params = data.getParameters();
         String[] ids = params.getStrings("attid");
         if (ids == null || ids.length == 0) 
         {
-            scarab.setAlertMessage("You must select at least one attribute.");
+            scarab.setAlertMessage(l10n.get("MustSelectAtLeastOneAttribute"));
         }
         else
         {
@@ -132,7 +134,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             Collections.sort(attributes, c);
             ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
             
-            data.setMessage(DEFAULT_MSG);
+            data.setMessage(l10n.get(DEFAULT_MSG));
         }
     }
 

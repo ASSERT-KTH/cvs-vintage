@@ -69,11 +69,12 @@ import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache; 
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.16 2002/07/18 23:31:13 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.17 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -85,6 +86,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         Module module = scarabR.getCurrentModule();
         List rmits = module.getRModuleIssueTypes();
@@ -106,8 +108,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                 }
                 if (navCount > 5)
                 {
-                   scarabR.setAlertMessage("You cannot select more than 5 issue types "
-                                   + "to appear in the left hand navigation.");
+                   scarabR.setAlertMessage(l10n.get("NavIssueTypeLimit"));
                    return;
                 }
             }
@@ -133,22 +134,22 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         Module module = scarabR.getCurrentModule();
 
         if (issueType.getIssueTypeId() == null)
         {
-            scarabR.setAlertMessage("Please select an issue type.");
+            scarabR.setAlertMessage(l10n.get("SelectIssueType"));
         }
         else if (module.getRModuleIssueType(issueType) != null)
         {
-            scarabR.setAlertMessage("The issue type is already associated "
-                            + "with the module.");
+            scarabR.setAlertMessage(l10n.get("IssueTypeAlreadyAssociated"));
         }
         else
         {
             module.addRModuleIssueType(issueType);
-            scarabR.setConfirmMessage("The issue type has been added to the module.");
+            scarabR.setConfirmMessage(l10n.get("IssueTypeAddedToModule"));
             setTarget(data, "admin,ManageArtifactTypes.vm");            
         }
     }
@@ -172,6 +173,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         ParameterParser params = data.getParameters();
         Module module = scarabR.getCurrentModule();
@@ -188,8 +190,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
             {
                 if (rmits.size() < 1)
                 {
-                    scarabR.setAlertMessage("You cannot have fewer than one "
-                                    + "issue type.");
+                    scarabR.setAlertMessage(l10n.get("CannotZeroIssueType"));
                     break;
                 }
                 else
@@ -219,9 +220,8 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                             scarabR.setAlertMessage(e.getMessage());
                         }
 
-                        scarabR.setConfirmMessage(
-                            "The selected issue types have"
-                            + " been removed from the module.");
+                        scarabR.setConfirmMessage(l10n.get(
+                            "SelectedIssueTypesRemovedFromModule"));
                         module.getNavIssueTypes().remove(issueType);
                     }
                 }
@@ -230,8 +230,8 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
          }
          if (!foundOne)
          { 
-            scarabR.setAlertMessage("Please select an issue type " + 
-                "to delete from the module.");
+            scarabR.setAlertMessage(
+                l10n.get("SelectIssueTypeToDeleteFromModule"));
          }
     }
 }

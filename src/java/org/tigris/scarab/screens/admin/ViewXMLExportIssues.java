@@ -59,6 +59,7 @@ import org.apache.turbine.TemplateContext;
 // Scarab Stuff
 import org.apache.turbine.modules.Module;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.Issue;
 
@@ -66,7 +67,7 @@ import org.tigris.scarab.om.Issue;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.2 2002/07/11 01:09:51 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.3 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -104,12 +105,13 @@ public class ViewXMLExportIssues extends Default
         }
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String ids = data.getParameters().getString("exportissues");
         context.put("exportissues", ids);
         if (ids == null || ids.length() == 0)
         {
             data.setTarget("admin,XMLExportIssues.vm");
-            scarabR.setAlertMessage("Please enter issues.");
+            scarabR.setAlertMessage(l10n.get("EnterIssues"));
         }
         else
         {
@@ -143,14 +145,15 @@ public class ViewXMLExportIssues extends Default
             if (issueIdList.isEmpty())
             {
                 data.setTarget("admin,XMLExportIssues.vm");
-                scarabR.setAlertMessage("No valid issues could be located.");
+                scarabR.setAlertMessage(l10n.get("NoValidIssuesFound"));
                 return;
             }
             else if (!badIdList.isEmpty())
             {
                 data.setTarget("admin,XMLExportIssues.vm");
-                scarabR.setAlertMessage("The following issue ids are invalid: " + 
-                    badIdList.toString());
+                scarabR.setAlertMessage(
+                    l10n.format("FollowingIssueIdsAreInvalid", 
+                    badIdList.toString()));
                 return;
             }
             context.put("issueIdList", issueIdList);

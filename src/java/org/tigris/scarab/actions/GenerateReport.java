@@ -85,6 +85,7 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportPeer;
 import org.tigris.scarab.om.ReportManager;
@@ -93,25 +94,30 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.21 2002/07/30 22:48:14 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.22 2002/09/15 15:37:18 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
 {
+    private static final String NO_PERMISSION_MESSAGE = 
+        "NoPermissionToEditReport";
+
     public void doStep1( RunData data, TemplateContext context )
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Report report = populateReport("reports,Step1.vm", data, context);
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( !intake.isAllValid() ) 
         {
-            getScarabRequestTool(context).setAlertMessage("Invalid data");
+            getScarabRequestTool(context).setAlertMessage(
+                l10n.get("InvalidData"));
             setTarget(data, "reports,Step1.vm");            
         }
         else if (report.getType() == 1)
@@ -124,7 +130,8 @@ public class GenerateReport
         }
         else 
         {
-            getScarabRequestTool(context).setAlertMessage("Invalid data");
+            getScarabRequestTool(context).setAlertMessage(
+                l10n.get("InvalidData"));
             setTarget(data, "reports,Step1.vm");            
         }
     }
@@ -136,8 +143,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -159,8 +165,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -182,8 +187,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -220,8 +224,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -246,8 +249,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -272,8 +274,7 @@ public class GenerateReport
         repGroup.get("Axis2Category").setRequired(true);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -297,8 +298,7 @@ public class GenerateReport
         repGroup.get("Axis2Keys").setRequired(true);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -321,8 +321,7 @@ public class GenerateReport
         repGroup.get("Axis1Category").setRequired(true);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -343,8 +342,7 @@ public class GenerateReport
         Report report = populateReport("reports,Step3_2b.vm", data, context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else 
@@ -360,8 +358,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -392,8 +389,7 @@ public class GenerateReport
         repGroup.get("Axis1Keys").setRequired(true);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -407,16 +403,16 @@ public class GenerateReport
         }
     }
 
-
     public void doSavereport( RunData data, TemplateContext context )
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Report report = populateReport("reports,SaveReport.vm", data, context);
         Intake intake = getIntakeTool(context);
         if (!report.isEditable((ScarabUser)data.getUser())) 
         {
-            getScarabRequestTool(context).setAlertMessage(
-                "You do not have permission to edit this report");
+            setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
         else if ( intake.isAllValid() ) 
@@ -425,7 +421,7 @@ public class GenerateReport
             if ( report.getName() == null || report.getName().length() == 0 ) 
             {
                 getScarabRequestTool(context)
-                    .setAlertMessage("Saved reports must have a name.");
+                    .setAlertMessage(l10n.get("SavedReportsMustHaveName"));
                 setTarget(data, "reports,SaveReport.vm");
             }
             else 
@@ -438,14 +434,13 @@ public class GenerateReport
                 {
                     report.save();
                     getScarabRequestTool(context)
-                        .setConfirmMessage("The report has been saved.");
+                        .setConfirmMessage(l10n.get("ReportSaved"));
                     setTarget(data, "reports,Report_1.vm");                    
                 }
                 else 
                 {
                     getScarabRequestTool(context).setAlertMessage(
-                        "A report already exists under this name."
-                        + "Please choose a unique name.");
+                        l10n.get("ReportNameNotUnique"));
                     setTarget(data, "reports,SaveReport.vm");
                 }
             }
@@ -453,7 +448,7 @@ public class GenerateReport
         else 
         {
             getScarabRequestTool(context).setAlertMessage(
-                "An error prevented saving your report.");
+                l10n.get("ErrorPreventedSavingReport"));
         }
     }
 
@@ -520,8 +515,10 @@ public class GenerateReport
     {
         Report report = populateReport("reports,Report_1.vm", data, context);
         setTarget(data, "reports,Report_1.vm");
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         getScarabRequestTool(context)
-            .setInfoMessage("Use your browser to print the report.");
+            .setInfoMessage(l10n.get("UseBrowserPrintReport"));
     }
 
     private Report populateReport( String template, 
@@ -532,5 +529,12 @@ public class GenerateReport
         Report report = scarabR.getReport();
         report.populate(data.getParameters());
         return report;
+    }
+
+    private void setNoPermissionMessage(TemplateContext context)
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
     }
 }

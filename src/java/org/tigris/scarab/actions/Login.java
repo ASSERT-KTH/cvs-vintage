@@ -63,6 +63,7 @@ import org.apache.fulcrum.security.util.TurbineSecurityException;
 
 // Scarab Stuff
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
@@ -74,7 +75,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.38 2002/09/05 00:52:20 jmcnally Exp $
+ * @version $Id: Login.java,v 1.39 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -122,6 +123,7 @@ public class Login extends ScarabTemplateAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
         String username = login.get("Username").toString();
@@ -136,7 +138,7 @@ public class Login extends ScarabTemplateAction
         }
         catch (TurbineSecurityException e)
         {
-            scarabR.setAlertMessage("Invalid username or password.");
+            scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
             Log.get().error ("Login: ", e);
             return failAction(data, "Login.vm");
         }
@@ -152,7 +154,7 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser(user);
                 }
 
-                scarabR.setAlertMessage("User is not confirmed!");
+                scarabR.setAlertMessage(l10n.get("UserIsNotConfirmed"));
                 return failAction(data, "Confirm.vm");
             }
             // check if the password is expired
@@ -164,7 +166,7 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser(user);
                 }
 
-                scarabR.setAlertMessage("Your password has expired.");
+                scarabR.setAlertMessage(l10n.get("YourPasswordHasExpired"));
                 return failAction(data, "ChangePassword.vm");
             }
 

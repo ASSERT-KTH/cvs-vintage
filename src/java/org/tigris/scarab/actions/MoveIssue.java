@@ -67,6 +67,7 @@ import org.apache.torque.util.Criteria;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUserManager;
@@ -97,7 +98,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.31 2002/07/30 22:48:14 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.32 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -115,6 +116,7 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
 
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = getScarabRequestTool(context).getIssue();
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
@@ -135,16 +137,14 @@ public class MoveIssue extends RequireLoginFirstAction
         if (!user.hasPermission(ScarabSecurity.ISSUE__ENTER, oldModule)
             || !user.hasPermission(permission, newModule))
         {
-            data.setMessage(NO_PERMISSION_MESSAGE);
+            data.setMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
 
         // Check that destination module has the current issue type
         if (newModule.getRModuleIssueType(issue.getIssueType()) == null)
         {
-            data.setMessage("The destination module does not have "
-                   + "this issue type associated with it. Please add " 
-                   + " this issue type and try again.");
+            data.setMessage(l10n.get("DestinationModuleLacksIssueType"));
             return;
         }
 
@@ -165,6 +165,7 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
 
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = getScarabRequestTool(context).getIssue();
         Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
@@ -177,6 +178,7 @@ public class MoveIssue extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         
         Issue newIssue = issue.move(newModule, selectAction, user);
+        getScarabRequestTool(context).setConfirmMessage(l10n.get(DEFAULT_MSG));
 
         // generate comment
         StringBuffer descBuf = new StringBuffer();
@@ -211,9 +213,8 @@ public class MoveIssue extends RequireLoginFirstAction
                               "Issue " +  newIssue.getUniqueId() 
                               + descBuf.toString(), template))
         {
-             getScarabRequestTool(context).setInfoMessage(
-                 "Your changes were saved, but could not send "
-                 + "notification email due to a sendmail error.");
+             getScarabRequestTool(context).setAlertMessage(
+                 l10n.get(EMAIL_ERROR));
         }                      
 
         // Redirect to moved or copied issue

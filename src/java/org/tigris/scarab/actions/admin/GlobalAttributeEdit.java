@@ -73,21 +73,17 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.cache.ScarabCache;  
 
 /**
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.25 2002/09/11 23:44:44 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.26 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
-
-    private static final String ERROR_MESSAGE = "More information was " +
-                                "required to submit your request. Please " +
-                                "scroll down to see error messages."; 
-
     /**
      * Used on GlobalAttributeEdit.vm to modify Attribute Name/Description/Type
      * Use doSaveoptions to modify the options.
@@ -97,6 +93,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         if ( intake.isAllValid() )
         {
@@ -113,8 +110,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 String attributeName = attrGroup.get("Name").toString();
                 if (Attribute.checkForDuplicate(attributeName))
                 {
-                    scarabR.setAlertMessage("Cannot create a duplicate Attribute "
-                                    +"with the same name!");
+                    scarabR.setAlertMessage(
+                        l10n.get("CannotCreateDuplicateAttribute"));
                     return;
                 }
             }
@@ -125,11 +122,11 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
 
             attrGroup.setProperties(attr);
             attr.save();
-            scarabR.setConfirmMessage(DEFAULT_MSG);  
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
         }
         else
         {
-          scarabR.setAlertMessage(ERROR_MESSAGE);
+          scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -145,6 +142,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
            .get(ScarabConstants.INTAKE_TOOL);
         ScarabRequestTool scarabR = (ScarabRequestTool)context
            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         if ( intake.isAllValid() ) 
         {
@@ -190,8 +188,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         // anyway just in case.
                         if (pcao.getOptionId().equals(pcao.getParentId()))
                         {
-                            scarabR.setAlertMessage("Sorry, a recursive Parent " +
-                              " Child relationship is not allowed!");
+                            scarabR.setAlertMessage(
+                                l10n.get("RecursiveParentChildRelationship"));
                             intake.remove(pcaoGroup);
                             return;
                          }
@@ -272,8 +270,10 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                             {
                                 e.printStackTrace();
                             }
-                            scarabR.setConfirmMessage("The attribute option has been added.");
-                            scarabR.setConfirmMessage(DEFAULT_MSG);  
+
+                            scarabR.setConfirmMessage(
+                                l10n.get("AttributeOptionAdded") + 
+                                l10n.get(DEFAULT_MSG));
                         }
                     }
 
@@ -308,6 +308,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         // If they came from the manage module page,
         // Add the attribute and return there.
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String lastTemplate = getCancelTemplate(data);
         Attribute attribute = scarabR.getAttribute();
         if (lastTemplate != null && attribute.getAttributeId() != null)
@@ -320,7 +321,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 if (groupId != null)
                 {
                     scarabR.getAttributeGroup(groupId).addAttribute(attribute);
-                    scarabR.setConfirmMessage("The attribute has been added.");
+                    scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
                 }
             }
             else if (lastTemplate.equals("admin,ArtifactTypeEdit.vm"))
@@ -328,7 +329,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 // Add user attribute to module
                 scarabR.getCurrentModule()
                        .addRModuleAttribute(scarabR.getIssueType(), attribute);
-                scarabR.setConfirmMessage("The attribute has been added.");
+                scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
             }
             ScarabCache.clear();
             setTarget( data, lastTemplate);

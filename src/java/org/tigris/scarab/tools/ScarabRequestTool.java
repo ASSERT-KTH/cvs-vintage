@@ -127,6 +127,7 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;  
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.SearchIndex;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is used by the Scarab API
@@ -759,7 +760,8 @@ try{
         {
             if ( templateId == null || templateId.length() == 0 )
             {
-                setAlertMessage("No template id specified.");
+                ScarabLocalizationTool l10n = getLocalizationTool();
+                setAlertMessage(l10n.get("NoTemplateId"));
             }
             else 
             {
@@ -1106,6 +1108,7 @@ try{
      */
     public String getNextEntryTemplate()
     {
+        ScarabLocalizationTool l10n = getLocalizationTool();
         RModuleIssueType rmit = null;
         String nextTemplate = null;
         try
@@ -1114,8 +1117,7 @@ try{
             if (rmit == null)
             {
                 nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
-                setAlertMessage("A module and issue type must be selected " +
-                                "before entering a new issue.");
+                setAlertMessage(l10n.get("ModuleIssueTypeRequiredToEnterIssue"));
             }
             else if (rmit.getDedupe())
             {
@@ -1130,9 +1132,8 @@ try{
         {
             // system would be messed up, if we are here.  Punt
             nextTemplate = "Index.vm";
-            String msg = "Cannot determine correct issue entry process. " +
-                "Please notify an administrator.";
-            setAlertMessage(msg);
+            String msg = "CannotDetermineIssueEntryTemplate";
+            setAlertMessage(l10n.get(msg));
             Log.get().error(msg, e);
         }
         return nextTemplate;
@@ -1262,7 +1263,8 @@ try{
         }
         catch (Exception e)
         {
-            setAlertMessage("Issue id was invalid.");
+            ScarabLocalizationTool l10n = getLocalizationTool();
+            setAlertMessage(l10n.get("InvalidIssueId"));
         }
         return issue;
     }
@@ -1273,10 +1275,11 @@ try{
      */
     public Issue getIssue(String id)
     {
+        ScarabLocalizationTool l10n = getLocalizationTool();
         Issue issue = null;
         if (id == null)
         {
-            setInfoMessage("Please enter an id.");
+            setInfoMessage(l10n.get("EnterId"));
         }
         else
         {
@@ -1291,13 +1294,13 @@ try{
 	        }
             if (issue.getDeleted())
             {
-                setAlertMessage("That id is not valid.");
+                setAlertMessage(l10n.get("InvalidId"));
                 issue = null;
              }
 	    }        
 	    catch (Exception e)
 	    {
-	        setAlertMessage("That id is not valid.");
+	        setAlertMessage(l10n.get("InvalidId"));
 	    }
         }
         return issue;
@@ -1526,6 +1529,7 @@ try{
     public List getCurrentSearchResults()
         throws Exception, ScarabException
     {
+        ScarabLocalizationTool l10n = getLocalizationTool();
         ScarabUser user = (ScarabUser)data.getUser();
         String currentQueryString = user.getMostRecentQuery();
         IssueSearch search = getSearch();
@@ -1535,7 +1539,7 @@ try{
 
         if (currentQueryString == null)
         {
-            setInfoMessage("Please enter a query.");
+            setInfoMessage(l10n.get("EnterQuery"));
             searchSuccess = false;
         }
         else
@@ -1587,7 +1591,7 @@ try{
             }
             if (!searchSuccess)
             {
-                setAlertMessage("Please enter dates in the format mm/dd/yyyy.");
+                setAlertMessage(l10n.get("DateFormatPrompt"));
                 return matchingIssueIds;
              }
             searchGroup.setProperties(search);
@@ -1626,7 +1630,7 @@ try{
                 matchingIssueIds = search.getMatchingIssues();
                 if (matchingIssueIds == null || matchingIssueIds.size() <= 0)
                 {
-                    setInfoMessage("No matching issues.");
+                    setInfoMessage(l10n.get("NoMatchingIssues"));
                 }            
             }
             catch (ScarabException e)
@@ -1836,6 +1840,7 @@ try{
      */
     public List getUserSearchResults()  throws Exception
     {
+        ScarabLocalizationTool l10n = getLocalizationTool();
         String searchString = data.getParameters()
                .getString("searchString"); 
         String searchField = data.getParameters()
@@ -1843,7 +1848,7 @@ try{
         Module module = getCurrentModule();  
         if (searchField == null)
         {
-            setInfoMessage("Please enter a search field.");
+            setInfoMessage(l10n.get("SearchFieldPrompt"));
             return null ;
         }
         
@@ -2213,6 +2218,15 @@ try{
             (endTime-startTime) + "ms";
         lapTime = endTime;
         return s;
+    }
+
+    /**
+     * Helper method to retrieve the ScarabLocalizationTool from the Context
+     */
+    private ScarabLocalizationTool getLocalizationTool()
+    {
+        return (ScarabLocalizationTool)org.apache.turbine.modules.Module
+            .getTemplateContext(data).get(ScarabConstants.LOCALIZATION_TOOL);
     }
 
     /**

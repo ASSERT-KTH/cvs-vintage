@@ -58,6 +58,7 @@ import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
@@ -73,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.21 2002/09/12 00:45:19 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.22 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -86,6 +87,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = getScarabRequestTool(context).getIssueType();
         Group group = intake.get("IssueType", issueType.getQueryKey());
         String cancelTemplate = getCancelTemplate(data);
@@ -121,12 +123,12 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                         getScarabRequestTool(context)
                            .getCurrentModule().addRModuleIssueType(issueType);
                         scarabR.setConfirmMessage(
-                            "The issue type has been added to the module.");
+                           l10n.get("IssueTypeAddedToModule"));
                     }
                 }
                 else 
                 {
-                    scarabR.setAlertMessage("Issue type by that name already exists");
+                    scarabR.setAlertMessage(l10n.get("IssueTypeNameExists"));
                 }
             }
             else
@@ -134,13 +136,12 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 // Edit existing issue type
                 group.setProperties(issueType);
                 issueType.save();
-                scarabR.setConfirmMessage(DEFAULT_MSG);  
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
             }
-
         }
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -153,6 +154,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         List attGroups = issueType.getAttributeGroups(false);
         String errorMsg = ERROR_MESSAGE;
@@ -197,16 +199,14 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             }
             if (areThereDupes)
             {
-               errorMsg= "Please do not enter duplicate "
-                                + " sequence numbers for attribute groups.";
+               errorMsg= "DuplicateSequenceNumbersForAttributeGroups";
                isValid = false;
             }
   
             // Check that duplicate check is not at the beginning or end.
             if (dupeOrder == 1 || dupeOrder == attGroups.size() +1)
             {
-                errorMsg = "The duplicate check cannot be at the "
-                                + "beginning or the end.";
+                errorMsg = "DuplicateCheckCannotBeginOrEnd";
                 isValid = false;
             }
         }
@@ -236,13 +236,13 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                     attGroup.setDedupe(false);
                 }
                 attGroup.save();
-                scarabR.setConfirmMessage(DEFAULT_MSG);  
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                 ScarabCache.clear();
             }
         }
         else
         {
-            scarabR.setAlertMessage(errorMsg);
+            scarabR.setAlertMessage(l10n.get(errorMsg));
             return;
         }
     }
@@ -255,8 +255,9 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
-        scarabR.setConfirmMessage(DEFAULT_MSG);  
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
         return issueType.createNewGroup();
     }
 
@@ -272,6 +273,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         String key;
         String groupId;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         List attributeGroups = issueType.getAttributeGroups(false);
 
@@ -289,15 +291,16 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 }
                 catch (Exception e)
                 {
-                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                    scarabR.setAlertMessage(
+                        l10n.get(NO_PERMISSION_MESSAGE));
                 }
                 if (attributeGroups.size() -1 < 2)
                 {
                     // If there are fewer than 2 attribute groups,
-                    // Turn of deduping
+                    // Turn off deduping
                     issueType.setDedupe(false);
                     issueType.save();
-                    scarabR.setConfirmMessage(DEFAULT_MSG);  
+                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                     ScarabCache.clear();
                 }
             }
@@ -312,13 +315,14 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         String[] attributeIds = data.getParameters()
                                     .getStrings("attribute_ids");
  
         if (attributeIds == null || attributeIds.length <= 0)
         { 
-            scarabR.setAlertMessage("Please select an attribute.");
+            scarabR.setAlertMessage(l10n.get("SelectAttribute"));
             return;
         }
         else
@@ -344,6 +348,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         ParameterParser params = data.getParameters();
         IssueType issueType = scarabR.getIssueType();
@@ -369,10 +374,10 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                }
                catch (Exception e)
                {
-                   scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
                }
 
-               scarabR.setConfirmMessage(DEFAULT_MSG);  
+               scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                ScarabCache.clear();
            }
         }        
@@ -386,6 +391,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         IssueType issueType =  getScarabRequestTool(context).getIssueType();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         if (intake.isAllValid())
         {
@@ -401,7 +407,8 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 riaGroup.setProperties(ria);
                 ria.save();
             }
-            getScarabRequestTool(context).setConfirmMessage(DEFAULT_MSG);  
+            getScarabRequestTool(context)
+                .setConfirmMessage(l10n.get(DEFAULT_MSG));  
         }
     }
 

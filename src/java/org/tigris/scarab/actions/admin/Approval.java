@@ -82,6 +82,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -90,7 +91,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.24 2002/08/26 22:02:10 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.25 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -107,6 +108,7 @@ public class Approval extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         String globalComment = data.getParameters().getString("global_comment");
@@ -228,7 +230,7 @@ public class Approval extends RequireLoginFirstAction
                                      module, user, null, toUser, subject,
                                      template))
                 {
-                    scarabR.setAlertMessage(EMAIL_ERROR);
+                    scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                 }
             }
         }
@@ -240,6 +242,7 @@ public class Approval extends RequireLoginFirstAction
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module module = scarabR.getCurrentModule();
         if (((ScarabUser)data.getUser())
             .hasPermission(ScarabSecurity.USER__APPROVE_ROLES, module)) 
@@ -275,10 +278,12 @@ public class Approval extends RequireLoginFirstAction
                                (org.apache.fulcrum.security.entity.Group)module
                                )) 
                             {
-                                String msg = role + 
-                                    " was previously approved for user " + 
-                                    user + " in module " + module.getRealName()
-                                    + ".";
+                                String key = 
+                                    "RolePreviouslyApprovedForUserInModule";
+                                String[] args = 
+                                    {role, user.getUserName(), 
+                                     module.getRealName()};
+                                String msg = l10n.format(key, args);
                                 String info = scarabR.getInfoMessage();
                                 if (info == null) 
                                 {
@@ -304,7 +309,7 @@ public class Approval extends RequireLoginFirstAction
                     }
                 }
             }
-            scarabR.setConfirmMessage("All roles have been processed.");
+            scarabR.setConfirmMessage(l10n.get("AllRolesProcessed"));
         }        
         setTarget(data, nextTemplate);
     }

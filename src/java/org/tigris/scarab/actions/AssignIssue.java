@@ -94,6 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -103,7 +104,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.58 2002/09/11 17:57:19 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.59 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -140,8 +141,8 @@ public class AssignIssue extends BaseModifyIssue
         else 
         {
             data.setTarget(user.getHomePage());
-            scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
         
@@ -177,8 +178,8 @@ public class AssignIssue extends BaseModifyIssue
         else 
         {
             data.setTarget(user.getHomePage());
-            scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
 
@@ -198,8 +199,8 @@ public class AssignIssue extends BaseModifyIssue
         else 
         {
             data.setTarget(user.getHomePage());
-            scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
 
@@ -207,6 +208,7 @@ public class AssignIssue extends BaseModifyIssue
                                        ScarabRequestTool scarabR)
         throws Exception
     {
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = scarabR.getIssues();
         List tempList = getTempList(data, context);
         String othersAction = null;
@@ -251,7 +253,7 @@ public class AssignIssue extends BaseModifyIssue
                             if (!notify(context, issue, assignee, assigner, 
                                         results[0], results[1]))
                             {
-                                scarabR.setAlertMessage(EMAIL_ERROR);
+                                scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                             }
                         }
                     }
@@ -275,7 +277,7 @@ public class AssignIssue extends BaseModifyIssue
                     if (!notify(context, issue, assignee, assigner, 
                                 userAction, othersAction))
                     {
-                         scarabR.setAlertMessage(EMAIL_ERROR);
+                         scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
                 }
             }
@@ -312,7 +314,7 @@ public class AssignIssue extends BaseModifyIssue
                     if (!notify(context, oldAttVal.getIssue(), assignee, 
                                 assigner, userAction, othersAction))
                     {
-                        scarabR.setAlertMessage(EMAIL_ERROR);
+                        scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
                     }
                 }
             }
@@ -328,7 +330,7 @@ public class AssignIssue extends BaseModifyIssue
         if (scarabR.getAlertMessage() == null || 
             scarabR.getAlertMessage().length() == 0)
         {
-            scarabR.setConfirmMessage(DEFAULT_MSG);
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
         // go back to the previous page...really a doDone, but...
         doCancel(data, context);

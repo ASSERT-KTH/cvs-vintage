@@ -83,6 +83,7 @@ import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -93,7 +94,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.89 2002/09/10 18:14:20 jmcnally Exp $
+ * @version $Id: Search.java,v 1.90 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -149,6 +150,7 @@ public class Search extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Query query = scarabR.getQuery();
         Group queryGroup = intake.get("Query", 
@@ -185,11 +187,7 @@ public class Search extends RequireLoginFirstAction
                 (userList == null || userList.length == 0))
             {
                 scarabR.setAlertMessage(
-                    "Sorry, no users have the  permission to approve" +
-                    " global queries in this module (" + module.getName() + 
-                    "). Please contact your Scarab administrator and ask " + 
-                    "them to give the Item Approve permission to someone" + 
-                    " in this module.");
+                    l10n.format("NoApproverAvailable", module.getName()));
             }
             else 
             {            
@@ -202,7 +200,7 @@ public class Search extends RequireLoginFirstAction
         }
         else
         {
-            scarabR.setAlertMessage(ERROR_MESSAGE);
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -314,7 +312,9 @@ public class Search extends RequireLoginFirstAction
         }
         else
         {
-            getScarabRequestTool(context).setAlertMessage("Please select issues to view.");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            getScarabRequestTool(context)
+                .setAlertMessage(l10n.get("SelectIssuesToView"));
         }
     }
 
@@ -326,6 +326,7 @@ public class Search extends RequireLoginFirstAction
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         List selectedIds = getSelected(data, context);
         if (selectedIds.size() > 0)
         {
@@ -337,13 +338,12 @@ public class Search extends RequireLoginFirstAction
             }
             else 
             {
-                scarabR.setAlertMessage(
-                    "Insufficient permissions to assign users to issues.");
-                }
+                scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            }
         }
         else
         {
-            scarabR.setAlertMessage("Please select issues to view.");
+            scarabR.setAlertMessage(l10n.get("SelectIssuesToView"));
         }
     }
 
@@ -355,6 +355,7 @@ public class Search extends RequireLoginFirstAction
     {        
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         getAllIssueIds(data, context);
         List modules = ModuleManager.getInstancesFromIssueList(
             scarabR.getIssues());
@@ -364,8 +365,7 @@ public class Search extends RequireLoginFirstAction
         }
         else 
         {
-            scarabR.setAlertMessage(
-                    "Insufficient permissions to assign users.");
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
 
@@ -418,7 +418,8 @@ public class Search extends RequireLoginFirstAction
         ScarabUser user = scarabR.getUserByUserName(userName);
         if (user == null)
         {
-            scarabR.setAlertMessage("User was not found.");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            scarabR.setAlertMessage(l10n.get("UserNotFound"));
         }
         else
         {

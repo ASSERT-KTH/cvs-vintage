@@ -66,13 +66,14 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.23 2002/09/12 00:45:19 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.24 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -110,7 +111,9 @@ public class GlobalAttributes extends RequireLoginFirstAction
                Attribute newAttribute = attribute
                   .copyAttribute((ScarabUser)data.getUser());
                newAttribute.save();
-               getScarabRequestTool(context).setConfirmMessage(DEFAULT_MSG);  
+               ScarabLocalizationTool l10n = getLocalizationTool(context);
+               getScarabRequestTool(context)
+                   .setConfirmMessage(l10n.get(DEFAULT_MSG));  
              }
          }
      }

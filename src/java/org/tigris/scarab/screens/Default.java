@@ -76,7 +76,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.62 2002/08/28 00:22:02 jmcnally Exp $
+ * @version $Id: Default.java,v 1.63 2002/09/15 15:37:18 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -155,7 +155,9 @@ public class Default extends TemplateSecureScreen
             template = template.replace(',','.');
 
             String perm = ScarabSecurity.getScreenPermission(template);
-            ScarabRequestTool scarabR = getScarabRequestTool(getTemplateContext(data));
+            TemplateContext context = getTemplateContext(data);
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
             Module currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
             ScarabUser user = (ScarabUser)data.getUser();
@@ -164,9 +166,8 @@ public class Default extends TemplateSecureScreen
                 if (! user.hasLoggedIn() 
                     || !user.hasPermission(perm, currentModule))
                 {
-                    scarabR.setInfoMessage("Please log in with an account " +
-                                    "that has permissions to " +
-                                    "access this page.");
+                    scarabR.setInfoMessage(
+                        l10n.get("LoginToAccountWithPermissions"));
                     // it is very common to come from email to view a 
                     // particular issue.  Until a more general formula for
                     // deciding which requests might be ok to continue after
@@ -183,9 +184,7 @@ public class Default extends TemplateSecureScreen
                 }
                 else if (currentModule == null)
                 {
-                    scarabR.setInfoMessage("Please select the Module " +
-                                    "that you would like to work " +
-                                    "in.");
+                    scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
                     setTargetSelectModule(data);
                     return false;
                 }
@@ -198,8 +197,7 @@ public class Default extends TemplateSecureScreen
             {
                 scarabR.setCurrentModule(null);
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
-                scarabR.setAlertMessage("Sorry, you do not have permission to"
-                                        + " work in the selected module.");
+                scarabR.setAlertMessage(l10n.get("NoPermissionInModule"));
                 setTargetSelectModule(data);
                 return false;
             }
@@ -232,5 +230,14 @@ public class Default extends TemplateSecureScreen
     {
         return (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+    }
+
+    /**
+     * Helper method to retrieve the ScarabLocalizationTool from the Context
+     */
+    public static ScarabLocalizationTool getLocalizationTool(TemplateContext context)
+    {
+        return (ScarabLocalizationTool)context
+            .get(ScarabConstants.LOCALIZATION_TOOL);
     }
 }
