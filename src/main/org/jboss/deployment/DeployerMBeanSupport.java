@@ -16,10 +16,16 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
- * <description> 
+ * An abstract base class for deployer service implementations.
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010725 Toby Allsopp (patch from David Jencks)</b>
+ * <ul><li>Added <code>getDeployments</code> method so that subclasses
+ * can find out what has been deployed.</li></ul>
  */
 public abstract class DeployerMBeanSupport
    extends ServiceMBeanSupport
@@ -128,7 +134,10 @@ public abstract class DeployerMBeanSupport
     */
    protected Object getInfo(URL url)
    {
-      return deployments.get(url);
+      synchronized (deployments)
+      {
+         return deployments.get(url);
+      }
    }
 
    /**
@@ -152,6 +161,25 @@ public abstract class DeployerMBeanSupport
     */
    protected abstract void undeploy(URL url, Object info)
       throws IOException, DeploymentException;
+
+   /**
+    * Returns the deployments that have been deployed by this
+    * deployer.  The <code>Map</code> returned from this method is a
+    * snapshot of the deployments at the time the method is called and
+    * will not reflect any subsequent deployments or undeployments.
+    *
+    * @return a mapping from <code>URL</code> to
+    *         <code>DeploymentInfo</code>
+    */
+   protected Map getDeployments()
+   {
+      Map ret = new HashMap();
+      synchronized (deployments)
+      {
+         ret.putAll(deployments);
+      }
+      return ret;
+   }
     
    // Private -------------------------------------------------------
 
