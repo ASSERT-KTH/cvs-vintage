@@ -68,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.36 2003/03/28 00:54:58 jon Exp $
+ * @version $Id: RModuleOption.java,v 1.37 2003/06/05 17:17:03 irk_tpt Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption
@@ -280,7 +280,9 @@ public class RModuleOption
                     rmo.save();
                     //rmos.add(rmo);
                 }
-            } 
+            }
+                     // notify module cache of this change
+                 ((ModuleManager)Torque.getManager(ModuleManager.MANAGED_CLASS)).refreshedObject(this);
         } 
         else
         {
