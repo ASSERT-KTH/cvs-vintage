@@ -18,7 +18,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JList;
@@ -47,8 +46,10 @@ public class ChooseFilterDialog
 	implements ListSelectionListener, ActionListener {
 
 	protected JList list;
+	protected ButtonWithMnemonic okButton;
+	protected boolean success;
 
-	POP3PreProcessingFilterPluginHandler pluginHandler;
+	protected POP3PreProcessingFilterPluginHandler pluginHandler;
 
 	public ChooseFilterDialog(JDialog dialog) {
 		super(dialog, true);
@@ -70,20 +71,21 @@ public class ChooseFilterDialog
 
 		initComponents();
 
-		dialog.pack();
-                dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	protected void initComponents() {
 		String[] names = pluginHandler.getPluginIdList();
 
 		list = new JList(names);
-
-		JPanel listPanel = new JPanel();
-		listPanel.setLayout( new BorderLayout() );
-		listPanel.setBorder( BorderFactory.createEmptyBorder(12,12,11,11));
+		list.addListSelectionListener(this);
 		
+		JPanel listPanel = new JPanel();
+		listPanel.setLayout(new BorderLayout());
+		listPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.getViewport().setBackground(Color.white);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
@@ -95,13 +97,21 @@ public class ChooseFilterDialog
 		mainPanel.add(listPanel, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+		okButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "ok"));
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.addActionListener(this);
+		okButton.setEnabled(false);
 		buttonPanel.add(okButton);
+		ButtonWithMnemonic cancelButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
+		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+		cancelButton.addActionListener(this);
+		buttonPanel.add(cancelButton);
 		ButtonWithMnemonic helpButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
@@ -128,6 +138,12 @@ public class ChooseFilterDialog
 
 		int index = list.getSelectedIndex();
 
+		if ( index == -1) {
+			// no item selected
+			okButton.setEnabled(false);
+		}else
+		okButton.setEnabled(true);
+
 	}
 
 	public String getSelection() {
@@ -144,7 +160,11 @@ public class ChooseFilterDialog
 
 		if (action.equals("OK")) {
 			setVisible(false);
+			success = true;
 			
+		} else if (action.equals("CANCEL")) {
+			setVisible(false);
+			success = false;
 		} else if (action.equals("HELP")) {
 			URLController c = new URLController();
 			try {
@@ -154,4 +174,11 @@ public class ChooseFilterDialog
 			}
 		}
 	}
+	/**
+	 * @return
+	 */
+	public boolean isSuccess() {
+		return success;
+	}
+
 }

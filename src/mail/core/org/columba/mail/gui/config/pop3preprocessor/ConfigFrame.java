@@ -26,8 +26,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -52,7 +50,6 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -126,7 +123,7 @@ public class ConfigFrame extends JDialog
 	public void initComponents() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		getContentPane().add(mainPanel);
 
         addButton = new ButtonWithMnemonic(
@@ -276,7 +273,7 @@ public class ConfigFrame extends JDialog
 		// centerpanel
 
 		centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
 		listView = new FilterListTable(filterList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
 		JScrollPane scrollPane = new JScrollPane(listView);
@@ -288,8 +285,8 @@ public class ConfigFrame extends JDialog
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+                buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
@@ -358,7 +355,7 @@ public class ConfigFrame extends JDialog
 			ColumbaLogger.log.debug("add");
 
 			ChooseFilterDialog d = new ChooseFilterDialog(this);
-			d.setVisible(true);
+			if ( d.isSuccess() == false ) return;
 			
 			String id = d.getSelection();
 			
@@ -398,12 +395,15 @@ public class ConfigFrame extends JDialog
 		} else if (action.equals("EDIT")) {
 			showFilterDialog();
 
+			
 			listView.update();
 		} else if (action.equals("HELP")) {
+			/*
 			URLController c = new URLController();
 			try {
 				c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/Using%20Columba#x34.x2e.5"));
 			} catch (MalformedURLException mue) {}
+			*/
 		}
 	}
 }
