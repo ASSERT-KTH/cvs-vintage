@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.12 2003/12/04 08:53:02 mkl Exp $
+// $Id: ChildGenUML.java,v 1.13 2003/12/05 09:18:16 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.12 2003/12/04 08:53:02 mkl Exp $
+// $Id: ChildGenUML.java,v 1.13 2003/12/05 09:18:16 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -113,6 +113,11 @@ public class ChildGenUML implements ChildGenerator {
 	    if (substates != null) return substates.elements();
 	}
 
+        if (ModelFacade.isAOperation(o)) {
+            Vector params = new Vector(ModelFacade.getParameters(o));
+            if (params != null) return params.elements();
+        }
+        
         if (ModelFacade.isAModelElement(o)) {
 	    Vector behavior = new Vector(ModelFacade.getBehaviors(o));
 	    if (behavior != null) return behavior.elements();
