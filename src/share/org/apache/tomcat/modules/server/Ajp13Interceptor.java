@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.8 2001/03/02 04:49:23 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2001/03/02 04:49:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.9 2001/06/24 22:43:10 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/06/24 22:43:10 $
  *
  * ====================================================================
  *
@@ -70,6 +70,11 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
+
+/* Frozen, bug fixes only: all active development goes in
+     jakarta-tomcat-connectors/jk/org/apache/ajp/Ajp14*
+*/
+
 
 public class Ajp13Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler
