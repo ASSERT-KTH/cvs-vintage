@@ -56,7 +56,7 @@ import org.tigris.scarab.util.xmlissues.ImportIssuesTest;
  * Used for running all of the tests at once.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: AllTest.java,v 1.3 2003/04/28 22:33:55 jmcnally Exp $
+ * @version $Id: AllTest.java,v 1.4 2003/04/29 23:04:47 jon Exp $
  */
 public class AllTest extends BaseTestCase
 {
@@ -79,6 +79,7 @@ public class AllTest extends BaseTestCase
         suite.addTest(ScarabUtilTest.suite());
         suite.addTest(IssueSearchTest.suite());
         suite.addTest(ImportIssuesTest.suite());
+        suite.addTest(EmailLinkTest.suite());
         return suite;
     }
 
