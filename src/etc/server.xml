@@ -86,11 +86,11 @@
                 userTable="users" userNameCol="user_name" userCredCol="user_pass"
                 userRoleTable="user_roles" roleNameCol="role_name" />
         
-             <RequestInterceptor className="org.apache.tomcat.request.JDBCRealm" debug="99"
-                driverName="sun.jdbc.odbc.JdbcOdbcDriver"
-                connectionURL="jdbc:odbc:TOMCAT"
-                userTable="users" userNameCol="user_name" userCredCol="user_pass"
-                userRoleTable="user_roles" roleNameCol="role_name" />
+             <RequestInterceptor className="org.apache.tomcat.realm.JDBCRealm" debug="99"
+              driverName="org.gjt.mm.mysql.Driver"
+              connectionURL="jdbc:mysql://localhost/authority?user=test;password=test"
+              userTable="users" userNameCol="user_name" userCredCol="user_pass"
+              userRoleTable="user_roles" roleNameCol="role_name" />
 
         -->
 
