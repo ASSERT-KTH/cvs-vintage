@@ -18,6 +18,8 @@ package org.columba.core.config;
 import java.io.File;
 import java.io.IOException;
 
+import org.columba.core.util.OSInfo;
+
 /**
  * @author frd
  *
@@ -30,7 +32,6 @@ public class ConfigPath {
 
 	public static String lineSeparator;
 	public static String fileSeparator;
-	public static String osName;
 	public static String userName;
 	public static String userHome;
 
@@ -49,15 +50,6 @@ public class ConfigPath {
 		configDirectory.mkdir();
 	}
 
-	protected boolean isWindowsPlatform() {
-		if (osName.equals("Windows 95"))
-			return true;
-		if (osName.equals("Windows 98"))
-			return true;
-
-		return false;
-	}
-
 	public static File getConfigDirectory() {
 		return configDirectory;
 	}
@@ -67,7 +59,6 @@ public class ConfigPath {
 
 		lineSeparator = new String(System.getProperty("line.separator"));
 		fileSeparator = new String(System.getProperty("file.separator"));
-		osName = new String(System.getProperty("os.name"));
 
 		//System.out.println("os.arch: "+System.getProperty("os.arch") );
 		//System.out.println("os.version: "+System.getProperty("os.version") );
@@ -77,7 +68,7 @@ public class ConfigPath {
 		//userDir = new String(System.getProperty("user.dir"));
 		//System.out.println("User home: "+userHome);
 
-		if (isWindowsPlatform() == true) {
+		if (OSInfo.isWindowsPlatform()) {
 			// this os has no home directory
 			// for example windows9x
 
