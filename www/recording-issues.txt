@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.12 2002/12/17 21:40:44 elicia Exp $
+$Id: recording-issues.txt,v 1.13 2003/01/31 17:48:52 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -16,22 +16,9 @@ This document is a work in progress and is currently incomplete, however
 the parts that are currently in the document can be considered complete.
 
 RULE #1:
-    Comments (saved as Attachments) about the Activit(y/ies) are always
-    added to the ActivitySet, not the Activity, regardless of the number
-    of Activities in the ActivitySet.
-
-RULE #2:
-  > Why is it that for URLs and files, the attachment is associated with the 
-  > Activity, but for Comments, it asso. with the ActivitySet?
-
-The reason is that, based on the UI, a change to a URL or File could
-generate more than one activity record in the activity set with multiple
-attachments.
-
-I (JDM) consider RULE #1 to be incorrect.  All comments, urls, and files should be 
-added to the Activity record.  The only attachment that should be associated
-with an ActivitySet is the "reason" that ties the activities together.  What is
-the justification for overloading the attachment_id in the ActivitySet table?
+All comments, urls, and files should be added to the Activity record. 
+The only attachment that should be associated with an ActivitySet is the
+"reason" that ties the activities together.
 
 
 Attributes:
