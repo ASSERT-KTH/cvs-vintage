@@ -62,8 +62,6 @@ public class SubjectWhitespaceRule extends AbstractRule{
             }
         }
         
-        System.out.println("count="+count);
-        
         // check for at least 10 whitespaces
         if ( count > 10 ) return MAX_PROBABILITY;
         
