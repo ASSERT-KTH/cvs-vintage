@@ -1,5 +1,5 @@
-// $Id: ActionGenerateOne.java,v 1.8 2003/06/29 23:50:02 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionGenerateOne.java,v 1.9 2004/07/20 01:37:22 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -72,10 +72,10 @@ public class ActionGenerateOne extends UMLAction {
         /*
         Editor ce = org.tigris.gef.base.Globals.curEditor();
         Vector sels = ce.getSelectionManager().getFigs();
-        java.util.Enumeration enum = sels.elements();
+        Enumeration figs = sels.elements();
         Vector classes = new Vector();
-        while (enum.hasMoreElements()) {
-        Fig f = (Fig)enum.nextElement();
+        while (figs.hasMoreElements()) {
+        Fig f = (Fig) figs.nextElement();
         Object owner = f.getOwner();
         if (!(owner instanceof MClass) && !(owner instanceof MInterface))
         continue;
@@ -114,9 +114,9 @@ public class ActionGenerateOne extends UMLAction {
         Editor ce = org.tigris.gef.base.Globals.curEditor();
         if(ce != null) {
             Vector sels = ce.getSelectionManager().getFigs();
-            java.util.Enumeration enum = sels.elements();
-            while (enum.hasMoreElements()) {
-        	Fig f = (Fig) enum.nextElement();
+            java.util.Enumeration figs = sels.elements();
+            while (figs.hasMoreElements()) {
+        	Fig f = (Fig) figs.nextElement();
         	Object owner = f.getOwner();
         	if (!(owner instanceof MClass) && !(owner instanceof MInterface))
         	    continue;
