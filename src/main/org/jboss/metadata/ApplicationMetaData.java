@@ -30,7 +30,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -225,7 +225,7 @@ public class ApplicationMetaData
       else
       {
          // Unknown
-         throw new DeploymentException( "Unknown PUBLIC id in " + 
+         throw new DeploymentException( "Unknown PUBLIC id in " +
             "ejb-jar.xml: " + publicId );
       }
 
@@ -440,39 +440,6 @@ public class ApplicationMetaData
                   containerTransaction, "trans-attribute") );
 
                TxSupport transactionType = TxSupport.byName(type);
-	       /*
-               if( type.equalsIgnoreCase("NotSupported") ||
-                  type.equalsIgnoreCase("Not_Supported") )
-               {
-                  transactionType = TX_NOT_SUPPORTED;
-               }
-               else if( type.equalsIgnoreCase("Supports") )
-               {
-                  transactionType = TX_SUPPORTS;
-               }
-               else if( type.equalsIgnoreCase("Required") )
-               {
-                  transactionType = TX_REQUIRED;
-               }
-               else if( type.equalsIgnoreCase("RequiresNew") ||
-                  type.equalsIgnoreCase("Requires_New") )
-               {
-                  transactionType = TX_REQUIRES_NEW;
-               }
-               else if( type.equalsIgnoreCase("Mandatory") )
-               {
-                  transactionType = TX_MANDATORY;
-               }
-               else if( type.equalsIgnoreCase("Never") )
-               {
-                  transactionType = TX_NEVER;
-               }
-               else
-               {
-                  throw new DeploymentException( "invalid " +
-                     "<transaction-attribute> : " + type);
-               }
-	       */
 
                // find the methods
                Iterator methods = getChildrenByTagName(
