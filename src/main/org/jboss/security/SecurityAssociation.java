@@ -8,6 +8,7 @@
 package org.jboss.security;
 
 import java.security.Principal;
+import java.util.ArrayList;
 
 /** The SecurityAssociation class maintains the security principal and
 credentials. This can be done on either a singleton basis or a thread
@@ -31,27 +32,29 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public final class SecurityAssociation
 {
     private static boolean server;
     private static Principal principal;
     private static Object credential;
-    private static ThreadLocal thread_principal;
-    private static ThreadLocal thread_credential;
+    private static ThreadLocal threadPrincipal;
+    private static ThreadLocal threadCredential;
+    private static RunAsThreadLocalStack threadRunAsStacks = new RunAsThreadLocalStack();
+
     static
     {
         boolean useThreadLocal = Boolean.getBoolean("org.jboss.security.SecurityAssociation.ThreadLocal");
         if( useThreadLocal )
         {
-            thread_principal = new ThreadLocal();
-            thread_credential = new ThreadLocal();
+            threadPrincipal = new ThreadLocal();
+            threadCredential = new ThreadLocal();
         }
         else
         {
-            thread_principal = new InheritableThreadLocal();
-            thread_credential = new InheritableThreadLocal();
+            threadPrincipal = new InheritableThreadLocal();
+            threadCredential = new InheritableThreadLocal();
         }
     }
 
@@ -61,7 +64,7 @@ public final class SecurityAssociation
     public static Principal getPrincipal()
     {
       if (server)
-        return (Principal) thread_principal.get();
+        return (Principal) threadPrincipal.get();
       else
         return principal;
     }
@@ -74,7 +77,7 @@ public final class SecurityAssociation
     public static Object getCredential()
     {
       if (server)
-        return thread_credential.get();
+        return threadCredential.get();
       else
         return credential;
     }
@@ -85,7 +88,7 @@ public final class SecurityAssociation
     public static void setPrincipal( Principal principal )
     {
       if (server)
-        thread_principal.set( principal );
+        threadPrincipal.set( principal );
       else
         SecurityAssociation.principal = principal;
     }
@@ -98,9 +101,26 @@ public final class SecurityAssociation
     public static void setCredential( Object credential )
     {
       if (server)
-        thread_credential.set( credential );
+        threadCredential.set( credential );
       else
         SecurityAssociation.credential = credential;
+    }
+
+    /**
+     */
+    public static void pushRunAsRole(Principal runAsRole)
+    {
+        threadRunAsStacks.push(runAsRole);
+    }
+    public static Principal popRunAsRole()
+    {
+        Principal runAsRole = threadRunAsStacks.pop();
+        return runAsRole;
+    }
+    public static Principal peekRunAsRole()
+    {
+        Principal runAsRole = threadRunAsStacks.peek();
+        return runAsRole;
     }
 
     /** Set the server mode of operation. When the server property has
@@ -113,5 +133,37 @@ public final class SecurityAssociation
     {
       server = true;
     }
-}
 
+    /**
+     */
+    private static class RunAsThreadLocalStack extends ThreadLocal
+    {
+        protected Object initialValue()
+        {
+            return new ArrayList();
+        }
+        void push(Principal runAs)
+        {
+            ArrayList stack = (ArrayList) super.get();
+            stack.add(runAs);
+        }
+        Principal pop()
+        {
+            ArrayList stack = (ArrayList) super.get();
+            Principal runAs = null;
+            int lastIndex = stack.size() - 1;
+            if( lastIndex >= 0 )
+                runAs = (Principal) stack.remove(lastIndex);
+            return runAs;
+        }
+        Principal peek()
+        {
+            ArrayList stack = (ArrayList) super.get();
+            Principal runAs = null;
+            int lastIndex = stack.size() - 1;
+            if( lastIndex >= 0 )
+                runAs = (Principal) stack.get(lastIndex);
+            return runAs;
+        }
+    }
+}
