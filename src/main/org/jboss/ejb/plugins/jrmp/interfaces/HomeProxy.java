@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.14 $
+ *      @version $Revision: 1.15 $
  */
 public class HomeProxy
    extends GenericProxy
@@ -72,7 +72,7 @@ public class HomeProxy
    // Constructors --------------------------------------------------
    public HomeProxy()
    {
-      // For externalization to work
+      // For Externalizable to work
    }
    
    public HomeProxy(String name, EJBMetaData ejbMetaData, ContainerRemote container, boolean optimize)

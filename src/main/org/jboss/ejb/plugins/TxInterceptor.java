@@ -38,7 +38,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 */
 public class TxInterceptor
 extends AbstractInterceptor
@@ -139,8 +139,8 @@ extends AbstractInterceptor
         // New transaction is the new transaction this might start
        Transaction newTransaction = null;
        
-       System.out.println("Current transaction in MI is "+mi.getTransaction()); 
-       System.out.println("Current method "+mi.getMethod());           
+//       System.out.println("Current transaction in MI is "+mi.getTransaction()); 
+//       System.out.println("Current method "+mi.getMethod());           
        byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
 
 // DEBUG  	printMethod(mi.getMethod(), transType);
