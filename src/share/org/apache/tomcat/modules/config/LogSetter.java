@@ -140,6 +140,8 @@ public class LogSetter extends  BaseInterceptor {
     String path;
     String verbosityLevel;
     boolean servletLogger=false;
+    boolean timestamps=true;
+    String tsFormat=null;
     
     public LogSetter() {
     }
@@ -164,6 +166,20 @@ public class LogSetter extends  BaseInterceptor {
      */
     public void setServletLogger( boolean b ) {
 	servletLogger=b;
+    }
+
+    /** Display the time of the event ( log ).
+     */
+    public void setTimestamps( boolean b ) {
+	timestamps=b;
+    }
+
+    /** Set the format of the timestamp.
+	"msec" will display the raw time ( fastest ),
+	otherwise a SimpleDateFormat.
+    */
+    public void setTimestampFormat( String s ) {
+	tsFormat=s;
     }
     
     /**
@@ -205,7 +221,11 @@ public class LogSetter extends  BaseInterceptor {
 	// construct a queue logger
 	QueueLogger ql=new QueueLogger();
 	ql.setName(name);
-
+	if( ! timestamps )
+	    ql.setTimestamp( "false" );
+	if( tsFormat!=null )
+	    ql.setTimestampFormat( tsFormat );
+	
 	if( path!=null )
 	    ql.setPath(path);
 	if( verbosityLevel!= null )
