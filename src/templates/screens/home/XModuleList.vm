@@ -28,7 +28,7 @@
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
      value="AdvancedQuery.vm" />
 
-#createMITList("Finished" $l10n.DefineQuery $user)
+#createMITList("Finished" $l10n.DefineQuery $user "home,XModuleList.vm")
 
 #set ($mitList = $user.CurrentMITList)
 #if (!$mitList || $mitList.isEmpty())

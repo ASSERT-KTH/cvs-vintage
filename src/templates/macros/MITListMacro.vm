@@ -27,7 +27,7 @@
 #end
 #end
 
-#macro (createMITList $event $buttonName $user)
+#macro (createMITList $event $buttonName $user $screenTemplate)
 
 <h3>$l10n.BuildListOfIssueTypes</h3>
 
@@ -149,15 +149,15 @@ $l10n.NoMoreIssueTypes
 #set ($isAddPagination = $resultsPerPage > 0 && $searchableRMITs.size() > $resultsPerPage)
 #if ($isAddPagination)
   #set ($searchableRMITs = $scarabR.getPaginatedList($searchableRMITs, $pageNum, $resultsPerPage))
-  #paginateXModuleList()
+  #paginateXModuleList($screenTemplate)
 #end
 
 <div class="directory">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
 	  <th nowrap="nowrap">$l10n.Select</th>
-	  <th>#rmitSort("module" "$l10n.CapModule")</th>
-	  <th>#rmitSort("issuetype" "$l10n.IssueType")</th>
+	  <th>#rmitSort("module" "$l10n.CapModule" $screenTemplate)</th>
+	  <th>#rmitSort("issuetype" "$l10n.IssueType" $screenTemplate)</th>
 	  <th>$l10n.Description</th>
     </tr>
 
@@ -176,7 +176,7 @@ $l10n.NoMoreIssueTypes
 #end      
 
 #if ($isAddPagination)
-  #paginateXModuleList()
+  #paginateXModuleList($screenTemplate)
 #end
 
 <div class="axial">
@@ -207,16 +207,16 @@ $l10n.NoMoreIssueTypes
 
 #end
 
-#macro (prepRMITPageLink)
- #set ($dummy = $link.setPage("home,XModuleList.vm").setPathInfo("resultsPerPage", "$resultsPerPage").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity"))
+#macro (prepRMITPageLink $screenTemplate)
+ #set ($dummy = $link.setPage($screenTemplate).setPathInfo("resultsPerPage", "$resultsPerPage").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity"))
 #end
 
-#macro (paginateXModuleList)
+#macro (paginateXModuleList $screenTemplate)
 <div class="colbar">
  <p class="paginate">
 
  #if($scarabR.PrevPage != 0)
-  #prepRMITPageLink()
+  #prepRMITPageLink($screenTemplate)
   #set ($prevLink = $link.setPathInfo("pageNum", "$scarabR.PrevPage"))
   <a href="$prevLink">&laquo; $l10n.Previous</a> |
  #end
@@ -224,7 +224,7 @@ $l10n.NoMoreIssueTypes
  $pageNum of $scarabR.NbrPages
 
  #if ($scarabR.NextPage != 0)
-  #prepRMITPageLink()
+  #prepRMITPageLink($screenTemplate)
   #set ($nextLink = $link.setPathInfo("pageNum", "$scarabR.NextPage"))
   | <a href="$nextLink">$l10n.Next &raquo;</a>
  #end
@@ -232,23 +232,23 @@ $l10n.NoMoreIssueTypes
 </div> 
 #end
 
-#macro (prepRMITLink $sortKey)
- #set ($dummy = $link.setPage("home,XModuleList.vm").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortKey"))
+#macro (prepRMITLink $sortKey $screenTemplate)
+ #set ($dummy = $link.setPage($screenTemplate).setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortKey"))
 #end
 
-#macro (rmitSort $shortName $longName)
+#macro (rmitSort $shortName $longName $screenTemplate)
   #if ($sortColumn.equals($shortName))
     #if ($sortPolarity.equals("desc"))
-      #prepRMITLink($shortName)
+      #prepRMITLink($shortName $screenTemplate)
       #set ($arrowLink = $link.setPathInfo("sortPolarity", "asc"))
       <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
     #else
-      #prepRMITLink($shortName)
+      #prepRMITLink($shortName $screenTemplate)
       #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc"))
       <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
     #end $longName
   #else
-    #prepRMITLink($shortName)
+    #prepRMITLink($shortName $screenTemplate)
     #set ($sortLink = $link.setPathInfo("sortPolarity", "$sortPolarity"))
     <a href="$sortLink">$longName</a>
   #end
