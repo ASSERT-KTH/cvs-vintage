@@ -72,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.3 2002/01/02 19:44:28 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.4 2002/01/11 23:26:13 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -86,44 +86,40 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+           .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         if ( intake.isAllValid() )
         {
-            Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-            Group attributeType = intake.get("AttributeType", IntakeTool.DEFAULT_KEY);
-
-            String attributeID = attribute.get("Id").toString();
-            String attributeName = attribute.get("Name").toString();
-            String attributeDesc = attribute.get("Description").toString();
-            String attributeTypeID = attributeType.get("AttributeTypeId").toString();
-
-            Attribute attr = null;
-            if (attributeID != null && attributeID.length() > 0)
+            Attribute attr = scarabR.getAttribute();
+            Group attrGroup = null;
+            if (attr.getAttributeId() == null)
             {
-                attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
-            }
-            else
-            {
+                // new attribute
+                attrGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+                attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
+
+                // Check for duplicate attribute names.
+                String attributeName = attrGroup.get("Name").toString();
                 if (Attribute.checkForDuplicate(attributeName))
                 {
                     data.setMessage("Cannot create a duplicate Attribute with the same name!");
-                    intake.remove(attribute);
+                    intake.remove(attrGroup);
                     return;
                 }
-    
-                attr = Attribute.getInstance();
-                attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
-                data.setMessage("New Attribute Created!");
             }
-            attr.setName(attributeName);
-            attr.setDescription(attributeDesc);
-            attr.setTypeId(new NumberKey(attributeTypeID));
+            else
+            {
+                attrGroup = intake.get("Attribute", attr.getQueryKey());
+            }
+
+            attrGroup.setProperties(attr);
             attr.save();
 
-            // put the new attribute back into the context.
-            ScarabRequestTool scarabR = (ScarabRequestTool)context
-                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-            scarabR.setAttribute(attr);
+        }
+        else
+        {
+          data.setMessage("dsfd");
         }
     }
 
@@ -137,26 +133,21 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+           .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         if ( intake.isAllValid() ) 
         {
             // get the Attribute that we are working on
-            Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-            Group attributeTypeGroup = intake.get("AttributeType", 
-                                                  IntakeTool.DEFAULT_KEY);
-            String attributeTypeId = attributeTypeGroup.get("AttributeTypeId")
-                                                       .toString();
+            Attribute attribute = scarabR.getAttribute();
+            Group attGroup = intake.get("Attribute", attribute.getQueryKey());
+            String attributeTypeId = attGroup.get("TypeId").toString();
             AttributeType attributeType = (AttributeType)AttributeTypePeer
                 .retrieveByPK(new NumberKey(attributeTypeId));
 
             if (attributeType.getAttributeClass().getName()
                                                  .equals("select-one"))
             {
-                String attributeId = attGroup.get("Id").toString();
-
-                Attribute attribute = Attribute
-                     .getInstance((ObjectKey)new NumberKey(attributeId));
-
                 // get the list of ParentChildAttributeOptions's 
                 // used to display the page
                 List pcaoList = attribute.getParentChildAttributeOptions();
@@ -236,7 +227,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         && newPCAO.getName().length() > 0)
                     {
                         // save the new PCAO
-                        newPCAO.setAttributeId(new NumberKey(attributeId));
+                        newPCAO.setAttributeId(new NumberKey(attribute.getAttributeId()));
                         try
                         {
                             newPCAO.save();
@@ -261,7 +252,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         throws Exception
     {
         doSaveattributedata(data, context);
-        doSaveoptions(data, context);
+        //doSaveoptions(data, context);
         doCancel(data, context);
     }
     
