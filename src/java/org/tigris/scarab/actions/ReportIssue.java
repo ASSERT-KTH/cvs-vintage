@@ -96,7 +96,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.118 2002/03/25 19:29:01 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.119 2002/04/09 23:43:53 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -296,7 +296,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         .getValidationKey();
                 }
                 else if (aval.getAttribute().getAttributeType()
-                         .getName().equals("combo-box"))
+                         .getName().equals(ScarabConstants.DROPDOWN_LIST))
                 {
                     field = "OptionId";
                 }

@@ -70,7 +70,7 @@
         #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
         #if ($attVal.Attribute.AttributeType.ValidationKey)
            #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
            #set ($field = "OptionId")
         #else
           #set ($field = "Value")

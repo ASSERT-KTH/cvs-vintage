@@ -85,7 +85,7 @@
         <th>
         #if ($attVal.Attribute.AttributeType.ValidationKey)
           #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
           #set ($field = "OptionId")
         #elseif ($attVal.Attribute.AttributeType.Name == "string")
           #set ($field = "Value")

@@ -74,7 +74,7 @@ $page.setTitle("Custom query")
 #foreach ($attVal in $searchValues)
   #if ($attVal.Attribute.AttributeType.ValidationKey)
     #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+  #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
     #set ($field = "OptionId")
   #end
   <tr>

@@ -52,7 +52,7 @@ from:&#160;<input type="text" size="20"
         #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
         #if ( $attVal.Attribute.AttributeType.ValidationKey )
               #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
               #set ( $field = "OptionIds" )
         #else
               #set ( $field = "Value" )
@@ -176,7 +176,7 @@ from:&#160;<input type="text" size="20"
      <select name="$searchGroup.StateChangeAttributeId.Key">
 #foreach ( $attKey in $attrValues.sequence() )
     #set ( $attVal = $attrValues.get($attKey) )
-    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
+    #if ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST )
         #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
         #set ( $selected = false )
         #if ($searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )

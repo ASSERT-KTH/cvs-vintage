@@ -36,7 +36,7 @@
       <td>
         #if ($attVal.Attribute.AttributeType.ValidationKey)
              ## TODO not sure what this is
-        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
            $att.getAttributeOption($attrInput.OptionId.toString()).Name
         #else
              $!attrInput.Value
@@ -87,7 +87,7 @@
       <td>
         #if ($attVal.Attribute.AttributeType.ValidationKey)
            #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+        #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
            #set ($field = "OptionId")
         #else
           #set ($field = "Value")

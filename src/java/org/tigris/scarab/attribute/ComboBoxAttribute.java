@@ -47,10 +47,10 @@ package org.tigris.scarab.attribute;
  */ 
 
 /**
- *  This class represents attribute displayed as a combo-box.
+ *  This class represents attribute displayed as a Dropdown list.
  *  used for Severity, Priority, Platform and the like.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Id: ComboBoxAttribute.java,v 1.7 2002/01/18 22:26:06 jon Exp $ 
+ * @version $Id: ComboBoxAttribute.java,v 1.8 2002/04/09 23:43:54 jon Exp $ 
  */
 public class ComboBoxAttribute extends SelectOneAttribute {}

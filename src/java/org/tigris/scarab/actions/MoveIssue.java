@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.25 2002/04/04 00:51:22 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.26 2002/04/09 23:43:53 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -250,7 +250,7 @@ public class MoveIssue extends RequireLoginFirstAction
                dataBuf.append(attVal.getAttribute().getName());
                String field = null;
                if (attVal.getAttribute().getAttributeType()
-                   .getName().equals("combo-box"))
+                   .getName().equals(ScarabConstants.DROPDOWN_LIST))
                {
                    field = attVal.getAttributeOption().getName();
                } 

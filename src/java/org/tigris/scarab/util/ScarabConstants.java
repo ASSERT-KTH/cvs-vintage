@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.33 2002/02/23 19:30:28 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.34 2002/04/09 23:43:54 jon Exp $
  */
 public interface ScarabConstants
 {
@@ -179,4 +179,10 @@ public interface ScarabConstants
     String ATTACHMENTS_REPO_KEY = "scarab.attachments.repository";
 
     String ARCHIVE_EMAIL_ADDRESS = "scarab.email.archive.toAddress";
+
+    /**
+     * An attribute type
+     */
+    public static final String DROPDOWN_LIST = "Dropdown list";
+    
 }    

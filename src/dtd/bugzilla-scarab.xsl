@@ -28,7 +28,7 @@
                         <attribute>
                             <name>Status</name>
                             <value><xsl:value-of select="bug_status"/></value>
-                            <type>combo-box</type>
+                            <type>Dropdown list</type>
                         </attribute>
                         <description>Status set to <xsl:value-of select="bug_status"/></description>
                         <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
