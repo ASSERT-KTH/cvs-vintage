@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.39 $
+*   @version $Revision: 1.40 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -448,9 +448,18 @@ public class ContainerFactory
 
                  container.addInterceptor(new LogInterceptor());
                  container.addInterceptor(new SecurityInterceptor());
-                 container.addInterceptor(new TxInterceptor());
-                 container.addInterceptor(new StatelessSessionInstanceInterceptor());
-
+                 
+           if (((SessionMetaData)bean).isContainerManagedTx()) {
+              // CMT
+              container.addInterceptor(new TxInterceptorCMT());
+                    container.addInterceptor(new StatelessSessionInstanceInterceptor());
+               
+           } else {
+              // BMT
+              container.addInterceptor(new StatelessSessionInstanceInterceptor());
+              container.addInterceptor(new TxInterceptorBMT());
+           }
+           
                  // Finally we add the last interceptor from the container
                  container.addInterceptor(container.createContainerInterceptor());
 
@@ -502,8 +511,18 @@ public class ContainerFactory
 
                  // Create interceptors
                  container.addInterceptor(new LogInterceptor());
-                 container.addInterceptor(new TxInterceptor());
-                 container.addInterceptor(new StatefulSessionInstanceInterceptor());
+                 
+           if (((SessionMetaData)bean).isContainerManagedTx()) {
+              // CMT
+              container.addInterceptor(new TxInterceptorCMT());
+                    container.addInterceptor(new StatefulSessionInstanceInterceptor());
+               
+           } else {
+              // BMT : the tx interceptor needs the context from the instance interceptor
+              container.addInterceptor(new StatefulSessionInstanceInterceptor());
+              container.addInterceptor(new TxInterceptorBMT());
+           }
+               
                  container.addInterceptor(new SecurityInterceptor());
 
                  container.addInterceptor(container.createContainerInterceptor());
@@ -577,8 +596,11 @@ public class ContainerFactory
               // Create interceptors
               container.addInterceptor(new LogInterceptor());
               container.addInterceptor(new SecurityInterceptor());
-              container.addInterceptor(new TxInterceptor());
-              container.addInterceptor(new EntityInstanceInterceptor());
+              
+           // entity beans are always CMT
+           container.addInterceptor(new TxInterceptorCMT());
+              
+           container.addInterceptor(new EntityInstanceInterceptor());
               container.addInterceptor(new EntitySynchronizationInterceptor());
 
               container.addInterceptor(container.createContainerInterceptor());
@@ -613,7 +635,7 @@ public class ContainerFactory
                 Logger.exception(e);
             }
             
-		  Logger.exception(e);
+         Logger.exception(e);
          //Logger.debug(e.getMessage());
 
          app.stop();
