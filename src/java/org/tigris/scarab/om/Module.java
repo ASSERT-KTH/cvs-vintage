@@ -216,7 +216,7 @@ public abstract class Module
             {
                 activeRModuleAttributes = this.activeRModuleAttributes; 
             }
-
+               
             return activeRModuleAttributes;
         }
         else 
@@ -308,8 +308,16 @@ public abstract class Module
     private List getAllRModuleOptions(Attribute attribute)
         throws Exception
     {
-        AttributeOption[] options = attribute.getAttributeOptions(false) ;
-        NumberKey[] optIds = new NumberKey[options.length];
+        AttributeOption[] options = attribute.getAttributeOptions(false);
+        NumberKey[] optIds = null;
+        if (options == null)
+        {
+            optIds = new NumberKey[0];
+        }
+        else
+        {
+            optIds = new NumberKey[options.length];
+        }
         for ( int i=optIds.length-1; i>=0; i-- ) 
         {
             optIds[i] = options[i].getOptionId();

@@ -190,7 +190,6 @@ public class Issue
             }
         }
         }catch (Exception e){e.printStackTrace();}
-
         return map;
     }
 
