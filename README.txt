@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.11 2001/03/27 03:14:58 jon Exp $
+$Id: README.txt,v 1.12 2001/05/01 04:04:57 jon Exp $
 
 Welcome to Scarab!
 
@@ -131,6 +131,21 @@ Then, in your web browser, go to:
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
       the Tomcat that comes with Scarab, you can safely undefine it and follow 
       the directions below for running the sandbox.
+
+
+-------------------------------------------------------------------------
+| B U I L D I N G  U S E C A S E  D O C S                               |
+-------------------------------------------------------------------------
+
+The usecase documentation is important in Scarab because it defines the
+overall application logic. Building the usecases takes advantage of
+Anakia (which is part of Velocity) to transform the XML definitions into
+HTML files. In order to build the HTML files, all you need to do is
+this:
+
+cd build
+./build.sh usecases <-- Unix
+build.bat usecases  <-- Win32
 
 
 -------------------------------------------------------------------------
