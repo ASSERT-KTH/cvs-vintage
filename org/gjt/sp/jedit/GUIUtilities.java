@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.56 2003/02/09 05:16:57 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.57 2003/02/11 02:31:06 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -171,6 +171,7 @@ public class GUIUtilities
 	 * inserts a separator in the menu.
 	 * @param view The view to load the menu for
 	 * @param name The menu name
+	 * @see #loadMenuItem(String)
 	 * @since jEdit 2.6pre2
 	 */
 	public static JMenu loadMenu(String name)
@@ -232,8 +233,12 @@ public class GUIUtilities
 
 	//{{{ loadMenuItem() method
 	/**
-	 * Creates a menu item.
+	 * Creates a menu item. The menu item is bound to the action named by
+	 * <code>name</code> with label taken from the return value of the
+	 * {@link EditAction#getLabel()} method.
+	 *
 	 * @param name The menu item name
+	 * @see #loadMenu(String)
 	 * @since jEdit 2.6pre1
 	 */
 	public static JMenuItem loadMenuItem(String name)

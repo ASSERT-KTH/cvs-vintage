@@ -28,7 +28,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.6 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.7 2003/02/11 02:31:05 spestov Exp $
  */
 public class BufferHistory
 {
@@ -254,6 +254,9 @@ public class BufferHistory
 		return returnValue;
 	}
 
+	/**
+	 * Recent file list entry.
+	 */
 	public static class Entry
 	{
 		public String path;

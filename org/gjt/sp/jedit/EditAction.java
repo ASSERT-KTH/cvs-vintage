@@ -39,7 +39,7 @@ import java.awt.Component;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.15 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: EditAction.java,v 1.16 2003/02/11 02:31:05 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -65,7 +65,7 @@ public abstract class EditAction
 	//{{{ getLabel() method
 	/**
 	 * Returns the action's label. The default implementation returns the
-	 * value of the property named by the action's internal name suffixed
+	 * value of the property named by {@link #getName()} suffixed
 	 * with <code>.label</code>.
 	 */
 	public String getLabel()
