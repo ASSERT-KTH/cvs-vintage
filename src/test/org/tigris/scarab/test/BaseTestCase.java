@@ -74,7 +74,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.19 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.20 2002/11/04 23:43:03 elicia Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -91,6 +91,7 @@ public class BaseTestCase extends TestCase
     private Issue issue0 = null;
     private Attribute platformAttribute = null;
     private Attribute assignAttribute = null;
+    private Attribute ccAttribute = null;
 
     private static boolean initialized = false;
 
@@ -220,6 +221,16 @@ public class BaseTestCase extends TestCase
             assignAttribute  = AttributeManager.getInstance(new NumberKey(2));
         }
         return assignAttribute;
+    }
+
+    protected Attribute getCcAttribute()
+        throws Exception
+    {
+        if (ccAttribute == null)
+        {
+            ccAttribute  = AttributeManager.getInstance(new NumberKey(13));
+        }
+        return ccAttribute;
     }
 
     protected ActivitySet getEditActivitySet()
