@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.298 2003/05/07 00:50:39 jon Exp $
+ * @version $Id: Issue.java,v 1.299 2003/05/09 22:57:09 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2402,10 +2402,9 @@ public class Issue
         }
         if (commentAttrs.size() > 0)
         {
-            attachmentBuf.append(Localization.getString(
+            attachmentBuf.append(Localization.format(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
-               getLocale(),
-               "DidNotCopyAttributes"));
+               getLocale(), "DidNotCopyAttributes", newIssueType.getName()));
             attachmentBuf.append("\n");
             for (int i=0;i<commentAttrs.size();i++)
             {
@@ -2426,10 +2425,11 @@ public class Issue
            Attachment comment = new Attachment();
            comment.setTextFields(user, newIssue, Attachment.COMMENT__PK);
 
+           Object[] args = {this.getUniqueId(), newIssueType.getName()};
            StringBuffer commentBuf = new StringBuffer(Localization.format(
               ScarabConstants.DEFAULT_BUNDLE_NAME,
               getLocale(),
-              "DidNotCopyAttributesFromArtifact", getUniqueId()));
+              "DidNotCopyAttributesFromArtifact", args));
            commentBuf.append("\n").append(delAttrs);
            comment.setData(commentBuf.toString());
            comment.setName(Localization.getString(
