@@ -36,7 +36,7 @@ import org.jboss.invocation.Invocation;
  *
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/6/4: yarrumretep</b>
@@ -68,7 +68,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 
     public void schedule(Invocation mi)
     {
-	boolean reading = container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName());
+        boolean reading = mi.getMethod() == null ? false : container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName());
 	Transaction miTx = mi.getTransaction();
 
 	sync();
