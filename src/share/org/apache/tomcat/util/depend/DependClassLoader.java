@@ -84,6 +84,9 @@ import org.apache.tomcat.util.compat.*;
  * 
  */
 public class DependClassLoader extends ClassLoader {
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(DependClassLoader.class);
+
     protected ClassLoader parent;
     protected ClassLoader parent2;
     
@@ -126,11 +129,6 @@ public class DependClassLoader extends ClassLoader {
 	this.pd=pd;
     }
 
-    // debug only
-    final void log( String s ) {
-	System.out.println("DependClassLoader: " + s );
-    }
-
     /**
      * Resolves the specified name to a Class. The method loadClass()
      * is called by the virtual machine.  As an abstract method,
@@ -156,7 +154,8 @@ public class DependClassLoader extends ClassLoader {
     protected Class loadClassInternal1( String name, boolean resolve )
 	throws ClassNotFoundException
     {
-	if( debug>9) log( "loadClass() " + name + " " + resolve);
+	if( logger.isTraceEnabled() ) 
+	    logger.trace( "loadClass() " + name + " " + resolve);
 	// The class object that will be returned.
         Class c = null;
 
@@ -205,7 +204,8 @@ public class DependClassLoader extends ClassLoader {
 	    }
 	    is.close();
 	} catch(IOException ex ) {
-	    if( debug > 0 ) ex.printStackTrace();
+	    if( logger.isDebugEnabled() )
+		logger.debug(" error reading " + name, ex);
 	    data=null;
 	    throw new ClassNotFoundException( name + " error reading " + ex.toString());
 	}
@@ -242,7 +242,8 @@ public class DependClassLoader extends ClassLoader {
 	File f=null;
 	if( "file".equals( res.getProtocol() )) {
 	    f=new File( res.getFile());
-	    if( debug > 9 ) log( "File dep "  +f );
+	    if( logger.isTraceEnabled() ) 
+		logger.trace( "File dep "  +f );
 	    if( ! f.exists()) f=null;
 	}
 	if( "jar".equals( res.getProtocol() )) {
@@ -257,7 +258,8 @@ public class DependClassLoader extends ClassLoader {
 	    if( fileN.startsWith( "/file:" ))
 		fileN=fileN.substring( 6 );
 	    f=new File(fileN);
-	    if( debug > 9 ) log( "Jar dep "  +f + " " + f.exists() );
+	    if( logger.isTraceEnabled() ) 
+		logger.trace( "Jar dep "  +f + " " + f.exists() );
 	    if( ! f.exists()) f=null;
 	}
 

@@ -79,6 +79,9 @@ public class DependClassLoader12 implements DependClassLoader.DCLFactory {
  */
 class DependClassLoader12Impl extends URLClassLoader {
 
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(DependClassLoader12Impl.class);
+
     private final static String FILE_PROTOCOL = "file:";
     private final static String BANG = "!";
 
@@ -197,18 +200,14 @@ class DependClassLoader12Impl extends URLClassLoader {
 	return parent.getResources(name);
     }
 
-    // debug only
-    final void log( String s ) {
-	System.out.println("DependClassLoader12: " + s );
-    }
-
     /** Actual class loading. The name 'loadClassInternal' generates a warning,
      *  as a private method with the same name exists int ClassLoader in JDK1.1 ( Sun impl ).
      */
     protected Class loadClassInternal1( String name, boolean resolve )
 	throws ClassNotFoundException
     {
-	if( debug>9) log( "loadClass() " + name + " " + resolve);
+	if( logger.isTraceEnabled() ) 
+	    logger.trace( "loadClass() " + name + " " + resolve);
 	// The class object that will be returned.
         Class c = null;
 
@@ -257,7 +256,8 @@ class DependClassLoader12Impl extends URLClassLoader {
 	    }
 	    is.close();
 	} catch(IOException ex ) {
-	    if( debug > 0 ) ex.printStackTrace();
+	    if( logger.isDebugEnabled() ) 
+		logger.debug("error reading " + name, ex);
 	    data=null;
 	    throw new ClassNotFoundException( name + " error reading " + ex.toString());
 	}
@@ -285,7 +285,8 @@ class DependClassLoader12Impl extends URLClassLoader {
 	File f=null;
 	if( "file".equals( res.getProtocol() )) {
 	    f=new File( res.getFile());
-	    if( debug > 9 ) log( "File dep "  +f );
+	    if( logger.isTraceEnabled() ) 
+		logger.trace( "File dep "  +f );
 	    if( ! f.exists()) f=null;
 	}
 	if( "jar".equals( res.getProtocol() )) {
@@ -300,7 +301,8 @@ class DependClassLoader12Impl extends URLClassLoader {
 	    if( fileN.startsWith( "/file:" ))
 		fileN=fileN.substring( 6 );
 	    f=new File(fileN);
-	    if( debug > 9 ) log( "Jar dep "  +f + " " + f.exists() );
+	    if( logger.isTraceEnabled() ) 
+		logger.trace( "Jar dep "  +f + " " + f.exists() );
 	    if( ! f.exists()) f=null;
 	}
 

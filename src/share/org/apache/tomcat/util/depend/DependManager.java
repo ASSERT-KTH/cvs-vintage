@@ -75,6 +75,9 @@ import java.security.*;
     servers ( with many contexts) it have scalability problems.
  */
 public class DependManager {
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(DependManager.class);
+
     int delay=4000;
     Dependency deps[];
     int depsCount=0;
@@ -123,7 +126,7 @@ public class DependManager {
     public boolean shouldReload() {
 	boolean b=shouldReload1();
 	if( b!=expired && noWarnBadVM ) {
-	    log("BUG ( VM or Tomcat? ) shouldReload returns expired=" + b +
+	    logger.info("BUG ( VM or Tomcat? ) shouldReload returns expired=" + b +
 		" and the real value is " + expired);
 	    noWarnBadVM=false;
 	}
@@ -134,22 +137,30 @@ public class DependManager {
     public boolean shouldReload1() {
 	// somebody else is checking, so we don't know yet.
 	// assume we're fine - reduce the need for sync
-	if( debug > 0  && expired )
-	    log( "ShouldReload1 E=" + expired + " C=" + checking);
+	if( expired ) {
+	    if(logger.isDebugEnabled())
+		logger.debug( "ShouldReload1 E=" + expired + " C=" + checking);
+	}
 	if( checking ) return expired;
 
 	synchronized(this) {
 	    try {
 		// someone else got here and did it before me
-		if( debug>0 && expired )
-		    log( "ShouldReload2 E=" + expired + " C=" + checking);
+		if( expired ) {
+		    if(logger.isDebugEnabled())
+			logger.debug( "ShouldReload2 E=" + expired + 
+				      " C=" + checking);
+		}
 		if( checking ) return expired;
 			
 		// did a check in the last N seconds
 		long startCheck=System.currentTimeMillis();
 		if( startCheck - lastCheck < delay ) {
-		    if( debug > 0 && expired )
-			log( "ShouldReload3 E=" + expired + " C=" + checking);
+		    if( expired ) {
+			if(logger.isDebugEnabled())
+			    logger.debug( "ShouldReload3 E=" + expired + 
+					  " C=" + checking);
+		    }
 		    return expired;
 		}
 		
@@ -161,14 +172,13 @@ public class DependManager {
 		    Dependency d=deps[i];
 		    if( d.checkExpiry() ) {
 			// something got modified
-			if( debug > 0)
-			    log("Found expired file " +
+			if( logger.isDebugEnabled())
+			    logger.debug("Found expired file " +
 				d.getOrigin().getName());
 
 			if( ! d.isLocal() ) {
 			    // if d is local, it'll just be marked as expired,
 			    // the DependManager will not.
-			    //			    if( debug >0 )
 			    expired=true;
 			}
 		    }
@@ -179,8 +189,10 @@ public class DependManager {
 	    } finally {
 		checking=false;
 	    }
-	    if( debug > 0 && expired )
-		log( "ShouldReload5 E=" + expired + " C=" + checking);
+	    if( expired ) {
+		if(logger.isDebugEnabled()) 
+		    logger.debug( "ShouldReload5 E=" + expired + " C=" + checking);
+	    }
 	    return expired;
 	}
     }
@@ -195,8 +207,8 @@ public class DependManager {
     }
 
     public void setExpired( boolean e ) {
-	if( debug > 0 ) {
-	    log( "SetExpired " + e );
+	if( logger.isDebugEnabled() ) {
+	    logger.debug( "SetExpired " + e );
  	}
 	for( int i=0; i<depsCount; i++ ) {
 	    deps[i].setExpired( e );
@@ -210,7 +222,8 @@ public class DependManager {
 	    deps=deps1;
 	}
 	deps[depsCount++]= dep ;
-	if( debug>2) log( "Added " + dep.getOrigin() + " " + dep.getTarget());
+	if( logger.isDebugEnabled() )
+	    logger.debug( "Added " + dep.getOrigin() + " " + dep.getTarget());
     }
 
     // -------------------- Private 
@@ -220,8 +233,5 @@ public class DependManager {
     public void setDebug( int i ) {
 	debug=i;
     }
-    
-    void log( String s ) {
-	System.out.println("DependManager: " + s );
-    }
+
 }
