@@ -22,7 +22,7 @@ import org.columba.core.gui.util.SelectionChangedEvent;
 import org.columba.core.gui.util.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.MessageSelectionChangedEvent;
+import org.columba.mail.gui.table.TableSelectionChangedEvent;
 
 public class ViewMessageAction extends InternAction implements SelectionListener {
 
@@ -38,7 +38,7 @@ public class ViewMessageAction extends InternAction implements SelectionListener
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		if( ((MessageSelectionChangedEvent)e).getUids().length == 1 ) {
+		if( ((TableSelectionChangedEvent)e).getUids().length == 1 ) {
 			/*
 			getMailFrameController()
 			.attachmentController

@@ -107,7 +107,7 @@ public class HeaderTableSelectionHandler extends SelectionHandler implements Tre
 			}
 		}
 		
-		fireSelectionChanged( new MessageSelectionChangedEvent( folder, getUidArray() ));
+		fireSelectionChanged( new TableSelectionChangedEvent( folder, getUidArray() ));
 
 		/*
 		DefaultMutableTreeNode node =

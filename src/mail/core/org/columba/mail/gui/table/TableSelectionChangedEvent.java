@@ -19,12 +19,12 @@ package org.columba.mail.gui.table;
 import org.columba.core.gui.util.SelectionChangedEvent;
 import org.columba.mail.folder.Folder;
 
-public class MessageSelectionChangedEvent extends SelectionChangedEvent {
+public class TableSelectionChangedEvent extends SelectionChangedEvent {
 
 	private Folder folder;
 	private Object[] uids;
 
-	public MessageSelectionChangedEvent( Folder folder, Object[] uids) {
+	public TableSelectionChangedEvent( Folder folder, Object[] uids) {
 		this.folder = folder;
 		this.uids = uids;
 	}

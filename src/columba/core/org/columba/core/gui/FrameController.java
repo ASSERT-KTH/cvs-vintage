@@ -50,10 +50,10 @@ public abstract class FrameController {
 		mouseTooltipHandler = new TooltipMouseHandler( statusBar );
 		
 		model.register(id, this);
-		
-		view = createView();
-				
+
 		selectionManager = new SelectionManager();
+				
+		view = createView();
 		registerSelectionHandlers();
 		
 		initInternActions();
