@@ -265,6 +265,7 @@
         <field name="UserId" key="visid" type="NumberKey">
            <rule name="mask" value="[0-9]+">intake_BadIdMessage</rule>
         </field>
+        <field name="NumericValue" key="num" type="int" />
         <field name="UserIds" key="visids" type="NumberKey" multiValued="true"/>
         <field name="Value" key="val" type="String">
             <rule name="maxLength" value="5000">intake_LengthMustBeLessThan5000CharactersUAttachmentOrComment</rule>
@@ -572,6 +573,9 @@
     </field>
     <field name="ModuleId" key="modId" type="NumberKey">
         <rule name="mask" value="[0-9]+">intake_SelectModuleFromList</rule>
+    </field>
+    <field name="IssueTypeId" key="itId" type="NumberKey">
+        <rule name="mask" value="[0-9]+">intake_SelectIssueTypeFromList</rule>
     </field>
     <field name="IssueId" key="issId" type="String">
     </field>
