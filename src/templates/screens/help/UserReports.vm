@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+
+
+  <title>Reports</title>
+ </head>
+
+ <body>
+<div class="docs" id="userreports"> 
+  <h2>Reports</h2>
+  <div id="toc"> 
+
+  <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to 
+            Scarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
+          <li><strong>Reports</strong></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFAQ.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3>Reports: overview</h3>
+  <p>Reports allow you to track the progress of your project. Scarab allows you 
+    to easily define, save and run reports in an issue type. Defining and using 
+    reports is a simple process:</p>
+
+<ul>
+  <li> 
+Define your type of report
+  </li>
+    <li>Determine your attribute filters</li>
+  <li>Select the row and column content</li>
+</ul>
+ <strong>Types of Reports</strong> 
+  <p>There are two types of reports available within Scarab: comparative analysis 
+    and rate of change.</p>
+
+<ul>
+  <li>
+ The comparative analysis report type is 
+      a snap shot of a single point in time. Use this report type to compare attributes, 
+      options and/or users at a single point in time.
+  </li>
+  <li>
+  The rate of change report allows you to 
+      track changes in your project over a period of time.
+  </li>
+</ul>
+<strong>Attribute filters</strong> 
+  <p>The primary filter attribute (PFA) defines the subset of issues from which 
+    the report is drawn. </p>
+  <p>If you have a several similar attributes defined in your PFA you may wish 
+    to display an average of the options.</p>
+  <p><strong>Display criteria</strong></p>
+  <p>The final step in defining a report is to set the display options. Use this 
+    area to define the row and column content.</p>
+ 
+  <div class="courtesylinks"> 
+    <p><a href="#toc">Top</a> 
+  </div>
+</div>
+ </body>
+</html>
+
+
