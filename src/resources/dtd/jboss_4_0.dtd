@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.20 2004/09/11 16:24:37 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.21 2004/10/08 07:16:04 tdiesler Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -64,6 +64,12 @@ Overview of the architecture of jboss.xml
       <resource-env-ref>
       <clustered />
       <cluster-config>
+      <port-component>
+        <port-component-name>
+        <port-uri>
+        <auth-method>
+        <transport-guarantee>
+      </port-component>
     </session>
 
     <message-driven>
