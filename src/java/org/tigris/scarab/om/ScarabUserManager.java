@@ -62,7 +62,7 @@ import org.apache.fulcrum.security.util.UnknownEntityException;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserManager.java,v 1.13 2004/05/27 21:10:20 dabbous Exp $
+ * @version $Id: ScarabUserManager.java,v 1.14 2004/10/06 15:05:26 dep4b Exp $
  */
 public class ScarabUserManager
     extends BaseScarabUserManager
@@ -143,27 +143,7 @@ public class ScarabUserManager
         }
         return user;
     }
-
-    /**
-     * Gets a list of ScarabUsers based on usernames.  Domain is currently
-     * unused.
-     *
-     * @param usernames a <code>String[]</code> value
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
-    protected List getUsersImpl(String[] usernames, String domainName) 
-        throws Exception
-    {
-        List users = null;
-        if (usernames != null && usernames.length > 0) 
-        {
-            Criteria crit = new Criteria();
-            crit.addIn(ScarabUserImplPeer.USERNAME, usernames);
-            users = ScarabUserImplPeer.doSelect(crit);            
-        }
-        return users;
-    }
+   
 }
 
 
