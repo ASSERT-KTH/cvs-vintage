@@ -18,11 +18,11 @@
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">Query name</th>
+   <th width="120">Name</th>
    <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
   </tr>
   <tr>
-   <th width="120">Query description</th>
+   <th width="120">Description</th>
    <td>#textAreaMedium("$queryGroup.Description.Key" $queryGroup.Description)</td>
   </tr>
   <tr>
