@@ -1,6 +1,6 @@
 #if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm") || $link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm") || $link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm") || $link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
 
-#set ($adminMenu = $data.Parameters.getString($scarabG.Constant.CURRENT_ADMIN_MENU, "1"))
+#set ($adminMenu = $data.Parameters.getString($scarabG.Constant.CURRENT_ADMIN_MENU, ""))
 
 <div>
 <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
@@ -9,10 +9,10 @@
 
 #if ($adminMenu.equals("1"))
 <div><strong>Users</strong>
- <div> <a href="admin,ManageUserSearch.vm">User Management</a> </div>
- <div> $link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User") </div>
+ <div><a href="admin,ManageUserSearch.vm">User Management</a></div>
+ <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User")</div>
 #else
-<div>$link.setPage("$scarabR.convertPath($data.Target)").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")
+<div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")
 #end
 </div>
 
@@ -22,10 +22,10 @@
 
 #if ($adminMenu.equals("2"))
 <div><strong>Roles</strong>
- <div> <a href="admin,ManageRoles.vm">Role List</a> </div>
- <div> <a href="admin,AddRole.vm">Add New Role</a> </div>
+ <div><a href="admin,ManageRoles.vm">Role List</a></div>
+ <div><a href="admin,AddRole.vm">Add New Role</a></div>
 #else
-<div>$link.setPage("$scarabR.convertPath($data.Target)").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")
+<div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")
 #end
 </div>
 
@@ -37,7 +37,7 @@
 <div><strong>Global Data</strong>
 $renderer.render("navigations", $data, "GlobalAdmin.vm")
 #else
-<div>$link.setPage("$scarabR.convertPath($data.Target)").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global Data")
+<div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global Data")
 #end
 </div>
 
@@ -49,7 +49,7 @@ $renderer.render("navigations", $data, "GlobalAdmin.vm")
 <div><strong>Modules</strong>
 $renderer.render("navigations", $data, "ModuleAdmin.vm")
 #else
-<div>$link.setPage("$scarabR.convertPath($data.Target)").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")
+<div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")
 #end
 </div>
 
