@@ -184,6 +184,14 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    ContextManager cm=ctx.getContextManager();
 	    
 	    if( fullReload ) {
+		Vector sI=new Vector();  // saved local interceptors
+		BaseInterceptor[] eI;    // all exisiting interceptors
+
+		// save the ones with the same context, they are local
+		eI=ctx.getContainer().getInterceptors();
+		for(int i=0; i < eI.length ; i++)
+		    if(ctx == eI[i].getContext()) sI.add(eI[i]);
+                
 		Enumeration e;
 		// Need to find all the "config" that
 		// was read from server.xml.
@@ -205,6 +213,16 @@ public class ReloadInterceptor extends  BaseInterceptor
 		cm.removeContext( ctx );
 
 		cm.addContext( ctx1 );
+
+		// put back saved local interceptors
+		e=sI.elements();
+		while(e.hasMoreElements()){
+		    BaseInterceptor savedI=(BaseInterceptor)e.nextElement();
+
+		    ctx1.addInterceptor(savedI);
+		    savedI.setContext(ctx1);
+		    savedI.reload(request,ctx1);
+		}
 
 		ctx1.init();
 
