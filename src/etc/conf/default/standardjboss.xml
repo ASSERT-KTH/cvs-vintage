@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.72 2004/04/08 15:18:47 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.73 2004/04/10 00:39:49 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -199,6 +199,7 @@
       <proxy-factory-config>
         <endpoint-interceptors>
           <interceptor>org.jboss.proxy.ClientMethodInterceptor</interceptor>
+          <interceptor>org.jboss.ejb.plugins.inflow.MessageEndpointInterceptor</interceptor>
           <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
           <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
         </endpoint-interceptors>

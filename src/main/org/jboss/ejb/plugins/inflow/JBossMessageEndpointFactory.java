@@ -50,7 +50,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.1 $</tt>
+ * @version <tt>$Revision: 1.2 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -62,6 +62,9 @@ public class JBossMessageEndpointFactory
    
    // Attributes ----------------------------------------------------
 
+   /** Whether trace is enabled */
+   private boolean trace = log.isTraceEnabled();
+   
    /** Our container */
    protected MessageDrivenContainer container;
    
@@ -115,20 +118,34 @@ public class JBossMessageEndpointFactory
    
    // Public --------------------------------------------------------
    
+   /**
+    * Get the message driven container
+    * 
+    * @return the container
+    */
+   public MessageDrivenContainer getContainer()
+   {
+      return container;
+   }
+   
    // MessageEndpointFactory implementation -------------------------
 
    public MessageEndpoint createEndpoint(XAResource resource) throws UnavailableException
    {
+      trace = log.isTraceEnabled(); 
+      
       if (getState() != STARTED)
          throw new UnavailableException("The container is not started");
       
       HashMap context = new HashMap();
-      context.put("MessageEndpoint.XAResource", resource);
-      context.put("MessageEndpoint.Factory", this);
+      context.put(MessageEndpointInterceptor.MESSAGE_ENDPOINT_FACTORY, this);
+      context.put(MessageEndpointInterceptor.MESSAGE_ENDPOINT_XARESOURCE, resource);
+
+      String ejbName = container.getBeanMetaData().getContainerObjectNameJndiName();
       
       MessageEndpoint endpoint = (MessageEndpoint) proxyFactory.createProxy
       (
-         messagingTypeClass.getName() + "@" + nextProxyId.increment(),  
+         ejbName + "@" + nextProxyId.increment(),  
          container.getServiceName(),
          InvokerInterceptor.getLocal(),
          null,
@@ -138,6 +155,10 @@ public class JBossMessageEndpointFactory
          interfaces,
          context
       );
+      
+      if (trace)
+         log.trace("Created endpoint " + endpoint + " from " + this);
+
       return endpoint;
    }
 
