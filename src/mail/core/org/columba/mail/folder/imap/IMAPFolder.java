@@ -452,6 +452,8 @@ public class IMAPFolder extends RemoteFolder {
 		// -> this is necessary to reflect the changes visually
 		for (int i = 0; i < uids.length; i++) {
 			ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uids[i]);
+			LOG.fine("uid=" + uids[i]+ " destUid=" + destUids[i] + "header=" + header);
+			
 			destFolder.getHeaderListStorage().addMessage(destUids[i],
 					header.getHeader(), header.getAttributes(),
 					header.getFlags());
