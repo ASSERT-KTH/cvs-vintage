@@ -1,6 +1,6 @@
 <!-- 
     Torque XML database schema DTD 
-    $Id: database.dtd,v 1.4 2001/05/18 21:22:01 jmcnally Exp $
+    $Id: database.dtd,v 1.5 2001/05/31 01:07:10 jmcnally Exp $
 -->
 
 <!ELEMENT app-data (database+)>
@@ -14,7 +14,7 @@
   basePeer CDATA #IMPLIED
 >
 
-<!ELEMENT table (column+,foreign-key*,index*,unique*,id-method-parameter*)>
+<!ELEMENT table (column+,(foreign-key|index|unique|id-method-parameter)*)>
 <!ATTLIST table 
   name CDATA #REQUIRED
   javaName CDATA #IMPLIED
@@ -23,6 +23,7 @@
   abstract (true|false) "false"
   baseClass CDATA #IMPLIED
   basePeer CDATA #IMPLIED
+  alias CDATA #IMPLIED
 >
 
 <!ELEMENT id-method-parameter EMPTY>
