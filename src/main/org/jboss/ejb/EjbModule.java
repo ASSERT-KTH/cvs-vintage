@@ -9,6 +9,7 @@ package org.jboss.ejb;
 
 
 //import org.jboss.management.j2ee.EjbModule;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Collection;
@@ -20,6 +21,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.BeanLockManager;
+import org.jboss.ejb.Container;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
@@ -39,6 +41,7 @@ import org.jboss.security.RealmMapping;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.system.UnifiedClassLoader;
 import org.jboss.util.jmx.MBeanProxy;
 import java.util.ArrayList;
 import javax.naming.InitialContext;
@@ -47,6 +50,8 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
+import org.jboss.web.WebClassLoader;
+import org.jboss.web.WebServiceMBean;
 
 import org.w3c.dom.Element;
 
@@ -67,7 +72,8 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.9 $
+ * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
+ * @version $Revision: 1.10 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -570,6 +576,39 @@ public class EjbModule
       container.setLocalClassLoader( new URLClassLoader( new URL[ 0 ], localCl ) );
       // Set metadata
       container.setBeanMetaData( bean );
+
+      // Create the container's WebClassLoader 
+      // and register it with the web service.
+      String webClassLoaderName = conf.getWebClassLoader();
+      WebClassLoader wcl;
+      try 
+      {
+         Class clazz = cl.loadClass(webClassLoaderName);
+         Constructor constructor = clazz.getConstructor(
+                  new Class[] { Container.class, UnifiedClassLoader.class } );
+         wcl = (WebClassLoader)constructor.newInstance(
+                  new Object[] { container, cl });
+      }
+      catch (Exception e) 
+      {
+         throw new DeploymentException(
+                  "Failed to create WebClassLoader of class: " 
+                  + webClassLoaderName + ": ", e);
+      }
+      WebServiceMBean webServer = 
+            (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+                                               WebServiceMBean.OBJECT_NAME);
+      URL[] codebase = { webServer.addClassLoader(wcl) };
+      wcl.setWebURLs(codebase);
+      StringBuffer sb = new StringBuffer();
+      for (int i = 0; i < codebase.length; i++) {
+         sb.append(codebase[i].toString());
+         if (i < codebase.length - 1) {
+            sb.append(" ");
+         }
+      }
+      container.setCodebase(sb.toString());
+
       // Set transaction manager
       InitialContext iniCtx = new InitialContext();
       container.setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
