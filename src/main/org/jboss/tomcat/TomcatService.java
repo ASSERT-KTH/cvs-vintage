@@ -25,7 +25,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class TomcatService
    extends ServiceMBeanSupport
@@ -61,46 +61,46 @@ public class TomcatService
       throws Exception
    {
       final Log log = this.log;
-      runner = new Thread(new Runnable()
-      {
-         public void run()
-         {
-            try
-            {
-               Class tomcatClass;
-               
-               log.log("Testing if Tomcat is present....");
-               try{
-                   tomcatClass = Class.forName("org.apache.tomcat.startup.Tomcat");
-                   log.log("OK");
-               }catch(Exception e)
-               {
-                    log.log("failed");
-                    log.log("Tomcat wasn't found. Be sure to have your CLASSPATH correctly set");
-                    //Logger.exception(e);
-                    return;
-               } 
-               
-               Class tomcatArgsClasses[] = new Class[1];
-               String args[] = new String[0];
-               tomcatArgsClasses[0] = args.getClass();
-               Method mainMethod = tomcatClass.getMethod("main", tomcatArgsClasses);
-               
-               Object tomcatArgs[] = new Object[1];
-               tomcatArgs[0] = args;
-               
-               Logger.log("Starting Tomcat...");
-               mainMethod.invoke(null,tomcatArgs); 
-               
-            } catch (Exception e)
-            {
-               log.error("Tomcat failed");
-               log.exception(e);
-            }
-         }
-      });
       
-      runner.start();
+      // Save CL since Tomcat does not reset it properly when it is done
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      
+      try
+      {
+         Class tomcatClass;
+         
+         log.log("Testing if Tomcat is present....");
+         try{
+             tomcatClass = Class.forName("org.apache.tomcat.startup.Tomcat");
+             log.log("OK");
+         }catch(Exception e)
+         {
+              log.log("failed");
+              log.log("Tomcat wasn't found. Be sure to have your CLASSPATH correctly set");
+              //Logger.exception(e);
+              return;
+         } 
+         
+         Class tomcatArgsClasses[] = new Class[1];
+         String args[] = new String[0];
+         tomcatArgsClasses[0] = args.getClass();
+         Method mainMethod = tomcatClass.getMethod("main", tomcatArgsClasses);
+         
+         Object tomcatArgs[] = new Object[1];
+         tomcatArgs[0] = args;
+         
+         Logger.log("Starting Tomcat...");
+         mainMethod.invoke(null,tomcatArgs); 
+         
+      } catch (Exception e)
+      {
+         log.error("Tomcat failed");
+         log.exception(e);
+      } finally
+      {
+         Thread.currentThread().setContextClassLoader(oldCl);
+      } 
+      
    }
    
    public void stopService()
