@@ -43,6 +43,7 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.logging.Logger;
 import org.jboss.monitor.Monitorable;
 import org.jboss.monitor.client.BeanCacheSnapshot;
+import org.jboss.monitor.MetricsConstants;
 
 /**
  * Base class for caches of entity and stateful beans. <p>
@@ -55,10 +56,10 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class AbstractInstanceCache
-	implements InstanceCache, XmlLoadable, Monitorable
+	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 {
 	// Constants -----------------------------------------------------
 
@@ -110,8 +111,9 @@ public abstract class AbstractInstanceCache
 	{
 		try
 		{
+            message.setJMSType(BEANCACHE_METRICS);
 			message.setJMSExpiration(5000);
-			message.setLongProperty("TIME", System.currentTimeMillis());
+			message.setLongProperty(TIME, System.currentTimeMillis());
 			m_jmsPublisher.publish(m_jmsTopic, message);
 		}
 		catch (JMSException x)
@@ -125,11 +127,11 @@ public abstract class AbstractInstanceCache
 		try
 		{
 			message = m_jmsSession.createMessage();
-			message.setStringProperty("APPLICATION", getContainer().getApplication().getName());
-			message.setStringProperty("BEAN", getContainer().getBeanMetaData().getEjbName());
+			message.setStringProperty(APPLICATION, getContainer().getApplication().getName());
+			message.setStringProperty(BEAN, getContainer().getBeanMetaData().getEjbName());
 			if (id != null)
 			{
-				message.setStringProperty("PRIMARY_KEY", id.toString());
+				message.setStringProperty(PRIMARY_KEY, id.toString());
 			}
 		}
 		catch (JMSException x)
@@ -328,7 +330,7 @@ public abstract class AbstractInstanceCache
 
 		m_jmsConnection = factory.createTopicConnection();
 
-		Object topicRef = namingContext.lookup("topic/beancache");
+		Object topicRef = namingContext.lookup("topic/metrics");
 		m_jmsTopic = (Topic)PortableRemoteObject.narrow(topicRef, Topic.class);
 		m_jmsSession = m_jmsConnection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
 		m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);
@@ -409,7 +411,7 @@ public abstract class AbstractInstanceCache
 			Message message = createMessage(id);
 			try
 			{
-				message.setStringProperty("TYPE", "ACTIVATION");
+				message.setStringProperty(TYPE, "ACTIVATION");
 			}
 			catch (JMSException x)
 			{
@@ -436,8 +438,8 @@ public abstract class AbstractInstanceCache
 			Message message = createMessage(id);
 			try
 			{
-				message.setStringProperty("TYPE", "PASSIVATION");
-				message.setStringProperty("ACTIVITY", "SCHEDULED");
+				message.setStringProperty(TYPE, "PASSIVATION");
+				message.setStringProperty(ACTIVITY, "SCHEDULED");
 			}
 			catch (JMSException x)
 			{
@@ -464,8 +466,8 @@ public abstract class AbstractInstanceCache
 			Message message = createMessage(id);
 			try
 			{
-				message.setStringProperty("TYPE", "PASSIVATION");
-				message.setStringProperty("ACTIVITY", "PASSIVATED");
+				message.setStringProperty(TYPE, "PASSIVATION");
+				message.setStringProperty(ACTIVITY, "PASSIVATED");
 			}
 			catch (JMSException x)
 			{
@@ -492,8 +494,8 @@ public abstract class AbstractInstanceCache
 			Message message = createMessage(id);
 			try
 			{
-				message.setStringProperty("TYPE", "PASSIVATION");
-				message.setStringProperty("ACTIVITY", "POSTPONED");
+				message.setStringProperty(TYPE, "PASSIVATION");
+				message.setStringProperty(ACTIVITY, "POSTPONED");
 			}
 			catch (JMSException x)
 			{
