@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.13 2002/04/26 20:24:48 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.14 2002/09/21 02:57:40 elicia Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -148,6 +148,12 @@ public class ScarabSecurity
      */
     public static final String MODULE__EDIT = 
         getService().getPermissionImpl("Module__Edit");
+
+    /** 
+     * Specifies that a User is allowed to configure a project.
+     */
+    public static final String MODULE__CONFIGURE = 
+        getService().getPermissionImpl("Module__Configure");
 
     /** 
      * Specifies that a User is allowed to add a project.

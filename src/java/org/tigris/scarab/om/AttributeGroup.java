@@ -242,7 +242,7 @@ public  class AttributeGroup
     {                
         Module module = getModule();
 
-        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
         {
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);

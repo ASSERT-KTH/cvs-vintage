@@ -94,23 +94,19 @@ public class RModuleAttribute
             try
             {
                 ria = getIssueType().getRIssueTypeAttribute(getAttribute());
+                if (ria != null && ria.getLocked())
+                {
+                    throw new TorqueException(getAttribute().getName() + "is locked");
+                }
+                else
+                {
+                    super.save(con);
+                }
             }
             catch (Exception e)
             {
                 throw new TorqueException("An error has occurred.");
             }
-            if (ria != null && ria.getLocked())
-            {
-                throw new TorqueException(getAttribute().getName() + "is locked");
-            }
-            else
-            {
-                super.save(con);
-            }
-        }
-        else
-        {
-            super.save(con);
         }
     }
 
@@ -198,7 +194,7 @@ public class RModuleAttribute
     {                
         Module module = getModule();
 
-        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
         {
             IssueType issueType = IssueTypeManager
                .getInstance(getIssueTypeId(), false);

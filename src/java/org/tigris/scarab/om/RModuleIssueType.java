@@ -23,6 +23,7 @@ public  class RModuleIssueType
     extends org.tigris.scarab.om.BaseRModuleIssueType
     implements Persistent
 {
+
     /**
      * Throws UnsupportedOperationException.  Use
      * <code>getModule()</code> instead.
@@ -88,7 +89,7 @@ public  class RModuleIssueType
     {                
         Module module = getModule();
 
-        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__CONFIGURE, module))
         {
             // Delete attribute groups first
             List attGroups = module.getAttributeGroups(getIssueType());
