@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.231 2002/12/12 23:01:56 jon Exp $
+ * @version $Id: Issue.java,v 1.232 2002/12/13 00:15:26 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2824,10 +2824,18 @@ public class Issue
     {
         Issue otherIssue = IssueManager
                         .getInstance(depend.getObserverId(), false);
+        if (otherIssue.equals(this))
+        {
+            throw new Exception(
+                "Cannot delete a parent issue dependency from a child issue.");
+        }
+        Issue thisIssue = IssueManager
+                        .getInstance(depend.getObservedId(), false);
+
 
         Object[] args = {
             depend.getDependType().getName(),
-            this.getUniqueId(),
+            thisIssue.getUniqueId(),
             otherIssue.getUniqueId() 
         };
         String desc = Localization.format(
@@ -2841,7 +2849,7 @@ public class Issue
         if (activitySet == null)
         {
             // deal with user comments
-            Attachment comment = depend.getDescriptionAsAttachment(user, this);
+            Attachment comment = depend.getDescriptionAsAttachment(user, thisIssue);
 
             activitySet = getActivitySet(user, comment,
                               ActivitySetTypePeer.EDIT_ISSUE__PK);
@@ -2850,7 +2858,7 @@ public class Issue
         }
 
         ActivityManager
-            .createDeleteDependencyActivity(this, activitySet, depend,
+            .createDeleteDependencyActivity(thisIssue, activitySet, depend,
                                 desc);
         ActivityManager
             .createDeleteDependencyActivity(otherIssue, activitySet, depend,
