@@ -20,7 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -48,8 +48,9 @@ public class EntityInstancePool
    {
        // If transaction still present don't do anything (let the instance be GC)
        if (ctx.getTransaction() != null) return ;
-           
-      super.free(ctx);
+        
+		 // To simplify design we don't reuse the ctx. 
+      //super.free(ctx);
    }
    
    // Z implementation ----------------------------------------------
