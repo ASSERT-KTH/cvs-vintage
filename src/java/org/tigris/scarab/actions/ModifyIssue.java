@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.130 2002/11/12 19:04:02 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.131 2002/11/13 00:24:45 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -366,7 +366,25 @@ public class ModifyIssue extends BaseModifyIssue
         Group group = intake.get("Attachment", "commentKey", false);
         if (group != null) 
         {
-            handleAttachment(data, context, Attachment.COMMENT__PK, group, issue);
+            Attachment attachment = AttachmentManager.getInstance();
+            try
+            {
+                group.setProperties(attachment);
+            }
+            catch (Exception e)
+            {
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                return;
+            }
+            ActivitySet activitySet = 
+                issue.addComment(null, attachment, (ScarabUser)data.getUser());
+            sendEmail(activitySet, issue, l10n.get("CommentSaved"), context);
+            scarabR.setConfirmMessage(l10n.get("CommentSaved"));
+            intake.remove(group);
+        }
+        else
+        {
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     } 
 
