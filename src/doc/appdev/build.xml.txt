@@ -28,12 +28,6 @@
      and TOMCAT_HOME environment variables into the "ant.home" and
      "tomcat.home" properties, which are normally not defined explicitly.
 
-     ant.home          The name of the base directory in which
-                       Ant has been installed.
-
-     build.compiler    The compiler used by the <javac> task.
-                       See the ANT documentation for more information.
-
      deploy.home       The name of the directory into which the
                        deployment hierarchy will be created.
                        Normally, this will be the name of a
@@ -45,17 +39,20 @@
      dist.src          The name of the distribution JAR file
                        containing the application source code,
                        to be stored in the "dist.home" directory.
+                       This filename should end with ".jar".
 
      dist.war          The name of the Web ARchive (WAR) file
                        containing our deployable application.
-
+                       This filename should end with ".war".
 
      javadoc.home      The name of the base directory in which
                        the JavaDoc documentation for this application
                        is generated.
 
      tomcat.home       The name of the base directory in which
-                       Tomcat has been installed.
+                       Tomcat has been installed.  This value is
+                       normally set automatically from the value
+                       of the TOMCAT_HOME environment variable.
 
      In the example below, the application being developed will be deployed
      to a subdirectory named "myapp", and will therefore be accessible at:
@@ -64,7 +61,8 @@
 -->
 
   <target name="init"
-    <property name="build.compiler" value="classic"/>
+    <!-- Property values defined here can be overridden by defining
+         corresponding Java system properties on the Ant command line.  -->
     <property name="deploy.home"    value="${tomcat.home}/webapps/myapp"/>
     <property name="dist.home"      value="${deploy.home}"/>
     <property name="dist.src"       value="myapp.jar"/>

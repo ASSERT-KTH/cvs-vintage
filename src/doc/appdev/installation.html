@@ -43,16 +43,8 @@ can be compiled.
 
 <p>Compatible JDKs for many platforms (or links to where they can be found)
 are available at
-<a href="http://java.sun.com/jdk/">http://java.sun.com/jdk/</a>.
+<a href="http://java.sun.com/jdk/" target="_top">http://java.sun.com/jdk/</a>.
 
-<p>The shell command line examples in this manual assume that you have
-set the <code>JAVA_HOME</code> environment variable to point at the base
-directory where you have installed the JDK (such as
-<code>/usr/local/jdk1.2.2</code>), have added the
-<code>$JAVA_HOME/bin</code> directory to your <code>PATH</code>
-environment variable (so that the compiler and other executable
-components can be located), and have initialized the
-<code>CLASSPATH</code> environment variable if necessary.
 
 <!-- 2.2 Tomcat -->
 <a name="Tomcat"></a>
@@ -66,33 +58,34 @@ have changed since Tomcat 3.0 was released, although the general
 concepts are very similar.
 
 <p>The shell command line examples in this manual assume that you have
-set the <code>TOMCAT_HOME</code> environment variable to point at the
-base directory where you have installed Tomcat (such as
-<code>/usr/local/tomcat</code>), and have added the
-<code>$TOMCAT_HOME/bin</code> directory to your <code>PATH</code>
-environment variable.  No adjustment to the <code>CLASSPATH</code>
-environment variable is normally required, unless your application
-requires additional Java classes or JAR files to be added to the
-system classpath.
+set up your environment as follows:
+<ul>
+<li>The <code>JAVA_HOME</code> environment variable points at the base
+    directory where you have installed the JDK (for example,
+    <code>/usr/local/jdk1.2.2</code>).
+<li>You have added directory <code>$JAVA_HOME/bin</code> to your
+    <code>PATH</code> environment variable, so that the <code>java</code>
+    command is recognized and executed.
+<li>The <code>TOMCAT_HOME</code> environment variable points at the base
+    directory where you have installed Tomcat (for example,
+    <code>/opt/tomcat</code> or <code>/usr/local/tomcat</code>).
+</ul>
+
+<p>Normally, any changes required to the <code>CLASSPATH</code> environment
+variable are handled for you by the development scripts.  However, if you
+are defining your own scripts, you may need to add file
+<code>$JAVA_HOME/lib/tools.jar</code> to your <code>CLASSPATH</code>.
+
 
 <!-- 2.3 Ant -->
 <a name="Ant"></a>
 <h2>2.3 Jakarta Ant</h2>
 
-<p>Binary downloads of the Ant development tool are available from the
+<p>Although Tomcat includes a binary distribution of the Ant development
+tool, it does not include the Ant developer documentation.  This can be
+acquired by downloading the complete Ant release from
 <a href="http://jakarta.apache.org/downloads/binindex.html">http://jakarta.apache.org/downloads/binindex.html</a>
-page.  This manual assumes you are using the most recent milestone,
-beta, or release of Tomcat 3.1 -- many of the deployment details
-have changed since Tomcat 3.0 was released, although the general
-concepts are very similar.
-
-<p>The shell command line examples in this manual assume that you have
-set the <code>ANT_HOME</code> environment variable to point at the
-base directory where you have installed Ant (such as
-<code>/usr/local/ant</code>), and have added the
-<code>$ANT_HOME/bin</code> directory to your <code>PATH</code>
-environment variable.  No adjustment to the <code>CLASSPATH</code>
-environment variable is normally required.
+page.
 
 
 <!-- 2.4 CVS -->

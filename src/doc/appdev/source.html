@@ -16,7 +16,7 @@
   <a href="contents.html">Top</a>
 </td>
 <td align="right" width="25%">
-  <a href="build.html">Next</a>
+  <a href="processes.html">Next</a>
 </td>
 </tr>
 <tr>
@@ -62,7 +62,7 @@ of an application can be pretty much anything you like.  However, the
 following organization has proven to be quite generally applicable, and is
 expected by the example <code>build.xml</code> configuration file that
 is discussed below.  All of these components exist under a top level
-"project directory" for your application:
+<i>project source directory</i> for your application:
 <ul>
 <li><b>etc/</b> - Directory containing special files related to your
     application that will be copied to the <code>WEB-INF</code> directory.
@@ -103,8 +103,8 @@ the scope of this manual.  However, the following steps are followed when
 using a command-line CVS client:
 <ul>
 <li>To refresh the state of your source code to that stored in the
-    the source repository, go to the top level directory of your source
-    hierarchy and execute <code>cvs update -d</code>.
+    the source repository, go to your project source directory, and
+    execute <code>cvs update -d</code>.
     <br><br>
 <li>When you create a new subdirectory in the source code hierarchy, register
     it in CVS with a command like <code>cvs add {subdirname}</code>.
@@ -117,13 +117,19 @@ using a command-line CVS client:
     containing directory and remove the file.  Then, deregister it in CVS
     with a command like <code>cvs remove {filename}</code>.
     <br><br>
-<li>While you are creating, modifying, and deleting source files, these changes
+<li>While you are creating, modifying, and deleting source files, changes
     are not yet reflected in the server repository.  To save your changes in
-    their current state, go to the top level directory of your source hierarchy
+    their current state, go to the project source directory
     and execute <code>cvs commit</code>.  You will be asked to write a brief
     description of the changes you have just completed, which will be stored
     with the new version of any updated source file.
 </ul>
+
+<p>CVS, like other source code control systems, has many additional features
+(such as the ability to tag the files that made up a particular release, and
+support for multiple development branches that can later be merged).  See the
+links and references in the <a href="introduction.html">Introduction</a> for
+more information.
 
 
 <!-- 4.3 Build -->
@@ -142,18 +148,133 @@ you can distribute your application.
 
 <p>To give you a head start, a
 <a href="build.xml.txt" target="_new">basic build.xml file</a> is provided
-that you can customize and install in the top-level directory of your source
-code hierarchy.  This file includes comments that describe the various
-components.  In the following section, scripts will be described that use
-Ant to build your project based on the contents of the <code>build.xml</code>
-file found there.
+that you can customize and install in the project source directory for your
+application.  This file includes comments that describe the various
+targets that can be executed.  Briefly, the following targets are generally
+provided:
+<ul>
+<li><b>init</b> - The initialization target is not executed directly.
+    Instead, it is invoked indirectly (by virtue of a <code>depends</code>
+    attribute) by all other build targets.  This is a convenient place
+    to create defaults for property values, which can be overridden by
+    system properties on the command line that starts Ant.
+    <br><br>
+<li><b>prepare</b> - This target "prepares" the deployment directory,
+    creating subdirectories as required.  A common use of this target is
+    to copy static files (documentation, HTML pages, and JSP pages)
+    from the source directory to the deployment directory.  When
+    executed, this target will only create directories if they do not
+    exist, and only copy files if the destination file does not exist,
+    or the source version of the file is newer.  This target is generally
+    invoked indirectly, by virtue of a <code>depends</code> attribute on
+    some other task.
+<li><b>compile</b> - This target is used to compile any source code that
+    has been changed since the last time compilation took place.  The
+    resulting class files are created in the deployment directory, so
+    that they can be directly executed when Tomcat is run.  A cool feature
+    of the Ant <code>javac</code> task is that it also copies any non-Java
+    source files to corresponding places in the deployment directory, while
+    maintaining the appropriate package hierarchy.  This is perfect for
+    properties files that you reference as resource bundles.  The "compile"
+    target is generally defined as the default target for your project,
+    so it will be executed when you simply type <code>build</code>.
+<li><b>javadoc</b> - This target creates Javadoc API documentation for the
+    Java classes in this web application.  The example <code>build.xml</code>
+    file assumes you want to include the API documentation with your app,
+    so it generates the docs in a subdirectory of the deployment directory.
+<li><b>all</b> - This target deletes the entire deployment directory and
+    then recreates everything.  It is a good habit to do this after you've
+    made a bunch of changes, and before you check them in to your source
+    code repository.  In particular, you should perform <code>build all</code>
+    before you use the "dist" target to create a distribution of your
+    application, to ensure that the distribution contains no unwanted files.
+<li><b>dist</b> - This target creates a web application archive (WAR) file
+    containing your application, and a JAR file containing all of the
+    source code.  In the example <code>build.xml</code> file, the contents
+    of the WAR file are based on the most recent build in the deployment
+    directory.
+</ul>
+
+<p>In the following section, scripts will be described that use Ant to
+compile your project, based on the contents of the <code>build.xml</code>
+file defined here.
 
 
 <!-- 4.4 Scripts -->
 <a name="Scripts"</a>
 <h2>4.4 Shell and Batch Scripts</h2>
 
+<p>The primary script we will utilize is generically called the <i>build</i>
+script.  It executes Ant, which reads and processes the <code>build.xml</code>
+file discussed above.  Each time you execute the build script, you will
+specify the build "target" that you wish to execute.  Users of a command
+line MAKE tool (which processes a makefile) will recognize this approach.
 
+<p>On UNIX-based systems, the following script should be saved as file
+<code>build</code> in the project source directory, with file permissions
+that make it executable, and customized as required:
+
+<pre>
+#!/bin/sh
+# build -- Build Script for "My Application"
+# $Id: source.html,v 1.2 2000/03/28 00:44:11 craigmcc Exp $
+
+# Identify the custom class path components we need
+CP=$TOMCAT_HOME/classes:$TOMCAT_HOME/lib/ant.jar:$TOMCAT_HOME/lib/xml.jar
+CP=$CP:$TOMCAT_HOME/lib/jasper.jar:$TOMCAT_HOME/lib/servlet.jar
+CP=$CP:$TOMCAT_HOME/lib/webserver.jar
+
+# Execute ANT to perform the requested build target
+java -Dtomcat.home=$TOMCAT_HOME -classpath $CP:$CLASSPATH \
+   org.apache.tools.ant.Main "$@"
+
+</pre>
+
+<p>On Windows-based systems, the following script should be saved as file
+<code>build.bat</code> in the project source directory, and customzed
+as required:
+
+<pre>
+
+echo off
+rem Build Script for "My Application"
+rem $Id: source.html,v 1.2 2000/03/28 00:44:11 craigmcc Exp $
+
+rem Identify the custom class path we need
+if "%CLASSPATH%" == "" goto noclasspath
+set _CLASSPATH=%CLASSPATH%
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%/classes
+goto restclasspath
+:noclasspath
+set _CLASSPATH=
+set CLASSPATH=%TOMCAT_HOME%/classes
+:restclasspath
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%/lib/ant.jar;%TOMCAT_HOME%/lib/xml.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%/lib/jasper.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%/lib/servlet.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%/lib/webserver.jar
+
+rem Execute ANT to perform the requested build target
+java -Dtomcat.home=%TOMCAT_HOME% org.apache.tools.ant.Main %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+rem Clean up CLASSPATH
+set CLASSPATH=%_CLASSPATH%
+set _CLASSPATH=
+
+</pre>
+
+<p>Build script customizations you might consider include:
+<ul>
+<li>Setting the JAVA_HOME and TOMCAT_HOME environment variables (probably
+    near the top of the script) if they are not defined already.
+    <br><br>
+<li>Overriding properties defined in the <code>build.xml</code> file
+    with default values.  For example, to change the distribution home
+    directory (property <code>dist.home</code>), you would include the
+    following command line option after the word "java":
+    <b>-Ddist.home=xxxxx</b>.
+    <br><br>
+</ul>
 
 </body>
 

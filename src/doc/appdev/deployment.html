@@ -44,7 +44,7 @@ to the 2.2 specification are required to accept a <i>Web Application
 Archive</i> in a standard format, which is discussed further below.
 
 <p>A web application is defined as a hierarchy of directories and files
-in a standard layout, described further below.  Such a hierarchy can be
+in a standard layout.  Such a hierarchy can be
 accessed in its "unpacked" form, where each directory and file exists in
 the filesystem separately, or in a "packed" form known as a Web ARchive,
 or WAR file.  The former format is more useful during development,
@@ -68,8 +68,8 @@ file from your document root.
 <p>To facilitate creation of a Web Application Archive file in the required
 format, it is convenient to arrange the "executable" version of your web
 application (that is, the files that Tomcat actually uses when executing
-your app) in the same format as required by the WAR format itself.  To do
-this, you will end up with the following contents in your
+your app) in the same organization as required by the WAR format itself.
+To do this, you will end up with the following contents in your
 application's "document root" directory:
 <ul>
 <li><b>*.html, *.jsp, etc.</b> - The HTML and JSP pages, along with other
@@ -106,7 +106,7 @@ as all classes in JAR files found in the <code>WEB-INF/lib/</code> directory,
 are added to the class path for your particular web application.  Thus, if
 you include all of the required library classes in one of these places (be
 sure to check licenses for redistribution rights for any third party libraries
-you require), you will simplify the installation of your web application --
+you utilize), you will simplify the installation of your web application --
 no adjustment to the system class path will be necessary.
 
 <p>Much of this information was extracted from Chapter 9 of the Servlet
@@ -127,8 +127,8 @@ deployed).
 <p>The complete syntax and semantics for the deployment descriptor is defined
 in Chapter 13 of the Servlet API Specification, version 2.2.  Over time, it
 is expected that development tools will be provided that create and edit the
-deployment descriptor for you.  In the meantime, to provide a starting point, a
-<a href="web.xml.txt" target="_new">basic web.xml file</a>
+deployment descriptor for you.  In the meantime, to provide a starting point,
+a <a href="web.xml.txt" target="_new">basic web.xml file</a>
 is provided.  This file includes comments that describe the purpose of each
 included element.
 
@@ -137,7 +137,10 @@ included element.
 <a name="Integration"></a>
 <h2>3.4 Integration With Tomcat</h2>
 
-<p>A web application can be deployed in Tomcat by one of three different
+<p>In order to be executed, a web application must be integrated with,
+or installed in, a servlet container.  This is true even during development.
+We will describe using Tomcat to provide the execution environment.
+A web application can be deployed in Tomcat by one of three different
 approaches:
 <ul>
 <li><i>Copy unpacked directory hierarchy into a subdirectory in directory
@@ -154,17 +157,58 @@ approaches:
     vendor or by your internal development staff, into an existing
     Tomcat installation.
     <br><br>
-<li><i>Add a <code>&lt;context&gt;</code> entry in the Tomcat
+<li><i>Add a <code>&lt;Context&gt;</code> entry in the Tomcat
     <code>server.xml</code> configuration file</i>.  This approach is
     described briefly below, and allows you to position the document root
     of your web application at some point other than the
-    <code>$TOMCAT_HOME/webapps/</code> directory.
+    <code>$TOMCAT_HOME/webapps/</code> directory.  Doing this requires
+    the following steps (for Tomcat 3.1):
 </ul>
 
-<p>TODO - Describe adding a context to <code>server.xml</code>.
+<p>Adding a new <code>&lt;Context&gt;</code> entry in Tomcat's
+<code>server.xml</code> file involves the following steps (for Tomcat 3.1):
+<ul>
+<li>Open file <code>$TOMCAT_HOME/conf/server.xml</code> in an editor.
+    <br><br>
+<li>Navigate to the bottom of the file (after the last existing
+    <code>&lt;Context&gt;</code> element.
+    <br><br>
+<li>Add a new <code>&lt;Context&gt;</code> element for your application,
+    using the existing examples as a guide.  The following attributes are
+    supported:
+    <ul>
+    <li><b>path</b>.  The <i>context path</i> for your application, which
+        is the prefix of a request URI that tells Tomcat which application
+        should be used to process this request.  For example, if you set
+        your path to "/catalog", any request URI beginning with "/catalog"
+        will be processed by this application.  This attribute is requrired,
+        and must start with a slash ('/') character.
+    <li><b>docBase</b>.  The <i>document root</i> directory for this web
+        application.  This can be a relative path (relative to the
+        directory in which Tomcat is started), or an absolute path, to the
+        directory containing your app.  On a Windows platform, you must
+        use the drive prefix and a colon when specifying an absolute path.
+        This attribute is required.
+    <li><b>debug</b>.  Debugging detail level (from "0" to "9") that defines
+        how verbose Tomcat's logging messages will be when your application
+        is initialized, started, and shut down.  The default value is "0"
+        (minimal logging) if you do not specify a different value.
+    <li><b>reloadable</b>.  Set to "true" if you want Tomcat to watch for
+        changes to Java class files in the WEB-INF/classes directory, or
+        JAR files in the WEB-INF/lib directory.  If such a change is noted,
+        Tomcat will shut down and reload your application automatically,
+        picking up these changes.  The default value ("false") means that
+        such changes will be ignored.  NOTE:  While this feature is very
+        useful during development, it requires overhead to do the checking.
+        This capability should generally <i>not</i> be used in deployed
+        production applications.
+    </ul>
+</ul>
+
+<p>Integrating your app with other servlet containers will be specific to each
+container, but all containers compatible with the Servlet API Specification
+(version 2.2) are required to accept a web application archive file.
 
 </body>
 
 </html>
-
-
