@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.188 2003/06/20 00:25:03 spestov Exp $
+ * @version $Id: Buffer.java,v 1.189 2003/06/22 01:09:47 spestov Exp $
  */
 public class Buffer
 {
@@ -1295,10 +1295,10 @@ public class Buffer
 			setFlag(UNDO_IN_PROGRESS,true);
 			int caret = undoMgr.undo();
 
-			/* if(caret == -1)
+			if(caret == -1)
 				textArea.getToolkit().beep();
 			else
-				textArea.setCaretPosition(caret); */
+				textArea.setCaretPosition(caret);
 
 			fireTransactionComplete();
 		}

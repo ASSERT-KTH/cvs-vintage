@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.183 2003/06/21 18:45:29 spestov Exp $
+ * @version $Id: jEdit.java,v 1.184 2003/06/22 01:09:47 spestov Exp $
  */
 public class jEdit
 {
@@ -1934,6 +1934,7 @@ public class jEdit
 			{
 				editPanes[i].saveCaretInfo();
 			}
+			_view = _view.next;
 		}
 
 		Buffer buffer = buffersFirst;

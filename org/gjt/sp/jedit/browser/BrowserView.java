@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.74 2003/05/29 19:02:55 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.75 2003/06/22 01:09:47 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -420,6 +420,7 @@ class BrowserView extends JPanel
 					if(!GUIUtilities.isPopupTrigger(evt))
 					{
 						browser.setDirectory(dirEntry.path);
+						if(browser.getMode() == VFSBrowser.BROWSER)
 						focusOnFileView();
 					}
 				}

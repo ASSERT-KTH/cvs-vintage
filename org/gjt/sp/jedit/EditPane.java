@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.45 2003/06/11 01:15:31 spestov Exp $
+ * @version $Id: EditPane.java,v 1.46 2003/06/22 01:09:47 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -387,10 +387,10 @@ public class EditPane extends JPanel implements EBComponent
 		TextAreaPainter painter = textArea.getPainter();
 
 		painter.setFont(jEdit.getFontProperty("view.font"));
-		painter.setBracketHighlightEnabled(jEdit.getBooleanProperty(
-			"view.bracketHighlight"));
-		painter.setBracketHighlightColor(
-			jEdit.getColorProperty("view.bracketHighlightColor"));
+		painter.setStructureHighlightEnabled(jEdit.getBooleanProperty(
+			"view.structureHighlight"));
+		painter.setStructureHighlightColor(
+			jEdit.getColorProperty("view.structureHighlightColor"));
 		painter.setEOLMarkersPainted(jEdit.getBooleanProperty(
 			"view.eolMarkers"));
 		painter.setEOLMarkerColor(
@@ -440,10 +440,10 @@ public class EditPane extends JPanel implements EBComponent
 		gutter.setHighlightInterval(interval);
 		gutter.setCurrentLineHighlightEnabled(jEdit.getBooleanProperty(
 			"view.gutter.highlightCurrentLine"));
-		gutter.setBracketHighlightEnabled(jEdit.getBooleanProperty(
-			"view.gutter.bracketHighlight"));
-		gutter.setBracketHighlightColor(
-			jEdit.getColorProperty("view.gutter.bracketHighlightColor"));
+		gutter.setStructureHighlightEnabled(jEdit.getBooleanProperty(
+			"view.gutter.structureHighlight"));
+		gutter.setStructureHighlightColor(
+			jEdit.getColorProperty("view.gutter.structureHighlightColor"));
 		gutter.setBackground(
 			jEdit.getColorProperty("view.gutter.bgColor"));
 		gutter.setForeground(
