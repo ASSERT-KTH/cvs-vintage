@@ -108,9 +108,9 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    Socket socket=connection.getSocket();
 	    socket.setSoLinger( true, 100);
 
-	    Request request = new Request();
+	    RequestImpl request = new RequestImpl();
 	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(socket);
-	    Response response=new Response();
+	    ResponseImpl response=new ResponseImpl();
 	    AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
 
 	    InputStream in=socket.getInputStream();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.10 2000/01/08 21:31:40 rubys Exp $
- * $Revision: 1.10 $
- * $Date: 2000/01/08 21:31:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.11 2000/01/13 18:20:34 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/01/13 18:20:34 $
  *
  * ====================================================================
  *
@@ -109,13 +109,13 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 	    Socket socket=connection.getSocket();
 	    socket.setSoLinger( true, 100);
 	    //XXX recycle
-	    Request request=new Request();
+	    RequestImpl request=new RequestImpl();
 	    
 	    AJPRequestAdapter reqA = new AJPRequestAdapter(socket); // todo: clean ConnectionHandler, make it abstract
 	    request.setRequestAdapter( reqA );
 	    
 	    Ajp11ResponseAdapter resA=new Ajp11ResponseAdapter();
-	    Response response = new Response();
+	    ResponseImpl response = new ResponseImpl();
             resA.setOutputStream(socket.getOutputStream());
 	    response.setResponseAdapter(resA );
 	    int count = 1;

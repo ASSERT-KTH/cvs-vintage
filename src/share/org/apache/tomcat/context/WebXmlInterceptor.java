@@ -75,7 +75,7 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class WebXmlInterceptor {
+public class WebXmlInterceptor implements ContextInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
     
     public WebXmlInterceptor() {
@@ -129,6 +129,9 @@ public class WebXmlInterceptor {
 	return 0;
     }
 
+    public int handleContextShutdown(Context ctx) {
+	return OK;
+    }
 
     private void processWebApp(Context ctx, InputStream is, boolean internal) {
         if (is != null) {

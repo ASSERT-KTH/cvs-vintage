@@ -75,7 +75,7 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class LoadOnStartupInterceptor {
+public class LoadOnStartupInterceptor implements ContextInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
     
     public LoadOnStartupInterceptor() {
@@ -133,6 +133,12 @@ public class LoadOnStartupInterceptor {
 		}
 	    }
 	}
-	return 0;
+	return OK;
     }
+
+    public int handleContextShutdown(Context ctx) {
+	return OK;
+    }
+
+
 }

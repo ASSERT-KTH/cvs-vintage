@@ -75,7 +75,7 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class WarInterceptor {
+public class WarInterceptor implements ContextInterceptor {
 
     public WarInterceptor() {
     }
@@ -109,5 +109,9 @@ public class WarInterceptor {
 	    }
 	}
 	return 0;
+    }
+
+    public int handleContextShutdown(Context ctx) {
+	return OK;
     }
 }

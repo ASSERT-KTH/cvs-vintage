@@ -75,7 +75,7 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class DefaultContextSetter {
+public class DefaultContextSetter implements ContextInterceptor {
 
     public DefaultContextSetter() {
     }
@@ -98,10 +98,12 @@ public class DefaultContextSetter {
 	// also have too change - there is no advantage in keeping them in Constants,
 	ctx.addClassPath("WEB-INF/classes");
 	ctx.addLibPath("WEB-INF/lib");
-	return 0;
+	return OK;
     }
 
-	
+    public int handleContextShutdown(Context ctx) {
+	return OK;
+    }
     // -------------------- implementation
     /** Encoded ContextManager.getWorkDir() + host + port + path
      */

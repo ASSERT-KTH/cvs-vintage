@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/DoorConnectionHandler.java,v 1.2 1999/10/28 05:15:31 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/DoorConnectionHandler.java,v 1.3 2000/01/13 18:20:35 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/13 18:20:35 $
  *
  * ====================================================================
  *
@@ -126,7 +126,7 @@ public class DoorConnectionHandler implements DoorFunction {
     public void call( MsgBuffer buf ) {
 	try {
 	    MsgConnector con=new DoorConnector();
-	    Request rrequest=new Request();
+	    RequestImpl rrequest=new RequestImpl();
 	    ConnectorResponse rresponse=new ConnectorResponse(con);
 	    ConnectorRequest  reqA=new ConnectorRequest(con);
 	    rrequest.setRequestAdapter( reqA );

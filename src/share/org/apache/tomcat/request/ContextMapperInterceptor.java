@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.4 2000/01/12 00:57:32 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/12 00:57:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextMapperInterceptor.java,v 1.1 2000/01/13 18:20:34 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/01/13 18:20:34 $
  *
  * ====================================================================
  *
@@ -72,10 +72,10 @@ import java.net.*;
 import java.util.*;
 
 
-public class ContextInterceptor implements RequestInterceptor {
+public class ContextMapperInterceptor implements RequestInterceptor {
     ContextManager cm;
     
-    public ContextInterceptor(ContextManager cm) {
+    public ContextMapperInterceptor(ContextManager cm) {
 	this.cm=cm;
     }
 

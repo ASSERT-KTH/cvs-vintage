@@ -86,7 +86,7 @@ public class ContextManager {
      */
     private StringManager sm =StringManager.getManager("org.apache.tomcat.core");
 
-    ContextInterceptor contextInterceptor=new ContextInterceptor( this );
+    ContextMapperInterceptor contextInterceptor=new ContextMapperInterceptor( this );
     SessionInterceptor sessionInterceptor=new SessionInterceptor();
     MapperInterceptor mapperInterceptor=new MapperInterceptor();
     
@@ -340,13 +340,15 @@ public class ContextManager {
 		queryString =urlPath.substring(i + 1, urlPath.length());
 	    urlPath = urlPath.substring(0, i);
 	}
-	
-	Request lr = new Request();
+
+	/** Creates an "internal" request
+	 */
+	RequestImpl lr = new RequestImpl();
 	RequestAdapterImpl reqA=new RequestAdapterImpl();
 	lr.setRequestAdapter( reqA);
 	lr.setLookupPath( urlPath );
 	lr.setQueryString( queryString );
-	lr.processQueryString();
+	//	lr.processQueryString();
 
 	lr.setContext( ctx );
 	

@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.1 2000/01/13 18:20:32 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/01/13 18:20:32 $
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -58,78 +62,19 @@
  */ 
 
 
-package org.apache.tomcat.context;
-
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.deployment.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.http.*;
-
+package org.apache.tomcat.core;
+import javax.servlet.Servlet;
 
 /**
- * Handles work dir setup/removal
+ * Called to set up and destroy a context.
+ * Example: expand WAR, move files in the right directories ( Apache ?),
+ * read web.xml or check for a serialized form for faster init, etc.
  *
  * @author costin@dnt.ro
  */
-public class WorkDirInterceptor implements ContextInterceptor {
-
-    public WorkDirInterceptor() {
-    }
-	
-    public int handleContextInit(Context ctx) {
-	// never null !! ( it is set by default to ./work ! )
-	//log	System.out.println("Preparing work dir " + ctx.getWorkDir() );
-
-	if (! ctx.isWorkDirPersistent()) {
-	    clearDir(ctx.getWorkDir() );
-        }
-
-	if (! ctx.getWorkDir().exists()) {
-	    //log  System.out.println("Creating work dir " + ctx.getWorkDir() );
-	    ctx.getWorkDir().mkdirs();
-	}
-
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
-	return 0;
-    }
-
-    public int handleContextShutdown( Context ctx ) {
-	
-	if (! ctx.isWorkDirPersistent()) {
-            clearDir(ctx.getWorkDir());
-	}
-	return 0;
-    }
-
-    private void clearDir(File dir) {
-        String[] files = dir.list();
-
-        if (files != null) {
-	    for (int i = 0; i < files.length; i++) {
-	        File f = new File(dir, files[i]);
-
-	        if (f.isDirectory()) {
-		    clearDir(f);
-	        }
-
-	        try {
-	            f.delete();
-	        } catch (Exception e) {
-	        }
-	    }
-
-	    try {
-	        dir.delete();
-	    } catch (Exception e) {
-	    }
-        }
-    }
-
-
-	
+public interface ContextInterceptor {
+    public static final int OK=0;
+    
+    public int handleContextInit(Context ctx);
+    public int handleContextShutdown(Context ctx);
 }

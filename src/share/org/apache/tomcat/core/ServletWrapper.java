@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.10 2000/01/11 03:02:14 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/01/11 03:02:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.11 2000/01/13 18:20:33 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/01/13 18:20:33 $
  *
  * ====================================================================
  *
@@ -209,11 +209,13 @@ public class ServletWrapper {
 	    // XXX XXX XXX
 	    // core shouldn't depend on a particular connector!
 	    // need to find out what this code does!
+
+	    // XXX XXX find a better way !!!
 	    RequestAdapterImpl reqA=new RequestAdapterImpl();
 	    ResponseAdapterImpl resA=new ResponseAdapterImpl();
 	    
-	    Request request = new Request();
-            Response response = new Response();
+	    RequestImpl request = new RequestImpl();
+            ResponseImpl response = new ResponseImpl();
             request.recycle();
             response.recycle();
 

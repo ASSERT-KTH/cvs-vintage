@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorResponse.java,v 1.2 1999/10/28 05:15:31 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorResponse.java,v 1.3 2000/01/13 18:20:35 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/13 18:20:35 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 
-public class ConnectorResponse extends Response {
+public class ConnectorResponse extends ResponseImpl {
     public static final int SEND_HEADERS=2;
     public static final int END_RESPONSE=5;
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.7 2000/01/07 19:14:16 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/07 19:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.8 2000/01/13 18:20:34 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/13 18:20:34 $
  *
  * ====================================================================
  *
@@ -112,7 +112,7 @@ public class Ajp22ConnectionHandler  implements  TcpConnectionHandler {
 	    msg=new MessageConnector(socket);
 	    Ajp22Response rresponse = new Ajp22Response(msg);
 	    //		rresponse.setProtocol( this );
-	    Request rrequest = new Request();
+	    RequestImpl rrequest = new RequestImpl();
 	    Ajp22Request reqA = new Ajp22Request(msg);
 	    rrequest.setRequestAdapter( reqA );
 	    rrequest.setResponse(rresponse);
@@ -375,7 +375,7 @@ class Ajp22Request extends RequestAdapterImpl {
 }
 
 
-class Ajp22Response extends Response implements Ajp22Constants {
+class Ajp22Response extends ResponseImpl implements Ajp22Constants {
     MessageConnector proto;
     Ajp22ServletOS rout;
 
@@ -393,7 +393,7 @@ class Ajp22Response extends Response implements Ajp22Constants {
 	out=rout;
     }
 
-    protected void fixHeaders() throws IOException {
+    public void fixHeaders() throws IOException {
 	//	System.out.println( "Fixing headers" );
 	headers.putIntHeader("Status", status);
         headers.putHeader("Content-Type", contentType);
