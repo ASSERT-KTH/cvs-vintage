@@ -39,9 +39,10 @@ import java.io.PrintStream;
  * When the reference count goes to 0, the lock is released from the
  * id -> lock mapping.
  *
+ * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/03: billb</b>
