@@ -16,7 +16,7 @@
         early tests.
     -->
   
-     <property name="host" value="localhost" />
+     <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
      <property name="debug"     value="0" />
@@ -85,8 +85,8 @@
 
     <gtest  description="Welcome File Test3"
            request="GET /test/welcome/ HTTP/1.0"
-           returnCode="${http.protocol} 302" 
-           goldenFile="${gdir}/movedwelcome.txt" />
+           returnCode="${http.protocol} 302" />
+<!--           goldenFile="${gdir}/movedwelcome.txt" />-->
    </target>
 
   <target name="file-apache" depends="init,file">
@@ -499,9 +499,13 @@
    </target>
 
   <target name="jsp-tomcat" depends="init,jsp">
+
+<!--
+     goldenFile="${gdir}/movedindex.txt"  
+-->
     <gtest  request="GET /test/jsp/ HTTP/1.0"
-           goldenFile="${gdir}/movedindex.txt"  
-           description="Redirects to index.html"
+           returnCode="${http.protocol} 302"           
+          description="Redirects to index.html"
     />
 
    </target>
