@@ -3,7 +3,7 @@
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
  - The contents of this file are subject to the LGPL Licence 
  - 
- - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
+ - Author:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
  - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
  -
  - Compilation directive for Common Architecture for RMI ObjectWeb Layer (CAROL)  
@@ -25,10 +25,10 @@
   <property name="build"	value="${basedir}/output"/>
   <!--======================================================
   load the following user properties from a file:
-  - build.compiler: Wich compiler do you want use ? (optional)
-  - build: Where do you want generate compilate object ?
-  - dist: Where do you want put the distribution ?
-  - testResult: Where do you want put the test results ?
+  - build.compiler: Which compiler do you want use ? (optional)
+  - build: Where do you want to generate compilate object ?
+  - dist: Where do you want to put the distribution ?
+  - testResult: Where do you want to put the test results ?
   =======================================================-->
   <property file="${config}/configure.properties"/>
 
@@ -40,7 +40,7 @@
   <property name="tmp"  	   value="${dist}/tmp"/> 
 
 
-  <!-- joanthan jar properties -->
+  <!-- jonathan jar properties -->
   <property name="jonathan.jar"   value="${externals}/jonathan.jar"/> 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
   <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
@@ -74,7 +74,8 @@
       <available file="${jonathan.jar}"/>
     </condition>   
     <antcall target="compile.base"/>
-    <antcall target="compile.stub"/> 
+    <antcall target="compile.stub"/>
+    <antcall target="compile.stub.jeremie"/> 
     <antcall target="compile.jonathan"/>
     <antcall target="compile.jvm.daemon"/>
     <antcall target="compile.cmi"/>
@@ -140,8 +141,16 @@
       <classpath refid="carol.classpath"/>
       <include name="**/org/objectweb/carol/jndi/iiop/_*.java"/>
     </javac> 
-    
+</target>
+<uptodate property="stub.jeremie.done"
+              srcfile="${src}/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.java"
+              targetfile="${build}/classes/org/objectweb/carol/jndi/wrapping/JNDIResourceWrapper.class" />
+
+<target name="compile.stub.jeremie"
+      description="build stub and skeleton "
+      unless="stub.jeremie.done" > 
     <!-- for jeremie -->
+      <echo message="stub ${stub.jeremie.done}"/>
       <java classname="${compiler.jeremie}" fork="true" failonerror="true">
       <jvmarg line="${jonathan.jvmarg}"/>
       <arg value="-opt"/>
