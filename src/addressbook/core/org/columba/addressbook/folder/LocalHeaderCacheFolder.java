@@ -76,6 +76,11 @@ public class LocalHeaderCacheFolder extends LocalFolder {
      *
      */
     protected boolean headerCacheAlreadyLoaded;
+    
+    /**
+     * dirty flag should be set if cached was changed
+     */
+    private boolean hasChanged;
 
     public LocalHeaderCacheFolder(FolderItem item) {
         super(item);
@@ -148,6 +153,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
         headerList.uidRemove(uid);
 
         super.remove(uid);
+        
+//      set dirty flag
+        hasChanged = true;
     }
 
     public void modify(DefaultCard card, Object uid) {
@@ -184,6 +192,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
         } else {
             item.add("displayname", card.get("displayname"));
         }
+        
+        // set dirty flag
+        hasChanged = true;
 
         /*
         File file =
@@ -290,6 +301,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
         headerList.add(item);
 
         nextUid = ((Integer) uid).intValue() + 1;
+        
+//      set dirty flag
+        hasChanged = true;
     }
 
     protected void addHeaderItem(GroupListCard card, Object uid) {
@@ -330,6 +344,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
         headerList.add(item);
 
         nextUid = ((Integer) uid).intValue() + 1;
+        
+//      set dirty flag
+        hasChanged = true;
     }
 
     public void load(WorkerStatusController worker) throws Exception {
@@ -396,6 +413,10 @@ public class LocalHeaderCacheFolder extends LocalFolder {
     }
 
     public void save(WorkerStatusController worker) throws Exception {
+    	// if cache wasn't modified
+    	// -> no need to save changes
+    	if ( hasChanged == false ) return;
+    	
         LOG.fine("saving header-cache=" + headerFile);
 
         FileOutputStream istream = new FileOutputStream(headerFile.getPath());
