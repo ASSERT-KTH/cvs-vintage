@@ -1,0 +1,90 @@
+<!--
+Here is what I was thinking the direction of the XML data format should
+look like. Of course it is far from 100% complete, but it does show a
+few certain things that I would like to achieve. Namely:
+
+#1. Database independence
+#2. XML attributes are only used for ID values for certain key fields
+that are required to already exist in the database before being created.
+For example, I give id's for the module as well as the users. In the
+case of the module information, I actually also include it.
+#3. I put things within tags instead of as XML attributes because they
+could contain CDATA. This will allow those tags to contain that type of
+information.
+#4. The idea is that someone should be able to also (optionally) create
+a new scarab database with only user and module information
+pre-populated and be able to import an XML file and have it fill in the
+rest of the information as necessary.
+#5. The XML format should be able to be parsed by a human. In the
+future, we may support XML submissions via email. This would make it
+easier to work with.
+-->
+
+<scarab>
+    <module id="5">
+        <fullname>Turbine &gt; Source</fullname>
+        <code>TBNS</code>
+        <issue id="101">
+            <artifact-type>Defect</artifact-type>
+            <attribute>
+                <name>Status</name>
+                <value>New</value>
+            </attribute>
+            <attribute>
+                <name>Priority</name>
+                <value>High</value>
+            </attribute>
+
+            <dependecy>
+                <type>non-blocking</type>
+                <child>TBNS203</child>
+            </dependecy>
+
+            <attachment>
+                <name>My cool file</name>
+                <type>ATTACHMENT</type>
+                <path>file://server/path/to/file.txt</path>
+                <mimetype>text/plain</mimetype>
+                <modified-date>2001-01-01</modified-date>
+                <created-by>2</created-by>
+                <modified-by>5</modified-by>
+            </attachment>
+
+            <transaction id="7">
+                <type>Edit Issue</type>
+                <activity>
+                    <old-value>NULL</old-value>
+                    <new-value>High</new-value>
+                    <attribute>Priority</attribute>
+                    <description>
+                        Issue TBNS101 had attribute Priority set to high
+                    </description>
+                </activity>
+                <activity>
+                    <old-value>NULL</old-value>
+                    <new-value>unconfirmed</new-value>
+                    <attribute>Status</attribute>
+                    <description>
+                        Issue TBNS101 had attribute Status set to 
+                        unconfirmed
+                    </description>
+                </activity>
+            </transaction>
+        </issue>
+        <issue id="203">
+            <artifact-type>Defect</artifact-type>
+            <attribute>
+                <name>Status</name>
+                <value>Closed</value>
+            </attribute>
+            <attribute>
+                <name>Resolution</name>
+                <value>Fixed</value>
+            </attribute>
+            <dependecy>
+                <type>blocking</type>
+                <parent>101</parent>
+            </dependecy>
+        </issue>
+    </module>
+</scarab>
