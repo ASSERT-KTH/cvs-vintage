@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.14 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelExtend.java,v 1.15 2003/01/24 20:36:04 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class PropPanelExtend extends PropPanelModelElement {
      */
 
     public PropPanelExtend() {
-        super("Extend", _extendIcon, ConfigLoader.getTabPropsOrientation());
+        super("Extend", ConfigLoader.getTabPropsOrientation());
 
         addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
         addField(Argo.localize("UMLMenu", "label.stereotype"), 
@@ -102,6 +102,7 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         JTextArea conditionArea = new UMLExpressionBodyField(conditionModel,
                                                             true);
+        conditionArea.setRows(5);
         JScrollPane conditionScroll =
             new JScrollPane(conditionArea);
 
