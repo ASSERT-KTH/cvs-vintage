@@ -12,7 +12,6 @@
          (and without using -D arguments each time they build) -->
     <property file="${user.home}/scarab.build.properties" /> 
     <property file="${user.home}/build.properties" />
-    <property file="${basedir}/${configuration.file}" />
     <property file="${basedir}/default.properties" />
     <property file="${basedir}/default.${scarab.database.type}.properties" />
 
@@ -21,29 +20,23 @@
     <property name="final.name" value="${project}-${version}"/>
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
 
-    <property name="src.conf.dir" value="${src.dir}/conf"/>
-    <property name="www.dir" value="${src.dir}/../www"/>
-    <property name="src.html.dir" value="${src.dir}/html"/>
-    <property name="src.dtd.dir" value="${src.dir}/dtd"/>
-    <property name="src.i18n.dir" value="${src.dir}/i18n"/>
-    <property name="src.images.dir" value="${src.dir}/images"/>
+    <property name="src.conf.dir" value="${src.dir}/conf"/>    
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
     
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
-    <property name="javadoc.destdir" value="${build.project}/api"/>
-    <property name="torquedoc.destdir" value="${src.html.dir}/docs"/>
+    <property name="torquedoc.destdir" value="${basedir}/target/torquedoc"/>
     <property name="scarab.war.file.dir" value="${build.webapps}"/>
-    <property name="scarab.war.file.name" value="${scarab.context}.war"/>
+    <property name="scarab.war.file.name" value="scarab.war"/>
     <property name="scarab.war.file" value="${scarab.war.file.dir}/${scarab.war.file.name}"/>
     <property name="scarab.ear.file.dir" value="${build.webapps}"/>
-    <property name="scarab.ear.file.name" value="${scarab.context}.ear"/>
+    <property name="scarab.ear.file.name" value="scarab.ear"/>
 
-    <property name="extensions.lib.dir" value="${extensions.dir}/lib"/>
-    <property name="extensions.templates.dir" value="${extensions.dir}/templates"/>
-    <property name="extensions.conf.dir" value="${extensions.dir}/conf"/>
+    <property name="extensions.lib.dir" value="${extensions.dir}/usermods/lib"/>
+    <property name="extensions.templates.dir" value="${extensions.dir}/usermods/templates"/>
+    <property name="extensions.conf.dir" value="${extensions.dir}/usermods/conf"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -54,20 +47,10 @@
         <fileset dir="${ant.home}/lib">
             <include name="**/ant*.jar"/>
         </fileset>
-        <fileset dir="${tomcat.dist.dir}/common/lib">
-            <include name="**/servlet*.jar"/>
+        <fileset dir="${basedir}/../www/repository">
+            <include name="**/**.jar"/>
         </fileset>
     </path>
-
-    <!-- ================================================================== -->
-    <!-- Check to see what optional dependencies are available              -->
-    <!-- ================================================================== -->
-    <target name="check_for_optional_packages">
-        <available property="junit.present"
-           classname="junit.framework.TestCase">
-            <classpath refid="classpath"/>
-        </available>
-    </target>
 
     <!-- ================================================================== -->
     <!-- Prepares the Build directory                                       -->
@@ -89,145 +72,32 @@
         [${version}-${DSTAMP}${TSTAMP}]
     </echo>
 
-    <condition property="do-tomcat-build" value="true">
-        <equals arg1="${scarab.build.tomcat}" arg2="true"/>
-    </condition>
 
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Prepares the Tomcat 4.1 directory                                  -->
-    <!-- ================================================================== -->
-    <target name="prepare-tomcat" depends="prepare-build-dir"
-            if="do-tomcat-build">
-
-        <!-- copy over tomcat -->
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dir}/temp"/>
-        <copy todir="${build.dir}/bin" filtering="no">
-            <fileset dir="${tomcat.dist.dir}/bin"/>
-        </copy>
-        <copy todir="${build.dir}/common" filtering="no">
-            <fileset dir="${tomcat.dist.dir}/common"/>
-        </copy>
-        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
-        <filter token="SCARAB_WEBAPP_RELOADABLE" value="${scarab.webapp.reloadable}"/>
-        <filter token="SCARAB_WEBAPP_CHECK_INTERVAL" value="${scarab.webapp.checkInterval}"/>
-        <filter token="TOMCAT_SHUTDOWN_PORT" value="${scarab.tomcat.shutdown.port}"/>
-        <filter token="TOMCAT_HTTP_PORT" value="${scarab.tomcat.http.port}"/>
-        <filter token="TOMCAT_PROXY_NAME" value="${scarab.tomcat.proxy.name}"/>
-        <filter token="TOMCAT_PROXY_PORT" value="${scarab.tomcat.proxy.port}"/>
-        <copy todir="${build.dir}/conf" filtering="yes">
-            <fileset dir="${tomcat.dist.dir}/conf"/>
-        </copy>
-        <!--
-        <copy todir="${build.dir}/lib" filtering="no">
-            <fileset dir="${tomcat.dist.dir}/lib"/>
-        </copy> -->
-        <copy todir="${build.dir}/server" filtering="no">
-            <fileset dir="${tomcat.dist.dir}/server"/>
-        </copy>
-        <copy todir="${build.dir}" filtering="no">
-            <fileset dir="${tomcat.dist.dir}">
-                <include name="scarab.sh"/>
-                <include name="scarab.bat"/>
-            </fileset>
-        </copy>
-        <!-- no need to have two copies of this checked into CVS -->
-        <copy todir="${build.dir}/server/lib" filtering="no">
-             <fileset dir="${lib.dir}">
-                <include name="**/jakarta-regexp*.jar"/>
-            </fileset>
-        </copy>
-        <!-- no need to have two copies of this checked into CVS -->
-        <copy todir="${build.dir}/server/lib" filtering="no">
-             <fileset dir="${lib.dir}">
-                <include name="**/commons-logging*.jar"/>
-            </fileset>
-        </copy>
-
-        <chmod dir="${build.dir}" perm="ug+rx" includes="**/*.sh" />
-
-        <mkdir dir="${build.dir}/logs"/>
-        <mkdir dir="${build.dir}/work"/>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Prepare style.tigris.org for action                                -->
-    <!-- ================================================================== -->
-    <target name="style-expanded-check">
-        <!-- we can check that style.zip is upToDate in order to know if
-             the archive has already been expanded because it is expanded
-             in the same target as it is copied to the directory -->
-        <mkdir dir="${build.project}/style"/>
-        <uptodate property="style.is.not.expanded"
-            targetfile="${src.html.dir}/${tigris-style}.zip">
-            <srcfiles dir="${build.project}/style" includes="**/*.css"/>
-        </uptodate>    
-    </target>
-
-    <target name="style-init" depends="style-expanded-check"
-            if="style.is.not.expanded">
-        <unzip src="${src.html.dir}/${tigris-style}.zip" dest="${build.dir}"/>
-
-        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
-        <filter token="SCARAB_HTML_REDIRECT" value="${scarab.html.redirect}"/>
-        <filter token="SCARAB_WELCOME_FILE" value="${scarab.welcome.file}"/>
-
-        <copy todir="${build.project}/style" filtering="yes">
-            <fileset dir="${build.dir}/${tigris-style}/css"
-                     includes="**/*.css" />
-        </copy>
-
-        <copy todir="${build.project}/style" filtering="yes">
-            <fileset dir="${src.html.dir}"
-                     includes="**/*.css" />
-            <fileset dir="${src.html.dir}"
-                     includes="**/*.dtd" />
-        </copy>
-
-        <copy todir="${build.project}/images" filtering="no">
-            <fileset dir="${src.images.dir}" />
-            <fileset dir="${build.dir}/${tigris-style}/images"
-                     includes="*.gif,*.png" />
-        </copy>
-        <delete dir="${build.dir}/${tigris-style}" quiet="true"/>
-    </target>
 
     <!-- ================================================================== -->
     <!-- Prepares the build directory                                       -->
     <!-- ================================================================== -->
-    <target name="prepare" depends="prepare-tomcat, style-init">
+    <target name="prepare">
 
         <!-- things to go into the project directory -->
         
-        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
-        <filter token="SCARAB_HTML_REDIRECT" value="${scarab.html.redirect}"/>
         <copy todir="${build.project}" filtering="yes">
-            <fileset dir="${src.html.dir}">
-                <include name="**/*.html"/>
-                <include name="**/*.jsp"/>
-                <include name="**/*.js"/>
+            <fileset dir="${src.dir}/webapp">
+                <include name="**/*.*"/>
             </fileset>
         </copy>
-
-        <!-- Copy DTDs. -->
-        <copy todir="${build.dest.scarab}/org/tigris/scarab" filtering="yes">
-          <fileset dir="${src.dtd.dir}">
-            <include name="scarab.dtd"/>
-            <include name="scarab-settings.dtd"/>
-          </fileset>
-        </copy>
+        
+        <copy todir="${build.project.webinf}/conf" filtering="yes">
+            <fileset dir="${src.dir}/conf/conf">
+                <include name="**/*.*"/>
+            </fileset>
+        </copy>        
 
         <!-- Conditionally copy templates -->
         <antcall target="copy-templates" />
-
-        <copy todir="${build.project.webinf}" filtering="yes">
-            <fileset dir="${src.conf.dir}/">
-                <include name="web.xml"/>
-                <include name="server-config.wsdd"/>
-            </fileset>
-        </copy>
+   
 
         <!-- Conditionally copy extension conf -->
         <available property="extensions.conf.exist" 
@@ -251,12 +121,7 @@
         <filter token="VERSION" value="${version}"/>
         <tstamp/>
         <filter token="BUILD_DATE" value="${DSTAMP}${TSTAMP}"/>
-        <filter token="TEMPLATE_PATH" value="${template.path}"/>
-        <filter token="HOMEPAGE" value="${scarab.homepage}"/>
-        <filter token="PIPELINE_DESCRIPTOR"
-            value="${scarab.default.pipeline.descriptor}"/>
-        <filter token="REQUEST_ERROR_HANDLER"
-            value="${scarab.request.error.handler}"/>
+       
         <filter token="ADMIN_USERNAME" value="${scarab.user.username}"/>
         <filter token="ADMIN_PASSWORD" value="${scarab.user.password}"/>
         <filter token="ADMIN_FIRSTNAME" value="${scarab.user.firstname}"/>
@@ -272,97 +137,14 @@
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
         <filter token="DATABASE_LOADORDER" value="${scarab.database.loadorder}"/>
-        <filter token="TEST_DATABASE_URL" value="${scarab.test.database.url}"/>
-        <filter token="TEST_DATABASE_USERNAME" value="${scarab.test.database.username}"/>
-        <filter token="TEST_DATABASE_PASSWORD" value="${scarab.test.database.password}"/>
 
         <filter token="DATABASE_VALIDATION_QUERY" value="${scarab.database.validationQuery}"/>
-        <filter token="SYSTEM_MAIL_HOST" value="${scarab.system.mail.host}"/>
-        <filter token="TURBINE_MODE" value="${scarab.mode}"/>
-        <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
-        <filter token="USER_SERVICE" value="${scarab.user.service}"/>
-        <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
-        <filter token="LOCALIZATION_SERVICE" value="${scarab.localization.service}"/>
-        <filter token="TORQUE_SERVICE" value="${scarab.torque.service}"/>
-        <filter token="DATABASE_INIT_SERVICE" value="${scarab.dbinit.service}"/>
-        <filter token="SCARAB_AUTOMATIC_ROLE_APPROVAL" value="${scarab.automatic.role.approval}"/>
-        <filter token="SCARAB_SITE_NAME" value="${scarab.site.name}"/>
-        <filter token="SCARAB_LINK" value="${scarab.pull.link}"/>
-        <filter token="SCARAB_STATIC_LINK" value="${scarab.pull.staticlink}"/>
-        <filter token="SESSION_TIMEOUT" value="${scarab.session.timeout}"/>
-        <filter token="LUCENE_INDEX_PATH" value="${scarab.lucene.index.path}"/>
-        <filter token="ATTACHMENTS_PATH" value="${scarab.attachments.path}"/>
-        <filter token="INTAKE_SERIALIZE_FILE" value="${scarab.intake.serialize.file}"/>
-        <filter token="INTAKE_OPTIONAL_GROUPS" value="${intake.optional.groups}"/>
-        <filter token="FILE_UPLOAD_PATH" value="${scarab.file.upload.path}"/>
-        <filter token="FILE_UPLOAD_MAX_SIZE" value="${scarab.file.max.size}"/>
-        <filter token="SCARAB_REGISTER_CHECK_VALID_A" value="${scarab.register.email.checkValidA}"/>
-        <filter token="SCARAB_REGISTER_BAD_EMAILS" value="${scarab.register.email.badEmails}"/>
-        <filter token="TORQUE_MANAGER_CACHE" value="${scarab.torque.manager.cache}"/>
-        <filter token="EXTRA_TR_PROPERTIES" 
-            value="${scarab.extra.tr.properties}"/>
-        <filter token="TIMEZONE" value="${scarab.timezone}"/>
-        <filter token="LOG_PATTERN" value="${scarab.log.pattern}"/>
-        <filter token="LOG_LEVEL_SCARAB" value="${scarab.log.level.scarab}"/>
-        <filter token="LOG_FILE_SCARAB" value="${scarab.log.file.scarab}"/>
-        <filter token="LOG_APPEND_SCARAB" value="${scarab.log.append.scarab}"/>
-        <filter token="LOG_LEVEL_SCARAB_XML_IMPORT" value="${scarab.log.level.scarabxmlimport}"/>
-        <filter token="LOG_FILE_SCARAB_XML_IMPORT" value="${scarab.log.file.scarabxmlimport}"/>
-        <filter token="LOG_APPEND_SCARAB_XML_IMPORT" value="${scarab.log.append.scarabxmlimport}"/>
-        <filter token="LOG_LEVEL_TURBINE" value="${scarab.log.level.turbine}"/>
-        <filter token="LOG_FILE_TURBINE" value="${scarab.log.file.turbine}"/>
-        <filter token="LOG_APPEND_TURBINE" value="${scarab.log.append.turbine}"/>
-        <filter token="LOG_LEVEL_FULCRUM" value="${scarab.log.level.fulcrum}"/>
-        <filter token="LOG_FILE_FULCRUM" value="${scarab.log.file.fulcrum}"/>
-        <filter token="LOG_APPEND_FULCRUM" value="${scarab.log.append.fulcrum}"/>
-        <filter token="LOG_LEVEL_TORQUE" value="${scarab.log.level.torque}"/>
-        <filter token="LOG_FILE_TORQUE" value="${scarab.log.file.torque}"/>
-        <filter token="LOG_APPEND_TORQUE" value="${scarab.log.append.torque}"/>
-        <filter token="LOG_LEVEL_STRATUM" value="${scarab.log.level.stratum}"/>
-        <filter token="LOG_FILE_STRATUM" value="${scarab.log.file.stratum}"/>
-        <filter token="LOG_APPEND_STRATUM" value="${scarab.log.append.stratum}"/>
-        <filter token="LOG_LEVEL_JCS" value="${scarab.log.level.jcs}"/>
-        <filter token="LOG_FILE_JCS" value="${scarab.log.file.jcs}"/>
-        <filter token="LOG_APPEND_JCS" value="${scarab.log.append.jcs}"/>
-        <filter token="LOG_LEVEL_BEANUTILS" value="${scarab.log.level.beanutils}"/>
-        <filter token="LOG_LEVEL_VELOCITY" value="${scarab.log.level.velocity}"/>
-        <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
-        <filter token="LOG_APPEND_VELOCITY" value="${scarab.log.append.velocity}"/>
-        <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
-        <filter token="LOCALE_DEFAULT_LANGUAGE" 
-            value="${scarab.locale.default.language}"/>
-        <filter token="LOCALE_DEFAULT_COUNTRY" 
-            value="${scarab.locale.default.country}"/>
-         <filter token="EMAIL_ENCODING" value="${scarab.email.encoding}"/> 
-         <filter token="DATA_EXPORT_ENCODING" value="${scarab.dataexport.encoding}"/> 
-        <filter token="SCARAB_EMAIL_DEFAULT_FROMNAME" 
-            value="${scarab.email.default.fromName}"/>
-        <filter token="SCARAB_EMAIL_DEFAULT_FROMADDRESS" 
-            value="${scarab.email.default.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_REGISTER_FROMNAME" 
-            value="${scarab.email.register.fromName}"/>
-        <filter token="SCARAB_EMAIL_REGISTER_FROMADDRESS" 
-            value="${scarab.email.register.fromAddress}"/>
-        <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMNAME" 
-            value="${scarab.email.forgotpassword.fromName}"/>
-        <filter token="SCARAB_EMAIL_FORGOTPASSWORD_FROMADDRESS" 
-            value="${scarab.email.forgotpassword.fromAddress}"/>
-        <filter token="SCARAB_MODULE_PACKAGES" value="${scarab.module.packages}"/>
         <filter token="HTTP_DOMAIN" value="${scarab.http.domain}"/>
         <filter token="HTTP_SCHEME" value="${scarab.http.scheme}"/>
         <filter token="HTTP_SCRIPTNAME" value="${scarab.http.scriptname}"/>
         <filter token="HTTP_PORT" value="${scarab.http.port}"/>
-        <filter token="SCARAB_SECURITY_USER_MANAGER" value="${scarab.security.user.manager}"/>
 
-        <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
-            <fileset dir="${src.conf.dir}/">
-                <include name="*.properties"/>
-                <include name="*.xml"/>
-                <include name="mime.types"/>
-            </fileset>
-        </copy>
-
-        <copy todir="${build.project.webinf}/lib" filtering="no">
+        <copy todir="${build.project.webinf}/lib" filtering="no" flatten="true">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
                 <exclude name="**/xalan*.jar"/>
@@ -371,6 +153,9 @@
                 <exclude name="**/*oracle*.jar"/>
                 <include name="**/*.jar"/>
             </fileset>
+            <fileset dir="${basedir}/../www/repository">
+            	<include name="**/**.jar"/>
+	        </fileset>
         </copy>
 
         <!-- Conditionally copy extension libraries -->
@@ -412,95 +197,6 @@
         <!-- express the type of database we are generating -->
         <touch file="${build.sql.scarab}/${scarab.database.type}" />
 
-        <!-- copy l18n stuff into classpath -->
-        <mkdir dir="${build.dest.scarab}"/>
-        <copy todir="${build.dest.scarab}" filtering="no">
-            <fileset dir="${src.i18n.dir}">
-                <include name="**/*.properties"/>
-            </fileset>
-        </copy>
-        
-        <!-- Set the default language if the Locale isn't present -->
-        <copy tofile="${build.dest.scarab}/ScarabBundle_de.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_de_DE.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_de.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_de_DE.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_en.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_en.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_en_US.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_fr.properties" 
-              filtering="no" 
-              file="${src.i18n.dir}/ScarabBundle_fr_FR.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_fr.properties" 
-              filtering="no" 
-              file="${src.i18n.dir}/InitDbScarabBundle_fr_FR.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_ja.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_ja_JP.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_ja.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_ja_JP.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_ko.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_ko_KR.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_ko.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_ko_KR.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_nl.properties"
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_nl_NL.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_nl.properties"
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_nl_NL.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_pt.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_pt_BR.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_pt.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_pt_BR.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_ru.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_ru_RU.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_ru.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_ru_RU.properties"/>
-        
-        <copy tofile="${build.dest.scarab}/ScarabBundle_zh.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_zh_CN.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle_zh.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_zh_CN.properties"/>
-        
-        <!-- final default language is english -->
-        <copy tofile="${build.dest.scarab}/ScarabBundle.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_en_US.properties"/>
-        <copy tofile="${build.dest.scarab}/InitDbScarabBundle.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/InitDbScarabBundle_en_US.properties"/>
-
-        <!-- copy JCS configuration into classpath -->
-        <filter token="JCS_CACHE_PROPERTIES" value="${scarab.jcs.cache.properties}"/>
-        <copy todir="${build.dest.scarab}" filtering="yes">
-            <fileset dir="${src.conf.dir}/">
-                <include name="cache.ccf"/>
-            </fileset>
-        </copy>
-
-        <mkdir dir="${build.project}/logs"/>
     </target>
 
     <!-- conditional file copy used in prepare target-->
@@ -821,7 +517,7 @@
         <echo message="${src.java.dir.scarab}/${project}-data.dtd"/>
         <echo message="${src.sql.dir}/${project}-data.dtd"/>
 
-        <move file="${src.dir}/${project}-data.dtd"
+        <copy file="${src.dir}/conf/classes/org/tigris/scarab/scarab.dtd"
             tofile="${src.sql.dir}/${project}-data.dtd"/>
     </target>
 
@@ -837,7 +533,7 @@
             todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
             tofile="${torque.dir.scarab}/build.properties"
-	    filtering="true"/>
+      filtering="true"/>
         <ant antfile="build-torque.xml"
             target="datasql" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -859,14 +555,14 @@
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}">
-	    <classpath refid="classpath"/>
+      <classpath refid="classpath"/>
             <classpath>
                 <fileset dir="${build.project.webinf.lib}">
                     <include name="**/torque*.jar"/>
                 </fileset>
             </classpath>
-	    <exclude name="**/package.html"/>
-	    <exclude name="torque/**"/>
+      <exclude name="**/package.html"/>
+      <exclude name="torque/**"/>
         </javac>
 
         <!-- Copy pipeline definitions. -->
@@ -877,124 +573,6 @@
         </copy>
     </target>
 
-    <target name="compile-tests" depends="compile">
-        <javac srcdir="${src.test.dir}"
-            destdir="${build.dest.scarab}"
-            excludes="**/package.html,torque/**"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}">
-
-        <classpath refid="classpath"/>
-
-        <classpath>
-            <fileset dir="${build.project.webinf.lib}">
-                <include name="**/torque*.jar"/>
-            </fileset>
-        </classpath>
-
-        </javac>
-
-        <copy todir="${build.dest.scarab}/org" filtering="no">
-            <fileset dir="${src.test.dir}/org">
-                <include name="**/*.xml"/>
-            </fileset>
-        </copy>
-
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Runs configuration                                                 -->
-    <!-- ================================================================== -->
-    <target name="configure">
-        <ant antfile="configure.xml" dir="${basedir}" inheritall="false">
-            <property name="configuration.file"
-                      value="${configuration.file}"/>
-        </ant>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Runs the test suite                                                -->
-    <!-- ================================================================== -->
-    <target name="tests" depends="compile-tests">
-        <ant antfile="run-tests.xml" dir="${basedir}" inheritall="false"/>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- jars the source directory                                          -->
-    <!-- ================================================================== -->
-    <target name="jarsrc" depends="prepare">
-        <jar jarfile="${build.dir}/${final.name}.src.jar"
-            basedir="${src.java.dir.scarab}"
-            excludes="**/package.html"/>
-    </target>
-
-
-
-
-    <!-- ================================================================== -->
-    <!-- Upgrade our dependencies easily                                    -->
-    <!-- These are in dependency order for themselves                       -->
-    <!-- ================================================================== -->
-    <target name="upgrade-jakarta">
-	    <ant antfile="upgrade-projects.xml" dir="${basedir}" inheritall="false"/>                     
-    </target>
-
-
-    <!-- ================================================================== -->
-    <!-- Creates the API documentation                                      -->
-    <!-- ================================================================== -->
-    <target name="javadocs" depends="om-peer,prepare">
-        <mkdir dir="${javadoc.destdir}"/>
-        <javadoc
-            sourcepath="${src.java.dir.scarab}"
-            packagenames="org.tigris.scarab.*"
-            destdir="${javadoc.destdir}"
-            author="true"
-            private="true"
-            version="true"
-            use="true"
-            windowtitle="${Name} ${version} API"
-            doctitle="${Name} ${version} API"
-            bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
-        >
-            <classpath refid="classpath"/>
-            <classpath>
-                <fileset dir="${build.project.webinf.lib}">
-                    <include name="**/torque*.jar"/>
-                </fileset>
-            </classpath>
-        </javadoc>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Creates the API documentation. Added a param -breakiterator        -->
-    <!-- that is specific for 1.4.1 and prevents ugly error messages        -->
-    <!-- ================================================================== -->
-    <target name="javadocs141" depends="om-peer,prepare">
-        <mkdir dir="${javadoc.destdir}"/>
-        <javadoc
-            sourcepath="${src.java.dir.scarab}"
-            packagenames="org.tigris.scarab.*"
-            destdir="${javadoc.destdir}"
-            author="true"
-            private="true"
-            version="true"
-            use="true"
-            windowtitle="${Name} ${version} API"
-            doctitle="${Name} ${version} API"
-            bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
-            additionalparam="-breakiterator"
-        >
-            <classpath refid="classpath"/>
-            <classpath>
-                <fileset dir="${build.project.webinf.lib}">
-                    <include name="**/torque*.jar"/>
-                </fileset>
-            </classpath>
-        </javadoc>
-    </target>
-
     
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
@@ -1003,7 +581,7 @@
         <delete dir="${build.dir}" quiet="true"/>
     </target>
 
-    <target name="clean-all" depends="prepare-build-dir, remove-generation">
+    <target name="clean-all" depends="prepare-build-dir, remove-generation,clean">
         <delete file="${src.sql.dir}/${project}-data.dtd"/>
         <delete file="${scarab.log.file.scarab}" quiet="true"/>
         <delete file="${scarab.log.file.turbine}" quiet="true"/>
@@ -1016,6 +594,11 @@
         <delete quiet="true">
             <fileset dir="..">
                 <include name="${final.name}*"/>
+            </fileset>
+        </delete>
+        <delete>
+            <fileset dir="../tomcat/logs">
+                <include name="*log*.txt"/>
             </fileset>
         </delete>
     </target>
@@ -1075,43 +658,16 @@
                 <exclude name="**/target/**"/>
                 <exclude name="**/www/**"/>
             </fileset>
-        </copy>
-
-        <!-- In the distribution, turn on Velocity template caching -->
-        <replace file="${final.dir}/build/default.properties">
-            <replacetoken><![CDATA[scarab.template.cache=false]]></replacetoken>
-            <replacevalue><![CDATA[scarab.template.cache=true]]></replacevalue>
-        </replace>
-
-        <!-- In the distribution, turn on template copying so that 
-             paths are relative -->
-        <replace file="${final.dir}/build/default.properties">
-            <replacetoken><![CDATA[#scarab.copy.templates=true]]></replacetoken>
-            <replacevalue><![CDATA[scarab.copy.templates=true]]></replacevalue>
-        </replace>
+        </copy>     
 
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Check to ensure that templates are in the war file                 -->
-    <!-- ================================================================== -->
-    <target name="war-requirements-check" depends="prepare">
-        <condition property="cannot.build.war" value="true">
-          <not>
-            <equals arg1="${scarab.copy.templates}" arg2="true"/>
-          </not>
-        </condition>
-    </target>
-
-    <target name="war-requirements-failure" depends="war-requirements-check"
-            if="cannot.build.war">
-        <fail message="In order to create a war file, the property scarab.copy.templates must be set to true"/>
-    </target>
+   
 
     <!-- ================================================================== -->
     <!-- Create a war file                                                  -->
     <!-- ================================================================== -->
-    <target name="war" depends="war-requirements-failure,compile">
+    <target name="war" depends="compile">
 
         <war warfile="${scarab.war.file}"
               webxml="${build.project.webinf}/web.xml">
@@ -1133,7 +689,6 @@
              filtering="true">
            <filterset>
                <filter token="WAR_FILE_NAME" value="${scarab.war.file.name}"/>
-               <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
            </filterset>
        </copy>
 
@@ -1153,97 +708,14 @@
       
     </target>
 
-    <target name="checkstyle" depends="compile">
-        <echo>
-  Using: ${checkstyle.all.jar}
-        </echo>
-        <taskdef name="checkstyle"
-            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
-            <classpath>
-                <pathelement location="${checkstyle.all.jar}"/>
-            </classpath>
-        </taskdef>
-        <checkstyle config="${basedir}/checkstyle-config.xml"
-                    failOnViolation="false"
-                    failureProperty="checkstyle.failure">
-            <classpath refid="classpath"/>
-            <classpath>
-                <fileset dir="${build.project.webinf.lib}">
-                    <include name="**/torque*.jar"/>
-                </fileset>
-            </classpath>
-            <property key="checkstyle.cache.file" file="${build.dir}/checkstyle.cache"/>
-            <fileset dir="${src.java.dir.scarab}/org">
-                 <include name="**/*.java"/>
-                 <exclude name="**/Base*.java"/>
-                 <exclude name="**/*MapBuilder.java"/>
-            </fileset>
-            <formatter type="xml" toFile="${build.dir}/checkstyle.xml"/>
-        </checkstyle>
-        <antcall target="checkstyle-style" />
-    </target>
-
-    <target name="checkstyle-style">
-        <style in="${build.dir}/checkstyle.xml" 
-              out="${build.dir}/checkstyle.txt"
-            style="${basedir}/checkstyle2txt.xsl"/>
-    </target>
-
-    <target name="checkstyle-mail" depends="checkstyle"
-            if="checkstyle.failure">
-        <mail from="${scarab.checkstyle.email.from}"
-              tolist="${scarab.checkstyle.email.to}"
-              mailhost="${scarab.system.mail.host}"
-              subject="Checkstyle violation(s) in project ${Name}"
-              messagefile="${build.dir}/checkstyle.txt"/>
-    </target>
+  
 
 <!-- ============================================================= -->
 <!-- Targets beyond this point are currently considered broken or  -->
 <!-- experimental - User Beware!                                  -->
 <!-- ============================================================= -->
 
-    <!-- ================================================================== -->
-    <!-- Tool to create proper import statements                            -->
-    <!-- ==================================================================
-    <target name="scrub" depends="om-peer,prepare">
-        <taskdef name="scrub" 
-          classname="org.apache.tools.ant.taskdefs.optional.importscrubber.ImportScrubberTask"/>
-
-        <property name="tmp.dir" value="tmp"/>
-
-        <delete dir="${tmp.dir}" quiet="true"/>
-
-        <copy todir="${tmp.dir}/org">
-          <fileset dir="${build.src.scarab}/org"/>
-        </copy>
-
-        <javac srcdir="${tmp.dir}"
-            destdir="${tmp.dir}"
-            excludes="**/package.html,torque/**"
-            debug="true">
-
-          <classpath refid="classpath"/>
-
-          <classpath>
-            <fileset dir="${build.project.webinf.lib}">
-              <include name="**/torque*.jar"/>
-            </fileset>
-          </classpath>
-        </javac>
-        
-        <scrub root="${tmp.dir}" format="nobreaks" recurse="true"/>
-
-        <delete>
-          <fileset dir="${tmp.dir}" includes="**/*.class"/>
-        </delete>
-
-        <copy todir="${src.java.dir.scarab}/org" overwrite="true">
-          <fileset dir="${tmp.dir}/org"/>
-        </copy>
-
-    </target>
-    -->
+  
 
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
@@ -1251,7 +723,7 @@
     <target name="datadoc" depends="torque-copy-all-schema,sql">
         <mkdir dir="${torquedoc.destdir}"/>
         <ant antfile="build-torque.xml"
-	         target="doc">
+           target="doc">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf}/lib"/>
             <property name="build.properties"
@@ -1274,13 +746,13 @@
                       value="${torque.dir.scarab}/build.properties"/> 
             <property name="torque.output.dir" value="${src.sql.dir}"/> 
             <property name="torque.database.driver"
-	              value="${scarab.database.jdbc.driver}"/>
+                value="${scarab.database.jdbc.driver}"/>
             <property name="torque.database.url"
-	              value="${scarab.database.url}"/>
+                value="${scarab.database.url}"/>
             <property name="torque.database.user"
-	              value="${scarab.database.username}"/>
+                value="${scarab.database.username}"/>
             <property name="torque.database.password"
-	              value="${scarab.database.password}"/>
+                value="${scarab.database.password}"/>
         </ant>
     </target>
 
@@ -1319,7 +791,6 @@
     <target name="remove-generation">
         <delete file="${src.sql.dir}/report.scarab.sql.generation"/>
         <delete file="${src.java.dir.scarab}/report.scarab.om.generation"/>
-        <delete file="${src.html.dir}/docs/report.scarab.doc.generation"/>
         <delete file="${src.dir}/report.scarab.datadtd.generation"/>
         <!-- delete file="${torque.dir.scarab}/report.scarab.om.generation"/-->
     </target>
@@ -1330,13 +801,10 @@
     <target name="test-complete-build">
         <antcall target="clean"/>
         <antcall target="compile"/>
-        <!-- antcall target="checkstyle"/ -->
         <antcall target="datadtd"/>
         <antcall target="datadoc"/>
-        <antcall target="javadocs"/>
         <antcall target="war"/>
         <antcall target="dist"/>
-        <antcall target="tests"/>
     </target>
 
     <target name="migrate-b15-b16" depends="prepare">
