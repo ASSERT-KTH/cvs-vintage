@@ -155,6 +155,11 @@
         <filter token="TEMPLATE_PATH" value="${template.path}"/>
         <filter token="PIPELINE_DESCRIPTOR"
             value="${scarab.default.pipeline.descriptor}"/>
+        <filter token="ADMIN_USERNAME" value="${scarab.user.username}"/>
+        <filter token="ADMIN_PASSWORD" value="${scarab.user.password}"/>
+        <filter token="ADMIN_FIRSTNAME" value="${scarab.user.firstname}"/>
+        <filter token="ADMIN_LASTNAME" value="${scarab.user.lastname}"/>
+        <filter token="ADMIN_EMAIL" value="${scarab.user.email}"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <filter token="DATABASE_HOST" value="${scarab.database.host}"/>
@@ -181,6 +186,13 @@
                 <exclude name="**/xalan*.jar"/>
                 <exclude name="**/${torque.zip}"/>
                 <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- the SQL data population scripts directory -->
+        <copy todir="${build.sql.scarab}" filtering="yes">
+            <fileset dir="${src.sql.dir}">
+                <include name="**/*"/>
             </fileset>
         </copy>
 
