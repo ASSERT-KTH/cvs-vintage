@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.20 2003/02/02 18:17:17 kataka Exp $
+// $Id: Init.java,v 1.21 2003/02/02 18:40:27 alexb Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -75,7 +75,7 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
-import ru.novosoft.uml.gen.mmm.MPackage;
+import ru.novosoft.uml.model_management.MPackage;
 import ru.novosoft.uml.model_management.MModel;
 
 /** Registers critics for use in Argo/UML.  This class is called at
