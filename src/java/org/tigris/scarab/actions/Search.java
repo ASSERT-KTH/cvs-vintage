@@ -65,6 +65,7 @@ import org.apache.turbine.services.intake.model.Field;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.Query;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -73,7 +74,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.23 2001/08/22 00:06:12 jmcnally Exp $
+    @version $Id: Search.java,v 1.24 2001/08/23 21:18:53 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -87,7 +88,7 @@ public class Search extends TemplateAction
 
         ScarabUser user = null;
 
-        context.put("queryString", data.getRequest().getQueryString());
+        context.put("queryString", getQueryString(data));
 
         if ( intake.isAllValid() ) 
         {
@@ -147,8 +148,9 @@ public class Search extends TemplateAction
          throws Exception
     {        
         String queryString = data.getParameters().getString("queryString");
-        context.put("queryString", queryString);
-        setTarget(data, "SaveQuery.vm");            
+        data.getParameters().remove("template");
+        data.getParameters().add("template",  "secure,SaveQuery.vm");
+        setTarget(data, "secure,SaveQuery.vm");            
     }
 
     /**
@@ -171,7 +173,7 @@ public class Search extends TemplateAction
     }
 
     /**
-        Redirects to ViewIssueLong.
+        Redirects to AssignIssue.
     */
     public void doReassignall( RunData data, TemplateContext context )
          throws Exception
@@ -179,9 +181,8 @@ public class Search extends TemplateAction
         setTarget(data, "AssignIssue.vm");            
     }
 
-
     /**
-        Gets selected id's and redirects to ViewIssueLong.
+        Gets selected id's and redirects to AssignIssue.
     */
     public void doReassignselected( RunData data, TemplateContext context )
          throws Exception
@@ -190,14 +191,49 @@ public class Search extends TemplateAction
         setTarget(data, "AssignIssue.vm");            
     }
 
-
     /**
-        Retrieves list of selected issue id's and stores it in memory. 
+        Edits the stored story.
+    */
+    public void doEditstoredquery( RunData data, TemplateContext context )
+         throws Exception
+    {        
+        String newValue = getQueryString(data);
+        ScarabRequestTool scarab = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        Query query = scarab.getQuery();
+        query.setValue(newValue);
+        query.save();
+    }
+
+    public String getQueryString( RunData data) throws Exception
+    {
+        String queryString = null;
+        StringBuffer buf = new StringBuffer();
+        Object[] keys =  data.getParameters().getKeys();
+        for (int i =0; i<keys.length; i++)
+        {
+            String key = keys[i].toString();
+            if (key.startsWith("attv") || key.startsWith("search") ||
+                key.startsWith("intake"))
+            {
+                String[] values = data.getParameters().getStrings(key);
+                for (int j=0; j<values.length; j++)
+                {
+                    buf.append("&").append(key);
+                    buf.append("=").append(values[j]);
+                }
+            }
+         }
+         queryString = buf.toString();
+         return queryString;
+    }
+        
+    /**
+        Retrieves list of selected issue id's and puts in the context.
     */
     private void getSelected( RunData data, TemplateContext context ) 
     {
         List newIssueIdList = new ArrayList();
-//        ScarabUser user = (ScarabUser)data.getUser();
         String key;
         Object[] keys =  data.getParameters().getKeys();
         for (int i =0; i<keys.length; i++)
@@ -214,7 +250,6 @@ public class Search extends TemplateAction
         }
     }
     
-
     /**
         This manages clicking the Cancel button
     */
@@ -222,6 +257,7 @@ public class Search extends TemplateAction
     {
         setTarget(data, "Start.vm");
     }
+
     /**
         calls doCancel()
     */
@@ -229,4 +265,6 @@ public class Search extends TemplateAction
     {
         doCancel(data, context);
     }
+
+
 }
