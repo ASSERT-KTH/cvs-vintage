@@ -6,7 +6,11 @@
   </properties>
 
   <body>
-    <release version="b19" date="in cvs">           
+    <release version="b19" date="in cvs">  
+      <action dev="epugh" type="add">
+        Revamped the site docs to be in xdoc format.  Integrated the existing docbook formatted admin guides.
+        Added a tasks.xml file to track the roadmap to 1.0.
+      </action>             
       <action dev="hdabbous" type="add">
         <a href="http://scarab.collab.net/scarab/issues/id/SCB1030">SCB1030</a> 
         Added a valve that updates the database with the user's preferred
