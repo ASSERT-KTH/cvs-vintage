@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -255,6 +255,11 @@ public class EARDeployer
                log.debug("Deployment Info: " + sub + ", isDirectory: " + sub.isDirectory);
             }
          }
+         EARDeployment earDeployment = new EARDeployment(di);
+         String name = earDeployment.getJMXName();
+         ObjectName objectName = new ObjectName(name);
+         di.deployedObject = objectName;
+         server.registerMBean(earDeployment, objectName);
       }
       catch (DeploymentException e)
       {
@@ -275,11 +280,6 @@ public class EARDeployer
       // Create an MBean for the EAR deployment
       try
       {
-         EARDeployment earDeployment = new EARDeployment(di);
-         String name = earDeployment.getJMXName();
-         ObjectName objectName = new ObjectName(name);
-         server.registerMBean(earDeployment, objectName);
-         di.deployedObject = objectName;
          serviceController.create(di.deployedObject);
       }
       catch (Exception e)

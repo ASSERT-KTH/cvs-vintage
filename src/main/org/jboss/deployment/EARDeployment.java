@@ -15,13 +15,19 @@ import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.system.ServiceMBeanSupport;
 
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
+import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
+
 /**
  * An EAR Deployment 
  *
  * @see EARDeployer
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian.Brock</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -42,7 +48,8 @@ public class EARDeployment
    private String name;
    private EARDeployer deployer;
    private DeploymentInfo deploymentInfo;
-   
+   private ConcurrentReaderHashMap metadata = new ConcurrentReaderHashMap();
+
    // Static --------------------------------------------------------
    
    public static String getJMXName(J2eeApplicationMetaData metaData, DeploymentInfo di)
@@ -71,5 +78,32 @@ public class EARDeployment
    {
       J2eeApplicationMetaData metaData = (J2eeApplicationMetaData) deploymentInfo.metaData;
       return getJMXName(metaData, deploymentInfo);
+   }
+
+   /**
+    * @jmx:managed-operation
+    *
+    */
+   public Object resolveMetaData(Object key)
+   {
+      return metadata.get(key);
+   }
+
+    /**
+     * @jmx:managed-operation
+     *
+     */
+   public void addMetaData(Object key, Object value)
+   {
+      metadata.put(key, value);
+   }
+
+    /**
+     * @jmx:managed-operation
+     *
+     */
+   public Map getMetaData()
+   {
+      return metadata;
    }
 }
