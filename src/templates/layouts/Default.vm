@@ -15,10 +15,10 @@
     <tr>
      <td width="100" id="leftcol">
       <div id="projnav">
-      <form action="$link.setPage("IssueView.vm")" method="get">	
-Ê Ê Ê Issue# <input type="text" name="id" size="8" maxlength="255" />	Ê
-Ê Ê Ê Ê Ê Ê Ê<input type="submit" name="Submit" value="Find" />	Ê
-Ê Ê Ê </form>
+      <form action="$link.setPage("IssueView.vm")" method="get">
+   Issue# <input type="text" name="id" size="8" maxlength="255" />
+      <input type="submit" name="Submit" value="Find" />
+   </form>
       </div>
      </td>
      <td id="bodycol">
