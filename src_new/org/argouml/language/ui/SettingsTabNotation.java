@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.12 2003/06/30 10:41:02 linus Exp $
+// $Id: SettingsTabNotation.java,v 1.13 2003/06/30 10:41:58 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -148,7 +148,7 @@ public class SettingsTabNotation extends SettingsTabHelper
      * @returns a boolean
      */
     private static boolean getBoolean(ConfigurationKey key) {
-	Configuration.getBoolean(key, false);
+	return Configuration.getBoolean(key, false);
     }
 
     public void handleSettingsTabSave() {
