@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.41 2002/07/03 21:22:08 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.42 2002/07/16 21:07:18 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1080,6 +1080,7 @@ public abstract class AbstractScarabModule
         rmo.setIssueTypeId(issueType.getIssueTypeId());
         rmo.setOptionId(option.getOptionId());
         rmo.setDisplayValue(option.getName());
+        rmo.setOrder(getLastAttributeOption(option.getAttribute(), issueType) + 1);
         return rmo;
     }
 
