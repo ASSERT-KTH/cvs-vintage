@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.23 2003/06/26 20:33:40 dlr Exp $
+ * @version $Id: ConfigureReport.java,v 1.24 2003/08/18 13:12:01 mpoeschl Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -667,9 +667,7 @@ public class ConfigureReport
         // remove old intake data
         Intake intake = getIntakeTool(context);
         intake.removeAll();
-        scarabR.setConfirmMessage(getLocalizationTool(context)
-            .get("HeadingAddedNowAddContent"));
-
+        scarabR.setConfirmMessage(l10n.get("HeadingAddedNowAddContent"));
     }        
 
     public void doAddgroup(RunData data, TemplateContext context)
