@@ -31,7 +31,7 @@ import org.jboss.tm.XidFactory;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.15 $
+ * @version   $Revision: 1.16 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -171,13 +171,28 @@ public class StdServerSession
     */
    public void run()
    {
-      if( log.isTraceEnabled() )
+      boolean trace = log.isTraceEnabled();
+      if (trace)
          log.trace("running...");
-      if (xaSession != null)
-         xaSession.run();
-      else
-         session.run();
+      try
+      {
+         if (xaSession != null)
+            xaSession.run();
+         else
+            session.run();
+      }
+      finally
+      {
+         if (trace)
+            log.trace("recycling...");
+        
+         recycle();
+
+         if (trace)
+            log.trace("finished run");
+      }
    }
+
    /**
     * Will get called from session for each message stuffed into it.
     *
@@ -334,8 +349,6 @@ public class StdServerSession
          {
             log.error("failed to commit/rollback", e);
          }
-         
-         StdServerSession.this.recycle();
       }
       if( trace )
          log.trace("onMessage done");
