@@ -134,10 +134,10 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
     }
 
     // ==================== callbacks from web server ====================
-    
+
     static Vector pool=new Vector();
     static boolean reuse=true;
-    
+
     /** Called from the web server for each request
      *  You can extend JNIConnectionHandler and implement a different
      *  JNIRequest/JNIResponse. Set the new handler on the JNIEndpoint,
@@ -151,7 +151,7 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
 	JNIResponseAdapter resA=null;
 
         try {
-	    
+
 	    if( reuse ) {
 		synchronized( this ) {
 		    if( pool.size()==0 ) {
@@ -171,7 +171,7 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
 		resA =new JNIResponseAdapter(this);
 		cm.initRequest( reqA , resA );
 	    }
-	    
+
             resA.setRequestAttr(s, l);
     	    reqA.readNextRequest(s, l);
 
@@ -193,6 +193,15 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
 	}
     }
 
+    public void shutdown()
+    {
+        try{
+            cm.log("Shutdown from JNI" );
+            cm.shutdown();
+        } catch (Throwable t){
+            cm.log("Exception while JNI shutdown",t);
+        }
+    }
     // -------------------- Find the native library --------------------
 
     private void initLibrary()

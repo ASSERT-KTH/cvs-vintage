@@ -197,13 +197,13 @@ public class JNIEndpoint {
         return 0;
     }
 
-    public void shutdown()
-    {
-        System.out.println("JNI In shutdown");
+    public void shutdown(){
+        handler.shutdown();
     }
 
     public static interface JniHandler {
 	public void processConnection( long s, long l );
+	public void shutdown();
     }
 }
 
