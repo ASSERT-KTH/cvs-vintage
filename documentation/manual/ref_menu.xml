@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_menu.xml,v 1.20 2003/10/21 20:28:59 mvw Exp $ -->
+<!-- $Id: ref_menu.xml,v 1.21 2003/10/21 20:37:45 mvw Exp $ -->
 
 <!--
 
@@ -816,11 +816,11 @@ Or should this be offered as a 3rd choice? -->
           concept of the ordering of artifacts on a diagram. 
           <!--visible in the "Package-centric" view in the explorer ??? -->. 
           This selects the item prior to the currently selected item in that
-          ordering.</para>
+          ordering.</para></listitem>
 
         <listitem><para><literal>Select Next</literal>. Similarly this
           selects the item following the currently selected item in that
-          ordering.</para>
+          ordering.</para></listitem>
 
         <listitem><para><literal>Invert Selection</literal>. This inverts the
           current selection. More exact: everything that was selected is de-selected
