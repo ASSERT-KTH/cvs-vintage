@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.348 2003/02/03 08:29:06 jon Exp $ -->
+<!-- $Id: changes.html,v 1.349 2003/02/03 13:25:31 thierrylach Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.348 2003/02/03 08:29:06 jon Exp $
+Last updated: $Id: changes.html,v 1.349 2003/02/03 13:25:31 thierrylach Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -25,6 +25,7 @@ Last updated: $Id: changes.html,v 1.348 2003/02/03 08:29:06 jon Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>Issue lookup is now case-insensitive for databases other than mySql. (TL)</li>
                 <li>Nightly <a href="http://checkstyle.sf.net/">Checkstyle</a> 
                     reports are now sent to the dev@scarab mailing list. 1.0 will not be released
                     until we hit zero errors. Please contribute patches to fix the errors.
@@ -1327,7 +1328,7 @@ Last updated: $Id: changes.html,v 1.348 2003/02/03 08:29:06 jon Exp $
                 <li>Can now save a query first without submitting it. (EWD)</li>
                 <li>Patch to set the DATABASE_DRIVER in the TR.props
                     based on what is in the default/build.properties file
-                    instead of being hard coded. Thanks to: Jean-François El Fouly
+                    instead of being hard coded. Thanks to: Jean-Fran?ois El Fouly
                     (JSS)</li>
                 <li>Fixed a problem with the creation of new Modules. The AttributeGroups
                     of the parent module were not copied. See also Bug Report 
