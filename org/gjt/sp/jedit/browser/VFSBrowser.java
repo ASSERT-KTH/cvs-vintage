@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.88 2003/05/23 21:19:51 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.89 2003/05/26 02:57:38 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -897,7 +897,18 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 					VFSBrowser.this.path = path;
 					if(!pathField.getText().equals(path))
 						pathField.setText(path);
-					pathField.addCurrentToHistory();
+					if(path.endsWith("/") ||
+						path.endsWith(File.separator))
+					{
+						// ensure consistent history;
+						// eg we don't want both
+						// foo/ and foo
+						path = path.substring(0,
+							path.length() - 1);
+					}
+
+					HistoryModel.getModel("vfs.browser.path")
+						.addItem(path);
 				}
 
 				boolean filterEnabled = filterCheckbox.isSelected();
@@ -1325,9 +1336,14 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 			popup = new JPopupMenu();
 			ActionHandler actionHandler = new ActionHandler();
 
-			popup.add(GUIUtilities.loadMenuItem("plugin-manager",false));
-			popup.add(GUIUtilities.loadMenuItem("plugin-options",false));
-			popup.addSeparator();
+			if(getMode() == BROWSER)
+			{
+				popup.add(GUIUtilities.loadMenuItem("plugin-manager",false));
+				popup.add(GUIUtilities.loadMenuItem("plugin-options",false));
+				popup.addSeparator();
+			}
+			else
+				/* we're in a modal dialog */;
 
 			ArrayList vec = new ArrayList();
 

@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.83 2003/05/23 21:19:52 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.84 2003/05/26 02:57:39 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -1261,7 +1261,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 					caretX + textArea.charWidth,y + height - 1);
 			}
 			else if(blockCaret)
-				gfx.fillRect(caretX,y,textArea.charWidth,height);
+				gfx.drawRect(caretX,y,textArea.charWidth - 1,height - 1);
 			else
 				gfx.drawLine(caretX,y,caretX,y + height - 1);
 		}

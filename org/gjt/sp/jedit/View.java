@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.86 2003/05/23 21:19:51 spestov Exp $
+ * @version $Id: View.java,v 1.87 2003/05/26 02:57:38 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -442,19 +442,30 @@ public class View extends JFrame implements EBComponent
 		switch(evt.getID())
 		{
 		case KeyEvent.KEY_TYPED:
-			// Handled in text area
-			if(keyEventInterceptor != null)
-				/* keyEventInterceptor.keyTyped(evt) */;
-			else if(calledFromTextArea
-				&& !inputHandler.isPrefixActive())
-				inputHandler.keyTyped(evt);
-			else if(inputHandler.isPrefixActive()
-				&& !getTextArea().hasFocus())
-				inputHandler.keyTyped(evt);
-			// but if the user pressed eg C+e n n in the
+			// this is terrible!
+			if(calledFromTextArea)
+			{
+				if(keyEventInterceptor != null)
+					keyEventInterceptor.keyTyped(evt);
+				else if(!inputHandler.isPrefixActive())
+					inputHandler.keyTyped(evt);
+			}
+			else
+			{
+				if(keyEventInterceptor == null
+					&& inputHandler.isPrefixActive())
+					inputHandler.keyTyped(evt);
+			}
+
+			// we might have been closed as a result of
+			// the above
+			if(isClosed())
+				return;
+
+			// if the user pressed eg C+e n n in the
 			// search bar we want focus to go back there
 			// after the prefix is done
-			else if(prefixFocusOwner != null)
+			if(prefixFocusOwner != null)
 			{
 				if(prefixFocusOwner.isShowing())
 					prefixFocusOwner.requestFocus();
@@ -467,6 +478,12 @@ public class View extends JFrame implements EBComponent
 			else
 			{
 				inputHandler.keyPressed(evt);
+
+				// we might have been closed as a result of
+				// the above
+				if(isClosed())
+					return;
+
 				// this is a weird hack.
 				// we don't want C+e a to insert 'a' in the
 				// search bar if the search bar has focus...

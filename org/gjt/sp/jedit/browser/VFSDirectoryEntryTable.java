@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.12 2003/05/14 02:25:10 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.13 2003/05/26 02:57:39 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -210,7 +210,7 @@ public class VFSDirectoryEntryTable extends JTable
 			if(!e.expanded || e.dirEntry.type == VFS.DirectoryEntry.FILE)
 				continue;
 
-			if(path.equals(e.dirEntry.path))
+			if(VFSBrowser.pathsEqual(path,e.dirEntry.path))
 			{
 				browserView.saveExpansionState();
 				browserView.loadDirectory(e,path);
