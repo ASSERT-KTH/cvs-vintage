@@ -387,6 +387,7 @@ public class Container implements Cloneable{
 	    if( bi.hasHook( PREDEFINED_I[i] )) {
 		if( interceptors[i]==null )
 		    interceptors[i]=new Vector();
+		if( dL > 0 ) debug( "Adding " + PREDEFINED_I[i] + " " +bi );
 		interceptors[i].addElement( bi );
 	    }
 	}
@@ -401,38 +402,44 @@ public class Container implements Cloneable{
 
     public static int getHookId( String hookName ) {
 	for( int i=0; i< PREDEFINED_I.length; i++ ) {
-	    if( PREDEFINED_I[i].equals(hookName)){
+	    if( PREDEFINED_I[i].equals(hookName))
 		return i;
-	    }
+	    
 	}
 	// get all interceptors for unknown hook names
 	return PREDEFINED_I.length-1;
     }
     
-    public BaseInterceptor[] getInterceptors( int type ) {
+    public BaseInterceptor[] getInterceptors( int type )
+    {
 	if( hooks[type] != null ) {
 	    return hooks[type];
 	}
+	if( dL>0 ) 
+	    debug("create hooks for " + type + " " + PREDEFINED_I[type]);
+	
 	Container globalIntContainer=getContextManager().getContainer();
 	Vector globals=globalIntContainer.getLocalInterceptors( type );
-	Vector locals=this.getLocalInterceptors( type );
+	Vector locals=null;
+	if( this != globalIntContainer ) {
+	    locals=this.getLocalInterceptors( type );
+	}
 
 	int gsize=globals.size();
-	int lsize=locals.size();
+	int lsize=(locals==null) ? 0 : locals.size();
 	hooks[type]=new BaseInterceptor[gsize+lsize];
 	
 	for ( int i = 0 ; i < gsize ; i++ ){
 	    hooks[type][i]=(BaseInterceptor)globals.elementAt(i);
+	    if( dL > 0 ) debug( "Add " + i + " " + hooks[type][i]);
 	}
 	for ( int i = 0 ; i < lsize  ; i++ ){
 	    hooks[type][gsize+i]=(BaseInterceptor)locals.elementAt(i);
+	    if( dL > 0 ) debug( "Add " + i + " " + hooks[type][i+gsize]);
 	}
 
 	return hooks[type];
     }
-
-
-
 
     
     // -------------------- Old code handling interceptors 
@@ -567,4 +574,12 @@ public class Container implements Cloneable{
         }
 	return rCachedContextInterceptors;
     }
+
+    // debug
+    public static final int dL=0;
+    private void debug( String s ) {
+	System.out.println("Container: " + s );
+    }
+
+
 }
