@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.15 2002/08/08 23:56:16 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.16 2002/08/13 23:53:21 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -156,7 +156,6 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo.delete(user);
                    rmos.remove(rmo);
-                   ScarabCache.clear();
                }
                catch (Exception e)
                {
@@ -176,6 +175,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
+               ScarabCache.clear();
             }
         }        
     }

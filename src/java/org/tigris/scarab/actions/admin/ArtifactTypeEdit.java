@@ -85,7 +85,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.28 2002/08/08 23:56:16 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.29 2002/08/13 23:53:21 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -379,6 +379,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                    scarabR.setAlertMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
                data.setMessage(DEFAULT_MSG);  
+               ScarabCache.clear();
            }
         }        
     }
