@@ -175,12 +175,21 @@ public class JspServlet extends HttpServlet {
 		}
 
             } catch (FileNotFoundException ex) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, 
-                                   Constants.getString("jsp.error.file.not.found", 
-                                                       new Object[] {
-                                                           ex.getMessage()
-                                                       }));
-                
+		try {
+		    response.sendError(HttpServletResponse.SC_NOT_FOUND, 
+				       Constants.getString
+				       ("jsp.error.file.not.found", 
+					new Object[] {
+					    ex.getMessage()
+					}));
+		} catch (IllegalStateException ise) {
+		    Constants.jasperLog.log(Constants.getString
+					    ("jsp.error.file.not.found",
+					     new Object[] {
+						 ex.getMessage()
+					     }), ex,
+					    Logger.ERROR);
+		}
                 return;
             }
 	}
@@ -319,8 +328,13 @@ public class JspServlet extends HttpServlet {
 	        String message = t.getMessage ();
 		if (message == null)
 		    message = "No detailed message";
-                response.sendError(HttpServletResponse.
-					SC_INTERNAL_SERVER_ERROR, message);
+		try {
+		    response.sendError(HttpServletResponse.
+				       SC_INTERNAL_SERVER_ERROR,
+				       message);
+		} catch (IllegalStateException ise) {
+		    Constants.jasperLog.log(message, t, Logger.ERROR);
+		}
             } catch (IOException ex) {
             }
 	}
