@@ -20,7 +20,7 @@
  *
  * Initial developer: Florent BENOIT
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.1 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.2 2005/02/08 09:45:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -139,11 +139,11 @@ public class JacORBCosNaming implements NameService {
 
                 if (isSsl) {
                     jvmProperties += Integer.toString(port);
-                    jvmProperties += " -DORBInitRef.NameService=corbaloc:ssliiop:localhost:" + Integer.toString(port + 1);
+                    jvmProperties += " -DORBInitRef.NameService=corbaloc:iiop:localhost" + Integer.toString(port + 1) + "/NameService";
                     jvmProperties += " -DOASSLPort=" + Integer.toString(port + 1) + " ";
                 } else {
                     jvmProperties += Integer.toString(port);
-                    jvmProperties += " -DORBInitRef.NameService=corbaloc:iiop:localhost:" + Integer.toString(port) + " ";
+                    jvmProperties += " -DORBInitRef.NameService=corbaloc:iiop:localhost:" + Integer.toString(port) + "/NameService ";
                 }
 
                 if (TraceCarol.isDebugJndiCarol()) {
@@ -186,7 +186,7 @@ public class JacORBCosNaming implements NameService {
                         try {
                             JacORBCosNaming.this.stop();
                         } catch (Exception e) {
-                            TraceCarol.error("OpenORBCosNaming ShutdownHook problem", e);
+                            TraceCarol.error("JacORBCosNaming ShutdownHook problem", e);
                         }
                     }
                 });
