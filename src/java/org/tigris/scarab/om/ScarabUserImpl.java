@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.74 2002/07/10 00:58:21 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.75 2002/07/12 00:53:23 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -405,12 +405,21 @@ public class ScarabUserImpl
     }
     
     /**
-     * Get modules that user can move or copy an issue to.
+     * Get modules that user can copy an issue to.
      */
     public List getCopyToModules(Module currentModule) throws Exception
     {        
          return internalUser.getCopyToModules(currentModule);
     }
+
+    /**
+     * Get modules that user can move an issue to.
+     */
+    public List getMoveToModules(Module currentModule) throws Exception
+    {        
+         return internalUser.getMoveToModules(currentModule);
+    }
+   
    
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[], boolean)
