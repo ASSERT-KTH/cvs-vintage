@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.41 2002/09/08 21:03:11 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.42 2002/09/13 19:53:40 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -177,7 +177,7 @@ public class TokenMarker
 main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 		{
 			//{{{ check if we have to stop parsing
-			if(terminateChar >= 0 && pos >= terminateChar
+			if(terminateChar >= 0 && pos - line.offset >= terminateChar
 				&& !terminated)
 			{
 				terminated = true;
