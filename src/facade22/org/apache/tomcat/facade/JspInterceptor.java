@@ -275,20 +275,45 @@ public class JspInterceptor extends BaseInterceptor {
 		ctx.addClassPath( url );
 		if( debug > 9 ) log( "Added to classpath: " + url );
 	    } catch( MalformedURLException ex ) {
+                ex.printStackTrace();
 	    }
-	} else if( !ctx.isTrusted() ) {
+	}
+
+        if( !ctx.isTrusted() ) {
             try {
-                File f=new File( cm.getInstallDir(), "lib/container/jasper.jar" );
+                File f=new File( cm.getInstallDir(),
+                                 "lib/container/jasper.jar" );
                 URL url=new URL( "file", null,
-                        f.getAbsolutePath().replace('\\','/') );
-                ctx.addClassPath( url );
-                if( debug > 9 ) log( "Added to classpath: " + url );
-                url=new URL( "file", "" ,
-                        System.getProperty( "java.home" ) + "/../lib/tools.jar");
+                                 f.getAbsolutePath().replace('\\','/') );
                 ctx.addClassPath( url );
                 if( debug > 9 ) log( "Added to classpath: " + url );
 	    } catch( MalformedURLException ex ) {
-	    }
+                ex.printStackTrace();
+            }
+        }
+
+        // Add tools.jar in any case
+        try {
+            File f=new File( System.getProperty( "java.home" ) +
+                             "/../lib/tools.jar");
+            if( ! f.exists() ) {
+                // On some systems java.home gets set to the root of jdk.
+                // That's a bug, but we can work around and be nice.
+                f=new File( System.getProperty( "java.home" ) +
+                                 "/lib/tools.jar");
+                if( ! f.exists() ) {
+                    log("Tools.jar not found " +
+                        System.getProperty( "java.home" ));
+                } else {
+                    log("Detected wrong java.home value " +
+                        System.getProperty( "java.home" ));
+                }
+            }
+            URL url=new URL( "file", "" , f.getAbsolutePath() );
+            ctx.addClassPath( url );
+            if( debug > 9 ) log( "Added to classpath: " + url );
+        } catch( MalformedURLException ex ) {
+            ex.printStackTrace();
         }
     }
 
@@ -335,6 +360,14 @@ public class JspInterceptor extends BaseInterceptor {
 	} else {
 	    ctx.addServlet( new JspPrecompileH());
 	}
+
+        //Extra test/warnings for tools.jar
+        try {
+            ctx.getClassLoader().loadClass( "sun.tools.javac.Main" );
+            if( debug>0) log( "Found javac in context init");
+        } catch( ClassNotFoundException ex ) {
+            if( debug>0) log( "javac not found in context init");
+        }
     }
 
     /** Set the HttpJspBase classloader before init,
@@ -652,11 +685,31 @@ final class JasperLiaison {
 		log.log( "Update class Name " + mangler.getServletClassName());
 	    handler.setServletClassName( mangler.getServletClassName() );
 
-	    // May be called from include, we need to set the context class loader
+	    // May be called from include, we need to set the context class
+            // loader
 	    // for jaxp1.1 to work using the container class loader
-	    ClassLoader savedContextCL= containerCCL( ctx.getContextManager()
-						      .getContainerLoader() );
-	    
+            //Extra test/warnings for tools.jar
+
+            ClassLoader savedContextCL= containerCCL( ctx.getContextManager()
+                                                  .getContainerLoader() );
+
+            try {
+                ctx.getClassLoader().loadClass( "sun.tools.javac.Main" );
+                if(debug>0) log.log( "Found javac using context loader");
+            } catch( ClassNotFoundException ex ) {
+                if(debug>0) log.log( "javac not found using context loader");
+            }
+
+            try {
+                ctx.getContextManager().getContainerLoader().
+                    loadClass( "sun.tools.javac.Main" );
+                if( debug > 0 )
+                    log.log( "Found javac using container loader");
+            } catch( ClassNotFoundException ex ) {
+                if( debug > 0 )
+                    log.log( "javac not found using container loader");
+            }
+
 	    try {
 		Options options=new JasperOptionsImpl(args); 
 		JspCompilationContext ctxt=createCompilationContext(req,
@@ -665,7 +718,7 @@ final class JasperLiaison {
 								    mangler);
 		jsp2java( mangler, ctxt );
 
-		javac( options, ctxt, mangler );
+		javac( req, options, ctxt, mangler );
 	    
 		if(debug>0)log.log( "Generated " +
 				    mangler.getClassFileName() );
@@ -734,7 +787,8 @@ final class JasperLiaison {
     String javaEncoding = "UTF8";           // perhaps debatable?
     static String sep = System.getProperty("path.separator");
 
-    private void prepareCompiler( JavaCompiler javac,
+    private void prepareCompiler( Request req,
+                                  JavaCompiler javac,
 				  Options options, 
 				  JspCompilationContext ctxt )
 	throws JasperException
@@ -763,6 +817,11 @@ final class JasperLiaison {
         javac.setClasspath( cp );
 	javac.setOutputDir(ctxt.getOutputDir());
 
+        if( javac instanceof SunJavaCompiler ) {
+            ClassLoader cl=req.getContext().getClassLoader();
+            ((SunJavaCompiler)javac).setLoader( cl );
+        }
+        
 	if( debug>5) log.log( "ClassPath " + cp);
     }
 
@@ -773,7 +832,7 @@ final class JasperLiaison {
 	with JavaCompiler - it's a general purpose code, no need to
 	keep it part of jasper
     */
-    void javac(Options options, JspCompilationContext ctxt,
+    void javac(Request req, Options options, JspCompilationContext ctxt,
 	       Mangler mangler)
 	throws JasperException
     {
@@ -793,7 +852,7 @@ final class JasperLiaison {
 		    forName("org.apache.jasper.compiler.JikesJavaCompiler");
 		JavaCompiler javaC=createJavaCompiler( jspCompilerPlugin );
 		
-		prepareCompiler( javaC, options, ctxt );
+		prepareCompiler( req, javaC, options, ctxt );
 		javaC.setMsgOutput(out);
 		status = javaC.compile(javaFileName);
 	    } catch( Exception ex ) {	
@@ -811,10 +870,10 @@ final class JasperLiaison {
 	}
 
 	JavaCompiler javaC=createJavaCompiler( jspCompilerPlugin );
-	prepareCompiler( javaC, options, ctxt );
+	prepareCompiler( req, javaC, options, ctxt );
 	ByteArrayOutputStream out = new ByteArrayOutputStream (256);
 	javaC.setMsgOutput(out);
-	
+
 	status = javaC.compile(javaFileName);
 
         if (!ctxt.keepGenerated()) {
