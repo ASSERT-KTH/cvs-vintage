@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.20 2001/10/05 16:26:33 slaboure Exp $
+ * $Id: AbstractVerifier.java,v 1.21 2001/10/05 18:22:00 starksm Exp $
  */
 
 // standard imports
@@ -62,7 +62,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -641,16 +641,19 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         Class[] a = source.getExceptionTypes();
         Class[] b = target.getExceptionTypes();
 
-        for (int i = 0; i < a.length; ++i) {
+        for (int i = 0; i < a.length; ++i)
+        {
 
             boolean found = false;
 
             for (int j = 0; j < b.length; ++j)
-                //if (a[i] == b[j]) {
-                if (b[j].isAssignableFrom (a[i])
+            {
+                if (b[j].isAssignableFrom (a[i]) )
+                {
                     found = true;
                     break;
                 }
+            }
 
             if (!found)
                 return false;
