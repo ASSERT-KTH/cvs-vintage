@@ -6,9 +6,10 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.10 2004/05/10 16:22:26 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.11 2004/08/19 18:53:00 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.webservice.metadata.ServiceRefMetaData;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.net.URLClassLoader;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class ClientMetaData
 {

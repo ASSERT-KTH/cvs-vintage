@@ -4,9 +4,9 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.metadata;
+package org.jboss.webservice.metadata;
 
-// $Id: InitParamMetaData.java,v 1.2 2004/05/07 14:58:49 tdiesler Exp $
+// $Id: InitParamMetaData.java,v 1.1 2004/08/19 18:53:04 tdiesler Exp $
 
 import java.io.Serializable;
 

@@ -4,11 +4,13 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.metadata;
+package org.jboss.webservice.metadata;
 
-// $Id: PortComponentRefMetaData.java,v 1.5 2004/06/16 18:49:29 starksm Exp $
+// $Id: PortComponentRefMetaData.java,v 1.1 2004/08/19 18:53:04 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.webservice.metadata.ServiceRefMetaData;
+import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
 import javax.xml.rpc.JAXRPCException;
@@ -19,7 +21,7 @@ import java.util.Iterator;
 /** The metdata data from service-ref/port-component-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.1 $
  */
 public class PortComponentRefMetaData implements Serializable
 {

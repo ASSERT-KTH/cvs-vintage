@@ -13,6 +13,7 @@ import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NobodyPrincipal;
 import org.jboss.security.SimplePrincipal;
+import org.jboss.webservice.metadata.ServiceRefMetaData;
 import org.w3c.dom.Element;
 
 import java.lang.reflect.Method;
@@ -31,7 +32,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.68 $
+ * @version $Revision: 1.69 $
  */
 public abstract class BeanMetaData
         extends MetaData

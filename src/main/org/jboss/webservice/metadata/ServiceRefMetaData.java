@@ -4,9 +4,9 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.metadata;
+package org.jboss.webservice.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.19 2004/08/03 10:15:05 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.1 2004/08/19 18:53:04 tdiesler Exp $
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -25,6 +25,8 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.webservice.WSDLDefinitionFactory;
 import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
+import org.jboss.metadata.MetaData;
+import org.jboss.xml.QNameBuilder;
 
 import org.w3c.dom.Element;
 
@@ -32,7 +34,7 @@ import org.w3c.dom.Element;
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.1 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -123,9 +125,9 @@ public class ServiceRefMetaData implements Serializable
       return array;
    }
 
-   public ServiceRefHandlerMetaData[] getHandlers()
+   public HandlerMetaData[] getHandlers()
    {
-      ServiceRefHandlerMetaData[] array = new ServiceRefHandlerMetaData[handlers.size()];
+      HandlerMetaData[] array = new HandlerMetaData[handlers.size()];
       handlers.toArray(array);
       return array;
    }
@@ -214,7 +216,7 @@ public class ServiceRefMetaData implements Serializable
       while (iterator.hasNext())
       {
          Element handlerElement = (Element) iterator.next();
-         ServiceRefHandlerMetaData handlerMetaData = new ServiceRefHandlerMetaData();
+         HandlerMetaData handlerMetaData = new HandlerMetaData();
          handlerMetaData.importStandardXml(handlerElement);
          handlers.add(handlerMetaData);
       }

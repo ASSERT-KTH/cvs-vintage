@@ -20,6 +20,7 @@ import org.jboss.logging.Logger;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
 import org.jboss.mx.util.ObjectNameFactory;
+import org.jboss.webservice.metadata.ServiceRefMetaData;
 import org.w3c.dom.Element;
 
 /** A representation of the web.xml and jboss-web.xml deployment
@@ -30,7 +31,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class WebMetaData extends MetaData
 {

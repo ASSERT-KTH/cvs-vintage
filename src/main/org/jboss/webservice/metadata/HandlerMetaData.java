@@ -4,11 +4,15 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.metadata;
+package org.jboss.webservice.metadata;
 
-// $Id: ServiceRefHandlerMetaData.java,v 1.2 2004/05/07 14:58:49 tdiesler Exp $
+// $Id: HandlerMetaData.java,v 1.1 2004/08/19 18:53:04 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.webservice.metadata.InitParamMetaData;
+import org.jboss.metadata.MetaData;
+import org.jboss.xml.QNameBuilder;
+import org.jboss.xml.QNameBuilder;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
@@ -16,12 +20,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.Serializable;
 
-/** The metdata data from a service-ref/handler element
+/** The unified metdata data for a handler element
  * 
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  */
-public class ServiceRefHandlerMetaData implements Serializable
+public class HandlerMetaData implements Serializable
 {
    // The required <handler-name> element
    private String handlerName;
@@ -33,17 +37,32 @@ public class ServiceRefHandlerMetaData implements Serializable
    private ArrayList soapHeaders = new ArrayList();
    // The optional <soap-role> elements
    private ArrayList soapRoles = new ArrayList();
-   // The optional <port-name> elements
+   // The optional <port-name> elements, these only apply to webserve clients
    private ArrayList portNames = new ArrayList();
+
+   public void setHandlerName(String value)
+   {
+      this.handlerName = value;
+   }
 
    public String getHandlerName()
    {
       return handlerName;
    }
 
+   public void setHandlerClass(String handlerClass)
+   {
+      this.handlerClass = handlerClass;
+   }
+
    public String getHandlerClass()
    {
       return handlerClass;
+   }
+
+   public void addInitParam(InitParamMetaData param)
+   {
+      initParams.add(param);
    }
 
    public InitParamMetaData[] getInitParams()
@@ -53,11 +72,21 @@ public class ServiceRefHandlerMetaData implements Serializable
       return array;
    }
 
+   public void addSoapHeader(QName qName)
+   {
+      soapHeaders.add(qName);
+   }
+
    public QName[] getSoapHeaders()
    {
       QName[] array = new QName[soapHeaders.size()];
       soapHeaders.toArray(array);
       return array;
+   }
+
+   public void addSoapRole(String value)
+   {
+      soapRoles.add(value);
    }
 
    public String[] getSoapRoles()
