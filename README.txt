@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.62 2003/09/18 17:12:15 dlr Exp $
+$Id: README.txt,v 1.63 2004/01/26 22:06:53 pledbrook Exp $
 
 Welcome to Scarab!
 
@@ -25,8 +25,8 @@ Make sure that you download the SDK and not the JRE!
 Note: On some operating systems (OS X, for instance), the SDK is
 included.
 
-Ant 1.4 or higher        --> <http://jakarta.apache.org/ant/>
-The version of torque used with scarab must be compiled with Ant 1.4.x
+Ant 1.5 or higher        --> <http://jakarta.apache.org/ant/>
+The version of torque used with scarab must be compiled with Ant 1.5.x
 
 Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
                              (Note: Tomcat 4.1.x is included with Scarab.)
