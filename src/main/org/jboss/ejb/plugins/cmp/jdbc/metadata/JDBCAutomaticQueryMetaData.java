@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  *      
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
 	/**
@@ -37,6 +37,10 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
 		return method;
 	}
 	
+	public boolean isResultTypeMappingLocal() {
+		return false;
+	}
+
 	/**
 	 * Compares this JDBCAutomaticQueryMetaData against the specified object. Returns
 	 * true if the objects are the same. Two JDBCAutomaticQueryMetaData are the same 

@@ -14,11 +14,12 @@ import org.w3c.dom.Element;
  * Imutable class which contains information about an EJB QL query. 
  *   
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
    private final Method method;
 	private final String ejbQl;
+	private final boolean resultTypeMappingLocal;
 	
 	/**
 	 * Constructs a JDBCQlQueryMetaData which is defined by the queryMetaData
@@ -29,6 +30,7 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
 	public JDBCQlQueryMetaData(QueryMetaData queryMetaData, Method method) {
       this.method = method;
 		ejbQl = queryMetaData.getEjbQl();
+		resultTypeMappingLocal = (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
 	}
 
 	/**
@@ -40,6 +42,7 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
 	public JDBCQlQueryMetaData(JDBCQlQueryMetaData jdbcQueryMetaData, Element queryElement, Method method) {
       this.method = method;
 		ejbQl = jdbcQueryMetaData.getEjbQl();
+		resultTypeMappingLocal = jdbcQueryMetaData.resultTypeMappingLocal;
 	}
 	
 	public Method getMethod() {
@@ -52,6 +55,10 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
 	 */
 	public String getEjbQl() {
 		return ejbQl;
+	}
+	
+	public boolean isResultTypeMappingLocal() {
+		return resultTypeMappingLocal;
 	}
 	
 	/**

@@ -8,16 +8,17 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.plugins.cmp.ejbql.Assembly;
 import org.jboss.ejb.plugins.cmp.ejbql.Parser;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.ejbql.EJBQLParser;
 import org.jboss.ejb.plugins.cmp.jdbc.ejbql.SQLTarget;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
 /**
  * JDBCDefinedFinderCommand finds entities based on an xml sql specification.
@@ -26,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 {
@@ -64,6 +65,19 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 		// set the sql
 		setSQL(target.toSQL());
 		
+		// select bridge object
+		Object selectBridgeObject = target.getSelectBridgeObject();
+		if(selectBridgeObject instanceof JDBCEntityBridge) {
+			selectEntity = (JDBCEntityBridge)selectBridgeObject;
+			selectCMPField = null;
+		} else if(selectBridgeObject instanceof JDBCCMPFieldBridge) {
+			selectCMPField = (JDBCCMPFieldBridge)selectBridgeObject;
+			selectEntity = null;
+		} else {
+			throw new IllegalStateException("Select bridge object is instance of unknown type: " +
+					"selectBridgeObject=" + selectBridgeObject);
+		}
+		
 		// get the parameter order
 		List l  = target.getInputParameters();
 		parameterArray = new int[l.size()];
@@ -83,5 +97,5 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 			int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
 			JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
 		}
-	}	
+	}
 }

@@ -41,7 +41,7 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	protected JDBCStoreManager manager;
@@ -190,13 +190,14 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 
 	public int loadInstanceResults(ResultSet rs, int parameterIndex, EntityEnterpriseContext ctx) {
 		try {
-			Object value = null; //will be set in loop below
-			Class[] javaTypes = getJDBCType().getJavaTypes();
-			for(int i=0; i<javaTypes.length; i++) {
-				Object columnValue = JDBCUtil.getResult(log, rs, parameterIndex++, javaTypes[i]);
-				value = getJDBCType().setColumnValue(i, value, columnValue);
-			}
-			setInstanceValue(ctx, value);
+			// value of this field,  will be filled in below
+			Object[] argumentRef = new Object[1];
+			
+			// load the cmp field value from the result set
+			parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
+
+			// set the value into the context
+			setInstanceValue(ctx, argumentRef[0]);
 			return parameterIndex;
 		} catch(EJBException e) {
 			// to avoid double wrap of EJBExceptions
@@ -209,28 +210,40 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	}		
 	
 	public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException {
+		// value of this field,  will be filled in below
+		Object[] argumentRef = new Object[1];
+		
+		// load the cmp field value from the result set
+		parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
+					
+		// set the value of this field into the pk
+		pkRef[0] = setPrimaryKeyValue(pkRef[0], argumentRef[0]);
+		
+		// retrun the updated parameterIndex
+		return parameterIndex;
+	}		
+
+	public int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef) throws IllegalArgumentException {
 		try {
 			// value of this field,  will be filled in below
-			Object value = null;
+			// set the value of this field into the pk
+			argumentRef[0] = null;
 			
 			// update the value from the result set
 			Class[] javaTypes = getJDBCType().getJavaTypes();
 			for(int i=0; i<javaTypes.length; i++) {
 				Object columnValue = JDBCUtil.getResult(log, rs, parameterIndex++, javaTypes[i]);
-				value = getJDBCType().setColumnValue(i, value, columnValue);
+				argumentRef[0] = getJDBCType().setColumnValue(i, argumentRef[0], columnValue);
 			}
-			
-			// set the value of this field into the pk
-			pkRef[0] = setPrimaryKeyValue(pkRef[0], value);
-		   
+					   
 			// retrun the updated parameterIndex
 			return parameterIndex;
 		} catch(SQLException e) {
 			// Non recoverable internal exception
-			throw new EJBException("Internal error getting results for primary key field member " + getFieldName() + ": " + e);
+			throw new EJBException("Internal error getting results for field member " + getFieldName() + ": " + e);
 		}
-	}		
-
+	}
+	
 	protected final boolean changed(Object current, Object old) {
 		return	
 			(current == null && old != null) ||   // TRUE if I am null and I wasn't before   

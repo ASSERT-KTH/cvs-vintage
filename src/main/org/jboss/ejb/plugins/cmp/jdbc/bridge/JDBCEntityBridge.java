@@ -33,6 +33,8 @@ import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 
 import org.jboss.proxy.Proxies;
@@ -51,7 +53,7 @@ import org.jboss.logging.Log;
  *		One per cmp entity bean type. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -65,6 +67,7 @@ public class JDBCEntityBridge implements EntityBridge {
 	protected Map cmrFieldsByName;
 	
 	protected JDBCSelectorBridge[] selectors;
+	protected Map selectorsByMethod;
 	
 	protected JDBCCMPFieldBridge[] eagerLoadFields;
 	protected ArrayList lazyLoadGroups;
@@ -177,8 +180,22 @@ public class JDBCEntityBridge implements EntityBridge {
 		}
 	}
 
-	protected void loadSelectors(JDBCEntityMetaData metadata) {
-		selectors = new JDBCSelectorBridge[0];
+	protected void loadSelectors(JDBCEntityMetaData metadata) throws DeploymentException {
+		// Don't know if this is the best way to do this.  Another way would be to 
+		// deligate seletors to the JDBCFindEntitiesCommand, but this is easier now.
+		
+		selectorsByMethod = new HashMap(metadata.getQueries().size());
+		Iterator definedFinders = manager.getMetaData().getQueries().iterator();
+		while(definedFinders.hasNext()) {
+			JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
+
+			if(q instanceof JDBCQlQueryMetaData) {
+				selectorsByMethod.put(q.getMethod(), new JDBCSelectorBridge(manager, (JDBCQlQueryMetaData)q));
+			}
+		}
+
+		selectors = new JDBCSelectorBridge[selectorsByMethod.values().size()];
+		selectors = (JDBCSelectorBridge[])selectorsByMethod.values().toArray(selectors);
 	}
 	
 	public String getEntityName() {

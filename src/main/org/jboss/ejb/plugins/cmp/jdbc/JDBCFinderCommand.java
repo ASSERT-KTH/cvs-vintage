@@ -20,8 +20,11 @@ import java.sql.ResultSet;
 
 import javax.ejb.FinderException;
 
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.util.FinderResults;
 
@@ -34,20 +37,23 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
    implements FindEntitiesCommand
 {
 	protected JDBCQueryMetaData queryMetaData;
+	protected JDBCEntityBridge selectEntity;
+	protected JDBCCMPFieldBridge selectCMPField;
 	
 	// Constructors --------------------------------------------------
 	
 	public JDBCFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) {
 		super(manager, q.getMethod().getName());
-		
+
 		queryMetaData = q;
+		selectEntity = entity;
 	}
 	
 	public JDBCQueryMetaData getQueryMetaData() {
@@ -68,7 +74,9 @@ public abstract class JDBCFinderCommand
 			// Execute the find... will return a collection of pks
 			Collection keys = (Collection)jdbcExecute(args);
 
-			// creat the finder results
+//
+//	The commented out code is for the old readahead code
+//			// creat the finder results
 //			if(finderMetaData.hasReadAhead()) {
 //				result = new FinderResults(keys, getWhereClause(args), this, args);
 //			} else {
@@ -82,17 +90,40 @@ public abstract class JDBCFinderCommand
 	}
 
    // JDBCQueryCommand overrides ------------------------------------
-
 	protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception {
 		
 		Collection result = new ArrayList();	
       try {
-			Object[] pkRef = new Object[1];
-			while(rs.next()) {
-				pkRef[0] = null;
-				entity.loadPrimaryKeyResults(rs, 1, pkRef);
-				result.add(pkRef[0]);
-			}
+			// are we selecting an entity (or just a field)
+			if(selectEntity != null) {
+				
+				// load the pks into the result list
+				Object[] pkRef = new Object[1];
+				while(rs.next()) {
+					pkRef[0] = null;
+					selectEntity.loadPrimaryKeyResults(rs, 1, pkRef);
+					result.add(pkRef[0]);
+				}
+				
+				// is this an ejb select command
+				if(queryMetaData.getMethod().getName().startsWith("ejbSelect")) {
+					// convert the list of pks into real ejbs
+					EntityContainer container = manager.getContainer();
+					if(queryMetaData.isResultTypeMappingLocal()) {
+						result = container.getLocalContainerInvoker().getEntityLocalCollection(result);
+					} else {
+						result = container.getContainerInvoker().getEntityCollection(result);
+					}
+				}
+			} else {
+				// this is a select for field
+				Object[] valueRef = new Object[1];
+				while(rs.next()) {
+					valueRef[0] = null;
+					selectCMPField.loadArgumentResults(rs, 1, valueRef);
+					result.add(valueRef[0]);
+				}
+			}	
 		} catch(Exception e) {
 			throw new ServerException("Finder failed: ", e);
 		}

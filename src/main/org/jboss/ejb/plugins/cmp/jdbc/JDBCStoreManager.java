@@ -44,7 +44,7 @@ import org.jboss.proxy.Proxy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */                            
 public class JDBCStoreManager extends CMPStoreManager {
 	protected DataSource dataSource;
@@ -132,7 +132,7 @@ public class JDBCStoreManager extends CMPStoreManager {
 		Class beanClass = container.getBeanClass();
 		
 		Class[] classes = new Class[] { beanClass };
-		EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(entityBridge, beanClass);           
+		EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(container, entityBridge, beanClass);           
 		ClassLoader classLoader = beanClass.getClassLoader();
 
 		return Proxy.newProxyInstance(classLoader, classes, handler);

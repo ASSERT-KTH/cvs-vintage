@@ -33,11 +33,17 @@ public class SQLTarget implements DeepCloneable {
 	private final List inputParameters = new ArrayList();
 	
 	private boolean isSelectDistinct;
-	private String selectIdentifier;
-	private List selectPath;
+	private String selectPath;
 	
 	private String whereClause = "";
 	
+	// cached generated sql
+	private String sql;
+	
+	/**
+	 * Constructs an a sql target for an EJB-QL query over the specified application.
+	 * @param application the application over which this query is defined
+	 */
 	public SQLTarget(Application application) {
 		this.application = application;
 		
@@ -58,6 +64,10 @@ public class SQLTarget implements DeepCloneable {
 		}
 	}
 
+	/**
+	 * Constructs a copy of the supplied sql target.
+	 * @param target the SQLTarget to be coppied
+	 */
 	public SQLTarget(SQLTarget target) {
 		application = target.application;
 		pathElements.putAll(target.pathElements);
@@ -65,18 +75,82 @@ public class SQLTarget implements DeepCloneable {
 		inputParameters.addAll(target.inputParameters);
 
 		isSelectDistinct = target.isSelectDistinct;
-		selectIdentifier = target.selectIdentifier;
 		selectPath = target.selectPath;	
 		
 		whereClause = target.whereClause;
+		
+		sql = target.sql;
 	}
 
+	/**
+	 * Set this target to generate a sql statement that returns distinct result set.
+	 * This means that the sql will begin with SELECT DISTINCT.
+	 * @param isSelectDisctinct should this target generate a SELECT DISTINCT query
+	 */
 	public void setSelectDistinct(boolean isSelectDistinct) {
 		this.isSelectDistinct = isSelectDistinct;
 	}
 
-	public void setSelectPath(List selectPath) {
-		this.selectPath = selectPath;
+	/**
+	 * Set the path to the element to select. The path is a list of the string names.
+	 * @param selectPath list of strings that make up the path to select
+	 */
+	public void setSelectPath(List selectPathList) {
+		//this.selectPath = selectPath;
+		if(selectPathList.isEmpty()) {
+			throw new IllegalArgumentException("SelectPathList is empty");
+		}
+
+		// is this a select object(o) style query?
+		if(selectPathList.size() == 1) {
+			String path = (String)selectPathList.get(0);
+			AbstractSchema schema = (AbstractSchema)pathElements.get(path);
+			if(schema == null) {
+				throw new IllegalStateException("Unknown identifier: " + path);
+			}
+			selectPath = path;
+		} else {
+			// select a.b.c.d style query				
+			String path = (String)selectPathList.get(0);
+			for(int i=1; i < selectPathList.size(); i++) {
+				// are we done yet?
+				if(i<selectPathList.size()-1) {
+					// nope, assure that the next cmr field exists and update path
+					path = getSingleValuedCMRField(path, (String)selectPathList.get(i));
+				} else {
+					// get the final cmp field, if possible, otherwise it is a single valued cmr field
+					String cmpFieldPath = getCMPField(path, (String)selectPathList.get(i)); 
+					if(cmpFieldPath != null) {
+						path = cmpFieldPath;
+					} else {
+						// create the single valued cmr field object
+						String cmrFieldPath = this.getSingleValuedCMRField(path, (String)selectPathList.get(i));
+						if(cmrFieldPath == null) {
+							throw new IllegalStateException("Unknown path: " + path + "." + selectPathList.get(i));
+						}
+						path = cmrFieldPath;
+					}
+				}
+			}
+			selectPath = path;
+		}
+	}
+	
+	public String getSelectPath() {
+		return selectPath;
+	}
+	
+	public Object getSelectBridgeObject() {
+		Object selectPathElement = pathElements.get(selectPath);
+		if(selectPathElement instanceof PathElement) {
+			PathElement pathElement = (PathElement)selectPathElement;
+			return pathElement.getEntityBridge();
+		} else if(selectPathElement instanceof CMPField) {
+			CMPField cmpField = (CMPField)selectPathElement;
+			return cmpField.getCMPFieldBridge();
+		}
+		throw new IllegalStateException("Select path element is instance of unknown type: " +
+				"selectPath=" + selectPath + " selectPathElement=" + selectPathElement);
 	}
 	
 	public void setWhereClause(String whereClause) {
@@ -102,7 +176,7 @@ public class SQLTarget implements DeepCloneable {
 			throw new IllegalArgumentException("path must map to an instance CollectionValuedCMRField: path="+path+", mappedPath="+o);
 		}
 		CollectionValuedCMRField cmrField = (CollectionValuedCMRField)o;
-
+		
 		pathElements.put(identifier, cmrField);
 	}
 
@@ -217,73 +291,68 @@ public class SQLTarget implements DeepCloneable {
 	}
 	
 	public String toSQL() {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
-		StringBuffer buf = new StringBuffer();
-		buf.append("SELECT ");
-		if(isSelectDistinct) {
-			buf.append("DISTINCT ");
-		}
-		
-		if(selectPath.size() == 1) {
-			AbstractSchema schema = (AbstractSchema)pathElements.get(selectPath.get(0));
-			buf.append(schema.getSelectClause(identifiersByPathElement));
-		} else {
-				
-			String path = (String)selectPath.get(0);
-			PathElement selectPathElement = null;
-			CMPField selectField = null;
-			for(int i=1; i < selectPath.size(); i++) {
-				if(i==selectPath.size()-1) {
-					// will create the cmp field object, if possible
-					String cmpFieldPath = getCMPField(path, (String)selectPath.get(i)); 
-					if(cmpFieldPath != null) {
-						CMPField cmpField = (CMPField)pathElements.get(cmpFieldPath);
-						buf.append(cmpField.getColumnNamesClause(identifiersByPathElement));
-					} else {
-						// create the single valued cmr field object
-						path = this.getSingleValuedCMRField(path, (String)selectPath.get(i));
-						SingleValuedCMRField cmrField = (SingleValuedCMRField)pathElements.get(path);
-						buf.append(cmrField.getSelectClause(identifiersByPathElement));
-					}
-				} else {
-					path = this.getSingleValuedCMRField(path, (String)selectPath.get(i));
-				}
-			}
-		}
-		
-		buf.append(" FROM ");
-
-		for(Iterator i = getUniquePathElements().iterator(); i.hasNext(); ) {
-			PathElement pathElement = (PathElement)i.next();
-			buf.append(pathElement.getTableDeclarations(identifiersByPathElement));
-			if(i.hasNext()) {
-				buf.append(", ");
-			}
-		}
-
-		Set cmrFields = getUniqueCMRFields();
-		if(whereClause.length() > 0 || cmrFields.size() > 0) {
-			buf.append(" WHERE ");
+		if(sql == null) {
+			Map identifiersByPathElement = getIdentifiersByPathElement();
+			StringBuffer buf = new StringBuffer();
 			
-			if(whereClause.length() > 0) {
-				if(cmrFields.size() > 0) {
-					buf.append("(");
-				}
-				buf.append(whereClause);
-				if(cmrFields.size() > 0) {
-					buf.append(") AND ");
-				}
+			// SELECT
+			buf.append("SELECT ");
+			if(isSelectDistinct) {
+				buf.append("DISTINCT ");
 			}
-
-			for(Iterator i = getUniqueCMRFields().iterator(); i.hasNext(); ) {
-				CMRField pathElement = (CMRField)i.next();
-				buf.append(pathElement.getTableWhereClause(identifiersByPathElement));
+			
+			Object selectPathElement = pathElements.get(selectPath);
+			if(selectPathElement instanceof AbstractSchema) {
+				AbstractSchema schema = (AbstractSchema)selectPathElement;
+				buf.append(schema.getSelectClause(identifiersByPathElement));
+			} else if(selectPathElement instanceof SingleValuedCMRField) {
+				SingleValuedCMRField cmrField = (SingleValuedCMRField)selectPathElement;
+				buf.append(cmrField.getSelectClause(identifiersByPathElement));
+			} else if(selectPathElement instanceof CMPField) {
+				CMPField cmpField = (CMPField)selectPathElement;
+				buf.append(cmpField.getColumnNamesClause(identifiersByPathElement));
+			} else {
+				throw new IllegalStateException("Path element is instance of unknown type: " +
+						"selectPath=" + selectPath + " selectPathElement=" + selectPathElement);
+			}			
+			
+			// FROM
+			buf.append(" FROM ");
+	
+			for(Iterator i = getUniquePathElements().iterator(); i.hasNext(); ) {
+				PathElement pathElement = (PathElement)i.next();
+				buf.append(pathElement.getTableDeclarations(identifiersByPathElement));
 				if(i.hasNext()) {
-					buf.append(" AND ");
+					buf.append(", ");
 				}
 			}
+	
+			// [WHERE]
+			Set cmrFields = getUniqueCMRFields();
+			if(whereClause.length() > 0 || cmrFields.size() > 0) {
+				buf.append(" WHERE ");
+				
+				if(whereClause.length() > 0) {
+					if(cmrFields.size() > 0) {
+						buf.append("(");
+					}
+					buf.append(whereClause);
+					if(cmrFields.size() > 0) {
+						buf.append(") AND ");
+					}
+				}
+	
+				for(Iterator i = getUniqueCMRFields().iterator(); i.hasNext(); ) {
+					CMRField pathElement = (CMRField)i.next();
+					buf.append(pathElement.getTableWhereClause(identifiersByPathElement));
+					if(i.hasNext()) {
+						buf.append(" AND ");
+					}
+				}
+			}
+			sql = buf.toString();
 		}
-		return buf.toString();
+		return sql;
 	}
 	
 	public List getInputParameters() {

@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *	@author <a href="danch@nvisia.com">danch</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public interface JDBCQueryMetaData {
 	/**
@@ -24,4 +24,10 @@ public interface JDBCQueryMetaData {
 	 * @return the Method object which invokes this query  
 	 */
 	public Method getMethod();
+	
+	/**
+	 * Is the result set of ejbSelect is mapped to local ejb objects or remote ejb objects.
+	 * @return true, if the result set is to be local objects
+	 */
+	public boolean isResultTypeMappingLocal();
 }

@@ -18,6 +18,7 @@ import org.jboss.ejb.plugins.cmp.ejbql.Repetition;
 import org.jboss.ejb.plugins.cmp.ejbql.Sequence;
 import org.jboss.ejb.plugins.cmp.ejbql.StringLiteral;
 import org.jboss.ejb.plugins.cmp.ejbql.Symbol;
+import org.jboss.ejb.plugins.cmp.ejbql.Token;
 import org.jboss.ejb.plugins.cmp.ejbql.Word;
 
 public class EJBQLParser {
@@ -47,6 +48,21 @@ public class EJBQLParser {
 		
 		s.add(new Repetition(commaList));
 		
+		s.setAssembler(new Assembler() {
+			public void workOn(Assembly a) {
+				Token t = a.peekToken();
+				// did we totaly match the from clause?
+				// only true if there are no tokens left of the next token is "WHERE"
+				if(t == null || t.toString().equalsIgnoreCase("WHERE")) {
+					SQLTarget target = (SQLTarget)a.getTarget();
+					List path = (List)a.pop();
+					target.setSelectPath(path);
+				} else {
+					a.setInvalid();
+				}
+			}
+		});
+
 		return s;
 	}
 
@@ -203,32 +219,18 @@ public class EJBQLParser {
 						
 						if(element.equalsIgnoreCase("SELECT")) {
 							Collections.reverse(path);
-							target.setSelectPath(path);
+							a.push(path);
 							return;
-						}
-						if(element.equalsIgnoreCase("DISTINCT")) {
-							a.pop(); // pop the word 'SELECT'
+						} else if(element.equalsIgnoreCase("DISTINCT")) {
 							target.setSelectDistinct(true);
-							Collections.reverse(path);
-							target.setSelectPath(path);
-							return;
+						} else if(element.equalsIgnoreCase("OBJECT")) {
+							// ignore the object keyword, it is just sugar to make parsing easy.
+						} else {
+							path.add(element);
 						}
-						if(element.equalsIgnoreCase("OBJECT")) {
-							// pop the next word (will be distinct or select)
-							String word = a.pop().toString();
-							if("DISTINCT".equalsIgnoreCase(word)) {
-								target.setSelectDistinct(true);
-								a.pop(); // pop the word 'SELECT'
-							}
-							Collections.reverse(path);
-							target.setSelectPath(path);
-							return;
-						}
-						path.add(element);
 					}
 				}
 			});
-
 		}
 		return selClau;
 	}

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.DeploymentException;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.proxy.InvocationHandler;
 
@@ -32,26 +33,26 @@ import org.jboss.proxy.InvocationHandler;
  *		One per cmp entity bean instance, including beans in pool. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
+	protected EntityContainer container;
 	protected EntityBridge entityBridge;
 	protected Class beanClass;
 	protected EntityEnterpriseContext ctx;
 	protected Map cmpFieldMap;
 	protected Map cmrFieldMap;
+	protected Map selectorMap;
 	
-	public EntityBridgeInvocationHandler(EntityBridge entityBridge, Class beanClass) throws Exception {
+	public EntityBridgeInvocationHandler(EntityContainer container, EntityBridge entityBridge, Class beanClass) throws Exception {
+		this.container = container;
 		this.entityBridge = entityBridge;
 		this.beanClass = beanClass;
 		Map abstractAccessors = getAbstractAccessors();
 		setupCMPFieldMap(abstractAccessors);
-		try {
 		setupCMRFieldMap(abstractAccessors);
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
+		
+		setupSelectorMap();
 	}
 	
 	public void setContext(EntityEnterpriseContext ctx) {
@@ -90,7 +91,13 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
 				return null;
 			}
 			throw new EJBException("Unknown cmr field method: " + methodName);
-		}		
+		}
+		
+		SelectorBridge selector = (SelectorBridge) selectorMap.get(method);
+		if(selector != null) {
+			container.synchronizeEntitiesWithinTransaction(ctx.getTransaction());
+			return selector.execute(args);
+		}
 		
 		Exception e = new EJBException("Unknown method type: " + methodName);
 		e.printStackTrace();
@@ -181,6 +188,15 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
 		if(setterMethod != null) {
 			cmrFieldMap.put(setterMethod, cmrField);
 			abstractAccessors.remove(setterName);
+		}
+	}
+	
+	protected void setupSelectorMap() {
+		SelectorBridge[] selectors = entityBridge.getSelectors();
+		selectorMap = new HashMap(selectors.length);
+
+		for(int i=0; i<selectors.length; i++) {
+			selectorMap.put(selectors[i].getMethod(), selectors[i]);
 		}
 	}
 }

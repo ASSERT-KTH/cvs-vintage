@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  * Imutable class contains information about a declated query.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    private final Method method;
@@ -43,6 +43,10 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
 	
 	public Method getMethod() {
 		return method;
+	}
+	
+	public boolean isResultTypeMappingLocal() {
+		return false;
 	}
 
 	/**

@@ -40,7 +40,7 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public interface JDBCCMPFieldBridge extends CMPFieldBridge {
 	/**
@@ -85,5 +85,9 @@ public interface JDBCCMPFieldBridge extends CMPFieldBridge {
 	 * Loads the data from result set into the primary key object.
 	 */
 	public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException;
-}
-                                         
+
+	/**
+	 * Loads the value of this cmp field from result set into argument referance.
+	 */
+	public int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef) throws IllegalArgumentException;
+}                                         

@@ -7,6 +7,9 @@
  
 package org.jboss.ejb.plugins.cmp.bridge;
 
+import java.lang.reflect.Method;
+import javax.ejb.FinderException;
+
 /**
  * SelectorBridge represents one ejbSelect method. 
  *
@@ -17,11 +20,12 @@ package org.jboss.ejb.plugins.cmp.bridge;
  *		One for each entity bean ejbSelect method. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public interface SelectorBridge {
 	public String getSelectorName();
+	public Method getMethod();
 	public Class getReturnType();
 		
-	public Object execute(Object[] args);
+	public Object execute(Object[] args) throws FinderException;
 }
