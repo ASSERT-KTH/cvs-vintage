@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Proxy;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.util.Collection;
@@ -47,7 +48,8 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *	@see org.jboss.ejb.plugins.SessionObjectOutputStream
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.3 $
+ *	@author Scott.Stark@jboss.org
+ *	@version $Revision: 1.4 $
  */
 class SessionObjectInputStream
 	extends ObjectInputStream
@@ -98,8 +100,12 @@ class SessionObjectInputStream
       return obj;
    }
    
-   protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException {
-      try {
+   /** Override the ObjectInputStream implementation to use the application class loader
+    */
+   protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException
+   {
+      try
+      {
          // use the application classloader to resolve the class
          return appCl.loadClass(v.getName());
          
@@ -108,5 +114,23 @@ class SessionObjectInputStream
          return super.resolveClass(v);
       }
    }
-      
+
+   /** Override the ObjectInputStream implementation to use the application class loader
+    */
+   protected Class resolveProxyClass(String[] interfaces) throws IOException, ClassNotFoundException
+   {
+       Class clazz = null;
+       Class[] ifaceClasses = new Class[interfaces.length];
+       for(int i = 0; i < interfaces.length; i ++)
+           ifaceClasses[i] = Class.forName(interfaces[i], false, appCl);
+       try
+       {
+           clazz = Proxy.getProxyClass(appCl, ifaceClasses);
+       }
+       catch(IllegalArgumentException e)
+       {
+           throw new ClassNotFoundException("Failed to resolve proxy class", e);
+       }
+       return clazz;
+   }
 }
