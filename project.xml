@@ -37,7 +37,27 @@
     </mailingList>
   </mailingLists>
 
-  <developers/>
+  <developers>
+    <developer>
+      <name>Eric Pugh</name>
+      <id>epugh</id>
+      <email>epugh@upstate.com</email>
+      <organization>www.OpenSourceConnections.com</organization>
+    </developer> 
+  </developers>
+  
+  <contributors>
+    <contributor>
+      <name>Vladimir Prus</name>
+      <id>vprus</id>
+      <email>ghost@cs.msu.su</email>
+    </contributor>    
+    <contributor>
+      <name>Hussayn Dabbous</name>
+      <id>hdabbous</id>
+      <email>dabbous@saxess.com</email>
+    </contributor>  
+  </contributors>
 
   <dependencies>
     <dependency>
