@@ -1,51 +1,154 @@
-<!-- $Id: scarab-tasks.html,v 1.1 2000/12/18 05:03:40 jon Exp $ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
 <title>Scarab Tasks</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!-- $Id: scarab-tasks.html,v 1.2 2001/02/07 21:21:59 jon Exp $ -->
 </head>
 
 <body bgcolor="#F0F0F0">
 <p><font size="+2">Scarab Tasks</font></p>
-<p><font size="-1">$Id: scarab-tasks.html,v 1.1 2000/12/18 05:03:40 jon Exp $</font></p>
-<p>These are tasks that will need to be done in order to complete Scarab. The point 
+<p><font size="-1">$Id: scarab-tasks.html,v 1.2 2001/02/07 21:21:59 jon Exp $</font></p>
+<p>
+    These are tasks that will need to be done in order to complete Scarab. The point 
     of this document is to break up the work load into smaller chunks that individuals 
-    can do in parallel. At this point, since we don't have the UI, it is difficult 
-    to break that into smaller chunks that people can work on directly. When we 
-    have that, this page will be updated to reflect who is working on what.</p>
+    can do in parallel.
+</p>
 <table width="75%" border="1" cellspacing="2" cellpadding="2">
     <tr> 
-        <td width="35%"><b>Task</b></td>
-        <td width="65%"><b>Description</b></td>
+        <td><b>Task</b></td>
+        <td><b>Priority</b></td>
+        <td><b>People</b></td>
+        <td><b>Description</b></td>
     </tr>
     <tr> 
-        <td width="35%">Information Architecture and UI design</td>
-        <td width="65%">The first round will be done by Cameron Barrett with help 
-            from Jon.</td>
+        <td>Information Architecture</td>
+        <td>P1</td>
+        <td>Owner: Jason Robbins; Secondary: Jon</td>
+        <td>
+        	Build the IA for Scarab. This must be able to
+            fit within the overall SourceCast platform as well 
+            as work standalone.
+        </td>
     </tr>
     <tr> 
-        <td width="35%">HTML templates</td>
-        <td width="65%">Jon</td>
+        <td>UI Design</td>
+        <td>P1</td>
+        <td>Owner: Cameron Barrett; Secondary: TBD</td>
+        <td>
+        	Build the UI Design for Scarab. This must be able to
+            fit within the overall SourceCast platform as well 
+            as work standalone.
+        </td>
     </tr>
     <tr> 
-        <td width="35%">HTML templates -&gt; WebMacro</td>
-        <td width="65%">Jon</td>
+        <td>Templates (Dynamic Screens)</td>
+        <td>P1</td>
+        <td>Owner: TBD; Secondary: TBD,Jon,John</td>
+        <td>
+            The people working on this portion will be responsible for
+            working with the Scarab API's that are available via the <a
+            href="http://java.apache.org/turbine/pullmodel.html">Pull
+            Model</a> in the Context. These people will state
+            requirements for additions to the API to the Owner of the
+            Scarab API.
+            <p>
+            Jon is starting with the administration screens for 
+            Attributes as well as the Start page.
+            <p>
+            Others can feel free to pick up a screen and 
+            add the fact that they are working on it to this document.
+        </td>
     </tr>
     <tr> 
-        <td width="35%">Java Code</td>
-        <td width="65%">Jon for now. Expect me to ask for help early next week (tuesday) 
-            with specific portions. I will modify this document to break up the 
-            screens for people to work on if they want to.</td>
+        <td>Scarab API</td>
+        <td>P1</td>
+        <td>Owner: Jon; Secondary: John</td>
+        <td>
+        	This is what is available to the templates through the 
+            Context. It is based on the 
+            <a href="http://java.apache.org/turbine/pullmodel.html">Pull Model</a>.
+        </td>
     </tr>
     <tr> 
-        <td width="35%">Database Schema</td>
-        <td width="65%">Fedor, Jon, Brian Goetz</td>
+        <td>Java Code (Actions)</td>
+        <td>P1</td>
+        <td>Owner: John; Secondary: Jon</td>
+        <td>
+        	Actions need to be written to make the "back end" of form submission
+        	work.
+        </td>
     </tr>
     <tr> 
-        <td width="35%">Sample Database Data (default attributes and such)</td>
-        <td width="65%">Fedor. He will be working on a tool to read in an XML file 
-            of metadata and use Turbine's IDBroker to do inserts into the database.</td>
+        <td>Intake</td>
+        <td>P1</td>
+        <td>Owner: John; Secondary: Jon</td>
+        <td>
+        	Intake is a tool to help us achieve the 100% Pull Model
+        	ideal where there is the ability to have the granularity
+        	where we can a single field within a form and move it to
+        	another page (within reason of course) without having to
+        	modify a single line of Java back end code to achieve this
+        	overall goal. Intake is being developed by John and is in 
+        	Turbine's CVS tree in turbine/conf/intake.
+        </td>
     </tr>
+    <tr> 
+        <td>Database Schema</td>
+        <td>P1</td>
+        <td>Owner: Jon,Fedor; Secondary: TBD,John</td>
+        <td>
+        	The database schema is primary finished. What needs to be done is
+        	any additions and changes to integrate into SourceCast as well 
+        	as adding in Security related join tables.
+        	<p>
+          	 We also need to figure out the integration between SourceCast 
+          	 Projects and Scarab Projects as there is a requirement for
+          	 nested projects and SourceCast does not currently support that
+          	 where Scarab's SCARAB_MODULE table does via a parent/child 
+          	 relationship scheme.
+        </td>
+    </tr>
+    <tr> 
+        <td>Database Schema - Inconsistencies</td>
+        <td>P1</td>
+        <td>Owner: John; Secondary: TBD,John</td>
+        <td>
+            There is an inconsistency within Scarab's schema and
+            Turbine's system in that the visitor_id is assumed to be a
+            long in Turbine's system and in scarab's it is an int. so,
+            in tables like scarab_issue_attribute_vote, there is a
+            visitor_id column there that is an int. it should be changed
+            to be a long.
+            <p>
+            we should also change the issue_id column in all of the
+            tables to be a long as well.
+            <p>
+            actually, now that i think about it more...lets use long for
+            ALL of our types instead of int for scaling reasons. i don't
+            think we need to go as far as BigDecimal though. :-)
+        </td>
+    </tr>
+    <tr> 
+        <td>XML Import/Export</td>
+        <td>P1</td>
+        <td>Owner: TBD (Ignacio?); Secondary: TBD</td>
+        <td>
+			Please refer to this email
+			<a href="http://scarab.tigris.org/scarab-dev/current/msg00111.html">here</a>.
+        </td>
+    </tr>
+    <tr> 
+        <td>Usage Documentation</td>
+        <td>P2</td>
+        <td>Owner: TBD; Secondary: Jon,Jason</td>
+        <td>
+        	By providing usage documentation, we can come up with a
+        	test plan so that the QA team can do their job.
+        </td>
+    </tr>
+
 </table>
 </body>
 </html>
