@@ -146,8 +146,6 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    }
 	}
 
-	// needed for modules using classes from the context
-	prepareClassLoader(context);
     }
 
     public void contextInit( Context ctx )
