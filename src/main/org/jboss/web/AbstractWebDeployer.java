@@ -151,7 +151,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.11 $
+@version $Revision: 1.12 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -305,11 +305,9 @@ public abstract class AbstractWebDeployer
          thread.setContextClassLoader(warLoader);
          WebDescriptorParser webAppParser = new DescriptorParser(di);
          String webContext = di.webContext;
-         if( webContext != null )
-         {
-            if( webContext.length() > 0 && webContext.charAt(0) != '/' )
-               webContext = "/" + webContext;
-         }
+         if (webContext != null && webContext.startsWith("/") == false)
+            webContext = "/" + webContext;
+
          // Get the war URL
          URL warURL = di.localUrl != null ? di.localUrl : di.url;
 
@@ -770,7 +768,7 @@ public abstract class AbstractWebDeployer
 
 
    /** This method creates a context-root string from either the
-      WEB-INF/jboss-web.xml context-root element is one exists, or the
+      WEB-INF/jboss-web.xml context-root element if one exists, or the
       filename portion of the warURL. It is called if the DeploymentInfo
       webContext value is null which indicates a standalone war deployment.
       A war name of ROOT.war is handled as a special case of a war that

@@ -9,15 +9,8 @@ package org.jboss.metadata;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.ObjectNameFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,12 +26,14 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class WebMetaData extends MetaData
 {
    private static Logger log = Logger.getLogger(WebMetaData.class);
 
+   /** The web.xml servlet-mapping <String, String> */
+   private HashMap servletMappings = new HashMap();
    /** The web.xml resource-refs <String, String> */
    private HashMap resourceReferences = new HashMap();
    /** The web.xml resource-env-refs <String, String> */
@@ -170,8 +165,7 @@ public class WebMetaData extends MetaData
       return securityDomain;
    }
 
-   /**
-    * Set the security domain for this web application
+   /** Set the security domain for this web application
     */
    public void setSecurityDomain(String securityDomain)
    {
@@ -179,19 +173,24 @@ public class WebMetaData extends MetaData
    }
 
    /** Get the security-constraint settings
-    * @return
-    */ 
+    */
    public Iterator getSecurityContraints()
    {
       return securityContraints.iterator();
    }
 
-   /**
-    * Get the optional map of security role/user mapping.
+   /** Get the optional map of security role/user mapping.
     */
    public Map getSecurityRoles()
    {
       return new HashMap(securityRoles);
+   }
+
+   /** Get the optional servlet-mappings
+    */
+   public HashMap getServletMappings()
+   {
+      return servletMappings;
    }
 
    /**
@@ -309,8 +308,18 @@ public class WebMetaData extends MetaData
     */
    protected void importWebXml(Element webApp) throws DeploymentException
    {
+      // Parse the web-app/servlet-mapping elements
+      Iterator iterator = getChildrenByTagName(webApp, "servlet-mapping");
+      while( iterator.hasNext() )
+      {
+         Element servletMapping = (Element) iterator.next();
+         String servletName = getElementContent(getUniqueChild(servletMapping, "servlet-name"));
+         String urlPattern = getElementContent(getUniqueChild(servletMapping, "url-pattern"));
+         servletMappings.put(servletName, urlPattern);
+      }
+
       // Parse the web-app/resource-ref elements
-      Iterator iterator = getChildrenByTagName(webApp, "resource-ref");
+      iterator = getChildrenByTagName(webApp, "resource-ref");
       while( iterator.hasNext() )
       {
          Element resourceRef = (Element) iterator.next();
@@ -635,136 +644,4 @@ public class WebMetaData extends MetaData
       level and the loader-repository config is needed early
       */
    }
-
-   /** This method creates a context-root string from either the
-      WEB-INF/jboss-web.xml context-root element is one exists, or the
-      filename portion of the warURL. It is called if the DeploymentInfo
-      webContext value is null which indicates a standalone war deployment.
-      A war name of ROOT.war is handled as a special case of a war that
-      should be installed as the default web context.
-    */
-   public void parseMetaData(String ctxPath, URL warURL)
-      throws DeploymentException
-   {
-      InputStream jbossWebIS = null;
-      InputStream webIS = null;
-
-      // Parse the war deployment descriptors, web.xml and jboss-web.xml
-      try
-      {
-         // See if the warUrl is a directory
-         File warDir = new File(warURL.getFile());
-         if( warURL.getProtocol().equals("file") && warDir.isDirectory() == true )
-         {
-            File webDD = new File(warDir, "WEB-INF/web.xml");
-            if( webDD.exists() == true )
-               webIS = new FileInputStream(webDD);
-            File jbossWebDD = new File(warDir, "WEB-INF/jboss-web.xml");
-            if( jbossWebDD.exists() == true )
-               jbossWebIS = new FileInputStream(jbossWebDD);
-         }
-         else
-         {
-            // First check for a WEB-INF/web.xml and a WEB-INF/jboss-web.xml
-            InputStream warIS = warURL.openStream();
-            java.util.zip.ZipInputStream zipIS = new java.util.zip.ZipInputStream(warIS);
-            java.util.zip.ZipEntry entry;
-            byte[] buffer = new byte[512];
-            int bytes;
-            while( (entry = zipIS.getNextEntry()) != null )
-            {
-               if( entry.getName().equals("WEB-INF/web.xml") )
-               {
-                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  while( (bytes = zipIS.read(buffer)) > 0 )
-                  {
-                     baos.write(buffer, 0, bytes);
-                  }
-                  webIS = new ByteArrayInputStream(baos.toByteArray());
-               }
-               else if( entry.getName().equals("WEB-INF/jboss-web.xml") )
-               {
-                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  while( (bytes = zipIS.read(buffer)) > 0 )
-                  {
-                     baos.write(buffer, 0, bytes);
-                  }
-                  jbossWebIS = new ByteArrayInputStream(baos.toByteArray());
-               }
-            }
-            zipIS.close();
-         }
-
-         XmlFileLoader xmlLoader = new XmlFileLoader();
-         String warURI = warURL.toExternalForm();
-         try
-         {
-            if( webIS != null )
-            {
-               Document webDoc = xmlLoader.getDocument(webIS, warURI+"/WEB-INF/web.xml");
-               Element web = webDoc.getDocumentElement();
-               this.importXml(web);
-            }
-         }
-         catch(Exception e)
-         {
-            throw new DeploymentException("Failed to parse WEB-INF/web.xml", e);
-         }
-         try
-         {
-            if( jbossWebIS != null )
-            {
-               Document jbossWebDoc = xmlLoader.getDocument(jbossWebIS, warURI+"/WEB-INF/jboss-web.xml");
-               Element jbossWeb = jbossWebDoc.getDocumentElement();
-               this.importXml(jbossWeb);
-            }
-         }
-         catch(Exception e)
-         {
-            throw new DeploymentException("Failed to parse WEB-INF/jboss-web.xml", e);
-         }
-
-      }
-      catch(Exception e)
-      {
-         log.warn("Failed to parse descriptors for war("+warURL+")", e);
-      }
-
-      // Build a war root context from the war name if one was not specified
-      String webContext = ctxPath;
-      if( webContext == null )
-         webContext = this.getContextRoot();
-      if( webContext == null )
-      {
-         // Build the context from the war name, strip the .war suffix
-         webContext = warURL.getFile();
-         webContext = webContext.replace('\\', '/');
-         if( webContext.endsWith("/") )
-            webContext = webContext.substring(0, webContext.length()-1);
-         int prefix = webContext.lastIndexOf('/');
-         if( prefix > 0 )
-            webContext = webContext.substring(prefix+1);
-         int suffix = webContext.lastIndexOf(".war");
-         if( suffix > 0 )
-            webContext = webContext.substring(0, suffix);
-          // Strip any '<int-value>.' prefix
-          int index = 0;
-          for(; index < webContext.length(); index ++)
-          {
-             char c = webContext.charAt(index);
-             if( Character.isDigit(c) == false && c != '.' )
-                break;
-          }
-          webContext = webContext.substring(index);
-      }
-
-      // Servlet containers are anal about the web context starting with '/'
-      if( webContext.length() > 0 && webContext.charAt(0) != '/' )
-         webContext = "/" + webContext;
-      // And also the default root context must be an empty string, not '/'
-      else if( webContext.equals("/") )
-         webContext = "";
-      this.setContextRoot(webContext);
-   }
-
 }
