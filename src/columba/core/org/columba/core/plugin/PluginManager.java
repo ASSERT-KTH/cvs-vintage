@@ -124,6 +124,15 @@ public class PluginManager {
         // determine plugin ID
         XmlElement element = config.getRoot().getElement("/plugin");
         String id = element.getAttribute("id");
+        String enabled = element.getAttribute("enabled");
+        
+        // if plugin is disabled
+        if ( ( enabled != null) && (enabled.equals("false")) )
+        {
+        	// don't add plugin
+        	return "";
+        }
+        
         ids.add(id);
         elements.put(id, element);
         folders.put(id, folder);

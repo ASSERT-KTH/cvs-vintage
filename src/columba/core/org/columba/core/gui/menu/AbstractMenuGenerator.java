@@ -15,23 +15,23 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.io.DiskIO;
-import org.columba.core.main.MainInterface;
-import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.util.GlobalResourceLoader;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
-
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 
 import javax.swing.JMenu;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.action.IMenu;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
 
 
 /**
@@ -175,12 +175,18 @@ public abstract class AbstractMenuGenerator {
 
             if (name.equals("menuitem")) {
                 if (next.getAttribute("action") != null) {
-                    try {
-                        AbstractColumbaAction action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
-                                "org.columba.core.action")).getAction(next.getAttribute(
-                                    "action"), frameController);
-
-                        if (action != null) {
+                    //try {
+                        AbstractColumbaAction action=null;
+						try {
+							action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+							        "org.columba.core.action")).getAction(next.getAttribute(
+							            "action"), frameController);
+						} catch (PluginHandlerNotFoundException e) {
+							if ( MainInterface.DEBUG)
+								e.printStackTrace();
+						}
+						
+						if (action != null) {
                             // use our custom CMenuItem here
                             // -> in order to support JavaHelp support
                             // -> @see CMenuItem for more details
@@ -191,6 +197,7 @@ public abstract class AbstractMenuGenerator {
                             menu.add(tmp);
                             lastWasSeparator = false;
                         }
+                        /*
                     } catch (Exception e) {
                         NotifyDialog dialog = new NotifyDialog();
                         dialog.showDialog("Error while loading plugin "
@@ -202,6 +209,7 @@ public abstract class AbstractMenuGenerator {
                             e.printStackTrace();
                         }
                     }
+                    */
                 } else if (next.getAttribute("checkboxaction") != null) {
                     try {
                         AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
