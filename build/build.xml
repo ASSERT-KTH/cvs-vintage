@@ -436,7 +436,7 @@
     <target name="upgrade-fulcrum" depends="build-fulcrum">
         <delete>
             <fileset dir="${lib.dir}">
-                <include name="**/${fulcrum.jar}"/>
+                <include name="**/fulcrum*.jar"/>
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
