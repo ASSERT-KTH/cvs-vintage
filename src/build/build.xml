@@ -42,6 +42,10 @@
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
     <property name="external.dir" value="${dist.dir}/external"/>
+    <property name="admin.dir" value="${dist.dir}/admin"/>
+    <property name="admin.client.dir" value="${admin.dir}/client"/>
+    <property name="admin.component.dir" value="${admin.dir}/components"/>
+    <property name="admin.client.lib.dir" value="${admin.client.dir}/lib"/>
 
     <property name="packages" value="org.jboss.*"/>
 
@@ -262,6 +266,8 @@
      <mkdir dir="${dist.dir}/conf"/>
      <mkdir dir="${dist.dir}/client"/>
      <mkdir dir="${dist.dir}/tmp"/>
+     <mkdir dir="${admin.client.lib.dir}"/>
+     <mkdir dir="${admin.component.dir}"/>
 
      <copy file="${etc.dir}/deploy.txt" tofile="${dist.dir}/deploy/deploy.txt"/>
      <copy file="${etc.dir}/hypersonic.txt" tofile="${dist.dir}/db/hypersonic/hypersonic.txt"/>
@@ -301,7 +307,21 @@
         <fileset dir="${build.dir}/client"/>
      </copy>
      <copy todir="${dist.dir}/client">
-        <fileset dir="${src.client.dir}"/>
+        <fileset dir="${src.client.dir}"
+                 excludes = "admin"
+        />
+     </copy>
+     <copy todir="${admin.dir}"
+           file="${etc.dir}/monitor.bat"/>
+     <copy todir="${admin.client.dir}">
+       <fileset dir="${src.client.dir}/admin"/>
+     </copy>
+     <copy todir="${admin.client.lib.dir}">
+       <fileset dir="${src.client.dir}/admin/lib"/>
+       <fileset dir="${src.lib.dir}"
+                includes="ejb.jar,jms.jar,jta-spec1_0_1.jar,jaas.jar"/>
+       <fileset dir="${src.client.dir}"
+                includes="jnp-client.jar,jboss-client.jar,jbossmq-client.jar,jbosssx-client.jar"/> 
      </copy>
      <copy todir="${dist.dir}/deploy/lib">
         <fileset dir="${etc.dir}/deploy"/>
