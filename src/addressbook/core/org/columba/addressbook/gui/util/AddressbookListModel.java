@@ -32,7 +32,7 @@ import javax.swing.AbstractListModel;
 public class AddressbookListModel extends AbstractListModel {
     private List listClone;
     private List list;
-    private String patternString = new String();
+    private String patternString = "";
 
     public AddressbookListModel() {
         super();

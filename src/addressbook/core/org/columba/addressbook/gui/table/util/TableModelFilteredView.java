@@ -30,7 +30,7 @@ public class TableModelFilteredView extends TableModelPlugin {
     private boolean attachmentFlag = false;
     */
     private String patternItem = new String("displayname");
-    private String patternString = new String();
+    private String patternString = "";
     private boolean dataFiltering = false;
     private HeaderItemList listClone;
 

@@ -110,7 +110,7 @@ public class GroupTableModel extends AbstractTableModel {
         }
 
         AdapterNode child = null;
-        String str = new String("");
+        String str = "";
 
         if (contact.getName().equals("contact")) {
             if (col == 0) {

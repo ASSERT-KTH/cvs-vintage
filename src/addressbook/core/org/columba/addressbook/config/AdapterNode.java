@@ -102,7 +102,7 @@ public class AdapterNode //implements TreeNode
     }
 
     public String getValue() {
-        String s = new String("");
+        String s = "";
         org.w3c.dom.NodeList nodeList = domNode.getChildNodes();
 
         if (nodeList.getLength() >= 1) {
@@ -133,7 +133,7 @@ public class AdapterNode //implements TreeNode
     }
 
     public String getCDATAValue() {
-        String s = new String("");
+        String s = "";
         org.w3c.dom.NodeList nodeList = domNode.getChildNodes();
 
         if (nodeList.getLength() >= 1) {
