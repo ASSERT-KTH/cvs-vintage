@@ -145,13 +145,13 @@ public class StopTomcat {
 	ServerXmlHelper sxml=new ServerXmlHelper();
 
 	sxml.setConnectorHelper( xh );
+	String tchome=sxml.getTomcatInstall();
 	// load server.xml
 	File f = null;
 	if (configFile != null)
 	    f=new File(configFile);
-
-	String tchome=sxml.getTomcatInstall();
-	f=new File(tchome, DEFAULT_CONFIG);
+	else
+	    f=new File(tchome, DEFAULT_CONFIG);
 	cm.setInstallDir( tchome);
 
 	try {
