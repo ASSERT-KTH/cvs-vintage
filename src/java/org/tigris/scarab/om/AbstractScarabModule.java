@@ -123,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.96 2003/04/29 23:38:49 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.97 2003/04/29 23:58:49 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1457,9 +1457,9 @@ public abstract class AbstractScarabModule
         RModuleOption rmo = null;
         List rmos = getRModuleOptions(option.getAttribute(),
                                       issueType, false);
-        Iterator i = rmos.iterator();
-        RModuleOption testRMO;
-        while (i.hasNext())
+        
+        RModuleOption testRMO = null;
+        for (Iterator i = rmos.iterator();i.hasNext();)
         {
             testRMO = (RModuleOption)i.next();
             if (testRMO.getAttributeOption().equals(option))
@@ -1468,7 +1468,6 @@ public abstract class AbstractScarabModule
                 break;
             }
         }
-
         return rmo;
     }
 
