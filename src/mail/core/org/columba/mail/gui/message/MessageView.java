@@ -15,9 +15,11 @@
 package org.columba.mail.gui.message;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.JTextComponent;
 
@@ -54,10 +56,13 @@ public class MessageView extends CScrollPane {
 		panel = new JPanel();
 		panel.setLayout( new BorderLayout() );
 		
+		
+		
 		setViewportView(panel);
 		
 		active = VIEWER_SIMPLE;
 		
+		//setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		hv = new HeaderViewer();
 		bodyTextViewer = new BodyTextViewer();
@@ -66,6 +71,20 @@ public class MessageView extends CScrollPane {
 		panel.add( bodyTextViewer, BorderLayout.CENTER );
 		
 	}
+	
+	protected void adjustSize()
+	{
+		
+		Dimension d = getPreferredSize();
+		
+		Dimension d2 = hv.getPreferredSize();
+		d2.width = d.width;
+		
+		
+		hv.setPreferredSize( d2 );
+		
+	}
+	
 	
 	public void addHyperlinkListener( HyperlinkListener l )
 	{
@@ -97,6 +116,8 @@ public class MessageView extends CScrollPane {
 				panel.add( hv, BorderLayout.NORTH );				
 				panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
 				panel.validate();
+				
+				adjustSize();
 			}
 		}
 		else
@@ -112,6 +133,7 @@ public class MessageView extends CScrollPane {
 				panel.add( hv, BorderLayout.NORTH );				
 				panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
 				panel.validate();
+				adjustSize();
 			}
 		}
 	}

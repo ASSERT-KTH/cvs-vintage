@@ -21,9 +21,9 @@ public class HeaderViewer extends JTextPane {
 	// background: ebebeb
 	// frame: d5d5d5
 	private static final String LEFT_COLUMN_PROPERTIES =
-		"border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\"";
+		"border=\"0\" nowrap font=\"dialog\" align=\"right\" valign=\"top\" width=\"65\"";
 	private static final String RIGHT_COLUMN_PROPERTIES =
-		"border=\"0\" align=\"left\" valign=\"top\" width=\"90%\"";
+		"border=\"0\" align=\"left\" valign=\"top\" width=\"100%\"";
 	private static final String OUTTER_TABLE_PROPERTIES =
 		"border=\"1\" cellspacing=\"1\" cellpadding=\"1\" align=\"left\" width=\"100%\" style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
 	private static final String INNER_TABLE_PROPERTIES =

@@ -27,8 +27,13 @@ public class DocumentParser {
 	PatternMatcher addressMatcher;
 
 	public String substituteEmailAddress(String s) throws Exception {
-		String pattern = "\\b(([\\w|.|\\-|_]*)@([\\w|.|\\-|_]*)(.)([a-zA-Z]{2,}))";
-
+		//String pattern = "\\b(([\\w|.|\\-|_]*)@([\\w|.|\\-|_]*)(.)([a-zA-Z]{2,}))";
+		
+		// contributed by Paul Nicholls
+		//  -> corrects inclusion of trailing full-stops
+		//  -> works for numerical ip addresses, too
+		String pattern = "([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})";
+		
 		addressCompiler = new Perl5Compiler();
 		addressPattern =
 			addressCompiler.compile(
