@@ -3,17 +3,15 @@ Bug report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 
 #set ($attrValues = $issue.AttributeValuesMap)
 #set ($attVal = $attrValues.get("SUMMARY"))
-#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
-$issue.UniqueId Summary:  $attrInput.Value 
+$issue.UniqueId Summary:  $attVal.Value 
 
 You can view the report at the following URL:
 <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId).setEncodeURLOff()>
 
 $issue.UniqueId Report 
 
-#foreach ( $attKey in $attrValues )
-  #set ($attVal = $attrValues.get($attKey.toString().toUpperCase()))
-  #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
-  $attVal.Attribute.Name: $attrInput.Value
+#foreach ( $attKey in $attrValues.keySet().iterator() )
+  #set ($attVal = $attrValues.get($attKey))
+  $attVal.Attribute.Name: $attVal.Value
 #end
