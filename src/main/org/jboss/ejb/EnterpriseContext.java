@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.security.Identity;
 import java.security.Principal;
 import java.util.Properties;
+import java.util.HashSet;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
@@ -28,15 +29,15 @@ import javax.transaction.HeuristicRollbackException;
 import org.jboss.logging.Logger;
 
 /**
- *	The EnterpriseContext is used to associate EJB instances with metadata about it.
- *	
- *	@see StatefulSessionEnterpriseContext
- *	@see StatelessSessionEnterpriseContext
- *	@see EntityEnterpriseContext
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *  The EnterpriseContext is used to associate EJB instances with metadata about it.
+ *  
+ *  @see StatefulSessionEnterpriseContext
+ *  @see StatelessSessionEnterpriseContext
+ *  @see EntityEnterpriseContext
+ *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 public abstract class EnterpriseContext
 {
@@ -57,6 +58,9 @@ public abstract class EnterpriseContext
    
    // The principal associated with the call
    Principal principal;
+
+   // The principal for the bean associated with the call
+   Principal beanPrincipal;
     
     // Only StatelessSession beans have no Id, stateful and entity do
    Object id; 
@@ -103,6 +107,7 @@ public abstract class EnterpriseContext
     public void setPrincipal(Principal principal) {
        
        this.principal = principal;
+
     }
     
     public void lock() 
@@ -111,7 +116,7 @@ public abstract class EnterpriseContext
        
        //new Exception().printStackTrace();
        
-//DEBUG		Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
+//DEBUG     Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
     }
     
     public void unlock() {
@@ -122,7 +127,7 @@ public abstract class EnterpriseContext
        //new Exception().printStackTrace();
        if (locked <0) new Exception().printStackTrace();
        
-//DEBUG		Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
+//DEBUG     Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
     }
     
     public boolean isLocked() {
@@ -169,7 +174,10 @@ public abstract class EnterpriseContext
       
       public Principal getCallerPrincipal() 
        { 
-         return principal;
+         if ( principal != null && beanPrincipal == null ) {
+             beanPrincipal = con.getRealmMapping().getPrincipal( principal );
+         }
+         return beanPrincipal;
        }
       
       public EJBHome getEJBHome() 
@@ -237,7 +245,11 @@ public abstract class EnterpriseContext
       // TODO - how to handle this best?
       public boolean isCallerInRole(String id) 
        { 
-         return false; 
+         if (principal == null)
+            return false;
+         HashSet set = new HashSet();
+         set.add( id );
+         return con.getRealmMapping().doesUserHaveRole( principal, set );
        }
    
       // TODO - how to handle this best?
@@ -262,7 +274,7 @@ public abstract class EnterpriseContext
          con.getTransactionManager().begin();
         
         // keep track of the transaction in enterprise context for BMT
-        setTransaction(con.getTransactionManager().getTransaction());		 
+        setTransaction(con.getTransactionManager().getTransaction());        
         
         
         // DEBUG Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
