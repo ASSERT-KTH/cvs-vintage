@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.56 2002/01/08 20:11:49 richard Exp $
+    @version $Id: ModifyIssue.java,v 1.57 2002/01/08 20:54:56 richard Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -479,8 +479,8 @@ public class ModifyIssue extends RequireLoginFirstAction
         setTarget(data, template);            
     }
     
-        /**
-    *  Deletes an url.
+   /**
+    *  Deletes a file.
     */
    public void doDeletefile (RunData data, TemplateContext context)
         throws Exception
@@ -800,5 +800,6 @@ public class ModifyIssue extends RequireLoginFirstAction
         doCancel(data, context);
     }
 }
+
 
 
