@@ -67,7 +67,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -197,7 +197,9 @@ implements ConfigurationServiceMBean
       if (server.isRegistered(serviceControl) == false)
          throw new IllegalStateException
          ("Failed to find ServiceControl mbean, name=" + serviceControl);
-      
+
+      boolean debug = log.isDebugEnabled();
+
       try
       {
          // Set configuration to MBeans from XML
@@ -205,7 +207,7 @@ implements ConfigurationServiceMBean
          for (int i = 0; i < nl.getLength(); i++)
          {
             Element mbeanElement = (Element)nl.item(i);
-            
+
             // get the name of the mbean
             ObjectName objectName = parseObjectName(mbeanElement);
             MBeanInfo info;
@@ -218,7 +220,7 @@ implements ConfigurationServiceMBean
                // It's ok, skip to next one
                continue;
             }
-            
+
             // Set attributes
             NodeList attrs = mbeanElement.getElementsByTagName("attribute");
             for (int j = 0; j < attrs.getLength(); j++)
@@ -228,12 +230,12 @@ implements ConfigurationServiceMBean
                if (attributeElement.hasChildNodes())
                {
                   String attributeValue = ((Text)attributeElement.getFirstChild()).getData();
-                  
+
                   if (autoTrim)
                   {
                      attributeValue = attributeValue.trim();
                   }
-                  
+
                   MBeanAttributeInfo[] attributes = info.getAttributes();
                   for (int k = 0; k < attributes.length; k++)
                   {
@@ -255,10 +257,11 @@ implements ConfigurationServiceMBean
                            editor.setAsText(attributeValue);
                            value = editor.getValue();
                         }
-                        
-                        log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
+
+                        if (debug)
+                           log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
                         server.setAttribute(objectName, new Attribute(attributeName, value));
-                        
+
                         break;
                      }
                   }
@@ -275,7 +278,7 @@ implements ConfigurationServiceMBean
          throw new ConfigurationException("Unexpected Error", e);
       }
    }
-   
+
    /**
     * Builds a string that consists of the configuration elements of
     * the currently running MBeans registered in the server.
@@ -284,14 +287,16 @@ implements ConfigurationServiceMBean
     */
    public String save() throws Exception
    {
+      boolean debug = log.isDebugEnabled();
+
       Writer out = new StringWriter();
-      
+
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       Document doc = builder.newDocument();
-      
+
       Element serverElement = doc.createElement("server");
-      
+
       // Store attributes as XML
       Iterator mbeans = server.queryMBeans(null, null).iterator();
       while (mbeans.hasNext())
@@ -300,18 +305,20 @@ implements ConfigurationServiceMBean
          ObjectName name = (ObjectName)instance.getObjectName();
          Element mbeanElement = doc.createElement("mbean");
          mbeanElement.setAttribute("name", name.toString());
-         
+
          MBeanInfo info = server.getMBeanInfo(name);
          mbeanElement.setAttribute("code", info.getClassName());
          MBeanAttributeInfo[] attributes = info.getAttributes();
          boolean hasAttributes = true;
+
          for (int i = 0; i < attributes.length; i++)
          {
             if (attributes[i].isReadable() && isAttributeWriteable(server.getObjectInstance(name).getClassName(), attributes[i].getName(), attributes[i].getType()))
             {
                if (!attributes[i].isWritable())
                {
-                  log.debug("Detected JMX Bug: Server reports attribute '"+attributes[i].getName() + "' is not writeable for MBean '" + name.getCanonicalName() + "'");
+                  if (debug)
+                     log.debug("Detected JMX Bug: Server reports attribute '"+attributes[i].getName() + "' is not writeable for MBean '" + name.getCanonicalName() + "'");
                }
                Element attributeElement = doc.createElement("attribute");
                Object value = server.getAttribute(name, attributes[i].getName());
