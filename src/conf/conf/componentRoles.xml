@@ -11,10 +11,10 @@
         default-class="org.apache.fulcrum.yaafi.service.systemproperty.SystemPropertyServiceImpl"
         early-init="true"
     />    
-    <!--role
-        name="org.apache.fulcrum.yaafi.TestComponent"
-        shorthand="test"
-        default-class="org.apache.fulcrum.yaafi.TestComponentImpl"
-        early-init="false"
-    /-->        
+    <role
+        name="org.tigris.scarab.services.hsql.HSQLService"
+        shorthand="HSQLService"
+        default-class="org.tigris.scarab.services.hsql.HSQLServiceImpl"
+        early-init="true"
+    />        
 </role-list>

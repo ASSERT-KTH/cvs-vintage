@@ -7,4 +7,7 @@
 	<SystemPropertyService>
 		<property name="FOO">BAR</property>
 	</SystemPropertyService-->
+   <HSQLService database="./target" dbname="test" trace="true" 
+        silent="false" start="true">
+   </HSQLService>    
 </componentConfig>
