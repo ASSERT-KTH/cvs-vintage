@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.93 2003/06/04 01:44:16 spestov Exp $
+ * @version $Id: View.java,v 1.94 2003/06/05 02:46:35 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1425,6 +1425,8 @@ public class View extends JFrame implements EBComponent
 				stack.push(token);
 			}
 		}
+
+		updateGutterBorders();
 
 		return (Component)stack.peek();
 	} //}}}
