@@ -61,85 +61,102 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.server.*;
+import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.deployment.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
-
-/**
- * 
- * @author James Duncan Davidson [duncan@eng.sun.com]
- * @author James Todd [gonzo@eng.sun.com]
- * @author Jason Hunter [jch@eng.sun.com]
- * @author Harish Prabandham
- */
 
 //
 // WARNING: Some of the APIs in this class are used by J2EE. 
 // Please talk to harishp@eng.sun.com before making any changes.
 //
 
+/**
+ * Context represent a Web Application as specified by Servlet Specs.
+ * The implementation is a repository for all the properties
+ * defined in web.xml and tomcat specific properties, with all the
+ * functionality delegated to interceptors.
+ * 
+ * @author James Duncan Davidson [duncan@eng.sun.com]
+ * @author James Todd [gonzo@eng.sun.com]
+ * @author Jason Hunter [jch@eng.sun.com]
+ * @author Harish Prabandham
+ * @author costin@dnt.ro
+ */
 public class Context {
-    
-    private StringManager sm =
-        StringManager.getManager(Constants.Package);
+    private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
+
+    // -------------------- internal properties
+    // context "id"
+    private String path = "";
+    private URL docBase;
+
+    // internal state / related objects
     private boolean initialized = false;
     private ContextManager server;
-    private String description = null;
-    private boolean isDistributable = false;
-    private String engineHeader = null;
-    //private Hashtable sessions = new Hashtable();
-    // XXX XXX XXX hardcoded ! 
-    private SessionManager sessionManager;
     private ServletContextFacade contextFacade;
-    private Hashtable initializationParameters = new Hashtable();
+    private SessionManager sessionManager;
+    private ServletWrapper defaultServlet = null;
+
+    // 
     private Hashtable attributes = new Hashtable();
-    private MimeMap mimeTypes = new MimeMap();
-    private int sessionTimeOut = -1;
-    private Vector welcomeFiles = new Vector();
-    private Hashtable errorPages = new Hashtable();
-    private Hashtable loadableServlets = new Hashtable();
-    private URL docBase;
-    private String path = "";
-    //private String sessionCookieName;
-    private boolean isInvokerEnabled = false;
-    private File workDir =
-        new File(System.getProperty("user.dir", ".") +
-            System.getProperty("file.separator") + Constants.WorkDir);
+
+    // work dir
+    private File workDir;
     private boolean isWorkDirPersistent = false;
+
+    // tomcat specific properties
+    private String engineHeader = null;
+    private URL servletBase = null;
+    private boolean isInvokerEnabled = false;
+
+    // for serving WARs directly 
     private File warDir = null;
     private boolean isWARExpanded = false;
     private boolean isWARValidated = false;
-    private Vector initInterceptors = new Vector();
-    private Vector serviceInterceptors = new Vector();
-    private Vector destroyInterceptors = new Vector();
-    private RequestSecurityProvider rsProvider =
-        DefaultRequestSecurityProvider.getInstance();
 
-    private Hashtable servlets = new Hashtable();
-    private Hashtable prefixMappedServlets = new Hashtable();
-    private Hashtable extensionMappedServlets = new Hashtable();
-    private Hashtable pathMappedServlets = new Hashtable();
-    private ServletWrapper defaultServlet = null;
-    private URL servletBase = null;
-
-    
     // Class Loading 
     private String classPath = ""; // classpath used by the classloader.
     private Vector classPaths = new Vector();
     private Vector libPaths = new Vector();
     private ServletClassLoader servletLoader;
     private ClassLoader classLoader = null;
-
     
+    // Interceptors
+    private Vector initInterceptors = new Vector();
+    private Vector serviceInterceptors = new Vector();
+    private Vector destroyInterceptors = new Vector();
+    private RequestSecurityProvider rsProvider;
+    
+    // Servlets loaded by this context( String->ServletWrapper )
+    private Hashtable servlets = new Hashtable();
+
+    // -------------------- from web.xml
+    private Hashtable initializationParameters = new Hashtable();
+    private Vector welcomeFiles = new Vector();
+    private Hashtable errorPages = new Hashtable();
+    private String description = null;
+    private boolean isDistributable = false;
+    private MimeMap mimeTypes = new MimeMap();
+    private int sessionTimeOut = -1;
+
+    // Maps specified in web.xml ( String->ServletWrapper )
+    private Hashtable prefixMappedServlets = new Hashtable();
+    private Hashtable extensionMappedServlets = new Hashtable();
+    private Hashtable pathMappedServlets = new Hashtable();
+    // servlets loaded on startup( String->ServletWrapper )
+    private Hashtable loadableServlets = new Hashtable();
+
+    // -------------------- Accessors --------------------
     public Context() {
     }
 	
-    public Context(ContextManager server, String path) {
+    public Context(ContextManager server, String path, URL docBase) {
         this.server = server;
 	this.path = path;
+	setDocumentBase( docBase );
         contextFacade = new ServletContextFacade(server, this);
     }
 
@@ -199,11 +216,17 @@ public class Context {
     }
 
     public RequestSecurityProvider getRequestSecurityProvider() {
+	if ( rsProvider==null)
+	    rsProvider=DefaultRequestSecurityProvider.getInstance();
+	
 	return this.rsProvider;
     }
 
     public File getWorkDir() {
-        return this.workDir;
+	if( workDir==null)
+	    workDir=new File(System.getProperty("user.dir", ".") +
+			     System.getProperty("file.separator") + Constants.WORK_DIR);
+	return workDir;
     }
 
     public void setWorkDir(String workDir, boolean isWorkDirPersistent) {
@@ -218,19 +241,11 @@ public class Context {
     }
 
     public void setWorkDir(File workDir, boolean isWorkDirPersistent) {
-        this.isWorkDirPersistent = isWorkDirPersistent;
-
-	if (workDir == null) {
-	    workDir = this.workDir;
-	}
-
-	if (! isWorkDirPersistent) {
-	    clearDir(workDir);
-        }
-
 	this.workDir = workDir;
+        this.isWorkDirPersistent = isWorkDirPersistent;
+	// assert workDir!=null - or no reason to set it
 
-	setAttribute(Constants.Attribute.WorkDirectory, this.workDir);
+	// workDir will be cleaned at init() and shutdown()
     }
 
     public boolean isWorkDirPersistent() {
@@ -239,6 +254,10 @@ public class Context {
 
     File getWARDir() {
         return this.warDir;
+    }
+
+    public void setWARDir( File f ) {
+	warDir=f;
     }
 
     public boolean isWARExpanded() {
@@ -340,127 +359,32 @@ public class Context {
      */
     
     public synchronized void init() {
-	// check to see if we've already been init'd
-
 	if (this.initialized) {
 	    String msg = sm.getString("context.init.alreadyinit");
-
 	    throw new IllegalStateException(msg);
 	}
-
 	this.initialized = true;
+
+	// Set defaults if not already there
+	new DefaultContextSetter().handleContextInit( this );
 	
-	if (this.docBase == null) {
-	    //String msg = sm.getString("context.init.nodocbase");
-	    //throw new IllegalStateException(msg);
+	// set up work dir ( attribute + creation )
+	new WorkDirInterceptor().handleContextInit( this );
 
-	    // XXX
-	    // for now we are going to pretend it doens't matter
-	}
-
-	// set up work dir attribute
-
-	if (this.workDir != null) {
-	    setAttribute(Constants.Context.Attribute.WorkDir.Name,
-	        this.workDir);
-
-	    if (! this.workDir.exists()) {
-	        this.workDir.mkdirs();
-	    }
-	}
-
-	// expand WAR
-
+	// XXX who uses servletBase ???
 	URL servletBase = this.docBase;
-
-	if (docBase.getProtocol().equalsIgnoreCase("war")) {
-	    if (isWARExpanded()) {
-	        this.warDir = new File(getWorkDir(),
-		    Constants.Context.WARExpandDir);
-
-		if (! this.warDir.exists()) {
-		    this.warDir.mkdirs();
-
-		    try {
-		        WARUtil.expand(this.warDir, getDocumentBase());
-		    } catch (MalformedURLException mue) {
-		    } catch (IOException ioe) {
-		    }
-
-		    try {
-                        servletBase = URLUtil.resolve(this.warDir.toString());
-		    } catch (Exception e) {
-		    }
-		}
-	    }
-	}
-
         this.setServletBase(servletBase);
 
-        for (int i = 0; i < Constants.Context.CLASS_PATHS.length; i++) {
-            this.addClassPath(Constants.Context.CLASS_PATHS[i]);
-	}
+	// expand WAR
+	new WarInterceptor().handleContextInit( this );
 
-        for (int i = 0; i < Constants.Context.LIB_PATHS.length; i++) {
-            this.addLibPath(Constants.Context.LIB_PATHS[i]);
-	}
-
-	// process base configuration
-
-	try {
-	    Class webApplicationDescriptor = Class.forName(
-	        "org.apache.tomcat.deployment.WebApplicationDescriptor");
-	    InputStream is =
-	        webApplicationDescriptor.getResourceAsStream(
-	            org.apache.tomcat.deployment.Constants.ConfigFile);
-	    String msg = sm.getString("context.getConfig.msg", "default");
-
-    	    System.out.println(msg);
-
-	    processWebApp(is, true);
-	} catch (Exception e) {
-	    String msg = sm.getString("context.getConfig.e", "default");
-
-	    System.out.println(msg);
-	}
-
-	// process webApp configuration
-
-	String s = docBase.toString();
-
-	if (docBase.getProtocol().equalsIgnoreCase("war")) {
-	    if (s.endsWith("/")) {
-	        s = s.substring(0, s.length() - 1);
-	    }
-
-	    s += "!/";
-	}
-
-	URL webURL = null;
-
-	try {
-	    webURL = new URL(s + Constants.Context.ConfigFile);
-
-	    InputStream is = webURL.openConnection().getInputStream();
-	    String msg = sm.getString("context.getConfig.msg",
-	        webURL.toString());
-
-	    System.out.println(msg);
-
-	    processWebApp(is);
-	} catch (Exception e) {
-	    String msg = sm.getString("context.getConfig.e",
-	        (webURL != null) ? webURL.toString() : "not available");
-
-            // go silent on this one
-	    // System.out.println(msg);
-	}
-
+	// Read context's web.xml
+	new WebXmlInterceptor().handleContextInit( this );
+	
 	if (! this.isInvokerEnabled) {
 	    // Put in a special "no invoker" that handles
 	    // /servlet requests and explains why no servlet
 	    // is being invoked
-
 	    this.addServlet(Constants.Servlet.NoInvoker.Name,
 	        Constants.Servlet.NoInvoker.Class);
 	    this.addMapping(Constants.Servlet.NoInvoker.Name,
@@ -468,7 +392,6 @@ public class Context {
 	}
 
 	// load-on-startup
-
         if (! loadableServlets.isEmpty()) {
 	    loadServlets();
         }
@@ -501,21 +424,32 @@ public class Context {
 
 	getSessionManager().removeSessions(this);
 
-	if (! isWorkDirPersistent) {
-            clearDir(workDir);
-	}
-
+	new WorkDirInterceptor().handleContextShutdown(this);
+	
 	System.out.println("Context: " + this + " down");
     }
     
     public Enumeration getWelcomeFiles() {
 	return welcomeFiles.elements();
     }
+
+    public void removeWelcomeFiles() {
+	if( ! this.welcomeFiles.isEmpty() )
+	    this.welcomeFiles.removeAllElements();
+    }
+
+    public void addWelcomeFile( String s) {
+	welcomeFiles.addElement( s );
+    }
     
     public String getInitParameter(String name) {
         return (String)initializationParameters.get(name);
     }
 
+    public void setInitParameter( String name, String value ) {
+	initializationParameters.put(name, value );
+    }
+    
     public Enumeration getInitParameterNames() {
         return initializationParameters.keys();
     }
@@ -591,8 +525,16 @@ public class Context {
         return mimeTypes;
     }
 
+    public void addContentType( String ext, String type) {
+	mimeTypes.addContentType( ext, type );
+    }
+
     public String getErrorPage(int errorCode) {
         return getErrorPage(String.valueOf(errorCode));
+    }
+
+    public void addErrorPage( String errorType, String value ) {
+	this.errorPages.put( errorPages, value );
     }
 
     public String getErrorPage(String errorCode) {
@@ -603,265 +545,30 @@ public class Context {
         return contextFacade;
     }
 
-    private Properties getProperties(String propertyFileName) {
-        Properties props = new Properties();
 
-        try {
-	    props.load(this.getClass().getResourceAsStream(propertyFileName));
-	} catch (IOException ioe) {
-	}
-
-	return props;
+    public Enumeration getInitLevles() {
+	return loadableServlets.keys();
     }
 
-    private void clearDir(File dir) {
-        String[] files = dir.list();
-
-        if (files != null) {
-	    for (int i = 0; i < files.length; i++) {
-	        File f = new File(dir, files[i]);
-
-	        if (f.isDirectory()) {
-		    clearDir(f);
-	        }
-
-	        try {
-	            f.delete();
-	        } catch (Exception e) {
-	        }
-	    }
-
-	    try {
-	        dir.delete();
-	    } catch (Exception e) {
-	    }
-        }
+    public Enumeration getLoadableServlets( Integer level ) {
+	return ((Vector)loadableServlets.get( level )).elements();
     }
 
-    private void processWebApp(InputStream is) {
-        processWebApp(is, false);
+    public void setLoadableServlets( Integer level, Vector servlets ) {
+	loadableServlets.put( level, servlets );
     }
 
-    private void processWebApp(InputStream is, boolean internal) {
-        if (is != null) {
-	    try {
-	        WebApplicationDescriptor webDescriptor =
-		    (new WebApplicationReader()).getDescriptor(is,
-		        new WebDescriptorFactoryImpl(),
-			isWARValidated());
-
-		processDescription(webDescriptor.getDescription());
-		processDistributable(webDescriptor.isDistributable());
-		processInitializationParameters(
-		    webDescriptor.getContextParameters());
-		processSessionTimeOut(webDescriptor.getSessionTimeout());
-		processServlets(webDescriptor.getWebComponentDescriptors());
-		processMimeMaps(webDescriptor.getMimeMappings());
-		processWelcomeFiles(webDescriptor.getWelcomeFiles(),
-                    internal);
-		processErrorPages(webDescriptor.getErrorPageDescriptors());
-	    } catch (Throwable e) {
-                String msg = "config parse: " + e.getMessage();
-
-                System.out.println(msg);
-	    }
-	}
+    public void addLoadableServlet( Integer level,String name ) {
+	Vector v;
+	if( loadableServlets.get(level) != null ) 
+	    v=(Vector)loadableServlets.get(level);
+	else
+	    v=new Vector();
+	
+	v.addElement(name);
+	loadableServlets.put(level, v);
     }
-
-    private void processDescription(String description) {
-        this.description = description;
-    }
-
-    private void processDistributable(boolean isDistributable) {
-        this.isDistributable = isDistributable;
-    }
-
-    private void processInitializationParameters(
-	Enumeration contextParameters) {
-        while (contextParameters.hasMoreElements()) {
-	    ContextParameter contextParameter =
-	        (ContextParameter)contextParameters.nextElement();
-	    initializationParameters.put(contextParameter.getName(),
-	        contextParameter.getValue());
-	}
-    }
-
-    private void processSessionTimeOut(int sessionTimeOut) {
-        this.sessionTimeOut = sessionTimeOut;
-    }
-
-    private void processServlets(Enumeration servlets) {
-        // XXX
-        // oh my ... this has suddenly turned rather ugly
-        // perhaps the reader should do this normalization work
-
-        while (servlets.hasMoreElements()) {
-	    WebComponentDescriptor webComponentDescriptor =
-	        (WebComponentDescriptor)servlets.nextElement();
-	    String name = webComponentDescriptor.getCanonicalName();
-	    String description = webComponentDescriptor.getDescription();
-	    String resourceName = null;
-	    boolean removeResource = false;
-
-	    if (webComponentDescriptor instanceof ServletDescriptor) {
-		resourceName =
-		    ((ServletDescriptor)webComponentDescriptor).getClassName();
-
-		if (containsServletByName(name)) {
-		    String msg = sm.getString("context.dd.dropServlet",
-		        name + "(" + resourceName + ")" );
-
-		    System.out.println(msg);
-		    
-		    removeResource = true;
-		    removeServletByName(name);
-		}
-
-		addServlet(name, resourceName, description);
-	    } else if (webComponentDescriptor instanceof JspDescriptor) {
-		resourceName =
-		    ((JspDescriptor)webComponentDescriptor).getJspFileName();
-
-		if (! resourceName.startsWith("/")) {
-		    resourceName = "/" + resourceName;
-		}
-
-		if (containsJSP(resourceName)) {
-		    String msg = sm.getString("context.dd.dropServlet",
-		        resourceName);
-
-		    System.out.println(msg);
-
-		    removeResource = true;
-		    removeJSP(resourceName);
-		}
-
-		addJSP(name, resourceName, description);
-	    }
-
-	    if (removeResource) {
-	        Enumeration enum = loadableServlets.keys();
-
-		while (enum.hasMoreElements()) {
-		    Integer key = (Integer)enum.nextElement();
-		    Vector v = (Vector)loadableServlets.get(key);
-
-		    Enumeration e = v.elements();
-		    Vector buf = new Vector();
-
-		    while (e.hasMoreElements()) {
-		        String servletName = (String)e.nextElement();
-
-			if (containsServletByName(servletName)) {
-			    buf.addElement(servletName);
-			}
-		    }
-
-		    loadableServlets.put(key, buf);
-		}
-	    }
-
-	    int loadOnStartUp = webComponentDescriptor.getLoadOnStartUp();
-
-            if (loadOnStartUp > Integer.MIN_VALUE) {
-	        Integer key = new Integer(loadOnStartUp);
-		Vector v = (Vector)((loadableServlets.containsKey(key)) ?
-		    loadableServlets.get(key) : new Vector());
-
-		v.addElement(name);
-		loadableServlets.put(key, v);
-	    }
-
-	    Enumeration enum =
-	        webComponentDescriptor.getInitializationParameters();
-	    Hashtable initializationParameters = new Hashtable();
-
-	    while (enum.hasMoreElements()) {
-	        InitializationParameter initializationParameter =
-		    (InitializationParameter)enum.nextElement();
-
-		initializationParameters.put(
-		    initializationParameter.getName(),
-		    initializationParameter.getValue());
-	    }
-
-	    setServletInitParams(webComponentDescriptor.getCanonicalName(),
-				 initializationParameters);
-
-	    enum = webComponentDescriptor.getUrlPatterns();
-
-	    while (enum.hasMoreElements()) {
-	        String mapping = (String)enum.nextElement();
-
-		if (! mapping.startsWith("*.") &&
-		    ! mapping.startsWith("/")) {
-		    mapping = "/" + mapping;
-		}
-
-		if (! containsServlet(mapping) &&
-		    ! containsJSP(mapping)) {
-		    if (containsMapping(mapping)) {
-		        String msg = sm.getString("context.dd.dropMapping",
-			    mapping);
-
-			System.out.println(msg);
-
-			removeMapping(mapping);
-		    }
-
-                    addMapping(name, mapping);
-		} else {
-		    String msg = sm.getString("context.dd.ignoreMapping",
-		        mapping);
-
-		    System.out.println(msg);
-		}
-	    }
-	}
-    }
-
-    private void processMimeMaps(Enumeration mimeMaps) {
-        while (mimeMaps.hasMoreElements()) {
-	    MimeMapping mimeMapping = (MimeMapping)mimeMaps.nextElement();
-
-	    this.mimeTypes.addContentType(
-	        mimeMapping.getExtension(), mimeMapping.getMimeType());
-	}
-    }
-
-    private void processWelcomeFiles(Enumeration welcomeFiles) {
-        processWelcomeFiles(welcomeFiles, false);
-    }
-
-    private void processWelcomeFiles(Enumeration welcomeFiles,
-        boolean internal) {
-        if (! internal &&
-            ! this.welcomeFiles.isEmpty() &&
-            welcomeFiles.hasMoreElements()) {
-            this.welcomeFiles.removeAllElements();
-        }
-
-	while (welcomeFiles.hasMoreElements()) {
-	    this.welcomeFiles.addElement(welcomeFiles.nextElement());
-	}
-    }
-
-    private void processErrorPages(Enumeration errorPages) {
-        while (errorPages.hasMoreElements()) {
-	    ErrorPageDescriptor errorPageDescriptor =
-	        (ErrorPageDescriptor)errorPages.nextElement();
-	    String key = null;
-
-	    if (errorPageDescriptor.getErrorCode() > -1) {
-	        key = String.valueOf(errorPageDescriptor.getErrorCode());
-	    } else {
-	        key = errorPageDescriptor.getExceptionType();
-	    }
-
-	    this.errorPages.put(key, errorPageDescriptor.getLocation());
-	}
-    }
-
+    
     private void loadServlets() {
 	Vector orderedKeys = new Vector();
 	Enumeration e = loadableServlets.keys();
@@ -974,7 +681,7 @@ public class Context {
 
     /** True if we have a servlet with className.
      */
-    boolean containsServlet(String className) {
+    public boolean containsServlet(String className) {
         ServletWrapper[] sw = getServlets(className);
 
         return (sw != null &&
@@ -983,7 +690,7 @@ public class Context {
 
     /** Check if we have a servlet with the specified name
      */
-    boolean containsServletByName(String name) {
+    public boolean containsServletByName(String name) {
 	return (servlets.containsKey(name));
     }
 
@@ -995,21 +702,21 @@ public class Context {
 
     /** Remove the servlet with a specific name
      */
-    void removeServletByName(String servletName) {
+    public void removeServletByName(String servletName) {
 	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
 	if( wrapper != null ) {
 	    removeServlet( wrapper );
 	}
     }
 
-    boolean containsJSP(String path) {
+    public boolean containsJSP(String path) {
         ServletWrapper[] sw = getServletsByPath(path);
 
         return (sw != null &&
 	    sw.length > 0);
     }
 
-    void removeJSP(String path) {
+    public void removeJSP(String path) {
 	Enumeration enum = servlets.keys();
 
 	while (enum.hasMoreElements()) {
@@ -1094,7 +801,7 @@ public class Context {
 	return extensionMappedServlets;
     }
     
-    boolean containsMapping(String mapping) {
+    public boolean containsMapping(String mapping) {
         mapping = mapping.trim();
 
         return (prefixMappedServlets.containsKey(mapping) ||
@@ -1102,7 +809,7 @@ public class Context {
 	    pathMappedServlets.containsKey(mapping));
     }
 
-    void removeMapping(String mapping) {
+    public void removeMapping(String mapping) {
         mapping = mapping.trim();
 
 	prefixMappedServlets.remove(mapping);

@@ -76,36 +76,25 @@ public class Constants {
     public static final int SERVLET_MAJOR = 2;
     public static final int SERVLET_MINOR = 2;
 
+
+    public static final String ATTRIB_WORKDIR1 = "sun.servlet.workdir";
+    public static final String ATTRIB_WORKDIR = "javax.servlet.context.tempdir";
+
+
     public static final String Package = "org.apache.tomcat.core";
     public static final int RequestURIMatchRecursion = 5;
-    public static final String WorkDir = "work";
+    public static final String WORK_DIR = "work";
 
     public static class Context {
         public static final String WebInfDir = "WEB-INF";
         public static final String WARInfDir = "META-INF";
         public static final String ConfigFile = WebInfDir + "/web.xml";
-        public static final String ServletDir = WebInfDir + "/classes";
-        public static final String LibDir = WebInfDir + "/lib";
         public static final String WARExpandDir = "docBase";
 
         public static final String[] MASKED_DIR = {
             WebInfDir,
             WARInfDir
         };
-
-        public static String[] CLASS_PATHS = {
-            ServletDir
-        };
-
-        public static String[] LIB_PATHS = {
-            LibDir
-        };
-
-        public static class Attribute {
-	    public static class WorkDir {
-	        public static final String Name = "sun.servlet.workdir";
-	    }
-	}
 
         public static class Default {
 	    public static final String Name = "default";
@@ -158,9 +147,8 @@ public class Constants {
         }
     }
 
+
     public static class Attribute {
-        public static final String WorkDirectory =
-            "javax.servlet.context.tempdir";
         public static final String RequestURI =
             "javax.servlet.include.request_uri";
         public static final String ServletPath =

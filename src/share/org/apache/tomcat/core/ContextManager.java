@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.5 2000/01/07 19:14:11 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/07 19:14:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.6 2000/01/08 22:55:45 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/08 22:55:45 $
  *
  * ====================================================================
  *
@@ -284,11 +284,12 @@ public class ContextManager  implements Server {
 	    throw new IllegalStateException(msg);
 	}
 
-	Context context = new Context(this, path);
-
-	if (docBase != null) {
-	    context.setDocumentBase(docBase);
+	if (docBase == null) {
+	    throw new RuntimeException("XXX SHOULD NEVER HAPPEN");
 	}
+
+	Context context = new Context(this, path, docBase);
+
 
 	// check to see if defaultContext
 
