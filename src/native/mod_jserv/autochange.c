@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: Replaces @VARIABLE@ values made by AutoMake/Conf for Win32   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                             *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include <stdio.h>
 #include <string.h>
@@ -69,14 +69,14 @@ int main(int argc, char *argv[]) {
     int defs;
     int x,y,k;
 
-    // Check for proper command line arguments
+    /* Check for proper command line arguments */
     if (argc<2) {
         printf("Usage: %s [name=data] ... < [inputfile] > [outputfile]\n",
                argv[0]);
         return(1);
     }
 
-    // Parse command line arguments to translate NAME=VALUE in @NAME@, VALUE
+    /* Parse command line arguments to translate NAME=VALUE in @NAME@, VALUE */
     for (k=1;k<argc;k++) {
         char *n=name[k-1];
         char *d=name[k-1];
@@ -101,52 +101,54 @@ int main(int argc, char *argv[]) {
         data[k-1]=d;
     }
 
-    // Print all replacing rules to standard error
+    /* Print all replacing rules to standard error */
     defs=k-1;
-    //fprintf(stderr,"%d replacing rules defined\n",defs);
-    //for (k=0;k<defs;k++) {
-        //fprintf(stderr,"Replacing \"%s\" with \"%s\"\n",name[k],data[k]);
-    //}
+    /* fprintf(stderr,"%d replacing rules defined\n",defs);
+     * for (k=0;k<defs;k++) {
+     *   fprintf(stderr,"Replacing \"%s\" with \"%s\"\n",name[k],data[k]);
+     * }
+     */
 
-    // Start examining lines
+    /* Start examining lines */
     x=0;
     while(fgets(line, 1024, stdin)!=NULL) {
-        // Increase line count
+        /*   Increase line count */
         x++;
-        // Copy the line in a temporary buffer
+        /* Copy the line in a temporary buffer */
         temp=(char *)malloc((strlen(line)+1)*sizeof(char));
         strcpy(temp,line);
-        // In each line check for every name.
+        /* In each line check for every name. */
         for (k=0;k<defs;k++) {
             char *ret=NULL;
             if ((ret=strstr(temp,name[k]))!=NULL) {
-                // We got a match of a name
-                // Evaluate string lengths
+		/* We got a match of a name
+                 * Evaluate string lengths */
                 int namelen=strlen(name[k]);
                 int datalen=strlen(data[k]);
                 int linelen=strlen(temp);
                 int len=linelen-namelen+datalen;
                 int beglen=(int)(ret-temp);
                 int endlen=linelen-beglen-namelen;
-                // Allocate some memory for the string
+                /* Allocate some memory for the string */
                 char *buf=(char *)malloc((len+1)*sizeof(char));
-                //fprintf(stderr,"[Line %d] Replaced \"%s\" with \"%s\"\n",
-                //        x,name[k],data[k]);
-                // Copy the beginning part, change the name and copy the rest
+                /** fprintf(stderr,"[Line %d] Replaced \"%s\" with \"%s\"\n",
+                 *        x,name[k],data[k]);
+                 * Copy the beginning part, change the name and copy the rest
+		 */
                 strncpy(buf,temp,beglen);
                 strncpy(buf+beglen,data[k],datalen);
                 strncpy(buf+beglen+datalen,temp+beglen+namelen,endlen);
-                // Terminate the string
+                /* Terminate the string */
                 buf[len]='\0';
-                // Deallocate unused memory and replace the string
+                /* Deallocate unused memory and replace the string */
                 free(temp);
                 temp=buf;
             }
                     
         }
-        // Print out the line
+        /* Print out the line */
         fprintf(stdout,"%s",temp);
-        // Deallocate temporary buffer
+        /* Deallocate temporary buffer */
         free(temp);
     }
     return(0);
