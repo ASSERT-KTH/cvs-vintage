@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -105,6 +105,7 @@ public class Invocation
       setId(id);
       setMethod(m);
       setArguments(args);    
+      setTransaction(tx);
       setPrincipal(identity);
       setCredential(credential);
    }
