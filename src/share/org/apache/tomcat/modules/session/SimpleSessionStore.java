@@ -337,6 +337,11 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    // The id will be set by one of the modules
 	    String newId=session.getId().toString();
 	    
+//XXXXX - the following is a temporary fix only!  Underlying problem
+//        is:  Why is the newId==null?
+
+	    newId=(newId==null)?"null":newId;
+	    
 	    // What if the newId belongs to an existing session ?
 	    // This shouldn't happen ( maybe we can try again ? )
 	    ServerSession oldS=findSession( newId );
@@ -344,7 +349,6 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 		// that's what the original code did
 		oldS.setState( ServerSession.STATE_EXPIRED );
 	    }
-	    
 	    sessions.put( newId, session );
 	    return (session);
 	}
