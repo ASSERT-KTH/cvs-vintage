@@ -811,7 +811,11 @@ public class IMAPFolder extends RemoteFolder {
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 		throws Exception {
 		//TODO Implement this with the IMAP protocol
-		return null;
+		return ((StreamableMimePart) getStore().getMimePartSource(
+			uid,
+			address,
+			getImapPath()))
+		.getInputStream();
 	}
 
 	/* (non-Javadoc)

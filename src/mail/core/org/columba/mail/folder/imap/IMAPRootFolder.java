@@ -287,8 +287,8 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener, Ro
 		// maybe remove this folder
 		if (parent instanceof IMAPFolder) {
 			if (!((IMAPFolder) parent).existsOnServer) {
-				parent.removeFolder();
 				MainInterface.treeModel.removeNodeFromParent(parent);
+				parent.removeFolder();
 			}
 		}
 	}

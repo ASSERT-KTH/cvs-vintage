@@ -353,6 +353,7 @@ public class ViewMessageCommand extends FolderCommand {
 				mimePartTree.getRootMimeNode().getHeader().getMimeType();
 				String contentType = (String) header.get("Content-Type");
 				ColumbaLogger.log.debug("contentType=" + contentType);
+
 				if (firstPartMimeType.getSubtype().equals("signed")) {
 			verifySignedPart(mimePartTree.getRootMimeNode()); }
 

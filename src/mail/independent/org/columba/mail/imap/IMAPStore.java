@@ -61,6 +61,8 @@ import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.ConcatenatedSource;
+import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.ParserException;
 import org.columba.ristretto.progress.ProgressObserver;
@@ -1015,8 +1017,57 @@ public class IMAPStore {
 			IMAPResponse[] responses =
 				getProtocol().fetchMimePart(uid, address);
 
-			part.setBody(
-				new CharSequenceSource(MimePartParser.parse(responses)));
+			part.setBody(MimePartParser.parse(responses[0]));
+
+			return part;
+		} catch (BadCommandException ex) {
+		} catch (CommandFailedException ex) {
+		} catch (DisconnectedException ex) {
+			state = STATE_NONAUTHENTICATE;
+			getMimePart(uid, address, path);
+		}
+		return null;
+	}
+
+	/**
+	 * Get {@link MimePart}.
+	 * 
+	 * @param uid			message UID
+	 * @param address		address of MimePart in MimeTree
+	 * @param path			mailbox name
+	 * @return				mimepart
+	 * @throws Exception
+	 */
+	public MimePart getMimePartSource(Object uid, Integer[] address, String path)
+		throws Exception {
+
+		ensureLoginState();
+		ensureSelectedState(path);
+
+		if (!aktMessageUid.equals(uid)) {
+			getMimePartTree(uid, path);
+		}
+
+		LocalMimePart part =
+			new LocalMimePart(
+				aktMimePartTree.getFromAddress(address).getHeader());
+
+		try {
+			IMAPResponse[] responses =
+				getProtocol().fetchMimePartHeader(uid, address);
+
+			Source headerSource = MimePartParser.parse(responses[0]);
+
+			responses =
+				getProtocol().fetchMimePart(uid, address);
+
+			Source bodySource = MimePartParser.parse(responses[0]);
+			
+			ConcatenatedSource mimepartSource = new ConcatenatedSource();
+			mimepartSource.addSource(headerSource);
+			mimepartSource.addSource(bodySource);
+
+			part.setBody(mimepartSource);
 
 			return part;
 		} catch (BadCommandException ex) {
