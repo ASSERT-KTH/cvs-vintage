@@ -1,0 +1,82 @@
+<!--
+This dtd is not used by any code and should only be considered a 
+guide.  Until this comment is removed it should not be assumed
+this dtd is in sync with the code.
+ *
+<report scopeId="1" userId="1">
+  <name>Foo</name>
+  <description>foobar</description>
+  <format>tsv</format>
+  <moduleIssueType moduleId="1" issueTypeId="1"/>
+  <axis>
+    <heading>
+      <group name="open">
+        <optionAttribute optionId="1"/>
+      </group>
+      <group name="closed">
+        <optionAttribute optionId="6"/>
+      </group>
+    </heading>
+    <heading>
+      <optionAttribute optionId="20"/>
+      <optionAttribute optionId="31"/>
+      <optionAttribute optionId="34"/>
+    </heading>
+  </axis>
+  <axis>
+    <heading>
+      <date value="20020101000000"/>
+      <date value="20020201000000"/>
+      <date value="20020301000000"/>
+    </heading>
+  </axis>
+</report>
+
+$Id: report.dtd,v 1.2 2003/06/06 22:31:43 dlr Exp $
+-->
+
+<!ELEMENT report (name, description, format?, moduleIssueType+, axis+)>
+<!ATTLIST report
+  scopeId CDATA #IMPLIED
+  userId CDATA #IMPLIED
+>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!-- The default display format used when no format element is
+     specified is web-based. -->
+<!ELEMENT format (#PCDATA)>
+
+<!ELEMENT moduleIssueType ()>
+<!ATTLIST moduleIssueType
+  moduleId CDATA #IMPLIED
+  issueTypeId CDATA #IMPLIED
+>
+
+<!ELEMENT axis (heading+)>
+<!ATTLIST axis
+  name CDATA #IMPLIED
+>
+
+<!ELEMENT heading ( (group | optionAttribute | userAttribute)* | date*)>
+
+<!ELEMENT group (optionAttribute+ | userAttribute+)>
+<!ATTLIST group
+  name CDATA #REQUIRED
+>
+
+<!ELEMENT optionAttribute ()>
+<!ATTLIST optionAttribute
+  optionId CDATA #REQUIRED
+>
+
+<!ELEMENT userAttribute ()>
+<!ATTLIST userAttribute
+  attributeId CDATA #REQUIRED
+  userId CDATA #REQUIRED
+>
+
+<!ELEMENT date ()>
+<!ATTLIST date
+  value CDATA #REQUIRED
+>
