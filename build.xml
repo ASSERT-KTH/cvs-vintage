@@ -86,10 +86,11 @@
                     unless="jdk12.present"/>
            <exclude name="**/SSLSocketFactory.java"
                     unless="jsse.present" />
-     </javac>
+    </javac>
     <copydir src="src/share" dest="${tomcat.build}/classes"
              excludes="javax/**">
       <include name="**/*.properties" />
+      <include name="**/*.dtd" />
     </copydir>
   </target>
 
