@@ -436,7 +436,7 @@ public class Query
          newQuery.setListId(getListId());
          newQuery.setApproved(getApproved());
          newQuery.setCreatedDate(new Date());
-         newQuery.setUserId(getUserId());
+         newQuery.setUserId(user.getUserId());
          newQuery.setScopeId(getScopeId());
          newQuery.save();
 
