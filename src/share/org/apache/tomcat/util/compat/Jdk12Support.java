@@ -72,7 +72,6 @@ import org.apache.tomcat.util.depend.*;
  */
 public class Jdk12Support extends Jdk11Compat {
 
-
     /** Return a class loader. For JDK1.2+ will return a URLClassLoader.
      *  For JDK1.1 will return the util.SimepleClassLoader
      */

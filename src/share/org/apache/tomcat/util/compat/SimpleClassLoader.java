@@ -86,7 +86,8 @@ import java.security.*;
  * The class path can be set only when the object is constructed.
  */
 public class SimpleClassLoader extends ClassLoader {
-    private static final int debug=0;
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(SimpleClassLoader.class);
     
     /**
      * The classpath which this classloader searches for class definitions.
@@ -168,11 +169,6 @@ public class SimpleClassLoader extends ClassLoader {
 	}
     }
     
-    // debug only 
-    void log( String s ) {
-	System.out.println("SimpleClassLoader: " + s );
-    }
-
     //------------------------------------ Implementation of Classloader
 
     /*
@@ -202,7 +198,8 @@ public class SimpleClassLoader extends ClassLoader {
     protected synchronized Class loadClass(String name, boolean resolve)
         throws ClassNotFoundException
     {
-        if( debug>0) log( "loadClass() " + name + " " + resolve);
+        if( logger.isDebugEnabled() )
+	    logger.debug( "loadClass() " + name + " " + resolve);
 	// The class object that will be returned.
         Class c = null;
 
@@ -219,7 +216,8 @@ public class SimpleClassLoader extends ClassLoader {
 	    try {
 		c = parent.loadClass(name);
 		if (c != null) {
-		    if( debug>0) log( "loadClass() from parent " + name);
+		    if( logger.isDebugEnabled() ) 
+			logger.debug( "loadClass() from parent " + name);
 		    if (resolve) resolveClass(c);
 		    return c;
 		}
@@ -232,7 +230,8 @@ public class SimpleClassLoader extends ClassLoader {
 	try {
 	    c = findSystemClass(name);
 	    if (c != null) {
-		if( debug>0) log( "loadClass() from system " + name);
+		if( logger.isDebugEnabled() ) 
+		    logger.debug( "loadClass() from system " + name);
 		if (resolve) resolveClass(c);
 		return c;
 	    }
@@ -253,7 +252,8 @@ public class SimpleClassLoader extends ClassLoader {
 	if( reserved!=null ) {
 	    for( int i=0; i<reserved.length; i++ ) {
 		if( name.startsWith( reserved[i] )) {
-		    if( debug>0) log( "reserved: " + name + " " + reserved[i]);
+		    if( logger.isDebugEnabled() ) 
+			logger.debug( "reserved: " + name + " " + reserved[i]);
 		    throw new ClassNotFoundException(name);
 		}
 	    }
@@ -306,11 +306,12 @@ public class SimpleClassLoader extends ClassLoader {
 	    try {
 		c = defineClass(name, classData, 0, classData.length );
 		if (resolve) resolveClass(c);
-		if( debug>0) log( "loadClass() from local repository " +
+		if( logger.isDebugEnabled() ) 
+		    logger.debug( "loadClass() from local repository " +
 				  name);
 		return c;
 	    } catch(Throwable t ) {
-		t.printStackTrace();
+		logger.error("Error Defining class: " + name,t);
 	    }
 	}
 
@@ -327,7 +328,7 @@ public class SimpleClassLoader extends ClassLoader {
      * @return  an URL on the resource, or null if not found.
      */
     public URL getResource(String name) {
-        if( debug > 0 ) log( "getResource() " + name );
+        if( logger.isDebugEnabled() ) logger.debug( "getResource() " + name );
 	URL u = null;
 
 	if (parent != null) {
@@ -352,7 +353,7 @@ public class SimpleClassLoader extends ClassLoader {
 		return new URL("file", null,
 			       r.file.getAbsolutePath());
 	    } catch(java.net.MalformedURLException badurl) {
-		badurl.printStackTrace();
+		logger.error("bad file: " + r.file, badurl);
 		return null;
 	    }
 	}
@@ -366,7 +367,7 @@ public class SimpleClassLoader extends ClassLoader {
 			       r.repository.getPath() + "!/" +
 			       name);
 	    } catch(java.net.MalformedURLException badurl) {
-		badurl.printStackTrace();
+		logger.error("bad jar: " + r.repository, badurl);
 		return null;
 	    } finally {
 		try {
@@ -394,13 +395,15 @@ public class SimpleClassLoader extends ClassLoader {
      */
     public InputStream getResourceAsStream(String name) {
         // Try to load it from the system class
-        if( debug > 0 ) log( "getResourceAsStream() " + name );
+        if( logger.isDebugEnabled() ) 
+	    logger.debug( "getResourceAsStream() " + name );
 	//	InputStream s = getSystemResourceAsStream(name);
 	InputStream s = null;
 
 	if (parent != null) {
 	    s = parent.getResourceAsStream(name);
-	    if( debug>0 ) log( "Found resource in parent " + s );
+	    if( logger.isDebugEnabled() ) 
+		logger.debug( "Found resource in parent " + s );
 	    if (s != null)
 		return s;
 	}
@@ -408,7 +411,8 @@ public class SimpleClassLoader extends ClassLoader {
 	// Get this resource from system class loader 
 	s = getSystemResourceAsStream(name);
 
-        if( debug>0 ) log( "System resource " + s );
+        if( logger.isDebugEnabled() ) 
+	    logger.debug( "System resource " + s );
 	if (s != null) {
 	    return s;
 	}
@@ -418,16 +422,16 @@ public class SimpleClassLoader extends ClassLoader {
 	if( r==null ) return null;
 	
 	if( r.file!=null ) {
-	    if( debug > 0 ) log( "Found "  + r.file);
+	    if( logger.isDebugEnabled() ) logger.debug( "Found "  + r.file);
 	    try {
                 InputStream res=new FileInputStream(r.file);
 		return res;
             } catch (IOException shouldnothappen) {
-		shouldnothappen.printStackTrace();
+		logger.error("No File: " + r.file, shouldnothappen);
 		return null;
             }
 	} else if( r.zipEntry != null ) {
-	    if( debug > 0 ) log( "Found "  + r.zipEntry);
+	    if( logger.isDebugEnabled() ) logger.debug( "Found "  + r.zipEntry);
 	    // workaround - the better solution is to not close the
 	    // zipfile !!!!
 	    try {
@@ -498,8 +502,7 @@ public class SimpleClassLoader extends ClassLoader {
                     }
 		    zf.close();
                 } catch (IOException ioe) {
-                    ioe.printStackTrace();
-		    System.out.println("Name= " + name + " " + file );
+                    logger.error("Name= " + name + " " + file , ioe);
                     return null;
                 }
             }   

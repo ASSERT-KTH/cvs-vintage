@@ -74,7 +74,9 @@ import java.util.Locale;
     The base class supports JDK1.1 behavior. 
 */
 public class Jdk11Compat {
-
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(Jdk11Compat.class);
+    
     /** Return java version as a string
      */
     public static String getJavaVersion() {
@@ -209,7 +211,8 @@ public class Jdk11Compat {
 	    try {
 		URL url=new URL( "jar:file:/test.jar!/foo");
 	    } catch( MalformedURLException ex ) {
-		if( dL >0) d( "Installing jar protocol handler ");
+		if( logger.isDebugEnabled() ) 
+		    logger.debug( "Installing jar protocol handler ");
 		String handlers=System.getProperty("java.protocol.handler.pkgs");
 		if( handlers==null ) {
 		    handlers=URL_COMPAT_HANDLERS;
@@ -219,12 +222,11 @@ public class Jdk11Compat {
 		    }
 		}
 		System.getProperties().put("java.protocol.handler.pkgs", handlers);
-		if( dL > 0 ) {
+		if( logger.isDebugEnabled() ) {
 		    try {
 			URL url=new URL( "jar:file:/test.jar!/foo");
 		    } catch( MalformedURLException ex1 ) {
-			d("Jar protocol failing ");
-			ex1.printStackTrace();
+			logger.debug("Jar protocol failing ", ex1);
 		    }
 		}
 	    }
@@ -233,10 +235,5 @@ public class Jdk11Compat {
 
     private static final String URL_COMPAT_HANDLERS=
 	"org.apache.tomcat.util.compat";
-
-    private static final int dL=10;
-    private static void d(String s ) {
-        System.err.println( "Jdk11Compat: " + s );
-    }
 
 }
