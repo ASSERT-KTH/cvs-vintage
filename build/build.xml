@@ -1460,7 +1460,35 @@ diff -u -r1.5 project.xml
             use="true"
             windowtitle="${Name} ${version} API"
             doctitle="${Name} ${version} API"
-          bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
+            bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
+        >
+            <classpath refid="classpath"/>
+            <classpath>
+                <fileset dir="${build.project.webinf.lib}">
+                    <include name="**/torque*.jar"/>
+                </fileset>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Creates the API documentation. Added a param -breakiterator        -->
+    <!-- that is specific for 1.4.1 and prevents ugly error messages        -->
+    <!-- ================================================================== -->
+    <target name="javadocs141" depends="om-peer,prepare">
+        <mkdir dir="${javadoc.destdir}"/>
+        <javadoc
+            sourcepath="${build.src.scarab}"
+            packagenames="org.tigris.scarab.*"
+            destdir="${javadoc.destdir}"
+            author="true"
+            private="true"
+            version="true"
+            use="true"
+            windowtitle="${Name} ${version} API"
+            doctitle="${Name} ${version} API"
+            bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
+            additionalparam="-breakiterator"
         >
             <classpath refid="classpath"/>
             <classpath>
