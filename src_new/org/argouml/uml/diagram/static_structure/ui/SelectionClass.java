@@ -24,7 +24,7 @@
 // File: SelectionClass.java
 // Classes: SelectionClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionClass.java,v 1.1 2000/09/04 12:50:23 1sturm Exp $
+// $Id: SelectionClass.java,v 1.2 2001/01/02 15:19:45 boger Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -152,7 +152,7 @@ public class SelectionClass extends SelectionWButtons {
     Dimension minSize = _content.getMinimumSize();
     int minWidth = minSize.width, minHeight = minSize.height;
     Class edgeClass = null;
-    Class nodeClass = ru.novosoft.uml.foundation.core.MClass.class;
+    Class nodeClass = ru.novosoft.uml.foundation.core.MClassImpl.class;
     int bx = mX, by = mY;
     boolean reverse = false;
     switch (hand.index) {

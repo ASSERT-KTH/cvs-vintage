@@ -24,7 +24,7 @@
 // File: SelectionObject.java
 // Classes: SelectionObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionObject.java,v 1.1 2000/09/04 12:50:20 1sturm Exp $
+// $Id: SelectionObject.java,v 1.2 2001/01/02 15:19:44 boger Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -122,7 +122,7 @@ public class SelectionObject extends SelectionWButtons {
     Dimension minSize = _content.getMinimumSize();
     int minWidth = minSize.width, minHeight = minSize.height;
     Class edgeClass = null;
-    Class nodeClass = MObject.class;
+    Class nodeClass = MObjectImpl.class;
     int bx = mX, by = mY;
     boolean reverse = false;
     switch (hand.index) {

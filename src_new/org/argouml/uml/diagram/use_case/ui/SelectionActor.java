@@ -24,7 +24,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.1 2000/09/04 12:50:22 1sturm Exp $
+// $Id: SelectionActor.java,v 1.2 2001/01/02 15:19:45 boger Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -111,7 +111,7 @@ public class SelectionActor extends SelectionWButtons {
     Dimension minSize = _content.getMinimumSize();
     int minWidth = minSize.width, minHeight = minSize.height;
     Class edgeClass = null;
-    Class nodeClass = MUseCase.class;
+    Class nodeClass = MUseCaseImpl.class;
     int bx = mX, by = mY;
     boolean reverse = false;
     switch (hand.index) {

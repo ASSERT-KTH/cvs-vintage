@@ -24,7 +24,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.1 2000/09/04 12:50:23 1sturm Exp $
+// $Id: SelectionInterface.java,v 1.2 2001/01/02 15:19:45 boger Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -115,7 +115,7 @@ public class SelectionInterface extends SelectionWButtons {
     Dimension minSize = _content.getMinimumSize();
     int minWidth = minSize.width, minHeight = minSize.height;
     Class edgeClass = null;
-    Class nodeClass = MClass.class;
+    Class nodeClass = MClassImpl.class;
     int bx = mX, by = mY;
     boolean reverse = false;
     switch (hand.index) {
