@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.29 2004/09/28 19:45:06 mvw Exp $
+// $Id: ArgoParser.java,v 1.30 2004/10/13 14:50:55 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.xml.argo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -360,14 +361,16 @@ public class ArgoParser extends SAXParserBase {
         
         MemberFilePersister memberParser = null;
         
+        HashMap attributeMap = new HashMap();
         if (type.equals("xmi")) {
             memberParser = new ModelMemberFilePersister(url, project);
         } else if (type.equals("pgml")) {
-            memberParser = new DiagramMemberFilePersister();
+            attributeMap.put("name", name.substring(4,name.length()-9));
+            memberParser = new DiagramMemberFilePersister(url, project);
         } else if (type.equals("todo")) {
             memberParser = new TodoListMemberFilePersister();
         }
-        memberParser.load();
+        memberParser.load(attributeMap);
     }
 
 } /* end class ArgoParser */
