@@ -295,9 +295,11 @@
             <rule name="mask" 
                 value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid To Date</rule>
         </field>
-        <field name="InitialSortAttributeId" key="isai" type="NumberKey"/>
-        <field name="InitialSortPolarity" key="isp" type="String"/>
-        <field name="ResultsPerPage" key="rpp" type="int"/>
+        <field name="SortAttributeId" key="sai" type="NumberKey"/>
+        <field name="SortPolarity" key="sp" type="String"/>
+        <!--Commenting out until we want to do pagination in the IssueSearch class
+             <field name="ResultsPerPage" key="rpp" type="int"/> 
+        -->
 </group>
 
 <group name="Module" key="mod" mapToObject="om.ScarabModule">
