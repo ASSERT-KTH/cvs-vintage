@@ -19,7 +19,7 @@
 // File: CrSingletonViolated.java
 // Classes: CrSingletonViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSingletonViolated.java,v 1.4 1998/04/23 23:51:56 jrobbins Exp $
+// $Id: CrSingletonViolated.java,v 1.5 1998/06/03 00:28:55 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 
@@ -57,7 +57,8 @@ public class CrSingletonViolated extends CrUML {
        "\n"+
        "To learn more about the Singleton Pattern, press the MoreInfo icon.");
        
-    addSupportedDecision(CrUML.decINHERITANCE);
+    addSupportedDecision(CrUML.decPATTERNS);
+    setPriority(ToDoItem.LOW_PRIORITY);
   }
 
   protected void sd(String s) { setDescription(s); }

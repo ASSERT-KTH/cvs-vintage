@@ -1,7 +1,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.5 1998/04/23 23:51:32 jrobbins Exp $
+// $Id: ChildGenUML.java,v 1.6 1998/06/03 00:28:23 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -27,16 +27,43 @@ public class ChildGenUML implements ChildGenerator {
       ModelElement me = ((ElementOwnership)o).getModelElement();
       return new EnumerationSingle(me);
     }
+
+//     // needs-more-work: associationclasses fit both of the next 2 cases
+
+//     if (o instanceof Classifier) {
+//       Classifier c = (Classifier) o;
+//       EnumerationComposite res = new EnumerationComposite();      
+//       res.addSub(c.getBehavioralFeature());
+//       res.addSub(c.getStructuralFeature());
+//       return res;
+//     }
+
+//     if (o instanceof IAssociation) {
+//       IAssociation asc = (IAssociation) o;
+//       Vector assocEnds = asc.getConnection();
+//       if (assocEnds != null) return assocEnds.elements();
+//     }
     
-    if (o instanceof Classifier) {
-      Classifier c = (Classifier) o;
-      Vector beh = c.getBehavioralFeature();
-      Vector str = c.getStructuralFeature();
-      if (beh == null && str == null) return EnumerationEmpty.theInstance();
-      if (beh == null) return str.elements();
-      if (str == null) return beh.elements();
-      return new EnumerationComposite(beh.elements(), str.elements());
-    }
+
+    
+    
+    
+    // // needed?
+//     if (o instanceof StateMachine) {
+//       StateMachine sm = (StateMachine) o;
+//       EnumerationComposite res = new EnumerationComposite();      
+//       State top = sm.getTop();
+//       if (top != null) res.addSub(EnumerationSingle(top));
+//       res.addSub(sm.getTransitions());
+//       return res;
+//     }
+
+//     // needed?
+//     if (o instanceof CompositeState) {
+//       CompositeState cs = (CompositeState) o;
+//       Vector substates = cs.getSubstates();
+//       if (substates != null) return substates.elements();
+//     }
 
     // tons more cases
     

@@ -19,7 +19,7 @@
 // File: CrNameConflict.java.java
 // Classes: CrNameConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.4 1998/04/23 23:51:45 jrobbins Exp $
+// $Id: CrNameConflict.java,v 1.5 1998/06/03 00:28:38 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -36,7 +36,7 @@ import uci.uml.Model_Management.*;
 public class CrNameConflict extends CrUML {
 
   public CrNameConflict() {
-    setHeadline("Name conflict");
+    setHeadline("Revise Name to Avoid Conflict");
     sd("Every element of a namespace must have a unique name. \n\n"+
        "Clear and unambiguous naming is key to code generation and \n"+
        "the understandability and maintainability of the design. \n\n"+

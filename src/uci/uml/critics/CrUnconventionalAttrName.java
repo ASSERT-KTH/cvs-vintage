@@ -19,7 +19,7 @@
 // File: CrUnconventionalAttrName.java.java
 // Classes: CrUnconventionalAttrName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.4 1998/04/23 23:51:51 jrobbins Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.5 1998/06/03 00:28:48 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -34,12 +34,13 @@ import uci.uml.Model_Management.*;
 public class CrUnconventionalAttrName extends CrUML {
 
   public CrUnconventionalAttrName() {
-    setHeadline("Choose a better name");
-    sd("Normally attributes begin with a lowercase letter. \n\n"+
-       "Following good naming conventions help to improve \n"+
+    setHeadline("Choose a Better Attribute Name");
+    sd("Normally attributes begin with a lowercase letter. "+
+       "The name '{name}' is unconventional because it does not.\n\n"+
+       "Following good naming conventions help to improve "+
        "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select the \n"+
-       "attribute and use the Properties tab to give it a name.");
+       "To fix this, use the FixIt button, or manually select {name} "+
+       "and use the Properties tab to give it a name.");
     addSupportedDecision(CrUML.decNAMING);
   }
 

@@ -28,7 +28,7 @@
 // File: NetNode.java
 // Classes: NetNode
 // Original Author: ics125 spring 1996
-// $Id: NetNode.java,v 1.6 1998/04/18 01:26:41 jrobbins Exp $
+// $Id: NetNode.java,v 1.7 1998/06/03 00:27:36 jrobbins Exp $
 
 package uci.gef;
 
@@ -101,7 +101,7 @@ implements GraphNodeHooks, java.io.Serializable  {
     while (ps.hasMoreElements()) {
       ((NetPort)ps.nextElement()).dispose();
     }
-    firePropertyChange("Disposed", false, true);
+    firePropertyChange("disposed", false, true);
   }
 
   ////////////////////////////////////////////////////////////////

@@ -19,7 +19,7 @@
 // File: CrNWayAgg.java.java
 // Classes: CrNWayAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.4 1998/04/23 23:51:44 jrobbins Exp $
+// $Id: CrNWayAgg.java,v 1.5 1998/06/03 00:28:37 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrNWayAgg extends CrUML {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();
+    if (conns == null || conns.size() <= 2) return NO_PROBLEM;
     int aggCount = 0;
     java.util.Enumeration enum = conns.elements();
     while (enum.hasMoreElements()) {

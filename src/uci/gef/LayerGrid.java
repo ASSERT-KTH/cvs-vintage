@@ -28,7 +28,7 @@
 // File: LayerGrid.java
 // Classes: LayerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerGrid.java,v 1.8 1998/05/21 00:59:11 jrobbins Exp $
+// $Id: LayerGrid.java,v 1.9 1998/06/03 00:27:30 jrobbins Exp $
 
 package uci.gef;
 

@@ -28,7 +28,7 @@
 // File: TabPropFrame.java
 // Interfaces: TabPropFrame
 // Original Author: jrobbins@ics.uci.edu
-// $Id: TabPropFrame.java,v 1.6 1998/05/21 00:59:19 jrobbins Exp $
+// $Id: TabPropFrame.java,v 1.7 1998/06/03 00:27:43 jrobbins Exp $
 
 
 

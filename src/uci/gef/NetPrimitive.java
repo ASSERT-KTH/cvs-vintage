@@ -28,7 +28,7 @@
 // File: NetPrimitive.java
 // Classes: NetPrimitive
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NetPrimitive.java,v 1.6 1998/04/18 02:08:46 jrobbins Exp $
+// $Id: NetPrimitive.java,v 1.7 1998/06/03 00:27:38 jrobbins Exp $
 
 package uci.gef;
 
@@ -63,12 +63,12 @@ public class NetPrimitive implements java.io.Serializable {
 
   /** Draw the user's attention to any and all visualizations of this
    *  net-level object. */
-  public boolean setHighlight() { return _highlight; }
+  public boolean getHighlight() { return _highlight; }
   
   public void setHighlight(boolean b) {
     boolean old = _highlight;
     _highlight = b;
-    firePropertyChange("Highlight", old, _highlight);
+    firePropertyChange("highlight", old, _highlight);
   }
 
 

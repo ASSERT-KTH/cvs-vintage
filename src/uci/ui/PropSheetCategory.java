@@ -28,7 +28,7 @@
 // File: PropSheetCategory.java
 // Interfaces: PropSheetCategory
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropSheetCategory.java,v 1.4 1998/05/21 00:59:18 jrobbins Exp $
+// $Id: PropSheetCategory.java,v 1.5 1998/06/03 00:27:42 jrobbins Exp $
 
 package uci.ui;
 

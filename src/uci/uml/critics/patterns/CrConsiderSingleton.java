@@ -19,7 +19,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.6 1998/05/21 00:59:51 jrobbins Exp $
+// $Id: CrConsiderSingleton.java,v 1.7 1998/06/03 00:28:54 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 
@@ -60,7 +60,8 @@ public class CrConsiderSingleton extends CrUML {
        "\n"+
        "To learn more about the Singleton Pattern, press the MoreInfo icon.");
        
-    addSupportedDecision(CrUML.decINHERITANCE);
+    addSupportedDecision(CrUML.decPATTERNS);
+    setPriority(ToDoItem.LOW_PRIORITY);
   }
 
   protected void sd(String s) { setDescription(s); }
@@ -87,7 +88,7 @@ public class CrConsiderSingleton extends CrUML {
       java.util.Enumeration strEnum = str.elements();
       while (strEnum.hasMoreElements()) {
 	StructuralFeature sf = (StructuralFeature) strEnum.nextElement();
-	if (sf.getTargetScope() == ScopeKind.INSTANCE) return NO_PROBLEM;
+	if (ScopeKind.INSTANCE.equals(sf.getTargetScope())) return NO_PROBLEM;
       }
     }
     

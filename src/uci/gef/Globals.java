@@ -28,7 +28,7 @@
 // File: Globals.java
 // Classes: Globals
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Globals.java,v 1.5 1998/04/18 01:26:22 jrobbins Exp $
+// $Id: Globals.java,v 1.6 1998/06/03 00:27:27 jrobbins Exp $
 
 package uci.gef;
 
@@ -48,9 +48,9 @@ public class Globals {
   ////////////////////////////////////////////////////////////////
   // constants
 
-  public static final String REMOVE = "Remove";
-  public static final String HIGHLIGHT = "Highlight";
-  public static final String UNHIGHLIGHT = "Unhighlight";
+  public static final String REMOVE = "remove";
+//   public static final String HIGHLIGHT = "highlight";
+//   public static final String UNHIGHLIGHT = "unhighlight";
 
   ////////////////////////////////////////////////////////////////
   // applet related methods

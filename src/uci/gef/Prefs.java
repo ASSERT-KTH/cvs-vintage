@@ -28,7 +28,7 @@
 // File: Prefs.java
 // Classes: Prefs
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Prefs.java,v 1.5 1998/04/18 01:26:45 jrobbins Exp $
+// $Id: Prefs.java,v 1.6 1998/06/03 00:27:39 jrobbins Exp $
 
 package uci.gef;
 
@@ -70,7 +70,7 @@ public class Prefs {
   public Color getLockedHandleColor() { return _lockedHandleColor; }
 
   /** The color of the highlight shown to draw the users attention */
-  Color _highlightColor = new Color(0x99, 0x33, 0x33);
+  Color _highlightColor = new Color(0xAA, 0x55, 0x55);
   /** The color of the highlight shown to draw the users attention */
   public Color getHighlightColor() { return _highlightColor; }
   /** The color of the highlight shown to draw the users attention */

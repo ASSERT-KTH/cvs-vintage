@@ -28,7 +28,7 @@
 // File: NetPort.java
 // Classes: NetPort
 // Original Author: ics125 spring 1996
-// $Id: NetPort.java,v 1.6 1998/04/18 01:26:41 jrobbins Exp $
+// $Id: NetPort.java,v 1.7 1998/06/03 00:27:37 jrobbins Exp $
 
 package uci.gef;
 
@@ -105,7 +105,7 @@ implements GraphPortHooks, java.io.Serializable {
       NetEdge e = (NetEdge) edges.nextElement();
       e.dispose();
     }
-    firePropertyChange("Disposed", false, true);
+    firePropertyChange("disposed", false, true);
   }
 
   ////////////////////////////////////////////////////////////////
