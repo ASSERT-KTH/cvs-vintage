@@ -9,7 +9,7 @@
               value="../jakarta-servletapi/lib/servlet.jar"/>
     <property name="tomcat.build" value="../build/tomcat"/>
     <property name="tomcat.home" value="../dist/tomcat"/>
-    <property name="j2ee.home" value="../../j2ee/build/unix"/>
+    <property name="j2ee.home" value="../j2ee/build/unix"/>
     <property name="optimize" value="true" />
     <property name="jaxp" value="../jaxp1.0.1" />
   </target>
@@ -50,16 +50,16 @@
     <fixcrlf srcdir="${tomcat.build}" includes="*.sh" cr="remove"/>
     <fixcrlf srcdir="${tomcat.build}" includes="*.bat" cr="add"/>
 
-    <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/antRun"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/tomcat.sh"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/jspc.sh"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/startup.sh"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/shutdown.sh"/>
+    <chmod perm="+x" file="${tomcat.build}/bin/ant"/>
+    <chmod perm="+x" file="${tomcat.build}/bin/antRun"/>
+    <chmod perm="+x" file="${tomcat.build}/bin/tomcat.sh"/>
+    <chmod perm="+x" file="${tomcat.build}/bin/jspc.sh"/>
+    <chmod perm="+x" file="${tomcat.build}/bin/startup.sh"/>
+    <chmod perm="+x" file="${tomcat.build}/bin/shutdown.sh"/>
   </target>
 
   <!-- ==================== Build tomcat ==================== -->
-  <target name="tomcat" depends="prepare">
+  <target name="tomcat-compile" >
     <available property="jsse.present" 
                classname="com.sun.net.ssl.internal.ssl.Provider" />
     <available property="jdk12.present"
@@ -89,6 +89,9 @@
              excludes="javax/**">
       <include name="**/*.properties" />
     </copydir>
+  </target>
+
+  <target name="tomcat" depends="prepare,tomcat-compile">
   </target>
 
 
@@ -205,11 +208,11 @@
     <deltree dir="${tomcat.home}/webapps/test"/>
 
     <!-- Change permissions for unix -->
-    <chmod perm="+x" src="${tomcat.home}/bin/tomcat.sh"/>
-    <chmod perm="+x" src="${tomcat.home}/bin/jspc.sh"/>
-    <chmod perm="+x" src="${tomcat.home}/bin/startup.sh"/>
-    <chmod perm="+x" src="${tomcat.home}/bin/shutdown.sh"/>
-    <chmod perm="+x" src="${tomcat.home}/bin/test-tomcat.sh"/>
+    <chmod perm="+x" file="${tomcat.home}/bin/tomcat.sh"/>
+    <chmod perm="+x" file="${tomcat.home}/bin/jspc.sh"/>
+    <chmod perm="+x" file="${tomcat.home}/bin/startup.sh"/>
+    <chmod perm="+x" file="${tomcat.home}/bin/shutdown.sh"/>
+    <chmod perm="+x" file="${tomcat.home}/bin/test-tomcat.sh"/>
   </target>
 
   <target name="j2ee-dist" depends="j2ee"> 
