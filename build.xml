@@ -8,6 +8,13 @@
   <property name="optimize" value="false"/>
   <property name="debug" value="on"/>
 
+  <!-- Version properties -->
+  <property name="version" value="3.3.2" />
+  <property name="release" value="Dev" />
+  <property name="version.release" value="${version} ${release}"/>
+  <property name="tomcat.name" value="Tomcat ${version}" />
+  <property name="tomcat.name.release" value="Tomcat ${version.release}" />
+
   <!-- Directories -->
   <!-- Where source packages are located -->
   <property name="ws" value=".." />
@@ -155,6 +162,13 @@
 
     <copy todir="${tomcat.build}/bin">
             <fileset dir="src/shell"/>
+        </copy>
+    <copy todir="${tomcat.build}/bin"
+          file="src/shell/tomcat.bat"
+          overwrite="yes">
+	    <filterset>
+	        <filter token="TITLE" value="${tomcat.name.release}"/>
+	    </filterset>
         </copy>
     <copy todir="${tomcat.build}/conf">
             <fileset dir="src/etc"/>
@@ -522,6 +536,14 @@
     <copy todir="${tomcat.build}/webapps/ROOT">
       <fileset dir="src/webpages"/>
     </copy>
+    <copy todir="${tomcat.build}/webapps/ROOT"
+          file="src/webpages/index.html"
+          overwrite="yes">
+	    <filterset>
+	        <filter token="NAME" value="${tomcat.name.release}"/>
+	        <filter token="VERSION" value="${version.release}"/>
+	    </filterset>
+        </copy>
     <copy todir="${tomcat.build}/webapps/ROOT/doc">
       <fileset dir="src/doc"/>
     </copy>

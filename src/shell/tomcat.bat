@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.45 2001/10/21 17:34:12 larryi Exp $
+rem $Id: tomcat.bat,v 1.46 2002/03/28 02:29:00 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -85,8 +85,8 @@ goto cleanup
 rem ----- Prepare Appropriate Java Execution Commands -----------------------
 
 if not "%OS%" == "Windows_NT" goto noTitle
-set _SECSTARTJAVA=start "Secure Tomcat 3.3" "%JAVA_HOME%\bin\java"
-set _STARTJAVA=start "Tomcat 3.3" "%JAVA_HOME%\bin\java"
+set _SECSTARTJAVA=start "Secure @TITLE@" "%JAVA_HOME%\bin\java"
+set _STARTJAVA=start "@TITLE@" "%JAVA_HOME%\bin\java"
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 goto setClasspath
 
