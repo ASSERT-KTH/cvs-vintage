@@ -7,8 +7,10 @@
 
 package org.jboss.jmx.client;
 
-import java.util.Arrays;
-import java.util.Collection;
+// import java.util.Arrays;
+// import java.util.Collection;
+import java.util.Iterator;
+import java.util.Hashtable;
 
 import javax.management.DynamicMBean;
 import javax.management.MBeanServer;
@@ -32,52 +34,35 @@ public interface ConnectorFactoryServiceMBean
 	public static final String OBJECT_NAME = "Factory:name=JMX";
 	
 	// Public --------------------------------------------------------
-	/**
-	* Returns a list of available servers
-	*
-	* @param pProtocol			Servers supporting this protocol if not null
-	*							or empty otherwise it will be ignored
-	* @param pServerQuery		Query instance to filter the list of servers
-	*
-	* @return					A collection of available servers
-	*							names/identifications (String)
-	**/
-	public Collection getServers(
-		String pProtocol
-//AS		ServerQuery pServerQuery
-	);
-	
-	/**
-	* Returns a list of available protocols (connectors)
-	*
-	* @param pServer			Server name/identification to look up
-	*
-	* @return					A collection of available protocols (String)
-	*/
-	public Collection getProtocols(
-		String pServer
-	);
 
-	/**
-	* Initiate a connection to the given server with the given
-	* protocol
-	*
-	* @param pServer			Server name/identification to connect to
-	* @param pProtocol			Protocol to use
-	*/
-	public JMXConnector createConnection(
-		String pServer,
-		String pProtocol
-	);
-	
-	/**
-	* Removes the given connection and frees the resources
-	*
-	* @param pSever				Server name/identification of the connectino
-	* @param pProtocol			Protocol used
-	*/
-	public void removeConnection(
-		String pServer,
-		String pProtocol
-	);
+   /**
+    * Look up for all registered JMX Connector at a given JNDI server
+    *
+    * @param pProperties List of properties defining the JNDI server
+    * @param pTester Connector Tester implementation to be used
+    *
+    * @return An iterator on the list of ConnectorNames representing
+    *         the found JMX Connectors
+    **/
+   public Iterator getConnectors( Hashtable pProperties, ConnectorFactoryImpl.IConnectorTester pTester );
+
+   /**
+    * Initiate a connection to the given server with the given protocol
+    *
+    * @param pConnector Connector Name used to identify the remote JMX Connector
+    *
+    * @return JMX Connector or null if server or protocol is not supported
+    **/
+   public JMXConnector createConnection(
+      ConnectorFactoryImpl.ConnectorName pConnector
+   );
+
+   /**
+    * Removes the given connection and frees the resources
+    *
+    * @param pConnector Connector Name used to identify the remote JMX Connector
+    **/
+   public void removeConnection(
+      ConnectorFactoryImpl.ConnectorName pConnector
+   );
 }
