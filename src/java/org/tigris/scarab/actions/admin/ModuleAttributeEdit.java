@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.4 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.5 2002/01/19 01:10:31 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -183,6 +183,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             RModuleOption rmo2 = module.
                  addRModuleOption(templateType, option);
             rmo2.save();
+            doCancel(data, context);
         }
     }
 
