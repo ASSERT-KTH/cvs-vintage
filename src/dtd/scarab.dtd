@@ -1,3 +1,11 @@
+<!--
+    The Scarab xml import works by parsing the XML file and
+    replaying the activityset/activity elements. The last 
+    activityset/activity elements in the issue element is the
+    current state of the issue. Therefore, the order of the
+    ActivitySet/activity elements in the issue is very important.
+-->
+
 <!-- General elements common to other elements: -->
 
 <!-- a string value -->
