@@ -623,10 +623,12 @@ public class Issue
             // which will lead to duplicates
             crit.setDistinct();
             List transactions = TransactionPeer.doSelect(crit);
-            Transaction t = (Transaction)transactions.get(0);
-            user = UserManager.getInstance(t.getCreatedBy());
+            if (transactions.size() == 1)
+            {
+                Transaction t = (Transaction)transactions.get(0);
+                user = UserManager.getInstance(t.getCreatedBy());
+            }
         }
-        
         return user;
     }
          
