@@ -11,7 +11,7 @@
 
 
 <p>
-$l10n.GoToSavedReports $link.setPage("ReportList.vm").setLabel("$l10n.SavedReportsList").
+$l10n.GoToSavedReports $link.setPage("reports,ReportList.vm").setLabel("$l10n.SavedReportsList").
 </p>
 
 <h3>$l10n.ReportInfo</h3>
