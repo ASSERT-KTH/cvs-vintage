@@ -60,8 +60,10 @@ import java.text.ParseException;
 import com.workingdogs.village.Record;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
+import org.apache.torque.TorqueException;
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
@@ -198,12 +200,15 @@ public class IssueSearch
     private NumberKey sortAttributeId;
     private String sortPolarity;
     private MITList mitList;
+
+    private List userIdList;
+    private List userSearchCriteriaList;
+    private List lastUsedAVList;
+    private boolean modified;
+
+    private int lastTotalIssueCount = -1;
+    private List lastMatchingIssueIds = null;
      
-    static 
-    {
-
-    }
-
     public IssueSearch(Issue issue)
         throws Exception
     {
@@ -369,7 +374,11 @@ public class IssueSearch
      */
     public void setSearchWords(String  v) 
     {
-        this.searchWords = v;
+        if (!ObjectUtils.equals(v, this.searchWords)) 
+        {
+            modified = true;
+            this.searchWords = v;
+        }
     }
 
     
@@ -388,7 +397,11 @@ public class IssueSearch
      */
     public void setCommentQuery(String  v) 
     {
-        this.commentQuery = v;
+        if (!ObjectUtils.equals(v, this.commentQuery)) 
+        {
+            modified = true;
+            this.commentQuery = v;
+        }
     }
     
     /**
@@ -402,7 +415,7 @@ public class IssueSearch
     {
         if ( textScope == null ) 
         {
-            setTextScopeToAll();
+            textScope = getTextScopeForAll();
         }
         else
         {
@@ -410,7 +423,7 @@ public class IssueSearch
             {
                 if ( textScope[i].equals(ALL_TEXT) ) 
                 {
-                    setTextScopeToAll();
+                    textScope = getTextScopeForAll();
                     break;
                 }       
             }
@@ -422,9 +435,10 @@ public class IssueSearch
     /**
      * Sets the text search scope to all quick search text attributes.
      */
-    private void setTextScopeToAll()
+    private NumberKey[] getTextScopeForAll()
         throws Exception
     {
+        NumberKey[] textScope = null;
         List textAttributes = getQuickSearchTextAttributeValues();
         if ( textAttributes != null ) 
         {
@@ -435,6 +449,7 @@ public class IssueSearch
                                 textAttributes.get(j)).getAttributeId();
             }
         }
+        return textScope;
     }
 
     /**
@@ -442,8 +457,44 @@ public class IssueSearch
      * @param v  Value to assign to textScope.
      */
     public void setTextScope(NumberKey[]  v) 
+        throws Exception
     {
-        this.textScope = v;
+        if (v != null) 
+        {
+            for ( int i=v.length-1; i>=0; i-- ) 
+            {
+                if ( v[i].equals(ALL_TEXT) ) 
+                {
+                    v = getTextScopeForAll();
+                    break;
+                }       
+            }
+        }
+
+        // note previous block may have made v == null though its not likely
+        // (don't replace the if with an else)
+        if (v == null) 
+        {
+            modified |= this.textScope != null;
+            this.textScope = null;
+        }
+        else if (this.textScope != null && this.textScope.length == v.length)
+        {
+            for ( int i=v.length-1; i>=0; i-- ) 
+            {
+                if ( !v[i].equals(this.textScope[i]) ) 
+                {
+                    modified = true;
+                    this.textScope = v;            
+                    break;
+                }       
+            }
+        }
+        else 
+        {
+            modified = true;
+            this.textScope = v;            
+        }
     }
 
 
@@ -464,11 +515,12 @@ public class IssueSearch
     {
         if ( v != null && v.length() == 0 ) 
         {
-            this.minId = null;
+            v = null;
         }
-        else 
+        if (!ObjectUtils.equals(v, this.minId)) 
         {
-            this.minId = v;            
+            modified = true;
+            this.minId = v;
         }
     }
 
@@ -490,10 +542,11 @@ public class IssueSearch
     {
         if ( v != null && v.length() == 0 ) 
         {
-            this.maxId = null;
+            v = null;
         }
-        else 
+        if (!ObjectUtils.equals(v, this.maxId)) 
         {
+            modified = true;
             this.maxId = v;
         }
     }
@@ -516,11 +569,12 @@ public class IssueSearch
     {
         if ( v != null && v.length() == 0 ) 
         {
-            this.minDate = null;
+            v = null;
         }
-        else 
+        if (!ObjectUtils.equals(v, this.minDate)) 
         {
-            this.minDate = v;            
+            modified = true;
+            this.minDate = v;
         }
     }
 
@@ -542,11 +596,12 @@ public class IssueSearch
     {
         if ( v != null && v.length() == 0 ) 
         {
-            this.maxDate = null;
+            v = null;
         }
-        else 
+        if (!ObjectUtils.equals(v, this.maxDate)) 
         {
-            this.maxDate = v;            
+            modified = true;
+            this.maxDate = v;
         }
     }
     
@@ -565,9 +620,14 @@ public class IssueSearch
      */
     public void setMinVotes(int  v) 
     {
-        this.minVotes = v;
+        if (v != this.minVotes) 
+        {
+            modified = true;
+            this.minVotes = v;
+        }
     }    
-        
+
+
     /**
      * Get the value of stateChangeAttributeId.
      * @return value of stateChangeAttributeId.
@@ -576,9 +636,8 @@ public class IssueSearch
     {
         if ( stateChangeAttributeId == null ) 
         {
-            stateChangeAttributeId = AttributePeer.STATUS__PK;
+            return AttributePeer.STATUS__PK;
         }
-        
         return stateChangeAttributeId;
     }
     
@@ -588,10 +647,13 @@ public class IssueSearch
      */
     public void setStateChangeAttributeId(NumberKey  v) 
     {
-        this.stateChangeAttributeId = v;
+        if (!ObjectUtils.equals(v, this.stateChangeAttributeId)) 
+        {
+            modified = true;
+            this.stateChangeAttributeId = v;
+        }
     }
-    
-    
+        
     /**
      * Get the value of stateChangeFromOptionId.
      * @return value of stateChangeFromOptionId.
@@ -607,7 +669,11 @@ public class IssueSearch
      */
     public void setStateChangeFromOptionId(NumberKey  v) 
     {
-        this.stateChangeFromOptionId = v;
+        if (!ObjectUtils.equals(v, this.stateChangeFromOptionId)) 
+        {
+            modified = true;
+            this.stateChangeFromOptionId = v;
+        }
     }
     
     /**
@@ -625,7 +691,11 @@ public class IssueSearch
      */
     public void setStateChangeToOptionId(NumberKey  v) 
     {
-        this.stateChangeToOptionId = v;
+        if (!ObjectUtils.equals(v, this.stateChangeToOptionId)) 
+        {
+            modified = true;
+            this.stateChangeToOptionId = v;
+        }
     }
 
     
@@ -646,10 +716,11 @@ public class IssueSearch
     {
         if ( v != null && v.length() == 0 ) 
         {
-            this.stateChangeFromDate = null;
+            v = null;
         }
-        else 
+        if (!ObjectUtils.equals(v, this.stateChangeFromDate)) 
         {
+            modified = true;
             this.stateChangeFromDate = v;
         }
     }
@@ -672,10 +743,11 @@ public class IssueSearch
     {
         if ( v != null && v.length() == 0 ) 
         {
-            this.stateChangeToDate = null;
+            v = null;
         }
-        else 
+        if (!ObjectUtils.equals(v, this.stateChangeToDate)) 
         {
+            modified = true;
             this.stateChangeToDate = v;
         }
     }
@@ -696,7 +768,11 @@ public class IssueSearch
      */
     public void setSortAttributeId(NumberKey v) 
     {
-        this.sortAttributeId = v;
+        if (!ObjectUtils.equals(v, this.sortAttributeId)) 
+        {
+            modified = true;
+            this.sortAttributeId = v;
+        }
     }
     
 
@@ -724,12 +800,13 @@ public class IssueSearch
      */
     public void setSortPolarity(String  v) 
     {
-        this.sortPolarity = v;
+        if (!ObjectUtils.equals(v, this.sortPolarity)) 
+        {
+            modified = true;
+            this.sortPolarity = v;
+        }
     }
 
-
-    private List userIdList;
-    private List userSearchCriteriaList;
     /**
      * Describe <code>addUserSearch</code> method here.
      *
@@ -754,9 +831,74 @@ public class IssueSearch
             userIdList = new ArrayList(4);
             userSearchCriteriaList = new ArrayList(4);
         }
+        boolean newCriteria = true;
+        for (int i=userIdList.size()-1; i>=0; i--) 
+        {
+            if (userId.equals(userIdList.get(i)) &&
+                searchCriteria.equals(userSearchCriteriaList.get(i))) 
+            {
+                newCriteria = false;
+                break;
+            }
+        }
         
-        userIdList.add(userId);
-        userSearchCriteriaList.add(searchCriteria);
+        if (newCriteria) 
+        {
+            modified = true;
+            userIdList.add(userId);
+            userSearchCriteriaList.add(searchCriteria);            
+        }
+    }
+
+    private boolean isAVListModified()
+        throws TorqueException
+    {
+        boolean result = false;
+        if (lastUsedAVList == null) 
+        {
+            result = true;
+        }
+        else 
+        {
+            List avList = getAttributeValues();
+            int max = avList.size();
+            if (lastUsedAVList.size() == max) 
+            {
+                for (int i=0; i<max; i++) 
+                {
+                    AttributeValue a1 = (AttributeValue)avList.get(i);
+                    AttributeValue a2 = (AttributeValue)lastUsedAVList.get(i);
+                    if ( !ObjectUtils.equals(a1.getOptionId(), a2.getOptionId())
+                         || !ObjectUtils.equals(a1.getUserId(), a2.getUserId())
+                         //|| a1.getNumericValue() != a2.getNumericValue()
+                         || !ObjectUtils.equals(a1.getValue(), a2.getValue()))
+                    {
+                        result = true;
+                    }
+                }
+            }
+            else 
+            {
+                result = true;
+            }
+        }        
+        return result;
+    }
+
+    /**
+     * 
+     *
+     * @return a <code>boolean</code> value
+     */
+    private void checkModified()
+        throws TorqueException
+    {
+        if (modified || isAVListModified()) 
+        {
+            modified = false;
+            lastTotalIssueCount = -1;
+            lastMatchingIssueIds = null;
+        }
     }
 
     public NumberKey getALL_TEXT()
@@ -853,17 +995,20 @@ public class IssueSearch
      *
      * @param attValues a <code>List</code> value
      */
-    private void removeUnsetValues(List attValues)
+    private List removeUnsetValues(List attValues)
     {
-        for ( int i=attValues.size()-1; i>=0; i-- ) 
+        int size = attValues.size();
+        List setAVs = new ArrayList(size);
+        for ( int i=0; i<size; i++ ) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
-            if ( attVal.getOptionId() == null && attVal.getValue() == null
-                 && attVal.getUserId() == null ) 
+            if ( attVal.getOptionId() != null || attVal.getValue() != null
+                 || attVal.getUserId() != null ) 
             {
-                attValues.remove(i);
+                setAVs.add(attVal);
             }
         }
+        return setAVs;
     }
 
     private void addMinimumVotes(Criteria crit)
@@ -1462,7 +1607,7 @@ public class IssueSearch
         }
 
         // add comment attachments
-        commentQuery = getCommentQuery();
+        String commentQuery = getCommentQuery();
         if (commentQuery != null && commentQuery.trim().length() > 0) 
         {
             NumberKey[] id = {AttachmentTypePeer.COMMENT_PK};
@@ -1543,16 +1688,14 @@ public class IssueSearch
         crit.add(IssuePeer.DELETED, false);
 
         // add option values
-        Criteria tempCrit = new Criteria(2)
-            .add(AttributeValuePeer.DELETED, false);        
-        List attValues = getAttributeValues(tempCrit);
+        lastUsedAVList = getAttributeValues();
 
         // remove unset AttributeValues before searching
-        removeUnsetValues(attValues);        
-        addSelectedAttributes(crit, attValues);
+        List setAttValues = removeUnsetValues(lastUsedAVList);        
+        addSelectedAttributes(crit, setAttValues);
 
         // search for issues based on text
-        NumberKey[] matchingIssueIds = getTextMatches(attValues);
+        NumberKey[] matchingIssueIds = getTextMatches(setAttValues);
 
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 )
         {            
@@ -1590,42 +1733,58 @@ public class IssueSearch
     public List getMatchingIssues()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
-        List sortedIssues = null;
-        // the matchingIssueIds are text search matches.  if length == 0,
-        // then no need to search further.  if null then there was no
-        // text to search, so continue the search process.
-        if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
-        {            
-            // Get matching issues, with sort criteria
-            sortedIssues = sortIssues(crit);
-        }
-        else 
+        checkModified();
+        if (lastMatchingIssueIds == null) 
         {
-            sortedIssues = new ArrayList(0);
-        }
+            List sortedIssues = null;
+            Criteria crit = new Criteria();
+            crit.setDistinct();
+            NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
+            // the matchingIssueIds are text search matches.  if length == 0,
+            // then no need to search further.  if null then there was no
+            // text to search, so continue the search process.
+            if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+            {            
+                // Get matching issues, with sort criteria
+                sortedIssues = sortIssues(crit);
+            }
+            else 
+            {
+                sortedIssues = new ArrayList(0);
+            }            
 
-        // Return list as issue ids
-        List sortedIssueIds = new ArrayList();
-        for (int i=0; i<sortedIssues.size(); i++)
-        {
-            sortedIssueIds.add(((Issue)sortedIssues.get(i)).getUniqueId());
+            // Return list as issue ids
+            lastMatchingIssueIds = new ArrayList(sortedIssues.size());
+            for (Iterator i = sortedIssues.iterator(); i.hasNext(); )
+            {
+                lastMatchingIssueIds.add(((Issue)i.next()).getUniqueId());
+            }            
         }
-        return sortedIssueIds;
+        
+        return lastMatchingIssueIds;
     }
 
     public int getIssueCount()
         throws Exception
     {
+        checkModified();
         int count = 0;
-        Criteria crit = new Criteria();
-        NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
-        if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+        if (lastTotalIssueCount >= 0) 
         {
-            crit.addSelectColumn("count(DISTINCT " + IssuePeer.ISSUE_ID + ')');
-            List records = IssuePeer.doSelectVillageRecords(crit);
-            count = ((Record)records.get(0)).getValue(1).asInt();
+            count = lastTotalIssueCount;
+        }
+        else 
+        {
+            Criteria crit = new Criteria();
+            NumberKey[] matchingIssueIds = addCoreSearchCriteria(crit);
+            if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+            {
+                crit.addSelectColumn(
+                    "count(DISTINCT " + IssuePeer.ISSUE_ID + ')');
+                List records = IssuePeer.doSelectVillageRecords(crit);
+                count = ((Record)records.get(0)).getValue(1).asInt();
+            }
+            lastTotalIssueCount = count;
         }
 
         return count;
@@ -1661,89 +1820,79 @@ public class IssueSearch
         {
             crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
         }
-        crit.setDistinct();
         return IssuePeer.doSelect(crit);
     }
 
-    /**
-     * Sorts on issue attribute selected by user
-     */
     private List sortByAttribute(Criteria crit) throws Exception
     {
-        Vector attSet = new Vector();
-        Vector attNotSet = new Vector();
-        List unSortedIssues = IssuePeer.doSelect(crit);
-        List sortedIssues = new ArrayList(unSortedIssues.size());
         NumberKey sortAttrId = getSortAttributeId();
         Attribute att = AttributeManager.getInstance(sortAttrId);
 
-        for (int j=0; j<unSortedIssues.size(); j++)
+        String sortColumn = null;  
+        if ( att.isOptionAttribute())
         {
-            Issue issue =  (Issue)unSortedIssues.get(j);
-            AttributeValue sortAttVal = (AttributeValue)issue
-               .getModuleAttributeValuesMap()
-               .get(att.getName().toUpperCase());
-            Object sortValue = null;
-            if ( sortAttVal instanceof OptionAttribute)
-            {
-                sortValue = sortAttVal.getAttributeOption();
-            }
-            else 
-            {
-                sortValue = sortAttVal.getValue();
-            }
-            if (sortValue == null)
-            {
-                attNotSet.add(issue);
-            }
-            else
-            {
-                attSet.add(issue.getIssueId());
-            }
-        } 
-        if (attSet.size() > 0)
-        {
-            String sortColumn = null;  
-            Criteria crit2 = new Criteria();
-            if ( att.isOptionAttribute())
-            {
-                crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
-                crit2.add(AttributeOptionPeer.ATTRIBUTE_ID, sortAttrId);
-                crit2.addJoin(AttributeOptionPeer.OPTION_ID,
-                              RModuleOptionPeer.OPTION_ID);
-                crit2.addJoin(AttributeValuePeer.OPTION_ID,
-                              RModuleOptionPeer.OPTION_ID);
-                crit2.addJoin(AttributeValuePeer.ISSUE_ID,
-                              IssuePeer.ISSUE_ID);
-                crit2.addJoin(IssuePeer.MODULE_ID, 
-                              RModuleOptionPeer.MODULE_ID);
-                crit2.addJoin(IssuePeer.TYPE_ID, 
-                              RModuleOptionPeer.ISSUE_TYPE_ID);
-                sortColumn = RModuleOptionPeer.PREFERRED_ORDER;
-                crit2.setDistinct();
-            }
-            else
-            {
-                crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
-                crit2.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
-                crit2.addJoin(AttributeValuePeer.ISSUE_ID,
-                              IssuePeer.ISSUE_ID);
-                crit2.setDistinct();
-                sortColumn = AttributeValuePeer.VALUE; 
-            }
-            if (getSortPolarity().equals("desc"))
-            {
-                crit2.addDescendingOrderByColumn(sortColumn);
-            }
-            else
-            {
-                crit2.addAscendingOrderByColumn(sortColumn);
-            }
-            IssuePeer.addSelectColumns(crit2);
-            crit2.addSelectColumn(sortColumn);
-            sortedIssues.addAll(IssuePeer.doSelect(crit2));
+            crit.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
+            crit.add(AttributeValuePeer.DELETED, false);
+            crit.addJoin(AttributeValuePeer.OPTION_ID,
+                         RModuleOptionPeer.OPTION_ID);
+            crit.addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+            crit.addJoin(IssuePeer.MODULE_ID, RModuleOptionPeer.MODULE_ID);
+            crit.addJoin(IssuePeer.TYPE_ID, RModuleOptionPeer.ISSUE_TYPE_ID);
+            sortColumn = RModuleOptionPeer.PREFERRED_ORDER;
         }
-        sortedIssues.addAll(attNotSet);
-        return sortedIssues;
+        else
+        {
+            crit.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
+            crit.addJoin(AttributeValuePeer.ISSUE_ID,
+                         IssuePeer.ISSUE_ID);
+            sortColumn = AttributeValuePeer.VALUE; 
+        }
+        if (getSortPolarity().equals("desc"))
+        {
+            crit.addDescendingOrderByColumn(sortColumn);
+        }
+        else
+        {
+            crit.addAscendingOrderByColumn(sortColumn);
+        }
+        IssuePeer.addSelectColumns(crit);
+        crit.addSelectColumn(sortColumn);
+        List issues = IssuePeer.doSelect(crit);
+        
+        // if all issues have a value for the sorted-by attribute
+        // we are done, otherwise we have to add the unsorted issues
+        // this is expensive!  The best would be an sql subselect but
+        // that is not supported in enough db's.
+        if (issues.size() < getIssueCount()) 
+        {
+            Criteria crit2 = new Criteria();
+            crit2.setDistinct();
+            addCoreSearchCriteria(crit2);
+            
+            // Get pks of issues to exclude, note this can be large
+            // mysql did not have a problem with a list of 20000 ids.
+            // we could save code and create a list to pass to 
+            // Criteria.addNotIn, but that method is terribly inefficient
+            // for this simple case; 100X speed improvement is worth it.
+            if (issues.size() > 0) 
+            {
+                StringBuffer pks = new StringBuffer(issues.size()*8);
+                pks.append(IssuePeer.ISSUE_ID).append(" NOT IN (");
+                Iterator i = issues.iterator();
+                pks.append(((Issue)i.next()).getIssueId());
+                while (i.hasNext())
+                {
+                    pks.append(',').append(((Issue)i.next()).getIssueId());
+                }
+                pks.append(')');
+                crit2.add(IssuePeer.ISSUE_ID, (Object)pks.toString(), 
+                          Criteria.CUSTOM);
+
+                issues.addAll( IssuePeer.doSelect(crit2) );
+            }
+        }
+        
+        return issues;
     }
 }
+
