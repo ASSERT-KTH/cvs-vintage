@@ -97,33 +97,25 @@ public class AttributePeer
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
             if (sortColumn.equals("desc"))
             {
-                addAttributeOrderBy(crit, AttributePeer.DESCRIPTION, 
-                                    sortPolarity);
+                addSortOrder(crit, AttributePeer.DESCRIPTION, 
+                             sortPolarity);
             }
             else if (sortColumn.equals("date"))
             {
-                addAttributeOrderBy(crit, AttributePeer.CREATED_DATE, 
-                                    sortPolarity);
+                addSortOrder(crit, AttributePeer.CREATED_DATE, 
+                             sortPolarity);
             }
             else if (sortColumn.equals("type"))
             {
                 crit.addJoin(AttributePeer.ATTRIBUTE_TYPE_ID, 
                              AttributeTypePeer.ATTRIBUTE_TYPE_ID);
-                if (sortPolarity.equals("desc"))
-                {
-                    crit.addDescendingOrderByColumn(AttributeTypePeer
-                                                   .ATTRIBUTE_TYPE_NAME);
-                }
-                else
-                {
-                    crit.addAscendingOrderByColumn(AttributeTypePeer
-                                                   .ATTRIBUTE_TYPE_NAME);
-                }
+                addSortOrder(crit, AttributeTypePeer .ATTRIBUTE_TYPE_NAME, 
+                             sortPolarity);
             }
             else
             {
-                addAttributeOrderBy(crit, AttributePeer.ATTRIBUTE_NAME, 
-                                    sortPolarity);
+                addSortOrder(crit, AttributePeer.ATTRIBUTE_NAME, 
+                             sortPolarity);
             }
             result = doSelect(crit);
         }
@@ -139,21 +131,6 @@ public class AttributePeer
         ScarabCache.put(result, ATTRIBUTE_PEER, GET_ALL_ATTRIBUTES);
         return result;
     }
-
-    private static Criteria addAttributeOrderBy(Criteria crit, 
-                            String sortColumn, String sortPolarity)
-    {
-        if (sortPolarity.equals("desc"))
-        {
-            crit.addDescendingOrderByColumn(sortColumn);
-        }
-        else
-        {
-            crit.addAscendingOrderByColumn(sortColumn);
-        }
-        return crit;
-    }
-
 
     private static List sortAttributesByCreatingUser(List result,
                                                      String sortPolarity)
@@ -180,6 +157,20 @@ public class AttributePeer
         };
         Collections.sort(result, c);
         return result;
+    }
+
+    private static Criteria addSortOrder(Criteria crit, 
+                       String sortColumn, String sortPolarity)
+    {
+        if (sortPolarity.equals("desc"))
+        {
+            crit.addDescendingOrderByColumn(sortColumn);
+        }
+        else
+        {
+            crit.addAscendingOrderByColumn(sortColumn);
+        }
+        return crit;
     }
 
     /**

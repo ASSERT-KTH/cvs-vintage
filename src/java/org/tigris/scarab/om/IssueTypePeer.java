@@ -53,7 +53,8 @@ public class IssueTypePeer
      *  Gets a List of all of the Issue types in the database,
      *  That are not template types.
      */
-    public static List getAllIssueTypes(boolean includeDeleted)
+    public static List getAllIssueTypes(boolean includeDeleted, 
+                       String sortColumn, String sortPolarity)
         throws Exception
     {
         List result = null;
@@ -67,6 +68,17 @@ public class IssueTypePeer
             {
                 c.add(IssueTypePeer.DELETED, 0);
             }
+            if (sortColumn != null && sortColumn.equals("desc"))
+            {
+                addSortOrder(c, IssueTypePeer.DESCRIPTION, 
+                             sortPolarity);
+            }
+            else
+            {
+                // sort on name
+                addSortOrder(c, IssueTypePeer.NAME, 
+                             sortPolarity);
+            }
             result = doSelect(c);
             ScarabCache.put(result, ISSUE_TYPE_PEER, GET_ALL_ISSUE_TYPES, b);
         }
@@ -75,6 +87,20 @@ public class IssueTypePeer
             result = (List)obj;
         }
         return result;
+    }
+
+    private static Criteria addSortOrder(Criteria crit, 
+                    String sortColumn, String sortPolarity)
+    {
+        if (sortPolarity.equals("desc"))
+        {
+            crit.addDescendingOrderByColumn(sortColumn);
+        }
+        else
+        {
+            crit.addAscendingOrderByColumn(sortColumn);
+        }
+        return crit;
     }
 
     /**
