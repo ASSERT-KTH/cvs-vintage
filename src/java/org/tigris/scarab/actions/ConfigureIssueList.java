@@ -70,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.4 2001/08/28 18:16:38 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.6 2001/09/04 22:02:08 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {

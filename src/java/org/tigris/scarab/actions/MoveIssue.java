@@ -85,7 +85,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
     This class is responsible for moving/copying an issue from one module to another.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.8 2001/08/31 01:48:55 jmcnally Exp $
+    @version $Id: MoveIssue.java,v 1.3 2001/09/04 22:02:08 elicia Exp $
 */
 public class MoveIssue extends TemplateAction
 {
@@ -106,7 +106,7 @@ public class MoveIssue extends TemplateAction
         context.put("orphanAttributes", orphanAttributes);
         context.put("matchingAttributes", matchingAttributes);
         context.put("select_action", selectAction);
-        setTarget(data, "secure,MoveIssue2.vm");            
+        setTarget(data, "MoveIssue2.vm");            
     }
 
 
