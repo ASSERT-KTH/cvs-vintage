@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -52,6 +52,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
     private ObjectPool pool;
     private PrintWriter log;
     private HashMap wrapperTx;
+    private TransactionManager tm;
 
     /**
      * Creates a new factory.  You must set the XADataSource and
@@ -61,6 +62,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
         ctx = new InitialContext();
         wrapperTx = new HashMap();
         listener = new ConnectionEventListener() {
+        
             public void connectionErrorOccurred(ConnectionEvent evt) {
                 closeConnection(evt, XAResource.TMFAIL);
             }
@@ -73,7 +75,6 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 XAConnection con = (XAConnection)evt.getSource();
                 Transaction trans = null;
                 try {
-                    TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
                     if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                         trans = tm.getTransaction();
                         trans.delistResource(con.getXAResource(), status);
@@ -179,7 +180,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
         if(ctx == null)
             throw new IllegalStateException("Must specify InitialContext to "+getClass().getName());
         try {
-            TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
+            tm = (TransactionManager)ctx.lookup(tmJndiName);
         } catch(NamingException e) {
             throw new IllegalStateException("Cannot lookup TransactionManager using specified context and name!");
         }
@@ -207,10 +208,8 @@ public class XAConnectionFactory extends PoolObjectFactory {
      */
     public Object prepareObject(Object pooledObject) {
         XAConnection con = (XAConnection)pooledObject;
-        TransactionManager tm = null;
         Transaction trans = null;
         try {
-            tm = (TransactionManager)ctx.lookup(tmJndiName);
             if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 trans = tm.getTransaction();
                 trans.enlistResource(con.getXAResource());
@@ -250,7 +249,6 @@ public class XAConnectionFactory extends PoolObjectFactory {
      */
     public Object isUniqueRequest() {
         try {
-            TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
             if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 Transaction trans = tm.getTransaction();
                 return wrapperTx.get(trans);
