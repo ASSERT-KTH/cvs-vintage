@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -44,6 +44,7 @@ public abstract class BeanMetaData
    public static final String LOCAL_INVOKER_PROXY_BINDING = "LOCAL";
 
    // Attributes ----------------------------------------------------
+   /** The metadata from the toplevel ejb-jar.xml/jboss.xml elements */
    private ApplicationMetaData application;
 
    // from ejb-jar.xml
@@ -559,10 +560,13 @@ public abstract class BeanMetaData
          }
       }
 
-      // If no permissions were assigned to the method, anybody can access it
-      if (result.isEmpty())
+      if( this.isExcludeMissingMethods() == false )
       {
-         result.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
+         // If no permissions were assigned to the method, anybody can access it
+         if (result.isEmpty())
+         {
+            result.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
+         }
       }
 
       return result;
@@ -578,6 +582,10 @@ public abstract class BeanMetaData
    {
       return callByValue;
    }
+   public boolean isExcludeMissingMethods()
+   {
+      return application.isExcludeMissingMethods();
+   }
 
    public ClusterConfigMetaData getClusterConfigMetaData()
    {
@@ -588,7 +596,7 @@ public abstract class BeanMetaData
          {
             clusterConfig = new ClusterConfigMetaData();
          }
-/* All beans associated with a container are the same type
+         /* All beans associated with a container are the same type
             so this can be done more than once without harm */
          clusterConfig.init(this);
       }
@@ -600,14 +608,17 @@ public abstract class BeanMetaData
       return iorSecurityConfig;
    }
 
+   /** Called to parse the ejb-jar.xml enterprise-beans child ejb elements
+    * @param element one of session/entity/message-driven
+    * @throws DeploymentException
+    */ 
    public void importEjbJarXml(Element element)
            throws DeploymentException
    {
       // set the ejb-name
       ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
 
-      // set the classes
-      // Not for MessageDriven
+      // Set the interfaces classes for all types but MessageDriven
       if (isMessageDriven() == false)
       {
          homeClass = getElementContent(getOptionalChild(element, "home"));
@@ -713,6 +724,10 @@ public abstract class BeanMetaData
       }
    }
 
+   /** Called to parse the jboss.xml enterprise-beans child ejb elements
+    * @param element one of session/entity/message-driven
+    * @throws DeploymentException
+    */ 
    public void importJbossXml(Element element) throws DeploymentException
    {
       // we must not set defaults here, this might never be called
