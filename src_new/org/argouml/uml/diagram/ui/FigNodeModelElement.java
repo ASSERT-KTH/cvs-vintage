@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.52 2003/01/10 11:44:16 mkl Exp $
+// $Id: FigNodeModelElement.java,v 1.53 2003/01/18 10:18:55 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,6 +75,7 @@ import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.ui.ActionProperties;
+import org.argouml.uml.ui.ActionDeleteFromDiagram;
 import org.argouml.util.Trash;
 import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
@@ -238,6 +239,7 @@ public abstract class FigNodeModelElement
             popUpActions.insertElementAt(critiques, 0);
         }
         popUpActions.addElement(ActionProperties.SINGLETON);
+        popUpActions.addElement(ActionDeleteFromDiagram.SINGLETON);
         return popUpActions;
     }
 
