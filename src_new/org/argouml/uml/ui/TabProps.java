@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.49 2004/09/07 18:50:04 mvw Exp $
+// $Id: TabProps.java,v 1.50 2004/09/11 19:14:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,7 +128,7 @@ public class TabProps
      * The constructor.
      * 
      * @param tabName the name of the tab
-     * @param panelClassBase 
+     * @param panelClassBase the panel class base
      */
     public TabProps(String tabName, String panelClassBase) {
         super(tabName);
@@ -386,7 +386,8 @@ public class TabProps
      * Returns the current target.
      * @deprecated As of ArgoUml version 0.13.5,
      * the visibility of this method will change in the future, replaced by 
-     * {@link org.argouml.ui.targetmanager.TargetManager#getTarget() TargetManager.getInstance().getTarget()}.
+     * {@link org.argouml.ui.targetmanager.TargetManager#getTarget() 
+     * TargetManager.getInstance().getTarget()}.
      *
      * @see org.argouml.ui.TabTarget#getTarget()
      */

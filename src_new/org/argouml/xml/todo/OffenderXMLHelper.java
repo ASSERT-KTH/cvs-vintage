@@ -1,4 +1,4 @@
-// $Id: OffenderXMLHelper.java,v 1.3 2003/06/29 23:53:45 linus Exp $
+// $Id: OffenderXMLHelper.java,v 1.4 2004/09/11 19:14:19 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,20 +36,20 @@ package org.argouml.xml.todo;
 public class OffenderXMLHelper
 {
     /** A description of the offender */
-    protected final String _item;
+    private final String item;
 
     /**
      * Creates a new OffenderXMLHelper describing the offender
      * described by item.
      *
-     * @param	item	A description of an offender.
+     * @param	offender	A description of an offender.
      * @throws	NullPointerException if item is null.
      */
-    public OffenderXMLHelper(String item)
+    public OffenderXMLHelper(String offender)
     {
-	if (item == null)
+	if (offender == null)
 	    throw new NullPointerException();
-	_item = item;
+	item = offender;
     }
 
     /**
@@ -59,7 +59,7 @@ public class OffenderXMLHelper
      */
     public String getOffender()
     {
-	return TodoParser.encode(_item);
+	return TodoParser.encode(item);
     }
 }
 

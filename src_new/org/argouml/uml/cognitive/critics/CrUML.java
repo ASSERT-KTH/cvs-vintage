@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.31 2004/09/05 16:57:50 bobtarling Exp $
+// $Id: CrUML.java,v 1.32 2004/09/11 19:14:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.31 2004/09/05 16:57:50 bobtarling Exp $
+// $Id: CrUML.java,v 1.32 2004/09/11 19:14:19 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -33,13 +33,12 @@ import org.apache.log4j.Logger;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ocl.CriticOclEvaluator;
-import org.argouml.ocl.OCLEvaluator;
+import org.argouml.uml.cognitive.UMLToDoItem;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.util.VectorSet;
 

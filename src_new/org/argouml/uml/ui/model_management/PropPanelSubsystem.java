@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.12 2004/07/31 13:42:02 mkl Exp $
+// $Id: PropPanelSubsystem.java,v 1.13 2004/09/11 19:16:56 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,12 +39,18 @@ import org.argouml.util.ConfigLoader;
 /** A property panel for UML subsystems. */
 public class PropPanelSubsystem extends PropPanelPackage {
 
-    private JScrollPane _featureScroll;
+    private JScrollPane featureScroll;
 
-    private static UMLClassifierFeatureListModel featureListModel = new UMLClassifierFeatureListModel();
+    private static UMLClassifierFeatureListModel featureListModel = 
+        new UMLClassifierFeatureListModel();
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelSubsystem() {
-        super("Subsystem", _subsystemIcon, ConfigLoader.getTabPropsOrientation());
+        super("Subsystem", _subsystemIcon, 
+                ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.available-features"),
                 getFeatureScroll());
@@ -54,6 +60,9 @@ public class PropPanelSubsystem extends PropPanelPackage {
     }
 
   
+    /**
+     * Add a new operation to this classifier.
+     */
     public void addOperation() {
         Object target = getTarget();
         if (ModelFacade.isAClassifier(target)) {
@@ -69,11 +78,11 @@ public class PropPanelSubsystem extends PropPanelPackage {
      * @return JScrollPane
      */
     public JScrollPane getFeatureScroll() {
-        if (_featureScroll == null) {
+        if (featureScroll == null) {
             JList list = new UMLLinkedList(featureListModel);
-            _featureScroll = new JScrollPane(list);
+            featureScroll = new JScrollPane(list);
         }
-        return _featureScroll;
+        return featureScroll;
     }
 
 } /* end class PropPanelSubsystem */

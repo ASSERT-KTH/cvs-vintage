@@ -1,4 +1,4 @@
-// $Id: PropPanelButton2.java,v 1.9 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelButton2.java,v 1.10 2004/09/11 19:14:19 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,19 +35,21 @@ import ru.novosoft.uml.MElementEvent;
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class PropPanelButton2 extends JButton implements UMLUserInterfaceComponent {
+public class PropPanelButton2 extends JButton 
+        implements UMLUserInterfaceComponent {
 
-    private UMLUserInterfaceContainer _container = null;
+    private UMLUserInterfaceContainer container = null;
     
     /**
      * Constructor for PropPanelButton2.
-     * @param a
+     * @param a the action
+     * @param c the UI container for this panel
      */
-    public PropPanelButton2(UMLUserInterfaceContainer container, Action a) {
+    public PropPanelButton2(UMLUserInterfaceContainer c, Action a) {
         super(a);
         setText(""); // just the icon and possibly a tooltip
         setBackground(Color.red);
-        setContainer(container);
+        setContainer(c);
     }
 
  
@@ -106,14 +108,14 @@ public class PropPanelButton2 extends JButton implements UMLUserInterfaceCompone
      * @return UMLUserInterfaceContainer
      */
     public UMLUserInterfaceContainer getContainer() {
-        return _container;
+        return container;
     }
 
     /**
      * Sets the container.
-     * @param container The container to set
+     * @param c the container to set
      */
-    public void setContainer(UMLUserInterfaceContainer container) {
-        _container = container;
+    public void setContainer(UMLUserInterfaceContainer c) {
+        container = c;
     }
 }

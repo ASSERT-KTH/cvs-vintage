@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.24 2004/09/09 18:07:18 mvw Exp $
+// $Id: ProjectMemberModel.java,v 1.25 2004/09/11 19:14:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,10 @@
 
 package org.argouml.uml;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -39,12 +35,12 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.kernel.SaveException;
-import org.argouml.xml.xmi.XMIParser;
 import org.argouml.model.ModelFacade;
+import org.argouml.xml.xmi.XMIParser;
 
+import ru.novosoft.uml.model_management.MModel;
 import ru.novosoft.uml.xmi.IncompleteXMIException;
 import ru.novosoft.uml.xmi.XMIWriter;
-import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @author Piotr Kaminski

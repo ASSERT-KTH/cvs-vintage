@@ -1,4 +1,4 @@
-// $Id: ResolvedCriticXMLHelper.java,v 1.5 2004/07/19 22:07:49 linus Exp $
+// $Id: ResolvedCriticXMLHelper.java,v 1.6 2004/09/11 19:14:19 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,18 +38,18 @@ import org.argouml.cognitive.ResolvedCritic;
 public class ResolvedCriticXMLHelper
 {
     /** The ResolvedCritic this instance helps. */
-    protected final ResolvedCritic _item;
+    private final ResolvedCritic item;
 
     /**
      * Creates a new ResolvedCriticXMLHelper for helping item.
      *
-     * @param	item	The ResolvedCritic to expose.
+     * @param	rc	The ResolvedCritic to expose.
      */
-    public ResolvedCriticXMLHelper(ResolvedCritic item)
+    public ResolvedCriticXMLHelper(ResolvedCritic rc)
     {
-	if (item == null)
+	if (rc == null)
 	    throw new NullPointerException();
-	_item = item;
+	item = rc;
     }
 
     /**
@@ -62,7 +62,7 @@ public class ResolvedCriticXMLHelper
      */
     public String getCritic()
     {
-	return TodoParser.encode(_item.getCritic());
+	return TodoParser.encode(item.getCritic());
     }
 
     /**
@@ -75,7 +75,7 @@ public class ResolvedCriticXMLHelper
      */
     public Vector getOffenderList()
     {
-	Vector in = _item.getOffenderList();
+	Vector in = item.getOffenderList();
 	Enumeration elems;
 	Vector out;
 

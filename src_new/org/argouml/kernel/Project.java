@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.110 2004/08/31 19:22:22 bobtarling Exp $
+// $Id: Project.java,v 1.111 2004/09/11 19:14:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,7 +339,7 @@ public class Project implements java.io.Serializable, TargetListener {
 
             // now close again, reopen and read the Diagrams.
 
-            PGMLParser.SINGLETON.setOwnerRegistry(uuidRefs);
+            PGMLParser.getSingleton().setOwnerRegistry(uuidRefs);
 
             //zis.close();
             ZipInputStream zis = new ZipInputStream(theUrl.openStream());
@@ -357,7 +357,7 @@ public class Project implements java.io.Serializable, TargetListener {
                     // "false" means the stream shall not be closed,
                     // but it doesn't seem to matter...
                     ArgoDiagram d =
-                        (ArgoDiagram) PGMLParser.SINGLETON.readDiagram(
+                        (ArgoDiagram) PGMLParser.getSingleton().readDiagram(
 								      sub,
 								      false);
                     if (d != null) {                  

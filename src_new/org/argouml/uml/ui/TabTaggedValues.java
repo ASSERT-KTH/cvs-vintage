@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.31 2004/09/08 19:31:37 mvw Exp $
+// $Id: TabTaggedValues.java,v 1.32 2004/09/11 19:14:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -170,7 +170,8 @@ public class TabTaggedValues extends TabSpawnable
      * @see org.argouml.ui.TabTarget#shouldBeEnabled(java.lang.Object)
      */
     public boolean shouldBeEnabled(Object theTarget) {
-        Object t = (theTarget instanceof Fig) ? ((Fig) theTarget).getOwner() : theTarget;
+        Object t = (theTarget instanceof Fig) 
+            ? ((Fig) theTarget).getOwner() : theTarget;
         if (!(org.argouml.model.ModelFacade.isAModelElement(t))) {
             shouldBeEnabled = false;
             return shouldBeEnabled;
