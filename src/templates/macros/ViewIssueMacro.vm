@@ -1,6 +1,6 @@
 #macro (viewIssue $currentIssue $module)
 
-<h2>Issue ID: $currentIssue.UniqueId</h2>
+<h2>$currentIssue.IssueType.Name ID: $currentIssue.UniqueId</h2>
 
 <div class="functnbar">
 <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="eventSubmit_doGotoothertemplate"  />&nbsp;<input type="submit" value="Copy" name="eventSubmit_doGotoothertemplate"  />&nbsp;issue
@@ -12,7 +12,7 @@
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
 
-<h3>Attribute group one</h3>
+<h3>Attributes</h3>
 
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
@@ -70,10 +70,10 @@
  #end
 #end
 </table>
+</div>
  
 #if ($canEdit)
 <h4>Save changes</h4>
-
 <div class="axial">
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey"))
 <table cellpadding="3" cellspacing="2" border="0">
@@ -167,15 +167,9 @@
    #end
  </table>
   #if ($canEdit)
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
+<div class="functnbar3">
      <input type="submit" value="Add link" name="eventSubmit_doSubmiturl"  />&#160;
      <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
-  </td>
- </tr>
-</table>
 </div>
   #end
 #end
@@ -209,14 +203,8 @@
  </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
+<div class="functnbar3">
   <input type="submit" value="Add dependency"  name="eventSubmit_doAdddependency" />
-  </td>
- </tr>
-</table>
 </div>
 
 #end
@@ -262,14 +250,8 @@
   </table>
 
   #if ($canEdit)
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
+<div class="functnbar3">
      <input type="submit"  name="eventSubmit_doUpdateparent" value="Update parent issue" />
-  </td>
- </tr>
-</table>
 </div>
   #end
 #end
@@ -315,14 +297,8 @@
   #end
   </table>
   #if ($canEdit)
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
+<div class="functnbar3">
      <input type="submit" value="Update child issue"  name="eventSubmit_doUpdatechild" />
-  </td>
- </tr>
-</table>
 </div>
   #end
 #end
@@ -336,56 +312,41 @@
 
 #if (!$comments || $canEdit)
 <h3>Comments</h3>
-<div class="axial">
-  <table cellpadding="3" cellspacing="2" border="1">
-     <tr>
-      <th nowrap="nowrap"><img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" />Date </th>
-      <th><a href="#">Author</a></th>
-      <th>Comment</th>
-     </tr>
+  #foreach ($comment in $comments)
+     #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
+     <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&nbsp;|&nbsp;<a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a></h4>
+    #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+     <P>   <textarea rows="10" cols="90" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
+    #else
+        $comment.DataAsString
+    #end
+  #end
 
-    #foreach ($comment in $comments)
+  #if ($canEdit)
+   <h4>Add Comment</h4>
+   <table cellspacing="2" cellpadding="3" border="0">
      <tr>
-       <td>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)</td>
-       #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
-       <td><a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a></td>
        <td>
-       #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
-         <textarea rows="10" cols="60" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
-       #else
-         $comment.DataAsString
-       #end
+          #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
+          <textarea rows="10" cols="90" name ="$commentGroup.DataAsString.Key"></textarea>
+          #fieldErrorMsg($commentGroup.DataAsString "")
+          <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
        </td>
      </tr>
-    #end
-    #if ($canEdit)
-     <tr>
-       <td colspan="2">Enter comment</td>
-       <td>
-        #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
-        <textarea rows="10" cols="60" name ="$commentGroup.DataAsString.Key"></textarea>
-        #fieldErrorMsg($commentGroup.DataAsString "")
-        <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
-       </td>
-     </tr>
-    #end
-  </table>
-</div>
-    #if ($canEdit)
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />
-     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
-       &#160;<input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
-     #end
-  </td>
- </tr>
-</table>
-</div>
-    #end
+   </table>
+   #end
+
+   #if ($canEdit)
+   <div class="functnbar3">
+      <input type="submit" value="Save" name="eventSubmit_doSubmitcomment" />
+      #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+        &#160;<input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
+      #end
+  </div>
+  #end
 #end
+</div>
+##end
 
 #if ($currentIssue.isCommentsLong())
   #if ($fullComments.equals("true"))
@@ -446,15 +407,9 @@
     <p><a href="$historyLink">Show complete history</a></p>
   #end
 #end
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
+<div class="functnbar3">
      <input type="submit" value="Move Issue" name="eventSubmit_doGotoothertemplate" />
      <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
-  </td>
- </tr>
-</table>
 </div>
 
 #end

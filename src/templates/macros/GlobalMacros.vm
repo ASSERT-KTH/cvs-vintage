@@ -77,7 +77,6 @@
 #elseif ($templAttrInput.Value.toString().length() > 0)
      #set ($currentValue = $templAttrInput.Value)
 #end
-
 #if ($attVal.Attribute.AttributeType.Name == "long-string")
    <textarea name="$attrInput.Value.Key" cols="40"
        rows="5">$!currentValue</textarea>
@@ -241,6 +240,7 @@
 
 #macro (frequencySelectBox $id)
   #foreach ($frequency in $scarabR.Frequencies)
+<option value="Choose" value=""></option>
     <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end>
     $frequency.Name
     </option>
@@ -276,6 +276,16 @@
 #end
 
 #macro (paginate $pageNum $resultsPerPage $searchType $page)
+#set ($searchType = $data.Parameters.getString("searchType"))
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
+#set ($pageNum = $data.Parameters.getInt("pageNum"))
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = "25")
+#end
+#if ($pageNum == 0)
+  #set ($pageNum = "1")
+#end
+
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
   #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString())
