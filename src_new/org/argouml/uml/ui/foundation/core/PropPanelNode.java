@@ -25,7 +25,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.5 2001/04/02 14:28:46 5heyden Exp $
+// $Id: PropPanelNode.java,v 1.6 2001/07/10 11:53:21 1sturm Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -70,8 +70,8 @@ public class PropPanelNode extends PropPanelClassifier {
     addField(new JScrollPane(compList),0,1,1);
 
     new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateUp",null);
-    new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),localize("navigateBackAction"),"isNavigateBackEnabled");
-    new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),localize("navigateForwardAction"),"isNavigateForwardEnabled");
+    new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),"navigateBackAction","isNavigateBackEnabled");
+    new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),"navigateForwardAction","isNavigateForwardEnabled");
     new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete node"),"removeElement",null);
 
   }

@@ -24,7 +24,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.5 2001/04/02 14:28:45 5heyden Exp $
+// $Id: PropPanelClassifierRole.java,v 1.6 2001/07/10 11:53:21 1sturm Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -68,8 +68,8 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     addField(connectScroll,0,1,1);
 
     new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateNamespace",null);
-    new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),localize("navigateBackAction"),"isNavigateBackEnabled");
-    new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),localize("navigateForwardAction"),"isNavigateForwardEnabled");
+    new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),"navigateBackAction","isNavigateBackEnabled");
+    new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),"navigateForwardAction","isNavigateForwardEnabled");
     new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete"),"removeElement",null);
   }
 

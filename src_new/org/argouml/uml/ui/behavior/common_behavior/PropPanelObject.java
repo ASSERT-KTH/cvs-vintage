@@ -24,7 +24,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.5 2001/04/02 14:28:45 5heyden Exp $
+// $Id: PropPanelObject.java,v 1.6 2001/07/10 11:53:21 1sturm Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -80,7 +80,7 @@ public class PropPanelObject extends PropPanelModelElement {
 	addField(receivedScroll,2,1,0.25);
 	
 	new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateNamespace",null);
-	new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),localize("navigateBackAction"),"isNavigateBackEnabled");
+	new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),"navigateBackAction","isNavigateBackEnabled");
 	new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),"navigateForwardAction","isNavigateForwardEnabled");
 	
 	new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete object"),"removeElement",null);

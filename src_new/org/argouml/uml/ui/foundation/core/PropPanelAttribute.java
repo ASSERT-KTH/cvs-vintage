@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.10 2001/04/02 14:28:46 5heyden Exp $
+// $Id: PropPanelAttribute.java,v 1.11 2001/07/10 11:53:21 1sturm Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -93,8 +93,8 @@ public class PropPanelAttribute extends PropPanelModelElement {
         addField(modPanel,3,1,0);
 
         new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateUp",null);
-        new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),localize("navigateBackAction"),"isNavigateBackEnabled");
-        new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),localize("navigateForwardAction"),"isNavigateForwardEnabled");
+        new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),"navigateBackAction","isNavigateBackEnabled");
+        new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),"navigateForwardAction","isNavigateForwardEnabled");
         new PropPanelButton(this,buttonPanel,_addAttrIcon,localize("New attribute"),"newAttribute",null);
         new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete attribute"),"removeElement",null);
     }

@@ -26,7 +26,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.6 2001/04/02 14:28:45 5heyden Exp $
+// $Id: PropPanelStimulus.java,v 1.7 2001/07/10 11:53:21 1sturm Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -114,7 +114,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     */
 
      new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateNamespace",null);
-     new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),localize("navigateBackAction"),"isNavigateBackEnabled");
+     new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),"navigateBackAction","isNavigateBackEnabled");
      new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),"navigateForwardAction","isNavigateForwardEnabled");
      new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete object"),"removeElement",null);
 
