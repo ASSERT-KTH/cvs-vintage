@@ -356,7 +356,7 @@
       <exclude name="org/apache/tomcat/util/XMLParser.class" /> 
       <exclude name="org/apache/tomcat/util/XMLTree.class" />
     </jar>
-    <jar jarfile="${tomcat.home}/lib/jasper.jar"
+    <jar jarfile="${tomcat.build}/lib/jasper.jar"
          basedir="${tomcat.build}/classes"
          includes="org/apache/jasper/**"/>
   </target>
