@@ -102,6 +102,8 @@ public interface Request  {
     public String getRemoteHost() ;
 
     // -------------------- Headers --------------------
+    public MimeHeaders getMimeHeaders();
+
     public String getHeader(String name) ;
 
     public Enumeration getHeaderNames() ;

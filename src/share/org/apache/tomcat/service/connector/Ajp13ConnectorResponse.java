@@ -1,8 +1,8 @@
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.1 2000/05/19 07:14:16 shachor Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/19 07:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.2 2000/05/23 21:39:52 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/23 21:39:52 $
  *
  * ====================================================================
  *
@@ -107,6 +107,12 @@ public class Ajp13ConnectorResponse extends ResponseImpl
             return;
         }
     
+	// Servlet Engine header will be set per/adapter - smarter adapters will
+	// not send it every time ( have it in C side ), and we may also want
+	// to add informations about the adapter used 
+	if( request.getContext() != null)
+	    setHeader("Servlet-Engine", request.getContext().getEngineHeader());
+
         MsgBuffer msg=con.getMsgBuffer();
         msg.reset();
         msg.appendByte(JK_AJP13_SEND_HEADERS);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.6 2000/05/12 02:24:39 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/12 02:24:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.7 2000/05/23 21:39:52 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/23 21:39:52 $
  *
  * ====================================================================
  *
@@ -313,6 +313,12 @@ class JNIResponseAdapter extends ResponseImpl {
 
         super.endHeaders();
         
+	// Servlet Engine header will be set per/adapter - smarter adapters will
+	// not send it every time ( have it in C side ), and we may also want
+	// to add informations about the adapter used 
+	if( request.getContext() != null)
+	    setHeader("Servlet-Engine", request.getContext().getEngineHeader());
+
         int    hcnt = 0;
         String []headerNames = null;
         String []headerValues = null;

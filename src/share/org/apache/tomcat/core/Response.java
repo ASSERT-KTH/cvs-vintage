@@ -80,6 +80,8 @@ public interface Response {
     // -------------------- Headers -------------------- 
     public boolean containsHeader(String name) ;
 
+    public MimeHeaders getMimeHeaders();
+    
     public void setHeader(String name, String value) ;
 
     public void addHeader(String name, String value) ;

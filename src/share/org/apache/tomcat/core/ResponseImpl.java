@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.26 2000/05/23 16:56:46 costin Exp $
- * $Revision: 1.26 $
- * $Date: 2000/05/23 16:56:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.27 2000/05/23 21:39:51 costin Exp $
+ * $Revision: 1.27 $
+ * $Date: 2000/05/23 21:39:51 $
  *
  * ====================================================================
  *
@@ -270,7 +270,11 @@ public class ResponseImpl implements Response {
     
 
     // -------------------- Headers --------------------
-    
+    public MimeHeaders getMimeHeaders() {
+	return headers;
+    }
+
+
     public void setHeader(String name, String value) {
 	if( ! notIncluded ) return; // we are in included sub-request
 	if( ! checkSpecialHeader(name, value) ) 
@@ -389,6 +393,16 @@ public class ResponseImpl implements Response {
     }
 
     public void addCookie(Cookie cookie) {
+	addHeader( CookieTools.getCookieHeaderName(cookie),
+			    CookieTools.getCookieHeaderValue(cookie));
+	if( cookie.getVersion() == 1 ) {
+	    // add a version 0 header too.
+	    // XXX what if the user set both headers??
+	    Cookie c0 = (Cookie)cookie.clone();
+	    c0.setVersion(0);
+	    addHeader( CookieTools.getCookieHeaderName(c0),
+				CookieTools.getCookieHeaderValue(c0));
+	}
 	if( notIncluded ) userCookies.addElement(cookie);
     }
 

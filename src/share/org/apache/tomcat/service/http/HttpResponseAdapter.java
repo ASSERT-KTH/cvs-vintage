@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.9 2000/05/23 20:58:25 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/05/23 20:58:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.10 2000/05/23 21:39:53 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/05/23 21:39:53 $
  *
  * ====================================================================
  *
@@ -135,6 +135,25 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	    printHead(message);
 	}
 	printHead("\r\n");
+	// Hack: set Date header.
+	// This method is overriden by ajp11, ajp12 - so date will not be set
+	// for any of those ( instead the server will generate the date )
+	// This avoids redundant setting of date ( very expensive ).
+	// XXX XXX Check if IIS, NES do generate the date
+	MimeHeaderField dateH= headers.find( "Date" );
+	if( dateH == null ) {
+	    // no date header set by user
+	    dateH=headers.putHeader();
+	    dateH.setName("Date");
+	    dateH.setDateValue(System.currentTimeMillis());
+	    // will reuse the HttpDate instance
+	}
+	
+	// Servlet Engine header will be set per/adapter - smarter adapters will
+	// not send it every time ( have it in C side ), and we may also want
+	// to add informations about the adapter used 
+	if( request.getContext() != null)
+	    setHeader("Servlet-Engine", request.getContext().getEngineHeader());
     }
 
     public void doWrite( byte buffer[], int pos, int count) throws IOException {

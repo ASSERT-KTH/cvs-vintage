@@ -501,6 +501,16 @@ class AJP12ResponseAdapter extends HttpResponseAdapter {
 	printHead( " " );
 	printHead( message );
 	printHead("\r\n");
+
+	// We set it here because we extend HttpResponseAdapter, and this is the
+	// method that is different. 
+	
+	// Servlet Engine header will be set per/adapter - smarter adapters will
+	// not send it every time ( have it in C side ), and we may also want
+	// to add informations about the adapter used 
+	if( request.getContext() != null)
+	    setHeader("Servlet-Engine", request.getContext().getEngineHeader());
+
     }
 }
 
