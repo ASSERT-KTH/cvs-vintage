@@ -15,7 +15,7 @@ import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRequiredException;
 
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 
 // TODO this needs to be replaced with the log4j logging
 
@@ -30,7 +30,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor
@@ -49,7 +49,7 @@ public class TxInterceptorCMT
 
     // Interceptor implementation --------------------------------------
 
-    public Object invokeHome(MethodInvocation mi)
+    public Object invokeHome(Invocation mi)
         throws Exception
     {
         return runWithTransactions(false, mi);
@@ -58,7 +58,7 @@ public class TxInterceptorCMT
     /**
      *  This method does invocation interpositioning of tx management
      */
-    public Object invoke(MethodInvocation mi)
+    public Object invoke(Invocation mi)
         throws Exception
     {
         return runWithTransactions(true, mi);
@@ -98,19 +98,19 @@ public class TxInterceptorCMT
      *
      *  This is where the meat is.  We define what to do with the Tx based
      *  on the declaration.
-     *  The MethodInvocation is always the final authority on what the Tx
+     *  The Invocation is always the final authority on what the Tx
      *  looks like leaving this interceptor.  In other words, interceptors
      *  down the chain should not rely on the thread association with Tx but
-     *  on the Tx present in the MethodInvocation.
+     *  on the Tx present in the Invocation.
      *
      *  @param remoteInvocation If <code>true</code> this is an invocation
      *                          of a method in the remote interface, otherwise
      *                          it is an invocation of a method in the home
      *                          interface.
-     *  @param mi The <code>MethodInvocation</code> of this call.
+     *  @param mi The <code>Invocation</code> of this call.
      */
     private Object runWithTransactions(boolean remoteInvocation,
-                                       MethodInvocation mi)
+                                       Invocation mi)
         throws Exception
     {
         // Old transaction is the transaction that comes with the MI
@@ -173,7 +173,7 @@ public class TxInterceptorCMT
                             //DEBUG log.debug("TxInterceptorCMT:after commit of " + newTransaction);
                         }
 
-                        // reassociate the oldTransaction with the methodInvocation (even null)
+                        // reassociate the oldTransaction with the Invocation (even null)
                         mi.setTransaction(oldTransaction);
                     }
                     // Always drop thread association even if committing or
