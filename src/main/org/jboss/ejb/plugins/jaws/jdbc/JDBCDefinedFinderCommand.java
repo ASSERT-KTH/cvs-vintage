@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.sql.PreparedStatement;
 
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
 
 /**
  * JAWSPersistenceManager JDBCDefinedFinderCommand
@@ -25,19 +26,22 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
    
    private int[] parameterArray;
+   private TypeMappingMetaData typeMapping;
    
    // Constructors --------------------------------------------------
    
    public JDBCDefinedFinderCommand(JDBCCommandFactory factory, FinderMetaData f)
    {
       super(factory, f.getName());
+
+      typeMapping = jawsEntity.getJawsApplication().getTypeMapping();
       
       // Replace placeholders with ?, but only if query is defined
       String query = "";
@@ -174,7 +178,9 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       
       for (int i = 0; i < parameterArray.length; i++)
       {
-         stmt.setObject(i+1, args[parameterArray[i]]);
+          Object arg = args[parameterArray[i]];
+          int jdbcType = typeMapping.getJdbcTypeForJavaType(arg.getClass());
+          setParameter(stmt,i+1,jdbcType,arg);
       }
    }
 }
