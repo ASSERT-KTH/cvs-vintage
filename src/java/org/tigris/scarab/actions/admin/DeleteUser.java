@@ -72,22 +72,27 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: DeleteUser.java,v 1.1 2001/11/21 23:15:34 jon Exp $
+ * @version $Id: DeleteUser.java,v 1.2 2001/11/21 23:21:11 jon Exp $
  */
 public class DeleteUser extends ScarabTemplateAction
 {
-    public void doDeleteuser( RunData data, TemplateContext context ) throws Exception
+    public void doDeleteuser( RunData data, TemplateContext context )
+        throws Exception
     {
-	data.setMessage("SUCCESS (sorta): the user <b>SHOULD</b> have been deleted [username: " + data.getParameters().getString("username") +"]");
+        data.setMessage("SUCCESS (sorta): the user <b>SHOULD</b> have been " + 
+            "deleted [username: " + data.getParameters()
+            .getString("username") +"]");
     }
     
-    
     /**
-     This manages clicking the Cancel button
+     * This manages clicking the Cancel button
      */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context )
+        throws Exception
     {
-	setTarget(data, data.getParameters().getString(ScarabConstants.CANCEL_TEMPLATE, "admin,ManageUserSearch.vm"));
+    	setTarget(data, data.getParameters()
+    	    .getString(ScarabConstants.CANCEL_TEMPLATE, 
+    	    "admin,ManageUserSearch.vm"));
     }
     
     /**
@@ -95,7 +100,6 @@ public class DeleteUser extends ScarabTemplateAction
      */
     public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
-	doCancel(data, context);
+    	doCancel(data, context);
     }
-    
 }
