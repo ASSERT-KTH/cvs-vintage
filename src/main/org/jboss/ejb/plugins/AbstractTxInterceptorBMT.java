@@ -29,7 +29,7 @@ import org.jboss.invocation.Invocation;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
@@ -131,7 +131,9 @@ abstract class AbstractTxInterceptorBMT
          Transaction beanTx = ctx.getTransaction();
 
          // Resume the bean instance transaction
-         tm.resume(beanTx);
+         // only if it not null, some TMs can't resume(null), e.g. Tyrex
+         if (beanTx != null) 
+           tm.resume(beanTx);
 
          // Let the MI know about our new transaction
          mi.setTransaction(beanTx);
