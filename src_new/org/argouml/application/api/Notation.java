@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.14 2002/07/18 09:47:04 kataka Exp $
+// $Id: Notation.java,v 1.15 2002/07/31 18:39:27 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -51,6 +51,7 @@ import ru.novosoft.uml.behavior.collaborations.*;
 import ru.novosoft.uml.model_management.*;
 
 import org.apache.log4j.*;
+
 
 /** Provides centralized methods dealing with notation.
  *
@@ -91,10 +92,31 @@ implements PropertyChangeListener {
    */
   public static final ConfigurationKey KEY_USE_GUILLEMOTS = Configuration.makeKey("notation", "guillemots");
 
-  /** Indicates if the user only wants to see UML notation.
+  /** 
+   * Indicates if the user only wants to see UML notation.
    */
   public static final ConfigurationKey KEY_UML_NOTATION_ONLY = Configuration.makeKey("notation", "only", "uml");
-
+  
+  /** 
+   * Indicates if the user wants to see visibility signs (public, private, protected or # + -)
+   */
+  public static final ConfigurationKey KEY_SHOW_VISIBILITY = Configuration.makeKey("notation", "show", "visibility");
+  
+  /** 
+   * Indicates if the user wants to see multiplicity in attributes and classes
+   */
+  public static final ConfigurationKey KEY_SHOW_MULTIPLICITY = Configuration.makeKey("notation", "show", "multiplicity");
+  
+  /** 
+   * Indicates if the user wants to see the initial value
+   */
+  public static final ConfigurationKey KEY_SHOW_INITIAL_VALUE = Configuration.makeKey("notation", "show", "initialvalue");
+  
+  /** 
+   * Indicates if the user wants to see the properties (everything between braces), that is for example the concurrency
+   */
+  public static final ConfigurationKey KEY_SHOW_PROPERTIES = Configuration.makeKey("notation", "show", "properties");
+  
   private static Notation SINGLETON = new Notation();
 
   // private ArrayList _providers = null;
