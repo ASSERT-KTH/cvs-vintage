@@ -83,7 +83,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.26 2002/03/05 03:12:56 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.27 2002/03/14 23:13:47 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -402,6 +402,18 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             b[i-to] = a[i];
         }
         return b;
+    }
+
+    /**
+     * Velocity has no way of getting the size of an Object[]
+     * easily. Usually this would be done by calling obj.length
+     * but this doesn't work in Velocity.
+     * @param the <code>Object[]</code>
+     * @return the number of objects in the <code>Object[]</code> or -1 if obj is null
+     */
+    public int sizeOfArray(Object[] obj)
+    {
+        return (obj == null) ? -1 : obj.length;
     }
 
     /**

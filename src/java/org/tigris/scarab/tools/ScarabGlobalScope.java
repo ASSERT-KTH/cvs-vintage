@@ -69,7 +69,7 @@ import org.apache.fulcrum.security.util.AccessControlList;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.13 2002/02/19 19:30:10 jmcnally Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.14 2002/03/14 23:13:47 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -161,6 +161,15 @@ public interface ScarabGlobalScope extends ApplicationTool
      * @return a new <code>Object[]</code> with a view of the original
      */
     public Object[] subset(Object[] a, Integer fromIndex, Integer toIndex);
+
+    /**
+     * Velocity has no way of getting the size of an Object[]
+     * easily. Usually this would be done by calling obj.length
+     * but this doesn't work in Velocity.
+     * @param the <code>Object[]</code>
+     * @param the number of objects in the <code>Object[]</code>
+     */
+    public int sizeOfArray(Object[] obj);
 
     /**
      * Logs a message at the debug level.  Useful for "I am here" type 
