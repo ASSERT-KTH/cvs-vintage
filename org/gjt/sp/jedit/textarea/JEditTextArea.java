@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.129 2002/06/03 12:09:15 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.130 2002/06/04 08:48:13 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6314,17 +6314,23 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				dragStartOffset = dragStart
 					- getLineStartOffset(dragStartLine);
 			}
-			else if(control)
-			{
-				if(!multi)
-					selectNone();
-
-				moveCaretPosition(xyToOffset(evt.getX(),
-					evt.getY(),false),false);
-				selectToMatchingBracket();
-			}
 			else
 			{
+				if(control)
+				{
+					int offset = xyToOffset(evt.getX(),evt.getY(),false);
+					buffer.getText(offset,1,lineSegment);
+					switch(lineSegment.array[lineSegment.offset])
+					{
+					case '(': case '[': case '{':
+					case ')': case ']': case '}':
+						moveCaretPosition(offset,false);
+						selectToMatchingBracket();
+						return;
+					}
+				}
+
+
 				if(!multi)
 					selectNone();
 

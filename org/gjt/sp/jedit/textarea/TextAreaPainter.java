@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.55 2002/06/03 12:09:20 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.56 2002/06/04 08:48:13 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -815,7 +815,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 			if(lineInfo.chunks != null)
 			{
-				x += Chunk.paintChunkList(
+				buffer.getLineText(physicalLine,textArea.lineSegment);
+				x += Chunk.paintChunkList(textArea.lineSegment,
 					lineInfo.chunks,gfx,x,baseLine,
 					lineBackground.bgColor,true);
 			}

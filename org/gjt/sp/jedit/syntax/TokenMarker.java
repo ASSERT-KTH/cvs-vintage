@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.34 2002/06/02 06:16:59 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.35 2002/06/04 08:48:13 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -237,7 +237,7 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 
 				escaped = false;
 			}
-			else
+			else if(keywords != null || context.rules.getRuleCount() != 0)
 			{
 				String noWordSep2 = (keywords == null
 					? "" : keywords.getNonAlphaNumericChars());
@@ -261,7 +261,10 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 				}
 
 				escaped = false;
-			} //}}}
+			}
+			else
+				escaped = false;
+			//}}}
 		} //}}}
 
 		//{{{ Mark all remaining characters

@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.90 2002/06/03 12:09:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.91 2002/06/04 08:48:12 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3081,7 +3081,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 			defaultMode = jEdit.getMode("text");
 		setMode(defaultMode);
 
-		/*Magic: UNTITLED is only set if newFile param to
+		/* Magic: UNTITLED is only set if newFile param to
 		 * constructor is set, NEW_FILE is also set if file
 		 * doesn't exist on disk.
 		 *
