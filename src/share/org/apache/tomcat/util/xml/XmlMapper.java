@@ -422,19 +422,32 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 
 //-------------------- "Core" actions --------------------
 // XXX XXX XXX Need to move the "standard" actions in individual files
-/** Create an object
+/**
+ * Create an object of the specified or override Java class name.
  */
 class ObjectCreate extends XmlAction {
     String className;
     String attrib;
 
+    /**
+     * Create an object of the specified class name.
+     *
+     * @param classN Fully qualified name of the Java class to instantiate
+     */
     public ObjectCreate(String classN) {
 	className=classN;
     }
 
-    /** Create an object based on an attribute of the current
-	tag
-    */
+    /**
+     * Create an object of the specified default class name, unless an
+     * attribute with the specified name is present, in which case the value
+     * of this attribute overrides the default class name.
+     *
+     * @param classN Fully qualified name of the Java class to instantiate
+     *  if the specified attribute name is not present
+     * @param attrib Name of the attribute that may contain a fully qualified
+     *  name of a Java class that overrides the default
+     */
     public ObjectCreate(String classN, String attrib) {
 	className=classN;
 	this.attrib=attrib;
@@ -448,7 +461,8 @@ class ObjectCreate extends XmlAction {
 
 	if( attrib!=null) {
 	    AttributeList attributes = ctx.getAttributeList( top );
-	    classN= attributes.getValue(attrib);
+	    if (attributes.getValue(attrib) != null)
+		classN= attributes.getValue(attrib);
 	}
 	Class c=Class.forName( classN );
 	Object o=c.newInstance();
