@@ -17,6 +17,7 @@
     <property name="src.dir" value="${basedir}/src/main"/>
     <property name="src.client.dir" value="${basedir}/src/client"/>
     <property name="src.resources" value="${basedir}/src/resources"/>
+    <property name="src.deploy.dir" value="${basedir}/src/deploy"/>
     <property name="db.dir" value="${basedir}/db"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="lib.ext.dir" value="${lib.dir}/ext"/>
@@ -172,6 +173,7 @@
      <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
      <copydir src="${build.dir}/client" dest="${dist.dir}/client"/>
      <copydir src="${src.client.dir}" dest="${dist.dir}/client"/>
+     <copydir src="${src.deploy.dir}" dest="${dist.dir}/deploy"/>
 
      <chmod src="${dist.dir}/bin/run.sh" perm="u+x" />
 
