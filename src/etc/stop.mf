@@ -1,0 +1,2 @@
+Main-Class: org.jboss.jmx.client.Stop
+Class-Path: ./ jnp.jar jndi.jar jmxri.jar ../conf/ ../lib/jmxri.jar ../lib/ext/jnp.jar
