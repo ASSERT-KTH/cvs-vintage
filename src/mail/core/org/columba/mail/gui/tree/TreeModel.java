@@ -21,16 +21,15 @@ import java.util.MissingResourceException;
 
 import javax.swing.tree.DefaultTreeModel;
 
-import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
+import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -60,7 +59,7 @@ public class TreeModel extends DefaultTreeModel {
 		createDirectories(
 			((FolderTreeNode) getRoot()).getNode(),
 			(FolderTreeNode) getRoot());
-			
+
 	}
 
 	public void createDirectories(
@@ -153,7 +152,7 @@ public class TreeModel extends DefaultTreeModel {
 		FolderTreeNode folder = null;
 		try {
 			folder = (FolderTreeNode) handler.getPlugin(type, args);
-			
+
 			parentFolder.add(folder);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -192,23 +191,20 @@ public class TreeModel extends DefaultTreeModel {
 			) {
 			FolderTreeNode node = (FolderTreeNode) e.nextElement();
 
-			if (node instanceof Folder) {
-				Folder folder = (Folder) node;
+			FolderItem item = node.getFolderItem();
+			if (item == null)
+				continue;
 
-				FolderItem item = folder.getFolderItem();
-				if (item == null)
-					continue;
+			//if (item.get("type").equals("IMAPRootFolder")) {
+			if ( node instanceof IMAPRootFolder) {
+				int account = item.getInteger("account_uid");
 
-				if (item.get("type").equals("IMAPRootFolder")) {
-					int account = item.getInteger("account_uid");
+				if (account == accountUid) {
+					int uid = item.getInteger("uid");
 
-					if (account == accountUid) {
-						int uid = item.getInteger("uid");
-
-						return getFolder(uid);
-					}
-
+					return getFolder(uid);
 				}
+
 			}
 
 		}
