@@ -540,10 +540,6 @@ default if metricsEnabled is not explicitly given.
       it is passed to the instance cache instance (if it implements 
       org.jboss.metadata.XmlLoadable) for it to load its parameters.
       
-      The default instance caches, NoPassivationEntityInstanceCache and
-      NoPassivationStatefulSessionInstanceCache, have no configuration
-      available.
-
       Used in: container-configuration
       -->
 <!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?)>
@@ -559,10 +555,14 @@ default if metricsEnabled is not explicitly given.
 <!--
 	The configuration settings for the selected cache policy.  This
 	is currently only valid for the LRU cache.
+	When the cache is the LRU one for the stateful container, the elements
+	remover-period and max-bean-life specifies the period of the remover
+	task that removes stateful beans (that normally have been passivated)
+	that have age greater than the specified max-bean-life element.
 
         Used in: container-cache-conf (when cache-policy is the LRU cache)
 	-->
-<!ELEMENT cache-policy-conf (min-capacity , max-capacity , overager-period , resizer-period , max-bean-age , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
+<!ELEMENT cache-policy-conf (min-capacity , max-capacity , remover-period? , max-bean-life? , overager-period , max-bean-age , resizer-period , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
 
 <!--
 	  The minimum capacity of this cache
