@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.95 2004/10/02 13:17:33 mvw Exp $
+// $Id: Modeller.java,v 1.96 2004/10/14 12:35:34 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1182,8 +1182,8 @@ public class Modeller
 	    }
 	}
         if (mAttribute == null) {
-            mAttribute = UmlFactory.getFactory().getCore().buildAttribute(name);
-            ModelFacade.addFeature(parseState.getClassifier(), mAttribute);
+            mAttribute = UmlFactory.getFactory().getCore().buildAttribute(mClassifier);
+            ModelFacade.setName(mAttribute, name);
         }
         return mAttribute;
     }
