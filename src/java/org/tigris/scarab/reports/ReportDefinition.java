@@ -428,6 +428,8 @@ public class ReportDefinition
     {
         String summary = null;
         List options = heading.getReportOptionAttributes();
+        List groups = heading.getReportGroups();
+        List users = heading.getReportUserAttributes();
         if (options != null && !options.isEmpty()) 
         {
             String attribute = null;
@@ -450,47 +452,39 @@ public class ReportDefinition
             sb.setLength(sb.length() - 2);
             summary = sb.toString();
         }
-        else if (heading.getReportGroups() != null)
+        else if (groups != null && !groups.isEmpty())
         {
-            List groups = heading.getReportGroups();
-            if (!groups.isEmpty()) 
+            StringBuffer sb = 
+                new StringBuffer(10*groups.size());
+            for (Iterator i = groups.iterator(); i.hasNext();) 
             {
-                StringBuffer sb = 
-                    new StringBuffer(10*groups.size());
-                for (Iterator i = groups.iterator(); i.hasNext();) 
-                {
-                    sb.append(((ReportGroup)i.next()).getName())
-                        .append('/');
-                }
-                sb.setLength(sb.length() - 1);
-                summary = sb.toString();
+                sb.append(((ReportGroup)i.next()).getName())
+                    .append('/');
             }
+            sb.setLength(sb.length() - 1);
+                summary = sb.toString();
         }
-        else if (heading.getReportUserAttributes() != null) 
+        else if (users != null && !users.isEmpty()) 
         {
-            List users = heading.getReportUserAttributes();
-            if (!users.isEmpty()) 
+            String attribute = null;
+            StringBuffer sb = new StringBuffer(20*users.size());
+            for (Iterator i = users.iterator(); i.hasNext();) 
             {
-                String attribute = null;
-                StringBuffer sb = new StringBuffer(20*users.size());
-                for (Iterator i = users.iterator(); i.hasNext();) 
+                ReportUserAttribute rua = (ReportUserAttribute)i.next();
+                String newAttribute = displayAttribute(rua);
+                if (!newAttribute.equals(attribute))
                 {
-                    ReportUserAttribute rua = (ReportUserAttribute)i.next();
-                    String newAttribute = displayAttribute(rua);
-                    if (!newAttribute.equals(attribute))
+                    if (attribute != null) 
                     {
-                        if (attribute != null) 
-                        {
-                            sb.append("; ");
-                        }
-                        attribute = newAttribute;
-                        sb.append(attribute).append(": ");
+                        sb.append("; ");
                     }
-                    sb.append(displayUser(rua)).append(", ");
+                    attribute = newAttribute;
+                    sb.append(attribute).append(": ");
                 }
-                sb.setLength(sb.length() - 2);
-                summary = sb.toString();
-            }
+                sb.append(displayUser(rua)).append(", ");
+                }
+            sb.setLength(sb.length() - 2);
+            summary = sb.toString();
         }
         // date ranges are not implemented yet.
         else if (heading.getReportDates() != null 
