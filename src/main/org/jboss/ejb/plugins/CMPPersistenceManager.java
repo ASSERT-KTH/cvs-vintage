@@ -38,7 +38,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -50,12 +50,6 @@ public class CMPPersistenceManager
    // Physical persistence implementation
    EntityPersistenceStore store;
 
-   // The EJB Methods, the reason for this class
-   Method ejbLoad;
-   Method ejbStore;
-   Method ejbActivate;
-   Method ejbPassivate;
-   Method ejbRemove;
 
    HashMap createMethods = new HashMap();
    HashMap postCreateMethods = new HashMap();
@@ -98,13 +92,6 @@ public class CMPPersistenceManager
    public void create()
       throws Exception
    {
-      // The common EJB methods
-      ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
-      ejbStore = EntityBean.class.getMethod("ejbStore", new Class[0]);
-      ejbActivate = EntityBean.class.getMethod("ejbActivate", new Class[0]);
-      ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
-      ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
-
       if (con.getHomeClass() != null)
       {
          Method[] methods = con.getHomeClass().getMethods();
@@ -355,19 +342,13 @@ public class CMPPersistenceManager
          ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
 
-      // Call bean
       try
       {
-         ejbActivate.invoke(ctx.getInstance(), new Object[0]);
+         EntityBean eb = (EntityBean) ctx.getInstance();
+         eb.ejbActivate();
       }
-      catch (IllegalAccessException e)
+      catch (Exception e)
       {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      }
-      catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
          if (e instanceof RemoteException)
          {
             // Rethrow exception
@@ -378,7 +359,7 @@ public class CMPPersistenceManager
             // Rethrow exception
             throw (EJBException)e;
          }
-         else if (e instanceof RuntimeException)
+         else
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
@@ -411,20 +392,13 @@ public class CMPPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-      //      Logger.debug("Store entity");
       try
       {
-         // Prepare the instance for storage
-         ejbStore.invoke(ctx.getInstance(), new Object[0]);
+         EntityBean eb = (EntityBean) ctx.getInstance();
+         eb.ejbStore();
       }
-      catch (IllegalAccessException e)
+      catch (Exception e)
       {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      }
-      catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
          if (e instanceof RemoteException)
          {
             // Rethrow exception
@@ -435,7 +409,7 @@ public class CMPPersistenceManager
             // Rethrow exception
             throw (EJBException)e;
          }
-         else if (e instanceof RuntimeException)
+         else
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
@@ -454,17 +428,11 @@ public class CMPPersistenceManager
    {
       try
       {
-         // Prepare the instance for passivation
-         ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
+         EntityBean eb = (EntityBean) ctx.getInstance();
+         eb.ejbPassivate();
       }
-      catch (IllegalAccessException e)
+      catch (Exception e)
       {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      }
-      catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
          if (e instanceof RemoteException)
          {
             // Rethrow exception
@@ -475,7 +443,7 @@ public class CMPPersistenceManager
             // Rethrow exception
             throw (EJBException)e;
          }
-         else if (e instanceof RuntimeException)
+         else
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
@@ -494,17 +462,11 @@ public class CMPPersistenceManager
    {
       try
       {
-         // Call ejbRemove
-         ejbRemove.invoke(ctx.getInstance(), new Object[0]);
+         EntityBean eb = (EntityBean) ctx.getInstance();
+         eb.ejbRemove();
       }
-      catch (IllegalAccessException e)
+      catch (Exception e)
       {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      }
-      catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
          if (e instanceof RemoveException)
          {
             // Rethrow exception
@@ -520,13 +482,12 @@ public class CMPPersistenceManager
             // Rethrow exception
             throw (EJBException)e;
          }
-         else if (e instanceof RuntimeException)
+         else
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }
       }
-
       //long lStart = System.currentTimeMillis();
       store.removeEntity(ctx);
       //mRemove.add();
@@ -536,17 +497,11 @@ public class CMPPersistenceManager
    {
       try
       {
-         // Call ejbLoad on bean instance, wake up!
-         ejbLoad.invoke(ctx.getInstance(), new Object[0]);
+         EntityBean eb = (EntityBean) ctx.getInstance();
+         eb.ejbLoad();
       }
-      catch (IllegalAccessException e)
+      catch (Exception e)
       {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      }
-      catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
          if (e instanceof RemoteException)
          {
             // Rethrow exception
@@ -557,7 +512,7 @@ public class CMPPersistenceManager
             // Rethrow exception
             throw (EJBException)e;
          }
-         else if (e instanceof RuntimeException)
+         else
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
