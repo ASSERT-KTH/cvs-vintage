@@ -166,6 +166,11 @@ public interface SessionManager {
      */
     public void setDistributable(boolean b);
 
+    /** Handle context reloader.
+     *  This notification is sent after the new classloader is created.
+     */
+    public void handleReload(ClassLoader newLoader);
+    
     // -------------------- Control manager livecycle
 
     /** Start managing the sessions. Called after everything is set up to allow

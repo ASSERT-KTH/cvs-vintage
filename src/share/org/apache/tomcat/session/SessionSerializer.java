@@ -57,8 +57,9 @@
  *
  */
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.session;
 
+import org.apache.tomcat.core.*;
 import java.io.*;
 import java.util.*;
 import javax.servlet.http.*;
@@ -79,22 +80,10 @@ import javax.servlet.http.*;
 */
 public final class SessionSerializer
 {
-	/** this is the ServletLoader that the ObjectInputStream depends on */
-	private static ServletLoader loader = null;
-	
 	/**
-		This is the method that does the serialization. We pass in the
-		Context because we want to be able to do some logging from within
-		this class. If we didn't want to do the logging we could simply 
-		pass in the SessionManager instead.
+		This is the method that does the serialization.
 	*/
-	public static final void doSerialization(ServletLoader cl, Context context) {
-		// assign the loader
-		loader = cl;
-
-		// get the session manager from the context
-		SessionManager sessionM = context.getSessionManager();
-		
+	public static final void doSerialization(ClassLoader cl, SessionManager sessionM) {
 		// get the hashtable of sessions
 		Hashtable sessions = sessionM.getSessions();
 		
@@ -110,14 +99,17 @@ public final class SessionSerializer
 			
 			// create the streams to read the sessions back in from.
 			ByteArrayInputStream bIn = new ByteArrayInputStream (b.toByteArray());
-			ObjectInputStream oOut= new ACLObjectInputStream(bIn);
+			ObjectInputStream oOut= new ACLObjectInputStream(cl, bIn);
 			
 			// unserialize the sessions
 			sessions = (Hashtable) oOut.readObject();
 			
 		} catch (Exception e) {
-			// log the error. there shouldn't be one here though.
-			context.log ( "SessionSerializer: ", e );
+		    // log the error. there shouldn't be one here though.
+		    // XXX We should call Logger.log - this is a problem, but
+		    // it's better to have a bug ( writing to out instead of log)
+		    // than adding dependencies to context.
+		    System.out.println( "SessionSerializer: " + e );
 		}
 	}
 	
@@ -130,8 +122,11 @@ public final class SessionSerializer
      * to be found and deserialized.
      */
     private static final class ACLObjectInputStream extends ObjectInputStream {
-        ACLObjectInputStream(InputStream bIn) throws IOException {
+	ClassLoader loader;
+	
+        ACLObjectInputStream(ClassLoader loader, InputStream bIn) throws IOException {
             super(bIn);
+	    this.loader=loader;
         }
         protected Class resolveClass(ObjectStreamClass v)
             throws IOException, ClassNotFoundException {

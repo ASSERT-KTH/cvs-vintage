@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.48 2000/06/10 17:54:26 costin Exp $
- * $Revision: 1.48 $
- * $Date: 2000/06/10 17:54:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.49 2000/06/10 18:54:49 costin Exp $
+ * $Revision: 1.49 $
+ * $Date: 2000/06/10 18:54:49 $
  *
  * ====================================================================
  *
@@ -406,7 +406,10 @@ public class ServletWrapper {
 					loader.reload();
 					
 					// re-serialize the sessions with a new classloader
-					SessionSerializer.doSerialization(loader, context);
+					SessionManager sM=context.getSessionManager();
+					// this is called after the new loader was set.
+
+					sM.handleReload(loader.getClassLoader());
 					
 					servlet=null;
 					servletClass=null;

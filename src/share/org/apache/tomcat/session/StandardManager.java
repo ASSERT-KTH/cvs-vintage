@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.7 2000/05/15 20:59:08 jon Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/15 20:59:08 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.8 2000/06/10 18:54:50 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/06/10 18:54:50 $
  *
  * ====================================================================
  *
@@ -105,7 +105,7 @@ import org.apache.tomcat.core.*;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.7 $ $Date: 2000/05/15 20:59:08 $
+ * @version $Revision: 1.8 $ $Date: 2000/06/10 18:54:50 $
  */
 public final class StandardManager implements Runnable, SessionManager {
     // ----------------------------------------------------- Instance Variables
@@ -362,6 +362,9 @@ public final class StandardManager implements Runnable, SessionManager {
 	return (session);
     }
 
+    public void handleReload(ClassLoader newLoader) {
+	SessionSerializer.doSerialization(newLoader, this);
+    }
 
     /**
      * Prepare for the beginning of active use of the public methods of this
