@@ -25,18 +25,17 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 #AttributeSelectBar("")
 
+<h3>Global user attributes</h3>
+
 #if ($attributes.size() == 0)
 
-<p class="alert">There are no user attributes that are not already
-associated with this module.</p>
+<p class="alert">There are no available user attributes for this module.</p>
 
 #else
 
-<h3>Global attributes</h3>
-
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap"></th>
+<th nowrap="nowrap">Select</th>
 <th>Attribute name</th>
 <th>Description</th>
 <th>Input type</th>

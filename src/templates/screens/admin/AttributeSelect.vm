@@ -10,8 +10,8 @@
 #end
 #if ($canEditDomain)
     <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
-    <input type="submit" value="Cancel" name="eventSubmit_doCancel"/>&#160;
 #end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel"/>
 </div>
 #end
 
@@ -27,6 +27,8 @@
 
 #AttributeSelectBar("")
 
+<h3>Global attributes</h3>
+
 #if ($attributes.size() == 0)
 
 <p class="alert">There are no more global attributes that are
@@ -34,8 +36,6 @@ not already associated with an attribute group in this
 module.</p>
 
 #else
-
-<h3>Global attributes</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>

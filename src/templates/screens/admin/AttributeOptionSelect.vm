@@ -15,6 +15,8 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
 		
+<h3>Global attribute options</h3>
+
 <div class="functnbar">
 #if ($availOptions.size() > 0)
 <input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />&#160;
@@ -27,13 +29,12 @@
 
 #if ($availOptions.size() == 0)
 
-<p class="alert">There are no more global attribute options that are not already
-associated with this attribute in this module.</p>
+<p class="alert">There are no more global attribute options available to
+be associated with this attribute in this module.</p>
 
 #else
 
 <p>The following attributes are available for use in this issue type.</p>
-<h3>Global attribute options</h3>
 
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
