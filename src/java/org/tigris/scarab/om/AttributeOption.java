@@ -85,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.19 2001/09/20 10:33:07 jon Exp $
+  * @version $Id: AttributeOption.java,v 1.20 2001/09/24 21:29:46 jon Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -137,7 +137,7 @@ public class AttributeOption
     }
 
     /**
-     * A comparator for this class. Compares on NumericValue.
+     * A comparator for this class. Compares on OPTION_NAME.
      */
     private static final Comparator comparator = new Comparator()
         {
@@ -146,13 +146,13 @@ public class AttributeOption
                 int result = 1;
                 AttributeOption opt1 = (AttributeOption)obj1; 
                 AttributeOption opt2 = (AttributeOption)obj2;
-                if (opt1.getWeight() < opt2.getWeight()) 
+                if (opt1.getName().equals(opt2.getName()))
+                {
+                    result = 0;
+                }
+                else
                 {
                     result = -1;
-                }
-                else if (opt1.getWeight() == opt2.getWeight()) 
-                {
-                    result = 0; 
                 }
                 return result;
             }
@@ -256,20 +256,6 @@ public class AttributeOption
         return ao;
     }
     
-    public static AttributeOption getInstance(Attribute attribute, int weight)
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        crit.add(AttributeOptionPeer.ATTRIBUTE_ID, attribute.getAttributeId());
-        crit.add(AttributeOptionPeer.WEIGHT, weight);
-        List options = AttributeOptionPeer.doSelect(crit);
-        // should only be one
-        AttributeOption option = (AttributeOption)options.get(0);
-        // we could just return this, but should return the object in the
-        // cache, if present, so add some inefficiency
-        return getInstance(option.getOptionId());
-    }
-
     /**
      * Returns a list of AttributeOptions which are ancestors
      * of this AttributeOption. An Ancestor is the parent tree

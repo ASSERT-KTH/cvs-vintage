@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.3 2001/09/20 10:33:07 jon Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.4 2001/09/24 21:29:46 jon Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable
@@ -278,6 +278,7 @@ public class ParentChildAttributeOption
                 roo.setOption1Id(getParentId());
                 roo.setOption2Id(duplicate.getOptionId());
                 roo.setPreferredOrder(getPreferredOrder());
+                roo.setWeight(getWeight());
                 roo.setRelationshipId(OptionRelationship.PARENT_CHILD);
                 try
                 {
@@ -304,7 +305,6 @@ public class ParentChildAttributeOption
         ao = AttributeOption.getInstance(getOptionId());
         
         ao.setName(getName());
-        ao.setWeight(getWeight());
         ao.setDeleted(getDeleted());
         ao.setAttribute(tmpAttr);
         ao.save();
@@ -329,6 +329,7 @@ public class ParentChildAttributeOption
             roo.setOption2Id(getOptionId());
         }
         roo.setPreferredOrder(getPreferredOrder());
+        roo.setWeight(getWeight());
         roo.setRelationshipId(OptionRelationship.PARENT_CHILD);
         roo.save();
     }

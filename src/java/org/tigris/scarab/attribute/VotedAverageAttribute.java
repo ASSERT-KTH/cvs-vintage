@@ -53,13 +53,17 @@ import java.util.Vector;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.8 $ $Date: 2001/09/13 17:35:17 $
+ * @version $Revision: 1.9 $ $Date: 2001/09/24 21:29:45 $
  */
 public class VotedAverageAttribute extends VotedAttribute 
 {
     /** 
      * This method calculates result of the vote
-     */
+
+     NOT CURRENTLY VALID. The getWeight() method has been
+     removed from AttributeOption's because it is now represented
+     in the R_OPTION_OPTION table. So, we would need a different
+     lookup here.
     public String computeResult()
         throws Exception
     {
@@ -81,4 +85,5 @@ public class VotedAverageAttribute extends VotedAttribute
                 .getName();
         }
     }
+     */
 }

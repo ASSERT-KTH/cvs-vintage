@@ -55,14 +55,18 @@ import java.util.Vector;
  *  This is a Bugzilla-style attribute. The result is the sum of all votes.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.7 $ $Date: 2001/09/13 17:35:17 $
+ * @version $Revision: 1.8 $ $Date: 2001/09/24 21:29:45 $
  */
 public class VotedTotalAttribute extends VotedAttribute
 {
     
     /** 
      * This method calculates result of the vote
-     */
+     
+     NOT CURRENTLY VALID. The getWeight() method has been
+     removed from AttributeOption's because it is now represented
+     in the R_OPTION_OPTION table. So, we would need a different
+     lookup here.
     public String computeResult()
     {
         int total = 0;
@@ -73,5 +77,6 @@ public class VotedTotalAttribute extends VotedAttribute
         }
         return Integer.toString(total);
     }
+     */
 }
 

@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.29 2001/09/21 19:09:45 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.30 2001/09/24 21:29:46 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -334,9 +334,9 @@ public class Attribute
                 pcao.setParentId(roo.getOption1Id());
                 pcao.setOptionId(roo.getOption2Id());
                 pcao.setPreferredOrder(roo.getPreferredOrder());
+                pcao.setWeight(roo.getWeight());
                 pcao.setName(ao.getName());
                 pcao.setDeleted(ao.getDeleted());
-                pcao.setWeight(ao.getWeight());
                 pcao.setAttributeId(this.getAttributeId());
                 parentChildAttributeOptions.add(pcao);
             }
