@@ -76,6 +76,8 @@ public class Constants {
     public static final int SERVLET_MAJOR = 2;
     public static final int SERVLET_MINOR = 2;
 
+    public static final String INVOKER_SERVLET_NAME = "invoker";
+    public static final String DEFAULT_SERVLET_NAME = "default";
 
     public static final String ATTRIB_WORKDIR1 = "sun.servlet.workdir";
     public static final String ATTRIB_WORKDIR = "javax.servlet.context.tempdir";
@@ -114,28 +116,7 @@ public class Constants {
         public static final String SESSION_COOKIE_NAME = "JSESSIONID";
     }
 
-    public static class Servlet {
-        public static class Default {
-	    public static final String Name = "default";
-	    public static final String Class =
-	        "org.apache.tomcat.core.DefaultServlet";
-	    public static final String Map = "";
-	}
-
-        public static class Invoker {
-	    public static final String Name = "invoker";
-	    public static final String Class =
-	        "org.apache.tomcat.core.InvokerServlet";
-	    public static final String Map = "/servlet";
-	}
-
-        public static class NoInvoker {
-	    public static final String Name = Invoker.Name;
-	    public static final String Class =
-	        "org.apache.tomcat.core.NoInvokerServlet";
-	    public static final String Map = Invoker.Map;
-	}
-    }
+    //	        "org.apache.tomcat.core.DefaultServlet";
 
     public static class JSP {
         public static final String NAME = "jsp";

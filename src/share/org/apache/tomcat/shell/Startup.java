@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.7 1999/12/31 01:18:37 craigmcc Exp $
- * $Revision: 1.7 $
- * $Date: 1999/12/31 01:18:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.8 2000/01/10 01:48:52 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/10 01:48:52 $
  *
  * ====================================================================
  *
@@ -139,7 +139,15 @@ public class Startup {
 
 		context.setSessionTimeOut(
 		    contextConfig.getDefaultSessionTimeOut());
-		context.setInvokerEnabled(contextConfig.isInvokerEnabled());
+
+		// this is the semantic of disable invoker.
+		if( ! contextConfig.isInvokerEnabled() ) {
+		    context.addServlet(org.apache.tomcat.core.Constants.INVOKER_SERVLET_NAME,
+				       "org.apache.tomcat.core.NoInvokerServlet", null);
+		    context.addMapping(org.apache.tomcat.core.Constants.INVOKER_SERVLET_NAME,
+				       "/servlet");
+		}
+
 		context.setIsWARExpanded(contextConfig.isWARExpanded());
 		context.setIsWARValidated(contextConfig.isWARValidated());
 		context.setWorkDir(contextWorkDirPath,

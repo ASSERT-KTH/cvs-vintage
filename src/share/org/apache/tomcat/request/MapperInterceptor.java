@@ -93,15 +93,12 @@ public class MapperInterceptor  implements  RequestInterceptor {
 	if (wrapper == null) {
 	    wrapper = context.getDefaultServlet();
 	    if (wrapper == null) {
-	        wrapper = context.getServletByName(Constants.Servlet.Default.Name);
+	        wrapper = context.getServletByName(Constants.DEFAULT_SERVLET_NAME );
 	    }
 
-	    String servletPath = Constants.Servlet.Default.Map;
-            String pathInfo = path;
-
 	    req.setWrapper( wrapper );
-	    req.setServletPath( servletPath );
-	    req.setPathInfo( pathInfo );
+	    req.setServletPath( "" );
+	    req.setPathInfo( path);
 	} else {
 	    getMapPath(wrapper, req);
 	    String resolvedServlet = getResolvedServlet(context, req.getMappedPath());
@@ -283,7 +280,7 @@ public class MapperInterceptor  implements  RequestInterceptor {
         // this is added to make available the destination
         // resource be it a servlet or jsp file - could be
         // cleaned up a bit (wobbly)
-        if (req.getServletPath().equals(Constants.Servlet.Invoker.Map) &&
+        if (req.getServletPath().equals("/servlet") &&
             req.getPathInfo() != null) {
             String s = req.getPathInfo();
 

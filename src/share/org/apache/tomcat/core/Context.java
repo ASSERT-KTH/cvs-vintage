@@ -381,16 +381,6 @@ public class Context {
 	// Read context's web.xml
 	new WebXmlInterceptor().handleContextInit( this );
 
-	if (! this.isInvokerEnabled) {
-	    // Put in a special "no invoker" that handles
-	    // /servlet requests and explains why no servlet
-	    // is being invoked
-	    this.addServlet(Constants.Servlet.NoInvoker.Name,
-			    Constants.Servlet.NoInvoker.Class, null);
-	    this.addMapping(Constants.Servlet.NoInvoker.Name,
-			    Constants.Servlet.NoInvoker.Map);
-	}
-
 	// load initial servlets
 	new LoadOnStartupInterceptor().handleContextInit( this );
     }
