@@ -141,10 +141,6 @@ $page.setTitle("Enter issue")
      #end
    #end
  </table>
-
-<div class="functnbar3">
-  <input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteattachment" />
-</div>
 #end
 
 <h4>Add Attachment</h4>
