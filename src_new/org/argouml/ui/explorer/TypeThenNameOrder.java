@@ -1,4 +1,4 @@
-// $Id: TypeThenNameOrder.java,v 1.7 2004/04/22 21:56:26 d00mst Exp $
+// $Id: TypeThenNameOrder.java,v 1.8 2004/05/31 16:14:50 d00mst Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,19 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author  alexb
  */
-public class TypeThenNameOrder extends NameOrder{
+public class TypeThenNameOrder extends NameOrder {
     
     /** Creates a new instance of TypeThenNameOrder */
     public TypeThenNameOrder() {
     }
-    
+
+    /**
+     * Compares obj1 and obj2 as per the class description.
+     * nulls are sorted first.
+     *
+     * @return a negative integer, zero, or a positive integer as the first
+     *         argument is less than, equal to, or greater than the second.
+     */
     public int compare(Object obj1, Object obj2) {
 	if (obj1 instanceof DefaultMutableTreeNode) {
 	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj1;
@@ -53,6 +60,14 @@ public class TypeThenNameOrder extends NameOrder{
 	if (obj2 instanceof DefaultMutableTreeNode) {
 	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj2;
 	    obj2 = node.getUserObject();
+	}
+
+	if (obj1 == null) {
+	    if (obj2 == null)
+		return 0;
+	    return -1;
+	} else if (obj2 == null) {
+	    return 1;
 	}
 
         String typeName = obj1.getClass().getName();
@@ -86,7 +101,7 @@ public class TypeThenNameOrder extends NameOrder{
         return typeNameOrder;
     }
     
-    public String toString(){
+    public String toString() {
         return "Order By Type, Name";
     }
 }
