@@ -1,5 +1,5 @@
-// $Id: GoSummaryToIncomingDependency.java,v 1.4 2003/12/22 23:00:16 alexb Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: AbstractPerspectiveRule.java,v 1.1 2003/12/22 23:00:15 alexb Exp $
+// Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,47 +24,18 @@
 
 package org.argouml.ui.explorer.rules;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
-
 /**
- * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.4 $
- *
- * @author  alexb, $Author: alexb $
- * @since argo 0.13.4, Created on 21 March 2003, 23:18
+ * @author  alexb
  */
-public class GoSummaryToIncomingDependency extends AbstractPerspectiveRule{
+public abstract class AbstractPerspectiveRule implements PerspectiveRule {
+    
+    public abstract java.util.Collection getChildren(Object parent);
+    
+    public abstract String getRuleName();
 
-    public String getRuleName() {
-	return Translator.localize ("Tree", "misc.class.attribute");
+    public String toString(){
+        return getRuleName();
     }
-
-
-    public Collection getChildren(Object parent) {
-	if ( parent instanceof IncomingDependencyNode) {
-          
-	    List list = new ArrayList();
-          
-	    Iterator it =
-		ModelFacade.getSupplierDependencies(((IncomingDependencyNode) parent).getParent()).iterator();
-          
-	    while (it.hasNext()) {
-              
-		Object next = it.next();
-		if (!ModelFacade.isAAbstraction(next))
-		    list.add(next);
-	    }
-          
-	    return list;
-	}
-	return null;
-    }
-
+    
 }

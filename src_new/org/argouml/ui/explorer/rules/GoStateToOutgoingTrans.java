@@ -1,4 +1,4 @@
-// $Id: GoStateToOutgoingTrans.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: GoStateToOutgoingTrans.java,v 1.3 2003/12/22 23:00:16 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.util.Collection;
 
 import org.argouml.model.ModelFacade;
 
-public class GoStateToOutgoingTrans implements PerspectiveRule {
+public class GoStateToOutgoingTrans extends AbstractPerspectiveRule{
 
     public String getRuleName() { return "State->Outgoing Transitions"; }
 

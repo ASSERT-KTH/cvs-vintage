@@ -1,4 +1,4 @@
-// $Id: GoModelToBaseElements.java,v 1.3 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: GoModelToBaseElements.java,v 1.4 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 
-public class GoModelToBaseElements implements PerspectiveRule {
+public class GoModelToBaseElements extends AbstractPerspectiveRule{
     protected static Logger cat =
 	Logger.getLogger(GoModelToBaseElements.class);
 

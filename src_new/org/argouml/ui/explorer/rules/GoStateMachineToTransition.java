@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToTransition.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: GoStateMachineToTransition.java,v 1.3 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import java.util.Collection;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class GoStateMachineToTransition implements PerspectiveRule {
+public class GoStateMachineToTransition extends AbstractPerspectiveRule{
 
     public String getRuleName() { return "State Machine->Transition"; }
 

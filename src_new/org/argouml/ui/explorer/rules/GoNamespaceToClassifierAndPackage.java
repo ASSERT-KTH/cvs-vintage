@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToClassifierAndPackage.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: GoNamespaceToClassifierAndPackage.java,v 1.3 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.model.ModelFacade;
  *
  * @since 0.15.2
  */
-public class GoNamespaceToClassifierAndPackage implements PerspectiveRule {
+public class GoNamespaceToClassifierAndPackage extends AbstractPerspectiveRule{
 
     public String getRuleName() {
         return "nsp -> owned elems";

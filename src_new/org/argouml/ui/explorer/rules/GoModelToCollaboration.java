@@ -1,4 +1,4 @@
-// $Id: GoModelToCollaboration.java,v 1.2 2003/10/29 22:41:26 kataka Exp $
+// $Id: GoModelToCollaboration.java,v 1.3 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
  * @since Oct 1, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class GoModelToCollaboration implements PerspectiveRule {
+public class GoModelToCollaboration extends AbstractPerspectiveRule{
 
     public String getRuleName() { return "Model->Collaboration"; }
 

@@ -1,5 +1,5 @@
 
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.2 2003/10/27 22:08:56 kataka Exp $
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.3 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 30, 2002
  */
-public class GoBehavioralFeatureToStateDiagram implements PerspectiveRule {
+public class GoBehavioralFeatureToStateDiagram extends AbstractPerspectiveRule{
 
     /**
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)

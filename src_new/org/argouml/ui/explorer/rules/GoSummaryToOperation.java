@@ -1,4 +1,4 @@
-// $Id: GoSummaryToOperation.java,v 1.3 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: GoSummaryToOperation.java,v 1.4 2003/12/22 23:00:16 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,12 +32,12 @@ import org.argouml.model.ModelFacade;
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  *
- * @author  alexb, $Author: jhraigniac $
+ * @author  alexb, $Author: alexb $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
-public class GoSummaryToOperation implements PerspectiveRule {
+public class GoSummaryToOperation extends AbstractPerspectiveRule{
 
     public String getRuleName() {
 	return Translator.localize ("Tree", "misc.class.operation");

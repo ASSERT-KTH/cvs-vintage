@@ -1,6 +1,6 @@
 
 
-// $Id: GoMessageAction.java,v 1.2 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: GoMessageAction.java,v 1.3 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.model.ModelFacade;
  * Go rule to navigate from some message to it's corresponding action
  * @author jaap.branderhorst
  */
-public class GoMessageAction implements PerspectiveRule {
+public class GoMessageAction extends AbstractPerspectiveRule{
 
     public String getRuleName() { return "Message->Action"; }
 

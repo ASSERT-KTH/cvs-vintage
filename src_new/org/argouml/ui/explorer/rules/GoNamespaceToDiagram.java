@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToDiagram.java,v 1.4 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: GoNamespaceToDiagram.java,v 1.5 2003/12/22 23:00:15 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Dec 30, 2002
  */
-public class GoNamespaceToDiagram implements PerspectiveRule {
+public class GoNamespaceToDiagram extends AbstractPerspectiveRule{
 
     public String getRuleName() {
         return Translator.localize("Tree", "misc.package.diagram");
