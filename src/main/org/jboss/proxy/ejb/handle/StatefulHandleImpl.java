@@ -35,7 +35,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * @todo make this go through the client interceptor stack so it can
  * get the context info such as security, tx.
@@ -60,11 +60,7 @@ public class StatefulHandleImpl
    }
 
    /** The identity of the bean. */
-   public int objectName;
-   public String jndiName;
-   public String invokerProxyBinding;
-   public Invoker invoker;
-   public Object id;
+   public InvocationContext ctx;
 
    /**
     * Construct a <tt>StatefulHandleImpl</tt>.
@@ -75,20 +71,10 @@ public class StatefulHandleImpl
     * @param name      JNDI name.
     * @param id        Identity of the bean.
     */
-   public StatefulHandleImpl(
-         int objectName,
-         String jndiName,
-         Invoker invoker,
-         String invokerProxyBinding,
-         Object id)
+   public StatefulHandleImpl(InvocationContext ctx)
    {
-      this.objectName = objectName;
-      this.jndiName= jndiName;
-      this.invoker = invoker;
-      this.id = id;
-      this.invokerProxyBinding = invokerProxyBinding;
+      this.ctx = ctx;
    }
-
    /**
     * Handle implementation.
     *
@@ -113,23 +99,25 @@ public class StatefulHandleImpl
          new Invocation(
             null,
             GET_EJB_OBJECT,
-            new Object[] {id},
+            new Object[] {ctx.getCacheId()},
             //No transaction set up in here? it will get picked up in the proxy
             null,
             // fix for bug 474134 from Luke Taylor
             SecurityAssociation.getPrincipal(),
             SecurityAssociation.getCredential());
 
-         invocation.setObjectName(new Integer(objectName));
+         invocation.setObjectName(ctx.getObjectName());
          invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
-               invokerProxyBinding, PayloadKey.AS_IS);
+               ctx.getInvokerProxyBinding(), PayloadKey.AS_IS);
 
          // It is a home invocation
          invocation.setType(InvocationType.HOME);
+         invocation.setInvocationContext(ctx);
 
          // Get the invoker to the target server (cluster or node)
 
          // Ship it
+         Invoker invoker = ctx.getInvoker();
          InvocationResponse response = invoker.invoke(invocation);
          return (EJBObject)response.getResponse();
       }

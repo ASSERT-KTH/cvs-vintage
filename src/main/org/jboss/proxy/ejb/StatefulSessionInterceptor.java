@@ -26,7 +26,7 @@ import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 /**
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class StatefulSessionInterceptor
    extends GenericEJBInterceptor
@@ -82,16 +82,7 @@ public class StatefulSessionInterceptor
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE))
       {
-         int objectName = ((Integer) ctx.getObjectName()).intValue();
-         String jndiName = (String) ctx.getValue(InvocationKey.JNDI_NAME);
-         Invoker invoker = ctx.getInvoker();
-         Object id = ctx.getCacheId();
-         return new InvocationResponse(new StatefulHandleImpl(
-               objectName, 
-               jndiName, 
-               invoker, 
-               ctx.getInvokerProxyBinding(), 
-               id));
+         return new InvocationResponse(new StatefulHandleImpl(ctx));
       }
       else if (m.equals(GET_EJB_HOME))
       {
