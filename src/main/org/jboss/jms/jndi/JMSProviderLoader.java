@@ -26,14 +26,14 @@ import org.jboss.system.ServiceMBeanSupport;
  * A JMX service to load a JMSProviderAdapter and register it.
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
- * 
+ *
  * <p>Created: Wed Nov 29 14:07:07 2000
  *
  * <p>6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -54,12 +54,12 @@ public class JMSProviderLoader
    /** The queue factory jndi name. */
    protected String queueFactoryRef;
 
-   /** The topic factory jndi name. */   
+   /** The topic factory jndi name. */
    protected String topicFactoryRef;
 
    /** The JNDI name to bind the adapter to. */
    protected String jndiName;
-   
+
    /** The actual JNDI name the adapter is bound to */
    private String bindName;
 
@@ -69,39 +69,39 @@ public class JMSProviderLoader
    public void setProviderName(String name)
    {
       this.providerName = name;
-   }      
-   
+   }
+
    /**
     * @jmx:managed-attribute
     */
    public String getProviderName()
    {
       return providerName;
-   }      
-   
+   }
+
    /**
     * @jmx:managed-attribute
     */
    public void setProviderAdapterClass(String clazz)
    {
       providerAdapterClass = clazz;
-   }      
-   
+   }
+
    /**
     * @jmx:managed-attribute
     */
    public String getProviderAdapterClass()
    {
       return providerAdapterClass;
-   }      
-   
+   }
+
    /**
     * @jmx:managed-attribute
     */
    public void setProviderUrl(final String url)
    {
       this.url = url;
-   }      
+   }
 
    /**
     * @jmx:managed-attribute
@@ -126,7 +126,7 @@ public class JMSProviderLoader
    {
       return jndiName;
    }
-   
+
    /**
     * @jmx:managed-attribute
     */
@@ -154,7 +154,7 @@ public class JMSProviderLoader
    public String getTopicFactoryRef() {
       return topicFactoryRef;
    }
-   
+
 
    ///////////////////////////////////////////////////////////////////////////
    //                    ServiceMBeanSupport Overrides                      //
@@ -164,7 +164,7 @@ public class JMSProviderLoader
    {
       return providerName;
    }
-   
+
    protected void startService() throws Exception
    {
       // validate the configuration
@@ -175,7 +175,7 @@ public class JMSProviderLoader
       if (topicFactoryRef == null)
          throw new DeploymentException
             ("missing required attribute: TopicFactoryRef");
-       
+
       Class cls = Class.forName(providerAdapterClass);
       providerAdapter = (JMSProviderAdapter)cls.newInstance();
       providerAdapter.setName(providerName);
@@ -197,25 +197,25 @@ public class JMSProviderLoader
       finally {
          context.close();
       }
-   }      
+   }
 
    protected void stopService() throws Exception
    {
       InitialContext context = new InitialContext();
-      
+
       try {
          // Unbind from JNDI with the actual name used to bind
          context.unbind(bindName);
          if (log.isInfoEnabled())
-            log.info("unbound adapter " + name + " from " + bindName);
-         
+            log.info("unbound adapter " + providerAdapter.getName() + " from " + bindName);
+
          //source.close();
          //log.log("XA Connection pool "+name+" shut down");
       }
       finally {
          context.close();
       }
-   }      
+   }
 
    private void bind(Context ctx, String name, Object val)
       throws NamingException
@@ -240,5 +240,5 @@ public class JMSProviderLoader
       }
 
       ctx.bind(n.get(0), val);
-   }      
+   }
 }
