@@ -267,7 +267,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		int encoding = MimeHeader.PLAIN; 
 			
 		if( bodyPart != null ) {
-			bodyPart.getHeader().getContentTransferEncoding();
+			encoding = bodyPart.getHeader().getContentTransferEncoding();
 		}
 
 		switch (encoding) {
