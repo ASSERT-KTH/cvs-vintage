@@ -225,7 +225,7 @@ public class Activity
     }
      */
 
-    public void save()
+    public void save(DBConnection dbCon)
         throws Exception
     {
         // make sure to mark last related activity as done
@@ -264,7 +264,7 @@ public class Activity
                 }
             }
         }
-        super.save();
+        super.save(dbCon);
     }
 }
 
