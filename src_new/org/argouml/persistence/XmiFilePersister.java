@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.16 2005/01/21 18:20:04 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.17 2005/02/18 01:06:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,11 +23,13 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 package org.argouml.persistence;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.log4j.Logger;
@@ -90,16 +92,13 @@ public class XmiFilePersister extends AbstractFilePersister {
                     "Failed to archive the previous file version", e);
         }
 
-        BufferedWriter writer = null;
+        OutputStreamWriter writer = null;
         try {
             project.setFile(file);
 
-            String encoding = "UTF-8";
-            FileOutputStream stream =
-                new FileOutputStream(file);
-            writer =
-                new BufferedWriter(new OutputStreamWriter(
-                        stream, encoding));
+            OutputStream stream = new FileOutputStream(file);
+            OutputStream bout = new BufferedOutputStream(stream);
+            writer = new OutputStreamWriter(bout, getEncoding());
 
             int size = project.getMembers().size();
             for (int i = 0; i < size; i++) {
