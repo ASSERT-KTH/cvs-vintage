@@ -61,6 +61,8 @@ import org.apache.turbine.services.pool.Recyclable;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.Query;
+import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ScarabModulePeer;
@@ -111,6 +113,11 @@ public class ScarabRequestTool implements ScarabRequestScope,
     private Depend depend = null;
 
     /**
+     * A Query object for use within the Scarab API.
+     */
+    private Query query = null;
+
+    /**
      * A ModuleEntity object for use within the Scarab API.
      */
     private ModuleEntity module = null;
@@ -156,6 +163,14 @@ public class ScarabRequestTool implements ScarabRequestScope,
     public void setDepend (Depend depend)
     {
         this.depend = depend;
+    }
+
+    /**
+     * A Query object for use within the Scarab API.
+     */
+    public void setQuery (Query query)
+    {
+        this.query = query;
     }
 
     private IntakeTool getIntakeTool()
@@ -238,6 +253,36 @@ try{
         }        
 }catch(Exception e){e.printStackTrace();}
         return attribute;
+ 
+   }
+
+    /**
+     * A Query object for use within the Scarab API.
+     */
+    public Query getQuery()
+     throws Exception
+    {
+        try
+        {
+            if (query == null)
+            {
+                String queryId = getIntakeTool()
+                    .get("Query", IntakeTool.DEFAULT_KEY).get("Id").toString();
+                if ( queryId == null || queryId.length() == 0 )
+                {
+                    query = Query.getInstance();
+                }
+                else 
+                {
+                    query = QueryPeer.retrieveByPK(new NumberKey(queryId));
+                }
+            }        
+        }        
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return query;
  
    }
 
