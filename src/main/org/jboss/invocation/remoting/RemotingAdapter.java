@@ -136,10 +136,23 @@ public class RemotingAdapter
       } // end of else
 
 
+      MarshalledInvocation marshalled = new MarshalledInvocation(invocation);
       Object result = next.invoke(
-         new InvocationRequest("", "EJB", new MarshalledInvocation(invocation),
+         new InvocationRequest("", "EJB", marshalled,
                                requestPayload, null, locator));
-      return (InvocationResponse)result;
+      try
+      {
+         return (InvocationResponse)result;
+      }
+      catch (ClassCastException cce)
+      {
+         log.error("***CCE want InvocationResponse, the object is:" + result.getClass().getName());
+         if (marshalled.getMethod() != null)
+         {
+            log.error("calling method: " + marshalled.getMethod().getName());
+         }
+         throw cce;
+      }
    }
 
 

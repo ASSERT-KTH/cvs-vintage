@@ -26,7 +26,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy
@@ -313,39 +313,46 @@ public class LRUEnterpriseContextCachePolicy
       
       public void run() 
       {
-         // For now implemented as a Cache Miss Frequency algorithm
-         if( m_cache == null )
+         try
          {
-            cancel();
-            return;
+            // For now implemented as a Cache Miss Frequency algorithm
+            if( m_cache == null )
+            {
+               cancel();
+               return;
+            }
+            
+            LRUList list = getList();
+
+            // Sync with the cache, since it is accessed also by another thread
+            synchronized (m_cache.getCacheLock())
+            {
+               int period = list.m_cacheMiss == 0 ? Integer.MAX_VALUE : (int)(resizerPeriod / list.m_cacheMiss);
+               int cap = list.m_capacity;
+               if (period <= m_minPeriod && cap < list.m_maxCapacity) 
+               {
+                  // Enlarge cache capacity: if period == m_minPeriod then
+                  // the capacity is increased of the (1-m_factor)*100 %.
+                  double factor = 1.0 + ((double)m_minPeriod / period) * (1.0 - m_factor);
+                  int newCap = (int)(cap * factor);
+                  list.m_capacity = newCap < list.m_maxCapacity ? newCap : list.m_maxCapacity;
+                  log(cap, list.m_capacity);
+               }
+               else if (period >= m_maxPeriod && 
+                        cap > list.m_minCapacity && 
+                        list.m_count < (cap * m_factor))
+               {
+                  // Shrink cache capacity
+                  int newCap = (int)(list.m_count / m_factor);
+                  list.m_capacity = newCap > list.m_minCapacity ? newCap : list.m_minCapacity;
+                  log(cap, list.m_capacity);
+               }
+               list.m_cacheMiss = 0;
+            }
          }
-
-         LRUList list = getList();
-
-         // Sync with the cache, since it is accessed also by another thread
-         synchronized (m_cache.getCacheLock())
+         catch (Exception ex)
          {
-            int period = list.m_cacheMiss == 0 ? Integer.MAX_VALUE : (int)(resizerPeriod / list.m_cacheMiss);
-            int cap = list.m_capacity;
-            if (period <= m_minPeriod && cap < list.m_maxCapacity) 
-            {
-               // Enlarge cache capacity: if period == m_minPeriod then
-               // the capacity is increased of the (1-m_factor)*100 %.
-               double factor = 1.0 + ((double)m_minPeriod / period) * (1.0 - m_factor);
-               int newCap = (int)(cap * factor);
-               list.m_capacity = newCap < list.m_maxCapacity ? newCap : list.m_maxCapacity;
-               log(cap, list.m_capacity);
-            }
-            else if (period >= m_maxPeriod && 
-                     cap > list.m_minCapacity && 
-                     list.m_count < (cap * m_factor))
-            {
-               // Shrink cache capacity
-               int newCap = (int)(list.m_count / m_factor);
-               list.m_capacity = newCap > list.m_minCapacity ? newCap : list.m_minCapacity;
-               log(cap, list.m_capacity);
-            }
-            list.m_cacheMiss = 0;
+            log.error("*****ResizerTask failed", ex);
          }
       }
       
@@ -381,40 +388,47 @@ public class LRUEnterpriseContextCachePolicy
       
       public void run() 
       {
-         if( m_cache == null )
+         try
          {
-            cancel();
-            return;
-         }
-
-         LRUList list = getList();
-         long now = System.currentTimeMillis();
-
-         synchronized (m_cache.getCacheLock())
-         {
-            for (LRUCacheEntry entry = list.m_tail; entry != null; entry = list.m_tail)
+            if( m_cache == null )
             {
-               if (now - entry.m_time >= getMaxAge())
-               {
-                  int initialSize = list.m_count;
-						
-                  // Log informations
-                  log(entry.m_key, initialSize);
-						
-                  // Kick out of the cache this entry
-                  kickOut(entry);
-						
-                  int finalSize = list.m_count;
-						
-                  if (initialSize == finalSize) 
-                  {
-                     // Here is a bug.
-                     throw new IllegalStateException
-                        ("Cache synchronization bug");
-                  }
-               }
-               else {break;}
+               cancel();
+               return;
             }
+            
+            LRUList list = getList();
+            long now = System.currentTimeMillis();
+            
+            synchronized (m_cache.getCacheLock())
+            {
+               for (LRUCacheEntry entry = list.m_tail; entry != null; entry = list.m_tail)
+               {
+                  if (now - entry.m_time >= getMaxAge())
+                  {
+                     int initialSize = list.m_count;
+                     
+                     // Log informations
+                     log(entry.m_key, initialSize);
+                     
+                     // Kick out of the cache this entry
+                     kickOut(entry);
+                     
+                     int finalSize = list.m_count;
+                     
+                     if (initialSize == finalSize) 
+                     {
+                        // Here is a bug.
+                        throw new IllegalStateException
+                           ("Cache synchronization bug");
+                     }
+                  }
+                  else {break;}
+               }
+            }
+         }
+         catch (Exception ex)
+         {
+            log.error("OveragerTask failed", ex);
          }
       }
       
