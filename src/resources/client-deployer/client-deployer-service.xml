@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The J2EE application client deployer service
+$Id: client-deployer-service.xml,v 1.2 2003/11/12 16:39:34 starksm Exp $
+-->
+<server>
+   <mbean code="org.jboss.deployment.ClientDeployer"
+          name="jboss.j2ee:service=ClientDeployer"
+      xmbean-dd="">
+      <xmbean>
+         <description>The J2EE Application Client Deployer</description>
+         <class>org.jboss.deployment.ClientDeployer</class>
+
+         <!-- Attributes -->
+         <attribute access="read-only" getMethod="getStateString">
+            <description>The service state name</description>
+            <name>StateString</name>
+            <type>java.lang.String</type>
+         </attribute>
+         <attribute access="read-write" getMethod="getState">
+            <description>The service state value</description>
+            <name>State</name>
+            <type>int</type>
+         </attribute>
+
+         <!-- Operations -->
+         <operation>
+            <description>The start lifecycle operation</description>
+            <name>start</name>
+         </operation>
+         <operation>
+            <description>The stop lifecycle operation</description>
+            <name>stop</name>
+         </operation>
+      </xmbean>
+   </mbean>
+</server>
