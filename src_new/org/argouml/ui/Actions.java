@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.65 2004/07/17 16:52:03 linus Exp $
+// $Id: Actions.java,v 1.66 2004/07/17 17:25:45 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -682,10 +682,10 @@ class ActionAboutArgoUML extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	JFrame jFrame = (JFrame) ActionUtilities.getActionRoot(ae);
-	AboutBox box = new AboutBox(jFrame, true);
+	JFrame jframe = ((JFrame)(ProjectBrowser.getInstance()));
+	AboutBox box = new AboutBox(jframe, true);
 
-	box.setLocationRelativeTo(jFrame);
+	box.setLocationRelativeTo(jframe);
 	box.show();
     }
 
