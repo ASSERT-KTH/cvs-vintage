@@ -70,14 +70,22 @@ public class AddressListRenderer {
 	 */
 	private static void appendAddress(Address address, StringBuffer result) {
 		result.append("<A HREF=\"mailto:");
-		result.append(address.getMailAddress());
-		result.append("\">");
 		if (address.getDisplayName().length() != 0) {
-			
 			result.append(address.getDisplayName());
-			result.append(" ");		
-			result.append("&lt;"+address.getMailAddress()+"&gt;");
+			result.append(" ");
+			result.append("<" + address.getMailAddress() + ">");
 			
+		} else
+			result.append(address.getMailAddress());
+		
+		result.append("\">");
+		
+		if (address.getDisplayName().length() != 0) {
+
+			result.append(address.getDisplayName());
+			result.append(" ");
+			result.append("&lt;" + address.getMailAddress() + "&gt;");
+
 		} else
 			result.append(address.getShortAddress());
 
