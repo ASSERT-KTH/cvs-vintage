@@ -87,8 +87,12 @@ dd	{
 	padding: 1px;
 	}
 #navcol {
+	color: gray;
 	line-height: 140%;
 	margin: 12px;
+	}
+#navcol strong, th {
+	color: black;
 	}
 #navcol div {
 	padding: 2px;
