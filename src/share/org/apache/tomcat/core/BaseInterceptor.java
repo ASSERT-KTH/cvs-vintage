@@ -163,7 +163,7 @@ public class BaseInterceptor
      *  The authorize is called by isUserInRole() and by ContextManager
      *  if the request have security constraints.
      *
-     *  @returns 0 if the module can't take a decision
+     *  @returns DECLINED if the module can't make a decision
      *           401 If the user is not authorized ( doesn't have
      *               any of the required roles )
      *           200 If the user have the right roles. No further module
@@ -171,7 +171,7 @@ public class BaseInterceptor
      */
     public int authorize(Request request, Response response,
 			 String reqRoles[]) {
-	return 0;
+	return DECLINED;
     }
 
     /** Called before service method is invoked. 
