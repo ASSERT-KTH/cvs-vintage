@@ -65,7 +65,7 @@ import ru.novosoft.uml.foundation.core.MComment;
  * // naming for extension points in convertValueToText.
  * </pre>
  *
- * $Id: DisplayTextTree.java,v 1.21 2003/04/12 14:26:37 alexb Exp $
+ * $Id: DisplayTextTree.java,v 1.22 2003/04/12 18:44:10 alexb Exp $
  */
 public class DisplayTextTree 
     extends JTree {
@@ -81,16 +81,23 @@ public class DisplayTextTree
     /** needs documenting */
     public static final int REMOVE = 3;
     
-    /** needs documenting */
-    Hashtable _expandedPathsInModel;
+    /**
+     * A Map helping the tree maintain a consistent expanded paths state.
+     *
+     *<pre>
+     * keys = the current TreeModel of this Tree
+     * values = Vector of currently expanded paths.
+     *</pre>
+     */
+    private Hashtable _expandedPathsInModel;
     
     /** needs documenting */
-    boolean _reexpanding;
+    private boolean _reexpanding;
     
-    /** needs documenting */
+    /** holds state info about whether to display stereotypes in the nav pane.*/
     private boolean showStereotype;
     
-    /** needs documenting */
+    /** Runnable to help avoid too many tree updates. */
     private DisplayTextTreeRun _doit;
     
     /** needs documenting */
