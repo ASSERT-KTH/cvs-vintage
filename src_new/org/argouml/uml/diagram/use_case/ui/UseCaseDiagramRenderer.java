@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.21 2005/01/30 20:48:35 linus Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.22 2005/02/09 20:54:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,7 @@ import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;
 import org.tigris.gef.base.Layer;
-import org.tigris.gef.graph.GraphEdgeRenderer;
 import org.tigris.gef.graph.GraphModel;
-import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
 
@@ -78,12 +76,14 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
      * @param lay   The layer in the graph on which we want this figure.
      *
      * @param node  The node to be rendered (an NSUML object)
-     *
+     * 
+     * @param styleAttributes an optional map of attributes to style the fig
+     * 
      * @return      The fig to be used, or <code>null</code> if we can't create
      *              one.
      */
-
-    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node, Map styleAttributes) {
+    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node, 
+            Map styleAttributes) {
 
         // Create a new version of the relevant fig
 
@@ -117,6 +117,8 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
      *
      * @param edge  The edge to be rendered (an NSUML object)
      *
+     * @param styleAttributes an optional map of attributes to style the fig
+     *
      * @return      The fig to be used, or <code>null</code> if we can't create
      *              one.
      *
@@ -124,7 +126,8 @@ public class UseCaseDiagramRenderer extends UmlDiagramRenderer {
      * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
      * java.lang.Object)
      */
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge, Map styleAttributes) {
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge, 
+            Map styleAttributes) {
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("making figedge for " + edge);
