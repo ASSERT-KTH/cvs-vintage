@@ -7,13 +7,13 @@
 #if ($currentIssue.CreatedDate)
 <tr>
 <th>$l10n.DateCommitted</th>
-<td><a href="mailTo:$currentIssue.CreatedBy.Email">$!currentIssue.CreatedBy.Name</a> on $format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate) </td>
+<td><a href="mailTo:$currentIssue.CreatedBy.Email">$!currentIssue.CreatedBy.Name</a> $format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate) </td>
 </tr>
 #end
 #if ($currentIssue.ModifiedDate)
 <tr>
 <th>$l10n.LastModified</th>
-<td><a href="mailTo:$currentIssue.ModifiedBy.Email">$!currentIssue.ModifiedBy.Name</a> on $format.getDate($scarabR.DateFormat, $currentIssue.ModifiedDate) </td>
+<td><a href="mailTo:$currentIssue.ModifiedBy.Email">$!currentIssue.ModifiedBy.Name</a> $format.getDate($scarabR.DateFormat, $currentIssue.ModifiedDate) </td>
 </tr>  
 #end
 </table>
