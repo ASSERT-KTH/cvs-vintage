@@ -72,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.63 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.64 2003/10/21 16:58:50 thierrylach Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -409,7 +409,10 @@ public  class IssueType
             }
             else
             {
-                crit.add(AttributeGroupPeer.MODULE_ID, 0);
+                // TODO Change this to be crit.add(AttributeGroupPeer.MODULE_ID, Criteria.ISNULL) when torque is fixed
+                crit.add(AttributeGroupPeer.MODULE_ID,
+                         (Object)(AttributeGroupPeer.MODULE_ID + " IS NULL"),
+                         Criteria.CUSTOM);
             }
             groups = AttributeGroupPeer.doSelect(crit);
             getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS,
