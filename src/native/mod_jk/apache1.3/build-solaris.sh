@@ -11,8 +11,12 @@
 
 # Update the following according to your installation
 
-APACHE_HOME=/usr/local/apache
-JAVA_HOME=/usr/java
+if [ -z "$APACHE_HOME" ] ; then
+    APACHE_HOME=/usr/local/apache
+fi
+if [ -z "$JAVA_HOME" ] ; then
+    JAVA_HOME=/usr/java
+fi
 
 #### End of configuration - do not change below
 
@@ -20,12 +24,14 @@ if [ -f $APACHE_HOME/bin/apxs ] ; then
    APXS=$APACHE_HOME/bin/apxs
 else
    echo Error: Unable to locate apxs.
-   echo Verify that APACHE_HOME is set correctly in this script.
+   echo Verify that APACHE_HOME is set correctly in the environment.
+   echo e.g.: APACHE_HOME=/opt/apache build-solaris.sh
    exit 1
 fi
 if [ ! -d $JAVA_HOME/include/solaris ] ; then
    echo Error: Unable to locate Java libraries.
-   echo Verify that JAVA_HOME is set correctly in this script.
+   echo Verify that JAVA_HOME is set correctly in the environment.
+   echo e.g.:  JAVA_HOME=/usr/local/java build-solaris.sh
    exit 1
 fi
 
@@ -36,7 +42,7 @@ SRC="../common/*.c mod_jk.c"
 
 # Run APXS to compile the mod_jk module and its components
 echo Building mod_jk
-$APXS -S CFLAGS="-DSOLARIS -DUSE_EXPAT -I../lib/expat-lite" -o mod_jk.so $INCLUDE -lposix4 -c $SRC
+$APXS -DSOLARIS -o mod_jk.so $INCLUDE -lposix4 -c $SRC
 
 # Check to see if the last command completed
 if [ $? -ne 0 ] ; then
@@ -56,7 +62,7 @@ echo Configuring apache...
 
 # Use apxs to add the correct lines to httpd.conf
 # Since our auto-config does this in the include
-# file (mod_jk-conf-auto), we'll add them as
+# file (mod_jk-conf), we'll add them as
 # commented statements for change later if
 # we decide not to use the auto-conf.
 #
@@ -66,6 +72,7 @@ $APXS -i -A mod_jk.so
 # Check to see if the last command completed
 if [ $? -ne 0 ] ; then
   echo Error using apxs to add configuration to httpd.conf
+  echo Check that `/usr/ucb/whoami` has permissions to modify $APACHE_HOME
   exit 1
 fi
 
@@ -74,18 +81,18 @@ cat<<END
 
 Build and configuration of mod_jk is complete.
 
-To finish the installation, edit your apache/conf/httpd.conf file and
+To finish the installation, edit your $APACHE_HOME/conf/httpd.conf file and
 add the following line to the end of the file:
 (Note: Change TOMCAT_HOME to the value of \$TOMCAT_HOME)
 
-Include TOMCAT_HOME/conf/jk/mod_jk.conf-auto
+Include TOMCAT_HOME/conf/auto/mod_jk.conf
 
-Example (/usr/local/apache/conf/httpd.conf):
+Example ($APACHE_HOME/conf/httpd.conf):
 
-Include /usr/local/jakarta-tomcat-3.3/conf/jk/mod_jk.conf-auto
+Include /usr/local/jakarta-tomcat-3.3/conf/auto/mod_jk.conf
 
-Next copy TOMCAT_HOME/conf/jk/workers.properties.unix to
-TOMCAT_HOME/conf/jk/workers.properties
+Next edit TOMCAT_HOME/conf/jk/workers.properties to
+set the correct paths if you are using the jni connector.
 
 Finally, add the apache auto-config setting to Tomcat.
 See the release notes for Tomcat 3.3 for information on enabling
