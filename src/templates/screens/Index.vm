@@ -35,14 +35,14 @@ module?" width="260" height="105" />
 Select a <a
 href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>module</strong></a>.
 A module is the unit of work space representing a unique set of
-"artifact types" (issues). Each new module also has the following unique
+"issue types" (issues). Each new module also has the following unique
 details:
 </p>
 
 <ul>
 <li><small>a set of users</small></li>
 <li><small>a set of roles</small></li>
-<li><small>a set of permissions per role, per artifact type</small></li>
+<li><small>a set of permissions per role, per issue type</small></li>
 </ul>
 
 <p>Scarab uses the generic term "module" instead of the more common
@@ -59,8 +59,8 @@ contact the administrator.
 <td>
 <p>
 <img src="$data.Request.ContextPath/images/artifact_type.gif" alt="What is an artifact type?" width="260"
-height="105" /></p> Select an <strong>artifact type</strong> from the
-left side navigation. An artifact type encapsulates a unique set of
+height="105" /></p> Select an <strong>issue type</strong> from the
+left side navigation. An issue type encapsulates a unique set of
 attributes and attribute options:
 </p>
 
@@ -70,7 +70,7 @@ attributes and attribute options:
 <li><small>a unique set of permissions per role</small></li>
 </ul>
 
-<p>Once a user selects an artifact type, Scarab's navigation will
+<p>Once a user selects an issue type, Scarab's navigation will
 indicate their selection state by dropping down a list of functions
 within that artifact type, giving authorized user's access to
 functionality such as:</p>
@@ -81,9 +81,9 @@ functionality such as:</p>
 <li><small>run reports on database activity</small></li>
 </ul>
 
-<p>The user's input remains confined to the selected artifact type until
+<p>The user's input remains confined to the selected issue type until
 they select another artifact type from the left side-bar navigation, or
-from the artifact type index.</p>
+from the issue type index.</p>
 
 </td>
 
