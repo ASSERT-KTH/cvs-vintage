@@ -24,6 +24,20 @@ New features:
   using only one level of inheritance now. This makes adding new frames very easy. 
   Also introduced the paradigm of a container which encapsulates views. (fdietz)
 - speedup of IMAP mailbox selection and auto-check (tstich)
+- cleanup of build-system (tstich)
+- created API for mail/addressbook components thereby introduced a much cleaner
+  separation which is also reflected by the new build-system (fdietz)
+- cleanup of mimetype icons, moved icons in their own folder and added many new
+  icons (fdietz) 
+- replaced MainInterface/MailInterface/AddressbookInterface with singleton 
+  based approach (fdietz)
+- set Columba to default-email client on win32 using jniwrapper (tstich)  
+- added nice version numbering method for release/build system (tstich)
+- added jpim library for vCard import/export, not complete yet (fdietz)
+- added a debug class for repaintmanager, this way we can easily detect 
+  calls to swing components outside the awt-event-dispatcher thread (fdietz)
+- cleanup of xml-based menu/toolbar generation code (fdietz)
+  
 
 Fixed bugs:
 - #773118 é in name of Directory (tstich)
@@ -52,7 +66,18 @@ Fixed bugs:
   config-file corruption, etc. (fdietz) 
 - do not try to disable internal plugin, its not possible anyway! (fdietz)
 - #1056686 Exception during IMAP auto-check (tstich)
-
+- ensure "Cancel" toolbar button is not visible twice times (fdietz)
+- replaced jargs with Jakarta CLI package, added Mozilla compatible support for
+  the mail component commandline options (tstich)
+- fixed Composer attachment viewer bug (fdietz)
+- changed frapuccino package to its correct name (fdietz)
+- #1033273, closing composer should show confirm dialog (fdietz)
+- #1029705 profile manager deletes complete directories (fdietz)
+- composer/message-frame are now unmanaged (fdietz)
+- cleanup of todo/fixme statements, added @author tag to these statements (fdietz)
+- added more detailed error logs and more documentation to plugin handler - 
+  should make finding bugs much easier for developers (fdietz)
+  
 Columba v1.0 RC1-final
 
 New features:
