@@ -51,7 +51,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -135,7 +135,7 @@ public class JBossMessageEndpointFactory
    {
       trace = log.isTraceEnabled(); 
       
-      if (getState() != STARTED)
+      if (getState() != STARTED && getState() != STARTING)
          throw new UnavailableException("The container is not started");
       
       HashMap context = new HashMap();
