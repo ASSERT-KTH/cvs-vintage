@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.86 2003/10/05 13:08:41 linus Exp $
+// $Id: Main.java,v 1.87 2003/10/07 22:01:02 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,6 +107,19 @@ public class Main {
 
     public static void main(String args[]) {        
 
+        // check we are using a supported java version
+        String javaVersion = System.getProperty("java.version", "");
+        // exit if unsupported java version.
+        if(javaVersion.startsWith("1.2") ||
+           javaVersion.startsWith("1.1")){
+            
+                JOptionPane.showMessageDialog(
+                    null, "Please use Java 1.3 or later", 
+                    "Please use Java 1.3 or later", JOptionPane.ERROR_MESSAGE);
+                ArgoSecurityManager.getInstance().setAllowExit(true);
+                System.exit(0);
+        }
+        
         // Force the configuration to load
         Configuration.load();
 
