@@ -26,6 +26,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.util.OSInfo;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
+import org.columba.core.gui.profiles.ProfileDialog;
 
 /**
  * Manages profiles consisting of configuration folders.
@@ -172,12 +173,77 @@ public class ProfileManager {
 	}
 
 	/**
+	 * Get formely selected profile. This was selected on the
+	 * previous startup of Columba.
+	 * 
+	 * @return		selected profile
+	 */
+	public String getSelectedProfile() {
+		String selected = null;
+		selected = profiles.getAttribute("selected");
+		
+		if ( selected == null) selected = "Default";
+		
+		return selected; 
+	}
+	
+	/**
 	 * Open dialog and prompt user for profile
 	 * 
 	 * @return profile
 	 */
 	protected Profile promptForProfile() {
-		return new Profile("Default", location);
+		String s = profiles.getAttribute("dont_ask");
+		if ( s == null) s = "false";
+		
+		boolean dontAsk = Boolean.valueOf(s).booleanValue();
+		
+		// use preselected profile
+		if ( dontAsk ) {
+			String selected = profiles.getAttribute("selected");
+			Profile p = getProfileForName(selected);
+			
+			return p;
+		} 
+		
+		// show profile choosing dialog
+		ProfileDialog d = new ProfileDialog();
+		String profileName = d.getSelection();
+
+		if (profileName.equals("Default")) {
+			profiles.addAttribute("selected", "Default");
+			profiles.addAttribute("dont_ask", new Boolean(d.isDontAskedSelected()).toString());
+			
+			// save to profiles.xml
+			try {
+				xml.save();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return new Profile("Default", location);
+		} else {
+			profiles.addAttribute("selected", profileName);
+			profiles.addAttribute("dont_ask", new Boolean(d.isDontAskedSelected()).toString());
+			
+			// save to profiles.xml
+			try {
+				xml.save();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return getProfileForName(profileName);
+		}
+	}
+
+	/**
+	 * Get profiles configuration.
+	 * 
+	 * @return top-level profiles node
+	 */
+	public XmlElement getProfiles() {
+		return profiles;
 	}
 
 	/**
