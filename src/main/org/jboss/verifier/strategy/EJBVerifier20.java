@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.12 2002/04/09 04:06:37 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.13 2002/04/09 04:27:25 jwalters Exp $
  */
 
 
@@ -49,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -1995,7 +1995,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              * Spec 10.6.2
              */
 
-			try {
+			/*try {  This isn't quite working right yet,so I'll leave it off
                 it = entity.getCMPFields();
                 while(it.hasNext()) {
                     String fieldName = (String)it.next();
@@ -2015,14 +2015,19 @@ public class EJBVerifier20 extends AbstractVerifier {
                     try {
 				        Method m = bean.getDeclaredMethod(setName, args);
 				    } catch (NoSuchMethodException nsme) {
-                        fireSpecViolationEvent(entity, new Section("10.6.2.h"));
-                        status = false;
+                        args[0] = classloader.loadClass("java.util.Collection");
+                        try {
+				            Method m = bean.getDeclaredMethod(setName, args);
+                        } catch (NoSuchMethodException nsme2) {
+                            fireSpecViolationEvent(entity, new Section("10.6.2.h"));
+                            status = false;
+                        }
 				    }
 	             }				 
              } catch (NoSuchFieldException nsfe) {
                  fireSpecViolationEvent(entity, new Section("10.6.2.j"));
                  status = false;
-			 }
+			 }*/
 
             /*
              * The ejbSelect(...) method signatures MUST follow these rules:
