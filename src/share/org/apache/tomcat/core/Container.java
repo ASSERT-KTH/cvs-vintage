@@ -374,12 +374,14 @@ public class Container implements Cloneable{
     }
 
     public Object getNote( String name ) throws TomcatException {
-	int id=contextM.getNoteId( ContextManager.CONTAINER_NOTE, name );
+	int id=getContextManager().getNoteId( ContextManager.CONTAINER_NOTE,
+					      name );
 	return getNote( id );
     }
 
     public void setNote( String name, Object value ) throws TomcatException {
-	int id=contextM.getNoteId( ContextManager.CONTAINER_NOTE, name );
+	int id=getContextManager().getNoteId( ContextManager.CONTAINER_NOTE,
+					      name );
 	setNote( id, value );
     }
     
@@ -399,8 +401,10 @@ public class Container implements Cloneable{
     public static final int H_postService=10;
     public static final int H_postRequest=11;
     public static final int H_handleError=12;
-    public static final int H_engineInit=13;
-    public static final int H_COUNT=14;
+    public static final int H_getInfo=13;
+    public static final int H_setInfo=14;
+    public static final int H_engineInit=15;
+    public static final int H_COUNT=16;
 
     Hooks hooks=new Hooks();
     BaseInterceptor hooksCache[][]=null;
@@ -420,6 +424,8 @@ public class Container implements Cloneable{
 	hooks.registerHook( "postService", H_postService );
 	hooks.registerHook( "postRequest", H_postRequest );
 	hooks.registerHook( "handleError", H_handleError );
+	hooks.registerHook( "getInfo", H_getInfo );
+	hooks.registerHook( "setInfo", H_setInfo );
 	hooks.registerHook( "engineInit", H_engineInit );
     }
 
