@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.230 2002/12/12 20:44:05 jon Exp $
+ * @version $Id: Issue.java,v 1.231 2002/12/12 23:01:56 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1748,24 +1748,13 @@ public class Issue
         String desc = Localization.format(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
             Locale.getDefault(),
-            "AddParentDependency", args);
+            "AddDependency", args);
 
-        // Save activity record
-        Activity activity = ActivityManager
+        // Save activity record for the parent issue
+        ActivityManager
             .createAddDependencyActivity(this, activitySet, depend, desc);
 
-        // Save activitySet record for child
-        Object[] args2 = {
-            childIssue.getUniqueId(),
-            this.getUniqueId(),
-            depend.getDependType().getName()
-        };
-        desc = Localization.format(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
-            "AddChildDependency", args2);
-
-        // Save activity record
+        // Save activity record for the child issue
         ActivityManager
             .createAddDependencyActivity(childIssue, activitySet, depend, desc);
 

@@ -11,7 +11,7 @@ $l10n.NoDependencies
  <th>$l10n.Select</th>
 #end
  <th>$l10n.Issue $l10n.ID #</th>
- <th>$l10n.Relationship</th>
+#*<th>$l10n.Relationship</th>*#
  <th>$l10n.Type</th>
 </tr>
 
@@ -31,7 +31,7 @@ $l10n.NoDependencies
   $l10n.PrivateIssue
 #end
 </td>
-<td>$l10n.Parent</td>
+#*<td>$l10n.Parent</td>*#
 <td>
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -69,7 +69,7 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
   $l10n.PrivateIssue
 #end
 </td>
-<td>$l10n.Child</td>
+#*<td>$l10n.Child</td>*#
 <td> 
 #if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $child.Module) )
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -103,7 +103,7 @@ $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$chil
  #end
     <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
 </td>
-<td>$l10n.Child</td>
+#*<td>$l10n.Child</td>*#
 <td> 
  #if (!$newDependGroup.TypeId.Message.equals(""))
   <p class="alert">$l10n.get($newDependGroup.TypeId.Message)</p>
