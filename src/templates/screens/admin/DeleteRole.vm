@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteRole.vm,v 1.1 2001/11/28 22:08:34 dr Exp $
+@version $Id: DeleteRole.vm,v 1.2 2001/11/29 21:26:16 dr Exp $
 *#
 
 #set ($state = $data.Parameters.getString("state"))
@@ -10,7 +10,7 @@
 
 $page.setTitle("Role Administration")
 
-<div id="deleteuser" class="app">
+<div id="deleterole" class="app">
 
 <h2>$page.Title</h2>
 

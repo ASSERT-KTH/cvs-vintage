@@ -1,11 +1,11 @@
 #** 
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditRole.vm,v 1.2 2001/11/28 21:03:18 dr Exp $
+@version $Id: EditRole.vm,v 1.3 2001/11/29 21:26:16 dr Exp $
 *#
 
 #set ($role = $scarabG.getRoleByName($data.Parameters.getString("name")))
 
-<div id="manageRoles" class="app">
+<div id="editrole" class="app">
 
 <h2>Role Administration</h2>
 <h3>Edit Permissions [for the $role.Name role]</h3>
