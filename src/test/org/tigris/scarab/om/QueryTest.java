@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.8 2002/03/19 22:52:49 elicia Exp $
+ * @version $Id: QueryTest.java,v 1.9 2002/05/14 17:43:49 jmcnally Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -153,7 +153,7 @@ public class QueryTest extends BaseTestCase
 
     private void testGetAllQueryTypes() throws Exception
     {
-        String[] scopeNames = {"personal", "global"};
+        String[] scopeNames = {"personal", "module"};
         System.out.println("\ntestGetAllQueryTypes()");
         List scopes = ScopePeer.getAllScopes();
         assertEquals(scopes.size(), 2);
