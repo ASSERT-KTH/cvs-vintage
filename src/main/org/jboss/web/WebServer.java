@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.24 $
+ *   @version $Revision: 1.25 $
  *
  *   Revisions:
  *
@@ -328,11 +328,17 @@ public class WebServer
                else
                {
                   if (clazzUrl.getFile().endsWith(".jar"))
+                  {
                      clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
-                  else
+                  }
+                  // this is a hack for the AOP ClassProxyFactory
+                  else if (clazzUrl.getFile().indexOf("/org_jboss_aop_proxy$") < 0)
+                  {
                      clazzUrl = new URL(clazzUrl, filePath);
+                  }
 
                   // Retrieve bytecodes
+                  log.trace("new clazzUrl: " + clazzUrl);
                   bytes = getBytes(clazzUrl);
                }
             }
