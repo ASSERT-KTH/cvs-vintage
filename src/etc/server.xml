@@ -219,14 +219,31 @@
              "binds" to. Add it if you want to "bind" to just "127.0.0.1".
              
              address="127.0.0.1"
+             
+             Parameter "tomcatAuthentication", controls if Tomcat honors 
+             ( and uses ) auth done in HTTP Server or not, when true Tomcat does 
+             not use in any way auth information provided by the HTTP Server. 
+             true is the default. 
+             
+             tomcatAuthentication="false"
+             
           -->
-        <Ajp12Connector	tomcatAuthentication="false" port="8007" />
+        <Ajp12Connector	 port="8007" />
 
         <!-- Apache AJP13 support (mod_jk)
              Parameter "address" defines network interface this Interceptor
              "binds" to. Add it if you want to "bind" to just "127.0.0.1".
 
              address="127.0.0.1"
+
+             Parameter "tomcatAuthentication", controls if Tomcat honors 
+             ( and uses ) auth done in HTTP Server or not, when true Tomcat does 
+             not use in any way auth information provided by the HTTP Server. 
+             true is the default. 
+             
+             tomcatAuthentication="false"
+             
+
           -->
         <Ajp13Connector port="8009" />
 
