@@ -1,4 +1,4 @@
-$Id: readme,v 1.2 2000/03/25 21:20:48 craigmcc Exp $
+$Id: readme,v 1.3 2000/03/26 02:36:11 craigmcc Exp $
         
                            Release Notes for
                            =================
@@ -9,11 +9,10 @@ $Id: readme,v 1.2 2000/03/25 21:20:48 craigmcc Exp $
 0.  TABLE OF CONTENTS:
 
     1.  Introduction
-    2.  Installing Tomcat
-    3.  Running Tomcat
-    4.  Application Development Using Tomcat
-    5.  New Features In This Release
-    6.  Known Bugs and Issues
+    2.  Installing and Running Tomcat
+    3.  Application Development Using Tomcat
+    4.  New Features In This Release
+    5.  Known Bugs and Issues
 
 =============================================================================
 1.  INTRODUCTION
@@ -29,141 +28,20 @@ You should read the License Agreement (in the LICENSE file of the top level
 directory), which applies to all software included in this release.
 
 =============================================================================
-2.  INSTALLING TOMCAT
+2.  INSTALLING AND RUNNING TOMCAT
 
 Tomcat requires a Java Runtime Environment conformant to JRE 1.1 or later,
 including any Java2 platform system.  If you wish to develop applications,
 you will need a Java compiler, such as the one included in a Java Development
 Kit 1.1 or later environment, including JDKs conformant with Java2.
 
-For detailed information about installing and configuring Tomcat, point your
+For detailed information about installing and running Tomcat, point your
 browser at file "doc/uguide/tomcat_ug.html" under the directory into which
 you unpacked the Tomcat distribution.
 
 
 =============================================================================
-3.  RUNNING TOMCAT
-
-3.1 Setting Up Your Environment
-
-In order to run Tomcat, you must have installed a compliant Java Runtime
-Environment (JRE) or Java Development Kit (JDK), and have configured your PATH
-environment variable so that the "java" command is recognized.  For detailed
-instructions, see the documentation that came with your JRE or JDK package.
-
-For best results, you should also set the JAVA_HOME environment variable to
-point at the directory in which your Java Development Kit or Java Runtime
-Environment installation exists, and also set the TOMCAT_HOME environment
-variable to point at the directory into which you installed Tomcat.  These
-settings are currently required on Windows platforms.  Example commands:
-
-        * UNIX Systems (sh or bash):
-                export JAVA_HOME=/usr/local/jdk1.2.2
-                export TOMCAT_HOME=/usr/local/tomcat
-
-        * UNIX Systems (csh):
-                setenv JAVA_HOME/usr/local/jdk1.2.2
-                setenv TOMCAT_HOME /usr/local/tomcat
-
-        * WINDOWS Systems:
-                set JAVA_HOME=c:\jdk1.2.2
-                set TOMCAT_HOME=c:\tomcat
-
-For convenience, you may also wish to add the "bin" directory under TOMCAT_HOME
-to your PATH environment variable, so that the startup and shutdown scripts are
-immediately available:
-
-        * UNIX Systems (sh or bash):
-                export PATH=$TOMCAT_HOME/bin:$PATH
-
-        * UNIX Systems (csh):
-                setenv PATH $TOMCAT_HOME/bin:$PATH
-
-        * WINDOWS Systems:
-                set PATH=%TOMCAT_HOME%/bin;%PATH%
-
-3.2 Starting Tomcat
-
-To start Tomcat on a Unix system, type one of the following commands:
-
-    startup.sh                   <-- If $TOMCAT_HOME/bin is on your path
-
-    $TOMCAT_HOME/bin/startup.sh  <-- Otherwise
-
-To start Tomcat on a Windows system, type one of the following commands:
-
-    startup                      <-- If %TOMCAT_HOME%\bin is on your path
-
-    %TOMCAT_HOME%\bin\startup    <-- Otherwise
-
-Alternatively, you can use the "tomcat.sh" script (Unix) or "tomcat.bat" script
-(Windows) directly.  This script is used by the startup and shutdown scripts,
-and also includes additional options.  For example, on a Unix system:
-
-    tomcat.sh start
-
-    $TOMCAT_HOME/bin/tomcat.sh start
-
-Now, point your browser at the following URL to begin using Tomcat:
-
-        http://localhost:8080
-
-
-3.3 Stopping Tomcat
-
-To stop Tomcat on a Unix system, type one of the following commands:
-
-    shutdown.sh                  <-- If $TOMCAT_HOME/bin is on your path
-
-    $TOMCAT_HOME/bin/shutdown.sh <-- Otherwise
-
-To stop Tomcat on a Windows system, type one of the following commands:
-
-    shutdown                     <-- If %TOMCAT_HOME%\bin is on your path
-
-    %TOMCAT_HOME%\bin\shutdown   <-- Otherwise
-
-
-3.4 Troubleshooting Startup Problems
-
-3.4.1 Out Of Environment Space
-
-On a Windows 95/98 machine, you may see an "Out of Environment Space"
-error message when starting the server (or the separate DOS window might
-appear and very quickly disappear).  This is caused by Windows providing
-too small a space for environment variables.  To work around this limitation:
-- Click on the MS-DOS icon at the upper left corner of the window
-- Select the "Properties" option from this menu
-- Click on the "Memory" tab
-- Adjust the value in the Initial Environment drop down box to at least 2816
-- Click the OK button
-- Close the MS-DOS window and open a new one (to make the changes take effect)
-- Start the server as described above
-
-3.4.2 Debugging Other Startup Problems
-
-To debug other problems starting the server, it is sometimes more convenient
-to run Tomcat in the same window (the startup scripts normally run Tomcat as a
-detached process on Unix, or in a separate window on Windows).  To disable this
-feature, start Tomcat like this on a Unix system
-
-    tomcat.sh run                <-- If $TOMCAT_HOME/bin is on your path
-
-or
-
-    $TOMCAT_HOME/bin/tomcat.sh run
-
-On a Windows system, you would type
-
-    tomcat run                  <-- If %TOMCAT_HOME%\bin is on your path
-
-or
-
-    %TOMCAT_HOME%\bin\tomcat run
-
-
-=============================================================================
-4.  APPLICATION DEVELOPMENT USING TOMCAT
+3.  APPLICATION DEVELOPMENT USING TOMCAT
 
 Preliminary information on using Tomcat for developing Servlet/JSP based
 applications is provided in the included Application Developer's Guide.
@@ -172,13 +50,28 @@ which you unpacked the Tomcat distribution.
 
 
 =============================================================================
-5.  NEW FEATURES IN THIS RELEASE
+4.  NEW FEATURES IN THIS RELEASE
 
 FIXME
 
 
 =============================================================================
-6.  KNOWN BUGS AND ISSUES
+5.  KNOWN BUGS AND ISSUES
+
+6.1 Using An Absolute Path as Document Root Under Windows
+
+In the TOMCAT_HOME/conf/server.xml file, you can declare a relative or absolute
+directory pathname for the docRoot attribute.  If you wish to use an absolute
+pathname on a Windows system, you MUST include the drive letter in order to
+conform to Java's definition of an absolute path on this platform:
+
+    GOOD:  c:\mydirectory\mydocroot
+    GOOD:  c:/mydirectory/mydocroot
+    BAD:   \mydirectory\mydocroot
+    BAD:   /mydirectory/mydocroot
+
+Under Unix, absolute pathnames must begin with a slash ('/') character.
+
 
 FIXME
 
