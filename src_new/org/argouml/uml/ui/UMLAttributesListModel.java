@@ -1,4 +1,4 @@
-// $Id: UMLAttributesListModel.java,v 1.16 2004/09/07 18:50:04 mvw Exp $
+// $Id: UMLAttributesListModel.java,v 1.17 2004/09/13 19:21:23 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -210,7 +210,7 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
         popup.add(open);
         UMLListMenuItem add = new UMLListMenuItem(
                 container.localize("New"), this, "add", index);
-        if (_upper >= 0 && getModelElementSize() >= _upper) {
+        if (getUpper() >= 0 && getModelElementSize() >= getUpper()) {
             add.setEnabled(false);
         }
         popup.add(add);

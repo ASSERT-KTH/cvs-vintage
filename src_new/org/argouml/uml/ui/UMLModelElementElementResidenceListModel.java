@@ -1,4 +1,4 @@
-// $Id: UMLModelElementElementResidenceListModel.java,v 1.1 2004/07/31 08:31:57 mkl Exp $
+// $Id: UMLModelElementElementResidenceListModel.java,v 1.2 2004/09/13 19:21:23 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
  * @since Oct 12, 2002
@@ -52,7 +51,8 @@ public class UMLModelElementElementResidenceListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return ModelFacade.isAElementResidence(o) && ModelFacade.getElementResidences(getTarget()).contains(o);
+        return ModelFacade.isAElementResidence(o) 
+            && ModelFacade.getElementResidences(getTarget()).contains(o);
     }
 
 }

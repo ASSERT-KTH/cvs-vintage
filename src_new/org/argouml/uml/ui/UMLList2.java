@@ -1,4 +1,4 @@
-// $Id: UMLList2.java,v 1.15 2004/07/24 15:44:47 mkl Exp $
+// $Id: UMLList2.java,v 1.16 2004/09/13 19:21:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public abstract class UMLList2
 
     /**
      * Constructor for UMLList2.
-     * @param dataModel
+     * @param dataModel the date model
      * @param showIcon true if an icon should be shown representing the
      * modelelement in each cell.
      */
@@ -55,6 +55,11 @@ public abstract class UMLList2
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param dataModel the date model
+     */
     public UMLList2(UMLModelElementListModel2 dataModel) {
         this(dataModel, false);
     }
@@ -62,12 +67,12 @@ public abstract class UMLList2
     /**
      * Constructor for UMLList2. Used by subclasses that want to add their own
      * renderer to the list.
-     * @param dataModel
-     * @param renderer
+     * @param dataModel the data model
+     * @param renderer the renderer
      */
     protected UMLList2(
-        UMLModelElementListModel2 dataModel,
-        ListCellRenderer renderer) {
+            UMLModelElementListModel2 dataModel,
+            ListCellRenderer renderer) {
         super(dataModel);
         setDoubleBuffered(true);
         getSelectionModel().addListSelectionListener(this);
@@ -89,6 +94,8 @@ public abstract class UMLList2
     /**
      * The 'body' of the valueChanged method. Is only called if there is
      * actually a selection made.
+     *
+     * @param e the event
      */
     protected abstract void doIt(ListSelectionEvent e);
 

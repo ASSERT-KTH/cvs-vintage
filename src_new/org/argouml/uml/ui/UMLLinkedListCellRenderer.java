@@ -1,4 +1,4 @@
-// $Id: UMLLinkedListCellRenderer.java,v 1.3 2004/07/24 15:44:47 mkl Exp $
+// $Id: UMLLinkedListCellRenderer.java,v 1.4 2004/09/13 19:21:23 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLLinkedListCellRenderer.java,v 1.3 2004/07/24 15:44:47 mkl Exp $
+// $Id: UMLLinkedListCellRenderer.java,v 1.4 2004/09/13 19:21:23 mvw Exp $
 package org.argouml.uml.ui;
 import java.awt.Component;
 
@@ -40,17 +40,20 @@ public class UMLLinkedListCellRenderer extends UMLListCellRenderer2 {
 
     /**
      * Constructor for UMLLinkedListCellRenderer.
-     * @param showIcon
+     * @param showIcon true if the icon should be shown
      */
     public UMLLinkedListCellRenderer(boolean showIcon) {
         super(showIcon);
     }
 
     /**
-     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(
+     * javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+    public Component getListCellRendererComponent(JList list, Object value, 
+            int index, boolean isSelected, boolean cellHasFocus) {
+        JLabel label = (JLabel) super.getListCellRendererComponent(
+                list, value, index, isSelected, cellHasFocus);
         /*       
         label.setBackground(list.getBackground());
         label.setForeground(list.getForeground());
@@ -58,7 +61,8 @@ public class UMLLinkedListCellRenderer extends UMLListCellRenderer2 {
         if (isSelected) {
             Font font = label.getFont();
             Map textattributes = font.getAttributes();
-            textattributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_EXTRABOLD);
+            textattributes.put(TextAttribute.WEIGHT, 
+                TextAttribute.WEIGHT_EXTRABOLD);
             label.setFont(font.deriveFont(textattributes));            
         } 
         */
