@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCPostCreateEntityCommand
 {
@@ -113,9 +113,6 @@ public class JDBCPostCreateEntityCommand
                          EntityEnterpriseContext ctx)
       throws CreateException
    {
-      log.debug("JDBCPostCreateEntityCommand> execute: "
-         + "ctx=" + ctx.getId());
-
       // check native CMR fields mapped to the pk
       for(Iterator iter=fkPartOfPkCmrFields.iterator(); iter.hasNext();)
       {
@@ -154,8 +151,6 @@ public class JDBCPostCreateEntityCommand
 
          // load the value from the database
          Collection rel = manager.loadRelation(cmrField, ctx);
-         log.debug("JDBCPostCreateEntityCommand> execute: "
-            + "loaded: " + rel );
 
          for(Iterator relIter = rel.iterator(); relIter.hasNext();) {
             Object relatedId = relIter.next();
@@ -163,10 +158,6 @@ public class JDBCPostCreateEntityCommand
                + "creating relationship with id=" + relatedId);
             cmrField.createRelationLinks(ctx, relatedId);
          }
-
-         System.out.println("JDBCPostCreateEntityCommand> execute: "
-            + "cmrField=" + cmrField.getFieldName()
-            + "; value=" + cmrField.getInstanceValue(ctx));
       }
       return null;
    }
