@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.43 2002/03/01 01:31:26 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.44 2002/03/06 04:23:05 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -262,6 +262,8 @@ Bug No.  Description
 6604     Fix a problem when using the AccessLog without a "Default Context" 
 [rc1]    defined.  
 
+6887	 Fix a problem locating an error-page when using virtual hosts.
+[F]
 
 Configuration:
 
