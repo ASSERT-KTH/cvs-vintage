@@ -8,6 +8,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -30,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
 
@@ -41,9 +42,10 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
    public Class getFieldType();
 
    /**
-    * Get metadata for the field.
+    * Gets the field of the primary key object in which the value of this 
+    * field is stored.
     */
-   public JDBCCMPFieldMetaData getMetaData();
+   public Field getPrimaryKeyField();
 
    /**
     * Gets the JDBCStoreManager for this field

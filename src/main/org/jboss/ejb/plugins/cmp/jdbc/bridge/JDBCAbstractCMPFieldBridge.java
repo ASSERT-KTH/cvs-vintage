@@ -40,13 +40,19 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
-   protected JDBCStoreManager manager;
-   protected JDBCCMPFieldMetaData metadata;
-   protected JDBCType jdbcType;
-   protected Logger log;
+   private final JDBCStoreManager manager;
+   private final Logger log;
+   private final JDBCType jdbcType;
+   private final String fieldName;
+   private final Class fieldType;
+   private final boolean readOnly;
+   private final long readTimeOut;
+   private final boolean primaryKeyMember;
+   private final Class primaryKeyClass;
+   private final Field primaryKeyField;
    
    public JDBCAbstractCMPFieldBridge(
          JDBCStoreManager manager, 
@@ -62,19 +68,49 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          JDBCCMPFieldMetaData metadata,
          JDBCType jdbcType) throws DeploymentException {
 
+      this(
+            manager,
+            metadata.getFieldName(),
+            metadata.getFieldType(),
+            jdbcType,
+            metadata.isReadOnly(),
+            metadata.getReadTimeOut(),
+            metadata.isPrimaryKeyMember(),
+            metadata.getEntity().getPrimaryKeyClass(),
+            metadata.getPrimaryKeyField());
+   }
+
+   public JDBCAbstractCMPFieldBridge(
+         JDBCStoreManager manager,
+         String fieldName,
+         Class fieldType,
+         JDBCType jdbcType,
+         boolean readOnly,
+         long readTimeOut,
+         boolean primaryKeyMember,
+         Class primaryKeyClass,
+         Field primaryKeyField) {
+
       this.manager = manager;
-      this.metadata = metadata;
+
+      this.fieldName = fieldName;
+      this.fieldType = fieldType;
       this.jdbcType = jdbcType;
+
+      this.readOnly = readOnly;
+      this.readTimeOut = readTimeOut;
+
+      this.primaryKeyMember = primaryKeyMember;
+      this.primaryKeyClass = primaryKeyClass;
+      this.primaryKeyField = primaryKeyField;
+      
       this.log = Logger.getLogger(
             this.getClass().getName() + 
             "." + 
             manager.getMetaData().getName() +
             "." +
-            metadata.getFieldName());
-   }
+            fieldName);
 
-   public JDBCCMPFieldMetaData getMetaData() {
-      return metadata;
    }
 
    public JDBCStoreManager getManager() {
@@ -82,23 +118,39 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    }
 
    public String getFieldName() {
-      return metadata.getFieldName();
+      return fieldName;
    }
    
+   public JDBCType getJDBCType() {
+      return jdbcType;
+   }
+
    public Class getFieldType() {
-      return metadata.getFieldType();
+      return fieldType;
+   }
+
+   public boolean isPrimaryKeyMember() {
+      return primaryKeyMember;
+   }
+
+   public Class getPrimaryKeyClass() {
+      return primaryKeyClass;
+   }
+
+   public Field getPrimaryKeyField() {
+      return primaryKeyField;
    }
 
    public boolean isReadOnly() {
-      return metadata.isReadOnly();
+      return readOnly;
+   }
+
+   public long getReadTimeOut() {
+      return readTimeOut;
    }
 
    public abstract boolean isReadTimedOut(EntityEnterpriseContext ctx);
    
-   public boolean isPrimaryKeyMember() {
-      return metadata.isPrimaryKeyMember();
-   }
-
    public Object getValue(EntityEnterpriseContext ctx) {
       // no user checks yet, but this is where they would go
       return getInstanceValue(ctx);
@@ -121,13 +173,13 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          throws IllegalArgumentException {
 
       try {
-         if(metadata.getPrimaryKeyField() != null) {
+         if(getPrimaryKeyField() != null) {
             if(primaryKey == null) {
                return null;
             }
             
             // Extract this field's value from the primary key.
-            return metadata.getPrimaryKeyField().get(primaryKey);
+            return getPrimaryKeyField().get(primaryKey);
          } else {
             // This field is the primary key, so no extraction is necessary.
             return primaryKey;
@@ -143,7 +195,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          throws IllegalArgumentException {
 
       try {
-         if(metadata.getPrimaryKeyField() != null) {
+         if(getPrimaryKeyField() != null) {
             // if we are tring to set a null value 
             // into a null pk, we are already done.
             if(value == null && primaryKey == null) {
@@ -152,12 +204,11 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
             
             // if we don't have a pk object yet create one
             if(primaryKey == null) {
-               primaryKey =
-                     manager.getEntityBridge().createPrimaryKeyInstance();
+               primaryKey = getPrimaryKeyClass().newInstance();
             }
             
             // Set this field's value into the primary key object.
-            metadata.getPrimaryKeyField().set(primaryKey, value);
+            getPrimaryKeyField().set(primaryKey, value);
             return primaryKey;
          } else {
             // This field is the primary key, so no extraction is necessary.
@@ -201,10 +252,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
          setInstanceValue(ctx, value);
       }
    }      
-
-   public JDBCType getJDBCType() {
-      return jdbcType;
-   }
 
    public int setInstanceParameters(
          PreparedStatement ps,

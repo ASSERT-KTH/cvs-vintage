@@ -7,6 +7,7 @@
  
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import javax.ejb.EJBException;
@@ -32,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
@@ -49,12 +50,12 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
          JDBCType jdbcType) throws DeploymentException {
 
       super(manager, metadata, jdbcType);
-   }
+   } 
 
    public Object getInstanceValue(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
       if(!fieldState.isLoaded) {
-         manager.loadField(this, ctx);
+         getManager().loadField(this, ctx);
          if(!fieldState.isLoaded) {
             throw new EJBException("Could not load field value: " + 
                   getFieldName());
@@ -120,7 +121,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       if(isReadOnly()) {
          long readInterval = System.currentTimeMillis() - 
                getFieldState(ctx).lastRead; 
-         return readInterval > metadata.getReadTimeOut();
+         return readInterval > getReadTimeOut();
       }
       
       // if we are read/write then we are always timed out

@@ -56,7 +56,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -286,10 +286,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
             JDBCCMPFieldMetaData cmpFieldMetaData = 
                   (JDBCCMPFieldMetaData)i.next();
             foreignKeyFields.add(new JDBCCMP2xFieldBridge(
-                     manager,
-                     cmpFieldMetaData,
-                     manager.getJDBCTypeFactory().getJDBCType(
-                        cmpFieldMetaData)));
+                  manager,
+                  cmpFieldMetaData,
+                  manager.getJDBCTypeFactory().getJDBCType(
+                     cmpFieldMetaData)));
          }
          foreignKeyFields = Collections.unmodifiableList(foreignKeyFields);
          hasForeignKey = !foreignKeyFields.isEmpty();
@@ -1062,7 +1062,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                parameterIndex,
                argumentRef);
       
-         if(field.getMetaData().getPrimaryKeyField() != null) {
+         if(field.getPrimaryKeyField() != null) {
             // if we are tring to set a null value 
             // into a null pk, we are already done.
             if(argumentRef[0] != null || fkRef[0] != null) {
@@ -1074,7 +1074,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
             
                try {
                   // Set this field's value into the primary key object.
-                  field.getMetaData().getPrimaryKeyField().set(
+                  field.getPrimaryKeyField().set(
                         fkRef[0],
                         argumentRef[0]);
                } catch(Exception e) {
