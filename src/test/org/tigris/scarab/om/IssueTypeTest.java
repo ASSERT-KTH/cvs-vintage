@@ -55,7 +55,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTypeTest.java,v 1.4 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: IssueTypeTest.java,v 1.5 2003/03/25 20:31:54 jmcnally Exp $
  */
 public class IssueTypeTest extends BaseTestCase
 {
@@ -125,7 +125,7 @@ public class IssueTypeTest extends BaseTestCase
     {
         issueType = new IssueType();
         issueType.setName("test issue type");
-        issueType.setParentId(new NumberKey(0));
+        issueType.setParentId(new Integer(0));
         issueType.save();
         IssueType template = new IssueType();
         template.setName("test issue type template");

@@ -53,7 +53,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivitySetTest.java,v 1.3 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: ActivitySetTest.java,v 1.4 2003/03/25 20:31:54 jmcnally Exp $
  */
 public class ActivitySetTest extends BaseTestCase
 {
@@ -91,7 +91,7 @@ public class ActivitySetTest extends BaseTestCase
         attachment.save();
         
         trans = ActivitySetManager
-            .getInstance(new NumberKey("1"), getUser1(), attachment);
+            .getInstance(new Integer(1), getUser1(), attachment);
         trans.save();
         System.out.println("new activitySet id = " + trans.getActivitySetId());
         System.out.println("\n trans" + trans);

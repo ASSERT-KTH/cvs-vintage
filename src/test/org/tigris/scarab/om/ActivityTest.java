@@ -55,7 +55,7 @@ import junit.framework.*;
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.8 2002/10/28 22:00:33 jon Exp $
+ * @version $Id: ActivityTest.java,v 1.9 2003/03/25 20:31:54 jmcnally Exp $
  */
 public class ActivityTest extends BaseTestCase
 {
@@ -88,7 +88,8 @@ public class ActivityTest extends BaseTestCase
         ActivitySet trans = getEditActivitySet();
         Activity activity = ActivityManager
             .createNumericActivity(getIssue0(), getPlatformAttribute(),
-            trans,"new activity long create", null, 5, 6);
+                                   trans,"new activity long create", null, 
+                                   new Integer(5), new Integer(6));
         activity.save();
         ActivitySet newtrans = activity.getActivitySet();
         assertEquals("getActivitySet expected: " + trans.getActivitySetId() +
@@ -128,8 +129,8 @@ public class ActivityTest extends BaseTestCase
         System.out.println("\ntestGetAttribute()");
         Activity retActivity = ActivityManager
             .getInstance(new NumberKey(1), false);
-        NumberKey key = retActivity.getAttribute().getAttributeId();
+        Integer key = retActivity.getAttribute().getAttributeId();
         assertTrue("AttId expected: 11 got: " + key, 
-                   key.toString().equals("11"));
+                   key.intValue() == 11);
     }
 }

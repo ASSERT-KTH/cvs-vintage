@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.13 2003/02/02 09:09:39 jon Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.14 2003/03/25 20:31:54 jmcnally Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -111,8 +111,8 @@ public class ScarabModuleTest extends BaseTestCase
         log("testCreateNew()");
         Module me = ModuleManager.getInstance();
         me.setRealName("New Module");
-        me.setOwnerId(new NumberKey(1));
-        me.setParentId(new NumberKey(1));
+        me.setOwnerId(new Integer(1));
+        me.setParentId(new Integer(1));
         me.setDescription("This is the new module description");
         me.save();
         newModule = (ScarabModule)me;

@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.11 2003/01/02 19:54:29 jon Exp $
+ * @version $Id: QueryTest.java,v 1.12 2003/03/25 20:31:54 jmcnally Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -101,14 +101,14 @@ public class QueryTest extends BaseTestCase
     private void testSave() throws Exception
     {
         System.out.println("\ntestSave()");
-        query.setUserId(new NumberKey(1));
+        query.setUserId(new Integer(1));
         query.setName("Test query 1");
         query.setValue("&searchId=1&searchisp=asc");
         query.setDescription("Description for test query 1");
         query.setModuleId(getModule().getModuleId());
         query.setIssueType(getDefaultIssueType());
         query.setApproved(false);
-        query.setScopeId(new NumberKey(1));
+        query.setScopeId(new Integer(1));
         query.save();
         //
         // Make sure the query was persisted correctly.
@@ -122,13 +122,13 @@ public class QueryTest extends BaseTestCase
     private void testSaveAndSendEmail() throws Exception
     {
         System.out.println("\ntestSaveAndSendEmail()");
-        query1.setUserId(new NumberKey(2));
+        query1.setUserId(new Integer(2));
         query1.setName("Test query 2");
         query1.setValue("&searchId=2&searchisp=asc");
         query1.setDescription("Description for test query 2");
         query1.setModuleId(getModule().getModuleId());
         query1.setIssueType(getDefaultIssueType());
-        query1.setScopeId(new NumberKey(1));
+        query1.setScopeId(new Integer(1));
         query1.saveAndSendEmail(getUser1(), getModule(), null);
         //
         // Make sure the query was persisted correctly.
@@ -199,9 +199,9 @@ public class QueryTest extends BaseTestCase
     private void testSubscribe() throws Exception
     {
         System.out.println("\ntestSubscribe()");
-        query.subscribe(getUser2(), "1");
+        query.subscribe(getUser2(), new Integer(1));
         RQueryUser rqu = query.getRQueryUser(getUser2());
-        query.subscribe(getUser2(), "1");
+        query.subscribe(getUser2(), new Integer(1));
         assertTrue(rqu.getIsSubscribed());
         // Now if unsubscribed, should fail to return RQueryUser
         query.unSubscribe(getUser2());
