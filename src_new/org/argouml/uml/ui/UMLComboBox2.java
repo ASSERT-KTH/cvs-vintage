@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.17 2004/07/20 22:07:44 kataka Exp $
+// $Id: UMLComboBox2.java,v 1.18 2004/07/24 15:44:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JComboBox;
 
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargettableModelView;
@@ -49,6 +50,7 @@ public class UMLComboBox2
      */
     protected UMLComboBox2(UMLComboBoxModel2 arg0) {
         super(arg0);
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addActionListener(this);
 
     }
@@ -62,6 +64,7 @@ public class UMLComboBox2
     public UMLComboBox2(UMLComboBoxModel2 arg0, UMLAction action,
 			boolean showIcon) {
         super(arg0);
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addActionListener(action);
         // setDoubleBuffered(true);
         setRenderer(new UMLListCellRenderer2(showIcon));      

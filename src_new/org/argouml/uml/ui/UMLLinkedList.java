@@ -1,4 +1,4 @@
-// $Id: UMLLinkedList.java,v 1.13 2004/07/17 13:10:30 kataka Exp $
+// $Id: UMLLinkedList.java,v 1.14 2004/07/24 15:44:46 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class UMLLinkedList extends UMLList2 implements ListSelectionListener {
     }
     
     public UMLLinkedList(UMLModelElementListModel2 dataModel) {
-        this(dataModel, false);
+        this(dataModel, true);
     }
 
     /**

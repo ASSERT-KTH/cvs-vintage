@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.10 2004/05/20 11:12:25 linus Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.11 2004/07/24 15:44:47 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,7 @@ import javax.swing.border.TitledBorder;
 import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
@@ -150,7 +151,7 @@ public abstract class UMLRadioButtonPanel
 	    String actionCommand =
 		(String) labeltextsActioncommands.get(keyAndLabel);
             button.setActionCommand(actionCommand);
-
+            button.setFont(LookAndFeelMgr.getInstance().getSmallFont());
             _buttonGroup.add(button);
             add(button);
         }

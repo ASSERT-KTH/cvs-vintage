@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.16 2004/03/25 22:30:01 mvw Exp $
+// $Id: UMLCheckBox2.java,v 1.17 2004/07/24 15:44:46 mkl Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.JCheckBox;
 import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.tigris.gef.presentation.Fig;
@@ -60,6 +61,7 @@ public abstract class UMLCheckBox2
      */
     public UMLCheckBox2(String text, Action a, String propertySetName) {
         super(text);
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
         _propertySetName = propertySetName;
         addActionListener(a);
 

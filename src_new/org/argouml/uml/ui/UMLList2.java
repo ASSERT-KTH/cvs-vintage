@@ -1,4 +1,4 @@
-// $Id: UMLList2.java,v 1.14 2004/02/29 12:35:46 linus Exp $
+// $Id: UMLList2.java,v 1.15 2004/07/24 15:44:47 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargettableModelView;
 
@@ -51,6 +52,7 @@ public abstract class UMLList2
         // setDoubleBuffered(true);
         getSelectionModel().addListSelectionListener(this);
         setCellRenderer(new UMLListCellRenderer2(showIcon));
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
     }
 
     public UMLList2(UMLModelElementListModel2 dataModel) {
@@ -71,6 +73,7 @@ public abstract class UMLList2
         getSelectionModel().addListSelectionListener(this);
         if (renderer != null)
             setCellRenderer(renderer);
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: UMLTextField2.java,v 1.9 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextField2.java,v 1.10 2004/07/24 15:44:47 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextField2.java,v 1.9 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLTextField2.java,v 1.10 2004/07/24 15:44:47 mkl Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.JTextField;
 
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargettableModelView;
 
@@ -46,6 +47,7 @@ public class UMLTextField2
      */
     public UMLTextField2(UMLPlainTextDocument doc) {
         super(doc, null, 0);
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addCaretListener(ActionCopy.getInstance());
         addCaretListener(ActionCut.getInstance());  
         addCaretListener(ActionPaste.getInstance());

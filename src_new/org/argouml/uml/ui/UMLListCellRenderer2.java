@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.20 2004/04/25 00:43:06 d00mst Exp $
+// $Id: UMLListCellRenderer2.java,v 1.21 2004/07/24 15:44:47 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.20 2004/04/25 00:43:06 d00mst Exp $
+// $Id: UMLListCellRenderer2.java,v 1.21 2004/07/24 15:44:47 mkl Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
@@ -72,13 +72,15 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      */
     public Component getListCellRendererComponent(JList list, Object value, 
                     int index, boolean isSelected, boolean cellHasFocus) {
-        
+        cat.debug("determine rendering for: " + value);
+        cat.debug("show icon: " + _showIcon);
         if (ModelFacade.isABase(value) || ModelFacade.isAMultiplicity(value)) {
             
+            cat.debug("is a MBase or MMultiplicity");
             String text = makeText(value);
             setText(text);
             
-            if (_showIcon) {
+            if (_showIcon) {                
                 
                 // ----- setup similar to the super() implementation -----
                 setComponentOrientation(list.getComponentOrientation());
