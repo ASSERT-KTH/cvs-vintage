@@ -5,8 +5,7 @@
 		<echo message="Compile Mail core"/>
 		<javac srcdir="${src.mail.core}" destdir="${dest}" encoding="ISO-8859-1" debug="${debugbuild}">
 			<classpath refid="compile.classpath"/>
-			<exclude name="**/*.html"/>
-			<exclude name="**/*.xml"/>
+			<include name="**/*.java" />
 		</javac>
 	</target>
 </project>

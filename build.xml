@@ -61,6 +61,7 @@
 		
 		<!-- Define the Classpaths -->
 		<path id="compile.classpath" >
+			<pathelement path="${dest}"/>
 			<pathelement path="${lib.forms}"/>
 			<pathelement path="${lib.jscf}"/>
 			<pathelement path="${lib.jargs}"/>
@@ -185,22 +186,18 @@
 	<!-- compile the classes -->
 	<target name="compile" depends="init, copy-resources, version"  description="Compiles the Columba core components">
 		<echo message="the classes are going to ${dest} "/>
+
+		<ant dir="${src.columba.core}" target="compile" inheritrefs="true" />
+	
+		<!-- Compile the APIs -->
 		<javac destdir="${dest}">
-			<src path="${src.columba.core}"/>
-			<src path="${src.mail.core}"/>
-			<src path="${src.addressbook.core}"/>
-			<exclude name="**/*.html"/>
-			<exclude name="**/*.xml"/>
+			<src path="${src.mail.api}"/>
+			<src path="${src.addressbook.api}"/>
 			<classpath refid="compile.classpath" />
 		</javac>
 		
-		<!-- This will be the way to compile each component separately 
-			after they are completetly separated through API Interfaces (tstich) 
-		
-		<ant dir="${src.columba.core}" target="compile" inheritrefs="true" />
 		<ant dir="${src.mail.core}" target="compile" inheritrefs="true" />
 		<ant dir="${src.addressbook.core}" target="compile" inheritrefs="true" />
-		-->
 	</target>
 
 	
