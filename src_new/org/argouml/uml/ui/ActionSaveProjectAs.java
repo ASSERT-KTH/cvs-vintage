@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.33 2005/01/02 04:08:33 bobtarling Exp $
+// $Id: ActionSaveProjectAs.java,v 1.34 2005/01/02 13:49:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,8 @@ import org.argouml.util.osdep.OsUtil;
 public class ActionSaveProjectAs extends ActionSaveProject {
 
     /** logger */
-    private static final Logger LOG = Logger.getLogger(ActionSaveProjectAs.class);
+    private static final Logger LOG = 
+        Logger.getLogger(ActionSaveProjectAs.class);
   
     /**
      * The singleton.
