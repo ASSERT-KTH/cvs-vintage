@@ -278,7 +278,6 @@ class Ajp12 {
                                 ContextManager cm=req.getContextManager();
 				cm.shutdown();
 				cm.log("Exiting" );
-				cm.getLog().flush();
 				// same behavior as in past, because it seems
 				// that stopping everything doesn't work -
 				// need to figure
