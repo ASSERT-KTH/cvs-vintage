@@ -32,6 +32,7 @@
     <jar name="lib/tomcat.jar"/>
     <jar name="lib/common/tomcat_core.jar"/>
     <jar name="lib/common/core_util.jar"/>
+    <jar name="lib/common/jasper-runtime.jar"/>
     <jar name="lib/container/container_util.jar"/>
     <jar name="lib/container/tomcat_modules.jar"/>
     <jar name="lib/container/facade22.jar"/>
