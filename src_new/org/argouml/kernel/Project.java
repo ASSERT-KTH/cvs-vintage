@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.50 2003/02/08 19:44:12 d00mst Exp $
+// $Id: Project.java,v 1.51 2003/02/18 19:44:21 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,9 +76,11 @@ import org.argouml.uml.ProfileJava;
 import org.argouml.uml.ProjectMemberModel;
 import org.argouml.uml.UMLChangeRegistry;
 import org.argouml.uml.diagram.ProjectMemberDiagram;
+import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
+import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.generator.GenerationPreferences;
 import org.argouml.util.ChangeRegistry;
@@ -898,7 +900,11 @@ public class Project implements java.io.Serializable {
      */
     protected void removeDiagram(ArgoDiagram d) {
         _diagrams.removeElement(d);
-        d.removeChangeRegistryAsListener( _saveRegistry );
+        if (d instanceof UMLStateDiagram) {
+            UMLStateDiagram statediagram = (UMLStateDiagram)d;
+            ProjectManager.getManager().getCurrentProject().moveToTrash(statediagram.getStateMachine());
+        }
+        d.removeChangeRegistryAsListener( _saveRegistry );        
         setNeedsSave(true);
     }
 
