@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2003 Slava Pestov
+ * Copyright (C) 1999, 2004 Slava Pestov
  * Portions copyright (C) 2000 Ollie Rutherfurd
  *
  * This program is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.301 2004/01/18 19:01:02 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.302 2004/01/20 05:37:18 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6071,15 +6071,26 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			buffer.beginCompoundEdit();
 
+			int[] width = new int[1];
+
 			int startCol = s.getStartColumn(buffer);
 			int startLine = s.startLine;
 			int endLine = s.endLine;
 			for(int i = startLine; i <= endLine; i++)
 			{
 				int offset = buffer.getOffsetOfVirtualColumn(
-					i,startCol,null);
+					i,startCol,width);
 				if(offset == -1)
-					continue;
+				{
+					if(width[0] == startCol)
+						offset = getLineLength(i);
+					else
+					{
+						if(i == startLine)
+							shiftTallCaretLeft(s);
+						continue;
+					}
+				}
 				offset += buffer.getLineStartOffset(i);
 				buffer.remove(offset-1,1);
 			}
@@ -6088,6 +6099,16 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			buffer.endCompoundEdit();
 		}
+	} //}}}
+
+	//{{{ shiftTallCaretLeft() method
+	private void shiftTallCaretLeft(Selection.Rect s)
+	{
+		removeFromSelection(s);
+		addToSelection(new Selection.Rect(
+			buffer,
+			s.getStartLine(),s.getStartColumn(buffer) - 1,
+			s.getEndLine(),s.getEndColumn(buffer) - 1));
 	} //}}}
 
 	//}}}
