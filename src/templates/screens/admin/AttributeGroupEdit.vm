@@ -37,7 +37,7 @@
  <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
  </tr>
  <tr>
- <th>Group desc</th>
+ <th>Group description</th>
  <td>#textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
  </tr>
  </table>
