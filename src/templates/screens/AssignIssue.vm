@@ -1,7 +1,13 @@
      
 <div id="projectlist" class="app">
 
-$page.setTitle("Assign users to artifact")
+#set ($att = $scarabR.Attribute)
+
+#if (!$att.AttributeId)
+  $page.setTitle("Assign users.")
+  <p class="alert">No user attribute has been selected.</p>
+#else
+  $page.setTitle("Assign users to attribute $att.Name")
 
 <div class="app" id="assignissue">
 <h2>$page.Title</h2>
@@ -27,7 +33,7 @@ $page.setTitle("Assign users to artifact")
 
 #set ($addedUsers = $data.Parameters.getStrings("addedusers"))
 #set ($removedUsers = $data.Parameters.getStrings("removedUsers"))
-#set ($assignedUsers =  $issue.AssigneeAttributeValues)
+#set ($assignedUsers =  $issue.getAttributeValues($att))
 
 #if ($addedUsers || $removedUsers)
  <p><strong class="alert">
@@ -37,6 +43,7 @@ $page.setTitle("Assign users to artifact")
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
+<input type="hidden" name="$intake.Attribute.Default.Id.Key" value="$att.AttributeId" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_TEMPLATE" value="ViewIssue.vm" />
 #if ($multiple)
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssueLong.vm" />
@@ -86,7 +93,7 @@ $page.setTitle("Assign users to artifact")
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
+		<th nowrap="nowrap">&#160;</th>
 		<th>Name</th>
 		<th><a href="#" title="sort">email</a></th>
 		</tr>
@@ -168,7 +175,7 @@ $page.setTitle("Assign users to artifact")
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
+		<th nowrap="nowrap">&#160;</th>
 		<th>Name</th>
 		<th><a href="#" title="sort">email</a></th>
 		</tr>
@@ -216,3 +223,4 @@ $page.setTitle("Assign users to artifact")
   </table>
 $intake.declareGroups()
 </form>
+#end

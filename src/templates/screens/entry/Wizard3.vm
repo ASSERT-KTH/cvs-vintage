@@ -116,26 +116,16 @@ $page.setTitle("Enter issue")
 </div>
 
 ## ATTACHMENT
-<h3>Add Attachment</h3>
-<div class="axial">
-    <table cellpadding="3" cellspacing="2" border="0">
-     <tr>
-      <th>Attachment description</th>
+<h4>Add Attachment</h4>
 #set ($atch = $scarabR.Attachment)
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-      <td>
 #if ( !$intakeAttachment.Name.isValid())
 <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
 #end
-       #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
-        <p>
-          Please provide a short (less than 250 characters) description
-          of the attachment
-        </p>
-      </td>
-     </tr>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-      <th>File path</th>
+      <th>Attachment path</th>
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
@@ -146,29 +136,34 @@ $page.setTitle("Enter issue")
        rename files.</p>
       </td>
      </tr>
-    </table>
+     
+     <tr>
+      <th>Attachment description</th>
+      <td>
+       #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
+      </td>
+     </tr>    </table>
 </div>
 
-<div class="axial stb">
-    <table cellpadding="3" cellspacing="2" border="0">
-     <tr>
-     <th>
-      Workflow options</th>
-     <td>
-    go to 
-   <input type="radio" checked="checked" name="$scarabG.Constant.NEXT_TEMPLATE"
-      value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")" />
-      Enter New Issue |
-  <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
-      Start Page |
-  <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="AssignIssue.vm" />
-      Assign Issue |
-  <input type="radio" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
-      View This New Issue
-      </td>
-      </tr>
-    </table>
+<div class="functnbar3">
+     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
+
+
+
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+<th width="120">After submit </th>
+<td><select name="$scarabG.Constant.NEXT_TEMPLATE">
+<option value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")">Enter new issue </option>
+<option value="ViewIssue.vm"> View this issue </option>			
+<option value="Index.vm"> Go to Start page </option>			
+</select></td>
+</tr>
+</table>
+</div>	
+
 
 <p class="functnbar2">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
