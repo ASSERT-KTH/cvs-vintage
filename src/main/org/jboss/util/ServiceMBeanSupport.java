@@ -15,12 +15,13 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
    
 import org.jboss.logging.Log;
-/**
- *   <description> 
+
+/** An abstract base class JBoss services can subclass
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.10 $
  */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -28,7 +29,7 @@ public abstract class ServiceMBeanSupport
 {
    // Attributes ----------------------------------------------------
    private int state;
-   
+   private MBeanServer server;
    public static String[] states = {"Stopped","Stopping","Starting","Started"};
    public static int STOPPED  = 0;
    public static int STOPPING = 1;
@@ -44,6 +45,11 @@ public abstract class ServiceMBeanSupport
    // Public --------------------------------------------------------
    public abstract String getName();
 
+   public MBeanServer getServer()
+   {
+       return server;
+   }
+
    public int getState()
    {
       return state;
@@ -54,28 +60,26 @@ public abstract class ServiceMBeanSupport
       return states[state];
    }
    
-	public void init()
-		throws Exception
-	{
-   
-	 log = Log.createLog( getName() );
-	 
-		log.log("Initializing");
-		log.setLog(log);
-		try
-		{
-		   initService();
-		} catch (Exception e)
-		{
-		   log.error("Initialization failed");
-		   log.exception(e);
-		   throw e;
-		} finally
-		{
-		   log.unsetLog();
-		}
-		log.log("Initialized");
-	}
+    public void init()
+            throws Exception
+    {
+        log = Log.createLog( getName() );
+        log.log("Initializing");
+        log.setLog(log);
+        try
+        {
+           initService();
+        } catch (Exception e)
+        {
+           log.error("Initialization failed");
+           log.exception(e);
+           throw e;
+        } finally
+        {
+           log.unsetLog();
+        }
+        log.log("Initialized");
+    }
 	
    public void start()
       throws Exception
@@ -109,10 +113,10 @@ public abstract class ServiceMBeanSupport
       log.log("Started");
    }
    
-   public void stop()
-   {
-		if (getState() != STARTED)
-			return;
+    public void stop()
+    {
+        if (getState() != STARTED)
+                return;
 	
       state = STOPPING;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
@@ -137,8 +141,8 @@ public abstract class ServiceMBeanSupport
    
    public void destroy()
    {
-		if (getState() != STOPPED)
-			stop();
+        if (getState() != STOPPED)
+                stop();
 	
    	log.log("Destroying");
    	log.setLog(log);
@@ -157,11 +161,11 @@ public abstract class ServiceMBeanSupport
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-		name = getObjectName(server, name);
-
-      return name;
+        name = getObjectName(server, name);
+        this.server = server;
+        return name;
    }
-   
+
    public void postRegister(java.lang.Boolean registrationDone)
    {
       if (!registrationDone.booleanValue())
@@ -175,7 +179,7 @@ public abstract class ServiceMBeanSupport
    
    public void postDeregister()
    {
-	   destroy();
+       destroy();
    }
    
    // Protected -----------------------------------------------------
