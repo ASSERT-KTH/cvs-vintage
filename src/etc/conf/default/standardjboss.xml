@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <jboss>
-	<secure>false</secure>
+	<enforce-ejb-restrictions>false</enforce-ejb-restrictions>
     <container-configurations>
 
 		<container-configuration>
@@ -21,8 +21,8 @@
 			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
-				<Optimized>True</Optimized>
 				<RMIObjectPort>4444</RMIObjectPort>
+				<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-cache-conf>
                 <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
@@ -56,17 +56,17 @@
                 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
             </container-interceptors>
-                        <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-                        <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-                        <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
-                        <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-                        <container-invoker-conf>
-                                <Optimized>True</Optimized>
-				<RMIObjectPort>4444</RMIObjectPort>
-                        </container-invoker-conf>
-                        <container-cache-conf>
-                <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
-				<cache-policy-conf>
+            <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
+            <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
+            <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+            <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
+            <container-invoker-conf>
+			    <RMIObjectPort>4444</RMIObjectPort>
+                <Optimized>True</Optimized>
+            </container-invoker-conf>
+                <container-cache-conf>
+              	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>      
+					<cache-policy-conf>
 					<min-capacity>50</min-capacity>
 					<max-capacity>1000</max-capacity>
 					<overager-period>300</overager-period>
@@ -76,12 +76,12 @@
 					<min-cache-miss-period>1</min-cache-miss-period>
 					<cache-load-factor>0.75</cache-load-factor>
 				</cache-policy-conf>
-                        </container-cache-conf>
-                        <container-pool-conf>
-                                <MaximumSize>100</MaximumSize>
-                                <MinimumSize>10</MinimumSize>
-                        </container-pool-conf>
-                        <commit-option>A</commit-option>
+            </container-cache-conf>
+            <container-pool-conf>
+                <MaximumSize>100</MaximumSize>
+                <MinimumSize>10</MinimumSize>
+            </container-pool-conf>
+            <commit-option>A</commit-option>
         </container-configuration>
 
 		<container-configuration>
@@ -338,6 +338,5 @@
                 </container-configuration>
 
 	</container-configurations>
-    <resource-managers />
-    <enterprise-beans />
+
 </jboss>

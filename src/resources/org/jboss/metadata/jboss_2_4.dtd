@@ -85,9 +85,7 @@ deployed
 3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (secure? , enforce-ejb-restrictions? , security-domain? , unauthenticated-principal?, enterprise-beans? , resource-managers? , container-configurations?)>
-
-<!ELEMENT secure (#PCDATA)>
+<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal?, enterprise-beans? , resource-managers? , container-configurations?)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
