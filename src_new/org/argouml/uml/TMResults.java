@@ -1,4 +1,4 @@
-// $Id: TMResults.java,v 1.7 2003/06/29 23:52:57 linus Exp $
+// $Id: TMResults.java,v 1.8 2003/10/14 19:23:11 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ public class TMResults extends AbstractTableModel {
 		else if (d instanceof UMLUseCaseDiagram) {
 		    name = "label.usecase-diagram";
 		} else if (d instanceof UMLStateDiagram) {
-		    name = "label.state-diagram";
+		    name = "label.state-chart-diagram";
 		} else if (d instanceof UMLDeploymentDiagram) {
 		    name = "label.deployment-diagram";
 		} else if (d instanceof UMLCollaborationDiagram) {
