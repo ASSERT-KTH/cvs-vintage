@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <!-- 
-This is the XML DTD for the JBoss 2.2 EJB deployment descriptor.
+This is the XML DTD for the JBoss 2.4 EJB deployment descriptor.
 The DOCTYPE is:
   <!DOCTYPE jboss PUBLIC
-      "-//JBoss//DTD JBOSS//EN"
-      "http://www.jboss.org/j2ee/dtd/jboss.dtd">
+      "-//JBoss//DTD JBOSS 2.4//EN"
+      "http://www.jboss.org/j2ee/dtd/jboss_2_4.dtd">
 
 Overview of the architecture of jboss.xml
 
 <jboss>
 
-  <secure />
+  <enforce-ejb-restrictions />
   <security-domain />
 
   <enterprise-beans>
@@ -64,8 +64,8 @@ Overview of the architecture of jboss.xml
       <container-cache-conf />
       <container-pool-conf />
       <commit-option />
-      <role-mapping-manager/>
-      <authentication-module/>
+      <optiond-refresh-rate />
+      <security-domain/>
     </container-configuration>
 
   </container-configurations>
@@ -84,23 +84,27 @@ deployed
 3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (secure? , security-domain?, enterprise-beans? , resource-managers? , container-configurations?)>
+<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , enterprise-beans? , resource-managers? , container-configurations?)>
 
 <!--
-  The secure element tells the container to enforce ejb1.1 restrictions
+  The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
   It must be one of the following : 
-     <secure>true</secure>
-     <secure>false</secure>
+     <enforce-ejb-restrictions>true</enforce-ejb-restrictions>
+     <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   
   Used in: jboss
   -->
-<!ELEMENT secure (#PCDATA)>
+<!ELEMENT enforce-ejb-restrictions (#PCDATA)>
 
-<!-- The security-domain element allows one to specify a module wide
-security manager domain. It specifies the JNDI name of the security
+<!-- The security-domain element specifies the JNDI name of the security
 manager that implements the EJBSecurityManager and RealmMapping for
-the domain. One can still override these interfaces at the container
-level using the authentication-module and role-mapping-manager elements.
+the domain. When specified at the jboss level it specifies the security
+domain for all j2ee components in the deployment unit.
+One can override the global security-domain at the container
+level using the security-domain element at the container-configuration
+level.
+
+  Used in: jboss, container-configuration
 -->
 <!ELEMENT security-domain (#PCDATA)>
 
@@ -116,7 +120,7 @@ level using the authentication-module and role-mapping-manager elements.
   
   Used in: jboss
   -->
-<!ELEMENT enterprise-beans (session | entity)+>
+<!ELEMENT enterprise-beans (session | entity | message-driven)+>
 
 <!--
     The entity element holds information specific to jboss and not declared
@@ -127,7 +131,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , security-proxy?, ejb-ref* , resource-ref*)>
+<!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
 
 <!--
     The session element holds information specific to jboss and not declared
@@ -138,13 +142,24 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT session (ejb-name , jndi-name? , configuration-name?, security-proxy?, ejb-ref* , resource-ref*)>
+<!ELEMENT session (ejb-name , jndi-name? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
+
+<!--
+    The message-driven element holds information specific to jboss and not declared
+    in ejb-jar.xml about a message-driven bean, such as container 
+    configuration and resources.
+    The bean should already be declared in ejb-jar.xml, with the same 
+    ejb-name.
+    
+    Used in: enterprise-beans
+    -->
+<!ELEMENT message-driven (ejb-name , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
 
 <!-- 
       The ejb-name element gives the name of the bean, it must correspond to 
       an ejb-name element in ejb-jar.xml
       
-      Used in: entity and session
+      Used in: entity, session, and message-driven
       -->
 <!ELEMENT ejb-name (#PCDATA)>
 
@@ -164,7 +179,7 @@ level using the authentication-module and role-mapping-manager elements.
       configurations. If none is provided, jboss will automatically use the
       right standard configuration, see container-configurations.
       
-      Used in: entity and session
+      Used in: entity, session, and message-driven
       -->
 <!ELEMENT configuration-name (#PCDATA)>
 
@@ -173,7 +188,7 @@ level using the authentication-module and role-mapping-manager elements.
 	just an object that implements methods in the home or remote interface
 	of an EJB without implementating any common interface.
 
-     Used in: entity and session
+      Used in: entity, session, and message-driven
 -->
 <!ELEMENT security-proxy (#PCDATA)>
 
@@ -183,7 +198,7 @@ level using the authentication-module and role-mapping-manager elements.
       provide a ejb-link element in ejb-jar.xml, but you provide a jndi-name
       in jboss.xml
        
-      Used in: entity, session
+      Used in: entity, session, and message-driven
       -->
 <!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
 
@@ -207,6 +222,34 @@ level using the authentication-module and role-mapping-manager elements.
         -->
 <!--    <!ELEMENT jndi-name (#PCDATA)> -->
 <!-- 
+      The resource-env-ref element gives a mapping between the "code name" 
+      of a env resource (res-ref-name, provided by the Bean Developper) and 
+      its deployed JNDI name.
+      
+      Used in: session, entity, message-driven
+      -->
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
+
+<!-- 
+        The resource-env-ref-name element gives the "code name" of a resource. It is 
+        provided by the Bean Developper. See resource-managers for the actual
+        
+        Used in: resource-env-ref
+        -->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!-- 
+        The jndi-name element gives the deployed name of the reference. The 
+        general form is 
+           <jndi-name>t3://otherserver/application/beanB</jndi-name>
+        
+        Used in: ejb-ref
+
+	(It's commented out here because it appears above and you
+         can't declare an element more than once per DTD)
+        -->
+<!--    <!ELEMENT jndi-name (#PCDATA)> -->
+<!-- 
       The resource-ref element gives a mapping between the "code name" 
       of a resource (res-ref-name, provided by the Bean Developper) and 
       its "xml name" (resource-name, provided by the Application Assembler).
@@ -215,9 +258,9 @@ level using the authentication-module and role-mapping-manager elements.
        
       See resource-managers.
       
-      Used in: session, entity
+      Used in: entity, session, and message-driven
       -->
-<!ELEMENT resource-ref (res-ref-name , resource-name)>
+<!ELEMENT resource-ref (res-ref-name , (resource-name | jndi-name | res-url))>
 
 <!-- 
         The res-ref-name element gives the "code name" of a resource. It is 
@@ -333,10 +376,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: container-configurations
     -->
-<!ELEMENT container-configuration (container-name, call-logging, container-invoker,
-container-interceptors?, instance-pool?, instance-cache? , persistence-manager? ,
-transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf?,
-commit-option? , (role-mapping-manager, authentication-module?)?)>
+<!ELEMENT container-configuration (container-name , call-logging? , container-invoker? , container-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , (security-domain | (role-mapping-manager , authentication-module))?)>
 
 <!--
     The configuration-class attribute is used to indicate the
@@ -473,7 +513,7 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT container-invoker-conf (Optimized , RMIObjectPort, RMIClientSocketFactory?, RMIServerSocketFactory?)>
+<!ELEMENT container-invoker-conf (Optimized , RMIObjectPort , RMIClientSocketFactory? , RMIServerSocketFactory?)>
 
 <!-- 
         This element is only valid if the container invoker is 
@@ -546,10 +586,6 @@ default if metricsEnabled is not explicitly given.
       it is passed to the instance cache instance (if it implements 
       org.jboss.metadata.XmlLoadable) for it to load its parameters.
       
-      The default instance caches, NoPassivationEntityInstanceCache and
-      NoPassivationStatefulSessionInstanceCache, have no configuration
-      available.
-
       Used in: container-configuration
       -->
 <!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?)>
@@ -565,10 +601,14 @@ default if metricsEnabled is not explicitly given.
 <!--
 	The configuration settings for the selected cache policy.  This
 	is currently only valid for the LRU cache.
+	When the cache is the LRU one for the stateful container, the elements
+	remover-period and max-bean-life specifies the period of the remover
+	task that removes stateful beans (that normally have been passivated)
+	that have age greater than the specified max-bean-life element.
 
         Used in: container-cache-conf (when cache-policy is the LRU cache)
 	-->
-<!ELEMENT cache-policy-conf (min-capacity , max-capacity , overager-period , resizer-period , max-bean-age , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
+<!ELEMENT cache-policy-conf (min-capacity , max-capacity , remover-period? , max-bean-life? , overager-period , max-bean-age , resizer-period , max-cache-miss-period , min-cache-miss-period , cache-load-factor)>
 
 <!--
 	  The minimum capacity of this cache
@@ -584,6 +624,18 @@ default if metricsEnabled is not explicitly given.
 	  The period of the overager's runs
 	  -->
 <!ELEMENT overager-period (#PCDATA)>
+
+<!--
+	  The period of the remover's runs
+	  -->
+<!ELEMENT remover-period (#PCDATA)>
+
+<!--
+	The max-bean-life specifies the period of the remover
+	task that removes stateful beans (that normally have been passivated)
+	that have age greater than the specified max-bean-life element.
+	-->
+<!ELEMENT max-bean-life (#PCDATA)>
 
 <!--
 	  The period of the resizer's runs
@@ -654,7 +706,7 @@ default if metricsEnabled is not explicitly given.
       This option is only used for entity container configurations.
 
       The commit-option element tells the container which option to use for transactions.
-      Its value must be A, B or C. 
+      Its value must be A, B C, or D. 
 
       - option A: the entiry instance has exclusive access to the database. The instance 
       stays ready after a transaction.
@@ -662,6 +714,9 @@ default if metricsEnabled is not explicitly given.
       The state is loaded before the next transaction.
       - option C: same as B, except the container does not keep the instance after commit: 
       a passivate is immediately performed after the commit.
+
+      - option D: a lazy update. default is every 30 secs.
+                   can be updated with <optiond-refresh-rate>
       
       See ejb1.1 specification for details (p118).
 
@@ -670,9 +725,15 @@ default if metricsEnabled is not explicitly given.
 <!ELEMENT commit-option (#PCDATA)>
 
 <!--
+    This element is used to specify the refresh rate of commit option d
+  -->
+<!ELEMENT optiond-refresh-rate (#PCDATA)>
+
+<!--
       The role-mapping-manager element specifies the JNDI name of the
       org.jboss.security.RealmMapping implementation that is to be used by the
-      container SecurityInterceptor.
+      container SecurityInterceptor. Its use is deprecated in favor of the
+      security-domain element.
 
       Used in: container-configuration
       -->
@@ -681,7 +742,8 @@ default if metricsEnabled is not explicitly given.
 <!--
       The authentication-module element specifies the JNDI name of the
       org.jboss.security.EJBSecurityManager implementation that is to be used
-      by the container SecurityInterceptor.
+      by the container SecurityInterceptor. Its use is deprecated in favor of
+      the security-domain element.
 
       Used in: container-configuration
       -->
