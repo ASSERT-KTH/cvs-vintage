@@ -94,8 +94,11 @@ public class ServerXmlReader extends BaseInterceptor {
 
     // -------------------- Properties --------------------
     String configFile=null;
+    String moduleFile=null;
     static final String DEFAULT_CONFIG="conf/server.xml";
-
+    static final String DEFAULT_MODULES="conf/modules.xml";
+    boolean useCachedModules=true;// can roll back
+    
     public void setConfig( String s ) {
 	configFile=s;
     }
@@ -104,6 +107,10 @@ public class ServerXmlReader extends BaseInterceptor {
 	System.getProperties().put("tomcat.home", h);
     }
 
+    public void setModuleConfig( String f ) {
+	moduleFile=f;
+    }
+    
     // -------------------- Hooks --------------------
 
     /** When this module is added, it'll automatically load
@@ -245,23 +252,59 @@ public class ServerXmlReader extends BaseInterceptor {
     }
 
     // read modules.xml, if any, and load taskdefs
-    public static  void addDefaultTags( ContextManager cm, XmlMapper xh)
+    public void addDefaultTags( ContextManager cm, XmlMapper xh)
 	throws TomcatException
     {
 	if( cm.getNote( "modules" ) != null )
 	    return;
-	File f=new File( cm.getHome(), "/conf/modules.xml");
+	if( moduleFile==null ) moduleFile=DEFAULT_MODULES;
+        File f=new File(moduleFile);
+        if ( !f.isAbsolute())
+	    f=new File( cm.getHome(), moduleFile );
+
 	if( f.exists() ) {
-	    Hashtable modules=new Hashtable();
+	    // try cached value
+	    File cachedM=new File( cm.getWorkDir() );
+	    if( !cachedM.isAbsolute())
+		cachedM=new File( cm.getHome(), cm.getWorkDir());
+	    cachedM=new File( cachedM, "modules.properties");
+	    Properties modules=new Properties();
 	    cm.setNote( "modules", modules );
-	    loadConfigFile( xh, f, cm );
-            // load module-*.xml
-            Vector v = getUserConfigFiles(f);
-            for (Enumeration e = v.elements();
-                 e.hasMoreElements() ; ) {
-                f = (File)e.nextElement();
-                loadConfigFile(xh,f,cm);
-            }
+	    if( useCachedModules &&
+		cachedM.exists() &&
+		cachedM.lastModified() > f.lastModified() ) {
+		// XXX check the other modules-foo.xml
+		loadCachedModules(cachedM, modules );
+		return;
+	    } else {
+		loadConfigFile( xh, f, cm );
+		// load module-*.xml
+		Vector v = getUserConfigFiles(f);
+		for (Enumeration e = v.elements();
+		     e.hasMoreElements() ; ) {
+		    f = (File)e.nextElement();
+		    loadConfigFile(xh,f,cm);
+		}
+		saveCachedModules(cachedM, modules);
+	    }
+	}
+    }
+
+    void loadCachedModules( File f, Properties mods ) {
+	try {
+	    FileInputStream pos=new FileInputStream( f );
+	    mods.load( pos );
+	} catch(IOException ex ) {
+	    log("Error loading modules ", ex );
+	}
+    }
+
+    void saveCachedModules( File f, Properties mods ) {
+	try {
+	    FileOutputStream pos=new FileOutputStream( f );
+	    mods.save( pos, "Auto-generated cache file");
+	} catch(IOException ex ) {
+	    log("Error saving modules ", ex );
 	}
     }
 
