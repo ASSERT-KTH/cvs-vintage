@@ -140,9 +140,14 @@ public class MessageController implements HyperlinkListener, MouseListener,
         Charset charset = ((CharsetOwnerInterface)getFrameController()).getCharset();
 
         if (charset == null) {
-            charset = Charset.forName(bodyPart.getHeader().getContentParameter("charset"));
+            String charsetName = bodyPart.getHeader().getContentParameter("charset");
+            
+            // There is no charset info -> the default system charset is used
+            if(charsetName != null ) {
+                charset = Charset.forName(charsetName);
 
-            ((CharsetOwnerInterface) getFrameController()).setCharset(charset);
+                ((CharsetOwnerInterface) getFrameController()).setCharset(charset);
+            }
         }
 
         // Shall we use the HTML-Viewer?
