@@ -52,7 +52,6 @@ import java.util.ArrayList;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
@@ -86,14 +85,15 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ReportGenerator;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.3 2001/10/01 03:43:23 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.4 2001/10/01 06:15:46 jon Exp $
 */
 public class GenerateReport 
-    extends TemplateAction
+    extends RequireLoginFirstAction
 {
     public void doStep1( RunData data, TemplateContext context )
         throws Exception
@@ -150,8 +150,7 @@ public class GenerateReport
             // add new option group
             List groups = report.getOptionGroups();
             ReportGenerator.OptionGroup group = report.getNewOptionGroup();
-            IntakeTool intake = (IntakeTool)context
-                .get(ScarabConstants.INTAKE_TOOL);
+            IntakeTool intake = getIntakeTool(context);
             Group intakeGroup = intake.get("OptionGroup", 
                                            group.getQueryKey(), false);
             if ( intakeGroup != null ) 
@@ -252,13 +251,11 @@ public class GenerateReport
        throws Exception
     {
         ReportGenerator report = null;
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
 
         if ( intake.isAllValid() ) 
         {
-            ScarabRequestTool scarabR = (ScarabRequestTool)context
-                .get(ScarabConstants.SCARAB_REQUEST_TOOL); 
+            ScarabRequestTool scarabR = getScarabRequestTool(context); 
             report = scarabR.getReport();
             populateReportGenerator(report, data.getParameters());
 
