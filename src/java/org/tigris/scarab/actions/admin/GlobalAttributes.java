@@ -56,9 +56,6 @@ import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
-import org.apache.torque.util.Criteria;
-import org.tigris.scarab.om.ROptionOptionPeer;
-
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ROptionOption;
@@ -71,7 +68,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.2 2001/09/20 10:33:07 jon Exp $
+ * @version $Id: GlobalAttributes.java,v 1.3 2001/09/20 10:35:56 jon Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
