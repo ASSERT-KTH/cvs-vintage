@@ -19,7 +19,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class MethodMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -93,7 +93,7 @@ public class MethodMetaData extends MetaData {
 				return true;
 			} else {
 				// we *have* to check the parameters
-				return sameParams(arg, (String[])paramList.toArray());
+				return sameParams(arg);
 			}
 		}
 	}
@@ -138,10 +138,10 @@ public class MethodMetaData extends MetaData {
         return out;
     }
 
-	private boolean sameParams(String[] list1, String[] list2) {
-        if(list1.length != list2.length) return false;
-        for(int i=0; i<list1.length; i++)
-            if(!list1[i].equals(list2[i]))
+	private boolean sameParams(String[] arg) {
+        if(arg.length != paramList.size()) return false;
+        for(int i=0; i<arg.length; i++)
+            if (!arg[i].equals(paramList.get(i)))
                 return false;
         return true;
     }
