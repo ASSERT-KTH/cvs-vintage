@@ -12,11 +12,9 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 #end
 #if ($templateId && $templateId.trim().length() > 0)
    #set ($templ = $scarabR.IssueTemplate)
-   #set ($templAttrValues = $templ.ModuleAttributeValuesMap)
 #end
 
 <h2>$page.Title</h2>
-
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
@@ -25,9 +23,12 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
   <td>3: Non-duplicate attributes</th>
 </table>
 </div>
+
+<P>
 <form method="get" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
+<p class="functnbar"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;<input type="reset" value="Reset" /></p>
 
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
 #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
@@ -58,51 +59,57 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <input type="hidden" name="templateId" value="$!templateId" />
-<h3>$scarabR.CurrentIssueType.Name</h3>
 
+<P>
 <div class="axial">
-<table cellpadding="3" cellspacing="2" border="0">
-#foreach ($attKey in $attrValues.sequence())
-  #set ($attVal = $attrValues.get($attKey))
-  #set ($templAttVal = $templAttrValues.get($attKey))
-  #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
-  #if ($attVal.Attribute.AttributeType.ValidationKey)
-        #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
-        #set ($field = "OptionId")
-  #else
-        #set ($field = "Value")
-  #end
-  #if ($attVal.isDedupeAttribute())
-        <tr>
-            <th>
-    #if ($attVal.isRequired())*#end
-    $attVal.RModuleAttribute.DisplayValue:
+#foreach ($group in $issueType.getAttributeGroups($module))
+    #if ($group.Dedupe)
+    <h3>$group.Name</h3>
+    <table cellpadding="3" cellspacing="2" border="0">
+  #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+      #if ($rma.Active)
+        #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+        #set ($templAttVal = $templ.getAttributeValue($att))
+        #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
+        #if ($attVal.Attribute.AttributeType.ValidationKey)
+           #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+           #set ($field = "OptionId")
+        #else
+          #set ($field = "Value")
+        #end
+          #if ($attVal.isDedupeAttribute())
+          <tr>
+            <th> #if ($attVal.isRequired())*#end 
+                 $attVal.RModuleAttribute.DisplayValue: 
             </th>
             <td>
-    #if ($attVal.Attribute.isUserAttribute())
-          #userSelectBox ($attVal "3" "true") 
-    #elseif ($attVal.Attribute.isOptionAttribute())
-        #if ($templateId)
-          #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
-        #else
-          #attrValueLeafSelect ($attVal $field "")
-        #end
-    #else
-        #if ($templateId)
-          #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
-        #else
-          #attrValueText ( $attVal "50" )
-        #end
-    #end
-    #attrValueErrorMsg ($attVal $field)
+              #if ($attVal.Attribute.isUserAttribute())
+                 #userSelectBox ($attVal "3" "true") 
+              #elseif ($attVal.Attribute.isOptionAttribute())
+                 #if ($templateId)
+                   #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
+                 #else
+                   #attrValueLeafSelect ($attVal $field "")
+                 #end
+              #else
+               #if ($templateId)
+                 #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
+               #else
+                 #attrValueText ( $attVal "50" )
+               #end
+              #end
+              #attrValueErrorMsg ($attVal $field)
             </td>
-        </tr>
+          </tr>
+        #end
+      #end
     #end
-#end
-   </table>
+</table>
+  #end
+ #end
 </div>
-
 <p class="functnbar2"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;<input type="reset" value="Reset" /></p>
 
 $intake.declareGroups()

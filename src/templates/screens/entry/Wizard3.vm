@@ -10,7 +10,6 @@ $page.setTitle("Enter issue")
 #end
 #if ($templateId && $templateId.trim().length() > 0)
   #set ($templ = $scarabR.getIssueTemplate($templateId))
-  #set ($templAttrValues = $templ.ModuleAttributeValuesMap)
 #end
 
 <div class="app" id="div2-1-0">
@@ -64,47 +63,53 @@ $page.setTitle("Enter issue")
 
 <p class="functnbar"><input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;<input type="reset" value="Reset form" />&#160;<input type="reset" value="Cancel" /></p>
 	
+<P>
 <div class="axial">
-<h3>$scarabR.CurrentIssueType.Name</h3>
+#foreach ($group in $issueType.getAttributeGroups($module))
+    <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
-#foreach ($attKey in $attrValues.sequence())
-  #set ($attVal = $attrValues.get($attKey))
-  #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
-  #set ($templAttVal = $templAttrValues.get($attKey))
-  #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
-  #if ($attVal.Attribute.AttributeType.ValidationKey)
-        #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
-        #set ($field = "OptionId")
-  #else
-        #set ($field = "Value")
-  #end
-        <tr>
-            <th>
-    #if ($attVal.isRequired())*#end
-    $attVal.RModuleAttribute.DisplayValue:
+  #foreach ($att in $group.Attributes)
+    #set ($rma = $module.getRModuleAttribute($att, $issueType))
+      #if ($rma.Active)
+        #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
+        #set ($templAttVal = $templ.getAttributeValue($att))
+        #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
+        #if ($attVal.Attribute.AttributeType.ValidationKey)
+           #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+        #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+           #set ($field = "OptionId")
+        #else
+          #set ($field = "Value")
+        #end
+          #if ($attVal.isDedupeAttribute())
+          <tr>
+            <th> #if ($attVal.isRequired())*#end 
+                 $attVal.RModuleAttribute.DisplayValue: 
             </th>
             <td>
-    #if ($attVal.Attribute.isUserAttribute())
-          #userSelectBox ($attVal "3" "true") 
-    #elseif ($attVal.Attribute.isOptionAttribute())
-        #if ($templateId)
-          #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
-        #else
-          #attrValueLeafSelect ($attVal $field "")
-        #end
-    #else
-        #if ($templateId)
-          #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
-        #else
-          #attrValueText ( $attVal "50" )
-        #end
-    #end
-    #attrValueErrorMsg ($attVal $field)
+              #if ($attVal.Attribute.isUserAttribute())
+                 #userSelectBox ($attVal "3" "true") 
+              #elseif ($attVal.Attribute.isOptionAttribute())
+                 #if ($templateId)
+                   #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
+                 #else
+                   #attrValueLeafSelect ($attVal $field "")
+                 #end
+              #else
+               #if ($templateId)
+                 #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
+               #else
+                 #attrValueText ( $attVal "50" )
+               #end
+              #end
+              #attrValueErrorMsg ($attVal $field)
             </td>
-        </tr>
-#end
-   </table>
+          </tr>
+        #end
+      #end
+    #end
+</table>
+ #end
 </div>
 
 ## ATTACHMENT
