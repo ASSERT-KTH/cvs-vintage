@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.75 2002/07/12 00:53:23 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.76 2002/07/12 21:28:08 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -887,8 +887,8 @@ public class ScarabUserImpl
         internalUser.setThreadKey(key);
     }
 
-    public boolean canMakeTransition(NumberKey fromOptionId, 
-                                     NumberKey toOptionId,
+    public boolean canMakeTransition(AttributeOption fromOption, 
+                                     AttributeOption toOption,
                                      Issue issue,
                                      Module module,               
                                      IssueType issueType)
