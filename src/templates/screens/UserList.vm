@@ -3,6 +3,9 @@
 ## USER SEARCH
 <form action="$link.setPage("UserList.vm")" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
+#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "AdvancedQuery.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
+<input type="hidden" name="$queryId" value="$data.Parameters.getString("queryId")" />
 
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)

@@ -29,7 +29,7 @@
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "Search.vm"))
+#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 #foreach ($issueId in $issueList)
   <input type="hidden" name="issue_ids" value="$issueId" />
@@ -59,6 +59,8 @@
   <input type="hidden" name="issue_ids" value="$issueId" />
 #end
 <input type="hidden" name="mod_ts" value="$now" />
+#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
 
@@ -288,7 +290,7 @@ $intake.declareGroups()
   </table>
 </div>
 
-#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "Search.vm"))
+#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
