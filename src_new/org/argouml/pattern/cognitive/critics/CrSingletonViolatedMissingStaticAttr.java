@@ -1,4 +1,4 @@
-// $Id: CrSingletonViolatedMissingStaticAttr.java,v 1.5 2003/08/30 18:47:05 alexb Exp $
+// $Id: CrSingletonViolatedMissingStaticAttr.java,v 1.6 2004/08/19 18:05:36 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,8 @@ import org.argouml.model.ModelFacade;
  * This version includes an implementation for the first test above!
  *
  * <p>
- * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_singleton_violated">
+ * @see <a href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/
+ * #s2.ref.critics_singleton_violated">
  * ArgoUML User Manual: Singleton Violated
  * </a>
  */

@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.18 2004/07/21 13:12:13 mkl Exp $
+// $Id: CrConsiderSingleton.java,v 1.19 2004/08/19 18:05:36 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,8 @@ import org.argouml.uml.cognitive.critics.CrUML;
  * as a Singleton (with stereotype &laquo;Singleton&raquo;.<p>
  *
  * @see <a
- * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_singleton_violated">
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#
+ * s2.ref.critics_singleton_violated">
  * ArgoUML User Manual: Singleton Violated</a>
  */
 public class CrConsiderSingleton extends CrUML {
@@ -103,8 +104,8 @@ public class CrConsiderSingleton extends CrUML {
         }
         
         // with a name...
-        if (ModelFacade.getName(dm) == null ||
-            "".equals(ModelFacade.getName(dm))) {
+        if (ModelFacade.getName(dm) == null 
+                || "".equals(ModelFacade.getName(dm))) {
                 return NO_PROBLEM;
         }
         
