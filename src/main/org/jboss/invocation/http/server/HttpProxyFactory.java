@@ -14,7 +14,7 @@ import javax.naming.InitialContext;
 import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.invocation.http.interfaces.HttpInvokerProxy;
 import org.jboss.logging.Logger;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.proxy.GenericProxyFactory;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
@@ -26,7 +26,7 @@ import org.jboss.util.Strings;
  * MarshalledValue with the Naming proxy as its content.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class HttpProxyFactory extends ServiceMBeanSupport
    implements HttpProxyFactoryMBean

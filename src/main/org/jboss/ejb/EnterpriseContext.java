@@ -36,7 +36,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
 
-import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
+import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
 
 /**
  * The EnterpriseContext is used to associate EJB instances with
@@ -51,7 +51,7 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -102,7 +102,7 @@ public abstract class EnterpriseContext
    // Static --------------------------------------------------------
    //Registration for CachedConnectionManager so our UserTx can notify
    //on tx started.
-   private static ServerVMClientUserTransaction.UserTransactionStartedListener tsl;
+   private static UserTransactionStartedListener tsl;
    
    /**
     * The <code>setUserTransactionStartedListener</code> method is called by 
@@ -112,7 +112,7 @@ public abstract class EnterpriseContext
     *
     * @param newTsl a <code>ServerVMClientUserTransaction.UserTransactionStartedListener</code> value
     */
-   public static void setUserTransactionStartedListener(ServerVMClientUserTransaction.UserTransactionStartedListener newTsl)
+   public static void setUserTransactionStartedListener(UserTransactionStartedListener newTsl)
    {
       tsl = newTsl;
    }

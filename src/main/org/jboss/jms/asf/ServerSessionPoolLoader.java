@@ -28,7 +28,7 @@ import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import org.jboss.naming.NonSerializableFactory;
+import org.jboss.util.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.XidFactory;
 
@@ -39,7 +39,7 @@ import org.jboss.tm.XidFactory;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */

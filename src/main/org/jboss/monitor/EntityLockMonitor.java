@@ -30,7 +30,7 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.naming.NonSerializableFactory;
+import org.jboss.util.naming.NonSerializableFactory;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -43,7 +43,7 @@ import javax.naming.Reference;
  *
  * @see Monitorable
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class EntityLockMonitor
    extends ServiceMBeanSupport

@@ -24,6 +24,8 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
+import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
+
 
 /**
  *  The client-side UserTransaction implementation for clients
@@ -32,7 +34,7 @@ import javax.transaction.UserTransaction;
  *  <code>TransactionManager</code> of the server.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 public class ServerVMClientUserTransaction
    implements UserTransaction
@@ -42,22 +44,27 @@ public class ServerVMClientUserTransaction
    /**
     *  Our singleton instance.
     */
-   private final static ServerVMClientUserTransaction singleton = new ServerVMClientUserTransaction();
+   private static ServerVMClientUserTransaction singleton;
 
 
    /**
-    *  The <code>TransactionManagerz</code> we delegate to.
+    *  The <code>TransactionManager</code> we delegate to.
     */
    private final TransactionManager tm;
 
 
-   private final Collection listeners = new ArrayList();
+   private final UserTransactionStartedListener listener;
 
    /**
     *  Return a reference to the singleton instance.
     */
    public static ServerVMClientUserTransaction getSingleton()
    {
+      if (singleton == null) 
+      {
+         throw new IllegalStateException("ServerVMClientUserTransaction not yet available, ClientUserTransactionService is not started");
+      } // end of if ()
+      
       return singleton;
    }
 
@@ -67,38 +74,25 @@ public class ServerVMClientUserTransaction
    /**
     *  Create a new instance.
     */
-   private ServerVMClientUserTransaction()
+   public ServerVMClientUserTransaction(final TransactionManager tm, UserTransactionStartedListener listener)
    {
-      // Lookup the local TM
-      TransactionManager local = null;
-      try {
-         local = (TransactionManager)new InitialContext().lookup("java:/TransactionManager");
-
-      } catch (NamingException ex) 
+      if (singleton != null) 
       {
-         //throw new RuntimeException("TransactionManager not found: " + ex);
-      }
-      tm = local;
-   }
-   //public constructor for TESTING ONLY
-   public ServerVMClientUserTransaction(final TransactionManager tm)
-   {
+         throw new IllegalStateException("You can only create one ServerVMClientUserTransaction!");
+      } // end of if ()
+      
       this.tm = tm;
+      this.listener = listener;
+      singleton = this;
+   }
+
+   public void clearSingleton()
+   {
+      singleton = null;
    }
 
    // Public --------------------------------------------------------
 
-   //Registration for TransactionStartedListeners.
-
-   public void registerTxStartedListener(UserTransactionStartedListener txStartedListener)
-   {
-      listeners.add(txStartedListener);
-   }
-
-   public void unregisterTxStartedListener(UserTransactionStartedListener txStartedListener)
-   {
-      listeners.remove(txStartedListener);
-   }
 
    //
    // implements interface UserTransaction
@@ -108,11 +102,7 @@ public class ServerVMClientUserTransaction
       throws NotSupportedException, SystemException
    {
       tm.begin();
-      for (Iterator i = listeners.iterator(); i.hasNext(); )
-      {
-         ((UserTransactionStartedListener)i.next()).userTransactionStarted();
-      } // end of for ()
-      
+      listener.userTransactionStarted();
    }
 
    public void commit()
@@ -153,10 +143,5 @@ public class ServerVMClientUserTransaction
       tm.setTransactionTimeout(seconds);
    }
 
-   public interface UserTransactionStartedListener extends EventListener 
-   {
-      void userTransactionStarted() throws SystemException;
-   }
-                                                       
 
 }

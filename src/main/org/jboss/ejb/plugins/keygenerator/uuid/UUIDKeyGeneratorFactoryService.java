@@ -13,7 +13,7 @@ import javax.naming.InitialContext;
 
 import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 
 import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
 import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
  *
  * @author <a href="mailto:loubyansky@ukr.net">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class UUIDKeyGeneratorFactoryService
    extends ServiceMBeanSupport

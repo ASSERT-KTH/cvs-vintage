@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.69 2002/11/13 20:17:46 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.70 2002/11/27 04:30:44 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -159,7 +159,7 @@
     -->
     <attribute name="StrictVerifier">true</attribute>
 
-    <depends>jboss:service=TransactionManager</depends>
+    <depends>jboss.tm:service=TransactionManagerService</depends>
     <depends>jboss:service=WebService</depends>
   </mbean>
   
@@ -197,24 +197,24 @@
     <attribute name="SecurityDomain">ssl-domain-name</attribute>
     -->
 
-    <depends>jboss:service=TransactionManager</depends>
+    <depends>jboss.tm:service=TransactionManagerService</depends>
   </mbean>
   
   <mbean code="org.jboss.invocation.pooled.server.PooledInvoker"
          name="jboss:service=invoker,type=pooled">
-    <depends>jboss:service=TransactionManager</depends>
+    <depends>jboss.tm:service=TransactionManagerService</depends>
   </mbean>
 
   <mbean code="org.jboss.invocation.local.LocalInvoker" 
          name="jboss:service=invoker,type=local">
 
-    <depends>jboss:service=TransactionManager</depends>
+    <depends>jboss.tm:service=TransactionManagerService</depends>
   </mbean>
 
   <!-- Trunk invoker -->
   <mbean code="org.jboss.resource.work.BaseWorkManager" 
          name="jboss:service=WorkManager,type=TrunkInvoker">
-    <depends optional-attribute-name="TransactionManager">jboss:service=TransactionManager</depends>
+    <depends optional-attribute-name="TransactionManager">jboss.tm:service=TransactionManagerService</depends>
     <attribute name="MinThreads">0</attribute>
     <attribute name="MaxThreads">50</attribute>
     <attribute name="KeepAliveTime">10000</attribute>
@@ -225,13 +225,27 @@
     <attribute name="EnableTcpNoDelay">true</attribute>
     <attribute name="ServerBindPort">4445</attribute>
     <depends optional-attribute-name="WorkManager">jboss:service=WorkManager,type=TrunkInvoker</depends>
-    <depends optional-attribute-name="TransactionManagerService">jboss:service=TransactionManager</depends>
+    <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
     <!--
     <attribute name="ServerBindAddress">192.168.1.1</attribute>
     <attribute name="ClientConnectAddress">192.168.1.1</attribute>
     <attribute name="ClientConnectPort">4445</attribute>
     -->
   </mbean>
+
+  <!-- ==================================================================== -->
+  <!-- User Transaction services.  Should be in another module              -->
+  <!-- ==================================================================== -->
+
+  <!--
+     | UserTransaction support.
+   -->
+  <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
+	 name="jboss.tm:service=ClientUserTransaction">
+    <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
+    <depends optional-attribute-name="CachedConnectionManager">jboss.jca:service=CachedConnectionManager</depends>
+  </mbean>
+
 
   <!-- ==================================================================== -->
   <!-- Deployment Scanning                                                  -->

@@ -10,7 +10,6 @@ package org.jboss.ejb;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -34,34 +33,24 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanRegistration;
-import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
-import javax.naming.Name;
-import javax.naming.NameAlreadyBoundException;
-import javax.naming.NameClassPair;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
-import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.EJB;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -78,7 +67,7 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.naming.ENCThreadLocalKey;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
@@ -111,7 +100,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.104 $
+ * @version $Revision: 1.105 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an 
  * aspect/interceptor.  Make this whole stack into a model mbean.

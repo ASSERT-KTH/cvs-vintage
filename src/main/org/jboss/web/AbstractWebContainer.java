@@ -53,7 +53,7 @@ import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.ENCFactory;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.server.ServerConfigLocator;
@@ -157,7 +157,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.54 $
+@version $Revision: 1.55 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport

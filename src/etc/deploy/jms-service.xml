@@ -20,7 +20,7 @@
   <!-- The server session pool for Message Driven Beans -->
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader"
 	 name="jboss.mq:service=ServerSessionPoolMBean,name=StdJMSPool">
-    <depends optional-attribute-name="XidFactory">jboss:service=XidFactory</depends>
+    <depends optional-attribute-name="XidFactory">jboss.tm:service=XidFactory</depends>
     <attribute name="PoolName">StdJMSPool</attribute>
     <attribute name="PoolFactoryClass">
       org.jboss.jms.asf.StdServerSessionPoolFactory
@@ -47,11 +47,7 @@
         <!--real attributes-->
         <attribute name="ManagedConnectionFactoryProperties">
           <properties>
-            <config-property>
-              <config-property-name>SessionDefaultType</config-property-name>
-              <config-property-type>java.lang.String</config-property-type>
-              <config-property-value>javax.jms.Topic</config-property-value>
-            </config-property>
+            <config-property name="SessionDefaultType" type="java.lang.String">javax.jms.Topic</config-property>
           </properties>
         </attribute>
       </mbean>
@@ -79,8 +75,8 @@
 
     <depends optional-attribute-name="JaasSecurityManagerService">jboss.security:service=JaasSecurityManager</depends>
 
-    <attribute name="TransactionManager">java:/TransactionManager</attribute>
-  </mbean>
+    <depends optional-attribute-name="TransactionManagerService">jboss.tm:service=TransactionManagerService</depends>
+   </mbean>
 
 
 </server>

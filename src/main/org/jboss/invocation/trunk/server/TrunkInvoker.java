@@ -36,7 +36,7 @@ import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TrunkRequest;
 import org.jboss.invocation.trunk.server.bio.BlockingServer;
 import org.jboss.logging.Logger;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;

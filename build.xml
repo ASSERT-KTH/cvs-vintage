@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.124 2002/11/11 12:38:37 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.125 2002/11/27 04:30:44 d_jencks Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -199,6 +199,7 @@
         <include name="org/jboss/logging/**/*.java"/>
         <include name="org/jboss/naming/**/*.java"/>
         <include name="org/jboss/web/**/*.java"/>
+        <include name="org/jboss/tm/**/*.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
     </jmxdoclet>

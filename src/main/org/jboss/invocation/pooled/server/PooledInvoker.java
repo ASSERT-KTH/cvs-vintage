@@ -14,7 +14,7 @@ import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.logging.Logger;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;

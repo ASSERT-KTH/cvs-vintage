@@ -33,7 +33,7 @@ import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.logging.Logger;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.Strings;
@@ -42,7 +42,7 @@ import org.jboss.util.Strings;
  * The HttpInvoker ... into the JMX base.
  *
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class HttpInvoker extends ServiceMBeanSupport
    implements HttpInvokerMBean

@@ -42,7 +42,7 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
-import org.jboss.naming.Util;
+import org.jboss.util.naming.Util;
 import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ClientContainer;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
@@ -71,7 +71,7 @@ import org.w3c.dom.NodeList;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
