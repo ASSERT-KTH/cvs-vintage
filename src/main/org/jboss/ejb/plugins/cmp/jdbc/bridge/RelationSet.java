@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -75,6 +75,12 @@ public class RelationSet implements Set {
       if(o == null) {
          throw new IllegalArgumentException("Null cannot be added to a CMR " +
                "relationship collection");
+      }
+      if(cmrField.getRelatedCMRField().isFkPartOfPk()) {
+         throw new IllegalStateException("A CMR field with a foreign key " +
+            "mapped to a primary key field can only be set in ejbCreate " +
+            "[EJB 2.0 Spec. 10.3.5]. " +
+            "CMR field: " + cmrField.getRelatedCMRField().getFieldName());
       }
 
       List idList = getIdList();
