@@ -255,32 +255,40 @@ public class Context {
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
-	if ( path == null   || 
-	     ! path.startsWith("/")) {
+	if ( path == null  || ! path.startsWith("/")) {
 	    return null; // spec say "return null if we can't return a dispather
 	}
 
-	Request subReq=contextM.createRequest( this, path );
-	contextM.processRequest(subReq);
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
+	rD.setPath( path );
+
+	return rD;
+// 	Request subReq=contextM.createRequest( this, path );
+// 	contextM.processRequest(subReq);
 	
-	return new RequestDispatcherImpl(subReq);
+// 	return new RequestDispatcherImpl(subReq);
     }
 
     public RequestDispatcher getNamedDispatcher(String name) {
         if (name == null)
 	    return null;
 
+	// We need to do the checks 
 	ServletWrapper wrapper = getServletByName( name );
 	if (wrapper == null)
 	    return null;
 
-	// creates a new subrequest, and set the wrapper.
-	Request subR = new Request();
-	subR.setWrapper( wrapper );
-	subR.setPathInfo("");
-	subR.setContext( this );
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
+	rD.setName( name );
+
+	return rD;
+// 	// creates a new subrequest, and set the wrapper.
+// 	Request subR = new Request();
+// 	subR.setWrapper( wrapper );
+// 	subR.setPathInfo("");
+// 	subR.setContext( this );
 	
-        return  new RequestDispatcherImpl(subR);
+//         return  new RequestDispatcherImpl(subR);
     }
 
     /** Implements getResource() - use a sub-request to let interceptors do the job.

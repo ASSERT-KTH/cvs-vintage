@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.19 2000/01/12 19:54:02 costin Exp $
- * $Revision: 1.19 $
- * $Date: 2000/01/12 19:54:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.20 2000/01/13 06:35:00 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/01/13 06:35:00 $
  *
  * ====================================================================
  *
@@ -236,7 +236,7 @@ public class Request  {
      * original parameters before adding parameters from the
      * query string, if any.
      */
-    public Hashtable getParametersCopy() {
+    Hashtable getParametersCopy() {
 	handleParameters();
 	return (Hashtable) parameters.clone();
     }
@@ -572,6 +572,10 @@ public class Request  {
 	// XXX Should we override query parameters ??
     }
 
+    public Hashtable getParameters() {
+	return parameters;
+    }
+
     public void setContentLength( int  len ) {
 	this.contentLength=len;
     }
@@ -639,7 +643,8 @@ public class Request  {
     }
 
     public void setAttribute(String name, Object value) {
-        attributes.put(name, value);
+	if(name!=null && value!=null)
+	    attributes.put(name, value);
     }
 
     public void removeAttribute(String name) {
