@@ -449,15 +449,17 @@ public class Issue
      * Returns type of dependency the passed-in issue has on
      * This issue.
      */
-    public String getDependencyType(Issue childIssue) throws Exception
+    public Depend getDependency(Issue childIssue) throws Exception
     {
+        Depend depend = null;
         Criteria crit = new Criteria(2)
             .add(DependPeer.OBSERVED_ID, getIssueId() )        
             .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );        
-        Depend depend = (Depend)DependPeer.doSelect(crit).get(0);
-        return depend.getTypeId().toString();
+        Vector depends = DependPeer.doSelect(crit);
+        if (depends.size() > 0) 
+            depend = (Depend)depends.get(0);
+        return depend;
     }
-
 
     /**
      * Removes any unset attributes and sets the issue # prior to saving
