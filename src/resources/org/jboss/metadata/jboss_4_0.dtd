@@ -8,8 +8,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 4.0//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_4_0.dtd">
 
-$Id: jboss_4_0.dtd,v 1.8 2004/03/30 10:29:09 tdiesler Exp $
-$Revision: 1.8 $
+$Id: jboss_4_0.dtd,v 1.9 2004/04/05 10:26:46 tdiesler Exp $
+$Revision: 1.9 $
 
 Overview of the architecture of jboss.xml
 
@@ -140,7 +140,7 @@ Overview of the architecture of jboss.xml
 
 -->
 <!ELEMENT jboss (loader-repository?, jmx-name?, enforce-ejb-restrictions?,
- security-domain?, unauthenticated-principal? , enterprise-beans?, assembly-descriptor?,
+ security-domain?, unauthenticated-principal?, enterprise-beans?, assembly-descriptor?,
  resource-managers?, invoker-proxy-bindings?, container-configurations?)>
 
 <!-- The loader-repository specifies the name of the UnifiedLoaderRepository
@@ -799,8 +799,7 @@ container or ejb depends.
 
 <!--
   The security-role element contains the definition of a security role.
-  The definition consists of an the security role name and optional
-  principal name elements.
+  The definition consists of an the security role name and principal name element(s).
 
 Used in: assembly-descriptor
 
@@ -812,6 +811,13 @@ Example:
 		</security-role>
 -->
 <!ELEMENT security-role (role-name, principal-name+)>
+
+<!--
+  The role-name element is the name of the role.
+
+  Used in: security-role
+-->
+<!ELEMENT role-name (#PCDATA)>
 
 <!--
   The principal-name element is the name of the principal that is mapped

@@ -27,7 +27,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -201,9 +201,22 @@ public class ApplicationMetaData
       return securityDomain;
    }
 
+   /**
+    * Set the security domain for this web application
+    */
+   public void setSecurityDomain(String securityDomain)
+   {
+      this.securityDomain = securityDomain;
+   }
+
    public String getUnauthenticatedPrincipal()
    {
       return unauthenticatedPrincipal;
+   }
+
+   public void setUnauthenticatedPrincipal(String unauthenticatedPrincipal)
+   {
+      this.unauthenticatedPrincipal = unauthenticatedPrincipal;
    }
 
    public boolean getEnforceEjbRestrictions()

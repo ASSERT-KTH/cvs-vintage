@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /** A representation of the web.xml and jboss-web.xml deployment
  * descriptors as used by the AbstractWebContainer web container integration
@@ -31,9 +33,9 @@ import java.util.Iterator;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
-public class WebMetaData implements XmlLoadable
+public class WebMetaData extends MetaData
 {
    private static Logger log = Logger.getLogger(WebMetaData.class);
 
@@ -43,12 +45,14 @@ public class WebMetaData implements XmlLoadable
    private HashMap resourceEnvReferences = new HashMap();
    /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
+   /** The security-roles */
+   private HashMap securityRoles = new HashMap();
    /** web.xml ejb-refs */
    private HashMap ejbReferences = new HashMap();
    /** web.xml ejb-local-refs */
    private HashMap ejbLocalReferences = new HashMap();
-   /** Currently unused as security-roles are not used */
-   private ArrayList securityRoleReferences = new ArrayList();
+   /** web.xml security-role-refs */
+   // private ArrayList securityRoleReferences = new ArrayList();
    /** The web.xml distributable flag */
    private boolean distributable = false;
    /** The jboss-web.xml class-loading.java2ClassLoadingCompliance flag */
@@ -152,6 +156,47 @@ public class WebMetaData implements XmlLoadable
       return securityDomain;
    }
 
+   /**
+    * Set the security domain for this web application
+    */
+   public void setSecurityDomain(String securityDomain)
+   {
+      this.securityDomain = securityDomain;
+   }
+
+   /**
+    * Get the optional map of security role/user mapping.
+    */
+   public Map getSecurityRoles()
+   {
+      return new HashMap(securityRoles);
+   }
+
+   /**
+    * Merge the security role/principal mapping defined in jboss-web.xml
+    * with the one defined at jboss-app.xml.
+    */
+   public void mergeSecurityRoles(Map applRoles)
+   {
+      Iterator it = applRoles.entrySet().iterator();
+      while (it.hasNext())
+      {
+         Map.Entry entry = (Map.Entry) it.next();
+         String roleName = (String)entry.getKey();
+         SecurityRoleMetaData appRole = (SecurityRoleMetaData)entry.getValue();
+         SecurityRoleMetaData srMetaData = (SecurityRoleMetaData)securityRoles.get(roleName);
+         if (srMetaData != null)
+         {
+            Set principalNames = appRole.getPrincipals();
+            srMetaData.addPrincipalNames(principalNames);
+         }
+         else
+         {
+            securityRoles.put(roleName, entry.getValue());
+         }
+      }
+   }
+
    /** The servlet container virtual host the war should be deployed into. If
     null then the servlet container default host should be used.
     */
@@ -225,7 +270,7 @@ public class WebMetaData implements XmlLoadable
       return replicationType;
    }
 
-   public void importXml(Element element) throws Exception
+   public void importXml(Element element) throws DeploymentException
    {
       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
       if( rootTag.equals("web-app") )
@@ -240,10 +285,10 @@ public class WebMetaData implements XmlLoadable
    
    /** Parse the elements of the web-app element used by the integration layer.
     */
-   protected void importWebXml(Element webApp) throws Exception
+   protected void importWebXml(Element webApp) throws DeploymentException
    {
       // Parse the web-app/resource-ref elements
-      Iterator iterator = MetaData.getChildrenByTagName(webApp, "resource-ref");
+      Iterator iterator = getChildrenByTagName(webApp, "resource-ref");
       while( iterator.hasNext() )
       {
          Element resourceRef = (Element) iterator.next();
@@ -253,7 +298,7 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Parse the resource-env-ref elements
-      iterator = MetaData.getChildrenByTagName(webApp, "resource-env-ref");
+      iterator = getChildrenByTagName(webApp, "resource-env-ref");
       while (iterator.hasNext())
       {
          Element resourceRef = (Element) iterator.next();
@@ -263,7 +308,7 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Parse the web-app/env-entry elements
-      iterator = MetaData.getChildrenByTagName(webApp, "env-entry");
+      iterator = getChildrenByTagName(webApp, "env-entry");
       while( iterator.hasNext() )
       {
          Element envEntry = (Element) iterator.next();
@@ -272,8 +317,17 @@ public class WebMetaData implements XmlLoadable
          environmentEntries.add(envEntryMetaData);
       }
 
+      // set the security roles (optional)
+      iterator = getChildrenByTagName(webApp, "security-role");
+      while (iterator.hasNext())
+      {
+         Element securityRole = (Element) iterator.next();
+         String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
+         securityRoles.put(roleName, new SecurityRoleMetaData(roleName));
+      }
+
       // Parse the web-app/ejb-ref elements
-      iterator = MetaData.getChildrenByTagName(webApp, "ejb-ref");
+      iterator = getChildrenByTagName(webApp, "ejb-ref");
       while( iterator.hasNext() )
       {
          Element ejbRef = (Element) iterator.next();
@@ -283,7 +337,7 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Parse the web-app/ejb-local-ref elements
-      iterator = MetaData.getChildrenByTagName(webApp, "ejb-local-ref");
+      iterator = getChildrenByTagName(webApp, "ejb-local-ref");
       while( iterator.hasNext() )
       {
          Element ejbRef = (Element) iterator.next();
@@ -293,7 +347,7 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Is the web-app marked distributable?
-      iterator = MetaData.getChildrenByTagName(webApp, "distributable");
+      iterator = getChildrenByTagName(webApp, "distributable");
       if(iterator.hasNext())
       {
          distributable=true;
@@ -306,29 +360,29 @@ public class WebMetaData implements XmlLoadable
 
    /** Parse the elements of the jboss-web element used by the integration layer.
     */
-   protected void importJBossWebXml(Element jbossWeb) throws Exception
+   protected void importJBossWebXml(Element jbossWeb) throws DeploymentException
    {
       // Parse the jboss-web/root-context element
-      Element contextRootElement = MetaData.getOptionalChild(jbossWeb, "context-root");
+      Element contextRootElement = getOptionalChild(jbossWeb, "context-root");
       if( contextRootElement != null )
-         contextRoot = MetaData.getElementContent(contextRootElement);
+         contextRoot = getElementContent(contextRootElement);
 
       // Parse the jboss-web/security-domain element
-      Element securityDomainElement = MetaData.getOptionalChild(jbossWeb, "security-domain");
+      Element securityDomainElement = getOptionalChild(jbossWeb, "security-domain");
       if( securityDomainElement != null )
-         securityDomain = MetaData.getElementContent(securityDomainElement);
+         securityDomain = getElementContent(securityDomainElement);
 
       // Parse the jboss-web/virtual-host element
-      Element virtualHostElement = MetaData.getOptionalChild(jbossWeb, "virtual-host");
+      Element virtualHostElement = getOptionalChild(jbossWeb, "virtual-host");
       if( virtualHostElement != null )
-         virtualHost = MetaData.getElementContent(virtualHostElement);
+         virtualHost = getElementContent(virtualHostElement);
 
       // Parse the jboss-web/resource-ref elements
-      Iterator iterator = MetaData.getChildrenByTagName(jbossWeb, "resource-ref");
+      Iterator iterator = getChildrenByTagName(jbossWeb, "resource-ref");
       while( iterator.hasNext() )
       {
          Element resourceRef = (Element) iterator.next();
-         String resRefName = MetaData.getElementContent(MetaData.getUniqueChild(resourceRef, "res-ref-name"));
+         String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
          ResourceRefMetaData refMetaData = (ResourceRefMetaData) resourceReferences.get(resRefName);
          if( refMetaData == null )
          {
@@ -339,11 +393,11 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Parse the jboss-web/resource-env-ref elements
-      iterator = MetaData.getChildrenByTagName(jbossWeb, "resource-env-ref");
+      iterator = getChildrenByTagName(jbossWeb, "resource-env-ref");
       while( iterator.hasNext() )
       {
          Element resourceRef = (Element) iterator.next();
-         String resRefName = MetaData.getElementContent(MetaData.getUniqueChild(resourceRef, "resource-env-ref-name"));
+         String resRefName = getElementContent(getUniqueChild(resourceRef, "resource-env-ref-name"));
          ResourceEnvRefMetaData refMetaData = (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
          if( refMetaData == null )
          {
@@ -353,12 +407,31 @@ public class WebMetaData implements XmlLoadable
          refMetaData.importJbossXml(resourceRef);
       }
 
+      // set the security roles (optional)
+      iterator = getChildrenByTagName(jbossWeb, "security-role");
+      while (iterator.hasNext())
+      {
+         Element securityRole = (Element) iterator.next();
+         String roleName = getElementContent(getUniqueChild(securityRole, "role-name"));
+         SecurityRoleMetaData securityRoleMetaData = (SecurityRoleMetaData)securityRoles.get(roleName);
+         if (securityRoleMetaData == null)
+            throw new DeploymentException("Security role '" + roleName + "' defined in jboss-web.xml" +
+                    "is not defined in web.xml");
+
+         Iterator itPrincipalNames = getChildrenByTagName(securityRole, "principal-name");
+         while (itPrincipalNames.hasNext())
+         {
+            String principalName = getElementContent((Element) itPrincipalNames.next());
+            securityRoleMetaData.addPrincipalName(principalName);
+         }
+      }
+
       // Parse the jboss-web/ejb-ref elements
-      iterator = MetaData.getChildrenByTagName(jbossWeb, "ejb-ref");
+      iterator = getChildrenByTagName(jbossWeb, "ejb-ref");
       while( iterator.hasNext() )
       {
          Element ejbRef = (Element) iterator.next();
-         String ejbRefName = MetaData.getElementContent(MetaData.getUniqueChild(ejbRef, "ejb-ref-name"));
+         String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
          EjbRefMetaData ejbRefMetaData = (EjbRefMetaData) ejbReferences.get(ejbRefName);
          if( ejbRefMetaData == null )
          {
@@ -369,11 +442,11 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Parse the jboss-web/ejb-local-ref elements
-      iterator = MetaData.getChildrenByTagName(jbossWeb, "ejb-local-ref");
+      iterator = getChildrenByTagName(jbossWeb, "ejb-local-ref");
       while( iterator.hasNext() )
       {
          Element ejbLocalRef = (Element) iterator.next();
-         String ejbLocalRefName = MetaData.getElementContent(MetaData.getUniqueChild(ejbLocalRef, "ejb-ref-name"));
+         String ejbLocalRefName = getElementContent(getUniqueChild(ejbLocalRef, "ejb-ref-name"));
          EjbLocalRefMetaData ejbLocalRefMetaData = (EjbLocalRefMetaData) ejbLocalReferences.get(ejbLocalRefName);
          if( ejbLocalRefMetaData == null )
          {
@@ -384,20 +457,20 @@ public class WebMetaData implements XmlLoadable
       }
 
       // Parse the jboss-web/depends elements
-      for( Iterator dependsElements = MetaData.getChildrenByTagName(jbossWeb, "depends");
+      for( Iterator dependsElements = getChildrenByTagName(jbossWeb, "depends");
          dependsElements.hasNext();)
       {
          Element dependsElement = (Element)dependsElements.next();
-         String dependsName = MetaData.getElementContent(dependsElement);
+         String dependsName = getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
 
       // Parse the jboss-web/use-session-cookies element
-      iterator = MetaData.getChildrenByTagName(jbossWeb, "use-session-cookies");
+      iterator = getChildrenByTagName(jbossWeb, "use-session-cookies");
       if ( iterator.hasNext() )
       {
          Element useCookiesElement = (Element) iterator.next();
-         String useCookiesElementContent = MetaData.getElementContent(useCookiesElement);
+         String useCookiesElementContent = getElementContent(useCookiesElement);
          Boolean useCookies=Boolean.valueOf(useCookiesElementContent);
          
          if (useCookies.booleanValue())
@@ -412,15 +485,15 @@ public class WebMetaData implements XmlLoadable
 
       // Parse the jboss-web/session-replication element
 
-      Element sessionReplicationRootElement = MetaData.getOptionalChild(jbossWeb, "replication-config");
+      Element sessionReplicationRootElement = getOptionalChild(jbossWeb, "replication-config");
       if( sessionReplicationRootElement != null )
       {
          // manage "replication-trigger" first ...
          //
-         Element replicationTriggerElement = MetaData.getOptionalChild(sessionReplicationRootElement, "replication-trigger");
+         Element replicationTriggerElement = getOptionalChild(sessionReplicationRootElement, "replication-trigger");
          if (replicationTriggerElement != null)
          {
-            String repMethod = MetaData.getElementContent(replicationTriggerElement);
+            String repMethod = getElementContent(replicationTriggerElement);
             if ("SET_AND_GET".equalsIgnoreCase(repMethod))
                this.invalidateSessionPolicy = SESSION_INVALIDATE_SET_AND_GET;
             else if ("SET_AND_NON_PRIMITIVE_GET".equalsIgnoreCase(repMethod))
@@ -434,10 +507,10 @@ public class WebMetaData implements XmlLoadable
 
          // ... then manage "replication-type".
          //
-         Element replicationTypeElement = MetaData.getOptionalChild(sessionReplicationRootElement, "replication-type");
+         Element replicationTypeElement = getOptionalChild(sessionReplicationRootElement, "replication-type");
          if (replicationTypeElement != null)
          {
-            String repType = MetaData.getElementContent(replicationTypeElement);
+            String repType = getElementContent(replicationTypeElement);
             if ("SYNC".equalsIgnoreCase(repType))
                this.replicationType = REPLICATION_TYPE_SYNC;
             else if ("ASYNC".equalsIgnoreCase(repType))

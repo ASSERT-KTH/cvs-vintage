@@ -13,7 +13,7 @@ import java.util.*;
  * This implementation only contains the security-role meta data
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class AssemblyDescriptorMetaData extends MetaData
 {
@@ -25,9 +25,34 @@ public class AssemblyDescriptorMetaData extends MetaData
       securityRoles.put(srMetaData.getRoleName(), srMetaData);
    }
 
-   public HashMap getSecurityRoles()
+   public Map getSecurityRoles()
    {
       return new HashMap(securityRoles);
+   }
+
+   /**
+    * Merge the security role/principal mapping defined in jboss.xml
+    * with the one defined at jboss-app.xml.
+    */
+   public void mergeSecurityRoles(Map applRoles)
+   {
+      Iterator it = applRoles.entrySet().iterator();
+      while (it.hasNext())
+      {
+         Map.Entry entry = (Map.Entry) it.next();
+         String roleName = (String)entry.getKey();
+         SecurityRoleMetaData appRole = (SecurityRoleMetaData)entry.getValue();
+         SecurityRoleMetaData srMetaData = (SecurityRoleMetaData)securityRoles.get(roleName);
+         if (srMetaData != null)
+         {
+            Set principalNames = appRole.getPrincipals();
+            srMetaData.addPrincipalNames(principalNames);
+         }
+         else
+         {
+            securityRoles.put(roleName, entry.getValue());
+         }
+      }
    }
 
    public SecurityRoleMetaData getSecurityRoleByName(String roleName)

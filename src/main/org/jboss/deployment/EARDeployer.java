@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -66,8 +66,9 @@ public class EARDeployer
          just contain a jboss sar specified in the jboss-app.xml descriptor.
          */
          XmlFileLoader xfl = new XmlFileLoader(false);
-         Element root = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
-         J2eeApplicationMetaData metaData = new J2eeApplicationMetaData(root);
+         J2eeApplicationMetaData metaData = new J2eeApplicationMetaData();
+         Element application = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
+         metaData.importXml(application);
          di.metaData = metaData;
          in.close();
 
@@ -78,7 +79,7 @@ public class EARDeployer
             Element jbossApp = xfl.getDocument(in, "META-INF/jboss-app.xml").getDocumentElement();
             in.close();
             // Import module/service archives to metadata
-            metaData.importXml(jbossApp, true);
+            metaData.importXml(jbossApp);
             // Check for a loader-repository for scoping
             Element loader = MetaData.getOptionalChild(jbossApp, "loader-repository");
             initLoaderRepository(di, loader);

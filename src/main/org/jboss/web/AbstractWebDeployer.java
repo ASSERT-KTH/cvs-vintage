@@ -10,6 +10,7 @@ package org.jboss.web;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.WebserviceClientDeployer;
+import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.ejb.EjbUtil;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.EjbLocalRefMetaData;
@@ -135,7 +136,7 @@ thread context ClassLoader as was used to dispatch the http service request.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -305,9 +306,21 @@ public abstract class AbstractWebDeployer
          }
 
          // Parse the web.xml and jboss-web.xml descriptors
-         WebMetaData metaData = (WebMetaData) di.metaData;
-         parseMetaData(webContext, warURL, di.shortName, metaData);
-         warInfo = new WebApplication(metaData);
+         WebMetaData webMetaData = (WebMetaData) di.metaData;
+         parseMetaData(webContext, warURL, di.shortName, webMetaData);
+
+         // inherit the security setup from jboss-app.xml
+         if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData)
+         {
+            J2eeApplicationMetaData appMetaData = (J2eeApplicationMetaData)di.parent.metaData;
+
+            if (webMetaData.getSecurityDomain() == null)
+               webMetaData.setSecurityDomain(appMetaData.getSecurityDomain());
+
+            webMetaData.mergeSecurityRoles(appMetaData.getSecurityRoles());
+         }
+
+         warInfo = new WebApplication(webMetaData);
          warInfo.setDeploymentInfo(di);
          warInfo.setClassLoader(warLoader);
          performDeploy(warInfo, warURL.toString(), webAppParser);

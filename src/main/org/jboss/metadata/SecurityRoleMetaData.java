@@ -17,7 +17,7 @@ import java.util.Set;
  * be used to map a run-as-principal to more than one role.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class SecurityRoleMetaData extends MetaData
 {
@@ -33,6 +33,11 @@ public class SecurityRoleMetaData extends MetaData
    public void addPrincipalName(String principalName)
    {
       principals.add(principalName);
+   }
+
+   public void addPrincipalNames(Set principalNames)
+   {
+      principals.addAll(principalNames);
    }
 
    public String getRoleName()

@@ -6,17 +6,21 @@
  */
 package org.jboss.deployment;
 
+// $Id: J2eeModuleMetaData.java,v 1.8 2004/04/05 10:26:36 tdiesler Exp $
+
 import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
 
-/** The metadata for an application/module element
+/**
+ * The metadata for an application/module element
  *
- *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.7 $
+ * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ * @author Thomas.Diesler@jboss.org
+ * @version $Revision: 1.8 $
  */
 public class J2eeModuleMetaData
-      extends MetaData
+        extends MetaData
 {
    // Constants -----------------------------------------------------
    public static final int EJB = 0;
@@ -34,13 +38,6 @@ public class J2eeModuleMetaData
    String webContext;
 
    // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-   public J2eeModuleMetaData(Element moduleElement, boolean jbossSpecific)
-      throws DeploymentException
-   {
-      importXml(moduleElement, jbossSpecific);
-   }
 
    // Public --------------------------------------------------------
 
@@ -87,8 +84,24 @@ public class J2eeModuleMetaData
       }
    }
 
+   public void importXml(Element rootElement) throws DeploymentException
+   {
+      String rootTag = rootElement.getOwnerDocument().getDocumentElement().getTagName();
+      if( rootTag.equals("application") )
+      {
+         importApplicationXml(rootElement);
+      }
+      else if( rootTag.equals("jboss-app") )
+      {
+         importJBossAppXml(rootElement);
+      }
+      else
+      {
+         throw new DeploymentException("Unrecognized root tag: " + rootTag);
+      }
+   }
 
-   public void importXml(Element element, boolean jbossSpecific) throws DeploymentException
+   protected void importApplicationXml(Element element) throws DeploymentException
    {
       String name = element.getTagName();
       if (name.equals("module"))
@@ -106,11 +119,7 @@ public class J2eeModuleMetaData
             switch (type)
             {
                case SERVICE:
-                  if (!jbossSpecific)
-                  {
-                     throw new DeploymentException("Service archives must be in jboss-app.xml");
-                  } // end of if ()
-                  //fall through.
+                  throw new DeploymentException("Service archives must be in jboss-app.xml");
                case EJB:
                case CLIENT:
                case CONNECTOR:
@@ -127,10 +136,10 @@ public class J2eeModuleMetaData
          }
 
          // If the module content is not recognized throw an exception
-         if( done == false )
+         if (done == false)
          {
             StringBuffer msg = new StringBuffer("Invalid module content, must be one of: ");
-            for (int i = 0; i < tags.length; i ++)
+            for (int i = 0; i < tags.length; i++)
             {
                msg.append(tags[i]);
                msg.append(", ");
@@ -142,6 +151,10 @@ public class J2eeModuleMetaData
       {
          throw new DeploymentException("non-module tag in application dd: " + name);
       }
+   }
+
+   protected void importJBossAppXml(Element element) throws DeploymentException
+   {
    }
 
 }

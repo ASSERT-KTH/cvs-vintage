@@ -19,6 +19,7 @@ import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.metadata.ApplicationMetaData;
@@ -43,7 +44,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.51 $</tt>
+ * @version <tt>$Revision: 1.52 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -278,7 +279,7 @@ public class EJBDeployer
 
    /**
     * Set the WebServiceName value.
-    * @param newWebServiceName The new WebServiceName value.
+    * @param webServiceName The new WebServiceName value.
     *
     * @jmx:managed-attribute
     */
@@ -433,7 +434,7 @@ public class EJBDeployer
       throws DeploymentException
    {
       log.debug("create, "+di.shortName);
-      ApplicationMetaData metaData = null;
+      ApplicationMetaData ejbMetaData = null;
       try
       {
          // Create a file loader with which to load the files
@@ -449,7 +450,21 @@ public class EJBDeployer
          }
 
          // Load XML
-         di.metaData = metaData = efm.load(alternativeDD);
+         di.metaData = ejbMetaData = efm.load(alternativeDD);
+
+         // inherit the security setup from jboss-app.xml
+         if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData)
+         {
+            J2eeApplicationMetaData appMetaData = (J2eeApplicationMetaData)di.parent.metaData;
+
+            if (ejbMetaData.getSecurityDomain() == null)
+               ejbMetaData.setSecurityDomain(appMetaData.getSecurityDomain());
+
+            if (ejbMetaData.getUnauthenticatedPrincipal() == null)
+               ejbMetaData.setUnauthenticatedPrincipal(appMetaData.getUnauthenticatedPrincipal());
+
+            ejbMetaData.getAssemblyDescriptor().mergeSecurityRoles(appMetaData.getSecurityRoles());
+         }
       }
       catch (Exception e)
       {
@@ -514,7 +529,7 @@ public class EJBDeployer
       try
       {
          EjbModule ejbModule = new EjbModule(di, tm, webServiceName);
-         String name = metaData.getJmxName();
+         String name = ejbMetaData.getJmxName();
          if( name == null )
          {
             name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName;
