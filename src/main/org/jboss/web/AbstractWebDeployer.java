@@ -25,7 +25,6 @@ import org.jboss.metadata.WebSecurityMetaData.WebResourceCollection;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
-import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.web.AbstractWebContainer.WebDescriptorParser;
 import org.jboss.webservice.WebServiceClientHandler;
 import org.omg.CORBA.ORB;
@@ -151,7 +150,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.14 $
+@version $Revision: 1.15 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -164,6 +163,8 @@ public abstract class AbstractWebDeployer
    protected boolean unpackWars = true;
    /** If true, ejb-links that don't resolve don't cause an error (fallback to jndi-name) */
    protected boolean lenientEjbLink = false;
+   /** The default security-domain name to use */
+   protected String defaultSecurityDomain;
 
    public AbstractWebDeployer()
    {
@@ -184,7 +185,7 @@ public abstract class AbstractWebDeployer
    /** Get the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @return true for parent first, false for the servlet 2.3 model
-    * @jmx.managed-attribute
+    * @jmx:managed-attribute
     */
    public boolean getJava2ClassLoadingCompliance()
    {
@@ -193,7 +194,7 @@ public abstract class AbstractWebDeployer
    /** Set the flag indicating if the normal Java2 parent first class loading
     * model should be used over the servlet 2.3 web container first model.
     * @param flag true for parent first, false for the servlet 2.3 model
-    * @jmx.managed-attribute
+    * @jmx:managed-attribute
     */
    public void setJava2ClassLoadingCompliance(boolean flag)
    {
@@ -204,7 +205,7 @@ public abstract class AbstractWebDeployer
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
     * 
-    * @jmx.managed-attribute
+    * @jmx:managed-attribute
     * @return true is war archives should be unpacked
     */ 
    public boolean getUnpackWars()
@@ -215,7 +216,7 @@ public abstract class AbstractWebDeployer
     * need to be set to false as long extraction paths under deploy can
     * show up as deployment failures on some platforms.
     * 
-    * @jmx.managed-attribute
+    * @jmx:managed-attribute
     * @param flag , true is war archives should be unpacked
     */ 
    public void setUnpackWars(boolean flag)
@@ -229,23 +230,44 @@ public abstract class AbstractWebDeployer
      * in favour of trying the jndi-name in jboss-web.xml
      * @return a <code>boolean</code> value
      *    
-     * @jmx.managed-attribute
+     * @jmx:managed-attribute
      */
     public boolean getLenientEjbLink ()
     {
         return lenientEjbLink;
-    }
-    
+    }    
     /**
      * Set the flag indicating if ejb-link errors should be ignored
      * in favour of trying the jndi-name in jboss-web.xml
-     * @jmx.managed-attribute
+     * @jmx:managed-attribute
      */    
     public void setLenientEjbLink (boolean flag)
     {
         lenientEjbLink = flag;
     }
-    
+
+   /** Get the default security domain implementation to use if a war
+    * does not declare a security-domain.
+    *
+    * @return jndi name of the security domain binding to use.
+    * @jmx:managed-attribute
+    */
+   public String getDefaultSecurityDomain()
+   {
+      return defaultSecurityDomain;
+   }
+   /** Set the default security domain implementation to use if a war
+    * does not declare a security-domain.
+    *
+    * @param defaultSecurityDomain - jndi name of the security domain binding
+    * to use.
+    * @jmx:managed-attribute
+    */
+   public void setDefaultSecurityDomain(String defaultSecurityDomain)
+   {
+      this.defaultSecurityDomain = defaultSecurityDomain;
+   }
+
     public boolean accepts(DeploymentInfo sdi)
     {
         String warFile = sdi.url.getFile();
@@ -677,21 +699,14 @@ public abstract class AbstractWebDeployer
    {
       if( securityDomain == null )
       {
-         log.debug("Binding security/securityMgr to NullSecurityManager");
-         Object securityMgr = new NullSecurityManager("java:/jaas/null");
-         Util.bind(envCtx, "security/securityMgr", securityMgr);
-         Util.bind(envCtx, "security/realmMapping", securityMgr);
-         Util.bind(envCtx, "security/security-domain", new LinkRef("java:/jaas/null"));
-         Util.bind(envCtx, "security/subject", new LinkRef("java:/jaas/null/subject"));
+         securityDomain = getDefaultSecurityDomain();
+         log.debug("No security-domain given, using default: "+securityDomain);
       }
-      else
-      {
-         log.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
-         Util.bind(envCtx, "security/securityMgr", new LinkRef(securityDomain));
-         Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
-         Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
-         Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
-      }
+      log.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
+      Util.bind(envCtx, "security/securityMgr", new LinkRef(securityDomain));
+      Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
+      Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
+      Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
    }
 
    /** A utility method that searches the given loader for the
