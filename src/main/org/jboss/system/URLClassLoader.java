@@ -1,9 +1,9 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.system;
 
 import java.net.URL;
@@ -12,62 +12,62 @@ import java.io.InputStream;
 
 
 /**
- * The URLClassLoader is associated with a given URL.
- * It can load jar and sar (or jsr).
- * 
- * <p>The ServiceLibraries keeps track of the UCL and asks everyone for
- *    resources and classes.
- *
- * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
- * @version $Revision: 1.9 $
- * 
- * <p><b>20010830 marc fleury:</b>
- * <ul>
- *   <li>Initial import
- * </ul>
- * <p><b>20011009 cgj:</b>
- * <ul>
- *   <li>fixed default resolution behaviour
- * </ul>
- */
+* The URLClassLoader is associated with a given URL.
+* It can load jar and sar (or jsr).
+* 
+* <p>The ServiceLibraries keeps track of the UCL and asks everyone for
+*    resources and classes.
+*
+* @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
+* @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
+* @version $Revision: 1.10 $
+* 
+* <p><b>20010830 marc fleury:</b>
+* <ul>
+*   <li>Initial import
+* </ul>
+* <p><b>20011009 cgj:</b>
+* <ul>
+*   <li>fixed default resolution behaviour
+* </ul>
+*/
 public class URLClassLoader
-   extends java.net.URLClassLoader
-   implements URLClassLoaderMBean
+extends java.net.URLClassLoader
+implements URLClassLoaderMBean
 {
    /** One URL per classLoader in our case 
-    * This is just a key used for identifying the classloader,
-    * nothing is actually loaded from it.  Classes and resources are 
-    * loaded from local copies or unpacked local copies.
-    */   
+   * This is just a key used for identifying the classloader,
+   * nothing is actually loaded from it.  Classes and resources are 
+   * loaded from local copies or unpacked local copies.
+   */   
    private URL keyUrl = null;
-
+   
    /** An SCL can also be loading on behalf of an MBean */
-    //private ObjectName mbean = null; not used
-	
+   //private ObjectName mbean = null; not used
+   
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
-	/** The bootstrap interface to the log4j system */
-	private static BootstrapLogger log = BootstrapLogger.getLogger(URLClassLoader.class);
-
+   /** The bootstrap interface to the log4j system */
+   private static BootstrapLogger log = BootstrapLogger.getLogger(URLClassLoader.class);
+   
    /**
-    * One url per SCL
-    *
-    * @param String application
-    * @param ClassLoader parent
-    */
+   * One url per SCL
+   *
+   * @param String application
+   * @param ClassLoader parent
+   */
    public URLClassLoader(URL[] urls, URL keyUrl)
    {
       super(urls);
       this.keyUrl = keyUrl;
       try
       {
-			
+         
          if (libraries == null)
          {
             libraries = ServiceLibraries.getLibraries();
          }
-			
+         
          // A URL enabled SCL must register itself with the libraries to
          // be queried
          libraries.addClassLoader(this);
@@ -77,77 +77,72 @@ public class URLClassLoader
          log.warn("URL "+keyUrl+" could not be opened");
       }
    }
-
+   
    public URL getKeyURL()
    {
       return keyUrl;
    }
-	
+   
    /**
-    * loadClass
-    *
-    * We intercept the load class to know exactly the dependencies
-    * of the underlying jar
-    */
-	
-   public Class loadClass(String name, boolean resolve)
-      throws ClassNotFoundException
+   * loadClass
+   *
+   * We intercept the load class to know exactly the dependencies
+   * of the underlying jar
+   */
+   
+   
+   /*
+   USE THIS TO TRACE CLASS LOADING
+   if (name.endsWith("CHANGEME"))
    {
-      if (name.endsWith("CHANGEME"))
-      {
-         log.debug("UCL LOAD "+this.hashCode()+" in loadClass "+name);
-      }
-
+   log.debug("UCL LOAD "+this.hashCode()+" in loadClass "+name);
+   }
+   */
+   
+   public Class loadClass(String name, boolean resolve)
+   throws ClassNotFoundException
+   {
       return libraries.loadClass(name, resolve, this);	
    }
-	
-	
+   
+   
    public Class loadClassLocally (String name, boolean resolve)
-      throws ClassNotFoundException
+   throws ClassNotFoundException
    {
-      if (name.endsWith("CHANGEME")) 
-      {
-         log.debug("UCL LOAD LOCALLY "+ this.hashCode() +
-                            " in loadClass "+name);
-      }
-		
       return super.loadClass(name, resolve);
    }
-	
+   
    public URL getResource(String name)
    {
-      if (name.endsWith("CHANGEME"))
-      {
-         log.debug("UCL GETRESOURCE "+name+ " in UCL " +
-                            this.hashCode());
-      }
-
+      
       URL resource = super.getResource(name);
-		
+      
       if (resource == null)
       {
          resource = libraries.getResource(name, this);
       }
-		
+      
+      /*
       if (resource == null)
       {
-         if( log.isTraceEnabled() )
-            log.trace("Did not find the UCL resource "+name);
+      if( log.isTraceEnabled() )
+      log.trace("Did not find the UCL resource "+name);
       }
+      */
       return resource;
    }
-	
+   
    public URL getResourceLocally(String name)
    {
       return super.getResource(name);
    }
-	
+   
    public InputStream getResourceAsStream(String name)
    {
       try
       {
          URL resourceUrl = getResource(name);
-			
+         
          if (resourceUrl != null)
          {
             return resourceUrl.openStream();
@@ -159,12 +154,12 @@ public class URLClassLoader
       
       return null;
    }
-	
+   
    public int hashCode() 
    {
       return keyUrl.hashCode();
    }
-	
+   
    public boolean equals(Object other) 
    {
       if (other instanceof URLClassLoader) 
@@ -173,7 +168,7 @@ public class URLClassLoader
       }
       return false;
    }
-
+   
    public String toString()
    {
       StringBuffer tmp = new StringBuffer("JBoss URLClassloader: keyURL : ");
