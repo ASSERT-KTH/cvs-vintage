@@ -20,7 +20,7 @@ import org.jboss.metadata.SessionMetaData;
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.28 $
+ *   @version $Revision: 1.29 $
  */
 public class TxInterceptorBMT
    extends AbstractTxInterceptorBMT
@@ -49,8 +49,8 @@ public class TxInterceptorBMT
    public Object invokeHome(Invocation mi)
       throws Exception
    {
-      if (stateless)
-         // stateless: no context, no transaction, no call to the instance
+      // stateless: no context, no transaction, no call to the instance
+      if (stateless || mi.getEnterpriseContext() == null)
          return getNext().invokeHome(mi);
       else
          return invokeNext(mi);
