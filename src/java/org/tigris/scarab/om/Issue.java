@@ -2064,7 +2064,7 @@ public class Issue
             templateInfo.save();
             if (approved)
             {        
-                setTypeId(IssueType.GLOBAL_TEMPLATE__PK);
+                setTypeId(IssueType.MODULE_TEMPLATE__PK);
             }
             save();
         } 

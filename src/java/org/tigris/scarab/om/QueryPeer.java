@@ -69,7 +69,7 @@ public class QueryPeer
         "getAllQueries";
     public static final String GET_PRIVATE_QUERIES = 
         "getPrivateQueries";
-    public static final String GET_GLOBAL_QUERIES = 
+    public static final String GET_MODULE_QUERIES = 
         "getGlobalQueries";
 
     /**
@@ -89,7 +89,7 @@ public class QueryPeer
         }
         else if (type.equals("global"))
         {
-            cacheKey = GET_GLOBAL_QUERIES;  
+            cacheKey = GET_MODULE_QUERIES;  
         }
       
         Object obj = ScarabCache.get("QueryPeer", GET_ALL_QUERIES, 
