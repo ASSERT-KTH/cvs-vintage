@@ -99,7 +99,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.40 2002/10/07 12:45:12 thierrylach Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.41 2002/10/07 18:29:24 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -118,6 +118,9 @@ public class ScarabGlobalTool implements ScarabGlobalScope
 
     private static final String buildVersion = 
         Turbine.getConfiguration().getString("scarab.build.version", "");
+
+    private static String siteName = 
+        Turbine.getConfiguration().getString("scarab.site.name");
 
     public void init(Object data)
     {
@@ -557,35 +560,26 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * Provides the site name for the top banner.
      *
      * @return the configured site name, the hostname if the site name
-     * was not configured, or nothing if unable to get the host name.
+     * was not configured (and not localhost), or nothing if unable to 
+     * get the host name.
      */
     public String getSiteName()
     {
-        String siteName;
-        siteName =  Turbine.getConfiguration().getString("scarab.site.name",
-                                                         "Unconfigured");
-        if ("Unconfigured".equals(siteName))
+        if (siteName == null)
         {
             try
             {
-                String hostName = InetAddress.getLocalHost().getHostName();
-                if ("localhost".equals(hostName))
+                siteName = InetAddress.getLocalHost().getHostName();
+                if ("localhost".equals(siteName))
                 {
-                    hostName = "Unconfigured";
+                    siteName = "";
                 }
-                siteName = hostName;
             }
             catch (UnknownHostException uhe)
             {
-                // Ignore
+                siteName = "";
             }
-        }
-        if ("Unconfigured".equals(siteName))
-        {
-            siteName = "";
         }
         return siteName;
     }
 }
-
-
