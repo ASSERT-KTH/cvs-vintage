@@ -1,5 +1,5 @@
 @echo off
-# The directory which the scripts are pre-processed into
+REM The directory which the scripts are pre-processed into
 set POPULATION_SCRIPT_DIR=..\..\target\webapps\scarab\WEB-INF\sql
 
 echo Drop Scarab database...
