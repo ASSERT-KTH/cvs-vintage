@@ -1,5 +1,5 @@
-// $Id: PropPanel.java,v 1.75 2003/11/10 12:35:00 jhraigniac Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: PropPanel.java,v 1.76 2004/02/03 07:06:15 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.75 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: PropPanel.java,v 1.76 2004/02/03 07:06:15 linus Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -480,7 +480,7 @@ abstract public class PropPanel
 
     /**
      * @deprecated As of ArgoUml version 0.13.5,replaced by
-     *             {@link org.argouml.ui.targetmanager.TargetManager.getInstance().navigateBack();
+     *             {@link org.argouml.ui.targetmanager.TargetManager.getInstance().navigateBack()}
      *
      */
     public void navigateBackAction() {

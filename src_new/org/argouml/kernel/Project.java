@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.93 2004/01/29 07:41:37 linus Exp $
+// $Id: Project.java,v 1.94 2004/02/03 07:03:42 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1198,7 +1198,7 @@ public class Project implements java.io.Serializable, TargetListener {
     /** Find a type by name in the default model.
      *
      * @param name the name.
-     * @returns the type.
+     * @return the type.
      */
     public Object findTypeInDefaultModel(String name) {
 	if (_defaultModelCache.containsKey(name))
