@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ForwardGenerator.java,v 1.1 1999/10/09 00:20:36 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ForwardGenerator.java,v 1.2 1999/10/19 21:34:49 mandar Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/19 21:34:49 $
  *
  * ====================================================================
  * 
@@ -93,46 +93,51 @@ public class ForwardGenerator
     }
     
     public void generate(ServletWriter writer, Class phase) {
+	boolean initial = true;
+	String sep = "?";	
         writer.println("if (true) {");
         writer.pushIndent();
         writer.println("out.clear();");
+	writer.println("String _jspx_qfStr = \"\";");
+	
 	if (params.size() > 0) {
 	    Enumeration en = params.keys();
 	    while (en.hasMoreElements()) {
 		String key = (String) en.nextElement();
 		String []value = (String []) params.get(key);
-
+		if (initial == true) {
+		    sep = "?";
+		    initial = false;
+		} else sep = "&";
+		
 		if (value.length == 1 && JspUtil.isExpression(value[0]))
-		    writer.println("request.setAttribute(\"" + key + "\", " +
-				   JspUtil.getExpr(value[0]) + ");");
+		    writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
+				   key + "=\" + " + JspUtil.getExpr(value[0]) + ";");
 		else {
 		    if (value.length == 1)
-			writer.println("request.setAttribute(\"" + key + "\", \"" + value[0] + "\");");
+			writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
+				       key + "=\" + \"" + value[0] + "\";");			
 		    else {
-			writer.println("{");
-			writer.pushIndent();
-			writer.println("String [] _tmpS = new String[" + value.length +"];");
-			for (int i = 0; i < value.length; i++)
+			for (int i = 0; i < value.length; i++) {
 			    if (!JspUtil.isExpression(value[i]))
-				writer.println("_tmpS[" +  i + "] = \"" + value[i] + "\";");
+				writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
+					       key + "=\" + \"" + value[i] + "\";");
 			    else
-				writer.println("_tmpS[" +  i + "] = " +
-					       JspUtil.getExpr(value[i]) + ";");	
-			writer.println("request.setAttribute(\"" + key + "\", _tmpS);");
-			writer.popIndent();
-			writer.println("}");
+				writer.println("_jspx_qfStr = _jspx_qfStr + \"" + sep +
+					       key + "=\" +" + JspUtil.getExpr(value[i])+ ";");
+			    if (sep.equals("?")) sep = "&";			    
+			}
 		    }
 		}
 	    }
 	}
 	if (!isExpression)
             writer.println("pageContext.forward(" +
-			   writer.quoteString(page) +
-			   ");");
+			   writer.quoteString(page) + " +  _jspx_qfStr);");
 	else
             writer.println("pageContext.forward(" +
-			   JspUtil.getExpr (page) +
-			   ");");
+			   JspUtil.getExpr (page) +  " +  _jspx_qfStr);");
+	
         writer.println("return;");
         writer.popIndent();
         writer.println("}");

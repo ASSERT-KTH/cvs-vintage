@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.2 1999/10/17 18:40:06 mandar Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/17 18:40:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.3 1999/10/19 21:34:50 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/19 21:34:50 $
  *
  * ====================================================================
  * 
@@ -110,53 +110,54 @@ public class IncludeGenerator
     }
     
     public void generate(ServletWriter writer, Class phase) {
+	boolean initial = true;
+	String sep = "?";
+	writer.println("{");
+	writer.pushIndent();
+	writer.println("String _jspx_qStr = \"\";");
         writer.println("out.flush();");
+	
 	if (params.size() > 0) {
 	    Enumeration en = params.keys();
 	    while (en.hasMoreElements()) {
 		String key = (String) en.nextElement();
 		String []value = (String []) params.get(key);
+		if (initial == true) {
+		    sep = "?";
+		    initial = false;
+		} else sep = "&";
 		
-		if (value.length == 1 && JspUtil.isExpression(value[0]))
-		    writer.println("request.setAttribute(\"" + key + "\", " +
-				   JspUtil.getExpr(value[0]) + ");");
-		else {
-		    if (value.length == 1)
-			writer.println("request.setAttribute(\"" + key + "\", \"" + value[0] + "\");");
-		    else {
-			writer.println("{");
-			writer.pushIndent();
+		if (value.length == 1 && JspUtil.isExpression(value[0])) {
+		    writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
+				   key + "=\" + " + JspUtil.getExpr(value[0]) + ";");
+		} else {
+		    if (value.length == 1) {
+			writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
+				       key + "=\" + \"" + value[0] + "\";");
+		    } else {
 			writer.println("String [] _tmpS = new String[" + value.length +"];");
-			for (int i = 0; i < value.length; i++)
+			for (int i = 0; i < value.length; i++) {
 			    if (!JspUtil.isExpression(value[i]))
-				writer.println("_tmpS[" +  i + "] = \"" + value[i] + "\";");
+				writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
+					       key + "=\" + \"" + value[i] + "\";");
 			    else
-				writer.println("_tmpS[" +  i + "] = " +
-					       JspUtil.getExpr(value[i]) + ";");	
-			writer.println("request.setAttribute(\"" + key + "\", _tmpS);");
-			writer.popIndent();
-			writer.println("}");
+				writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
+					       key + "=\" +" + JspUtil.getExpr(value[i])+ ";");
+			    if (sep.equals("?")) sep = "&";
+			    
+			}
 		    }
 		}
 	    }
 	}
 	if (!isExpression) 
 	    writer.println("pageContext.include(" +
-			   writer.quoteString(page) +
-			   ");");
+			   writer.quoteString(page) + " + _jspx_qStr);");
 	else
-	    writer.println ("pageContext.include(" +
-			    JspUtil.getExpr(page) +
-			    ");");
+	    writer.println ("pageContext.include(" + 
+			    JspUtil.getExpr(page) + " + _jspx_qStr);");
 
-	// Now remove the parameters that were meant only for the inclusion.
-	if (params.size() > 0) {
-	    Enumeration en = params.keys();
-	    while (en.hasMoreElements()) {
-		String key = (String) en.nextElement();
-		writer.println("request.removeAttribute(\"" + key + "\");");
-	    }
-	}
-	
+	writer.popIndent();
+	writer.println("}");
     }
 }
