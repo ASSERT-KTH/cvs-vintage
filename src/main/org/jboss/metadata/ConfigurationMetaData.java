@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -37,24 +37,24 @@ public class ConfigurationMetaData extends MetaData {
 	public static final String[] commitOptionStrings = { "A", "B", "C" };
 	
     // Attributes ----------------------------------------------------
-	private String name;
-	private String containerInvoker;
-	private String instancePool;
-	private String instanceCache;
-	private String persistenceManager;
-	private String transactionManager;
-   private byte commitOption;
-	private boolean callLogging;
-	private boolean readOnlyGetMethods;
-	
-   private String authenticationModule;
-   private String roleMappingManager;
+    private String name;
+    private String containerInvoker;
+    private String instancePool;
+    private String instanceCache;
+    private String persistenceManager;
+    private String transactionManager;
+    private byte commitOption;
+    private boolean callLogging;
+    private boolean readOnlyGetMethods;
 
-	private Element containerInvokerConf;
-	private Element containerPoolConf;
-	private Element containerCacheConf;
-	
-	
+    private String authenticationModule;
+    private String roleMappingManager;
+
+    private Element containerInvokerConf;
+    private Element containerPoolConf;
+    private Element containerCacheConf;
+    private Element containerInterceptorsConf;
+
     // Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
@@ -83,7 +83,8 @@ public class ConfigurationMetaData extends MetaData {
     public Element getContainerInvokerConf() { return containerInvokerConf; }
 	public Element getContainerPoolConf() { return containerPoolConf; }
 	public Element getContainerCacheConf() { return containerCacheConf; }
-	
+	public Element getContainerInterceptorsConf() { return containerInterceptorsConf; }
+
 	public boolean getCallLogging() { return callLogging; }
 	
 	public byte getCommitOption() { return commitOption; }
@@ -129,7 +130,10 @@ public class ConfigurationMetaData extends MetaData {
 		
 		// the classes which can understand the following are dynamically loaded during deployment : 
 		// We save the Elements for them to use later
-		
+
+        // The configuration for the container interceptors
+        containerInterceptorsConf = getOptionalChild(element, "container-interceptors", containerInterceptorsConf);
+
 		// configuration for container invoker
 	    containerInvokerConf = getOptionalChild(element, "container-invoker-conf", containerInvokerConf);
 		
