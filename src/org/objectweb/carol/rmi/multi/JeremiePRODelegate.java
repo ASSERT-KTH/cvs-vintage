@@ -81,7 +81,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
 	    Method exportO = unicastClass.getMethod("exportObject",  new Class [] { Remote.class, Integer.TYPE });
 	    exportO.invoke(unicastClass, (new Object[] { obj , new Integer(port)} ));
 	} catch (Exception e) {
-	    throw new RemoteException(e.toString());
+	    throw new RemoteException(e.toString(), e);
 	}
     }
 

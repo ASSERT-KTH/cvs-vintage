@@ -30,6 +30,7 @@
 
   <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="test.client.classpath"> 
+    <pathelement location="/home/cayuelaj/sb3/objectweb/carol/externals/tmp"/>
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
     </fileset>  
@@ -43,7 +44,11 @@
     <pathelement location="${test.tmp.client}"/>
   </path>
 
-  <path id="test.server.classpath">
+  <path id="test.server.classpath">  
+    <pathelement location="/home/cayuelaj/sb3/objectweb/carol/externals/tmp"/>
+    <fileset dir="${carol.dist}/lib"> 
+      <include name="**/*.jar"/>   
+    </fileset> 
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
     </fileset> 
@@ -57,7 +62,8 @@
     <pathelement location="${test.tmp.server}"/>
   </path>
 
-  <path id="test.name.server.classpath">
+  <path id="test.name.server.classpath"> 
+  <pathelement location="/home/cayuelaj/sb3/objectweb/carol/externals/tmp"/> 
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
     </fileset>

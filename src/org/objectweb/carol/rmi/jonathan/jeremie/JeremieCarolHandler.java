@@ -28,7 +28,7 @@
 package org.objectweb.carol.rmi.jonathan.jeremie;
 
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
-import org.objectweb.david.apis.services.handler.Service;
+import org.objectweb.jeremie.apis.services.handler.Service;
 import org.objectweb.jonathan.apis.kernel.Context;
 import org.objectweb.jonathan.apis.kernel.JonathanException;
 import org.omg.IOP.ServiceContext;
