@@ -76,6 +76,7 @@ public class ColumbaHeader extends Rfc822Header implements HeaderInterface{
 	public Object clone() {
 
 		ColumbaHeader header = new ColumbaHeader();
+		
 		Hashtable ht = new Hashtable();
 
 		for (Enumeration e = getHashtable().keys(); e.hasMoreElements();) {
@@ -84,10 +85,10 @@ public class ColumbaHeader extends Rfc822Header implements HeaderInterface{
 
 		}
 		header.setHashtable(ht);
-
+		
 		//header.setHashtable( (Hashtable) hashTable.clone() );
 
-		//ColumbaHeader header = (ColumbaHeader) super.clone();
+		
 
 		return header;
 	}

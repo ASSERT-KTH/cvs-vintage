@@ -94,6 +94,26 @@ public abstract class Folder extends FolderTreeNode {
 			directoryFile = new File(dir);
 	}
 	
+	public void innerCopy( Folder destFolder, Object[] uids, WorkerStatusController worker ) throws Exception
+	{
+	}
+	
+	public FolderTreeNode getRootFolder()
+	{
+		FolderTreeNode folderTreeNode = (FolderTreeNode) getParent();
+		while (folderTreeNode != null) {
+			
+			if (folderTreeNode instanceof Root) {
+
+				return (Root) folderTreeNode;
+			}
+
+			folderTreeNode = (FolderTreeNode) folderTreeNode.getParent();
+
+		}
+		
+		return null;
+	}
 	
 
 	/**

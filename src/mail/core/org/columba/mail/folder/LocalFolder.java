@@ -125,10 +125,11 @@ public abstract class LocalFolder extends Folder {
 		}
 
 		String source = getMessageSource(uid, worker);
-
+		
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, true, null, 0);
 		message.setUID(uid);
+		message.setSource( source );
 
 		aktMessage = message;
 

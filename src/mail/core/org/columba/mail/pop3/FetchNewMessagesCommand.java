@@ -8,15 +8,16 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -109,7 +110,7 @@ public class FetchNewMessagesCommand extends Command {
 			//  -> always increase fetch number
 			Message message = server.getMessage(index + 1, serverUID);
 			message.getHeader().set("columba.size", new Integer(size));
-
+			message.getHeader().set("columba.flags.seen", Boolean.FALSE );
 			//System.out.println("message:\n" + message.getSource());
 
 			// get inbox-folder from pop3-server preferences

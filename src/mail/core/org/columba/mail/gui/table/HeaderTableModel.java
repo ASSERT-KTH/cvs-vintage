@@ -16,6 +16,7 @@ package org.columba.mail.gui.table;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,12 +39,12 @@ import org.columba.mail.message.MessageCollection;
 
 public class HeaderTableModel extends AbstractTreeTableModel {
 
-	//protected boolean mutex;
-
 	private HeaderTableItem item;
 
 	private Folder folder;
 	protected HeaderList headerList;
+
+	protected Hashtable uidList;
 
 	private MessageCollection messageCollection;
 
@@ -61,6 +62,8 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 		root = new MessageNode("root", null);
 		super.setRoot(root);
+
+		uidList = new Hashtable();
 
 		//mutex = false;
 
@@ -90,20 +93,21 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		selectedMessageNode = node;
 	}
 
-	protected void removeNode(Object messageNode) {
+	protected void removeNode(MessageNode messageNode) {
 
-		MessageNode node = (MessageNode) messageNode;
-
-		removeNodeFromParent(node);
+		removeNodeFromParent(messageNode);
 
 	}
 
-	public void markHeader(Object[] messageNodes, int subMode) {
+	public MessageNode findMessageNode(MessageNode parent, Object uid) {
+		return null;
+	}
 
-		for (int i = 0; i < messageNodes.length; i++) {
+	public void markHeader(Object[] uids, int subMode) {
 
-			//MessageNode node = findMessage(getRootNode(), uids[i]);
-			MessageNode node = (MessageNode) messageNodes[i];
+		for (int i = 0; i < uids.length; i++) {
+
+			MessageNode node = (MessageNode) uidList.get(uids[i]);
 
 			if (node != null) {
 				HeaderInterface header = node.getHeader();
@@ -131,74 +135,73 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 						}
 				}
 
-				if (messageNodes.length < 100)
+				if (uids.length < 100)
 					nodeChanged(node);
 			} else {
 				System.out.println("unable to find message");
 			}
 		}
 
-		if (messageNodes.length >= 100)
+		if (uids.length >= 100)
 			update();
 	}
 
-	public void removeHeaderList(Object[] messageNode) {
-		Object[] uids = MessageNode.toUidArray((MessageNode[]) messageNode);
+	public void removeHeaderList(Object[] uids) {
 
 		if (uids.length > 100) { // recreate whole tablemodel
 			for (int i = 0; i < uids.length; i++) {
-				headerList.remove(uids[i]);
+				//headerList.remove(uids[i]);
+				uidList.remove(uids[i]);
 			}
 
 			update();
 		} else { // single operation per message
 			for (int i = 0; i < uids.length; i++) {
-				headerList.remove(((MessageNode) uids[i]).getUid());
-				removeNode(uids[i]);
+				//headerList.remove(uids[i]);
+				MessageNode node = (MessageNode) uidList.get(uids[i]);
+				if (node != null)
+					removeNode(node);
 			}
 		}
 	}
 
 	public void addHeaderList(HeaderInterface[] headerList) throws Exception {
+
 		for (int i = 0; i < headerList.length; i++) {
 			addHeader(headerList[i]);
 		}
+
 	}
 
 	public void addHeader(HeaderInterface header) throws Exception {
-		//System.out.println("headertablemodel->addMessage()");
+
 		int count;
 		if (headerList != null)
 			count = getRootNode().getChildCount();
 		else
 			count = 0;
 		if (count == 0) {
-			//System.out.println("------------------> first message");
+
 			headerList = new HeaderList();
-			//setFolder( getFolder() );
-			//update();
-			//HeaderInterface header = (HeaderInterface) message.getHeader();
-			//Object uid = message.getUID();
+			uidList = new Hashtable();
+
 			Object uid = header.get("columba.uid");
 			headerList.add(header, uid);
+
 			MessageNode child = new MessageNode(header, uid);
+			uidList.put(uid, child);
+
 			getRootNode().add(child);
-			//hashtable.put( uid, child );
+
 			nodeStructureChanged(getRootNode());
 			return;
-		} //HeaderInterface header = null;
+		}
 		try { // we don't need this here
-			/*
-			if (headerList != null) {
-			
-				//header = (HeaderInterface) message.getHeader();
-				Object uid = header.get("columba.uid");
-				headerList.add(header, uid);
-			}
-			*/
 
 			Object uid = header.get("columba.uid");
 			MessageNode node = new MessageNode(header, uid);
+			uidList.put(uid, node);
+
 			setSelectedMessageNode(node);
 			boolean result =
 				getTableModelFilteredView().manipulateModel(
@@ -216,6 +219,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 					//hashtable.put( message.getUID(), node );
 				}
 			}
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -251,17 +255,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 	public void setHeaderList(HeaderList list) {
 		root.removeAllChildren();
 		headerList = list;
-		/*
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-			Object uid = e.nextElement();
-		
-			HeaderInterface header = headerList.getHeader(uid);
-		
-			MessageNode child = new MessageNode(header, uid);
-		
-			root.add(child);
-		}
-		*/
+		uidList.clear();
 
 		if (list == null) {
 			nodeStructureChanged(root);
@@ -278,11 +272,12 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			boolean result =
 				getTableModelFilteredView().manipulateModel(
 					TableModelPlugin.STRUCTURE_CHANGE);
-			if (result == false) { //hashtable = new Hashtable();
+			if (result == false) {
 				for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 					Object uid = e.nextElement();
 					HeaderInterface header = headerList.getHeader(uid);
 					MessageNode child = new MessageNode(header, uid);
+					uidList.put(uid, child);
 					root.add(child);
 				}
 
@@ -297,57 +292,8 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		}
 
 		nodeStructureChanged(root);
-	} /*
-					
-					public void setMessageCollection(MessageCollection mc) {
-						this.messageCollection = mc;
-					
-						System.out.println("headerTableModel->setMessagecollection");
-					
-						root.removeAllChildren();
-					
-						if (messageCollection == null) {
-							System.out.println("messagecollection is null");
-							return;
-						}
-					
-						try {
-							boolean result =
-								getTableModelFilteredView().manipulateModel(
-									TableModelPlugin.STRUCTURE_CHANGE);
-					
-							if (result == false) {
-								for (int i = 0; i < messageCollection.count(); i++) {
-									Message message = messageCollection.get(i);
-									Rfc822Header header = (Rfc822Header) message.getHeader();
-									Object uid = header.get("columba.pop3uid");
-									//String subject = (String) header.get("Subject");
-					
-									//System.out.println("subject("+i+"): " +subject );
-					
-									MessageNode child = new MessageNode(message, uid);
-					
-									//child.setUserObject( message );
-									root.add(child);
-								}
-							}
-					
-							getTableModelThreadedView().manipulateModel(
-								TableModelPlugin.STRUCTURE_CHANGE);
-					
-							getTableModelSorter().manipulateModel(
-								TableModelPlugin.STRUCTURE_CHANGE);
-					
-							System.out.println("mc count: " + messageCollection.count());
-					
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					
-						nodeStructureChanged(root);
-					
-					}
-					*/ /***************************** treemodel interface ********************************/ //
+	}
+	/***************************** treemodel interface ********************************/ //
 	// The TreeModel interface
 	//
 	public int getChildCount(Object node) {

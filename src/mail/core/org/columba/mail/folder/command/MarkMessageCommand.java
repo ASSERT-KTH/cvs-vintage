@@ -62,7 +62,7 @@ public class MarkMessageCommand extends FolderCommand {
 		markVariant = r[0].getMarkVariant();
 		ColumbaLogger.log.debug("src=" + folder);
 
-		folder.markMessage(MessageNode.toUidArray( (MessageNode[]) uids ), markVariant , worker);
+		folder.markMessage(r[0].getUids(), markVariant , worker);
 		
 		
 	}

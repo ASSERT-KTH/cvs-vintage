@@ -135,7 +135,7 @@ public class IMAPFolder extends RemoteFolder {
 		attributes.put("remove", "true");
 		attributes.put(
 			"accountuid",
-			new Integer(getImapRootFolder().getAccountUid()));
+			new Integer(((IMAPRootFolder) getRootFolder()).getAccountUid()));
 
 		return attributes;
 	}
@@ -187,7 +187,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	}
 
-	public IMAPRootFolder getImapRootFolder() {
+	public FolderTreeNode getRootFolder() {
 		FolderTreeNode folderTreeNode = (FolderTreeNode) getParent();
 		while (folderTreeNode != null) {
 			// System.out.println("name: "+ folder.getName() );
@@ -203,16 +203,9 @@ public class IMAPFolder extends RemoteFolder {
 		return null;
 	}
 
-	/*
-	
-	public IMAPRootFolder getImapRootFolder() {
-		return (IMAPRootFolder) getParent();
-	}
-	*/
-
 	public IMAPStore getStore() {
 		if (store == null)
-			store = getImapRootFolder().getStore();
+			store = ((IMAPRootFolder) getRootFolder()).getStore();
 
 		return store;
 	}
@@ -223,7 +216,7 @@ public class IMAPFolder extends RemoteFolder {
 		headerList = cache.getHeaderList(worker);
 
 		worker.setDisplayText("Fetching UID list...");
-		
+
 		Vector newList = getStore().fetchUIDList(worker, getImapPath());
 
 		if (newList == null)
@@ -232,11 +225,11 @@ public class IMAPFolder extends RemoteFolder {
 		Vector result = synchronize(headerList, newList);
 
 		worker.setDisplayText("Fetching FLAGS list...");
-		
+
 		IMAPFlags[] flags = getStore().fetchFlagsList(worker, getImapPath());
 
 		worker.setDisplayText("Fetching header list ");
-		
+
 		getStore().fetchHeaderList(headerList, result, worker, getImapPath());
 
 		updateFlags(flags);
@@ -256,19 +249,18 @@ public class IMAPFolder extends RemoteFolder {
 				header.set("columba.flags.seen", Boolean.TRUE);
 			else
 				getMessageFolderInfo().incUnseen();
-				
+
 			if (flags.isAnswered())
 				header.set("columba.flags.answered", Boolean.TRUE);
 			if (flags.isDeleted())
 				header.set("columba.flags.expunged", Boolean.TRUE);
 			if (flags.isFlagged())
 				header.set("columba.flags.flagged", Boolean.TRUE);
-			if (flags.isRecent())
-			{
+			if (flags.isRecent()) {
 				header.set("columba.flags.recent", Boolean.TRUE);
 				getMessageFolderInfo().incRecent();
 			}
-				
+
 			getMessageFolderInfo().incExists();
 		}
 	}
@@ -367,6 +359,13 @@ public class IMAPFolder extends RemoteFolder {
 		return getStore().getMimePart(uid, address, worker, getImapPath());
 	}
 
+	public void innerCopy(
+		Folder destFolder,
+		Object[] uids,
+		WorkerStatusController worker)
+		throws Exception {
+	}
+
 	public Object addMessage(
 		AbstractMessage message,
 		WorkerStatusController worker)
@@ -382,7 +381,8 @@ public class IMAPFolder extends RemoteFolder {
 		return null;
 	}
 
-	public boolean exists(Object uid, WorkerStatusController worker) throws Exception {
+	public boolean exists(Object uid, WorkerStatusController worker)
+		throws Exception {
 		return cache.getHeaderList(worker).containsKey(uid);
 	}
 
@@ -400,7 +400,7 @@ public class IMAPFolder extends RemoteFolder {
 						getMessageFolderInfo().decRecent();
 					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
 						getMessageFolderInfo().decUnseen();
-						
+
 					h.set("columba.flags.seen", Boolean.TRUE);
 					break;
 				}
@@ -436,7 +436,8 @@ public class IMAPFolder extends RemoteFolder {
 
 	}
 
-	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker)
+		throws Exception {
 	}
 
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
@@ -450,7 +451,8 @@ public class IMAPFolder extends RemoteFolder {
 		return uids;
 	}
 
-	public void expungeFolder(Object[] uids, WorkerStatusController worker) throws Exception {
+	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+		throws Exception {
 
 		boolean result = getStore().expunge(worker, getImapPath());
 		if (result == false)
@@ -543,14 +545,13 @@ public class IMAPFolder extends RemoteFolder {
 		}
 		*/
 	}
-	
+
 	public synchronized boolean tryToGetLock() {
-		return getImapRootFolder().tryToGetLock();
+		return getRootFolder().tryToGetLock();
 	}
-	
-	public void releaseLock()
-	{
-		getImapRootFolder().releaseLock();
+
+	public void releaseLock() {
+		getRootFolder().releaseLock();
 	}
 
 }

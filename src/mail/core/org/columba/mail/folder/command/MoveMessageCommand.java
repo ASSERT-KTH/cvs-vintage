@@ -20,7 +20,7 @@ import org.columba.main.MainInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class MoveMessageCommand extends FolderCommand {
+public class MoveMessageCommand extends CopyMessageCommand {
 
 	protected Folder destFolder;
 	protected Folder srcFolder;
@@ -58,12 +58,15 @@ public class MoveMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		super.execute(worker);
+		
+		
 		MailFrameController mailFrameController =
 			(MailFrameController) frameController;
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
+		Object[] uids = r[0].getUids();
 
 		srcFolder = (Folder) r[0].getFolder();
 		destFolder = (Folder) r[1].getFolder();
@@ -74,20 +77,7 @@ public class MoveMessageCommand extends FolderCommand {
 			"Moving messages to " + destFolder.getName() + "...");
 		worker.setProgressBarMaximum(uids.length);
 
-		for (int i = 0; i < uids.length; i++) {
-			worker.setProgressBarValue(i);
-			Object uid = uids[i];
-
-			if (srcFolder.exists(uid, worker)) {
-
-				ColumbaLogger.log.debug("copying UID=" + uid);
-
-				String source = srcFolder.getMessageSource(uid, worker);
-
-				destFolder.addMessage(source, worker);
-			}
-
-		}
+		
 
 		srcFolder.markMessage(
 			uids,

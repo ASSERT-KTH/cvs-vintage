@@ -12,6 +12,7 @@ import org.columba.mail.folder.LocalHeaderCache;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.parser.Rfc822Parser;
@@ -54,6 +55,32 @@ public class CachedMHFolder extends MHFolder {
 		throws Exception {
 
 		return (ColumbaHeader) cache.getHeaderList(worker).get(uid);
+	}
+	
+	public AbstractMessage getMessage(
+		Object uid,
+		WorkerStatusController worker)
+		throws Exception {
+		if (aktMessage != null) {
+			if (aktMessage.getUID().equals(uid)) {
+				// this message is already cached
+				//ColumbaLogger.log.info("using already cached message..");
+
+				return aktMessage;
+			}
+		}
+
+		String source = getMessageSource(uid, worker);
+		ColumbaHeader header = getMessageHeader(uid, worker);
+		
+		AbstractMessage message =
+			new Rfc822Parser().parse(source, false, header, 0);
+		message.setUID(uid);
+		message.setSource( source );
+
+		aktMessage = message;
+
+		return message;
 	}
 
 	public Object addMessage(String source, WorkerStatusController worker)
@@ -231,6 +258,25 @@ public class CachedMHFolder extends MHFolder {
 		}
 
 		return uids;
+	}
+
+	public void innerCopy(
+		Folder destFolder,
+		Object[] uids,
+		WorkerStatusController worker)
+		throws Exception {
+		for (int i = 0; i < uids.length; i++) {
+
+			Object uid = uids[i];
+
+			if (exists(uid, worker)) {
+				AbstractMessage message = getMessage(uid, worker);
+				
+				destFolder.addMessage(message, worker);
+			}
+
+			worker.setProgressBarValue(i);
+		}
 	}
 
 }

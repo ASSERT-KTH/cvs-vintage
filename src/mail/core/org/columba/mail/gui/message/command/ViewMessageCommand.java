@@ -44,14 +44,11 @@ public class ViewMessageCommand extends FolderCommand {
 
 	private void getData(
 		Folder srcFolder,
-		MessageNode messageNode,
+		Object uid,
 		WorkerStatusController wsc)
 		throws Exception {
 		
-		this.folder = srcFolder;
-		//this.messageNode = messageNode;
-		this.uid = messageNode.getUid();
-
+		this.uid = uid;
 		bodyPart = null;
 
 		AbstractMessage message = srcFolder.getMessage(uid, wsc);
@@ -123,7 +120,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void execute(Worker worker) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		getData((Folder) r[0].getFolder(), (MessageNode) r[0].getUids()[0], worker);
+		getData((Folder) r[0].getFolder(), r[0].getUids()[0], worker);
 	}
 
 }

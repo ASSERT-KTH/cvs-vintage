@@ -30,7 +30,7 @@ public class RemoteSearchEngine implements SearchEngineInterface {
 	public RemoteSearchEngine(Folder folder) {
 		this.folder = folder;
 
-		rootFolder = ((IMAPFolder) folder).getImapRootFolder();
+		rootFolder = (IMAPRootFolder) ((IMAPFolder) folder).getRootFolder();
 		//imap = rootFolder.getImapServerConnection();
 
 	}

@@ -139,7 +139,7 @@ public class PrintMessageCommand extends FolderCommand {
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
+		Object[] uids = r[0].getUids();
 
 		Folder srcFolder = (Folder) r[0].getFolder();
 

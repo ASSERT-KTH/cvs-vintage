@@ -403,11 +403,13 @@ public class TableController
 
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node =
-			(DefaultMutableTreeNode) view.getTree().getLastSelectedPathComponent();
+			(DefaultMutableTreeNode) view
+				.getTree()
+				.getLastSelectedPathComponent();
 
 		if (node == null)
 			return;
-			
+
 		MessageNode[] nodes = getView().getSelectedNodes();
 		if (nodes == null) {
 			return;
@@ -418,15 +420,10 @@ public class TableController
 		if (nodes.length == 0)
 			return;
 
-		/*
-		newUidList = new Object[nodes.length];
-		for (int i = 0; i < nodes.length; i++) {
-			newUidList[i] = nodes[i].getUid();
-			//System.out.println("node=" + newUidList[i]);
-		}
-		*/
+		newUidList = MessageNode.toUidArray(nodes);
 		
-		getTableSelectionManager().fireMessageSelectionEvent(null, nodes);
+
+		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
 
 	}
 
@@ -436,22 +433,34 @@ public class TableController
 
 	public void showMessage() {
 
-		FolderCommandReference[] reference = (FolderCommandReference[]) MainInterface.frameController.tableController.getTableSelectionManager().getSelection();
-		
+		FolderCommandReference[] reference =
+			(FolderCommandReference[]) MainInterface
+				.frameController
+				.tableController
+				.getTableSelectionManager()
+				.getSelection();
+
 		FolderTreeNode treeNode = reference[0].getFolder();
 		Object[] uids = reference[0].getUids();
-		
+
 		// this is no message-viewing action,
 		// but a selection of multiple messages
-		if ( uids.length > 1 ) return;
-		
-		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setFolder(treeNode);
-		MainInterface.frameController.attachmentController.getAttachmentSelectionManager().setUids(uids);
-		
+		if (uids.length > 1)
+			return;
+
+		MainInterface
+			.frameController
+			.attachmentController
+			.getAttachmentSelectionManager()
+			.setFolder(treeNode);
+		MainInterface
+			.frameController
+			.attachmentController
+			.getAttachmentSelectionManager()
+			.setUids(uids);
+
 		MainInterface.processor.addOp(
-			new ViewMessageCommand(
-				mailFrameController,
-				reference));
+			new ViewMessageCommand(mailFrameController, reference));
 	}
 
 	/**
