@@ -38,7 +38,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -81,20 +81,23 @@ public abstract class JDBCFinderCommand
    }
 
 
-   /** This method must be overridden to return the where clause used in 
-    *  this query. This must start with the keyword 'WHERE' and include all 
-    *  conditions needed to execute the query properly. 
+   /**
+    * This method must be overridden to return the where clause used in 
+    * this query. This must start with the keyword 'WHERE' and include all 
+    * conditions needed to execute the query properly. 
     */
    public abstract String getWhereClause();
 
-   /** This method must be ovverridden to return the full table list for 
-    *  the query, including any join statements. This must start with the 
-    *  keyword 'FROM' and include all tables needed to execute the query properly.
+   /**
+    * This method must be ovverridden to return the full table list for 
+    * the query, including any join statements. This must start with the 
+    * keyword 'FROM' and include all tables needed to execute the query properly.
     */   
    public abstract String getFromClause();
    
-   /** This method must be ovverridded to return the full order by clause for 
-    *  the query, including the 'ORDER BY' keyword.
+   /**
+    * This method must be ovverridded to return the full order by clause for 
+    * the query, including the 'ORDER BY' keyword.
     */
    public abstract String getOrderByClause();
    
@@ -113,8 +116,8 @@ public abstract class JDBCFinderCommand
          result = new FinderResults(keys, null, null, null);
       } catch (Exception e)
       {
-         if (log.isDebugEnabled()) log.debug("Exception", e);
-         throw new FinderException("Find failed");
+         log.error("Failed to create finder results", e);
+         throw new FinderException("Find failed: " + e);
       }
 
       return result;
