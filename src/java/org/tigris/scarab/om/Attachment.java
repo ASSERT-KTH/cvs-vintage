@@ -47,6 +47,11 @@ package org.tigris.scarab.om;
  */ 
 
 import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 import java.sql.Connection;
 import java.util.Date;
 
@@ -79,7 +84,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.44 2002/10/02 05:11:35 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.45 2002/10/15 20:48:30 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -468,5 +473,63 @@ public class Attachment
             }
         }
         return fileRepo;
+    }
+
+    public void copyFileTo(String path)
+        throws Exception
+    {
+        BufferedInputStream in = null;
+        BufferedOutputStream out = null;
+        try
+        {
+            in = new BufferedInputStream(new FileInputStream(getFullPath()));
+            out = new BufferedOutputStream(new FileOutputStream(path));
+            byte[] bytes = new byte[2048];
+            int s = 0;
+            while ( (s = in.read(bytes)) != -1 )
+            {
+                out.write(bytes,0,s);
+            }
+        }
+        finally
+        {
+            try
+            {
+                in.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+            try
+            {
+                out.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
+    }
+
+    /**
+     * Makes a copy of this object.
+     * It creates a new object filling in the simple attributes.
+     */
+    public Attachment copy() throws TorqueException
+    {
+        Attachment copyObj = AttachmentManager.getInstance();
+        copyObj.setIssueId(getIssueId());
+        copyObj.setTypeId(getTypeId());
+        copyObj.setName(getName());
+        copyObj.setData(getData());
+        copyObj.setFileName(getFileName());
+        copyObj.setMimeType(getMimeType());
+        copyObj.setModifiedBy(getModifiedBy());
+        copyObj.setCreatedBy(getCreatedBy());
+        copyObj.setModifiedDate(getModifiedDate());
+        copyObj.setCreatedDate(getCreatedDate());
+        copyObj.setDeleted(getDeleted());
+        return copyObj;
     }
 }
