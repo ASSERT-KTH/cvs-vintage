@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.32 2005/01/29 22:42:48 mvw Exp $
+// $Id: FigMessage.java,v 1.33 2005/01/29 22:45:12 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,10 @@ public class FigMessage extends FigNodeModelElement {
 
     private FigPoly figPoly;
 
-    public static final int SOUTH = 1;
-    public static final int EAST = 2;
-    public static final int WEST = 3;
-    public static final int NORTH = 4;
+    private static final int SOUTH = 1;
+    private static final int EAST = 2;
+    private static final int WEST = 3;
+    private static final int NORTH = 4;
     
     /**
      * The current arrow direction set to constants above.
@@ -207,30 +207,30 @@ public class FigMessage extends FigNodeModelElement {
 
 	arrowDirection = direction;
 	switch (direction) {
-            case SOUTH: {
-                int[] xpoints = {75, 75, 77, 75, 73, 75};
-                int[] ypoints = {15, 24, 24, 33, 24, 24};
-                Polygon polygon = new Polygon(xpoints, ypoints, 6);
-                figPoly.setPolygon(polygon);
-                break;
-            } case EAST: {
-                int[] xpoints = {66, 75, 75, 84, 75, 75};
-                int[] ypoints = {24, 24, 26, 24, 22, 24};
-                Polygon polygon = new Polygon(xpoints, ypoints, 6);
-                figPoly.setPolygon(polygon);
-                break;
-            } case WEST: {
-                int[] xpoints = {84, 75, 75, 66, 75, 75};
-                int[] ypoints = {24, 24, 26, 24, 22, 24};
-                Polygon polygon = new Polygon(xpoints, ypoints, 6);
-                figPoly.setPolygon(polygon);
-                break;
-            } default: { // north
-                int[] xpoints = {75, 75, 77, 75, 73, 75};
-                int[] ypoints = {33, 24, 24, 15, 24, 24};
-                Polygon polygon = new Polygon(xpoints, ypoints, 6);
-                figPoly.setPolygon(polygon);
-            }
+	case SOUTH: {
+	    int[] xpoints = {75, 75, 77, 75, 73, 75};
+	    int[] ypoints = {15, 24, 24, 33, 24, 24};
+	    Polygon polygon = new Polygon(xpoints, ypoints, 6);
+	    figPoly.setPolygon(polygon);
+	    break;
+	} case EAST: {
+	    int[] xpoints = {66, 75, 75, 84, 75, 75};
+	    int[] ypoints = {24, 24, 26, 24, 22, 24};
+	    Polygon polygon = new Polygon(xpoints, ypoints, 6);
+	    figPoly.setPolygon(polygon);
+	    break;
+	} case WEST: {
+	    int[] xpoints = {84, 75, 75, 66, 75, 75};
+	    int[] ypoints = {24, 24, 26, 24, 22, 24};
+	    Polygon polygon = new Polygon(xpoints, ypoints, 6);
+	    figPoly.setPolygon(polygon);
+	    break;
+	} default: { // north
+	    int[] xpoints = {75, 75, 77, 75, 73, 75};
+	    int[] ypoints = {33, 24, 24, 15, 24, 24};
+	    Polygon polygon = new Polygon(xpoints, ypoints, 6);
+	    figPoly.setPolygon(polygon);
+	}
 	}
 	setBounds(bbox);
     }
