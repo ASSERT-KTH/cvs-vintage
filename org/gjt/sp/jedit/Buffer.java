@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.99 2002/08/14 15:25:45 spestov Exp $
+ * @version $Id: Buffer.java,v 1.100 2002/08/14 20:11:08 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -510,10 +510,8 @@ public class Buffer implements EBComponent
 	 */
 	public int checkFileStatus()
 	{
-		VFSManager.waitForRequests();
-
 		// only supported on local file system
-		if(file != null)
+		if(!getFlag(IO) && !getFlag(LOADING) && file != null)
 		{
 			boolean newReadOnly = (file.exists() && !file.canWrite());
 			if(newReadOnly != getFlag(READ_ONLY))

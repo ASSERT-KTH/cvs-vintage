@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.36 2002/06/23 04:09:31 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.37 2002/08/14 20:11:08 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1012,6 +1012,38 @@ public class GUIUtilities
 			splash.dispose();
 			splash = null;
 		}
+	} //}}}
+
+	//{{{ createMultilineLabel() method
+	/**
+	 * Creates a component that displays a multiple line message. This
+	 * is implemented by assembling a number of <code>JLabels</code> in
+	 * a <code>JPanel</code>.
+	 * @param str The string, with lines delimited by newline
+	 * (<code>\n</code>) characters.
+	 * @since jEdit 4.1pre3
+	 */
+	public static JComponent createMultilineLabel(String str)
+	{
+		JPanel panel = new JPanel(new VariableGridLayout(
+			VariableGridLayout.FIXED_NUM_COLUMNS,1,1,1));
+		int lastOffset = 0;
+		for(;;)
+		{
+			int index = str.indexOf('\n',lastOffset);
+			if(index == -1)
+				break;
+			else
+			{
+				panel.add(new JLabel(str.substring(lastOffset,index)));
+				lastOffset = index + 1;
+			}
+		}
+
+		if(lastOffset != str.length())
+			panel.add(new JLabel(str.substring(lastOffset)));
+
+		return panel;
 	} //}}}
 
 	//{{{ requestFocus() method

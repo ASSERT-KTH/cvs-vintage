@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.37 2002/08/14 16:46:53 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.38 2002/08/14 20:11:09 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -683,6 +683,7 @@ public class DockableWindowManager extends JPanel
 		Component comp = view.getFocusOwner();
 		while(comp != null)
 		{
+			System.err.println(comp.getClass());
 			if(comp instanceof PanelWindowContainer
 				.DockablePanel)
 			{

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.55 2002/08/13 18:59:47 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.56 2002/08/14 20:11:09 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -762,7 +762,6 @@ public class VFSBrowser extends JPanel implements EBComponent
 	//{{{ directoryLoaded() method
 	void directoryLoaded(final DefaultMutableTreeNode node,
 		final boolean loadingRoot, final String path,
-		final VFS.DirectoryEntry[] parents,
 		final VFS.DirectoryEntry[] list)
 	{
 		SwingUtilities.invokeLater(new Runnable()
@@ -826,7 +825,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 				}
 
 				browserView.directoryLoaded(node,path,
-					parents,directoryVector);
+					directoryVector);
 
 				// to notify listeners that any existing
 				// selection has been deactivated
