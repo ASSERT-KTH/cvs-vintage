@@ -1,4 +1,4 @@
-// $Id: UMLBinaryRelationListModel.java,v 1.18 2004/09/15 19:17:04 mvw Exp $
+// $Id: UMLBinaryRelationListModel.java,v 1.19 2004/10/02 13:05:11 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,8 @@ import org.tigris.gef.presentation.Fig;
  * association pane on PropPanelUsecase
  *
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003), replaced by 
- *             {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#getAssociationEndScroll()},
+ * {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#
+ * getAssociationEndScroll()},
  *             this class is part of the 'old'(pre 0.13.*) implementation
  *             of proppanels that used reflection a lot.
  */
@@ -57,7 +58,9 @@ public abstract class UMLBinaryRelationListModel
     /**
      * Constructor for UMLBinaryConnectionListModel.
      * @param container the ui element that contains this list
-     * @param property 
+     * @param property a string that specifies the name of an event
+     * that should force a refresh of the list model.  A null value
+     * will cause all events to trigger a refresh.
      * @param showNone true if a "none" has to be shown when there 
      *                 is no name to show
      */
