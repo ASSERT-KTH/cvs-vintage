@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Scarab - Postgresql</title></properties><body><section name=""><p>
+In order to get Torque to generate the right Scarab .sql files for
+Postgresql and to allow Scarab to connect to Postgres, please try the
+following directions:
+</p><ol>
+<li>
+    Create a scarab/build/build.properties file. There are instructions
+    in the SCARAB/README.txt file which detail why you want to do this.
+</li>
+<li>
+    In the build.properties file, fill out the following properties with
+    the right information pertaining to Postgresql (see below for
+    examples). Then, remove the target directory and rebuild.
+</li>
+<li>
+    One should also follow the directions for setting up Postgresql to
+    accept <a href="http://www.ca.postgresql.org/users-lounge/docs/7.2/postgres/jdbc.html#JDBC-PREPARE">TCP/IP connections from localhost</a>.
+
+<p><code>
+scarab.database.name=scarab<br></br>
+scarab.database.port=5432<br></br>
+scarab.database.host=localhost<br></br>
+scarab.database.url=jdbc:postgresql://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}<br></br>
+scarab.database.admin.url=jdbc:postgresql://${scarab.database.host}:${scarab.database.port}/<br></br>
+scarab.database.type=postgresql<br></br>
+scarab.database.jdbc.driver=org.postgresql.Driver<br></br>
+scarab.database.username=[INSERT_USERNAME_HERE]<br></br>
+scarab.database.password=<br></br>
+</code></p>
+</li>
+
+<li>
+    Use the scarab/src/sql/create-db.sh script to create and populate the database. 
+    For example:
+    
+    <p><code>
+    cd scarab/src/sql
+    ./create-db.sh [arguments]
+    </code></p>
+    <p>
+    To get a list of arguments that the create-db.sh script accepts, one can just execute
+    <code>./create-db.sh --help</code>
+    </p>
+</li>
+</ol></section></body></document>

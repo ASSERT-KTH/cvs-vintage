@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>Scarab Misc Docs</title>
+    <author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+
+  <section name="Misc Docs">
+    <p>
+      Various documents that have not been properly edited or categorized.
+      <ul>
+        <li><a href="scarab-design.html">Scarab Design</a></li>
+        <li><a href="development.html">Development</a></li>
+        <li><a href="i18n.html">Internationalization</a></li>
+        <li><a href="BranchingOfIssues.html">Branching of Issues</a></li>
+        <li><a href="project_development_tools_and_technology.html">Tools and Technology</a></li>
+        <li><a href="workflow.html">Workflow in Scarab</a></li>
+        <li><a href="attributes.html">Attributes in Scarab</a></li>
+        <li><a href="duplicate.html">Duplicate Issue Checking</a></li>
+        <li><a href="httpclient-example.html">HTTP Client Example</a></li>
+        <li><a href="package_dependencies.html">Package Dependencies</a></li>
+        
+      </ul>
+    </p>
+  </section>
+
+  </body>
+</document>

@@ -1,0 +1,2511 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Database Schema Documentation for 
+      @DATABASE_PROP_NAME@</title></properties><body><section name="Database: 
+    @DATABASE_PROP_NAME@"><subsection name="Tables"><table border="1">
+<tr>
+<th>Table Name</th><th>Description</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ACTIVITY">SCARAB_ACTIVITY</a></td><td>History of changes made to the attributes of an issue. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTACHMENT">SCARAB_ATTACHMENT</a></td><td>Attachment is a piece of information associated with an issue. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTACHMENT_TYPE">SCARAB_ATTACHMENT_TYPE</a></td><td>Possible types of attachements.             Example: Comment             Example: File </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>Possible attributes of an issue.                      Example: Operating System                      Example: Severity </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_CLASS">SCARAB_ATTRIBUTE_CLASS</a></td><td>Attribute class is group of attributes types that have the same properties.                       Example: Free form input.                       Example: Select one from the list. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_GROUP">SCARAB_ATTRIBUTE_GROUP</a></td><td>Groupings in which attributes appear on the page. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>Attribute option is possible value of an attribute of an issue.                      Example: DOS 3.1 (for attribute Operating System) </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_TYPE">SCARAB_ATTRIBUTE_TYPE</a></td><td>Attribute type is group of attributes that have the same representation                     in the application data structure.                     Attribute type fully defines attribute behavior.                     Example: Integer                     Example: String </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_DEPEND">SCARAB_DEPEND</a></td><td>Dependency between issues.                       Example: Issue is a duplicate of another issue.                       Example: Issue is blocking another issue. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_DEPEND_TYPE">SCARAB_DEPEND_TYPE</a></td><td>Possible types of dependency between issues.                      Example: Duplicate                      Example: Block </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_FREQUENCY">SCARAB_FREQUENCY</a></td><td>Frequencies of an event.                      Examples: every half hour, weekly. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>Information about artifact under processing in tracking system.                      Example: Particular defect                      Example: Particular inquiry </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_ATTRIBUTE_VALUE">SCARAB_ISSUE_ATTRIBUTE_VALUE</a></td><td>Actual attribute of the issue with its value. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TEMPLATE_INFO">SCARAB_ISSUE_TEMPLATE_INFO</a></td><td>A saved user template for entering issues. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td> </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_VOTE">SCARAB_ISSUE_VOTE</a></td><td>The number of votes a user has cast for an issue. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODIFICATION">SCARAB_MODIFICATION</a></td><td>Modification information for table. Not currently used. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>Logical category of issues.                      Usually corresponds to the software project.                      Example: Scarab </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_OPTION_RELATIONSHIP">SCARAB_OPTION_RELATIONSHIP</a></td><td>Possible types of dependency between options.                     Example: Parent-Child                     Example: Requires </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_QUERY">SCARAB_QUERY</a></td><td>A saved user query. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_ATTRIBUTE_ATTRGROUP">SCARAB_R_ATTRIBUTE_ATTRGROUP</a></td><td>Mapping from attributes to groups. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_MODULE_ATTRIBUTE">SCARAB_R_MODULE_ATTRIBUTE</a></td><td>Attributes that are applicable to issues of the particular module. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_MODULE_ISSUE_TYPE">SCARAB_R_MODULE_ISSUE_TYPE</a></td><td>Mapping between modules and issue types. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_MODULE_OPTION">SCARAB_R_MODULE_OPTION</a></td><td>Options that are applicable to issues of the particular module. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_MODULE_USER_ATTRIBUTE">SCARAB_R_MODULE_USER_ATTRIBUTE</a></td><td>User's choice of attributes to appear on the Issue List screen. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_OPTION_OPTION">SCARAB_R_OPTION_OPTION</a></td><td>Sets up relations between options. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_R_QUERY_USER">SCARAB_R_QUERY_USER</a></td><td>Users subscribed to a query. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_REPORT">SCARAB_REPORT</a></td><td>A saved report. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_SCOPE">SCARAB_SCOPE</a></td><td>Scope: personal, global. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_TRANSACTION">SCARAB_TRANSACTION</a></td><td>Transaction is a group of attribute modification that are performed together. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_TRANSACTION_TYPE">SCARAB_TRANSACTION_TYPE</a></td><td>Possible types of transactions.                      Example: Issue Created                      Example: Issue Moved </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_USER_PREFERENCE">SCARAB_USER_PREFERENCE</a></td><td>This table is used to store user preferences and other information                      relating to a specific user. </td>
+</tr>
+<tr>
+<td><a href="#SCARAB_USER_VOTE">SCARAB_USER_VOTE</a></td><td>A user's record of votes.  It is assumed that a module that supports                      voting will give a new user some votes to use when the user is added,                       otherwise the user has no votes. </td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>             Dummy table for where the USER_ID lives. In most cases, this will be a             foreign table outside of the scope of Scarab itself. For example, if you are             using Scarab with Turbine, then this will be defined as TURBINE_USER. For             use in other systems, you will want to define this to be the name of your              own USER table and update the FK references in this file to point at the new              name. Then, all you need to do is regenerate the OR code to use the new              table name. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ACTIVITY">
+<h2>SCARAB_ACTIVITY</h2>
+</a></p><subsection name="
+    Description:
+  "><p>History of changes made to the attributes of an issue.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ACTIVITY_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>PK. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute that has been modified. </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>System-generated description of modification. </td>
+</tr>
+<tr>
+<td>END_DATE</td><td>DATE
+  null
+</td><td>Date this Activity is no longer the current value of the Attribute. </td>
+</tr>
+<tr>
+<td>ISSUE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue attribute of which has been modified. </td>
+</tr>
+<tr>
+<td>NEW_NUMERIC_VALUE</td><td>INTEGER
+  null
+</td><td>Value of integer attribute after modification. </td>
+</tr>
+<tr>
+<td>NEW_OPTION_ID</td><td>INTEGER
+  null
+</td><td>Value of option attribute after modification. </td>
+</tr>
+<tr>
+<td>NEW_USER_ID</td><td>INTEGER
+  null
+</td><td>Value of user attribute after modification. </td>
+</tr>
+<tr>
+<td>NEW_VALUE</td><td>LONGVARCHAR
+  null
+</td><td>Value of attribute after modification. </td>
+</tr>
+<tr>
+<td>OLD_NUMERIC_VALUE</td><td>INTEGER
+  null
+</td><td>Value of integer attribute before modification. </td>
+</tr>
+<tr>
+<td>OLD_OPTION_ID</td><td>INTEGER
+  null
+</td><td>Value of option attribute before modification. </td>
+</tr>
+<tr>
+<td>OLD_USER_ID</td><td>INTEGER
+  null
+</td><td>Value of user attribute before modification. </td>
+</tr>
+<tr>
+<td>OLD_VALUE</td><td>LONGVARCHAR
+  null
+</td><td>Value of attribute before modification. </td>
+</tr>
+<tr>
+<td>TRANSACTION_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Transaction to which the attribute modification belongs. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>ATTRIBUTE_ID<br></br>
+</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>OLD_OPTION_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>NEW_OPTION_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>ISSUE_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_TRANSACTION">SCARAB_TRANSACTION</a></td><td>TRANSACTION_ID<br></br>
+</td><td>TRANSACTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>OLD_USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>NEW_USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection><subsection name="
+      Indexes:
+    "><table border="1">
+<tr>
+<th>Index Name</th><th>Fields</th>
+</tr>
+<tr>
+<td>IX_ATTRIBUTE_ISSUE_ENDDATE</td><td>ATTRIBUTE_ID<br></br>END_DATE<br></br>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td>IX_ISSUE_TRANSACTION</td><td>ISSUE_ID<br></br>TRANSACTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td>IX_TRANSACTION</td><td>TRANSACTION_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTACHMENT">
+<h2>SCARAB_ATTACHMENT</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Attachment is a piece of information associated with an issue.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTACHMENT_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_DATA</td><td>VARBINARY
+  null
+</td><td>Actual information constituting the attachment. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_FILE_PATH</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Server side location of the file that contains attachment.                      Location is relative to the central file storage location                      specified in the application properties. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_MIME_TYPE</td><td>VARCHAR
+    (25)
+  
+    not
+  
+  null
+</td><td>MIME type of the attachment.                      Describes type of information constituting an attachment. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name that is displayed in the UI. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type. </td>
+</tr>
+<tr>
+<td>CREATED_BY</td><td>INTEGER
+  null
+</td><td>Person that associated the attachment with an issue initially. </td>
+</tr>
+<tr>
+<td>CREATED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the initial association of attachment with an issue. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that attachment has been deleted. </td>
+</tr>
+<tr>
+<td>ISSUE_ID</td><td>INTEGER
+  null
+</td><td>Issue that attachment is associated with. </td>
+</tr>
+<tr>
+<td>MODIFIED_BY</td><td>INTEGER
+  null
+</td><td>Person that made last modification to the attachment. </td>
+</tr>
+<tr>
+<td>MODIFIED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the last modification of the attachment. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTACHMENT_TYPE">SCARAB_ATTACHMENT_TYPE</a></td><td>ATTACHMENT_TYPE_ID<br></br>
+</td><td>ATTACHMENT_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>ISSUE_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>CREATED_BY<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>MODIFIED_BY<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTACHMENT_TYPE">
+<h2>SCARAB_ATTACHMENT_TYPE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Possible types of attachements.             Example: Comment             Example: File</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTACHMENT_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_TYPE_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+<tr>
+<td>SEARCHABLE</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag marking text/searchable attachments. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTRIBUTE">
+<h2>SCARAB_ATTRIBUTE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Possible attributes of an issue.                      Example: Operating System                      Example: Severity</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ACTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>For user attributes, whether the user will be emailed, cc'd, or neither. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type. </td>
+</tr>
+<tr>
+<td>CREATED_BY</td><td>INTEGER
+  null
+</td><td>Person that set value to the column of the table initially. </td>
+</tr>
+<tr>
+<td>CREATED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the initial set of the column of the table. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that attribute has been deleted. </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Description. </td>
+</tr>
+<tr>
+<td>PERMISSION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>A permission related to this attribute. </td>
+</tr>
+<tr>
+<td>REQUIRED_OPTION_ID</td><td>INTEGER
+  null
+</td><td>A required option for this attribute to be active. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>REQUIRED_OPTION_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_TYPE">SCARAB_ATTRIBUTE_TYPE</a></td><td>ATTRIBUTE_TYPE_ID<br></br>
+</td><td>ATTRIBUTE_TYPE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTRIBUTE_CLASS">
+<h2>SCARAB_ATTRIBUTE_CLASS</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Attribute class is group of attributes types that have the same properties.                       Example: Free form input.                       Example: Select one from the list.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_CLASS_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_CLASS_DESC</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Description. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_CLASS_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+<tr>
+<td>JAVA_CLASS_NAME</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Fully qualified name of the java class that represents attribute,                      belonging to the attribute class, in the application. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTRIBUTE_GROUP">
+<h2>SCARAB_ATTRIBUTE_GROUP</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Groupings in which attributes appear on the page.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_GROUP_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td> Unique identifier. </td>
+</tr>
+<tr>
+<td>ACTIVE</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DEDUPE</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue type. </td>
+</tr>
+<tr>
+<td>MODULE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+  null
+</td><td> </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>ISSUE_TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+</table></subsection><subsection name="
+      Indexes:
+    "><table border="1">
+<tr>
+<th>Index Name</th><th>Fields</th>
+</tr>
+<tr>
+<td>IX_ISSUE_MODULE_PREFERRED_ORDER</td><td>ISSUE_TYPE_ID<br></br>MODULE_ID<br></br>PREFERRED_ORDER<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTRIBUTE_OPTION">
+<h2>SCARAB_ATTRIBUTE_OPTION</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Attribute option is possible value of an attribute of an issue.                      Example: DOS 3.1 (for attribute Operating System)</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>OPTION_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute that can take the options as its value. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that option has been deleted. </td>
+</tr>
+<tr>
+<td>OPTION_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>ATTRIBUTE_ID<br></br>
+</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+</table></subsection><subsection name="
+      Indexes:
+    "><table border="1">
+<tr>
+<th>Index Name</th><th>Fields</th>
+</tr>
+<tr>
+<td>IX_ATTRIBUTE</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ATTRIBUTE_TYPE">
+<h2>SCARAB_ATTRIBUTE_TYPE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Attribute type is group of attributes that have the same representation                     in the application data structure.                     Attribute type fully defines attribute behavior.                     Example: Integer                     Example: String</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_CLASS_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td> Attribute class. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_TYPE_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+<tr>
+<td>JAVA_CLASS_NAME</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Fully qualified name of the java class that represents attribute,                      belonging to the attribute type, in the application. </td>
+</tr>
+<tr>
+<td>VALIDATION_KEY</td><td>VARCHAR
+    (20)
+  
+  null
+</td><td>A key which ties into a validation service (intake). </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_CLASS">SCARAB_ATTRIBUTE_CLASS</a></td><td>ATTRIBUTE_CLASS_ID<br></br>
+</td><td>ATTRIBUTE_CLASS_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_DEPEND">
+<h2>SCARAB_DEPEND</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Dependency between issues.                       Example: Issue is a duplicate of another issue.                       Example: Issue is blocking another issue.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>OBSERVED_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue that other issue depends upon.                      Example: Issue that blocks.                      Example: Issue that has duplicates. </td>
+</tr>
+<tr>
+<td>OBSERVER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue that depends on other issue.                      Example: Issue that is being blocked.                      Example: Issue that is duplicate. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that dependency has been deleted. </td>
+</tr>
+<tr>
+<td>DEPEND_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_DEPEND_TYPE">SCARAB_DEPEND_TYPE</a></td><td>DEPEND_TYPE_ID<br></br>
+</td><td>DEPEND_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>OBSERVED_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>OBSERVER_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_DEPEND_TYPE">
+<h2>SCARAB_DEPEND_TYPE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Possible types of dependency between issues.                      Example: Duplicate                      Example: Block</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>DEPEND_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>DEPEND_TYPE_NAME</td><td>VARCHAR
+    (100)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_FREQUENCY">
+<h2>SCARAB_FREQUENCY</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Frequencies of an event.                      Examples: every half hour, weekly.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>FREQUENCY_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>FREQUENCY_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ISSUE">
+<h2>SCARAB_ISSUE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Information about artifact under processing in tracking system.                      Example: Particular defect                      Example: Particular inquiry</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ISSUE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier used for primary key. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that issue has been deleted. </td>
+</tr>
+<tr>
+<td>ID_COUNT</td><td>INTEGER
+    (10)
+  
+    not
+  
+  null
+</td><td>Part of Id which is an integer. </td>
+</tr>
+<tr>
+<td>ID_DOMAIN</td><td>VARCHAR
+    (127)
+  
+  null
+</td><td>The instance of scarab the issue was originally reported to.                      This field could be null for the normal instance where the issue                      is local to this database. </td>
+</tr>
+<tr>
+<td>ID_PREFIX</td><td>CHAR
+    (4)
+  
+    not
+  
+  null
+</td><td>Part of Id related to module. </td>
+</tr>
+<tr>
+<td>MODULE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Module that issue relates to. </td>
+</tr>
+<tr>
+<td>TYPE_ID</td><td>INTEGER
+  null
+</td><td>Type : Issue, or Enter Issue Template. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+</table></subsection><subsection name="
+      Indexes:
+    "><table border="1">
+<tr>
+<th>Index Name</th><th>Fields</th>
+</tr>
+<tr>
+<td>IX_COUNT_PREFIX</td><td>ID_COUNT<br></br>ID_PREFIX<br></br>
+</td>
+</tr>
+<tr>
+<td>IX_TYPE_MODULE</td><td>MODULE_ID<br></br>TYPE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ISSUE_ATTRIBUTE_VALUE">
+<h2>SCARAB_ISSUE_ATTRIBUTE_VALUE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Actual attribute of the issue with its value.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>VALUE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>PK. </td>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that attribute has been deleted. </td>
+</tr>
+<tr>
+<td>ISSUE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue that attribute belongs to. </td>
+</tr>
+<tr>
+<td>NUMERIC_VALUE</td><td>INTEGER
+    (11)
+  
+  null
+</td><td>some attributes are better saved in numeric format, so this column                      can be used in place of VALUE. </td>
+</tr>
+<tr>
+<td>OPTION_ID</td><td>INTEGER
+  null
+</td><td>Option that is the value of the attribute if attribute is option based. </td>
+</tr>
+<tr>
+<td>USER_ID</td><td>INTEGER
+  null
+</td><td>Person that is the value of the attribute if attribute is person based. </td>
+</tr>
+<tr>
+<td>VALUE</td><td>LONGVARCHAR
+  null
+</td><td>         Display value of the attribute.         This column should always contain a value which serves as a 'summary value'         of the attribute, you MAY need to look elsewhere to get real value.         Purpose of this 'duplication' is to be able to get overview of the attribute         independently of what kind of attribute this is. This also improves performance         so you do not need to perform (sometimes complex) processing each time you view the issue.         It lets you get list of issues with their attributes with a single SQL statement.         Examples of what would go into this fields for different kinds of attributes:          - For 'free-form' attributes this would be the actual value (it's String             representation to be exact)          - For 'select-one' this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUE.             There will also be an apropriate value in OPTION_ID column which you should use to             join with SCARAB_ATTRIBUTE_OPTION          - For 'voted' attributes this would be the vote result. For bugzilla-style votes it is sum             of all votes casted. For average vote this result is DISPLAY_VALUE of OPTION which has              computed as: round(sum(votes.numeric_value)/count(votes)). For 'Tracking'             attribute which is also considered a voted attribute this value is a list of login_IDs             of users tracking the issue.           It is responsibility of Attribute's subclass which implements this ATTRIBUTE_TYPE to          populate this field with an apropriate value. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>ATTRIBUTE_ID<br></br>
+</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>OPTION_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>ISSUE_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection><subsection name="
+      Indexes:
+    "><table border="1">
+<tr>
+<th>Index Name</th><th>Fields</th>
+</tr>
+<tr>
+<td>IX_DELETED_ISSUE_ATTRIBUTE</td><td>ATTRIBUTE_ID<br></br>DELETED<br></br>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td>IX_DELETED_OPTION</td><td>DELETED<br></br>OPTION_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ISSUE_TEMPLATE_INFO">
+<h2>SCARAB_ISSUE_TEMPLATE_INFO</h2>
+</a></p><subsection name="
+    Description:
+  "><p>A saved user template for entering issues.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ISSUE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>APPROVED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>ATTACHMENT_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>The description of the saved template. </td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+<tr>
+<td>SCOPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Scope : personal or global. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>ISSUE_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_SCOPE">SCARAB_SCOPE</a></td><td>SCOPE_ID<br></br>
+</td><td>SCOPE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ISSUE_TYPE">
+<h2>SCARAB_ISSUE_TYPE</h2>
+</a></p><subsection name="
+    Description:
+  "></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier used for primary key. </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Description. </td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (100)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+<tr>
+<td>PARENT_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>If this issue type is a template, the id of the issue type it                      Corresponds to. If is not, parent id is 0. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>PARENT_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_ISSUE_VOTE">
+<h2>SCARAB_ISSUE_VOTE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>The number of votes a user has cast for an issue.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ISSUE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>USER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+<tr>
+<td>VOTES</td><td>INTEGER
+    (3)
+  
+  null
+</td><td>The votes a user has cast for the issue. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE">SCARAB_ISSUE</a></td><td>ISSUE_ID<br></br>
+</td><td>ISSUE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_MODIFICATION">
+<h2>SCARAB_MODIFICATION</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Modification information for table. Not currently used.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>COLUMN_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Column of the table. </td>
+</tr>
+<tr>
+<td>TABLE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Table. </td>
+</tr>
+<tr>
+<td>CREATED_BY</td><td>INTEGER
+  null
+</td><td>Person that set value to the column of the table initially. </td>
+</tr>
+<tr>
+<td>CREATED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the initial set of the column of the table. </td>
+</tr>
+<tr>
+<td>MODIFIED_BY</td><td>INTEGER
+  null
+</td><td>Person that made last modification to the column of the table. </td>
+</tr>
+<tr>
+<td>MODIFIED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the last modification of the column of the table. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_MODULE">
+<h2>SCARAB_MODULE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Logical category of issues.                      Usually corresponds to the software project.                      Example: Scarab</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>CLASS_KEY</td><td>INTEGER
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Flag, which marks that module has been deleted. </td>
+</tr>
+<tr>
+<td>DOMAIN</td><td>VARCHAR
+    (127)
+  
+  null
+</td><td>The instance name of scarab the module is located within. </td>
+</tr>
+<tr>
+<td>MODULE_CODE</td><td>CHAR
+    (4)
+  
+    not
+  
+  null
+</td><td>Abbreviation whose primary use to identify related issues. </td>
+</tr>
+<tr>
+<td>MODULE_DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Description. </td>
+</tr>
+<tr>
+<td>MODULE_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. It is RealName because Module implements the Turbine Group interface                      and having it as Name would clash with that interface. Please note that                      the result of group.getName() needs to be unique for each SCARAB_MODULE. </td>
+</tr>
+<tr>
+<td>MODULE_URL</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>URL pointing to the information on the module. </td>
+</tr>
+<tr>
+<td>OWNER_ID</td><td>INTEGER
+  null
+</td><td>Person that is responsible for the module. @deprecated. </td>
+</tr>
+<tr>
+<td>PARENT_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Parent module containing the module.                     Allows for hierarchical structure of modules. </td>
+</tr>
+<tr>
+<td>QA_CONTACT_ID</td><td>INTEGER
+  null
+</td><td>Key quality assurance person for the module. @deprecated. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>PARENT_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>OWNER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>QA_CONTACT_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_OPTION_RELATIONSHIP">
+<h2>SCARAB_OPTION_RELATIONSHIP</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Possible types of dependency between options.                     Example: Parent-Child                     Example: Requires</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>RELATIONSHIP_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>RELATIONSHIP_NAME</td><td>VARCHAR
+    (100)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_QUERY">
+<h2>SCARAB_QUERY</h2>
+</a></p><subsection name="
+    Description:
+  "><p>A saved user query.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>QUERY_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>APPROVED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>CREATED_DATE</td><td>TIMESTAMP
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>The description of the saved query. </td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue type. </td>
+</tr>
+<tr>
+<td>MODULE_ID</td><td>INTEGER
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>The name the query will be saved under. </td>
+</tr>
+<tr>
+<td>SCOPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Type. </td>
+</tr>
+<tr>
+<td>SUBSCRIPTION_FREQUENCY_ID</td><td>INTEGER
+  null
+</td><td>Default subscription frequency. </td>
+</tr>
+<tr>
+<td>USER_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+<tr>
+<td>VALUE</td><td>LONGVARCHAR
+    not
+  
+  null
+</td><td>The query string. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_FREQUENCY">SCARAB_FREQUENCY</a></td><td>SUBSCRIPTION_FREQUENCY_ID<br></br>
+</td><td>FREQUENCY_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>ISSUE_TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_SCOPE">SCARAB_SCOPE</a></td><td>SCOPE_ID<br></br>
+</td><td>SCOPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_ATTRIBUTE_ATTRGROUP">
+<h2>SCARAB_R_ATTRIBUTE_ATTRGROUP</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Mapping from attributes to groups.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute. </td>
+</tr>
+<tr>
+<td>GROUP_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Group. </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+  null
+</td><td> </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>ATTRIBUTE_ID<br></br>
+</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_GROUP">SCARAB_ATTRIBUTE_GROUP</a></td><td>GROUP_ID<br></br>
+</td><td>ATTRIBUTE_GROUP_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_MODULE_ATTRIBUTE">
+<h2>SCARAB_R_MODULE_ATTRIBUTE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Attributes that are applicable to issues of the particular module.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute. </td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue type. </td>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>ACTIVE</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Flag, which marks that module attribute is not used. </td>
+</tr>
+<tr>
+<td>DEFAULT_TEXT_FLAG</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Flag, which marks that this attribute should be used in the email                      subject line, when an issue is created. May be used in other                      contexts as well. </td>
+</tr>
+<tr>
+<td>DISPLAY_VALUE</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Value that represents the attribute in the UI. </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+    not
+  
+  null
+</td><td>Column order. </td>
+</tr>
+<tr>
+<td>QUICK_SEARCH</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Flag, which marks this attribute as being eligible for quick search. </td>
+</tr>
+<tr>
+<td>REQUIRED</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Flag, which marks that issues entered for this module must have                      this attribute set. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>ATTRIBUTE_ID<br></br>
+</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>ISSUE_TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+</table></subsection><subsection name="
+      Indexes:
+    "><table border="1">
+<tr>
+<th>Index Name</th><th>Fields</th>
+</tr>
+<tr>
+<td>IX_QUICKSEARCH</td><td>QUICK_SEARCH<br></br>
+</td>
+</tr>
+<tr>
+<td>IX_REQUIRED</td><td>REQUIRED<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_MODULE_ISSUE_TYPE">
+<h2>SCARAB_R_MODULE_ISSUE_TYPE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Mapping between modules and issue types.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Artifact type. </td>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>ACTIVE</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Flag, which marks that the issue type is not used. </td>
+</tr>
+<tr>
+<td>COMMENTS</td><td>INTEGER
+  null
+</td><td>Default number of comments. </td>
+</tr>
+<tr>
+<td>DEDUPE</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Deduping on/off for this module/issuetype. </td>
+</tr>
+<tr>
+<td>DISPLAY</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Whether or not the issue type shows up in left hand nav. </td>
+</tr>
+<tr>
+<td>DISPLAY_DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Value that represents the description of the issue type in the UI. </td>
+</tr>
+<tr>
+<td>DISPLAY_NAME</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Value that represents the name of the issue type in the UI. </td>
+</tr>
+<tr>
+<td>HISTORY</td><td>INTEGER
+  null
+</td><td>Default number of history entries. </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+  null
+</td><td>Order the the issue types appear in the left nav. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>ISSUE_TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_MODULE_OPTION">
+<h2>SCARAB_R_MODULE_OPTION</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Options that are applicable to issues of the particular module.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue Type. </td>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>OPTION_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Option. </td>
+</tr>
+<tr>
+<td>ACTIVE</td><td>BOOLEANINT
+    (1)
+  
+    not
+  
+  null
+</td><td>Flag, which marks that option has been deleted within the module. </td>
+</tr>
+<tr>
+<td>DISPLAY_VALUE</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>Value that represents the option in the UI. </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+  null
+</td><td>Allows the template engineer and module owner some means to order option listings. </td>
+</tr>
+<tr>
+<td>WEIGHT</td><td>INTEGER
+  null
+</td><td> </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>OPTION_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_MODULE_USER_ATTRIBUTE">
+<h2>SCARAB_R_MODULE_USER_ATTRIBUTE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>User's choice of attributes to appear on the Issue List screen.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>ATTRIBUTE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Attribute. </td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Artifact type. </td>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>USER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+    not
+  
+  null
+</td><td>Column order. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE">SCARAB_ATTRIBUTE</a></td><td>ATTRIBUTE_ID<br></br>
+</td><td>ATTRIBUTE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>ISSUE_TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_OPTION_OPTION">
+<h2>SCARAB_R_OPTION_OPTION</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Sets up relations between options.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>OPTION1_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Parent Option. </td>
+</tr>
+<tr>
+<td>OPTION2_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Child Option. </td>
+</tr>
+<tr>
+<td>PREFERRED_ORDER</td><td>INTEGER
+    not
+  
+  null
+</td><td>The preferred order that these options should be shown in.                      Each option should have a 1-N ordering for all of its                      options (regardless of nesting). </td>
+</tr>
+<tr>
+<td>RELATIONSHIP_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>The type of relationship. See the SCARAB_OPTION_RELATIONSHIP                      table for the different types. </td>
+</tr>
+<tr>
+<td>WEIGHT</td><td>INTEGER
+  null
+</td><td>             This gives 'weight' to an option. In other words, it can be used             to set the 'importance' of one option vs. another option. P1 can              be made more 'important' than P2. This is currently not used             in any of the code. This may become more useful in              the future when we have outside workflow logic. This is placed              here because an Attribute Option may have different weights              with different parents. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>OPTION1_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTRIBUTE_OPTION">SCARAB_ATTRIBUTE_OPTION</a></td><td>OPTION2_ID<br></br>
+</td><td>OPTION_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_OPTION_RELATIONSHIP">SCARAB_OPTION_RELATIONSHIP</a></td><td>RELATIONSHIP_ID<br></br>
+</td><td>RELATIONSHIP_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_R_QUERY_USER">
+<h2>SCARAB_R_QUERY_USER</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Users subscribed to a query.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>QUERY_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Query. </td>
+</tr>
+<tr>
+<td>USER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+<tr>
+<td>IS_SUBSCRIBED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Is user subscribed. </td>
+</tr>
+<tr>
+<td>ISDEFAULT</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td>Whether this is the user's default query. </td>
+</tr>
+<tr>
+<td>SUBSCRIPTION_FREQUENCY_ID</td><td>INTEGER
+  null
+</td><td>User's subscription frequency. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_FREQUENCY">SCARAB_FREQUENCY</a></td><td>SUBSCRIPTION_FREQUENCY_ID<br></br>
+</td><td>FREQUENCY_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_QUERY">SCARAB_QUERY</a></td><td>QUERY_ID<br></br>
+</td><td>QUERY_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_REPORT">
+<h2>SCARAB_REPORT</h2>
+</a></p><subsection name="
+    Description:
+  "><p>A saved report.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>REPORT_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>CREATED_DATE</td><td>TIMESTAMP
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DELETED</td><td>BOOLEANINT
+    (1)
+  
+  null
+</td><td> </td>
+</tr>
+<tr>
+<td>DESCRIPTION</td><td>VARCHAR
+    (255)
+  
+  null
+</td><td>The description of the saved report. </td>
+</tr>
+<tr>
+<td>ISSUE_TYPE_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Issue type. </td>
+</tr>
+<tr>
+<td>MODULE_ID</td><td>INTEGER
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>The name the report will be saved under. </td>
+</tr>
+<tr>
+<td>QUERY_STRING</td><td>LONGVARCHAR
+    not
+  
+  null
+</td><td>The report string. </td>
+</tr>
+<tr>
+<td>USER_ID</td><td>INTEGER
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ISSUE_TYPE">SCARAB_ISSUE_TYPE</a></td><td>ISSUE_TYPE_ID<br></br>
+</td><td>ISSUE_TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_SCOPE">
+<h2>SCARAB_SCOPE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Scope: personal, global.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>SCOPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>SCOPE_NAME</td><td>VARCHAR
+    (255)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_TRANSACTION">
+<h2>SCARAB_TRANSACTION</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Transaction is a group of attribute modification that are performed together.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>TRANSACTION_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>ATTACHMENT_ID</td><td>INTEGER
+  null
+</td><td>Comment added to modification. </td>
+</tr>
+<tr>
+<td>CREATED_BY</td><td>INTEGER
+  null
+</td><td>Person that performed the transaction. </td>
+</tr>
+<tr>
+<td>CREATED_DATE</td><td>TIMESTAMP
+  null
+</td><td>Date of the transaction. </td>
+</tr>
+<tr>
+<td>TYPE_ID</td><td>INTEGER
+  null
+</td><td>Possible enumerated transaction type. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_ATTACHMENT">SCARAB_ATTACHMENT</a></td><td>ATTACHMENT_ID<br></br>
+</td><td>ATTACHMENT_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#SCARAB_TRANSACTION_TYPE">SCARAB_TRANSACTION_TYPE</a></td><td>TYPE_ID<br></br>
+</td><td>TYPE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>CREATED_BY<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_TRANSACTION_TYPE">
+<h2>SCARAB_TRANSACTION_TYPE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>Possible types of transactions.                      Example: Issue Created                      Example: Issue Moved</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>TYPE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>NAME</td><td>VARCHAR
+    (100)
+  
+    not
+  
+  null
+</td><td>Name. </td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_USER_PREFERENCE">
+<h2>SCARAB_USER_PREFERENCE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>This table is used to store user preferences and other information                      relating to a specific user.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>USER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+<tr>
+<td>PASSWORD_EXPIRE</td><td>TIMESTAMP
+    not
+  
+  null
+</td><td>This is a column that Scarab standalone needs. Torque doesn't do anything                      with it at this point because this is an aliased table. Leaving it in                      here just as an FYI and in the hope that one day, Torque will generate                      the right methods even for aliased tables. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="SCARAB_USER_VOTE">
+<h2>SCARAB_USER_VOTE</h2>
+</a></p><subsection name="
+    Description:
+  "><p>A user's record of votes.  It is assumed that a module that supports                      voting will give a new user some votes to use when the user is added,                       otherwise the user has no votes.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>MODULE_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Module. </td>
+</tr>
+<tr>
+<td>USER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Person. </td>
+</tr>
+<tr>
+<td>TOTAL_VOTES</td><td>INTEGER
+    (3)
+  
+  null
+</td><td>The total votes a user is allowed to cast in a project. </td>
+</tr>
+<tr>
+<td>USED_VOTES</td><td>INTEGER
+    (3)
+  
+  null
+</td><td>The number of votes a user has cast in a project. </td>
+</tr>
+</table></subsection><subsection name="
+      Foreign Keys:
+    "><table border="1">
+<tr>
+<th>Foreign Table</th><th>Local Field</th><th>Foreign Field</th>
+</tr>
+<tr>
+<td><a href="#SCARAB_MODULE">SCARAB_MODULE</a></td><td>MODULE_ID<br></br>
+</td><td>MODULE_ID<br></br>
+</td>
+</tr>
+<tr>
+<td><a href="#TURBINE_USER">TURBINE_USER</a></td><td>USER_ID<br></br>
+</td><td>USER_ID<br></br>
+</td>
+</tr>
+</table></subsection></section><section name=""><p><a name="TURBINE_USER">
+<h2>TURBINE_USER</h2>
+</a></p><subsection name="
+    Description:
+  "><p>             Dummy table for where the USER_ID lives. In most cases, this will be a             foreign table outside of the scope of Scarab itself. For example, if you are             using Scarab with Turbine, then this will be defined as TURBINE_USER. For             use in other systems, you will want to define this to be the name of your              own USER table and update the FK references in this file to point at the new              name. Then, all you need to do is regenerate the OR code to use the new              table name.</p></subsection><subsection name="
+    Columns:
+  "><table border="1">
+<tr>
+<th>Column Name</th><th>Type</th><th>Description</th>
+</tr>
+<tr>
+<td>USER_ID
+          
+           *
+        </td><td>INTEGER
+    not
+  
+  null
+</td><td>Unique identifier. </td>
+</tr>
+</table></subsection></section></body></document>

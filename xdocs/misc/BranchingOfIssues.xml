@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<properties>
+<title>Branching of Issues</title>
+<author email="jan.stola@czech.sun.com">Jan Stola</author>
+<author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+</properties>
+<body>
+<section name="Branching of Issues">
+<p><b>Motto</b>:<i>Provide ability to reflect branches in a CVS repository.</i></p>
+
+<subsection name="Content"><ul>
+<li>
+<b><a href="#Case Study">Case Study</a></b></li>
+
+<li>
+<b><a href="#Requirements">Requirements</a></b></li>
+
+<li>
+<b><a href="#Users View">User's View</a></b></li>
+</ul></subsection>
+<subsection name="Case Study"><p>
+Let's suppose you have two branches in a CVS repository (</p><i>main-trunk</i><p>
+and </p><i>stabilization</i><p>). Normal development takes place in </p><i>main-trunk</i><p>
+and </p><i>stabilization</i><p> branch is for stabilization before some release.
+</p><p><b>Problematic situations:</b>
+<ol>
+<li>
+Bug is fixed only in main-trunk because it is too risky to fix it in stabilization
+branch.</li>
+
+<li>
+Bug is fixed only in stabilization branch because fix is needed for the
+release, but for the next release more sophisticated fix will be developed.</li>
+
+<li>
+Sustaining group wants to create patch for some release. So, they need
+to modify bugs for the release they are patching.</li>
+
+<li>
+User wants to list all bugs in the release he/she have installed on his/her
+computer.</li>
+</ol>
+
+</p></subsection><subsection name="Requirements"><p>
+Following requirements should be fulfilled to solve problems mentioned
+above:
+</p><ul>
+<li>
+Attributes of bugs can differ in different branches.</li>
+
+<li>
+New branch can be created for some product from another branch.</li>
+
+<li>
+Bug can be modified in given branch.</li>
+
+<li>
+Bug can be modified in several branches at once.</li>
+
+<li>
+Bug can be entered into given branch.</li>
+
+<li>
+Bug can be entered into several branches at once.</li>
+
+<li>
+New branch of bug can be created.</li>
+
+<li>
+User can find bugs in specified branch.</li>
+</ul><b>Attributes of bugs can differ in different branches.</b><p>Bugs can have different status and comments in different branches. Look
+at the situations one and two from the case study. For example in the second
+situation the bug will be marked as FIXED in the stabilization branch and
+left as ASSIGNED or even NEW in the main-trunk where also comment about
+necessary changes will be added.
+</p><p>When new branch is created in CVS repository it is sometimes a good
+idea to branch bugs according to the CVS branch. For example in the case
+study we are interested not only in bugs that are in stabilization branch
+(these bugs will be in the upcoming release) but also in the main-trunk
+(these bugs will be in next releases).
+</p><p>This requirement is connected with the first requirement. The user should
+have possibility to see and modify attributes in the branch he/she is interested.
+He/she should be able to switch from one branch of the bug to another easily.
+</p><p>The most common situation in the case study is that the bug is fixed
+in both branches at once. So, there should be possibility to manipulate
+with attributes in more branches at once. For example when the bug is fixed
+in both main-trunk and stabilization branches the developer should be able
+to select both branches and change their status at once.
+</p><p>When a branch exists some time it is natural that bugs that appear only
+in this branch are found.
+</p><p>It is impossible to know about all bugs in the current build. New bugs
+that appear in several branches are found quite often. Therefore it is
+important to be able to enter new bug into several branches at once. Care
+should be taken of branches new bug should be entered into. In open-source
+projects we cannot rely on a good will of the external user to try whether
+this bug appears in other branches. Some rules have to be established about
+branches that probably contain the new bug.
+</p><p>Sometimes can happen that bug was entered into more specific branch
+that it should have been entered. In such situations it should be possible
+to branch just one bug report.
+</p><p>Ability to list bugs in given branch is very important for almost al
+groups: users, QA engineers, developers, managers etc. Users should be
+able to find all open bugs in their installed version. Managers are interested
+in fixed bugs for particular patch etc.
+</p></subsection>
+<subsection name="Users View"><p>
+User's view of the bug-branching depends on the depth of its support.
+</p><p><b>Light support</b>
+<ul>
+<li>
+Branch corresponds to the Version (or maybe to the combination of few attributes
+like Version and Target-milestone).</li>
+
+<li>
+Each branch of a bug has its own bug number.</li>
+
+<li>
+One branch of the same bug is associated with other branches through field
+like <i>Other Branches </i>similar to <i>Depends on</i> field.</li>
+
+<li>
+When a new branch is created for some product from a given branch, attributes
+of bugs in the given branch are copied into new bug reports and <i>Other
+branches</i> fields are modified to show up-to-date information. Maybe
+additional rules should be specified what should happen with both branches
+(e.g. Target-milestone should be set to something etc.)</li>
+
+<li>
+Bug can be modified in given branch by editing bug with Version set to
+specified branch.</li>
+
+<li>
+"Modify several branches" link is part of the page displaying attributes
+of bugs. This link moves user to the "Change several bugs at once" page
+with all branches of this bug shown. User can select which branches he/she
+wants to modify.</li>
+
+<li>
+Bug can be entered into some branch by setting correct Version.</li>
+
+<li>
+Attempt to enter bug into several branches means that someone have found
+a bug that appeared in the product before the branch was created. So, the
+user have to specify only one Version (the one before branching) and the
+bug will be entered into all branches created from this Version. This means
+that somewhere in the Scarab have to be stored rules (maintained by administrator)
+that determines the branches the entered bug should belong to. Maybe additional
+rules should specify how should be set some attributes (e.g. Target-milestone)
+in branches.</li>
+
+<li>
+User can create new branch of some bug by duplicating existing bug report
+(and setting correct Version).</li>
+
+<li>
+User can find bugs in the given branch by submitting query with Version
+set to the name of the branch.</li>
+</ul>
+<b>Intermediate support</b>
+</p><p>Some kind of compromise between the light and wide support.
+</p></subsection></section></body></document>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>Scarab XML Import</title>
+    <author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+
+  <section name="XML Import">
+    <p>
+      <ul>
+        <li><a href="import-issues.html">Importing Issues</a></li>
+        <li><a href="xml-format.html">XML Format</a></li>
+        <li><a href="/faq.html#22">XML FAQ</a></li>
+
+        
+      </ul>
+    </p>
+  </section>
+
+  </body>
+</document>

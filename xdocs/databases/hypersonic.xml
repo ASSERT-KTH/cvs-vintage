@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<properties>
+<title>Scarab - Hypersonic</title>
+<author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+<author email="Jason.Gillam NO SPAM vignette.com">Gillam, Jason</author>
+</properties> 
+<body>
+
+<section name="Hypersonic">
+<p>
+1 - set property: scarab.database.type=hypersonic (note - this will generate
+the scripts but the current ant script won't automatically install the
+database schema for a hypersonic db.  You'll have to manually load them.)
+</p>
+
+
+<p>
+2 - set other DB properties to point to your hypersonic DB.  You need to run in server mode
+</p>
+
+<p>
+4 - Torque has a bug when generating hypersonic scripts.  The only script in
+scarab which exposes the problem is the scarab.sql file.  You will have to
+manually go in there and look for an extra comma at the end of each table
+column definition in the CREATE statements.  Some of them have the extra
+comma (which needs to be deleted), and others are okay.
+</p>
+
+
+
+<p>
+6 - Use one of the hypersonic tools (DatabaseManager works well) to open and
+execute each of the .sql scripts in the same order that they appear in the
+create-mysql-database.bat/.sh file.
+</p>
+
+<p>
+---
+Outstanding Issues:
+</p>
+
+<p>
+Just this one.  The scarab web application appears to be working, including
+the e-mail registration part.  I'm stuck at a spot where I don't seem to be
+authorized to do anything (not even the admin account is).  So I can't add
+modules or even see any issues in the sample application.  Whether this is a
+problem with Scarab or a problem with hypersonic has yet to be determined.
+Nothing showed up in the application server logs.
+</p>
+
+<p>
+If anyone figures this out, please post a response.  Hypersonic makes an
+excellent platform for small deployments because it's opensource and you
+don't have to run a full database in a separate process (i.e. standalone
+"file" mode).
+</p>
+
+
+
+<h4>Basic instructions</h4>
+Torque generates the sql properly except for a couple modifications.  After run ant create-db go
+into /target/scarab/web-inf/sql/hypersonic and do these changes:
+<ol>
+<li> Change all # to --</li>
+
+<li> Change all drops from "drop table if exists TURBINE_USER_GROUP_ROLE;" to
+"drop table TURBINE_USER_GROUP_ROLE is exists"</li>
+
+<li>change mediumblob to object</li>
+
+<li> change mediumtext to varchar</li>
+</ol>
+
+Then rerun the ant create-db and it'll work.
+</section>
+</body>
+</document>

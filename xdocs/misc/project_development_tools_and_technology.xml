@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Scarab: Development Tools and Technologies</title></properties>
+<body>
+  <section name="Misc Docs">
+  
+
+<p>
+Here is a list of technologies that are used within the Scarab project:
+</p>
+  <p>
+<ul>
+    <li><a href="http://jakarta.apache.org/turbine/">Turbine</a> is the 
+        underlying web app framework</li>
+    <li><a
+    href="http://jakarta.apache.org/turbine/torque/index.html">Torque</a
+    > is used for the database object relational layer.</li>
+    <li><a href="http://jakarta.apache.org/turbine/fulcrum/howto/intake-service.html">Intake</a> is used for form data validation and Torque
+    OM object population.</li>
+    <li><a href="http://jakarta.apache.org/velocity/">Velocity</a> is
+    used as the abstraction between the user interface and the
+    business logic (ie: the View). The look and feel of this application easily
+    customizable.</li>
+    <li><a href="http://jakarta.apache.org/lucene/">Lucene</a> is
+    the search engine that is used to index and search the issue data.</li>
+    <li><a href="http://www.mysql.com">MySQL</a> is the SQL backend
+    (Support for other RDBM's will also be included. We are just
+    developing with MySQL for now because it is a commonly used
+    database.)</li>
+    <li><a href="http://jakarta.apache.org/tomcat/">Tomcat 4.x</a> 
+        is the target Java Servlet engine (Any Servlet API 2.1 or higher
+        engine will work).</li>
+</ul>
+    </p>
+  </section>
+</body>
+</document>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Scarab Attribute Documentation</title></properties>
+<body>
+  <section name="Attributes">
+   <subsection name="Attributes and Attribute Options">
+   
+   <p>
+   Scarab has a concept called Attributes. An Attribute is defined as a
+   value that describes an Issue. For instance, an Issue may have the
+   following Attributes:
+   </p>
+   
+   <blockquote>
+       "OS, Priority, Severity, Status"
+   </blockquote>
+   
+   <p>
+   Each of these Attributes can have one or more Attribute Options. For
+   example, the Status Attribute has the following default options:
+   </p>
+   
+   <blockquote>
+       "Open, Closed, Fixed, Resolved, Invalid"
+   </blockquote>
+   
+   <p>
+   All Attributes belong to an Attribute Type which in turn belongs to an
+   Attribute Class. Taking the Status Attribute as an example again, it has
+   a type of "combo-box" and belongs in the class "select-one".
+   </p>
+   
+   <p>
+   This grouping allows the user interface to be built according to the
+   type and class of Attribute that is defined. For example, the Status
+   Attribute would be rendered in the UI as a pull down menu with the
+   ability to select one of the options.
+   </p>
+   
+   <p>
+   To reiterate, the relationship chain looks like this:
+   </p>
+   
+   <pre>
+      select-one -> 
+                    combo-box -> 
+                                 Status ->
+                                           Open
+                                           Closed
+                                           Fixed
+                                           Resolved
+                                           Invalid
+   </pre>
+   
+   <p>
+   Another feature that the Attribute system has is the ability to
+   infinitely nest Attribute Options. For example, we define the OS
+   Attribute as having the following Options:
+   </p>
+   
+   <pre>
+       OS ->
+             Windows
+             Windows 2000
+             Windows 98
+             Windows 95
+   </pre>
+   
+   <p>
+   We consider the "Windows" option to be a generic value for all of the OS
+   Options. This allows us to implement features such as the ability to
+   search for all Issues within the Windows Option list. If we show the
+   effect of nesting, it looks like this:
+   </p>
+   
+   <pre>
+       OS ->
+             Windows
+                 Windows 2000
+                 Windows 98
+                 Windows 95
+   </pre>
+   
+   <p>
+   Options also have a relationship associated with them. In other words,
+   it is possible to define that an Option has a parent/child relationship
+   with another option or that one Option is required to be listed
+   before/after another Option.
+   </p>
+   
+   <p>
+   This nesting is described in the SCARAB_R_OPTION_OPTION table.
+   </p>
+   
+   <p>
+   It is important to note that there is also the ability to order the
+   display of the Attribute Options. For example, if one wanted to display
+   a specific order for the Options, then they would define things like
+   this:
+   </p>
+   
+   <pre>
+       OS ->
+             Windows           1
+                 Windows 95    2
+                 Windows 98    3
+                 Windows 2000  4
+   
+             MacOS             5
+                 MacOS 9       6
+                 MacOS X       7
+   </pre>
+   
+   <p>
+   This can also be shown like this:
+   </p>
+   
+   <pre>
+           id  parent  option        preferred order
+           -----------------------------------------
+            1  0       Windows       1
+            2  1       Windows 95    2
+            3  1       Windows 98    3
+            4  1       Windows 2000  4
+            5  0       MacOS         5
+            6  5       MacOS 9       6
+            7  5       MacOS X       7
+   </pre>
+   
+   <p>
+   All Attribute Options in the SCARAB_R_OPTION_OPTION table which do not
+   have a parent that is directly another option_id will have a parent of
+   '0' which is a special Attribute Option Id that is never shown in the
+   user interface. This is required in order to allow the SQL select clause
+   to work on the R_OPTION_OPTION table properly.
+   </p>
+   
+   <p>
+   One thing that shows up in the user interface, but is not quite used yet
+   in any of the programming logic for Scarab is the idea of an Attribute
+   Option weight. The idea of the Attribute Option weight is that it would
+   be possible to assign Priority P1 as "weighing more than" Priority P2.
+   In the future, we can build on top of that so that people can do
+   searches as well as use things like color in the UI to represent
+   attribute options which weight more than another one.
+   </p>
+   
+   <p>
+   The SQL used to generate the above listings looks like this:
+   </p>
+   
+   <pre>
+   select   a1.OPTION_ID,a2.OPTION1_ID,a2.OPTION2_ID,
+            a1.OPTION_NAME,a1.WEIGHT,a2.PREFERRED_ORDER
+   from     scarab_attribute_option a1, scarab_r_option_option a2
+   where    a1.ATTRIBUTE_ID=4 and a1.OPTION_ID=a2.OPTION2_ID
+   order by a2.PREFERRED_ORDER;
+   </pre>
+   
+   <p>
+   The UI for entering an Issue does not show the Parent Option because we
+   figure that a specific operating system choice is important with regards
+   to entering the Issue. If the Issue is present across multiple OS's,
+   then multiple Issues can be entered and then a dependency chain between
+   those Issues can be established. It is our feeling that Issue entry
+   should attempt to, as specifically as possible, report the event.
+   </p>
+   </subsection>
+   
+   <subsection name="Modules and Attributes/Options">
+   
+   <p>
+   Attributes are associated to Modules in the SCARAB_R_MODULE_ATTRIBUTE
+   table. This allows each Module to have a defined set of Attributes and
+   Options. Options are also associated to a Module through the
+   SCARAB_R_MODULE_OPTION table. Both of these tables also record a
+   "Display Value" column which allows an individual module to customize a
+   different value for display than for the actual value of the Attribute
+   or Option. The Preferred order, whether or not the Attribute/Option is
+   "Active" (meaning it is being used in the Module) can also be overriden.
+   The Required field for an Attribute marks whether or not this Module
+   requires the Attribute to be entered with a value or if it can be left
+   null.
+   </p>
+   
+   <p>
+   Attributes are marked where they show up on the IssueEntry set of
+   Wizards. The benefit of this is that some of the Attributes can show up
+   on Wizard1 and other Attributes can show up on Wizard3. This determines
+   which Attributes are marked as important for the deduplicate feature of
+   filling in an Issue.
+   </p>
+   
+   <p>
+   Which Attributes show up on the Quick Search page can also be customized
+   through the SCARAB_R_MODULE_ATTRIBUTE table.
+   </p>
+   
+   <h3>Issues and Attributes/Options</h3>
+   
+   <p>
+   Each Issue has an associated Attribute Id and Option Id stored in the
+   SCARAB_ISSUE_ATTRIBUTE_VALUE table. This is what gives an Issue its
+   values. [FIXME: Need to add more about what column to use for what
+   value, because John and Jon haven't thought of a better way to describe
+   this yet.]
+   </p>
+   
+   </subsection>
+   
+   <subsection name="Examples">
+   
+   <p>
+   Examples of Attributes can be found in the
+   src/sql/mysql-scarab-default-data.sql file.
+</p>
+</subsection>
+   
+  </section>
+</body>
+</document>

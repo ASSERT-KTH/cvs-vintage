@@ -13,28 +13,28 @@
         locale if it changes. The check is done each request, and the
         locale is used to generate e-mails in the correct language.
       </action>
-	  <action dev="epugh" type="add">
+    <action dev="epugh" type="add">
         Add goal scarab:sample that leverages NSIS to create an installer for windows that bundles a Scarab, 
         Hypersonic, and Tomcat.  This is already to install and run!
       </action>    
-	  <action dev="epugh" type="add">
+    <action dev="epugh" type="add">
         First cut at using Hypersonic as the embedded database.  The database must manually be started via
         a batch file, but then can be used for running unit tests or sampling the webapp.
       </action>         
-	  <action dev="epugh" type="add">
+    <action dev="epugh" type="add">
         Generate into the WEB-INF/sql/ directory all the SQL DDL scripts for all the databases 
         supported by Scarab.
       </action>      
-	  <action dev="epugh" type="add">
+    <action dev="epugh" type="add">
         ConfigurationFactory is now used!  Provides ability to define at runtime which sources of
         Configuration data to check.  You can now override ANY property set in TR.props.
       </action>         
-	  <action dev="pledbrook" type="fix">
+    <action dev="pledbrook" type="fix">
         SCB1072 getRModuleAttributes() and getRIssueTypeAttributes()
         have been modified to return empty lists, rather than
-		null, if no attributes exist in the group.
+    null, if no attributes exist in the group.
       </action>       
-	  <action dev="epugh" type="update">
+    <action dev="epugh" type="update">
         Reorganized all the webapp assets under /src/webapp.  Allows easy inplace development.
         Additionally, you can now use either Ant or Maven!
       </action>        
@@ -56,6 +56,83 @@
         Refactoring of Email.java.
       </action>             
     </release>
+    <release version="b18" date="6-Jan-2004">
+      <action dev="" type="fix">
+        SCB327  Datadump does not handle nulls properly
+      </action>             
+      <action dev="" type="fix">
+        SCB627   Most recent  query returns incomplete results
+      </action>
+      <action dev="" type="fix">
+        SCB799  "commit" warnings with PostgreSQL"
+      </action>
+      <action dev="" type="fix">
+        SCB888  Multi-line long-string attributes do not display correctly
+      </action>
+      <action dev="" type="add">
+        SCB898   modify src sql scarab schema xml to support DB2
+      </action>
+      <action dev="" type="add">
+        SCB899   modify src sql scarab sample data sql to support
+      </action>
+      <action dev="" type="add">
+        Remove unneeded setDistinct from QueryPeer.jav
+      </action>
+      <action dev="" type="fix">
+        SCB930   ResourceNotFoundException when saving query if All Issues Types is selected
+      </action>
+      <action dev="" type="fix">
+        SCB941   Update language bundles for b16
+      </action>   
+      <action dev="" type="fix">
+        SCB952   Add remove attributes from view  does not work properly
+      </action>   
+      <action dev="" type="fix">
+        SCB953  Comments with more than 255 characters
+      </action>   
+      <action dev="" type="fix">
+        SCB957  Attribute changes missing in the History
+      </action>   
+      <action dev="" type="fix">
+        SCB958   defect in scarab when creating a new enhancement issue
+      </action>   
+      <action dev="" type="fix">
+        SCB964  Session lost on multiple pages
+      </action>   
+      <action dev="" type="fix">
+        SCB965  duplicate check remove special chars
+      </action>                                                                                            
+      <action dev="" type="fix">
+        SCB970  check.Scarab.properties
+      </action> 
+      <action dev="" type="fix">
+        SCB972  When adding personnel to an issue, next and previous links don't work
+      </action> 
+      <action dev="" type="fix">
+        SCB978   Issue Types Headers Displayed When No Issue Types Present  
+      </action> 
+      <action dev="" type="fix">
+        SCB984  Locale en_NZ not supported
+      </action> 
+      <action dev="" type="fix">
+        SCB986  incorrect query results with hierarchy
+      </action> 
+      <action dev="" type="fix">
+        SCB997  Non-expiring password setting in scarab.props causes NumberFormatException
+      </action> 
+      <action dev="" type="fix">
+        SCB1008 role approval deny failure in localized message.
+      </action>                                     
+      <action dev="" type="fix">
+        SCB1011 postgresql referential integrity violation during sample data insert
+      </action>  
+      <action dev="" type="fix">
+        SCB1014  Adding a new issue type to a module causes exception
+      </action>  
+      <action dev="" type="add">
+        SCB1028 PostgreSQL v7.4 and Scarab
+      </action>              
+    </release>    
   </body>
 </document>
 

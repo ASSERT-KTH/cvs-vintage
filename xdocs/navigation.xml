@@ -13,27 +13,43 @@
       <item name="Overview"               href="/index.html"/>
       <item name="Howto Build"            href="/howto/build-howto.html"/>
     </menu>
-    <menu name="Maven Goals">
-      <item name="Goals"                  href="/goals.html" />
-      <item name="Properties"             href="/properties.html" />
-    </menu>   
+  
     <menu name="Documentation">
       <item name="Admin Guide"            href="/scarab-admin.html"/>
       <item name="Admin Guide (FR)"       href="/scarab-admin-fr.html"/>
-      <item name="Admin User (FR)"        href="/scarab-user-fr.html"/>
-      <item name="Changes"                href="/changes-report.html"/>
+      <item name="Admin User (FR)"        href="/scarab-user-fr.html"/>      
       <item name="FAQ"                    href="/faq.html"/>
-      <item name="How-To's"               href="/howto/index.html"/>
-      <item name="JavaDocs"               href="/apidocs/index.html"/>
-      <item name="Old Docs"               href="http://scarab.tigris.org/project_docs.html"/>
-      <item name="Archive Generated Docs" href="http://scarab-gen.tigris.org/unbranded-source/browse/*checkout*/scarab-gen/www/index.html?rev=1.1"/>
+      <item name="How-To's"               href="/howto/index.html" collapse="true">
+       <item name="Howto Build"           href="/howto/build-howto.html"/>
+       <item name="Howto Build Docs"      href="/howto/build-docs-howto.html"/>
+       <item name="Releasing Scarab"      href="/howto/release-howto.html"/>
+       <item name="Scarab and Firewalls"  href="/howto/firewall-howto.html"/>
+       <item name="Tuning Howto"          href="/howto/tuning-howto.html"/>
+       <item name="Customizing Scarab"    href="/howto/customize-howto.html"/>                                   
+      </item>
+      <item name="Databases"              href="/databases/index.html" collapse="true">
+       <item name="Database Independence" href="/databases/database_independence.html"/>
+       <item name="Hypersonic"            href="/databases/hypersonic.html"/>       
+       <item name="Oracle"                href="/databases/oracle.html"/>
+       <item name="MySQL I18N"   href="/databases/mysql-internationalization.html"/>
+       <item name="Postgre SQL"           href="/databases/postgresql.html"/>
+       <item name="MSSQL"                 href="/databases/mssql.html"/>
+       <item name="Schema"                href="/databases/schema.html"/>
+       <item name="Schema Details"        href="/databases/generated-scarab-schema.html"/>       
+      </item>     
+      <item name="Misc"                   href="/misc/index.html"/>
+      <item name="XML Import"             href="/xmlimport/index.html"  collapse="true">
+          <item name="Import Issues"      href="/xmlimport/import-issues.html"/>
+          <item name="XML Format"         href="/xmlimport/xml-format.html"/>
+          <item name="XML FAQ"            href="/faq.html#22"/>
+      </item>
+      <item name="Changes"                href="/changes-report.html"/>
+      <item name="JavaDocs"               href="/apidocs/index.html"/>     
     </menu>
-
-    <!--menu name="Development">
-      <item name="Proposals"              href="/proposals.html"/>
-      <item name="How To Help"            href="/how-to-help.html"/>
-      <item name="Todo"                   href="/todo.html"/>
-    </menu-->
+    <menu name="Maven Goals">
+      <item name="Goals"                  href="/goals.html" />
+      <item name="Properties"             href="/properties.html" />
+    </menu> 
 
   </body>
 </project>

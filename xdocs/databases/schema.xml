@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>Scarab Database Schema</title>
+    <author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+
+  <section name="Database Details">
+    <p> Schema in PNG     
+    </p>
+    <img src="scarabdb.png"/>
+  </section>
+
+  </body>
+</document>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Scarab - HttpClient Example</title></properties>
+<body>
+  <section name="Misc Docs">
+
+<p>
+The following class was used to test scarab's memory usage.  It would
+login to scarab and then parse the response for links.  It then
+followed each of these links adding more links as it went.  The
+class is not generally useful as is, but it does show an example
+of using the commons package, httpclient, to interact with scarab.
+Some useful things to note are the login process and how the known bug
+in httpclient wrt % encoded characters is avoided.
+</p>
+<p>
+<pre>
+import java.util.*;
+import java.io.*;
+
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.methods.*;
+
+/**
+ * This class contains a main method that logs in to scarab and then 
+ * starts harvesting links.  Alternatively if an url is given in the 
+ * command line, it logs in and then repeatedly hits that same url.
+ */
+public class WalkScarab
+{
+    Map urlMap;
+    Map visitedUrlMap;
+    List urlList;
+    HttpClient client;
+
+    int oldissues;
+
+    WalkScarab()
+    {
+        urlMap = new HashMap(300);
+        visitedUrlMap = new HashMap(300);
+        urlList = new ArrayList(200);
+        client = new HttpClient();
+        client.startSession("localhost", 8080);
+    }
+
+    public static void main (String[] args) 
+        throws Exception
+    {
+        WalkScarab crawler = new WalkScarab();
+
+        // prime the cookie
+        HttpMethod method = new UrlGetMethod(
+            "http://localhost:8080/scarab/servlet/scarab/template/Login.vm");
+        int code = crawler.client.executeMethod(method);
+
+        // start off by logging in.  this will take us to the SelectModule.vm
+        // template, where we can start traversing all available links looking
+        // for more while we go.
+        String url =  url = "http://localhost:8080/scarab/servlet/scarab/action/Login/login_0u/turbine@tigris.org/login_0p/1";
+
+        if (args.length > 0) 
+        {
+            // still login but continuously hit the given url
+            method = new UrlGetMethod(url);
+            code = crawler.client.executeMethod(method);
+            method.getResponseBodyAsString();
+            url = args[0];
+            while (true) 
+            {
+                crawler.hitUrl(url);
+            }
+        }
+        else 
+        {
+            crawler.start(url);            
+        }
+    }
+
+    private void start(String url)
+        throws Exception
+    {        
+        hitUrl(url);
+        
+        //while (true) 
+        //{
+            for (int i=0; i&lt;urlList.size(); i++) 
+            {
+                url = (String)urlList.get(i);
+                System.out.println("****************************************");
+                hitUrl(url); 
+            }
+            //}
+
+            System.out.println("!!!!!!!!!!!! Done harvesting !!!!!!!!!!!!!!!");
+    }
+
+    private void hitUrl(String url)
+        throws Exception
+    {
+        System.out.println("hitUrl: " + url);
+        HttpMethod method = new UrlGetMethod(url);
+        int code = client.executeMethod(method);
+        String response = method.getResponseBodyAsString();
+        if (!visitedUrlMap.containsKey(url)) 
+        {
+            System.out.println("new");
+            visitedUrlMap.put(url, null);
+            //System.out.println(response + "\n\n" + code);
+            if (response.indexOf("not have permission") > 0) 
+            {
+                System.out.println("!!!!!!!!!!!!");
+                System.exit(1);
+            }
+            
+            char[] ra = response.toCharArray();
+            for (int i=0; i &lt; ra.length - 7; i++) 
+            {
+                if ( ra[i] == 'h'
+                     &amp;&amp; ra[i+1] == 'r'
+                     &amp;&amp; ra[i+2] == 'e'
+                     &amp;&amp; ra[i+3] == 'f'
+                     &amp;&amp; ra[i+4] == '='
+                     &amp;&amp; ra[i+5] == '"'
+                     ) 
+                {
+                    int j = 0;
+                    for (j=i+6; ra[j] != '"'; j++) 
+                    {
+                        
+                    }
+                    String href = new String(ra, i+6, j-i-6);
+                    //System.out.println("raw href: " + href);
+                    i = j;
+                    
+                    if (href.charAt(0) == '/' 
+                        &amp;&amp; href.indexOf(".vm") &gt; 0 
+                        &amp;&amp; href.indexOf("Logout") &lt; 0 
+                        &amp;&amp; href.indexOf("help") &lt; 0 
+                        ) 
+                    {
+                        //httpclient does not handle % correctly
+                        int percentPos = href.indexOf('%');
+                        while (percentPos &gt; 0) 
+                        {
+                            StringBuffer sb = new StringBuffer(href);
+                            sb.replace(percentPos, percentPos+3, ",");
+                            href = sb.toString();
+                            percentPos = href.indexOf('%');
+                        }
+                        
+                        href = "http://localhost:8080" + href;
+                        if (!urlMap.containsKey(href)) 
+                        {
+                            System.out.println("Adding url: " + href);
+                            urlMap.put(href, href);
+                            urlList.add(href);
+
+                            // keep track for later reference
+                            int size = urlList.size();
+                            if (size % 100 == 0) 
+                            {                                
+                                BufferedWriter urlFileWriter = 
+                                    new BufferedWriter(
+                                    new FileWriter("/tmp/urls.txt", true));
+                                for (int k=size-100; k &lt; size; k++) 
+                                {
+                                    String s = (String)urlList.get(k);
+                                    urlFileWriter.write(s, 0, s.length());
+                                    urlFileWriter.newLine();
+                                }
+                                urlFileWriter.close();
+                            }                            
+                        }
+                    }                
+                }
+            }
+        }
+
+        // pick out the memory info
+        int freePos = response.lastIndexOf("Free=") + 5;
+        int endFreePos = response.lastIndexOf("; Total="); 
+        int totalPos = endFreePos + 8; 
+        int endTotalPos = response.lastIndexOf(" bytes"); 
+
+        int issuePos = response.lastIndexOf("IssueMap=") + 9;
+        int endIssuePos = response.lastIndexOf("; ReportMap=");
+
+        int free = 0;
+        int total = 0;
+        int issues = 0;
+        try
+        {
+            free = Integer.parseInt(response
+                                    .substring(freePos, endFreePos));
+            total = Integer.parseInt(response
+                                     .substring(totalPos, endTotalPos));
+
+            issues = Integer.parseInt(response
+                                     .substring(issuePos, endIssuePos));
+        }
+        catch (Exception e)
+        {
+            System.out.println("freePos=" + freePos + "; endFreePos=" +
+                               endFreePos + "; totalPos=" + totalPos +
+                               "; endTotalPos=" + endTotalPos + 
+                               "; response.length()=" + response.length());
+            throw e;
+        }
+
+        if (issues != oldissues) 
+        {
+            BufferedWriter out = 
+                new BufferedWriter(
+                   new FileWriter("/tmp/issueurls.txt", true));
+            String s = "IssuesMap.size()=" + issues + " on url " + url;
+            out.write(s, 0, s.length());
+            out.newLine();
+            out.close();
+            oldissues = issues;
+        }
+
+
+        while (true) 
+        {
+            for (int i=0; i&lt;10; i++) 
+            {
+            method = new UrlGetMethod(url);
+            code = client.executeMethod(method);
+            response = method.getResponseBodyAsString();
+            }
+
+            // pick out the memory info
+            freePos = response.lastIndexOf("Free=") + 5;
+            endFreePos = response.lastIndexOf("; Total="); 
+            totalPos = endFreePos + 8; 
+            endTotalPos = response.lastIndexOf(" bytes"); 
+            issuePos = response.lastIndexOf("IssueMap=") + 9;
+            endIssuePos = response.lastIndexOf("; ReportMap=");
+            
+            int newfree = Integer.parseInt(response
+                .substring(freePos, endFreePos));
+            int newtotal = Integer.parseInt(response
+                .substring(totalPos, endTotalPos));
+            int newissues = Integer.parseInt(response
+                .substring(issuePos, endIssuePos));
+            
+            if (newissues &gt; issues) 
+            {
+                BufferedWriter out = 
+                    new BufferedWriter(
+                        new FileWriter("/tmp/issueurls.txt", true));
+                String s = " IssuesMap.size()=" + newissues + " on url " + url;
+                out.write(s, 0, s.length());
+                out.newLine();
+                out.close();            
+            }
+        
+            if (newtotal &gt; total + 1024 || newfree &lt; free - 1024) 
+            {
+                System.out.println("Memory has not stabilized");
+                String m = "Free="  + newfree + "; Total=" + newtotal;
+                m += "; Url=" + url;
+                System.out.println(m);
+                free = newfree;
+                total = newtotal;
+            }
+            else 
+            {
+                break;
+            }
+        }
+    }
+}
+
+</pre>
+</p>
+  </section>
+</body>
+</document>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<properties>
+<title>Scarab - MSSQL</title>
+<author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+</properties>
+
+<body>
+
+  <section name="Database Details">
+    <p>
+    Scarab has been developed with database independence in mind, however
+    our primary goal is to make Scarab work with MySQL. Therefore, our
+    support for other RDBM's is largely untested. We are relying on the user
+    community in order to help us test and develop further support for other
+    databases. This document outlines the steps that we think are required
+    to get Scarab working with MSSQL. <a
+    href="mailto:dev@scarab.tigris.org">Community feedback</a> on this
+    document will help improve things for others.
+    </p>
+    
+    <p>The following instructions were supplied by Slobodan Mumovic who
+    says the one of the problems was the default JDBC connection pool
+    configuration does not work with MSSQL.  For the following to be
+    effective, you must have the MS SQL JDBC driver available.</p>
+    
+    
+    <p>
+    1 - set property: scarab.database.type=mssql in build.properties
+    </p>
+    <p>
+    2. Edit the /src/conf/CustomSettings.properties file adding the following lines::
+    </p>       
+    
+<pre>            
+    torque.dsfactory.scarab.factory=org.apache.torque.dsfactory.TorqueDataSourceFactory
+    torque.dsfactory.scarab.pool.defaultMaxConnections=10
+    torque.dsfactory.scarab.pool.maxExpiryTime=3600
+    torque.dsfactory.scarab.pool.connectionWaitTimeout=10
+</pre>    
+<p>
+    3. Build the project using ant
+</p>    
+<p>
+    4. Manually create the database in MSSQL Server with the user specified in
+    step 1. as the DBO
+</p>    
+<p>    
+    5. Execute the ant create-db target
+ </p>    
+<p>   
+    6. Start scarab.
+ </p>    
+<p>   
+    A later email states Scarab is still not usable on MSSQL:
+</p>    
+    <p>
+    ... So we never actually used Scarab on MSSQL due to the following problems:
+    </p>
+    <p>
+    1. Several tables are created with fields of type TEXT and IMAGE. This by
+    itself would not be a problem but the code (I believe torque) uses "SELECT
+    DISTINCT" on fields that contain TEXT and/or IMAGE. This could be fixed with
+    a clever and insightful remapping of the JDBC to MSSQL data types in torque
+    (/target/webapps/scarab/WEB-INF/src/torque/templates/sql/base/mssql/db.props
+    ). But when I replaced IMAGE and TEXT with VARCHAR(xxxx) (where xxxx were
+    several experimental values chosen not to overflow over the allowed limit
+    for a data row) the result was that inserts of new issues simply hanged
+    without any log or debug message of the reason. 
+    
+</p>    
+<p>
+    
+    ... Here is what Eric Pugh discovered:
+</p>    
+<p>    
+    After you run ant create-db, you need to 
+    go into /target/scarab/web-inf/sql/mssql and edit the files:
+</p>    
+<p>    
+    Must convert all BIGINT to int
+    Convert TEXT to VARCHAR (2000).  Make sure to use whole word matching!
+    Change OBJECT to something else, I think VARCHAR(2000).
+</p>    
+<p>    
+    Then rerun ant create-db and the proper data types will be inserted!
+</p>
+  </section>
+</body>
+</document>

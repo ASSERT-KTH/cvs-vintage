@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Scarab - Oracle</title></properties>
+<body>
+  <section name="Oracle">
+    <p>
+    Scarab has been developed with database independence in mind, however
+    our primary goal is to make Scarab work with MySQL. Therefore, our
+    support for other RDBM's is largely untested. We are relying on the user
+    community in order to help us test and develop further support for other
+    databases. This document outlines the steps that we think are required
+    to get Scarab working with Oracle. <a
+    href="mailto:dev@scarab.tigris.org">Community feedback</a> on this
+    document will help improve things for others.
+  </p>
+  <subsection name="Basic instructions">
+<p>
+
+In order to get Torque to generate the right Scarab .sql files for
+Oracle, try the following:
+</p>
+
+<ul>
+    <li>Copy the Oracle jdbc driver .jar file into the scarab/lib/
+        directory *before* building Scarab.
+        If the jar is named to match the regular expression *oracle*.jar,
+        the existing build process will copy it as necessary.</li>
+    <li>Create a scarab/build/build.properties file.</li>
+    <li>In it, fill out the following properties with the right information
+pertaining to Oracle...ie: for database.*.url, create an Oracle JDBC URL.
+For database.type, put 'oracle'. For jdbc.driver, put the Oracle
+one....then, rm the target directory and rebuild.
+</li>
+</ul>
+
+<pre>
+scarab.database.host=localhost
+scarab.database.port=
+scarab.database.url=
+scarab.database.admin.url=
+scarab.database.type=oracle
+scarab.database.jdbc.driver=oracle.jdbc.driver.OracleDriver
+scarab.database.username=
+scarab.database.password=
+scarab.database.admin.username=
+scarab.database.admin.password=
+<strike>scarab.database.validationQuery=SELECT 1 FROM DUAL</strike>
+</pre>
+
+<small>Note: Effective with version 1.0 beta 12, it is no longer necessary
+to add <code>scarab.database.validationQuery</code>
+to <code>build.properties</code>.
+It is automatically added when <code>scarab.database.type</code>
+is set to <code>oracle</code>.
+</small>
+
+<p>
+There is also some more discussion and information in <a
+href="http://scarab.tigris.org/issues/show_bug.cgi?id=188">this reported
+issue</a>.
+</p>
+</subsection>
+
+
+<subsection name="Inconsistent Datatypes">
+There is an inconsistency with Turbine's handling
+of <code>BLOB</code> datatypes under Oracle.
+This usually manifests itself with an error similar to the following:
+
+<pre>
+  java.lang.RuntimeException: Please check turbine.log for more info: Failed to retrieve users: ORA-00932: inconsistent datatypes
+  at org.tigris.scarab.om.ScarabModule.getUsers(ScarabModule.java:164)
+  at org.tigris.scarab.tools.ScarabRequestTool.getUsers(ScarabRequestTool.java:1856)
+
+        (remainder of stack trace omitted)
+
+</pre>
+
+There is currently no resolution to this problem.
+<p>
+A workaround is to edit the <code>webapps/scarab/WEB-INF/sql/turbine.sql</code> and
+<code>webapps/scarab/WEB-INF/sql/scheduler.sql</code> files,
+and change the columns defined as <code>BLOB</code>
+to <code>VARCHAR2(4000)</code>. 
+
+</p>
+<p>
+An alternate workaround would be to edit
+<code>webapps/scarab/WEB-INF/src/torque/templates/sql/base/oracle/db.props</code>
+and change the line which reads
+<pre>
+
+VARBINARY = BLOB
+
+</pre>
+to be
+<pre>
+
+VARBINARY = VARCHAR2(4000)
+
+</pre>
+This has the slight advantage of being slightly more persistent -
+the only time that this file changes
+is when a new version of Torque is added into Scarab,
+or when "ant clean" or "ant clean-all" is run.
+</p>
+</subsection>
+  
+  </section>
+
+</body>
+</document>

@@ -3,8 +3,21 @@
 
   <part id="general">
     <title>General</title>
-   
+     <faq id="0">
+    
+      <question>
+        How can I not load the Sample Data?
+      </question>
+      <answer>
+There is a LoadOrder.lst file in src/sql that you should be able to
+modify to get what you want.  Just remove the last file which is the
+sample data.  If you don't want to modify the default LoadOrder.lst, you
+can also specify a different file to use with -l or --loadorder option
+to create-db.sh.
+      </answer>
+    </faq>  
     <faq id="1">
+    
       <question>
         Is there suitable 'propaganda' material that I could use in my company demo to try to convince my boss that it is a good idea to use Scarab?
       </question>
@@ -583,7 +596,156 @@ If you want to disable logging people off, just set the value to
 a very high number.
 </p>
       </answer>
-    </faq>   
-   
+    </faq>      
   </part>  
+  
+<part id="xml">
+    <title>XML Import</title>
+   
+    <faq id="22">
+      <question>
+        I need to add issues to scarab. How do I begin? 
+      </question>
+      <answer>
+The best place to start is by studying an issue exported by scarab.  First study
+how the issue sits in scarab, and then browse to 
+<strong>Admin->Modules->XML export issues</strong> and export that issue.
+issue.  Correlate UI w/ its representation in xml.  Also study the comments
+in the <a 
+href="http://scarab.tigris.org/source/browse/scarab/src/dtd/scarab.dtd?rev=1">scarab
+dtd</a> for clarification on scarab's interpretation of xml elements.  Note 
+that many elements have subtly different representations in the UI than they
+do in the dtd.      
+      </answer>
+    </faq>
+<faq id="23">    
+<question>
+        Can running an import break my scarab instance?
+      </question>
+      <answer>
+<p>It shouldn't.  The way the scarab import works is that it first parses the 
+passed xml to import to ensure all dependencies resolve, and that all modules, 
+users, attributes and attribute options mentioned in the xml exist.  If any 
+are missing, then the entire import fails and a report is produced listing the 
+problems found ("No such user 'jon'", etc.).  If importing via the UI, the
+error report shows in the result screen.  If importing via ant, check the
+scarab-xmlimport.log file.  If the validation parse runs to the end w/o error,
+then begins the insertion parse. 
+</p>
+<p>Note, the scarab validation parse mentioned above is
+distinct from an xml validation parse: The latter checks the validity of the 
+xml submitted, the former examines the data contained in the xml making sure
+its coherent with respect to scarab.
+</p>
+      </answer>
+</faq>      
+<faq id="24">      
+<question>
+        What can I do via xml import?
+      </question>
+      <answer>
+The import of 'new' issues has been well tested.  Updating extant issues
+w/ comments, etc., works at least for the simple cases but is in need of
+testing.  The import of dependencies amongst issues works but it too is 
+in need of testing, and has some limitations and requirements if included
+as part of an initial issue import.
+      </answer>
+</faq>      
+<faq id="25">       
+<question>
+        Does import support the import of inter-issue dependencies?
+      </question>
+      <answer>
+You cannot declare dependencies between separate scarab xml files being 
+imported; dependencies can only be reliably established (that is, reconciled)
+within a single xml import file. The way dependencies are done is that on 
+import, after the validation parse and insert of issues, a dependency resolving
+step runs: It 'decorates' the just inserted issues w/ the interdependencies 
+mentioned in the xml (providing certain information, like activity-set id,
+is correctly set between issues).  This step must happen after insert because 
+in order to make the interdependencies, the actual scarab issue ids must
+exist. At this time, it does not seem as though you can add dependencies 
+via the xml import update mechanism.
+      </answer>
+</faq>      
+<faq id="26"> 
+<question>
+        I want to import users and attributes. Can I?
+      </question>      
+      <answer>
+You cannot currently import nor export modules, users, attributes nor 
+attribute options. This facility is to be added soon.
+      </answer>
+</faq>      
+<faq id="27"> 
+<question>
+        When would I start a new activity set?
+      </question>
+      <answer>
+<p>You'd start a new activity-set when: 
+    <ol>
+    <li>Importing an issue and its initial state.</li>
+    <li>Adding physical attachments to an issue.</li>
+    <li>Adding comments to an issue (Scarab treats attachments and comments as
+        roughly equivalent).</li>
+    <li>Adding an <i>activity</i> entry: e.g., one or more state changes such
+        as 'Changed from NEW to STARTED', or issue dependencies.</li>
+    </ol>
+</p>
+      </answer>
+</faq>      
+<faq id="28">       
+<question>
+        How does workflow affect xml import?
+      </question>
+      <answer>
+Workflow is disabled in the importing thread so there should be no 
+ possibility for conflict.
+      </answer>
+</faq>      
+<faq id="29">       
+<question>
+        Are there sample xml issues that I can study?
+      </question>
+      <answer>
+<ul>
+    <li>/src/extensions/update-example.xml is an Example that updates an existing 
+    issue adding a comment.</li>
+    <li>/src/extensions/interdependencies.xml is an Example that imports 3 issues 
+    preserving the dependency issue 3 has on issue 1.</li>
+</ul>
+      </answer>
+</faq>      
+<faq id="30">       
+<question>
+        Why when I import is issue 'created-by' not respected?
+      </question>
+      <answer>
+<p>What may be happening is that the activity-set id in your xml may be that
+of an already existing activity-set; you may be picking up the 'created-by'
+of the activity-set that already exists in scarab.  Ensure your activity-set
+id is definetly not that of an already existing activity-set in scarab.
+This section from the scarab.dtd is pertinent:
+<pre>
+    The activity-set id passed is checked against the db to see if
+    this activity-set already exists (The activity-set id 
+    == SCARAB_TRANSACTION.TRANSACTION_ID).  If the activity-set id
+    does not refer to an already-existing activity-set, a new
+    activity-set id is created by taking the next id off the top of 
+    auto-incrementing sequence; the passed activity-set id is
+    discarded.  If an activity-set w/ the passed id already exists,
+    then we'll use the already-existing activity-set during import of
+    this activity-set's activites. To avoid picking up an extant
+    activity-set unintentionally on import, i.e. in the case where
+    you are doing an import of all new issues w/ no desire to refer
+    to already existing activity-sets, do not use a purely numerical
+    id for your activity-set id: Give the activity-set an alphabetic 
+    prefix.  In other words, instead of using numeric ids like 
+    1,2,3,4,5, use ids that run new1, new2, new3, etc.
+</pre>
+
+</p>
+      </answer>      
+</faq>   
+  </part>      
 </faqs>

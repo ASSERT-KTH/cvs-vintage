@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Duplicate Checking</title></properties>
+<body>
+  <section name="Duplicate Issue Checking">
+
+<subsection name="Introduction">
+
+<p>
+Scarab has a nifty feature called "Duplicate Checking." What this means
+is that we have broken up the Issue entry process into a well defined
+set of steps. This allows us to do a search for pre-existing Issues in
+the database which match up to the one that is being entered. The
+primary goal being that this will help prevent duplicate Issues from
+being entered into the database. Of course, it is also possible to skip
+this duplicate checking step and enter in the Issue directly. The steps
+involved are:
+</p>
+
+<ol>
+<li>Attributes which are marked as being part of the duplicate check process</li>
+<li>Search for those Attributes against values in the database</li>
+<li>If there are matching Issues. Display a screen with a list of
+matching Issues (and the ability to submit comments or vote) or take the
+user to the final screen which is entering in the rest of the Attributes
+which were not on the first screen</li>
+</ol>
+
+<p>
+The way that the feature works is that <a
+href="attributes.html">Attributes</a> are assigned to a Module and a
+certain set of Attributes are marked as being made available on the
+first screen.
+</p>
+</subsection>
+
+<subsection name="Search Definition">
+
+<p>
+The process of duplicate checking is done by using the <a
+href="http://jakarta.apache.org/lucene/">Lucene Search Engine</a> to
+index any free form text entry attributes (like 'Summary') and then
+provide a set of logic like this:
+</p>
+
+<ol>
+<li>OR the data in the text fields</li>
+<li>AND the rest of the Attributes</li>
+</ol>
+
+<p>
+For example, if the first duplicate checking page has the following
+Attributes: Summary (text), Platform (select menu), and OS (select
+menu). The user then sets the values for the Attributes to be: "Nasty
+bug in Scarab", "All", "Windows 3.1". The search would be spelled out
+like this: ("Nasty" OR "bug" OR "Scarab") AND (All) AND (Windows 3.1).
+We left out "in" because this would be a word that Lucene would most
+likely not index by default because it is a standard word in the English
+language.
+</p>
+
+<p>
+When Lucene returns the results which are shown on the second page, it
+orders them from top to bottom in order of the weight given to the
+match. In other words, queries which result in an exact match appear at
+the top and queries which result in a fuzzy match are closer to the
+bottom.
+</p>
+
+<p>
+NOTE: The definition of how things are searched is still up in the air.
+It is currently hard coded into the .java source code but can be fairly
+easily modified. Once we have larger sets of data, we will work to refine
+the search definition in order to reduce the number of false positives.
+</p>
+</subsection>
+
+  </section>
+</body>
+</document>

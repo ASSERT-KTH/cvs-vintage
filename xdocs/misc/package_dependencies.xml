@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<document>
+
+  <properties>
+    <title>Scarab Package Dependencies</title>
+    <author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+
+  <section name="Package Dependencies">
+    <p> Package Dependencies
+    </p>
+    <img src="package_dependencies.gif"/>
+  </section>
+
+  </body>
+</document>

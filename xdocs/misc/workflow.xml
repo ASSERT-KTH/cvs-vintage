@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Workflow</title></properties>
+<body>
+  <section name="Workflow">
+
+<p>
+
+Workflow is a topic that both CollabNet and the community recognize as a valuable
+
+aspect of any defect tracking system.  Brian Behlendorf has written a response to
+
+questions about plans for workflow in Scarab.
+
+</p>
+
+
+
+<p><a href="http://scarab.tigris.org/servlets/ReadMsg?list=users&amp;msgNo=361">Brian's response</a>
+
+is available in the Scarab users mail list.</p>
+
+<p>
+<strong>A user has volunteered to contribute their workflow efforts!</strong>  This will be a basic implementation, but may help
+get us closer.
+</p>
+
+    
+  </section>
+</body>
+</document>

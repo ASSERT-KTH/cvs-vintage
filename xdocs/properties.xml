@@ -27,7 +27,15 @@
           <td>
             Where to store the HEAD version of the documentation.
           </td>
-        </tr>             
+        </tr>  
+        <tr>
+          <td>scarab.docbook.enable=true</td>
+          <td>Yes</td>
+          <td>
+            Whether to transform docbook documentation.  Turn it off if you aren't connected to the 
+            internet!
+          </td>
+        </tr>                   
       </table>
     </section>
   </body>

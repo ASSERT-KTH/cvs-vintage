@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>Importing issue data</title></properties>
+<body>
+
+  <section name="Importing Issue Data">
+<p>
+Scarab has the ability to export XML issues and then import them back
+in. For now, there are a lot of pre-requirements in order for this to
+happen successfully (see below). We cannot stress strongly enough that
+you backup your database before you do this import as the code is in its
+early alpha stages. One thing that is known to not work entirely
+is the import of the dependency information. I have also not done a
+lot of testing of the update-same-db import-type, just the
+create-same-db import-type.
+</p>
+
+<p>
+There are three ways that the import can happen and this is defined by the
+import-type element in the XML file:
+</p>
+
+<p>
+  <strong>&lt;import-type&gt;create-same-db&lt;/import-type&gt;</strong> - 
+  This means that when doing an import, all issues being imported will be 
+  considered new issues, any pre-existing data will be ignored and all data
+  in the XML file will be imported as new data. Right now, this has the same
+  behavior as create-different-db.
+</p>
+<p>
+  <strong>&lt;import-type&gt;create-different-db&lt;/import-type&gt;</strong> - 
+  This means that when doing an import, all issues being imported will be 
+  considered new issues, any pre-existing data will be ignored and all data
+  in the XML file will be imported as new data. Right now, this has the same
+  behavior as create-same-db.
+</p>
+<p>
+  <strong>&lt;import-type&gt;update-same-db&lt;/import-type&gt;</strong> - 
+  This means that the system will try to find existing data in the database
+  (such as an ActivitySet id) and will overwrite the pre-existing data
+  with what is in the XML file. If it can't find the data, it will create
+  new data.
+</p>
+
+<p>
+The current pre-requirements for a successful import are that all of the
+modules, usernames, issue/artifact types, attributes, attribute options
+referenced in the XML file must already exist in the system. If they cannot
+be found, the import will fail.
+</p>
+
+<p>
+Importing can be done via the UI into a running scarab or via an ImportIssues 
+ant task.
+</p>  
+
+<p>
+The import issues screen can be found under <strong>Admin->Modules</strong>
+in the navigation bar.  The import issues UI can be asked to give back the 
+issue import results as xml by setting the value of the form input 'format' 
+field to 'xml'.  Such a feature might be used scripting a mass import of 
+issues via HTTP POST.
+</p>
+
+<p>
+To perform the import via ant, one needs to setup some properties
+and then execute the scarab/build/import.xml file. The properties can be
+defined in a ~/build.properties file (or ~/scarab.build.properties,
+scarab/build.properties, etc. Look at the top of the import.xml file
+for the various locations which can be used.)
+</p>
+
+<p>
+The important properties to define are:
+</p>
+
+<ul>
+    <li><strong>scarab.import.issues.xml</strong> - The relative or absolute
+    path to the file which is going to be used to import the issues.
+    Default: ../src/dtd/scarab-issues-export.xml</li>
+    <li><strong>scarab.import.config.file</strong> - The path to the xml
+    import configuration file which defines the log4j settings and other 
+    variables. Default: /WEB-INF/conf/xmlimport.properties</li>
+    <li><strong>scarab.import.trprops.file</strong> - The path to the 
+    TurbineResources.properties file which defines things like the connection
+    to the database. Default: /WEB-INF/conf/TurbineResources.properties</li>
+</ul>
+
+<p>
+The best thing to do in the early stages of this development phase is
+to cd into the build directory and first make sure that Scarab is built (type: <strong>ant</strong>). 
+Then, type the following: <strong>ant -f import.xml</strong>
+</p>
+
+<p>
+You should then see the debugging output sent to the screen. If you see an 
+exception, please make sure to 
+<a href="mailto:jon@latchkey.com?subject=xml import problems">send it to me</a> 
+so that I can look into fixing it.
+</p>
+
+<p>See also this explaination of the <a href="./xmlimport/ScarabXMLFormat.html">Scarab XML Format</a>, 
+and the xml import <a href="xmlimport/faq.html">FAQ</a> to learn more.
+</p>
+  </section>
+</body>
+</document>

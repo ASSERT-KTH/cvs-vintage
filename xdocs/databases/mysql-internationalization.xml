@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document><properties><title>OOP-Reserch : How to store 2 bytes String into MySQL
+</title></properties>
+<body><section name="MySQL Internationalization"><table width="100%" cellpadding="3">
+
+<tr>
+<td valign="TOP">
+
+<!-- START OF CONTENTS OF THIS PAGE -->
+
+<h1>Java and MySQL</h1>
+<p>
+<a href="http://www.mysql.com/">MySQL</a> is the world fastest SQL database, which is available for most platform. Through <a href="http://java.sun.com/products/jdbc/index.html">JDBC</a> driver, our Java programs can insert and query the data on MySQL. <a href="http://www.worldserver.com/mm.mysql/#downloads">MM Mysql Driver</a> is the complete JDBC2.0 implementation, by which we can use PreparedStatement. Once the instance of PreparedStatement is retrieved, we can execute it again and again along with the different parameters. For example:
+<form>
+<center>
+<textarea name="1" rows="20" cols="40">
+
+    private static final String SQL_DRV="org.gjt.mm.mysql.Driver";
+    private static final String SQL_URL="jdbc:mysql://localhost/foo";
+    private static final String INSERT="INSERT INTO my_tbl (col_1,col_2) VALUES(?,?)";
+.....
+    Class.forName(SQL_DRV);
+    Connection con=DriverManager.getConnection(SQL_URL,usr,pss);
+    PreparedStatement ps=con.prepareStatement(INSERT);
+    String col_1_str=null;
+    String col_2_str=null;
+    for(int i=0; col_1s.length; i++){
+        // col_1s and col_2s are the arrays of Strings
+        col_1_str=col_1s[i];
+  col_2_str=col_2s[i];
+  ps.setString(1,col_1_str);
+  ps.setString(2,col_2_str);
+  ps.executeUpdate();
+    }
+    ps.close();
+    con.close();
+</textarea>
+</center>
+</form>
+
+The 2 arrays of Strings are inserted into "my_tbl" by this simple code.
+</p>
+
+<h1>Java is Internationalization ready</h1>
+<p>
+Within our Java code, once the instance of String is created, we need not pay any attention whether it consists of all the ASCII characters or not.
+For example:
+<form>
+<center>
+<textarea name="1" rows="10" cols="40">
+
+   private static final String RESOURCE="MyResource";
+   try{
+      ResourceBundle res=ResourceBundle.getBundle(RESOURCE);
+      button_title=res.getString("button");
+      ....
+      }
+   catch(Exception ex){
+      ....
+   }
+   JButton mybutton=new JButton(button_title);
+</textarea>
+</center>
+</form>
+
+In the Japanese language environment, JVM tries to find "MyResource_ja.properties" in its CLASSPATH and parse its contents if found. In case that "MyResource_ja.properties" does not exist in the CLASSPATH, "MyResource.properties" will be parsed as the default property file instead. Anyway, the instance of ResourceBundle is created based on the property file, and it provides us with the instance of String appropriate for the runtime environment.
+<br></br>
+Thus, the instance of String with NON-ASCII characters can easily be created. And such an instance of String can be treated as if it is all the ASCII String.
+<blockquote>
+To create the property file for NON-ASCII characters, we should use "native2ascii" tool which is supplied with JDK. For details about these features, please read <a href="http://java.sun.com/products/jdk/1.2/docs/index.html">the JDK documentation</a> or <a href="http://java.sun.com/docs/books/tutorial/i18n/index.html">Java Tutorial</a>.
+</blockquote>
+<blockquote>
+As for the Strings on Swing GUI, you can write them in the XML file. This can easily be done by <a href="http://www.oop-reserch.com/xmlpanel_1_0.html">OOP XMLPanelEdit</a>. It's FREE for non-commercial use.
+</blockquote>
+</p>
+
+<h1>And MySQL can be!</h1>
+<p>
+But what happens to store the NON-ASCII Strings into SQL database? When MySQL is compiled for ASCII charset, all the NON-ASCII Strings inserted into table was corruped. Query on such a culumn fails. Although MySQL can be compiled for the specific charset, it cannot be capable for the Strings other than that charset. How happy we are if MySQL can be Internationalization ready as Java. If it is, we can take the full advantage of Java and MySQL can serve as SQL database behind the web application for almost all the language in the world!
+<br></br>
+<font size="+1" color="#FF6666">And MySQL can be!</font>
+Any NON-ASCII Strings can be converted into all the ASCII Strings using UTF8 byte array. It looks like this:
+<form>
+<center>
+<textarea name="1" rows="20" cols="40">
+
+    private static final String SQL_DRV="org.gjt.mm.mysql.Driver";
+    private static final String SQL_URL="jdbc:mysql://localhost/foo";
+    private static final String INSERT="INSERT INTO my_tbl (col_1,col_2) VALUES(?,?)";
+.....
+    Class.forName(SQL_DRV);
+    Connection con=DriverManager.getConnection(SQL_URL,usr,pss);
+    PreparedStatement ps=con.prepareStatement(INSERT);
+    String col_1_str=null;
+    String col_2_str=null;
+    byte[] col_1_b=null;
+    byte[] col_2_b=null;
+    for(int i=0; col_1s.length; i++){
+        // col_1s and col_2s are the arrays of Strings
+  // Now, some of them can be NON-ASCII String
+        col_1_str=col_1s[i];
+  col_2_str=col_2s[i];
+  col_1_b=col_1_str.getBytes("UTF8");
+  col_2_b=col_2_str.getBytes("UTF8");
+  col_1_str=new String(col_1_b,"8859_1");
+  col_2_str=new String(col_2_b,"8859_1");
+  ps.setString(1,col_1_str);
+  ps.setString(2,col_2_str);
+  ps.executeUpdate();
+    }
+    ps.close();
+    con.close();
+</textarea>
+</center>
+</form>
+
+In the "col_1" and "col_2", the Strings which consists of only the ASCII characters are stored. So, some Strings with Japanese ShiftJIS and another with Chinese BIG5 can be stored in the same column of the single table, by MySQL.
+<br></br>
+Query on this kind of column can be done by the same way:
+<form>
+<center>
+<textarea name="1" rows="20" cols="40">
+
+    private static final String SELECT="SELECT * FROM my_tbl where col_1=?";
+....
+    PreparedStatement ps=con.prepareStatement(SELECT);
+    // query_str may be NON-ASCII String
+    byte[] query_b=query_str.getBytes("UTF8");
+    query_str=new String(query_b,"8859_1");
+    ps.setString(1,query_str);
+    ResultSet rs=ps.executeQuery();
+    while(rs.next()){
+  col_1_str=rs.getString(1);
+  col_2_str=rs.getString(2);
+  col_1_b=col_1_str.getBytes("8859_1");
+  col_2_b=col_2_str.getBytes("8859_1");
+  col_1_str=new String(col_1_b,"UTF8");
+  col_2_str=new String(col_2_b,"UTF8");
+    }
+    rs.close();
+
+</textarea>
+</center>
+</form>
+Note that resulting String must be reverted through the procedure in reverse order.
+
+</p>
+
+<!-- END OF CONTENTS OF THIS PAGE -->
+
+</td>
+
+<td valign="TOP">
+ 
+</td>
+
+</tr>
+
+</table></section><section name=""></section></body></document>

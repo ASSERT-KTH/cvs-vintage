@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<document>
+<properties>
+<title>Development Notes</title>
+<author email="epugh@OpensourceConnections.com">Eric Pugh</author>
+</properties>
+<body>
+<section name="Scarab hacking and You">
+
+<p>Unless otherwise noted, we use the <a
+href="http://jakarta.apache.org/site/guidelines.html">general project
+guidelines from the Jakarta project</a>, and the <a
+href="http://jakarta.apache.org/turbine/common/code-standards.html">coding
+standards from the Turbine project</a>.</p>
+
+
+<subsection name="Change log messages">
+
+<p>Concise and descriptive change log messages are a major factor in
+eking the most value out of your <a
+href="http://www.cvshome.org/">version control</a>/<a
+href="http://scm.tigris.org/">software configuration managment</a>
+tools.</p>
+
+<p>Change log messages are sometimes referred to as "commit logs",
+"commit log messages", or just "log messages".  These phrases will be
+used interchangeably throughout the docs.</p>
+
+<p>Guidelines for writing change log messages are essentially as laid
+out in the "Writing log messages" section of the <a
+href="http://subversion.tigris.org/">Subversion</a> project's <a
+href="http://svn.collab.net/repos/svn/trunk/HACKING">HACKING</a>
+file.</p>
+
+<p>It's encouraged that developers start their log messages as early
+in the change process as possible.  Recording a brief, high level
+change summary before actually making the change, and/or recording the
+change as it's made are excellent technique for producing accurate and
+valuable log messages which truly aid in change tracking.  When using
+a CVS/SVN style VC/SCM tool, diffing the list of files you plan on
+checking in and comparing the actual changes to what's in your log
+message is a great way to verify the accuracy of your log message, or
+produce a change log message after the fact.</p>
+
+</subsection>
+<subsection name="Misc. development comments">
+
+<p>
+As Scarab uses a build -&gt; compile -&gt; run development framework,
+please remember to always edit only the files in the src directory,
+and not the build target directory.
+</p>
+
+<p>
+Once you have edited a file in the src directory, you need to make sure to 
+execute the ant script again. If you edit a .java source file, then you 
+should execute [./ant compile]. If you edit any other file, then you 
+only need to execute [./ant].
+</p>
+
+<p>
+If, you make a change to a source file and you don't see that change 
+reflected in what you are doing, make sure to read the note above. :-)
+</p>
+
+<p>
+If you delete a src/java or src/template file you will need to delete the 
+corresponding src files as well as any .class files from within the target tree 
+and then re-compile. For example:
+</p>
+
+<p>
+Delete:<br/>
+scarab/src/java/org/tigris/scarab/screens/Foo.java<br/>
+Also Delete:<br/>
+scarab/target/webapps/scarab/WEB-INF/src/java/org/tigris/scarab/screens/Foo.java<br/>
+scarab/target/webapps/scarab/WEB-INF/classes/org/tigris/scarab/screens/Foo.class
+</p>
+
+<p>
+You can make the above procedure easier by simply removing the entire target 
+tree and re-creating it. Next, you are going to ask why the source file is 
+stored in the WEB-INF directory. The reason is because Ant allows us to do 
+String replacement in the source files. So, at some point in the future, we 
+will probably use this functionality to include a version number into one 
+of the source files so that it is possible to see what version of Scarab 
+is running. There are other reasons for doing this as well, but this is 
+an easy example to explain. :-)
+</p>
+
+<p>
+At any point, you should be able to build a fresh target tree. This means 
+that you should be able to kill Tomcat, remove the target directory and 
+re-execute the build.sh script.
+</p>
+
+<p>
+If you make a change to a .java file and then recompile, you need to wait at 
+least 3 seconds (this is configurable in Tomcat's server.xml file near the 
+bottom) for the classloader to notice that the class has changed and
+reload it. Currently, if you are logged in, it will probably log you back out
+when this happens. We are working to resolve the issue.
+</p>
+
+</subsection>
+
+<subsection name="Code organization">
+
+<p>
+"business logic should not be coded into actions".  In the best
+circumstance, actions would do nothing more than assemble objects based
+on the available input data and pass them to the appropriate business
+classes to carry out the requested action.
+</p>
+
+<p>
+Data which resides in the logged-in user's temp Hashtable should be
+keyed by a constant of the ScarabConstants interface, and have its
+name prefixed with "scarab.".  For example:
+
+<pre>
+YourAction.java:
+List issueIdList = (List) user.getTemp("issueIdList");
+
+                        |
+                        v
+
+ScarabConstants.java:
+public static final String ISSUE_ID_LIST = "scarab.issueIdList";
+
+YourAction.java:
+List issueIdList = (List) user.getTemp(ScarabConstants.ISSUE_ID_LIST);
+</pre></p>
+
+
+</subsection>
+
+
+<subsection name="Working with an IDE">
+
+<p>While it is not necessary to use a GUI IDE to develop Scarab,
+there is a lot of value in having the Scarab CVS distribution be IDE-ready.
+Facilitating easy development of Scarab with a GUI IDE should go a long way
+towards helping new developers get up to speed.
+<!-- Nice quote, Dan -->
+</p>
+<p>
+At this point, the integration of <a href="http://eclipse.org">Eclipse</a>
+is just beginning.
+As the integration expands, guidelines and additional information
+will be available <a href="development_ide.html">here</a>.
+</p>
+</subsection>
+
+</section>
+</body></document>
