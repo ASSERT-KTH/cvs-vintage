@@ -30,7 +30,7 @@ import org.jboss.util.FinderResults;
 * An EJB stateful session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>
@@ -49,7 +49,7 @@ extends GenericProxy
    
    /** JBoss generated identifier. */
    protected Object id;
-   
+
    // Static --------------------------------------------------------
   
    // Constructors --------------------------------------------------
@@ -107,17 +107,17 @@ extends GenericProxy
       else if (m.equals(HASH_CODE)) {
          return new Integer(id.hashCode());
       }
-      
+
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE)) {
          return new StatefulHandleImpl(jndiName,invoker.getServerHostName(), id);
       }
       else if (m.equals(GET_EJB_HOME)) {
-         
+
          return getEJBHome();
       }
       else if (m.equals(GET_PRIMARY_KEY)) {
-       
+
          return id;
       }
       else if (m.equals(IS_IDENTICAL)) {
@@ -125,14 +125,15 @@ extends GenericProxy
          // See above, this is not correct but works for now (do jboss1.0 PKHolder hack in here)
          return isIdentical(args[0], id);
       }
-      
+
       // If not taken care of, go on and call the container
       else {
          return invoke(createInvocation(id, m, args));
       }
    }
-   
-   public Invocation createInvocation(Object id, Method m, Object[] args) 
+
+   public Invocation createInvocation(Object id, Method m, Object[] args)
+     throws Exception
    {
       Invocation invocation = new Invocation(new HashMap());
       invocation.setContainer(objectName);
@@ -140,7 +141,8 @@ extends GenericProxy
       invocation.setId(id);
       invocation.setMethod(m);
       invocation.setArguments(args);
-      
+      invocation.setTransaction(getTransaction());
+
       return invocation;
    
    }

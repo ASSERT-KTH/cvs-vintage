@@ -29,7 +29,7 @@ import org.jboss.util.FinderResults;
 /**
 * An EJB entity bean proxy class.
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -135,21 +135,23 @@ extends GenericProxy
       }
    }
    public Invocation createInvocation(CacheKey id, Method m, Object[] args)
+     throws Exception
    {
       Invocation invocation = new Invocation(new HashMap());
-      
+
       invocation.setContainer(objectName);
       invocation.setType("remote");
       invocation.setId(id);
       invocation.setMethod(m);
-      invocation.setArguments(args);    
-      
+      invocation.setArguments(args);
+      invocation.setTransaction(getTransaction());
+
       return invocation;
    }
    // Package protected ---------------------------------------------
-   
+
    // Protected -----------------------------------------------------
-   
+
    /**
    * Externalization support.
    *
@@ -163,7 +165,7 @@ extends GenericProxy
       super.writeExternal(out);
       out.writeObject(cacheKey);
    }
-   
+
    /**
    * Externalization support.
    *
@@ -177,11 +179,11 @@ extends GenericProxy
    {
       super.readExternal(in);
       cacheKey = (CacheKey)in.readObject();
-      
+
       // Private -------------------------------------------------------
-      
+
       // Inner classes -------------------------------------------------
    }
 }
-   
-   
+
+

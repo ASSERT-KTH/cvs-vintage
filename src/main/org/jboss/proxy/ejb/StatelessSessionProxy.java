@@ -18,7 +18,7 @@ import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
 * An EJB stateless session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>
@@ -104,21 +104,23 @@ extends GenericProxy
          // if the names are equal we are equal
          return isIdentical(args[0], jndiName);
       }
-      
+
       // If not taken care of, go on and call the container
       else {
          return invoke(createInvocation(m, args));
       }
    }
-   
-   public Invocation createInvocation(Method m, Object[] args) 
+
+   public Invocation createInvocation(Method m, Object[] args)
+     throws Exception
    {
       Invocation invocation = new Invocation(new HashMap());
-      
+
       invocation.setContainer(objectName);
       invocation.setType("remote");
       invocation.setMethod(m);
-      invocation.setArguments(args);  
+      invocation.setArguments(args);
+      invocation.setTransaction(getTransaction());
       
       return invocation;
    }

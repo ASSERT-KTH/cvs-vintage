@@ -38,7 +38,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>
@@ -49,7 +49,7 @@ public class HomeProxy
 extends GenericProxy
 {
    // Constants -----------------------------------------------------
-   
+
    /** Serial Version Identifier. */
 //   private static final long serialVersionUID = 432426690456622923L;
    
@@ -159,10 +159,10 @@ extends GenericProxy
       else if (m.equals(REMOVE_BY_HANDLE)) {
          // First get the EJBObject
          EJBObject object = ((Handle) args[0]).getEJBObject();
-         
+
          // remove the object from here
          object.remove();
-         
+
          // Return Void
          return Void.TYPE;
       }
@@ -170,15 +170,15 @@ extends GenericProxy
          // Session beans must throw RemoveException (EJB 1.1, 5.3.2)
          if (ejbMetaData.isSession())
             throw new RemoveException("Session beans cannot be removed by primary key.");
-         
+
          // The trick is simple we trick the container in believe it
          // is a remove() on the instance
          Object id = new CacheKey(args[0]);
-         
+
          // create an invocation for the new format
-         
+
          Invocation invocation = new Invocation(new HashMap());
-         
+
          invocation.setContainer(objectName);
          invocation.setId(id);
          invocation.setType("remote");
@@ -186,31 +186,33 @@ extends GenericProxy
          invocation.setArguments(EMPTY_ARGS);
          return invoke(invocation);
       }
-      
-      
+
+
       // If not taken care of, go on and call the container
-      else { 
-         
+      else {
+
          // Create an Invocation
-         
+
          return invoke(createInvocation(m, args));
       }
    }
-   
-   
+
+
    public Invocation createInvocation(Method m, Object[] arguments)
+     throws Exception
    {
-      
+
       Invocation invocation = new Invocation(new HashMap());
-      
+
       invocation.setContainer(objectName);
       invocation.setType("home");
       invocation.setMethod(m);
       invocation.setArguments(arguments);
-      
+      invocation.setTransaction(getTransaction());
+
       return invocation;
    }
-   
+
    /**
    * Externalization support.
    *
