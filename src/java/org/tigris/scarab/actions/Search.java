@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.94 2002/10/23 21:33:24 jon Exp $
+ * @version $Id: Search.java,v 1.95 2002/10/28 18:57:20 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -196,7 +196,8 @@ public class Search extends RequireLoginFirstAction
         Group queryGroup = intake.get("Query", 
                                       query.getQueryKey());
         queryGroup.setProperties(query);
-        query.save();
+        query.saveAndSendEmail((ScarabUser)data.getUser(), 
+                 getScarabRequestTool(context).getCurrentModule(), context);
     }
 
     /**
@@ -213,8 +214,8 @@ public class Search extends RequireLoginFirstAction
         String newValue = getQueryString(data);
         queryGroup.setProperties(query);
         query.setValue(newValue);
-        query.saveAndSendEmail((ScarabUser)data.getUser(), scarabR.getCurrentModule(),
-                                   context);
+        query.saveAndSendEmail((ScarabUser)data.getUser(), 
+                 scarabR.getCurrentModule(), context);
     }
 
     /**
