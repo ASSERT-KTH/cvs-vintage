@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.40 2005/01/30 20:48:02 linus Exp $
+// $Id: FigComment.java,v 1.41 2005/02/18 21:20:42 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,7 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.Model;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.tigris.gef.base.Selection;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigPoly;
@@ -362,6 +363,13 @@ public class FigComment
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
+
+    /**
+     * @see org.tigris.gef.presentation.Fig#makeSelection()
+     */
+    public Selection makeSelection() {
+        return new SelectionComment(this);
+    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#setLineColor(java.awt.Color)
