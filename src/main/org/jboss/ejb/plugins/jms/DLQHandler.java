@@ -1,9 +1,12 @@
-/*
- * JBoss, the OpenSource EJB server
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.ejb.plugins.jms;
 
 import java.util.Hashtable;
@@ -28,73 +31,81 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.jms.jndi.JMSProviderAdapter;
 
+import org.jboss.system.ServiceMBeanSupport;
+
 /**
  * Places redeliveded messages on a Dead Letter Queue.
  *
- *<p>The Dead Letter Queue handler is used to not set JBoss in an endles loop
+ *<p>
+ *The Dead Letter Queue handler is used to not set JBoss in an endles loop
  * when a message is resent on and on due to transaction rollback for
  * message receipt.
  *
- *<p>It sends message to a dead letter queue (configurable, defaults to
+ * <p>
+ * It sends message to a dead letter queue (configurable, defaults to
  * queue/DLQ) when the message has been resent a configurable amount of times,
  * defaults to 10.
  *
- * <p>The handler is configured through the element MDBConfig in
+ * <p>
+ * The handler is configured through the element MDBConfig in
  * container-invoker-conf.
  *
- * <p>The JMS property JBOSS_ORIG_DESTINATION in the resent message is set
+ * <p>
+ * The JMS property JBOSS_ORIG_DESTINATION in the resent message is set
  * to the name of the original destination (Destionation.toString()).
  *
- * <p>The JMS property JBOSS_ORIG_MESSAGEID in the resent message is set
+ * <p>
+ * The JMS property JBOSS_ORIG_MESSAGEID in the resent message is set
  * to the id of the original message.
- *
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @author
- * @version $Revision: 1.10 $ $Date: 2002/02/17 06:13:30 $
+ * @version <tt>$Revision: 1.11 $</tt>
+ * @author ???
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-
 public class DLQHandler
+   extends ServiceMBeanSupport
 {
-   /** Class logger. */
-   private static Logger log = Logger.getLogger(DLQHandler.class);
-   
    /** JMS property name holding original destination. */
    public static final String JBOSS_ORIG_DESTINATION ="JBOSS_ORIG_DESTINATION";
    
    /** JMS property name holding original JMS message id. */
    public static final String JBOSS_ORIG_MESSAGEID="JBOSS_ORIG_MESSAGEID";
    
-   /** Connection factory JNDI, java:/ConnectionFactory, should we make it configurable? */
-   private static final String FACTORY_JNDI="java:/ConnectionFactory";
-   
    // Configuratable stuff
+
    /**
-    *  Destination to send dead letters to.
-    *<p>Defaults to queue/DLQ,
-    * configurable through DestinationQueue element.
+    * Destination to send dead letters to.
+    * 
+    * <p>
+    * Defaults to <em>queue/DLQ</em>, configurable through
+    * <tt>DestinationQueue</tt> element.
     */
    private String destinationJNDI = "queue/DLQ";
    
    /**
     * Maximum times a message is alowed to be resent.
     *
-    * <p>Defaults to 10, configurable through MaxTimesRedelivered element.
+    * <p>Defaults to <em>10</em>, configurable through
+    * <tt>MaxTimesRedelivered</tt> element.
     */
    private int maxResent = 10;
    
    /**
     * Time to live for the message.
     *
-    *<p>Defaults to Message.DEFAULT_TIME_TO_LIVE, configurable through
-    * the TimeToLive element.
+    * <p>
+    * Defaults to <em>{@link Message#DEFAULT_TIME_TO_LIVE}</em>, 
+    * configurable through the <tt>TimeToLive</tt> element.
     */
    private long timeToLive = Message.DEFAULT_TIME_TO_LIVE;
    
    // May become configurable
+   
    /** Delivery mode for message, Message.DEFAULT_DELIVERY_MODE. */
    private int deliveryMode = Message.DEFAULT_DELIVERY_MODE;
+
    /** Priority for the message, Message.DEFAULT_PRIORITY */
    private int priority = Message.DEFAULT_PRIORITY;
    
@@ -102,107 +113,102 @@ public class DLQHandler
    private QueueConnection connection;
    private Queue dlq;
    private Hashtable resentBuffer = new Hashtable();
-   private JMSProviderAdapter providerAdapter = null;
+   private JMSProviderAdapter providerAdapter;
 
-   public DLQHandler()
+   public DLQHandler(final JMSProviderAdapter providerAdapter)
    {
-      
+      this.providerAdapter = providerAdapter;
    }
 
-  // Fix: set the JMS provider adapter to handle DLQ stuff
-  public DLQHandler(JMSProviderAdapter providerAdapter)
-  {
-    this.providerAdapter = providerAdapter;
-  }
-
-  //--- Service
+   //--- Service
+   
    /**
     * Initalize the service.
     *
     * @throws Exception    Service failed to initalize.
     */
-   void create() throws Exception
+   protected void createService() throws Exception
    {
-      // Fix: use provider adapter eventually
-      Context ctx = providerAdapter != null? providerAdapter.getInitialContext(): new InitialContext();
-      QueueConnectionFactory factory = (QueueConnectionFactory)
-      ctx.lookup(FACTORY_JNDI);
+      Context ctx = providerAdapter.getInitialContext();
       
-      connection = factory.createQueueConnection();
-      dlq = (Queue)ctx.lookup(destinationJNDI);
-      if (log.isDebugEnabled())
-      log.debug("Created Dead Letter Queue connection " + dlq);
-   }
-   
-   /**
-    * Start the service.
-    *
-    * @throws Exception    Service failed to start.
-    */
-   void start() throws Exception
-   {
-      
-   }
-   
-   /**
-    * Stop the service.
-    */
-   void stop()
-   {
-      
-   }
-   
-   /**
-    * Destroy the service.
-    */
-   void destroy()
-   {
-      try
-      {
-         connection.stop();
+      try {
+         String factoryName = providerAdapter.getQueueFactoryRef();
+         QueueConnectionFactory factory = (QueueConnectionFactory)
+            ctx.lookup(factoryName);
+         log.debug("Using factory: " + factory);
+         
+         connection = factory.createQueueConnection();
+         log.debug("Created connection: " + connection);
+
+         dlq = (Queue)ctx.lookup(destinationJNDI);
+         log.debug("Using Queue: " + dlq);
       }
-      catch(Exception ex)
-      {
+      finally {
+         ctx.close();
       }
+   }
+
+   protected void startService() throws Exception
+   {
+      connection.start();
+   }
+
+   protected void stopService() throws Exception
+   {
+      connection.stop();
+   }
+   
+   protected void destroyService() throws Exception
+   {
+      // Help the GC
+      connection = null;
+      dlq = null;
+      resentBuffer = null;
+      providerAdapter = null;
    }
    
    //--- Logic
+   
    /**
     * Check if a message has been redelivered to many times.
     *
     * If message has been redelivered to many times, send it to the
     * dead letter queue (default to queue/DLQ).
     *
-    * @return true if message is handled, i.e resent, false if not.
+    * @return true if message is handled (i.e resent), false if not.
     */
-   public boolean handleRedeliveredMessage(Message msg)
+   public boolean handleRedeliveredMessage(final Message msg)
    {
+      boolean handled = false;
+      
       try
       {
          String id = msg.getJMSMessageID();
+         
          if (id == null)
          {
             // if we can't get the id we are basically fucked
-            log.error("Message id is null, can't handle message");
+            log.error("Message id is null; can not handle message");
          }
-         else if(incrementResentCount(id) > maxResent)
+         else if (incrementResentCount(id) > maxResent)
          {
-            log.warn("Message resent too many times; sending it to DLQ. Id: " + id);
+            log.warn("Message resent too many times; sending it to DLQ; message id=" + id);
+            
             sendMessage(msg);
             deleteFromBuffer(id);
-            return true;
+
+            handled = true;
          }
       }
-      catch(JMSException ex)
+      catch (JMSException e)
       {
          // If we can't send it ahead, we do not dare to just drop it...or?
-         log.error("Could not send message to Dead Letter Queue", ex);
+         log.error("Could not send message to Dead Letter Queue", e);
       }
       
-      return false;
+      return handled;
    }
 
-   //--- Private helper stuff
    /**
     * Increment the counter for the specific JMS message id.
     *
@@ -212,20 +218,25 @@ public class DLQHandler
    {
       BufferEntry entry = null;
       boolean trace = log.isTraceEnabled();
-      if(!resentBuffer.containsKey(id))
+      
+      if (!resentBuffer.containsKey(id))
       {
-         if (trace)
-         log.trace("Making new entry for id " + id);
+         if (trace) {
+            log.trace("Making new entry for id: " + id);
+         }
+         
          entry = new BufferEntry();
          entry.id = id;
          entry.count = 1;
          resentBuffer.put(id,entry);
-      } else
+      }
+      else
       {
          entry = (BufferEntry)resentBuffer.get(id);
          entry.count++;
-         if (trace)
-         log.trace("Incremented old entry for id " + id + " count " + entry.count);
+         if (trace) {
+            log.trace("Incremented old entry for id: " + id + "; count=" + entry.count);
+         }
       }
       return entry.count;
    }
@@ -243,35 +254,47 @@ public class DLQHandler
     */
    protected void sendMessage(Message msg) throws JMSException
    {
-      // Set the properties
-      QueueSession ses = null;
+      boolean trace = log.isTraceEnabled();
+      
+      QueueSession session = null;
       QueueSender sender = null;
+
       try
       {
-         msg = makeWritable(msg);//Don't know yet if we are gona clone or not
+         msg = makeWritable(msg); // Don't know yet if we are gona clone or not
+         
+         // Set the properties
          msg.setStringProperty(JBOSS_ORIG_MESSAGEID,
          msg.getJMSMessageID());
          msg.setStringProperty(JBOSS_ORIG_DESTINATION,
          msg.getJMSDestination().toString());
          
-         ses = connection.createQueueSession(false,Session.AUTO_ACKNOWLEDGE);
-         sender = ses.createSender(dlq);
-         if (log.isTraceEnabled())
-            log.trace("Resending DLQ message to destination" + dlq);
-         sender.send(msg,deliveryMode,priority,timeToLive);
+         session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+         sender = session.createSender(dlq);
+         if (trace) {
+            log.trace("Sending message to DLQ; destination=" +
+                      dlq + ", session=" + session + ", sender=" + sender);
+         }
+
+         sender.send(msg, deliveryMode, priority, timeToLive);
+
+         if (trace) {
+            log.trace("Message sent.");
+         }
+         
       }
       finally
       {
          try
          {
-            sender.close();
-            ses.close();
+            if (sender != null) sender.close();
+            if (session != null) session.close();
          }
-         catch(Exception ex)
+         catch(Exception e)
          {
+            log.warn("Failed to close sender or session; ignoring", e);
          }
       }
-      
    }
    
    /**
@@ -282,64 +305,63 @@ public class DLQHandler
    protected Message makeWritable(Message msg) throws JMSException
    {
       Hashtable tmp = new Hashtable();
+
       // Save properties
-      for(Enumeration en = msg.getPropertyNames();en.hasMoreElements();)
+      for (Enumeration en=msg.getPropertyNames(); en.hasMoreElements();)
       {
-         String key = (String) en.nextElement();
-         tmp.put(key,msg.getStringProperty(key));
+         String key = (String)en.nextElement();
+         tmp.put(key, msg.getStringProperty(key));
       }
+      
       // Make them writable
       msg.clearProperties();
       
       Enumeration keys = tmp.keys();
-      while(keys.hasMoreElements())
+      while (keys.hasMoreElements())
       {
          String key = (String) keys.nextElement();
-         msg.setStringProperty(key,(String)tmp.get(key));
+         msg.setStringProperty(key, (String)tmp.get(key));
       }
+      
       return msg;
    }
    
    /**
     * Takes an MDBConfig Element
     */
-   public void importXml(Element element) throws DeploymentException
+   public void importXml(final Element element) throws DeploymentException
    {
-      destinationJNDI  = MetaData.getElementContent
-      (MetaData.getUniqueChild(element, "DestinationQueue"));
+      destinationJNDI = MetaData.getElementContent
+         (MetaData.getUniqueChild(element, "DestinationQueue"));
       
       try
       {
          String mr = MetaData.getElementContent
-         (MetaData.getUniqueChild(element, "MaxTimesRedelivered"));
+            (MetaData.getUniqueChild(element, "MaxTimesRedelivered"));
          maxResent = Integer.parseInt(mr);
-         
+      }
+      catch (Exception ignore) {}
+
+      try {
          String ttl = MetaData.getElementContent
-         (MetaData.getUniqueChild(element, "TimeToLive"));
+            (MetaData.getUniqueChild(element, "TimeToLive"));
          timeToLive = Long.parseLong(ttl);
-         if( timeToLive < 0 )
+         
+         if (timeToLive < 0) {
+            log.warn("Invalid TimeToLive: " + timeToLive + "; using default");
             timeToLive = Message.DEFAULT_TIME_TO_LIVE;
+         }
       }
-      catch (NumberFormatException e)
-      {
-         //Noop will take default value
-      }
-      catch (DeploymentException e)
-      {
-         //Noop will take default value
-      }
-      
+      catch (Exception ignore) {}
    }
    
    public String toString()
    {
-      StringBuffer buff = new StringBuffer();
-      buff.append("DLQHandler: {");
-      buff.append("destinationJNDI=").append(destinationJNDI);
-      buff.append(";maxResent=").append(maxResent);
-      buff.append(";timeToLive=").append(timeToLive);
-      buff.append("}");
-      return buff.toString();
+      return super.toString() +
+         "{ destinationJNDI=" +  destinationJNDI +
+         ", maxResent=" + maxResent +
+         ", timeToLive=" + timeToLive +
+         " }";
    }
    
    private class BufferEntry
@@ -347,16 +369,4 @@ public class DLQHandler
       int count;
       String id;
    }
-} // DLQHandler
-
-
-
-
-
-
-
-
-
-
-
-
+}

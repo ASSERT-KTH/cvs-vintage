@@ -1,68 +1,72 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+
 package org.jboss.ejb.plugins.jms;
+
 import java.lang.reflect.Method;
 import java.security.Principal;
 
 import java.util.Collection;
 import java.util.Hashtable;
-import javax.ejb.EJBHome;
-
-import javax.ejb.EJBMetaData;
-import javax.ejb.EJBObject;
 
 import javax.jms.*;
-import javax.management.MBeanServer;
 
-import javax.management.MBeanServerFactory;
+import javax.management.MBeanServer;
 import javax.management.ObjectName;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
-
 import javax.naming.Name;
 import javax.naming.NamingException;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.util.TCLStack;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 
-import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 
-import org.jboss.logging.Logger;
 import org.jboss.jms.ConnectionFactoryHelper;
 import org.jboss.jms.asf.ServerSessionPoolFactory;
 import org.jboss.jms.asf.StdServerSessionPool;
 import org.jboss.jms.jndi.JMSProviderAdapter;
+
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
-import org.jboss.metadata.XmlLoadable;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
- * @author    <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author    <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini
- *      </a>
- * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.47 $
+ * @version <tt>$Revision: 1.48 $</tt>
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class JMSContainerInvoker
+   extends ServiceMBeanSupport
    implements EJBProxyFactory
 {
+   private static final Logger log = Logger.getLogger(JMSContainerInvoker.class);
+   
    // Constants -----------------------------------------------------
    
    /**
@@ -76,106 +80,98 @@ public class JMSContainerInvoker
     * successfull. Default value: javax.jms.Topic.
     */
    protected final static String DEFAULT_DESTINATION_TYPE = "javax.jms.Topic";
+
+   /**
+    * Initialize the ON_MESSAGE reference.
+    */
+   static
+   {
+      try
+      {
+         final Class type = MessageListener.class;
+         final Class arg = Message.class;
+         ON_MESSAGE = type.getMethod("onMessage", new Class[]{arg});
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new ExceptionInInitializerError(e);
+      }
+   }
    
    // Attributes ----------------------------------------------------
    
-   /**
-    * Description of the Field
-    */
    protected boolean optimize;
-   // = false;
-   /**
-    * Maximu number provider is allowed to stuff into a session.
-    */
+
+   /** Maximum number provider is allowed to stuff into a session. */
    protected int maxMessagesNr = 1;
-   /**
-    * Maximun pool size of server sessions.
-    */
+
+   /** Maximun pool size of server sessions. */
    protected int maxPoolSize = 15;
-   /**
-    * Time to wait before retrying to reconnect a lost connection.
-    */
+   
+   /** Time to wait before retrying to reconnect a lost connection. */
    protected long reconnectInterval = 10000;
-   /**
-    * If Dead letter queue should be used or not.
-    */
+   
+   /** If Dead letter queue should be used or not. */
    protected boolean useDLQ = false;
+   
    /**
     * JNDI name of the provider adapter.
+    * 
     * @see org.jboss.jms.jndi.JMSProviderAdapter
     */
    protected String providerAdapterJNDI;
+   
    /**
     * JNDI name of the server session factory.
+    * 
     * @see org.jboss.jms.asf.ServerSessionPoolFactory
     */
    protected String serverSessionPoolFactoryJNDI;
-   /**
-    * JMS acknowledge mode, used when session is not XA.
-    */
+   
+   /** JMS acknowledge mode, used when session is not XA. */
    protected int acknowledgeMode;
-   /**
-    * escription of the Field
-    */
+
    protected boolean isContainerManagedTx;
-   /**
-    * Description of the Field
-    */
    protected boolean isNotSupportedTx;
-   /**
-    * The container.
-    */
+
+   /** The container. */
    protected Container container;
-   /**
-    * The JMS connection.
-    */
+   
+   /** The JMS connection. */
    protected Connection connection;
-   /**
-    * TH JMS connection consumer.
-    */
+
+   /** The JMS connection consumer. */
    protected ConnectionConsumer connectionConsumer;
-   /**
-    * Description of the Field
-    */
+   
    protected TransactionManager tm;
-   /**
-    * Description of the Field
-    */
    protected ServerSessionPool pool;
-   /**
-    * Description of the Field
-    */
    protected ExceptionListenerImpl exListener;
-   /**
-    * Description of the Field
-    */
-   protected String beanName;
-   /**
-    * Dead letter queue handler.
-    */
+
+   /** Dead letter queue handler. */
    protected DLQHandler dlqHandler;
-   /**
-    * DLQConfig element from MDBConfig element from jboss.xml.
-    */
+
+   /** DLQConfig element from MDBConfig element from jboss.xml. */
    protected Element dlqConfig;
 
    protected InvokerProxyBindingMetaData invokerMetaData;
-   
    protected String invokerBinding;
    
    /**
     * Set the invoker meta data so that the ProxyFactory can initialize properly
     */
-   public void setInvokerMetaData(InvokerProxyBindingMetaData imd) { invokerMetaData = imd; }
+   public void setInvokerMetaData(InvokerProxyBindingMetaData imd)
+   {
+      invokerMetaData = imd;
+   }
+   
    /**
     * Set the invoker jndi binding
     */
-   public void setInvokerBinding(String binding) { invokerBinding = binding; }
-
-   /**
-    * Instance logger.
-    */
-   private final Logger log = Logger.getLogger(this.getClass());
+   public void setInvokerBinding(String binding)
+   {
+      invokerBinding = binding;
+   }
 
    // ContainerService implementation -------------------------------
    
@@ -187,7 +183,6 @@ public class JMSContainerInvoker
    public void setContainer(final Container container)
    {
       this.container = container;
-      //jndiName = container.getBeanMetaData().getJndiName();
    }
    
    // Static --------------------------------------------------------
@@ -204,38 +199,37 @@ public class JMSContainerInvoker
    public void setOptimized(final boolean optimize)
    {
       if (log.isDebugEnabled())
-      log.debug("Container Invoker optimize set to " + optimize);
+         log.debug("Container Invoker optimize set to " + optimize);
+      
       this.optimize = optimize;
    }
    
    // EJBProxyFactory implementation
-   
-/*
-    * Gets the EJBHome attribute of the JMSContainerInvoker object
-    *
-    * @return   The EJBHome value
+
+   /**
+    * Always throws an Error
+    * 
+    * @throws Error Not valid for MDB
     */
    public Object getEJBHome()
+   {
+      throw new Error("Not valid for MessageDriven beans");
+   }
 
-   {
-      throw new Error("Not valid for MessageDriven beans");
-   }
-   
    /**
-    * Gets the EJBMetaData attribute of the JMSContainerInvoker object
-    *
-    * @return   The EJBMetaData value
+    * Always throws an Error
+    * 
+    * @throws Error Not valid for MDB
     */
-   public EJBMetaData getEJBMetaData()
+   public javax.ejb.EJBMetaData getEJBMetaData()
    {
       throw new Error("Not valid for MessageDriven beans");
    }
    
    /**
-    * Gets the EntityCollection attribute of the JMSContainerInvoker object
-    *
-    * @param ids  Description of Parameter
-    * @return     The EntityCollection value
+    * Always throws an Error
+    * 
+    * @throws Error Not valid for MDB
     */
    public Collection getEntityCollection(Collection ids)
    {
@@ -243,39 +237,31 @@ public class JMSContainerInvoker
    }
    
    /**
-    * Gets the EntityEJBObject attribute of the JMSContainerInvoker object
-    *
-    * @param id  Description of Parameter
-    * @return    The EntityEJBObject value
+    * Always throws an Error
+    * 
+    * @throws Error Not valid for MDB
     */
    public Object getEntityEJBObject(Object id)
-
    {
       throw new Error("Not valid for MessageDriven beans");
    }
    
    /**
-    * Gets the StatefulSessionEJBObject attribute of the JMSContainerInvoker
-    * object
-    *
-    * @param id  Description of Parameter
-    * @return    The StatefulSessionEJBObject value
+    * Always throws an Error
+    * 
+    * @throws Error Not valid for MDB
     */
    public Object getStatefulSessionEJBObject(Object id)
-
    {
       throw new Error("Not valid for MessageDriven beans");
    }
    
    /**
-
-    * Gets the StatelessSessionEJBObject attribute of the JMSContainerInvoker
-    * object
-    *
-    * @return   The StatelessSessionEJBObject value
+    * Always throws an Error
+    * 
+    * @throws Error Not valid for MDB
     */
    public Object getStatelessSessionEJBObject()
-
    {
       throw new Error("Not valid for MessageDriven beans");
    }
@@ -288,65 +274,11 @@ public class JMSContainerInvoker
    public boolean isOptimized()
    {
       if (log.isDebugEnabled())
-      log.debug("Optimize in action: " + optimize);
+         log.debug("Optimize in action: " + optimize);
+      
       return optimize;
    }
-   
-   /**
-    * Take down all fixtures.
-    */
-   public void destroy()
-   {
-      if (log.isDebugEnabled())
-      log.debug("Destroying JMSContainerInvoker for bean " + beanName);
       
-      // Take down DLQ
-      if ( dlqHandler != null)
-      {
-         dlqHandler.destroy();
-      }
-      
-      // close the connection consumer
-      try
-      {
-         if (connectionConsumer != null)
-         {
-            connectionConsumer.close();
-         }
-      }
-      catch (Exception e)
-      {
-         log.error("Could not close consumer", e);
-      }
-      
-      // clear the server session pool (if it is clearable)
-      try
-      {
-         if (pool instanceof StdServerSessionPool)
-         {
-            StdServerSessionPool p = (StdServerSessionPool)pool;
-            p.clear();
-         }
-      }
-      catch (Exception e)
-      {
-         log.error("Could not clear ServerSessionPool", e);
-      }
-      
-      // close the connection
-      if (connection != null)
-      {
-         try
-         {
-            connection.close();
-         }
-         catch (Exception e)
-         {
-            log.error("Could not close connection", e);
-         }
-      }
-   }
-   
    /**
     * XmlLoadable implementation.
     *
@@ -356,53 +288,58 @@ public class JMSContainerInvoker
     * @param element                  Description of Parameter
     * @exception DeploymentException  Description of Exception
     */
-   public void importXml(Element element) throws Exception
+   public void importXml(final Element element) throws Exception
    {
-      try
-      {
+      try {
          String maxMessages = MetaData.getElementContent
             (MetaData.getUniqueChild(element, "MaxMessages"));
          maxMessagesNr = Integer.parseInt(maxMessages);
-         
+      }
+      catch (Exception ignore) {}
+      
+      try {
          String maxSize = MetaData.getElementContent
             (MetaData.getUniqueChild(element, "MaximumSize"));
          maxPoolSize = Integer.parseInt(maxSize);
+      }
+      catch (Exception ignore) {}
          
-         Element mdbConfig = MetaData.getUniqueChild(element, "MDBConfig");
+      Element mdbConfig = MetaData.getUniqueChild(element, "MDBConfig");
+         
+      try {
+         //
+         // jason: should just make this millis and let users convert as needed
+         //
          
          String reconnect = MetaData.getElementContent
             (MetaData.getUniqueChild(mdbConfig, "ReconnectIntervalSec"));
          reconnectInterval = Long.parseLong(reconnect)*1000;
+      }
+      catch (Exception ignore) {}
          
-         // Get Dead letter queue config - and save it for later use
-         Element dlqEl = MetaData.getOptionalChild(mdbConfig, "DLQConfig");
-         if (dlqEl != null)
-         {
-            dlqConfig = (Element)((Node)dlqEl).cloneNode(true);
-            useDLQ = true;
-         }
-         else
-         {
-            useDLQ = false;
-         }
-         
-      }
-      catch (NumberFormatException e)
+      // Get Dead letter queue config - and save it for later use
+      Element dlqEl = MetaData.getOptionalChild(mdbConfig, "DLQConfig");
+      if (dlqEl != null)
       {
-         //Noop will take default value
+         dlqConfig = (Element)((Node)dlqEl).cloneNode(true);
+         useDLQ = true;
       }
-      catch (DeploymentException e)
+      else
       {
-         //Noop will take default value
+         useDLQ = false;
       }
-      
+
       // If these are not found we will get a DeploymentException, I hope
       providerAdapterJNDI = MetaData.getElementContent
          (MetaData.getUniqueChild(element, "JMSProviderAdapterJNDI"));
       
       serverSessionPoolFactoryJNDI = MetaData.getElementContent
          (MetaData.getUniqueChild(element, "ServerSessionPoolFactoryJNDI"));
-      
+
+      //
+      // jason: should do away with this, make the config use java:/ explicitly
+      // 
+
       // Check java:/ prefix
       if (!providerAdapterJNDI.startsWith("java:/"))
       {
@@ -424,17 +361,27 @@ public class JMSContainerInvoker
     *
     * @throws Exception  Failed to initalize.
     */
-   public void create() throws Exception {
+   protected void createService() throws Exception
+   {
       importXml(invokerMetaData.getProxyFactoryConfig());
+
+      //
+      // jason: this is all whacked out...
+      //
+      
       exListener = new ExceptionListenerImpl(this);
       try {
           innerCreate();
-      } catch ( final JMSException e ) {
-      	 // start a thread up to handle recovering the connection.
-      	 new Thread() {
-      	 	public void run() {
-      	 		exListener.onException(e);
-      	 	}
+      }
+      catch (final JMSException e) {
+      	 //
+      	 // start a thread up to handle recovering the connection. so we can
+         // attach to the jms resources once they become available
+         //
+      	 new Thread("JMSContainerInvoker Create Recovery Thread") {
+            public void run() {
+               exListener.onException(e);
+            }
       	 }.start();
       }
    }
@@ -445,14 +392,18 @@ public class JMSContainerInvoker
     *
     * @throws Exception  Failed to initalize.
     */
-   public void innerCreate() throws Exception
+   private void innerCreate() throws Exception
    {
-      log.debug("initializing");
+      log.debug("Initializing");
+
+      // Get the JMS provider
+      JMSProviderAdapter adapter = getJMSProviderAdapter();
+      log.debug("Provider adapter: " + adapter);
       
       // Set up Dead Letter Queue handler  
       if (useDLQ)
       {
-         dlqHandler = new DLQHandler();
+         dlqHandler = new DLQHandler(adapter);
          dlqHandler.importXml(dlqConfig);
          dlqHandler.create();
       }
@@ -462,7 +413,7 @@ public class JMSContainerInvoker
       
       // Get configuration information - from EJB-xml
       MessageDrivenMetaData config =
-      ((MessageDrivenMetaData)container.getBeanMetaData());
+         ((MessageDrivenMetaData)container.getBeanMetaData());
       
       // Selector
       String messageSelector = config.getMessageSelector();
@@ -470,25 +421,18 @@ public class JMSContainerInvoker
       // Queue or Topic - optional unfortunately
       String destinationType = config.getDestinationType();
       
-      // Bean Name
-      beanName = config.getEjbName();
-      
       // Is container managed?
       isContainerManagedTx = config.isContainerManagedTx();
       acknowledgeMode = config.getAcknowledgeMode();
       isNotSupportedTx = 
-      config.getMethodTransactionType("onMessage", 
-         new Class[]{Message.class}, 
-         false) == MetaData.TX_NOT_SUPPORTED; 
+         config.getMethodTransactionType("onMessage", 
+                                         new Class[]{ Message.class }, 
+                                         false) == MetaData.TX_NOT_SUPPORTED; 
       
       // Get configuration data from jboss.xml
       String destinationJNDI = config.getDestinationJndiName();
       String user = config.getUser();
       String password = config.getPasswd();
-      
-      // Get the JMS provider
-      JMSProviderAdapter adapter = getJMSProviderAdapter();
-      log.debug("provider adapter: " + adapter);
       
       // Connect to the JNDI server and get a reference to root context
       Context context = adapter.getInitialContext();
@@ -501,8 +445,7 @@ public class JMSContainerInvoker
       }
       
       // Get the JNDI suffix of the destination
-      String jndiSuffix = parseJndiSuffix(destinationJNDI,
-         config.getEjbName());
+      String jndiSuffix = parseJndiSuffix(destinationJNDI, config.getEjbName());
       log.debug("jndiSuffix: " + jndiSuffix);
       
       // Unfortunately the destination is optional, so if we do not have one
@@ -510,9 +453,13 @@ public class JMSContainerInvoker
       // a default.
       if (destinationType == null)
       {
-         log.info("No message-driven-destination given, guessing type");
+         log.warn("No message-driven-destination given; using; guessing type");
          destinationType = getDestinationType(context, destinationJNDI);
       }
+
+      //
+      // jason: The following is highly redundant code...
+      //
       
       if (destinationType.equals("javax.jms.Topic"))
       {
@@ -520,53 +467,52 @@ public class JMSContainerInvoker
          
          // create a topic connection
          Object factory = context.lookup(adapter.getTopicFactoryRef());
-         TopicConnection tConnection =
-         (TopicConnection)ConnectionFactoryHelper.createTopicConnection
-         (factory, user, password);
+         TopicConnection tConnection = (TopicConnection)
+            ConnectionFactoryHelper.createTopicConnection(factory, user, password);
          connection = tConnection;
 
-        // Fix: ClientId must be set as the first method call after connection creation.
-        // Fix: ClientId is necessary for durable subscriptions.
-          String clientId = config.getClientId();
-          if (clientId != null && clientId.length() > 0)
+         // Fix: ClientId must be set as the first method call after connection creation.
+         // Fix: ClientId is necessary for durable subscriptions.
+         
+         String clientId = config.getClientId();
+         log.debug("Using client id: " + clientId);
+         if (clientId != null && clientId.length() > 0)
             connection.setClientID(clientId);
-
 
          // lookup or create the destination topic
          Topic topic = (Topic)createDestination(Topic.class,
-            context,
-            "topic/" + jndiSuffix,
-            jndiSuffix);
+                                                context,
+                                                "topic/" + jndiSuffix,
+                                                jndiSuffix);
          
          // set up the server session pool
          pool = createSessionPool(tConnection,
-            maxPoolSize,
-            true, // tx
-            acknowledgeMode ,
-            new MessageListenerImpl(this));
+                                  maxPoolSize,
+                                  true, // tx
+                                  acknowledgeMode ,
+                                  new MessageListenerImpl(this));
          
          // To be no-durable or durable
-         if (config.getSubscriptionDurability() !=
-            MessageDrivenMetaData.DURABLE_SUBSCRIPTION)
+         if (config.getSubscriptionDurability() != MessageDrivenMetaData.DURABLE_SUBSCRIPTION)
          {
             // Create non durable
             connectionConsumer =
                tConnection.createConnectionConsumer(topic,
-               messageSelector,
-               pool,
-               maxMessagesNr);
+                                                    messageSelector,
+                                                    pool,
+                                                    maxMessagesNr);
          }
          else
          {
-            //Durable subscription
+            // Durable subscription
             String durableName = config.getSubscriptionId();
             
             connectionConsumer =
                tConnection.createDurableConnectionConsumer(topic,
-               durableName,
-               messageSelector,
-               pool,
-               maxMessagesNr);
+                                                           durableName,
+                                                           messageSelector,
+                                                           pool,
+                                                           maxMessagesNr);
          }
          log.debug("Topic connectionConsumer set up");
       }
@@ -576,281 +522,76 @@ public class JMSContainerInvoker
          
          // create a queue connection
          Object qFactory = context.lookup(adapter.getQueueFactoryRef());
-         QueueConnection qConnection =
-         (QueueConnection)ConnectionFactoryHelper.createQueueConnection
-         (qFactory, user, password);
+         QueueConnection qConnection = (QueueConnection)
+            ConnectionFactoryHelper.createQueueConnection(qFactory, user, password);
          connection = qConnection;
+
+         // Set the optional client id
+         String clientId = config.getClientId();
+         log.debug("Using client id: " + clientId);
+         if (clientId != null && clientId.length() > 0)
+            connection.setClientID(clientId);
          
          // lookup or create the destination queue
          Queue queue = (Queue)createDestination(Queue.class,
-            context,
-            "queue/" + jndiSuffix,
-            jndiSuffix);
+                                                context,
+                                                "queue/" + jndiSuffix,
+                                                jndiSuffix);
          
          // set up the server session pool
          pool = createSessionPool(qConnection,
-            maxPoolSize,
-            true,
-            // tx
-            acknowledgeMode,
-            new MessageListenerImpl(this));
-         log.debug("server session pool: " + pool);
+                                  maxPoolSize,
+                                  true, // tx
+                                  acknowledgeMode,
+                                  new MessageListenerImpl(this));
+         log.debug("Server session pool: " + pool);
          
          // create the connection consumer
          connectionConsumer =
             qConnection.createConnectionConsumer(queue,
-            messageSelector,
-            pool,
-            maxMessagesNr);
-         log.debug("connection consumer: " + connectionConsumer);
+                                                 messageSelector,
+                                                 pool,
+                                                 maxMessagesNr);
+         log.debug("Connection consumer: " + connectionConsumer);
       }
       
-      log.debug("initialized with config " + toString());
-   }
-   
-   /**
-    * #Description of the Method
-    *
-    * @param id             Description of Parameter
-    * @param m              Description of Parameter
-    * @param args           Description of Parameter
-    * @param tx             Description of Parameter
-    * @param identity       Description of Parameter
-    * @param credential     Description of Parameter
-    * @return               Description of the Returned Value
-    * @exception Exception  Description of Exception
-    */
-   public Object invoke(Object id,
-      Method m,
-      Object[] args,
-      Transaction tx,
-      Principal identity,
-      Object credential)
-      throws Exception
-   {
+      log.debug("Initialized with config " + toString());
 
-      Invocation invocation = 
-            new Invocation(id, m, args, tx, identity, credential);
-      invocation.setType(InvocationType.LOCAL);
-      
-      // Set the right context classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(container.getClassLoader());
-      
-      try
+      context.close();
+   }
+   
+   protected void startService() throws Exception
+   {
+      if (dlqHandler != null)
       {
-         return container.invoke(invocation);
+         dlqHandler.start();
       }
-      finally
+      
+      if (connection != null)
       {
-         Thread.currentThread().setContextClassLoader(oldCl);
+         connection.setExceptionListener(exListener);
+         connection.start();
       }
    }
    
-   /**
-    * Start the connection.
-    *
-    * @exception Exception  Description of Exception
-    */
-   public void start() throws Exception
+   protected void stopService() throws Exception
    {
-      log.debug("Starting JMSContainerInvoker for bean " + beanName);
-      if( connection != null )
-      {
-	      connection.setExceptionListener(exListener);
-	      connection.start();
-      }
-   }
-   
-   /**
-    * Stop the connection.
-    */
-   public void stop()
-   {
-      log.debug("Stopping JMSContainerInvoker for bean " + beanName);
       // Silence the exception listener
       if (exListener != null)
       {
          exListener.stop();
       }
+      
       innerStop();
-   }
-   
-   /**
-    * Try to get a destination type by looking up the destination JNDI, or
-    * provide a default if there is not destinationJNDI or if it is not possible
-    * to lookup.
-    *
-    * @param ctx              The naming context to lookup destinations from.
-    * @param destinationJNDI  The name to use when looking up destinations.
-    * @return                 The destination type, either derived from
-    *      destinationJDNI or DEFAULT_DESTINATION_TYPE
-    */
-   protected String getDestinationType(Context ctx, String destinationJNDI)
-   {
-      String destType = null;
-      
-      if (destinationJNDI != null)
-      {
-         try
-         {
-            Destination dest = (Destination)ctx.lookup(destinationJNDI);
-            if (dest instanceof javax.jms.Topic)
-            {
-               destType = "javax.jms.Topic";
-            }
-            else if (dest instanceof javax.jms.Queue)
-            {
-               destType = "javax.jms.Queue";
-            }
-         }
-         catch (NamingException ex)
-         {
-            log.debug("Could not do heristic lookup of destination ", ex);
-         }
-         
-      }
-      if (destType == null)
-      {
-         if (log.isInfoEnabled())
-            log.info("WARNING Could not determine destination type, defaults to: " + DEFAULT_DESTINATION_TYPE);
-         destType = DEFAULT_DESTINATION_TYPE;
-      }
-      return destType;
-   }
-   
-   /**
-    * Return the JMSProviderAdapter that should be used.
-    *
-    * @return                     The JMSProviderAdapter to use.
-    * @exception NamingException  Description of Exception
-    */
-   protected JMSProviderAdapter getJMSProviderAdapter()
-      throws NamingException
-   {
-      Context context = new InitialContext();
-      try
-      {
-         log.debug("looking up provider adapter: " + providerAdapterJNDI);
-         return (JMSProviderAdapter)context.lookup(providerAdapterJNDI);
-      }
-      finally
-      {
-         context.close();
-      }
-   }
-   
-   /**
-    * Create and or lookup a JMS destination.
-    *
-    * @param type                       Either javax.jms.Queue or
-    *      javax.jms.Topic.
-    * @param ctx                        The naming context to lookup
-    *      destinations from.
-    * @param jndiName                   The name to use when looking up
-    *      destinations.
-    * @param jndiSuffix                 The name to use when creating
-    *      destinations.
-    * @return                           The destination.
-    * @throws IllegalArgumentException  Type is not Queue or Topic.
-    * @exception Exception              Description of Exception
-    */
-   protected Destination createDestination(final Class type,
-      final Context ctx,
-      final String jndiName,
-      final String jndiSuffix)
-      throws Exception
-   {
-      try
-      {
-         // first try to look it up
-         return (Destination)ctx.lookup(jndiName);
-      }
-      catch (NamingException e)
-      {
-         // if the lookup failes, the try to create it
-         log.warn("destination not found: " + jndiName + " reason: " + e);
-         log.warn("creating a new temporary destination: " + jndiName);
-         //
-         // attempt to create the destination (note, this is very
-         // very, very unportable).
-         //
-         MBeanServer server = (MBeanServer)
-         MBeanServerFactory.findMBeanServer(null).iterator().next();
-         
-         String methodName;
-         if (type == Topic.class)
-         {
-            methodName = "createTopic";
-         }
-         else if (type == Queue.class)
-         {
-            methodName = "createQueue";
-         }
-         else
-         {
-            // type was not a Topic or Queue, bad user
-            throw new IllegalArgumentException
-            ("expected javax.jms.Queue or javax.jms.Topic: " + type);
-         }
 
-         // invoke the server to create the destination
-         server.invoke(new ObjectName("jboss.mq:service=DestinationManager"),
-            methodName,
-            new Object[] {jndiSuffix},
-            new String[] {"java.lang.String"});
-         
-         // try to look it up again
-         return (Destination)ctx.lookup(jndiName);
+      if (dlqHandler != null) {
+         dlqHandler.stop();
       }
    }
-   
+
    /**
-    * Create a server session pool for the given connection.
-    *
-    * @param connection           The connection to use.
-    * @param maxSession           The maximum number of sessions.
-    * @param isTransacted         True if the sessions are transacted.
-    * @param ack                  The session acknowledgement mode.
-    * @param listener             The message listener.
-    * @return                     A server session pool.
-    * @throws JMSException
-    * @exception NamingException  Description of Exception
-    */
-   protected ServerSessionPool
-      createSessionPool(final Connection connection,
-      final int maxSession,
-      final boolean isTransacted,
-      final int ack,
-      final MessageListener listener)
-      throws NamingException, JMSException
-   {
-      ServerSessionPool pool;
-      Context context = new InitialContext();
-      
-      try
-      {
-         // first lookup the factory
-         log.debug("looking up session pool factory: " +
-         serverSessionPoolFactoryJNDI);
-         ServerSessionPoolFactory factory = (ServerSessionPoolFactory)
-         context.lookup(serverSessionPoolFactoryJNDI);
-         
-         // the create the pool
-         pool = factory.getServerSessionPool
-         (connection, maxSession, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
-      }
-      finally
-      {
-         context.close();
-      }
-      
-      return pool;
-   }
-   
-   /**
-    * Stop done from inside, we should not stop the exceptionListener in inner
-    * stop.
+    * Stop done from inside, we should not stop the
+    * exceptionListener in inner stop.
     */
    protected void innerStop()
    {
@@ -882,6 +623,262 @@ public class JMSContainerInvoker
       }
    }
    
+   protected void destoryService() throws Exception
+   {
+      // Take down DLQ
+      if (dlqHandler != null)
+      {
+         dlqHandler.destroy();
+      }
+      
+      // close the connection consumer
+      try
+      {
+         if (connectionConsumer != null)
+         {
+            connectionConsumer.close();
+         }
+      }
+      catch (Exception e)
+      {
+         log.error("Failed to close connection consumer", e);
+      }
+      
+      // clear the server session pool (if it is clearable)
+      try
+      {
+         if (pool instanceof StdServerSessionPool)
+         {
+            StdServerSessionPool p = (StdServerSessionPool)pool;
+            p.clear();
+         }
+      }
+      catch (Exception e)
+      {
+         log.error("Failed to clear session pool", e);
+      }
+      
+      // close the connection
+      if (connection != null)
+      {
+         try
+         {
+            connection.close();
+         }
+         catch (Exception e)
+         {
+            log.error("Failed to close connection", e);
+         }
+      }
+   }
+
+   public Object invoke(Object id,
+                        Method m,
+                        Object[] args,
+                        Transaction tx,
+                        Principal identity,
+                        Object credential)
+      throws Exception
+   {
+
+      Invocation invocation = new Invocation(id, m, args, tx, identity, credential);
+      invocation.setType(InvocationType.LOCAL);
+      
+      // Set the right context classloader
+      TCLStack.push(container.getClassLoader());
+      
+      try
+      {
+         return container.invoke(invocation);
+      }
+      finally
+      {
+         TCLStack.pop();
+      }
+   }
+   
+   /**
+    * Try to get a destination type by looking up the destination JNDI, or
+    * provide a default if there is not destinationJNDI or if it is not possible
+    * to lookup.
+    *
+    * @param ctx              The naming context to lookup destinations from.
+    * @param destinationJNDI  The name to use when looking up destinations.
+    * @return                 The destination type, either derived from
+    *                         destinationJDNI or DEFAULT_DESTINATION_TYPE
+    */
+   protected String getDestinationType(Context ctx, String destinationJNDI)
+   {
+      //
+      // jason: this is lame, just return the Destination
+      //
+      
+      String destType = null;
+      
+      if (destinationJNDI != null)
+      {
+         try
+         {
+            Destination dest = (Destination)ctx.lookup(destinationJNDI);
+            if (dest instanceof javax.jms.Topic)
+            {
+               destType = "javax.jms.Topic";
+            }
+            else if (dest instanceof javax.jms.Queue)
+            {
+               destType = "javax.jms.Queue";
+            }
+         }
+         catch (NamingException ex)
+         {
+            log.debug("Could not do heristic lookup of destination ", ex);
+         }
+         
+      }
+      if (destType == null)
+      {
+         //
+         // jason: should throw an exception, user should specify this (screw the spec)
+         //
+         
+         log.warn("Could not determine destination type, defaults to: " +
+                  DEFAULT_DESTINATION_TYPE);
+         
+         destType = DEFAULT_DESTINATION_TYPE;
+      }
+      
+      return destType;
+   }
+   
+   /**
+    * Return the JMSProviderAdapter that should be used.
+    *
+    * @return  The JMSProviderAdapter to use.
+    */
+   protected JMSProviderAdapter getJMSProviderAdapter()
+      throws NamingException
+   {
+      Context context = new InitialContext();
+      try
+      {
+         log.debug("Looking up provider adapter: " + providerAdapterJNDI);
+         return (JMSProviderAdapter)context.lookup(providerAdapterJNDI);
+      }
+      finally
+      {
+         context.close();
+      }
+   }
+   
+   /**
+    * Create and or lookup a JMS destination.
+    *
+    * @param type         Either javax.jms.Queue or javax.jms.Topic.
+    * @param ctx          The naming context to lookup destinations from.
+    * @param jndiName     The name to use when looking up destinations.
+    * @param jndiSuffix   The name to use when creating destinations.
+    * @return             The destination.
+    * 
+    * @throws IllegalArgumentException  Type is not Queue or Topic.
+    * @throws Exception                 Description of Exception
+    */
+   protected Destination createDestination(final Class type,
+                                           final Context ctx,
+                                           final String jndiName,
+                                           final String jndiSuffix)
+      throws Exception
+   {
+      try
+      {
+         // first try to look it up
+         return (Destination)ctx.lookup(jndiName);
+      }
+      catch (NamingException e)
+      {
+         // if the lookup failes, the try to create it
+         log.warn("destination not found: " + jndiName + " reason: " + e);
+         log.warn("creating a new temporary destination: " + jndiName);
+
+         //
+         // jason: we should do away with this...
+         //
+         // attempt to create the destination (note, this is very
+         // very, very unportable).
+         //
+         
+         MBeanServer server = org.jboss.util.jmx.MBeanServerLocator.locate();
+         
+         String methodName;
+         if (type == Topic.class)
+         {
+            methodName = "createTopic";
+         }
+         else if (type == Queue.class)
+         {
+            methodName = "createQueue";
+         }
+         else
+         {
+            // type was not a Topic or Queue, bad user
+            throw new IllegalArgumentException
+               ("Expected javax.jms.Queue or javax.jms.Topic: " + type);
+         }
+
+         // invoke the server to create the destination
+         server.invoke(new ObjectName("jboss.mq:service=DestinationManager"),
+                       methodName,
+                       new Object[] { jndiSuffix },
+                       new String[] { "java.lang.String" });
+         
+         // try to look it up again
+         return (Destination)ctx.lookup(jndiName);
+      }
+   }
+   
+   /**
+    * Create a server session pool for the given connection.
+    *
+    * @param connection           The connection to use.
+    * @param maxSession           The maximum number of sessions.
+    * @param isTransacted         True if the sessions are transacted.
+    * @param ack                  The session acknowledgement mode.
+    * @param listener             The message listener.
+    * @return                     A server session pool.
+    * 
+    * @throws JMSException
+    * @throws NamingException  Description of Exception
+    */
+   protected ServerSessionPool
+      createSessionPool(final Connection connection,
+                        final int maxSession,
+                        final boolean isTransacted,
+                        final int ack,
+                        final MessageListener listener)
+      throws NamingException, JMSException
+   {
+      ServerSessionPool pool;
+      Context context = new InitialContext();
+      
+      try
+      {
+         // first lookup the factory
+         log.debug("looking up session pool factory: " +
+         serverSessionPoolFactoryJNDI);
+         ServerSessionPoolFactory factory = (ServerSessionPoolFactory)
+         context.lookup(serverSessionPoolFactoryJNDI);
+         
+         // the create the pool
+         pool = factory.getServerSessionPool
+            (connection, maxSession, isTransacted, ack, !isContainerManagedTx || isNotSupportedTx, listener);
+      }
+      finally
+      {
+         context.close();
+      }
+      
+      return pool;
+   }
+   
    /**
     * Parse the JNDI suffix from the given JNDI name.
     *
@@ -896,6 +893,7 @@ public class JMSContainerInvoker
       // since the jndi name contains the message type I have to split
       // at the "/" if there is no slash then I use the entire jndi name...
       String jndiSuffix = "";
+      
       if (jndiname != null)
       {
          int indexOfSlash = jndiname.indexOf("/");
@@ -916,14 +914,6 @@ public class JMSContainerInvoker
       
       return jndiSuffix;
    }
-   
-   // Package protected ---------------------------------------------
-   
-   // Protected -----------------------------------------------------
-   
-   // Private -------------------------------------------------------
-   
-   // Inner classes -------------------------------------------------
    
    /**
     * An implementation of MessageListener that passes messages on to the
@@ -987,18 +977,13 @@ public class JMSContainerInvoker
                return;
             }
             
-            invoker.invoke(id,
-               // Object id - where used?
-               ON_MESSAGE,
-               // Method to invoke
-               new Object[]{message},
-               // argument
-               tm.getTransaction(),
-               // Transaction
-               null,
-               // Principal
-               null);
-               // Cred
+            invoker.invoke(id,                    // Object id - where used?
+                           ON_MESSAGE,            // Method to invoke
+                           new Object[]{message}, // argument
+                           tm.getTransaction(),   // Transaction
+                           null,                  // Principal                           
+                           null);                 // Cred
+                           
          }
          catch (Exception e)
          {
@@ -1014,9 +999,7 @@ public class JMSContainerInvoker
       implements ExceptionListener
    {
       JMSContainerInvoker invoker;
-      // = null;
       Thread currentThread;
-      // = null;
       boolean notStoped = true;
       
       ExceptionListenerImpl(final JMSContainerInvoker invoker)
@@ -1056,6 +1039,7 @@ public class JMSContainerInvoker
                invoker.innerCreate();
                invoker.start();
                tryIt = false;
+               
                log.info("Reconnected to JMS provider");
             }
             catch (Exception e)
@@ -1068,13 +1052,13 @@ public class JMSContainerInvoker
 
       void stop()
       {
-         log.debug("stop requested");
+         log.debug("Stop requested");
          
          notStoped = false;
          if (currentThread != null)
          {
             currentThread.interrupt();
-            log.debug("current thread interrupted");
+            log.debug("Current thread interrupted");
          }
       }
    }
@@ -1084,39 +1068,17 @@ public class JMSContainerInvoker
     */
    public String toString()
    {
-      StringBuffer buff = new StringBuffer();
-      buff.append("JMSContainerInvoker: {");
-      buff.append("beanName=").append(beanName);
-      buff.append(";maxMessagesNr=").append(maxMessagesNr);
-      buff.append(";maxPoolSize=").append(maxPoolSize);
-      buff.append(";reconnectInterval=").append(reconnectInterval);
-      buff.append(";providerAdapterJNDI=").append(providerAdapterJNDI);
-      buff.append(";serverSessionPoolFactoryJNDI=").append(serverSessionPoolFactoryJNDI);
-      buff.append(";acknowledgeMode=").append(acknowledgeMode);
-      buff.append(";isContainerManagedTx=").append(isContainerManagedTx);
-      buff.append(";isNotSupportedTx=").append(isNotSupportedTx);
-      buff.append(";useDLQ=").append(useDLQ);
-      if (dlqHandler != null)
-         buff.append(";dlqHandler=").append(dlqHandler.toString());
-      buff.append("}");
-      return buff.toString();
-   }
-   
-   /**
-    * Initialize the ON_MESSAGE reference.
-    */
-   static
-   {
-      try
-      {
-         final Class type = MessageListener.class;
-         final Class arg = Message.class;
-         ON_MESSAGE = type.getMethod("onMessage", new Class[]{arg});
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-         throw new ExceptionInInitializerError(e);
-      }
-   }
+      return super.toString() + 
+         "{ maxMessagesNr=" + maxMessagesNr +
+         ", maxPoolSize=" + maxPoolSize +
+         ", reconnectInterval=" + reconnectInterval +
+         ", providerAdapterJNDI=" + providerAdapterJNDI +
+         ", serverSessionPoolFactoryJNDI=" + serverSessionPoolFactoryJNDI +
+         ", acknowledgeMode=" + acknowledgeMode +
+         ", isContainerManagedTx=" + isContainerManagedTx +
+         ", isNotSupportedTx=" + isNotSupportedTx +
+         ", useDLQ=" +useDLQ +
+         ", dlqHandler=" + dlqHandler +
+         " }";
+   }   
 }
