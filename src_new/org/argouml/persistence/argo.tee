@@ -11,7 +11,7 @@
 <!-- files.  "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.1 2004/12/23 18:27:53 bobtarling Exp $ -->
+<!-- $Id: argo.tee,v 1.2 2004/12/28 21:47:07 bobtarling Exp $ -->
 
 
 <!-- TO DO LIST: -->
@@ -22,7 +22,7 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <template class="org.argouml.kernel.Project">
 <![CDATA[
-<?xml version = "1.0" encoding = "ISO-8859-1" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <!DOCTYPE argo SYSTEM "argo.dtd" >
 <argo version="<ocl>self.persistenceVersion</ocl>">
   <documentation>
