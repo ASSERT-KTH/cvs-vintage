@@ -10,7 +10,7 @@ package org.jboss.system;
  * The Service interface for the JBOSS-SYSTEM.
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -20,14 +20,31 @@ package org.jboss.system;
  * <ul>
  *   <li>removed init and destroy methods
  * </ul>
+ *  <p><b>20011208 marc fleury:</b>
+ * <ul>
+ *   <li>init and destroy were put back by david
+ *   <li>init becomes create
+ * </ul>
 
  */
 public interface Service
 {
+   /**
+    * create the service, do expensive operations etc 
+    */
+   void create() throws Exception;
+   
+   /**
+    * start the service, create is already called
+    */
    void start() throws Exception;
    
+   /**
+    * stop the service
+    */
    void stop();
-   //well I tried... maybe later.
-   void init() throws Exception;
+   /**
+    * destroy the service, tear down 
+    */
    void destroy();
 }
