@@ -2,6 +2,7 @@
 #set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 #set ($issueType = $group.IssueType)
+$groupId
 
 <div class="app" id="div2-1-4-0">
 
@@ -28,6 +29,7 @@
 <h3>$l10n.AttributeGroupInfo</h3>
 
 #set ($agGroup = $intake.AttributeGroup.mapTo($group))
+$agGroup
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>

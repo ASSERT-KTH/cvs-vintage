@@ -149,7 +149,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
   #end
   <td>$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId).setLabel("$group.Name")</td>
-  <td>#booleanCheckboxLock ($agGroup.Active $locked)</td>
+  <td>#booleanCheckboxLock ($agGroup.Active $issueTypeLock)</td>
   <td>
     #if ($issueTypeLock)
       $group.Order
