@@ -33,7 +33,7 @@ import javax.swing.text.Segment;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.8 2002/05/19 08:31:13 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.9 2002/05/19 09:25:48 spestov Exp $
  */
 public class ParserRuleSet
 {
@@ -160,26 +160,6 @@ public class ParserRuleSet
 		this.digitRE = digitRE;
 	} //}}}
 
-	//{{{ getEscapeRule() method
-	public ParserRule getEscapeRule()
-	{
-		return escapeRule;
-	} //}}}
-
-	//{{{ setEscape() method
-	public void setEscape(String esc)
-	{
-		if (esc == null)
-		{
-			escapeRule = null;
-		}
-		else
-		{
-			escapeRule = ParserRuleFactory.createEscapeRule(esc);
-		}
-		escapePattern = null;
-	} //}}}
-
 	//{{{ getDefault() method
 	public byte getDefault()
 	{
@@ -224,7 +204,6 @@ public class ParserRuleSet
 	private ParserRule[] ruleMapLast;
 
 	private ParserRule escapeRule;
-	private Segment escapePattern;
 	private int terminateChar = -1;
 	private boolean ignoreCase = true;
 	private byte defaultToken;
