@@ -203,22 +203,25 @@ public class EJBQLParser {
 						
 						if(element.equalsIgnoreCase("SELECT")) {
 							Collections.reverse(path);
-							target.setSelectPath(path, false);
+							target.setSelectPath(path);
 							return;
 						}
 						if(element.equalsIgnoreCase("DISTINCT")) {
 							a.pop(); // pop the word 'SELECT'
+							target.setSelectDistinct(true);
 							Collections.reverse(path);
-							target.setSelectPath(path, true);
+							target.setSelectPath(path);
 							return;
 						}
 						if(element.equalsIgnoreCase("OBJECT")) {
-							boolean isDistinct = "DISTINCT".equalsIgnoreCase(a.pop().toString());
-							if(isDistinct) {
+							// pop the next word (will be distinct or select)
+							String word = a.pop().toString();
+							if("DISTINCT".equalsIgnoreCase(word)) {
+								target.setSelectDistinct(true);
 								a.pop(); // pop the word 'SELECT'
 							}
 							Collections.reverse(path);
-							target.setSelectPath(path, isDistinct);
+							target.setSelectPath(path);
 							return;
 						}
 						path.add(element);

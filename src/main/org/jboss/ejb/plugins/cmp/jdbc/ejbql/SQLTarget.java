@@ -69,8 +69,11 @@ public class SQLTarget implements DeepCloneable {
 		whereClause = target.whereClause;
 	}
 
-	public void setSelectPath(List selectPath, boolean isSelectDistinct) {
+	public void setSelectDistinct(boolean isSelectDistinct) {
 		this.isSelectDistinct = isSelectDistinct;
+	}
+
+	public void setSelectPath(List selectPath) {
 		this.selectPath = selectPath;
 	}
 	

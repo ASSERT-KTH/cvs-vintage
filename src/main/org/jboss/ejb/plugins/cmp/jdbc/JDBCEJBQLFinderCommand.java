@@ -10,6 +10,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.ejbql.Assembly;
 import org.jboss.ejb.plugins.cmp.ejbql.Parser;
@@ -25,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 {
@@ -40,14 +41,30 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 
 		JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
 		log.debug("EQL-QL: "+metadata.getEjbQl());
+		
+		// get a parser
 		Parser ejbql = new EJBQLParser().ejbqlQuery();
+		
+		// initialize the assembly
 		Assembly a = new Assembly(metadata.getEjbQl());
 		a.setTarget(new SQLTarget(manager.getContainer().getApplication()));
+		
+		// match the query
 		a = ejbql.soleMatch(a);
 		log.debug("Assembly: "+a);
+		
+		// get the final target
 		SQLTarget target = (SQLTarget)a.getTarget();
+		
+		// set the target to use select distinct if the return type is set
+		if(metadata.getMethod().getReturnType().equals(Set.class)) {
+			target.setSelectDistinct(true);
+		}
+		
+		// set the sql
 		setSQL(target.toSQL());
 		
+		// get the parameter order
 		List l  = target.getInputParameters();
 		parameterArray = new int[l.size()];
 		for(int i=0; i<l.size(); i++) {
