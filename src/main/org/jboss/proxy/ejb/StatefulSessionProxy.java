@@ -24,13 +24,12 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 
 import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
-import org.jboss.util.FinderResults;
 
 /**
 * An EJB stateful session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>

@@ -23,13 +23,11 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 
 import org.jboss.proxy.ejb.handle.EntityHandleImpl;
-import org.jboss.util.FinderResults;
-
 
 /**
 * An EJB entity bean proxy class.
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
