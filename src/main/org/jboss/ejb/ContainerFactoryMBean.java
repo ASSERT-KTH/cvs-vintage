@@ -17,16 +17,16 @@ import org.jboss.system.ServiceMBean;
  * for administration.
  *
  * @see ContainerFactory
- * 
+ *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public interface ContainerFactoryMBean
    extends ServiceMBean
 {
    /** The default object name. */
-   String OBJECT_NAME = ":service=ContainerFactory";
+   String OBJECT_NAME = "jboss.j2ee:service=ContainerFactory";
 
    /**
     * Returns the applications deployed by the container factory
