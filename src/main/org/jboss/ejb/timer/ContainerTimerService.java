@@ -12,14 +12,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.Method;
 
 import javax.ejb.EJBException;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
+import javax.ejb.TimedObject;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.SerializationHelper;
+import org.jboss.invocation.LocalEJBInvocation;
+import org.jboss.invocation.InvocationType;
 
 /**
  * Timer Service of a Container acting also as bridge between
@@ -27,7 +33,7 @@ import org.jboss.mx.util.SerializationHelper;
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  **/
 public class ContainerTimerService
     implements TimerService
@@ -171,7 +177,7 @@ public class ContainerTimerService
           mLog.debug("handleTimedEvent(), this: " + this
                   + ", call timer: " + lTimer
                   + ", container: " + mContainer);
-          mContainer.handleEjbTimeout(lTimer);
+          handleEjbTimeout(mContainer, lTimer);
           if (lTimer.isSingleAction())
              lTimer.cancel();
           else
@@ -179,6 +185,70 @@ public class ContainerTimerService
        }
     }
    
+   /**
+    * Handles an Timed Event by gettting the appropriate EJB instance,
+    * invoking the "ejbTimeout()" method on it with the given timer
+    *
+    * @param pTimer Timer causing this event
+    **/
+   private void handleEjbTimeout(Container container, Timer pTimer)
+   {
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(container.getClassLoader());
+
+      Object id = ((ContainerTimer) pTimer).getKey();
+      try
+      {
+         Method ejbTimeout = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
+         LocalEJBInvocation invocation = new LocalEJBInvocation(
+                 id,
+                 ejbTimeout,
+                 new Object[]{pTimer},
+                 null,
+                 null,
+                 null
+         );
+         invocation.setType(InvocationType.LOCAL);
+
+         container.invoke(invocation);
+         TransactionManager transactionManager = container.getTransactionManager();
+         if (transactionManager.getTransaction() != null)
+         {
+            Transaction tx = transactionManager.getTransaction();
+            mLog.error("TRANSACTION IS STILL ALIVE!!!!!" + tx.getStatus());
+         }
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         throw new RuntimeException("call ejbTimeout() failed: " + e);
+      }
+              /*AS TODO: Manage the exceptions properly
+                catch (AccessException ae)
+                {
+                throw new AccessLocalException( ae.getMessage(), ae );
+                }
+                catch (NoSuchObjectException nsoe)
+                {
+                throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+                }
+                catch (TransactionRequiredException tre)
+                {
+                throw new TransactionRequiredLocalException( tre.getMessage() );
+                }
+                catch (TransactionRolledbackException trbe)
+                {
+                throw new TransactionRolledbackLocalException(
+                trbe.getMessage(), trbe );
+                }
+              */
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
+   }
+
+
    /**
     * Stops this Timer Service by removing all its timers
     * and remove itself from the Timer Source.

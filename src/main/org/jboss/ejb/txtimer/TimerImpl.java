@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.6 2004/04/14 13:18:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -23,10 +23,10 @@ import java.util.TimerTask;
 
 /**
  * An implementation of an EJB Timer.
- *
+ * <p/>
  * Internally it uses a java.util.Timer and maintains its state in
  * a Tx manner.
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
  */
@@ -35,8 +35,9 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    // logging support
    private static Logger log = Logger.getLogger(TimerImpl.class);
 
-   /** Timer states and their allowed transitions
-    *
+   /**
+    * Timer states and their allowed transitions
+    * <p/>
     * CREATED  - on create
     * CREATED -> STARTED_IN_TX - when strated with Tx
     * CREATED -> ACTIVE  - when started without Tx
@@ -62,11 +63,12 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    private static final int IN_TIMEOUT = 6;
    private static final int RETRY_TIMEOUT = 7;
 
-   private static final String[] TIMER_STATES = {"created", "started_in_tx", "active","canceled_in_tx",
-                                           "canceled", "expired", "in_timeout", "retry_timeout"};
+   private static final String[] TIMER_STATES = {"created", "started_in_tx", "active", "canceled_in_tx",
+                                                 "canceled", "expired", "in_timeout", "retry_timeout"};
 
    // The initial txtimer properties
    private TimedObjectId timedObjectId;
+   private TimedObjectInvoker timedObjectInvoker;
    private Date firstTime;
    private Date createDate;
    private long periode;
@@ -80,16 +82,22 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    /**
     * Schedules the txtimer for execution at the specified time with a specified periode.
     */
-   TimerImpl(TimedObjectId timedObjectId, Date firstTime, long periode, Serializable info)
+   TimerImpl(TimedObjectId timedObjectId, TimedObjectInvoker timedObjectInvoker, Serializable info)
    {
       this.timedObjectId = timedObjectId;
-      this.firstTime = firstTime;
+      this.timedObjectInvoker = timedObjectInvoker;
       this.createDate = new Date();
-      this.periode = periode;
       this.info = info;
 
-      nextExpire = firstTime.getTime();
       setTimerState(CREATED);
+   }
+
+   void startTimer(Date firstTime, long periode)
+   {
+      this.firstTime = firstTime;
+      this.periode = periode;
+
+      nextExpire = firstTime.getTime();
 
       TimerServiceImpl timerService = getTimerService();
       timerService.addTimer(this);
@@ -271,7 +279,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    {
       long remaining = nextExpire - System.currentTimeMillis();
       String retStr = "[" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode +
-         "," + TIMER_STATES[timerState] + "]";
+              "," + TIMER_STATES[timerState] + "]";
       return retStr;
    }
 
@@ -336,7 +344,9 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    private TimerServiceImpl getTimerService()
    {
       EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
-      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(timedObjectId);
+      String containerId = timedObjectId.getContainerId();
+      Object instancePk = timedObjectId.getInstancePk();
+      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(containerId, instancePk);
       if (timerService == null)
          throw new NoSuchObjectLocalException("Cannot find TimerService: " + timedObjectId);
 
@@ -398,7 +408,9 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
             setTimerState(RETRY_TIMEOUT);
             log.debug("retry: " + this);
             EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
-            ejbTimerService.retryTimeout(timedObjectId, this);
+            String containerId = timedObjectId.getContainerId();
+            Object instancePk = timedObjectId.getInstancePk();
+            ejbTimerService.retryTimeout(containerId, instancePk, this);
          }
          else if (timerState == IN_TIMEOUT || timerState == RETRY_TIMEOUT)
             setTimerState(periode == 0 ? EXPIRED : ACTIVE);
@@ -432,9 +444,8 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
          {
             try
             {
-               EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
                setTimerState(IN_TIMEOUT);
-               ejbTimerService.callTimeout(timedObjectId, timer);
+               timedObjectInvoker.callTimeout(timer);
             }
             catch (Exception e)
             {

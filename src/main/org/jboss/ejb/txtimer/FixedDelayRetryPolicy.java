@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: FixedDelayRetryPolicy.java,v 1.2 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: FixedDelayRetryPolicy.java,v 1.3 2004/04/14 13:18:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -15,12 +15,10 @@ import javax.ejb.Timer;
 /**
  * This service implements a TimeoutRetryPolicy that retries
  * the call to ejbTimeout after a fixed delay.
- * 
- * @jmx.mbean
- *    name="jboss:service=EJBTimerServiceRetryPolicy"
- *    extends="org.jboss.ejb.txtimer.TimeoutRetryPolicy"
  *
  * @author Thomas.Diesler@jboss.org
+ * @jmx.mbean name="jboss:service=EJBTimerServiceRetryPolicy"
+ * extends="org.jboss.ejb.txtimer.TimeoutRetryPolicy"
  * @since 07-Apr-2004
  */
 public class FixedDelayRetryPolicy implements FixedDelayRetryPolicyMBean
@@ -33,8 +31,9 @@ public class FixedDelayRetryPolicy implements FixedDelayRetryPolicyMBean
 
    /**
     * Get the delay for retry
-    * @jmx.managed-attribute
+    *
     * @return delay in ms
+    * @jmx.managed-attribute
     */
    public long getDelay()
    {
@@ -43,8 +42,9 @@ public class FixedDelayRetryPolicy implements FixedDelayRetryPolicyMBean
 
    /**
     * Set the delay for retry
-    * @jmx.managed-attribute
+    *
     * @param delay in ms
+    * @jmx.managed-attribute
     */
    public void setDelay(long delay)
    {
@@ -53,20 +53,21 @@ public class FixedDelayRetryPolicy implements FixedDelayRetryPolicyMBean
 
    /**
     * Invokes the ejbTimeout method on the TimedObject with the given id.
-    * @jmx.managed-operation
+    *
     * @param invoker The invoker for the TimedObject
-    * @param timer the Timer that is passed to ejbTimeout
+    * @param timer   the Timer that is passed to ejbTimeout
+    * @jmx.managed-operation
     */
    public void retryTimeout(TimedObjectInvoker invoker, Timer timer)
    {
       // check if the delay is appropriate
       if (timer instanceof TimerImpl)
       {
-         TimerImpl txTimer = (TimerImpl)timer;
+         TimerImpl txTimer = (TimerImpl) timer;
 
          long periode = txTimer.getPeriode();
          if (0 < periode && periode / 2 < delay)
-            log.warn ("A delay of " + delay + " ms might not be appropriate for a timer periode of " + periode + " ms");
+            log.warn("A delay of " + delay + " ms might not be appropriate for a timer periode of " + periode + " ms");
       }
 
       new RetryThread(invoker, timer).start();

@@ -6,24 +6,20 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectInvokerImpl.java,v 1.2 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: TimedObjectInvokerImpl.java,v 1.3 2004/04/14 13:18:40 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.ejb.MessageDrivenContainer;
+import org.jboss.ejb.StatelessSessionContainer;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.InvocationKey;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.PayloadKey;
-import org.jboss.metadata.EntityMetaData;
 
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.io.Serializable;
 
 /**
  * An implementation of a TimedObjectInvoker, that can invoke deployed
@@ -40,7 +36,7 @@ public class TimedObjectInvokerImpl implements TimedObjectInvoker
    private String invokerProxyBinding;
    private Method method;
 
-   public TimedObjectInvokerImpl(Container container, TimedObjectId timedObjectId)
+   public TimedObjectInvokerImpl(TimedObjectId timedObjectId, Container container)
    {
       try
       {

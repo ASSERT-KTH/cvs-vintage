@@ -6,14 +6,14 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectId.java,v 1.3 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: TimedObjectId.java,v 1.4 2004/04/14 13:18:40 tdiesler Exp $
 
 import java.io.Serializable;
 
 /**
  * The combined TimedObjectId consists of a String that identifies
  * the "class" of the TimedObject and optionally an instance primary key object.
- *
+ * <p/>
  * When the TimedObject is an EJB deployed on JBoss, the containerId is the JMX
  * name of the component, and the instancePk is the entity's primary key.
  * If the component is not an entity, the instancePk should be null.
@@ -29,8 +29,9 @@ public class TimedObjectId implements Serializable
 
    /**
     * Construct a combined TimedObjectId
+    *
     * @param containerId The TimedObject identifier
-    * @param instancePk The TimedObject instance identifier, can be null
+    * @param instancePk  The TimedObject instance identifier, can be null
     */
    public TimedObjectId(String containerId, Object instancePk)
    {
@@ -43,6 +44,7 @@ public class TimedObjectId implements Serializable
 
    /**
     * Construct a TimedObjectId
+    *
     * @param timedObjectId The TimedObject identifier
     */
    public TimedObjectId(String timedObjectId)
@@ -72,7 +74,7 @@ public class TimedObjectId implements Serializable
       if (obj == this) return true;
       if (obj instanceof TimedObjectId)
       {
-         TimedObjectId other = (TimedObjectId)obj;
+         TimedObjectId other = (TimedObjectId) obj;
          if (containerId.equals(other.containerId))
             return (instancePk != null ? instancePk.equals(other.instancePk) : other.instancePk == null);
       }

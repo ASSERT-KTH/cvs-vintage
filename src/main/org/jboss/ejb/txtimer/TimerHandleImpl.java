@@ -6,14 +6,14 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.6 2004/04/14 13:18:40 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;
-import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +28,9 @@ import java.util.StringTokenizer;
  */
 public class TimerHandleImpl implements TimerHandle
 {
-   /** The date pattern used by this handle */
+   /**
+    * The date pattern used by this handle
+    */
    public static final String DATE_PATTERN = "dd-MMM-yyyy HH:mm:ss.SSS";
 
    // The initial txtimer properties
@@ -167,11 +169,13 @@ public class TimerHandleImpl implements TimerHandle
    {
 
       EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
-      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(timedObjectId);
+      String containerId = timedObjectId.getContainerId();
+      Object instancePk = timedObjectId.getInstancePk();
+      TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(containerId, instancePk);
       if (timerService == null)
          throw new NoSuchObjectLocalException("Timer not available: " + timedObjectId);
 
-      TimerImpl timer = (TimerImpl)timerService.getTimer(this);   
+      TimerImpl timer = (TimerImpl) timerService.getTimer(this);
       if (timer == null || timer.isActive() == false)
          throw new NoSuchObjectLocalException("Timer not available: " + timedObjectId);
 

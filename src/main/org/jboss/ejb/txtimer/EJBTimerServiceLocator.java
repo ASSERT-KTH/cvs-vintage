@@ -6,8 +6,9 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceLocator.java,v 1.2 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: EJBTimerServiceLocator.java,v 1.3 2004/04/14 13:18:40 tdiesler Exp $
 
+import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
 
@@ -18,7 +19,7 @@ import javax.management.MBeanServer;
 /**
  * Locates the EJBTimerService, either as MBean or as local instance.
  * <p/>
- * It first checks if the EJBTimerServiceTx is registerd with the MBeanServer,
+ * It first checks if the EJBTimerServiceImpl is registerd with the MBeanServer,
  * if not it creates a singleton and uses that.
  *
  * @author Thomas.Diesler@jboss.org
@@ -49,7 +50,7 @@ public class EJBTimerServiceLocator
 
       // This path can be used for standalone test cases
       if (ejbTimerService == null)
-         ejbTimerService = new EJBTimerServiceTx();
+         ejbTimerService = new EJBTimerServiceImpl();
 
       return ejbTimerService;
    }
@@ -66,22 +67,15 @@ public class EJBTimerServiceLocator
          this.server = server;
       }
 
-      /**
-       * Create a TimerService for a given TimedObjectId
-       *
-       * @param timedObjectId combined TimedObjectId
-       * @param timedObjectInvoker a TimedObjectInvoker
-       * @return the TimerService
-       */
-      public TimerService createTimerService(TimedObjectId timedObjectId, TimedObjectInvoker timedObjectInvoker)
+      public TimerService createTimerService(String containerId, Object instancePk, Container container)
               throws IllegalStateException
       {
          try
          {
             TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
                     "createTimerService",
-                    new Object[]{timedObjectId, timedObjectInvoker},
-                    new String[]{TimedObjectId.class.getName(), TimedObjectInvoker.class.getName()});
+                    new Object[]{containerId, instancePk},
+                    new String[]{String.class.getName(), Object.class.getName(), Container.class.getName()});
             return timerService;
          }
          catch (Exception e)
@@ -91,21 +85,33 @@ public class EJBTimerServiceLocator
          }
       }
 
-      /**
-       * Get the TimerService for a given TimedObjectId
-       *
-       * @param timedObjectId combined TimedObjectId
-       * @return The TimerService, or null if it does not exist
-       */
-      public TimerService getTimerService(TimedObjectId timedObjectId)
+      public TimerService createTimerService(String containerId, Object instancePk, TimedObjectInvoker invoker)
+              throws IllegalStateException
+      {
+         try
+         {
+            TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
+                    "createTimerService",
+                    new Object[]{containerId, instancePk},
+                    new String[]{String.class.getName(), Object.class.getName(), TimedObjectInvoker.class.getName()});
+            return timerService;
+         }
+         catch (Exception e)
+         {
+            log.error("Cannot createTimerService", e);
+            return null;
+         }
+      }
+
+      public TimerService getTimerService(String containerId, Object instancePk)
               throws IllegalStateException
       {
          try
          {
             TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
                     "getTimerService",
-                    new Object[]{timedObjectId},
-                    new String[]{TimedObjectId.class.getName()});
+                    new Object[]{containerId, instancePk},
+                    new String[]{String.class.getName(), Object.class.getName()});
             return timerService;
          }
          catch (Exception e)
@@ -115,39 +121,14 @@ public class EJBTimerServiceLocator
          }
       }
 
-      /**
-       * Invokes the ejbTimeout method on a given TimedObjectId
-       * @param timedObjectId combined TimedObjectId
-       * @param timer the Timer that is passed to ejbTimeout
-       */
-      public void callTimeout(TimedObjectId timedObjectId, Timer timer) throws Exception
-      {
-         try
-         {
-            server.invoke(EJBTimerService.OBJECT_NAME,
-                    "callTimeout",
-                    new Object[]{timedObjectId, timer},
-                    new String[]{TimedObjectId.class.getName(), Timer.class.getName()});
-         }
-         catch (Exception e)
-         {
-            log.error("Cannot callTimeout", e);
-         }
-      }
-
-      /**
-       * Invokes the ejbTimeout method a given TimedObjectId
-       * @param timedObjectId combined TimedObjectId
-       * @param timer the Timer that is passed to ejbTimeout
-       */
-      public void retryTimeout(TimedObjectId timedObjectId, Timer timer)
+      public void retryTimeout(String containerId, Object instancePk, Timer timer)
       {
          try
          {
             server.invoke(EJBTimerService.OBJECT_NAME,
                     "retryTimeout",
-                    new Object[]{timedObjectId, timer},
-                    new String[]{TimedObjectId.class.getName(), Timer.class.getName()});
+                    new Object[]{containerId, instancePk},
+                    new String[]{String.class.getName(), Object.class.getName(), Timer.class.getName()});
          }
          catch (Exception e)
          {
@@ -155,35 +136,20 @@ public class EJBTimerServiceLocator
          }
       }
 
-      /**
-       * Remove the TimerService for a given TimedObjectId
-       *
-       * @param timedObjectId combined TimedObjectId
-       */
-      public void removeTimerService(TimedObjectId timedObjectId)
+      public void removeTimerService(String containerId, Object instancePk)
               throws IllegalStateException
       {
          try
          {
             server.invoke(EJBTimerService.OBJECT_NAME,
                     "removeTimerService",
-                    new Object[]{timedObjectId},
-                    new String[]{TimedObjectId.class.getName()});
+                    new Object[]{containerId, instancePk},
+                    new String[]{String.class.getName(), Object.class.getName()});
          }
          catch (Exception e)
          {
             log.error("Cannot removeTimerService", e);
          }
-      }
-
-      /**
-       * Invokes the ejbTimeout method on the TimedObject with the given id.
-       * @param invoker the invoker for the TimedObject
-       * @param timer the Timer that is passed to ejbTimeout
-       */
-      public void retryTimeout(TimedObjectInvoker invoker, Timer timer) throws Exception
-      {
-
       }
    }
 }

@@ -13,10 +13,6 @@ import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.ejb.timer.ContainerTimer;
-import org.jboss.ejb.timer.ContainerTimerService;
-import org.jboss.ejb.txtimer.TimedObjectInvokerImpl;
-import org.jboss.ejb.txtimer.TimedObjectId;
-import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationStatistics;
 import org.jboss.invocation.InvocationType;
@@ -84,7 +80,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.142 $
+ * @version $Revision: 1.143 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -192,9 +188,6 @@ public abstract class Container
    protected long removeCount;
    /** Time statistics for the invoke(Invocation) methods */
    protected InvocationStatistics invokeStats = new InvocationStatistics();
-
-   /** Timer Service for this Container. Note, this is not used by the EJBTimerServiceTx */
-   public HashMap timerServices = new HashMap();
 
    /** A reference to {@link TimedObject#ejbTimeout}. */
    protected static final Method ejbTimeout;
@@ -613,32 +606,12 @@ public abstract class Container
       TimerService timerService = null;
       try
       {
-         // Try the Tx EJBTimerService first
-         ObjectName oname = new ObjectName("jboss:service=EJBTimerServiceTx");
-         if (server.isRegistered(oname))
-         {
-            // Try to get an already existing TimerService
-            TimedObjectId timedObjectId = new TimedObjectId(getJmxName().getCanonicalName(), pKey);
-            TimedObjectInvoker timedObjectInvoker = new TimedObjectInvokerImpl(this, timedObjectId);
-            timerService = (TimerService) server.invoke(oname, "createTimerService",
-                    new Object[]{timedObjectId, timedObjectInvoker},
-                    new String[]{TimedObjectId.class.getName(), TimedObjectInvoker.class.getName()});
-         }
-
-         // Fall back to the non transactional EJBTimerService
-         else
-         {
-            oname = new ObjectName("jboss:service=EJBTimerService");
-            timerService = (TimerService) timerServices.get((pKey == null ? "null" : pKey));
-            if (timerService == null)
-            {
-               timerService = (TimerService) server.invoke(oname, "createTimerService",
-                       new Object[]{getJmxName().toString(), this, pKey},
-                       new String[]{String.class.getName(), Container.class.getName(), Object.class.getName()});
-               timerServices.put((pKey == null ? "null" : pKey),
-                       timerService);
-            }
-         }
+         ObjectName oname = new ObjectName("jboss:service=EJBTimerService");
+         String containerId = getJmxName().getCanonicalName();
+         timerService = (TimerService) server.invoke(oname,
+                 "createTimerService",
+                 new Object[]{containerId, pKey, this},
+                 new String[]{String.class.getName(), Object.class.getName(), Container.class.getName()});
       }
       catch (Exception e)
       {
@@ -660,95 +633,17 @@ public abstract class Container
    {
       try
       {
-         // Try EJBTimerServiceTx first
-         ObjectName oname = new ObjectName("jboss:service=EJBTimerServiceTx");
-         if (server.isRegistered(oname))
-         {
-            // Try to get an already existing TimerService
-            TimedObjectId timedObjectId = new TimedObjectId(getJmxName().getCanonicalName(), pKey);
-            server.invoke(oname, "removeTimerService",
-                    new Object[]{timedObjectId}, new String[]{TimedObjectId.class.getName()});
-         }
-
-         // Fall back to EJBTimerService
-         else
-         {
-            Iterator i = timerServices.values().iterator();
-            while (i.hasNext())
-            {
-               TimerService timerService = (TimerService) i.next();
-               ((ContainerTimerService) timerService).stopService();
-               i.remove();
-            }
-         }
+         ObjectName oname = new ObjectName("jboss:service=EJBTimerService");
+         String containerId = getJmxName().getCanonicalName();
+         server.invoke(oname, "removeTimerService",
+                 new Object[]{containerId, pKey},
+                 new String[]{String.class.getName(), Object.class.getName()});
       }
       catch (Exception e)
       {
          log.error("Could not remove timer service", e);
       }
    }
-
-   /**
-    * Handles an Timed Event by gettting the appropriate EJB instance,
-    * invoking the "ejbTimeout()" method on it with the given timer
-    *
-    * @param pTimer Timer causing this event
-    **/
-   public void handleEjbTimeout(Timer pTimer)
-   {
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
-
-      Object id = ((ContainerTimer) pTimer).getKey();
-      try
-      {
-         LocalEJBInvocation invocation = new LocalEJBInvocation(
-                 id,
-                 ejbTimeout,
-                 new Object[]{pTimer},
-                 null,
-                 null,
-                 null
-         );
-         invocation.setType(InvocationType.LOCAL);
-
-         invoke(invocation);
-         if (getTransactionManager().getTransaction() != null)
-         {
-            Transaction tx = getTransactionManager().getTransaction();
-            log.error("TRANSACTION IS STILL ALIVE!!!!!" + tx.getStatus());
-         }
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-         throw new RuntimeException("call ejbTimeout() failed: " + e);
-      }
-              /*AS TODO: Manage the exceptions properly
-                catch (AccessException ae)
-                {
-                throw new AccessLocalException( ae.getMessage(), ae );
-                }
-                catch (NoSuchObjectException nsoe)
-                {
-                throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
-                }
-                catch (TransactionRequiredException tre)
-                {
-                throw new TransactionRequiredLocalException( tre.getMessage() );
-                }
-                catch (TransactionRolledbackException trbe)
-                {
-                throw new TransactionRolledbackLocalException(
-                trbe.getMessage(), trbe );
-                }
-              */
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(oldCl);
-      }
-   }
-
 
    /**
     * The EJBDeployer calls this method.  The EJBDeployer has set

@@ -1,12 +1,11 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.5 2004/04/13 15:37:57 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.6 2004/04/14 13:18:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
 
 import javax.ejb.EJBException;
-import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;
 import javax.ejb.TimerService;
@@ -39,6 +38,7 @@ public class TimerServiceImpl implements TimerService
    private TransactionManager transactionManager;
 
    private TimedObjectId timedObjectId;
+   private TimedObjectInvoker timedObjectInvoker;
 
    // maps TimerHandles to Timer objects
    private Map timers = new HashMap();
@@ -46,9 +46,10 @@ public class TimerServiceImpl implements TimerService
    /**
     * Create a Timer service for the given TimedObject
     */
-   public TimerServiceImpl(TimedObjectId timedObjectId)
+   public TimerServiceImpl(TimedObjectId timedObjectId, TimedObjectInvoker timedObjectInvoker)
    {
       this.timedObjectId = timedObjectId;
+      this.timedObjectInvoker = timedObjectInvoker;
       try
       {
          InitialContext iniCtx = new InitialContext();
@@ -161,7 +162,8 @@ public class TimerServiceImpl implements TimerService
 
       try
       {
-         TimerImpl timer = new TimerImpl(timedObjectId, initialExpiration, intervalDuration, info);
+         TimerImpl timer = new TimerImpl(timedObjectId, timedObjectInvoker, info);
+         timer.startTimer(initialExpiration, intervalDuration);
          return timer;
       }
       catch (Exception e)
@@ -240,6 +242,14 @@ public class TimerServiceImpl implements TimerService
             timer.killTimer();
          }
       }
+   }
+
+   /**
+    * Get the TimedObjectInvoker associated with this TimerService
+    */
+   public TimedObjectInvoker getTimedObjectInvoker()
+   {
+      return timedObjectInvoker;
    }
 
    /**

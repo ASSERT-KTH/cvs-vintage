@@ -6,23 +6,20 @@
  */
 package org.jboss.ejb.timer;
 
-import java.io.EOFException;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.txtimer.TimedObjectId;
+import org.jboss.system.ServiceMBeanSupport;
+
+import javax.ejb.TimerService;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.ejb.EJBContext;
-import javax.ejb.TimerService;
-import javax.management.MalformedObjectNameException;
-import javax.management.MBeanInfo;
-import javax.management.MBeanOperationInfo;
-import javax.management.MBeanParameterInfo;
-import javax.management.ObjectName;
-
-import org.jboss.ejb.Container;
-import org.jboss.system.ServiceMBeanSupport;
 
 
 /**
@@ -33,7 +30,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * The Timer Source implementation is reponsible to support that persistence
  * timers maintain their Id.
  *
- * @jmx:mbean name="jboss:service=EJBTimerSource"
+ * @jmx.mbean name="jboss:service=EJBTimerSource"
  *            extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
@@ -174,8 +171,6 @@ public abstract class AbstractTimerSource
     * Creates a new timer to be invoked once, a definte or infinite number
     * of times.
     *
-    * @param ??
-    *
     * @return Id of the Timer
     **/
    public abstract Integer createTimer(
@@ -261,9 +256,9 @@ public abstract class AbstractTimerSource
     *
     * @param pContainerId Identification of the Container
     *
-    * @jmx:managed-operation
+    * @jmx.managed-operation
     **/
-   public TimerService createTimerService( String pContainerId, Container pContainer, Object pKey ) {
+   public TimerService createTimerService(String pContainerId, Object pKey, Container pContainer) {
       TimerService lService = null;
       ContainerKey lContainerKey = new ContainerKey( pContainerId, pKey );
       if( mContainerTimerServices.containsKey( lContainerKey ) ) {
@@ -287,7 +282,7 @@ public abstract class AbstractTimerSource
    /**
     * Delivers the Timer Service for a given Container Id
     *
-    * @param pContainerId Id of the Container to look for its Timer Service
+    * @param pContainerKey Id of the Container to look for its Timer Service
     *
     * @return Timer Service if found otherwise null
     **/
