@@ -8,7 +8,6 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.LocalFolder;
@@ -32,14 +31,18 @@ public class SyncSearchEngineCommand extends FolderCommand {
 	}
 
 	public void updateGUI() throws Exception {
+		// update treemodel
 		MailInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	public void execute(Worker worker) throws Exception {
+		// get source folder
 		parentFolder =
 			(LocalFolder) ((FolderCommandReference) getReferences()[0])
 				.getFolder();
 				
+		// resync search engine
+		// -> this is only needed for Lucene right now
 		AbstractSearchEngine engine = parentFolder.getSearchEngineInstance();
 		if ( engine instanceof LuceneSearchEngine )
 			{

@@ -54,30 +54,42 @@ public class ExportFolderCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		// get references
 		FolderCommandReference[] references =
 			(FolderCommandReference[]) getReferences();
+		
+		// use wrapper class
 		adapter = new FolderCommandAdapter(references);
 	
+		// get source references
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
+		// get destination file
 		File destFile = r[0].getDestFile();
 		
+		// create output stream
 		FileOutputStream os = new FileOutputStream(destFile);
 
 		int counter = 0;
 		
-		// for every source folder
+		// for each source folder
 		for (int i = 0; i < r.length; i++) {
 			
+			// get source folder
 			Folder srcFolder = (Folder) r[i].getFolder();
+			
+			// update status message
 			worker.setDisplayText("Exporting "+srcFolder.getName()+" "+(i+1)+"/"+r.length+"...");
 		 	
+			// get array of message UIDs
 			Object[] uids = srcFolder.getUids();
 			
+			// initialize progressbar with total number of messages
 			worker.setProgressBarMaximum(uids.length);
+			
 			worker.setProgressBarValue(0);
 			
-			// for every message in folder i
+			// for each message in folder i
 			for (int j = 0; j < uids.length; j++) {
 				// get message source from folder
 				String source = srcFolder.getMessageSource(uids[j]);
@@ -97,14 +109,18 @@ public class ExportFolderCommand extends FolderCommand {
 				worker.setProgressBarValue(j);
 				counter++;
 				
+				// if user cancels operation
 				if ( worker.cancelled() ) break;
 			}
 			
+			//if user cancels operation
 			if ( worker.cancelled() ) break;
 		}
 
+		// close output stream
 		os.close();
 		
+		// update status message
 		worker.setDisplayText("Exported "+counter+" messages successfully");
 	}
 

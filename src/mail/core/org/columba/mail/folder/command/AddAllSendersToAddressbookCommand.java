@@ -31,7 +31,7 @@ import org.columba.ristretto.message.HeaderInterface;
 /**
  * Add all senders contained in the selected messages to
  * the addressbook.
- * 
+ * <p>
  * A dialog asks the user to choose the destination addressbook.
  * 
  * @author fdietz
@@ -109,7 +109,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 	 * <p>
 	 * TODO: This code should most probably moved to the addressbook component
 	 * 
-	 * @param sender	email address of sender
+	 * @param sender		email address of sender
 	 */
 	public void addSender(String sender) {
 		if (sender == null)

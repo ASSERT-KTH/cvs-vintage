@@ -21,7 +21,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -33,8 +32,8 @@ import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 
 /**
- * 
  * Check for new messages in IMAPFolder.
+ * 
  * 
  * @author fdietz
  */
@@ -43,6 +42,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 	FolderCommandAdapter adapter;
 	IMAPFolder inboxFolder;
 	boolean needGUIUpdate;
+	
 	/**
 	 * @param references
 	 */
@@ -66,15 +66,20 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		// get references
 		FolderCommandReference[] references =
 			(FolderCommandReference[]) getReferences();
+		
+		// use wrapper class to make handling references easier
 		adapter = new FolderCommandAdapter(references);
 
+		// get array of source references
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
 		// get IMAP rootfolder
 		IMAPRootFolder srcFolder = (IMAPRootFolder) r[0].getFolder();
-		//		register for status events
+		
+		// register for status events
 		 ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
 		// we only check inbox

@@ -27,7 +27,16 @@ All Rights Reserved.
 <body bgcolor="white">
 
 Provides commands for accessing the mailbox stores.
-
+<p>
+Folder shouldn't be accessed directly. Instead we use {@link FolderCommand}, which
+in conjunction with {@link FolderCommandReference} provide a looking facility.
+This makes sure that only one {@link Command} at a time can modify the folder's
+data.
+<p>
+As explained in org.columba.command, {@link DefaultProcessor} is  a preclaiming
+schedular. FolderCommandReference keeps a list of folders involved in
+the operation the Command executes. DefaultProcessor will only start
+the Command if all folders (resources) can be claimed at once.
 
 </body>
 </html>

@@ -17,6 +17,10 @@ import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
  * Import messages to folder.
  * <p>
  * This command is used by the mail import wizard to import messages.
+ * All the interesting work happens in {@link DefaultMailboxImporter}.
+ * <p>
+ * Note, that the import wizard needs a command to make sure that the folder
+ * is locked.
  * 
  * @author fdietz
  */

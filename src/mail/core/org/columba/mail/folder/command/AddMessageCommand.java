@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.command;
@@ -19,7 +21,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
@@ -30,8 +31,10 @@ import org.columba.ristretto.message.HeaderInterface;
 
 /**
  * Add message to folder
- *
- *
+ * <p>
+ * This command isn't used right now, and will most probably be removed in the
+ * future.
+ * 
  * @author fdietz
  */
 public class AddMessageCommand extends Command {
@@ -41,6 +44,7 @@ public class AddMessageCommand extends Command {
 
 	/**
 	 * Constructor for AddMessageCommand.
+	 * 
 	 * @param frameController
 	 * @param references
 	 */
@@ -49,48 +53,36 @@ public class AddMessageCommand extends Command {
 	}
 
 	public void updateGUI() throws Exception {
-		//MailFrameController frame = (MailFrameController) frameController;
 
+		// send update to message list
 		TableModelChangedEvent ev =
 			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, folder);
 
-		//frame.tableController.tableChanged(ev);
-		
-		MailInterface.treeModel.nodeChanged(folder);
-		
 		TableUpdater.tableChanged(ev);
+
+		// notify treemodel
+		MailInterface.treeModel.nodeChanged(folder);
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
+		// get reference
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+
+		// get source folder
 		folder = (Folder) r[0].getFolder();
-		
-//		register for status events
-		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
-		
+
+		// register for status events
+		 ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+
+		// get message from reference
 		ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
+		// add message to folder
 		Object uid = folder.addMessage(message);
 
-		// we need this to reflect changes in table-widget
-		// -> this is cached in folder anyway, so actually
-		// -> we just get the HeaderInterface from a Hashtable
-		headerList[0] = folder.getMessageHeader(uid);
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void undo(Worker worker) throws Exception {
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#redo(Worker)
-	 */
-	public void redo(Worker worker) throws Exception {
 	}
 
 }

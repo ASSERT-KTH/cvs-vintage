@@ -20,7 +20,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -57,22 +56,25 @@ public class CopyMessageCommand extends FolderCommand {
 
 	public void updateGUI() throws Exception {
 
+		// notify table of changes
 		TableModelChangedEvent ev =
 			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, destFolder);
 
 		TableUpdater.tableChanged(ev);
 
+		// notify treemodel
 		MailInterface.treeModel.nodeChanged(destFolder);
 	}
 
 	/**
 	 * Copying messages between folders which are of the same mailbox
-	 * format, and/or exist on the same IMAP server.
+	 * format, and exist on the same IMAP server btw. have the same
+	 * parent root node.
 	 * 
-	 * @param srcFolder
-	 * @param destFolder
-	 * @param uids
-	 * @param worker
+	 * @param srcFolder			source folder
+	 * @param destFolder		destination folder
+	 * @param uids				arry of message UIDs
+	 * @param worker			worker thread
 	 * @throws Exception
 	 */
 	protected void innerCopy(
@@ -90,10 +92,10 @@ public class CopyMessageCommand extends FolderCommand {
 	 * Simple fall-back copy method, which first copies the message
 	 * to the folder, using the raw message source stream.
 	 * 
-	 * @param srcFolder
-	 * @param destFolder
-	 * @param uids
-	 * @param worker
+	 * @param srcFolder			source folder
+	 * @param destFolder		destination folder
+	 * @param uids				array of message UIDs
+	 * @param worker			worker thread
 	 * @throws Exception
 	 */
 	protected void defaultCopy(
@@ -103,19 +105,26 @@ public class CopyMessageCommand extends FolderCommand {
 		Worker worker)
 		throws Exception {
 
+		// what does thi method?
         if(destUids == null){
           destUids = new Object[uids.length];
         }
+        
+        // for each message
 		for (int i = 0; i < uids.length; i++) {
 
 			Object uid = uids[i];
 			//ColumbaLogger.log.debug("copying UID=" + uid);
 
+			// if message exists in sourcefolder
 			if (srcFolder.exists(uid)) {
+				// get message source
 				String source = srcFolder.getMessageSource(uid);
+				// add source to destination folder
                 destUids[i] = destFolder.addMessage(source);
 			}
 
+			// update progress bar
 			worker.setProgressBarValue(i);
 		}
 
@@ -125,20 +134,29 @@ public class CopyMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-
+		
+		// get references
 		FolderCommandReference[] references =
 			(FolderCommandReference[]) getReferences();
+		
+		// use wrapper class
 		adapter = new FolderCommandAdapter(references);
 
+		// get source references
 		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		
+		// get destination foldedr
 		destFolder = adapter.getDestinationFolder();
 
+		// for each message
 		for (int i = 0; i < r.length; i++) {
 
 			Object[] uids = r[i].getUids();
 
+			// get source folder
 			Folder srcFolder = (Folder) r[i].getFolder();
-//			register for status events
+			
+			// register for status events
 			((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
 				 
 			// setting lastSelection for srcFolder to null
@@ -146,14 +164,17 @@ public class CopyMessageCommand extends FolderCommand {
 
 			ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
 
+			// update status message
 			worker.setDisplayText(
 				"Copying messages to " + destFolder.getName() + "...");
+			
+			// initialize progress bar with total number of messages
 			worker.setProgressBarMaximum(uids.length);
 
 			// compare source- and dest-folder
 			if (srcFolder.getRootFolder().equals(destFolder.getRootFolder())) {
 				// source- and dest-folder match
-				//  -> user optimized copy operation
+				//  -> use optimized copy operation
 
 				innerCopy(srcFolder, destFolder, uids, worker);
 			} else {
@@ -162,33 +183,6 @@ public class CopyMessageCommand extends FolderCommand {
 				defaultCopy(srcFolder, destFolder, uids, worker);
 			}
 		}
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void undo(Worker worker) throws Exception {
-		/*
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-
-		Object[] uids = r[1].getUids();
-
-		Folder srcFolder = (Folder) r[1].getFolder();
-
-		for (int i = 0; i < uids.length; i++) {
-			Object uid = uids[i];
-			ColumbaLogger.log.debug("undo_copying UID=" + uid);
-
-			srcFolder.removeMessage(uid, worker);
-		}
-		*/
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#redo(Worker)
-	 */
-	public void redo(Worker worker) throws Exception {
-		execute(worker);
 	}
 
 }
