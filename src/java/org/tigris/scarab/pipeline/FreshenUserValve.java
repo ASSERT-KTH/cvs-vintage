@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.18 2003/04/01 03:56:07 jon Exp $
+ * @version $Id: FreshenUserValve.java,v 1.19 2003/04/01 04:22:14 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -207,7 +207,9 @@ public class FreshenUserValve
         }
         // If they have just changed modules,
         // Set the current issue type to the new module's first active issue type.
-        if (user.getCurrentModule() != module)
+        Module currentModule = user.getCurrentModule();
+        if (module != null && currentModule != null &&
+            !module.getModuleId().equals(currentModule.getModuleId()))
         {
             IssueType issueType = null;
             List navIssueTypes = module.getNavIssueTypes();
