@@ -7,9 +7,9 @@
 
 package org.jboss.security;
 
-import javax.security.auth.Subject;
 import java.security.Principal;
 import java.util.ArrayList;
+import javax.security.auth.Subject;
 
 /** The SecurityAssociation class maintains the security principal and
 credentials. This can be done on either a singleton basis or a thread
@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.15 $
+@version $Revision: 1.16 $
  */
 public final class SecurityAssociation
 {
@@ -56,9 +56,12 @@ public final class SecurityAssociation
    /** Thread local stacks of run-as principal roles used to implement J2EE
     run-as identity propagation */
    private static RunAsThreadLocalStack threadRunAsStacks = new RunAsThreadLocalStack();
-   /** The permission required to access getPrincpal, getCredential, getSubject */
+   /** The permission required to access getPrincpal, getCredential */
    private static final RuntimePermission getPrincipalInfoPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.getPrincipalInfo");
+   /** The permission required to access getSubject */
+   private static final RuntimePermission getSubjectPermission =
+      new RuntimePermission("org.jboss.security.SecurityAssociation.getSubject");
    /** The permission required to access setPrincpal, setCredential, setSubject */
    private static final RuntimePermission setPrincipalInfoPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo");
@@ -151,7 +154,7 @@ public final class SecurityAssociation
     If a security manager is present, then this method calls the security
     manager's <code>checkPermission</code> method with a
     <code>
-    RuntimePermission("org.jboss.security.SecurityAssociation.getPrincipalInfo")
+    RuntimePermission("org.jboss.security.SecurityAssociation.getSubject")
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
@@ -161,7 +164,7 @@ public final class SecurityAssociation
    {
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
-         sm.checkPermission(getPrincipalInfoPermission);
+         sm.checkPermission(getSubjectPermission);
 
       // [todo] what subject do we return if there is a run-as identity 
 
@@ -179,7 +182,7 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param principal the current principal identity.
+    @param principal - the current principal identity.
     */
    public static void setPrincipal( Principal principal )
    {
@@ -204,7 +207,7 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param credential the credential that proves the principal identity.
+    @param credential - the credential that proves the principal identity.
     */
    public static void setCredential( Object credential )
    {
@@ -226,7 +229,7 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param subject the current principal identity.
+    @param subject - the current identity.
     */
    public static void setSubject(Subject subject)
    {
@@ -313,7 +316,7 @@ public final class SecurityAssociation
    {
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
-         sm.checkPermission(setPrincipalInfoPermission);
+         sm.checkPermission(setServerPermission);
 
       server = true;
    }
