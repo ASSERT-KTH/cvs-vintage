@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.5 2001/09/06 13:18:04 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.6 2001/09/06 21:48:42 dmaplesden Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -436,7 +436,7 @@
    -->
   <mbean code="org.jboss.mq.server.StateManager" 
 	 name="JBossMQ:service=StateManager">
-    <attribute name="StateFile">jbossmq-state.xml</attribute>
+    <attribute name="StateFile">conf/default/jbossmq-state.xml</attribute>
   </mbean>
 
   <!-- The PersistenceManager is used to store messages to disk. -->
