@@ -72,6 +72,19 @@ public  class RModuleIssueType
     }
 
     /**
+     * Gets name to display.
+     */
+    public String getDisplayText() throws Exception
+    {    
+        String display = getIssueType().getName();            
+        if (super.getDisplayName() != null)
+        {
+            display = super.getDisplayName();
+        }
+        return display;
+    }
+            
+    /**
      * Copies object.
      */
     public RModuleIssueType copy()
