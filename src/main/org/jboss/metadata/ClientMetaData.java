@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.11 2004/08/19 18:53:00 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.12 2004/09/11 00:38:07 starksm Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.webservice.metadata.ServiceRefMetaData;
@@ -21,7 +21,7 @@ import java.net.URLClassLoader;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class ClientMetaData
 {
@@ -31,14 +31,19 @@ public class ClientMetaData
    private String jndiName;
    /** An ArrayList<EnvEntryMetaData> for the env-entry element(s) */
    private ArrayList environmentEntries = new ArrayList();
-   /** A HashMap<EjbRefMetaData> for the ejb-ref element(s) */
+   /** A HashMap<String, EjbRefMetaData> for the ejb-ref element(s) */
    private HashMap ejbReferences = new HashMap();
-   /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
+   /** The HashMap<String, ServiceRefMetaData> service-ref element(s) info */
    private HashMap serviceReferences = new HashMap();
-   /** A  HashMap<ResourceRefMetaData> resource-ref element(s) info */
+   /** A  HashMap<String, ResourceRefMetaData> resource-ref element(s) info */
    private HashMap resourceReferences = new HashMap();
-   /** A  HashMap<ResourceEnvRefMetaData> resource-env-ref element(s) info */
+   /** A  HashMap<String, ResourceEnvRefMetaData> resource-env-ref element(s) info */
    private HashMap resourceEnvReferences = new HashMap();
+   /** A  HashMap<String, ArrayList<ResourceEnvRefMetaData>> of
+    * message-destination-ref that resolve to a jndi-name via a message-destination
+    * via a message-destination-link
+    */
+   private HashMap resourceEnvReferenceLinks = new HashMap();
    /** The JAAS callback handler */
    private String callbackHandler;
 
@@ -186,6 +191,35 @@ public class ClientMetaData
          refMetaData.importEjbJarXml(resourceRef);
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
+
+      // Parse the message-destination-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "message-destination-ref");
+      while (iterator.hasNext())
+      {
+         Element resourceRef = (Element) iterator.next();
+         ResourceEnvRefMetaData refMetaData = new ResourceEnvRefMetaData();
+         refMetaData.importEjbJarXml(resourceRef);
+         /* A message-destination-ref is linked to a jndi-name either via
+         the message-destination-ref/message-destination-ref-name mapping to
+         a jboss resource-env-ref/resource-env-ref-name if there is no
+         message-destination-link, or by the message-destination-link ->
+         message-destination/message-destination-name mapping to a jboss
+         resource-env-ref/resource-env-ref-name.
+         */
+         String refName = refMetaData.getRefName();
+         String link = refMetaData.getLink();
+         if( link != null )
+         {
+            ArrayList linkedRefs = (ArrayList) resourceEnvReferenceLinks.get(link);
+            if( linkedRefs == null )
+            {
+               linkedRefs = new ArrayList();
+               resourceEnvReferenceLinks.put(link, linkedRefs);
+            }
+            linkedRefs.add(refMetaData);
+         }
+         resourceEnvReferences.put(refName, refMetaData);            
+      }
    }
 
    public void importJbossClientXml(Element element) throws DeploymentException
@@ -251,10 +285,26 @@ public class ClientMetaData
             (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
          if (refMetaData == null)
          {
-            throw new DeploymentException("resource-env-ref " + resRefName
-               + " found in jboss-client.xml but not in application-client.xml");
+            // Try the resourceEnvReferenceLinks
+            ArrayList linkedRefs = (ArrayList) resourceEnvReferenceLinks.get(resRefName);
+            if( linkedRefs != null )
+            {
+               for(int n = 0; n < linkedRefs.size(); n ++)
+               {
+                  refMetaData = (ResourceEnvRefMetaData) linkedRefs.get(n);
+                  refMetaData.importJbossXml(resourceRef);
+               }
+            }
+            else
+            {
+               throw new DeploymentException("resource-env-ref " + resRefName
+                  + " found in jboss-client.xml but not in application-client.xml");
+            }
          }
-         refMetaData.importJbossXml(resourceRef);
+         else
+         {
+            refMetaData.importJbossXml(resourceRef);
+         }
       }
    }
 }
