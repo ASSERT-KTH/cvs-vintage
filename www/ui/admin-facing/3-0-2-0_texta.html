@@ -54,20 +54,17 @@
 <div id="navcolumn">
 
 
-
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
+ <div><a href="#">Enter new defect</a></div>
  
- <div><a href="#">Defect</a>
-
  <div><a href="#">Queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
  <div id="admintools" class="toolgroup">
 
@@ -80,11 +77,14 @@
     
  <div><a href="#">Global data</a>
  
-  <div><a href="#">Issue types</a></div>
- <div><a href="#">Attributes</a></div>
+  <div><a href="#">Global issue types</a></div>
+  
+  <div><a href="#">Global attributes</a></div>
+  
+  <div><a href="#">Update search index</a></div>
 
  </div>
- 
+
  
  <div><a href="#">Project data</a></div>         
   
@@ -95,6 +95,7 @@
  </div>
  
  </div> </div>
+
 
 
 <div id="helptext" class="toolgroup">
@@ -128,11 +129,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />

@@ -59,11 +59,11 @@
   <div class="label"><strong>Scarab</strong></div>
   <div class="body">
  
- <div><a href="#">Defect</a>
+ <div><a href="#">Enter new defect</a></div>
 
- <div><a href="#">Queries</a></div>
+ <div><a href="#">Saved queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
+ <div><a href="#">Templates</a></div>         
  
  <div><a href="#">Reports</a></div>
  
@@ -80,18 +80,7 @@
     
  <div><a href="#">Global data</a></div>
  
- <div><a href="#">Project data</a>
-  
-  <div><a href="#">Manage issue types</a></div>
-  
-  <div><a href="#">Manage modules</a></div>
-  
-  <div><a href="#">XML export issues</a></div>
-
-  <div><a href="#">XML export settings</a></div>
-
-
- </div>         
+ <div><a href="#">Project data</a></div>         
   
  <div><a href="#">Roles</a></div>
  
@@ -133,11 +122,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -145,6 +129,19 @@ title="Note: link may open in new window">Get help?</a></div>
     	&#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 		</form>
 	</td>
+	
+	<td>
+		<form action="post" method="get">
+  		<select name="go" tabindex="3" onChange="this.form.submit();">
+    	<option value="#">Defect</option>
+    	<option value="#">Task</option>
+    	<option value="#">Enhancement</option>
+ 	 	</select>
+  		<input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
+  		<noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+		</form>
+  	</td>
+
 	<td>
 		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
 		<input type="hidden" name="nextTemplate" value="Index.vm" />
@@ -201,7 +198,14 @@ title="Note: link may open in new window">Get help?</a></div>
 		
 
                         
-        <h3>Attributes in this group</h3>
+		<div class="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<th><a href="2-1-4-1.html" title="#">Attributes</a></th>
+			<td><a href="2-1-4-1-tab2.html" title="#">Attribute configuration options</a></td>
+			</tr>
+			</table>
+		</div>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
@@ -210,8 +214,6 @@ title="Note: link may open in new window">Get help?</a></div>
         <th>Per project name</th>
         <th>Active</th>
         <th>Required</th>
-        <th>Included in report builder</th>
-        <th>Included in Custom query</th>
         <th>Sequence #</th>
         </tr>
 
@@ -220,8 +222,6 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><input type="checkbox" /></td>
         <td><a href="#">Attribute W</a></td>
         <td><input type="text" name="" value="" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td>
@@ -237,8 +237,6 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><input type="text" name="" value="" /></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" checked="checked" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
         <td>
         <select class="select">
         <option>2</option>
@@ -252,8 +250,6 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><input type="text" name="" value="" /></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
         <td>
         <select class="select">
         <option>3</option>
@@ -267,8 +263,6 @@ title="Note: link may open in new window">Get help?</a></div>
         <td><input type="text" name="" value="" /></td>
         <td><input type="checkbox" checked="checked" /></td>
         <td><input type="checkbox" /></td>
-        <td><input type="checkbox" checked="checked" /></td>
-       	<td><input type="checkbox" /></td>
         <td>
         <select class="select">
         <option>4</option>
