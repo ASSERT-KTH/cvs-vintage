@@ -31,7 +31,8 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @version $Revision: 1.2 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
@@ -173,7 +174,7 @@ public class JDBCStoreEntityCommand
    
    protected final boolean changed(Object current, Object old)
    {
-      return (current == null) ? (old != null) : current.equals(old);
+      return (current == null) ? (old != null) : !current.equals(old);
    }
    
    /** 
