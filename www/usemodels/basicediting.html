@@ -1,11 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>Browsing and Searching Use Cases</title>
+    <title>Basic Editing Use Cases</title>
   </head>
 
   <body>
-    <h1>Browsing and Searching Use Cases</h1>
+    <h1>Basic Editing Use Cases</h1>
 
 <!-- --------------------------------------------------------------- -->
 
@@ -271,11 +271,199 @@
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
     <td bgcolor="white" valign="top">
-       In the course of reviewing new issues, reject those that are invalid.  Provide consise rationale.
-    </td>
+       
+      <p>In the course of reviewing new issues, reject those that are invalid. 
+        Provide consise rationale. </p>
+      </td>
   </tr>
 </table>
 
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+<a name="UC-14"></a>
+      <TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
+        <TBODY>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Name:</B></TD>
+          <TD bgColor=white vAlign=top>UC-14: Copying an Issue Within the Same 
+            Project or to Other Projects</TD></TR>
+        <TR>
+          <TD align=right bgColor=white height=59 
+vAlign=top><B>Extends:</B></TD>
+          <TD bgColor=white height=59 vAlign=top>None</TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Purpose:</B></TD>
+          <TD bgColor=white vAlign=top>User can select an issue within a 
+            project and copy it within the same project or to other projects 
+            that they have access to. To copy within the same project, an edit 
+            would be necessary to prevent entering a duplicate issue. For a 
+            project-to-project(s) copy, this can be a straight copy with no 
+            edits necessary. In either case, a new Issue ID is created.</TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Feature(s):</B></TD>
+          <TD bgColor=white vAlign=top><A 
+            href="http://www.tigris.org/features/feature.html">FeatureName</A></TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Direct Actors:</B></TD>
+          <TD bgColor=white vAlign=top>CompOwner: Component Owner (High 
+            Priority, High Frequency)<BR>Scarab: The scarab system. </TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Stakeholders:</B></TD>
+          <TD bgColor=white vAlign=top>CompOwner: <BR>Other project members: 
+            Want to have visibility into project activity and progress</TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Prereq:</B></TD>
+          <TD bgColor=white vAlign=top>Logged In<BR>Project set up<BR>User has 
+            access to the project(s) that s/he is copying to and from</TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Results:</B></TD>
+          <TD bgColor=white vAlign=top>Issue is copied within the same project 
+            and/or to other another project(s). A new Issue ID is created for 
+            each copy.</TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Data sets:</B></TD>
+          <TD bgColor=white vAlign=top><BR></TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Notes/Questions:</B></TD>
+          <TD bgColor=white vAlign=top>
+            <P>Does the user have access to the project?<BR>If no edits are made 
+            to the copied issue, prevent user from creating a duplicate.<BR>No 
+            anonymous users can copy and then create issues<BR>At what point do 
+            users have to log in?<BR>User can copy to either one or several 
+            projects based on his/her permissions. Copy within the same project 
+            would require an edit. </P>
+            <P>Is IssueChangedConfirmation screen the appropriate 
+          response?</P></TD></TR>
+        <TR>
+          <TD bgColor=white colSpan=2 vAlign=top><B>Main Success Scenario:</B> 
 
+            <OL>
+              <LI>CompOwner: visit MyIssues or other list of issues assigned to 
+              his/her component 
+              <LI>CompOwner: select an issue from list 
+              <LI>Scarab: display <a href="C:\Program Files\GNU\WinCvs 1.1\Scarab\scarab\www\usemodels\IssueView.html">IssueView</a>  
+              <LI>CompOwner: selects "Copy" 
+              <LI>Scarab: display <a href="C:\Program Files\GNU\WinCvs 1.1\Scarab\scarab\www\usemodels\ProjectView.html">ProjectView</a>  
+              <LI>If CompOwner: selects to copy within the same project: 
+              <UL type=a>
+                <LI>Scarab: copies issue and waits for user to make edit(s) 
+                <LI>User makes edits and clicks Copy </LI></UL>
+              <LI>If CompOwner selects to copy from one project to another 
+              project(s): 
+              <UL type=a>
+                <LI>Scarab: Copies issue to other project(s) 
+                <LI>User confirms and clicks Copy </LI></UL>
+              <LI>Scarab: validate data or bounce back to prev screen 
+              <LI>Scarab: Stores values, creates new Issue ID(s) and establishes 
+              a link back to the orginal issue 
+              <LI>Scarab: display <A 
+              href="http://projects.collab.net/project/jrobbins/scarab/ProjectIssues.html">ProjectIssues</A> 
+              page with <A 
+              href="http://projects.collab.net/project/jrobbins/scarab/IssueChangedConfirmation.html">IssueChangedConfirmation</A> 
+              </LI></OL></TD></TR>
+        <TR>
+          <TD bgColor=white colSpan=2 vAlign=top><B>Alternative Scenario 
+            Extensions:</B> 
+            <UL>
+              <LI>None </LI></UL></TD></TR></TBODY></TABLE>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+<A name=UC-15></A>
+      <TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
+        <TBODY>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Name:</B></TD>
+          <TD bgColor=white vAlign=top>UC-15: Move an Issue to Another Project</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top height="59"><B>Extends:</B></TD>
+          <TD bgColor=white vAlign=top height="59">None</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Purpose:</B></TD>
+          <TD bgColor=white vAlign=top>User can move an issue from one project 
+            to another. The original issue (Issue ID) would be closed out and 
+            a new Issue ID would be created by the move. The new Issue ID would 
+            have a link back to the orginal issue.</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Feature(s):</B></TD>
+          <TD bgColor=white vAlign=top><A 
+            href="http://www.tigris.org/features/feature.html">FeatureName</A></TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Direct Actors:</B></TD>
+          <TD bgColor=white vAlign=top>CompOwner: Component Owner (High Priority, 
+            High Frequency)<BR>
+            Scarab: The scarab system. </TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Stakeholders:</B></TD>
+          <TD bgColor=white vAlign=top>CompOwner: <BR>
+            Other project members: Want to have visibility into project activity 
+            and progress</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Prereq:</B></TD>
+          <TD bgColor=white vAlign=top>           
+            Logged In<BR>
+            Project set up<BR>
+            User has access to the project(s) that s/he is moving the issue to 
+            and from</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Results:</B></TD>
+          <TD bgColor=white vAlign=top>Issue is moved from one project to another. 
+            A new ID is created and is linked back to the original ID.</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Data sets:</B></TD>
+          <TD bgColor=white vAlign=top><BR>
+          </TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Notes/Questions:</B></TD>
+          <TD bgColor=white vAlign=top>
+            <p>Does the user have access to the project?<br>
+              No anonymous users can move issues<BR>
+              At what point do users have to log in?<BR>
+            </p>
+            </TD>
+        </TR>
+        <TR> 
+          <TD bgColor=white colSpan=2 vAlign=top><B>Main Success Scenario:</B> 
+            <OL>
+              <LI>CompOwner: visit MyIssues or other list of issues assigned to 
+                his/her component 
+              <LI>CompOwner: select an issue from list and clicks &quot;Move&quot;
+              <LI>Scarab: display <a href="C:\Program Files\GNU\WinCvs 1.1\Scarab\scarab\www\usemodels\ProjectView.html">ProjectView</a>
+              <LI>CompOwner: selects the project that they want to move the issue 
+                to and clicks &quot;Submit&quot;
+              <LI>Scarab: asks CompOwner to confirm
+              <LI> CompOwner: confirms and clicks &quot;Submit&quot;
+              <LI>Scarab: validate data or bounce back to prev screen 
+              <LI>Scarab: Stores values, creates new Issue ID(s) and establishes 
+                a link back to the orginal issue 
+              <LI>Scarab: display <A 
+              href="http://projects.collab.net/project/jrobbins/scarab/ProjectIssues.html">ProjectIssues</A> 
+                page with <A 
+              href="http://projects.collab.net/project/jrobbins/scarab/IssueChangedConfirmation.html">IssueChangedConfirmation</A> 
+            </OL>
+            
+          </TD>
+        </TR>
+        <TR>
+          <TD bgColor=white colSpan=2 vAlign=top><B>Alternative Scenario 
+            Extensions:</B> 
+            <UL>
+              <LI>None </LI></UL></TD></TR></TBODY></TABLE><BR>
+      <HR>
+      <BR><!-- project-specific footer --><!--
+WARNING: Include: Error reading file /usr/tigris/html/jrobbins/www/project_footer.html 
+--><!-- end project-specific footer --><!-- End Servlet-Specific Content --><!-- Page End --><!-- End Main Window Table --></TD></TR>
+  <TR>
+    <TD align=left bgColor=#ffffff><FONT 
+      face="Verdana, Arial, Helvetica, sans-serif" size=2><A 
+      href="mailto:projects-admin@collab.net">Comments</A>? </FONT></TD>
+    <TD align=left 
+bgColor=#ffffff></TD></TR></TBODY></TABLE>
+<br><hr><br>
   </body>
 </html>
