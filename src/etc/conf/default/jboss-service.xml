@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.91 2003/10/06 00:04:43 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.92 2003/11/09 00:12:21 tdiesler Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -301,8 +301,13 @@
 
       <depends optional-attribute-name="TransactionManagerServiceName">jboss:service=TransactionManager</depends>
       <depends optional-attribute-name="WebServiceName">jboss:service=WebService</depends>
+
+      <!--
+         This enables the EJBDeployer to handle JSR109 compliant webservices.
+      -->
+      <depends optional-attribute-name="JSR109ServiceName">jboss.net:service=JSR109Service</depends>
    </mbean>
-  
+
    <!-- EAR deployer, remove if you are not using Web layers -->
    <mbean code="org.jboss.deployment.EARDeployer" name="jboss.j2ee:service=EARDeployer">
    </mbean>
