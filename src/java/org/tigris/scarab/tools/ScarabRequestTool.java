@@ -111,6 +111,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
+import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.TransactionPeer;
@@ -1411,16 +1412,25 @@ try{
             try
             {
                 matchingIssueIds = search.getMatchingIssues();
+                if (matchingIssueIds == null || matchingIssueIds.size() <= 0)
+                {
+                    data.setMessage("No matching issues.");
+                }            
             }
-            catch (Exception e)
+            catch (ScarabException e)
             {
-                data.setMessage("There was an error retrieving search results.");
+                String queryError = e.getMessage();
+                if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
+                {
+                    Log.info(queryError);
+                    data.setMessage(queryError);
+                }
+                else 
+                {
+                    throw e;
+                }
             }
         }
-        if (matchingIssueIds == null || matchingIssueIds.size() <= 0)
-        {
-            data.setMessage("No matching issues.");
-        }            
         return matchingIssueIds;
     }
 

@@ -58,10 +58,12 @@ import org.tigris.scarab.om.AttributeValue;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.7 2002/01/23 10:02:07 dlr Exp $
+ * @version $Id: SearchIndex.java,v 1.8 2002/03/21 02:14:10 jmcnally Exp $
  */
 public interface SearchIndex
 {
+    public static final String PARSE_ERROR = 
+        "Search engine could not parse the query: ";
     public static final String INDEX_PATH = "searchindex.path";
     public static final String CLASS_NAME = "searchindex.class";
     public static final String VALUE_ID = "valid";

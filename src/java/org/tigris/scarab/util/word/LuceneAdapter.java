@@ -83,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.8 2002/03/09 02:16:32 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.9 2002/03/21 02:14:10 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -96,9 +96,6 @@ public class LuceneAdapter
 
     /** the words and boolean operators */
     private List queryText;
-
-    /** list of invalid characters when doing searches */
-    public static final String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>";
 
     /**
      * Ctor.  Sets up an index directory if one does not yet exist in the
@@ -161,22 +158,12 @@ public class LuceneAdapter
             for ( int j=attributeIds.size()-1; j>=0; j-- ) 
             {
                 NumberKey[] ids = (NumberKey[])attributeIds.get(j);
-                String enteredQuery = (String) queryText.get(j);
+                String query = (String) queryText.get(j);
+                StringBuffer fullQuery = new StringBuffer(query.length()+100);
 
-                int enteredQueryLength = enteredQuery.length();
-                StringBuffer fullQuery = new StringBuffer(enteredQueryLength + 100);
-
-                StringTokenizer tokens = new StringTokenizer(enteredQuery, invalidChars);
-                StringBuffer query = new StringBuffer(enteredQueryLength + 50);
-                while (tokens.hasMoreTokens())
+                if (query.length() > 0)
                 {
-                    query.append(" ");
-                    query.append(tokens.nextToken());
-                }
-                String queryStr = query.toString();
-                if (queryStr.length() > 0)
-                {
-                    queryStr.trim();
+                    query.trim();
                 }
 
                 if ( ids != null && ids.length != 0 ) 
@@ -193,21 +180,30 @@ public class LuceneAdapter
                         }
                     }
                     fullQuery.append(") AND (")
-                        .append(queryStr)
+                        .append(query)
                         .append("))");            
                 }
                 else
                 {
                     fullQuery
                         .append("+(")
-                        .append(queryStr)
+                        .append(query)
                         .append(')');
                 }
 
-                Log.debug("Querybefore=" + fullQuery);
-                Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
-                                            new StandardAnalyzer());
-                Log.debug("Queryafter=" + q.toString("text"));
+                Query q = null;
+                try
+                {
+                    Log.debug("Querybefore=" + fullQuery);
+                    q = QueryParser.parse(fullQuery.toString(), TEXT, 
+                                          new StandardAnalyzer());
+                    Log.debug("Queryafter=" + q.toString("text"));
+                }
+                catch (Throwable t)
+                {
+                    throw new ScarabException(PARSE_ERROR + fullQuery + 
+                        ". Reason given was: " +  t.getMessage());
+                }
                 
                 IndexSearcher is = new IndexSearcher(path); 
                 Hits hits = is.search(q);

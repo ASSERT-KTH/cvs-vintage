@@ -60,6 +60,7 @@ import org.apache.turbine.RunData;
 import org.apache.commons.lang.Strings;
 
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey; 
 import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.intake.model.Group;
@@ -88,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.65 2002/03/15 00:01:47 elicia Exp $
+    @version $Id: Search.java,v 1.66 2002/03/21 02:14:10 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -106,17 +107,8 @@ public class Search extends RequireLoginFirstAction
         String queryString = getQueryString(data);
         data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        List searchResults = null;
-        try
-        {
-            searchResults = scarabR.getCurrentSearchResults();
-        }
-        catch (Exception e)
-        {
-            return;
-        }
+        List searchResults = scarabR.getCurrentSearchResults();
         data.getParameters().add("queryString", queryString);
-
         if (searchResults.size() > 0)
         {
             context.put("issueList", searchResults);
@@ -124,10 +116,6 @@ public class Search extends RequireLoginFirstAction
                 .getString(ScarabConstants.NEXT_TEMPLATE, 
                            "IssueList.vm");
             setTarget(data, template);            
-        }
-        else
-        {
-            data.setMessage("No issues match your search.");
         }
     }
 
