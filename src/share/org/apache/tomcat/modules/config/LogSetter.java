@@ -287,7 +287,12 @@ public class LogSetter extends  BaseInterceptor {
     /** Adapter and registry for QueueLoggers
      */
     static class TomcatLogManager extends LogManager {
-
+	TomcatLogManager() {
+	    // can't be changed after this
+	    LogManager olm=Log.setLogManager( this ); 
+	    this.loggers=olm.getLoggers();
+	    this.channels=olm.getChannels();
+	}
 
     }
 
