@@ -39,20 +39,19 @@ public class ThemeSwitcher {
 					{
 						break;
 					}
-				case 2 :
-					{
-						
-						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getGuiItem()));
-
-					}
 				case 1 :
 					{
-
 						MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
                                                 UIManager.setLookAndFeel(
 							UIManager.getCrossPlatformLookAndFeelClassName());
-
 						break;
+					}
+				case 2 :
+					{
+						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getGuiItem()));
+                                                UIManager.setLookAndFeel(
+							UIManager.getCrossPlatformLookAndFeelClassName());
+                                                break;
 					}
 				/*
 				case 3 :
@@ -69,8 +68,6 @@ public class ThemeSwitcher {
 				*/
 				case 3 :
 					{
-					
-						
 						try {
 							UIManager.setLookAndFeel(
 								 "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
@@ -79,13 +76,10 @@ public class ThemeSwitcher {
 							UIManager.setLookAndFeel(
 							UIManager.getCrossPlatformLookAndFeelClassName());
 						}
-						
 						break;
 					}
 				case 4 :
 					{
-					
-						
 						try {
 							UIManager.setLookAndFeel(
 								  "javax.swing.plaf.mac.MacLookAndFeel"  );
@@ -94,13 +88,10 @@ public class ThemeSwitcher {
 							UIManager.setLookAndFeel(
 							UIManager.getCrossPlatformLookAndFeelClassName());
 						}
-						
 						break;
 					}
 				case 5 :
 					{
-					
-						
 						try {
 							UIManager.setLookAndFeel(
 								   "com.sun.java.swing.plaf.motif.MotifLookAndFeel"   );
@@ -116,9 +107,7 @@ public class ThemeSwitcher {
 			System.out.println(
 				"failure while trying to load theme: " + ex.getMessage());
 		}
-
 		setFonts(Config.getOptionsConfig().getGuiItem());
-
 	}
 
 	public static void updateFrame(JFrame frame) {
