@@ -4,16 +4,19 @@
 elements into a JBoss deployment. This version applies to the JBoss 3.2.x
 releases.
 
-DOCTYPE jboss-web
-    PUBLIC "-//JBoss//DTD Web Application 2.4//EN"
-    "http://www.jboss.org/j2ee/dtd/jboss-web_4_0.dtd"
+$Id: jboss-web_4_0.dtd,v 1.2 2004/05/04 08:51:49 tdiesler Exp $
+
+  <!DOCTYPE jboss-web PUBLIC
+    "-//JBoss//DTD Web Application 2.4//EN"
+    "http://www.jboss.org/j2ee/dtd/jboss-web_4_0.dtd">
+
 -->
 
 <!-- The jboss-web element is the root element.
 -->
 <!ELEMENT jboss-web (class-loading?, security-domain?, context-root?,
    virtual-host?, use-session-cookies?, replication-config?, resource-env-ref*,
-   resource-ref*, security-role*, ejb-ref*, ejb-local-ref*, depends*)>
+   resource-ref*, security-role*, ejb-ref*, ejb-local-ref*, service-ref*, depends*)>
 
 <!-- The class-loading element allows one to override the default class
 loading behavior of the web container. You can specify the
@@ -272,3 +275,28 @@ Examples:
          <replication-type>ASYNC</replication-type>
 -->
 <!ELEMENT replication-type (#PCDATA)>
+
+<!-- The service-ref element provides jboss specific deployment values to
+the web service reference in web.xml.
+Example:
+    <service-ref>
+        <service-ref-name>OrganizationService</service-ref-name>
+        <wsdl-override>file:/wsdlRepository/organization-service.wsdl</wsdl-override>
+    </ejb-local-ref>
+-->
+<!ELEMENT service-ref (service-ref-name , wsdl-override?)>
+
+<!-- The service-ref-name element gives the ENC relative name used
+in the web.xml service-ref-name element.
+
+Used in: service-ref
+-->
+<!ELEMENT service-ref-name (#PCDATA)>
+
+<!-- The wsdl-override element the actual wsdl docuement the web service client
+uses to connect to the remote service. It overrides the value of wsdl-file in web.xml.
+
+Used in: service-ref
+-->
+<!ELEMENT wsdl-override (#PCDATA)>
+

@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.7 2004/04/27 15:55:40 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.8 2004/05/04 08:51:48 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -19,7 +19,7 @@ import java.util.Iterator;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ClientMetaData
 {
@@ -31,14 +31,14 @@ public class ClientMetaData
    private ArrayList environmentEntries = new ArrayList();
    /** A HashMap<EjbRefMetaData> for the ejb-ref element(s) */
    private HashMap ejbReferences = new HashMap();
+   /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
+   private HashMap serviceReferences = new HashMap();
    /** A  HashMap<ResourceRefMetaData> resource-ref element(s) info */
    private HashMap resourceReferences = new HashMap();
    /** A  HashMap<ResourceEnvRefMetaData> resource-env-ref element(s) info */
    private HashMap resourceEnvReferences = new HashMap();
    /** The JAAS callback handler */
    private String callbackHandler;
-   /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
-   private HashMap serviceReferences = new HashMap();
 
    /** The ClassLoader to load additional resources */
    private ClassLoader resourceCl;
@@ -144,6 +144,16 @@ public class ClientMetaData
          ejbReferences.put(ejbRefMetaData.getName(), ejbRefMetaData);
       }
 
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
+         refMetaData.importClientXml(serviceRef);
+         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
+      }
+
       // The callback-handler element
       Element callbackElement = MetaData.getOptionalChild(element,
          "callback-handler");
@@ -174,16 +184,6 @@ public class ClientMetaData
          refMetaData.importEjbJarXml(resourceRef);
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
-
-      // Parse the service-ref elements
-      iterator = MetaData.getChildrenByTagName(element, "service-ref");
-      while (iterator.hasNext())
-      {
-         Element serviceRef = (Element) iterator.next();
-         ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
-         refMetaData.importClientXml(serviceRef);
-         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
-      }
    }
 
    public void importJbossClientXml(Element element) throws DeploymentException
@@ -204,6 +204,21 @@ public class ClientMetaData
                + " found in jboss-client.xml but not in application-client.xml");
          }
          ejbRefMetaData.importJbossXml(ejbRef);
+      }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
+         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
+         if (refMetaData == null)
+         {
+            throw new DeploymentException("service-ref " + serviceRefName
+               + " found in jboss-client.xml but not in application-client.xml");
+         }
+         refMetaData.importJBossXml(serviceRef);
       }
 
       // Get the JNDI name binding for resource-refs
@@ -238,21 +253,6 @@ public class ClientMetaData
                + " found in jboss-client.xml but not in application-client.xml");
          }
          refMetaData.importJbossXml(resourceRef);
-      }
-
-      // Parse the service-ref elements
-      iterator = MetaData.getChildrenByTagName(element, "service-ref");
-      while (iterator.hasNext())
-      {
-         Element serviceRef = (Element) iterator.next();
-         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
-         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
-         if (refMetaData == null)
-         {
-            throw new DeploymentException("service-ref " + serviceRefName
-               + " found in jboss-client.xml but not in application-client.xml");
-         }
-         refMetaData.importJBossXml(serviceRef);
       }
    }
 }

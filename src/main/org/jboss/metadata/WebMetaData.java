@@ -32,7 +32,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class WebMetaData extends MetaData
 {
@@ -42,8 +42,6 @@ public class WebMetaData extends MetaData
    private HashMap resourceReferences = new HashMap();
    /** The web.xml resource-env-refs */
    private HashMap resourceEnvReferences = new HashMap();
-   /** The web.xml service-refs */
-   private HashMap serviceReferences = new HashMap();
    /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
    /** The security-roles */
@@ -52,6 +50,8 @@ public class WebMetaData extends MetaData
    private HashMap ejbReferences = new HashMap();
    /** web.xml ejb-local-refs */
    private HashMap ejbLocalReferences = new HashMap();
+   /** The web.xml service-refs */
+   private HashMap serviceReferences = new HashMap();
    /** web.xml security-role-refs */
    // private ArrayList securityRoleReferences = new ArrayList();
    /** The web.xml distributable flag */
@@ -318,16 +318,6 @@ public class WebMetaData extends MetaData
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
 
-      // Parse the service-ref elements
-      iterator = MetaData.getChildrenByTagName(webApp, "service-ref");
-      while (iterator.hasNext())
-      {
-         Element serviceRef = (Element) iterator.next();
-         ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
-         refMetaData.importClientXml(serviceRef);
-         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
-      }
-
       // Parse the web-app/env-entry elements
       iterator = getChildrenByTagName(webApp, "env-entry");
       while( iterator.hasNext() )
@@ -365,6 +355,16 @@ public class WebMetaData extends MetaData
          EjbLocalRefMetaData ejbRefMetaData = new EjbLocalRefMetaData();
          ejbRefMetaData.importEjbJarXml(ejbRef);
          ejbLocalReferences.put(ejbRefMetaData.getName(), ejbRefMetaData);
+      }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(webApp, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData(resourceCl);
+         refMetaData.importClientXml(serviceRef);
+         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
       }
 
       // Is the web-app marked distributable?
@@ -424,21 +424,6 @@ public class WebMetaData extends MetaData
          refMetaData.importJbossXml(resourceRef);
       }
 
-      // Parse the service-ref elements
-      iterator = MetaData.getChildrenByTagName(jbossWeb, "service-ref");
-      while (iterator.hasNext())
-      {
-         Element serviceRef = (Element) iterator.next();
-         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
-         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
-         if (refMetaData == null)
-         {
-            throw new DeploymentException("service-ref " + serviceRefName
-               + " found in jboss-web.xml but not in web.xml");
-         }
-         refMetaData.importJBossXml(serviceRef);
-      }
-
       // set the security roles (optional)
       iterator = getChildrenByTagName(jbossWeb, "security-role");
       while (iterator.hasNext())
@@ -486,6 +471,21 @@ public class WebMetaData extends MetaData
                + " found in jboss-web.xml but not in web.xml");
          }
          ejbLocalRefMetaData.importJbossXml(ejbLocalRef);
+      }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(jbossWeb, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
+         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
+         if (refMetaData == null)
+         {
+            throw new DeploymentException("service-ref " + serviceRefName
+               + " found in jboss-web.xml but not in web.xml");
+         }
+         refMetaData.importJBossXml(serviceRef);
       }
 
       // Parse the jboss-web/depends elements
