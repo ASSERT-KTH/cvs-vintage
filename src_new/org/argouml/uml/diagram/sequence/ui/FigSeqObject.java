@@ -23,7 +23,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.3 2001/01/03 13:01:20 boger Exp $
+// $Id: FigSeqObject.java,v 1.4 2001/04/02 14:28:40 5heyden Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -874,7 +874,7 @@ public class FigSeqObject extends FigNodeModelElement
 
 ///////////////////////////////////////////////////////////////////////////////
 // MElementListener-implementation
-
+/*
   public void removed(MElementEvent mee) {
 
      Vector edges = getFigEdges();
@@ -883,6 +883,6 @@ public class FigSeqObject extends FigNodeModelElement
      }
      else System.out.println("Object not deleted, there are some Links to or from this object left!");
   }
-
+*/
 
 } /* end class FigSeqObject */

@@ -24,7 +24,7 @@
 // File: FigCompositeState.java
 // Classes: FigCompositeState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigCompositeState.java,v 1.1 2000/09/04 12:50:21 1sturm Exp $
+// $Id: FigCompositeState.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -217,6 +217,11 @@ public class FigCompositeState extends FigStateVertex {
     if (s == null) return;
     String newText = GeneratorDisplay.SINGLETON.generateStateBody(s);
     _internal.setText(newText);
+
+    calcBounds();
+    Rectangle rect = getBounds();
+    setBounds(rect.x, rect.y, rect.width, rect.height);
+    firePropChange("bounds", rect, getBounds());
   }
 
   public void textEdited(FigText ft) throws PropertyVetoException {

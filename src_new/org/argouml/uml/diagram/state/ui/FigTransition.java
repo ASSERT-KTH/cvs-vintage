@@ -24,7 +24,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.1 2000/09/04 12:50:21 1sturm Exp $
+// $Id: FigTransition.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -65,21 +65,12 @@ public class FigTransition extends FigEdgeModelElement {
    *  and update the model.  This class handles the name, subclasses
    *  should override to handle other text elements. */
   protected void textEdited(FigText ft) throws PropertyVetoException {
-    String s = ft.getText();
-    MTransition newTrans = ParserDisplay.SINGLETON.parseTransition(s);
-    if (newTrans == null) System.out.println("null new MTransition!!");
-    String newName     = (newTrans == null) ? null : newTrans.getName();
-    MEvent newTrigger = (newTrans == null) ? null : newTrans.getTrigger();
-    MGuard newGuard   = (newTrans == null) ? null : newTrans.getGuard();
-    MAction newEffect = (newTrans == null) ?
-      null : newTrans.getEffect();
-
+    
     MTransition t = (MTransition) getOwner();
     if (t == null) return;
-      t.setName(newName);
-      t.setTrigger(newTrigger);
-      t.setGuard(newGuard);
-      t.setEffect(newEffect);
+    String s = ft.getText();
+    ParserDisplay.SINGLETON.parseTransition(t, s);
+   
   }
 
   /** This is called aftern any part of the UML MModelElement has

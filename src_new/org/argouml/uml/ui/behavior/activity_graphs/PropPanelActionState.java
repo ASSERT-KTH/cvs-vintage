@@ -26,10 +26,9 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.4 2001/01/10 06:24:00 carnold Exp $
+// $Id: PropPanelActionState.java,v 1.5 2001/04/02 14:28:44 5heyden Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
-
 
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.*;
@@ -41,6 +40,8 @@ import ru.novosoft.uml.behavior.activity_graphs.*;
 
 import org.argouml.ui.*;
 import org.argouml.uml.ui.*;
+import org.argouml.uml.ui.behavior.state_machines.*;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -48,40 +49,34 @@ import java.awt.*;
  *  the user to edit the properties of the selected UML model
  *  element. */
 
-public class PropPanelActionState extends PropPanel {
+public class PropPanelActionState extends PropPanelState {
 
   ////////////////////////////////////////////////////////////////
   // contructors
   public PropPanelActionState() {
-    super("Action State Properties",2);
+    super("Action State",_actionStateIcon, 2);
 
     Class mclass = MActionState.class;
 
-    addCaption("Name:",0,0,0);
-    addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
+    addCaption("Name:",1,0,0);
+    addField(nameField,1,0,0);
 
-    addCaption("Stereotype:",1,0,0);
-    JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
-    addField(stereotypeBox,1,0,0);
+    addCaption("Stereotype:",2,0,0);
+    addField(new UMLComboBoxNavigator(this,"NavStereo",stereotypeBox),2,0,0);
 
-    addCaption("Namespace:",2,0,0);
-    JList namespaceList = new UMLList(new UMLNamespaceListModel(this),true);
-    namespaceList.setBackground(getBackground());
-    namespaceList.setForeground(Color.blue);
-    addField(namespaceList,2,0,0);
+    addCaption("Entry-Action:",3,0,0);
+    addField(entryScroll,3,0,0);
 
-    addCaption("Modifiers:",3,0,1);
-
+    addCaption("Modifiers:",4,0,1);
     JPanel modifiersPanel = new JPanel(new GridLayout(0,2));
     modifiersPanel.add(new UMLCheckBox(localize("dynamic"),this,new UMLReflectionBooleanProperty("isDynamic",mclass,"isDynamic","setDynamic")));
-    addField(modifiersPanel,3,0,0);
+    addField(modifiersPanel,4,0,0);
 
-    //
-    //  TODO: replace JComboBoxes with action combos
-    //
-    addCaption("Entry",0,1,0);
-    addCaption("Exit",1,1,0);
-    addCaption("Transition",2,1,1);
+    addCaption("Incoming:",0,1,0.5);
+    addField(incomingScroll,0,1,0.5);
+    
+    addCaption("Outgoing:",1,1,0.5);
+    addField(outgoingScroll,1,1,0.5);
 
   }
 

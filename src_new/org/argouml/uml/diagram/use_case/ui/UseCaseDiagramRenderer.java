@@ -24,7 +24,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.1 2000/09/04 12:50:21 1sturm Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.2 2001/04/02 14:28:42 5heyden Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -98,7 +98,19 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       genFig.setDestFigNode(superTypeFN);
       return genFig;
     }
-   
+      if (edge instanceof MDependency) {
+      MDependency dep = (MDependency) edge;
+      FigDependency depFig = new FigDependency(dep);
+      MModelElement supplier = (MModelElement)((dep.getSuppliers().toArray())[0]);
+      MModelElement client = (MModelElement)((dep.getClients().toArray())[0]);
+      FigNode supplierFN = (FigNode) lay.presentationFor(supplier);
+      FigNode clientFN = (FigNode) lay.presentationFor(client);
+      depFig.setSourcePortFig(clientFN);
+      depFig.setSourceFigNode(clientFN);
+      depFig.setDestPortFig(supplierFN);
+      depFig.setDestFigNode(supplierFN);
+      return depFig;
+    }
     // what about realizations? They are not distince objects in my UML model
     // maybe they should be, just as an implementation issue, dont
     // remove any of the methods that are there now.

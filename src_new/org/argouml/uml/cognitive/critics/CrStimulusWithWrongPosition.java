@@ -26,7 +26,7 @@
 // File: CrStimulusWithWrongPosition.java
 // Classes: CrStimulusWithWrongPosition
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrStimulusWithWrongPosition.java,v 1.1 2000/09/29 16:02:25 boger Exp $
+// $Id: CrStimulusWithWrongPosition.java,v 1.2 2001/04/02 14:28:39 5heyden Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -100,25 +100,35 @@ public class CrStimulusWithWrongPosition extends CrUML {
               if (ma instanceof MReturnAction) continue;
               else {
                 FigSeqObject fso = (FigSeqObject) fsl.getSourceFigNode();
-                Vector edges = fso.getFigEdges();
-                int portNumber = fsl.getPortNumber(edges);
-                int low = 10000;
-                for (int j=0; j<edges.size(); j++) {
-                  FigSeqLink edge = (FigSeqLink) edges.elementAt(j);
-                  int edge_number = edge.getPortNumber(edges);
-                  if (edge_number < low) low = edge_number;
-                }
-                if (low >= portNumber) {
-                  FigActivation fa = (FigActivation) fso._activations.elementAt(0);
-                  if (!(fa.isFromTheBeg())) found = true;
-                }
-                else {
-                  for (int k=0; k<fso._activations.size(); k++) {
-                    FigActivation fa = (FigActivation) fso._activations.elementAt(k);
-                    int from = fa.getFromPosition();
-                    if (from ==  portNumber) found = true;  
-                  }
-                }
+		if ( fso != null) {
+		    Vector edges = fso.getFigEdges();
+		    if (edges != null && edges.size()>0) {
+			int portNumber = fsl.getPortNumber(edges);
+			int low = 10000;		
+			for (int j=0; j<edges.size(); j++) {
+			    FigSeqLink edge = (FigSeqLink) edges.elementAt(j);
+			    int edge_number = edge.getPortNumber(edges);
+			    if (edge_number < low) low = edge_number;
+			}
+			if (low >= portNumber) {
+			    Vector act = fso._activations;
+			    if ( act != null && act.size()>0) {
+				FigActivation fa = (FigActivation) act.elementAt(0);
+				if (! fa.isFromTheBeg()) found = true;
+			    }
+			}
+			else {
+			    Vector act = fso._activations;
+			    if (act != null && act.size()>0) {
+				for (int k=0; k<act.size(); k++) {
+				    FigActivation fa = (FigActivation) act.elementAt(k);
+				    int from = fa.getFromPosition();
+				    if (from ==  portNumber) found = true;  
+				}
+			    }
+			}
+		    }
+		}
               }
             }
           }

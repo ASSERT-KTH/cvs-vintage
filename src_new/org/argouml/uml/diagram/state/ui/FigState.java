@@ -24,7 +24,7 @@
 // File: FigState.java
 // Classes: FigState
 // Original Author: ics 125b silverbullet team
-// $Id: FigState.java,v 1.1 2000/09/04 12:50:20 1sturm Exp $
+// $Id: FigState.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -198,6 +198,11 @@ public class FigState extends FigStateVertex {
     if (s == null) return;
     String newText = GeneratorDisplay.SINGLETON.generateStateBody(s);
     _internal.setText(newText);
+
+    calcBounds();
+    Rectangle rect = getBounds();
+    setBounds(rect.x, rect.y, rect.width, rect.height);
+    firePropChange("bounds", rect, getBounds());  
   }
 
   public void textEdited(FigText ft) throws PropertyVetoException {

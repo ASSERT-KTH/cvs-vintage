@@ -25,7 +25,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.3 2001/02/26 12:54:20 toby Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.4 2001/04/02 14:28:42 5heyden Exp $
 
 package org.argouml.uml.diagram.use_case;
 
@@ -199,7 +199,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
     _nodes.addElement(node);
     // needs-more-work: assumes public, user pref for default visibility?
       if (node instanceof MClassifier) {
-	System.out.println("setting namespace "+_model +" to element "+node);
+	  //System.out.println("setting namespace "+_model +" to element "+node);
 	_model.addOwnedElement((MClassifier) node);
       }
     fireNodeAdded(node);
@@ -267,7 +267,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
     fireEdgeRemoved(edge);
   }
 
-  /** Return true if the two given ports can be connected by a 
+  /** Return true if the two given ports can be connected by a
    * kind of edge to be determined by the ports. */
   public boolean canConnect(Object fromP, Object toP) {
     if ((fromP instanceof MActor) && (toP instanceof MActor)) return false;
@@ -301,7 +301,15 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
 	  addEdge(gen);
 	  return gen;
       }
-      else {
+      else if (edgeClass == MDependencyImpl.class &&
+	       (fromPort instanceof MUseCase && toPort instanceof MUseCase)) {
+	  MClassifier client = (MClassifier)fromPort;
+	  MClassifier supplier = (MClassifier)toPort;
+	  MDependency dep = MMUtil.SINGLETON.buildDependency(client,supplier);
+	  addEdge(dep);
+	  return dep;
+      }
+            else {
 		  System.out.println("Incorrect edge");
 		  return null;
       }

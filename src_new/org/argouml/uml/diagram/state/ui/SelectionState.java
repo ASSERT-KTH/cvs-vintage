@@ -24,7 +24,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.1 2000/09/04 12:50:21 1sturm Exp $
+// $Id: SelectionState.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -175,7 +175,8 @@ public class SelectionState extends SelectionWButtons {
 
     MState newNode = new MStateImpl();
     if (!mgm.canAddNode(newNode)) return;
-    // mgm.getNamespace().addOwnedElement(newNode);
+
+    //mgm.getNamespace().addOwnedElement(newNode);
 
     GraphNodeRenderer renderer = ce.getGraphNodeRenderer();
     LayerPerspective lay = (LayerPerspective)

@@ -24,7 +24,7 @@
 // File: FigStateVertex.java
 // Classes: FigStateVertex
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigStateVertex.java,v 1.2 2001/01/16 08:31:08 carnold Exp $
+// $Id: FigStateVertex.java,v 1.3 2001/04/02 14:28:41 5heyden Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -68,7 +68,7 @@ public abstract class FigStateVertex extends FigNodeModelElement {
     MCompositeState m = null;
     if (encloser != null && (encloser.getOwner() instanceof MCompositeState)) {
       m = (MCompositeState) encloser.getOwner();
-    }
+     }
     else {
       ProjectBrowser pb = ProjectBrowser.TheInstance;
       if (pb.getTarget() instanceof UMLDiagram) {
@@ -81,8 +81,9 @@ public abstract class FigStateVertex extends FigNodeModelElement {
           ex.printStackTrace();
         }
       }
-    }
-    sv.setContainer(m);
+    }	
+    if (m!=null) 
+	sv.setContainer(m);
   }
 
 

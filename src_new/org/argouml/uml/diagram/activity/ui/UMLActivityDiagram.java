@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.2 2000/09/21 14:00:32 1sturm Exp $
+// $Id: UMLActivityDiagram.java,v 1.3 2001/04/02 14:28:40 5heyden Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -143,7 +143,7 @@ public class UMLActivityDiagram extends UMLDiagram {
 	if (sm != null) return sm;
 	return gm.getNamespace();
     }
-    
+
     public MStateMachine getStateMachine() {
 	return ((StateDiagramGraphModel)getGraphModel()).getMachine();
   }
@@ -171,15 +171,15 @@ public class UMLActivityDiagram extends UMLDiagram {
 
     _toolBar.add(_actionState);
     _toolBar.add(_actionTransition);
+
+    _toolBar.addSeparator();
+
     _toolBar.add(_actionStartPseudoState);
     _toolBar.add(_actionFinalPseudoState);
     _toolBar.add(_actionBranchPseudoState);
     _toolBar.add(_actionForkPseudoState);
     _toolBar.add(_actionJoinPseudoState);
     _toolBar.addSeparator();
-
-    //_toolBar.add(Actions.AddInternalTrans);
-    //_toolBar.addSeparator();
 
     _toolBar.add(_actionRectangle);
     _toolBar.add(_actionRRectangle);

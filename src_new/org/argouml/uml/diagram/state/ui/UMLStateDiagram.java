@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.1 2000/09/04 12:50:21 1sturm Exp $
+// $Id: UMLStateDiagram.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -178,8 +178,8 @@ public MStateMachine getStateMachine() {
     _toolBar.add(_actionDeepHistoryPseudoState);
     _toolBar.addSeparator();
 
-    _toolBar.add(Actions.AddInternalTrans);
-    _toolBar.addSeparator();
+    //_toolBar.add(Actions.AddInternalTrans);
+    //_toolBar.addSeparator();
 
     _toolBar.add(_actionRectangle);
     _toolBar.add(_actionRRectangle);
