@@ -54,6 +54,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 // Turbine
+import org.apache.commons.util.StringUtils;
 import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
@@ -87,6 +88,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScopePeer;
 import org.tigris.scarab.om.FrequencyPeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.Attachment;
@@ -104,6 +106,9 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportPeer;
+import org.tigris.scarab.om.TransactionPeer;
+import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivityPeer;
 
 /**
  * This class is used by the Scarab API
@@ -178,11 +183,6 @@ public class ScarabRequestTool
     private Issue reportingIssue = null;
 
     /**
-     * The most recent query.
-     */
-    private String currentQuery = null;
-
-    /**
      * A ModuleEntity object
      */
     private ModuleEntity module = null;
@@ -248,7 +248,6 @@ public class ScarabRequestTool
         currentModule = null;
         currentIssueType = null;
         reportingIssue = null;
-        currentQuery = null;
         module = null;
         attributeOption = null;
         roo = null;
@@ -963,31 +962,6 @@ try{
     }
 
     /**
-     * The most recent query entered.
-     *
-     * @return an <code>Issue</code> value
-    public String getCurrentQuery()
-        throws Exception
-    {
-        if ( currentQuery == null ) 
-        {
-            System.out.println("use default");
-        }
-        else 
-        {
-            currentQuery = (String)((ScarabUser)data.getUser())
-                .getTemp(ScarabConstants.CURRENT_QUERY);
-        }
-        return currentQuery;
-    }
-
-    public void setCurrentQuery(String query)
-    {
-        currentQuery = query;
-    }
-     */
-
-    /**
      * Sets the current ModuleEntity
      */
     public void setCurrentModule(ModuleEntity me)
@@ -1184,6 +1158,21 @@ try{
         return new IssueSearch(getCurrentModule(), getCurrentIssueType());
     }
 
+    /**
+     * The most recent query entered.
+    */
+    public String getCurrentQuery()
+        throws Exception
+    {
+        String currentQuery = null;
+        currentQuery = (String)((ScarabUser)data.getUser())
+            .getTemp(ScarabConstants.CURRENT_QUERY);
+        return currentQuery;
+    }
+
+    /**
+     * Parses query into intake values.
+    */
     public Intake parseQuery(String query)
         throws Exception
     {
@@ -1194,71 +1183,230 @@ try{
         return intake;
     }
 
+    /**
+     * Performs search on current query (which is stored in user session).
+    */
     public List getCurrentSearchResults()
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
+        String currentQueryString = getCurrentQuery();
+        IssueSearch search = getSearch();
+        List matchingIssueIds = new ArrayList();
+        boolean searchSuccess = true;
         Intake intake = new Intake();
-        if (user.getTemp(ScarabConstants.CURRENT_QUERY) == null)
+
+        if (currentQueryString == null)
         {
-           // No query stored in session
-           // Check for default query.
-           Query query = user.getDefaultQuery(getCurrentModule(),
-                                              getCurrentIssueType());
-           String defaultQuery = null;
-           if (query == null)
-           {
-               // Use default query : all issues created by or
-               // Assigned to this user.
-               defaultQuery = user.getDefaultDefaultQuery();
-           }
-           else
-           {
-               defaultQuery = query.getValue();
-           } 
-           intake = parseQuery(defaultQuery);
+            data.setMessage("Please enter a query.");
+            searchSuccess = false;
         }
         else
         {
-           String currentQuery = user.getTemp(ScarabConstants
-                                              .CURRENT_QUERY).toString();
-           intake = parseQuery(currentQuery);
+           intake = parseQuery(currentQueryString);
         }
         
-        IssueSearch search = getSearch();
-        Group searchGroup = intake.get("SearchIssue", 
-                                       getSearch().getQueryKey() );
-        searchGroup.setProperties(search);
-
-        // If user set attribute to sort by, sort by it
-        String sortAttrId = data.getParameters()
-                            .getString("sortAttrId");
-        if (sortAttrId != null && sortAttrId.length() >0)
+        // If they have entered users to search on, and that returns no results
+        // Don't bother running search
+        if (data.getParameters().getStrings("user_list") != null
+            && data.getParameters().getStrings("user_list").length > 0)
         {
-            search.setInitialSortAttributeId(new NumberKey(sortAttrId));
-        }
-        // Set sort polarity
-        String sortPolarity = data.getParameters()
-                              .getString("sortPolarity");
-        if (sortPolarity != null && sortPolarity.length() >0)
-        {
-            search.setInitialSortPolarity(sortPolarity);
-        }
-
-        SequencedHashtable avMap = search.getModuleAttributeValuesMap();
-        Iterator i = avMap.iterator();
-        while (i.hasNext()) 
-        {
-            AttributeValue aval = (AttributeValue)avMap.get(i.next());
-            Group group = intake.get("AttributeValue", aval.getQueryKey());
-            if ( group != null ) 
+            List issueIdsFromUserSearch = getIssueIdsFromUserSearch();
+            if (issueIdsFromUserSearch.size() > 0)
             {
-                group.setProperties(aval);
-            }                
+                search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
+            }
+            else
+            {
+               searchSuccess = false;
+            }
         }
-        
-        return search.getMatchingIssues();
+
+        if (searchSuccess)
+        {
+            // Set intake properties
+            Group searchGroup = intake.get("SearchIssue", 
+                                           getSearch().getQueryKey() );
+            searchGroup.setProperties(search);
+
+            // Set attribute values to search on
+            SequencedHashtable avMap = search.getModuleAttributeValuesMap();
+            Iterator i = avMap.iterator();
+            while (i.hasNext()) 
+            {
+                AttributeValue aval = (AttributeValue)avMap.get(i.next());
+                Group group = intake.get("AttributeValue", aval.getQueryKey());
+                if ( group != null ) 
+                {
+                    group.setProperties(aval);
+                }                
+            }
+            
+            // If user is sorting on an attribute, set sort criteria
+            // Do not use intake, since intake parsed from query is not the same
+            // As intake passed from the form
+            String sortAttrId = data.getParameters().getString("sortAttrId");
+            if (sortAttrId != null && sortAttrId.length() > 0 
+                && StringUtils.isNumeric(sortAttrId))
+            {
+                search.setSortAttributeId(new NumberKey(sortAttrId));
+            }
+            String sortPolarity = data.getParameters().getString("sortPolarity");
+            if (sortPolarity != null && sortPolarity.length() > 0)
+            {
+                search.setSortPolarity(sortPolarity);
+            }
+               
+            // Do search
+            try
+            {
+                matchingIssueIds = search.getMatchingIssues();
+            }
+            catch (Exception e)
+            {
+                data.setMessage("There was an error retrieving search results.");
+            }
+        }
+        if (matchingIssueIds == null || matchingIssueIds.size() <= 0)
+        {
+            data.setMessage("No matching issues.");
+        }            
+        return matchingIssueIds;
     }
+
+    /**
+     * Searches on user attributes.
+    */
+    private List getIssueIdsFromUserSearch()
+        throws Exception
+    {
+        Criteria userCrit = new Criteria();
+        boolean atLeastOneMatch = false;
+        Object[] keys =  data.getParameters().getKeys();
+        for (int i =0; i<keys.length; i++)
+        {
+            String key = keys[i].toString();
+            if (key.startsWith("user_attr_"))
+            {
+               Criteria tempCrit = new Criteria()
+                  .add(IssuePeer.MODULE_ID, getCurrentModule().getModuleId())
+                  .add(IssuePeer.TYPE_ID, getCurrentIssueType().getIssueTypeId());
+
+               String userId = key.substring(10);
+               String attrId = data.getParameters().getString(key);
+
+               if (attrId == null)
+               {
+                  attrId = "any";
+               }
+               List tempIssueList = null;
+               List tempIssueIds = new ArrayList();
+               
+               // Build Criteria for created by
+               Criteria createdByCrit = new Criteria()
+                   .addJoin(TransactionPeer.TRANSACTION_ID, 
+                                ActivityPeer.TRANSACTION_ID)
+                   .addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID)
+                   .add(TransactionPeer.TYPE_ID, TransactionTypePeer.CREATE_ISSUE__PK)
+                   .add(TransactionPeer.CREATED_BY, userId);
+
+               // If attribute is "committed by", search for creating user
+               if (attrId.equals("created_by"))
+               {
+                   tempIssueList = IssuePeer.doSelect(createdByCrit);
+               }
+               // If attribute is "any", search across user attributes
+               else if (attrId.equals("any"))
+               {
+                   Criteria.Criterion cCreated = null;
+                   Criteria.Criterion cAttr = null;
+
+                   // First get results of searching across user attributes
+                   Criteria attrCrit = new Criteria()
+                     .add(AttributeValuePeer.USER_ID, userId)
+                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+                   List attrList = IssuePeer.doSelect(attrCrit);
+                   List attrIdList = new ArrayList();
+                   for (int j=0; j < attrList.size(); j++)
+                   {
+                       attrIdList.add(((Issue)attrList.get(j)).getIssueId());
+                   }
+
+                   // Then get results of searching createdBy
+                   List createdList = IssuePeer.doSelect(createdByCrit);
+                   List createdIdList = new ArrayList();
+                   for (int j=0; j < createdList.size(); j++)
+                   {
+                       createdIdList.add(((Issue)createdList.get(j)).getIssueId());
+                   }
+
+                   // Combine the two searches with an OR
+                   if (createdIdList.size() > 0)
+                   {
+                       cCreated = attrCrit.getNewCriterion(IssuePeer.ISSUE_ID, 
+                                                           createdIdList, Criteria.IN); 
+                   }
+                   if (attrIdList.size() > 0)
+                   {
+                       cAttr = attrCrit.getNewCriterion(IssuePeer.ISSUE_ID, 
+                                                        attrIdList, Criteria.IN);
+                   }
+                   if (cCreated != null && cAttr != null)
+                   {
+                       cAttr.and(cCreated);
+                       tempCrit.add(cAttr);
+                   }
+                   else if (cCreated != null)
+                   {
+                       tempCrit.add(cCreated);
+                   }
+                   else if (cAttr != null)
+                   {
+                       tempCrit.add(cAttr);
+                   }
+                   tempIssueList = IssuePeer.doSelect(tempCrit);
+               }
+               else
+               {
+                   // A user attribute was selected to search on 
+                   tempCrit.add(AttributeValuePeer.ATTRIBUTE_ID, attrId)
+                     .add(AttributeValuePeer.USER_ID, userId)
+                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+                   tempIssueList = IssuePeer.doSelect(tempCrit);
+               }
+               if (tempIssueList.size() > 0)
+               {
+                   atLeastOneMatch = true;
+                   // Get issue id list from issue result set
+                   for (int l = 0; l < tempIssueList.size();l++)
+                   {
+                       tempIssueIds.add(((Issue)tempIssueList.get(l)).getIssueId());
+                   }
+
+                   // Create a criteria that is the results of an OR 
+                   // Between the different users that were searched on.
+                   Criteria.Criterion c1 = userCrit.
+                                            getNewCriterion(IssuePeer.ISSUE_ID, 
+                                            tempIssueIds, Criteria.IN);
+                   userCrit.or(c1);
+               }
+            }
+        }
+
+        List finalIssueIds = new ArrayList();
+        if (atLeastOneMatch)
+        {
+            // Turn final issue list resulting from OR into an id list
+            // And set search property
+            List finalIssueList = IssuePeer.doSelect(userCrit);
+            for (int l = 0; l<finalIssueList.size();l++)
+            {
+                finalIssueIds.add(((Issue)finalIssueList.get(l)).getIssueId());
+            }
+        }
+        return finalIssueIds;
+    }
+
 
     /**
      * Convert paths with slashes to commas.
@@ -1266,7 +1414,7 @@ try{
     public String convertPath(String path)
         throws Exception
     {
-        return path.replace('/',',');
+            return path.replace('/',',');
     }
 
 
@@ -1387,19 +1535,6 @@ try{
         return pageResults;
     }
 
-    /**
-     * Get the cached list of issue id's resulting from a search
-     * And return the list of issues.
-     */
-    public List getIssueList() 
-        throws Exception
-    {
-        if ( issueList == null ) 
-        {
-            issueList = getCurrentSearchResults();
-        }
-        return issueList;
-    }
 
     /**
      * Set the value of issueList.

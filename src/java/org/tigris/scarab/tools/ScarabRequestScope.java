@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.23 2002/01/18 22:26:13 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.24 2002/01/28 02:49:03 elicia Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -112,6 +112,11 @@ public interface ScarabRequestScope extends ApplicationTool
      * A Attribute object for use within the Scarab API.
      */
     public AttributeOption getAttributeOption() throws Exception;
+
+    /**
+     * Gets results of current query and puts them in context.
+     */
+    public List getCurrentSearchResults() throws Exception;
 
     /**
      * Gets the ModuleEntity associated with the information
@@ -207,12 +212,6 @@ public interface ScarabRequestScope extends ApplicationTool
      * @return a <code>Issue</code> value
      */
     public Issue getIssue(String key) throws Exception;
-
-    /**
-     * Get the cached list of issue id's resulting from a search
-     * And return the list of issues.
-     */
-    public List getIssueList() throws Exception;
 
     /**
      * Get a list of Issue objects.
