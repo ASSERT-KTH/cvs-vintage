@@ -65,6 +65,8 @@ import org.apache.commons.util.GenerateUniqueId;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.security.ScarabSecurity;
+import org.tigris.scarab.security.SecurityFactory;
 
 /**
     This class is an abstraction that is currently based around
@@ -73,7 +75,7 @@ import org.tigris.scarab.util.ScarabException;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.24 2001/10/20 00:51:05 jon Exp $
+    @version $Id: ScarabUserImpl.java,v 1.25 2001/10/22 23:56:38 elicia Exp $
 */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -245,6 +247,28 @@ public class ScarabUserImpl
         return modules;
     }
 
+    /**
+     * Gets all modules the user has permissions to edit.
+     */
+    public List getEditableModules() throws Exception
+    {
+        List userModules = getModules();
+        ArrayList editModules = new ArrayList();
+        ScarabSecurity security = SecurityFactory.getInstance();
+
+        for (int i=0; i<userModules.size(); i++)
+        {
+            ModuleEntity module = (ModuleEntity)userModules.get(i);
+            if (security.hasPermission(ScarabSecurity.MODULE__EDIT, 
+                                      (ScarabUser)this,
+                                      (ModuleEntity)module)
+               && !(module.getModuleId().toString().equals("0")))
+            {
+                editModules.add(module);
+            }
+        }
+        return editModules;
+     }
 
     /**
      * Returns list of RModuleUserAttribute objects for this
