@@ -60,12 +60,13 @@ import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.GlobalParameter;
+import org.tigris.scarab.util.Log;
 
 
 /**
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.5 2003/01/07 21:50:09 elicia Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.6 2003/01/09 19:53:17 jmcnally Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -89,13 +90,13 @@ public class DatabaseInitializer
             if (dbState.getValue().equals(PRE_L10N)) 
             {
                 long start = System.currentTimeMillis();
-                System.out.println("New scarab database; localizing strings for '" + defaultLocale.getDisplayName() + "'...");
+                Log.get().info("New scarab database; localizing strings for '" + defaultLocale.getDisplayName() + "'...");
                 dbState.setValue("started");
                 dbState.save();
                 initdb(); //Turbine.getConfiguration();                
                 dbState.setValue(POST_L10N);
                 dbState.save();
-                System.out.println("Done localizing.  Time elapsed = " + 
+                Log.get().info("Done localizing.  Time elapsed = " + 
                     (System.currentTimeMillis()-start)/1000.0 + " s");
             }
         }
@@ -158,6 +159,8 @@ public class DatabaseInitializer
                     Object om = i.next();
                     for (int n=0; n<getters.length; n++) 
                     {
+                        Log.get().debug("Converting " + row[1] + '.' + 
+                                        getters[n].getName());
                         String key = (String)getters[n].invoke(om, null);
                         String value = null;
                         try 
