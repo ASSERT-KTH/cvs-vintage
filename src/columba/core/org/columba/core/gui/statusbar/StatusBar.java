@@ -72,7 +72,7 @@ public class StatusBar
 
 		imageSequenceTimer = new ImageSequenceTimer();
 
-		setBorder( BorderFactory.createEmptyBorder(0,2,0,2) );
+		setBorder( BorderFactory.createEmptyBorder(1,2,1,2) );
 		
 		displayedWorkerIndex = 0;
 		workerListSize = 0;
@@ -159,12 +159,7 @@ public class StatusBar
 	}
 
 	public Border getDefaultBorder() {
-		
-		if (UIManager.getBorder("TableHeader.cellBorder") != null) {
-			return UIManager.getBorder("StatusBar.border");
-		} else
-			return UIManager.getBorder("TableHeader.cellBorder");
-
+		return UIManager.getBorder("TableHeader.cellBorder");
 	}
 
 	public void displayTooltipMessage(String message) {
