@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.70 2004/03/14 12:21:03 pledbrook Exp $
+$Id: README.txt,v 1.71 2004/03/14 12:25:52 pledbrook Exp $
 
 Welcome to Scarab!
 
@@ -259,12 +259,12 @@ src
 '-----------------------------------------------------------------------'
 
 The Scarab build process can be configured by setting build properties.
-You can find desctiptions of the available properties and their default
+You can find descriptions of the available properties and their default
 values in the file:
 
   build/default.properties
 
-and also in the various database-specific properties files:
+and also in the various database-specific property files:
 
   build/default.mysql.properties
   build/default.postgresql.properties
@@ -281,7 +281,7 @@ of the following property files and add your own property settings:
     scarab/build/build.properties
 
 If you have the same property defined in more than one of these files,
-which one takes priority? In this case, ~/scara.build.properties takes
+which one takes priority? In this case, ~/scarab.build.properties takes
 precedence over ~/build.properties, which in turn takes precedence over
 scarab/build/build.properties.
 
