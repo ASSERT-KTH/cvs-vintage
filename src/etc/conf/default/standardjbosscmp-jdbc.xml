@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.32 2002/06/14 03:39:13 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.33 2002/06/16 06:03:14 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -753,7 +753,7 @@
          <mapping>
             <java-type>java.util.Date</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
-            <sql-type>TIMESTAMP</sql-type>
+            <sql-type>TIMESTAMP with time zone</sql-type>
          </mapping>
          <mapping>
             <java-type>java.sql.Date</java-type>
@@ -768,7 +768,7 @@
          <mapping>
             <java-type>java.sql.Timestamp</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
-            <sql-type>TIMESTAMP</sql-type>
+            <sql-type>TIMESTAMP with time zone</sql-type>
          </mapping>
          <mapping>
             <java-type>java.math.BigDecimal</java-type>
@@ -956,8 +956,8 @@
          </mapping>
          <mapping>
             <java-type>java.util.Date</java-type>
-            <jdbc-type>DATE</jdbc-type>
-            <sql-type>DATE</sql-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Boolean</java-type>
