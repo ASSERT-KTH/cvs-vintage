@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.14 2003/01/09 20:35:23 kataka Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.15 2003/02/19 01:20:22 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,8 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+
+import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
@@ -83,10 +85,24 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     }
 
     /**
+     * @see org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper#isAddingCollaborationAllowed(Object)
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)
      */
     public boolean isValidNamespace(MNamespace ns) {
-        return (ns instanceof MCollaboration || ns instanceof MClassifier || ns == ProjectManager.getManager().getCurrentProject().getModel());
+        return CollaborationsHelper.getHelper().isAddingCollaborationAllowed(ns);
     }
 
+    /**
+     * Just calls isValidNamespace(...) on the nav pane target.
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
+    public boolean shouldBeEnabled() {
+        
+        Object target = ProjectBrowser.TheInstance.getTarget();
+        if(target instanceof MNamespace)
+            return isValidNamespace((MNamespace)target);
+        else
+            return false;
+    }
+    
 } /* end class ActionCollaborationDiagram */
