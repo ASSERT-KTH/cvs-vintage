@@ -93,7 +93,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.159 2002/06/18 00:12:08 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.160 2002/06/18 23:09:40 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2344,7 +2344,7 @@ public class Issue
         buf2.append(newAttrDisplayName + '.');
         String othersAction = buf2.toString();
 
-        if (!reason.equals(""))
+        if (reason != null && reason.length() > 0)
         {
             // Save attachment if reason has been provided
             attachment = new Attachment();
