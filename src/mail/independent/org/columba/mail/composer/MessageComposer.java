@@ -34,6 +34,7 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.message.PgpMimePart;
+import org.columba.mail.message.SendableHeader;
 import org.columba.mail.util.RFC822Date;
 
 public class MessageComposer {
@@ -47,8 +48,8 @@ public class MessageComposer {
 		model = controller.getModel();
 	}
 
-	protected ColumbaHeader initHeader() {
-		ColumbaHeader header = new ColumbaHeader();
+	protected SendableHeader initHeader() {
+		SendableHeader header = new SendableHeader();
 		EncodedWordEncoder encoder = new EncodedWordEncoder();
 
 		// RFC822 - Header
@@ -256,7 +257,7 @@ public class MessageComposer {
 		SendableMessage message = new SendableMessage();
 		StringBuffer composedMessage = new StringBuffer();
 
-		ColumbaHeader header = initHeader();
+		SendableHeader header = initHeader();
 		MimePart root;
 
 		Vector mimeParts = model.getAttachments();
@@ -287,7 +288,7 @@ public class MessageComposer {
 			root = signPart;
 		}
 
-		message.setRecipients(controller.getRCPTVector());
+		header.setRecipients(controller.getRCPTVector());
 
 		String composedBody;
 
