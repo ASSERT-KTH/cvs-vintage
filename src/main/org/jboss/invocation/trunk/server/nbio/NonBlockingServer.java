@@ -22,8 +22,8 @@ import org.jboss.invocation.trunk.client.ConnectionManager;
 import org.jboss.invocation.trunk.client.nbio.NonBlockingSocketTrunk;
 import org.jboss.invocation.trunk.client.nbio.SelectionAction;
 import org.jboss.invocation.trunk.client.nbio.SelectorManager;
-import org.jboss.invocation.trunk.sever.IServer;
-import org.jboss.invocation.trunk.sever.TrunkInvoker;
+import org.jboss.invocation.trunk.server.IServer;
+import org.jboss.invocation.trunk.server.TrunkInvoker;
 import org.jboss.logging.Logger;
 
 /**

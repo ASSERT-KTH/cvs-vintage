@@ -17,8 +17,8 @@ import java.net.SocketException;
 
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.bio.BlockingSocketTrunk;
-import org.jboss.invocation.trunk.sever.IServer;
-import org.jboss.invocation.trunk.sever.TrunkInvoker;
+import org.jboss.invocation.trunk.server.IServer;
+import org.jboss.invocation.trunk.server.TrunkInvoker;
 import org.jboss.logging.Logger;
 
 /**
