@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.33 2003/05/02 23:14:17 spestov Exp $
+ * @version $Id: Macros.java,v 1.34 2003/05/24 01:18:27 spestov Exp $
  */
 public class Macros
 {
@@ -800,7 +800,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 
 			for(int i = 0; i < buffer.getLineCount(); i++)
 			{
-				buffer.indentLine(i,true,true);
+				buffer.indentLine(i);
 			}
 
 			EditBus.removeFromBus(this);
