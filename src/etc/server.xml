@@ -78,7 +78,9 @@
 			useJspServlet="false"
 			/>
         
-        <StaticInterceptor listings="true" />
+        <StaticInterceptor listings="true"
+                           useAcceptLanguage="true"
+                           useCharset="locale" />
         
         <ReloadInterceptor fullReload="true" />
 
