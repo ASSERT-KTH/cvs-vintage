@@ -45,6 +45,8 @@
 		<separator />
 		<menuitem imenu="ParagraphMenu" />
 		<menuitem imenu="JustifyMenu" />
+		<separator />
+		<menuitem action="InsertBreakAction" />
 	</menu>
 	
 	<menu name="menu_message">

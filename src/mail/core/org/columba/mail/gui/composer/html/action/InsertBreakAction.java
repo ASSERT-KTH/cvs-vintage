@@ -16,60 +16,42 @@
 package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.SwingWorker;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
+import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * Format selected text as bold "<b>"
- *
- * @author fdietz
+ * Inserts the html element &lt;br&gt (br tag), i.e. a line break.
+ * 
+ * @author Karl Peder Olesen (karlpeder), 20030923
  */
-public class BoldFormatAction extends CheckBoxAction 
-		implements Observer, ContainerListener {
+public class InsertBreakAction extends FrameAction
+		implements Observer{
 
 	/**
 	 * @param frameController
- 	 */
-	public BoldFormatAction(AbstractFrameController frameController) {
-
+	 */
+	public InsertBreakAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
 				"menu",
 				"composer",
-				"menu_format_bold"));
-
-		setLargeIcon(ImageLoader.getImageIcon("stock_text_bold.png"));
-		setSmallIcon(ImageLoader.getSmallImageIcon("stock_text_bold-16.png"));
-
-		setTooltipText(
-			MailResourceLoader.getString(
+				"menu_format_break"));
+		setTooltipText(MailResourceLoader.getString(
 				"menu",
 				"composer",
-				"menu_format_bold_tooltip"));
-
-		// register for text selection changes
-		ComposerController ctrl =
-				(ComposerController) getFrameController();
-		ctrl.getEditorController().addObserver(this);
-		
-		// register for changes to the editor
-		ctrl.addContainerListenerForEditor(this);
+				"menu_format_break_tooltip"));
 
 		// register for changes to editor type (text / html)
 		XmlElement optionsElement =
@@ -82,28 +64,17 @@ public class BoldFormatAction extends CheckBoxAction
 		
 		// set initial enabled state
 		setEnabled((new Boolean(enableHtml)).booleanValue());
-		 
 	}
 
 	/**
-	 * Method is called when text selection has changed.
-	 * <p>
-	 * Set state of togglebutton / -menu to pressed / not pressed
-	 * when selections change. 
+	 * Method is called when the html option has changed.
+	 * <br>
+	 * Used to enable / disable the action and associated menu
 	 * 
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		
-		if (arg0 instanceof HtmlEditorController) {
-			// check if current text is bold or not - and set state accordingly
-			FormatInfo info = (FormatInfo) arg1;
-			boolean isBold = info.isBold();
-		
-			// notify all observers to change their selection state
-			getObservable().setSelected(isBold);
-
-		} else if (arg0 instanceof XmlElement) {
+		if (arg0 instanceof XmlElement) {
 			// possibly change btw. html and text
 			XmlElement e = (XmlElement) arg0;
 
@@ -116,7 +87,6 @@ public class BoldFormatAction extends CheckBoxAction
 				
 			}
 		}
-
 	}
 
 	/* (non-Javadoc)
@@ -129,27 +99,7 @@ public class BoldFormatAction extends CheckBoxAction
 			(HtmlEditorController) ((ComposerController) frameController)
 				.getEditorController();
 
-		editorController.toggleBold();
-
+		editorController.insertBreak();
 	}
-
-	/**
-	 * This event could mean that a the editor controller has changed.
-	 * Therefore this object is re-registered as observer to keep 
-	 * getting information about format changes.
-	 * 
-	 * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
-	 */
-	public void componentAdded(ContainerEvent e) {
-		ColumbaLogger.log.debug(
-				"Re-registering as observer on editor controller");
-		((ComposerController) getFrameController()).
-				getEditorController().addObserver(this);
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
-	 */
-	public void componentRemoved(ContainerEvent e) {}
 
 }

@@ -16,6 +16,8 @@
 
 package org.columba.mail.gui.composer.html.util;
 
+import java.util.Enumeration;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
 import javax.swing.text.StyleConstants;
@@ -105,6 +107,39 @@ public class FormatInfo {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Convenience method to determine whether current text is striked out
+	 * @return	true if text is striked out
+	 */
+	public boolean isStrikeout() {
+		if (StyleConstants.isStrikeThrough(getCharAttr())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Convenience method to determine whether current text is "tele typer",
+	 * i.e. formattet as type written text.
+	 * @return	true if text is tele typer
+	 */
+	public boolean isTeleTyper() {
+		// get current attributes
+		Enumeration enum = getCharAttr().getAttributeNames();
+		// search for tele typer attribute
+		while (enum.hasMoreElements()) {
+			Object name = enum.nextElement();
+			if ((name instanceof HTML.Tag) &&
+					(name.toString().equals(HTML.Tag.TT.toString()))) {
+				// found tele typer
+				return true;
+			}
+		}
+		// nothing found
+		return false;
 	}
 
 	/**

@@ -16,7 +16,6 @@
 
 package org.columba.mail.gui.composer.html;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -24,9 +23,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.MutableAttributeSet;
@@ -39,7 +40,6 @@ import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLDocument;
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLEditorKit;
-import org.columba.mail.gui.composer.html.util.HTMLUtilities;
 
 
 /**
@@ -168,7 +168,102 @@ public class HtmlEditorView extends JTextPane
 	public void toggleUnderline() {
 		actionFontUnderline.actionPerformed(null); // see not for toggleBold
 	}
+	
+	/**
+	 * Toggles strikeout (aka strike through) on/off
+	 */
+	public void toggleStrikeout() {
+		MutableAttributeSet inputAttr = htmlKit.getInputAttributes();
+		boolean isStrike = false;
+		if (StyleConstants.isStrikeThrough(inputAttr)) {
+			isStrike = true;
+		}
+		
+		// define attribute set with the strike attribute
+		SimpleAttributeSet sas = new SimpleAttributeSet();
+		StyleConstants.setStrikeThrough(sas, !isStrike); // ! for toggle
+		
+		// set format on current selection and input attributes
+		setCharacterFormat(sas);
+	}
 
+	/**
+	 * Toggles tele typer (aka typewritten) on/off
+	 */
+	public void toggleTeleTyper() {
+		MutableAttributeSet inputAttr = htmlKit.getInputAttributes();
+
+		// Check if current format includes "tele typer"
+		// (needs to be done manually, no helper methods exist on StyleConstants)
+		boolean isTeleTyper = false;
+		Enumeration enum = inputAttr.getAttributeNames();
+		while (enum.hasMoreElements()) {
+			Object name  = enum.nextElement();
+			if ((name instanceof HTML.Tag) && 
+					(name.toString().equals(HTML.Tag.TT.toString()))) {
+				isTeleTyper = true;
+				break;
+			}
+		}
+		
+		/*
+		 * Addition and removal of formatting needs to be done more or less
+		 * manually since no helper methods exist on StyleConstants - to bad...
+		 */
+
+		// define attribute set with the tele typer attribute
+		SimpleAttributeSet sas = new SimpleAttributeSet();
+		sas.addAttribute(HTML.Tag.TT, new SimpleAttributeSet());
+
+		if (isTeleTyper) {
+			// remove formatting from "input attributes"
+			inputAttr.removeAttributes(sas);
+			
+			// remove formatting from current selection if any
+			int selStart  = getSelectionStart();
+			int selEnd    = getSelectionEnd();
+			
+			for (int i=selStart; i<selEnd; i++) {
+				// need to remove formatting char by char to keep 
+				// other existing formats (bold, italic etc.)
+				SimpleAttributeSet attr =
+						new SimpleAttributeSet(
+							htmlDoc.getCharacterElement(i).getAttributes());
+				attr.removeAttributes(sas);
+				htmlDoc.setCharacterAttributes(i, 1, attr, true);
+			}
+			
+		} else {
+			// set format on current selection and input attributes
+			setCharacterFormat(sas);
+		}
+
+	}
+
+	/**
+	 * Private utility for setting character format on current selection
+	 * and on the input attributes, which defines the format of text typed
+	 * at the current caret position.
+	 * 
+	 * @param attr		Attributeset containing the format to set
+	 */
+	private void setCharacterFormat(AttributeSet attr) {
+		// get information on current selection
+		int selStart  = getSelectionStart();
+		int selEnd    = getSelectionEnd();
+		int selLength = selEnd - selStart;
+		
+		// set format on current selection if any
+		if (selLength != 0) {
+			htmlDoc.setCharacterAttributes(
+					selStart, selLength, attr, false);
+		}
+		
+		// set format on "input attributes", so the following text is same format
+		MutableAttributeSet inputAttr = htmlKit.getInputAttributes();
+		inputAttr.addAttributes(attr);
+	}
+	
 	/**
 	 * Sets format of selected paragraphs or current paragraph
 	 * when no text is selected.
@@ -193,7 +288,7 @@ public class HtmlEditorView extends JTextPane
 		// define attribute set corresponding to the requested format
 		MutableAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(StyleConstants.NameAttribute, formatTag);
-		
+	
 		// get information on current selection
 		int selStart  = getSelectionStart();
 		int selEnd    = getSelectionEnd();
@@ -219,6 +314,7 @@ public class HtmlEditorView extends JTextPane
 		} catch (IOException e) {
 			ColumbaLogger.log.error("Error inserting br tag", e);
 		}
+
 	}
 
 

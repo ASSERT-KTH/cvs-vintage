@@ -115,6 +115,20 @@ public class HtmlEditorController
 	}
 
 	/**
+	 * Toggle strikeout font in the view on/off
+	 */
+	public void toggleStrikeout() {
+		view.toggleStrikeout();
+	}
+	
+	/**
+	 * Toggle teletyper font (type written text) in the view on/off
+	 */
+	public void toggleTeleTyper() {
+		view.toggleTeleTyper();
+	}
+
+	/**
 	 * Sets paragraph format for selected paragraphs or current
 	 * paragraph if no text is selected
 	 * @param	tag		Html tag specifying the format to set

@@ -105,6 +105,7 @@
  <action name="FontSizeMenu" class="org.columba.mail.gui.composer.html.action.FontSizeMenu" />
  <action name="JustifyMenu" class="org.columba.mail.gui.composer.html.action.JustifyMenu" />
  <action name="ParagraphMenu" class="org.columba.mail.gui.composer.html.action.ParagraphMenu" />
+ <action name="InsertBreakAction" class="org.columba.mail.gui.composer.html.action.InsertBreakAction" />
  
  <!-- attachment -->
  <action name="OpenAttachment" class="org.columba.mail.gui.attachment.action.OpenAction"/>
