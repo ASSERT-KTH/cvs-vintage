@@ -1232,7 +1232,8 @@ try{
     }
 
     /**
-     * Performs search on current query (which is stored in user session).
+     * Returns all issue templates that are global, 
+     * Plus those that are personal and created by logged-in user.
     */
     public List getIssueTemplates()
         throws Exception
@@ -1248,6 +1249,28 @@ try{
             sortPolarity = "asc";
         }
         return IssueTemplateInfoPeer.getAllTemplates(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               sortColumn, sortPolarity);
+    }
+
+    /**
+     * Returns all queries that are global, 
+     * Plus those that are personal and created by logged-in user.
+    */
+    public List getQueries()
+        throws Exception
+    {
+        String sortColumn = data.getParameters().getString("sortColumn");
+        String sortPolarity = data.getParameters().getString("sortPolarity");
+        if (sortColumn == null)
+        {
+            sortColumn = "name";
+        }
+        if (sortPolarity == null)
+        {
+            sortPolarity = "asc";
+        }
+        return QueryPeer.getAllQueries(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
                sortColumn, sortPolarity);
     }
