@@ -33,7 +33,7 @@
     #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("IssueList.vm"))
     | <a href="$nextLink">&raquo;</a> next
   #end
-    (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
+    (<a href="secure,ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 #end
 
 
@@ -43,7 +43,7 @@
 <p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
 #if ($searchType.equals("advanced"))
 &#160;<sup>|</sup>
-&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" />#end</p>
+&#160;<input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />#end</p>
 	
 
 	<h3>Search Results</h3>
@@ -91,7 +91,7 @@
 <p class="functnbar"><input type="submit" value="reassign selected" name="eventSubmit_doReassignselected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" name="eventSubmit_doReassignall" />
 #if ($searchType.equals("advanced"))
 &#160;<sup>|</sup>
-&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" />#end</p>
+&#160;<input type="submit" value="save query" name="eventSubmit_doRedirecttosavequery" />#end</p>
 	
 	
 #if( $paginated)
