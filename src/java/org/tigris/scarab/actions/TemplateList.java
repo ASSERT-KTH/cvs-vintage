@@ -81,7 +81,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.36 2002/10/23 21:34:32 jon Exp $
+ * @version $Id: TemplateList.java,v 1.37 2003/02/01 21:16:56 jon Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -274,18 +274,28 @@ public class TemplateList extends RequireLoginFirstAction
             key = keys[i].toString();
             if (key.startsWith("delete_"))
             {
-               templateId = key.substring(7);
-               Issue issue = IssueManager
-                  .getInstance(new NumberKey(templateId), false);
-               try
-               {
-                   issue.delete(user);
-               }
-               catch (Exception e)
-               {
-                   getScarabRequestTool(context).setAlertMessage(
-                       l10n.get(NO_PERMISSION_MESSAGE));
-               }
+                templateId = key.substring(7);
+                try
+                {
+                    Issue issue = IssueManager
+                       .getInstance(new NumberKey(templateId), false);
+                    if (issue == null)
+                    {
+                        throw new Exception(
+                            l10n.get("CouldNotLocateTemplateToDelete"));
+                    }
+                    issue.delete(user);
+                }
+                catch (ScarabException e)
+                {
+                    getScarabRequestTool(context)
+                        .setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                }
+                catch (Exception e)
+                {
+                    getScarabRequestTool(context)
+                        .setAlertMessage(e.getMessage());
+                }
             }
         } 
         getScarabRequestTool(context)
