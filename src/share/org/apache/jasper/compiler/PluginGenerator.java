@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.8 2000/07/25 01:11:38 craigmcc Exp $
- * $Revision: 1.8 $
- * $Date: 2000/07/25 01:11:38 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1

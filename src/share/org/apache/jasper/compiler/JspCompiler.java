@@ -135,8 +135,6 @@ public class JspCompiler extends Compiler implements Mangler {
     public final String getRealClassName() {
 	if( realClassName!=null ) return realClassName;
 
-	// 	loghelper.log("JspCompiler: extract class name and version ",
-	//                    null, Logger.DEBUG);
         try {
             realClassName = ClassName.getClassName( getClassFileName() );
         } catch( JasperException ex) {
@@ -309,9 +307,17 @@ public class JspCompiler extends Compiler implements Mangler {
     public boolean isOutDated() {
         File jspReal = null;
 
-        jspReal = new File(ctxt.getRealPath(jsp.getPath()));
+        String realPath = ctxt.getRealPath(jsp.getPath());
+        if (realPath == null)
+            return true;
 
-        File classFile = new File(getClassFileName());
+        jspReal = new File(realPath);
+
+		  if(!jspReal.exists()){
+			  return true;
+		  }
+
+		  File classFile = new File(getClassFileName());
         if (classFile.exists()) {
             outDated = classFile.lastModified() < jspReal.lastModified();
         } else {

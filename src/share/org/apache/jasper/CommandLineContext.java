@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.6 2000/07/11 00:15:04 shemnon Exp $
- * $Revision: 1.6 $
- * $Date: 2000/07/11 00:15:04 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1

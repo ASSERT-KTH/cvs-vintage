@@ -181,19 +181,38 @@ public class JspServlet extends HttpServlet {
 
             } catch (FileNotFoundException ex) {
 		try {
-		    response.sendError(HttpServletResponse.SC_NOT_FOUND, 
-				       Constants.getString
-				       ("jsp.error.file.not.found", 
-					new Object[] {
-					    ex.getMessage()
-					}));
+                    if (insecure_TMI) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND, 
+                                           Constants.getString
+                                           ("jsp.error.file.not.found.TMI", 
+                                            new Object[] {
+                                                ex.getMessage()
+                                            }));
+                    } else {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND, 
+                                           Constants.getString
+                                           ("jsp.error.file.not.found", 
+                                            new Object[] {
+                                                // Too Much Information -- ex.getMessage()
+                                            }));
+                    }
 		} catch (IllegalStateException ise) {
+                    // logs are presumed to be secure, thus the TMI info can be logged
 		    Constants.jasperLog.log(Constants.getString
-					    ("jsp.error.file.not.found",
+					    ("jsp.error.file.not.found.TMI",
 					     new Object[] {
 						 ex.getMessage()
 					     }), ex,
 					    Logger.ERROR);
+		    // rethrow FileNotFoundException so someone higher up can handle
+                    if (insecure_TMI)
+                        throw ex;
+                    else
+			throw new FileNotFoundException(Constants.getString
+                                           ("jsp.error.file.not.found", 
+                                            new Object[] {
+                                                // Too Much Information -- ex.getMessage()
+                                            }));
 		}
                 return;
             }
@@ -215,6 +234,9 @@ public class JspServlet extends HttpServlet {
     protected ClassLoader parentClassLoader;
     protected ServletEngine engine;
     protected String serverInfo;
+    
+    /** Set to true to provide Too Much Information on errors */
+    private final boolean insecure_TMI = false;
 
     static boolean firstTime = true;
     static boolean jdk12=false;
@@ -430,7 +452,7 @@ public class JspServlet extends HttpServlet {
 	}
 	//	Class jspClass = (Class) loadedJSPs.get(jspUri);
 	boolean firstTime = jsw.servletClass == null;
-        JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
+   JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
                                                      context, jspUri, 
                                                      isErrorPage, options,
                                                      req, res);
@@ -449,6 +471,7 @@ public class JspServlet extends HttpServlet {
 		}
             }
         } catch (FileNotFoundException ex) {
+			  compiler.removeGeneratedFiles();
             throw ex;
         } catch (JasperException ex) {
             throw ex;

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.11 2000/05/26 18:55:10 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/05/26 18:55:10 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -125,4 +121,10 @@ public interface Options {
      * ProtectionDomain for this JSP Context when using a SecurityManager
      */
     public Object getProtectionDomain();
+
+    /**
+     * Java platform encoding to generate the JSP
+     * page servlet.
+     */
+    public String getJavaEncoding();
 }

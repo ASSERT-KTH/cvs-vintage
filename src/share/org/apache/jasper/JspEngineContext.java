@@ -1,7 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.10 2000/09/29 07:00:02 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/09/29 07:00:02 $
  *
  * ====================================================================
  * 

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.17 2000/09/29 07:00:01 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/09/29 07:00:01 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -197,6 +193,10 @@ public class JspC implements Options { //, JspCompilationContext {
     public String getJspCompilerPath() {
        // we don't compile, so this is meanlingless
         return null;
+    }
+
+    public String getJavaEncoding() {
+	return "UTF-8";
     }
 
     public String getClassPath() {

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.7 2000/11/21 00:47:15 larryi Exp $
- * $Revision: 1.7 $
- * $Date: 2000/11/21 00:47:15 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1

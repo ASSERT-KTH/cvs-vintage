@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.17 2000/11/21 03:09:55 larryi Exp $
- * $Revision: 1.17 $
- * $Date: 2000/11/21 03:09:55 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -445,11 +441,11 @@ public class PageContextImpl extends PageContext {
 	request.setAttribute("javax.servlet.jsp.jspException", e);
 
 	if (errorPageURL != null && !errorPageURL.equals("")) {
-	    try {
-		forward(errorPageURL);
-	    } catch (IllegalStateException ise) {
-		include(errorPageURL);
-	    }
+            try {
+                forward(errorPageURL);
+            } catch (IllegalStateException ise) {
+                include(errorPageURL);
+            }
 	} // Otherwise throw the exception wrapped inside a ServletException.
 	else {
 	    // Set the exception as the root cause in the ServletException

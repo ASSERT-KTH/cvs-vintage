@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.29 2000/10/06 11:10:15 larryi Exp $
- * $Revision: 1.29 $
- * $Date: 2000/10/06 11:10:15 $
- *
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -228,12 +224,14 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    
 	    if (in == null)
 		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
-							      new Object[] {TLD}));
+							      new Object[] {uri}));
 	    // Now parse the tld.
 	    parseTLD(in);
 	}
 	    
 	// FIXME Take this stuff out when taglib changes are thoroughly tested.
+        // 2000.11.15 commented out the 'copy to work dir' section,
+        // which I believe is what this FIXME comment referred to. (pierred)
 	if (uri.endsWith("jar")) {
 	    
 	    if (!isRelativeURI(uri)) {
@@ -248,6 +246,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    this.jarEntries = new Hashtable();
 	    this.ctxt = ctxt;
 	    
+            /* NOT COMPILED
 	    // First copy this file into our work directory! 
 	    {
 		File jspFile = new File(ctxt.getJspFile());
@@ -278,8 +277,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    
 	        ctxt.addJar(jarFileName);
 	    }
-	    
-	    
+            */ // END NOT COMPILED
 	    boolean tldFound = false;
 	    ZipEntry entry;
 	    while ((entry = zin.getNextEntry()) != null) {
@@ -362,23 +360,23 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
             if (tname.equals("tlibversion")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    this.tlibversion = t.getData();
+                    this.tlibversion = t.getData().trim();
             } else if (tname.equals("jspversion")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    this.jspversion = t.getData();
+                    this.jspversion = t.getData().trim();
             } else if (tname.equals("shortname")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    this.shortname = t.getData();
+                    this.shortname = t.getData().trim();
             } else if (tname.equals("uri")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    this.urn = t.getData();
+                    this.urn = t.getData().trim();
             } else if (tname.equals("info")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    this.info = t.getData();
+                    this.info = t.getData().trim();
             } else if (tname.equals("tag"))
                 tagVector.addElement(createTagInfo(e));
             else
@@ -409,23 +407,23 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
             if (tname.equals("name")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    name = t.getData();
+                    name = t.getData().trim();
             } else if (tname.equals("tagclass")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    tagclass = t.getData();
+                    tagclass = t.getData().trim();
             } else if (tname.equals("teiclass")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    teiclass = t.getData();
+                    teiclass = t.getData().trim();
             } else if (tname.equals("bodycontent")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    bodycontent = t.getData();
+                    bodycontent = t.getData().trim();
             } else if (tname.equals("info")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    info = t.getData();
+                    info = t.getData().trim();
             } else if (tname.equals("attribute"))
                 attributeVector.addElement(createAttribute(e));
             else 
@@ -490,25 +488,25 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
             if (tname.equals("name"))  {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    name = t.getData();
+                    name = t.getData().trim();
             } else if (tname.equals("required"))  {
                 Text t = (Text) e.getFirstChild();
                 if (t != null) {
-                    required = Boolean.valueOf(t.getData()).booleanValue();
-		    if( t.getData().equalsIgnoreCase("yes") )
-			required = true;
-		}
+                    required = Boolean.valueOf(t.getData().trim()).booleanValue();
+                    if( t.getData().equalsIgnoreCase("yes") )
+                        required = true;
+                }
             } else if (tname.equals("rtexprvalue")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null) {
-                    rtexprvalue = Boolean.valueOf(t.getData()).booleanValue();
+                    rtexprvalue = Boolean.valueOf(t.getData().trim()).booleanValue();
                     if( t.getData().equalsIgnoreCase("yes") )
                         rtexprvalue = true;
-		}
+                }
             } else if (tname.equals("type")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    type = t.getData();
+                    type = t.getData().trim();
             } else 
                 Constants.message("jsp.warning.unknown.element.in.attribute", 
                                   new Object[] {

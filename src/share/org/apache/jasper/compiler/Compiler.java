@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.20 2000/09/29 07:00:26 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2000/09/29 07:00:26 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -66,6 +62,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
@@ -143,7 +140,10 @@ public class Compiler {
         // XXX - There are really three encodings of interest.
 
         String jspEncoding = "8859_1";          // default per JSP spec
-        String javaEncoding = "UTF8";           // perhaps debatable?
+
+	// We try UTF8 by default. If it fails, we use the java encoding 
+	// specified for JspServlet init parameter "javaEncoding".
+        String javaEncoding = "UTF8";
 
 	// This seems to be a reasonable point to scan the JSP file
 	// for a 'contentType' directive. If it found then the set
@@ -166,11 +166,34 @@ public class Compiler {
             jspEncoding
         );
 
-        ServletWriter writer = 
-            (new ServletWriter
-                (new PrintWriter
-                    (new java.io.OutputStreamWriter(
-                        new FileOutputStream(javaFileName),javaEncoding))));
+	OutputStreamWriter osw; 
+	try {
+	    osw = new OutputStreamWriter(
+		      new FileOutputStream(javaFileName),javaEncoding);
+	} catch (java.io.UnsupportedEncodingException ex) {
+	    // Try to get the java encoding from the "javaEncoding"
+	    // init parameter for JspServlet.
+	    javaEncoding = ctxt.getOptions().getJavaEncoding();
+	    if (javaEncoding != null) {
+		try {
+		    osw = new OutputStreamWriter(
+			      new FileOutputStream(javaFileName),javaEncoding);
+		} catch (java.io.UnsupportedEncodingException ex2) {
+		    // no luck :-(
+		    throw new JasperException(
+			Constants.getString("jsp.error.invalid.javaEncoding",
+					    new Object[] { 
+						"UTF8", 
+						javaEncoding,
+					    }));
+		}
+	    } else {
+		throw new JasperException(
+		    Constants.getString("jsp.error.needAlternateJavaEncoding",
+					new Object[] { "UTF8" }));		
+	    }
+	}
+	ServletWriter writer = new ServletWriter(new PrintWriter(osw));
 
         ctxt.setReader(reader);
         ctxt.setWriter(writer);
@@ -189,14 +212,19 @@ public class Compiler {
         //          System.getProperty("jsp.class.path", ".") 
         // business. If anyone badly needs this we can talk. -akv
 
+        // I'm adding tc_path_add because it solves a real problem
+        // and nobody has yet to come up with a better alternative.
+        // Note: this is in two places.  Search for tc_path_add below.
+        // If you have one, please let me know.  -Sam Ruby
+
         String sep = System.getProperty("path.separator");
         String[] argv = new String[] 
         {
             "-encoding",
             javaEncoding,
             "-classpath",
-            System.getProperty("java.class.path")+ sep + classpath 
-            + sep + ctxt.getOutputDir(),
+	    System.getProperty("java.class.path")+ sep + classpath + sep +
+                System.getProperty("tc_path_add") + sep + ctxt.getOutputDir(),
             "-d", ctxt.getOutputDir(),
             javaFileName
         };
@@ -225,9 +253,11 @@ public class Compiler {
 
         /**
          * Configure the compiler object
+         * See comment above: re tc_path_add
          */
         javac.setEncoding(javaEncoding);
         javac.setClasspath( System.getProperty("java.class.path")+ sep + 
+                            System.getProperty("tc_path_add") + sep +
                             classpath + sep + ctxt.getOutputDir());
         javac.setOutputDir(ctxt.getOutputDir());
         javac.setMsgOutput(out);
@@ -340,6 +370,22 @@ public class Compiler {
 	}
 	return null;
     }
+
+	 /**
+	  * Remove generated files
+	  */
+	 public void removeGeneratedFiles()
+	 {
+		 try{
+			 // XXX Should we delete the generated .java file too?
+			 String classFileName = mangler.getClassFileName();
+			 if(classFileName != null){
+				 File classFile = new File(classFileName);
+				 classFile.delete();
+			 }
+		 }catch(Exception e){
+		 }
+	 }
 }
 
 

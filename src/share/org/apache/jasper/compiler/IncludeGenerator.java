@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.5 2000/09/14 03:11:05 larryi Exp $
- * $Revision: 1.5 $
- * $Date: 2000/09/14 03:11:05 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -138,7 +134,6 @@ public class IncludeGenerator
 			writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +
 				       key + "=\" + \"" + value[0] + "\";");
 		    } else {
-			writer.println("String [] _tmpS = new String[" + value.length +"];");
 			for (int i = 0; i < value.length; i++) {
 			    if (!JspUtil.isExpression(value[i]))
 				writer.println("_jspx_qStr = _jspx_qStr + \"" + sep +

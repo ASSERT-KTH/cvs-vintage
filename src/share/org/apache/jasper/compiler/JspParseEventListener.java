@@ -1,7 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.20 2000/09/29 07:00:27 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2000/09/29 07:00:27 $
  *
  * ====================================================================
  *
@@ -348,18 +345,18 @@ public class JspParseEventListener extends BaseJspListener {
 	//writer.println("} catch (Throwable t) {");
 	writer.println("} catch (Exception ex) {");
 	writer.pushIndent();
-        writer.println("if (out.getBufferSize() != 0)");
+        writer.println("if (out != null && out.getBufferSize() != 0)");
         writer.pushIndent();
 	writer.println("out.clearBuffer();");
 	writer.popIndent();
-	writer.println("pageContext.handlePageException(ex);");
+	writer.println("if (pageContext != null) pageContext.handlePageException(ex);");
 	writer.popIndent();
 	writer.println("} finally {");
 	writer.pushIndent();
 	/* Do stuff here for finally actions... */
         //writer.println("out.close();");
-	writer.println("out.flush();");
-	writer.println("_jspxFactory.releasePageContext(pageContext);");
+	writer.println("if (out != null) out.flush();");
+	writer.println("if (_jspxFactory != null) _jspxFactory.releasePageContext(pageContext);");
 	writer.popIndent();
 	writer.println("}");
 	// Close the service method:
@@ -716,15 +713,13 @@ public class JspParseEventListener extends BaseJspListener {
 
 	if (directive.equals("include")) {
 	    String file = (String) attrs.get("file");
-	    String encoding = (String) attrs.get("encoding");
-
 	    if (file == null)
 		throw new CompileException(start,
 					   Constants.getString("jsp.error.include.missing.file"));
 
             // jsp.error.include.bad.file needs taking care of here??
             try {
-                reader.pushFile(file, encoding);
+                reader.pushFile(file);
             } catch (FileNotFoundException fnfe) {
                 throw new CompileException(start,
 					   Constants.getString("jsp.error.include.bad.file"));

@@ -838,7 +838,7 @@ public class Parser {
                                     start,
                                     Constants.getString("jsp.error.unterminated.user.tag", 
                                         new Object[]{JspUtil.escapeXml(tagEnd)}));
-                            }
+			    }
 			    listener.setTemplateInfo(parser.tmplStart, parser.tmplStop);
                             listener.handleTagEnd(parser.tmplStop, reader.mark(), prefix, 
                                                   shortTagName, attrs, tli, ti);

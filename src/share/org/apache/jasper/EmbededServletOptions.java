@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.5 2000/09/29 07:00:00 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/09/29 07:00:00 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -135,6 +131,11 @@ public final class EmbededServletOptions implements Options {
      */
     public String jspCompilerPath = null;
 
+    /**
+     * Java platform encoding to generate the JSP
+     * page servlet.
+     */
+    private String javaEncoding;
 
     /**
      * Are we keeping generated code around?
@@ -205,6 +206,10 @@ public final class EmbededServletOptions implements Options {
      */
     public String getJspCompilerPath() {
         return jspCompilerPath;
+    }
+
+    public String getJavaEncoding() {
+	return javaEncoding;
     }
 
     /**
@@ -309,7 +314,8 @@ public final class EmbededServletOptions implements Options {
                                   Logger.FATAL);
             }
         }
-  
+
+        this.javaEncoding = config.getInitParameter("javaEncoding");
     }
 }
 

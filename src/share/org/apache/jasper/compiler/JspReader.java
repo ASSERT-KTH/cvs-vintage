@@ -94,7 +94,15 @@ public class JspReader {
     private JspCompilationContext context;
 
     Log loghelper = new Log("JASPER_LOG", "JspReader");
+    //    LogHelper loghelper = new LogHelper("JASPER_LOG", "JspReader");
     
+    /*
+     * Default encoding used. The JspReader is created with the
+     * "top file" encoding. This is then the encoding used for the
+     * included files (same translation unit).
+     */
+    private String encoding = null;
+
     public String getFile(int fileid) {
 	return (String) sourceFiles.elementAt(fileid);
     }
@@ -132,6 +140,17 @@ public class JspReader {
      * Push a new file onto the stack.
      * The name of the file is resolved to a fully qualified filename.
      * @param name The name of the file.
+     */
+    public void pushFile(String name) 
+	throws ParseException, FileNotFoundException
+    {
+	pushFile(name, this.encoding);
+    }
+
+    /**
+     * Push a new file onto the stack.
+     * The name of the file is resolved to a fully qualified filename.
+     * @param name The name of the file.
      * @param encoding The optional encoding for the file.
      */
     public void pushFile(String name, String encoding) 
@@ -160,7 +179,7 @@ public class JspReader {
     {
         // Default encoding if needed:
 	if (encoding == null) {
-            encoding = "8859_1";
+            encoding = this.encoding;
             // XXX - longer term, this should really be:
 	    //   System.getProperty("file.encoding", "8859_1");
             // but this doesn't work right now, so we stick with ASCII
@@ -170,6 +189,9 @@ public class JspReader {
 	String longName = (context == null)
 	    ? file.getAbsolutePath()
 	    : context.getRealPath(file.toString());
+
+	if (longName == null)
+	    throw new FileNotFoundException(file.toString());
 
 	int fileid = registerSourceFile(longName);
 	
@@ -246,16 +268,18 @@ public class JspReader {
 		(Constants.getString("jsp.error.file.not.registered",
 				     new Object[] {fName}));
 
-	boolean result = current.popStream();
-	if (result)
-	    master = current.baseDir;
-	return (result);
+	boolean r = current.popStream();
+	if (r)
+		master = current.baseDir;
+	return r;
     }
 	
     protected JspReader(String file, JspCompilationContext ctx, String encoding) 
 	throws ParseException, FileNotFoundException
     {
         this.context = ctx;
+	this.encoding = encoding;
+	if (this.encoding == null) this.encoding = "8859_1";
 	pushFile(file, encoding);
     }
 

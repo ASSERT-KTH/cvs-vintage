@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.4 2000/07/03 09:11:17 bergsten Exp $
- * $Revision: 1.4 $
- * $Date: 2000/07/03 09:11:17 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1

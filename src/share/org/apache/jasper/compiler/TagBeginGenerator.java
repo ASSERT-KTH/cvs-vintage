@@ -193,6 +193,11 @@ public class TagBeginGenerator
                 if (attrValue != null) {
 		    String attrName = attributes[i].getName();
 		    Method m = tc.getSetterMethod(attrName);
+		    if (m == null)
+			throw new CompileException
+			    (start, Constants.getString
+			     ("jsp.error.unable.to_find_method",
+			      new Object[] { attrName }));
                     Class c[] = m.getParameterTypes();
                     // assert(c.length > 0)
 
@@ -203,14 +208,6 @@ public class TagBeginGenerator
                             attrValue = convertString(c[0], attrValue, writer, attrName);
 		    } else
 			attrValue = convertString(c[0], attrValue, writer, attrName);
-
-
-		    if (m == null)
-			throw new CompileException
-			    (start, Constants.getString
-			     ("jsp.error.unable.to_find_method",
-			      new Object[] { attrName }));
-
 		    writer.println(thVarName+"."+m.getName()+"("+attrValue+");");
                 }
             }

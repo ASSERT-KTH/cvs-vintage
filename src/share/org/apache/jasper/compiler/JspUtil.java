@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.19 2000/11/08 13:11:07 larryi Exp $
- * $Revision: 1.19 $
- * $Date: 2000/11/08 13:11:07 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
