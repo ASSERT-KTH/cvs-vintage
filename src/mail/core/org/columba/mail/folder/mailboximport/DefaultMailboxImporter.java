@@ -26,7 +26,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.folder.Folder;
 
-public abstract class DefaultMailboxImporter  {
+public abstract class DefaultMailboxImporter {
 	public static int TYPE_FILE = 0;
 	public static int TYPE_DIRECTORY = 1;
 
@@ -34,15 +34,10 @@ public abstract class DefaultMailboxImporter  {
 	protected File[] sourceFiles;
 	//protected TempFolder tempFolder;
 	protected int counter;
-	
-	
 
 	public DefaultMailboxImporter(
-		
 		Folder destinationFolder,
 		File[] sourceFiles) {
-		
-		
 
 		this.destinationFolder = destinationFolder;
 		this.sourceFiles = sourceFiles;
@@ -65,12 +60,37 @@ public abstract class DefaultMailboxImporter  {
 		return TYPE_FILE;
 	}
 
+	
+
+	public void importMailbox(WorkerStatusController worker) {
+		File[] listing = getSourceFiles();
+
+		for (int i = 0; i < listing.length; i++) {
+			if (worker.cancelled())
+				return;
+
+			try {
+
+				importMailboxFile(listing[i], worker, getDestinationFolder());
+			} catch (Exception ex) {
+				if (ex instanceof FileNotFoundException) {
+					NotifyDialog dialog = new NotifyDialog();
+					dialog.showDialog("Source File not found:");
+				} else {
+					ExceptionDialog dialog = new ExceptionDialog();
+					dialog.showDialog(ex);
+				}
+			}
+
+		}
+	}
+
 	/**
 	 * this method does all the import work
 	 */
-	public abstract void importMailbox(
+	public abstract void importMailboxFile(
 		File file,
-		WorkerStatusController worker)
+		WorkerStatusController worker, Folder destFolder)
 		throws Exception;
 
 	/*********** intern methods (no need to overwrite these) ****************/
@@ -98,37 +118,11 @@ public abstract class DefaultMailboxImporter  {
 	 *  and handles exceptions
 	 */
 	public void run(WorkerStatusController worker) {
-		
 
 		worker.setDisplayText("Importing messages...");
 
-		try {
-			for ( int i=0; i<sourceFiles.length; i++)
-			{
-			
-			importMailbox(sourceFiles[i], worker);
-			}
-		} catch (Exception ex) {
-			if (ex instanceof FileNotFoundException) {
-				NotifyDialog dialog = new NotifyDialog();
-				dialog.showDialog("Source File not found!");
-			} else {
-				ExceptionDialog dialog = new ExceptionDialog();
-				dialog.showDialog(ex);
-			}
-
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(
-				"Message import failed! No messages were added to your folder.");
-
-			return;
-		}
-
-		if (worker.cancelled()) {
-			
-			return;
-		}
-
+		importMailbox(worker);
+		
 		if (getCount() == 0) {
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
@@ -151,141 +145,28 @@ public abstract class DefaultMailboxImporter  {
 	/**
 	 * use this method to save a message to the specified destination folder
 	 */
-	protected void saveMessage(String rawString, WorkerStatusController worker)
+	protected void saveMessage(String rawString, WorkerStatusController worker, Folder destFolder)
 		throws Exception {
-		destinationFolder.addMessage(rawString, worker);
+		destFolder.addMessage(rawString, worker);
 
 		counter++;
 
 		worker.setDisplayText("Importing messages: " + getCount());
 
-		// FIXME
-		/*
-		int index = rawString.indexOf("\n\n");
-		if (index == -1)
-		{
-			System.out.println("non-standard-compliant message:\n" + rawString);
-			return;
-		}
-		
-		String headerString = rawString.substring(0, index);
-		Rfc822Parser parser = new Rfc822Parser();
-		
-		ColumbaHeader header = parser.parseHeader(rawString);
-		
-		Message m = new Message(header);
-		ColumbaHeader h = m.getHeader();
-		m.setRawString(rawString);
-		
-		h.set("columba.flags.recent", Boolean.TRUE);
-		
-		int size = rawString.length();
-		
-		size = Math.round(size / 1024);
-		
-		if (size == 0)
-			size = 1;
-		//m.setSize( size );
-		h.set("columba.size", new Integer(size));
-		
-		Date date = DateParser.parseString((String) h.get("date"));
-		//System.out.println("date1: "+ h.get("date") );
-		//m.setDate( date );
-		h.set("columba.date", date);
-		Date date2 = (Date) h.get("columba.date");
-		
-		//System.out.println("date2: "+ h.get("columba.date") );
-		
-		String shortFrom = (String) header.get("From");
-		if (shortFrom != null)
-		{
-			if (shortFrom.indexOf("<") != -1)
-			{
-				shortFrom = shortFrom.substring(0, shortFrom.indexOf("<"));
-				if (shortFrom.length() > 0)
-				{
-					if (shortFrom.startsWith("\""))
-						shortFrom = shortFrom.substring(1, shortFrom.length() - 1);
-					if (shortFrom.endsWith("\""))
-						shortFrom = shortFrom.substring(0, shortFrom.length() - 1);
-				}
-		
-			}
-			else
-				shortFrom = shortFrom;
-		
-			//m.setShortFrom( shortFrom );
-			h.set("columba.from", shortFrom);
-		}
-		else
-		{
-			//m.setShortFrom("");
-			h.set("columba.from", new String(""));
-		}
-		
-		String priority = (String) header.get("X-Priority");
-		if (priority != null)
-		{
-		
-			//m.setPriority( prio );
-			h.set("columba.priority", Integer.getInteger(priority));
-		}
-		else
-		{
-			//m.setPriority( 3 );
-			h.set("columba.priority", new Integer(3));
-		}
-		
-		String attachment = (String) header.get("Content-Type");
-		if (attachment != null)
-		{
-			attachment = attachment.toLowerCase();
-		
-			if (attachment.indexOf("multipart") != -1)
-			{
-				//m.setAttachment(true);
-				h.set("columba.attachment", Boolean.TRUE);
-			}
-			else
-			{
-				h.set("columba.attachment", Boolean.FALSE);
-				//m.setAttachment(false);
-			}
-		}
-		else
-		{
-			h.set("columba.attachment", Boolean.FALSE);
-			//m.setAttachment(false);
-		}
-		
-		Object uid = tempFolder.workerAdd(m);
-		
-		Object[] uids = new Object[1];
-		uids[0] = uid;
-		
-		FolderOperation op =
-			new FolderOperation(Operation.MOVE, 0, uids, tempFolder, destinationFolder);
-		MainInterface.crossbar.operate(op);
-		
-		counter++;
-		
-		setText("Importing messages: " + getCount());
-		*/
 	}
 
-	/*
-	protected void finish()
-	{
-		Object[] uids = tempFolder.getUids();
-	
-		FolderOperation op =
-			new FolderOperation(Operation.MOVE, 0, uids, tempFolder, destinationFolder);
-		MainInterface.crossbar.operate(op);
+	/**
+	 * @return Folder
+	 */
+	public Folder getDestinationFolder() {
+		return destinationFolder;
 	}
-	*/
 
-	
-
-	
+	/**
+	 * @return File[]
+	 */
+	public File[] getSourceFiles() {
+		return sourceFiles;
+	}
 
 }

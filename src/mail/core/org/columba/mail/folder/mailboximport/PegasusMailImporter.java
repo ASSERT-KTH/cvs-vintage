@@ -37,7 +37,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter {
 		return TYPE_FILE;
 	}
 
-	public void importMailbox(File file, WorkerStatusController worker)
+	public void importMailboxFile(File file, WorkerStatusController worker, Folder destFolder)
 		throws Exception {
 
 		int count = 0;
@@ -64,7 +64,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter {
 				if (strbuf.length() != 0) {
 					// found new message
 
-					saveMessage(strbuf.toString(), worker);
+					saveMessage(strbuf.toString(), worker, getDestinationFolder());
 
 					count++;
 
@@ -79,7 +79,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter {
 
 		// save last message, because while loop aborted before being able to save message
 		if ((sucess == true) && (strbuf.length() > 0)) {
-			saveMessage(strbuf.toString(), worker);
+			saveMessage(strbuf.toString(), worker, getDestinationFolder());
 		}
 
 		in.close();

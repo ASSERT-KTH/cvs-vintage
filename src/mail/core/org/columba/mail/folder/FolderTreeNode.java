@@ -261,7 +261,7 @@ public abstract class FolderTreeNode
 	public FolderTreeNode addFolder(String name, String type) throws Exception {
 		FolderPluginHandler handler =
 					(FolderPluginHandler) MainInterface.pluginManager.getHandler(
-						"folder");
+						"org.columba.mail.folder");
 		
 		Class childClass = handler.getPluginClass(type);
 		

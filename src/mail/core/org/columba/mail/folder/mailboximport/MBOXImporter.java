@@ -34,7 +34,7 @@ public class MBOXImporter extends DefaultMailboxImporter
 		return TYPE_FILE;
 	}
 	
-	public void importMailbox(File file, WorkerStatusController worker) throws Exception
+	public void importMailboxFile(File file, WorkerStatusController worker, Folder destFolder) throws Exception
 	{
 
 		boolean success = false;
@@ -66,7 +66,7 @@ public class MBOXImporter extends DefaultMailboxImporter
 				{
 					// found new message
 
-					saveMessage(strbuf.toString(), worker);
+					saveMessage(strbuf.toString(), worker, getDestinationFolder());
 
 					success = true;
 
@@ -80,7 +80,7 @@ public class MBOXImporter extends DefaultMailboxImporter
 		// save last message, because while loop aborted before being able to save message
 		if (success && (strbuf.length() > 0))
 		{
-			saveMessage(strbuf.toString(), worker);
+			saveMessage(strbuf.toString(), worker, getDestinationFolder());
 		}
 
 		in.close();

@@ -38,7 +38,7 @@ public class MHImporter extends DefaultMailboxImporter {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
 	 */
-	public void importMailbox(File directory, WorkerStatusController worker)
+	public void importMailboxFile(File directory, WorkerStatusController worker, Folder destFolder)
 		throws Exception {
 		boolean success = false;
 
@@ -80,7 +80,7 @@ public class MHImporter extends DefaultMailboxImporter {
 
 		in.close();
 
-		saveMessage(strbuf.toString(), worker);
+		saveMessage(strbuf.toString(), worker, getDestinationFolder());
 	}
 
 }
