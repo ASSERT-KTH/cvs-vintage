@@ -53,7 +53,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge {
    // ------ Invocation messages ------
@@ -488,17 +488,34 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       return true;
    }
 
+   public Object getValue(EntityEnterpriseContext ctx) {
+      // no user checks yet, but this is where they would go
+      return getInstanceValue(ctx);
+   }
+
+   public void setValue(EntityEnterpriseContext ctx, Object value) {
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " +
+               "fieldName=" + getFieldName());
+      }
+      if(!entity.isCreated(ctx)) {
+         throw new IllegalStateException("A CMR field cannot be set " +
+               "in ejbCreate; this should be done in the ejbPostCreate " +
+               "method instead [EJB 2.0 Spec. 10.5.2].");
+      }
+      if(isCollectionValued() && value == null) {
+         throw new IllegalArgumentException("null cannot be assigned to a " +
+               "collection-valued cmr-field [EJB 2.0 Spec. 10.3.8].");
+      }
+      
+      setInstanceValue(ctx, value);      
+   }
+
    /**
     * Gets the value of the cmr field for the instance associated with 
     * the context.
     */
    public Object getInstanceValue(EntityEnterpriseContext myCtx) {
-      if(!entity.isCreated(myCtx)) {
-//         throw new IllegalStateException("A CMR field cannot be set " +
-//               "in ejbCreate; this should be done in the ejbPostCreate " +
-//               "method instead.");
-      }
-
       load(myCtx);
 
       FieldState fieldState = getFieldState(myCtx);
@@ -528,15 +545,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
    public void setInstanceValue(
          EntityEnterpriseContext myCtx, Object newValue) {
 
-      if(isReadOnly()) {
-         throw new EJBException("Field is read-only: " + getFieldName());
-      }
-
-      if(isCollectionValued() && newValue == null) {
-//         throw new IllegalArgumentException("null cannot be assigned to a " +
-//               "collection-valued cmr-field [EJB 2.0 Spec. 10.3.8].");
-      }
-      
       load(myCtx);
       
       FieldState fieldState = getFieldState(myCtx);
@@ -740,7 +748,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       if(!entity.isCreated(myCtx)) {
          throw new IllegalStateException("A CMR field cannot be set or added " +
                "to a relationship in ejbCreate; this should be done in the " +
-               "ejbPostCreate method instead.");
+               "ejbPostCreate method instead [EJB 2.0 Spec. 10.5.2].");
       }
 
       load(myCtx);
@@ -815,9 +823,11 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       }
       
       // check the preload cache
-      log.debug("Read ahead cahce load:"+
-         " cmrField="+getFieldName()+
-         " pk="+myCtx.getId());
+      if(log.isDebugEnabled()) {
+         log.debug("Read ahead cahce load:"+
+               " cmrField="+getFieldName()+
+               " pk="+myCtx.getId());
+      }
       manager.getReadAheadCache().load(myCtx);
       if(fieldState.isLoaded()) {
          return;
@@ -847,7 +857,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       fieldState.setLoaded(true);
    }
 
-   public void loadPreloadedValue(EntityEnterpriseContext myCtx, Collection values) {
+   public void loadPreloadedValue(
+         EntityEnterpriseContext myCtx,
+         Collection values) {
+
       if(isSingleValued() && values.size() > 1) {
          throw new EJBException("Preload data contains multiple values, but " +
                "this cmr field is single valued");
@@ -874,10 +887,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       // mark the field loaded
       fieldState.setLoaded(true);
       
-      log.debug("Preloaded value: "+
-            " cmrField="+getFieldName()+
-            " pk="+myCtx.getId()+
-            " values="+values);
+      if(log.isDebugEnabled()) {
+         log.debug("Preloaded value: "+
+               " cmrField="+getFieldName()+
+               " pk="+myCtx.getId()+
+               " values="+values);
+      }
    }
    
    /**

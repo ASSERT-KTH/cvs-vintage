@@ -27,6 +27,12 @@ public interface JDBCFieldBridge extends FieldBridge {
    public boolean isPrimaryKeyMember();
 
    /**
+    * Is this field read only.
+    * @return true if this field is read only
+    */ 
+   public boolean isReadOnly();
+      
+   /**
     * Has current data read timed out?
     */
    public boolean isReadTimedOut(EntityEnterpriseContext ctx);
@@ -54,6 +60,20 @@ public interface JDBCFieldBridge extends FieldBridge {
          PreparedStatement ps, 
          int parameterIndex,
          EntityEnterpriseContext ctx);
+
+   /**
+    * Gets the internal value of this field without user level checks.
+    * @param ctx the context for which this field's value should be fetched
+    * @return the value of this field
+    */
+   public Object getInstanceValue(EntityEnterpriseContext ctx);
+      
+   /**
+    * Sets the internal value of this field without user level checks.
+    * @param ctx the context for which this field's value should be set
+    * @param value the new value of this field
+    */
+   public void setInstanceValue(EntityEnterpriseContext ctx, Object value);
 
    /**
     * Loads the data from result set into the instance associated with 

@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      One for each entity bean field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public interface FieldBridge {
    /**
@@ -29,23 +29,17 @@ public interface FieldBridge {
    public String getFieldName();
    
    /**
-    * Is this field read only.
-    * @return true if this field is read only
-    */ 
-   public boolean isReadOnly();
-      
-   /**
     * Gets the value of this field for the specified instance context.
     * @param ctx the context for which this field's value should be fetched
     * @return the value of this field
     */
-   public Object getInstanceValue(EntityEnterpriseContext ctx);
+   public Object getValue(EntityEnterpriseContext ctx);
       
    /**
     * Sets the value of this field for the specified instance context.
     * @param ctx the context for which this field's value should be set
     * @param value the new value of this field
     */
-   public void setInstanceValue(EntityEnterpriseContext ctx, Object value);
+   public void setValue(EntityEnterpriseContext ctx, Object value);
 
 }

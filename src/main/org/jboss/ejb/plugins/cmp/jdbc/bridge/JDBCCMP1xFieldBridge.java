@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    private Field field;
@@ -72,11 +72,6 @@ public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    }
    
    public void setInstanceValue(EntityEnterpriseContext ctx, Object value) {
-      if(isPrimaryKeyMember() && manager.getEntityBridge().isCreated(ctx)) {
-//         throw new IllegalStateException("A field that is a member " +
-//               "of the primary key can only be set in ejbCreate");
-      }
-      
       try {
          field.set(ctx.getInstance(), value);
 

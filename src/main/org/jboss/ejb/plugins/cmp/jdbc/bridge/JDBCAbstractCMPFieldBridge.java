@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    protected JDBCStoreManager manager;
@@ -93,6 +93,24 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    
    public boolean isPrimaryKeyMember() {
       return metadata.isPrimaryKeyMember();
+   }
+
+   public Object getValue(EntityEnterpriseContext ctx) {
+      // no user checks yet, but this is where they would go
+      return getInstanceValue(ctx);
+   }
+
+   public void setValue(EntityEnterpriseContext ctx, Object value) {
+      if(isReadOnly()) {
+         throw new EJBException("Field is read-only: " +
+               "fieldName=" + getFieldName());
+      }
+      if(isPrimaryKeyMember() && manager.getEntityBridge().isCreated(ctx)) {
+         throw new IllegalStateException("A CMP field that is a member " +
+               "of the primary key can only be set in ejbCreate " +
+               "[EJB 2.0 Spec. 10.3.5].");
+      }
+      setInstanceValue(ctx, value);      
    }
 
    public Object getPrimaryKeyValue(Object primaryKey) 

@@ -37,7 +37,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
@@ -110,13 +110,9 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
       }
 
       if(methodName.startsWith("get")) {
-         return field.getInstanceValue(ctx);
+         return field.getValue(ctx);
       } else if(methodName.startsWith("set")) {
-         if(field.isReadOnly()) {
-            throw new EJBException("Field is read-only: " +
-                  "fieldName=" + field.getFieldName());
-         }
-         field.setInstanceValue(ctx, args[0]);
+         field.setValue(ctx, args[0]);
          return null;
       }
       // Should never get here, but it's better to be safe then sorry.
