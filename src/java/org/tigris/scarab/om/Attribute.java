@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.31 2001/09/26 01:09:05 jon Exp $
+  * @version $Id: Attribute.java,v 1.32 2001/10/05 00:45:29 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -251,6 +251,17 @@ public class Attribute
         {
             return getAttributeType().getAttributeClass().getName()
                 .equals("select-one");
+        }
+        return false;
+    }
+
+    public boolean isUserAttribute()
+        throws Exception
+    {
+        if ( getTypeId() != null ) 
+        {
+            return getAttributeType().getAttributeClass().getName()
+                .equals("user");
         }
         return false;
     }

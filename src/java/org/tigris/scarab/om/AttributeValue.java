@@ -344,6 +344,17 @@ public abstract class AttributeValue
         setOptionIdOnly(optionId);
     }
 
+    /**
+     * Makes sure to set the Value as well
+     *
+     * @param int 
+     */
+    public void setNumericValue(int v)
+    {        
+        super.setNumericValue(v);
+        setValueOnly(String.valueOf(v));
+    }
+
     protected void setOptionIdOnly(NumberKey optionId)
         throws Exception
     {

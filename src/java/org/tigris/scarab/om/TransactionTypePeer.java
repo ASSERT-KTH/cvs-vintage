@@ -13,4 +13,5 @@ public class TransactionTypePeer
     public static final NumberKey CREATE_ISSUE__PK = new NumberKey("1");
     public static final NumberKey EDIT_ISSUE__PK = new NumberKey("2");
     public static final NumberKey MOVE_ISSUE__PK = new NumberKey("3");
+    public static final NumberKey RETOTAL_ISSUE_VOTE__PK = new NumberKey("4");
 }

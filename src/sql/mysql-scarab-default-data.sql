@@ -429,6 +429,8 @@ insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
         values(2, 'Edit Issue');
 insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
         values(3, 'Move Issue');
+insert into SCARAB_TRANSACTION_TYPE(TYPE_ID, NAME)
+        values(4, 'Retotaling Issue Votes');
 
 
 /*

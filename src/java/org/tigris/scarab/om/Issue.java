@@ -104,7 +104,7 @@ public class Issue
     }
 
     /**
-     * Gets the UinqueId for this Issue.
+     * Gets the UniqueId for this Issue.
      */
     public String getUniqueId()
         throws Exception
@@ -1011,6 +1011,11 @@ public class Issue
         {
             voteValue = (TotalVotesAttribute)voteValues.get(0);
         }
+        // Updating attribute values requires a transaction
+        Transaction transaction = new Transaction();
+        transaction
+            .create(TransactionTypePeer.RETOTAL_ISSUE_VOTE__PK, user, null);
+        voteValue.startTransaction(transaction);
         voteValue.addVote();
         voteValue.save();
     }
