@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.26 2004/11/10 13:20:27 bobtarling Exp $
+// $Id: ProjectMemberDiagram.java,v 1.27 2004/11/13 18:14:21 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,8 @@ public class ProjectMemberDiagram extends ProjectMember {
     public void save(Writer writer, Integer indent) throws SaveException {
         OCLExpander expander;
         try {
-            expander = new OCLExpander(TemplateReader.SINGLETON.read(PGML_TEE));
+            expander = 
+                new OCLExpander(TemplateReader.getInstance().read(PGML_TEE));
         } catch (FileNotFoundException e) {
             throw new SaveException(e);
         }
