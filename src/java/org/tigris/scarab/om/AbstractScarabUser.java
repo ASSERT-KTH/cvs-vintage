@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.43 2002/07/13 00:44:35 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.44 2002/07/15 16:33:42 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1101,7 +1101,7 @@ public abstract class AbstractScarabUser
 
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#updateIssueListAttributes()
+     * @see org.tigris.scarab.om.ScarabUser#updateIssueListAttributes(List)
      */
     public void updateIssueListAttributes(List attributes)
         throws Exception

@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.77 2002/07/13 00:44:35 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.78 2002/07/15 16:33:42 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -961,7 +961,7 @@ public class ScarabUserImpl
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#updateIssueListAttributes()
+     * @see org.tigris.scarab.om.ScarabUser#updateIssueListAttributes(List)
      */
     public void updateIssueListAttributes(List attributes)
         throws Exception
