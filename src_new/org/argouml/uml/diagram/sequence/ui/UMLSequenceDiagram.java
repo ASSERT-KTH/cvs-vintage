@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.40 2005/01/27 21:42:31 linus Exp $
+// $Id: UMLSequenceDiagram.java,v 1.41 2005/01/29 15:47:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,7 +214,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
     public void cleanUp() {
         Object collab =
             ((SequenceDiagramGraphModel) getGraphModel()).getCollaboration();
-        Model.getUmlFactory().delete(collab);
+        ProjectManager.getManager().getCurrentProject().moveToTrash(collab);
     }
 
 } /* end class UMLSequenceDiagram */
