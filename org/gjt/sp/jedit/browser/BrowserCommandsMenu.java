@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.22 2003/11/16 03:51:22 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.23 2003/12/27 22:38:52 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -201,6 +201,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 
 		ButtonGroup grp = new ButtonGroup();
 
+		List encodingMenuItemList = new ArrayList();
 		String[] encodings = MiscUtilities.getEncodings();
 		for(int i = 0; i < encodings.length; i++)
 		{
@@ -210,16 +211,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			mi.addActionListener(actionHandler);
 			grp.add(mi);
 			encodingMenuItems.put(encoding,mi);
-
-			if(menu.getMenuComponentCount() > 20)
-			{
-				JMenu newMenu = new JMenu(
-					jEdit.getProperty("common.more"));
-				menu.add(newMenu);
-				menu = newMenu;
-			}
-
-			menu.add(mi);
+			encodingMenuItemList.add(mi);
 		}
 
 		String systemEncoding = System.getProperty("file.encoding");
@@ -231,6 +223,17 @@ public class BrowserCommandsMenu extends JPopupMenu
 			mi.addActionListener(actionHandler);
 			grp.add(mi);
 			encodingMenuItems.put(systemEncoding,mi);
+			encodingMenuItemList.add(mi);
+		}
+
+		Collections.sort(encodingMenuItemList,
+			new MiscUtilities.MenuItemCompare());
+
+		Iterator iter = encodingMenuItemList.iterator();
+		while(iter.hasNext())
+		{
+			JRadioButtonMenuItem mi = (JRadioButtonMenuItem)
+				iter.next();
 
 			if(menu.getMenuComponentCount() > 20)
 			{
@@ -242,7 +245,6 @@ public class BrowserCommandsMenu extends JPopupMenu
 
 			menu.add(mi);
 		}
-
 		menu.addSeparator();
 
 		otherEncoding = new JRadioButtonMenuItem();

@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.68 2003/12/23 02:15:05 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.69 2003/12/27 22:38:52 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1515,9 +1515,6 @@ loop:		for(;;)
 				{
 					returnValue.add(iter.next());
 				}
-
-				Collections.sort(returnValue,
-					new StringICaseCompare());
 			}
 			catch(Exception e)
 			{
