@@ -185,9 +185,9 @@ cd ${DIR}; cd ${SCARAB}/build
 ant javadocs
 echo "Building Scarab Javadoc Finish..."
 
-echo "Recreating the database..."
+echo "Recreating the database (using new method)..."
 cd ${DIR}; cd ${SCARAB}/src/sql
-./create-mysql-database.sh
+./create-db.sh mysql
 
 
 StartTomcat
