@@ -1,0 +1,58 @@
+  <FORM METHOD="post" NAME="SearchForm" action="">
+  <input type="hidden" name="action" value="Search">
+<!-- search -->
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+ <tr>
+  <td colspan="6" width="100%" class="Header" bgcolor="#999999">SEARCH FOR ISSUES</td>
+ </tr>
+ <tr>
+  <td colspan="6" width="100%" class="SectionHeader" bgcolor="#CCCCCC">Quick Search</td>
+ </tr>
+ <tr>
+  <td class="InputHeader">Free text:<br>
+  <input name="summary" value="$summary" size="15" type="text">
+  </td>
+  <td class="InputHeader">Fields:<br>
+  <select name="fields">
+  <option selected value="">Category</option>
+  <option value="">Option2</option>
+  <option value="">Option3</option>
+  </select>
+  </td>
+  <td class="InputHeader">Component:<br>
+  <select name="components">
+  <option selected value="">Type</option>
+  <option value="">Option2</option>
+  <option value="">Option3</option>
+  </select>
+  </td>
+  <td class="InputHeader">Platform:<br>
+  <select name="platforms">
+  <option selected value="">All</option>
+  <option value="">DEC</option>
+  <option value="">HP</option>
+  <option value="">Mac</option>
+  <option value="">PC</option>
+  <option value="">SGI</option>
+  <option value="">Sun</option>
+  <option value="">Other</option>
+  </select>
+  </td>
+  <td class="InputHeader">Issue ID:<br>
+  <input name="issueID" value="$issueID" size="10" type="text">
+  </td>
+  <td>
+  <input type="submit" name="eventSubmit_doSearch" value="Search">
+  </form>
+  </td>
+ </tr>
+ <tr>
+  <td colspan="6">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+     <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr>
+	</table>
+  </td>
+ </tr>
+</table> 
+</form>
+<!-- end search -->

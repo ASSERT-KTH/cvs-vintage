@@ -1,0 +1,26 @@
+Bug report $issue.Id has just been filed.
+
+You can view the report at the following URL:
+
+   <$link.setPage("IssueDetail.vm").addPathInfo("issueid", $issue.Id).setEncodeURLOff()>
+
+REPORT $issue.Id Details.
+
+Project: $issue.Project
+Component: $issue.Component
+
+Type: $issue.Type
+Resolution: $issue.Resolution
+Priority: $issue.Priority
+Severity: $issue.Severity
+
+Environment: 
+   Version: $issue.Version
+   Platform: $issue.Platform
+   OS: $issue.OpSys
+
+Synopsis: 
+$issue.Summary
+
+Description: 
+$issue.Description

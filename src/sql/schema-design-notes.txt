@@ -1,0 +1,99 @@
+Project -> Component -> Issue Type -> Issue
+
+    Each Project can have one or more Components
+    Each Component can have one or more Issue Types
+    Each Issue Type can have one or more Issues
+
+    A Component is a subproject within the main Project. For example, the 
+    Turbine Project is a large project that has many different parts to it. One 
+    of those Parts is a database connection pool. That "Part" is essentially a 
+    "Component" within this model.
+
+    An Issue Type is "Bug", "Todo", etc. Each one of these types will have their
+    own set of issues.
+    
+    An Issue is an individual "Bug" or "Todo" item. It contains all the necessary
+    information to render it on the screen in a user friendly manner.
+        
+Priority, Platform, Severity, Resolution, Status, Milestone and OS Tables
+
+    Each Project has a set of default Priority, Platform, Severity and OS settings 
+    that are added to the table when the project is first created.
+    
+    Each Component, when created, is then populated with the defaults from the 
+    Project Default tables. The purpose is this is to allow someone to setup 
+    defaults for the project and then those defaults are applied when needed. 
+    Yes, there is some duplication here in the database, but this is acceptable 
+    because we want to give project owners lots of control.
+
+    There are join tables which associate these items to a particular Issue and 
+    Type, for instance, this Issue is at this Priority.
+    
+    To select the priority for a given issue one would write SQL like this 
+    (untested):
+    
+    select scarab_priority.priority_name 
+      from scarab_priority, scarab_issue_rpiority
+     where scarab_issue_priority.issue_id='3'
+       and scarab_issue_priority.type_id='1' // optional
+       and scarab_priority.component_id='1' // optional
+       and scarab_priority.language_id='1'
+       and scarab_priority.component_id=scarab_issue_priority.component_id
+       and scarab_priority.priority_id=scarab_issue_priority.priority_id
+       
+Type
+    This table defines what the type of and Issue is. The types can come in many 
+    forms. For the first round of Scarab, we will focus on the type being simply
+    "Bug". Future versions will have different types such as "Todo" list. 
+    
+Version
+    Each component can have its own version
+    
+Attachments
+    Currently, you can attach a file or data to a Component and an Issue
+    
+Issue Dependency, Issue Blocking
+    Issues can depend on one or more other issues. If an Issue is a duplicate of 
+    another issue, this is also marked. It is considered that if one Issue is a 
+    duplicate of another issue, it must also depend on that other Issue, but is 
+    not required.
+
+    Issues can block each other. One issue can block another issue and thus make 
+    the Issue that it is blocking unable to close
+
+    The Issue dependency/blocking tables are related directly to Issues instead 
+    of related to the Issue type. This way, Issues across types can depend 
+    on each other.
+
+Issue Detail
+    This is for posting comments to an Issue. Visitor column is for marking who 
+    posted the comment.
+
+Activity Logging
+    This is essentially the same design as in Bugzilla. It works pretty well so 
+    why re-invent it? What it does it is there is two tables, the Activity Table 
+    and then a field table that is a foreign key into the Activity table. The 
+    field table designates what action was performed, such as target_milestone. 
+    That way, you can say "Jon changed the target_milestone from M1 to M2 on 
+    Saturday for Todo #43 in Component Documentation in Project Turbine".
+    
+    The Activity Table does not start with SCARAB_ because it is intended to 
+    be used across multiple non-Scarab projects as well.
+    
+Issue Assignment and Ownership
+    All issues are related to a component. Thus, when a new Issue is created, 
+    the business logic of the application defines that the Issue will be 
+    assigned to the Owner of the component. It is then up to that owner to re-
+    assign the Issue to someone else if needed.
+
+Project_Visitor Table
+    This is a join table that maps people who have registered and said that they
+    belong to a particular project.
+
+Keyword
+    In Mozilla, they have a good concept of Keywords. The problem with their 
+    implementation is that the Keywords field in the form is not just a <SELECT> 
+    box. Instead it is a input text=field. I plan on fixing that.
+
+    The Keyword Table does not start with SCARAB_ because it is intended to be 
+    used across multiple non-Scarab projects as well.

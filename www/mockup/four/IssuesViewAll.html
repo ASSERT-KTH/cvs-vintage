@@ -1,0 +1,384 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;CHARSET=iso-8859-1">
+</head>
+
+<body bgcolor="#F0F0F0">
+<p> 
+<table border="0" cellpadding="2" width="98%" bgcolor="white">
+    <tr> 
+        <td width="99%" bgcolor="#CCCC99"><strong><font color="#000033" face="Arial, Helvetica, sans-serif">View 
+            Multiple Issues</font></strong></td>
+    </tr>
+    <tr> 
+        <td width="99%" height="100" valign="TOP" bgcolor="#F0F0F0"><br>
+            <br>
+            <table border="1" width="100%">
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Issue ID:</b> 
+                    </td>
+                    <td width="40%"> #<a href="IssueView.html">$id</a></td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Component:</b> 
+                    </td>
+                    <td width="40%">$component</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Type:</b> 
+                    </td>
+                    <td width="40%">$type</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Severity:</b> 
+                    </td>
+                    <td width="40%">$severity</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Reported by:</b> 
+                    </td>
+                    <td width="40%">$reporter</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Priority:</b> 
+                    </td>
+                    <td width="40%">$priority</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Assigned to:</b> 
+                    </td>
+                    <td width="40%">$developer</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Status:</b> 
+                    </td>
+                    <td width="40%">$status</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Date entered:</b> 
+                    </td>
+                    <td width="40%">$dateentered</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Resolution:</b> 
+                    </td>
+                    <td width="40%">$resolution (if status is closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Last modified:</b> 
+                    </td>
+                    <td width="40%">$datemodified</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Votes:</b> 
+                    </td>
+                    <td width="40%">$votes (if status is not closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Summary:</b> 
+                    </td>
+                    <td colspan="4">$summary</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Keywords:</b> 
+                    </td>
+                    <td colspan="4">$keywords</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>&nbsp;Description:</b> 
+                    </td>
+                    <td colspan="4">&nbsp;$description</td>
+                </tr>
+            </table>
+            <br>
+            <br>
+            <table border="1" width="100%">
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Issue ID:</b> 
+                    </td>
+                    <td width="40%"> #<a href="IssueView.html">$id</a></td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Component:</b> 
+                    </td>
+                    <td width="40%">$component</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Type:</b> 
+                    </td>
+                    <td width="40%">$type</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Severity:</b> 
+                    </td>
+                    <td width="40%">$severity</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Reported by:</b> 
+                    </td>
+                    <td width="40%">$reporter</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Priority:</b> 
+                    </td>
+                    <td width="40%">$priority</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Assigned to:</b> 
+                    </td>
+                    <td width="40%">$developer</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Status:</b> 
+                    </td>
+                    <td width="40%">$status</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Date entered:</b> 
+                    </td>
+                    <td width="40%">$dateentered</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Resolution:</b> 
+                    </td>
+                    <td width="40%">$resolution (if status is closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Last modified:</b> 
+                    </td>
+                    <td width="40%">$datemodified</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Votes:</b> 
+                    </td>
+                    <td width="40%">$votes (if status is not closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Summary:</b> 
+                    </td>
+                    <td colspan="4">$summary</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Keywords:</b> 
+                    </td>
+                    <td colspan="4">$keywords</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>&nbsp;Description:</b> 
+                    </td>
+                    <td colspan="4">&nbsp;$description</td>
+                </tr>
+            </table>
+            <br>
+            <br>
+            <table border="1" width="100%">
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Issue ID:</b> 
+                    </td>
+                    <td width="40%"> #<a href="IssueView.html">$id</a></td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Component:</b> 
+                    </td>
+                    <td width="40%">$component</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Type:</b> 
+                    </td>
+                    <td width="40%">$type</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Severity:</b> 
+                    </td>
+                    <td width="40%">$severity</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Reported by:</b> 
+                    </td>
+                    <td width="40%">$reporter</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Priority:</b> 
+                    </td>
+                    <td width="40%">$priority</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Assigned to:</b> 
+                    </td>
+                    <td width="40%">$developer</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Status:</b> 
+                    </td>
+                    <td width="40%">$status</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Date entered:</b> 
+                    </td>
+                    <td width="40%">$dateentered</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Resolution:</b> 
+                    </td>
+                    <td width="40%">$resolution (if status is closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Last modified:</b> 
+                    </td>
+                    <td width="40%">$datemodified</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Votes:</b> 
+                    </td>
+                    <td width="40%">$votes (if status is not closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Summary:</b> 
+                    </td>
+                    <td colspan="4">$summary</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Keywords:</b> 
+                    </td>
+                    <td colspan="4">$keywords</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>&nbsp;Description:</b> 
+                    </td>
+                    <td colspan="4">&nbsp;$description</td>
+                </tr>
+            </table>
+            <br>
+            <br>
+            <table border="1" width="100%">
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Issue ID:</b> 
+                    </td>
+                    <td width="40%"> #<a href="IssueView.html">$id</a></td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Component:</b> 
+                    </td>
+                    <td width="40%">$component</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Type:</b> 
+                    </td>
+                    <td width="40%">$type</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Severity:</b> 
+                    </td>
+                    <td width="40%">$severity</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Reported by:</b> 
+                    </td>
+                    <td width="40%">$reporter</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Priority:</b> 
+                    </td>
+                    <td width="40%">$priority</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Assigned to:</b> 
+                    </td>
+                    <td width="40%">$developer</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Status:</b> 
+                    </td>
+                    <td width="40%">$status</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Date entered:</b> 
+                    </td>
+                    <td width="40%">$dateentered</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Resolution:</b> 
+                    </td>
+                    <td width="40%">$resolution (if status is closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Last modified:</b> 
+                    </td>
+                    <td width="40%">$datemodified</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Votes:</b> 
+                    </td>
+                    <td width="40%">$votes (if status is not closed)</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Summary:</b> 
+                    </td>
+                    <td colspan="4">$summary</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>Keywords:</b> 
+                    </td>
+                    <td colspan="4">$keywords</td>
+                </tr>
+                <tr> 
+                    <td width="100"> 
+                        <p align="RIGHT"><b>&nbsp;Description:</b> 
+                    </td>
+                    <td colspan="4">&nbsp;$description</td>
+                </tr>
+            </table>
+            <br>
+            <br>
+            <br>
+        </td>
+    </tr>
+</table>
+<p></p>
+<p><br>
+    Comments:</p>
+<ul>
+    <li>Goal is to view, scan a handful of bugs at once 
+    <li>TODO: work out editing capabilities 
+    <li>How do users get help? make labels into links? 
+</ul>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+
+<!-- copyright -->
+  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+    <TR>
+      <TD BGCOLOR="#000000" HEIGHT="1"><SPACER HEIGHT="1" TYPE="block"></TD>
+    </TR>
+    <TR>
+      <TD CLASS="PlainText">
+	&copy; 2000&nbsp;<a href="http://www.collab.net/">CollabNet</a> | 
+	<a href="http://scarab.tigris.org/">Scarab</a> |
+	<a href="$link.setPage("Links.vm")">Links</a>
+      </TD>
+    </TR>
+  </TABLE>
+<!-- end copyright -->

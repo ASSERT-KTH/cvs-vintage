@@ -1,0 +1,248 @@
+$page.setTitle("Registration Confirmation")
+
+<!-- top nav bar -->
+  <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+    <TR>
+      <TD>
+        <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0">
+          <TR>
+            <TD nowrap class="NavHeader">SCARAB:</TD>
+            <TD nowrap class="NavHeaderOn" BGCOLOR="#cccccc"><A HREF="$link.setPage("Login.vm")">Return to Login</A></TD>
+          </TR>
+        </TABLE>
+      </TD>
+    </TR>
+    <TR>
+      <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
+    </TR>
+</TABLE>
+<!-- end top nav bar -->
+<TABLE BORDER="0" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+	</TR>
+		<TD class="PlainTextHeader">Scarab: Registration</TD>
+	</TR>
+	<TR>
+		<TD CLASS="Header" BGCOLOR="#999999">&nbsp;USER REGISTRATION: CONFIRMATION</TD>
+	</TR>
+	<TR>
+	&nbsp;
+	</TR>
+</TABLE>
+
+<ul>
+    <li class="PlainText">Please confirm that the information below is accurate and then click the Confirm Registration
+        button to continue.</li>
+</ul>
+
+<P>
+<FORM name="RegisterConfirmForm" action="$link.setPage("Confirm.vm")" method="post">
+    <input type="hidden" name="action" value="RegisterConfirm">
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Email Address:</TD>
+		<TD class="PlainText">$email</TD>
+		<TD class="PlainText">To be verified via email</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Full Name:</TD>
+		<TD class="PlainText">$firstname $lastname</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Company Name:</TD>
+		<TD class="PlainText">$companyname</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Address 1:</TD>
+		<TD class="PlainText">$address1</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Address 2:</TD>
+		<TD class="PlainText">$address2</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;City:</TD>
+		<TD class="PlainText">$city</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;State:</TD>
+		<TD class="PlainText">$state</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Country:</TD>
+		<TD class="PlainText">$country</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Phone:</TD>
+		<TD class="PlainText">$phone</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Alt Phone:</TD>
+		<TD class="PlainText">$altphone</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Fax:</TD>
+		<TD class="PlainText">$fax</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Cell:</TD>
+		<TD class="PlainText">$cell</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD class="PlainTextHeader">&nbsp;Pager:</TD>
+		<TD class="PlainText">$pager</TD>
+		<TD class="PlainText">OK</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD>&nbsp;</TD>
+		<TD>
+            <INPUT TYPE="submit" NAME="eventSubmit_doBack" VALUE="Back">
+    		<INPUT TYPE="submit" NAME="eventSubmit_doConfirmRegistration" VALUE="Confirm Registration">
+		</TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="4" COLSPAN="3"><SPACER TYPE="block" HEIGHT="4"></TD>
+	</TR>
+	<TR>
+		<TD HEIGHT="1" COLSPAN="3" BGCOLOR="#cccccc"><SPACER TYPE="block" HEIGHT="1"></TD>
+	</TR>
+</TABLE>
+</FORM>
+
+
+
+
+
+
+
+

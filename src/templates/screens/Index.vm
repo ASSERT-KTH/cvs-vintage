@@ -1,0 +1,7 @@
+$page.setTitle("Welcome to Scarab!")
+
+<font face="verdana,geneva,helvetica">
+<h2>Welcome to Scarab!</h2>
+</font>
+
+<a href="$link.setPage("Links.vm")">Links to Site Pages</a>

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;CHARSET=iso-8859-1">
+</head>
+
+<body bgcolor="#F0F0F0">
+<form action="default.cgi" method="POST" enctype="application/x-www-form-urlencoded">
+    <p> 
+    <table border="0" cellpadding="2" width="98%" bgcolor="white">
+        <tr> 
+            <td width="99%" bgcolor="#CCCC99"><strong><font color="#000033" face="Arial, Helvetica, sans-serif">Query 
+                Results</font></strong></td>
+        </tr>
+        <tr> 
+            <td width="99%" height="100" valign="TOP" bgcolor="#F0F0F0"> 
+                <p>Your query produced $Hits hits, of which $percentOpen;% are open 
+                    and $percentHigh;% are high priority. <a href="Metrics.html">More 
+                    mertics</a>.</p>
+                <p> 
+                <table border="0" cellpadding="2" width="98%" bgcolor="white">
+                    <tr> 
+                        <td width="20" bgcolor="#CCCC99">&nbsp;</td>
+                        <td bgcolor="#CCCC99"><strong><font color="#000033" face="Arial, Helvetica, sans-serif">Issue-ID</font></strong></td>
+                        <td bgcolor="#B8B872"><strong><a href="QueryResults.html"><font face="Arial, Helvetica, sans-serif">Status</font></a></strong></td>
+                        <td bgcolor="#B8B872"><strong><a href="QueryResults.html"><font face="Arial, Helvetica, sans-serif">Priority</font></a></strong></td>
+                        <td bgcolor="#B8B872"><strong><a href="QueryResults.html"><font face="Arial, Helvetica, sans-serif">Severity</font></a></strong></td>
+                        <td bgcolor="#B8B872"><strong><a href="QueryResults.html"><font face="Arial, Helvetica, sans-serif">Platform</font></a></strong></td>
+                        <td bgcolor="#B8B872"><strong><a href="QueryResults.html"><font face="Arial, Helvetica, sans-serif">Reporter</font></a></strong></td>
+                    </tr>
+                    <tr> 
+                        <td width="20" valign="TOP" bgcolor="#F0F0F0"> 
+                            <input type="CHECKBOX" name="CheckBox" value="CheckBox">
+                        </td>
+                        <td bgcolor="#F0F0F0">#<a href="IssueView.html">000001</a></td>
+                        <td bgcolor="#F0F0F0">open</td>
+                        <td bgcolor="#F0F0F0">high</td>
+                        <td bgcolor="#F0F0F0">show-stopper</td>
+                        <td bgcolor="#F0F0F0">all</td>
+                        <td bgcolor="#F0F0F0">jrobbins</td>
+                    </tr>
+                    <tr> 
+                        <td width="20" bgcolor="#F0F0F0">&nbsp;</td>
+                        <td colspan="6" bgcolor="#F0F0F0">This product will not 
+                            compile no matter what options I specify because there 
+                            is no source code...</td>
+                    </tr>
+                    <tr> 
+                        <td width="20" valign="TOP" bgcolor="#FCFCD8"> 
+                            <input type="CHECKBOX" name="CheckBox1" value="CheckBox">
+                        </td>
+                        <td bgcolor="#FFFFCC">#<a href="IssueView.html">000002</a></td>
+                        <td bgcolor="#FCFCD8">open</td>
+                        <td bgcolor="#FCFCD8">high</td>
+                        <td bgcolor="#FCFCD8">show-stopper</td>
+                        <td bgcolor="#FCFCD8">all</td>
+                        <td bgcolor="#FCFCD8">jrobbins</td>
+                    </tr>
+                    <tr> 
+                        <td width="20" bgcolor="#FCFCD8">&nbsp;</td>
+                        <td colspan="6" bgcolor="#FFFFCC">This product will not 
+                            run no matter what options I specify because it will 
+                            not compile...</td>
+                    </tr>
+                </table>
+                <p></p>
+                <p>Options (maybe shown as a toolbar?):</p>
+                <ul>
+                    <li><a href="IssuesViewAll.html">View all selected issues</a> 
+                    <li><a href="IssueEditAll.html">Edit all selected issues</a> 
+                    <li><a href="Query.html">Another query</a> 
+                    <li>Bookmark this query 
+                    <li><a href="StartPage.html">Add query to personal start page</a> 
+                    <li><a href="Subscriptions.html">Subscribe to this query</a> 
+                    <li><a href="CustomizeColumns.html">Customize columns</a> 
+                </ul>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <p><br>
+    </p>
+    <p><br>
+        Comments: 
+    <ul>
+        <li>table that can be sorted by any column 
+        <li>customizable columns 
+        <li>multi-line summaries (e.g., alternating green and white) 
+        <li>save this query, subscribe to this query 
+        <li>summary: number of hits, basic metrics on these results 
+        <li>maybe use <b><font color="maroon">bold</font></b> text to highlight 
+            matched keywords in summary 
+    </ul>
+</form>
+</body>
+</html>

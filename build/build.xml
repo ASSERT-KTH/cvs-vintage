@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+
+<!-- Build file for Scarab -->
+
+<project name="Scarab" default="jar" basedir=".">
+
+    <!-- Give user a chance to override without editing this file
+        (and without typing -D each time it compiles it -->
+    <property file="${user.home}/.ant.properties" />
+    <property file=".ant.properties" />
+
+    <property name="Name" value="Scarab"/>
+    <property name="version" value="1.0-dev"/>
+    <property name="project" value="scarab"/>
+    <property name="final.name" value="${project}-${version}"/>
+    <property name="final.dir" value="../${final.name}/"/>
+
+    <property name="build.compiler" value="classic"/>
+    <property name="debug" value="on"/>
+    <property name="optimize" value="off"/>
+    <property name="deprecation" value="on"/>
+
+    <property name="ant.home" value="."/>
+    <property name="year" value="2000-2001"/>
+
+    <property name="build.dir" value="../target"/>
+    <property name="build.webapps" value="${build.dir}/webapps"/>
+    <property name="build.project" value="${build.webapps}/${project}"/>
+    <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
+    <property name="build.src" value="${build.project.webinf}/src"/>
+    <property name="build.dest" value="${build.project.webinf}/classes"/>
+
+    <property name="src.dir" value="../src"/>
+    <property name="src.conf.dir" value="${src.dir}/conf"/>
+    <property name="src.html.dir" value="${src.dir}/html"/>
+    <property name="src.images.dir" value="${src.dir}/images"/>
+    <property name="src.java.dir" value="${src.dir}/java"/>
+    <property name="src.lib.dir" value="../lib"/>
+    <property name="src.sql.dir" value="${src.dir}/sql"/>
+    <property name="src.templates.dir" value="${src.dir}/templates"/>
+    <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
+
+    <property name="javadoc.destdir" value="${build.project}/docs"/>
+
+    <!-- Build classpath -->
+    <path id="classpath">
+        <fileset dir="${src.lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <!-- ================================================================== -->
+    <!-- Prepares the Tomcat directory                                      -->
+    <!-- ================================================================== -->
+    <target name="prepare-tomcat">
+        <!-- copy over tomcat -->
+        <copy todir="${build.dir}" filtering="no">
+            <fileset dir="${tomcat.dist.dir}/"/>
+        </copy>
+
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/logs"/>
+        <mkdir dir="${build.dir}/work"/>
+        <mkdir dir="${build.dir}/webapps"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Prepares the build directory                                   -->
+    <!-- ================================================================== -->
+    <target name="prepare" depends="prepare-tomcat">
+
+        <!-- things to go into the project directory -->
+        <copy todir="${build.project}" filtering="no">
+            <fileset dir="${src.html.dir}"/>
+        </copy>
+        <copy todir="${build.project}/images" filtering="no">
+            <fileset dir="${src.images.dir}"/>
+        </copy>
+        <copy todir="${build.project}/templates" filtering="no">
+            <fileset dir="${src.templates.dir}"/>
+        </copy>
+        <copy todir="${build.project.webinf}" filtering="no">
+            <fileset dir="${src.conf.dir}/">
+                <include name="web.xml"/>
+            </fileset>
+        </copy>
+
+        <!-- things to go into the web-inf directory -->
+        <copy todir="${build.project.webinf}/conf" filtering="no">
+            <fileset dir="${src.conf.dir}/">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${build.project.webinf}/lib" filtering="no">
+            <fileset dir="${src.lib.dir}/">
+                <exclude name="**/servlet*.jar"/>
+                <exclude name="**/stylebook*.jar"/>
+                <include name="**/*.jar"/>
+            </fileset>
+        </copy>
+
+        <!-- the source code directory -->
+        <copy todir="${build.src}/org" filtering="yes">
+            <fileset dir="${src.java.dir}/org">
+                <include name="**/*.java"/>
+                <include name="**/*.properties"/>
+                <include name="**/package.html"/>
+            </fileset>
+        </copy>
+        
+        <mkdir dir="${build.project}/logs"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Compiles the source directory                                      -->
+    <!-- ================================================================== -->
+    <target name="compile" depends="prepare">
+        <mkdir dir="${build.dest}"/>
+        <javac srcdir="${build.src}"
+            destdir="${build.dest}"
+            excludes="**/package.html"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}">
+
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- jars the source directory                                          -->
+    <!-- ================================================================== -->
+    <target name="jarsrc" depends="prepare">
+        <jar jarfile="${build.dir}/${final.name}.src.jar"
+            basedir="${build.src}"
+            excludes="**/package.html"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Creates the API documentation                                      -->
+    <!-- ================================================================== -->
+    <target name="javadocs" depends="prepare">
+        <mkdir dir="${javadoc.destdir}"/>
+        <javadoc
+            sourcepath="${build.src}"
+            packagenames="org.tigris.scarab.*"
+            destdir="${javadoc.destdir}"
+            author="true"
+            private="true"
+            version="true"
+            use="true"
+            windowtitle="${Name} ${version} API"
+            doctitle="${Name} ${version} API"
+            bottom="Copyright &amp;copy; ${year} CollabNet. All Rights Reserved."
+        >
+            <classpath refid="classpath"/>
+    </javadoc>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Package                                                            -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package" depends="javadocs">
+        <mkdir dir="${final.dir}"/>
+        <mkdir dir="${final.dir}/src/java"/>
+
+        <copy todir="${final.dir}/src/java">
+            <fileset dir="${build.dir}/src"/>
+        </copy>
+
+        <copy todir="${final.dir}/build">
+            <fileset dir="../build"/>
+        </copy>
+
+        <copy todir="${final.dir}/lib">
+            <fileset dir="../lib"/>
+        </copy>
+
+        <copy file="${build.dir}/${final.name}.jar" tofile="${final.dir}/${final.name}.jar"/>
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with ZIP                                 -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package-zip" depends="package">
+        <delete file="../${Name}-${version}.zip"/>
+        <zip zipfile="../${Name}-${version}.zip" basedir="../" includes="**/${final.name}/**"/>
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with TAR-GZIP                            -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package-tgz" depends="package">
+        <delete file="../${Name}-${version}.tar"/>
+        <delete file="../${Name}-${version}.tar.gz"/>
+        <tar tarfile="../${Name}-${version}.tar" basedir="../" includes="**/${final.name}/**"/>
+        <gzip zipfile="../${Name}-${version}.tar.gz" src="../${Name}-${version}.tar"/>
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Packages the distribution with ZIP and TAG-GZIP                    -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="package-all" depends="package-zip, package-tgz">
+    </target>
+    -->
+
+    <!-- ================================================================== -->
+    <!-- Same as package-all. It is just here for compatibility.            -->
+    <!-- ================================================================== -->
+    <!--
+    <target name="dist" depends="package-all">
+    </target>
+    -->
+    
+    <!-- ================================================================== -->
+    <!-- Cleans up the build directory                                      -->
+    <!-- ================================================================== -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+</project>

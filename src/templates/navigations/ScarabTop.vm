@@ -1,0 +1,2 @@
+$page.setStyleSheet("/scarab/style.css")
+$page.setBgColor("#ffffff")

@@ -1,0 +1,107 @@
+<!-- $Id: project_status.html,v 1.1 2000/12/18 05:03:40 jon Exp $ -->
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Jon Stevens">
+<title>Scarab Bug Tracking System - Status</title>
+</head>
+<body bgcolor="#F0F0F0">
+&nbsp; 
+<table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
+    <tr> 
+        <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Status 
+            of the Scarab Bug Tracking System (SBTS)</font></b></td>
+    </tr>
+</table>
+<p><i>Last Updated: $Id: project_status.html,v 1.1 2000/12/18 05:03:40 jon Exp $</i> 
+<p>Currently this project is in its infancy. There has been a lot of interest in 
+    helping out with this project as well as a lot of feedback on the types of tracking 
+    and the ways to perform the tracking. All of this feedback is crucial towards 
+    generating a product that is usable across a wide audience and is appreciated. 
+    Please refer to the <a href="http://scarab.tigris.org/index.html">homepage</a> 
+    of the project for the primary goals. 
+<p>An outline of the current status of the project is described below... <br>
+    &nbsp; 
+<table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
+    <tr> 
+        <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Contributors</font></b></td>
+    </tr>
+</table>
+<p>The following people are currently working on this project: 
+<p><a href="introductions.html">Jon S. Stevens</a> - Project Leader and Lead Engineer 
+    <br>
+    <a href="mailto:jrobbins@collab.net">Jason Robbins</a> - Co-Project Leader <br>
+    <a href="mailto:npm@collab.net">Niels P. Mayer</a> - Co-Project Leader <br>
+<p><a href="mailto:cameron@alphanumerica.com">Cameron Barret</a> - IA/UI Design<br>
+<p><a href="mailto:susank@collab.net">Susan Kelly</a> - Template Engineer 
+<p>Interest from others has been expressed on the mailing list: 
+<p><a href="mailto:mick.wright@bull.co.uk">Mick Wright</a> - Mailing list member 
+    <br>
+    <a href="mailto:kphannan@nscorp.com">Kevin P. Hannan</a> - Mailing list member 
+    <br>
+    <a href="introductions.html">Christopher Elkins</a> - Mailing list member <br>
+    <a href="introductions.html">Dave Bryson</a> - Mailing list member <br>
+    <a href="mailto:josh@stonecottage.com">Josh Lucas</a> - Mailing list member 
+    <br>
+    <a href="mailto:cpfeifer@acm.org">Craig Pfeifer</a> - Mailing list member <br>
+    &nbsp; 
+<table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
+    <tr> 
+        <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Direction 
+            and Status...</font></b></td>
+    </tr>
+</table>
+<p>The first steps that need to be taken in order to ensure the success of this 
+    project are (in order): 
+<ul>
+    <li> A database schema must be designed and agreed upon</li>
+    <li> The UI mockup needs to be completed and agreed upon</li>
+    <li> Actual implementation must proceed</li>
+</ul>
+<p>The database schema is available in CVS and an image is <a href="scarab-schema.html">available</a>.</p>
+<p>The IA/UI designs are currently in progress and will be available for review 
+    soon. </p>
+<table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
+    <tr> 
+        <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Technologies 
+            and Design...</font></b></td>
+    </tr>
+</table>
+<p>Here is a list of technologies that are currently slated to be used within the 
+    project: 
+<ul>
+    <li> <a href="http://java.apache.org/turbine/">Turbine</a> will be used as the 
+        underlying framework</li>
+    <li> <a href="http://www.working-dogs.com/turbine/cvsweb/index.cgi/turbine/src/java/org/apache/turbine/om/">Peer 
+        model</a> and <a href="http://www.working-dogs.com/turbine/cvsweb/index.cgi/turbine/src/java/org/apache/turbine/tools/torque/">Torque</a> 
+        within Turbine will provide the database abstraction</li>
+    <li> <a href="http://www.working-dogs.com/turbine/cvsweb/index.cgi/turbine/src/java/org/apache/turbine/services/localization/">Localization 
+        Service</a> within Turbine will be used so that the application can be used 
+        in any language</li>
+    <li> <a href="http://www.webmacro.org/">Webmacro</a> will be used as the abstraction 
+        between the user interface and the business logic. We intend to make the 
+        look and feel of this application easily customizable.</li>
+    <li> <a href="http://www.mysql.com">MySQL</a> will be the SQL backend.</li>
+    <li> <a href="http://www.embarcadero.com/">Embarcadero ERStudio</a> - SQL database 
+        design</li>
+    <li> <a href="http://java.apache.org/jserv/">Apache JServ</a> and <a href="http://jakarta.apache.org/">Tomcat</a> 
+        will be the target Java Servlet engines, but this application should run 
+        on any JSDK 2.0 and higher Java Servlet engine.</li>
+</ul>
+<p>The <a href="scarab-design.html">Scarab Design Document</a> explains in detail 
+    what is expected of the application as well as our reasoning behind our choices.</p>
+<table border=0 cellpadding=2 width="98%" bgcolor="#FFFFFF" >
+    <tr> 
+        <td width="100%" bgcolor="#CCCC99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">What 
+            you can do to help...</font></b></td>
+    </tr>
+</table>
+<p>All discussion of all parts of this application should go on the <a href="/project_mail.html">developers 
+    mailing list</a>. That way, the largest amount of people can participate. 
+<p>We will be maintaining a <a href="scarab-tasks.html">Scarab Tasks</a> document 
+    that will provide areas where you can take charge and do development. 
+<p>&nbsp; 
+<p>&nbsp; 
+</body>
+</html>
