@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.30 2004/10/13 14:50:55 bobtarling Exp $
+// $Id: ArgoParser.java,v 1.31 2004/10/13 17:01:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -365,7 +365,8 @@ public class ArgoParser extends SAXParserBase {
         if (type.equals("xmi")) {
             memberParser = new ModelMemberFilePersister(url, project);
         } else if (type.equals("pgml")) {
-            attributeMap.put("name", name.substring(4,name.length()-9));
+            String value = name.substring(4,name.length()-5);
+            attributeMap.put("name", value);
             memberParser = new DiagramMemberFilePersister(url, project);
         } else if (type.equals("todo")) {
             memberParser = new TodoListMemberFilePersister();
