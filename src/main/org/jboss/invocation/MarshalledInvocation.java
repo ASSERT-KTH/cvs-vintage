@@ -34,7 +34,7 @@ import org.jboss.invocation.Invocation;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -187,9 +187,19 @@ public class MarshalledInvocation
       // For externalization to work
    }
    
+   public MarshalledInvocation(Invocation invocation) 
+   {
+      this(invocation.payload, invocation.as_is_payload);
+   
    public MarshalledInvocation(Map payload) 
    {   
       super(payload);
+   }
+   
+   public MarshalledInvocation(Map payload, Map as_is_payload)
+   {
+      super(payload);
+      this.as_is_payload = as_is_payload;
    }
    
    public MarshalledInvocation(
@@ -219,7 +229,7 @@ public class MarshalledInvocation
          // Keep it in the payload
          if (m != null)  
          {
-            payload.put(METHOD, m);
+            transient_payload.put(METHOD, m);
             
             return m;
          }
@@ -256,7 +266,8 @@ public class MarshalledInvocation
     */
    public Object getValue(Object key) 
    { 
-      Object value = payload.get(key);
+
+      Object value = super.getValue(key);
       
       // The map may contain serialized values of the fields
       if (value instanceof MarshalledValue)
@@ -281,6 +292,7 @@ public class MarshalledInvocation
       throws IOException
    {
       
+      // FIXME marcf: the "specific" treatment of Transactions should be abstracted.
       // Write the TPC, not the local transaction
       out.writeObject(tpc);
       
@@ -290,12 +302,7 @@ public class MarshalledInvocation
       server but not in the generic JMX land. they will travel in the  payload
       as MarshalledValue objects, see the Invocation getter logic
       */
-      // FIXME MARCF: we can put some optimizations in what we serialize and not, for example
-      // classes that come from the JDK will be present at deserialization on the server side. 
-      // So there is no need to marshal a "Principal" for example. 
-      // This code could be "if class.getName().startsWith("java") then don't serialize. 
-      // think about time, test these string manipulation to see if it is good (test method arguments
-      // with native object and with extensions... compare)
+
       Iterator keys = payload.keySet().iterator();
       while (keys.hasNext())
       {
@@ -305,18 +312,18 @@ public class MarshalledInvocation
          // Bench the above for speed.
          
          //Replace the current object with a Marshalled representation
-         if (currentKey != TRANSACTION)
-         {
-            if (currentKey == METHOD)
-               // We write the hash instead of the method
-               sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
-            else
-               sentData.put (currentKey, new MarshalledValue(payload.get(currentKey)));
-         }
+         if (currentKey == METHOD)
+            // We write the hash instead of the method
+            sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
+         else
+            sentData.put (currentKey, new MarshalledValue(payload.get(currentKey)));
       }
       
       // The map contains only serialized representations of every other object
       out.writeObject(sentData);
+      
+      // This map is "safe" as is
+      out.writeObject(as_is_payload);
    }
 
    public void readExternal(java.io.ObjectInput in)
@@ -327,5 +334,7 @@ public class MarshalledInvocation
       
       // The map contains only serialized representations of every other object
       payload = (Map) in.readObject();
+      
+      as_is_payload = (Map) in.readObject();
    }
 }
