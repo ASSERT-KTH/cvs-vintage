@@ -77,13 +77,12 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
-import org.tigris.scarab.security.ScarabSecurityPull;
 
 /**
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.40 2001/10/26 00:31:13 elicia Exp $
+    @version $Id: Search.java,v 1.41 2001/10/26 23:09:24 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {

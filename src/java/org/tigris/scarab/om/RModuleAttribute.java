@@ -51,8 +51,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.Log;
 
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -119,10 +118,8 @@ public class RModuleAttribute
          throws Exception
     {                
         ModuleEntity module = getScarabModule();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                   user, module))
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             Criteria c = new Criteria()
                 .add(RModuleAttributePeer.MODULE_ID, getModuleId())

@@ -66,15 +66,12 @@ import org.apache.torque.map.DatabaseMap;
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.services.user.UserManager;
 
 /** 
@@ -1306,11 +1303,9 @@ public class Issue
          throws Exception, ScarabException
 
     {                
-        ScarabSecurity security = SecurityFactory.getInstance();
         ModuleEntity module = getModule();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
-                                   module))
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             IssueTemplateInfo templateInfo = getTemplateInfo();
             templateInfo.setApproved(true);
@@ -1336,10 +1331,8 @@ public class Issue
          throws Exception, ScarabException
     {                
         ModuleEntity module = getModule();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                   user, module)
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
           || (user.equals(getCreatedBy()) 
              && getTypeId().equals(IssueType.USER_TEMPLATE__PK)))
         {
@@ -1364,10 +1357,8 @@ public class Issue
         throws Exception
     {                
         boolean hasPerm = false;
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ISSUE__ENTER, user,
-                                   module))
+        if (user.hasPermission(ScarabSecurity.ISSUE__ENTER, module))
         {
              hasPerm = true;
         } 
@@ -1382,10 +1373,8 @@ public class Issue
         throws Exception
     {                
         boolean hasPerm = false;
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ISSUE__EDIT, user,
-                                   module)
+        if (user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
             || user.equals(getCreatedBy()))
         {
             hasPerm = true;

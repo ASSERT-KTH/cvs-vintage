@@ -5,9 +5,7 @@ import org.apache.torque.om.UnsecurePersistent;
 import org.apache.torque.util.Criteria;
 import org.tigris.scarab.util.ScarabConstants;
 
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
-import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.module.ModuleEntity;
 
@@ -47,15 +45,13 @@ public  class RModuleIssueType
          throws Exception
     {                
         ModuleEntity module = getModule();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
             Criteria c = new Criteria()
                 .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
                 .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, getIssueTypeId());
             RModuleIssueTypePeer.doDelete(c);
             save();
-        if (security.hasPermission(ScarabSecurity.MODULE__EDIT, 
-                                   user, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             c = new Criteria()
                 .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())

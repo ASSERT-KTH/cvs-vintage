@@ -72,9 +72,17 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
+import org.apache.turbine.Log;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbinePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineUserGroupRolePeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineRolePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineRolePeer;
 
 /**
  * The ScarabModule class is the focal point for dealing
@@ -88,7 +96,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.58 2001/10/26 00:43:18 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.59 2001/10/26 23:09:24 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -113,6 +121,39 @@ public class ScarabModule
      * The 'long' name of the module, includes the parents.
      */
     private String name = null;
+
+    /**
+     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String)
+     */
+    public ScarabUser[] getUsers(String permission)
+    {
+        Criteria crit = new Criteria();
+        crit.setDistinct();
+        crit.add(TurbinePermissionPeer.NAME, permission);
+        crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+                     TurbineRolePermissionPeer.PERMISSION_ID);
+        crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+        crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
+                 ((Persistent)this).getPrimaryKey());
+        crit.addJoin(ScarabUserImplPeer.USER_ID, 
+                     TurbineUserGroupRolePeer.USER_ID);
+        ScarabUser[] scarabUsers = null;
+        try
+        {
+            User[] users = TurbineSecurity.getUsers(crit);
+            scarabUsers = new ScarabUser[users.length];
+            for ( int i=scarabUsers.length-1; i>=0; i--) 
+            {
+                scarabUsers[i] = (ScarabUser)users[i];
+            }
+        }
+        catch (Exception e)
+        {
+            Log.error("An exception prevented retrieving any users", e);
+        }
+        return scarabUsers;
+    }
 
     /**
      * This method is an implementation of the Group.getName() method
@@ -204,10 +245,7 @@ public class ScarabModule
 
     public ScarabUser[] getEligibleIssueReporters()
     {
-        ScarabSecurity security = SecurityFactory.getInstance();
-        ScarabUser[] users = 
-            security.getUsers(ScarabSecurity.ISSUE__ENTER, this);
-        return users;
+        return getUsers(ScarabSecurity.ISSUE__ENTER);
     }
 
     /*
@@ -236,7 +274,6 @@ public class ScarabModule
         ScarabUser[] users = null;
         if ( attribute.isUserAttribute() ) 
         {
-            ScarabSecurity security = SecurityFactory.getInstance();
             String permission = attribute.getPermission();
             if ( permission == null ) 
             {
@@ -246,7 +283,7 @@ public class ScarabModule
             }
             else 
             {
-                users = security.getUsers(permission, this);
+                users = getUsers(permission);
             }
         }
         return users;
@@ -1022,6 +1059,7 @@ try{
                     }
 
                     setCode(getModuleRelatedByParentIdCast().getCode());
+                }
 
                     // try to insert a row into the id_table just to be safe.
                     try
@@ -1038,7 +1076,6 @@ try{
                     catch (Exception e)
                     {
                     }
-                }
 
                 // need to do this before the relationship save below
                 // in order to set the moduleid for the new module.

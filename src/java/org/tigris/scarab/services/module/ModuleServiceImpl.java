@@ -51,6 +51,7 @@ import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.util.Criteria;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.GlobalCacheService;
@@ -66,7 +67,7 @@ import org.tigris.scarab.util.ScarabException;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleServiceImpl.java,v 1.9 2001/10/14 01:21:29 jon Exp $
+ * @version $Id: ModuleServiceImpl.java,v 1.10 2001/10/26 23:09:24 jmcnally Exp $
  */
 public class ModuleServiceImpl extends BaseService 
                             implements ModuleService
@@ -146,5 +147,17 @@ public class ModuleServiceImpl extends BaseService
         }
         
         return module;
+    }
+
+    /**
+     *   check for a duplicate project name
+     */
+    public boolean exists(ModuleEntity module)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add (ScarabModulePeer.MODULE_NAME, module.getRealName());
+        crit.add (ScarabModulePeer.PARENT_ID, module.getParentId());
+        return ScarabModulePeer.doSelect(crit).size() > 0;
     }
 }

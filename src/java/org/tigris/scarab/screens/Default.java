@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
 
 // Scarab Stuff
 import org.tigris.scarab.pages.ScarabPage;
-import org.tigris.scarab.security.ScarabSecurityPull;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.26 2001/10/23 01:28:02 elicia Exp $
+ * @version $Id: Default.java,v 1.27 2001/10/26 23:09:24 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -103,22 +103,19 @@ public class Default extends TemplateSecureScreen
         {
             template = template.replace('/','.');
 
-            String perm = Turbine.getConfiguration()
-                .getString("scarab.security." + template);
+            String perm = ScarabSecurity.getScreenPermission(template);
 
-            ScarabSecurityPull security = 
-                (ScarabSecurityPull)getTemplateContext(data)
-                .get(ScarabConstants.SECURITY_TOOL);
             ScarabRequestTool scarabR = 
                 (ScarabRequestTool)getTemplateContext(data)
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
             ModuleEntity currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
+            ScarabUser user = (ScarabUser)data.getUser();
             if (perm != null)
             {
-                if (! data.getUser().hasLoggedIn() 
-                    && !security.hasPermission(perm, currentModule))
+                if (! user.hasLoggedIn() 
+                    && !user.hasPermission(perm, currentModule))
                 {
                     data.setMessage("Please log in with an account " +
                                     "that has permissions to " +
@@ -151,10 +148,8 @@ public class Default extends TemplateSecureScreen
             // we don't check user.hasLoggedIn() here because guest
             // users could have a role in a module.
             else if (currentModule != null && 
-                    security.getRoles((ScarabUser)data.getUser(),
-                        currentModule).size() == 0)
+                     !user.hasAnyRoleIn(currentModule))
             {
-                
                 scarabR.setCurrentModule(null);
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
                 data.setMessage("Sorry, you do not have permission to " + 

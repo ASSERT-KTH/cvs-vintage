@@ -60,6 +60,7 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import org.apache.torque.Torque;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
@@ -67,10 +68,20 @@ import org.apache.commons.util.GenerateUniqueId;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 import org.apache.turbine.Turbine;
+import org.apache.turbine.Log;
+import org.apache.fulcrum.security.util.AccessControlList;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbinePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineUserGroupRolePeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineRolePermissionPeer;
+import org.apache.fulcrum.security.impl.db.entity
+    .TurbineRolePeer;
+
 
 /**
  * This class is an abstraction that is currently based around
@@ -79,13 +90,12 @@ import org.apache.turbine.Turbine;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.30 2001/10/26 00:43:45 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.31 2001/10/26 23:09:24 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
     implements ScarabUser
 {
-    //private static final String CURRENT_MODULE = "CURRENT_MODULE";
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
 
     public static final String PASSWORD_EXPIRE = "PASSWORD_EXPIRE";
@@ -105,7 +115,7 @@ public class ScarabUserImpl
     {
         super();
     }
-    
+
     /**
      *   Utility method that takes a username and a confirmation code
      *   and will return true if there is a match and false if no match.
@@ -174,35 +184,138 @@ public class ScarabUserImpl
             return false;
         }
     }
-    
+
     /**
-        This will return the username for a given userid.
-        return null if there is an error or if the user doesn't exist
-    */
-    public static String getUserName(ObjectKey userid)
+     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
+     */
+    public boolean hasPermission(String perm, ModuleEntity module)
     {
+        boolean hasPermission = false;
+        String mappedPerm = ScarabSecurity.getPermission(perm);
         try
         {
-            Criteria criteria = new Criteria();
-            criteria.add (ScarabUserImplPeer.USER_ID, userid);
-            User user = (User)ScarabUserImplPeer.doSelect(criteria).get(0);
-            return user.getUserName();
+            AccessControlList acl = TurbineSecurity.getACL(this);
+            if ( acl != null ) 
+            {
+                hasPermission = acl.hasPermission(mappedPerm, (Group)module);
+            }
         }
         catch (Exception e)
         {
-            return null;
-        }        
+            hasPermission = false;
+            Log.error("Permission check failed on:" 
+                      + perm + '=' + mappedPerm, e);
+        }
+        return hasPermission;
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getModules(String)
+     */
+    public ModuleEntity[] getModules(String permission)
+    {
+        String[] perms = {permission};
+        return getModules(perms);
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getModules(String[])
+     */
+    public ModuleEntity[] getModules(String[] permissions)
+    {        
+        Criteria crit = new Criteria();
+        crit.setDistinct();
+        crit.addIn(TurbinePermissionPeer.PERMISSION_NAME, permissions);
+        crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+                     TurbineRolePermissionPeer.PERMISSION_ID);
+        crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+        crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+        crit.addJoin(ScarabModulePeer.MODULE_ID, 
+                     TurbineUserGroupRolePeer.GROUP_ID);
+
+        ModuleEntity[] modules = null;
+        try
+        {
+            List scarabModules = ScarabModulePeer.doSelect(crit);
+            modules = new ModuleEntity[scarabModules.size()];
+            for ( int i=scarabModules.size()-1; i>=0; i--) 
+            {
+                modules[i] = (ModuleEntity)scarabModules.get(i);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.error("An exception prevented retrieving any modules", e);
+        }
+        return modules;
     }
 
     /**
-        Pass in a string id and return username.
-    */
-    public static String getUserName(String userId)
+     * @see org.tigris.scarab.om.ScarabUser#hasAnyRoleIn(ModuleEntity)
+     */ 
+   public boolean hasAnyRoleIn(ModuleEntity module)
+        throws Exception
     {
-        return getUserName((ObjectKey)new NumberKey(userId));
+        return getRoles(module).size() != 0;
     }
 
+    /* *
+     * @see org.tigris.scarab.om.ScarabUser#getRoles(ModuleEntity)
+     * !FIXME! need to define a Role interface (maybe the one in fulcrum is 
+     * sufficient?) before making a method like this public.   
+     * Right now it is only used in one place to determine
+     * if the user has any roles available, so we will use a more specific
+     * public method for that.
+     */
+    private List getRoles(ModuleEntity module)
+         throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.setDistinct();
+        crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+        crit.add(TurbineUserGroupRolePeer.GROUP_ID, module.getModuleId());
+        crit.addJoin(TurbineRolePeer.ROLE_ID, 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+        List roles = TurbineRolePeer.doSelect(crit);
+        return roles;
+    }
+    
 
+    /* *
+     * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
+     * This method is not needed yet.
+     * /
+    public List getModules(Role role) 
+        throws Exception
+    {
+    /*
+        Criteria crit = new Criteria(3)
+            .add(RModuleUserRolePeer.DELETED, false)
+            .add(RModuleUserRolePeer.ROLE_ID, 
+                 ((BaseObject)role).getPrimaryKey());        
+        List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
+
+        // rearrange so list contains Modules
+        List modules = new ArrayList(moduleRoles.size());
+        Iterator i = moduleRoles.iterator();
+        while (i.hasNext()) 
+        {
+            ModuleEntity module = 
+                (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
+            modules.add(module);
+        }
+
+        return modules;
+    * /
+        if (true)
+            throw new Exception ("FIXME: This method doesn't belong here!");
+        return null;
+    }
+    */
+    
     /**
      * @see org.tigris.scarab.om.ScarabUser#createNewUser()
      */
@@ -248,14 +361,12 @@ public class ScarabUserImpl
     {
         List userModules = getModules();
         ArrayList editModules = new ArrayList();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
         for (int i=0; i<userModules.size(); i++)
         {
             ModuleEntity module = (ModuleEntity)userModules.get(i);
-            if (security.hasPermission(ScarabSecurity.MODULE__EDIT, 
-                                      (ScarabUser)this,
-                                      (ModuleEntity)module)
+            if (hasPermission(ScarabSecurity.MODULE__EDIT, 
+                              (ModuleEntity)module)
                && !(module.getModuleId().toString().equals("0")))
             {
                 editModules.add(module);
@@ -313,35 +424,6 @@ public class ScarabUserImpl
         return mua;
     }
 
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
-     */
-    public List getModules(Role role) 
-        throws Exception
-    {
-    /*
-        Criteria crit = new Criteria(3)
-            .add(RModuleUserRolePeer.DELETED, false)
-            .add(RModuleUserRolePeer.ROLE_ID, 
-                 ((BaseObject)role).getPrimaryKey());        
-        List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
-
-        // rearrange so list contains Modules
-        List modules = new ArrayList(moduleRoles.size());
-        Iterator i = moduleRoles.iterator();
-        while (i.hasNext()) 
-        {
-            ModuleEntity module = 
-                (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
-            modules.add(module);
-        }
-
-        return modules;
-    */
-        if (true)
-            throw new Exception ("FIXME: This method doesn't belong here!");
-        return null;
-    }
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getReportingIssue(String)

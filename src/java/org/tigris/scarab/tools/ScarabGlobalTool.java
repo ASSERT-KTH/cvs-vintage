@@ -67,7 +67,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.6 2001/10/17 20:02:56 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.7 2001/10/26 23:09:25 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -75,6 +75,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * holds the Scarab constants
      */
     private FieldMethodizer constant = null;
+
+    /**
+     * holds the Scarab security permission constants
+     */
+    private FieldMethodizer security = null;
 
     /**
      * Used for formatting dates in the format: M/d/yy
@@ -96,6 +101,8 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         constant = new FieldMethodizer(
             "org.tigris.scarab.util.ScarabConstants");
+        security = new FieldMethodizer(
+            "org.tigris.scarab.services.security.ScarabSecurity");
     }
 
     /**
@@ -105,6 +112,15 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public FieldMethodizer getConstant()
     {
         return constant;
+    }
+
+    /**
+     * holds the Scarab permission constants.  It will be available to 
+     * the template system as $scarabG..PERMISSION_NAME.
+     */
+    public FieldMethodizer getPermission()
+    {
+        return security;
     }
     
     /**

@@ -55,8 +55,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -105,15 +104,13 @@ public class Query
                                   TemplateContext context )
         throws Exception
     {
-        ScarabSecurity security = SecurityFactory.getInstance();
         // If it's a global query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
         if (getScopeId().equals(Scope.PERSONAL__PK))
         {
             setApproved(true);
         }
-        else if (security.hasPermission(ScarabSecurity.ITEM__APPROVE,
-                                        user, module))
+        else if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
         } 
@@ -230,11 +227,9 @@ public class Query
     public void approve( ScarabUser user, boolean approved )
          throws Exception
     {                
-        ScarabSecurity security = SecurityFactory.getInstance();
         ModuleEntity module = getModule();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
-                                   module))
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
             if (approved)
@@ -259,10 +254,8 @@ public class Query
          throws Exception
     {                
         ModuleEntity module = getModule();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                   user, module)
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
           || (user.getUserId().equals(getUserId()) 
              && getScopeId().equals(Scope.PERSONAL__PK)))
         {

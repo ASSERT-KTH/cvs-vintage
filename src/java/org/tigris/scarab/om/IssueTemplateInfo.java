@@ -8,8 +8,7 @@ import org.apache.torque.om.UnsecurePersistent;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.Email;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -37,7 +36,6 @@ public  class IssueTemplateInfo
                                   TemplateContext context )
         throws Exception
     {
-        ScarabSecurity security = SecurityFactory.getInstance();
         Issue issue = (Issue) IssuePeer.retrieveByPK(getIssueId());
 
         // If it's a global template, user must have Item | Approve 
@@ -46,8 +44,7 @@ public  class IssueTemplateInfo
         {
             setApproved(true);
         }
-        else if (security.hasPermission(ScarabSecurity.ITEM__APPROVE,
-                                        user, module))
+        else if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
         } 
@@ -82,11 +79,9 @@ public  class IssueTemplateInfo
     public void approve( ScarabUser user, boolean approved )
          throws Exception
     {                
-        ScarabSecurity security = SecurityFactory.getInstance();
         ModuleEntity module = getIssue().getModule();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
-                                   module))
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             setApproved(true);
             if (approved)

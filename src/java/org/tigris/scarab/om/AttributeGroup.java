@@ -52,8 +52,7 @@ import java.util.List;
 import org.apache.torque.om.UnsecurePersistent;
 import org.apache.torque.util.Criteria;
 
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -126,10 +125,8 @@ public  class AttributeGroup
          throws Exception
     {                
         ModuleEntity module = getModule();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.MODULE__EDIT,
-                                   user, module))
+        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             // Delete module-attribute mapping
             Criteria c  = new Criteria()

@@ -4,8 +4,7 @@ import org.apache.torque.om.UnsecurePersistent;
 //import org.apache.fulcrum.template.TemplateContext;
 import org.apache.torque.util.Criteria;
 
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -26,10 +25,8 @@ public  class RAttributeAttributeGroup
     public void delete(ScarabUser user) throws Exception 
     { 
         ModuleEntity module = getAttributeGroup().getModule();
-        ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                   user, module))
+        if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
             Criteria c = new Criteria()
                 .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())

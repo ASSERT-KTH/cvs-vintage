@@ -63,7 +63,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: HelmUserService.java,v 1.2 2001/09/13 17:26:47 jmcnally Exp $
+ * @version $Id: HelmUserService.java,v 1.3 2001/10/26 23:09:25 jmcnally Exp $
  */
 public class HelmUserService 
     extends BaseService 
@@ -71,6 +71,16 @@ public class HelmUserService
 {
     /** "org.tigris.scarab.om.TurbineUser" */
     private static Class userClass = null;
+
+    private static final String USER_INFO_FROM_ID_ACTION
+        = "userInfoFromID";
+
+    private static final String USER_INFO_FROM_IDS_ACTION
+        = "userInfoFromIDs";
+
+    private static final String USER_INFO_FROM_LOGIN_NAME_ACTION
+        = "userInfoFromLoginName";
+
 
     /**
      * Initializes the BaseUserService, locating the apropriate ScarabUser

@@ -61,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * duplicate methods.  One should be deprecated.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.16 2001/10/20 18:17:17 dlr Exp $
+ * @version $Id: ModuleManager.java,v 1.17 2001/10/26 23:09:24 jmcnally Exp $
  */
 public abstract class ModuleManager
 {
@@ -92,5 +92,11 @@ public abstract class ModuleManager
     public static Class getModuleClass()
     {
         return getService().getModuleClass();
+    }
+
+    public static boolean exists(ModuleEntity module)
+        throws Exception
+    {
+        return getService().exists(module);
     }
 }

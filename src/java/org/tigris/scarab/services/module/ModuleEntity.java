@@ -65,7 +65,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.34 2001/10/26 00:45:06 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.35 2001/10/26 23:09:24 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -75,6 +75,15 @@ public interface ModuleEntity
      * FIXME: define this in a properties file
      */
     public static String NAME_DELIMINATOR = " > ";
+
+    /**
+     * Get a list of <code>ScarabUser</code>'s that have the given
+     * permission in the given module.
+     *
+     * @param permission a <code>String</code> value
+     * @return ScarabUser[]
+     */
+    public ScarabUser[] getUsers(String permission);
 
     /**
      * This method is only used by the Turbine Group interface.

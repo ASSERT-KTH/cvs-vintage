@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 // Turbine
+import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
@@ -1180,6 +1181,59 @@ try{
     public int getPrevPage()
     {
         return prevPage;
+    }
+
+
+    /**
+     * Determine if the user currently interacting with the scarab
+     * application has a permission within the user's currently
+     * selected module.
+     *
+     * @param permission a <code>String</code> permission value, which should
+     * be a constant in this interface.
+     * @return true if the permission exists for the user within the
+     * current module, false otherwise
+     */
+    public boolean hasPermission(String permission)
+    {
+        boolean hasPermission = false;
+        try
+        {
+            ModuleEntity module = getCurrentModule();
+            hasPermission = hasPermission(permission, module);
+        }
+        catch (Exception e)
+        {
+            hasPermission = false;
+            Log.error("Permission check failed on:" + permission, e);
+        }
+        return hasPermission;
+    }
+
+    /**
+     * Determine if the user currently interacting with the scarab
+     * application has a permission within a module.
+     *
+     * @param permission a <code>String</code> permission value, which should
+     * be a constant in this interface.
+     * @param module a <code>ModuleEntity</code> value
+     * @return true if the permission exists for the user within the
+     * given module, false otherwise
+     */
+    public boolean hasPermission(String permission, ModuleEntity module)
+    {
+        boolean hasPermission = false;
+        try
+        {
+            hasPermission = ((ScarabUser)data.getUser())
+                .hasPermission(permission, module);
+        }
+        catch (Exception e)
+        {
+            hasPermission = false;
+            Log.error("Permission check failed on:" + permission, e);
+        }
+        return hasPermission;
     }
 
 

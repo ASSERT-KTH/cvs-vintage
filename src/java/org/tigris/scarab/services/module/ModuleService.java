@@ -54,7 +54,7 @@ import org.apache.torque.om.ObjectKey;
  * This is the interface that describes a ModuleService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleService.java,v 1.6 2001/08/02 07:11:42 jon Exp $
+ * @version $Id: ModuleService.java,v 1.7 2001/10/26 23:09:24 jmcnally Exp $
  */
 public interface ModuleService extends Service
 {
@@ -84,4 +84,10 @@ public interface ModuleService extends Service
     public ModuleEntity getInstance() throws Exception;
 
     public ModuleEntity getInstance(ObjectKey key) throws Exception;
+
+    /**
+     *   check for a duplicate project name
+     */
+    public boolean exists(ModuleEntity module)
+        throws Exception;
 }

@@ -51,8 +51,7 @@ import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.security.ScarabSecurity;
-import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 /** 
@@ -61,7 +60,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * long as it does not already exist in the output directory.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RQueryUser.java,v 1.4 2001/10/26 00:38:17 elicia Exp $
+ * @version $Id: RQueryUser.java,v 1.5 2001/10/26 23:09:24 jmcnally Exp $
  */
 public  class RQueryUser 
     extends org.tigris.scarab.om.BaseRQueryUser
