@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiProtocolTests.java,v 1.8 2005/02/08 10:03:48 benoitf Exp $
+ * $Id: MultiProtocolTests.java,v 1.9 2005/02/11 10:50:32 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.clients;
@@ -55,11 +55,6 @@ public class MultiProtocolTests extends TestCase {
     private String basicMultiName = null;
 
     /**
-     * Name of the basic object ref (in all name services)
-     */
-    private String basicRefName = null;
-
-    /**
      * Initial Contexts
      */
     private InitialContext ic = null;
@@ -76,7 +71,7 @@ public class MultiProtocolTests extends TestCase {
 
     /**
      * Constructor
-     * @param String Name for this test
+     * @param name the name of the test
      */
     public MultiProtocolTests(String name) {
         super(name);
@@ -84,6 +79,7 @@ public class MultiProtocolTests extends TestCase {
 
     /**
      * Setup Method
+     * @throws Exception if setup fails (could be narrow)
      */
     public void setUp() throws Exception {
         super.setUp();
@@ -95,7 +91,6 @@ public class MultiProtocolTests extends TestCase {
         // set the object name
         basicName = "basicname";
         basicMultiName = "basicmultiname";
-        basicRefName = "basicrefname";
 
         // lookup to the remote objects
         ba = (BasicObjectItf) PortableRemoteObject.narrow(ic.lookup(basicName), BasicObjectItf.class);
@@ -104,6 +99,7 @@ public class MultiProtocolTests extends TestCase {
 
     /**
      * tearDown method
+     * @throws Exception if super method fails
      */
     public void tearDown() throws Exception {
         basicName = null;
@@ -174,6 +170,7 @@ public class MultiProtocolTests extends TestCase {
 
     /**
      * Suite method
+     * @return the test suite to launch
      */
     public static Test suite() {
         return new TestSuite(MultiProtocolTests.class);
