@@ -28,6 +28,7 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -52,8 +53,14 @@ public class OpenMessageWithMessageFrameAction
 	public OpenMessageWithMessageFrameAction(AbstractFrameController frameController) {
 		super(
 			frameController,
-			"Open Message in New Window",
-			"Open Message in New Window",
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_opennew"),
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_opennew_tooltip"),
 			"OPEN_MESSAGE_IN_NEW_WINDOW",
 			null,
 			null,
