@@ -1,8 +1,8 @@
-<div id="xmlexportselect" class="app">
+<div id="xmlexportissues" class="app">
 
 <h3>$page.Title</h3>
 
-<form action="$link.setPage("admin,ViewXMLExportIssues.vm")" method="post" name="xmlexportselect">
+<form action="$link.setPage("admin,ViewXMLExportIssues.vm")" method="post" name="xmlexportissues">
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Index.vm" />
 
 <div class="axial">
@@ -48,7 +48,7 @@
 
 <script>
 <!--
-document.xmlexportselect.${xmlExportSelectGroup.FederatedIds.Key}.focus();
+document.xmlexportissues.exportissues.focus();
 // -->
 </script>
 </form>
