@@ -1,9 +1,9 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 
 package org.jboss;
 
@@ -42,52 +42,52 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 /**
- * The main entry point for the JBoss server.
- *
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.52 $
- *
- * <b>Revisions:</b>
- * <p>
- * <b>20010830 marcf:</b>
- * <ul>
- *   <li>Initial import, support for net-install
- * </ul>
- * <b>20010925 jason:</b>
- * <ul>
- *   <li>Replaced custom command line option parsing with gnu.getopt.
- *   <li>Added -D option to set system properties
- * </ul>
- */
+* The main entry point for the JBoss server.
+*
+* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+* @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+* @version $Revision: 1.53 $
+*
+* <b>Revisions:</b>
+* <p>
+* <b>20010830 marcf:</b>
+* <ul>
+*   <li>Initial import, support for net-install
+* </ul>
+* <b>20010925 jason:</b>
+* <ul>
+*   <li>Replaced custom command line option parsing with gnu.getopt.
+*   <li>Added -D option to set system properties
+* </ul>
+*/
 public class Main
 {
    /**
-    * The version & build information holder.
-    */
+   * The version & build information holder.
+   */
    private Version version = Version.getInstance();
    
    /**
-    * Constructor for the Main object
-    *
-    * @param installURL    The install URL.
-    * @param confDir       The configuration directory.
-    * @param patchDir      The patch directory.
-    * @param libDir        The library directory.
-    * @param spineDir      The spine directory.
-    */
+   * Constructor for the Main object
+   *
+   * @param installURL    The install URL.
+   * @param confDir       The configuration directory.
+   * @param patchDir      The patch directory.
+   * @param libDir        The library directory.
+   * @param spineDir      The spine directory.
+   */
    public Main(String installURL,
-               String confDir,
-               String patchDir,
-               String libDir,
-               String spineDir)
+      String confDir,
+      String patchDir,
+      String libDir,
+      String spineDir)
    {
       long startTime = System.currentTimeMillis();
-
+      
       try
       {
          final PrintStream err = System.err;
-
+         
          System.setProperty("jboss.system.started", new Date(startTime).toString());
          System.setProperty("jboss.system.installationURL", installURL);
          System.setProperty("jboss.system.configurationDirectory", confDir);
@@ -95,61 +95,61 @@ public class Main
          System.setProperty("jboss.system.libraryDirectory", libDir);
          System.setProperty("jboss.system.version", version.toString());
          System.setProperty("jboss.system.version.name", version.getName());
-
+         
          // Give feedback about from where jndi.properties is read
          URL jndiLocation = this.getClass().getResource("/jndi.properties");
          if (jndiLocation instanceof URL)
          {
             System.out.println("Please make sure the following is intended " +
-                               "(check your CLASSPATH): jndi.properties is " +
-                               "read from " + jndiLocation);
+               "(check your CLASSPATH): jndi.properties is " +
+               "read from " + jndiLocation);
          }
-
+         
          // Create MBeanServer
          final MBeanServer server =
-            MBeanServerFactory.createMBeanServer("JBOSS-SYSTEM");
-
+         MBeanServerFactory.createMBeanServer("JBOSS-SYSTEM");
+         
          // Initialize the MBean libraries repository
          server.registerMBean(ServiceLibraries.getLibraries(),
-                              new ObjectName(server.getDefaultDomain(),
-                                             "spine",
-                                             "ServiceLibraries"));
-
+            new ObjectName(server.getDefaultDomain(),
+               "spine",
+               "ServiceLibraries"));
+         
          // Build the list of URL for the spine to boot
          ArrayList urls = new ArrayList();
-
+         
          // Add the patch directory
          addJars(patchDir, urls);
-
+         
          // Add configuration directory to be able to load files
          urls.add(new URL(confDir));
-
+         
          // Add the local path stuff
          urls.add(new URL(libDir + "log4j.jar"));
          urls.add(new URL(libDir + "jboss-spine.jar"));
-
+         
          // Crimson and jaxp are fucked up right now, cl usage fixed in new
          // version of jaxp according to the developers.
          //urls.add(new URL(libDir+"jaxp.jar"));
          //urls.add(new URL(libDir+"crimson.jar"));
-
+         
          Iterator bootURLs = urls.iterator();
          while (bootURLs.hasNext())
          {
             // The libraries will register themselves with the libraries
-            URL thisUrl = (URL)bootURLs.next();
+            URL thisUrl = (URL) bootURLs.next();
             //Only the boot urls are keyed on themselves: 
             //everything else is copied for loading but keyed on the
             //original deployed url.
             new URLClassLoader(new URL[]{thisUrl}, thisUrl);
          }
-
+         
          // Create MBeanClassLoader for the base system
          ObjectName loader = new ObjectName(server.getDefaultDomain(),
-                                            "spine",
-                                            "ServiceClassLoader");
+            "spine",
+            "ServiceClassLoader");
          MBeanClassLoader mcl = new MBeanClassLoader(loader);
-
+         
          try
          {
             server.registerMBean(mcl, loader);
@@ -157,7 +157,7 @@ public class Main
             // Set ServiceClassLoader as classloader for the construction of
             // the basic JBoss-System
             Thread.currentThread().setContextClassLoader(mcl);
-
+            
             System.out.println("Looking for the docuemnt");
             try
             {
@@ -168,37 +168,37 @@ public class Main
             {
                e.printStackTrace();
             }
-
+            
             // Create the Loggers
             server.createMBean("org.jboss.logging.Log4jService", null, loader);
-
+            
             // General Purpose Architecture information
             server.createMBean("org.jboss.system.Info", null, loader);
-
+            
             // Shutdown stuff
             server.createMBean("org.jboss.system.Shutdown", null, loader);
             
             // Properties for the JAXP configuration
             if (System.getProperty("javax.xml.parsers.DocumentBuilderFactory") == null) {
                System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-                                  "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl");
+                  "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl");
             }
             if (System.getProperty("javax.xml.parsers.SAXParserFactory") == null) {
                System.setProperty("javax.xml.parsers.SAXParserFactory",
-                                  "org.apache.crimson.jaxp.SAXParserFactoryImpl");
+                  "org.apache.crimson.jaxp.SAXParserFactoryImpl");
             }
-
+            
             //
             // Service Deployment
             //
-
+            
             // Controller
             server.createMBean("org.jboss.system.ServiceController",
-                               null, loader);
-
+               null, loader);
+            
             // Deployer
             server.createMBean("org.jboss.deployment.ServiceDeployer",
-                               null, loader);
+               null, loader);
          }
          catch(RuntimeMBeanException e)
          {
@@ -220,54 +220,55 @@ public class Main
          {
             re.getTargetException().printStackTrace();
          }
-
+         
          /*
-          * URL mletConf = mlet.getResource("boot.jmx");
-          * URL mletConf = new URL(confDir+"boot.jmx");
-          *
-          * Set beans = mlet.getMBeansFromURL(mletConf);
-          *
-          * Iterator enum = beans.iterator();
-          * while (enum.hasNext())
-          * {
-          * Object obj = enum.next();
-          * if (obj instanceof RuntimeOperationsException)
-          * ((RuntimeOperationsException)obj).getTargetException().printStackTrace(err);
-          * else if (obj instanceof RuntimeErrorException)
-          * ((RuntimeErrorException)obj).getTargetError().printStackTrace(err);
-          * else if (obj instanceof MBeanException)
-          * ((MBeanException)obj).getTargetException().printStackTrace(err);
-          * else if (obj instanceof RuntimeMBeanException)
-          * ((RuntimeMBeanException)obj).getTargetException().printStackTrace(err);
-          * else if (obj instanceof ReflectionException)
-          * ((ReflectionException)obj).getTargetException().printStackTrace(err);
-          * else if (obj instanceof Throwable)
-          * ((Throwable)obj).printStackTrace(err);
-          * }
-          */
+         * URL mletConf = mlet.getResource("boot.jmx");
+         * URL mletConf = new URL(confDir+"boot.jmx");
+         *
+         * Set beans = mlet.getMBeansFromURL(mletConf);
+         *
+         * Iterator enum = beans.iterator();
+         * while (enum.hasNext())
+         * {
+         * Object obj = enum.next();
+         * if (obj instanceof RuntimeOperationsException)
+         * ((RuntimeOperationsException)obj).getTargetException().printStackTrace(err);
+         * else if (obj instanceof RuntimeErrorException)
+         * ((RuntimeErrorException)obj).getTargetError().printStackTrace(err);
+         * else if (obj instanceof MBeanException)
+         * ((MBeanException)obj).getTargetException().printStackTrace(err);
+         * else if (obj instanceof RuntimeMBeanException)
+         * ((RuntimeMBeanException)obj).getTargetException().printStackTrace(err);
+         * else if (obj instanceof ReflectionException)
+         * ((ReflectionException)obj).getTargetException().printStackTrace(err);
+         * else if (obj instanceof Throwable)
+         * ((Throwable)obj).printStackTrace(err);
+         * }
+         */
       }
       catch (Exception e)
       {
          e.printStackTrace();
       }
-
+      
       // Done
       long stopTime = System.currentTimeMillis();
       long lapsedTime = stopTime - startTime;
       long minutes = lapsedTime / 60000;
       long seconds = (lapsedTime - 60000 * minutes) / 1000;
+      long milliseconds = (lapsedTime -60000 * minutes - 1000 * seconds);
       System.out.println("JBoss " + version +
-            " [" + version.getName() + "] Started in " +
-            minutes  + "m:" + seconds  + "s");
+         " [" + version.getName() + "] Started in " +
+         minutes  + "m:" + seconds  + "s:" +milliseconds +"ms");
    }
-
+   
    /**
-    * The main entry-point for the Main class
-    *
-    * @param args    The command line arguments
-    * 
-    * @throws Exception     Description of Exception
-    */
+   * The main entry-point for the Main class
+   *
+   * @param args    The command line arguments
+   * 
+   * @throws Exception     Description of Exception
+   */
    public static void main(final String[] args) throws Exception
    {
       //
@@ -294,7 +295,7 @@ public class Main
          System.setProperty("jboss.system.home", home);
       }
       String systemHome = System.getProperty("jboss.system.home");
-
+      
       String installURL = new File(systemHome).toURL().toString();
       if (!installURL.endsWith(File.separator)) {
          installURL += File.separator;
@@ -304,16 +305,16 @@ public class Main
       // i.e. all conf files are in "/conf/default"
       String configDir = "default";
       String patchDir = "";
-
+      
       // Given conf name
-
+      
       //
       // parse command line options
       //
-
+      
       // set this from a system property or default to jboss
       String programName = System.getProperty("jboss.boot.loader.name",
-                                              "jboss");
+         "jboss");
       String sopts = "-:hD:p:n:c:";
       LongOpt[] lopts = {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
@@ -333,16 +334,16 @@ public class Main
             case '?':
                // for now both of these should exit with error status
                System.exit(1);
-               break; // for completeness
-
+            break; // for completeness
+            
             case 1:
                // this will catch non-option arguments
                // (which we don't currently care about)
                System.err.println(programName +
-                                  ": unused non-option argument: " +
-                                  getopt.getOptarg());
-               break; // for completeness
-             
+                  ": unused non-option argument: " +
+                  getopt.getOptarg());
+            break; // for completeness
+            
             case 'h':
                // show command line help
                System.out.println("usage: " + programName + " [options]");
@@ -352,13 +353,13 @@ public class Main
                System.out.println("    --help-examples               Show some command line examples");
                System.out.println("    --                            Stop processing options");
                System.out.println("    -D<name>[=<value>]            Set a system property");
-               System.out.println("    -p, --patch-dir <dir>         Set the patch directory");
+               System.out.println("    -p, --patch-dir <dir>         Set the patch directory, takes an absolute file name");
                System.out.println("    -n, --net-install <url>       Set the network install url");
                System.out.println("    -c, --configuration <name>    Set the server configuration name");
                System.out.println();               
                System.exit(0);
-               break; // for completeness
-
+            break; // for completeness
+            
             case 'D':
                // set a system property
                arg = getopt.getOptarg();
@@ -373,57 +374,57 @@ public class Main
                   value = arg.substring(i + 1, arg.length());
                }
                System.setProperty(name, value);
-               break;
-               
+            break;
+            
             case 10:
                // show help examples
-               System.out.println("example: " + programName + " --net-install http://www.jboss.org/jboss --configuration jboxx");
-               System.out.println("will download from the webserver and run the the configuration called jboxx");
+               System.out.println("example: " + programName + " --net-install http://www.jboss.org/jboss --configuration jboxx --patch-dir /tmp/dir");
+               System.out.println("will download from the webserver and run the the configuration called jboxx, it will uses jar patches found in /tmp/dir");
                System.out.println();
                System.exit(0);
-               break; // for completeness
-
+            break; // for completeness
+            
             case 'p':
                // set the local patch directory
                patchDir = getopt.getOptarg();
-               break;
-
+            break;
+            
             case 'n':
                // set the net install url
                arg = getopt.getOptarg();
                installURL = arg.startsWith("http://") ? arg : "http://" + arg;
-
+               
                // make sure there is a trailing '/'
                if (!installURL.endsWith("/")) installURL += "/";
-               break;
-
+            break;
+            
             case 'c':
                // set the configuration name
                configDir = getopt.getOptarg();
-               break;
-
+            break;
+            
             default:
                // this should not happen,
                // if it does throw an error so we know about it
                throw new Error("unhandled option code: " + code);
          }
       }
-
+      
       //
       // setup the boot environment and get things cooking
       //
-
+      
       // should really turn these into file:// urls so we don't have to worry about File.sep* fluff
       configDir = installURL + (installURL.startsWith("http:") ? "conf/" + configDir + "/" : "conf" + File.separatorChar + configDir + File.separatorChar);
       String loadDir = installURL + (installURL.startsWith("http:") ? "lib/ext/" : "lib" + File.separatorChar + "ext" + File.separatorChar);
       String spineDir = installURL + (installURL.startsWith("http:") ? "lib/" : "lib" + File.separatorChar);
-
+      
       final String iURL = installURL;
       final String cDir = configDir;
       final String pDir = patchDir;
       final String lDir = loadDir;
       final String sDir = spineDir;
-
+      
       // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(
          new PrivilegedAction()
@@ -437,29 +438,32 @@ public class Main
    }
    
    private void addJars(String directory, ArrayList urls)
-          throws Exception
+   throws Exception
    {
       if (directory != null && directory != "")
       {
          // The string must be a local file
          File dir = new File(directory);
-         File[] jars = dir.listFiles(new java.io.FileFilter()
-            {
-               public boolean accept(File pathname)
+         if (dir.exists()) {
+            
+            File[] jars = dir.listFiles(new java.io.FileFilter()
                {
-                  String name = pathname.getName();
-                  return name.endsWith(".jar") || name.endsWith(".zip");
-               }
-            });
-
-         // Add the local file patch directory
-         urls.add(directory);
-
-         for (int j = 0; jars != null && j < jars.length; j++)
-         {
-            File jar = jars[j];
-            URL u = jar.getCanonicalFile().toURL();
-            urls.add(u);
+                  public boolean accept(File pathname)
+                  {
+                     String name = pathname.getName();
+                     return name.endsWith(".jar") || name.endsWith(".zip");
+                  }
+               });
+            
+            // Add the local file patch directory
+            urls.add(dir.toURL());
+            
+            for (int j = 0; jars != null && j < jars.length; j++)
+            {
+               File jar = jars[j];
+               URL u = jar.getCanonicalFile().toURL();
+               urls.add(u);
+            }
          }
       }
    }
