@@ -159,56 +159,66 @@ public class Query
                     + getValue();
     }
 
-
     /**
-     * Returns list of all frequency values.
+     * Subscribes user to query.
      */
-    public List getFrequencies() throws Exception
+    public void subscribe(ScarabUser user, String frequencyId)
+        throws Exception
     {
-        return FrequencyPeer.doSelect(new Criteria());
+        RQueryUser rqu = getRQueryUser(user);
+        rqu.setSubscriptionFrequency(frequencyId);
+        rqu.setIsSubscribed(true);
+        rqu.save();
     }
 
     /**
-     * Returns list of subscribed users.
+     * Unsubscribes user from query.
      */
-    public List getSubscribedUsers() throws Exception
+    public void unSubscribe(ScarabUser user)
+        throws Exception
+    {
+        RQueryUser rqu = getRQueryUser(user);
+        if (rqu.getIsdefault())
+        {
+            rqu.setIsSubscribed(false);
+            rqu.save();
+        }
+        else
+        {
+            rqu.delete();
+        }
+    }
+
+    /**
+     * Gets RQueryUser objects for this query.
+    public List getRQueryUsers()
+        throws Exception
     {
         Criteria crit = new Criteria();
         crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
-        return RQueryUserPeer.doSelect(crit);
+        crit.add(RQueryUserPeer.USER_ID, getUserId());
+        return (List)RQueryUserPeer.doSelect(crit);
     }
-
-    /**
-     * Returns true if passed-in user is subscribed to query.
      */
-    public boolean isUserSubscribed(NumberKey userId) throws Exception
-    {
-        boolean isSubscribed = false;
-        List queryUsers = getSubscribedUsers(); 
-        for (int i=0;i<queryUsers.size(); i++)
-        {
-            if (((RQueryUser)queryUsers.get(i))
-                             .getScarabUserImpl().getUserId().equals(userId))
-            {
-                 isSubscribed = true;
-                 break;
-            }
-        }
-        return isSubscribed;
-    }
 
     /**
      * Gets RQueryUser object for this query and user.
      */
-    public RQueryUser getSubscription(NumberKey userId) throws Exception
+    public RQueryUser getRQueryUser(ScarabUser user)
+        throws Exception
     {
         RQueryUser rqu = new RQueryUser();
-        if (isUserSubscribed(userId))
+        Criteria crit = new Criteria();
+        crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
+        crit.add(RQueryUserPeer.USER_ID, user.getUserId());
+        if (RQueryUserPeer.doSelect(crit).size() > 0)
         {
-            Criteria crit = new Criteria();
-            crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
-            crit.add(RQueryUserPeer.USER_ID, userId);
-            rqu = (RQueryUser)RQueryUserPeer.doSelect(crit).get(0);
+            rqu = (RQueryUser)getRQueryUsers().get(0);
+        }
+        else
+        {
+            rqu.setQuery(this);
+            rqu.setUserId(user.getUserId());
         }
         return rqu;
     }
@@ -256,8 +266,16 @@ public class Query
           || (user.getUserId().equals(getUserId()) 
              && getScopeId().equals(Scope.PERSONAL__PK)))
         {
+            // Delete user-query maps.
+            List rqus = getRQueryUsers();
+            for (int i=0; i<rqus.size(); i++)
+            {
+                RQueryUser rqu = (RQueryUser)rqus.get(i);
+                rqu.delete();
+            }
             setDeleted(true);
             save();
+            
         } 
         else
         {
