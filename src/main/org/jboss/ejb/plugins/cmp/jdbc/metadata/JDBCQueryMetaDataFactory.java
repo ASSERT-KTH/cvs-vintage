@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -90,6 +91,27 @@ public class JDBCQueryMetaDataFactory {
       Element rawSql = MetaData.getOptionalChild(queryElement, "raw-sql");
       if(rawSql != null) {
          return new JDBCRawSqlQueryMetaData(method);
+      }
+
+      // JBOSS-QL
+      Element jbossQL = 
+            MetaData.getOptionalChild(queryElement, "jboss-ql");
+      if(jbossQL != null) {
+         return new JDBCJBossQLQueryMetaData(
+               jdbcQueryMetaData,
+               jbossQL,
+               method,
+               readAhead);
+      }
+
+      // DYNAMIC-SQL
+      Element dynamicQL = 
+            MetaData.getOptionalChild(queryElement, "dynamic-ql");
+      if(dynamicQL != null) {
+         return new JDBCDynamicQLQueryMetaData(
+               jdbcQueryMetaData,
+               dynamicQL,
+               method);
       }
 
       // DECLARED-SQL
@@ -243,8 +265,26 @@ public class JDBCQueryMetaDataFactory {
          }
       }
       
+      int arraySize = 0;
+      while(name.endsWith("[]")) {
+         name = name.substring(0, name.length()-2);
+         arraySize++;
+      }
+
       try {
-         return entity.getClassLoader().loadClass(name);
+         // get the base class
+         Class c = entity.getClassLoader().loadClass(name);
+
+         // if we have an array get the array class
+         if(arraySize > 0) {
+            int[] dimensions = new int[arraySize];
+            for(int i=0; i<arraySize; i++) {
+               dimensions[i]=1;
+            }
+            c = Array.newInstance(c, dimensions).getClass();
+         }
+
+         return c;
       } catch(ClassNotFoundException e) {
          throw new DeploymentException("Parameter class not found: " + name);
       }
