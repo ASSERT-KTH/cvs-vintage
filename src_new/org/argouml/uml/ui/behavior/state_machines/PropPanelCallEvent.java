@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.18 2004/05/20 11:12:25 linus Exp $
+// $Id: PropPanelCallEvent.java,v 1.19 2004/09/12 09:54:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,13 +38,18 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelCallEvent extends PropPanelEvent {
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelCallEvent() {
         super("Call event", _eventIcon, 
               ConfigLoader.getTabPropsOrientation());
     }
 
+    /**
+     * @see org.argouml.uml.ui.behavior.state_machines.PropPanelEvent#initialize()
+     */
     public void initialize() {
         super.initialize();
        

@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.34 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelExtend.java,v 1.35 2004/09/12 09:54:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,8 @@ public class PropPanelExtend extends PropPanelModelElement {
 //					      "UMLMenu",
 //					      "tooltip.nav-stereo"),
 //					  getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+                getStereotypeBox());
         addField(Translator.localize("UMLMenu", "label.namespace"),
 		 getNamespaceScroll());
 
@@ -123,14 +124,15 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         // Add the toolbar.
 
-        buttonPanel.add(new PropPanelButton2(this, new ActionNavigateNamespace()));
-        new PropPanelButton(this, buttonPanel, _extensionPointIcon,
+        buttonPanel.add(new PropPanelButton2(this, 
+                new ActionNavigateNamespace()));
+        new PropPanelButton(this, buttonPanel, extensionPointIcon,
                             localize("New Extension Point"),
                             "newExtensionPoint",
                             null);
         buttonPanel
         .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
-   }
+    }
 
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelChangeEvent.java,v 1.4 2004/06/01 19:32:05 mvw Exp $
+// $Id: PropPanelChangeEvent.java,v 1.5 2004/09/12 09:54:01 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,10 +30,16 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for a ChangeEvent.
+ *
+ */
 public class PropPanelChangeEvent extends PropPanelEvent {
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelChangeEvent() {
         super("Change event", _eventIcon, 
               ConfigLoader.getTabPropsOrientation());

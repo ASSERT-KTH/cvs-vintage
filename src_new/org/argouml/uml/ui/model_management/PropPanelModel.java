@@ -1,4 +1,4 @@
-// $Id: PropPanelModel.java,v 1.15 2004/07/31 13:42:01 mkl Exp $
+// $Id: PropPanelModel.java,v 1.16 2004/09/12 09:54:00 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,12 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelModel extends PropPanelPackage  {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelModel() {
-        super("Model", _modelIcon, ConfigLoader.getTabPropsOrientation());
+        super("Model", modelIcon, ConfigLoader.getTabPropsOrientation());
     }
 
 } /* end class PropPanelModel */

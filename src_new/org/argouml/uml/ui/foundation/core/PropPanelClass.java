@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.53 2004/08/14 15:26:11 mvw Exp $
+// $Id: PropPanelClass.java,v 1.54 2004/09/12 09:54:00 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,15 +116,18 @@ public class PropPanelClass extends PropPanelClassifier {
                 .add(new PropPanelButton2(this, 
                         ActionAddOperation.getSingleton()));
         buttonPanel.add(new PropPanelButton2(this, new ActionNewReception()));
-        new PropPanelButton(this, buttonPanel, _innerClassIcon, Translator
+        new PropPanelButton(this, buttonPanel, innerClassIcon, Translator
                 .localize("UMLMenu", "button.new-inner-class"),
                 "addInnerClass", null);
-        new PropPanelButton(this, buttonPanel, _classIcon, Translator.localize(
+        new PropPanelButton(this, buttonPanel, classIcon, Translator.localize(
                 "UMLMenu", "button.new-class"), "newClass", null);
         buttonPanel
                 .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
+    /**
+     * Add an inner class. 
+     */
     public void addInnerClass() {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAClassifier(target)) {
@@ -134,6 +137,9 @@ public class PropPanelClass extends PropPanelClassifier {
         }
     }
 
+    /**
+     * Add a new class.
+     */
     public void newClass() {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAClassifier(target)) {

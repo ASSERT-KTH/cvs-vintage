@@ -1,4 +1,4 @@
-// $Id: PropPanelLinkEnd.java,v 1.2 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelLinkEnd.java,v 1.3 2004/09/12 09:53:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,12 +39,17 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelLinkEnd extends PropPanelModelElement {
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelLinkEnd() {
-        super("Linkend", _assocEndIcon, ConfigLoader.getTabPropsOrientation());
+        super("Linkend", assocEndIcon, ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("UMLMenu", "label.name"),
                 getNameTextField());
         
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
+        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+                getStereotypeBox());
                 
         addField(Translator.localize("UMLMenu", "label.namespace"),
                 getNamespaceScroll());

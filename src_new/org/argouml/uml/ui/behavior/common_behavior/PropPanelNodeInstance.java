@@ -1,4 +1,4 @@
-// $Id: PropPanelNodeInstance.java,v 1.30 2004/09/07 18:50:05 mvw Exp $
+// $Id: PropPanelNodeInstance.java,v 1.31 2004/09/12 09:53:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class PropPanelNodeInstance extends PropPanelInstance {
      * Constructor.
      */
     public PropPanelNodeInstance() {
-        super("Node Instance", _nodeInstanceIcon, ConfigLoader
+        super("Node Instance", nodeInstanceIcon, ConfigLoader
                 .getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.NODE_INSTANCE;

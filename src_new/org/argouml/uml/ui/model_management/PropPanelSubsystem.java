@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.13 2004/09/11 19:16:56 mvw Exp $
+// $Id: PropPanelSubsystem.java,v 1.14 2004/09/12 09:54:00 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,13 +49,13 @@ public class PropPanelSubsystem extends PropPanelPackage {
      * 
      */
     public PropPanelSubsystem() {
-        super("Subsystem", _subsystemIcon, 
+        super("Subsystem", subsystemIcon, 
                 ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("UMLMenu", "label.available-features"),
                 getFeatureScroll());
 
-        new PropPanelButton(this, buttonPanel, _addOpIcon, Translator.localize(
+        new PropPanelButton(this, buttonPanel, addOpIcon, Translator.localize(
                 "UMLMenu", "button.new-operation"), "addOperation", null);
     }
 

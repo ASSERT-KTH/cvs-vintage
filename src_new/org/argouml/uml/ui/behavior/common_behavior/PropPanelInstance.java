@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.29 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelInstance.java,v 1.30 2004/09/12 09:53:59 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.29 2004/07/31 08:31:57 mkl Exp $
+// $Id: PropPanelInstance.java,v 1.30 2004/09/12 09:53:59 mvw Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -45,18 +45,28 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for an Instance.
+ *
+ */
 public class PropPanelInstance extends PropPanelModelElement {
 
-    protected JScrollPane stimuliSenderScroll;
+    private JScrollPane stimuliSenderScroll;
 
-    protected JScrollPane stimuliReceiverScroll;
+    private JScrollPane stimuliReceiverScroll;
 
-    protected static UMLInstanceSenderStimulusListModel stimuliSenderListModel = new UMLInstanceSenderStimulusListModel();
+    private static UMLInstanceSenderStimulusListModel 
+        stimuliSenderListModel = new UMLInstanceSenderStimulusListModel();
 
-    protected static UMLInstanceReceiverStimulusListModel stimuliReceiverListModel = new UMLInstanceReceiverStimulusListModel();
+    private static UMLInstanceReceiverStimulusListModel 
+        stimuliReceiverListModel = new UMLInstanceReceiverStimulusListModel();
 
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelInstance() {
-        super("Instance Properties", _instanceIcon, ConfigLoader
+        super("Instance Properties", instanceIcon, ConfigLoader
                 .getTabPropsOrientation());
         Class mclass = (Class) ModelFacade.INSTANCE;
 
@@ -75,15 +85,30 @@ public class PropPanelInstance extends PropPanelModelElement {
                 new ActionNavigateNamespace()));
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param name the name for the properties panel
+     * @param icon the icon shown next to the name
+     * @param orientation the orientation
+     */
     public PropPanelInstance(String name, ImageIcon icon,
             Orientation orientation) {
         super(name, icon, orientation);
     }
 
-    public boolean isAcceptibleClassifier(Object/* MModelElement */classifier) {
-        return org.argouml.model.ModelFacade.isAClassifier(classifier);
+    /**
+     * @param me the given object
+     * @return true if the given modelelement is acceptable for this panel, 
+     *         i.e. is a Classifier
+     */
+    public boolean isAcceptibleClassifier(Object/* MModelElement */me) {
+        return org.argouml.model.ModelFacade.isAClassifier(me);
     }
 
+    /**
+     * @return the classifier that owns this panel
+     */
     public Object getClassifier() {
         Object classifier = null;
         Object target = getTarget();
@@ -104,12 +129,15 @@ public class PropPanelInstance extends PropPanelModelElement {
         return classifier;
     }
 
+    /**
+     * @param element the owning UML element
+     */
     public void setClassifier(Object/* MClassifier */element) {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
             Object inst = /* (MInstance) */target;
-            //            ((MInstance) target).setClassifier((MClassifier) element);
+            // ((MInstance) target).setClassifier((MClassifier) element);
 
             // delete all classifiers
             Collection col = ModelFacade.getClassifiers(inst);
@@ -125,6 +153,9 @@ public class PropPanelInstance extends PropPanelModelElement {
         }
     }
 
+    /**
+     * @return the scrollpane for stimuli sender
+     */
     protected JScrollPane getStimuliSenderScroll() {
         if (stimuliSenderScroll == null) {
             JList stimuliSenderList = new UMLLinkedList(stimuliSenderListModel);
@@ -134,6 +165,9 @@ public class PropPanelInstance extends PropPanelModelElement {
         return stimuliSenderScroll;
     }
 
+    /**
+     * @return the scrollpane for stimuli receiver
+     */
     protected JScrollPane getStimuliReceiverScroll() {
         if (stimuliReceiverScroll == null) {
             JList stimuliReceiverList = new UMLLinkedList(

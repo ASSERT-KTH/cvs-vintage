@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.55 2004/08/14 15:26:11 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.56 2004/09/12 09:54:00 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class PropPanelOperation extends PropPanelFeature {
      * The constructor.
      */
     public PropPanelOperation() {
-        super("Operation", _operationIcon, ConfigLoader
+        super("Operation", operationIcon, ConfigLoader
                 .getTabPropsOrientation());
 
         Class mclass = (Class) ModelFacade.OPERATION;
@@ -123,7 +123,7 @@ public class PropPanelOperation extends PropPanelFeature {
                         ActionAddOperation.getSingleton()));
         buttonPanel
                 .add(new PropPanelButton2(this, ActionNewParameter.SINGLETON));
-        new PropPanelButton(this, buttonPanel, _signalIcon,
+        new PropPanelButton(this, buttonPanel, signalIcon,
                 localize("New Raised Signal"), "buttonAddRaisedSignal", null);
         buttonPanel
                 .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
@@ -131,7 +131,7 @@ public class PropPanelOperation extends PropPanelFeature {
     }
 
     /**
-     * @return
+     * @return the returntype of the operation
      */
     public Object getReturnType() {
         Object type = null;
@@ -155,6 +155,9 @@ public class PropPanelOperation extends PropPanelFeature {
         return type;
     }
 
+    /**
+     * @param type the returntype of the operation
+     */
     public void setReturnType(Object/* MClassifier */type) {
         Object target = getTarget();
         if (ModelFacade.isAOperation(target)) {
@@ -199,6 +202,9 @@ public class PropPanelOperation extends PropPanelFeature {
         }
     }
 
+    /**
+     * @return the raised signals of this operation
+     */
     public Collection getRaisedSignals() {
         Collection signals = null;
         Object target = getTarget();
@@ -208,6 +214,9 @@ public class PropPanelOperation extends PropPanelFeature {
         return signals;
     }
 
+    /**
+     * @param signals the raised signals of this operation
+     */
     public void setRaisedSignals(Collection signals) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAOperation(target)) {
@@ -215,6 +224,9 @@ public class PropPanelOperation extends PropPanelFeature {
         }
     }
 
+    /**
+     * @param index add a raised signal
+     */
     public void addRaisedSignal(Integer index) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAOperation(target)) {
@@ -230,6 +242,9 @@ public class PropPanelOperation extends PropPanelFeature {
         }
     }
 
+    /**
+     * The button to add a raised signal is pressed.
+     */
     public void buttonAddRaisedSignal() {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAOperation(target)) {
