@@ -70,6 +70,7 @@ import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.aaa.SimplePrincipal;
 
 class Ajp12 {
     Socket socket;
@@ -153,12 +154,16 @@ class Ajp12 {
 		    req.remoteHost().setString( readString(ajpin, ""));
                     if (isTomcatAuthentication())
                         dummy=readString(ajpin, null);
-                    else req.setRemoteUser( readString(ajpin, null));
+                    else {
+                        req.setRemoteUser( readString(ajpin, null));
+                        // Note that roles are not integrated with apache
+                        req.setUserPrincipal( new SimplePrincipal( req.getRemoteUser() ));
+                    }
 		    req.setAuthType(readString(ajpin, null));
 		    //remote port
 		    dummy = readString(ajpin, null);
 		    //		    System.out.println("XXX rport " + dummy );
-		    
+
 		    req.method().setString( readString(ajpin, null));
 		    req.requestURI().setString( readString(ajpin, ""));
 
