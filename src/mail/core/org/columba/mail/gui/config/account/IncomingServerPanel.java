@@ -53,6 +53,8 @@ import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.PopItem;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3Store;
@@ -583,12 +585,38 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 	}
 
+	private DefaultItem getCurrentDialogSettings()
+	{
+	  DefaultItem server = null;
+	  
+		if (accountItem.isPopAccount()) {
+			server = (DefaultItem)accountItem.getPopItem().clone();
+		} else {
+			server = (DefaultItem)accountItem.getImapItem().clone();
+		}
+
+		server.set("user", loginTextField.getText());
+		server.set("host", hostTextField.getText());
+		server.set("password", passwordTextField.getText());
+		server.set("port", ((Integer) portSpinner.getValue()).toString());
+
+		server.set("enable_ssl", secureCheckBox.isSelected());
+		server.set("ssl_type", sslComboBox.getSelectedIndex());
+
+	  return server;
+	  
+	}
+	
 	private void fetchAuthMechanisms() {
 		{
 			List list = new LinkedList();
-
+			DefaultItem serverItem = getCurrentDialogSettings();
+			
 			if (isPopAccount()) {
-				POP3Store store = new POP3Store(accountItem.getPopItem());
+			  //user may have changed hostname. use dialog settings instead of
+			  //stored settings
+			  
+				POP3Store store = new POP3Store((PopItem)serverItem/*accountItem.getPopItem()*/);
 				
 				try {
 					list = store.checkSupportedAuthenticationMethods();
@@ -597,7 +625,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 					new ExceptionHandler().processException(e);
 				}
 			} else {
-				IMAPServer server = new IMAPServer(accountItem.getImapItem(),null);
+				IMAPServer server = new IMAPServer(/*accountItem.getImapItem()*/(ImapItem)serverItem,null);
 				
 				try {
 					list = server.checkSupportedAuthenticationMethods();

@@ -44,6 +44,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.command.ExceptionHandler;
+import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
@@ -431,11 +432,26 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         }
     }
 
+		private AccountItem getCurrentDialogSettings()
+		{
+
+		  AccountItem account = (AccountItem)accountItem.clone();
+		  
+      account.set("user", loginTextField.getText());
+      account.set("save_password", storePasswordCheckBox.isSelected());
+      account.set("port", ((Integer)portSpinner.getValue()).toString());
+      account.set("host", hostTextField.getText());
+      account.set("enable_ssl", secureCheckBox.isSelected());
+	
+		  return account;
+		  
+		}
+		
     private void fetchSupportedAuthenticationMechanisms() {
         List list = new LinkedList();
 
         try {
-            SMTPServer server = new SMTPServer(accountItem);
+            SMTPServer server = new SMTPServer(getCurrentDialogSettings());
             list = server.checkSupportedAuthenticationMethods();
         }  catch (SMTPException e1) {
             LOG.severe("Server does not support the CAPA command");
