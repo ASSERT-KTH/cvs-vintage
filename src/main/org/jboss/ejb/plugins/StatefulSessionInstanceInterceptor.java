@@ -33,7 +33,7 @@ import javax.ejb.EJBObject;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -331,8 +331,11 @@ extends AbstractInterceptor
 			if (notifySession) {
 				
 				try {
-					
-					afterCompletion.invoke(ctx.getInstance(), new Object[] {new Integer(status)});
+					 
+					if (status == Status.STATUS_COMMITTED) 
+						afterCompletion.invoke(ctx.getInstance(), new Object[] {new Boolean(true)});
+					else
+						afterCompletion.invoke(ctx.getInstance(), new Object[] {new Boolean(false)});
 				}
 				catch (Exception e) {Logger.exception(e);}
 			}
