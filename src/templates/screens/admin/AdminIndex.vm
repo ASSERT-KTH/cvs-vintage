@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.11 2002/01/04 23:16:59 jmcnally Exp $
+@version $Id: AdminIndex.vm,v 1.12 2002/01/11 23:27:47 dr Exp $
 *#
 
 $page.setTitle("Scarab Administration")
@@ -50,26 +50,4 @@ $page.setTitle("Scarab Administration")
 
 </div>
 
-
-<p>
-This is the new administrative piece of Scarab (to replace Flux). At this
-point, a lot of the underlying 'action' code is a rip off of the 'Flux'
-code. This was done for a number of reasons:
-<ol>
-  <li> the current user admin using Flux does not look like the rest of
-       Scarab; though this is fixed simply by modifying the templates </li>
-  <li> ultimately the goal is to remove Flux from Scarab as the Flux 'action
-       code' doesn't support the feel that would make it function similar to
-       the rest of Scarab </li>
-  <li> if the user piece is ever gonna get done, it will be more easily
-       picked up if there is a jump point to start at within Scarab </li>
-</ol>
-</p>
-
-<p>
-The following are some other things to do (in no particular order):
-<ul>
- <li> on 'User Management' pass the search info forward, so that if a user presses cancel it takes them back to the last search (rather than an empty search) </li>
-</ul>
-</p>
 
