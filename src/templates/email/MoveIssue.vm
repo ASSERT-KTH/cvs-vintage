@@ -1,0 +1,18 @@
+
+#if ($action.equals("copy"))
+  #set ($actionWord = "copied")
+#else
+  #set ($actionWord = "moved")
+#end
+
+#set ($user = $scarabR.getUser($issue.ModifiedBy.toString()) )
+#Issue $issue.UniqueId has just been $actionWord from $oldModule to $newModule by user $user.UserName.
+
+You can view the issue detail at the following URL:
+
+   <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId)>
+
+
+#if ( $attachment.DataAsString )Comment:  $attachment.DataAsString #end
+
+

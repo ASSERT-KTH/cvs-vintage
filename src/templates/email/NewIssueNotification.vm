@@ -1,26 +1,19 @@
-Bug report $issue.Id has just been filed.
+#set ($user = $scarabR.getUser($issue.ModifiedBy.toString()) )
+Bug report $issue.UniqueId has just been filed by user $user.UserName.
+
+#set ($attrValues = $issue.AttributeValuesMap)
+#set($attVal =  $attrValues.get("SUMMARY"))
+#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+
+$issue.UniqueId Summary:  $attrInput.Value 
 
 You can view the report at the following URL:
+<$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId).setEncodeURLOff()>
 
-   <$link.setPage("IssueDetail.vm").addPathInfo("issueid", $issue.Id).setEncodeURLOff()>
+$issue.UniqueId Report 
 
-REPORT $issue.Id Details.
-
-Project: $issue.Project
-Component: $issue.Component
-
-Type: $issue.Type
-Resolution: $issue.Resolution
-Priority: $issue.Priority
-Severity: $issue.Severity
-
-Environment: 
-   Version: $issue.Version
-   Platform: $issue.Platform
-   OS: $issue.OpSys
-
-Synopsis: 
-$issue.Summary
-
-Description: 
-$issue.Description
+#foreach ( $attKey in $attrValues )
+  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()))
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+  $attVal.Attribute.Name: $attrInput.Value
+#end
