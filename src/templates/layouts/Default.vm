@@ -49,26 +49,26 @@
   <td id="leftcol" width="20%">
 	<div id="navcolumn">
 
-<div><strong><a href="#">My start page</a></strong></div>
+<div><strong>My start page</strong></div>
 
-<div><strong><a href="#">Projects &amp; categories</a></strong></div> 
+<div><strong>Projects &amp; categories</strong></div> 
 
  <div id="tools"><strong>Project tools</strong>
-      <div><small><a href="#">Members</a></small></div>
- <div><small><a href="#"> Mailing lists</a></small></div> 
-<div><small><a href="#">Source code</a></small></div>
-<div><small><a href="#">Issue tracking</a></small>
+      <div><small>Members</small></div>
+ <div><small> Mailing lists</small></div> 
+<div><small>Source code</small></div>
+<div><small>Issue tracking</small>
 
 
-			<div><small><a href="#">Enter issue</a></small></div>
-			<div><small><a href="#">Queries</a></small></div>
-			<div><small><a href="#">Reports</a></small></div>
-			<div><small><a href="#">Vote mgmt.</a></small></div>
-			<div><small><a href="#">Workflow optns.</a></small></div>
+			<div><small>Enter issue</small></div>
+			<div><small>Queries</small></div>
+			<div><small>Reports</small></div>
+			<div><small>Vote mgmt.</small></div>
+			<div><small>Workflow optns.</small></div>
 
 </div>
-     <div><small><a href="#">Documents</a></small></div>
-      <div><small><a href="#">News</a></small></div>  
+     <div><small>Documents</small></div>
+      <div><small>News</small></div>  
    </div>
 
 </div>
@@ -79,9 +79,9 @@
  </tr>
  <tr>
  <td>
-  <div><a href="#">Learn 
- more about this project?</a> </div> <div><a href="#">Print this page...</a></div>
-<div><a href="#">Troubleshoot...</a>
+  <div>Learn 
+ more about this project? </div> <div>Print this page...</div>
+<div>Troubleshoot...
 </div>
 </td>
 </tr>
