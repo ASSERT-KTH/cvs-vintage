@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.48 2004/07/17 13:10:41 kataka Exp $
+// $Id: PropPanelClass.java,v 1.49 2004/07/22 15:42:32 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLCheckBox;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLReflectionBooleanProperty;
@@ -77,7 +76,7 @@ public class PropPanelClass extends PropPanelClassifier {
 	// addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
 	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
-	_modifiersPanel.add(new UMLCheckBox(Translator.localize("UMLMenu", "checkbox.active-uc"), this, new UMLReflectionBooleanProperty("isActive", mclass, "isActive", "setActive")));
+	_modifiersPanel.add(new UMLClassActiveCheckBox());
 	addField(Translator.localize("UMLMenu", "label.modifiers"), _modifiersPanel);
 	addField(Translator.localize("UMLMenu", "label.namespace-visibility"), getNamespaceVisibilityPanel());
 
