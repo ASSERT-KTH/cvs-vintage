@@ -42,7 +42,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
 {
@@ -53,7 +53,7 @@ public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
       // if(BeanMetaData.LOCAL_INVOKER_PROXY_BINDING.equals(invokerBinding)) return;
       if (invokerBinding == null)
       {
-         log.debug("invokerBinding is null in ProxyFactoryFinder");
+         log.trace("invokerBinding is null in ProxyFactoryFinder");
          return;
       }
 
