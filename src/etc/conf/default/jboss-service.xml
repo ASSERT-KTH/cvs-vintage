@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.31 2002/02/24 10:24:31 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.32 2002/03/01 08:29:56 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -17,6 +17,21 @@
      | then there is no need to list the files and it should commented
    -->
   <classpath codebase="lib" archives="*"/>
+
+  <!-- ==================================================================== -->
+  <!-- Deployment Scanning                                                  -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.deployment.scanner.DirectoryDeploymentScanner"
+	 name="jboss.deployment:type=DeploymentScanner,flavor=Directory">
+    <depends>jboss.system:service=MainDeployer</depends>
+    <attribute name="ScanPeriod">5000</attribute>
+
+    <!-- Directories are comman seperated and relative to server home -->
+    <attribute name="Directories">
+       ./deploy
+    </attribute>
+  </mbean>
 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
