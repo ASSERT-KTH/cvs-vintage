@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.7 2004/03/06 21:16:27 mvw Exp $
+// $Id: StartBrowser.java,v 1.8 2004/08/24 16:43:23 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,20 +35,22 @@ import org.apache.log4j.Logger;
  */
 public class StartBrowser {
     /** logger */
-    private static Logger cat = Logger.getLogger(StartBrowser.class);
+    private static final Logger LOG = Logger.getLogger(StartBrowser.class);
 
     /**
      * Open an Url in the system's default browser.
      * <P>
      * This will probably not be perfect for everyone but hopefully it is a
      * good enough alternative.
+     *
+     * @param url the given URL
      */
     public static void openUrl(String url)
     {
 	try {
 	    if (OsUtil.isWin32()) {
-		Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "
-					  + url);
+		Runtime.getRuntime()
+		    .exec("rundll32 url.dll,FileProtocolHandler " + url);
 	    }
 	    else if (OsUtil.isMac()) {
 		try {
@@ -63,8 +65,8 @@ public class StartBrowser {
 		    };
 		    m.invoke(c.newInstance(), args);
 		} catch (Exception cnfe) {
-		    cat.error(cnfe);
-		    cat.info("Trying a default browser (netscape)");
+		    LOG.error(cnfe);
+		    LOG.info("Trying a default browser (netscape)");
 		    String[] commline = {
 			"netscape", url 
 		    };
@@ -85,9 +87,9 @@ public class StartBrowser {
 	}
 	catch (IOException ioe) {
 	    // Didn't work.
-            cat.error(ioe);
+            LOG.error(ioe);
 	}	    
 
-	cat.error("Could not open url: " + url);
+	LOG.error("Could not open url: " + url);
     }
 }
