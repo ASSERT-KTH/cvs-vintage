@@ -112,10 +112,6 @@ ul, ol, dd	{
 	border-bottom: 1px solid #cc9;
 	border-right: 1px solid #cc9;
 	}
-	
-	
-	
-	
 #sidebar td {
 	background: white;
 	}
@@ -125,10 +121,7 @@ ul, ol, dd	{
 	}
 #sidebar td {
 	border: 1px solid #003366;
-	}
-	
-	
-	
+	}	
 /* SoucreCast - styles end here */
 
 /* Scarab/App - styles start here */
@@ -136,8 +129,6 @@ ul, ol, dd	{
 	border-top: 1px solid white;
 	border-bottom: 1px solid #999;
 	}
-	
-	
 #tabs { border-bottom: 1em #999 solid }
 #tabs th {
 	background: url(../images/nw_min.gif) no-repeat top left;
