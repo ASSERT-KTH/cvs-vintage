@@ -10,25 +10,28 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.apache.log4j.Category;
+
 import javax.management.*;
 
-import org.jboss.logging.Log;
-
 /**
- *   <description> 
+ * Shutdown service.  Installs a hook to cleanly shutdown the server and
+ * provides the ability to handle user shutdown requests.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.3 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @version $Revision: 1.4 $
  */
 public class Shutdown
    implements MBeanRegistration, ShutdownMBean
 {
    // Constants -----------------------------------------------------
+
    public static final String OBJECT_NAME = ":type=Shutdown";
-    
+   
    // Attributes ----------------------------------------------------
-   Log log = Log.createLog("Shutdown");
+
+   /** Instance logger. */
+   private final Category log = Category.getInstance(ClassPathExtension.class);
    
    List mbeans = new ArrayList();
    MBeanServer server;
@@ -40,8 +43,9 @@ public class Shutdown
    }
    
    // MBeanRegistration implementation ------------------------------
+
    public ObjectName preRegister(final MBeanServer server, ObjectName name)
-      throws java.lang.Exception
+      throws Exception
    {
       this.server = server;
       try
@@ -58,20 +62,20 @@ public class Shutdown
                System.out.println("Shutdown complete");
             }
          });
-         log.log("Shutdown hook added");
+         log.info("Shutdown hook added");
       } catch (Throwable e)
       {
-         log.error("Could not add shutdown hook");
+         log.error("Could not add shutdown hook", e);
       }
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
    
-   public void postRegister(java.lang.Boolean registrationDone)
+   public void postRegister(Boolean registrationDone)
    {
    }
    
    public void preDeregister()
-      throws java.lang.Exception
+      throws Exception
    {
    }
    
@@ -87,7 +91,7 @@ public class Shutdown
          server.invoke(new ObjectName(":service=ServiceControl"), "stop", new Object[0] , new String[0]);
       } catch (Exception e)
       {
-         e.printStackTrace();
+         log.error("failed to stop services", e);
       }
 
       try
@@ -96,7 +100,7 @@ public class Shutdown
          server.invoke(new ObjectName(":service=ServiceControl"), "destroy", new Object[0] , new String[0]);
       } catch (Exception e)
       {
-         e.printStackTrace();
+         log.error("failed to destroy services", e);         
       }
    }
 }

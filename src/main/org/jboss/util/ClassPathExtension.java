@@ -6,21 +6,22 @@
  */
 package org.jboss.util;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import javax.management.*;
 import javax.management.loading.MLet;
 
-import org.jboss.logging.Log;
+import org.apache.log4j.Category;
+
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
- *   Add URL's to the MLet classloader
+ * Add URL's to the MLet classloader
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.11 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @version $Revision: 1.12 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration
@@ -29,14 +30,20 @@ public class ClassPathExtension
    public static final String OBJECT_NAME = ":service=ClassPathExtension";
     
    // Attributes ----------------------------------------------------
-   String url;
-   String name;
-   
-   Log log = Log.createLog("Classpath extension");
+
+   /** The url to extend the classpath with. */
+   private String url;
+
+   /** The name of the classpath ??? */
+   private String name;
+
+   /** Instance logger. */
+   private final Category log = Category.getInstance(ClassPathExtension.class);
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
+
    public ClassPathExtension(String url)
    {
       this(url, url);
@@ -49,9 +56,10 @@ public class ClassPathExtension
    }
    
    // MBeanRegistration implementation ------------------------------
-   public ObjectName preRegister(MBeanServer server,
-                              ObjectName objName)
-                       throws java.lang.Exception
+    
+   public ObjectName preRegister(final MBeanServer server,
+                                 final ObjectName objName)
+      throws Exception
    {
       return objName == null ? new ObjectName(OBJECT_NAME+",name="+this.name) : objName;
    }
@@ -88,7 +96,7 @@ public class ClassPathExtension
                if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
                {
                   URL file = new File(dir, files[i]).getCanonicalFile().toURL();
-                  log.debug("Added library:"+file);
+                  log.debug("Added library: "+file);
                   mlet.addURL(file);
                
                   // Add to java.class.path
@@ -110,7 +118,7 @@ public class ClassPathExtension
                   // Add to java.class.path
                   classPath += separator + u.getFile();
                
-                  log.debug("Added directory:"+u);
+                  log.debug("Added directory: "+u);
                } catch (MalformedURLException e)
                {
 //                  URL u = new File(url).toURL();
@@ -120,13 +128,12 @@ public class ClassPathExtension
                   // Add to java.class.path
                   classPath += separator + u.getFile();
                
-                  log.debug("Added directory:"+url);
+                  log.debug("Added directory: "+url);
                }
             }
          } catch (Throwable ex)
          {
-         	log.warning("Classpath extension "+u+" is invalid.");
-            ex.printStackTrace();
+         	log.warn("invalid url: " + u, ex);
          }
       } else
       {
@@ -139,7 +146,7 @@ public class ClassPathExtension
             // Add to java.class.path
             classPath += separator + u.getFile();
          
-            log.debug("Added library:"+u);
+            log.debug("Added library: "+u);
          } catch (MalformedURLException e)
          {
             try
@@ -151,11 +158,10 @@ public class ClassPathExtension
                // Add to java.class.path
                classPath += separator + u.getFile();
          
-               log.debug("Added library:"+url);
+               log.debug("Added library: "+url);
             } catch (MalformedURLException ex)
             {
-               log.warning("Classpath extension "+u+" is invalid.");
-               log.exception(ex);
+               log.warn("invalid url: "+u, ex);
             }
          }
       }
@@ -165,7 +171,7 @@ public class ClassPathExtension
    }
    
    public void preDeregister()
-      throws java.lang.Exception
+      throws Exception
    {
       
    }
