@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.19 2004/05/10 21:04:46 dabbous Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.20 2004/12/13 13:00:55 dabbous Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -225,7 +225,7 @@ public class DatabaseInitializer
         String oldPort = GlobalParameterManager
             .getString(ScarabConstants.HTTP_PORT);
 
-        if (oldDomain == null)
+        if (oldDomain.equals(""))
         {
             // installations with post-b15 but pre-b16 may have module
             // specific values.  

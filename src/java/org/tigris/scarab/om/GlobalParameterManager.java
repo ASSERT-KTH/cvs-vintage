@@ -51,6 +51,7 @@ import java.io.Serializable;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
+import org.apache.turbine.Turbine;
 
 
 /** 
@@ -60,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * module does not provide alternatives.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameterManager.java,v 1.7 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: GlobalParameterManager.java,v 1.8 2004/12/13 13:00:54 dabbous Exp $
  */
 public class GlobalParameterManager
     extends BaseGlobalParameterManager
@@ -156,7 +157,7 @@ public class GlobalParameterManager
         return result;
     }
 
-    public static String getString(String name)
+    public static String getString(String key)
         throws TorqueException
     {
         // we do not call getString(name, null) here because we do
@@ -165,17 +166,21 @@ public class GlobalParameterManager
         String result = null;
         // reversing order because we want to be able to invalidate based
         // on the parameter name, not the method name.
-        Object obj = getMethodResult().get(MANAGER_KEY, name, GET_STRING); 
+        Object obj = getMethodResult().get(MANAGER_KEY, key, GET_STRING); 
         if (obj == null) 
         {
-            result = getInstance(name).getValue();
+            result = getInstance(key).getValue();
             if (result == null)
             {
-                log.warn("GlobalParameter " + name + " does not exist!");
+                result = Turbine.getConfiguration().getString(key);
+                if (result == null || result.trim().length() == 0) 
+                {
+                    result = "";
+                }
             }
-            else
+            if(!result.equals(""))
             {
-                getMethodResult().put(result, MANAGER_KEY, name, GET_STRING);
+                getMethodResult().put(result, MANAGER_KEY, key, GET_STRING);
             }
         }
         else 
