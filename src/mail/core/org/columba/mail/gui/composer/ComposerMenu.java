@@ -148,7 +148,7 @@ public class ComposerMenu extends JMenuBar{
 		CMenuItem menuItem =
 			new CMenuItem(
 				MailResourceLoader.getString("menu","mainframe","menu_edit_find"), //$NON-NLS-1$ //$NON-NLS-2$
-				ImageLoader.getSmallImageIcon("stock_search-16.png_8") ); //$NON-NLS-1$
+				ImageLoader.getSmallImageIcon("stock_search-16.png") ); //$NON-NLS-1$
 		menuItem.setAccelerator(
 			KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		menuItem.setMnemonic(KeyEvent.VK_F);

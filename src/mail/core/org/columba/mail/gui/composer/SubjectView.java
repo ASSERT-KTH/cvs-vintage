@@ -32,7 +32,7 @@ public class SubjectView extends JTextField {
 	
 	public SubjectView( ComposerModel model )
 	{
-		super(MailResourceLoader.getString("action","mainframe","composer_no_subject")); //$NON-NLS-1$
+		super(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
 		
 		this.model = model;
 		

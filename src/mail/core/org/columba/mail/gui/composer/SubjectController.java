@@ -55,7 +55,7 @@ public class SubjectController implements DocumentListener {
 		String subject = model.getHeaderField("Subject");
 
 		if (subject.length() == 0) {
-			subject = new String(MailResourceLoader.getString("menu","mainframe","composer_no_subject")); //$NON-NLS-1$
+			subject = new String(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
 			//SubjectDialog dialog = new SubjectDialog(composerInterface.composerFrame);
 			SubjectDialog dialog = new SubjectDialog();
 			dialog.showDialog(subject);

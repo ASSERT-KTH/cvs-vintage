@@ -630,7 +630,7 @@ public class ComposerActionListener implements ActionListener {
 					"composer",
 					"menu_edit_extern_edit"),
 				"EXTERNEDIT",
-				ImageLoader.getSmallImageIcon("extern_edit_small.png"),
+				null,
 				null,
 				MailResourceLoader.getMnemonic(
 					"menu",
