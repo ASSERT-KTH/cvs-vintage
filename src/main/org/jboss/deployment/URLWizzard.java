@@ -33,7 +33,7 @@ import java.util.jar.Manifest;
 * Very scratchy! Any improvements are welcome!
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
-*	@version $Revision: 1.2 $
+*	@version $Revision: 1.3 $
 */
 public class URLWizzard
 {
@@ -77,19 +77,20 @@ public class URLWizzard
    _destDirectory, _prefix and _suffix  */
    public static URL downloadTemporary (URL _src, URL _destDirectory, String _prefix, String _suffix) throws IOException
    {
-      File f = new File (_destDirectory.getFile ());
+      File f = new File (_destDirectory.getFile ()); 
       if (!f.exists ())
          f.mkdirs ();
       
-      f = File.createTempFile (_prefix, _suffix, f);
-      
-      URL result = f.toURL ();
-      
-      download (_src, result);
-      
-      return result;
+      File file;   
+      do
+      {
+         file = new File (f, _prefix + getId () + _suffix); 
+      }
+      while (!file.createNewFile ());
+         
+      return download (_src, file.toURL ());
    }
-
+   
    
    /** packs the source directory the _src url points to to a jar archiv at
    the _dest position */
@@ -152,8 +153,14 @@ public class URLWizzard
       if (!f.exists ())
          f.mkdirs ();
       
-      f = File.createTempFile (_prefix, _suffix, f);
-      JarOutputStream jout = new JarOutputStream (new FileOutputStream (f));
+      File file;   
+      do
+      {
+         file = new File (f, _prefix + getId () + _suffix); 
+      }
+      while (!file.createNewFile ());
+         
+      JarOutputStream jout = new JarOutputStream (new FileOutputStream (file));
       
       // put all into the jar...
       add (jout, new File (_src.getFile()), "");
@@ -231,7 +238,7 @@ public class URLWizzard
       }
       while (true); // the endless loop should never cause trouble
    }
-
+   
    private static int id = 1000; 
    
    /** used by createTempDir */
@@ -239,7 +246,7 @@ public class URLWizzard
    {
       return String.valueOf (++id);
    }
-
+   
    
    
    /** deletes the given file:/... url recursively */    
@@ -280,7 +287,7 @@ public class URLWizzard
       
       _out.flush ();
    }
-   
-   
+
+
 
 }
