@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.95 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.96 2003/12/04 19:26:16 mpoeschl Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -807,7 +807,7 @@ public abstract class AbstractScarabUser
             .getScreenPermission(homePage.replace(',','.'));
         if (perm != null && !hasPermission(perm, module)) 
         {
-            result = false;;
+            result = false;
         }
         return result;
     }

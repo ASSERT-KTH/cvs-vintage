@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.41 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.42 2003/12/04 19:26:16 mpoeschl Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -193,7 +193,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
             // Check that duplicate check is not at the beginning.
             if (dupeOrder == 1)
             {
-                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));;
+                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));
                 return false;
             }
 

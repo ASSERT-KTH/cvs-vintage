@@ -64,7 +64,7 @@ import org.tigris.scarab.util.SkipFiltering;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.6 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: EmailLink.java,v 1.7 2003/12/04 19:26:16 mpoeschl Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -283,7 +283,7 @@ public class EmailLink
      */
     public void removePathInfo(String name)
     {
-        removePairByName( pathInfo, name );;
+        removePairByName( pathInfo, name );
     }
 
     /**

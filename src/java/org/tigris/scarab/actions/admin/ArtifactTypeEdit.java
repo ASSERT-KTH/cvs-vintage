@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.59 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.60 2003/12/04 19:26:16 mpoeschl Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -205,7 +205,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             // Check that duplicate check is not at the beginning.
             if (dupeOrder == 1)
             {
-                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));;
+                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));
                 return false;
             }
             // Check for duplicate sequence numbers
