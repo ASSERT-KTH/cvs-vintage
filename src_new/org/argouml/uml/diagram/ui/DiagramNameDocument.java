@@ -1,4 +1,4 @@
-// $Id: DiagramNameDocument.java,v 1.2 2004/11/29 21:25:27 mvw Exp $
+// $Id: DiagramNameDocument.java,v 1.3 2005/01/01 22:53:07 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 class DiagramNameDocument implements DocumentListener, TargetListener {
 
     private JTextField field;
+    private boolean stopEvents = false;
     
     /**
      * The constructor.
@@ -60,13 +61,19 @@ class DiagramNameDocument implements DocumentListener, TargetListener {
     
     /**
      * If the currently selected object is a diagram, 
-     * then update the name-field.
+     * then update the name-field. <p>
+     * 
+     * MVW: I added the stopEvents mechanism, because otherwise 
+     * updating the field causes the UML model to be adapted!
      * 
      * @param t the currently selected object
      */
     private void setTarget(Object t) {
-        if (t instanceof UMLDiagram) 
+        if (t instanceof UMLDiagram) {
+            stopEvents = true;
             field.setText(((UMLDiagram) t).getName());
+            stopEvents = false;
+        }
     }
     
     /**
@@ -118,21 +125,23 @@ class DiagramNameDocument implements DocumentListener, TargetListener {
      * @param e the documentevent from the Documentlistener interface
      */
     private void update(DocumentEvent e) {
-        Object target = TargetManager.getInstance().getTarget();
-        if (target instanceof UMLDiagram) {
-            UMLDiagram d = (UMLDiagram) target;
-            try {
-                int documentLength = e.getDocument().getLength();
-                String newName = e.getDocument().getText(0, documentLength);
-                String oldName = d.getName();
-                /* Prevent triggering too many events by setName(). */
-                if (!oldName.equals(newName)) { 
-                    d.setName(newName);
+        if (!stopEvents) {
+            Object target = TargetManager.getInstance().getTarget();
+            if (target instanceof UMLDiagram) {
+                UMLDiagram d = (UMLDiagram) target;
+                try {
+                    int documentLength = e.getDocument().getLength();
+                    String newName = e.getDocument().getText(0, documentLength);
+                    String oldName = d.getName();
+                    /* Prevent triggering too many events by setName(). */
+                    if (!oldName.equals(newName)) { 
+                        d.setName(newName);
+                    }
+                } catch (PropertyVetoException pe) {
+                    pe.printStackTrace();
+                } catch (BadLocationException ble) {
+                    ble.printStackTrace();
                 }
-            } catch (PropertyVetoException pe) {
-                pe.printStackTrace();
-            } catch (BadLocationException ble) {
-                ble.printStackTrace();
             }
         }
     }
