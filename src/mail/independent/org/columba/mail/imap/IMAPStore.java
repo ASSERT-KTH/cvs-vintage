@@ -367,6 +367,10 @@ public class IMAPStore {
 
 		} else {
 			// force selection of correct folder
+			
+			// currenlty selected folder == null
+			setSelectedFolderPath(null);
+			
 			select(path);
 		}
 
@@ -535,11 +539,10 @@ public class IMAPStore {
 				if (responses[i] == null) {
 					continue;
 				}
-				
-				if( responses[i].getResponseSubType().equals("LSUB") ) {
-					ListInfo listInfo = ListInfoParser.parse(responses[i]);
-					v.add(listInfo);
-				}
+
+				ListInfo listInfo = new ListInfo();
+				listInfo.parse(responses[i]);
+				v.add(listInfo);
 			}
 
 			if (v.size() > 0) {

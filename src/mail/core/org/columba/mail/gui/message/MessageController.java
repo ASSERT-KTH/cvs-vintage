@@ -48,9 +48,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.message.action.MessageActionListener;
-import org.columba.mail.gui.message.action.MessageFocusListener;
-import org.columba.mail.gui.message.action.MessagePopupListener;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.ColumbaHeader;
@@ -78,16 +75,12 @@ public class MessageController
 
 	private MessageMenu menu;
 
-	private MessageFocusListener focusListener;
-
-	private MessagePopupListener popupListener;
-
 	private JButton button;
 
 	private String activeCharset;
 
 	private MessageView view;
-	private MessageActionListener actionListener;
+	
 
 	protected AbstractMailFrameController abstractFrameController;
 	protected AttachmentController attachmentController;
@@ -105,7 +98,7 @@ public class MessageController
 		//view.addHyperlinkListener(this);
 		view.addMouseListener(this);
 
-		actionListener = new MessageActionListener(this);
+		
 
 		((CharsetOwnerInterface) getFrameController())
 			.getCharsetManager()
@@ -119,9 +112,6 @@ public class MessageController
 
 	}
 
-	public MessageActionListener getActionListener() {
-		return actionListener;
-	}
 
 	public MessageView getView() {
 
@@ -201,13 +191,13 @@ public class MessageController
 
 		if (charsetName != null) {
 			Charset charset;
-			
+
 			try {
 				charset = Charset.forName(charsetName);
-			} catch ( UnsupportedCharsetException e ) {
-				charset = Charset.forName( System.getProperty("file.encoding"));
+			} catch (UnsupportedCharsetException e) {
+				charset = Charset.forName(System.getProperty("file.encoding"));
 			}
-			
+
 			bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
 		}
 		boolean hasAttachments = false;
@@ -224,6 +214,11 @@ public class MessageController
 
 	}
 
+	public void setPGPMessage( int value, String message )
+	{
+		getView().getPgp().setValue(value, message);	
+	}
+	
 	public void hyperlinkUpdate(HyperlinkEvent e) {
 
 	}
@@ -282,8 +277,9 @@ public class MessageController
 		return url;
 	}
 
-	protected void processPopup(MouseEvent event) {
-		URL url = extractURL(event);
+	protected void processPopup(MouseEvent ev) {
+		final URL url = extractURL(ev);
+		final MouseEvent event = ev;
 		if (url == null) {
 			// no URL, this means opening the default context menu
 			// with actions like reply/forward/delete/etc.
@@ -295,13 +291,25 @@ public class MessageController
 			/*
 			getPopupMenu().show((JEditorPane)event.getSource(), event.getX(), event.getY());
 			*/
+			
+			
 			return;
 		}
 
-		// open context-menu with open/open with actions
-		URLController c = new URLController();
-		JPopupMenu menu = c.createMenu(url);
-		menu.show(getView(), event.getX(), event.getY());
+		//		open context-menu with open/open with actions
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				
+				/*
+				URLController c = new URLController();
+				JPopupMenu menu = c.createMenu(url);
+				menu.show(getView(), event.getX(), event.getY());
+				*/
+				
+				getPopupMenu().show(getView(), event.getX(), event.getY());
+			}
+		});
+
 	}
 
 	/********************* context menu *******************************************/

@@ -37,8 +37,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.gui.message.SecurityIndicator;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.PGPController;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.LocalMimePart;
@@ -61,6 +62,10 @@ public class ViewMessageCommand extends FolderCommand {
 	Folder srcFolder;
 	Object uid;
 	Object[] uids;
+
+	String pgpMessage;
+	int pgpMode = SecurityIndicator.NOOP;
+
 	// true if we view an encrypted message
 	boolean encryptedMessage = false;
 
@@ -130,26 +135,38 @@ public class ViewMessageCommand extends FolderCommand {
 		// getting controller Instance
 		PGPController controller = PGPController.getInstance();
 		// creating Stream for encrypted Body part and decrypt it
-		InputStream decryptedStream = controller.decrypt(new ByteArrayInputStream(encryptedBodyPart.getBytes()),pgpItem);
+		InputStream decryptedStream =
+			controller.decrypt(
+				new ByteArrayInputStream(encryptedBodyPart.getBytes()),
+				pgpItem);
 		try {
-//			TODO should be removed if we only use Streams!
-			String decryptedBodyPart = StreamUtils.readInString(decryptedStream).toString();
+			//			TODO should be removed if we only use Streams!
+			String decryptedBodyPart =
+				StreamUtils.readInString(decryptedStream).toString();
 			ColumbaLogger.log.debug(decryptedBodyPart);
 			//String decryptedBodyPart = PGPController.getInstance().decrypt(encryptedBodyPart, pgpItem);
 
 			// construct new Message from decrypted string
 			ColumbaMessage message;
-	
+
 			message =
 				new ColumbaMessage(
-					MessageParser.parse(new CharSequenceSource(decryptedBodyPart)));
+					MessageParser.parse(
+						new CharSequenceSource(decryptedBodyPart)));
 			mimePartTree = message.getMimePartTree();
 
 			header = (ColumbaHeader) message.getHeaderInterface();
+
+			pgpMode = SecurityIndicator.DECRYPTION_SUCCESS;
+
 		} catch (ParserException e) {
+			
 			e.printStackTrace();
+			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
 		} catch (IOException e) {
 			e.printStackTrace();
+			
+			pgpMode = SecurityIndicator.DECRYPTION_FAILURE;
 		}
 	}
 
@@ -215,17 +232,19 @@ public class ViewMessageCommand extends FolderCommand {
 		LocalMimePart mimePart = (LocalMimePart) list.getFirst();
 
 		// get encrypted string
-		InputStream signedMessagePart = new ByteArrayInputStream(mimePart.getBody().toString().getBytes());
+		InputStream signedMessagePart =
+			new ByteArrayInputStream(mimePart.getBody().toString().getBytes());
 		// get all MimeParts with contentType="application/pgp-signature"
 		LinkedList list2 =
 			mimePartTree.getLeafsWithContentType(
 				mimePartTree.getRootMimeNode(),
-				"application/pgp-signature");
+				"application/pgp-signed");
 
 		// get first one -> this is the one we need to decrypt
 		mimePart = (LocalMimePart) list.getFirst();
 		// get signed part
-		InputStream signedPart = new ByteArrayInputStream(mimePart.getBody().toString().getBytes());
+		InputStream signedPart =
+			new ByteArrayInputStream(mimePart.getBody().toString().getBytes());
 		// get PGPItem, use To-headerfield and search through
 		// all accounts to find a matching PGP id
 		String to = (String) header.get("To");
@@ -234,10 +253,15 @@ public class ViewMessageCommand extends FolderCommand {
 		// getting controller Instance
 		PGPController controller = PGPController.getInstance();
 		// verify
-		boolean ok = controller.verifySignature(signedMessagePart,signedPart, pgpItem);
-		if (!ok) {
+		boolean ok =
+			controller.verifySignature(signedMessagePart, signedPart, pgpItem);
+		if (ok) {
+
 			ColumbaLogger.log.error(controller.getPGPResultStream());
+			pgpMessage = controller.getPGPResultStream().toString();
+			pgpMode = SecurityIndicator.VERIFICATION_SUCCESS;
 		} else {
+			pgpMode = SecurityIndicator.VERIFICATION_FAILURE;
 			ColumbaLogger.log.debug(controller.getPGPErrorStream());
 		}
 
@@ -259,15 +283,15 @@ public class ViewMessageCommand extends FolderCommand {
 
 		if (contentType.indexOf("pgp-encrypted") != -1)
 			protocolType = "pgp-encrypted";
-		else if (contentType.indexOf("pgp-signature") != -1)
-			protocolType = "pgp-signature";
+		else if (contentType.indexOf("pgp-signed") != -1)
+			protocolType = "pgp-signed";
 
 		if (protocolType.equals("pgp-encrypted")) {
 			// RFC3156-conform encrypted message
 
 			encryptMessage();
 
-		} else if (protocolType.equals("pgp-signature")) {
+		} else if (protocolType.equals("pgp-signed")) {
 			// RFC3156-conform signed message
 
 			verifyMessage();
@@ -290,12 +314,23 @@ public class ViewMessageCommand extends FolderCommand {
 			h.setMessage(srcFolder, uid);
 
 		if (header != null && bodyPart != null) {
-			(
+			if (pgpMode != 0) {
+				// update pgp security indicator
+				(
+					(
+						AbstractMailFrameController) frameController)
+							.messageController
+							.setPGPMessage(
+					pgpMode,
+					pgpMessage);
+			}
+
 			// show message in gui component
 			(
-				AbstractMailFrameController) frameController)
-					.messageController
-					.showMessage(
+				(
+					AbstractMailFrameController) frameController)
+						.messageController
+						.showMessage(
 				header,
 				bodyPart,
 				mimePartTree);
@@ -303,10 +338,11 @@ public class ViewMessageCommand extends FolderCommand {
 			// security check, i dont know if we need this (waffel)
 			if (frameController instanceof ThreePaneMailFrameController) {
 				// if the message it not yet seen
-				if (!((ColumbaHeader)header).getFlags().getSeen()) {
+				if (!((ColumbaHeader) header).getFlags().getSeen()) {
 					// restart timer which marks the message as read
 					// after a user configurable time interval
-					((ThreePaneMailFrameController) frameController).getTableController()
+					((ThreePaneMailFrameController) frameController)
+						.getTableController()
 						.getMarkAsReadTimer()
 						.restart((FolderCommandReference) getReferences()[0]);
 				}
@@ -320,26 +356,21 @@ public class ViewMessageCommand extends FolderCommand {
 	public void execute(Worker wsc) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 		srcFolder = (Folder) r[0].getFolder();
-//		register for status events
-		((StatusObservableImpl)srcFolder.getObservable()).setWorker(wsc);
-		
+		//		register for status events
+		 ((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
+
 		uid = r[0].getUids()[0];
 
 		bodyPart = null;
 
-		
-
 		// get attachment structure
-		try
-		{	
+		try {
 			mimePartTree = srcFolder.getMimePartTree(uid);
-		}
-		catch ( FileNotFoundException ex)
-		{
+		} catch (FileNotFoundException ex) {
 			// message doesn't exist anymore
 			return;
 		}
-		
+
 		//	get RFC822-header
 		header = srcFolder.getMessageHeader(uid);
 
@@ -356,9 +387,10 @@ public class ViewMessageCommand extends FolderCommand {
 		// - multipart/signed
 		String contentType = (String) header.get("Content-Type");
 		ColumbaLogger.log.debug("contentType=" + contentType);
-
-		if ((contentType != null ) && ((contentType.equals("multipart/encrypted"))
-			|| (contentType.equals("multipart/signature"))))
+		
+		if ((contentType != null)
+			&& ((contentType.indexOf("multipart/encrypted") != -1)
+				|| (contentType.indexOf("multipart/signed") != -1)))
 			handlePGPMessage(header, wsc);
 
 		if (mimePartTree != null) {
@@ -373,13 +405,16 @@ public class ViewMessageCommand extends FolderCommand {
 			// Which Bodypart shall be shown? (html/plain)
 
 			if (viewhtml)
-				bodyPart = (StreamableMimePart) mimePartTree.getFirstTextPart("html");
+				bodyPart =
+					(StreamableMimePart) mimePartTree.getFirstTextPart("html");
 			else
-				bodyPart = (StreamableMimePart) mimePartTree.getFirstTextPart("plain");
+				bodyPart =
+					(StreamableMimePart) mimePartTree.getFirstTextPart("plain");
 
 			if (bodyPart == null) {
 				bodyPart = new LocalMimePart(new MimeHeader());
-				((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
+				((LocalMimePart) bodyPart).setBody(
+					new CharSequenceSource("<No Message-Text>"));
 			} else if (encryptedMessage == true) {
 
 				// meaning, bodyPart already contains the correct
@@ -388,7 +423,9 @@ public class ViewMessageCommand extends FolderCommand {
 			} else {
 
 				bodyPart =
-				(StreamableMimePart) srcFolder.getMimePart(uid, bodyPart.getAddress());
+					(StreamableMimePart) srcFolder.getMimePart(
+						uid,
+						bodyPart.getAddress());
 			}
 		}
 	}

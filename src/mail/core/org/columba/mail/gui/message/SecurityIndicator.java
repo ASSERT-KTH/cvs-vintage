@@ -24,85 +24,90 @@ import javax.swing.JPanel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
-public class SecurityIndicator extends JPanel
-{
-    public static final int DECRYPTION_SUCCESS = 0;
-    public static final int DECRYPTION_FAILURE = 1;
-    public static final int VERIFICATION_SUCCESS = 2;
-    public static final int VERIFICATION_FAILURE = 3;
-    public static final int NOKEY = 4;
-    public static final int NOOP = 5;
-    
-    protected JLabel display;
+public class SecurityIndicator extends JPanel {
+	public static final int DECRYPTION_SUCCESS = 0;
+	public static final int DECRYPTION_FAILURE = 1;
+	public static final int VERIFICATION_SUCCESS = 2;
+	public static final int VERIFICATION_FAILURE = 3;
+	public static final int NOKEY = 4;
+	public static final int NOOP = 5;
 
-    public SecurityIndicator()
-    {
-	super(new BorderLayout());
-        display = new JLabel();
-        display.setHorizontalAlignment(JLabel.RIGHT);
-        add(display);
-	setValue(NOOP);
-    }
+	protected JLabel display;
 
-    public void setValue(int value)
-    {
-	switch (value)
-	    {
-	        case  DECRYPTION_SUCCESS:
-		{
-		    display.setIcon( ImageLoader.getImageIcon(
-                                        		    "pgp-signature-ok.png" ) );
-		    display.setToolTipText(MailResourceLoader.getString(
-                                    "menu",
-                                    "mainframe",
-                                    "security_encrypt_success"));
-		    break;
+	public SecurityIndicator() {
+		super(new BorderLayout());
+		display = new JLabel();
+		//display.setHorizontalAlignment(JLabel.RIGHT);
+		add(display);
+		//setValue(NOOP,"");
+		setValue(DECRYPTION_FAILURE, "<html><body><p>Verification failed</p></body></html>");
+	}
+
+	public void setValue(int value, String message) {
+		
+		display.setText(message);
+		
+		switch (value) {
+			case DECRYPTION_SUCCESS :
+				{
+					display.setIcon(
+						ImageLoader.getImageIcon("pgp-signature-ok.png"));
+					display.setToolTipText(
+						MailResourceLoader.getString(
+							"menu",
+							"mainframe",
+							"security_encrypt_success"));
+					break;
+				}
+			case DECRYPTION_FAILURE :
+				{
+					display.setIcon(
+						ImageLoader.getImageIcon("pgp-signature-bad.png"));
+					display.setToolTipText(
+						MailResourceLoader.getString(
+							"menu",
+							"mainframe",
+							"security_encrypt_fail"));
+					break;
+				}
+			case VERIFICATION_SUCCESS :
+				{
+					display.setIcon(
+						ImageLoader.getImageIcon("pgp-signature-ok.png"));
+					display.setToolTipText(
+						MailResourceLoader.getString(
+							"menu",
+							"mainframe",
+							"security_verify_success"));
+					break;
+				}
+			case VERIFICATION_FAILURE :
+				{
+					display.setIcon(
+						ImageLoader.getImageIcon("pgp-signature-bad.png"));
+					display.setToolTipText(
+						MailResourceLoader.getString(
+							"menu",
+							"mainframe",
+							"security_verify_fail"));
+					break;
+				}
+			case NOKEY :
+				{
+					display.setIcon(
+						ImageLoader.getImageIcon("pgp-signature-nokey.png"));
+					display.setToolTipText(
+						MailResourceLoader.getString(
+							"menu",
+							"mainframe",
+							"security_verify_nokey"));
+					break;
+				}
+			case NOOP :
+				{
+					display.setText("");
+					break;
+				}
 		}
-		case  DECRYPTION_FAILURE:
-		{
-		    display.setIcon( ImageLoader.getImageIcon(
-							    "pgp-signature-bad.png" ) );
-		    display.setToolTipText(MailResourceLoader.getString(
-                                    "menu",
-                                    "mainframe",
-                                    "security_encrypt_fail"));
-		    break;
-		}
-		case  VERIFICATION_SUCCESS:
-		{
-		    display.setIcon( ImageLoader.getImageIcon(
-							    "pgp-signature-ok.png" ) );
-		    display.setToolTipText(MailResourceLoader.getString(
-                                    "menu",
-                                    "mainframe",
-                                    "security_verify_success"));
-		    break;
-		}
-		case  VERIFICATION_FAILURE:
-		{
-		    display.setIcon( ImageLoader.getImageIcon(
-							    "pgp-signature-bad.png" ) );
-		    display.setToolTipText(MailResourceLoader.getString(
-                                    "menu",
-                                    "mainframe",
-                                    "security_verify_fail"));
-		    break;
-		}
-		case  NOKEY:
-		{
-		    display.setIcon( ImageLoader.getImageIcon(
-							    "pgp-signature-nokey.png" ) );
-		    display.setToolTipText(MailResourceLoader.getString(
-                                    "menu",
-                                    "mainframe",
-                                    "security_verify_nokey"));
-		    break;
-		}
-		case  NOOP:
-		{
-		    display.setText("");
-		    break;
-		}
-	    }
-    }
+	}
 }

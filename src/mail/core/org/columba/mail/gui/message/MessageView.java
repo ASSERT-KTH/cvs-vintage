@@ -47,6 +47,8 @@ public class MessageView extends JScrollPane {
 	protected BodyTextViewer bodyTextViewer;
 
 	protected MessageController messageController;
+	
+	protected SecurityIndicator pgp;
 
 	public MessageView(MessageController controller, AttachmentView attachmentView) {
 		super();
@@ -67,7 +69,14 @@ public class MessageView extends JScrollPane {
 		bodyTextViewer = new BodyTextViewer();	
 		panel.add(bodyTextViewer, BorderLayout.CENTER);
 	
-		panel.add( attachmentView, BorderLayout.SOUTH);		
+		JPanel bottom = new JPanel();
+		bottom.setLayout( new BorderLayout() );
+		
+		pgp = new SecurityIndicator();
+		bottom.add( pgp, BorderLayout.NORTH);
+		bottom.add( attachmentView, BorderLayout.CENTER);
+		
+		panel.add( bottom, BorderLayout.SOUTH );		
 	}
 
 	public void addHyperlinkListener(HyperlinkListener l) {
@@ -110,4 +119,11 @@ public class MessageView extends JScrollPane {
 		
 		setDoc( header, text.toString(), html, hasAttachments);
 	}
+	/**
+	 * @return
+	 */
+	public SecurityIndicator getPgp() {
+		return pgp;
+	}
+
 }
