@@ -25,7 +25,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -83,12 +83,14 @@ public class ServiceCreator
       ConstructorInfo constructor =
 
       ConstructorInfo.create(mbeanElement);
-      if (debug)
-         log.debug("About to create bean: "+name);
+      
+      if (debug) log.debug("About to create bean: "+name);
+
 		
       // Create the MBean instance
       try 
       {
+         log.info("code "+code);
          ObjectInstance instance = server.createMBean(code,
                                                       name,
                                                       loader,

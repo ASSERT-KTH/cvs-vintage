@@ -61,43 +61,42 @@ import org.jboss.security.RealmMapping;
 import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 
 /**
- * This is the base class for all EJB-containers in JBoss. A Container
- * functions as the central hub of all metadata and plugins. Through this
- * the container plugins can get hold of the other plugins and any metadata
- * they need.
- *
- * <p>The ContainerFactory creates instances of subclasses of this class
- *    and calls the appropriate initialization methods.
- *
- * <p>A Container does not perform any significant work, but instead delegates
- *    to the plugins to provide for all kinds of algorithmic functionality.
- *
- * @see ContainerFactory
- *
- * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
- * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.68 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>2001/07/26 bill burke:</b>
- * <ul>
- * <li> Added BeanLockManager.
- * </ul>
- * <p><b>2001/08/13 scott.stark:</b>
- * <ul>
- * <li> Added DynamicMBean support for method invocations and access to EJB interfaces.
- * </ul>
- * <p><b>2001/12/18 marc fleury:</b>
- * <ul>
- * <li> Moved to new Invocation layer and detached invokers.  
- *  <li> Use the method mappings for MarshalledInvocation.
- * </ul>
- */
-public abstract class Container
-   implements DynamicMBean
+* This is the base class for all EJB-containers in JBoss. A Container
+* functions as the central hub of all metadata and plugins. Through this
+* the container plugins can get hold of the other plugins and any metadata
+* they need.
+*
+* <p>The EJBDeployer creates instances of subclasses of this class
+*    and calls the appropriate initialization methods.
+*    
+* <p>A Container does not perform any significant work, but instead delegates
+*    to the plugins to provide for all kinds of algorithmic functionality.
+*
+* @see EJBDeployer
+* 
+* @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
+* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+* @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+* @author <a href="bill@burkecentral.com">Bill Burke</a>
+* @version $Revision: 1.69 $
+*
+* <p><b>Revisions:</b>
+*
+* <p><b>2001/07/26 bill burke:</b>
+* <ul>
+* <li> Added BeanLockManager.
+* </ul>
+* <p><b>2001/08/13 scott.stark:</b>
+* <ul>
+* <li> Added DynamicMBean support for method invocations and access to EJB interfaces.
+* </ul>
+* <p><b>2001/12/18 marc fleury:</b>
+* <ul>
+* <li> Moved to new Invocation layer and detached invokers.  
+*  <li> Use the method mappings for MarshalledInvocation.
+* </ul>
+*/
+public abstract class Container implements DynamicMBean
 {
    // Constants -----------------------------------------------------
    
@@ -403,17 +402,17 @@ public abstract class Container
    }
    
    /**
-    * The ContainerFactory calls this method.  The ContainerFactory has set
-    * all the plugins and interceptors that this bean requires and now proceeds
-    * to initialize the chain.  The method looks for the standard classes in 
-    * the URL, sets up the naming environment of the bean. The concrete 
-    * container classes should override this method to introduce
-    * implementation specific initialization behaviour.
-    *
-    * @throws Exception    if loading the bean class failed
-    *                      (ClassNotFoundException) or setting up "java:"
-    *                      naming environment failed (DeploymentException)
-    */
+   * The EJBDeployer calls this method.  The EJBDeployer has set
+   * all the plugins and interceptors that this bean requires and now proceeds
+   * to initialize the chain.  The method looks for the standard classes in 
+   * the URL, sets up the naming environment of the bean. The concrete 
+   * container classes should override this method to introduce
+   * implementation specific initialization behaviour.
+   *
+   * @throws Exception    if loading the bean class failed
+   *                      (ClassNotFoundException) or setting up "java:"
+   *                      naming environment failed (DeploymentException)
+   */
    public void create() throws Exception
    {
       // Acquire classes from CL

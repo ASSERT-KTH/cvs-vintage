@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBeanSupport;
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -47,7 +47,8 @@ public class WebService
 		Properties mimeTypes = new Properties();
       try
       {
-         mimeTypes.load(getClass().getResourceAsStream("mime.types"));
+        
+         mimeTypes.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("org/jboss/web/mime.types"));
 			
 			Enumeration keys = mimeTypes.keys();
 			while (keys.hasMoreElements())
@@ -57,9 +58,9 @@ public class WebService
 				server.addMimeType(extension, type);
 			}
       }
-      catch (IOException e)
+      catch (Exception e)
       {
-         log.error("Failed to load mime.types", e);
+         log.error("Failed to load org/jboss/web/mime.types", e);
       }
       // Get the public host name
       try

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.23 2002/01/18 18:48:11 schaefera Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.24 2002/01/20 15:15:16 mnf999 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -96,24 +96,27 @@
 
 
   <!-- ==================================================================== -->
-  <!-- And now to get everything else going...                              -->
+  <!-- The deployers...                                                     -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.deployment.AutoDeployer" 
-         name="jboss:service=AutoDeployer">
-    <attribute name="Deployers">
-      jboss.system:service=ServiceDeployer;
-      jboss.jca:service=RARDeployer;
-      jboss.j2ee:service=J2eeDeployer
-    </attribute>
-    <attribute name="URLs">
-      ../deploy/lib,
-      ../deploy
-    </attribute>
-    <attribute name="Timeout">
-      3000
-    </attribute>
+  <!-- Main Deployer and SARDeployer are provided by main -->
+
+  <!-- EJB deployer, remove to disable EJB behavior-->
+  <mbean code="org.jboss.ejb.EJBDeployer" name="EJB:service=EJBDeployer">
+    <attribute name="VerifyDeployments">true</attribute>
+    <attribute name="ValidateDTDs">false</attribute>
+    <attribute name="MetricsEnabled">false</attribute>
+    <attribute name="VerifierVerbose">true</attribute>
+    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
   </mbean>
+  
+  <!-- EAR deployer, remove if you are not using Web layers -->
+  <mbean code="org.jboss.deployment.EARDeployer" name="J2EE:service=EARDeployer">
+  </mbean>
+  
+  <!-- WAR Deployer is provided by tomcat or jetty -->
+  <!-- RAR Deployer is provided by the rar.sar package -->
+
 
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
