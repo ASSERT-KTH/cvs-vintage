@@ -30,7 +30,7 @@ import org.jnp.interfaces.NamingContext;
 /**
  * A JMX client that uses an RMIAdaptor to shutdown a remote JBoss server.
  *
- * @version <tt>$Revision: 1.13 $</tt>
+ * @version <tt>$Revision: 1.14 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -42,7 +42,7 @@ public class Shutdown
    
    public static final String PROGRAM_NAME = System.getProperty("program.name", "shutdown");
    
-   protected static void displayUsage()
+   protected static void displyUsage()
    {
       System.out.println("A JMX client to shutdown (exit or halt) a remote JBoss server.");
       System.out.println();
