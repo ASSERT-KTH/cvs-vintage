@@ -7,7 +7,7 @@
 // AUTHOR:       Tony Parent
 // ORG:          AMCC
 // ORIG-DATE:     8-Oct-02 at 12:24:05
-// LAST-MOD:     28-Oct-02 at 13:07:25 by Tony Parent
+// LAST-MOD:      6-Jan-03 at 12:00:21 by Tony Parent
 // DESCRIPTION:
 // DESCRIP-END.
 //
@@ -27,6 +27,9 @@
 //
 //
 // $Log: XmlIO.java,v $
+// Revision 1.2  2003/01/06 19:18:26  tonyparent
+// [intern] Escape '<', '>', and '&' when writing data and attributes.
+//
 // Revision 1.1  2002/12/29 17:44:37  fdietz
 // [intern]source tree cleanup
 //
@@ -86,8 +89,8 @@ public class XmlIO extends DefaultHandler {
 	// setup and load constructor
 	public XmlIO(String FilePath) {
 		currentElement = null;
-		
-		
+
+
 	}
 	*/
 
@@ -129,27 +132,30 @@ public class XmlIO extends DefaultHandler {
 			//      xr.setContentHandler( this );
 
 			SAXParser saxParser = factory.newSAXParser();
-			
-			
+
+
 
 			saxParser.parse(inputFile, this);
-			
+
 		} catch (javax.xml.parsers.ParserConfigurationException ex) {
 			ColumbaLogger.log.error(
-				"XML config error while attempting to read XML file");
+				"XML config error while attempting to read XML file \n'"
+                +inputFile+"'");
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
 		} catch (org.xml.sax.SAXException ex) {
 			// Error
 			ColumbaLogger.log.error(
-				"XML parse error while attempting to read XML file");
+				"XML parse error while attempting to read XML file \n'"
+                +inputFile+"'");
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
 		} catch (java.io.IOException ex) {
 			ColumbaLogger.log.error(
-				"File read error while attempting to read XML file");
+				"File read error while attempting to read XML file \n'"
+                +inputFile+"'");
 			ColumbaLogger.log.error(ex.toString());
 			ex.printStackTrace();
 			return (false);
@@ -259,6 +265,13 @@ public class XmlIO extends DefaultHandler {
 		PW.flush();
 	}
 
+    private String _escapeText(String txt){
+      txt = txt.replaceAll("<","&lt;");
+      txt = txt.replaceAll(">","&gt;");
+      txt = txt.replaceAll("&","&amp;");
+      return(txt);
+    }
+
 	private void _writeSubNode(PrintWriter out, XmlElement Element, int indent)
 		throws IOException {
 		_writeSpace(out, indent);
@@ -267,7 +280,8 @@ public class XmlIO extends DefaultHandler {
 			e.hasMoreElements();
 			) {
 			String K = (String) e.nextElement();
-			out.print(" " + K + "=\"" + Element.getAttribute(K) + "\"");
+			out.print(" " + K + "=\"" + _escapeText(Element.getAttribute(K))
+                      + "\"");
 		}
 
 		out.print(">");
@@ -279,7 +293,7 @@ public class XmlIO extends DefaultHandler {
 				out.println("");
 				_writeSpace(out, indent + writeIndent);
 			}
-			out.print(Data);
+			out.print(_escapeText(Data));
 		}
 		Vector SubElements = Element.getElements();
 
@@ -297,7 +311,7 @@ public class XmlIO extends DefaultHandler {
 			out.println("");
 			_writeSpace(out, indent);
 		}
-		out.println("</" + Element.getName() + ">");
+		out.println("</" + _escapeText(Element.getName()) + ">");
 	}
 
 	private void _writeSpace(PrintWriter out, int numSpaces)
