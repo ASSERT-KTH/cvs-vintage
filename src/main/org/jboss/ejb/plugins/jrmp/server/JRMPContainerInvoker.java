@@ -1,9 +1,9 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.ejb.plugins.jrmp.server;
 
 import java.io.IOException;
@@ -31,6 +31,8 @@ import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.management.ObjectName;
+import javax.management.MBeanException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
@@ -54,17 +56,17 @@ import org.jboss.tm.TransactionPropagationContextImporter;
 import org.w3c.dom.Element;
 
 /**
- *  The <code>ContainerInvoker</code> for invoking enterprise beans
- *  over the JRMP invocation transport.
- *
- *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *  @version $Revision: 1.44 $
- */
+*  The <code>ContainerInvoker</code> for invoking enterprise beans
+*  over the JRMP invocation transport.
+*
+*  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+*  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+*  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
+*  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+*  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+*  @version $Revision: 1.45 $
+*/
 public class JRMPContainerInvoker
 extends RemoteServer
 implements ContainerRemote, ContainerInvoker, XmlLoadable
@@ -173,20 +175,20 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
       {
          log.error("getEJBObject failed", e);
       }
-
+      
       
       // Create metadata
       
       /**
-       Constructor signature is
-       
-       public EJBMetaDataImpl(Class remote,
-       Class home,
-       Class pkClass,
-       boolean session,
-       boolean statelessSession,
-       HomeHandle homeHandle)
-       */      
+      Constructor signature is
+      
+      public EJBMetaDataImpl(Class remote,
+      Class home,
+      Class pkClass,
+      boolean session,
+      boolean statelessSession,
+      HomeHandle homeHandle)
+      */      
       if (container.getBeanMetaData() instanceof EntityMetaData)
       {
          Class pkClass;
@@ -208,32 +210,32 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
             throw new RuntimeException("Primary Key Problem");
          }
          ejbMetaData = new EJBMetaDataImpl(
-         ((ContainerInvokerContainer)container).getRemoteClass(),
-         ((ContainerInvokerContainer)container).getHomeClass(),
-         pkClass,
-         false, //Session
-         false, //Stateless
-         new HomeHandleImpl(jndiName));
+            ((ContainerInvokerContainer)container).getRemoteClass(),
+            ((ContainerInvokerContainer)container).getHomeClass(),
+            pkClass,
+            false, //Session
+            false, //Stateless
+            new HomeHandleImpl(jndiName));
       } else
       {
          if (((SessionMetaData)container.getBeanMetaData()).isStateless())
          {
             ejbMetaData = new EJBMetaDataImpl(
-            ((ContainerInvokerContainer)container).getRemoteClass(),
-            ((ContainerInvokerContainer)container).getHomeClass(),
-            null, //No PK
-            true, //Session
-            true, //Stateless
-            new HomeHandleImpl(jndiName));
+               ((ContainerInvokerContainer)container).getRemoteClass(),
+               ((ContainerInvokerContainer)container).getHomeClass(),
+               null, //No PK
+               true, //Session
+               true, //Stateless
+               new HomeHandleImpl(jndiName));
          } else
          { // we are stateful
             ejbMetaData = new EJBMetaDataImpl(
-            ((ContainerInvokerContainer)container).getRemoteClass(),
-            ((ContainerInvokerContainer)container).getHomeClass(),
-            null, //No PK
-            true, //Session
-            false,//Stateless
-            new HomeHandleImpl(jndiName));
+               ((ContainerInvokerContainer)container).getRemoteClass(),
+               ((ContainerInvokerContainer)container).getHomeClass(),
+               null, //No PK
+               true, //Session
+               false,//Stateless
+               new HomeHandleImpl(jndiName));
          }
       }
       
@@ -253,21 +255,21 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
          
          // Bind the home in the JNDI naming space
          rebind(
-         // The context
-         context,
-         // Jndi name
-         container.getBeanMetaData().getJndiName(),
-         // The Home
-         ((ContainerInvokerContainer)container).getContainerInvoker().getEJBHome());
+            // The context
+            context,
+            // Jndi name
+            container.getBeanMetaData().getJndiName(),
+            // The Home
+            ((ContainerInvokerContainer)container).getContainerInvoker().getEJBHome());
          
          // Bind a bare bones invoker in the JNDI invoker naming space
          rebind(
-         // The context
-         context,
-         // JNDI name under the invokers moniker
-         "invokers/"+container.getBeanMetaData().getJndiName(),
-         // The invoker
-         ((ContainerInvokerContainer)container).getContainerInvoker());
+            // The context
+            context,
+            // JNDI name under the invokers moniker
+            "invokers/"+container.getBeanMetaData().getJndiName(),
+            // The invoker
+            ((ContainerInvokerContainer)container).getContainerInvoker());
          
          
          log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
@@ -284,7 +286,7 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
          InitialContext ctx = new InitialContext();
          ctx.unbind(container.getBeanMetaData().getJndiName());
          ctx.unbind("invokers/"+container.getBeanMetaData().getJndiName());
-
+         
          unexportCI();
       } 
       catch (Exception e)
@@ -337,8 +339,8 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
    // ContainerRemote implementation --------------------------------
    
    /**
-    *  Invoke a Home interface method.
-    */
+   *  Invoke a Home interface method.
+   */
    public MarshalledObject invokeHome(MarshalledObject mimo)
    throws Exception
    {
@@ -350,9 +352,26 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(homeMethodInvokerMap);
          
-         return new MarshalledObject(container.invokeHome(new MethodInvocation(null, rmi.getMethod(), rmi.getArguments(),
-         importTPC(rmi.getTransactionPropagationContext()),
-         rmi.getPrincipal(), rmi.getCredential() )));
+         MethodInvocation message = new MethodInvocation(
+            null, 
+            rmi.getMethod(), 
+            rmi.getArguments(),
+            importTPC(rmi.getTransactionPropagationContext()),
+            rmi.getPrincipal(), 
+            rmi.getCredential() ); 
+         
+         // FIXME marcf: When we move to a global container invoker we will need to extract the name 
+         // from the invocation layer. 
+         ObjectName containerName = 
+         new ObjectName("J2EE:service=EJB,jndiName="+container.getBeanMetaData().getJndiName());
+         
+         return new MarshalledObject(
+            container.mbeanServer.invoke(containerName, "home", new Object[] {message}, new String[] {"java.lang.Object"})); 
+      
+      
+      }catch (MBeanException mbe) {
+         throw mbe.getTargetException();
+      
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -360,8 +379,8 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
    }
    
    /**
-    *  Invoke a Remote interface method.
-    */
+   *  Invoke a Remote interface method.
+   */
    public MarshalledObject invoke(MarshalledObject mimo)
    throws Exception
    {
@@ -373,21 +392,41 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(beanMethodInvokerMap);
          
-         return new MarshalledObject(container.invoke(new MethodInvocation(rmi.getId(), rmi.getMethod(), rmi.getArguments(),
-         importTPC(rmi.getTransactionPropagationContext()),
-         rmi.getPrincipal(), rmi.getCredential() )));
-      } finally
+         
+         // Begin the detaching of the invoker from the JMX stuff
+         
+         MethodInvocation message = new MethodInvocation(
+            rmi.getId(), 
+            rmi.getMethod(), 
+            rmi.getArguments(),
+            importTPC(rmi.getTransactionPropagationContext()),
+            rmi.getPrincipal(), 
+            rmi.getCredential() ); 
+         
+         // FIXME marcf: When we move to a global container invoker we will need to extract the name 
+         // from the invocation layer. 
+         ObjectName containerName = 
+         new ObjectName("J2EE:service=EJB,jndiName="+container.getBeanMetaData().getJndiName());
+        
+         return new MarshalledObject(container.mbeanServer.invoke(containerName, "remote", new Object[] {message}, new String[] {"java.lang.Object"})); 
+         //MBean Name for the container invoker on this bean
+      
+      }catch (MBeanException mbe) {
+         throw mbe.getTargetException();
+      }
+      
+      finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
    
    /**
-    *  Invoke a Home interface method.
-    *  This is for optimized local calls.
-    */
+   *  Invoke a Home interface method.
+   *  This is for optimized local calls.
+   */
    public Object invokeHome(Method m, Object[] args, Transaction tx,
-   Principal identity, Object credential)
+      Principal identity, Object credential)
    throws Exception
    {
       // Check if this call really can be optimized
@@ -419,7 +458,7 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
       try
       {
          return container.invokeHome(new MethodInvocation(null, m, args, tx,
-         identity, credential));
+               identity, credential));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -427,11 +466,11 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
    }
    
    /**
-    *  Invoke a Remote interface method.
-    *  This is for optimized local calls.
-    */
+   *  Invoke a Remote interface method.
+   *  This is for optimized local calls.
+   */
    public Object invoke(Object id, Method m, Object[] args, Transaction tx,
-   Principal identity, Object credential)
+      Principal identity, Object credential)
    throws Exception
    {
       // Check if this call really can be optimized
@@ -547,18 +586,18 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
-
+   
    protected void exportCI() throws Exception
    {
       UnicastRemoteObject.exportObject(this, rmiPort,
-                                       clientSocketFactory, serverSocketFactory);
+         clientSocketFactory, serverSocketFactory);
    }
-
+   
    protected void unexportCI() throws Exception
    {
       UnicastRemoteObject.unexportObject(this, true);
    }
-
+   
    protected void createCIDelegate() throws DeploymentException
    {
       // Create delegate depending on JDK version
@@ -570,7 +609,7 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
          ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
       }
    }
-
+   
    protected void rebind(Context ctx, String name, Object val)
    throws NamingException
    {
@@ -662,9 +701,9 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
    }
    
    /**
-    *  Import a transaction propagation context into the local VM, and
-    *  return the corresponding <code>Transaction</code>.
-    */
+   *  Import a transaction propagation context into the local VM, and
+   *  return the corresponding <code>Transaction</code>.
+   */
    private Transaction importTPC(Object tpc)
    {
       if (tpc != null)
