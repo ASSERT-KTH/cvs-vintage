@@ -79,19 +79,19 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.26 2002/02/09 01:16:16 dlr Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.27 2002/02/09 01:19:21 dlr Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
     /**
      * Sets the <code>Alert!</code> message for this request.
      */
-    public void setAlert(Attachment attachment);
+    public void setAlert(String message);
 
     /**
      * Retrieves any <code>Alert!</code> message which has been set.
      */
-    public Attachment getAlert();
+    public String getAlert();
 
     /**
      * A Attachment object for use within the Scarab API
