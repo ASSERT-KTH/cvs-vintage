@@ -46,54 +46,74 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 
+import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.om.ScopePeer;
+import org.tigris.scarab.services.cache.ScarabCache;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * Used for running all of the tests at once.
+ * A Testing Suite for the om.Query class.
  *
- * @author <a href="mailto:tmcnerney@truis.com">Tim McNerney</a>
- * @version $Id: AllTest.java,v 1.8 2002/03/26 22:06:46 elicia Exp $
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: RModuleAttributeTest.java,v 1.1 2002/03/26 22:06:46 elicia Exp $
  */
-public class AllTest extends BaseTestCase
+public class RModuleAttributeTest extends BaseTestCase
 {
-    /**
-     * @param name    Name of Object
-     */
-    public AllTest(String name)
-    {
-        super(name);
-    }
-
-    public AllTest()
-    {
-        super("AllTest");
-    }
-
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite();
-        suite.addTest(AttributeTest.suite());
-        suite.addTest(AttributeOptionTest.suite());
-        suite.addTest(IssueTest.suite());
-        suite.addTest(ScarabUserTest.suite());
-        suite.addTest(ScarabModuleTest.suite());
-        suite.addTest(QueryTest.suite());
-        suite.addTest(ActivityTest.suite());
-        suite.addTest(TransactionTest.suite());
-        suite.addTest(RModuleAttributeTest.suite());
-        suite.addTest(AttributeGroupTest.suite());
-        return suite;
-    }
+    private RModuleAttribute rma = null;
+    private Attribute platform = null;
 
     /**
-     * Main method needed to make a self runnable class
+     * Creates a new instance.
      *
-     * @param args This is required for main method
      */
-    public static void main(String[] args)
+    public RModuleAttributeTest()
     {
-        junit.textui.TestRunner.run(new TestSuite(AllTest.class));
+        super("RModuleAttributeTest");
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new RModuleAttributeTest();
+    }
+
+    protected void runTest()
+            throws Throwable
+    {
+        platform = AttributeManager.getInstance(new NumberKey("5"));
+        rma = getModule().getRModuleAttribute(platform,
+                                              getDefaultIssueType());
+        testGetDisplayValue();
+        testSetIsDefaultText();
+        testDelete();
+    }
+
+    private void testGetDisplayValue() throws Exception
+    {
+        System.out.println("\ntestGetDisplayValue()");
+        assertEquals("Platform", rma.getDisplayValue());
+    }
+
+    private void testGetIsDefaultText() throws Exception
+    {
+        System.out.println("\ntestGetIsDefaultText()");
+        assertEquals(false, rma.getIsDefaultText());
+    }
+
+    private void testSetIsDefaultText() throws Exception
+    {
+        System.out.println("\ntestGetIsDefaultText()");
+        rma.setIsDefaultText(true);
+        assertEquals(true, rma.getIsDefaultText());
+    }
+
+    private void testDelete() throws Exception
+    {
+        System.out.println("\ntestDelete()");
+        rma.delete(getUser1());
+        assertEquals(10,getModule().getRModuleAttributes(getDefaultIssueType()).size());
     }
 }
