@@ -363,7 +363,7 @@ class Profile {
     ClassLoader appLoader;
     Vector modules=new Vector();
     
-    public Profile() {};
+    public Profile() {}
 
     public String getName() {
 	return name;

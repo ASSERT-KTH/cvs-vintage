@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.20 2001/02/06 04:44:53 costin Exp $
+# $Id: tomcat.sh,v 1.21 2001/03/15 07:33:19 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -9,16 +9,19 @@
 # Java Platform 1.1 based runtimes. The second works well with
 # Java2 Platform based runtimes.
 
-#jre -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Startup $*
-#java -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Startup $*
+#jre -cp lib/tomcat.jar org.apache.tomcat.startup.Main $*
+#java -cp lib/tomcat.jar org.apache.tomcat.startup.Main $*
+#java -jar lib/tomcat.jar
 
-NEW_LOADER=1
-export NEW_LOADER
-
+# Read local properties 
 if [ -f $HOME/.tomcatrc ] ; then 
   . $HOME/.tomcatrc
 fi
 
+# -------------------- Guess TOMCAT_HOME --------------------
+# Follow symbolic links to the real tomcat.sh
+# Extract the base dir.
+# Look in well-known places if this fails
 if [ "$TOMCAT_HOME" = "" ] ; then
   ## resolve links - $0 may be a link to  home
   PRG=$0
@@ -75,6 +78,8 @@ if [ "$JSPC_OPTS" = "" ] ; then
   JSPC_OPTS=""
 fi
 
+## -------------------- Find JAVA_HOME --------------------
+
 if [ -z "$JAVA_HOME" ] ;  then
   JAVA=`which java`
   if [ -z "$JAVA" ] ; then
@@ -90,46 +95,21 @@ if [ "$JAVACMD" = "" ] ; then
    JAVACMD=$JAVA_HOME/bin/java
 fi
 
+## -------------------- Prepare CLASSPATH --------------------
+MAIN=org.apache.tomcat.startup.Main
+export MAIN
 
 oldCP=$CLASSPATH
- 
 unset CLASSPATH
-
-if [ "$NEW_LOADER" = "1" ]; then
-  MAIN=org.apache.tomcat.startup.Main
-  export MAIN
-  CLASSPATH=${TOMCAT_HOME}/lib/tomcat.jar
-else
-  MAIN=org.apache.tomcat.startup.Tomcat
-
-## Temp - old script 
-for i in ${TOMCAT_HOME}/lib/* ; do
-  if [ "$CLASSPATH" != "" ]; then
-    CLASSPATH=${CLASSPATH}:$i
-  else
-    CLASSPATH=$i
-  fi
-done
-
-if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
-   # We are probably in a JDK1.2 environment
-   CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
-fi
-
-# Backdoor classpath setting for development purposes when all classes
-# are compiled into a /classes dir and are not yet jarred.
-if [ -d ${TOMCAT_HOME}/classes ]; then
-    CLASSPATH=${TOMCAT_HOME}/classes:${CLASSPATH}
-fi
+CLASSPATH=${TOMCAT_HOME}/lib/tomcat.jar
 
 if [ "$oldCP" != "" ]; then
     CLASSPATH=${CLASSPATH}:${oldCP}
 fi
 
-# End - NEW_LOADER
-fi
-
 export CLASSPATH
+
+## -------------------- Process options -------------------- 
 
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window
@@ -139,13 +119,44 @@ if [ "$1" = "start" ] ; then
   echo Using classpath: ${CLASSPATH}
   echo Using JAVA_HOME: ${JAVA_HOME}
   echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-  if [ "$1" = "-security" ] ; then
-    echo Starting with a SecurityManager
-    $JAVACMD $TOMCAT_OPTS -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" &
-  else
-  $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" &
+
+  #Old code for -security: -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy 
+  # not needed, java starter will do that automatically
+
+  if [ -f ${TOMCAT_HOME}/conf/ajp12.id ] ;  then  
+        rm -f  ${TOMCAT_HOME}/conf/ajp12.id
   fi
-#   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
+
+  WAIT=0
+  if [ "$1" = "-wait" ] ; then
+    shift
+    # wait at least 2 min
+    WAIT=120
+  fi
+
+  if [ "$1" = "-noout" ] ; then
+    shift
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" >${TOMCAT_HOME}/stdout.log 2>&1 &
+  else
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" &
+  fi
+
+
+  JAVA_PID=$!
+  echo $JAVA_PID > ${TOMCAT_HOME}/conf/tomcat.pid
+
+  # Wait for ajp12.id signaling end of startup
+  if [ ! "$WAIT" = "0" ] ; then 
+    while [ ! -f ${TOMCAT_HOME}/conf/ajp12.id ] ; do 
+        sleep 1
+
+        WAIT=`expr $WAIT - 1`
+        if [ "$i" = "0" ] ; then
+            echo "Tomcat was no ready after 120 seconds, giving up waiting "
+	    break;
+        fi
+    done
+  fi
 
 elif [ "$1" = "stop" ] ; then 
   shift 
@@ -160,14 +171,7 @@ elif [ "$1" = "run" ] ; then
   echo Using classpath: ${CLASSPATH}
   echo Using JAVA_HOME: ${JAVA_HOME}
   echo Using TOMCAT_HOME: ${TOMCAT_HOME}
-  if [ "$1" = "-security" ] ; then
-    echo Starting with a SecurityManager
-    $JAVACMD $TOMCAT_OPTS -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy -Dtomcat.home=${TOMCAT_HOME} $MAIN "$@"
-  else
   $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} $MAIN "$@" 
-  fi
-#  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
-  # no &
 
 elif [ "$1" = "ant" ] ; then 
   shift 
@@ -183,6 +187,27 @@ elif [ "$1" = "env" ] ; then
   ## Call it with source tomcat.sh to set the env for tomcat
   shift 
   echo Setting classpath to: ${CLASSPATH}
+  # -------------------- Add all classes in common, container, apps - 
+  # Used if you want to do command-line javac, etc
+  ## Temp - old script 
+  for i in ${TOMCAT_HOME}/lib/* ${TOMCAT_HOME}/lib/common/* ${TOMCAT_HOME}/lib/container/* ${TOMCAT_HOME}/lib/apps/* ; do
+    if [ "$CLASSPATH" != "" ]; then
+      CLASSPATH=${CLASSPATH}:$i
+    else
+      CLASSPATH=$i
+    fi
+  done
+
+  if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
+     # We are probably in a JDK1.2 environment
+     CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+  fi
+
+  # Backdoor classpath setting for development purposes when all classes
+  # are compiled into a /classes dir and are not yet jarred.
+  if [ -d ${TOMCAT_HOME}/classes ]; then
+     CLASSPATH=${TOMCAT_HOME}/classes:${CLASSPATH}
+  fi
   oldCP=$CLASSPATH
 
 else
@@ -190,7 +215,8 @@ else
   echo "tomcat (start|env|run|stop|ant)"
   echo "        start - start tomcat in the background"
   echo "        run   - start tomcat in the foreground"
-  echo "              -security - use a SecurityManager when starting"
+  echo "        run -wait - wait until tomcat is initialized before returning  "
+  echo "            -security - use a SecurityManager when starting"
   echo "        stop  - stop tomcat"
   echo "        env  -  set CLASSPATH and TOMCAT_HOME env. variables"
   echo "        ant  - run ant script in tomcat context ( classes, directories, etc)"

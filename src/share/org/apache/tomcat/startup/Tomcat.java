@@ -37,7 +37,7 @@ public class Tomcat {
     String configFile=null;
     // relative to TOMCAT_HOME
     static final String DEFAULT_CONFIG="conf/server.xml";
-    SimpleHashtable attributes=new SimpleHashtable();;
+    SimpleHashtable attributes=new SimpleHashtable();
     static Log log=Log.getLog( "tc_log", "Tomcat" );
     
     public Tomcat() {

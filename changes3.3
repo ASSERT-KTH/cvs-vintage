@@ -113,6 +113,24 @@ reused :-)
 
 -------------------- BUILD/STARTUP --------------------
 
+- On startup, after the server is initialized, the Ajp12Interceptor will
+ generate conf/ajp12.id containing it's port and secret ( if any ), to
+allow easy stop.
+
+- the unix start scripts now take a "-wait" option ( "tomcat.sh start -wait" )
+making the script wait until the server is started. This is good for
+automated tests.
+
+- the unix scripts will generate a conf/tomcat.pid file with the pid 
+of the java process that is put in background. This should be used as 
+a last resort if normal shutdown fails.
+
+- the -security option is passed and processed in Java. All sandboxing
+options are specified using PolicyInterceptor ( including the 
+policy file, etc ) - the command line is no longer used. This allows 
+people embeding tomcat the same control and reduces the complexity of
+the shell script. 
+
 - org.apache.tomcat.startup.Main now builds 3 distinct class loaders: (1)
 one to be used only by the servlet container.  (2) one to be shared by all
 web applications and (3) one that is common to both the above.
@@ -123,6 +141,7 @@ into the correct classloaders.  In addition, classes can be made available
 to the 'apps' and 'common' classloaders by including them in the classpath
 properties "-Dorg.apache.tomcat.apps.classpath" and 
 "-Dorg.apache.tomcat.common.classpath", respectively.
+
 - generate separate jar files for each component ( utils, core, facade, 
 modules ) That insures the layers are properly separated, utils can be reused.
 

@@ -101,10 +101,14 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	secret=s;
     }
     
-    public void engineInit(ContextManager cm )
+    public void engineState(ContextManager cm, int state )
 	throws TomcatException
     {
-	super.engineInit(cm);
+	if( state!=ContextManager.STATE_START )
+	    return;
+	// the engine is now started, create the ajp12.id
+	// file that will allow us to stop the server and
+	// know that the server is started ok.
 	Ajp12Interceptor tcpCon=this;
 	int portInt=tcpCon.getPort();
 	InetAddress address=tcpCon.getAddress();
