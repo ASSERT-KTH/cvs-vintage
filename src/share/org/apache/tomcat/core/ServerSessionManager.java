@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.4 1999/11/01 20:50:47 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/01 20:50:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.5 2000/01/07 19:14:11 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/07 19:14:11 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ public class ServerSessionManager {
 	manager = new ServerSessionManager();
     }
     
-    static ServerSessionManager getManager() {
+    public static ServerSessionManager getManager() {
 	return manager;
     }
 
@@ -100,6 +100,25 @@ public class ServerSessionManager {
 	reaper.start();
     }
 
+    /** Called from Request.getSession to create a new session 
+     */
+    public HttpSession getSession(Request request, Response response,
+        boolean create) {
+	ServerSession sSession=getServerSession( request, response, create);
+	if( sSession!=null ) sSession.accessed();
+	if( sSession ==null) return null;
+	
+	return sSession.getApplicationSession(request.getContext(), create);
+    }
+
+    public void accessed( HttpSession session ) {
+	ApplicationSession apS=(ApplicationSession)session;
+	ServerSession servS=apS.getServerSession();
+	servS.accessed();
+	apS.accessed();
+	
+    }
+    
     ServerSession getServerSession(Request request, Response response,
         boolean create) {
 	// Look for session id -- cookies only right now

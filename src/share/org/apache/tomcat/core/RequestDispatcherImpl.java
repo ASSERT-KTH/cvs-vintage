@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.4 2000/01/07 18:48:34 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/07 18:48:34 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -252,8 +248,11 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	}
 
 	this.urlPath = urlPath;
-	this.lookupResult =
-	    context.getContainer().lookupServlet(this.urlPath);
+
+	this.lookupResult = new Request();
+	lookupResult.setLookupPath( this.urlPath );
+	lookupResult.setContext( context );
+	context.getContextManager().internalRequestParsing(lookupResult);
     }
 
     boolean isValid() {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.3 1999/11/08 03:58:41 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/08 03:58:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.4 2000/01/07 19:14:11 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/07 19:14:11 $
  *
  * ====================================================================
  *
@@ -259,16 +259,17 @@ implements HttpServletRequest {
     }
 
     public HttpSession getSession() {
-        return request.getSession();
+        return request.getSession(true);
     }
     
     public HttpSession getSession(boolean create) {
         return request.getSession(create);
     }
 
-    public ServerSession getServerSession(boolean create) {
-        return request.getServerSession(create);
-    }
+    // XXX XXX is it used ?? (costin)
+    //     public ServerSession getServerSession(boolean create) {
+    //         return request.getServerSession(create);
+    //     }
 
     public BufferedReader getReader() throws IOException {
 	if (usingStream) {

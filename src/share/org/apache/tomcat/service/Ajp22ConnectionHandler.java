@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.6 1999/11/02 17:37:20 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/11/02 17:37:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.7 2000/01/07 19:14:16 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/07 19:14:16 $
  *
  * ====================================================================
  *
@@ -130,39 +130,7 @@ public class Ajp22ConnectionHandler  implements  TcpConnectionHandler {
 		    break;
 		}
 
-		// XXX
-                //    return if an error was detected in processing the
-                //    request line
-		if (rresponse.getStatus() >= 400) {
-		    rresponse.finish();
-		    rrequest.recycle();
-		    rresponse.recycle();
-		    break;
-		}
-
-		
-		// resolve the server that we are for
-		String path = rrequest.getRequestURI();
-	
-		Context ctx= contextM.getContextByPath(path);
-
-		// final fix on response & request
-		//		rresponse.setServerHeader(server.getServerHeader());
-
-                //    don't do headers if request protocol is http/0.9
-		if (rrequest.getProtocol() == null) {
-		    rresponse.setOmitHeaders(true);
-		}
-
-		// do it
-		//		System.out.println( request + " " + rresponse );
-		ctx.handleRequest(rrequest, rresponse);
-
-		// finish and clean up
-		rresponse.finish();
-
-		// protocol notification
-		msg.endResponse();
+		contextM.service(rrequest, rresponse);
 		
 		rrequest.recycle();
 		rresponse.recycle();

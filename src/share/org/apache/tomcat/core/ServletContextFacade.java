@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.6 2000/01/07 18:48:34 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/07 18:48:34 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -249,9 +245,15 @@ implements ServletContext {
 	// XXX
 	// this could use a once over - after war perhaps
 
+
+	
         URL docBase = context.getDocumentBase();
-	Request lr =
-	    getRealContext().getContainer().lookupServlet(path);
+
+	Request lr = new Request();
+	lr.setLookupPath( path );
+	lr.setContext( getRealContext() );
+	getRealContext().getContextManager().internalRequestParsing(lr);
+
 	String mappedPath = path;
 
 	if (lr != null &&

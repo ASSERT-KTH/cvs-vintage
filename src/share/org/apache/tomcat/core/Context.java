@@ -86,7 +86,7 @@ public class Context {
     private StringManager sm =
         StringManager.getManager(Constants.Package);
     private boolean initialized = false;
-    private Server server;
+    private ContextManager server;
     private String description = null;
     private boolean isDistributable = false;
     private String engineHeader = null;
@@ -120,11 +120,11 @@ public class Context {
     private Vector destroyInterceptors = new Vector();
     private RequestSecurityProvider rsProvider =
         DefaultRequestSecurityProvider.getInstance();
-
+    
     public Context() {
     }
 	
-    public Context(Server server, String path) {
+    public Context(ContextManager server, String path) {
         this.server = server;
 	this.path = path;
 
@@ -154,6 +154,10 @@ public class Context {
 
     public String getEngineHeader() {
         return engineHeader;
+    }
+
+    public ContextManager getContextManager() {
+	return server;
     }
     
     public String getPath() {
@@ -597,63 +601,6 @@ public class Context {
 
     ServletContextFacade getFacade() {
         return contextFacade;
-    }
-
-    public void handleRequest(Request request, Response response)
-    throws IOException {
-	// XXX
-	// make sure we are init'd or throw an illegal state exception
-
-	request.setContext(this);
-	request.setResponse(response);
-	
-	// look for session id -- cookies only right now
-
-	ServerSession session =
-	    sessionManager.getServerSession(request, response, false);
-
-	if (session != null) {
-	    session.accessed();
-
-	    ApplicationSession appSession =
-	        session.getApplicationSession(this, false);
-
-	    if (appSession != null) {
-	        appSession.accessed();
-	    }
-	}
-
-	request.setServerSession(session);  // may be null
-
-	// XXX XXX XXX lookupServlet should operate on the original
-	// request, it will change when we introduce the interceptors.
-	Request result =
-	    container.lookupServlet(request.getLookupPath());
-	
-	request.setServletPath(result.getServletPath());
-	request.setPathInfo(result.getPathInfo());
-
-        if (result.getResolvedServlet() != null) {
-            request.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
-                result.getResolvedServlet());
-        } else if (result.getMappedPath() != null) {
-            request.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
-                result.getMappedPath());
-        } else {
-            request.removeAttribute(Constants.Attribute.RESOLVED_SERVLET);
-        }
-
-	result.getWrapper().handleRequest(request.getFacade(),
-            response.getFacade());
-
-	//ServletWrapper wrap = container.resolveServlet(request);
-	
-	// XXX
-	// we want to be sure to handle any IOExceptions here
-	// and log 'em -- also an UnavailableExceptions would be
-	// trapped here.
-	
-	//wrap.handleRequest(request.getFacade(), response.getFacade());
     }
 
     private Properties getProperties(String propertyFileName) {

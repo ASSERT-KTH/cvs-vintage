@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.5 1999/11/01 20:50:48 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/11/01 20:50:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.6 2000/01/07 19:14:12 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/07 19:14:12 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import javax.servlet.http.*;
 // WARNING: Some of the APIs in this class are used by J2EE. 
 // Please talk to harishp@eng.sun.com before making any changes.
 //
-class ServletWrapper {
+public class ServletWrapper {
 
     private StringManager sm =
         StringManager.getManager(Constants.Package);
@@ -110,7 +110,7 @@ class ServletWrapper {
 	isReloadable = reloadable;
     }
 
-    String getServletName() {
+    public String getServletName() {
         return config.getServletName();
     }
 
@@ -126,11 +126,11 @@ class ServletWrapper {
         this.description = description;
     }
 
-    String getPath() {
+    public String getPath() {
         return this.path;
     }
 
-    void setPath(String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -141,11 +141,11 @@ class ServletWrapper {
 	config.setServletClassName(this.servletClassFile.getName());
     }
 
-    String getServletClass() {
+    public String getServletClass() {
         return this.servletClassName;
     }
 
-    void setServletClass(String servletClassName) {
+    public void setServletClass(String servletClassName) {
         this.servletClassName = servletClassName;
 
 	config.setServletClassName(servletClassName);
@@ -233,6 +233,7 @@ class ServletWrapper {
 				 Constants.JSP.Directive.Compile.Value );
 
             request.setContext(getContext());
+	    request.updatePaths();
             request.getSession(true);
 
             RequestDispatcher rd =

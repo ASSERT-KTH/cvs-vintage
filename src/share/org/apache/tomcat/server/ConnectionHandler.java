@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.6 1999/10/31 19:28:06 costin Exp $
- * $Revision: 1.6 $
- * $Date: 1999/10/31 19:28:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.7 2000/01/07 19:14:15 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/01/07 19:14:15 $
  *
  * ====================================================================
  *
@@ -194,22 +194,10 @@ class ConnectionHandler extends Thread {
 		}
 
 		HttpServer server = manager.resolveServer(endpoint,hostHeader);
-		String path = request.getRequestURI();
-		int index = path.indexOf("?");
-
 		response.setServerHeader(server.getServerHeader());
 
-		if (index > 0 ) {
-		    path = path.substring(0, index);
-		}
-
-		Context ctx = server.getContextByPath(path);
-		String ctxPath = ctx.getPath();
-		String pathInfo =
-		    path.substring(ctxPath.length(), path.length());
-		
-		ctx.handleRequest(request, response);
-		response.finish();
+		ContextManager cm=server.getContextManager();
+		cm.service( request, response );
 
 		request.recycle();
 		response.recycle();

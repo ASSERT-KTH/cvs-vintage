@@ -58,124 +58,132 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.request;
 
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import java.util.Hashtable;
 
+// Based on RequestMapper.
 
 /**
+ * Process the URI, find the Wrapper ( the Servlet that will handle the request) 
+ * and set all Paths.
+ * 
+ * This is the original parser from Tomcat - please don't change it, but
+ * create new interceptors ( we need to split it in more specialized
+ * modules - and better parsers )
  *
- * @author James Todd [gonzo@eng.sun.com]
  */
+public class MapperInterceptor  implements  RequestInterceptor {
 
-public class RequestMapper {
-    private Container container = null;
-    private Hashtable prefixMaps = null;
-    private Hashtable extensionMaps = null;
-    private Hashtable pathMaps = null;
-
-    private String servletPath = null;
-    private String mapPath = null;
-    private String pathInfo = null;
-    private String resourceName = null;
-
-    RequestMapper(Container container) {
-        this.container = container;
+    public MapperInterceptor() {
     }
 
-    void setPathMaps(Hashtable pathMaps) {
-        this.pathMaps = pathMaps;
-    }
-
-    void setPrefixMaps(Hashtable prefixMaps) {
-        this.prefixMaps = prefixMaps;
-    }
+    // no configuration 
     
-    void setExtensionMaps(Hashtable extensionMaps) {
-        this.extensionMaps = extensionMaps;
-    }
-
-    Request lookupServlet(String path) {
-	Request lookupResult = null;
-	ServletWrapper wrapper = getMatch(path);
-
-	if (wrapper != null) {
-            this.mapPath = getMapPath(wrapper);
-            String resolvedServlet = getResolvedServlet(this.mapPath);
-
-	    lookupResult = new Request();
-	    lookupResult.setWrapper( wrapper );
-	    lookupResult.setServletPath( servletPath );
-	    lookupResult.setMappedPath( mapPath );
-	    lookupResult.setPathInfo(pathInfo);
-	    lookupResult.setResolvedServlet( resolvedServlet );
-        }
-
-	return lookupResult;
-    }
-
-    private ServletWrapper getMatch(String path) {
+    public int handleRequest(Request req) {
+	Container container=req.getContext().getContainer();
+	String path=req.getLookupPath();
         ServletWrapper wrapper = null;
 
+	wrapper = getMatch(container, path, req);
+
+	if (wrapper == null) {
+	    wrapper = container.getDefaultServlet();
+	    if (wrapper == null) {
+	        wrapper = container.getServletByName(Constants.Servlet.Default.Name);
+	    }
+
+	    String servletPath = Constants.Servlet.Default.Map;
+            String pathInfo = path;
+
+	    req.setWrapper( wrapper );
+	    req.setServletPath( servletPath );
+	    req.setPathInfo( pathInfo );
+	} else {
+	    getMapPath(wrapper, req);
+	    String resolvedServlet = getResolvedServlet(container, req.getMappedPath());
+	    
+	    req.setWrapper( wrapper );
+	    req.setResolvedServlet( resolvedServlet );
+	}
+	
+	if (req.getResolvedServlet() != null) {
+	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
+				 req.getResolvedServlet());
+	} else if (req.getMappedPath() != null) {
+	    req.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
+				 req.getMappedPath());
+	} else {
+	    req.removeAttribute(Constants.Attribute.RESOLVED_SERVLET);
+	}
+
+	return OK;
+    }
+
+    private ServletWrapper getMatch(Container container, String path, Request req) {
+        ServletWrapper wrapper = null;
 	// try an exact match
 
-        wrapper = getPathMatch(path);
+        wrapper = getPathMatch(container, path, req);
 
 	// try a prefix match
 
 	if (wrapper == null) {
-	    wrapper = getPrefixMatch(path);
+	    wrapper = getPrefixMatch(container, path, req);
 	}
 
 	// try an extension match
 
 	if (wrapper == null) {
-	    wrapper = getExtensionMatch(path);
+	    wrapper = getExtensionMatch(container, path, req);
 	}
 
 	// lookup real servlet if what we're actually
 	// dealing with a jsp file
 
-        wrapper = getResolvedServlet(wrapper);
+        wrapper = getServletForJsp(container, wrapper, req);
 
 	return wrapper;
     }
 
-    private ServletWrapper getPathMatch(String path) {
+    private ServletWrapper getPathMatch(Container container, String path, Request req) {
         ServletWrapper wrapper = null;
 
-	wrapper = (ServletWrapper)pathMaps.get(path);
+	wrapper = (ServletWrapper)container.getPathMap().get(path);
 
 	if (wrapper != null) {
-	    this.servletPath = path;
+	    req.setServletPath( path );
+	    // this.servletPath = path;
 	}
 
         return wrapper;
     }
 
-    private ServletWrapper getPrefixMatch(String path) {
+    private ServletWrapper getPrefixMatch(Container container, String path, Request req) {
 	ServletWrapper wrapper = null;
         String s = path;
 
 	while (s.length() > 0) {
 	    String suffix = (s.endsWith("/")) ? "*" : "/*";
  
-	    wrapper = (ServletWrapper)prefixMaps.get(s + suffix);
+	    wrapper = (ServletWrapper)container.getPrefixMap().get(s + suffix);
 
 	    if (wrapper != null) {
 	        if (s.endsWith("/")) {
                     String t = s.substring(0, s.length() - 1);
 
-		    this.servletPath = (t.trim().length() == 0) ? null : t;
+		    req.setServletPath( (t.trim().length() == 0) ? null : t );
 		    t = s.substring(s.length() - 1);
-		    this.pathInfo = (t.trim().length() == 0) ? null : t;
+		    req.setPathInfo(  (t.trim().length() == 0) ? null : t);
 		} else {
                     String t = s;
 
-		    this.servletPath = (t.trim().length() == 0) ? null : t;
+		    req.setServletPath(  (t.trim().length() == 0) ? null : t);
                     t = path.substring(s.length(), path.length());
-		    this.pathInfo = (t.trim().length() == 0) ? null : t;
+		    req.setPathInfo((t.trim().length() == 0) ? null : t);
 		}
 
 		s = "";
@@ -196,7 +204,7 @@ public class RequestMapper {
 	return wrapper;
     }
 
-    private ServletWrapper getExtensionMatch(String path) {
+    private ServletWrapper getExtensionMatch(Container container, String path, Request req) {
         ServletWrapper wrapper = null;
         int i = path.lastIndexOf(".");
 	int j = path.lastIndexOf("/");
@@ -211,19 +219,19 @@ public class RequestMapper {
 		extension = extension.substring(0, k);
 	    }
 
-	    wrapper = (ServletWrapper)extensionMaps.get(
+	    wrapper = (ServletWrapper)container.getExtensionMap().get(
 	        "*" + extension);
 
 	    if (wrapper != null) {
-	        this.servletPath = path;
+	        req.setServletPath( path );
 
 		if (j > i) {
 		    int k = i + path.substring(i).indexOf("/");
                     String s = path.substring(0, k);
 
-		    this.servletPath = (s.trim().length() == 0) ? null : s;
+		    req.setServletPath( (s.trim().length() == 0) ? null : s );
                     s = path.substring(k);
-		    this.pathInfo = (s.trim().length() == 0) ? null : s;
+		    req.setPathInfo( (s.trim().length() == 0) ? null : s );
 		}
 	    }
 	}
@@ -231,23 +239,26 @@ public class RequestMapper {
 	return wrapper;
     }
 
-    private ServletWrapper getResolvedServlet(ServletWrapper wrapper) {
+    // XXX XXX XXX eliminate recursivity (costin )
+    private ServletWrapper getServletForJsp(Container container, ServletWrapper wrapper, Request req) {
         if (wrapper != null) {
-            String servletPath = this.servletPath;
-            String pathInfo = this.pathInfo;
+            String servletPath = req.getServletPath();
+            String pathInfo = req.getPathInfo();
+            req.setResourceName( req.getServletPath());
+
             boolean stillSearching = true;
             int counter = 0;
 
-            this.resourceName = this.servletPath;
 
             while (stillSearching) {
                 if (wrapper != null &&
                     wrapper.getPath() != null &&
                     wrapper.getServletClass() == null) {
-                        this.resourceName = wrapper.getPath();
-                        wrapper = getMatch(wrapper.getPath() +
-                            (pathInfo == null ? "" : pathInfo));
-                        this.mapPath = this.servletPath;
+                        req.setResourceName( wrapper.getPath() );
+                        wrapper = getMatch(container,
+					   wrapper.getPath() + (pathInfo == null ? "" : pathInfo),
+					   req);
+                        req.setMappedPath(  req.getServletPath() );
 
                         if (stillSearching &&
                             ++counter > Constants.RequestURIMatchRecursion) {
@@ -258,26 +269,26 @@ public class RequestMapper {
                 }
             }
 
-            this.servletPath = servletPath;
-            this.pathInfo = pathInfo;
+            req.setServletPath( servletPath);
+            req.setPathInfo(pathInfo);
         }
 
         return wrapper;
     }
 
-    private String getMapPath(ServletWrapper wrapper) {
-        String mapPath = this.mapPath;
+    private void getMapPath(ServletWrapper wrapper, Request req) {
+        String mapPath = req.getMappedPath();
 
         // XXX
         // this is added to make available the destination
         // resource be it a servlet or jsp file - could be
         // cleaned up a bit (wobbly)
-        if (this.servletPath.equals(Constants.Servlet.Invoker.Map) &&
-            this.pathInfo != null) {
-            String s = this.pathInfo;
+        if (req.getServletPath().equals(Constants.Servlet.Invoker.Map) &&
+            req.getPathInfo() != null) {
+            String s = req.getPathInfo();
 
-            if (this.pathInfo.startsWith("/")) {
-                s = this.pathInfo.substring(1);
+            if (req.getPathInfo().startsWith("/")) {
+                s = req.getPathInfo().substring(1);
             }
 
             int i = s.indexOf("/");
@@ -288,16 +299,16 @@ public class RequestMapper {
 
             mapPath = "/" + s;
         } else if (mapPath == null &&
-            this.resourceName != null) {
-            mapPath = this.resourceName;
+            req.getResourceName() != null) {
+            mapPath = req.getResourceName();
         }
 
-        return mapPath;
+        req.setMappedPath( mapPath );
     }
 
-    private String getResolvedServlet(String path) {
+    private String getResolvedServlet(Container container, String path) {
         String resolvedServlet = null;
-        ServletWrapper[] sw = this.container.getServletsByPath(path);
+        ServletWrapper[] sw = container.getServletsByPath(path);
 
         if (sw.length > 0) {
             // assume one

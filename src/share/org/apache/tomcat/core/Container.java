@@ -203,8 +203,7 @@ public class Container {
     void removeServletByName(String servletName) {
 	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
 	if( wrapper != null ) {
-	    ServletWrapper wa[]={wrapper};
-	    removeServlets( wa );
+	    removeServlet( wrapper );
 	}
     }
 
@@ -216,7 +215,17 @@ public class Container {
     }
 
     void removeJSP(String path) {
-        removeServlets(getServletsByPath(path));
+	Enumeration enum = servlets.keys();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+
+	    if (sw.getPath() != null &&
+	        sw.getPath().equals(path)) {
+	        removeServlet( sw );
+	    }
+	}
     }
 
     public void setServletInitParams(String name, Hashtable initParams) {
@@ -274,6 +283,22 @@ public class Container {
 	}
     }
 
+    public ServletWrapper getDefaultServlet() {
+	return defaultServlet;
+    }
+    
+    public Hashtable getPathMap() {
+	return pathMappedServlets;
+    }
+
+    public Hashtable getPrefixMap() {
+	return prefixMappedServlets;
+    }
+
+    public Hashtable getExtensionMap() {
+	return extensionMappedServlets;
+    }
+    
     boolean containsMapping(String mapping) {
         mapping = mapping.trim();
 
@@ -290,38 +315,6 @@ public class Container {
 	pathMappedServlets.remove(mapping);
     }
 
-    Request lookupServlet(String lookupPath) {
-        RequestMapper requestMapper = new RequestMapper(this);
-
-	requestMapper.setPathMaps(pathMappedServlets);
-	requestMapper.setPrefixMaps(prefixMappedServlets);
-	requestMapper.setExtensionMaps(extensionMappedServlets);
-
-	Request lookupResult =
-	    requestMapper.lookupServlet(lookupPath);
-
-        if (lookupResult == null) {
-	    ServletWrapper wrapper = null;
-
-	    if (defaultServlet != null) {
-	        wrapper = defaultServlet;
-	    } else {
-	        wrapper = (ServletWrapper)servlets.get(
-		    Constants.Servlet.Default.Name);
-	    }
-
-	    String servletPath = Constants.Servlet.Default.Map;
-            String pathInfo = lookupPath;
-
-	    lookupResult = new Request();
-	    lookupResult.setWrapper( wrapper );
-	    lookupResult.setServletPath( servletPath );
-	    lookupResult.setPathInfo( pathInfo );
-	}
-
-	return lookupResult;
-    }
-
     Request lookupServletByName(String servletName) {
         Request lookupResult = null;
 
@@ -336,7 +329,7 @@ public class Container {
         return lookupResult;
     }
 
-    ServletWrapper getServletByName(String servletName) {
+    public ServletWrapper getServletByName(String servletName) {
 	return (ServletWrapper)servlets.get(servletName);
     }
 
@@ -394,46 +387,50 @@ public class Container {
 	servlets.put(name, wrapper);
     }
 
+    private void removeServlet(ServletWrapper sw) {
+	if (prefixMappedServlets.contains(sw)) {
+	    Enumeration enum = prefixMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+		
+		if (prefixMappedServlets.get(key).equals(sw)) {
+		    prefixMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	if (extensionMappedServlets.contains(sw)) {
+	    Enumeration enum = extensionMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+
+		if (extensionMappedServlets.get(key).equals(sw)) {
+		    extensionMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	if (pathMappedServlets.contains(sw)) {
+	    Enumeration enum = pathMappedServlets.keys();
+	    
+	    while (enum.hasMoreElements()) {
+		String key = (String)enum.nextElement();
+
+		if (pathMappedServlets.get(key).equals(sw)) {
+		    pathMappedServlets.remove(key);
+		}
+	    }
+	}
+	
+	servlets.remove(sw.getServletName());
+    }
+    
     private void removeServlets(ServletWrapper[] sw) {
 	if (sw != null) {
 	    for (int i = 0; i < sw.length; i++) {
-	        if (prefixMappedServlets.contains(sw[i])) {
-		    Enumeration enum = prefixMappedServlets.keys();
-
-		    while (enum.hasMoreElements()) {
-		        String key = (String)enum.nextElement();
-
-			if (prefixMappedServlets.get(key).equals(sw[i])) {
-			    prefixMappedServlets.remove(key);
-			}
-		    }
-		}
-
-		if (extensionMappedServlets.contains(sw[i])) {
-		    Enumeration enum = extensionMappedServlets.keys();
-
-		    while (enum.hasMoreElements()) {
-		        String key = (String)enum.nextElement();
-
-			if (extensionMappedServlets.get(key).equals(sw[i])) {
-			    extensionMappedServlets.remove(key);
-			}
-		    }
-		}
-
-		if (pathMappedServlets.contains(sw[i])) {
-		    Enumeration enum = pathMappedServlets.keys();
-
-		    while (enum.hasMoreElements()) {
-		        String key = (String)enum.nextElement();
-
-			if (pathMappedServlets.get(key).equals(sw[i])) {
-			    pathMappedServlets.remove(key);
-			}
-		    }
-		}
-
-	        servlets.remove(sw[i].getServletName());
+		removeServlet( sw[i] );
 	    }
 	}
     }
@@ -466,7 +463,7 @@ public class Container {
     // XXX
     // made package protected so that RequestMapper can have access
 
-    ServletWrapper[] getServletsByPath(String path) {
+    public ServletWrapper[] getServletsByPath(String path) {
         Vector servletWrappers = new Vector();
 	Enumeration enum = servlets.keys();
 

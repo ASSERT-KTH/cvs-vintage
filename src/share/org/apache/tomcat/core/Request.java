@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.11 2000/01/07 18:48:34 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/01/07 18:48:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.12 2000/01/07 19:14:11 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/01/07 19:14:11 $
  *
  * ====================================================================
  *
@@ -109,7 +109,7 @@ public class Request  {
     protected HttpServletRequestFacade requestFacade;
     protected Context context;
     protected Hashtable attributes = new Hashtable();
-    protected ServerSession serverSession;
+    protected HttpSession serverSession;
 
     protected boolean didReadFormData;
     protected boolean didParameters;
@@ -121,6 +121,7 @@ public class Request  {
     ServletWrapper wrapper = null;
     String mappedPath = null;
     String resolvedServlet = null;
+    String resouceName=null;
 
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
@@ -208,6 +209,9 @@ public class Request  {
 	return lookupPath;
     }
 
+    public void setLookupPath( String l ) {
+	lookupPath=l;
+    }
 
     public String[] getParameterValues(String name) {
 	if(!didParameters) {
@@ -318,14 +322,24 @@ public class Request  {
 	this.response = response;
     }
 
-    // Called after a Context is found, adjust all other paths.
-    // XXX XXX XXX
+    public Response getResponse() {
+	return response;
+    }
+    
     public void setContext(Context context) {
 	this.context = context;
+    }
+
+    // Called after a Context is found, adjust all other paths.
+    // XXX XXX XXX
+    public void updatePaths() {
 	contextPath = context.getPath();
 	String requestURI = getRequestURI();
-	lookupPath = requestURI.substring(contextPath.length(),
-            requestURI.length());
+	// do not set it if it is already set or we have no
+	// URI - the case of a sub-request generated internally
+	if( requestURI!=null && lookupPath==null ) 
+	    lookupPath = requestURI.substring(contextPath.length(),
+					      requestURI.length());
 
 	// check for ? string on lookuppath
 	int qindex = lookupPath.indexOf("?");
@@ -360,36 +374,45 @@ public class Request  {
     }
 
 
-    public ApplicationSession getSession() {
-        return getSession(true);
-    }
+//     // XXX XXX XXX
+//     public ServerSession getServerSession(boolean create) {
+// 	if (context == null) {
+// 	    System.out.println("CONTEXT WAS NEVER SET");
+// 	    return null;
+// 	}
 
-    // XXX XXX XXX
-    public ServerSession getServerSession(boolean create) {
-	if (context == null) {
-	    System.out.println("CONTEXT WAS NEVER SET");
-	    return null;
+// 	if (serverSession == null && create) {
+//             serverSession =
+// 		ServerSessionManager.getManager()
+// 		    .getServerSession(this, response, create);
+//             serverSession.accessed();
+// 	}
+
+// 	return serverSession;
+//     }
+
+    public HttpSession getSession(boolean create) {
+	if( serverSession==null ) {
+	    if( ! create )
+		return null;
+	    else {
+// 		serverSession =
+// 		    ServerSessionManager.getManager()
+// 		    .getServerSession(this, response, create);
+// 		serverSession.accessed();
+		serverSession =ServerSessionManager.getManager()
+ 		    .getSession(this, response, create);
+ 		
+	    }
 	}
 
-	if (serverSession == null && create) {
-            serverSession =
-		ServerSessionManager.getManager()
-		    .getServerSession(this, response, create);
-            serverSession.accessed();
-	}
-
+	// assert serverSession!=null
+// 	ApplicationSession appSession = null;
+// 	return  serverSession.getApplicationSession(context, create);
 	return serverSession;
-    }
 
-    public ApplicationSession getSession(boolean create) {
-	getServerSession(create);
-	ApplicationSession appSession = null;
-	if (serverSession != null) {
-	    appSession = serverSession.getApplicationSession(context, create);
-	}
 
-	return appSession;
-
+	
 	//  if (reqSessionId != null) {
 //  	    //Session session = context.getSession(reqSessionId);
 //  	    //if (session == null) {
@@ -408,28 +431,36 @@ public class Request  {
     }
 
     // -------------------- LookupResult 
-    String getResolvedServlet() {
+    public String getResolvedServlet() {
 	return resolvedServlet;
     }
 
-    void setResolvedServlet(String rs ) {
+    public void setResolvedServlet(String rs ) {
 	resolvedServlet=rs;
     }
 
-    ServletWrapper getWrapper() {
+    public ServletWrapper getWrapper() {
 	return wrapper;
     }
     
-    void setWrapper(ServletWrapper wrapper) {
+    public void setWrapper(ServletWrapper wrapper) {
 	this.wrapper=wrapper;
     }
 
-    String getMappedPath() {
+    public String getMappedPath() {
 	return mappedPath;
     }
 
-    void setMappedPath( String m ) {
+    public void setMappedPath( String m ) {
 	mappedPath=m;
+    }
+
+    public String getResourceName() {
+	return resouceName;
+    }
+
+    public void setResourceName( String m ) {
+	resouceName=m;
     }
 
     // -------------------- Setters
@@ -566,7 +597,7 @@ public class Request  {
 	this.reqSessionId = reqSessionId;
     }
 
-    public void setServerSession(ServerSession serverSession) {
+    public void setSession(HttpSession serverSession) {
 	this.serverSession = serverSession;
     }
 

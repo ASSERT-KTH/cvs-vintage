@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.4 1999/10/28 05:15:24 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/28 05:15:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.5 2000/01/07 19:14:11 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/07 19:14:11 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.net.*;
+import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
@@ -94,7 +95,11 @@ public class ContextManager  implements Server {
     private StringManager sm =
         StringManager.getManager(Constants.Package);
 
-
+    ContextInterceptor contextInterceptor=new ContextInterceptor( this );
+    SessionInterceptor sessionInterceptor=new SessionInterceptor();
+    MapperInterceptor mapperInterceptor=new MapperInterceptor();
+    
+    
     /**
      * The default Context used to process paths not associated with
      * any other Context.
@@ -236,47 +241,9 @@ public class ContextManager  implements Server {
 	return (Context)contexts.get(name);
     }
 
-
-    /**
-     * Gets the context that is responsible for requests for a
-     * particular path.  If no specifically assigned Context can be
-     * identified, returns the default Context.
-     *
-     * @param path The path for which a Context is requested
-     */
-    
-    public Context getContextByPath(String path) {
-	String realPath = path;
-	Context ctx = null;
-
-	// XXX
-	// needs help ... this needs to be optimized out.
-
-        lookup:
-	do {
-	    ctx = (Context)contextMaps.get(path);
-	    if (ctx == null) {
-	        int i = path.lastIndexOf('/');
-		if (i > -1 && path.length() > 1) {
-		    path = path.substring(0, i);
-		    if (path.length() == 0) {
-		        path = "/";
-		    }
-		} else {
-		    // path too short
-		    break lookup;
-		}
-	    } else {
-	    }
-	} while (ctx == null);
-
-	if (ctx == null) {
-	    ctx = defaultContext;
-	}
-
-	return ctx;
+    public Context getMappedContext( String path ) {
+	return  (Context)contextMaps.get(path);
     }
-
 
     /**
      * Adds a new Context to the set managed by this ContextManager.
@@ -419,25 +386,24 @@ public class ContextManager  implements Server {
 		return;
 	    }
 
-	    // resolve the server that we are for
-	    String path = rrequest.getRequestURI();
-	    
-	    Context ctx= this.getContextByPath(path);
-	    
-	    // final fix on response & request
-	    //		rresponse.setServerHeader(server.getServerHeader());
-	    
-	    String ctxPath = ctx.getPath();
-	    String pathInfo =path.substring(ctxPath.length(),
-					    path.length());
 	    //    don't do headers if request protocol is http/0.9
 	    if (rrequest.getProtocol() == null) {
 		rresponse.setOmitHeaders(true);
 	    }
+
+	    // XXX Hardcoded - it will be changed in the next step.( costin )
+
+	    // will set the Context
+	    contextInterceptor.handleRequest( rrequest );
+	    // will set Session 
+	    sessionInterceptor.handleRequest( rrequest );
 	    
+	    // will set all other fields and ServletWrapper
+	    mapperInterceptor.handleRequest( rrequest );
+
 	    // do it
-	    //		System.out.println( request + " " + rresponse );
-	    ctx.handleRequest(rrequest, rresponse);
+	    rrequest.getWrapper().handleRequest(rrequest.getFacade(),
+					       rresponse.getFacade());
 	    
 	    // finish and clean up
 	    rresponse.finish();
@@ -453,5 +419,20 @@ public class ContextManager  implements Server {
 	}
     }
 
+    // XXX need to be changed to use a full sub-request model (costin)
+    
+    /** Will find the ServletWrapper for a servlet, assuming we already have
+     *  the Context. This is used by Dispatcher and getResource - where the Context
+     *  is already known.
+     */
+    int internalRequestParsing( Request req ) {
+	return mapperInterceptor.handleRequest( req );
+    }
+    
+    public Context getContextByPath(String path ) {
+	// XXX XXX XXX need to create a sub-request !!!!
+	// 
+	return contextInterceptor.getContextByPath( path );      
+    }
     
 }
