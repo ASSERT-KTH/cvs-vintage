@@ -93,7 +93,7 @@ import org.apache.tomcat.logging.Logger;
 public class JspServlet extends HttpServlet {
 
     class JspServletWrapper {
-	HttpJspPage theServlet;
+        Servlet theServlet;
 	String jspUri;
 	boolean isErrorPage;
 	
@@ -109,13 +109,14 @@ public class JspServlet extends HttpServlet {
 			//loader.getJspServletClass(jspUri);
 		// This is for the original protocol.
 		destroy();
-		theServlet = (HttpJspPage) servletClass.newInstance();
+		theServlet = (Servlet) servletClass.newInstance();
 	    } catch (Exception ex) {
 		throw new JasperException(ex);
 	    }
 	    theServlet.init(JspServlet.this.config);
 	    if (theServlet instanceof HttpJspBase)  {
-                ((HttpJspBase)theServlet).setClassLoader(JspServlet.this.parentClassLoader);
+                HttpJspBase h = (HttpJspBase) theServlet;
+                h.setClassLoader(JspServlet.this.parentClassLoader);
 	    }
 	}
 	
