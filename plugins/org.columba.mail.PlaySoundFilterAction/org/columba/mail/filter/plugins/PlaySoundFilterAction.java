@@ -6,7 +6,7 @@ import java.net.URL;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
+import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.util.PlaySound;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
