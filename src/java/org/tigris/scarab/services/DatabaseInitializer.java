@@ -67,7 +67,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.12 2003/04/21 19:39:14 jackrepenning Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.13 2003/05/13 17:03:58 thierrylach Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -169,18 +169,21 @@ public class DatabaseInitializer
                                         getters[n].getName());
                         String key = (String)getters[n].invoke(om, null);
                         String value = null;
-                        try 
-                        {
-                            value = Localization.getString(row[0], 
-                                                           defaultLocale,
-                                                           key);
-                        }
-                        catch (MissingResourceException e)
-                        {
-                            Log.get().debug("Missing database initialization "
-                                            + "resource: " + e.getMessage());
-                        } 
-                
+
+                        // Oracle returns null on empty field.
+                        if (key != null) {
+                        	try 
+	                        {
+	                            value = Localization.getString(row[0], 
+	                                                           defaultLocale,
+	                                                           key);
+	                        }
+	                        catch (MissingResourceException e)
+	                        {
+	                            Log.get().debug("Missing database initialization "
+	                                            + "resource: " + e.getMessage());
+	                        } 
+						}
                         if (value != null) 
                         {
                             Object[] arg = {value};
