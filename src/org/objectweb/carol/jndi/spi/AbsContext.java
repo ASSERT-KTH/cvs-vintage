@@ -19,14 +19,16 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: AbsContext.java,v 1.1 2005/03/10 10:05:01 benoitf Exp $
+ * $Id: AbsContext.java,v 1.2 2005/03/15 09:57:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
 import java.io.Serializable;
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -40,8 +42,14 @@ import javax.naming.Referenceable;
 
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
+import org.objectweb.carol.jndi.wrapping.UnicastJNDIReferenceWrapper;
 import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.RMIConfiguration;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * This abstract class define the common methods used for all existing protocol
@@ -60,7 +68,7 @@ public abstract class AbsContext implements Context {
     /**
      * Exported Wrapper Hashtable
      */
-    private static Hashtable exportedObjects = new Hashtable();
+    private Hashtable exportedObjects = new Hashtable();
 
     /**
      * Constructs a wrapper on the given protocol context
@@ -116,44 +124,9 @@ public abstract class AbsContext implements Context {
         }
     }
 
-    /**
-     * Default implementation of wrapObject method Wrap an Object : If the
-     * object is a reference wrap it into a Reference Wrapper Object here the
-     * good way is to contact the carol configuration to get the portable remote
-     * object
-     * @param o the object to encode
-     * @param name of the object
-     * @param replace if the object need to be replaced
-     * @return a <code>Remote JNDIRemoteReference Object</code> if o is a
-     *         resource o if else
-     * @throws NamingException if object cannot be wrapped
-     */
-    protected Object defaultWwrapObject(Object o, Name name, boolean replace) throws NamingException {
-        try {
-            // Only Serializable (not implementing Remote or Referenceable or
-            // Reference)
-            if ((!(o instanceof Remote)) && (!(o instanceof Referenceable)) && (!(o instanceof Reference))
-                    && (o instanceof Serializable)) {
-                JNDIResourceWrapper irw = new JNDIResourceWrapper((Serializable) o);
-                CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-                Remote oldObj = (Remote) addToExported(name, irw);
-                if (oldObj != null) {
-                    if (replace) {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
-                    } else {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
-                        addToExported(name, oldObj);
-                        throw new NamingException("Object '" + o + "' with name '" + name + "' is already bind");
-                    }
-                }
-                return irw;
-            } else {
-                return o;
-            }
-        } catch (Exception e) {
-            throw NamingExceptionHelper.create("Cannot wrap object '" + o + "' with name '" + name + "' : "
-                    + e.getMessage(), e);
-        }
+    protected int getObjectPort() throws NamingException {
+        return 0;
+
     }
 
     /**

@@ -22,14 +22,23 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JEREMIEContext.java,v 1.9 2005/03/10 10:05:01 benoitf Exp $
+ * $Id: JEREMIEContext.java,v 1.10 2005/03/15 09:57:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
 
+import java.io.Serializable;
+import java.rmi.Remote;
+
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+
+import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
+import org.objectweb.carol.rmi.exception.NamingExceptionHelper;
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 /**
  * @author Guillaume Riviere
@@ -70,6 +79,31 @@ public class JEREMIEContext extends AbsContext implements Context {
      * @throws NamingException if object cannot be wrapped
      */
     protected Object wrapObject(Object o, Name name, boolean replace) throws NamingException {
-        return super.defaultWwrapObject(o, name, replace);
+        try {
+            if ((!(o instanceof Remote)) && (!(o instanceof Referenceable)) && (!(o instanceof Reference))
+                    && (o instanceof Serializable)) {
+                // Only Serializable (not implementing Remote or Referenceable or
+                // Reference)
+                JNDIResourceWrapper irw = new JNDIResourceWrapper((Serializable) o);
+                CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
+                Remote oldObj = (Remote) addToExported(name, irw);
+                if (oldObj != null) {
+                    if (replace) {
+                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+                    } else {
+                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
+                        addToExported(name, oldObj);
+                        throw new NamingException("Object '" + o + "' with name '" + name + "' is already bind");
+                    }
+                }
+                return irw;
+            } else {
+                return o;
+            }
+        } catch (Exception e) {
+            throw NamingExceptionHelper.create("Cannot wrap object '" + o + "' with name '" + name + "' : "
+                    + e.getMessage(), e);
+        }
+
     }
 }
