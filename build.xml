@@ -81,6 +81,12 @@
                file="${jakarta-tomcat-connectors}"/>
     <available property="jakarta-tomcat-jasper-present"
                file="${jakarta-tomcat-jasper}" />
+    <available property="jaxp10-present"
+               file="${jaxp.home}/parser.jar" />
+    <available property="jaxp11-present"
+               file="${jaxp.home}/crimson.jar" />
+    <available property="xerces-present"
+               file="${jaxp.home}/xerces.jar" />
   </target>
 
   <target name="msg.jdk12" if="jdk12.present" >
@@ -106,10 +112,40 @@
   <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.jtc,msg.jtj,msg.commons-dbcp" >
   </target>
 
-  <!-- ==================== Copy static files ==================== -->
-  <!-- IF YOU CHANGE, sync dist.prepare !!! -->
+  <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
+    <echo message="Installing JAXP-1.0"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
+          file="${jaxp.home}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/parser.jar"
+          file="${jaxp.home}/parser.jar"/>
+  </target>
 
-  <target name="prepare" depends="init">
+  <target name="prepare.jaxp11" depends="detect" if="jaxp11-present" >
+    <echo message="Installing JAXP-1.1"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
+          file="${jaxp.home}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/xalan.jar"
+          file="${jaxp.home}/xalan.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/crimson.jar"
+          file="${jaxp.home}/crimson.jar"/>
+  </target>
+
+  <target name="prepare.xerces" depends="detect" if="xerces-present" >
+    <echo message="Installing XERCES"/>
+    <copy tofile="${tomcat.build}/lib/container/xerces.jar"
+          file="${jaxp.home}/xerces.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
+          file="${jaxp.home}/jaxp.jar"/>
+  </target>
+  
+  <target name="prepare.jaxp" depends="prepare.jaxp101,prepare.jaxp11,prepare.xerces" />
+
+  <!-- ==================== Copy static files ==================== -->
+
+  <target name="prepare" depends="init,prepare.dirs,prepare.jaxp" 
+	  description="Create the directory structure for build and copy binaries" />
+
+  <target name="prepare.dirs" depends="init">
     <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="${tomcat.build}"/>
     <mkdir dir="${tomcat.build}/conf"/>
@@ -147,14 +183,6 @@
     </copy>
     -->
 
-    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
-          file="${jaxp.home}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/parser.jar"
-          file="${jaxp.home}/parser.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
-          file="${jaxp.home}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/crimson.jar"
-          file="${jaxp.home}/crimson.jar"/>
     <copy file ="src/build/readme/readme.container"
           tofile="${tomcat.build}/lib/container/README" />
 
