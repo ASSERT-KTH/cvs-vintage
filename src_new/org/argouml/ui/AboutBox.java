@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.27 2003/11/17 17:19:14 mvw Exp $
+// $Id: AboutBox.java,v 1.28 2003/11/24 18:02:30 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,8 @@ import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JPanel; //MVW
+import javax.swing.border.EmptyBorder; //MVW
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.AboutTabPanel;
@@ -69,6 +71,7 @@ public class AboutBox extends JDialog {
 
     public AboutBox(Frame owner, boolean modal) {
 	super(owner, modal);
+  // TODO: i18n
 	this.setTitle("About ArgoUML");
 	_splashPanel = new SplashPanel("Splash");
 	int imgWidth = _splashPanel.getImage().getIconWidth();
@@ -107,7 +110,20 @@ public class AboutBox extends JDialog {
 			  + "work!\n");
 	versionBuf.append("\n");
 
-	_tabs.addTab("Splash", _splashPanel);
+  /** MVW: Added the inset JPanel, so that the image width is also
+     applied to the "ArgoUML Vx,xx.x" part */
+  JPanel myInsetPanel = new JPanel(); //MVW
+  /* top, left, bottom, right */
+  myInsetPanel.setBorder(new EmptyBorder(30,40,40,40)); //MVW
+  /* This gives some more space to the row of tabs, 
+     so that there will not be 2 rows of tabs
+     See issue 2365, remark 3 from Jeremy.         */
+  imgWidth  += 40 + 40; //MVW
+  /* It looks better is the height increases, too */
+  imgHeight += 40 + 40; //MVW
+  myInsetPanel.add(_splashPanel); //MVW
+  _tabs.addTab("Splash", myInsetPanel); //MVW
+	//_tabs.addTab("Splash", _splashPanel);
 
 	try {
 	    JTextArea a = new JTextArea();
