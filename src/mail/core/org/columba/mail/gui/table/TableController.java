@@ -138,6 +138,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
      * previously selected rows
      */
     protected int[] previouslySelectedRows;
+    
+    private MessageNode[] previouslySelectedNodes;
 
     /**
      * previously selected folder
@@ -313,7 +315,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // selected rows before updating the model
         // -> used later to restore the selection
         previouslySelectedRows = view.getSelectedRows();
-
+        
         // folder in which the update occurs
         AbstractFolder folder = event.getSrcFolder();
 
@@ -387,13 +389,21 @@ public class TableController implements FocusOwner, ListSelectionListener {
         if (event.getEventType() == TableModelChangedEvent.MARK) return;
         if (event.getEventType() == TableModelChangedEvent.SET) return;
 
+        
         // re-select previous selection
         if (previouslySelectedRows != null) {
             // only re-select if only a single row was formerly selected
-            if (previouslySelectedRows.length == 1) {
-                view.selectRow(previouslySelectedRows[0]);
+            if (previouslySelectedRows.length == 1) {            	
+            	int row = getHeaderTableModel().getRow(previouslySelectedNodes[0]);           	
+            	if ( row != -1)
+            		// message still exists
+            		view.selectRow(row); 
+            	else
+            		// message was removed from JTable
+            		view.selectRow(previouslySelectedRows[0]);
             }
         }
+        
 
     }
 
@@ -676,10 +686,19 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // -> wait until the final selection is available
         if (arg0.getValueIsAdjusting()) return;
 
-        /*
-        // skip if no message selected
-        if ( getView().getSelectedNodes().length == 0 ) return;
-        */
+        // @author fdietz
+        // bug #983931, message jumps while downloading new messages
+        if ( getView().getSelectedNodes().length == 0 ) {
+        	 // skip if no message selected
+        	
+        	if ( getView().getRowCount() > 0)
+        	// if folder contains messages 
+        	// -> skip to fix above bug
+        	return;
+        }
+        
+        // rememember selected nodes
+        previouslySelectedNodes = getView().getSelectedNodes();
         
         // show message
         new ViewMessageAction(getFrameController()).actionPerformed(null);

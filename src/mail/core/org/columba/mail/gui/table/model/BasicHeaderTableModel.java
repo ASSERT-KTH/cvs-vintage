@@ -144,6 +144,22 @@ public class BasicHeaderTableModel extends AbstractTreeTableModel {
         return (MessageNode) treePath.getLastPathComponent();
     }
 
+    /**
+     * Get row for node.
+     * 
+     * @param node		selected message node
+     * @return			current row of node
+     */
+    public int getRow(MessageNode node) {
+    	
+    	for ( int i=0; i<getTree().getRowCount(); i++) {
+    		MessageNode n = (MessageNode) getValueAt(i,0);
+    		if ( n.getUid().equals(node.getUid())) return i;
+    	}
+    	
+    	return -1;
+    }
+    
     public String getColumnName(int column) {
         return (String) columns.get(column);
     }
