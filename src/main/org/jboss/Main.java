@@ -32,13 +32,13 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.30 $
+ *   @version $Revision: 1.31 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-   String versionIdentifier = "2.1-BETA-Mar-26-2001";
+   String versionIdentifier = "2.3 BETA";
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
@@ -55,7 +55,7 @@ public class Main
           if( args[a].startsWith("-p") )
               patchDir = args[a+1];
       }
-      final String confName = cn;   
+      final String confName = cn;
       final String patchDirName = patchDir;
 
       // Load system properties
@@ -114,7 +114,7 @@ public class Main
    public Main(String confName, String patchDir)
    {
    	  Date startTime = new Date();
-      
+
       try
       {
          System.out.println("Using configuration \""+confName+"\"");
@@ -190,7 +190,7 @@ public class Main
          }
 
          DocumentBuilderFactory.newInstance();
-         
+
          // Load configuration
          server.invoke(new ObjectName(":service=Configuration"), "loadConfiguration", new Object[0], new String[0]);
 
