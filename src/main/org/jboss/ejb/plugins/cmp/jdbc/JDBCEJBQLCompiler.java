@@ -87,7 +87,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -503,10 +503,10 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       // add the where clause
       if(where.length() != 0 && thetaJoin.length() != 0) {
-         buf.append(" ").append(where);
-         buf.append(" AND (").append(thetaJoin).append(")");
+         buf.append(" WHERE (").append(where);
+         buf.append(") AND (").append(thetaJoin).append(")");
       } else if(where.length() != 0) {
-         buf.append(" ").append(where);
+         buf.append(" WHERE ").append(where);
       } else if(thetaJoin.length() != 0) {
          buf.append(" WHERE ").append(thetaJoin);
       }
@@ -797,6 +797,13 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          buf.append(SQLUtil.getColumnNamesClause(loadFields, alias));
       }
       return buf;
+   }
+
+   /** Generates where clause without the "WHERE" keyword. */
+   public Object visit(ASTWhere node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+      node.jjtGetChild(0).jjtAccept(this, data);
+      return data;
    }
 
    public Object visit(ASTNullComparison node, Object data) {
