@@ -1,7 +1,7 @@
 mysql-scarab.sql
 mysql-turbine.sql
-mysql-turbine-scheduler.sql
-mysql-id-table-schema.sql
+mysql-scheduler.sql
+mysql-id-table.sql
 mysql-turbine-id-table-init.sql
 mysql-scarab-id-table-init.sql
 mysql-scarab-required-data.sql
