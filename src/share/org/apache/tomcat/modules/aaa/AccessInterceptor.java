@@ -527,9 +527,7 @@ class FormAuthHandler extends Handler {
 	if( debug>0) log( "Username = " + username);
 
 	String originalLocation = req.requestURI().toString();
-	if (req.queryString().toString() != null
-                && !req.queryString().toString().equals(""))
-	    originalLocation += "?" + req.queryString().toString();
+
         //XXX is needed to put the JVM route too?
         if (noSession
 	    || Request.SESSIONID_FROM_URL.equals(req.getSessionIdSource()))  {
@@ -538,6 +536,9 @@ class FormAuthHandler extends Handler {
             originalLocation += id ;
             page += id ;
 	}
+	if (req.queryString().toString() != null
+                && !req.queryString().toString().equals(""))
+	    originalLocation += "?" + req.queryString().toString();
 	session.setAttribute( "tomcat.auth.originalLocation",
 			      originalLocation);
 
