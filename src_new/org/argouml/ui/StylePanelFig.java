@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.13 2003/06/30 18:00:24 linus Exp $
+// $Id: StylePanelFig.java,v 1.14 2003/08/20 20:20:26 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class StylePanelFig extends StylePanel
     protected JComboBox _lineField = new JComboBox();
     protected JLabel _shadowLabel =
 	new JLabel(Argo.localize(BUNDLE, "stylepane.label.shadow") + ": ");
-    protected JComboBox _shadowField = new JComboBox();
+    protected JComboBox _shadowField = new ShadowComboBox();
     //protected JLabel _dashedLabel = new JLabel("Dashed: ");
     //protected JComboBox _dashedField = new JComboBox(Fig.DASHED_CHOICES);
     protected SpacerPanel _spacer = new SpacerPanel();
@@ -199,17 +199,6 @@ public class StylePanelFig extends StylePanel
 	_lineField.addItem(Color.orange);
 	_lineField.addItem(Color.pink);
 	_lineField.addItem(Argo.localize(BUNDLE, "stylepane.label.custom"));
-
-	_shadowField.addItem(Argo.localize(BUNDLE,
-					   "stylepane.label.no-shadow"));
-	_shadowField.addItem("1");
-	_shadowField.addItem("2");
-	_shadowField.addItem("3");
-	_shadowField.addItem("4");
-	_shadowField.addItem("5");
-	_shadowField.addItem("6");
-	_shadowField.addItem("7");
-	_shadowField.addItem("8");
     }
 
     ////////////////////////////////////////////////////////////////
