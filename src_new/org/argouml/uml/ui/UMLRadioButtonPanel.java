@@ -1,6 +1,5 @@
-
-// $Id: UMLRadioButtonPanel.java,v 1.9 2004/03/25 22:30:01 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLRadioButtonPanel.java,v 1.10 2004/05/20 11:12:25 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -23,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLRadioButtonPanel.java,v 1.9 2004/03/25 22:30:01 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.GridLayout;
@@ -49,10 +47,11 @@ import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 
 /**
- * A panel that shows a group of radiobuttons. An action can be added to the
- * panel which will be executed when one of the radiobuttons is pressed. Via the 
- * name of the button (settext), the action can find out which button is
- * pressed.
+ * A panel that shows a group of radiobuttons. An action can be added
+ * to the panel which will be executed when one of the radiobuttons is
+ * pressed. Via the name of the button (settext), the action can find
+ * out which button is pressed.
+ *
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
@@ -148,8 +147,10 @@ public abstract class UMLRadioButtonPanel
             String keyAndLabel = (String) it.next();
             JRadioButton button = new JRadioButton(keyAndLabel);
             button.addActionListener(setAction);
-            button.setActionCommand(
-				    (String) labeltextsActioncommands.get(keyAndLabel));
+	    String actionCommand =
+		(String) labeltextsActioncommands.get(keyAndLabel);
+            button.setActionCommand(actionCommand);
+
             _buttonGroup.add(button);
             add(button);
         }
@@ -213,7 +214,8 @@ public abstract class UMLRadioButtonPanel
         }
         _target = target;
         if (ModelFacade.isABase(_target)) {
-            // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
+            // UmlModelEventPump.getPump().removeModelEventListener(this,
+            // (MBase)_target, _propertySetName);
             eventPump.addModelEventListener(this, _target, _propertySetName);
         }
         if (_target != null) {

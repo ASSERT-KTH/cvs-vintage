@@ -1,6 +1,5 @@
-
-// $Id: UmlHelper.java,v 1.17 2003/12/06 18:12:54 alexb Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UmlHelper.java,v 1.18 2004/05/20 11:12:21 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -76,7 +75,7 @@ public class UmlHelper {
      */
     public void addListenersToModel(Object model) {
         
-        if(!ModelFacade.isAModel(model))
+        if (!ModelFacade.isAModel(model))
             throw new IllegalArgumentException();
         
 	addListenersToMBase(model);
@@ -87,11 +86,11 @@ public class UmlHelper {
      */
     protected void addListenersToMBase(Object mbase) {     
         
-        if(!ModelFacade.isABase(mbase))
+        if (!ModelFacade.isABase(mbase))
             throw new IllegalArgumentException();
         
 	UmlFactory.getFactory().addListenersToModelElement(mbase);
-	Collection elements = ((MBase)mbase).getModelElementContents();
+	Collection elements = ((MBase) mbase).getModelElementContents();
 	if (elements != null) {
 	    Iterator iterator = elements.iterator();
 	    while (iterator.hasNext()) {
