@@ -66,7 +66,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * @version
  */
 public class IncomingServerPanel extends DefaultPanel implements
-		ActionListener, ItemListener {
+		ActionListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -182,13 +182,21 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 			authenticationComboBox.setSelectedItem(serverItem
 					.get("login_method"));
-
+			
+			// disable the actionlistener for this period
+			// to avoid an unwanted port check
+			secureCheckBox.removeActionListener(this);
+			sslComboBox.removeActionListener(this);
+			
 			secureCheckBox.setSelected(serverItem.getBoolean("enable_ssl",
 					false));
 
 			sslComboBox.setSelectedIndex(serverItem.getInteger("ssl_type", 1));
 			sslComboBox.setEnabled(secureCheckBox.isSelected());
-
+			// reactivate
+			secureCheckBox.addActionListener(this);
+			sslComboBox.addActionListener(this);
+			
 			defaultAccountCheckBox.setEnabled(MailInterface.config
 					.getAccountList().getDefaultAccountUid() != accountItem
 					.getInteger("uid"));
@@ -395,7 +403,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 		portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
 				"dialog", "account", "port"));
 
-		portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 99999, 1));
+		portSpinner = new JSpinner(new SpinnerNumberModel(100, 0, 65535, 1));
 		portLabel.setLabelFor(portSpinner);
 
 		storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
@@ -404,7 +412,8 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 		secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
 				"dialog", "account", "use_SSL_for_secure_connection"));
-		secureCheckBox.addItemListener(this);
+		secureCheckBox.setActionCommand("SSL");
+		secureCheckBox.addActionListener(this);
 
 		authenticationLabel = new LabelWithMnemonic(MailResourceLoader
 				.getString("dialog", "account", "authentication_type"));
@@ -429,7 +438,8 @@ public class IncomingServerPanel extends DefaultPanel implements
 		}
 		sslComboBox.addItem(MailResourceLoader.getString("dialog", "account",
 				"tls_in_checkbox"));
-		sslComboBox.addItemListener(this);
+		sslComboBox.setActionCommand("SSL");
+		sslComboBox.addActionListener(this);
 	}
 
 	private void updateAuthenticationComboBox() {
@@ -476,65 +486,56 @@ public class IncomingServerPanel extends DefaultPanel implements
 		} else if (action.equals("CHECK_AUTHMETHODS")) {
 			getAuthMechanisms();
 		} 
-		/*
-		   * else if (action.equals("SSL")) {
-		   *  }
-		   */
-	}
+		else if (action.equals("SSL")) {
+			sslComboBox.setEnabled(secureCheckBox.isSelected());
 
-	/**
-	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-	 */
-	public void itemStateChanged(ItemEvent arg0) {
-
-		sslComboBox.setEnabled(secureCheckBox.isSelected());
-
-		if (secureCheckBox.isSelected()) {
-			// Update the Port
-			if (sslComboBox.getSelectedIndex() == TLS) {
-				// Default Port
+			if (secureCheckBox.isSelected()) {
+				// Update the Port
+				if (sslComboBox.getSelectedIndex() == TLS) {
+					// Default Port
+					if (isPopAccount()) {
+						if (((Integer) portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_PORT) {
+							portSpinner.setValue(new Integer(
+									POP3Protocol.DEFAULT_PORT));
+							showPortChangeMessageBox();
+						}
+					} else {
+						if (((Integer) portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_PORT) {
+							portSpinner.setValue(new Integer(
+									IMAPProtocol.DEFAULT_PORT));
+							showPortChangeMessageBox();
+						}
+					}
+				} else {
+					// POP3s / IMAPs
+					if (isPopAccount()) {
+						if (((Integer) portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_SSL_PORT) {
+							portSpinner.setValue(new Integer(
+									POP3Protocol.DEFAULT_SSL_PORT));
+							showPortChangeMessageBox();
+						}
+					} else {
+						if (((Integer) portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_SSL_PORT) {
+							portSpinner.setValue(new Integer(
+									IMAPProtocol.DEFAULT_SSL_PORT));
+							showPortChangeMessageBox();
+						}
+					}
+				}
+			} else {
+				// Check for default Ports
 				if (isPopAccount()) {
 					if (((Integer) portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_PORT) {
-						portSpinner.setValue(new Integer(
-								POP3Protocol.DEFAULT_PORT));
+						portSpinner
+								.setValue(new Integer(POP3Protocol.DEFAULT_PORT));
 						showPortChangeMessageBox();
 					}
 				} else {
 					if (((Integer) portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_PORT) {
-						portSpinner.setValue(new Integer(
-								IMAPProtocol.DEFAULT_PORT));
+						portSpinner
+								.setValue(new Integer(IMAPProtocol.DEFAULT_PORT));
 						showPortChangeMessageBox();
 					}
-				}
-			} else {
-				// POP3s / IMAPs
-				if (isPopAccount()) {
-					if (((Integer) portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_SSL_PORT) {
-						portSpinner.setValue(new Integer(
-								POP3Protocol.DEFAULT_SSL_PORT));
-						showPortChangeMessageBox();
-					}
-				} else {
-					if (((Integer) portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_SSL_PORT) {
-						portSpinner.setValue(new Integer(
-								IMAPProtocol.DEFAULT_SSL_PORT));
-						showPortChangeMessageBox();
-					}
-				}
-			}
-		} else {
-			// Check for default Ports
-			if (isPopAccount()) {
-				if (((Integer) portSpinner.getValue()).intValue() != POP3Protocol.DEFAULT_PORT) {
-					portSpinner
-							.setValue(new Integer(POP3Protocol.DEFAULT_PORT));
-					showPortChangeMessageBox();
-				}
-			} else {
-				if (((Integer) portSpinner.getValue()).intValue() != IMAPProtocol.DEFAULT_PORT) {
-					portSpinner
-							.setValue(new Integer(IMAPProtocol.DEFAULT_PORT));
-					showPortChangeMessageBox();
 				}
 			}
 		}
