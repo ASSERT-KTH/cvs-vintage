@@ -91,7 +91,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.78 2002/06/20 04:43:26 jon Exp $
+ * @version $Id: Search.java,v 1.79 2002/06/28 01:35:43 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -120,7 +120,7 @@ public class Search extends RequireLoginFirstAction
         }
         String queryString = getQueryString(data);
         data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
-        data.getParameters().add("queryString", queryString);
+        data.getParameters().setString("queryString", queryString);
         if (searchResults != null && searchResults.size() > 0)
         {
             context.put("issueList", searchResults);
@@ -136,9 +136,16 @@ public class Search extends RequireLoginFirstAction
     */
     public void doRedirecttosavequery(RunData data, TemplateContext context)
          throws Exception
-    {        
-        data.getParameters().add("queryString", getQueryString(data));
-        setTarget(data, "SaveQuery.vm");            
+    {
+        data.getParameters().setString("queryString", getQueryString(data));
+        setTarget(data, "SaveQuery.vm");
+    }
+
+    public void doRedirecttocrossmodulequery(RunData data, TemplateContext context)
+         throws Exception
+    {
+        context.put("queryString", getQueryString(data));
+        setTarget(data, "home,XModuleList.vm");
     }
 
     /**
@@ -157,7 +164,7 @@ public class Search extends RequireLoginFirstAction
         Field name = queryGroup.get("Name");
         name.setRequired(true);
         Field value = queryGroup.get("Value");
-        data.getParameters().add("queryString", getQueryString(data));
+        data.getParameters().setString("queryString", getQueryString(data));
 
         Module module = scarabR.getCurrentModule();
         if (intake.isAllValid()) 
@@ -251,7 +258,7 @@ public class Search extends RequireLoginFirstAction
             // doRunstoredquery()
             if (Strings.isNumeric(go))
             {
-                data.getParameters().add("queryId", go);
+                data.getParameters().setString("queryId", go);
                 doRunstoredquery(data, context);
             }
             else
@@ -357,7 +364,7 @@ public class Search extends RequireLoginFirstAction
             String userInList = userList[i];
             if (!toRemove.contains(userInList))
             {
-                data.getParameters().add("user_list", userInList);
+                data.getParameters().setString("user_list", userInList);
             }
         }
     }
@@ -377,7 +384,7 @@ public class Search extends RequireLoginFirstAction
         }
         else
         {
-            data.getParameters().add("user_list", user.getUserId().toString());
+            data.getParameters().setString("user_list", user.getUserId().toString());
         }
     }
 
@@ -392,7 +399,7 @@ public class Search extends RequireLoginFirstAction
         doCancel(data, context);
     }
 
-    public String getQueryString(RunData data) throws Exception
+    public static String getQueryString(RunData data) throws Exception
     {
         String queryString = null;
         StringBuffer buf = new StringBuffer();
@@ -407,8 +414,8 @@ public class Search extends RequireLoginFirstAction
                 String[] values = data.getParameters().getStrings(key);
                 for (int j=0; j<values.length; j++)
                 {
-                    buf.append("&").append(key);
-                    buf.append("=").append(values[j]);
+                    buf.append('&').append(key);
+                    buf.append('=').append(values[j]);
                 }
             }
          }
