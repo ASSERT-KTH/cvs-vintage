@@ -70,7 +70,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.104 $
+* @version $Revision: 1.105 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -350,7 +350,9 @@ public class ContainerFactory
             undeploy( appUrl );
 
          app.setURL( appUrl );
-         log.info( "Deploying:" + appUrl );
+         if (log.isDebugEnabled()) {
+            log.debug( "Deploying: " + appUrl );
+         }
 
          /* Create a subclass of URLClassLoader that allows for dynamic class
             loading via the WebServiceMBean
@@ -374,7 +376,10 @@ public class ContainerFactory
          app.start();
 
          // Done
-         log.info( "Deployed application: " + app.getName() );
+         if (log.isDebugEnabled()) {
+            log.debug( "Deployed: " + app.getName() );
+         }
+         
          // Register deployment. Use the application name in the hashtable
          deployments.put( appUrl, app );
       }

@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 
 public class Installer
@@ -75,7 +75,7 @@ public class Installer
    Deployment d;
    
    // the log4j category for output
-   Logger log;
+   Logger log = Logger.getLogger(Installer.class);
 
    // to get the Log and the temprary deployment dir
    InstallerFactory factory;
@@ -104,7 +104,6 @@ public class Installer
    public Installer(InstallerFactory factory, URL src) throws IOException
    {
       this.factory = factory;
-      log = factory.log;
       this.src = src;
    }
 
@@ -113,7 +112,10 @@ public class Installer
    /** install pure ejb module */
    protected URL executeEJBModule(String name, Deployment d, InputStream in, URL libraryRoot)  throws IOException {
        // just install the package
-       log.info("install EJB module "+name);
+       if (log.isDebugEnabled()) {
+          log.debug("install EJB module "+name);
+       }
+       
        File f = install(in, "ejb");
        // Check for libs declared int the EJB jar manifest
        JarFile jar = new JarFile(f);
@@ -127,7 +129,10 @@ public class Installer
    /** install pure war module */
    protected URL executeWarModule(String name, Deployment d, InputStream in, URL libraryRoot, String webContext) throws IOException {
        // just inflate the package and determine the context name
-       log.info("inflate and install WEB module "+name);
+       if (log.isDebugEnabled()) {
+          log.debug("inflate and install WEB module "+name);
+       }
+      
        File f = installInflate(in, "web");
        // Check for libs declared int the WAR jar manifest
        URL[] libs = {};
@@ -146,7 +151,10 @@ public class Installer
    
    /** install pure rar module */
    protected URL executeConnectorModule(String name, Deployment d, InputStream in, URL libraryRoot) throws IOException {
-       log.info("install CONNECTOR module "+name);
+       if (log.isDebugEnabled()) {
+          log.debug("install CONNECTOR module "+name);
+       }
+       
        File f = install(in, "rar");
        // Check for libs declared int the EJB jar manifest
        JarFile jar = new JarFile(f);
@@ -159,7 +167,9 @@ public class Installer
 
    /** install pure java client module */
    protected URL executeJavaModule(String name, Deployment d, InputStream in, URL libraryRoot) throws IOException {
-       log.info("install JAVA application module "+name);
+       if (log.isDebugEnabled()) {
+          log.debug("install JAVA application module "+name);
+       }
        File f = install(in, "java");
        // Check for libs declared int the EJB jar manifest
        JarFile jar = new JarFile(f);
@@ -242,7 +252,7 @@ public class Installer
                    throw _ioe;
                }
                catch (NullPointerException _npe) {
-                   log.info("module "+modName+" not found in "+d.name);
+                   log.warn("module "+modName+" not found in "+d.name);
                    throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
                }
            }
@@ -264,7 +274,7 @@ public class Installer
                    throw _ioe;
                }
                catch (NullPointerException _npe) {
-                   log.info("module "+modName+" not found in "+d.name);
+                   log.warn("module "+modName+" not found in "+d.name);
                    throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
                }
            } 
@@ -273,7 +283,7 @@ public class Installer
                    executeConnectorModule(modName,d,jarFile.
                     getInputStream(jarFile.getEntry(modName)),libraryRoot);
                } catch(NullPointerException e) {
-                   log.info("module "+modName+" not found in "+d.name);
+                   log.warn("module "+modName+" not found in "+d.name);
                    throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
                }
            } else if(mod.isJava()) {
@@ -281,7 +291,7 @@ public class Installer
                    executeJavaModule(modName,d,
                     jarFile.getInputStream(jarFile.getEntry(modName)),libraryRoot);
                 } catch(NullPointerException e) {
-                   log.info("module "+modName+" not found in "+d.name);
+                   log.warn("module "+modName+" not found in "+d.name);
                    throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
                }
            } //
@@ -290,11 +300,12 @@ public class Installer
        }
        
        // put all ejb jars to the common classpath too
-       if( ejbJars.size() > 0 )
-           log.info("add all ejb jar files to the common classpath");
-       for(int e = 0; e < ejbJars.size(); e ++) {
-           URL jar = (URL) ejbJars.get(e);
-           d.commonUrls.add(jar);
+       if( ejbJars.size() > 0 ) {
+          log.debug("add all ejb jar files to the common classpath");
+          for(int e = 0; e < ejbJars.size(); e ++) {
+             URL jar = (URL) ejbJars.get(e);
+             d.commonUrls.add(jar);
+          }
        }
    }
 
@@ -307,8 +318,10 @@ public class Installer
     */
    public Deployment execute() throws J2eeDeploymentException, IOException
    {
-      if (done)
-         throw new IllegalStateException("this object ("+src+")is already executed.");
+      if (done) {
+         throw new IllegalStateException
+            ("this object ("+src+")is already executed.");
+      }
       
       File localCopy = null;
       d = new Deployment();
@@ -337,8 +350,11 @@ public class Installer
          
          // determine the type...
          int type = determineType(new JarFile(localCopy));
-                  
-         log.info("Create application " + d.name);
+
+         if (log.isDebugEnabled()) {
+            log.debug("Create application " + d.name);
+         }
+         
          switch (type)
          {
             case EJB_MODULE:
@@ -377,7 +393,8 @@ public class Installer
          }
          catch (Exception _e)
          {
-            log.debug("couldnt remove unused files in "+baseDir.getAbsolutePath()+": "+_e.getMessage());
+            log.warn("could not remove unused files in " +
+                     baseDir.getAbsolutePath(), _e);
          }
          
          if (_ex instanceof J2eeDeploymentException)
@@ -387,7 +404,7 @@ public class Installer
             throw (IOException) _ex;
          
          log.error("unexpected exception occured", _ex);
-         throw new J2eeDeploymentException("unexpected exception occured (see server trace)");
+         throw new J2eeDeploymentException("unexpected exception occured", _ex);
       }
       finally
       {
@@ -403,7 +420,7 @@ public class Installer
          }
          catch (Exception _e)
          {
-            log.debug("couldnt remove temporary copy "+localCopy+": "+_e.getMessage());
+            log.warn("could not remove temporary copy " + localCopy, _e);
          }
       }
       
@@ -490,12 +507,17 @@ public class Installer
          classPath = mainAttributes.getValue(Attributes.Name.CLASS_PATH);
       }
 
+      boolean debug = log.isDebugEnabled();
+      
       URL[] libs = {};
       if (classPath != null)
       {
          ArrayList tmp = new ArrayList();
          StringTokenizer st = new StringTokenizer(classPath);
-         log.debug("resolveLibraries: "+classPath);
+         if (debug) {
+            log.debug("resolveLibraries: "+classPath);
+         }
+         
          while (st.hasMoreTokens())
          {
             String tk = st.nextToken();
@@ -505,11 +527,13 @@ public class Installer
                URL baseDir = factory.baseDir.toURL();
                URL localURL = URLWizzard.downloadTemporary(lib, baseDir, "lib", ".jar");
                tmp.add(localURL);
-               log.debug("added "+lib+" to common classpath");
+               if (debug) {
+                  log.debug("added "+lib+" to common classpath");
+               }
             }
             catch (IOException _ioe)
             {
-               log.warn("Failed to add "+tk+" to common classpath: "+_ioe.getMessage());
+               log.warn("Failed to add "+tk+" to common classpath", _ioe);
             }
          }
          libs = new URL[tmp.size()];
@@ -728,7 +752,7 @@ public class Installer
       while (result.exists());
       
       if (!result.mkdirs())
-         throw new IOException("couldnt create directory: "+result.getCanonicalPath());
+         throw new IOException("could not create directory: "+result.getCanonicalPath());
       
       return result;
    }

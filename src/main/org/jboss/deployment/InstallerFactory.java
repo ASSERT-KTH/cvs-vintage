@@ -26,30 +26,31 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *  @author <a href="mailto:wburke@commercetone.com">Bill Burke</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public class InstallerFactory
 {
    // Constants -----------------------------------------------------
    
-   
    // Attributes ----------------------------------------------------
-   // the deployment base directory (for the temporary files)
+
+   /** The deployment base directory (for the temporary files). */
    protected File baseDir;
-   // the logger if there is something to say
-   protected Logger log;
+   
+   /** Instance logger. */
+   protected Logger log = Logger.getLogger(InstallerFactory.class);
    
    // Constructors --------------------------------------------------
    
    /** Constructs a new InstallerFactory, only one is needed per J2eeDeployer
     * @param _tmpDir the temporary deployment directory
-    * @param _log the Log for output
     */
-   public InstallerFactory(File _tmpDir, Logger _log) throws IOException
-   
+   public InstallerFactory(File _tmpDir) throws IOException
    {
       baseDir = _tmpDir.getCanonicalFile();
-      log = _log;
+      if (log.isDebugEnabled()) {
+         log.debug("Using base directory: " + baseDir);
+      }
    }
    
    // Public --------------------------------------------------------
@@ -99,7 +100,7 @@ public class InstallerFactory
             }
             catch (IOException _ioe)
             {
-               log.error("exception while searching deployments: ", _ioe);
+               log.error("exception while searching deployments", _ioe);
             }
          }
       }
@@ -171,7 +172,7 @@ public class InstallerFactory
             }
             catch (IOException _ioe)
             {
-               log.error("exception while searching deployment: ", _ioe);
+               log.error("exception while searching deployment", _ioe);
             }
          }
       }
@@ -208,7 +209,7 @@ public class InstallerFactory
             }
             catch (IOException _ioe)
             {
-               log.error("exception while uncluttering deployment "+files[i]+": ", _ioe);
+               log.error("exception while uncluttering deployment "+files[i], _ioe);
             }
          }
          else
