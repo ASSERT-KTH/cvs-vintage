@@ -121,7 +121,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , ejb-ref* , resource-ref*)>
+<!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , security-proxy?, ejb-ref* , resource-ref*)>
 
 <!--
     The session element holds information specific to jboss and not declared
@@ -132,7 +132,7 @@ level using the authentication-module and role-mapping-manager elements.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT session (ejb-name , jndi-name? , configuration-name? , ejb-ref* , resource-ref*)>
+<!ELEMENT session (ejb-name , jndi-name? , configuration-name?, security-proxy?, ejb-ref* , resource-ref*)>
 
 <!-- 
       The ejb-name element gives the name of the bean, it must correspond to 
@@ -161,6 +161,15 @@ level using the authentication-module and role-mapping-manager elements.
       Used in: entity and session
       -->
 <!ELEMENT configuration-name (#PCDATA)>
+
+<!-- The security-proxy gives the class name of the security proxy implementation.
+	This may be an instance of org.jboss.security.SecurityProxy, or an
+	just an object that implements methods in the home or remote interface
+	of an EJB without implementating any common interface.
+
+     Used in: entity and session
+-->
+<!ELEMENT security-proxy (#PCDATA)>
 
 <!-- 
       The ejb-ref element is used to give the jndi-name of an external 
@@ -321,7 +330,7 @@ level using the authentication-module and role-mapping-manager elements.
 <!ELEMENT container-configuration (container-name, call-logging, container-invoker,
 container-interceptors?, instance-pool?, instance-cache? , persistence-manager? ,
 transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf?,
-commit-option? , role-mapping-manager? , authentication-module?)>
+commit-option? , (role-mapping-manager, authentication-module?)?)>
 
 <!--
     The configuration-class attribute is used to indicate the
