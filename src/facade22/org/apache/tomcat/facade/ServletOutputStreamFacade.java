@@ -142,7 +142,8 @@ public final class ServletOutputStreamFacade extends ServletOutputStream {
     public void flush() throws IOException {
 	if( ob.flushCharsNeeded() )
 	    ob.flushChars();
-	ob.flushBytes();
+        ob.flushBytes();
+        resA.clientFlush();
     }
 
     public void close() throws IOException {

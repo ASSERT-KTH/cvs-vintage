@@ -402,6 +402,11 @@ public class Response {
       oBuffer.flush();
     }
 
+    /** Client-originated flush
+     */
+    public void clientFlush() throws IOException {
+        // Nothing. Can be overriden.
+    }
 
     // -------------------- I18N --------------------
     
