@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.78 2004/04/20 18:33:22 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.79 2004/06/12 07:58:40 pilhuhn Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -2668,33 +2668,42 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
    <!-- reserved words that should not be used as table names -->
    <!-- JBoss will escape them by prepending a 'X' -->
    <reserved-words>
-      	<word>create</word>
-      	<word>table</word>
+      	<word>alias</word>   	
       	<word>alter</word>
-      	<word>on</word>
-      	<word>column</word>
-      	<word>index</word>
-      	<word>set</word>
-      	<word>select</word>
-      	<word>update</word>
-      	<word>delete</word>
-      	<word>from</word>
-      	<word>view</word>
-      	<word>trigger</word>
-      	<word>commit</word>
-      	<word>rollback</word>
-      	<word>drop</word>
-      	<word>grant</word>
-      	<word>revoke</word>
-      	<word>group</word>
       	<word>between</word>
-      	<word>join</word>
-      	<word>unique</word>
-      	<word>primary</word>
-      	<word>number</word>
+      	<word>char</word>      	
+      	<word>column</word>      	
+      	<word>commit</word>
+      	<word>create</word>
+      	<word>date</word>
+      	<word>default</word>
+      	<word>delete</word>
+      	<word>drop</word>
+      	<word>file</word>
+      	<word>from</word>
+      	<word>grant</word>
+      	<word>group</word>
+      	<word>index</word>
       	<word>integer</word>
-      	<word>varchar</word>
-      	<word>char</word>
+      	<word>join</word>
+      	<word>number</word>
+      	<word>on</word>
+      	<word>order</word>
+      	<word>primary</word>
+      	<word>public</word>
+      	<word>revoke</word>
+      	<word>rollback</word>
+      	<word>row</word>
+      	<word>select</word>
+      	<word>set</word>
+      	<word>session</word>
+      	<word>size</word>      	
+      	<word>table</word>
+      	<word>trigger</word>
+      	<word>update</word>
+      	<word>unique</word>
       	<word>user</word>
+      	<word>varchar</word>
+      	<word>view</word>
     </reserved-words>
 </jbosscmp-jdbc>
