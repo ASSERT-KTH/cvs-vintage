@@ -145,23 +145,23 @@ public class Request {
     // MB are also used for headers - it allows lazy
     // byte->char conversion so we can add the encoding
     // that is known only after header parsing. Work in progress.
-    protected MessageBytes schemeMB=new MessageBytes();
+    protected MessageBytes schemeMB=MessageBytes.newInstance();
 
     // uri without any parsing performed
-    protected MessageBytes unparsedURIMB=new MessageBytes();
+    protected MessageBytes unparsedURIMB=MessageBytes.newInstance();
 
-    protected MessageBytes methodMB=new MessageBytes();
-    protected MessageBytes uriMB=new MessageBytes();
-    protected MessageBytes queryMB=new MessageBytes();
-    protected MessageBytes protoMB=new MessageBytes();
+    protected MessageBytes methodMB=MessageBytes.newInstance();
+    protected MessageBytes uriMB=MessageBytes.newInstance();
+    protected MessageBytes queryMB=MessageBytes.newInstance();
+    protected MessageBytes protoMB=MessageBytes.newInstance();
     // uri components
-    protected MessageBytes contextMB=new MessageBytes();
-    protected MessageBytes servletPathMB=new MessageBytes();
-    protected MessageBytes pathInfoMB=new MessageBytes();
+    protected MessageBytes contextMB=MessageBytes.newInstance();
+    protected MessageBytes servletPathMB=MessageBytes.newInstance();
+    protected MessageBytes pathInfoMB=MessageBytes.newInstance();
 
     // remote address/host
-    protected MessageBytes remoteAddrMB=new MessageBytes();
-    protected MessageBytes remoteHostMB=new MessageBytes();
+    protected MessageBytes remoteAddrMB=MessageBytes.newInstance();
+    protected MessageBytes remoteHostMB=MessageBytes.newInstance();
     
     // GS, used by the load balancing layer in the Web Servers
     // jvmRoute == the name of the JVM inside the plugin.
@@ -181,7 +181,7 @@ public class Request {
     protected MessageBytes contentTypeMB=null;
     //    protected String contentType = null;
     protected String charEncoding = null;
-    protected MessageBytes serverNameMB=new MessageBytes();
+    protected MessageBytes serverNameMB=MessageBytes.newInstance();
 
     // auth infor
     protected String authType;
