@@ -836,7 +836,7 @@ public class EmbededTomcat {
         if( noClassLoaders ) {
             commonCL=this.getClass().getClassLoader();
             if( commonCL == null ) {
-                commonCL=new java.net.URLClassLoader( new URL[] {}, null );
+                commonCL=jdk11Compat.newClassLoaderInstance(new URL [] {}, null);
             }
             parentCL=commonCL;
             containerCL=commonCL;
