@@ -31,7 +31,7 @@ import java.io.*;
 import java.net.*;
 import java.text.MessageFormat;
 import java.util.*;
-import org.gjt.sp.jedit.buffer.BufferIORequest;
+import org.gjt.sp.jedit.buffer.*;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.help.HelpViewer;
@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.162 2003/05/09 23:42:24 spestov Exp $
+ * @version $Id: jEdit.java,v 1.163 2003/05/10 03:13:54 spestov Exp $
  */
 public class jEdit
 {
@@ -1013,7 +1013,25 @@ public class jEdit
 
 		EditBus.send(new PluginUpdate(jar,PluginUpdate.LOADED));
 		if(!isMainThread())
+		{
 			EditBus.send(new DynamicMenuChanged("plugins"));
+
+			// buffers retain a reference to the fold handler in
+			// question... and the easiest way to handle fold
+			// handler loading is this...
+			Buffer buffer = buffersFirst;
+			while(buffer != null)
+			{
+				FoldHandler handler =
+					FoldHandler.getFoldHandler(
+					buffer.getStringProperty("folding"));
+				if(handler != buffer.getFoldHandler())
+				{
+					buffer.setFoldHandler(handler);
+				}
+				buffer = buffer.getNext();
+			}
+		}
 	} //}}}
 
 	//{{{ addPluginJARsFromDirectory() method
@@ -1075,6 +1093,22 @@ public class jEdit
 		}
 		else
 		{
+			// buffers retain a reference to the fold handler in
+			// question... and the easiest way to handle fold
+			// handler unloading is this...
+			Buffer buffer = buffersFirst;
+			while(buffer != null)
+			{
+				if(FoldHandler.getFoldHandler(
+					buffer.getStringProperty("folding"))
+					== null)
+				{
+					buffer.setFoldHandler(
+						new DummyFoldHandler());
+				}
+				buffer = buffer.getNext();
+			}
+
 			jar.uninit(false);
 			jars.removeElement(jar);
 		}

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.11 2003/04/24 02:36:38 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.12 2003/05/10 03:13:54 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -262,7 +262,7 @@ L2:			for (int j=0; j < gc.length; j++)
 			String result = System.getProperty("apple.laf.useScreenMenuBar");
 			if (result == null)
 				result = System.getProperty("com.apple.macos.useScreenMenuBar");
-			hasScreenMenuBar = (result.equals("true")) ? 1 : 0;
+			hasScreenMenuBar = ("true".equals(result)) ? 1 : 0;
 		}
 
 		return (hasScreenMenuBar == 1);

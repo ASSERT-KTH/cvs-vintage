@@ -97,7 +97,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.23 2003/05/07 22:40:00 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.24 2003/05/10 03:13:54 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -506,6 +506,9 @@ public class PluginJAR
 
 			if(plugin != null)
 			{
+				if(plugin instanceof EBPlugin)
+					EditBus.removeFromBus((EBPlugin)plugin);
+
 				try
 				{
 					plugin.stop();
