@@ -53,7 +53,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge {
    // ------ Invocation messages ------
@@ -246,7 +246,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       //
       if(metadata.getRelationMetaData().isTableMappingStyle()) {
          // initialize relation table key fields
-         Collection tableKeys = metadata.getTableKeyFields();
+         Collection tableKeys = metadata.getKeyFields();
          tableKeyFields = new ArrayList(tableKeys.size());
          for(Iterator i=tableKeys.iterator(); i.hasNext(); ) {
             JDBCCMPFieldMetaData cmpFieldMetaData = 
@@ -257,7 +257,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
          tableKeyFields = Collections.unmodifiableList(tableKeyFields);
       } else {      
          // initialize foreign key fields
-         Collection foreignKeys = metadata.getForeignKeyFields();
+         Collection foreignKeys = metadata.getRelatedRole().getKeyFields();
          foreignKeyFields = new ArrayList(foreignKeys.size());
          for(Iterator i=foreignKeys.iterator(); i.hasNext(); ) {
             JDBCCMPFieldMetaData cmpFieldMetaData = 
