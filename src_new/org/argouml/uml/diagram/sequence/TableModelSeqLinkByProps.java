@@ -25,7 +25,7 @@
 // File: TableModelSeqLinkByProps.java
 // Classes: TableModelSeqLinkByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelSeqLinkByProps.java,v 1.1 2000/09/29 16:02:26 boger Exp $
+// $Id: TableModelSeqLinkByProps.java,v 1.2 2002/08/19 08:41:40 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence;
@@ -60,7 +60,7 @@ public class TableModelSeqLinkByProps extends TableModelComposite {
     int size = edges.size();
     for (int i = 0; i < size; i++) {
       Object edge = edges.elementAt(i);
-      if (edge instanceof MLinkImpl) res.addElement(edge);
+      if (edge instanceof MLink) res.addElement(edge);
     }
     return res;
   }

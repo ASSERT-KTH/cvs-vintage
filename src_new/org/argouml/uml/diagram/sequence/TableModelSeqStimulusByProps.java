@@ -25,7 +25,7 @@
 // File: TableModelSeqStimulusByProps.java
 // Classes: TableModelSeqStimulusByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelSeqStimulusByProps.java,v 1.1 2000/09/29 16:02:26 boger Exp $
+// $Id: TableModelSeqStimulusByProps.java,v 1.2 2002/08/19 08:41:40 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence;
@@ -57,7 +57,7 @@ public class TableModelSeqStimulusByProps extends TableModelComposite {
   }
 
   public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLSequenceDiagram || t instanceof MLinkImpl)) return new Vector();
+    if (!(t instanceof UMLSequenceDiagram || t instanceof MLink)) return new Vector();
     if (t instanceof UMLSequenceDiagram) {
       Editor _editor = Globals.curEditor();
       Layer lay = _editor.getLayerManager().getActiveLayer();

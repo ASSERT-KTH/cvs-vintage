@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.9 2002/08/11 06:52:16 linus Exp $
+// $Id: PackageContext.java,v 1.10 2002/08/19 08:41:40 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -68,7 +68,7 @@ class PackageContext extends Context
 		Class classifier;
 
 		// Special case for model
-		if(mPackage instanceof MModelImpl) {
+		if(mPackage instanceof MModel) {
 		    classifier = Class.forName(name);
 		}
 		else {
@@ -122,7 +122,7 @@ class PackageContext extends Context
 		Class classifier;
 
 		// Special case for model
-		if(mPackage instanceof MModelImpl) {
+		if(mPackage instanceof MModel) {
 		    classifier = Class.forName(name);
 		}
 		else {

@@ -24,7 +24,7 @@
 // File: TableModelInterface_in_DeplByProps.java
 // Classes: TableModelInterface_in_DeplByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelInterface_in_DeplByProps.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: TableModelInterface_in_DeplByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -52,7 +52,7 @@ public class TableModelInterface_in_DeplByProps extends TableModelComposite {
   }
 
   public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponentImpl)) return new Vector();
+    if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponent)) return new Vector();
     if (t instanceof UMLDeploymentDiagram) {
       UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
       Vector nodes = d.getNodes();
@@ -60,7 +60,7 @@ public class TableModelInterface_in_DeplByProps extends TableModelComposite {
       int size = nodes.size();
       for (int i = 0; i < size; i++) {
         Object node = nodes.elementAt(i);
-        if (node instanceof MInterfaceImpl) res.addElement(node);
+        if (node instanceof MInterface) res.addElement(node);
       }
       return res;
     }

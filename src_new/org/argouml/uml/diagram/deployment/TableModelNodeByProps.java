@@ -25,7 +25,7 @@
 // File: TableModelNodeByProps.java
 // Classes: TableModelNodeByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelNodeByProps.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: TableModelNodeByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -56,7 +56,7 @@ public class TableModelNodeByProps extends TableModelComposite {
     int size = nodes.size();
     for (int i = 0; i < size; i++) {
       Object node = nodes.elementAt(i);
-      if (node instanceof MNodeImpl) res.addElement(node);
+      if (node instanceof MNode) res.addElement(node);
     }
     return res;
   }

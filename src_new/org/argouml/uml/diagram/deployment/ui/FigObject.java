@@ -24,7 +24,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.3 2002/08/04 17:44:18 thierrylach Exp $
+// $Id: FigObject.java,v 1.4 2002/08/19 08:41:40 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -209,12 +209,12 @@ public class FigObject extends FigNodeModelElement {
   public void setEnclosingFig(Fig encloser) {
     super.setEnclosingFig(encloser);
     if (!(getOwner() instanceof MModelElement)) return;
-    if (getOwner() instanceof MObjectImpl) {
+    if (getOwner() instanceof MObject) {
       MObject me = (MObject) getOwner();
       MComponentInstance mcompInst = null;
       MComponent mcomp = null;
 
-      if (encloser != null && (encloser.getOwner() instanceof MComponentInstanceImpl)) {
+      if (encloser != null && (encloser.getOwner() instanceof MComponentInstance)) {
         mcompInst = (MComponentInstance) encloser.getOwner();
         me.setComponentInstance(mcompInst);
       }
@@ -223,7 +223,7 @@ public class FigObject extends FigNodeModelElement {
           me.setComponentInstance(null);
         }
       }
-      if (encloser != null && (encloser.getOwner() instanceof MComponentImpl)) {
+      if (encloser != null && (encloser.getOwner() instanceof MComponent)) {
         mcomp = (MComponent) encloser.getOwner();
         MObject obj = (MObject) getOwner();
         resident.setImplementationLocation(mcomp);

@@ -24,7 +24,7 @@
 // File: CrInterfaceWithoutComponent.java
 // Classes: CrInterfaceWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrInterfaceWithoutComponent.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.3 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -88,7 +88,7 @@ public class CrInterfaceWithoutComponent extends CrUML {
       Object obj = figs.elementAt(i);
       if (!(obj instanceof FigInterface)) continue;
       FigInterface fi = (FigInterface) obj;
-      if (fi.getEnclosingFig() == null || (!(fi.getEnclosingFig().getOwner() instanceof MComponentImpl))) {
+      if (fi.getEnclosingFig() == null || (!(fi.getEnclosingFig().getOwner() instanceof MComponent))) {
         if (offs == null) {
           offs = new VectorSet();
           offs.addElement(dd);

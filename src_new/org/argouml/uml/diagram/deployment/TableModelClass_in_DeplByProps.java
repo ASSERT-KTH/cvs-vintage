@@ -25,7 +25,7 @@
 // File: TableModelClass_in_DeplByProps.java
 // Classes: TableModelClass_in_DeplByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelClass_in_DeplByProps.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: TableModelClass_in_DeplByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -53,7 +53,7 @@ public class TableModelClass_in_DeplByProps extends TableModelComposite {
   }
 
   public Vector rowObjectsFor(Object t) {
-    if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponentImpl)) return new Vector();
+    if (!(t instanceof UMLDeploymentDiagram || t instanceof MComponent)) return new Vector();
     if (t instanceof UMLDeploymentDiagram) {
       UMLDeploymentDiagram d = (UMLDeploymentDiagram) t;
       Vector nodes = d.getNodes();
@@ -61,7 +61,7 @@ public class TableModelClass_in_DeplByProps extends TableModelComposite {
       int size = nodes.size();
       for (int i = 0; i < size; i++) {
         Object node = nodes.elementAt(i);
-        if (node instanceof MClassImpl) res.addElement(node);
+        if (node instanceof MClass) res.addElement(node);
       }
       return res;
     }
@@ -73,7 +73,7 @@ public class TableModelClass_in_DeplByProps extends TableModelComposite {
       while (it.hasNext()) {
         MElementResidence residence = (MElementResidence) it.next();
         MModelElement node = (MModelElement) residence.getResident();
-        if (node instanceof MClassImpl) res.addElement(node);
+        if (node instanceof MClass) res.addElement(node);
 
       }
       return res;

@@ -24,7 +24,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongLinkEnds.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrWrongLinkEnds.java,v 1.3 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -90,7 +90,7 @@ public class CrWrongLinkEnds extends CrUML {
       Object obj = figs.elementAt(i);
       if (!(obj instanceof FigLink)) continue;
       FigLink fl = (FigLink) obj;
-      if (!(fl.getOwner() instanceof MLinkImpl)) continue;
+      if (!(fl.getOwner() instanceof MLink)) continue;
       MLink link = (MLink) fl.getOwner();
       Collection ends = link.getConnections();
       if (ends != null && (ends.size() > 0)) {

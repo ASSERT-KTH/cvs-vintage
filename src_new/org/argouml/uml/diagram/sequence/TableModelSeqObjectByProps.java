@@ -25,7 +25,7 @@
 // File: TableModelSeqObjectByProps.java
 // Classes: TableModelSeqObjectByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelSeqObjectByProps.java,v 1.1 2000/09/29 16:02:26 boger Exp $
+// $Id: TableModelSeqObjectByProps.java,v 1.2 2002/08/19 08:41:40 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence;
@@ -59,7 +59,7 @@ public class TableModelSeqObjectByProps extends TableModelComposite {
     int size = nodes.size();
     for (int i = 0; i < size; i++) {
       Object node = nodes.elementAt(i);
-      if (node instanceof MObjectImpl) res.addElement(node);
+      if (node instanceof MObject) res.addElement(node);
     }
     return res;
   }

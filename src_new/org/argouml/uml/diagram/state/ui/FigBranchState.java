@@ -24,7 +24,7 @@
 // File: FigBranchState.java
 // Classes: FigBranchState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigBranchState.java,v 1.1 2000/09/04 12:50:21 1sturm Exp $
+// $Id: FigBranchState.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -106,7 +106,7 @@ public class FigBranchState extends FigStateVertex {
     super.setOwner(node);
     bindPort(node, _bigPort);
     // if it is a UML meta-model object, register interest in any change events
-    if (node instanceof MElementImpl)
+    if (node instanceof MElement)
       ((MElementImpl)node).addMElementListener(this);
   }
 

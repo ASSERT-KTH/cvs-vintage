@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.27 2002/08/19 08:18:17 kataka Exp $
+// $Id: FigClass.java,v 1.28 2002/08/19 08:41:40 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -588,7 +588,7 @@ public class FigClass extends FigNodeModelElement {
     // The next if-clause is important for the Deployment-diagram
     // it detects if the enclosing fig is a component, in this case
     // the ImplementationLocation will be set for the owning MClass
-    if (encloser != null && (encloser.getOwner() instanceof MComponentImpl)) {
+    if (encloser != null && (encloser.getOwner() instanceof MComponent)) {
       MComponent component = (MComponent) encloser.getOwner();
       MClass cl = (MClass) getOwner();
       resident.setImplementationLocation(component);

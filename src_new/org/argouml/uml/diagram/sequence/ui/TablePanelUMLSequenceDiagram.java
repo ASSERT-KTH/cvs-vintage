@@ -25,7 +25,7 @@
 // File: TablePanelUMLSequenceDiagram.java
 // Classes: TablePanelUMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TablePanelUMLSequenceDiagram.java,v 1.1 2000/09/29 16:02:26 boger Exp $
+// $Id: TablePanelUMLSequenceDiagram.java,v 1.2 2002/08/19 08:41:40 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -125,7 +125,7 @@ public class TablePanelUMLSequenceDiagram extends TablePanel {
 
   public void objectSelected(Object sel) {
     super.objectSelected(sel);
-    if (sel instanceof MLinkImpl) {
+    if (sel instanceof MLink) {
       _tableModelSeqStimulusByProps.setTarget((MLink)sel);
     }
   }

@@ -24,7 +24,7 @@
 // File: DisplayTextTree.java
 // Classes: DisplayTextTree
 // Original Author:
-// $Id: DisplayTextTree.java,v 1.5 2002/08/12 14:13:31 thierrylach Exp $
+// $Id: DisplayTextTree.java,v 1.6 2002/08/19 08:41:39 kataka Exp $
 
 // 26 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Patch to give a better
 // naming for extension points in convertValueToText.
@@ -87,7 +87,7 @@ implements MElementListener, VetoableChangeListener {
       // original
       MElement e = (MElement) value;
       String ocl = "";
-      if (e instanceof MModelElementImpl)
+      if (e instanceof MModelElement)
 	ocl = ((MModelElementImpl)e).getUMLClassName();
         String name = ((MModelElementImpl)e).getName();
       if (e instanceof MTransition) {

@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.6 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: OuterClassifierContext.java,v 1.7 2002/08/19 08:41:40 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -79,7 +79,7 @@ class OuterClassifierContext extends Context
 		Class classifier;
 
 		// Special case for model
-		if(mPackage instanceof MModelImpl) {
+		if(mPackage instanceof MModel) {
 		    classifier = Class.forName(namePrefix + name);
 		}
 		else {
@@ -129,7 +129,7 @@ class OuterClassifierContext extends Context
 		Class classifier;
 		
 		// Special case for model
-		if(mPackage instanceof MModelImpl) {
+		if(mPackage instanceof MModel) {
 		    classifier = Class.forName(namePrefix + name);
 		}
 		else {

@@ -24,7 +24,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: your email address here
-// $Id: FigNote.java,v 1.1 2000/09/04 12:50:18 1sturm Exp $
+// $Id: FigNote.java,v 1.2 2002/08/19 08:41:41 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -89,7 +89,7 @@ public class FigNote extends FigNodeModelElement {
   public void setOwner(Object node) {
     super.setOwner(node);
     // if it is a UML meta-model object, register interest in any change events
-    if (node instanceof MElementImpl)
+    if (node instanceof MElement)
       ((MElementImpl)node).addMElementListener(this);
     bindPort(node, _bigPort);
   }

@@ -25,7 +25,7 @@
 // File: TableModelLinkByProps.java
 // Classes: TableModelLinkByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelLinkByProps.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: TableModelLinkByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -58,7 +58,7 @@ public class TableModelLinkByProps extends TableModelComposite {
     int size = edges.size();
     for (int i = 0; i < size; i++) {
       Object edge = edges.elementAt(i);
-      if (edge instanceof MLinkImpl) res.addElement(edge);
+      if (edge instanceof MLink) res.addElement(edge);
     }
     return res;
   }

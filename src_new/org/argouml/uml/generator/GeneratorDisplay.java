@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.23 2002/08/19 08:18:16 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.24 2002/08/19 08:41:39 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -382,7 +382,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
   public String generateClassifier(MClassifier cls) {
     String generatedName = generateName(cls.getName());
     String classifierKeyword;
-    if (cls instanceof MClassImpl) classifierKeyword = "class";
+    if (cls instanceof MClass) classifierKeyword = "class";
     else if (cls instanceof MInterface) classifierKeyword = "interface";
     else return ""; // actors and use cases
     String s = "";

@@ -24,7 +24,7 @@
 // File: FigInitialState.java
 // Classes: FigInitialState
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
+// $Id: FigInitialState.java,v 1.3 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -123,7 +123,7 @@ public class FigInitialState extends FigStateVertex {
     super.setOwner(node);
     bindPort(node, _bigPort);
     // if it is a UML meta-model object, register interest in any change events
-    if (node instanceof MElementImpl)
+    if (node instanceof MElement)
       ((MElementImpl)node).addMElementListener(this);
   }
 

@@ -25,7 +25,7 @@
 // File: TableModelDependency_in_DeplByProps.java
 // Classes: TableModelDependency_in_DeplByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelDependency_in_DeplByProps.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: TableModelDependency_in_DeplByProps.java,v 1.2 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.diagram.deployment;
 
@@ -58,7 +58,7 @@ public class TableModelDependency_in_DeplByProps extends TableModelComposite {
     int size = edges.size();
     for (int i = 0; i < size; i++) {
       Object edge = edges.elementAt(i);
-      if (edge instanceof MDependencyImpl) res.addElement(edge);
+      if (edge instanceof MDependency) res.addElement(edge);
     }
     return res;
   }

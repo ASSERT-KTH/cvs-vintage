@@ -24,7 +24,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.8 2002/06/04 05:25:27 mkl Exp $
+// $Id: FigComponent.java,v 1.9 2002/08/19 08:41:40 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -204,15 +204,15 @@ public class FigComponent extends FigNodeModelElement {
       }
     }
 
-    if (!(getOwner() instanceof MModelElementImpl)) return;
-    if (getOwner() instanceof MComponentImpl) {
+    if (!(getOwner() instanceof MModelElement)) return;
+    if (getOwner() instanceof MComponent) {
       MComponent me = (MComponent) getOwner();
       MNode mnode = null;
 
-      if (encloser != null && (encloser.getOwner() instanceof MNodeImpl)) {
+      if (encloser != null && (encloser.getOwner() instanceof MNode)) {
         mnode = (MNode) encloser.getOwner();
       }
-      if (encloser != null && (encloser.getOwner() instanceof MComponentImpl)) {
+      if (encloser != null && (encloser.getOwner() instanceof MComponent)) {
         MComponent comp = (MComponent) encloser.getOwner();
         Collection compNodes = comp.getDeploymentLocations();
         Iterator it = compNodes.iterator();

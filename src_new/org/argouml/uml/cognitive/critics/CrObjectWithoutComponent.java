@@ -24,7 +24,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutComponent.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrObjectWithoutComponent.java,v 1.3 2002/08/19 08:41:39 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -89,8 +89,8 @@ public class CrObjectWithoutComponent extends CrUML {
       if (!(obj instanceof FigObject)) continue;
       FigObject fo = (FigObject) obj;
       if (fo.getEnclosingFig() == null ||
-         (!((fo.getEnclosingFig().getOwner() instanceof MComponentImpl) || 
-            (fo.getEnclosingFig().getOwner() instanceof MComponentInstanceImpl)))) {
+         (!((fo.getEnclosingFig().getOwner() instanceof MComponent) || 
+            (fo.getEnclosingFig().getOwner() instanceof MComponentInstance)))) {
         if (offs == null) {
           offs = new VectorSet();
           offs.addElement(dd);

@@ -25,7 +25,7 @@
 // File: TablePanelUMLDeploymentDiagram.java
 // Classes: TablePanelUMLDeploymentDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TablePanelUMLDeploymentDiagram.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: TablePanelUMLDeploymentDiagram.java,v 1.2 2002/08/19 08:41:40 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -232,18 +232,18 @@ public class TablePanelUMLDeploymentDiagram extends TablePanel {
 
   public void objectSelected(Object sel) {
     super.objectSelected(sel);
-    if (sel instanceof MComponentImpl) {
+    if (sel instanceof MComponent) {
       _tableModelClass_in_DeplByProps.setTarget((MComponent)sel);
       _tableModelInterface_in_DeplByProps.setTarget((MComponent)sel);
       _tableModelObjectByProps.setTarget((MComponent)sel);
     }
-    else if (sel instanceof MComponentInstanceImpl) {
+    else if (sel instanceof MComponentInstance) {
       _tableModelObjectByProps.setTarget((MComponentInstance)sel);
     }
-    else if (sel instanceof MNodeImpl) {
+    else if (sel instanceof MNode) {
       _tableModelComponentByProps.setTarget((MNode)sel);
     }
-    else if (sel instanceof MNodeInstanceImpl) {
+    else if (sel instanceof MNodeInstance) {
       _tableModelCompInstanceByProps.setTarget((MNodeInstance)sel);
     }  
   }
