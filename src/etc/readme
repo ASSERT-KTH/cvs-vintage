@@ -1,6 +1,6 @@
-$Id: readme,v 1.3 1999/10/16 03:09:28 bergsten Exp $
+$Id: readme,v 1.4 1999/12/14 22:32:15 akv Exp $
 	
-Tomcat 2.2 (development version)
+Tomcat 3.0
 
 All classes are written exclusively in the Java(tm) Programming
 Language and may be used with and JRE 1.1 conformant system,

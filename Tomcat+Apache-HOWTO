@@ -3,11 +3,12 @@ Tomcat+Apache HOWTO
    Costin Manolache <costin@eng.sun.com>
    Anil Vijendran <akv@eng.sun.com>
 
-$Revision: 1.2 $ $Date: 1999/12/14 01:34:00 $
+$Revision: 1.3 $ $Date: 1999/12/14 22:32:15 $
 
 This document describes how to setup Tomcat to run with Apache. For
-now this document describes how to run Tomcat v1.0 R1 with Apache
-1.3.9. 
+now this document describes how to run Tomcat 3.0 with Apache
+1.3.9. Check the section on "Tested Configurations" for other
+Apache/Tomcat versions.
 ------------------------------------------------------------------------
 
 Table of Contents
@@ -15,7 +16,7 @@ Table of Contents
       1. Introduction
       2. Installation
 	 2.1 Apache 1.3.9
-	 2.2 Tomcat v1.0 R1
+	 2.2 Tomcat 3.0
 	 2.3 Testing Your Configuration
 	 2.4 Adding Contexts
       3. Tested Configurations
@@ -32,8 +33,8 @@ Table of Contents
    updated. 
 
    In the rest of the document, we use /path/to/apache-1.3.9 to mean
-   the path to the Apache 1.3.9 installation and /path/to/tomcat1.0r1
-   to mean the path to the Tomcat 1.0 R1 installation. We will assume
+   the path to the Apache 1.3.9 installation and /path/to/tomcat3.0
+   to mean the path to the Tomcat 3.0 installation. We will assume
    you are running Apache on the default port (80). 
 
 2. Installation
@@ -51,22 +52,22 @@ Table of Contents
        * Make sure ServerName in /path/to/apache-1.3.9/conf/httpd.conf
          contains the name of your host.
 
-   2.2 Tomcat v1.0 R1
+   2.2 Tomcat 3.0
 
-       * Download and install Tomcat v1.0 R1 for your OS/platform from
+       * Download and install Tomcat 3.0 for your OS/platform from
   
-	   http://jakarta.apache.org/builds/tomcat/release/v1.0R1/<os>/<platform>
+	   http://jakarta.apache.org/builds/tomcat/release/v3.0/<os>/<platform>
 
        * Download mod_jserv for your platform from 
 
-	   http://jakarta.apache.org/builds/tomcat/release/v1.0R1/<os>/<platform>/modules
+	   http://jakarta.apache.org/builds/tomcat/release/v3.0/<os>/<platform>/modules
   
          and copy it into /path/to/apache-1.3.9/modules.
 
        * Edit /path/to/apache-1.3.9/conf/httpd.conf and add the
          following line at the end:
 
-           Include /path/to/tomcat1.0r1/etc/tomcat.conf
+           Include /path/to/tomcat3.0/etc/tomcat.conf
 
    2.3 Testing Your Configuration
 
@@ -83,7 +84,7 @@ Table of Contents
        configuration: 
 
         (a) 
-	    * Add to /path/to/tomcat1.0r1/etc/tomcat.conf: 
+	    * Add to /path/to/tomcat3.0/etc/tomcat.conf: 
 	    
 	    	    ApJservMount /<context> /root
 
@@ -96,10 +97,10 @@ Table of Contents
 	    * Install all the files of that context into that
               directory.
 
-	    * Make sure /path/to/tomcat1.0r1/server.xml points to
+	    * Make sure /path/to/tomcat3.0/server.xml points to
               /path/to/apache-1.3.9/htdocs/<context>
 
-	    * Add to /path/to/tomcat1.0r1/etc/tomcat.conf:
+	    * Add to /path/to/tomcat3.0/etc/tomcat.conf:
 
 	      ApJservMount /<context>/servlet /root 
 	      <Location /CONTEXT/WEB-INF/ >
@@ -110,7 +111,7 @@ Table of Contents
 3. Tested Configurations
 
 
-   Apache 1.3.9 + Tomcat 1.0 R1 has been tested on the following OSes: 
+   Apache 1.3.9 + Tomcat 3.0 has been tested on the following OSes: 
 
     * Linux (RedHat 6.1) on SPARC and Intel
     * Solaris 2.6 on SPARC

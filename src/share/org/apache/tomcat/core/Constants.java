@@ -109,16 +109,8 @@ public class Constants {
 	}
 
         public static class Tomcat {
-            /**
-             * Name of the Engine. If you change this string, ALSO
-             * CHANGE the string used in: 
-             *
-             * org.apache.jasper.runtime.ServletEngine.getServletEngine()
-             *                                             - akv
-             *
-             */
 	    public static final String Name = "Tomcat Web Server";
-	    public static final String Version = "1.0R1";
+	    public static final String Version = "3.0";
 	}
 
         public static class Attribute {

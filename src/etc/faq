@@ -1,5 +1,5 @@
 Some Frequently Asked Questions (FAQ) on Tomcat
-----------------------------------------------
+-----------------------------------------------
 
 Q: I am getting a 404 Error, what does it mean?
 
@@ -83,7 +83,7 @@ Q: Can I combine these classes with other webservers?
 A: The JSP engine uses just the public portion of the Java Servlet 2.2 
    API. In theory, it could run on other servlet engines that support 
    the Servlet 2.2 API but we have not tested this release on any servlet 
-   engine other than the one in JSWDK.
+   engine other than the one in Tomcat.
 
 Q: Where do I put my jsp sources and beans?
 
