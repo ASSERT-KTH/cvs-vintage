@@ -30,6 +30,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
@@ -101,6 +102,10 @@ public class MailMain extends DefaultMain {
                 }
             }
         });
+        
+        if (MailConfig.getAccountList().count() == 0) {
+            new AccountWizardLauncher().launchWizard(true);
+        }
     }
 
     /* (non-Javadoc)
