@@ -55,7 +55,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.12 2001/10/09 03:49:10 elicia Exp $
+ * @version $Id: ScarabSecurity.java,v 1.13 2001/10/16 00:32:19 elicia Exp $
 */
 public interface ScarabSecurity
 {
@@ -80,7 +80,7 @@ public interface ScarabSecurity
     /** 
      * Specifies that a User is allowed to modify a project.
      */
-    public static final String MODULE_EDIT = "Module | Edit";
+    public static final String MODULE__EDIT = "Module | Edit";
 
     /**
      * Determine if a user has a permission within a module.
