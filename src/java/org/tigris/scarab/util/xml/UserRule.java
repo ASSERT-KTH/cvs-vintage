@@ -80,7 +80,7 @@ public class UserRule extends BaseRule
     public void end()
         throws Exception
     {
-        log().debug("(" + getState() + ") user end()");
+        log().debug("(" + getState() + ") user end");
         super.doInsertionOrValidationAtEnd();
     }
     
@@ -122,7 +122,7 @@ public class UserRule extends BaseRule
     }
     
     /**
-     * handle the validation
+     * handle the validation.  
      */
     protected void doValidationAtEnd()
         throws Exception

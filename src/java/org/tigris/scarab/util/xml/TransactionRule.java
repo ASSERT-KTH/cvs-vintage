@@ -51,6 +51,7 @@ import org.xml.sax.Attributes;
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.Issue;
 
 /**
  * Handler for the xpath "scarab/module/issue/transaction"
@@ -73,13 +74,19 @@ public class TransactionRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") transaction begin()");
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Transaction transaction = new Transaction();
-            log().debug("transaction id: " + attributes.getValue("id"));
-            digester.push(transaction);
-        }
+        log().debug("(" + getState() + ") transaction begin");
+        super.doInsertionOrValidationAtBegin(attributes);
+    }
+    
+    protected void doInsertionAtBegin(Attributes attributes)
+    {
+        Transaction transaction = new Transaction();
+        log().debug("transaction id: " + attributes.getValue("id"));
+        digester.push(transaction);
+    }
+    
+    protected void doValidationAtBegin(Attributes attributes)
+    {
     }
     
     /**
@@ -88,10 +95,18 @@ public class TransactionRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") transaction end()");
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Transaction transaction = (Transaction)digester.pop();
-        }
+        log().debug("(" + getState() + ") transaction end");
+        super.doInsertionOrValidationAtEnd();
+    }
+    
+    protected void doInsertionAtEnd() throws Exception
+    {
+        Transaction transaction = (Transaction)digester.pop();
+        Issue issue = (Issue)digester.pop();
+        digester.push(issue);
+    }
+    
+    protected void doValidationAtEnd() throws Exception
+    {
     }
 }

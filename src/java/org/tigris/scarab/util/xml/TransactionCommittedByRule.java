@@ -79,7 +79,7 @@ public class TransactionCommittedByRule extends BaseRule
     public void body(String text)
         throws Exception
     {
-        log().debug("(" + getState() + ") transaction committed-by body: " + text);
+        log().debug("(" + getState() + ") transaction committed by body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -96,18 +96,6 @@ public class TransactionCommittedByRule extends BaseRule
     protected void doValidationAtBody(String committedByName)
         throws Exception
     {
-        try
-        {
-            ScarabUser user = (ScarabUser)TurbineSecurity
-                                .getUser(committedByName);
-        }
-        catch(Exception e)
-        {
-            if (!getUserList().contains(committedByName))
-            {
-                throw new Exception("User: " + committedByName + 
-                                    ", is not defined");
-            }
-        }
+        validateUser(committedByName);
     }
 }
