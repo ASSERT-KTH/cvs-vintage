@@ -123,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.91 2003/04/14 23:37:31 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.92 2003/04/17 01:36:41 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1459,17 +1459,7 @@ public abstract class AbstractScarabModule
                 crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
                 crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
                 crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
-                
-                AbstractScarabModule module = this;
-                AbstractScarabModule prevModule = null;
-                do
-                {
-                    rModOpts = module.getRModuleOptions(crit);
-                    prevModule = module;
-                    module = (AbstractScarabModule)prevModule.getParent();
-                }
-                while (rModOpts.size() == 0 &&
-                        !ROOT_ID.equals(prevModule.getPrimaryKey()));
+                rModOpts = getRModuleOptions(crit);
             }
             ScarabCache.put(rModOpts, this, GET_ALL_R_MODULE_OPTIONS, 
                             attribute, issueType); 
@@ -1631,6 +1621,11 @@ public abstract class AbstractScarabModule
 
         List moduleOptions = null;
         moduleOptions = getRModuleOptions(attribute, issueType, activeOnly);
+        if (moduleOptions == null)
+        {
+            return moduleOptions;
+        }
+
         int size = moduleOptions.size();
         List[] ancestors = new List[size];
 
