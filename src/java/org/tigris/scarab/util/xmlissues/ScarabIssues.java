@@ -598,11 +598,11 @@ public class ScarabIssues implements java.io.Serializable
         {
             attachmentOM.setCreatedBy(creUser.getUserId());
         }
-        @OM@.ScarabUser modUser = @OM@.ScarabUserManager
+        @OM@.ScarabUser modUserOM = @OM@.ScarabUserManager
             .getInstance(attachment.getModifiedBy(), issueOM.getModule().getDomain());
-        if (modUser != null)
+        if (modUserOM != null)
         {
-            attachmentOM.setModifiedBy(modUser.getUserId());
+            attachmentOM.setModifiedBy(modUserOM.getUserId());
         }
         return attachmentOM;
     }
