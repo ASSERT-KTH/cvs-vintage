@@ -28,7 +28,7 @@ import org.columba.mail.config.FolderItem;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LocalRootFolder extends FolderTreeNode {
+public class LocalRootFolder extends FolderTreeNode implements RootFolder {
 
 	protected final static ImageIcon rootIcon =
 		ImageLoader.getSmallImageIcon("localhost.png");
@@ -47,5 +47,12 @@ public class LocalRootFolder extends FolderTreeNode {
 		return rootIcon;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.RootFolder#getTrashFolder()
+	 */
+	public FolderTreeNode getTrashFolder() {
+		return findChildWithUID(105,false);
+	}
 
 }

@@ -173,19 +173,12 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	 * @return FolderTreeNode		return root parent folder of this folder
 	 */
 	public FolderTreeNode getRootFolder() {
-		FolderTreeNode folderTreeNode = (FolderTreeNode) getParent();
-		while (folderTreeNode != null) {
-
-			if (folderTreeNode instanceof Root) {
-
-				return (Root) folderTreeNode;
-			}
-
-			folderTreeNode = (FolderTreeNode) folderTreeNode.getParent();
-
+		FolderTreeNode parent = (FolderTreeNode) getParent();
+		if( parent instanceof RootFolder ) {
+			return parent;
+		} else {
+			return ((Folder)parent).getRootFolder();
 		}
-
-		return null;
 	}
 	
 

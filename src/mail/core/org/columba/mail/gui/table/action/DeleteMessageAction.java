@@ -29,6 +29,8 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
@@ -95,11 +97,13 @@ public class DeleteMessageAction
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
 		Folder folder = (Folder) r[0].getFolder();
-		String uid = folder.getFolderItem().get("uid");
-		Folder trash = (Folder) MainInterface.treeModel.getTrashFolder();
+		int uid = folder.getFolderItem().getInteger("uid");
+		Folder trash = (Folder) ((RootFolder)folder.getRootFolder()).getTrashFolder();
+		
+		//Folder trash = (Folder) MainInterface.treeModel.getTrashFolder();
 
 		// trash folder has uid==105
-		if (uid.equals("105")) {
+		if (uid == trash.getUid() ) {
 			// trash folder is selected
 			//  -> delete message
 

@@ -38,13 +38,14 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
 
-public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
+public class IMAPRootFolder extends FolderTreeNode implements ActionListener, RootFolder  {
 
 	protected final static ImageIcon imapRootIcon =
 		//ImageLoader.getSmallImageIcon("imap-16.png");
@@ -820,6 +821,13 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 			getStore().logout();
 		}
 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.RootFolder#getTrashFolder()
+	 */
+	public FolderTreeNode getTrashFolder() {
+		return findChildWithUID( accountItem.getSpecialFoldersItem().getInteger("trash"), true );
 	}
 
 }
