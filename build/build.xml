@@ -163,8 +163,8 @@
         <filter token="ADMIN_EMAIL" value="${scarab.user.email}"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
-        <filter token="DATABASE_HOST" value="${scarab.database.host}"/>
-        <filter token="DATABASE_PORT" value="${scarab.database.port}"/>
+        <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
+        <filter token="DATABASE_URL" value="${scarab.database.url}"/>
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
         <filter token="TURBINE_MODE" value="${scarab.mode}"/>
@@ -274,7 +274,13 @@
         <!-- removing sample schema that comes packaged with torque -->
         <delete file="${torque.dir.scarab}/schema/project-schema.xml"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
-        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
+        <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
+        <filter token="DATABASE_URL" value="${scarab.database.url}"/>
+        <filter token="DATABASE_ADMIN_URL" 
+                value="${scarab.database.admin.url}"/>
+        <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
+        <filter token="DATABASE_USER" value="${scarab.database.username}"/>
+        <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
@@ -284,6 +290,16 @@
         <copy file="${src.sql.dir}/id-table-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
+
+	<!-- 
+        Patch oracle property file in torque. Supplied by Thierry Lach.
+        Should these be included in the standard torque dist?
+    -->
+	<replace file="${torque.dir.scarab}/templates/sql/base/oracle/db.props">
+	    <replacefilter token="INTEGER = INT" value="INTEGER = NUMBER"/>
+	    <replacefilter token="BINARY = RAW" value="BINARY = LONG RAW"/>
+	</replace>
+
     </target>
  
 
@@ -317,51 +333,64 @@
     <!-- ================================================================== -->
     <!-- Create DB from Torque                                              -->
     <!-- ================================================================== -->
-    <target name="create-db" depends="sql">
-        <!-- torque requires the db handle and actual name to be the same, which creates
-             some problems with dependencies (fulcrum)
-        <ant antfile="build.xml"
-                dir="${torque.dir.scarab}" target="project-create-db" 
-                inheritAll="false">
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${build.project.webinf.lib}"/>
-            <property name="build.properties" 
-                value="${torque.dir.scarab}/build.properties"/>
-        </ant>
-        -->
+    <target name="db-type-check">
+        <condition property="auto.create.db">
+	    <not>
+	        <or>
+                    <equals arg1="${scarab.database.type}" arg2="oracle"/>
+                    <equals arg1="${scarab.database.type}" arg2="db2"/>
+	        </or>
+	    </not>
+        </condition>
+    </target>
 
-        <!-- use instead of the above -->
+    <target name="create-db-schema" depends="db-type-check,sql" 
+            if="auto.create.db">
+
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
-        <copy file="${src.sql.dir}/create-mysql-db.sql" 
+        <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
               todir="${build.src.scarab}"
               filtering="true" overwrite="true"/>
-        <echo message="Connecting to mysql at ${scarab.database.host}:${scarab.database.port}/"/>
+        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.admin.url}"/>
         <sql
-            driver="org.gjt.mm.mysql.Driver"
-            url="jdbc:mysql://${scarab.database.host}:${scarab.database.port}/"
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.admin.url}"
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
-            <transaction src="${build.src.scarab}/create-mysql-db.sql"/>
+            <transaction 
+                src="${build.src.scarab}/create-${scarab.database.type}-db.sql"/>
         </sql>
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Create DB from Torque                                              -->
+    <!-- ================================================================== -->
+    <target name="create-db" depends="create-db-schema">
+
         <!-- populate with default and sample data -->
-        <echo message="Connecting to mysql at ${scarab.database.host}:${scarab.database.port}/${scarab.database.name}"/>
+        <echo message=
+            "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
+        <property name="file.prefix" 
+            value="${build.sql.scarab}/${scarab.database.type}"/>
         <sql
-            driver="org.gjt.mm.mysql.Driver"
-            url="jdbc:mysql://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}"
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
-            <transaction src="${build.sql.scarab}/mysql-scarab.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-turbine.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-turbine-scheduler.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-id-table-schema.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-turbine-id-table-init.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-scarab-id-table-init.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-scarab-required-data.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-scarab-default-data.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-scarab-security.sql"/>
-            <transaction src="${build.sql.scarab}/mysql-scarab-sample-data.sql"/>
+
+            <transaction src="${file.prefix}-scarab.sql"/>
+            <transaction src="${file.prefix}-turbine.sql"/>
+            <transaction src="${file.prefix}-turbine-scheduler.sql"/>
+            <transaction src="${file.prefix}-id-table-schema.sql"/>
+            <transaction src="${file.prefix}-turbine-id-table-init.sql"/>
+            <transaction src="${file.prefix}-scarab-id-table-init.sql"/>
+            <transaction src="${file.prefix}-scarab-required-data.sql"/>
+            <transaction src="${file.prefix}-scarab-default-data.sql"/>
+            <transaction src="${file.prefix}-scarab-security.sql"/>
+            <transaction src="${file.prefix}-scarab-sample-data.sql"/>
         </sql>
     </target>
 

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.77 2002/01/15 03:04:27 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.78 2002/01/24 18:12:37 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -76,10 +76,10 @@
     <foreign-key foreignTable="SCARAB_TRANSACTION">
         <reference local="TRANSACTION_ID" foreign="TRANSACTION_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="OLD_USER_ID" foreign="USER_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="NEW_USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
@@ -165,10 +165,10 @@
     <foreign-key foreignTable="SCARAB_ATTACHMENT_TYPE">
         <reference local="ATTACHMENT_TYPE_ID" foreign="ATTACHMENT_TYPE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="CREATED_BY" foreign="USER_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="MODIFIED_BY" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -294,7 +294,7 @@
 <!--
     Mapping from attributes to groups.
 -->
-<table name="SCARAB_R_ATTRIBUTE_ATTRIBUTEGROUP" idMethod="none" javaName="RAttributeAttributeGroup">
+<table name="SCARAB_R_ATTRIBUTE_ATTRGROUP" idMethod="none" javaName="RAttributeAttributeGroup">
     <!--
         Group.
     -->
@@ -682,7 +682,7 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <index name="IX_DELETED_ISSUE_ATTRIBUTE">
@@ -788,10 +788,10 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="PARENT_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="OWNER_ID" foreign="USER_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="QA_CONTACT_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -986,7 +986,7 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
@@ -1023,7 +1023,7 @@
     -->
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
 
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="CREATED_BY" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_TRANSACTION_TYPE">
@@ -1075,7 +1075,7 @@
     <foreign-key foreignTable="SCARAB_ISSUE_ATTRIBUTE_VALUE">
         <reference local="VALUE_ID" foreign="VALUE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -1131,7 +1131,7 @@
     name. Then, all you need to do is regenerate the OR code to use the new 
     table name.
 -->
-<table name="SCARAB_USER" javaName="ScarabUserImpl" alias="TurbineUser" 
+<table name="TURBINE_USER" javaName="ScarabUserImpl" alias="TurbineUser" 
     baseClass="org.apache.fulcrum.security.impl.db.entity.TurbineUser"
     basePeer="org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer">
     <!--
@@ -1157,7 +1157,7 @@
     -->
     <column name="PASSWORD_EXPIRE" primaryKey="false" required="true" type="TIMESTAMP"/>
 
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -1190,7 +1190,7 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -1216,7 +1216,7 @@
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -1267,7 +1267,7 @@
     -->
     <column name="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" javaName="SubscriptionFrequency" required="false" type="INTEGER"></column>
 
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_SCOPE">
@@ -1315,7 +1315,7 @@
     <foreign-key foreignTable="SCARAB_QUERY">
         <reference local="QUERY_ID" foreign="QUERY_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_FREQUENCY">
@@ -1422,7 +1422,7 @@
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
+    <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">

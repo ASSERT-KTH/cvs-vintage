@@ -44,7 +44,7 @@ project=scarab
 # Default: none
 # -------------------------------------------------------------------
 
-database=mysql
+database=@DATABASE_TYPE@
 
 # -------------------------------------------------------------------
 #
@@ -84,13 +84,14 @@ suffix=MapBuilder
 # will create an XML database schema from JDBC metadata. These
 # settings are also used by the SQL Ant task to initialize your
 # Turbine system with the generated SQL.
+# NOTE: Scarab is not using the properties here, maybe in the future
 # -------------------------------------------------------------------
 
-databaseUrl = jdbc:mysql://localhost/@DATABASE_NAME@
-databaseDriver = org.gjt.mm.mysql.Driver
-databaseUser =
-databasePassword =
-createDatabaseUrl = jdbc:mysql://localhost/mysql
+databaseUrl = @DATABASE_URL@
+databaseDriver = @DATABASE_DRIVER@
+databaseUser = @DATABASE_USER@
+databasePassword = @DATABASE_PASSWORD@
+createDatabaseUrl = @DATABASE_ADMIN_URL@
 
 
 # Tells JDBC task that javaName attribute for the tables and columns
