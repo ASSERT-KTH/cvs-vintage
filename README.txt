@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.30 2002/02/28 16:07:17 jon Exp $
+$Id: README.txt,v 1.31 2002/02/28 17:43:56 jon Exp $
 
 Welcome to Scarab!
 
@@ -222,12 +222,14 @@ NOTE: If you get a 'Server configuration denies access to data source'
       or 'access denied' or 'Invalid authorization' error from MySQL in
       the log files, please read the MySQL documentation on how to fix
       this error. We will not provide support for this since it is
-      really a MySQL configuration issue. Here is a link to help you
-      solve your problem:
+      really a MySQL configuration issue. Here is a couple links to help
+      you solve your problem:
       
       <http://www.mysql.com/documentation/mysql/bychapter/
        manual_MySQL_Database_Administration.html#Access_denied>
 
+      <http://sourceforge.net/docman/display_doc.php?docid=8968&group_id=15923>
+      
 -------------------------------------------------------------------------
 | R U N N I N G  T H E  S A N D B O X                                   |
 -------------------------------------------------------------------------
