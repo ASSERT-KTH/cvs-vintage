@@ -20,18 +20,18 @@ import org.jboss.invocation.InvocationType;
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class SessionMetaData
    extends BeanMetaData
 {
    // Constants -----------------------------------------------------
    public static final String DEFAULT_STATEFUL_INVOKER =
-      "stateful-remoting-invoker";
+      "stateful-remoting-socket-invoker";
    public static final String DEFAULT_CLUSTERED_STATEFUL_INVOKER =
       "clustered-stateful-rmi-invoker";
    public static final String DEFAULT_STATELESS_INVOKER =
-      "stateless-remoting-invoker";
+      "stateless-remoting-socket-invoker";
    public static final String DEFAULT_CLUSTERED_STATELESS_INVOKER =
       "clustered-stateless-rmi-invoker";
 

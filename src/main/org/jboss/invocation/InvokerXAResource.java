@@ -105,9 +105,9 @@ public class InvokerXAResource
     * Actually this is "next"
     * The variable <code>invoker</code> tells the prepare/commit
     * etc. methods where to send their invocation.  It can't be put in
-    * a threadlocal to share one ProxyXAResource among many invokers
+    * a threadlocal to share one InvokerXAResource among many invokers
     * because the TransactionManager needs to be able to ask if two
-    * ProxyXAResources represent the same resource manager.  Without
+    * InvokerXAResources represent the same resource manager.  Without
     * this variable there is no basis for answering.
     *
     */
@@ -134,8 +134,8 @@ public class InvokerXAResource
    //Remove this!!
    protected void internalSetServiceName() throws Exception
    {
-      getLog().info("internalSetServiceName called: " + getIdentity());
       serviceName = ObjectNameFactory.create("jboss.client:service=InvokerXAResource," + getIdentityNameClause());
+      getLog().info("internalSetServiceName called: " + serviceName);
    }
 
    private Object readResolve() throws ObjectStreamException
@@ -153,7 +153,15 @@ public class InvokerXAResource
    protected void internalSetup() throws Exception
    {
       //register ourselves
-      super.internalSetup();
+      if (!server.isRegistered(getServiceName()))
+      {
+         super.internalSetup();
+      } // end of if ()
+      else
+      {
+         log.info("Got to internal setup even though already registered");
+      } // end of else
+
 
       if (xids == null)
       {

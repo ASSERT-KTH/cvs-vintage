@@ -20,14 +20,14 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class EntityMetaData extends BeanMetaData
 {
    public final static int CMP_VERSION_1 = 1;
    public final static int CMP_VERSION_2 = 2;
    public static final String DEFAULT_ENTITY_INVOKER_PROXY_BINDING =
-      "entity-remoting-invoker";
+      "entity-remoting-socket-invoker";
    public static final String DEFAULT_CLUSTERED_ENTITY_INVOKER_PROXY_BINDING =
       "clustered-entity-rmi-invoker";
 

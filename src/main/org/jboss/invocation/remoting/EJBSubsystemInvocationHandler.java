@@ -100,6 +100,10 @@ public class EJBSubsystemInvocationHandler
    protected void destroyService() throws Exception
    {
       workManager = null;
+      getServer().invoke(connectorName,
+                         "removeInvocationHandler",
+                         new Object[] {"EJB"},
+                         new String[] {String.class.getName()});
    }
 
    /**

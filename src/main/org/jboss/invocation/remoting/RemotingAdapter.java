@@ -190,8 +190,8 @@ public class RemotingAdapter
     */
    protected void internalSetServiceName() throws Exception
    {
-      getLog().info("internalSetServiceName called: " + getIdentityNameClause());
       serviceName = ObjectNameFactory.create("jboss.client:service=RemotingAdapter," + getIdentityNameClause());
+      getLog().info("internalSetServiceName called: " + serviceName);
    }
 
    private Object readResolve() throws ObjectStreamException
@@ -208,7 +208,15 @@ public class RemotingAdapter
    protected void internalSetup() throws Exception
    {
       //register ourselves
-      super.internalSetup();
+      if (!server.isRegistered(getServiceName()))
+      {
+         super.internalSetup();
+      } // end of if ()
+      else
+      {
+         log.info("Got to internal setup even though already registered");
+      } // end of else
+
       startService();
    }
 
