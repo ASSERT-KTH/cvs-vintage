@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: build-release.sh,v 1.1 2004/09/05 19:57:13 linus Exp $
+# $Id: build-release.sh,v 1.2 2004/12/29 17:07:05 linus Exp $
 
 # The purpose of this shellscript is to make all the release work
 #
@@ -48,7 +48,7 @@ cd src_new
 
 echo "$BUILD build the documentation in pdf."
 ( cd ../documentation && ../tools/ant-1.4.1/bin/ant docbook-xsl-get )
-if test ! -d ../documentation/docbook-setup/docbook-xsl-1.60.1
+if test ! -d ../documentation/docbook-setup/docbook-xsl-1.66.1
 then
     echo "docbook-xsl download failed. Fix it and press return."
     read garbage
