@@ -30,10 +30,8 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.SequenceInputStream;
 import org.waffel.jscf.JSCFConnection;
-import org.waffel.jscf.JSCFDriverManager;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
-import org.waffel.jscf.gpg.GPGDriver;
 
 public class MultipartSignedRenderer extends MimePartRenderer {
     private MimeHeader signatureHeader;
@@ -94,17 +92,20 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 
         signatureMimePart = new InputStreamMimePart(signatureHeader,
                 controller.sign(signedPartCloneModel.getClone(), pgpItem));
-*/
+
         JSCFDriverManager.registerJSCFDriver(new GPGDriver());
         JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
-        con.getProperties().put("USERID", pgpItem.get("id"));
+        */
+        JSCFController controller = JSCFController.getInstance();
+        JSCFConnection con = controller.getConnection();
+        //con.getProperties().put("USERID", pgpItem.get("id"));
         PGPPassChecker passCheck = PGPPassChecker.getInstance();
-        boolean check = passCheck.checkPassphrase(pgpItem, con);
+        boolean check = passCheck.checkPassphrase(con);
         if (!check) {
             throw new WrongPassphraseException();
         }
         JSCFStatement stmt = con.createStatement();
-        JSCFResultSet res = stmt.executeSign(signedPartCloneModel.getClone(),pgpItem.get("id"), passCheck.getPasswordFromId(pgpItem));
+        JSCFResultSet res = stmt.executeSign(signedPartCloneModel.getClone());
         
         signatureMimePart = new InputStreamMimePart(signatureHeader, res.getResultStream());
         

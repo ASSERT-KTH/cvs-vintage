@@ -35,10 +35,8 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SequenceInputStream;
 import org.columba.ristretto.message.io.Source;
 import org.waffel.jscf.JSCFConnection;
-import org.waffel.jscf.JSCFDriverManager;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
-import org.waffel.jscf.gpg.GPGDriver;
 
 
 public class MultipartEncryptedRenderer extends MimePartRenderer {
@@ -92,10 +90,14 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
 
         StreamableMimePart encryptedPart;
         encryptedPart = null;
-
+        
+        /*
         JSCFDriverManager.registerJSCFDriver(new GPGDriver());
         JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
-        con.getProperties().put("USERID", pgpItem.get("id"));
+        */
+        JSCFController controller = JSCFController.getInstance();
+        JSCFConnection con = controller.getConnection();
+        //con.getProperties().put("USERID", pgpItem.get("id"));
         JSCFStatement stmt = con.createStatement();
         JSCFResultSet res = stmt.executeEncrypt(MimeTreeRenderer.getInstance() .renderMimePart(part.getChild(0)), 
                 pgpItem.get("recipients"));

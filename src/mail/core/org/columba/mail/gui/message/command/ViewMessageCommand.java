@@ -45,6 +45,7 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.pgp.JSCFController;
 import org.columba.mail.pgp.PGPPassChecker;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
@@ -117,19 +118,23 @@ public class ViewMessageCommand extends FolderCommand {
 		InputStream decryptedStream = null;
 
 		try {
+            /*
             JSCFDriverManager.registerJSCFDriver(new GPGDriver());
             JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+(String)pgpItem.get("path"));
-            con.getProperties().put("USERID", pgpItem.get("id"));
+            */
+            JSCFController controller = JSCFController.getInstance();
+            JSCFConnection con = controller.getConnection();
+            //con.getProperties().put("USERID", pgpItem.get("id"));
             JSCFStatement stmt = con.createStatement();
             PGPPassChecker passCheck = PGPPassChecker.getInstance();
-            boolean check = passCheck.checkPassphrase(pgpItem, con);
+            boolean check = passCheck.checkPassphrase(con);
             if (!check) {
                 pgpMode =  SecurityIndicator.DECRYPTION_FAILURE;
                 // TODO make i18n!
                 pgpMessage = "wrong passphrase";
                 return;
             }
-            JSCFResultSet res = stmt.executeDecrypt(encryptedPart, passCheck.getPasswordFromId(pgpItem));
+            JSCFResultSet res = stmt.executeDecrypt(encryptedPart);
             if (res.isError()) {
                 pgpMode =  SecurityIndicator.DECRYPTION_FAILURE;
                 pgpMessage = StreamUtils.readInString(res.getErrorStream()).toString();
@@ -219,16 +224,19 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// Get the mailaddress and use it as the id
 		Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
-		
+        /*
         PGPItem pgpItem =null;
         // we need the pgpItem, to extract the path to gpg
         pgpItem = MailInterface.config.getAccountList().getDefaultAccount().getPGPItem();
-
+        */
 		try {
+            /*
             // TODO this should be only once, after starting columba!
             JSCFDriverManager.registerJSCFDriver(new GPGDriver());
             JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+(String)pgpItem.get("path"));
-            
+            */
+            JSCFController controller = JSCFController.getInstance();
+            JSCFConnection con = controller.getConnection();
 			JSCFStatement stmt = con.createStatement();
             String micalg = signedMultipart.getHeader().getContentParameter( "micalg").substring(4);
             JSCFResultSet res = stmt.executeVerify(signedPart, signature, micalg);
