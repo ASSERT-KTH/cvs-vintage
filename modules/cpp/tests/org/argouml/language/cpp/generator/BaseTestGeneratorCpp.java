@@ -1,4 +1,4 @@
-// $Id: BaseTestGeneratorCpp.java,v 1.7 2005/01/08 23:27:33 linus Exp $
+// $Id: BaseTestGeneratorCpp.java,v 1.8 2005/01/14 01:02:32 euluis Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,13 +77,33 @@ class BaseTestGeneratorCpp extends TestCase {
         setAClass(getFactory().buildClass("AClass"));
 
         Object me = getAClass();
-        Collection propertyChangeListeners =
-            ProjectManager.getManager().getCurrentProject()
-            	.findFigsForMember(me);
         Object voidType =
             ProjectManager.getManager().getCurrentProject().findType("void");
-        setFooMethod(Model.getCoreFactory().buildOperation(me,
-                getModel(), voidType, "foo", propertyChangeListeners));
+        setFooMethod(buildOperation(me, voidType, "foo"));
+    }
+
+    /**
+     * Create a operation in the given model element. 
+     * @param me the model element for which to build the operation
+     * @param returnType the operation return type
+     * @param opName operation name
+     * @return the operation
+     */
+    protected Object buildOperation(Object me, Object returnType, 
+            String opName) {
+        Collection propertyChangeListeners = getPropertyChangeListeners(me);
+        return Model.getCoreFactory().buildOperation(me,
+                getModel(), returnType, "foo", propertyChangeListeners);
+    }
+
+    /**
+     * Retrieve the property change listeners for the given model element.
+     * @param me the modelelement
+     * @return property change listeners for me
+     */
+    protected Collection getPropertyChangeListeners(Object me) {
+        return ProjectManager.getManager().getCurrentProject()
+            .findFigsForMember(me);
     }
 
     /**
