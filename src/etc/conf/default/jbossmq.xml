@@ -3,21 +3,17 @@
 <Server>
 
 	<!-- Setup the persistence settings -->
-	<PersistenceManager>
+	<PersistenceManager class="org.jbossmq.filepersistence.PersistenceManager">
 		<DataDirectory>../../db/jbossmq/</DataDirectory>
 	</PersistenceManager>
 
 	<!-- The physical topics known by the server -->
-	<Topic><Name>metrics</Name></Topic>
-	<Topic><Name>beancache</Name></Topic>
 	<Topic><Name>testTopic</Name></Topic>
-	<Topic><Name>testDurableTopic</Name></Topic>
 	<Topic><Name>example</Name></Topic>
 	<Topic><Name>bob</Name></Topic>
 
 	<!-- The physical queues known by the server -->
 	<Queue><Name>testQueue</Name></Queue>
-	<Queue><Name>testObjectMessage</Name></Queue>
 	<Queue><Name>controlQueue</Name></Queue>
 	<Queue><Name>A</Name></Queue>
 	<Queue><Name>B</Name></Queue>
@@ -29,13 +25,13 @@
 	<!-- The users known by the server -->
 	<UserManager>
 		<User>
+			<Name>guest</Name>
+			<Password>guest</Password>
+		</User>
+		<User>
 			<Name>john</Name>
 			<Password>needle</Password>
 			<Id>DurableSubscriberExample</Id>
-		</User>
-		<User>
-			<Name>sahra</Name>
-			<Password>spot</Password>
 		</User>
 	</UserManager>
 
