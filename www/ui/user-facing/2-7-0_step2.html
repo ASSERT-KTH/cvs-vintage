@@ -54,20 +54,17 @@
 <div id="navcolumn">
 
 
-
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
+ <div><a href="#">Enter new defect</a></div>
  
- <div><a href="#">Defect</a>
-
  <div><a href="#">Queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
  <div id="admintools" class="toolgroup">
 
@@ -88,8 +85,7 @@
    
  </div>
  
- </div> </div> </div>
-
+ </div> </div>
 
 <div id="helptext" class="toolgroup">
 <div class="label"><strong>How do I...</strong></div>
@@ -122,11 +118,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -245,7 +236,7 @@ title="Note: link may open in new window">Get help?</a></div>
 					
 					
 					<h3>Attributes that do not map to destination issue type (saved as comment)</h3>
-					<div class="colbar">Selected attributes / values will be included in destination issue as comment text</div>
+					<div class="colbar"><div class="infomark">Selected attributes / values will be included in destination issue as comment text</div></div>
 					<table width="100%" border="1" cellspacing="2" cellpadding="3">
 					<tr>
 					<th>Select</th>
@@ -288,7 +279,7 @@ title="Note: link may open in new window">Get help?</a></div>
     
  <tr>
    <th>*Reason for change</th>
-   <td>This information will be added to the change history entry for both the original issue, and the destination issue
+   <td><div class="infomark">This information will be added to the change history entry for both the original issue, and the destination issue</div>
    
          <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
    <input type="hidden" name="atchattCommentKeyn" value="comment" />

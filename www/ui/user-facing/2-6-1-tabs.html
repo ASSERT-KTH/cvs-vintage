@@ -54,19 +54,18 @@
 <div id="navcolumn">
 
 
- <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
-  <div class="body">
- 
- <div><a href="#" class="selfref">Defect</a>
 
+ <div id="projecttools" class="toolgroup">
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
+  <div class="body">
+ <div><a href="#">Enter new defect</a></div>
+ 
  <div><a href="#">Queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
  <div id="admintools" class="toolgroup">
 
@@ -88,7 +87,6 @@
  </div>
  
  </div> </div>
-
 
 <div id="helptext" class="toolgroup">
 <div class="label"><strong>How do I...</strong></div>
@@ -121,11 +119,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -366,9 +359,8 @@ title="Note: link may open in new window">Get help?</a></div>
     
  <tr>
    <th>Reason for change</th>
-   <td>Enter a reason for the changes made to the attributes above (this information is appended to the history, and included as email content)
-   
-         <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
+   <td><div class="infomark">Enter a reason for the changes made to the attributes above (this information is appended to the history, and included as email content)</div>
+<p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
    <input type="hidden" name="atchattCommentKeyn" value="comment" />
    </td>
  </tr>

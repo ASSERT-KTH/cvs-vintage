@@ -225,7 +225,7 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
 </div>
 
 
-<div class="colbar"><strong>Note:</strong> Grouping items appear as a single heading bearing the selected group name</div>
+<div class="colbar"><div class="infomark"><strong>Note:</strong> Grouping items appear as a single heading bearing the selected group name</div></div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
         <th>Select</th>
@@ -320,8 +320,8 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
 </div>
 
 
-<div class="colbar"><strong>Note:</strong> Each heading in this list appears as a column or row heading in this report's output. Each item in each heading appears as a new row or column (depending on whether the Y-axis has been set to be either row or column).
-<div>Grouping items appear as a single heading bearing the selected group name</div></div>
+<div class="colbar"><div class="infomark"><strong>Note:</strong> Each heading in this list appears as a column or row heading in this report's output. Each item in each heading appears as a new row or column (depending on whether the Y-axis has been set to be either row or column).
+<p>Grouping items appear as a single heading bearing the selected group name</p></div></div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
         <th>Select</th>
@@ -336,7 +336,6 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
         <select name="#">
         <option value="0">No group selected</option>
         <option value="1" selected="selected">Open</option>
-        <option value="2" >Closed</option>
         </select>
       </td>
       <td><a href="#">Status: New</a></td>
@@ -349,12 +348,35 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
         <select name="#">
         <option value="0">No group selected</option>
         <option value="1" selected="selected">Open</option>
-        <option value="2" >Closed</option>
         </select>
       </td>
       <td><a href="#">Status: Assigned</a></td>
     </tr>
     
+     <tr class="a">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>1</td>
+      <td>
+        <select name="#">
+        <option value="0">No group selected</option>
+        <option value="1">Open</option>
+        </select>
+      </td>
+      <td><a href="#">Status: Closed</a></td>
+    </tr>
+    
+   <tr class="b">
+      <td><input type="checkbox" name="heading" value="0" /></td>
+      <td>2</td>
+      <td>
+        <select name="#">
+        <option value="0" selected="selected">No group selected</option>
+        <option value="1">Open</option>
+        </select>
+      </td>
+      <td><a href="#">Priority: 1</a></td>
+    </tr>
+     
     <tr class="a">
       <td><input type="checkbox" name="heading" value="0" /></td>
       <td>2</td>
@@ -362,10 +384,9 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
         <select name="#">
         <option value="0" selected="selected">No group selected</option>
         <option value="1">Open</option>
-        <option value="2" >Closed</option>
         </select>
       </td>
-      <td><a href="#">Priority: 1</a></td>
+      <td><a href="#">Priority: 2</a></td>
     </tr>
     
     <tr class="b">
@@ -375,20 +396,6 @@ document.write('<link rel="stylesheet" type="text/css" href="/scarab/style/ns4_o
         <select name="#">
         <option value="0" selected="selected">No group selected</option>
         <option value="1">Open</option>
-        <option value="2" >Closed</option>
-        </select>
-      </td>
-      <td><a href="#">Priority: 2</a></td>
-    </tr>
-    
-    <tr class="a">
-      <td><input type="checkbox" name="heading" value="0" /></td>
-      <td>2</td>
-      <td>
-        <select name="#">
-        <option value="0" selected="selected">No group selected</option>
-        <option value="1">Open</option>
-        <option value="2" >Closed</option>
         </select>
       </td>
       <td><a href="#">Priority: 3</a></td>

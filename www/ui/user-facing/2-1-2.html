@@ -56,18 +56,16 @@
 
 
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
+ <div><a href="#" class="selfref">Enter new defect</a></div>
  
- <div><a href="#">Defect</a>
-
  <div><a href="#">Queries</a></div>
  
- <div><a href="#" class="selfref">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
  <div id="admintools" class="toolgroup">
 
@@ -89,6 +87,7 @@
  </div>
  
  </div> </div>
+
 
 
 <div id="helptext" class="toolgroup">
@@ -122,11 +121,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -388,13 +382,13 @@ title="Note: link may open in new window">Get help?</a></div>
      <tr>
       <th>Attachment path</th>
       <td>
-       <input type="file" name="atchd" size="45"
-            value="" />
-       <p>Click Browse and select a file. If you do not see a Browse
+       <p><input type="file" name="atchd" size="45"
+            value="" /></p>
+       <p><div class="infomark">Click Browse and select a file. If you do not see a Browse
        button, your browser does not support file uploads. Windows
        users, set Files of Type: to be All Files (*.*) to get a
        complete file listing. The File field cannot be used to
-       rename files.</p>
+       rename files.</div></p>
       </td>
      </tr>
      
@@ -441,7 +435,7 @@ title="Note: link may open in new window">Get help?</a></div>
     
  <tr>
    <th>*Reason</th>
-   <td>This text will appear in the subject line of the New issue email, and will be appended to the issues change history
+   <td><div class="infomark">This text will appear in the subject line of the New issue email, and will be appended to the issues change history</div>
    
          <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
    <input type="hidden" name="atchattCommentKeyn" value="comment" />

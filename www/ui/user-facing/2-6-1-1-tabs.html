@@ -56,20 +56,36 @@
 
 
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
- 
  <div><a href="#">Enter new defect</a></div>
-
- <div><a href="#">Saved queries</a></div>
  
- <div><a href="#">Templates</a></div>         
+ <div><a href="#">Queries</a></div>
  
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
+ <div id="admintools" class="toolgroup">
 
+ 
+ <div class="label"><strong>Administration</strong></div>
+ 
+ <div class="body">
+ 
+ <div><a href="#">Approval queue</a></div>
+    
+ <div><a href="#">Global data</a></div>
+ 
+ <div><a href="#">Project data</a></div>         
+  
+ <div><a href="#">Roles</a></div>
+ 
+ <div><a href="#">Users</a></div>
+   
+ </div>
+ 
  </div> </div>
 
 
@@ -159,7 +175,6 @@ title="Note: link may open in new window">Get help?</a></div>
     <input type="hidden" name="fullHistory" value="" />
   <input type="hidden" name="id" value="TBNS1" />
 
-<p class="alert"><img src="../csi/images/icon_alertsml.gif" width="16" height="14" alt="Alert notification" border="0" />&nbsp;<small>Values expressed as "---" are different in each of the issues you are currently editing. Selecting/entering a new value will change the data in all issues to that value.</small></p>
 		
 <!-- Scarab - App -->
 	
@@ -207,13 +222,13 @@ title="Note: link may open in new window">Get help?</a></div>
 			<tr>
 			<th>Attributes</th>
 			<td><a href="#" title="#">User associations</a></td>
-			<td><a href="#" title="#">Comments</a></td>
+			<td><a href="#" title="#">Comments/history</a></td>
 			<td><a href="#" title="#">URLs/Attachments/Dependencies</a></td>
-			<td><a href="#" title="#">History</a></td>
 			</tr>
 			</table>
 		</div>
 
+<div class="colbar"><div class="infomark">Values expressed as "---" are different in each of the issues you are currently editing. Selecting/entering a new value will change the data in all issues to that value.</div></div>
 
 
 <div class="functnbar">
@@ -395,7 +410,7 @@ title="Note: link may open in new window">Get help?</a></div>
     
  <tr>
    <th>Reason for change</th>
-   <td>Enter a reason for the changes made to the attributes above (this information is appended to the history, and included as email content)
+   <td><div class="infomark">Enter a reason for the changes made to the attributes above (this information is appended to the history, and included as email content)</div>
    
          <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
    <input type="hidden" name="atchattCommentKeyn" value="comment" />

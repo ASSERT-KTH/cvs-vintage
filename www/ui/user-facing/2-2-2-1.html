@@ -54,35 +54,39 @@
 <div id="navcolumn">
 
 
-<div id="projecttools" class="toolgroup">
-  <div class="label">
-  <strong><a href="#">Issue tracking home</a></strong>
-  </div>
+
+ <div id="projecttools" class="toolgroup">
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
-    <div><a href="#">Enter new defect</a></div>
-    <div><a href="#">Queries</a></div>
-    <div><a href="#">Templates</a></div>
-    <div><a href="#">Reports</a></div>
+ <div><a href="#">Enter new defect</a></div>
+ 
+ <div><a href="#" class="selfref">Queries</a></div>
+ 
+ <div><a href="#">Templates</a></div>
   
-</div>
-</div>
+ <div><a href="#">Reports</a></div>
+ 
+ </div> </div>
+ <div id="admintools" class="toolgroup">
 
-<div class="toolgroup">
-<div class="label">
- <strong>Admin</strong></div>
-
-<div class="body">
-      <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CGlobalArtifactTypeShow.vm/curadminmenu/1">Global data</a></div>
+ 
+ <div class="label"><strong>Administration</strong></div>
+ 
+ <div class="body">
+ 
+ <div><a href="#">Approval queue</a></div>
+    
+ <div><a href="#">Global data</a></div>
+ 
+ <div><a href="#">Project data</a></div>         
   
-  <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CApproval.vm/curadminmenu/2">Approve</a></div>
-
-            <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CManageModules.vm/curadminmenu/3">Modules</a></div>
-      
-      <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CManageRoles.vm/curadminmenu/4">Roles</a></div>
-  
-          <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CManageUserSearch.vm/newsearch/true/curadminmenu/5">Users</a></div>
-      </div>
-</div>
+ <div><a href="#">Roles</a></div>
+ 
+ <div><a href="#">Users</a></div>
+   
+ </div>
+ 
+ </div> </div>
 
 
 <div id="helptext" class="toolgroup">
@@ -143,7 +147,7 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="bodycol">
 
 <div id="apphead">
-<h2>Queries</h2>
+<h2>Issue tracking: <em>Queries</em></h2>
 </div>
 		
 <!-- Scarab - App -->
@@ -162,9 +166,7 @@ title="Note: link may open in new window">Get help?</a></div>
 
 <p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
-		
-		<h3>Saved queries</h3>
-		<div class="colbar"><small>Click on "Scope" to execute query</small></div>
+		<div class="colbar"><div class="infomark">Click on "Scope" to execute query</div></div>
 
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
