@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.42 2002/02/01 07:40:23 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.43 2002/02/04 08:13:36 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -599,6 +599,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	 */
 	public void paintComponent(Graphics _gfx)
 	{
+		long start = System.currentTimeMillis();
+
 		Graphics2D gfx = (Graphics2D)_gfx;
 		gfx.setRenderingHints(renderingHints);
 		fontRenderContext = gfx.getFontRenderContext();
@@ -662,6 +664,9 @@ public class TextAreaPainter extends JComponent implements TabExpander
 				+ lastInvalid + "}:");
 			Log.log(Log.ERROR,this,e);
 		}
+
+		System.err.println((System.currentTimeMillis() - start) +
+			"ms to paint " + (lastInvalid - firstInvalid + 1) + " lines");
 	} //}}}
 
 	//{{{ nextTabStop() method
