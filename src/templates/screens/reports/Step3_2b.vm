@@ -36,7 +36,7 @@
    <table border="1" cellspacing="2" cellpadding="3">
      <tr>
        <th nowrap="nowrap">Date #</th>
-       <th>Date setting</th>
+       <th>Date setting (MM/DD/YYYY hh:mm)</th>
      </tr>
 
 #set ($finalCount = 1)
@@ -58,6 +58,7 @@
      #end
      <input type="text" size="20" name="$intakeDate.Date.Key"
            value="$intakeDate.Date" />
+      #fieldErrorMsg($intakeDate.Date "")
      </td>
    </tr>
     #set ($finalCount = $velocityCount + 1)
@@ -79,6 +80,7 @@
     <td>
       <input type="text" size="20" name="$intakeDate.Date.Key"
             value="$value" />
+      #fieldErrorMsg($intakeDate.Date "")
     </td>
    </tr>
    </table>
