@@ -22,7 +22,7 @@ import org.jboss.security.NobodyPrincipal;
 import org.jboss.security.SimplePrincipal;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.ejb.plugins.TxSupport;
 
 /**
@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public abstract class BeanMetaData
    extends MetaData

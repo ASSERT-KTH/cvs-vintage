@@ -36,6 +36,7 @@ import org.jboss.invocation.ServerID;
 import java.util.LinkedList;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.proxy.TransactionInterceptor;
+import org.jboss.mx.util.JMXExceptionDecoder;
 import java.net.Socket;
 
 /**
@@ -311,7 +312,7 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
       }
       catch (Exception e)
       {
-         org.jboss.util.jmx.JMXExceptionDecoder.rethrow(e);
+         JMXExceptionDecoder.rethrow(e);
 
          // the compiler does not know an exception is thrown by the above
          throw new org.jboss.util.UnreachableStatementException();

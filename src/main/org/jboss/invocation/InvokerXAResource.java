@@ -38,7 +38,7 @@ import org.jboss.tm.TransactionManagerService;
 import org.jboss.tm.UserTransactionImpl;
 import org.jboss.tm.XAResourceFactory;
 import org.jboss.tm.XATerminatorMethods;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.util.naming.Util;
 import org.jboss.system.Registry;
 

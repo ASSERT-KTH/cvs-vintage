@@ -54,6 +54,7 @@ import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
+import org.jboss.mx.util.JMXExceptionDecoder;
 
 /**
  * The JRMPInvoker is an RMI implementation that can generate Invocations
@@ -63,7 +64,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -364,7 +365,7 @@ public class JRMPInvoker
       }
       catch (Exception e)
       {
-         org.jboss.util.jmx.JMXExceptionDecoder.rethrow(e);
+         JMXExceptionDecoder.rethrow(e);
 
          // the compiler does not know an exception is thrown by the above
          throw new org.jboss.util.UnreachableStatementException();

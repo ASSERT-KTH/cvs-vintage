@@ -38,7 +38,7 @@ import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.system.client.Client;
 import org.jboss.util.MethodHashing;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.ObjectNameFactory;
 
 
 /**
@@ -46,7 +46,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  */
 public class TransactionInterceptor

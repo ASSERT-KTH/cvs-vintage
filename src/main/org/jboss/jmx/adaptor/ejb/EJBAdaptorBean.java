@@ -50,7 +50,7 @@ import javax.naming.NamingException;
 
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
-import org.jboss.util.jmx.MBeanServerLocator;
+import org.jboss.mx.util.MBeanServerLocator;
 
 import org.jboss.logging.Logger;
 
@@ -69,7 +69,7 @@ import org.jboss.logging.Logger;
  *
  * @todo implement notifications
  * @todo convert to mbeanserverconnection
- * @version <tt>$Revision: 1.10 $</tt>
+ * @version <tt>$Revision: 1.11 $</tt>
  * @author  Andreas Schaefer
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */

@@ -23,7 +23,7 @@ import org.jboss.invocation.Invoker;
 import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
 import org.jboss.system.client.ClientServiceMBeanSupport;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.ObjectNameFactory;
 
 /**
  * This is the proxy object of the TrunkInvoker that lives on the server.

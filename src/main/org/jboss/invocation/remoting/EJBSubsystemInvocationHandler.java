@@ -30,7 +30,7 @@ import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.UnreachableStatementException;
-import org.jboss.util.jmx.JMXExceptionDecoder;
+import org.jboss.mx.util.JMXExceptionDecoder;
 import org.jboss.util.naming.Util;
 import java.util.Map;
 

@@ -41,8 +41,8 @@ import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.system.Registry;
 import org.jboss.util.NestedRuntimeException;
-import org.jboss.util.jmx.JMXExceptionDecoder;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.JMXExceptionDecoder;
+import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.util.naming.Util;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -68,7 +68,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class ProxyFactory
    implements EJBProxyFactory

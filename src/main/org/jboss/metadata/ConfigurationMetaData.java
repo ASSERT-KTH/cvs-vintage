@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.ObjectNameFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21,7 +21,7 @@ import org.w3c.dom.NodeList;
  * The configuration information for an EJB container.
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class ConfigurationMetaData extends MetaData
 {

@@ -25,7 +25,7 @@ import org.jboss.aspect.spi.AspectInterceptor;
 import org.jboss.aspect.spi.AspectInvocation;
 import org.jboss.invocation.Invocation;
 import org.jboss.util.Classes;
-import org.jboss.util.jmx.MBeanServerLocator;
+import org.jboss.mx.util.MBeanServerLocator;
 
 /**
  * The JMXInvokerInterceptor allows pass down method invocations

@@ -83,9 +83,9 @@ import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.MethodHashing;
 import org.jboss.util.NestedError;
-import org.jboss.util.jmx.MBeanProxy;
-import org.jboss.util.jmx.ObjectNameConverter;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.MBeanProxyExt;
+import org.jboss.mx.util.ObjectNameConverter;
+import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.util.naming.Util;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
@@ -111,7 +111,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.120 $
+ * @version $Revision: 1.121 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -1042,7 +1042,7 @@ public abstract class Container extends ServiceMBeanSupport
          stopTimers();
          teardownEnvironment();
          WebServiceMBean webServer =
-            (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class,
+            (WebServiceMBean)MBeanProxyExt.create(WebServiceMBean.class,
                                                WebServiceMBean.OBJECT_NAME);
          ClassLoader wcl = getWebClassLoader();
          if( wcl != null )
@@ -1860,7 +1860,7 @@ public abstract class Container extends ServiceMBeanSupport
       //THis is an invalid operation in the create lifecycle step.
       //The webserver might not be started.
       WebServiceMBean webServer =
-         (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class,
+         (WebServiceMBean)MBeanProxyExt.create(WebServiceMBean.class,
                                             WebServiceMBean.OBJECT_NAME);
       URL[] codebase = { webServer.addClassLoader(wcl) };
       wcl.setWebURLs(codebase);

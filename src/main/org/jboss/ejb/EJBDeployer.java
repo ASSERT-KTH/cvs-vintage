@@ -26,8 +26,8 @@ import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.system.ServiceControllerMBean;
-import org.jboss.util.jmx.MBeanProxy;
-import org.jboss.util.jmx.ObjectNameConverter;
+import org.jboss.mx.util.MBeanProxyExt;
+import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
@@ -45,7 +45,7 @@ import org.jboss.verifier.event.VerificationListener;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.35 $</tt>
+ * @version <tt>$Revision: 1.36 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -104,10 +104,10 @@ public class EJBDeployer
     */
    protected void startService() throws Exception
    {
-      delegate = (SubDeployer)MBeanProxy.create(SubDeployer.class, delegateName, server);
+      delegate = (SubDeployer)MBeanProxyExt.create(SubDeployer.class, delegateName, server);
 
       serviceController = (ServiceControllerMBean)
-         MBeanProxy.create(ServiceControllerMBean.class,
+         MBeanProxyExt.create(ServiceControllerMBean.class,
                            ServiceControllerMBean.OBJECT_NAME, server);
 
       // register with MainDeployer

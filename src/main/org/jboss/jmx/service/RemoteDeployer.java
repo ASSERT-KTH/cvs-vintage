@@ -43,8 +43,8 @@ import org.jboss.deployment.Deployer;
 import org.jboss.deployment.DeployerMBean;
 import org.jboss.deployment.DeploymentException;
 
-import org.jboss.util.jmx.JMXExceptionDecoder;
-import org.jboss.util.jmx.MBeanProxy;
+import org.jboss.mx.util.JMXExceptionDecoder;
+import org.jboss.mx.util.MBeanProxyExt;
 import org.jboss.util.Strings;
 
 import org.jboss.logging.Logger;
@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
 /**
  * A JMX client to deploy an application into a running JBoss server via RMI.
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -118,7 +118,7 @@ public class RemoteDeployer
       throws Exception
    {
       RemoteMBeanServer server = lookupRemoteMBeanServer(env, adapterName);
-      deployer = (Deployer)MBeanProxy.create(Deployer.class, deployerName, server);
+      deployer = (Deployer)MBeanProxyExt.create(Deployer.class, deployerName, server);
    }
    
    /**

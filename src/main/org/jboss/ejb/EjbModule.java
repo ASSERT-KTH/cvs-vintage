@@ -62,8 +62,8 @@ import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.util.NullArgumentException;
-import org.jboss.util.jmx.MBeanProxy;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.MBeanProxyExt;
+import org.jboss.mx.util.ObjectNameFactory;
 
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
@@ -89,7 +89,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -289,7 +289,7 @@ public class EjbModule
       }
 
       serviceController = (ServiceControllerMBean)
-         MBeanProxy.create(ServiceControllerMBean.class,
+         MBeanProxyExt.create(ServiceControllerMBean.class,
                            ServiceControllerMBean.OBJECT_NAME,
                            server);
       boolean debug = log.isDebugEnabled();

@@ -44,6 +44,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
 import org.jboss.util.naming.Util;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvokerXAResource;
+import org.jboss.mx.util.JMXExceptionDecoder;
 
 /**
  * Provides the MBean used by the JBoss JMX system to start this
@@ -308,7 +309,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       }
       catch (Exception e)
       {
-         org.jboss.util.jmx.JMXExceptionDecoder.rethrow(e);
+         JMXExceptionDecoder.rethrow(e);
 
          // the compiler does not know an exception is thrown by the above
          throw new org.jboss.util.UnreachableStatementException();

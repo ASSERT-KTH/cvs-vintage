@@ -34,7 +34,7 @@ import org.jboss.remoting.ident.Identity;
 import org.jboss.system.ServiceMBean;
 import org.jboss.system.client.ClientServiceMBeanSupport;
 import org.jboss.tm.DTXAResourceInterceptor;
-import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.mx.util.ObjectNameFactory;
 
 
 

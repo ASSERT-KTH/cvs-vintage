@@ -24,7 +24,7 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.system.server.Server;
 import org.jboss.system.server.ServerImpl;
 
-import org.jboss.util.jmx.MBeanProxy;
+import org.jboss.mx.util.MBeanProxyExt;
 
 /**
  * A JMX client to shutdown a remote JBoss server.
@@ -32,7 +32,7 @@ import org.jboss.util.jmx.MBeanProxy;
  * <p>
  * This was quick and dirty...
  *
- * @version <tt>$Revision: 1.9 $</tt>
+ * @version <tt>$Revision: 1.10 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Shutdown
@@ -191,7 +191,7 @@ public class Shutdown
 
       RemoteMBeanServer connector = new RMIConnectorImpl((RMIAdaptor)obj);
 
-      Server server = (Server)MBeanProxy.create(Server.class,
+      Server server = (Server)MBeanProxyExt.create(Server.class,
                                                 ServerImpl.OBJECT_NAME,
                                                 connector);
 
