@@ -55,8 +55,9 @@ public abstract class AbstractSearchEngine {
 
 	public void messageRemoved(Object uid) throws Exception {
 	};
-	
-	public void reset() throws Exception {};
+
+	public void reset() throws Exception {
+	};
 
 	protected synchronized AbstractFilter getFilter(String type) {
 
@@ -72,7 +73,11 @@ public abstract class AbstractSearchEngine {
 		AbstractFilter instance = null;
 		try {
 			AbstractFilterPluginHandler handler =
-				(AbstractFilterPluginHandler) MainInterface.pluginManager.getHandler("filter");
+				(
+					AbstractFilterPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"filter");
 			instance = (AbstractFilter) handler.getActionPlugin(type, null);
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(
@@ -294,6 +299,8 @@ public abstract class AbstractSearchEngine {
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
+			
+			long startTime = System.currentTimeMillis();
 
 		LinkedList notDefaultEngineResult = null;
 		LinkedList defaultEngineResult = new LinkedList();
@@ -313,24 +320,43 @@ public abstract class AbstractSearchEngine {
 		}
 
 		if (notDefaultEngine.count() == 0) {
-			return defaultEngineResult.toArray();
-		}
+			notDefaultEngineResult = defaultEngineResult;
+		} else {
 
-		// MATCH_ALL
-		if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
-			if (defaultEngine.count() > 0)
-				notDefaultEngineResult =
-					processCriteria(
-						notDefaultEngine,
-						defaultEngineResult,
-						worker);
-			else {
-				if (uids != null) {
+			// MATCH_ALL
+			if (filterRule.getConditionInt() == FilterRule.MATCH_ALL) {
+				if (defaultEngine.count() > 0)
 					notDefaultEngineResult =
 						processCriteria(
 							notDefaultEngine,
-							Arrays.asList(uids),
+							defaultEngineResult,
 							worker);
+				else {
+					if (uids != null) {
+						notDefaultEngineResult =
+							processCriteria(
+								notDefaultEngine,
+								Arrays.asList(uids),
+								worker);
+					} else {
+						notDefaultEngineResult =
+							processCriteria(
+								notDefaultEngine,
+								Arrays.asList(folder.getUids(worker)),
+								worker);
+					}
+				}
+			}
+			// MATCH_ANY
+			else {
+				if (uids != null) {
+					List uidList = new LinkedList(Arrays.asList(uids));
+					ListTools.substract(uidList, defaultEngineResult);
+
+					notDefaultEngineResult =
+						processCriteria(notDefaultEngine, uidList, worker);
+
+					notDefaultEngineResult.addAll(defaultEngineResult);
 				} else {
 					notDefaultEngineResult =
 						processCriteria(
@@ -338,27 +364,11 @@ public abstract class AbstractSearchEngine {
 							Arrays.asList(folder.getUids(worker)),
 							worker);
 				}
+
 			}
 		}
-		// MATCH_ANY
-		else {
-			if (uids != null) {
-				List uidList = new LinkedList(Arrays.asList(uids));
-				ListTools.substract(uidList, defaultEngineResult);
-
-				notDefaultEngineResult =
-					processCriteria(notDefaultEngine, uidList, worker);
-
-				notDefaultEngineResult.addAll(defaultEngineResult);
-			} else {
-				notDefaultEngineResult =
-					processCriteria(
-						notDefaultEngine,
-						Arrays.asList(folder.getUids(worker)),
-						worker);
-			}
-
-		}
+		
+		worker.setDisplayText("Search Result: "+notDefaultEngineResult.size()+" messages found in " + (System.currentTimeMillis()-startTime) + " ms" );
 
 		return notDefaultEngineResult.toArray();
 	}

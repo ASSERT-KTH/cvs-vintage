@@ -464,7 +464,7 @@ public class LuceneSearchEngine
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
-			recreateIndex();
+			recreateIndex(wc);
 		}
 
 	}
@@ -476,19 +476,24 @@ public class LuceneSearchEngine
 		createIndex();
 	}
 
-	public void recreateIndex() {
-		ColumbaLogger.log.error("Recreating Lucene Index");
-
+	public void recreateIndex(WorkerStatusController wc) {
+		ColumbaLogger.log.error("Lucene Index inconsistent - recreation forced");
+		
+		wc.setDisplayText("Lucene Index inconsistent - recreation forced");
+		
 		try {
 			createIndex();
 			Object[] uids =
 				folder.getUids(NullWorkerStatusController.getInstance());
+
+			wc.setProgressBarMaximum(uids.length);
 
 			for (int i = 0; i < uids.length; i++) {
 				messageAdded(
 					((LocalFolder) folder).getMessage(
 						uids[i],
 						NullWorkerStatusController.getInstance()));
+				wc.incProgressBarValue();
 			}
 
 		} catch (Exception e) {
