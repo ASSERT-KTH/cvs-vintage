@@ -1,4 +1,4 @@
-// $Id: Context.java,v 1.1 2001/03/07 14:42:46 toby Exp $
+// $Id: Context.java,v 1.2 2001/03/12 19:51:54 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -24,6 +24,7 @@
 package org.argouml.uml.reveng.java;
 
 import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.model_management.*;
 
 /**
    The context is the current available namespaces via import in the
@@ -58,5 +59,22 @@ abstract class Context
     abstract public MClassifier get(String name);
 
     abstract public MInterface getInterface(String name);
+
+    /**
+       Get the complete java name for a package.
+       
+       @param mPackage The package.
+       @returns Package name in java format
+    */
+    protected String getJavaName(MPackage mPackage)
+    {
+	MNamespace parent = mPackage.getNamespace();
+	if(parent instanceof MModel) {
+	    return mPackage.getName();
+	}
+	else {
+	    return getJavaName((MPackage)parent) + "." + mPackage.getName();
+	}
+    }
 }
 	

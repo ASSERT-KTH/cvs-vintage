@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.1 2001/03/07 14:42:46 toby Exp $
+// $Id: PackageContext.java,v 1.2 2001/03/12 19:51:54 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -63,7 +63,7 @@ class PackageContext extends Context
 		}
 		else {
 		    classifier = 
-			Class.forName(mPackage.getName() + "." +
+			Class.forName(getJavaName(mPackage) + "." +
 				      name);
 		}		    
 		if(classifier.isInterface()) {
@@ -122,7 +122,7 @@ class PackageContext extends Context
 		}
 		else {
 		    classifier = 
-			Class.forName(mPackage.getName() + "." +
+			Class.forName(getJavaName(mPackage) + "." +
 				      name);
 		}		    
 		if(classifier.isInterface()) {
@@ -188,5 +188,7 @@ class PackageContext extends Context
         }
         return unknown;
     }           
+
+    
 }
 	
