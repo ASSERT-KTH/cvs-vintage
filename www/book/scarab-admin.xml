@@ -1,702 +1,469 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
-<book>
-  <title>Scarab</title>
-
-  <subtitle>The Definitive Guide</subtitle>
-
-  <bookinfo>
-    <author>
-      <firstname>Daniel</firstname>
-
-      <surname>Patterson</surname>
-    </author>
-
-    <copyright>
-      <year>2003</year>
-    </copyright>
-  </bookinfo>
-
-  <preface>
-    <title>Preface</title>
-
-    <para></para>
-
-    <sect1>
-      <title>Audience</title>
-
-      <para>This book is targette</para>
-    </sect1>
-
-    <sect1>
-      <title>How This Book is Organised</title>
-
-      <para></para>
-    </sect1>
-
-    <sect1>
-      <title>Typographic Conventions</title>
-
-      <para></para>
-    </sect1>
-  </preface>
-
-  <glossary>
-    <glossdiv>
-      <title></title>
-
-      <glossentry>
-        <glossterm>Issue Type</glossterm>
-
-        <glosssee>A definition of a type of issue, which is essentially a
-        collection of attributes. Common issue types are &#34;Bug&#34; or
-        &#34;Enhancement&#34;.</glosssee>
-      </glossentry>
-
-      <glossentry>
-        <glossterm>Issue</glossterm>
-
-        <glosssee>An instance of an issue type inside a module. An issue is
-        something that a user has entered into the system.</glosssee>
-      </glossentry>
-
-      <glossentry>
-        <glossterm>Attribute</glossterm>
-
-        <glosssee>An attribute is an item of data to be stored about an issue.
-        Attributes represent things like names, dates, status&#39;,
-        descriptions, etc.</glosssee>
-      </glossentry>
-
-      <glossentry>
-        <glossterm>Module</glossterm>
-
-        <glosssee>Modules are where issues are created. Modules let you group
-        issues together (e.g. per-project, or per-customer).</glosssee>
-      </glossentry>
-    </glossdiv>
-  </glossary>
-
-  <chapter>
-    <title>Introduction</title>
-
-    <sect1>
-      <title>What is Scarab?</title>
-
-      <para>Scarab is a customisable issue tracking system. It allows you to
-      create issue types that suite your needs, then collect and track data on
-      those issue types.</para>
-
-      <para>It is web based and written in Java. It stores issue information
-      in a database, MySQL being the primary platform, but it is also rumoured
-      to work on Oracle, PostgreSQL and DB2. It runs as a J2EE web application
-      (WAR), and by default, comes bundled with the Tomcat servlet container.
-      This, along with a MySQL database is all you need to get up and running.</para>
-
-      <sect2>
-        <title>How Scarab Differs from other issue tracking systems</title>
-
-        <para>Scarab is extremely customisable. It contains no hard-coded
-        workflow (e.g. Bugs move from Open to Closed) and no hard-coded issue
-        type definitions. You have complete freedom to define your issues the
-        way you want them. The downside of this is a bit more start-up effort,
-        but you get something that more closely fits your needs.</para>
-
-        <para>Most other issue-trackers (Bugzilla, Issuezilla, SourgeForge,
-        Gnats) contain issue-processing logic as part of the application. This
-        means you&#39;re often stuck in the workflow defined by that system.
-        Scarab does not limit you in this way and gives you a much bigger gun
-        to blow your foot off with.</para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Scarab&#39;s History</title>
-
-      <para>TODO</para>
-    </sect1>
-
-    <sect1>
-      <title>Scarab&#39;s Features</title>
-
-      <para>TODO</para>
-    </sect1>
-  </chapter>
-
-  <chapter>
-    <title>Basic Concepts</title>
-
-    <para>In this section, we&#39;ll examine the basic concepts that drive
-    Scarab so that when you see the user interface, you&#39;ll understand what
-    is being represented on screen.</para>
-
-    <sect1>
-      <title>The Anatomy of an Issue</title>
-
-      <para>Scarab is a system for storing issues. Because everyone has their
-      own idea about what kind of issue data they should be capturing, Scarab
-      lets you define your own structure.</para>
-
-      <sect2>
-        <title>Issue Types</title>
-
-        <para>An issue type is a description of the structure of a set of
-        issues. An issue type might be a Bug, a Defect, a Work Order, a Help
-        Request, etc. It is up to you to define what your issue types are.
-        Issue types themselves are not issues, they simply describe what
-        information can be captured for that type.</para>
-
-        <para>There are two kinds of issue types. Global and module. Global
-        issue types themselves only act as a template for creating issue-types
-        on a per-module basis (for a description of modules, see lower down).
-        Module issue-types are what define the information that is captured
-        for each issue-type in each module.</para>
-      </sect2>
-
-      <sect2>
-        <title>Attributes</title>
-
-        <para>Attributes are the pieces of information that you bundle
-        together in your issue type definitions. An attribute is an atomic
-        piece of information, like &#34;name&#34; or &#34;description&#34; or
-        &#34;Operating System&#34;.</para>
-
-        <para>Attributes are created globally in Scarab. Where possible,
-        it&#39;s a good idea to re-use attributes between issue-types. This
-        will allow you, should you want to, to produce reports for issues
-        across different modules that share common attributes.</para>
-      </sect2>
-
-      <sect2>
-        <title>Issues</title>
-
-        <para>An issue is an &#34;instance&#34; of an issue type. An issue is
-        what you enter data for. Issues are given a unique identifier. In
-        addition to the attributes you define in the issue type definition, an
-        issue also has the following information associated with it:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para>Attachments</para>
-
-            <para>You can attach (multiple) files to issues. This is useful
-            for adding extra information related to an issue alongside it
-            (i.e. a logfile that was taken when a bug was found)</para>
-          </listitem>
-
-          <listitem>
-            <para>Comments</para>
-
-            <para>Arbitary comments can be added to issues. This is where
-            general commentary about the issue is stored (i.e. discussion
-            about the issue). Comments are appended as they are added, as
-            opposed to issue attributes, which contain only a single value.</para>
-          </listitem>
-
-          <listitem>
-            <para>Dependencies</para>
-
-            <para>Dependencies can be used to describe relationships between
-            issues. Dependencies can be:</para>
-
-            <itemizedlist>
-              <listitem>
-                <para>Blocking</para>
-
-                <para>This means that the related issue prevents some kind of
-                further action on the issue you are looking at. This
-                relationship is descriptive, it doesn&#39;t actually stop you
-                doing anything in Scarab, it simply tells you something about
-                the relationship between the issues.</para>
-              </listitem>
-
-              <listitem>
-                <para>Non-blocking</para>
-
-                <para>This means that the related issue doesn&#39;t prevent
-                things happening to the issue you are looking at.</para>
-              </listitem>
-
-              <listitem>
-                <para>Duplicate</para>
-
-                <para>This means that the related issue is the same as the one
-                you are looking at.</para>
-              </listitem>
-            </itemizedlist>
-          </listitem>
-
-          <listitem>
-            <para>URLs</para>
-
-            <para>This is a place to store URL&#39;s that provide additional
-            information for the issue (this may be a link to a page that
-            demonstrates a bug, if the product you&#39;re capturing issues for
-            is a website for example).</para>
-          </listitem>
-
-          <listitem>
-            <para>Personnel</para>
-
-            <para>You can create associations between an issue and users in
-            the system. The &#34;name&#34; of the association is configured by
-            you as part of the issue type, and will usually look something
-            like &#34;assigned to&#34;, or &#34;owned by&#34; or
-            &#34;interested in&#34;. Again, these associations are only
-            informational, and don&#39;t actually infer any different
-            functionality in Scarab based on their value or name (i.e.
-            it&#39;s up to you to interpret what the information means).</para>
-          </listitem>
-        </itemizedlist>
-      </sect2>
-
-      <sect2>
-        <title>Issue modification audit trail</title>
-
-        <para>All changes to everything on an issue is tracked in the issues
-        audit trail. For changes to issue attributes, you almost always
-        (comments are the exceptions) have to supply a reason for your change.
-        All changes are logged, along with the reason for each change.</para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Modules</title>
-
-      <para></para>
-    </sect1>
-  </chapter>
-
-  <chapter>
-    <title>Installation</title>
-
-    <para>In this section, we&#39;ll outline the basic installation process.
-    Because Scarab is written as a J2EE Web Application, this means that you
-    can deploy it in a few different ways. Scarab comes bundled with a copy of
-    Apache Tomcat, a servlet container, that you can use to run Scarab
-    out-of-the-box. Take a look at the later section &#34;Alternative ways of
-    running&#34; for some clues on how to run Scarab in a not out-of-the-box
-    way.</para>
-
-    <sect1>
-      <title>Building the code</title>
-
-      <para></para>
-
-      <sect2>
-        <title>Prerequisites</title>
-
-        <para>Ant</para>
-
-        <para>Java 1.3.1 or higher</para>
-      </sect2>
-
-      <sect2>
-        <title>Getting the code</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Configuring the build</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Build it!</title>
-
-        <para></para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Creating the database</title>
-
-      <para></para>
-    </sect1>
-
-    <sect1>
-      <title>Running Scarab</title>
-
-      <para></para>
-    </sect1>
-
-    <sect1>
-      <title>Alternative ways of running</title>
-
-      <para></para>
-
-      <sect2>
-        <title>Deploying as a J2EE WAR</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Running under other Servlet containers</title>
-
-        <para></para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Platform Specific Notes</title>
-
-      <para></para>
-    </sect1>
-  </chapter>
-
-  <chapter>
-    <title>Using Scarab</title>
-
-    <para>This section will outline how you use Scarab in a day to day way.
-    We&#39;ll cover all the common things you do, as well as some of the
-    not-so-common ones.</para>
-
-    <para>In general, the majority of the tasks that you will perform inside
-    Scarab will be related to the creation and update of issues. However,
-    there are a few other things you can do and sometimes need to do before
-    other portions of the system will do anything useful.</para>
-
-    <para>Lets begin.</para>
-
-    <sect1>
-      <title>Registering for an Account</title>
-
-      <para></para>
-
-      <sect2>
-        <title>Creating your account</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Getting access to modules</title>
-
-        <para></para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Issues</title>
-
-      <para>This section will outline the majority of the operations
-      you&#39;ll perform when inside Scarab.</para>
-
-      <sect2>
-        <title>Creating a new Issue</title>
-
-        <para>1. Select the appropriate module</para>
-
-        <para>2. Choose the issue type you want to create</para>
-
-        <para>3. Fill out the details for the issue</para>
-
-        <para>4. If present, identify duplicates</para>
-
-        <para>5. Complete!</para>
-      </sect2>
-
-      <sect2>
-        <title>Modfying an Issue</title>
-
-        <para>1. Find the issue you want to modify (either by query, or by
-        entering the number in the search box)</para>
-
-        <sect3>
-          <title>Changing attribute data</title>
-
-          <para></para>
-        </sect3>
-
-        <sect3>
-          <title>Modifying Personnel information</title>
-
-          <para></para>
-        </sect3>
-
-        <sect3>
-          <title>Adding comments</title>
-
-          <para></para>
-        </sect3>
-
-        <sect3>
-          <title>Adding attachments and URLs</title>
-
-          <para></para>
-        </sect3>
-
-        <sect3>
-          <title>Setting up dependencies between issues</title>
-
-          <para></para>
-        </sect3>
-      </sect2>
-
-      <sect2>
-        <title>Viewing an issues history</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Deleting issues (and why you can&#39;t)</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Moving/copying issues</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Creating and Using Templates</title>
-
-        <para></para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Queries</title>
-
-      <para></para>
-
-      <sect2>
-        <title>Module Queries</title>
-
-        <para>For each issue-type in your module,</para>
-      </sect2>
-
-      <sect2>
-        <title>Cross-module Queries</title>
-
-        <para>If you&#39;ve defined the same issue-type (or even remotely
-        similar issue types that share attributes) in multiple modules, you
-        can create queries that span many modules. This is useful for finding
-        out things across many projects (i.e. show me all open issues in
-        modules X, Y and Z).</para>
-      </sect2>
-
-      <sect2>
-        <title>Pre-defined queries</title>
-
-        <para>There are a couple of pre-defined queries. The &#34;My
-        Issues&#34; query will show you all issues that have you assigned in
-        some way as a &#34;personnel attribute&#34;.</para>
-      </sect2>
-
-      <sect2>
-        <title>Saving queries</title>
-
-        <para>Queries can be saved, making it easy to create queries that do
-        things like &#34;show me all bugs in the &#34;open&#34; state&#34;, or
-        &#34;show me all bugs that were opened this week&#34;.</para>
-
-        <sect3>
-          <title>Personal vs. Module wide</title>
-
-          <para>Personal queries are only visible to you, module-wide queries
-          are visible to all people in that module and require approval to
-          create (although, you may have that permission yourself).</para>
-        </sect3>
-      </sect2>
-
-      <sect2>
-        <title>Customising your query results</title>
-
-        <para>Adding/removing attributes from view, sorting, exporting to XLS,
-        CSV.</para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Reports</title>
-
-      <para></para>
-    </sect1>
-  </chapter>
-
-  <chapter>
-    <title>Administration</title>
-
-    <para></para>
-
-    <sect1>
-      <title>Configuration</title>
-
-      <para></para>
-
-      <sect2>
-        <title>Structure and Layout</title>
-
-        <para>**Best practises</para>
-      </sect2>
-
-      <sect2>
-        <title>Re-use principals</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Creating Modules</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Creating Attributes and Issue Types</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Adding Issue Types to Modules</title>
-
-        <para></para>
-
-        <sect3>
-          <title>Customising Issue Types</title>
-
-          <para></para>
-        </sect3>
-      </sect2>
-
-      <sect2>
-        <title>User Management</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Roles and Permissions</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Approvals</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Email configuration</title>
-
-        <para></para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Backups</title>
-
-      <para>Outline what needs to be backed up</para>
-    </sect1>
-
-    <sect1>
-      <title>Imports and Exports</title>
-
-      <para></para>
-
-      <sect2>
-        <title>Settings</title>
-
-        <para></para>
-      </sect2>
-
-      <sect2>
-        <title>Issue Data</title>
-
-        <para></para>
-      </sect2>
-    </sect1>
-
-    <sect1>
-      <title>Search Indexes</title>
-
-      <para></para>
-    </sect1>
-  </chapter>
-
-  <chapter>
-    <title>Customisation</title>
-
-    <para>In this section, we&#39;ll examine the various options you&#39;ve
-    got for customising Scarab to fit in your environment. This section will
-    not discuss how to customise issue types, see the Administration chapter
-    for that.</para>
-
-    <sect1>
-      <title>Customising templates</title>
-
-      <para>Email templates, web templates, how to go about upgrading without
-      breaking</para>
-    </sect1>
-
-    <sect1>
-      <title>Customising the authentication database</title>
-
-      <para></para>
-    </sect1>
-
-    <sect1>
-      <title>Workflow customisation</title>
-
-      <para></para>
-    </sect1>
-  </chapter>
-
-  <chapter>
-    <title>Development</title>
-
-    <para></para>
-
-    <sect1>
-      <title>How to Contribute</title>
-
-      <para>Lurk on the mailing lists</para>
-
-      <para>Get code, hack</para>
-
-      <para>Submit patches</para>
-
-      <para>Get CVS access</para>
-
-      <para>(refer to existing how to contribute doc)</para>
-    </sect1>
-
-    <sect1>
-      <title>Resources</title>
-
-      <para>Where to get the code, what libs are used and where they&#39;re
-      from, what technologies/standards are adhered to. Mailing lists,
-      websites. Fill this in properly.</para>
-
-      <para>Reference the FAQ.</para>
-    </sect1>
-
-    <sect1>
-      <title>Architecture and Design</title>
-
-      <para>Data model: How data is stored (torque), issues, attributes,
-      modules, activities</para>
-
-      <para>User interface: layouts, templates</para>
-
-      <para>Business logic: ....</para>
-    </sect1>
-  </chapter>
-
-  <appendix>
-    <title>Troubleshooting</title>
-
-    <para>Include some items from the FAQ here (particularly those about
-    database errors).</para>
-  </appendix>
+<book lang="en">
+	<title>Scarab</title>
+	<subtitle>Administration Guide</subtitle>
+	<bookinfo>
+		<corpauthor>The Scarab Development Team</corpauthor>
+		<editor>
+			<firstname>Jean-François</firstname>
+			<surname>El Fouly</surname>
+		</editor>
+		<copyright>
+			<year>2003</year>
+			<holder>CollabNet, Inc.</holder>
+		</copyright>
+	</bookinfo>
+	<preface>
+		<title>Preface</title>
+		<para/>
+		<sect1>
+			<title>Audience</title>
+			<para>This book is written for Scarab System administrators. It does not tackle usage questions, which are covered in another ebook, the Scarab User's Guide.</para>
+		</sect1>
+		<sect1>
+			<title>How This Book is Organised</title>
+			<para>This book is divided in two parts. The first part covers Scarab installation; the second part answers a few questions about Scarab administration after installation (such as backups and restores).</para>
+		</sect1>
+	</preface>
+	<part>
+		<title>Scarab Installation</title>
+		<chapter>
+			<title>General</title>
+			<sect1>
+				<title>How to install Scarab</title>
+				<para>In the current state of development -- and maybe in the long term as well -- Scarab does not install fully assembled, as is usually the case with an installation program.</para>
+				<para>Scarab is built dynamically for every particular installation, according to local parameters among which the database used to store the issues and other information that Scarab needs to work.</para>
+				<para>This could make you anxious at first sight, but the process is simple and proven: you can achieve this task easily like most other people did until now.</para>
+			</sect1>
+			<sect1>
+				<title>The steps in a normal Scarab installation</title>
+				<para>A normal installation is performed in four steps :
+				<itemizedlist>
+						<listitem>
+							<para>Preparing the installation</para>
+						</listitem>
+						<listitem>
+							<para>Installing and configuring the database management software</para>
+						</listitem>
+						<listitem>
+							<para>Building Scarab</para>
+						</listitem>
+						<listitem>
+							<para>Building the Scarab database</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Preparing the installation</title>
+			<sect1>
+				<title>Choosing an operating system</title>
+				<para>Scarab is theoretically portable on any system that supports Java.</para>
+				<para>Practically, Scarab has been used and intensively tested on three kinds of platforms:</para>
+				<itemizedlist>
+					<listitem>
+						<para>Linux: the platform on which the most experience has been gathered (and thus the system on which you will easily get support from the user community if ever you face a problem).</para>
+					</listitem>
+					<listitem>
+						<para>Windows</para>
+					</listitem>
+					<listitem>
+						<para>MacOS X: in fact, Scarab has been developed in part on this platform, and the first Scarab demonstrator, the "runbox", was running on this platform.</para>
+					</listitem>
+				</itemizedlist>
+			</sect1>
+			<sect1>
+				<title>Choosing a database manager</title>
+				<para>Scarab needs a database management system to store the issues and other structured information (parameters, queries, reports, modules,...). Thus, you have to choose an RDBMS (for the database installation, see the next chapter).</para>
+				<para>Theoretically, you could use Scarab on any RDBMS that has a JDBC driver.</para>
+				<para>Practically, you are faced with some SQL compatibility issues, and moreover, you need to have correct support for this DBMS in Torque, the persistence and object-relational mapping component associated with the Turbine framework, on which Scarab is built.</para>
+				<sect2>
+					<title>DBMS that have been tested with Scarab (and are supported)</title>
+					<sect3>
+						<title>MySQL</title>
+						<para>MySQL is the DBMS on which Scarab has been developed and fully tested. If you don't have any particular reason to choose a database or another to run Scarab, MySQL should be your first choice.</para>
+						<para>Which version to choose? Scarab will work with any 3.x or 4.x version of MySQL. It could happen in the future that the support of version 3 could be dropped to use the transactional functionalities that are available only in version 4. So, if you don't have a particular reason to choose a particular version, you may choose long term peace of mind and use a version 4.x. from the start.</para>
+						<para>MySQL is open-source software, and it is available for free on Linux, Windows and a few other platforms (commercial licences and support are available for a fee).</para>
+					</sect3>
+					<sect3>
+						<title>PostgreSQL</title>
+						<para>Scarab has been tested successfully on PostgreSQL, version 7.2.1 and the following.</para>
+						<para>PostgreSQL is open-source software, and it is available for free on Linux and Windows.</para>
+					</sect3>
+					<sect3>
+						<title>Oracle 9i</title>
+						<para>The compatibility of Scarab with Oracle 9i has also been tested</para>
+						<para>Because of a problem with the manner Torque manages BLOBs, using Scarab with Oracle 9i is a bit more difficult than with other DBMS (you will have to patch the code generated by Torque).</para>
+					</sect3>
+					<!-- Need to write a section here about DB2 -->
+				</sect2>
+				<sect2>
+					<title>DBMS that have been tested and are not fully supported by Scarab</title>
+					<sect3>
+						<title>Microsoft SQL Server</title>
+						<para>The Scarab configuration on Microsoft SQL Server has been carefully defined and tested.</para>
+						<para>A few problems remain, related to the mapping of certain data types by Torque and to the use of the SQL CONCAT function. These problems have not been solved at the moment.</para>
+						<para>People interested in the technical details on this question may refer to the appropriate documentation page on the Scarab web site.</para>
+					</sect3>
+					<sect3>
+						<title>Hypersonic SQL</title>
+						<para>Scarab has been configured and tested carefully on HyperSonic.</para>
+						<para>However, the tests have shown that Scarab is not fully operational on this platform.</para>
+						<para>People interested in the technical details on this question may refer to the appropriate documentation page on the Scarab web site.</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>DBMS that are not supported by Scarab</title>
+					<sect3>
+						<title>Oracle 8i</title>
+						<para>Oracle 8i has been supported with some success at the beginning of the Scarab development.</para>
+						<para>This support has been discontinued in 2003 due to compatibility problems in the syntax of some SQL joins. Unless someone tackles this problem, Oracle 8i will not be supported again.</para>
+						<para>But Scarab is now compatible with Oracle 9i, as it has been discussed before.</para>
+					</sect3>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Choosing a servlet container</title>
+				<para>Scarab runs on any Servlet 2.3-compatible servlet engine; in fact, a patch could make Scarab compatible with 2.2 servlet engines, among which WebSphere Application Server 4.0.</para>
+				<para>Practically, most Scarab users use it on Tomcat; in fact, the Scarab installation process builds a "light" Tomcat server, the "sandbox", which you can use to test or run Scarab once it has been built.</para>
+				<para>You may want to deploy Scarab on an existing Tomcat installation; Resin has also been successfully tested as Scarab engine.</para>
+			</sect1>
+			<sect1>
+				<title>Gathering the other elements required for the Scarab installation</title>
+				<para>To perform the Scarab installation, you will need three more things: a Java SDK, Ant and -- of course -- Scarab itself.</para>
+				<sect2>
+					<title>Download and install a Java SDK</title>
+					<para>If you don't have a Java SDK handy (pre-installed on some systems such as MacOS X or certain Linux distributions), you need to download and install one. Be careful: you need a Java 2 SDK and not only a JRE (Java Runtime Environment) because you will need to compile Scarab.</para>
+					<para>The SDK version must be at least 1.3.1.</para>
+					<para>You may download a Java SDK from <ulink url="http://java.sun.com">http://java.sun.com</ulink>.</para>
+					<para>Make sure the JAVA_HOME environment variable correctly points to the directory in which your SDK is installed.</para>
+				</sect2>
+				<sect2>
+					<title>Download and install Ant</title>
+					<para>To build Scarab, you will need the Ant build system.</para>
+					<para>You can download Ant from <ulink url="http://ant.apache.org">http://ant.apache.org</ulink>.</para>
+					<para>The Ant version should be 1.5.1 or greater.</para>
+					<para>Make sure the ANT_HOME environment variable correctly points to the directory in which Ant is installed</para>
+				</sect2>
+				<sect2>
+					<title>Downlad Scarab</title>
+					<para>You need of course to download Scarab itself. You will find the latest version (1.0-b18) at the following URL: <ulink url="http://scarab.tigris.org/servlets/ProjectDocumentList">http://scarab.tigris.org/servlets/ProjectDocumentList</ulink>.</para>
+					<para>Uncompress the Scarab archive in the directory of your choice.</para>
+					<para>At the beginning of the installation process, you will focus on the ./build sub-directory.</para>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Installing the database software and preparing for Scarab installation</title>
+			<sect1>
+				<title>MySQL</title>
+				<sect2>
+					<title>Installing MySQL</title>
+					<para>Please refer to the MySQL installation instructions.</para>
+				</sect2>
+				<sect2>
+					<title>Create a database user for Scarab</title>
+					<para>You will not be able (or you won't like) to run Scarab with the default MySQL security scheme (root user without password on the local machine).</para>
+					<para>So, you'll probably need to create a MySQL user and grant him/her the appropriate rights. Let's suppose you want to create a database user with the name 'scarab' on a local server et grant him the rights on a 'scarab' database; connect to the admin interface (the unix command is <computeroutput>mysql</computeroutput>) and execute the following statement&nbsp;:</para>
+					<para>
+						<computeroutput>grant all privileges on scarab.* to scarab@localhost;</computeroutput>
+					</para>
+					<para>If you want the 'scarab' user to authenticate with the password 'secret' when he/she/it connects to the database server, the syntax becomes&nbsp;</para>
+					<para>
+						<computeroutput>grant all privileges on scarab.* to scarab@localhost identified by 'secret';</computeroutput>
+					</para>
+				</sect2>
+				<sect2>
+					<title>Setting up the MySQL parameters in Scarab</title>
+					<para>Use a text or program editor to open read-only (if possible) the default properties file in the build directory of your Scarab installation. Do not modify this file.</para>
+					<para>Use your editor to create a build.properties file in the same directory. Any parameter you will define in this file will take precedence on the one defined in default.properties. This allows you to keep reasonable default values for most parameters while redefining those you want (or must) change.</para>
+					<sect3>
+						<title>Define the database type</title>
+						<para>You do not need to redefine the scarab.database.type parameter, because by default (as you can see by yourself in the default.properties file):</para>
+						<para>scarab.database.type=mysql</para>
+					</sect3>
+					<sect3>
+						<title>Define the database user</title>
+						<para>Even in a default MySQL installation, you will probably have to define the database user (scarab.database.username), for instance:</para>
+						<para>scarab.database.username=scarab</para>
+						<para>If a password is required for this database user, you will also need to define the scarab.database.password key, for instance:</para>
+						<para>scarab.database.password=secret</para>
+					</sect3>
+					<sect3>
+						<title>Define the database server</title>
+						<para>By default, the database is supposed to be on the same machine as the Scarab server:</para>
+						<para>scarab.database.host=127.0.0.1</para>
+						<para>If the database server isn't on the same machine as the servlet engine, you need to define the scarab.database.host ky, specifying the network name of the MySQL server or its IP address.</para>
+						<para>If you are faced to database access errors to a local database (access denied), you may try to replace 127.0.0.1 by localhost.</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Option: downloading an optimized driver</title>
+					<para>If you build a "production" Scarab installation, you may choose to use a MySQL driver that is more recent and more performant than the one supplied in the Scarab distribution (this driver may not be bundled with Scarab because its licence is GPL).</para>
+					<para>Download this driver from the MySQL web site at the following URL: <ulink url="http://www.mysql.com/downloads/api-jdbc-dev.html">http://www.mysql.com/downloads/api-jdbc-dev.html</ulink> and copy the jar in the lib directory of your Scarab installation.</para>
+					<para>You also need to declare its use in your build.properties file:</para>
+					<para>scarab.jdbc.driver.jar=mysql-connector*.jar</para>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>PostgreSQL</title>
+				<sect2>
+					<title>Installing PostgreSQL</title>
+					<para>Please refer to the PostgreSQL installation instructions.</para>
+				</sect2>
+				<sect2>
+					<title>Setting up the PostgreSQL in Scarab</title>
+					<para/>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Oracle 9i</title>
+				<sect2>
+					<title>Installing Oracle 9i</title>
+					<para>Please refer to the Oracle 9i installation instructions.</para>
+				</sect2>
+				<sect2>
+					<title>Setting up the Oracle 9i parameters in Scarab</title>
+					<para/>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Building Scarab</title>
+			<sect1>
+				<title>Finishing Scarab configuration</title>
+				<para>The default Scarab configuration supplies reasonable values for most installation and execution parameters. However, you need to supply appropriate values for a few configuration parameters, and you may also choose to redefine a few other settings.</para>
+				<sect2>
+					<title>Defining the server name and protocol</title>
+					<para>These parameters are required.</para>
+					<para>You will probably keep the default values for the following parameters&nbsp;:</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.context</computeroutput> (default value: <computeroutput>scarab</computeroutput>)</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.scheme</computeroutput> (default value: <computeroutput>http</computeroutput>)</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.scriptname</computeroutput> (default value: <computeroutput>/${scarab.context}/issues</computeroutput>)</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.redirect</computeroutput> (default value: <computeroutput>${scarab.http.scriptname}</computeroutput>)</para>
+						</listitem>
+					</itemizedlist>
+					<para>but you will need to define the <computeroutput>scarab.http.domain</computeroutput> property (no default value) with your server name, and you may need to redefine the port as well (<computeroutput>scarab.http.port</computeroutput>, default value: 8080).</para>
+					<para>If you make a mistake defining these server parameters, your users will not be able to access Scarab from the emails sent by the issue tracker; correcting the mistakes will require rebuilding Scarab (which remains easy) and tweaking values in the database, which is far more tedious.</para>
+				</sect2>
+				<sect2>
+					<title>Choosing the name and email address of the Scarab administrator</title>
+					<para>By default, this name will be turbine@tigris.org.</para>
+					<para>To change this default value, define the scarab.user.username property in your build.properties file:</para>
+					<para>scarab.user.username=scarab-superuser@mydomain.net</para>
+					<para>This user name will also become the default email address. If the name is not a valid address or if you prefer to use another email address, you could also define the scarab.user.email property; otherwise, the user name you supplied just before will also be the email address.</para>
+					<para>If you choose (later in the installation process) not to install the sample data supplied with Scarab, this user will be the first and only one in your brand new Scarab installation. Its password will be "1" (the digit one, without quotes).</para>
+					<para>The default first name will be "Scarab" and the name wil be "Administrator" (the first and last name of the connected user are displayed in the top right corner when Scarab is running).</para>
+					<para>For a localized installation you may prefer to define the properties</para>
+					<para>scarab.user.firstname=Administrateur</para>
+					<para>scarab.user.lastname=Scarab</para>
+					<para>(which allows you to translate and change the order of the words) or you may choose to user here the first and last name of the person who manages Scarab in real life.</para>
+				</sect2>
+				<sect2>
+					<title>Defining the mail server</title>
+					<para>The default mail server (for sending emails) is the machine on which Scarab is running (localhost). Thus Scarab expects to find a running SMTP server on the same machine to send its messages. If this is not the case (which happens quite often), you need to define a property with the network name of your SMTP server, e.g. the SMTP server of your ISP:</para>
+					<para>scarab.system.mail.host=smtp.example.net</para>
+				</sect2>
+				<sect2>
+					<title>Localizing your Scarab installation</title>
+					<para>The language of the Scarab user interface (as it appears in the user's browser) isn't defined by the installation or configuration parameters (it is defined by the user's browser linguistic settings). So there isn't anything special to configure to have Scarab localized in another language -- if the corresponding resource bundle is available, of course.</para>
+					<para>There are, however, two settings you may want to define at this stage.</para>
+					<sect3>
+						<title>Character set used for sending email</title>
+						<para>You may define for this purpose the scarab.email.encoding property, for instance:</para>
+						<para>scarab.email.encoding=ISO-8859-1</para>
+						<para>scarab.email.encoding=UTF-8</para>
+					</sect3>
+					<sect3>
+						<title>Default language definition</title>
+						<para>You may also define the scarab.locale.default.language and scarab.locale.default.country properties, for instance:</para>
+						<para>scarab.locale.default.language=fr</para>
+						<para>scarab.locale.default.country=FR</para>
+						<para>These parameters are used (at least) to define the language of the default/sample data in the database (if a corresponding resource bundle is available).</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Preparing the deployment on another servlet engine</title>
+					<para>If you plan not to use the Tomcat server that is built together with Scarab ("sandbox"), you must have the Velocity templates -- used to generate the web pages -- in the web application hierarchy. To do this, you must define the following property:</para>
+					<para>scarab.copy.templates=true</para>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Building Scarab</title>
+				<para>From here, building Scarab is a fairly simple process: go to the ./build directory and type</para>
+				<para>ant</para>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Building the Scarab database</title>
+			<sect1>
+				<title>MySQL</title>
+				<sect2>
+					<title>On Unix/Linux</title>
+					<para>From the root of your Scarab installation, type</para>
+					<para>cd src/sql</para>
+					<para>./create-db.sh</para>
+					<para>For a production installation, you may want not to include the sample data supplied with Scarab and start with an empty database; just add the -e command line argument:</para>
+					<para>./create-db.sh -e</para>
+					<para>If the MySQL server is on another machine, or if you must authenticate to execute administration commands, you may supply additional arguments to the script using the usual MySQL syntax, for instance&nbsp;:</para>
+					<para>./create-db.sh -u jon --password -P 3306 -h mysqlserver.example.com</para>
+				</sect2>
+				<sect2>
+					<title>On Windows</title>
+					<para>From the root of your Scarab installation</para>
+					<para>cd src/sql</para>
+					<para>create-mysql-database.bat</para>
+					<para>If your database server is on another machine, or if you have to authenticate to execute administration commands, you will need to edit the create-mysql-database.bat script.</para>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Running Scarab</title>
+			<sect1>
+				<title>Running Scarab with its own Tomcat server</title>
+				<para>To run Scarab with the minimal Tomcat server that has been built together with it, simply go to the target directory of your Scarab installation and type:</para>
+				<para>./scarab.sh &amp;</para>
+			</sect1>
+		</chapter>
+	</part>
+	<part>
+		<title>Scarab system administration after installation</title>
+		<chapter>
+			<title>Backups and Restores</title>
+			<para>To restore a Scarab installation, if the server fails for instance, you must perform backups on a regular basis.</para>
+			<para>You will have to backup the data contained in the Scarab database, but also the directories that contain the attachments, the indices used by Lucene for full-text search and the objects serialized by Intake.</para>
+			<sect1>
+				<title>Backing up Scarab information</title>
+				<sect2>
+					<title>Backing up the database</title>
+					<sect3>
+						<title>MySQL</title>
+						<para>On the command line, type for instance:</para>
+						<para>
+							<computeroutput>mysqldump scarab &gt; filenamer.sql</computeroutput>
+						</para>
+						<para>If your MySQL server requires authentication, you will have to supply the appropriate arguments on the command line, for instance:</para>
+						<para>
+							<computeroutput>mysqldump scarab --user=scarab --password &gt; filename.sql</computeroutput>
+						</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Backing up other information</title>
+					<para>The directories used to store attachments and Lucene indices, and the file containing the objects serialized by Intake have been defined at build time. The corresponding properties are:</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<computeroutput>scarab.attachments.path</computeroutput>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.lucene.index.path</computeroutput>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.intake.serialize.file</computeroutput>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para>You need to back up these two directories and this file as well as the database information.</para>
+					<para>If you hadn't redefined the three parameters above when you built Scarab, all these objects are in the Scarab file hierarchy under <computeroutput>target/webapps/scarab/WEB-INF</computeroutput> .</para>
+					<para>On Windows, the simplest solution is probably to copy the two directories and the Intake file in a zip archive.</para>
+					<para>On Linux, you can do the same with the following command (for those not familiar with unix commands)&nbsp;:</para>
+					<para>
+						<computeroutput>tar zcf scarab.tgz attachments index intake-xml.ser</computeroutput>
+					</para>
+					<para>If one or several of the parameters has/have been redefined, you will need to find where the directories and the file are to be able to archive them.</para>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Restoring Scarab information from a backup</title>
+				<sect2>
+					<title>Restoring the database</title>
+					<sect3>
+						<title>MySQL</title>
+						<para>Connect to MySQL, for instance&nbsp;:</para>
+						<para>
+							<computeroutput>mysql</computeroutput>
+						</para>
+						<para>You may have to specify a user name and/or password if your MySQL server requires authentication&nbsp;:</para>
+						<para>
+							<computeroutput>mysql --user=name --password</computeroutput>
+						</para>
+						<para>If necessary, you may have to delete a corrupted Scarab database&nbsp;:</para>
+						<para>
+							<computeroutput>drop database scarab;</computeroutput>
+						</para>
+						<para>Create a new Scarab database and select it&nbsp;:</para>
+						<para>
+							<computeroutput>create database scarab;</computeroutput>
+						</para>
+						<para>
+							<computeroutput>use scarab;</computeroutput>
+						</para>
+						<para>Restore the data you had backed up with mysqldump&nbsp;:</para>
+						<para>
+							<computeroutput>source filename.sql;</computeroutput>
+						</para>
+						<para>That's it&nbsp;!</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Restoring other information</title>
+					<para>Uncompress the archive you made previously with attachments, Lucene indices and objects serialized by Intake, in the directories defined when Scarab was built, as explained above.</para>
+					<para>Your Scarab installation is now ready to restart.</para>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Moving an existing Scarab installation to another server</title>
+			<para>If your Scarab server fails -- or for any other valid admin reason -- you may want to move an existing Scarab installation to another server.</para>
+			<para>Unless the settings and the network name of the new machine are strictly identical, you will need to perform a new Scarab installation from scratch, tuning a few configuration parameters.</para>
+			<para>If the network name of the target machine differs from the original one, you will also need to perform three modifications in the database, even if the database server itself does not change.</para>
+			<sect1>
+				<title>Modifying the database when the Scarab server changes</title>
+				<sect2>
+					<title>Modifying the SCARAB_GLOBAL_PARAMETER table</title>
+					<para>If you change any of the following parameters on the new installation: scarab.http.domain, scarab.http.scheme, scarab.http.scriptname or scarab.http.port, you will need to update the corresponding entries in the SCARAB_GLOBAL_PARAMETER table. For instance&nbsp;:</para>
+					<para>
+						<computeroutput>update SCARAB_GLOBAL_PARAMETER set VALUE='newserver.example.com' where NAME='scarab.http.domain';</computeroutput>
+					</para>
+					<para>
+						<computeroutput>update SCARAB_GLOBAL_PARAMETER set VALUE='8081' where NAME='scarab.http.port';</computeroutput>
+					</para>
+				</sect2>
+				<sect2>
+					<title>Modifying the SCARAB_MODULE table</title>
+					<para>You may need to update the domain (server) name in the SCARAB_MODULE table&nbsp;:</para>
+					<para>
+						<computeroutput>update SCARAB_MODULE set DOMAIN='newserver.example.com';</computeroutput>
+					</para>
+				</sect2>
+				<sect2>
+					<title>Modifying the SCARAB_ISSUE table</title>
+					<para>You may need to update the domain (server) name in the SCARAB_ISSUE table&nbsp;:</para>
+					<para>
+						<computeroutput>update SCARAB_ISSUE set ID_DOMAIN='newserver.example.com';</computeroutput>
+					</para>
+				</sect2>
+			</sect1>
+		</chapter>
+	</part>
 </book>
