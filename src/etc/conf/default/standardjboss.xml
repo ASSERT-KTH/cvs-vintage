@@ -303,7 +303,7 @@
         <container-configuration>
             <container-name>Standard Message Driven Bean</container-name>
             <call-logging>false</call-logging>
-            <container-invoker>org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker</container-invoker>
+            <container-invoker>org.jboss.ejb.plugins.jms.JMSContainerInvoker</container-invoker>
             <container-interceptors>
                 <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
@@ -321,8 +321,11 @@
             <persistence-manager></persistence-manager>
             <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
             <container-invoker-conf>
-                <RMIObjectPort>4444</RMIObjectPort>
-            <Optimized>True</Optimized>
+           		<JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
+           		<ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
+           		<MaximumSize>15</MaximumSize>
+           		<MaxMessages>1</MaxMessages>
+            	<Optimized>True</Optimized>
             </container-invoker-conf>
             <container-pool-conf>
             <MaximumSize>100</MaximumSize>
