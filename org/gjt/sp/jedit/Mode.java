@@ -28,12 +28,9 @@ import org.gjt.sp.util.Log;
 /**
  * An edit mode defines specific settings for editing some type of file.
  * One instance of this class is created for each supported edit mode.
- * In most cases, instances of this class can be created directly, however
- * if the edit mode needs to define custom indentation behaviour,
- * subclassing is required.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.1 2001/09/02 05:37:24 spestov Exp $
+ * @version $Id: Mode.java,v 1.2 2001/09/29 09:20:15 spestov Exp $
  */
 public class Mode
 {

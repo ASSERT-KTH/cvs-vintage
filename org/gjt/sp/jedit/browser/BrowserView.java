@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.1 2001/09/02 05:38:19 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.2 2001/09/29 09:20:15 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -261,7 +261,7 @@ public class BrowserView extends JPanel
 	private void showFilePopup(VFS.DirectoryEntry file, Point point)
 	{
 		popup = new BrowserPopupMenu(browser,file);
-		popup.show(tree,point.x+1,point.y+1);
+		GUIUtilities.showPopupMenu(popup,tree,point.x+1,point.y+1);
 	}
 
 	class BrowserJTree extends JTree
