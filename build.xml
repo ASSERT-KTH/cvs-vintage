@@ -3,18 +3,18 @@
 
 <project name="columba" default="build">
 <description>
-This is the whole build file for columba. This build file is seperated into any buildfiles who 
-are dependend on this buildfile.  Build columba and try it.
-Have fun ... your columba-team!
+This is the whole build file for Columba. This build file is seperated into any buildfiles who
+are dependend on this buildfile. Build Columba and try it.
+Have fun ... your Columba Team!
 </description>
   <property name="basedir" value="${user.dir}"/>
 	<property name="src" value="${basedir}"/>
 	<property name="build" value="build"/>
 	<property name="user.name" value="The Columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
-	<property name="version" value="0.10.0"/>
+	<property name="version" value="0.12.0"/>
 	<property name="dest" value="${basedir}/classes"/>
-	<property name="ownclasspath" value="${dest}:${classpath}:${src}/lib/log4j.jar:${src}/lib/lucene-1.3-rc1.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.0-beta.jar"/>
+	<property name="ownclasspath" value="${dest}:${classpath}:${src}/lib/log4j.jar:${src}/lib/lucene-1.3-rc1.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar:${src}/lib/jargs.jar:${src}/lib/jwizz-0.1.0.jar"/>
 
 
 	<!-- definition of the task to check the style of the java-code -->
@@ -47,7 +47,7 @@ Have fun ... your columba-team!
 		<mkdir dir="${dest}"/>
 	</target>
 
-	<target name="document" depends="init" description="creates the java-docu for the columba sources">
+	<target name="document" depends="init" description="creates the javadocs for the columba sources">
 		<delete dir="${dest}/docs/api/"/>
 		<mkdir dir="${dest}/docs/api/"/>
 		<javadoc destdir="${dest}/docs/api/" classpath="${ownclasspath}" doctitle="Columba ${version} API Documentation" windowtitle="Columba API Documentation" link="http://java.sun.com/products/jdk/1.3/docs/api">
@@ -63,7 +63,7 @@ Have fun ... your columba-team!
 	</target>
 
 	<!-- copy required files for later tasks into the dest directory -->
-	<target name="copy-required" description="copy later required files to the output-folder">
+	<target name="copy-required" description="copy later required files to the output folder">
 		<copy todir="${dest}">
 			<fileset dir="${src}">
 				<include name="**/*.xml"/>
@@ -133,7 +133,7 @@ Have fun ... your columba-team!
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
-	<target name="jar" depends="compile" description="creates the columba-jar file">
+	<target name="jar" depends="compile" description="creates the columba.jar file">
 		<delete file="columba.jar"/>
 		<echo message="the jar file is going to be columba.jar "/>
 		<jar basedir="${dest}" jarfile="columba.jar">
@@ -157,7 +157,7 @@ Have fun ... your columba-team!
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
-				<attribute name="Class-Path" value="lib/log4j.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar lib/lucene-1.3-rc1.jar lib/jargs.jar lib/jwizz-0.1.0-beta.jar"/>
+				<attribute name="Class-Path" value="lib/log4j.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar lib/lucene-1.3-rc1.jar lib/jargs.jar lib/jwizz-0.1.0.jar"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -330,7 +330,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
            <include name="lib/junit.jar"/>
            <include name="lib/jakarta-oro-2.0.6.jar"/>
            <include name="lib/jargs.jar"/>
-	   <include name="lib/jwizz-0.1.0-beta.jar"/>
+	   <include name="lib/jwizz-0.1.0.jar"/>
           </fileset>
          </signjar>
         </target>
@@ -358,5 +358,4 @@ else echo "cannot find columba.jar in `pwd`"; fi
 		<include name="**/*.properties"/>
 	</zip>
 	</target>
-
 </project>
