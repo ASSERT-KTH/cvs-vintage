@@ -38,8 +38,8 @@
 #end
 
 #macro ( xmlScarabHeader )
-<?xml version=\"1.0\" standalone=\"no\"?>
-<!DOCTYPE scarab SYSTEM \"scarab.dtd\">
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE scarab SYSTEM "scarab.dtd">
 <scarab>
 #end
 
