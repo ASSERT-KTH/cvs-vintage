@@ -48,6 +48,9 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
     }
 
     /**
+     * 
+     * Save currently selected message.
+     * 
      * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
      */
     public void saveOptionsToXml(MessageFolder folder) {
@@ -62,10 +65,12 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         if ( tableController.getView().getSelectedNodes().length == 0 ) return;
         
         MessageNode node = tableController.getView().getSelectedNodes()[0];
-        if ( (node != null) && (folder != null) ) folder.setLastSelection(node);
+        if ( (node != null) && (folder != null) ) folder.setLastSelection(node.getUid());
     }
 
     /**
+     * Restore selection.
+     * 
      * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
      */
     public void loadOptionsFromXml(MessageFolder folder) {
@@ -116,7 +121,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             // no messages in this folder
             if (lastSelUids[0] == null) { return; }
 
-            Object uid = ((MessageNode) lastSelUids[0]).getUid();
+            Object uid = lastSelUids[0];
 
             // this message doesn't exit in this folder anymore
             if (tableController.getHeaderTableModel().getMessageNode(uid) == null) {

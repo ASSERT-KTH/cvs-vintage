@@ -428,6 +428,11 @@ public class TableController implements FocusOwner, ListSelectionListener {
     }
 
     /**
+     * Show the headerlist of currently selected folder.
+     * <p>
+     * Additionally, implements folderoptions plugin entrypoint.
+     * 
+     * @see org.columba.mail.folder.folderoptions
      * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder,
      *      org.columba.mail.message.HeaderList)
      */
@@ -674,6 +679,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // -> wait until the final selection is available
         if (arg0.getValueIsAdjusting()) return;
 
+        // skip if no message selected
+        if ( getView().getSelectedNodes().length == 0 ) return;
+        
         // show message
         new ViewMessageAction(getFrameController()).actionPerformed(null);
     }
