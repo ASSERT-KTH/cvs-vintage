@@ -1,0 +1,59 @@
+<div id="savereport" class="app">
+
+<form method="post" action="$link.setPage("reports,ReportList.vm")" >
+<input type="hidden" name="action" value="GenerateReport" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="reports,Step1.vm" />
+
+<div class="functnbar">
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div> 
+
+##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+
+
+<div>
+Click on "Availability" to execute report.
+</div>
+#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
+#if ($reports.size() > 0 )
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap">&nbsp;</th>
+<th><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Report name</th>
+<th>Report descr</a></th>
+<th>Availability</a></th>
+<th>Author</a></th>
+</tr>
+
+
+
+#foreach ($report in $reports)
+  #set ($group = $intake.Report.mapTo($report))
+$group.Deleted
+  #indexedRows($velocityCount)
+<td>#booleanCheckbox($group.Deleted)</td>
+<td>$report.Name</a></td>
+<td>$!report.Description</td>
+<td>Personal profile</a></td>
+<td>
+ #set ($createdUser = $scarabR.getUser($report.UserId.toString()))
+<a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+</tr>
+#end
+
+</table>
+#end
+
+<div class="functnbar3">
+  <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+  <input type="submit" value="Delete selected" name="eventSubmit_doDeletestoredreport" />
+</div> 
+
+##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+
+<div class="functnbar2">
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div> </div>
+
+$intake.declareGroups();
+</form>
