@@ -79,6 +79,7 @@ public class StaticInterceptor extends BaseInterceptor {
     boolean useAcceptLanguage=true;
     String charset=null;
     private boolean extraSafety=false;
+    private boolean useInternal=false;
 
     public StaticInterceptor() {
     }
@@ -95,6 +96,14 @@ public class StaticInterceptor extends BaseInterceptor {
 
     public void setListings(boolean listings) {
 	this.listings = listings;
+    }
+
+    /** Do we do an internal redirect?
+     *  @param internal <code>true</code>  do an internal redirect.
+                        <code>false</code> do a 301 redirect.
+    */
+    public void setUseInternal(boolean internal) {
+	useInternal = internal;
     }
 
     public void setUseAcceptLanguage(boolean use) {
@@ -182,13 +191,9 @@ public class StaticInterceptor extends BaseInterceptor {
 	    return 0; // no handler is set - will end up as 404
 	}
 
-	// Directory, check if we have a welcome file
-	String welcomeFile = getWelcomeFile(ctx, file);
-	if( debug > 0 )
-	    log( "DefaultServlet: welcome file: "  + welcomeFile);
 
 	// consistent with Apache
-	if( welcomeFile==null && ! requestURI.endsWith("/") ) {
+	if( ! requestURI.endsWith("/") && !req.getResponse().isIncluded()) {
 	    String redirectURI= requestURI + "/";
 	    redirectURI=fixURLRewriting( req, redirectURI );
 	    String query = req.query().toString();
@@ -200,6 +205,10 @@ public class StaticInterceptor extends BaseInterceptor {
 	    req.setHandler( ctx.getServletByName( "tomcat.redirectHandler"));
 	    return 0;
 	}
+	// Directory, check if we have a welcome file
+	String welcomeFile = getWelcomeFile(ctx, file);
+	if( debug > 0 )
+	    log( "DefaultServlet: welcome file: "  + welcomeFile);
 	
 	// Doesn't matter if we are or not in include
 	if( welcomeFile == null  ) {
@@ -208,20 +217,71 @@ public class StaticInterceptor extends BaseInterceptor {
 	    if( debug > 0) log( "Dir handler");
 	    return 0;
 	}
+	int status = 0;
+	if(useInternal) {
+	    status = doInternalRedirect(req,welcomeFile);
+	} else {
+	    status = doExternalRedirect(req,welcomeFile);
+	}
+	return status;
+    }
 
-	// Send redirect to the welcome file.
-	// This is consistent with other web servers and avoids
-	// gray areas in the spec - if the welcome file is a jsp,
-	// what will be the requestPath - if it's the dir, then
-	// jasper will not work. The original code created a
-	// RequestDispatcher and the JSP will see an included
-	// request, but that's not a specified behavior
-	String redirectURI=null;
+    /** Re-map the request as an internal redirect.
+     *  We have gray areas in the 2.2 spec, so we are going to follow
+     *  the 2.3 spec for guidance.
+     */
+    private int doInternalRedirect(Request req, String welcomeFile) {
+        BaseInterceptor ri[];
+	String requestURI=req.requestURI().toString();
+	String redirectURI=concatPath(requestURI,welcomeFile);
+	req.requestURI().setString(redirectURI);
+	req.unparsedURI().recycle();
+	req.servletPath().recycle();
+	req.pathInfo().recycle();
+
+	/* We are using the real request here, so we don't want to have
+	   to repeat all of the pre-processing for cm.processRequest.
+	   This means that postReadRequest hooks aren't re-called for 
+	   the new URI, but that shouldn't matter. And calling
+	   them again is more likely to do harm than good IMHO. However,
+	   we need to contextMap again to catch extention-mapped servlets.
+	*/
+	int status = 0;
+	ri=cm.getContainer().getInterceptors(Container.H_contextMap);
+	
+	for( int i=0; i< ri.length; i++ ) {
+	    status=ri[i].contextMap( req );
+	    if( status!=0 ) return status;
+	}
+	ri=req.getContext().getContainer().
+	    getInterceptors(Container.H_requestMap);
+	for( int i=0; i< ri.length; i++ ) {
+	    if( debug > 1 )
+		log( "RequestMap " + ri[i] );
+	    status=ri[i].requestMap( req );
+	    if( status!=0 ) return status;
+	    if(ri[i] == this) 
+		break; // ContextManager will finish the list.
+	}
+	return 0; 
+    }
+    /** Send redirect to the welcome file.
+     * This is consistent with other web servers and avoids
+     * gray areas in the spec - if the welcome file is a jsp,
+     * what will be the requestPath - if it's the dir, then
+     * jasper will not work. The original code created a
+     * RequestDispatcher and the JSP will see an included
+     * request, but that's not a specified behavior
+     */
+    private int doExternalRedirect(Request req, String welcomeFile) {
+    	String redirectURI=null;
+	String requestURI=req.requestURI().toString();
 	redirectURI=concatPath( requestURI, welcomeFile);
 	redirectURI=fixURLRewriting( req, redirectURI );
 	String query = req.query().toString();
-	if( query != null && !query.equals("") )
+	if ( query != null && ! query.equals("") )
 	    redirectURI += "?" + query;
+	Context lCtx = req.getContext();
 
 	req.setAttribute("javax.servlet.error.message",
 			 redirectURI);
@@ -229,7 +289,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	// allow processing to go on - another mapper may change the
 	// outcome, we are just the default ( preventive for bad ordering,
 	// in correct config Static is the last one anyway ).
-	req.setHandler( ctx.getServletByName( "tomcat.redirectHandler"));
+	req.setHandler( lCtx.getServletByName( "tomcat.redirectHandler"));
 	return 0;
     }
 
