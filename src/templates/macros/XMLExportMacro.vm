@@ -46,7 +46,10 @@
 
   <module id="$module.ModuleId" parent="$module.ParentId">
     <name>$module.RealName</name>
+    <owner-id>$scarabR.getUser($module.OwnerId).UserName</owner-id>
     <description>$module.Description</description>
+    <url>$module.Url</url>
+    <domain>$!module.Domain</domain>
     <code>$module.Code</code>
 #end
 
