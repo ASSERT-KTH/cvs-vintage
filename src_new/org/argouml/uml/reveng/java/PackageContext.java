@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.13 2003/02/06 19:09:07 thn Exp $
+// $Id: PackageContext.java,v 1.14 2003/02/23 23:19:15 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -76,7 +76,7 @@ class PackageContext extends Context
 		    ModelFacade.setTaggedValue(mInterface,MMUtil.GENERATED_TAG,"yes");
 		}
 	    }
-	    catch(Throwable e) {
+	    catch(ClassNotFoundException e) {
 		// We didn't find any interface
 	    }
 	}
@@ -127,7 +127,7 @@ class PackageContext extends Context
 		}
 		ModelFacade.setTaggedValue(mClassifier,MMUtil.GENERATED_TAG,"yes");
 	    }
-	    catch(Throwable e) {
+	    catch(ClassNotFoundException e) {
 		// No class or interface found
 	    }
 	}
