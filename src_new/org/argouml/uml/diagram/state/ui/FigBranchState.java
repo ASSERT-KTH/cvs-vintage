@@ -1,4 +1,4 @@
-//$Id: FigBranchState.java,v 1.12 2004/06/28 16:54:39 mvw Exp $
+//$Id: FigBranchState.java,v 1.13 2004/06/28 18:10:42 mvw Exp $
 //Copyright (c) 2004 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -79,7 +79,7 @@ public class FigBranchState extends FigStateVertex {
     }
 
     public Object clone() {
-	FigInitialState figClone = (FigInitialState) super.clone();
+	FigBranchState figClone = (FigBranchState) super.clone();
 	Iterator it = figClone.getFigs(null).iterator();
 	figClone._bigPort = (FigCircle) it.next();
 	figClone._head = (FigCircle) it.next();
