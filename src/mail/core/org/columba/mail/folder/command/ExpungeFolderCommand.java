@@ -17,11 +17,12 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -33,43 +34,74 @@ import org.columba.core.main.MainInterface;
  */
 public class ExpungeFolderCommand extends FolderCommand {
 
-	protected Folder srcFolder;
+	protected FolderCommandAdapter adapter;
 	/**
 	 * Constructor for ExpungeFolderCommand.
 	 * @param frameController
 	 * @param references
 	 */
-	public ExpungeFolderCommand(
-		DefaultCommandReference[] references) {
-		super( references);
+	public ExpungeFolderCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		
-		
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE, srcFolder );
-		 
-		MainInterface.frameModel.tableChanged(ev);
-		
-		MainInterface.treeModel.nodeChanged(srcFolder);
-		
+
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+
+		TableChangedEvent ev;
+		for (int i = 0; i < r.length; i++) {
+
+			ev =
+				new TableChangedEvent(
+					TableChangedEvent.REMOVE,
+					r[i].getFolder(),
+					r[i].getUids());
+
+			MainInterface.frameModel.tableChanged(ev);
+
+			MainInterface.treeModel.nodeChanged(r[i].getFolder());
+		}
+
+		FolderCommandReference u = adapter.getUpdateReferences();
+		if (u != null) {
+
+			ev =
+				new TableChangedEvent(
+					TableChangedEvent.REMOVE,
+					u.getFolder(),
+					u.getUids());
+
+			MainInterface.frameModel.tableChanged(ev);
+
+			MainInterface.treeModel.nodeChanged(u.getFolder());
+		}
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		srcFolder = (Folder) r[0].getFolder();
-		Object[] uids = srcFolder.getUids(worker);
+		adapter =
+			new FolderCommandAdapter(
+				(FolderCommandReference[]) getReferences());
 
-		srcFolder.expungeFolder(uids, worker);
-		
-		
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+
+		for (int i = 0; i < r.length; i++) {
+
+			Object[] uids = r[i].getUids();
+
+			Folder srcFolder = (Folder) r[i].getFolder();
+			uids = r[i].getUids();
+
+			srcFolder.expungeFolder(uids, worker);
+
+		}
+
 	}
 
 }

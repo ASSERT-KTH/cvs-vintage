@@ -253,6 +253,28 @@ public class VirtualFolder extends Folder {
 	 */
 	public void expungeFolder(Object[] uids, WorkerStatusController worker)
 		throws Exception {
+
+		for (int i = 0; i < uids.length; i++) {
+			Object uid = uids[i];
+
+			if (exists(uid, worker) == false)
+				continue;
+
+			ColumbaHeader h = getMessageHeader(uid, worker);
+			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
+
+			//ColumbaLogger.log.debug("expunged=" + expunged);
+
+			if (expunged.equals(Boolean.TRUE)) {
+				// move message to trash
+
+				//ColumbaLogger.log.info("moving message with UID " + uid + " to trash");
+
+				// remove message
+				removeMessage(uid, worker);
+
+			}
+		}
 	}
 
 	/**
@@ -296,6 +318,16 @@ public class VirtualFolder extends Folder {
 	 */
 	public void removeMessage(Object uid, WorkerStatusController worker)
 		throws Exception {
+
+		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid, worker);
+
+		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().decUnseen();
+		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().decRecent();
+
+		
+		headerList.remove(uid);
 	}
 
 	/**
@@ -339,7 +371,7 @@ public class VirtualFolder extends Folder {
 		WorkerStatusController worker)
 		throws Exception {
 
-		return null;
+		return (ColumbaHeader) headerList.get(uid);
 	}
 
 	/**
@@ -414,7 +446,7 @@ public class VirtualFolder extends Folder {
 			v.add(srcUid);
 		}
 
-		newReference = new FolderCommandReference[ list.size() +2 ];
+		newReference = new FolderCommandReference[list.size() + 2];
 		int i = 0;
 		for (Enumeration e = list.keys(); e.hasMoreElements();) {
 			Folder srcFolder = (Folder) e.nextElement();
@@ -430,16 +462,13 @@ public class VirtualFolder extends Folder {
 				newReference = new FolderCommandReference[1];
 			*/
 
-			
-
 			newReference[i] = new FolderCommandReference(srcFolder);
 			Object[] uidArray = new Object[v.size()];
 			v.copyInto(uidArray);
 			newReference[i].setUids(uidArray);
 			newReference[i].setMarkVariant(r[0].getMarkVariant());
 			newReference[i].setMessage(r[0].getMessage());
-			
-			
+
 			i++;
 		}
 
@@ -449,10 +478,8 @@ public class VirtualFolder extends Folder {
 		else
 			newReference[i] = null;
 
-	
 		newReference[i + 1] = r[0];
-		
-		
+
 		return newReference;
 	}
 
