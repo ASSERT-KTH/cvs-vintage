@@ -101,8 +101,11 @@ public class PopAttributPanel implements ActionListener {
 
             limitMessageDownloadTextField.setText(item.get("download_limit"));
 
+			/*
             enablePreProcessingFilterCheckBox.setSelected(item.getBoolean(
                     "enable_pop3preprocessingfilter", false));
+            */
+            
         } else {
             item.set("leave_messages_on_server",
                 leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
@@ -114,8 +117,10 @@ public class PopAttributPanel implements ActionListener {
             item.set("enable_download_limit",
                 limitMessageDownloadCheckBox.isSelected());
 
+			/*
             item.set("enable_pop3preprocessingfilter",
                 enablePreProcessingFilterCheckBox.isSelected());
+            */
         }
     }
 
@@ -141,6 +146,7 @@ public class PopAttributPanel implements ActionListener {
         b.append(limitMessageDownloadCheckBox, limitMessageDownloadTextField);
 
         builder.append(panel, 4);
+        /*
         builder.nextLine();
 
         JPanel panel2 = new JPanel();
@@ -155,6 +161,7 @@ public class PopAttributPanel implements ActionListener {
 
         builder.append(panel2, 4);
         builder.nextLine();
+        */
     }
 
     protected void initComponents() {
@@ -175,6 +182,7 @@ public class PopAttributPanel implements ActionListener {
         excludeCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "exclude_from_fetch_all"));
 
+		/*
         enablePreProcessingFilterCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "enable_pop3_preprocessing"));
 
@@ -182,6 +190,7 @@ public class PopAttributPanel implements ActionListener {
                     "dialog", "account", "configure"));
         configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
         configurePreProcessingFilterButton.addActionListener(this);
+        */
     }
 
     /*
@@ -316,6 +325,7 @@ public class PopAttributPanel implements ActionListener {
         String action = e.getActionCommand();
 
         if (action.equals("CONFIGURE_FILTER")) {
+        	/*
             XmlElement list = item.getElement("pop3preprocessingfilterlist");
 
             if (list == null) {
@@ -325,6 +335,7 @@ public class PopAttributPanel implements ActionListener {
 
             new org.columba.mail.gui.config.pop3preprocessor.ConfigFrame(dialog,
                 list);
+            */
         } else if (action.equals("LIMIT_MESSAGE_DOWNLOAD")) {
             limitMessageDownloadTextField.setEnabled(limitMessageDownloadCheckBox.isSelected());
         }
