@@ -1,6 +1,6 @@
 
 
-// $Id: UUIDManager.java,v 1.9 2003/09/04 20:11:43 thierrylach Exp $
+// $Id: UUIDManager.java,v 1.10 2003/10/27 21:10:49 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,7 @@ public class UUIDManager {
 		s += (new Byte(b[i])).longValue() + "-";
 	}
 	s += uid.toString();
-	cat.debug("new UUID: " + s);
+//	cat.debug("new UUID: " + s);
 	return s;
     }
 

@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.21 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: CrUML.java,v 1.22 2003/10/27 21:10:49 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.21 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: CrUML.java,v 1.22 2003/10/27 21:10:49 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -174,7 +174,7 @@ public class CrUML extends Critic {
      * No recursive expansion.
      */
     public String expand(String res, VectorSet offs) {
-	cat.debug("expanding: " + res);
+//	cat.debug("expanding: " + res);
 
 	if (offs.size() == 0) return res;
 
@@ -193,7 +193,7 @@ public class CrUML extends Critic {
 	    if (matchPos > 0) beginning.append(res.substring(0, matchPos));
 	    String expr = res.substring(matchPos + OCL_START.length(), endExpr);
 	    String evalStr = OCLEvaluator.SINGLETON.evalToString(off1, expr);
-	    cat.debug("expr='" + expr + "' = '" + evalStr + "'");
+//	    cat.debug("expr='" + expr + "' = '" + evalStr + "'");
 	    if (expr.endsWith("") && evalStr.equals(""))
 		evalStr = "(anon)";
 	    beginning.append(evalStr);

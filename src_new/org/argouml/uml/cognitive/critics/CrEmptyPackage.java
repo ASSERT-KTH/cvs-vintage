@@ -1,4 +1,4 @@
-// $Id: CrEmptyPackage.java,v 1.11 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: CrEmptyPackage.java,v 1.12 2003/10/27 21:10:49 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
+import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.Designer;
@@ -52,10 +53,13 @@ public class CrEmptyPackage extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	cat.debug("predicate2 on " + dm);
+//	cat.debug("predicate2 on " + dm);
 	if (!(ModelFacade.isAPackage(dm))) return NO_PROBLEM;
-	Iterator enum = ModelFacade.getOwnedElements(dm).iterator();
-	if (!enum.hasNext()) return PROBLEM_FOUND;
+	Collection elems = ModelFacade.getOwnedElements(dm);
+	if (elems.size() == 0){
+            cat.debug("PROBLEM_FOUND on " + dm);
+            return PROBLEM_FOUND;
+        }
 	return NO_PROBLEM;
     }
 
