@@ -62,7 +62,8 @@ public class Attachment implements java.io.Serializable
     private String createdBy = null;
     private String modifiedBy = null;
     private boolean deleted = false;
-
+    private boolean reconcilePath = false;
+    
     public Attachment()
     {
     }
@@ -175,5 +176,15 @@ public class Attachment implements java.io.Serializable
     public boolean getDeleted()
     {
         return this.deleted;
+    }
+
+    public void setReconcilePath(boolean reconcilePath)
+    {
+        this.reconcilePath = reconcilePath;
+    }
+
+    public boolean getReconcilePath()
+    {
+        return this.reconcilePath;
     }
 }
