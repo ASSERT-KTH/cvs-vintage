@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelper.java,v 1.9 2004/08/18 21:16:57 mvw Exp $
+// $Id: ActivityGraphsHelper.java,v 1.10 2004/10/06 17:03:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,10 @@ import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
 import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.model_management.MPackage;
 
 /**
  * Helper class for UML BehavioralElements::ActivityGraphs Package.
@@ -135,6 +137,25 @@ public class ActivityGraphsHelper {
             }
         }
         return null;
+    }
+    
+    /**
+     * Returns true if an activitygraph may be added to the given
+     * context. To decouple ArgoUML as much as possible from the NSUML
+     * model, the parameter of the method is of type Object.<p>
+     *
+     * An ActivityGraph specifies the dynamics of<br>
+     *       (i) a Package, or<br>
+     *      (ii) a Classifier (including UseCase), or<br>
+     *     (iii) a BehavioralFeature.
+     * 
+     * @param context the given context
+     * @return boolean true if an activitygraph may be added
+     */
+    public boolean isAddingActivityGraphAllowed(Object context) {
+        return context instanceof MBehavioralFeature
+            || context instanceof MClassifier
+            || context instanceof MPackage;
     }
 }
 
