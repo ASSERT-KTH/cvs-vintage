@@ -254,12 +254,18 @@
         <pathelement location="${jsse.lib}/jcert.jar"/>
       </classpath>
       <include name="org/apache/tomcat/util/**"/>
-      <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
-      <exclude name="**/util/net/SSLSocketFactory.java" unless="jdk12.present"/>
-      <exclude name="**/util/compat/JSSECertCompat.java" unless="jsse.present"/>
-      <exclude name="**/util/compat/JSSECertCompat.java" unless="jdk12.present"/>
-      <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
-      <exclude name="**/util/depend/DependClassLoader12.java" unless="jdk12.present"/>
+      <exclude name="**/util/net/SSLSocketFactory.java"
+               unless="jsse.present"/>
+      <exclude name="**/util/net/SSLSocketFactory.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jsse.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/compat/Jdk12Support.java"
+               unless="jdk12.present"/>
+      <exclude name="**/util/depend/DependClassLoader12.java"
+               unless="jdk12.present"/>
     </javac>
 
     <copy todir="${tomcat.build}/classes">
@@ -305,6 +311,10 @@
 	       unless="jdk12.present"/>
       <exclude name="**/util/compat/Jdk12Support.java" 
 	       unless="jdk12.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jsse.present"/>
+      <exclude name="**/util/compat/JSSECertCompat.java"
+               unless="jdk12.present"/>
       <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar"
