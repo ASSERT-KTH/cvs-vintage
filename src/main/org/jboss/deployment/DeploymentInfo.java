@@ -54,7 +54,7 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @version   $Revision: 1.1 $ <p>
+* @version   $Revision: 1.2 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -89,6 +89,9 @@ public class DeploymentInfo
    public String shortName;
    
    public long lastDeployed = 0;
+   
+   // A free form status for the "state" can be Deployed/failed etc etc
+   public String status;
    
    //   public List dirs = new ArrayList();
    

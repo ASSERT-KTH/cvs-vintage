@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 *
 */
@@ -261,17 +261,20 @@ implements MainDeployerMBean, Runnable
          {
             DeploymentInfo di = (DeploymentInfo) modified.next();
             
-            // if the url is a file that doesn't exist, it was removed -> undeploy
-            // TODO: check connection on http protocol and see if it is removed.
-            if (di.url.getProtocol().startsWith("file") && !new File(di.url.getFile()).exists())
-            {   
-               undeploy(di);
-            }  
-            // it is a deployment 
-            else 
-            {
-               undeploy(di); deploy(di);
+            try {
+               // if the url is a file that doesn't exist, it was removed -> undeploy
+               // TODO: check connection on http protocol and see if it is removed.
+               if (di.url.getProtocol().startsWith("file") && !new File(di.url.getFile()).exists())
+               {   
+                  undeploy(di);
+               }  
+               // it is a deployment 
+               else 
+               {
+                  undeploy(di); deploy(di);
+               }
             }
+            catch (Exception ignoreIt) {log.info("exception ", ignoreIt);} 
          }
       }
       catch (Exception ignored) {log.info ("exception ", ignored);} 
@@ -351,6 +354,7 @@ implements MainDeployerMBean, Runnable
    }
    
    public void deploy(DeploymentInfo deployment) 
+   throws DeploymentException
    {      
       try {
          // If we are already deployed return
@@ -375,6 +379,22 @@ implements MainDeployerMBean, Runnable
          // Deploy this SDI, if it is a deployable type
          if (deployment.deployer != null) deployment.deployer.deploy(deployment);
             
+         deployment.status="Deployed";
+         
+         log.info("Done deploying "+deployment.shortName);
+      
+      }  
+      catch (DeploymentException e) 
+      { 
+         log.error("Deployment failed: "+ deployment.url,e); 
+         
+         deployment.status="Deployment FAILED reason: "+e.getMessage();
+         
+         throw e;
+      }
+      
+      finally 
+      {
          // whether you do it or not, for the autodeployer
          deployment.lastDeployed = System.currentTimeMillis();
          
@@ -384,22 +404,7 @@ implements MainDeployerMBean, Runnable
          deploymentsList.add(deployment);
          
          if (log.isDebugEnabled()) log.debug("Watching new file: " + deployment.url);  
-            
-         log.info("Done deploying "+deployment.shortName);
-      
-      }  
-      catch (Exception e) 
-      { 
-         log.error("Deployment failed: "+ deployment.url,e); 
          
-         // whether you do it or not, for the autodeployer
-         deployment.lastDeployed = System.currentTimeMillis();
-         
-         deployments.remove(deployment.url);
-         if (deploymentsList.lastIndexOf(deployment) != -1) 
-            deploymentsList.remove(deploymentsList.lastIndexOf(deployment));
-         
-         deployment.cleanup(log);
       }
    }
    
@@ -540,80 +545,74 @@ implements MainDeployerMBean, Runnable
       JarFile jarFile =null;
       
       // Then the packages inside the package being deployed
-      try 
+      
+      // marcf FIXME FIXME FIXME add support for directories not just jar files
+      
+      // Do we have a jar file jar:<theURL>!/..
+      try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
+         catch (Exception ignored) {throw new DeploymentException(ignored.getMessage());}
+      
+      for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
       {
+         JarEntry entry = (JarEntry)e.nextElement();
+         String name = entry.getName();
          
-         // marcf FIXME FIXME FIXME add support for directories not just jar files
-         
-         // Do we have a jar file jar:<theURL>!/..
-         try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
-            catch (Exception ignored) {return;}
-         
-         for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
+         // Everything that is not 
+         // a- an XML file
+         // b- a class in a normal directory structure
+         // is a "package" and will be deployed
+         if (name.endsWith(".jar")
+            || name.endsWith(".sar")
+            || name.endsWith(".ear")
+            || name.endsWith(".rar")
+            || name.endsWith(".war")
+            || name.endsWith(".zip"))
          {
-            JarEntry entry = (JarEntry)e.nextElement();
-            String name = entry.getName();
             
-            // Everything that is not 
-            // a- an XML file
-            // b- a class in a normal directory structure
-            // is a "package" and will be deployed
-            if (name.endsWith(".jar")
-               || name.endsWith(".sar")
-               || name.endsWith(".ear")
-               || name.endsWith(".rar")
-               || name.endsWith(".war")
-               || name.endsWith(".zip"))
+            try 
             {
+               File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");
                
-               try 
-               {
-                  File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");
+               // We use the name of the entry as the name of the file under deploy 
+               // (marcf note: I don't think we need the getNextID, not important)
+               File outFile = new File(localCopyDir, name);
+               
+               // Copy in and out 
+               OutputStream out = new FileOutputStream(outFile); 
+               InputStream in = jarFile.getInputStream(entry);
+               
+               try { copy(in, out);}
                   
-                  // We use the name of the entry as the name of the file under deploy 
-                  // (marcf note: I don't think we need the getNextID, not important)
-                  File outFile = new File(localCopyDir, name);
-                  
-                  // Copy in and out 
-                  OutputStream out = new FileOutputStream(outFile); 
-                  InputStream in = jarFile.getInputStream(entry);
-                  
-                  try { copy(in, out);}
-                     
-                  finally { out.close(); }
-                  
-                  // It is a sub-deployment
-                  URL subURL = new URL("file:" + outFile.toString());
-                  DeploymentInfo sub = new DeploymentInfo(subURL, di);
-                  
-                  // And deploy it, this call is recursive
-                  deploy(sub);
-               }
-               catch (Exception e2) 
-               { 
-                  log.error("Error in subDeployment", e2);
-                  
-                  throw new DeploymentException("Could not deploy sub deployment "+name+" of deployment "+di.url);
-               }
+               finally { out.close(); }
+               
+               // It is a sub-deployment
+               URL subURL = new URL("file:" + outFile.toString());
+               DeploymentInfo sub = new DeploymentInfo(subURL, di);
+               
+               // And deploy it, this call is recursive
+               deploy(sub);
+            }
+            catch (DeploymentException e3) { throw e3;} //just throw
+            catch (Exception e2) 
+            { 
+               log.error("Error in subDeployment with name "+name);
+               
+               throw new DeploymentException("Could not deploy sub deployment "+name+" of deployment "+di.url);
             }
          }
+         
+         // WARNING: Do not close the jarFile let it hang until undeployment 
+         // The reason is that if you close the jarFile you cannot open streams 
+         // to files inside. The bug can be seen as follow 
+         // Thread.currentThread().getContextClassLoader().getResource("a text file in jar").openStream())
+         // Doesn't work while
+         // Thread.currentThread().getContextClassLoader().loadClass("a class in the jar")
+         // works
+         // We should encapsulate "opening and closing of the jarFile" in the DeploymentInfo
+         // Here we let it be open and cached
       }
-      catch (Exception e) 
-      {
-         log.error("Could not open the jar file ", e); 
-         throw new DeploymentException("Could not open jar file "+di.url);
-      }
-      
-      // WARNING: Do not close the jarFile let it hang until undeployment 
-      // The reason is that if you close the jarFile you cannot open streams 
-      // to files inside. The bug can be seen as follow 
-      // Thread.currentThread().getContextClassLoader().getResource("a text file in jar").openStream())
-      // Doesn't work while
-      // Thread.currentThread().getContextClassLoader().loadClass("a class in the jar")
-      // works
-      // We should encapsulate "opening and closing of the jarFile" in the DeploymentInfo
-      // Here we let it be open and cached
    }
+   
    
    protected void copy(InputStream in, OutputStream out)
    throws IOException
@@ -706,7 +705,7 @@ implements MainDeployerMBean, Runnable
       in.close ();
    }
    
-   public void parseManifestLibraries(DeploymentInfo sdi)
+   public void parseManifestLibraries(DeploymentInfo sdi) throws DeploymentException
    {
       String classPath = null;
       
@@ -726,10 +725,13 @@ implements MainDeployerMBean, Runnable
          log.debug("resolveLibraries: "+classPath);
          while (st.hasMoreTokens())
          {
-            String tk = st.nextToken();
-            try
+            URL lib = null;
+            
+            try 
             {
-               URL lib = new URL(sdi.url, tk);
+               String tk = st.nextToken();
+               
+               lib = new URL(sdi.url, tk);
                
                log.debug("new manifest entry for sdi at "+sdi.shortName+" entry is "+tk);
                
@@ -743,8 +745,9 @@ implements MainDeployerMBean, Runnable
                   sdi.subDeployments.add(sub);
                }
             }
-            // Don't waste too much time with the manifest libraries
-            catch (Exception ignored) {}
+            catch (Exception ignore) { 
+               log.error("The manifest entry in "+sdi.url+" references URL "+lib+ " which could not be opened, entry ignored, please fix classpath in manifest.mf");
+            } 
          }
       }
    }   
