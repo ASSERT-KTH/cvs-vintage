@@ -257,12 +257,13 @@ public class Issue
     /**
      * Adds a comment to this issue.
      */
-    public void addComment(Attachment attachment)
+    public void addComment(Attachment attachment, ScarabUser user)
         throws Exception
     {
         attachment.setIssue(this);
         attachment.setTypeId(Attachment.COMMENT__PK);
         attachment.setName("");
+        attachment.setCreatedBy(user.getUserId());
         attachment.setMimeType("text/plain");
         attachment.save();
     }
