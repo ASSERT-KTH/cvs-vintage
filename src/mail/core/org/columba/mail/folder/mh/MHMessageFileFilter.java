@@ -19,7 +19,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
  */
 public class MHMessageFileFilter implements FileFilter {
 	
-	private static final String fileRegexp = "[0-9]+"; 
+	private static final String fileRegexp = "~*[0-9]+"; 
 	
 	protected static MHMessageFileFilter myInstance;
 	
