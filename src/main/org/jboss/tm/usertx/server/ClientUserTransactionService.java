@@ -29,7 +29,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  usage for standalone clients.
  *      
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 public class ClientUserTransactionService
    extends ServiceMBeanSupport
@@ -61,7 +61,7 @@ public class ClientUserTransactionService
       throws javax.management.MalformedObjectNameException
    {
       this.server = server;
-      return new ObjectName(OBJECT_NAME);
+      return OBJECT_NAME;
    }
     
    protected void startService()

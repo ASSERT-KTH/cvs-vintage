@@ -24,7 +24,7 @@ public interface SchedulableExampleMBean
    // Constants
    // -------------------------------------------------------------------------  
    
-   public static final String OBJECT_NAME = "jboss:type=example,name=schedulable";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss:type=example,name=schedulable");
    
    // -------------------------------------------------------------------------
    // Methods

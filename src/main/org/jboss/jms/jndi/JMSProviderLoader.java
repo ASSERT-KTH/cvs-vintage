@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -95,7 +95,7 @@ public class JMSProviderLoader
    public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) 
       throws MalformedObjectNameException
    {
-      return (parm2 == null) ? new ObjectName(OBJECT_NAME) : parm2;
+      return (parm2 == null) ? OBJECT_NAME : parm2;
    }      
 
    public String getName()

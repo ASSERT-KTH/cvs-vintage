@@ -73,7 +73,7 @@ public class RMIAdaptorService
       ObjectName name
    ) throws javax.management.MalformedObjectNameException {
       this.server = server;
-      return new ObjectName( OBJECT_NAME );
+      return OBJECT_NAME;
    }
 
    public String getName() {

@@ -7,27 +7,29 @@
 
 package org.jboss.tm;
 
+import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
+import org.jboss.system.ServiceMBean;
+
 /**
- *   <description> 
+ * The JMX management interface for the {@link TransactionManagerService} MBean.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.8 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @version $Revision: 1.9 $
  */
 public interface TransactionManagerServiceMBean
-   extends org.jboss.system.ServiceMBean
+   extends ServiceMBean
 {
-   // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = ":service=TransactionManager";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create(":service=TransactionManager");
     
-   // Public --------------------------------------------------------
-   public int getTransactionTimeout();
+   int getTransactionTimeout();
 
-   public void setTransactionTimeout(int timeout);
+   void setTransactionTimeout(int timeout);
 
-   public String getXidClassName();
+   String getXidClassName();
 
-   public void setXidClassName(String name);
+   void setXidClassName(String name);
 }
 

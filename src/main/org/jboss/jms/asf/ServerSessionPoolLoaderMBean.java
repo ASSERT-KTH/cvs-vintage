@@ -15,7 +15,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.jboss.jms.asf;
+
+import javax.management.ObjectName;
+import org.jboss.util.ObjectNameFactory;
 
 import org.jboss.system.ServiceMBean;
 
@@ -25,13 +29,13 @@ import org.jboss.system.ServiceMBean;
  * <p>Created: Wed Nov 29 16:20:17 2000
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface ServerSessionPoolLoaderMBean 
    extends ServiceMBean 
 {
    /** The default MBean object name. */
-   String OBJECT_NAME = "jboss:service=ServerSessionPoolMBean";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss:service=ServerSessionPoolMBean");
 
    /**
     * Set the pool name.

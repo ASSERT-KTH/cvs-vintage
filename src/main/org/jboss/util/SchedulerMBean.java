@@ -4,11 +4,15 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.util;
 
 import java.security.InvalidParameterException;
 import java.util.Date;
 
+import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
 import org.jboss.system.ServiceMBean;
 
 /**
@@ -24,15 +28,16 @@ import org.jboss.system.ServiceMBean;
  * defines which one is used. Therefore you should <b>never mixed these two</b>.
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.11 $
  **/
-public interface SchedulerMBean
+interface SchedulerMBean
    extends ServiceMBean
 {
    // -------------------------------------------------------------------------
    // Constants
    // -------------------------------------------------------------------------  
 
-   public static final String OBJECT_NAME = "jboss:service=Scheduler";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss:service=Scheduler");
 
    // -------------------------------------------------------------------------
    // Methods
@@ -47,7 +52,7 @@ public interface SchedulerMBean
     *                                   or invalid (especially for the Schedulable
     *                                   class attributes).
     **/
-   public void startSchedule();
+   void startSchedule();
    
    /**
     * Stops the schedule because it is either not used anymore or to restart it with
@@ -57,20 +62,20 @@ public interface SchedulerMBean
     *                 scheduled call otherwise the next call will be performed before
     *                 the schedule is stopped.
     **/
-   public void stopSchedule(
+   void stopSchedule(
       boolean pDoItNow
    );
    
    /**
     * Stops the server right now and starts it right now.
     **/
-   public void restartSchedule();
+   void restartSchedule();
    
    /**
     * @return Full qualified Class name of the schedulable class called by the schedule or
     *         null if not set.
     **/
-   public String getSchedulableClass();
+   String getSchedulableClass();
    
    /**
     * Sets the fully qualified Class name of the Schedulable Class being called by the
@@ -83,7 +88,7 @@ public interface SchedulerMBean
     *                                   be loaded by the Scheduler or is not of instance
     *                                   Schedulable.
     **/
-   public void setSchedulableClass( String pSchedulableClass )
+   void setSchedulableClass( String pSchedulableClass )
       throws InvalidParameterException;
    
    /**
@@ -91,7 +96,7 @@ public interface SchedulerMBean
     *         Schedulable class instance. Right now only basic data types, String and
     *         Classes with a Constructor with a String as only argument are supported.
     **/
-   public String getSchedulableArguments();
+   String getSchedulableArguments();
    
    /**
     * Sets the comma seperated list of arguments for the Schedulable class. Note that
@@ -102,13 +107,13 @@ public interface SchedulerMBean
     * @param pArgumentList List of arguments used to create the Schedulable intance. If
     *                      the list is null or empty then the no-args constructor is used.
     **/
-   public void setSchedulableArguments( String pArgumentList );
+   void setSchedulableArguments( String pArgumentList );
    
    /**
     * @return A comma seperated list of Argument Types which should match the list of
     *         arguments.
     **/
-   public String getSchedulableArgumentTypes();
+   String getSchedulableArgumentTypes();
    
    /**
     * Sets the comma seperated list of argument types for the Schedulable class. This will
@@ -122,13 +127,13 @@ public interface SchedulerMBean
     *
     * @throws InvalidParameterException If the given list contains a unknow datat type.
     **/
-   public void setSchedulableArgumentTypes( String pTypeList )
+   void setSchedulableArgumentTypes( String pTypeList )
       throws InvalidParameterException;
    
    /**
     * @return Object Name if a Schedulalbe MBean is set
     **/
-   public String getSchedulableMBean();
+   String getSchedulableMBean();
    
    /**
     * Sets the fully qualified JMX MBean name of the Schedulable MBean to be called.
@@ -145,13 +150,13 @@ public interface SchedulerMBean
     *
     * @throws InvalidParameterException If the given value is an valid Object Name.
     **/
-   public void setSchedulableMBean( String pSchedulableMBean )
+   void setSchedulableMBean( String pSchedulableMBean )
       throws InvalidParameterException;
    
    /**
     * @return Schedulable MBean Method description if set
     **/
-   public String getSchedulableMBeanMethod();
+   String getSchedulableMBeanMethod();
    
    /**
     * Sets the method name to be called on the Schedulable MBean. It can optionally be
@@ -182,20 +187,20 @@ public interface SchedulerMBean
     * @throws InvalidParameterException If the given value is not of the right
     *                                   format
     **/
-   public void setSchedulableMBeanMethod( String pSchedulableMBeanMethod )
+   void setSchedulableMBeanMethod( String pSchedulableMBeanMethod )
       throws InvalidParameterException;
    
    /**
-   * @return True if the Scheduler uses a Schedulable MBean, false if it uses a
-   *         Schedulable class
-   **/
-   public boolean isUsingMBean();
+    * @return True if the Scheduler uses a Schedulable MBean, false if it uses a
+    *         Schedulable class
+    **/
+   boolean isUsingMBean();
    
    /**
     * @return Schedule Period between two scheduled calls in Milliseconds. It will always
     *         be bigger than 0 except it returns -1 then the schedule is stopped.
     **/
-   public long getSchedulePeriod();
+   long getSchedulePeriod();
    
    /**
     * Sets the Schedule Period between two scheduled call.
@@ -205,44 +210,44 @@ public interface SchedulerMBean
     *
     * @throws InvalidParameterException If the given value is less or equal than 0
     **/
-   public void setSchedulePeriod( long pPeriod );
+   void setSchedulePeriod( long pPeriod );
    
    /**
-   * @return Date (and time) of the first scheduled. For value see {@link #setInitialStartDate
-   *         setInitialStartDate()} method.
-   **/
-   public String getInitialStartDate();
+    * @return Date (and time) of the first scheduled. For value see {@link #setInitialStartDate
+    *         setInitialStartDate()} method.
+    **/
+   String getInitialStartDate();
    
-   /**
-   * Sets the first scheduled call. If the date is in the past the scheduler tries to find the
-   * next available start date.
-   *
-   * @param pStartDate Date when the initial call is scheduled. It can be either:
-   *                   <ul>
-   *                      <li>
-   *                         NOW: date will be the current date (new Date()) plus 1 seconds
-   *                      </li><li>
-   *                         Date as String able to be parsed by SimpleDateFormat with default format
-   *                      </li><li>
-   *                         Milliseconds since 1/1/1970
-   *                      </li>
-   *                   </ul>
-   *                   If the date is in the past the Scheduler
-   *                   will search a start date in the future with respect to the initial repe-
-   *                   titions and the period between calls. This means that when you restart
-   *                   the MBean (restarting JBoss etc.) it will start at the next scheduled
-   *                   time. When no start date is available in the future the Scheduler will
-   *                   not start.<br>
-   *                   Example: if you start your Schedulable everyday at Noon and you restart
-   *                   your JBoss server then it will start at the next Noon (the same if started
-   *                   before Noon or the next day if start after Noon).
-   **/
-   public void setInitialStartDate( String pStartDate );
+   /** 
+    * Sets the first scheduled call. If the date is in the past the scheduler tries to find the
+    * next available start date.
+    *
+    * @param pStartDate Date when the initial call is scheduled. It can be either:
+    *                   <ul>
+    *                      <li>
+    *                         NOW: date will be the current date (new Date()) plus 1 seconds
+    *                      </li><li>
+    *                         Date as String able to be parsed by SimpleDateFormat with default format
+    *                      </li><li>
+    *                         Milliseconds since 1/1/1970
+    *                      </li>
+    *                   </ul>
+    *                   If the date is in the past the Scheduler
+    *                   will search a start date in the future with respect to the initial repe-
+    *                   titions and the period between calls. This means that when you restart
+    *                   the MBean (restarting JBoss etc.) it will start at the next scheduled
+    *                   time. When no start date is available in the future the Scheduler will
+    *                   not start.<br>
+    *                   Example: if you start your Schedulable everyday at Noon and you restart
+    *                   your JBoss server then it will start at the next Noon (the same if started
+    *                   before Noon or the next day if start after Noon).
+    **/
+   void setInitialStartDate( String pStartDate );
    
    /**
     * @return Number of scheduled calls initially. If -1 then there is not limit.
     **/
-   public long getInitialRepetitions();
+   long getInitialRepetitions();
    
    /**
     * Sets the initial number of scheduled calls.
@@ -252,42 +257,41 @@ public interface SchedulerMBean
     *
     * @throws InvalidParameterException If the given value is less or equal than 0
     **/
-   public void setInitialRepetitions( long pNumberOfCalls );
+   void setInitialRepetitions( long pNumberOfCalls );
 
    /**
     * @return Number of remaining repetitions. If -1 then there is no limit.
     **/
-   public long getRemainingRepetitions();
+   long getRemainingRepetitions();
    
    /**
     * @return True if the schedule is up and running. If you want to start the schedule
     *         with another values by using {@ #startSchedule} you have to stop the schedule
     *         first with {@ #stopSchedule} and wait until this method returns false.
     **/
-   public boolean isStarted();
+   boolean isStarted();
    
    /**
     * @return True if any attributes are changed but the Schedule is not restarted yet.
     **/
-   public boolean isRestartPending();
+   boolean isRestartPending();
    
    /**
-   * @return True if the Schedule when the Scheduler is started
-   **/
-   public boolean isStartAtStartup();
+    * @return True if the Schedule when the Scheduler is started
+    **/
+   boolean isStartAtStartup();
    
    /**
-   * Set the scheduler to start when MBean started or not. Note that this method only
-   * affects when the {@link #startService startService()} gets called (normally at
-   * startup time.
-   *
-   * @param pStartAtStartup True if Schedule has to be started at startup time
-   **/
-   public void setStartAtStartup( boolean pStartAtStartup );
+    * Set the scheduler to start when MBean started or not. Note that this method only
+    * affects when the {@link #startService startService()} gets called (normally at
+    * startup time.
+    *
+    * @param pStartAtStartup True if Schedule has to be started at startup time
+    **/
+   void setStartAtStartup( boolean pStartAtStartup );
    
    /**
-   * @return True if this Scheduler is active and will send notifications in the future
-   **/
-   public boolean isActive();
-
+    * @return True if this Scheduler is active and will send notifications in the future
+    **/
+   boolean isActive();
 }

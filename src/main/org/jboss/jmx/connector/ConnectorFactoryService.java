@@ -102,9 +102,9 @@ public class ConnectorFactoryService
 		System.out.println(
          "ConnectorFactoryService.getObjectName(), server: " + mServer +
 			", object name: " + OBJECT_NAME +
-			", instance: " + new ObjectName( OBJECT_NAME )
+			", instance: " + OBJECT_NAME
       );
-		return new ObjectName( OBJECT_NAME );
+		return OBJECT_NAME;
 	}
 	
 	public String getName() {

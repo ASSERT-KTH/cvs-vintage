@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -127,7 +127,7 @@ public class NamingService
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-      return new ObjectName(OBJECT_NAME);
+      return OBJECT_NAME;
    }
    
    public String getName()

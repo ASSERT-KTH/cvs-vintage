@@ -24,11 +24,11 @@ import org.jboss.logging.Logger;
  * all file based URLs when externalized with have spaces replaced with pluses.
  *      
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 
-   public static final String OBJECT_NAME= ":service=FileURLPatch";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create(":service=FileURLPatch");
    Logger log = Logger.getLogger(FileURLPatch.class);
    private CustomURLStreamHandlerFactory customURLStreamHandlerFactory= new CustomURLStreamHandlerFactory();
    private boolean enabled= false;
@@ -89,7 +89,7 @@ public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
    
    public ObjectName preRegister(MBeanServer server, ObjectName name) throws java.lang.Exception {
 	  URL.setURLStreamHandlerFactory(customURLStreamHandlerFactory);
-	  return new ObjectName(OBJECT_NAME);
+	  return OBJECT_NAME;
    }   
 
    public void postRegister(java.lang.Boolean registrationDone) {

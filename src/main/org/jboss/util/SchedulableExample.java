@@ -115,7 +115,7 @@ public class SchedulableExample
    )
       throws MalformedObjectNameException
    {
-      return new ObjectName( OBJECT_NAME );
+      return OBJECT_NAME;
    }
 
    public String getName() {

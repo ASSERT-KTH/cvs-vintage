@@ -36,7 +36,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ServerSessionPoolLoader
    extends ServiceMBeanSupport
@@ -103,7 +103,7 @@ public class ServerSessionPoolLoader
                                    final ObjectName name)
       throws MalformedObjectNameException
    {
-      return (name == null) ? new ObjectName(OBJECT_NAME) : name;
+      return (name == null) ? OBJECT_NAME : name;
    }
 
    /**

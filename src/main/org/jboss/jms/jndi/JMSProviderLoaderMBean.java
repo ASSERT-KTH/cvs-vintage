@@ -15,44 +15,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.jboss.jms.jndi;
+
+import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
 
 import org.jboss.system.ServiceMBean;
 
 /**
- * JMSProviderLoaderMBean.java
- *
+ * The JMX managment interface for the {@link JMSProviderLoader} MBean.
  *
  * Created: Wed Nov 29 14:08:39 2000
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @author 
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
- * @version
+ * @version $Revision: 1.6 $
  */
-
 public interface JMSProviderLoaderMBean  
    extends ServiceMBean
 {
-	public static final String OBJECT_NAME = ":service=JMSProviderLoader";
-
-	public void setProviderName(String name);
-	
-	public String getProviderName();
-	
-	public void setProviderAdapterClass(String clazz);
-	
-	public String getProviderAdapterClass();
-
-	public void setProviderUrl(String url);
-
-	public String getProviderUrl();
-	
-	public java.lang.String getQueueFactoryRef();
-
-	public java.lang.String getTopicFactoryRef();
-	
-	public void setQueueFactoryRef(java.lang.String newQueueFactoryRef);
-
-	public void setTopicFactoryRef(java.lang.String newTopicFactoryRef);
+   ObjectName OBJECT_NAME = ObjectNameFactory.create(":service=JMSProviderLoader");
+   
+   void setProviderName(String name);
+   
+   String getProviderName();
+   
+   void setProviderAdapterClass(String clazz);
+   
+   String getProviderAdapterClass();
+   
+   void setProviderUrl(String url);
+   
+   String getProviderUrl();
+   
+   String getQueueFactoryRef();
+   
+   String getTopicFactoryRef();
+   
+   void setQueueFactoryRef(String newQueueFactoryRef);
+   
+   void setTopicFactoryRef(String newTopicFactoryRef);
 }

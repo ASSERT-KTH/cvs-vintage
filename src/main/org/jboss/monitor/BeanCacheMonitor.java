@@ -31,7 +31,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class BeanCacheMonitor
    implements BeanCacheMonitorMBean, MBeanRegistration
@@ -71,7 +71,7 @@ public class BeanCacheMonitor
       // Get map of deployed applications
       try
       {
-         applications = (Iterator)m_mbeanServer.invoke(new ObjectName(EJBDeployerMBean.OBJECT_NAME), "getDeployedApplications", new Object[]
+         applications = (Iterator)m_mbeanServer.invoke(EJBDeployerMBean.OBJECT_NAME, "getDeployedApplications", new Object[]
          {}, new String[]
          {});
       }

@@ -4,24 +4,25 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.deployment;
 
+package org.jboss.deployment;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+
 import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
 import org.jboss.system.ServiceMBean;
 
 /**
- *   @see 
- *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *   @version $Revision: 1.1 $
+ * The JMX management interface for the {@link EARDeployer} MBean.
+ * 
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @version $Revision: 1.2 $
  */
 public interface EARDeployerMBean
-extends DeployerMBean
+   extends DeployerMBean
 {
-   // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "J2EE:service=EARDeployer";
-    
-   // Public --------------------------------------------------------
+   ObjectName OBJECT_NAME = ObjectNameFactory.create("J2EE:service=EARDeployer");
 }

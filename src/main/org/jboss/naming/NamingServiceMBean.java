@@ -4,21 +4,25 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.naming;
 
+import javax.management.ObjectName;
+
+import org.jnp.server.MainMBean;
+
+import org.jboss.util.ObjectNameFactory;
+import org.jboss.system.ServiceMBean;
+
 /**
- *   <description> 
+ * The JMX management interface for the {@link NamingService} MBean.
  *      
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.8 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.9 $
  */
 public interface NamingServiceMBean
-   extends org.jboss.system.ServiceMBean, org.jnp.server.MainMBean
+   extends ServiceMBean, MainMBean
 {
-   // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = "jboss:service=Naming";
-    
-   // Public --------------------------------------------------------
+   ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss:service=Naming");
 }
 

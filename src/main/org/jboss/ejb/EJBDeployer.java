@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.6 $ 
+* @version $Revision: 1.7 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -143,7 +143,7 @@ implements EJBDeployerMBean
    public ObjectName getObjectName( MBeanServer server, ObjectName name )
    throws MalformedObjectNameException
    {
-      return new ObjectName( OBJECT_NAME );
+      return OBJECT_NAME;
    }
    
    /**

@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -71,7 +71,7 @@ public class TransactionManagerService
       throws javax.management.MalformedObjectNameException
    {
       this.server = server;
-      return new ObjectName(OBJECT_NAME);
+      return OBJECT_NAME;
    }
     
    protected void startService()

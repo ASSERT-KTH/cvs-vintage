@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBeanSupport;
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -85,7 +85,7 @@ public class WebService
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-      return new ObjectName(OBJECT_NAME);
+      return OBJECT_NAME;
    }
    
    public String getName()

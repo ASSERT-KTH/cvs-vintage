@@ -4,32 +4,35 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.naming;
 
 import java.io.IOException;
 import javax.naming.NamingException;
 
+import javax.management.ObjectName;
+
+import org.jboss.util.ObjectNameFactory;
+
 /**
- *   
- *      
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.8 $
-*/
-public interface JNDIViewMBean extends org.jboss.system.ServiceMBean
+ * The JMX management interface for the {@link JNDIView} MBean.
+ * 
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @version $Revision: 1.9 $
+ */
+public interface JNDIViewMBean
+   extends org.jboss.system.ServiceMBean
 {
-    // Constants -----------------------------------------------------
-    public static final String OBJECT_NAME = "jboss:service=JNDIView";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss:service=JNDIView");
     
-    // Public --------------------------------------------------------
-
-    /** List the JBoss JNDI namespace.
-
-    @param verbose, 
+   /**
+    * List the JBoss JNDI namespace.
+    * @param verbose, 
     */
-    public String list(boolean verbose);
-
-    /**
-     * List the JBoss JNDI namespace in XML Format
-     **/
-    public String listXML();
+   String list(boolean verbose);
+   
+   /**
+    * List the JBoss JNDI namespace in XML Format
+    */
+   String listXML();
 }

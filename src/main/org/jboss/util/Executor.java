@@ -19,13 +19,13 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
-   public static final String OBJECT_NAME = ":service=Executor";
+   ObjectName OBJECT_NAME = ObjectNameFactory.create(":service=Executor");
    private static Logger log = Logger.getLogger("Executor");
     
    // Attributes ----------------------------------------------------
@@ -58,7 +58,7 @@ public class Executor
       if (infoEnabled)
          log.info("Done");
          
-      return new ObjectName(OBJECT_NAME);
+      return OBJECT_NAME;
    }
    
    public void postRegister(java.lang.Boolean registrationDone)
