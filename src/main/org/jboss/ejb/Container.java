@@ -73,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  *
  * <p><b>Revisions:</b>
  *
@@ -149,10 +149,14 @@ public abstract class Container implements DynamicMBean
    
    /** ??? */   
    protected Class localInterface;
-
+   
+   /** ObjectName of the JSR-77 EJB representation **/
+   protected String mEJBObjectName;
+   
    // We need the visibility on the MBeanServer for prototyping, it will be removed in the future FIXME marcf
    //protected MBeanServer mbeanServer;
    public MBeanServer mbeanServer;
+   
 
    // Public --------------------------------------------------------
 

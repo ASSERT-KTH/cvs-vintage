@@ -70,7 +70,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.99 $
+* @version $Revision: 1.100 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -371,11 +371,6 @@ public class ContainerFactory
          //app.init();
          // Start application
          app.start();
-         // Startup the Management MBean Wrapper for the containers
-         Iterator i = app.containers.values().iterator();
-         while( i.hasNext() ) {
-            handleContainerManagement( (Container) i.next(), true );
-         }
 
          // Done
          log.info( "Deployed application: " + app.getName() );
@@ -486,11 +481,6 @@ public class ContainerFactory
 
       // Undeploy application
       log.info( "Undeploying:" + url );
-      // Shutdown the Management MBean Wrapper for the containers
-      Iterator i = app.containers.values().iterator();
-      while( i.hasNext() ) {
-         handleContainerManagement( (Container) i.next(), false );
-      }
       app.stop();
       //app.destroy();
       try {
@@ -676,58 +666,6 @@ public class ContainerFactory
    // **************
    // Helper Methods
    // **************
-
-   /**
-    * Either creates the Management MBean wrapper for a container and start
-    * it or it destroy it.
-    **/
-   private void handleContainerManagement( Container container, boolean doStart )
-   {
-      try
-      {
-         // Create and register the ContainerMBean
-         ObjectName name = new ObjectName( "Management", "jndiName", container.getBeanMetaData().getJndiName() );
-         if( doStart )
-         {
-            getServer().createMBean(
-                                    "org.jboss.management.ContainerManagement",
-                                    name,
-                                    new Object[] { container },
-                                    new String[] { "org.jboss.ejb.Container" }
-                                    );
-            //getServer().invoke( name, "init", new Object[] {}, new String[] {} );
-            //getServer().invoke( name, "start", new Object[] {}, new String[] {} );
-            getServer().invoke(getServiceControllerName(),
-                           "registerAndStartService",
-                           new Object[] {name, null},
-                           new String[] {"javax.management.ObjectName", "java.lang.String"});
-         }
-         else
-         {
-            getServer().invoke(getServiceControllerName(),
-                 "undeploy",
-                 new Object[] {name},
-                 new String[] {"javax.management.ObjectName"});
-            // If not startup then assume that the MBean is there
-            //getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
-            //getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
-            // Unregister the MBean to avoid future name conflicts
-            //getServer().unregisterMBean( name );
-         }
-      }
-      catch( Exception e )
-      {
-         if( e instanceof RuntimeMBeanException )
-         {
-            e = ((RuntimeMBeanException) e).getTargetException();
-         }
-         if( e instanceof MBeanException )
-         {
-            e = ((MBeanException) e).getTargetException();
-         }
-         log.error("handleContainerManagement", e);
-      }
-   }
 
    /**
     * Perform the common steps to initializing a container.

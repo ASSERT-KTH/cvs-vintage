@@ -14,8 +14,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.ejb.EJBLocalHome;
+import javax.management.ObjectName;
 
 import org.jboss.system.Service;
+import org.jboss.management.j2ee.EJB;
 
 /**
  * An Application represents a collection of beans that are deployed as a
@@ -28,7 +30,7 @@ import org.jboss.system.Service;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class Application
    implements Service
@@ -209,12 +211,21 @@ public class Application
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         con.init();        
+         con.init();
       }
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         con.start();        
+         con.start();
+         // Create JSR-77 EJB-Wrapper
+         ObjectName lEJB = EJB.create(
+            con.mbeanServer,
+            getModuleName(),
+            con.getBeanMetaData()
+         );
+         if( lEJB != null ) {
+            con.mEJBObjectName = lEJB.toString();
+         }
       }
    }
 	
@@ -226,12 +237,16 @@ public class Application
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         con.stop();        
+         con.stop();
       }
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         con.destroy();        
+         // Remove JSR-77 EJB-Wrapper
+         if( con.mEJBObjectName != null ) {
+            EJB.destroy( con.mbeanServer, con.mEJBObjectName );
+         }
+         con.destroy();
       }
    }
 	

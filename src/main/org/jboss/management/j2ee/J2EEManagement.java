@@ -1,3 +1,9 @@
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.management.j2ee;
 
 import java.util.ArrayList;
@@ -9,12 +15,19 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 /**
-* Is the entry point of all managed objects in the management
-* domain.
-*
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-**/
+ * Root class of the JBoss JSR-77 implementation of
+ * {@link javax.management.j2ee.J2EEManagement J2EEManagement}.
+ *
+ * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
+ * @version $Revision: 1.2 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20011126 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Adjustments to the JBoss Guidelines
+ * </ul>
+ **/
 public class J2EEManagement
    extends J2EEManagedObject
    implements J2EEManagementMBean

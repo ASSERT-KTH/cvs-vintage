@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.management.j2ee;
 
 import java.io.Serializable;
@@ -17,10 +17,19 @@ import javax.management.j2ee.J2EEManagedObject;
 import org.jboss.system.Service;
 
 /**
-* JBoss specific implementation.
-*
-* @author Marc Fleury
-**/
+ * MBean Mangement Inteface for {@link org.jboss.management.j2ee.J2EEManagedObject
+ * J2EEManagedObject}.
+ *
+ * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
+ * @version $Revision: 1.2 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20011126 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Creation
+ * </ul>
+ **/
 public interface J2EEManagedObjectMBean
    extends J2EEManagedObject, Service
 {

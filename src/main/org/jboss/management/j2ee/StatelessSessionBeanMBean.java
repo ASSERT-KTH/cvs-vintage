@@ -6,23 +6,23 @@
  */
 package org.jboss.management.j2ee;
 
-import javax.management.j2ee.EjbModule;
+import javax.management.j2ee.StatelessSessionBean;
 
 /**
- * MBean Mangement Inteface for {@link org.jboss.management.j2ee.EjbModule
- * EjbModule}.
+ * MBean Mangement Inteface for {@link org.jboss.management.j2ee.StatelessSessionBean
+ * StatelessSessionBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
  * <p><b>20011126 Andreas Schaefer:</b>
  * <ul>
- * <li> Adjustments to the JBoss Guidelines
+ * <li> Creation
  * </ul>
  **/
-public interface EjbModuleMBean
-   extends EjbModule, J2EEManagedObjectMBean
+public interface StatelessSessionBeanMBean
+   extends StatelessSessionBean, J2EEManagedObjectMBean
 {
 }

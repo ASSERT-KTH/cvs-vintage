@@ -27,7 +27,7 @@ import java.security.InvalidParameterException;
  * {@link javax.management.j2ee.EjbModule EjbModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -144,14 +144,14 @@ public class EjbModule
    
    // EJBModule implementation --------------------------------------
    
-   public EJB[] getEjbs() {
-      return (EJB[]) mEJBs.toArray( new EJB[ 0 ] );
+   public ObjectName[] getEjbs() {
+      return (ObjectName[]) mEJBs.toArray( new ObjectName[ 0 ] );
    }
    
-   public EJB getEjb( int pIndex ) {
+   public ObjectName getEjb( int pIndex ) {
       if( pIndex >= 0 && pIndex < mEJBs.size() )
       {
-         return (EJB) mEJBs.get( pIndex );
+         return (ObjectName) mEJBs.get( pIndex );
       }
       else
       {
@@ -159,6 +159,30 @@ public class EjbModule
       }
    }
    
+   // J2EEManagedObjectMBean implementation -------------------------
+   
+   public void addChild( ObjectName pChild ) {
+      String lType = J2EEManagedObject.getType( pChild );
+      if( "EntityBean".equals( lType ) ||
+         "StatelessSessionBean".equals( lType ) ||
+         "StatefulSessionBean".equals( lType ) ||
+         "MessageDrivenBean".equals( lType )
+      ) {
+         mEJBs.add( pChild );
+      }
+   }
+   
+   public void removeChild( ObjectName pChild ) {
+      String lType = J2EEManagedObject.getType( pChild );
+      if( "EntityBean".equals( lType ) ||
+         "StatelessSessionBean".equals( lType ) ||
+         "StatefulSessionBean".equals( lType ) ||
+         "MessageDrivenBean".equals( lType )
+      ) {
+         mEJBs.remove( pChild );
+      }
+   }
+
    // Object overrides ---------------------------------------------------
    
    public String toString() {
