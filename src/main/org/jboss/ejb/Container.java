@@ -7,7 +7,6 @@
 
 package org.jboss.ejb;
 
-
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,8 +84,9 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.88 $
-** <p><b>Revisions:</b>
+* @version $Revision: 1.89 $
+* 
+* <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
 * <ul>
@@ -811,42 +811,38 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       {
          try 
          {
-            if ("create".equals(ignored) ) 
+            if ("create".equals(ignored)) 
             {
                create();
-            } // end of if ()
+            }
             else if ("start".equals(ignored)) 
             {
                start();
-            } // end of if ()
+            }
             else if ("stop".equals(ignored)) 
             {
                stop();
-            } // end of if ()
+            }
             else if ("destroy".equals(ignored)) 
             {
                destroy();
-            } // end of if ()
+            }
             else
             {
                throw new IllegalArgumentException("unknown operation! " + ignored);
-            } // end of else
+            }
+            
             return null;
          }
          catch (Exception e)
          {
-            log.error("Exception in service lifecyle operation: " + ignored, e);
             throw new MBeanException(e, "Exception in service lifecyle operation: " + ignored);
-         } // end of try-catch
-         
-            
-      } // end of if ()
+         }
+      }
       else
       {
-         log.error("Expected zero or single Invocation argument");
          throw new IllegalArgumentException("Expected zero or single Invocation argument");
-      } // end of else
-      
+      }
    }
    
    /**
