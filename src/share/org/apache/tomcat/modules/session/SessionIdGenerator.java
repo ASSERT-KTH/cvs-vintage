@@ -108,7 +108,6 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 
     public final void setRandomClass(String randomClass) {
 	this.randomClassName=randomClass;
-	randomSource=createRandomClass( randomClassName );
     }
 
     /** Use /dev/random-type special device. This is new code, but may reduce the
@@ -157,15 +156,6 @@ public final class SessionIdGenerator  extends BaseInterceptor {
     /** Init session management stuff for this context. 
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-	if( randomSource==null ) {
-	    // backward compatibility 
-	    String randomClass=(String)cm.getProperty("randomClass" );
-	    // set a reasonable default 
-	    if( randomClass==null ) {
-		randomClass="java.security.SecureRandom";
-	    }
-	    setRandomClass(randomClass);
-	}
     }
     
 
@@ -207,24 +197,27 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	}           
     }    
 
-    private Random createRandomClass( String s ) {
-	Random randomSource=null;
-	String className = s;
-	if (className != null) {
-	    try {
-		Class randomClass = Class.forName(className);
-		long time=System.currentTimeMillis();
-		randomSource = (java.util.Random)randomClass.newInstance();
-		time = System.currentTimeMillis() - time;
-		// Since this can take a lot of time, let the user know
-		log( "Created random " + s + " in " + time );
-	    } catch (Exception e) {
-		e.printStackTrace();
+    /** Create the random generator using the configured class name, and
+     * defaulting to java.security.SecureRandom
+     */
+    private void createRandomClass() {
+	if( randomClassName==null ) {
+	    // backward compatibility 
+	    randomClassName=(String)cm.getProperty("randomClass" );
+	    // set a reasonable default 
+	    if( randomClassName==null ) {
+		randomClassName="java.security.SecureRandom";
 	    }
+	}
+	try {
+	    Class randomClass = Class.forName(randomClassName);
+	    randomSource = (java.util.Random)randomClass.newInstance();
+	} catch (Exception e) {
+	    log("SessionIdGenerator.createRandomClass", e);
 	}
 	if (randomSource == null)
 	    randomSource = new java.security.SecureRandom();
-	return randomSource;
+	log( "Created random class " + randomSource.getClass().getName());
     }
 
     /*
@@ -265,8 +258,6 @@ public final class SessionIdGenerator  extends BaseInterceptor {
     public synchronized String getIdentifier(String jsIdent)
     {
         StringBuffer sessionId = new StringBuffer();
-	if( randomSource==null && randomIS==null)
-	    throw new RuntimeException( "No random source " );
 	
         // random value ..
         long n = 0;
@@ -281,6 +272,8 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	    }
 	}
 	if( randomIS==null ) {
+	    if (randomSource==null )
+		createRandomClass();
 	    n=randomSource.nextLong();
 	} 
 

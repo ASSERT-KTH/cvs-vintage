@@ -6,11 +6,6 @@
          will be used, and if not set "." will be used.
          webapps/, work/ and log/ will be relative to this ( unless 
          set explicitely to absolute paths ).
-         You can also specify a "randomClass" attribute, which determines 
-         a subclass of java.util.Random will be used for generating session IDs.
-         By default this is "java.security.SecureRandom". 
-         Specifying "java.util.Random" will speed up Tomcat startup, 
-         but it will cause sessions to be less secure.
       -->
     <ContextManager debug="0" workDir="work" >
 
@@ -41,7 +36,7 @@
         <SessionExpirer checkInterval="60" />
         <!-- For development you can use randomClass="java.util.Random" -->
         <SessionIdGenerator randomClass="java.security.SecureRandom" 
-                            devRandom="/dev/urandom" />
+                            randomFile="/dev/urandom" />
 
 
         <!-- ========== context processing modules ========== -->
