@@ -13,13 +13,13 @@ import java.lang.reflect.Method;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 import javax.transaction.Transaction;
-
-import org.jboss.invocation.Invocation;
 
 /**
  * The MarshalledInvocation is an invocation that travels.  As such it serializes
@@ -31,29 +31,10 @@ import org.jboss.invocation.Invocation;
  * well as the "hash" for the methods that we send, as opposed to sending Method objects.
  * Serialization "optimizations" should be coded here in the externalization implementation of the class
  *
- *   @see <related>
- *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- *   @version $Revision: 1.17 $
- *   Revisions:
- *
- *   <p><b>Revisions:</b>
- *
- *   <p><b>2001120 marc fleury:</b>
- *   <ul>
- *   <li> Initial check-in
- *   </ul>
- *   <p><b>20020113 Sacha Labourey:</b>
- *   <ul>
- *   <li> Make Externalizable calls (writeExternal) idempotent: until now,
- *  serialization on a MarshalledInvocation could only performed once (transaction was removed
- *  and METHOD type was modified). If another call was re-using the same object (in
- *  clustering for example), the call was making a ClassCastException because of
- *  the changed METHOD type in the Map that occured in the previous call to writeExternal)
- *   </ul>
- *   <p><b>20020911 Bill Burke:</b>
- *   <ul>
- *   <li> Optimize access to certain variables.  Avoid hash lookups.
- *   </ul>
+ * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
+ * @author Bill.Burke@jboss.org
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.18 $
  */
 public class MarshalledInvocation
         extends Invocation
@@ -63,32 +44,170 @@ public class MarshalledInvocation
 
    /** Serial Version Identifier. */
    static final long serialVersionUID = -718723094688127810L;
+   /** A flag indicating if the */
+   static boolean useFullHashMode = false;
+   /** WeakHashMap<Class, HashMap<String, Long>> of declaring class to hashes */
+   static Map hashMap = new WeakHashMap();
 
-   // The Transaction Propagation Context for distribution
-   Object tpc;
+   /** The Transaction Propagation Context for distribution */
+   protected Object tpc;
 
-   // The Map of methods used by this Invocation
-   transient Map methodMap;
+   /** The Map of methods used by this Invocation */
+   protected transient Map methodMap;
 
    // These are here to avoid unneeded hash lookup
    protected transient long methodHash = 0;
    protected transient MarshalledValue marshalledArgs = null;
 
-   // Static --------------------------------------------------------
-   static Map hashMap = new WeakHashMap();
+   /** Get the full hash mode flag.
+    * @return the full hash mode flag.
+    */ 
+   public static boolean getUseFullHashMode()
+   {
+      return useFullHashMode;
+   }
+   /** Set the full hash mode flag. When true, method hashes are calculated
+    * using the getFullInterfaceHashes which is able to differentiate methods
+    * by declaring class, return value, name and arg signature, and exceptions.
+    * Otherwise, the getInterfaceHashes method uses, and this is only able to
+    * differentiate classes by return value, name and arg signature. A
+    * useFullHashMode = false is compatible with 3.2.3 and earlier.
+    * 
+    * This needs to be set consistently on the server and the client.
+    * 
+    * @param flag the full method hash calculation mode flag.
+    */
+   public static void setUseFullHashMode(boolean flag)
+   {
+      useFullHashMode = flag;
+   }
 
-   /**
-    * Calculate method hashes. This algo is taken from RMI with the full
-    * method string taken from the method.toString to include the declaring
-    * class.
+   /** Calculate method hashes. This algo is taken from RMI with the
+    * method string built from the method name + parameters + return type. Note
+    * that this is not able to distinguish type compatible methods from
+    * different interfaces.
     *
-    * @param intf 
-    * @return Map<Method.toString(), Long> mapping of method string to its hash. 
+    * @param intf - the class/interface to calculate method hashes for.
+    * @return Map<Long, Method> mapping of method hash to the Method object.
     */
    public static Map getInterfaceHashes(Class intf)
    {
       // Create method hashes
-      Method[] methods = intf.getDeclaredMethods();
+      Method[] methods = null;
+      if( System.getSecurityManager() != null )
+      {
+         DeclaredMethodsAction action = new DeclaredMethodsAction(intf);
+         methods = (Method[]) AccessController.doPrivileged(action);
+      }
+      else
+      {
+         methods = intf.getDeclaredMethods();
+      }
+
+      HashMap map = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+      {
+         Method method = methods[i];
+         Class[] parameterTypes = method.getParameterTypes();
+         String methodDesc = method.getName() + "(";
+         for (int j = 0; j < parameterTypes.length; j++)
+         {
+            methodDesc += getTypeString(parameterTypes[j]);
+         }
+         methodDesc += ")" + getTypeString(method.getReturnType());
+
+         try
+         {
+            long hash = 0;
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
+            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
+            dataoutputstream.writeUTF(methodDesc);
+            dataoutputstream.flush();
+            byte abyte0[] = messagedigest.digest();
+            for (int j = 0; j < Math.min(8, abyte0.length); j++)
+               hash += (long) (abyte0[j] & 0xff) << j * 8;
+            map.put(method.toString(), new Long(hash));
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+      }
+
+      return map;
+   }
+
+   /** Calculate method full hashes. This algo is taken from RMI with the full
+    * method string built from the method toString() which includes the
+    * modifiers, return type, declaring class, name, parameters and exceptions. 
+    *
+    * @param intf - the class/interface to calculate method hashes for.
+    * @return Map<Long, Method> mapping of method hash to the Method object.
+    */
+   public static Map getFullInterfaceHashes(Class intf)
+   {
+      // Create method hashes
+      Method[] methods = null;
+      if( System.getSecurityManager() != null )
+      {
+         DeclaredMethodsAction action = new DeclaredMethodsAction(intf);
+         methods = (Method[]) AccessController.doPrivileged(action);
+      }
+      else
+      {
+         methods = intf.getDeclaredMethods();
+      }
+
+      HashMap map = new HashMap();
+      for (int i = 0; i < methods.length; i++)
+      {
+         Method method = methods[i];
+         String methodDesc = method.toString();
+
+         try
+         {
+            long hash = 0;
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
+            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
+            dataoutputstream.writeUTF(methodDesc);
+            dataoutputstream.flush();
+            byte abyte0[] = messagedigest.digest();
+            for (int j = 0; j < Math.min(8, abyte0.length); j++)
+               hash += (long) (abyte0[j] & 0xff) << j * 8;
+            map.put(method.toString(), new Long(hash));
+         }
+         catch (Exception e)
+         {
+            e.printStackTrace();
+         }
+      }
+
+      return map;
+   }
+
+   /** Calculate method hashes. This algo is taken from RMI with the full
+    * method string taken from the method.toString to include the declaring
+    * class.
+    *
+    * @param c the class/interface to calculate method hashes for.
+    * @return Map<Long, Method> mapping of method hash to the Method object.
+    */
+   public static Map methodToHashesMap(Class c)
+   {
+      // Create method hashes
+      Method[] methods = null;
+      if( System.getSecurityManager() != null )
+      {
+         DeclaredMethodsAction action = new DeclaredMethodsAction(c);
+         methods = (Method[]) AccessController.doPrivileged(action);
+      }
+      else
+      {
+         methods = c.getDeclaredMethods();
+      }
+
       HashMap map = new HashMap();
       for (int i = 0; i < methods.length; i++)
       {
@@ -107,46 +226,6 @@ public class MarshalledInvocation
             for (int j = 0; j < Math.min(8, abyte0.length); j++)
                hash += (long) (abyte0[j] & 0xff) << j * 8;
             map.put(methodDesc, new Long(hash));
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-         }
-      }
-
-      return map;
-   }
-
-   
-   /** Calculate method hashes. This algo is taken from RMI with the full
-    * method string taken from the method.toString to include the declaring
-    * class.
-    *
-    * @param c the class/interface to calculate method hashes for. 
-    * @return Map<Long, Method> mapping of method hash to the Method object. 
-    */
-   public static Map methodToHashesMap(Class c)
-   {
-      // Create method hashes
-      Method[] methods = c.getDeclaredMethods();
-      HashMap map = new HashMap();
-      for (int i = 0; i < methods.length; i++)
-      {
-         Method method = methods[i];
-         String methodDesc = method.toString();
-
-         try
-         {
-            long hash = 0;
-            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(512);
-            MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-            DataOutputStream dataoutputstream = new DataOutputStream(new DigestOutputStream(bytearrayoutputstream, messagedigest));
-            dataoutputstream.writeUTF(methodDesc);
-            dataoutputstream.flush();
-            byte abyte0[] = messagedigest.digest();
-            for (int j = 0; j < Math.min(8, abyte0.length); j++)
-               hash += (long) (abyte0[j] & 0xff) << j * 8;
-            map.put(new Long(hash), method);
          }
          catch (Exception e)
          {
@@ -210,7 +289,6 @@ public class MarshalledInvocation
    * we override the hashCode
    *
    * The hashes are cached in a static for efficiency
-   * RO: WeakHashMap needed to support undeploy
    */
    public static long calculateHash(Method method)
    {
@@ -219,7 +297,10 @@ public class MarshalledInvocation
       if (methodHashes == null)
       {
          // Add the method hashes for the class
-         methodHashes = getInterfaceHashes(method.getDeclaringClass());
+         if( useFullHashMode == true )
+            methodHashes = getFullInterfaceHashes(method.getDeclaringClass());
+         else
+            methodHashes = getInterfaceHashes(method.getDeclaringClass());
          synchronized (hashMap)
          {
             hashMap.put(method.getDeclaringClass(), methodHashes);
@@ -229,6 +310,7 @@ public class MarshalledInvocation
       Long hash = (Long) methodHashes.get(method.toString());
       return hash.longValue();
    }
+
 
    /** Remove all method hashes for the declaring class
     * @param declaringClass a class for which a calculateHash(Method) was called
@@ -258,18 +340,6 @@ public class MarshalledInvocation
    }
 
 
-   /*
-   public MarshalledInvocation(Map payload)
-   {
-      super(payload);
-   }
-
-   public MarshalledInvocation(Map payload, Map as_is_payload)
-   {
-      super(payload);
-      this.as_is_payload = as_is_payload;
-   }
-   */
    public MarshalledInvocation(
            Object id,
            Method m,
@@ -280,8 +350,6 @@ public class MarshalledInvocation
    {
       super(id, m, args, tx, identity, credential);
    }
-   // Public --------------------------------------------------------
-
 
    public Method getMethod()
    {
@@ -294,7 +362,7 @@ public class MarshalledInvocation
       // Keep it in the payload
       if (this.method == null)
       {
-         throw new IllegalStateException("Failed to find method for hash:" + methodHash + " available mappings: " + methodMap);
+         throw new IllegalStateException("Failed to find method for hash:" + methodHash);
       }
       return this.method;
    }
@@ -487,5 +555,20 @@ public class MarshalledInvocation
       // TODO invocationType should be removed from as is payload
       // for now, it is in there for binary compatibility
       invocationType = (InvocationType)getAsIsValue(InvocationKey.TYPE);
+   }
+
+   private static class DeclaredMethodsAction implements PrivilegedAction
+   {
+      Class c;
+      DeclaredMethodsAction(Class c)
+      {
+         this.c = c;
+      }
+      public Object run()
+      {
+         Method[] methods = c.getDeclaredMethods();         
+         c = null;
+         return methods;
+      }
    }
 }
