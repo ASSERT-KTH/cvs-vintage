@@ -34,7 +34,7 @@
   #indexedRows($finalCount)
     <td>&nbsp;</td>
     <td>$rowCol $finalCount</td>
-    <td>#dateEntry("y_$finalCount" 2002 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "m_$finalCount" $selectedMonth "d_$finalCount" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "h_$finalCount" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))
+    <td>#dateEntry("y_$finalCount" 2004 $calendar.get($scarabG.CALENDAR_YEAR_FIELD) "m_$finalCount" $selectedMonth "d_$finalCount" $calendar.get($scarabG.CALENDAR_DAY_FIELD) "h_$finalCount" $calendar.get($scarabG.CALENDAR_HOUR_FIELD))
     <td>$l10n.SingleDateTime</td>
   </tr>
 </table>
