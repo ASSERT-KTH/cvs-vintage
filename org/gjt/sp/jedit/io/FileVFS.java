@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.2 2001/09/04 06:45:35 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.3 2001/09/05 01:25:05 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -230,11 +230,11 @@ public class FileVFS extends VFS
 			type = VFS.DirectoryEntry.FILE;
 
 		boolean hidden;
-		if(method != null)
+		if(isHiddenMethod != null)
 		{
 			try
 			{
-				hidden = Boolean.TRUE.equals(method.invoke(
+				hidden = Boolean.TRUE.equals(isHiddenMethod.invoke(
 					file,new Object[0]));
 			}
 			catch(Exception e)
@@ -500,7 +500,7 @@ public class FileVFS extends VFS
 	
 	// private members
 	private static boolean isUnix;
-	private static Method method;
+	private static Method isHiddenMethod;
 
 	static
 	{
@@ -535,7 +535,7 @@ public class FileVFS extends VFS
 
 		try
 		{
-			method = File.class.getMethod("isHidden",new Class[0]);
+			isHiddenMethod = File.class.getMethod("isHidden",new Class[0]);
 			Log.log(Log.DEBUG,FileVFS.class,"File.isHidden() method"
 				+ " detected");
 		}
