@@ -32,7 +32,7 @@ import org.jboss.Version;
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 */
 public class Server
 implements ServerMBean
@@ -156,20 +156,6 @@ implements ServerMBean
       // Start the main deployer thread
       server.invoke(mainDeployer, "start", new Object[]{}, new String[] {});
       
-      /*
-      // Ok, now deploy jboss-service.xml
-      URL serviceURL = new URL(config.getConfigURL(), "jboss-service.xml");
-      log.info("Deploying basic components from: " + serviceURL);
-      server.invoke(deployerName, 
-      "deploy", 
-      new Object[] { serviceURL.toString() },
-      new String[] { "java.lang.String" });
-      */                  
-      
-      
-      
-      
-      
       // Calculate how long it took
       long lapsedTime = System.currentTimeMillis() - started.getTime();
       long minutes = lapsedTime / 60000;
@@ -177,7 +163,8 @@ implements ServerMBean
       long milliseconds = (lapsedTime -60000 * minutes - 1000 * seconds);
       
       // Tell the world how fast it was =)
-      log.info("Started in " + minutes  + "m:" + 
+      log.info("JBoss (MX MicroKernel) " + 
+         version + " [" + version.getName() + "]"+ " Started in " + minutes  + "m:" + 
          seconds  + "s:" + milliseconds +"ms");
    }
    

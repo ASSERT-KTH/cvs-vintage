@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 *
 */
@@ -144,22 +144,6 @@ implements MainDeployerMBean, Runnable
       if (log.isDebugEnabled()) log.debug("Removed directory scan "+url);
    }
    
-   /*
-   public String[] getDirectories() 
-   {
-   
-   String[] urls= new String[directories.size()];
-   
-   int i = 0;
-   Iterator dirs = directories.iterator();
-   while (dirs.hasNext())
-   urls[i++]= ((URL) dirs.next()).getFile();
-   
-   return urls;
-   }
-   */
-   
-   
    public String[] getDeployed()
    {
       String[] urls = new String[deployments.size()];
@@ -216,10 +200,13 @@ implements MainDeployerMBean, Runnable
       // watch the deploy directory, it is a set so multiple adds (start/stop) only one entry is present
       addDirectory("deploy");
       
+      // Do a first pass
+      scan();
+      
       // Start auto deploy thread
       running = true;
       
-      // Kick off the thread, since we wait at the end it makes a first run
+      // Kick off the thread
       new Thread(this, "MainDeployer").start();
    }
    
@@ -248,42 +235,47 @@ implements MainDeployerMBean, Runnable
             
          catch (Exception ignoredAgain) {log.info("interrupted exception");}
          
-         try 
-         {
-            // Scan diretories for new deployments 
-            Iterator newDeployments = scanNew().iterator();
-            
-            while (newDeployments.hasNext())
-            {
-               deploy((URL) newDeployments.next());     
-            }
-            
-            // Undeploy and redeployto the modified ones
-            Iterator modified = scanModified().iterator();
-            
-            while (modified.hasNext())
-            {
-               DeploymentInfo di = (DeploymentInfo) modified.next();
-               
-               // if the url is a file that doesn't exist, it was removed -> undeploy
-               // TODO: check connection on http protocol and see if it is removed.
-               if (di.url.getProtocol().startsWith("file") && !new File(di.url.getFile()).exists())
-               {   
-                  undeploy(di);
-               }  
-               // it is a deployment 
-               else 
-               {
-                  undeploy(di); deploy(di);
-               }
-            }
-         }
-         catch (Exception ignored) {log.info ("exception ", ignored);} 
+         scan();
       
       
       } while (running);
    }
    
+   
+   public void scan() 
+   {   
+      try 
+      {
+         // Scan diretories for new deployments 
+         Iterator newDeployments = scanNew().iterator();
+         
+         while (newDeployments.hasNext())
+         {
+            deploy((URL) newDeployments.next());     
+         }
+         
+         // Undeploy and redeployto the modified ones
+         Iterator modified = scanModified().iterator();
+         
+         while (modified.hasNext())
+         {
+            DeploymentInfo di = (DeploymentInfo) modified.next();
+            
+            // if the url is a file that doesn't exist, it was removed -> undeploy
+            // TODO: check connection on http protocol and see if it is removed.
+            if (di.url.getProtocol().startsWith("file") && !new File(di.url.getFile()).exists())
+            {   
+               undeploy(di);
+            }  
+            // it is a deployment 
+            else 
+            {
+               undeploy(di); deploy(di);
+            }
+         }
+      }
+      catch (Exception ignored) {log.info ("exception ", ignored);} 
+   }  
    
    public void undeploy(String url)
    {
@@ -509,7 +501,7 @@ implements MainDeployerMBean, Runnable
                if ( ! theFile.exists()) modified.add(deployment);
                   
                lastModified = theFile.lastModified();
-             }
+            }
             
             // Use URL connection to get lastModified on http
             else lastModified = deployment.watch.openConnection().getLastModified();
