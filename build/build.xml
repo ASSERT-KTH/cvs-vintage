@@ -789,10 +789,10 @@
     <!-- ================================================================== -->
     <target name="build-turbine">
         <exec executable="ant" dir="${turbine.dir}">
-            <arg line="maven:clean"/>
+            <arg line="-f build-legacy.xml maven:clean"/>
         </exec>
         <exec executable="ant" dir="${turbine.dir}">
-            <arg line="maven:install-jar"/>
+            <arg line="-f build-legacy.xml maven:install-jar"/>
         </exec>
     </target>
 
