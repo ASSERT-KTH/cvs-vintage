@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.41 2001/10/16 03:45:52 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.42 2001/10/16 05:02:57 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -435,11 +435,11 @@ public class ScarabModule
     public List getIssueTypes()
         throws Exception
     {
-        Criteria crit = new Criteria(3);
+        Criteria crit = new Criteria();
         crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
                      IssueTypePeer. ISSUE_TYPE_ID);
         crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
-        crit.add(IssueTypePeer. TEMPLATE, false);
+        crit.add(IssueTypePeer.PARENT_ID, 0);
         return IssueTypePeer.doSelect(crit);
     }
 
@@ -917,7 +917,7 @@ try{
         crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
         .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
                      IssueTypePeer.ISSUE_TYPE_ID)
-        .add(IssueTypePeer.TEMPLATE, false)
+        .add(IssueTypePeer.PARENT_ID, 0)
         .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
         return RModuleIssueTypePeer.doSelect(crit);
     }

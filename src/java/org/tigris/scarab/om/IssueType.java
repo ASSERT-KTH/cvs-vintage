@@ -43,7 +43,7 @@ public  class IssueType
     {
         int sequence = 1;
         Vector groups = getAttributeGroups(module);
-        for (int i=1; i<groups.size(); i++)
+        for (int i=1; i<=groups.size(); i++)
         {
            int order = ((AttributeGroup)groups.get(i)).getOrder();
            int previousOrder = ((AttributeGroup)groups.get(i-1)).getOrder();

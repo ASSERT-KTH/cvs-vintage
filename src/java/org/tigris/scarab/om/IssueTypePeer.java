@@ -26,7 +26,7 @@ public class IssueTypePeer
         throws Exception
     {
         Criteria c = new Criteria();
-        c.add(IssueTypePeer.TEMPLATE, 0);
+        c.add(IssueTypePeer.PARENT_ID, 0);
         return doSelect(c);
     }
 }

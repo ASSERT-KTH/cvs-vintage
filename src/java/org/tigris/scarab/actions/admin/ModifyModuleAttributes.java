@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.19 2001/10/16 00:29:31 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.20 2001/10/16 05:02:57 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -245,7 +245,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     }
 
     /**
-     * Changes the properties of existing Artifact types.
+     * Adds or modifies an issue type's properties.
      */
     public synchronized void doModifyissuetype ( RunData data, 
                                                  TemplateContext context )
@@ -291,29 +291,29 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                     AttributeGroup ag2 = (AttributeGroup)attributeGroups.get(j);
                     Group agGroup2 = intake.get("AttributeGroup", 
                                  ag2.getQueryKey(), false);
-                order2 = agGroup2.get("Order");
+                    order2 = agGroup2.get("Order");
 
-                if (order1.toString().equals(order2.toString()))
-                {
-                    areThereDupes = true;
-                    break;
+                    if (order1.toString().equals(order2.toString()))
+                    {
+                        areThereDupes = true;
+                        break;
+                    }
                 }
             }
-        }
-        if (areThereDupes)
-        {
-           data.setMessage("Please do not enter duplicate "
-                            + " sequence numbers for attribute groups.");
-           isValid = false;
-        }
+                if (areThereDupes)
+                {
+                   data.setMessage("Please do not enter duplicate "
+                                    + " sequence numbers for attribute groups.");
+                   isValid = false;
+                }
   
-       // Check that duplicate check is not at the beginning or end.
-       if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
-       {
-           data.setMessage("The duplicate check cannot be at the beginning "
-                             + "or the end.");
-           isValid = false;
-       }
+               // Check that duplicate check is not at the beginning or end.
+               if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
+               {
+                   data.setMessage("The duplicate check cannot be at the beginning "
+                                     + "or the end.");
+                   isValid = false;
+               }
        }
        if ( intake.isAllValid() && isValid) 
         {
@@ -321,6 +321,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             Group issueTypeGroup = intake.get("IssueType", 
                                         issueType.getQueryKey(), false);
             issueTypeGroup.setProperties(issueType);
+            issueType.setParentId(new NumberKey("0"));
             issueType.save();
 
             // If this is a new issue type, set mappings with module
@@ -330,6 +331,12 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                 rmit.setModuleId(module.getModuleId());
                 rmit.setIssueTypeId(issueType.getIssueTypeId());
                 rmit.save();
+
+                // Create template type.
+                IssueType template = new IssueType();
+                template.setName(issueType.getName() + " Template");
+                template.setParentId(issueType.getIssueTypeId());
+                template.save();
             }
            
           
