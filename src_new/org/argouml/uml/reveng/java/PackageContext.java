@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.12 2003/02/03 19:02:35 thn Exp $
+// $Id: PackageContext.java,v 1.13 2003/02/06 19:09:07 thn Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -56,7 +56,7 @@ class PackageContext extends Context
 	throws ClassifierNotFoundException
     {
         // Search in model
-        Object mInterface = ModelFacade.lookupNamespaceFor(mPackage,name);
+        Object mInterface = ModelFacade.lookupIn(mPackage,name);
 
         if(mInterface == null) {
 	    // Try to find it via the classpath
@@ -104,7 +104,7 @@ class PackageContext extends Context
 	throws ClassifierNotFoundException
     {
 	// Search in model
-	Object mClassifier = ModelFacade.lookupNamespaceFor(mPackage,name);
+	Object mClassifier = ModelFacade.lookupIn(mPackage,name);
 
 	if(mClassifier == null) {
 	    // Try to find it via the classpath

@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.9 2003/02/03 19:02:35 thn Exp $
+// $Id: OuterClassifierContext.java,v 1.10 2003/02/06 19:09:07 thn Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -67,7 +67,7 @@ class OuterClassifierContext extends Context
 	throws ClassifierNotFoundException
     {
         // Search in classifier
-        Object mInterface = ModelFacade.lookupNamespaceFor(mClassifier,name);
+        Object mInterface = ModelFacade.lookupIn(mClassifier,name);
 
 	if(mInterface == null) {
 	    // Try to find it via the classpath
@@ -114,7 +114,7 @@ class OuterClassifierContext extends Context
 	throws ClassifierNotFoundException
     {
 	// Search in classifier
-	Object iClassifier = ModelFacade.lookupNamespaceFor(mClassifier,name);
+	Object iClassifier = ModelFacade.lookupIn(mClassifier,name);
 
 	if(iClassifier == null) {
 	    // Try to find it via the classpath

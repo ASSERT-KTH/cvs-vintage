@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.16 2003/01/26 16:51:12 kataka Exp $
+// $Id: PropPanelStereotype.java,v 1.17 2003/02/06 19:09:07 thn Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,6 +43,7 @@ import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 import org.argouml.uml.ui.UMLSpecializationListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 
+import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 public class PropPanelStereotype extends PropPanelModelElement {
@@ -95,7 +96,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
 
     public void newStereotype() {
         Object target = getTarget();
-        MStereotype newStereo = ExtensionMechanismsFactory.getFactory().buildStereotype(null, null);
+        MStereotype newStereo = ExtensionMechanismsFactory.getFactory().buildStereotype((MModelElement)null, (String)null);
         navigateTo(newStereo);
         /*
         if(target instanceof MStereotype) {
