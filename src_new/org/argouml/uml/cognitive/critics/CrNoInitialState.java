@@ -1,5 +1,4 @@
-
-// $Id: CrNoInitialState.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrNoInitialState.java,v 1.8 2003/08/30 12:02:32 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: CrNoInitialState.java
 // Classes: CrNoInitialState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInitialState.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrNoInitialState.java,v 1.8 2003/08/30 12:02:32 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,6 +36,7 @@ import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.behavior.state_machines.*;
 
 import org.argouml.cognitive.*;
+import org.argouml.model.ModelFacade;
 
 /** A critic to detect whether the Compositestate attached to a 
  *  Statemachine has no initial state. 
@@ -64,8 +64,7 @@ public class CrNoInitialState extends CrUML {
 	for (Iterator iter = peers.iterator(); iter.hasNext();) {
 	    Object sv = iter.next();
 	    if (org.argouml.model.ModelFacade.isAPseudostate(sv) 
-		&& (MPseudostateKind.INITIAL.equals(((MPseudostate) sv)
-						    .getKind())))
+		&& (MPseudostateKind.INITIAL.equals(ModelFacade.getKind(sv))))
 		initialStateCount++;
 	}
 	if (initialStateCount == 0) return PROBLEM_FOUND;

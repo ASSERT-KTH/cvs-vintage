@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.81 2003/08/30 10:51:52 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.82 2003/08/30 12:02:32 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -843,9 +843,20 @@ public class ModelFacade {
         return handle instanceof MPseudostate;
     }
 
+    // TODO - Do we need this as well as getKind - I think not
     public static Object getPseudostateKind(Object handle) {
         if (handle instanceof MPseudostate) {
             return ((MPseudostate) handle).getKind();
+        }
+        throw new IllegalArgumentException("Unrecognized handle " + handle);
+    }
+
+    public static Object getKind(Object handle) {
+        if (handle instanceof MPseudostate) {
+            return ((MPseudostate) handle).getKind();
+        }
+        if (handle instanceof MParameter) {
+            return ((MParameter) handle).getKind();
         }
         throw new IllegalArgumentException("Unrecognized handle " + handle);
     }
@@ -1236,6 +1247,7 @@ public class ModelFacade {
         if (handle instanceof MParameter) {
             MParameter p = (MParameter) handle;
             return MParameterDirectionKind.RETURN.equals(p.getKind());
+            
         }
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);

@@ -1,5 +1,4 @@
-
-// $Id: PredIsStartState.java,v 1.4 2003/08/25 19:15:57 bobtarling Exp $
+// $Id: PredIsStartState.java,v 1.5 2003/08/30 12:02:32 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +24,7 @@
 
 package org.argouml.uml.diagram.state;
 
+import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
@@ -38,7 +38,7 @@ public class PredIsStartState implements Predicate {
 
     public boolean predicate(Object obj) {
 	return (org.argouml.model.ModelFacade.isAPseudostate(obj)) &&
-	    (MPseudostateKind.INITIAL.equals(((MPseudostate) obj).getKind()));
+	    (MPseudostateKind.INITIAL.equals(ModelFacade.getKind(obj)));
     }
   
 } /* end class PredIsStartpackage */
