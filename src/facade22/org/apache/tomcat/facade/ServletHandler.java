@@ -158,7 +158,7 @@ public final class ServletHandler extends Handler {
 	servlet=null; // reset the servlet, if it was set
 	servletClass=null;
 	this.servletClassName=servletClassName;
-	if( debug>0 && sw.getJspFile()!=null)
+	if( debug>0 && sw!=null && sw.getJspFile()!=null)
 	    log( context, "setServletClassName for " + sw.getJspFile() +
 		 ": " + servletClassName);
     }
