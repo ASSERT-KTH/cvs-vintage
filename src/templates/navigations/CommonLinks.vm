@@ -1,13 +1,7 @@
 #if ($data.User.CurrentRModuleIssueType)
-  #set ($rmit = $data.User.CurrentRModuleIssueType)
-  #if ($rmit.Dedupe)
-    #set ($wizardScreen = "entry,Wizard1.vm")
-  #else
-    #set ($wizardScreen = "entry,Wizard3.vm")
-  #end 
-
   #if ($scarabR.CurrentModule.allowsNewIssues())
-    <div>$link.setPage("$wizardScreen").setLabel("Enter new $rmit.DisplayName.toLowerCase()")</div>
+    #set ($rmit = $data.User.CurrentRModuleIssueType)
+    <div>$link.setPage("$scarabR.NextEntryTemplate").setLabel("Enter new $rmit.DisplayName.toLowerCase()")</div>
   #end
   #if (!$module.isGlobalModule())
     <div>$link.setPage("QueryList.vm").setLabel("Queries")</div>

@@ -22,7 +22,6 @@
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="entry,Wizard1.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
 
 #if ($templateId)

@@ -80,8 +80,6 @@ $renderer.render("layouts", "MainContent.vm")
  </td>
 #if ($template.equals("SelectModule.vm"))
   $renderer.render("layouts", "/ModuleHelp.vm")
-#elseif ($template.equals("SelectArtifactType.vm"))
-  $renderer.render("layouts", "/ArtifactTypeHelp.vm")
 #end
  </tr>
 </table>

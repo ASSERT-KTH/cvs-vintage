@@ -62,8 +62,8 @@ height="105" /></p>
 *#
 
 <p>
-Select an <a href="$link.setPage("SelectArtifactType.vm")">issue type</a> from the
-left side navigation. An issue type encapsulates a unique set of
+Select an <a href="$link.setPage("home,EnterNew.vm")">issue type</a> from the
+search bar navigation. An issue type encapsulates a unique set of
 attributes and attribute options:
 </p>
 

@@ -30,7 +30,7 @@
 #foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
 
     #indexedRows($velocityCount)
-      <td><a href="$link.setPage("entry,Wizard1.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $issueType.QueryKey).addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "entry,Wizard1.vm").setAction("SelectIssueType")">$issueType.Name</a></td>
+      <td><a href="$link.setPage("entry,Wizard1.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $issueType.QueryKey).setAction("SelectIssueType")">$issueType.Name</a></td>
 <!-- commenting out until functionality is added
       <td><input type="checkbox" /></td>
 -->

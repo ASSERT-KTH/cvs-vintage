@@ -20,7 +20,7 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 0)
 <td>
-<form action="$link.setPage("Index.vm").setAction("SelectIssueType")" 
+<form action="$link.setPage("Wizard1.vm").setAction("SelectIssueType")" 
     method="get">
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
     value="$data.User.HomePage" />
