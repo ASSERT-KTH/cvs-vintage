@@ -4,7 +4,7 @@
 <!-- jEdit FAQ									                        -->
 <!-- Copyright (C) 2002 John Gellene                    -->
 
-<!-- $Id: faq-appendix.xml,v 1.1 2002/01/16 19:55:52 jgellene Exp $
+<!-- $Id: faq-appendix.xml,v 1.2 2002/01/26 13:40:00 jgellene Exp $
 -->
 
 <appendix id="appendix"><title>List of contributors</title>
@@ -15,6 +15,7 @@
   <itemizedlist>
     <listitem><para>Mike Dillon</para></listitem>
     <listitem><para>Slava Pestov</para></listitem>
+    <listitem><para>Frank Rocca</para></listitem>
     <listitem><para>Maik Schreiber</para></listitem>
     <listitem><para>Dominic Stolerman</para></listitem>
     <!--
