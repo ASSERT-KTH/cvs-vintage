@@ -408,7 +408,7 @@ public class Container implements Cloneable{
 	hooks.registerHook( "postService", H_postService );
 	hooks.registerHook( "postRequest", H_postRequest );
 	hooks.registerHook( "handleError", H_handleError );
-	hooks.registerHook( "engineInit", H_handleError );
+	hooks.registerHook( "engineInit", H_engineInit );
     }
 
     public Hooks getHooks() {

@@ -294,6 +294,9 @@ public class BaseInterceptor
      *
      *  This hook will be called before the interceptor is initialized
      *  ( using engineInit hook )
+     *
+     *  An interceptor can add/remove other interceptors or applications,
+     *  or alter the ordering of hooks, or change/set server properties.
      * 
      *  @param cm  the server
      *  @param ctx not null if this is a local interceptor
@@ -344,12 +347,17 @@ public class BaseInterceptor
     {
     }
 
+    /** Notify that the server is ready and able to process requests
+     */
     public  void engineStart(ContextManager cm )
 	throws TomcatException
     {
     }
     
 
+    /** Notify that the server is disabled and shoulnd't process more
+     * requests
+     */
     public  void engineStop(ContextManager cm )
 	throws TomcatException
     {
