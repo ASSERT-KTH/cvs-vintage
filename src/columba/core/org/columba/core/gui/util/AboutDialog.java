@@ -33,6 +33,7 @@ import org.columba.mail.gui.util.URLLabel;
 public class AboutDialog implements ActionListener {
     
     public static final String CMD_CLOSE = "CLOSE";
+    private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
     
     private JDialog dialog;
     private boolean bool = false;
@@ -45,19 +46,17 @@ public class AboutDialog implements ActionListener {
     public void showDialog()
     {
 	//LOCALIZE
-        dialog = DialogStore.getDialog("About Columba v"+org.columba.core.main.MainInterface.version);
+        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "title") + org.columba.core.main.MainInterface.version);
 	JPanel contentPane = (JPanel)dialog.getContentPane();
 	contentPane.setLayout(new BorderLayout(0,0));
 	contentPane.add(new JLabel(ImageLoader.getImageIcon("splash.gif")),BorderLayout.NORTH);
         JPanel contactPanel = new JPanel(new GridBagLayout());
-	//LOCALIZE
 	contactPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createEmptyBorder(10,12,0,11),
-				BorderFactory.createTitledBorder("Contact")));
+				BorderFactory.createTitledBorder(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "contact"))));
 
         GridBagConstraints c = new GridBagConstraints();
-	//LOCALIZE
-        JLabel authorLabel = new JLabel("Authors:");
+        JLabel authorLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "authors"));
 	//Font font = MainInterface.columbaTheme.getControlTextFont();
 	Font font = UIManager.getFont("Label.font");
 	if ( font != null )
@@ -90,8 +89,7 @@ public class AboutDialog implements ActionListener {
         c.gridwidth = GridBagConstraints.REMAINDER;
         contactPanel.add( a2, c );
 
-	//LOCALIZE
-        JLabel websiteLabel = new JLabel("Website:");
+        JLabel websiteLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "website"));
         if(font!=null)websiteLabel.setFont( font );
         c.gridx = 0;
         c.gridy = 2;
@@ -111,7 +109,6 @@ public class AboutDialog implements ActionListener {
 	contentPane.add(contactPanel,BorderLayout.CENTER);
 	JPanel buttonPanel = new JPanel(new BorderLayout(0,0));
 	buttonPanel.setBorder(BorderFactory.createEmptyBorder(17,12,11,11));
-	//LOCALIZE
 	JButton closeButton = new JButton(GlobalResourceLoader.getString("global", "global", "close"));
 	closeButton.setActionCommand(CMD_CLOSE);
 	closeButton.addActionListener(this);
