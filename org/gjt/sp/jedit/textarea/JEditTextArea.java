@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.125 2002/05/28 00:34:22 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.126 2002/05/31 04:47:03 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -615,7 +615,11 @@ public class JEditTextArea extends JComponent
 				{
 					count -= chunkCache.getLineInfosForPhysicalLine(physFirstLine).length;
 					firstLine++;
-					physFirstLine = foldVisibilityManager.getNextVisibleLine(physFirstLine);
+					int nextLine = foldVisibilityManager.getNextVisibleLine(physFirstLine);
+					if(nextLine == -1)
+						break;
+					else
+						physFirstLine = nextLine;
 				}
 			}
 
