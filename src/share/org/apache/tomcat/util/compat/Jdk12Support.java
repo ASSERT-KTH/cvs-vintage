@@ -85,8 +85,20 @@ public class Jdk12Support extends Jdk11Compat {
 	return AccessController.getContext();
     }
     
-    public Object doPrivileged( Action action, Object accO ) throws Exception {
-	AccessControlContext acc=(AccessControlContext)accO;
+    public Object doPrivileged( Action action, Object accObj ) throws Exception {
+        ProtectionDomain domain[]=null;
+        if ( accObj instanceof ProtectionDomain ) {
+            domain=new ProtectionDomain[1];
+            domain[0]=(ProtectionDomain)accObj;
+        } else if (accObj instanceof ProtectionDomain[] ) {
+            domain=(ProtectionDomain []) accObj;
+        }
+	AccessControlContext acc=null;
+        if( domain==null ) {
+            acc=(AccessControlContext)accObj;
+        } else {
+            acc=new AccessControlContext( domain );
+        }
 	if( acc==null )
 	    throw new Exception("Invalid access control context ");
 	Object proxy=action.getProxy();
