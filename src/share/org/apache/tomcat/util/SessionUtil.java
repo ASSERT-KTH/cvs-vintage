@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.5 2000/05/23 00:43:19 jon Exp $
- * $Revision: 1.5 $
- * $Date: 2000/05/23 00:43:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.6 2000/07/05 20:02:44 alex Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/07/05 20:02:44 $
  *
  * ====================================================================
  *
@@ -67,6 +67,7 @@ package org.apache.tomcat.util;
 
 import javax.servlet.http.Cookie;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
 
 
 /**
@@ -74,7 +75,7 @@ import org.apache.tomcat.core.*;
  * <code>Session</code> implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2000/05/23 00:43:19 $
+ * @version $Revision: 1.6 $ $Date: 2000/07/05 20:02:44 $
  */
 
 public final class SessionUtil {
