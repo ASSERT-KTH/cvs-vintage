@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.6 2002/04/30 05:25:22 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.7 2002/05/17 05:15:29 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -36,6 +36,8 @@ Bug No.  Description
 7770	 Fixed thread race problem in accessing the Hooks.
 
 8092	 Fixed JSP source exposure proplem.
+
+9165	 Fix auto-detection of tomcat.install for certain 1.1.x JDKs.
 
 Jasper:
 
