@@ -1380,15 +1380,16 @@ public class Issue
             ModuleEntity module = getModule();
             setIdDomain(module.getDomain());
             setIdPrefix(module.getCode());
-            setIdCount(getNextIssueId(dbCon.getConnection()));
+            setIdCount(getNextIssueId(dbCon));
         }
         super.save(dbCon);
     }
 
 
-    private int getNextIssueId(Connection con)
+    private int getNextIssueId(DBConnection dbCon)
         throws Exception
     {
+        Connection con = dbCon.getConnection();
         int id = -1;
         String key = getIdTableKey();
         DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
@@ -1411,7 +1412,7 @@ public class Issue
                     // entered, insert a row into the id_table and try again.
                     try
                     {
-                        saveIdTableKey(dbMap.getName());
+                        saveIdTableKey(dbCon);
                         id = idbroker.getIdAsInt(con, key);
                     }
                     catch (Exception badException)
@@ -1448,17 +1449,24 @@ public class Issue
         return prefix;
     }
 
-    private void saveIdTableKey(String dbName)
+    private void saveIdTableKey(DBConnection dbCon)
         throws Exception
     {
+        int id = 0;
+        DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
+        IDBroker idbroker = dbMap.getIDBroker();
+        String idTable = IDBroker.TABLE_NAME.substring(0, 
+             IDBroker.TABLE_NAME.indexOf('.'));
+        id = idbroker.getIdAsInt(dbCon.getConnection(), idTable);
+
         String key = getIdTableKey();
 
         // FIXME: UGLY! IDBroker doesn't have a Peer yet.
-        String sql = "insert into " + 
-            IDBroker.TABLE_NAME.substring(0, IDBroker.TABLE_NAME.indexOf('.'))
-            + " set " +   IDBroker.TABLE_NAME + "='" + key + "'," +
+        String sql = "insert into " + idTable 
+            + " set ID_TABLE_ID=" + id + ',' + 
+            IDBroker.TABLE_NAME + "='" + key + "'," +
             IDBroker.NEXT_ID  + "=1," + IDBroker.QUANTITY  + "=1";
-        BasePeer.executeStatement(sql, dbName);
+        BasePeer.executeStatement(sql, dbCon);
     }
 
 

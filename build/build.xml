@@ -453,8 +453,8 @@
 
             <transaction src="${file.prefix}-scarab.sql"/>
             <transaction src="${file.prefix}-turbine.sql"/>
-            <transaction src="${file.prefix}-turbine-scheduler.sql"/>
-            <transaction src="${file.prefix}-id-table-schema.sql"/>
+            <transaction src="${file.prefix}-scheduler.sql"/>
+            <transaction src="${file.prefix}-id-table.sql"/>
             <transaction src="${file.prefix}-turbine-id-table-init.sql"/>
             <transaction src="${file.prefix}-scarab-id-table-init.sql"/>
             <transaction src="${file.prefix}-scarab-required-data.sql"/>
