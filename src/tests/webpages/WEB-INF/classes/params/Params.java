@@ -18,7 +18,14 @@ public class Params extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
-	ServletUtil.printParams( request, out );
+	String pi=(String)request.
+	    getAttribute( "javax.servlet.include.path_info");
+	if( pi==null ) pi="";
+	ServletUtil.printParamValues( "", " ]",
+				      pi + ":", " = [ ",
+				      "", "",
+				      " , ",
+				      request, out );
     }
 
 }

@@ -19,25 +19,35 @@ public class RDInclude extends HttpServlet {
         PrintWriter out = response.getWriter();
 
 	out.println("RequestDispatcher view: ");
-	ServletUtil.printParams( request, out );
+	ServletUtil.printParamValues( "", " ]",
+				      "before:", " = [ ",
+				      "", "",
+				      " , ",
+				      request, out );
 
-	String uri="Params?a=b";
+	String uri="params.Params/include1?a=b";
 	out.println("Calling RD.include for: " + uri);
 	RequestDispatcher rd=request.getRequestDispatcher(uri);
 
 	rd.include( request, response );
 
-	out.println("After include ");
-	ServletUtil.printParams( request, out );
+	ServletUtil.printParamValues( "", " ]",
+				      "postInclude1:", " = [ ",
+				      "", "",
+				      " , ",
+				      request, out );
 
-	uri="Params?a=c&d=e";
+	uri="params.Params/include2?a=c&d=e";
 	out.println("Calling RD.include for: " + uri);
 	rd=request.getRequestDispatcher(uri);
 
 	rd.include( request, response );
 	
-	out.println("After include ");
-	ServletUtil.printParams( request, out );
+	ServletUtil.printParamValues( "", " ]",
+				      "postInclude2:", " = [ ",
+				      "", "",
+				      " , ",
+				      request, out );
     }
 
 }

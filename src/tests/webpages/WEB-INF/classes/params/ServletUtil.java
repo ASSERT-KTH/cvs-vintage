@@ -12,39 +12,71 @@ import javax.servlet.http.*;
 public class ServletUtil {
 
 
-    public static void printParams( HttpServletRequest request,
+    public static void printParams(HttpServletRequest request,
 				   PrintWriter out )
         throws IOException, ServletException
     {
+	printParamNames( "Params = [", " ]"," , ",request, out );
+	printParamValues( "", " ]",
+			  "", " = [ " ,
+			  "", "",
+			  " , ",request, out );
+	out.println("Query = " + request.getQueryString());
+
+    }
+    
+    public static void printParamNames( String prefix, String sufix,
+					String sep,
+					HttpServletRequest request,
+					PrintWriter out )
+        throws IOException, ServletException
+    {
 	Enumeration paramN=request.getParameterNames();
-	out.print( "Params = [");
+	out.print( prefix );
 	
 	while( paramN.hasMoreElements() ) {
 	    String name=(String)paramN.nextElement();
 	    String all[]=request.getParameterValues(name);
 	    out.print(name);
-	    if( paramN.hasMoreElements()) out.print(" , ");
+	    if( paramN.hasMoreElements()) out.print( sep );
 	}
 	
-	out.println( " ]");
+	out.println( sufix );
+    }
 
-	paramN=request.getParameterNames();
+    
 
+    public static void printParamValues( String prefix,
+					 String sufix,
+					 String prefixN,
+					 String sufixN,
+					 String prefixV,
+					 String sufixV,
+					 String sepV,
+					 HttpServletRequest request,
+					 PrintWriter out )
+        throws IOException, ServletException
+    {
+	Enumeration  paramN=request.getParameterNames();
+
+	out.print( prefix );
 	while( paramN.hasMoreElements() ) {
 	    String name=(String)paramN.nextElement();
 	    String all[]=request.getParameterValues(name);
 
+	    out.print(prefixN);
 	    out.print(name);
-	    out.print(" = [ " );
+	    out.print(sufixN );
 	    for( int i=0; i<all.length; i++ ) {
-		if( i>0 ) out.print( " , ");
+		if( i>0 ) out.print( sepV );
+		out.print( prefixV );
 		out.print( all[i] );
+		out.print( sufixV );
 	    }
-	    out.println( " ]");
+	    out.println( sufix );
 	    
 	}
 	
-        out.println("Query = " + request.getQueryString());
     }
 
     public static void printBody( HttpServletRequest request,
