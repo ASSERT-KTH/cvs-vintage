@@ -36,10 +36,10 @@
 <input type="hidden" name="tab" value="$tab" />
 
 <div class="functnbar">
-#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule)))
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
     <input type="submit" value="Move this issue" name="eventSubmit_doMove" />&#160;
 #end
-#if (!$copyToModules.isEmpty())
+#if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
     <input type="submit" value="Copy this issue" name="eventSubmit_doCopy" />
 #end
 </div>
@@ -652,10 +652,10 @@ $l10n.NoDependencies
 #end
 
 <div class="functnbar2">
-#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule)))
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
-#if (!$copyToModules.isEmpty())
+#if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
     <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
