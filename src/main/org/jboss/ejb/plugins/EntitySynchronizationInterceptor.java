@@ -22,6 +22,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.util.NestedRuntimeException;
 
 /**
  * The role of this interceptor is to synchronize the state of the cache with
@@ -39,7 +40,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.78 $
+ * @version $Revision: 1.79 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -167,17 +168,23 @@ public class EntitySynchronizationInterceptor
          synchronized (ctx)
          {
             ctx.setValid(false);
+            ctx.hasTxSynchronization(false);
+            ctx.setTransaction(null);
          }
-
-         // This is really a mistake from the JTA spec, the fact that the tx is marked rollback should not be relevant
-         // We should still hear about the demarcation
-         clearContextTx("RollbackException", ctx, tx, trace);
+         throw new EJBException(e);
       }
-      catch (Exception e)
+      catch (Throwable t)
       {
          // If anything goes wrong with the association remove the ctx-tx association
-         clearContextTx("Exception", ctx, tx, trace);
-         throw new EJBException(e);
+         ctx.hasTxSynchronization(false);
+         if (t instanceof RuntimeException)
+            throw (RuntimeException) t;
+         else if (t instanceof Error)
+            throw (Error) t;
+         else if (t instanceof Exception)
+            throw new EJBException((Exception) t);
+         else
+            throw new NestedRuntimeException(t);
       }
    }
 
@@ -228,41 +235,8 @@ public class EntitySynchronizationInterceptor
       // Is my state valid?
       if (!ctx.isValid())
       {
-         try
-         {
-            // If not tell the persistence manager to load the state
-            container.getPersistenceManager().loadEntity(ctx);
-         }
-         catch (Throwable ex)
-         {
-            // readonly does not synchronize, lock or belong with transaction.
-            if (!container.isReadOnly())
-            {
-               Method method = mi.getMethod();
-               if (method == null ||
-                       !container.getBeanMetaData().isMethodReadOnly(
-                               method.getName()))
-               {
-                  clearContextTx(
-                          "loadEntity Exception",
-                          ctx,
-                          tx,
-                          log.isTraceEnabled());
-               }
-            }
-            if (ex instanceof Exception)
-            {
-               throw (Exception) ex;
-            }
-            else if (ex instanceof Error)
-            {
-               throw (Error) ex;
-            }
-            else
-            {
-               throw new InvocationTargetException(ex);
-            }
-         }
+         // If not tell the persistence manager to load the state
+         container.getPersistenceManager().loadEntity(ctx);
 
          // Now the state is valid
          ctx.setValid(true);
@@ -506,30 +480,6 @@ public class EntitySynchronizationInterceptor
 
    }
 
-   protected void clearContextTx(String msg, EntityEnterpriseContext ctx, Transaction tx, boolean trace)
-   {
-      BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
-      lock.sync();
-      try
-      {
-         if (trace)
-         {
-            log.trace(msg + ", clear tx for ctx=" + ctx + ", tx=" + tx);
-         }
-
-         // The context is no longer synchronized on the TX
-         ctx.hasTxSynchronization(false);
-         ctx.setTransaction(null);
-
-         lock.wontSynchronize(tx);
-      }
-      finally
-      {
-         lock.releaseSync();
-         container.getLockManager().removeLockRef(lock.getId());
-      }
-   }
-
    class ValidContextsRefresher implements Runnable
    {
       private long refreshRate;
@@ -556,8 +506,13 @@ public class EntitySynchronizationInterceptor
             {
             }
 
-            EntityCache cache = (EntityCache) container.getInstanceCache();
-            cache.flush();
+            // Guard against NPE at shutdown           
+            if (container != null)
+            {
+               EntityCache cache = (EntityCache) container.getInstanceCache();
+               if (cache != null)
+                  cache.flush();
+            }
          }
       }
    }

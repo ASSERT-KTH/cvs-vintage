@@ -18,6 +18,7 @@ import javax.transaction.Status;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.monitor.LockMonitor;
 import org.jboss.util.deadlock.DeadlockDetector;
 
@@ -47,7 +48,7 @@ import org.jboss.util.deadlock.DeadlockDetector;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -82,6 +83,11 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       public int id = 0;
       public String threadName;
       public boolean isQueued;
+
+      /**
+       * deadlocker is used by the DeadlockDetector
+       * It is the thread if the tx is null.
+       */
       public Object deadlocker;
 
       public TxLock(Transaction trans)
@@ -398,6 +404,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          //         log.debug(Thread.currentThread()+" handing off to "+lock.threadName);
          if( deadlockDetection == true )
             DeadlockDetector.singleton.removeWaiting(thelock.deadlocker);
+
          synchronized (thelock)
          {
             // notify All threads waiting on this transaction.
@@ -429,19 +436,14 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     */
    public void endInvocation(Invocation mi)
    {
+      // Do we own the lock?
       Transaction tx = mi.getTransaction();
-
-      if (isReadOnlyTxLock && tx != null)
+      if (tx != null && tx.equals(getTransaction()))
       {
-         // If we are not the owner, won't synchronize was
-         // done first to pass the lock
-         if (tx.equals(getTransaction()) == false)
-            return;
-
-         if (isReadOnlyTxLock)
-         {
+         // If there is no context or synchronization, release the lock
+         EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
+         if (ctx == null || ctx.hasTxSynchronization() == false)
             endTransaction(tx);
-         }
       }
    }
 
