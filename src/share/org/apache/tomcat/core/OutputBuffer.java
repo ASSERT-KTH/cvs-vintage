@@ -168,7 +168,6 @@ public final class OutputBuffer extends Writer {
 	if( debug > 0 ) log("write(b,off,len)");
 	int avail=buf.length - count;
 
-	bytesWritten += len;
 
 	// fit in buffer, great.
 	if( len <= avail ) {
@@ -176,6 +175,7 @@ public final class OutputBuffer extends Writer {
 	  // want to flush now
 	    System.arraycopy(b, off, buf, count, len);
 	    count += len;
+	    bytesWritten += len;
 	}
 
 	// Optimization:
@@ -193,7 +193,7 @@ public final class OutputBuffer extends Writer {
 	    System.arraycopy(b, off, buf, count, avail);
 	    count += avail;
 	    flushBytes();
-	    
+
 	    System.arraycopy(b, off+avail, buf, count, len - avail);
 	    count+= len - avail;
 	    bytesWritten += len - avail;
@@ -202,6 +202,7 @@ public final class OutputBuffer extends Writer {
 	    // long write - flush the buffer and write the rest
 	    // directly from source
 	    flushBytes();
+	    bytesWritten += len;
 	    realWrite( req, resp, b, off, len );
 	}
 
@@ -358,9 +359,10 @@ public final class OutputBuffer extends Writer {
 
     synchronized public void flush() throws IOException {
         doFlush = true;
-        if( state==CHAR_STATE )
+        if( state==CHAR_STATE ){
             flushChars();
-        else if (state==BYTE_STATE)
+            flushBytes();
+        }else if (state==BYTE_STATE)
             flushBytes();
         else if (state==INITIAL_STATE)
             realWrite( req, resp, null, 0, 0 );       // nothing written yet
