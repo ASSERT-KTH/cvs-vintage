@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.16 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelStimulus.java,v 1.17 2003/01/07 20:49:12 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.16 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelStimulus.java,v 1.17 2003/01/07 20:49:12 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -44,14 +44,16 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.UMLStimulusActionTextField;
 import org.argouml.uml.ui.UMLStimulusActionTextProperty;
+import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
+import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
+
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
 import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
@@ -68,14 +70,14 @@ public class PropPanelStimulus extends PropPanelModelElement {
     Class mclass = MStimulus.class;
 
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(nameField,1,0,0);
+    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
     
     addCaption("Action:",2,0,0);
     addField(new UMLStimulusActionTextField(this,new UMLStimulusActionTextProperty("name")),2,0,0);
 
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),3,0,0);
-    addField(stereotypeBox,3,0,0);
+    addField(getStereotypeBox(),3,0,0);
 
    
     addCaption("Sender:",4,0,0);
@@ -95,7 +97,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     addField(receiverScroll,5,0,0.5);
 
      addCaption(Argo.localize("UMLMenu", "label.namespace"),6,0,1);
-     addLinkField(namespaceComboBox,6,0,0);
+     addLinkField(getNamespaceComboBox(),6,0,0);
 
     
 

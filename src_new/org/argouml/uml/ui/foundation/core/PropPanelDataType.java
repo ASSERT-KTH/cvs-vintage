@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.19 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelDataType.java,v 1.20 2003/01/07 20:49:13 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,21 +24,27 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.util.Collection;
+import java.util.Iterator;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.model_management.*;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
-import org.argouml.application.api.*;
+import org.argouml.application.api.Argo;
 import org.argouml.model.uml.foundation.core.CoreFactory;
-import org.argouml.model.uml.foundation.core.CoreHelper;
-import org.argouml.ui.ProjectBrowser;
-import org.argouml.uml.*;
-import org.argouml.uml.ui.*;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLAttributesListModel;
+import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.UMLList;
+import org.argouml.uml.ui.UMLTextField2;
+
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MDataType;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
+import ru.novosoft.uml.model_management.MModel;
 
 public class PropPanelDataType extends PropPanelClassifier {
 
@@ -51,14 +57,14 @@ public class PropPanelDataType extends PropPanelClassifier {
     Class mclass = MDataType.class;
 
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(nameField,1,0,0);
+    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
 
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);
-    addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox),2,0,0);
+    addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()),2,0,0);
 
     addCaption(Argo.localize("UMLMenu", "label.namespace"),3,0,0);
-    addField(namespaceComboBox, 3,0,0);
+    addField(getNamespaceComboBox(), 3,0,0);
 
     addCaption(Argo.localize("UMLMenu", "label.modifiers"),4,0,1);
     addField(_modifiersPanel,4,0,0);

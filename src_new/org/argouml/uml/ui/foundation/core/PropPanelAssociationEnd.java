@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.22 2003/01/04 16:48:38 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.23 2003/01/07 20:49:13 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLMutableLinkedList;
+import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.foundation.core.MAssociation;
@@ -148,8 +149,8 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
      */
     public PropPanelAssociationEnd() {
         this("AssociationEnd", ConfigLoader.getTabPropsOrientation());
-        addField(Argo.localize("UMLMenu", "label.name"), nameField);
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), stereotypeBox));
+        addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
+        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
         addField(Argo.localize("UMLMenu", "label.association"), _associationScroll);
         addField(Argo.localize("UMLMenu", "label.type"), _typeCombobox);
         addField(Argo.localize("UMLMenu", "label.multiplicity"), _multiplicityComboBox);

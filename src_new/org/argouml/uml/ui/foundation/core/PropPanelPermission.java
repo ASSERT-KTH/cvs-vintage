@@ -1,4 +1,4 @@
-// $Id: PropPanelPermission.java,v 1.3 2003/01/03 22:11:22 kataka Exp $
+// $Id: PropPanelPermission.java,v 1.4 2003/01/07 20:49:13 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.util.ConfigLoader;
 
 public class PropPanelPermission extends PropPanelDependency {
@@ -35,9 +36,9 @@ public class PropPanelPermission extends PropPanelDependency {
     public PropPanelPermission() {
         super("Permission", ConfigLoader.getTabPropsOrientation());
         
-        addField(Argo.localize("UMLMenu", "label.name"), nameField);
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), stereotypeBox));
-        addField(Argo.localize("UMLMenu", "label.namespace"), namespaceComboBox);
+        addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
+        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
         add(LabelledLayout.getSeperator());
 

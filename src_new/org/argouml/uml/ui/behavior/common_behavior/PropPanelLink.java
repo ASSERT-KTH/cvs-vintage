@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.14 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelLink.java,v 1.15 2003/01/07 20:49:12 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.14 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelLink.java,v 1.15 2003/01/07 20:49:12 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -35,7 +35,10 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
+import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
+
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
@@ -52,15 +55,15 @@ public class PropPanelLink extends PropPanelModelElement {
 
     Class mclass = MLink.class;
     addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-    addField(nameField,1,0,0);
+    addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
 
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);
-    addField(stereotypeBox,2,0,0);
+    addField(getStereotypeBox(),2,0,0);
 
 
     addCaption(Argo.localize("UMLMenu", "label.namespace"),3,0,1);
-    addLinkField(namespaceComboBox,3,0,1);
+    addLinkField(getNamespaceComboBox(),3,0,1);
 
 
     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);

@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.20 2003/01/06 20:03:05 kataka Exp $
+// $Id: PropPanelParameter.java,v 1.21 2003/01/07 20:49:13 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.uml.ui.UMLInitialValueComboBox;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLRadioButton;
 import org.argouml.uml.ui.UMLReflectionListModel;
+import org.argouml.uml.ui.UMLTextField2;
 
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -63,10 +64,10 @@ public class PropPanelParameter extends PropPanelModelElement {
     setNameEventListening(namesToWatch);
 
         addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-        addField(nameField,1,0,0);
+        addField(new UMLTextField2(new UMLModelElementNameDocument()),1,0,0);
 
         addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);
-        addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox),2,0,0);
+        addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()),2,0,0);
 
         addCaption(Argo.localize("UMLMenu", "label.owner"),3,0,1);
         JList namespaceList = new UMLList(new UMLReflectionListModel(this,"behaviorialfeature",false,"getBehavioralFeature",null,null,null),true);

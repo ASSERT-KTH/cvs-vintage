@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.10 2003/01/07 19:39:21 kataka Exp $
+// $Id: UMLModelElementListModel2.java,v 1.11 2003/01/07 20:49:11 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -219,7 +219,7 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel impleme
      * @param target
      */
     public void setTarget(Object target) {
-        if (target == _target) return;
+        if (target == _target && target != null) return;
         if (_eventName == null || _eventName.equals("")) 
             throw new IllegalStateException("eventName not set!");
         if (_target instanceof MBase) {
@@ -316,7 +316,7 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel impleme
      * @see org.argouml.uml.ui.TargetChangedListener#targetChanged(java.lang.Object)
      */
     public void targetChanged(Object newTarget) {
-        if ((_target != null) && (newTarget != null) && (newTarget.getClass().equals(_target.getClass())))
+        if (_target != newTarget)
             setTarget(newTarget);
     }
 

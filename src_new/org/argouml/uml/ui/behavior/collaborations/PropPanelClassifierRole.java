@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.22 2003/01/01 16:06:38 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.23 2003/01/07 20:49:11 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.22 2003/01/01 16:06:38 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.23 2003/01/07 20:49:11 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -40,7 +40,9 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLMutableLinkedList;
+import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
+import org.argouml.uml.ui.foundation.core.UMLModelElementNameDocument;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
@@ -56,9 +58,9 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
     Class mclass = MClassifierRole.class;
    
-    addField(Argo.localize("UMLMenu", "label.name"), nameField);
-    addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
-    addField(Argo.localize("UMLMenu", "label.namespace"),namespaceScroll);
+    addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
+    addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
+    addField(Argo.localize("UMLMenu", "label.namespace"),getNamespaceScroll());
     
     addField(Argo.localize("UMLMenu", "label.multiplicity"),new UMLMultiplicityComboBox(this,mclass));
     
