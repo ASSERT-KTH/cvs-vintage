@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.7 2004/12/23 02:53:45 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.8 2004/12/23 12:50:23 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -239,7 +239,6 @@ public class UmlFilePersister extends AbstractFilePersister {
                         new XmlInputStream(url.openStream(),
                                            "pgml",
                                            instanceCount.getIntValue());
-                    inputStream.reopen();
                     persister = new DiagramMemberFilePersister(p, inputStream);
                 } else if (memberList.get(i).equals("todo")) {
                     inputStream =
