@@ -1,0 +1,24 @@
+#set ( $action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssueLong.vm") )
+
+#set ($user = $scarabR.User)
+#set( $issueIdList = $user.getTemp("issueIdList") )
+
+#if( $issueIdList )
+   
+  <p>&#171; previous | 1 of 3 | <a href="#">next</a> <a href="#">&#187;</a></p>
+
+  <form name="IssueForm" method="post" action="$action" >
+
+  #foreach ($id in $issueIdList)
+
+    #set( $currentIssue = $scarabR.getIssue($id.toString()) )
+    #viewIssue ($currentIssue)
+
+  #end
+  $intake.declareGroups()
+
+  </form>
+
+#else
+   <div class="alert">You have not selected any issues to view.</div>
+#end
