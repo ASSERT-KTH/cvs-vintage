@@ -3,7 +3,7 @@
  <h2>$page.getTitle()</h2>
  <p>Welcome to Scarab, a Bug Tracking and Issue Reporting Tool</p>
  <ul>
-  <li>New users, <a href="$link.setPage(">register here</a>.</li>
+  <li>New users, <a href="$link.setPage("Register.vm")">register here</a>.</li>
  </ul>
  #if ($data.getMessage()) 
  <p>$data.getMessage()</p>
