@@ -8,10 +8,15 @@ package org.jboss.invocation.jrmp.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Method;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
 import org.jboss.invocation.InvokerInterceptor;
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.naming.Util;
 import org.jboss.proxy.ClientMethodInterceptor;
 import org.jboss.proxy.GenericProxyFactory;
@@ -26,7 +31,7 @@ import org.w3c.dom.Element;
  * is bound to. 
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JRMPProxyFactory extends ServiceMBeanSupport
    implements JRMPProxyFactoryMBean
@@ -46,6 +51,12 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
    private Element interceptorConfig;
    /** The interceptor Classes defined in the interceptorConfig */
    private ArrayList interceptorClasses = new ArrayList();
+   /** invoke target method */
+   private boolean invokeTargetMethod;
+   /** methods by their hash code */
+   private final Map methodMap = new HashMap();
+   /** signatures by method */
+   private final Map signatureMap = new HashMap();
 
    public JRMPProxyFactory()
    {
@@ -98,6 +109,16 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
       this.exportedInterfaces = exportedInterfaces;
    }
 
+   public boolean getInvokeTargetMethod()
+   {
+      return invokeTargetMethod;
+   }
+
+   public void setInvokeTargetMethod(boolean invokeTargetMethod)
+   {
+      this.invokeTargetMethod = invokeTargetMethod;
+   }
+
    public Element getClientInterceptors()
    {
       return interceptorConfig;
@@ -124,6 +145,28 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
       return theProxy;
    }
 
+   public Object invoke(Invocation mi) throws Exception
+   {
+      final boolean remoteInvocation = mi instanceof MarshalledInvocation;
+      if(remoteInvocation)
+      {
+         ((MarshalledInvocation)mi).setMethodMap(methodMap);
+      }
+
+      final Object result;
+      if(invokeTargetMethod)
+      {
+         String signature[] = (String[])signatureMap.get(mi.getMethod());
+         result = server.invoke(targetName, mi.getMethod().getName(), mi.getArguments(), signature);
+      }
+      else
+      {
+         result = server.invoke(targetName, "invoke", new Object[]{mi}, Invocation.INVOKE_SIGNATURE);
+      }
+
+      return result;
+   }
+
    /** Initializes the servlet.
     */
    protected void startService() throws Exception
@@ -132,8 +175,8 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
       This is used by the JRMPInvoker to map from the Invocation ObjectName
       hash value to the target JMX ObjectName.
       */
-      Integer nameHash = new Integer(targetName.hashCode());
-      Registry.bind(nameHash, targetName);
+      Integer nameHash = new Integer(getServiceName().hashCode());
+      Registry.bind(nameHash, getServiceName());
 
       // Create the service proxy
       Object cacheID = null;
@@ -150,11 +193,36 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
          Util.bind(iniCtx, jndiName, theProxy);
          log.debug("Bound proxy under jndiName="+jndiName);
       }
+
+      for(int i = 0; i < exportedInterfaces.length; ++i)
+      {
+         final Method[] methods = exportedInterfaces[i].getMethods();
+         for(int j = 0; j < methods.length; ++j)
+         {
+            methodMap.put(new Long(MarshalledInvocation.calculateHash(methods[j])), methods[j]);
+
+            String signature[];
+            final Class[] types = methods[j].getParameterTypes();
+            if(types == null || types.length == 0)
+            {
+               signature = null;
+            }
+            else
+            {
+               signature = new String[types.length];
+               for(int typeInd = 0; typeInd < types.length; ++typeInd)
+               {
+                  signature[typeInd] = types[typeInd].getName();
+               }
+            }
+            signatureMap.put(methods[j], signature);
+         }
+      }
    }
 
    protected void stopService() throws Exception
    {
-      Integer nameHash = new Integer(targetName.hashCode());
+      Integer nameHash = new Integer(getServiceName().hashCode());
       Registry.unbind(nameHash);
       if( jndiName != null )
       {
@@ -174,7 +242,7 @@ public class JRMPProxyFactory extends ServiceMBeanSupport
    )
    {
       GenericProxyFactory proxyFactory = new GenericProxyFactory();
-      theProxy = proxyFactory.createProxy(cacheID, targetName, invokerName,
+      theProxy = proxyFactory.createProxy(cacheID, getServiceName(), invokerName,
          jndiName, proxyBindingName, interceptorClasses, loader, ifaces);
    }
 

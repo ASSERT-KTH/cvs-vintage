@@ -9,6 +9,7 @@ package org.jboss.invocation.jrmp.server;
 import javax.management.ObjectName;
 
 import org.jboss.system.ServiceMBean;
+import org.jboss.invocation.Invocation;
 
 import org.w3c.dom.Element;
 
@@ -17,7 +18,7 @@ import org.w3c.dom.Element;
  * as the transport protocol.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface JRMPProxyFactoryMBean extends ServiceMBean
 {
@@ -62,7 +63,19 @@ public interface JRMPProxyFactoryMBean extends ServiceMBean
     * @param config the proxy client side interceptor configuration
     */ 
    public void setClientInterceptors(Element config) throws Exception;
+
+   /**
+    * @return  whether invocations go to the target method instead of invoke(Invocation mi)
+    */
+   public boolean getInvokeTargetMethod();
+   /**
+    * @param invokeTargetMethod  whether invocations should go to the target method instead of invoke(Invocation mi)
+    */
+   public void setInvokeTargetMethod(boolean invokeTargetMethod);
+
    /** Get the proxy instance created by the factory.
     */
    public Object getProxy();
+
+   public Object invoke(Invocation mi) throws Exception;
 }
