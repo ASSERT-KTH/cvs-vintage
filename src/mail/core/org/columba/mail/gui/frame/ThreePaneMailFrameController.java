@@ -6,7 +6,6 @@
  */
 package org.columba.mail.gui.frame;
 
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -16,23 +15,20 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
-import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
+import org.columba.mail.gui.table.action.DownAction;
 import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.action.UpAction;
-import org.columba.mail.gui.table.action.DownAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
-import org.columba.mail.message.HeaderList;
 
 /**
  * @author frd
@@ -97,20 +93,18 @@ public class ThreePaneMailFrameController
 		treeController.getView().getActionMap().put(
 			"PASTE",
 			new PasteAction(this));
-			
+
 		tableController.getView().getInputMap().put(
-		  KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
+			KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
 			"UP");
-		tableController.getView().getActionMap().put(
-		 "UP",
-		 new UpAction(this));
-		 
+		UpAction upAction = new UpAction(this);
+		tableController.getView().getActionMap().put("UP", upAction);
+
 		tableController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
-				"DOWN");
-		tableController.getView().getActionMap().put(
-		 "DOWN",
-		new DownAction(this));
+			"DOWN");
+		DownAction downAction = new DownAction(this);
+		tableController.getView().getActionMap().put("DOWN", downAction);
 	}
 
 	public AbstractFrameView createView() {
@@ -181,8 +175,6 @@ public class ThreePaneMailFrameController
 	public boolean hasTable() {
 		return true;
 	}
-
-	
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#getTableController()
