@@ -76,7 +76,15 @@ public class AccountingInterceptor extends  BaseInterceptor {
     boolean acc=true;
     String trace="trace.log";
     BufferedOutputStream logF=null;
+    public static final int ACC_PRE_CMAP=0;
+    public static final int ACC_PRE_RMAP=1;
+    public static final int ACC_POST_MAP=2;
+    public static final int ACC_PRE_SERVICE=3;
+    public static final int ACC_POST_SERVICE=4;
+    public static final int ACC_IN_OUT=5;
+    public static final int ACC_OUT_COUNT=6;
 
+    
     public AccountingInterceptor() {
     }
 
@@ -97,21 +105,21 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int requestMap(Request request ) {
 	if( acc ) {
-	    request.getCounters().setCounter( Request.ACC_PRE_RMAP, System.currentTimeMillis() );
+	    request.getCounters().setCounter( ACC_PRE_RMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int contextMap( Request request ) {
 	if( acc ) {
-	    request.getCounters().setCounter( Request.ACC_PRE_CMAP, System.currentTimeMillis() );
+	    request.getCounters().setCounter( ACC_PRE_CMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int authenticate(Request request, Response response) {
 	if( acc  ) {
-	    request.getCounters().setCounter( Request.ACC_POST_MAP, System.currentTimeMillis() );
+	    request.getCounters().setCounter( ACC_POST_MAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -123,7 +131,7 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int preService(Request request, Response response) {
 	if( acc ) {
-	    request.getCounters().setCounter( Request.ACC_PRE_SERVICE, System.currentTimeMillis() );
+	    request.getCounters().setCounter( ACC_PRE_SERVICE, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -143,20 +151,20 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int postService(Request request, Response response) {
 	if( acc  ) {
-	    request.getCounters().setCounter( Request.ACC_POST_SERVICE, System.currentTimeMillis() );
+	    request.getCounters().setCounter( ACC_POST_SERVICE, System.currentTimeMillis() );
 
-	    long t1=request.getCounters().getCounter( Request.ACC_PRE_CMAP );
-	    long t2=request.getCounters().getCounter( Request.ACC_PRE_RMAP );
-	    long t3=request.getCounters().getCounter( Request.ACC_POST_MAP );
-	    long t4=request.getCounters().getCounter( Request.ACC_PRE_SERVICE );
-	    long t5=request.getCounters().getCounter( Request.ACC_POST_SERVICE );
+	    long t1=request.getCounters().getCounter( ACC_PRE_CMAP );
+	    long t2=request.getCounters().getCounter( ACC_PRE_RMAP );
+	    long t3=request.getCounters().getCounter( ACC_POST_MAP );
+	    long t4=request.getCounters().getCounter( ACC_PRE_SERVICE );
+	    long t5=request.getCounters().getCounter( ACC_POST_SERVICE );
 
 	    long t21=t2-t1;
 	    long t31=t3-t1;
 	    long t54=t5-t4;
 	    long t41=t4-t1;
 
-	    long tout=request.getCounters().getCounter( Request.ACC_OUT_COUNT );
+	    long tout=request.getCounters().getCounter( ACC_OUT_COUNT );
 	    StringBuffer sb=new StringBuffer();
 	    // ContextMap, Map, Service, Pre-Service-Overhead
 	    sb.append(t21).append(",");
