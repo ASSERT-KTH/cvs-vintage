@@ -1,9 +1,5 @@
 package org.apache.tomcat.startup;
 
-import java.net.*;
-import java.io.*;
-
-import java.util.*;
 
 /**
  * 

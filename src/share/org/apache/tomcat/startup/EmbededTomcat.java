@@ -1,15 +1,23 @@
 package org.apache.tomcat.startup;
 
-import java.net.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.compat.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.IntrospectionUtils;
-import java.security.*;
-import java.util.*;
-import java.lang.reflect.*;
+import org.apache.tomcat.util.compat.Action;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 
 /* EmbededTomcat is the bean you use to embed tomcat in your application.
    Main is a wrapper that will guess TOMCAT_HOME and dispatch to 

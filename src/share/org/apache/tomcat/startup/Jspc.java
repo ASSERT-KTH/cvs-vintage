@@ -1,19 +1,12 @@
 package org.apache.tomcat.startup;
 
-import java.beans.*;
-import java.io.*;
-import java.io.IOException;
-import java.lang.reflect.*;
+import java.io.File;
+import java.net.URL;
 import java.util.Hashtable;
-import java.util.*;
-import java.net.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.util.compat.*;
-import org.apache.tomcat.util.log.*;
-import org.xml.sax.*;
-import org.apache.tomcat.util.collections.*;
+import java.util.Vector;
+
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 
 /**
  * 

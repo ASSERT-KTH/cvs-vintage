@@ -1,19 +1,10 @@
 package org.apache.tomcat.startup;
 
-import java.beans.*;
-import java.io.*;
-import java.io.IOException;
-import java.lang.reflect.*;
 import java.util.Hashtable;
-import java.util.*;
-import java.net.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.modules.config.*;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.core.*;
-import org.xml.sax.*;
-import org.apache.tomcat.util.collections.*;
+
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  * Main entry point to several Tomcat functions. Uses EmbededTomcat to
