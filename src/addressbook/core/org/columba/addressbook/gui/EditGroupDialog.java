@@ -285,14 +285,12 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 
 			for (int j = 0; j < array.length; j++) {
 				item = (HeaderItem) addressbook.get(array[j]);
-				System.out.println("add item:" + item);
 
 				members.addElement(item);
 			}
 		} else if (command.equals("REMOVE")) {
 			int[] array = list.getSelectedIndices();
 			for (int j = 0; j < array.length; j++) {
-				System.out.println("remove index:" + array[j]);
 				members.remove(array[j]);
 			}
 		}

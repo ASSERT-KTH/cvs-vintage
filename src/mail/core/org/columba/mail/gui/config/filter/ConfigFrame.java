@@ -352,17 +352,13 @@ public class ConfigFrame
 			//String value = (String) theList.getSelectedValue();
 			index = theList.getAnchorSelectionIndex();
 
-			System.out.println("index: " + index);
-
 			setSelected(filterList.get(index));
 		}
 	}
 
 	public void showFilterDialog() {
 		Filter parent = getSelected();
-
 		if (parent != null) {
-
 			FilterDialog dialog = new FilterDialog(parent);
 		}
 	}

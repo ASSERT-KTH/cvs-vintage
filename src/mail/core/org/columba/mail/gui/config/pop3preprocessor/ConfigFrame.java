@@ -332,25 +332,18 @@ public class ConfigFrame extends JDialog
 			//String value = (String) theList.getSelectedValue();
 			index = theList.getAnchorSelectionIndex();
 
-			System.out.println("index: " + index);
-
 			setSelected(filterList.getElement(index));
 		}
-
 	}
 
 	public void showFilterDialog() {
-
 		XmlElement parent = getSelected();
-
 		if (parent != null) {
 
 			// TODO: add config-dialog here
 			//FilterDialog dialog = new FilterDialog(parent);
 
-
 		}
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
