@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.19 2003/01/03 18:45:38 jon Exp $
+ * @version $Id: IssueTest.java,v 1.20 2003/02/01 09:48:25 jon Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -132,7 +132,7 @@ public class IssueTest extends BaseTestCase
     private void testGetAllAttributeValuesMap(Issue issue) throws Exception
     {
         System.out.println ("testGetAllAttributeValuesMap()");
-        HashMap map = issue.getAllAttributeValuesMap();
+        Map map = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " + map.size());
         int expectedSize = 12;
         switch (Integer.parseInt(issue.getTypeId().toString()))

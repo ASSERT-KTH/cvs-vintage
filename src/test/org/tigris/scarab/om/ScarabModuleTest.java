@@ -62,7 +62,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.11 2002/11/04 23:41:56 elicia Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.12 2003/02/01 09:48:25 jon Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -161,7 +161,7 @@ public class ScarabModuleTest extends BaseTestCase
     private void testGetAllAttributeValuesMap(Issue issue) throws Exception
     {
         System.out.println ("testGetAllAttributeValuesMap()");
-        HashMap attrMap = issue.getAllAttributeValuesMap();
+        Map attrMap = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " 
                              + attrMap.size());
         assertEquals (getExpectedSize(issue.getIssueType()), attrMap.size());
@@ -194,16 +194,16 @@ public class ScarabModuleTest extends BaseTestCase
         throws Exception
     {
         System.out.println ("testGetActiveAttributes");
-        Attribute[] attrs =  newModule.getActiveAttributes(issueType);
-        assertEquals (getExpectedSize(issueType), attrs.length);
+        List attrs =  newModule.getActiveAttributes(issueType);
+        assertEquals (getExpectedSize(issueType), attrs.size());
     }
 
     private void testGetQuickSearchAttributes(IssueType issueType)
         throws Exception
     {
         System.out.println ("testGetQuickSearchAttributes");
-        Attribute[] attrs =  newModule.getQuickSearchAttributes(issueType);
-        assertEquals (1, attrs.length);
+        List attrs =  newModule.getQuickSearchAttributes(issueType);
+        assertEquals (1, attrs.size());
     }
 
     private void testGetRequiredAttributes(IssueType issueType)
