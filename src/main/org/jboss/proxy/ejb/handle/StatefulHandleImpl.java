@@ -29,7 +29,16 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author  <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.3 $
+ *
+ * <p><b>Revisions:</b><br>
+ * <p><b>2002/01/09: billb</b>
+ * <ol>
+ *   <li>Don't go to JNDI to get Invoker, instead, store invoker directly in handle.
+ * </ol>
+ * 
  */
 public class StatefulHandleImpl
    implements Handle
@@ -52,7 +61,7 @@ public class StatefulHandleImpl
    
    /** The identity of the bean. */
    public String jndiName;
-   public String server;
+   public Invoker invoker;
    public Object id;
    
    /**
@@ -64,10 +73,10 @@ public class StatefulHandleImpl
     * @param name      JNDI name.
     * @param id        Identity of the bean.
     */
-   public StatefulHandleImpl(String jndiName, String server, Object id)
+   public StatefulHandleImpl(String jndiName, Invoker invoker, Object id)
    {
       this.jndiName= jndiName;
-      this.server = server;
+      this.invoker = invoker;
       this.id = id;
    }
    
@@ -88,10 +97,6 @@ public class StatefulHandleImpl
     */
    public EJBObject getEJBObject() throws RemoteException {
       try {
-         // Get the invoker to the target server (cluster or node)
-         Invoker invoker = 
-         (Invoker) new InitialContext().lookup("invokers/"+server+"/jrmp");
-         
          Invocation invocation = 
          new Invocation(
             null,

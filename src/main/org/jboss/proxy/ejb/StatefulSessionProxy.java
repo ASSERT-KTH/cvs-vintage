@@ -30,7 +30,7 @@ import org.jboss.util.FinderResults;
 * An EJB stateful session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>
@@ -110,7 +110,7 @@ extends GenericProxy
 
       // Implement local EJB calls
       else if (m.equals(GET_HANDLE)) {
-         return new StatefulHandleImpl(jndiName,invoker.getServerHostName(), id);
+         return new StatefulHandleImpl(jndiName,invoker, id);
       }
       else if (m.equals(GET_EJB_HOME)) {
 
