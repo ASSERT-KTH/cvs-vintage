@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.44 2000/05/12 19:36:49 costin Exp $
- * $Revision: 1.44 $
- * $Date: 2000/05/12 19:36:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.45 2000/05/15 21:00:31 jon Exp $
+ * $Revision: 1.45 $
+ * $Date: 2000/05/15 21:00:31 $
  *
  * ====================================================================
  *
@@ -363,36 +363,40 @@ public class ServletWrapper {
     // The problem is that we are just clearing up invoker, not
     // the class loaded by invoker.
     void handleReload() {
-	// That will be reolved after we reset the context - and many
-	// other conflicts.
-	if( isReloadable && ! "invoker".equals( getServletName())) {
-	    ServletLoader loader=context.getServletLoader();
-	    if( loader!=null) {
-		// XXX no need to check after we remove the old loader
-		if( loader.shouldReload() ) {
-		    // workaround for destroy 
-		    destroy();
-		    initialized=false;
-		    loader.reload();
-		    servlet=null;
-		    servletClass=null;
-		    /* Initial attempt to shut down the context and sessions.
-		       
-		       String path=context.getPath();
-		       String docBase=context.getDocBase();
-		       // XXX all other properties need to be saved or something else
-		       ContextManager cm=context.getContextManager();
-		       cm.removeContext(path);
-		       Context ctx=new Context();
-		       ctx.setPath( path );
-		       ctx.setDocBase( docBase );
-		       cm.addContext( ctx );
-		       context=ctx;
-		       // XXX shut down context, remove sessions, etc
-		    */
+		// That will be reolved after we reset the context - and many
+		// other conflicts.
+		if( isReloadable && ! "invoker".equals( getServletName())) {
+			ServletLoader loader=context.getServletLoader();
+			if( loader!=null) {
+				// XXX no need to check after we remove the old loader
+				if( loader.shouldReload() ) {
+					// workaround for destroy 
+					destroy();
+					initialized=false;
+					loader.reload();
+					
+					// re-serialize the sessions with a new classloader
+					SessionSerializer.doSerialization(loader, context);
+					
+					servlet=null;
+					servletClass=null;
+					/* Initial attempt to shut down the context and sessions.
+
+					String path=context.getPath();
+					String docBase=context.getDocBase();
+					// XXX all other properties need to be saved or something else
+					ContextManager cm=context.getContextManager();
+					cm.removeContext(path);
+					Context ctx=new Context();
+					ctx.setPath( path );
+					ctx.setDocBase( docBase );
+					cm.addContext( ctx );
+					context=ctx;
+					// XXX shut down context, remove sessions, etc
+					*/
+				}
+			}
 		}
-	    }
-	}
     }
 
     void handleJsp(Request req, Response res) {
