@@ -2,7 +2,6 @@
 <!DOCTYPE project [
   <!ENTITY buildmagic SYSTEM "resource://org/jboss/tools/buildmagic/common.xml">
   <!ENTITY xdoclet SYSTEM "../tools/etc/buildfragments/xdoclet.ent">
-  <!ENTITY libraries-jmx SYSTEM "../tools/etc/buildfragments/libraries-jmx.ent">
   <!ENTITY libraries SYSTEM "../tools/etc/buildfragments/libraries.ent">
   <!ENTITY modules SYSTEM "../tools/etc/buildfragments/modules.ent">
   <!ENTITY locations SYSTEM "../tools/etc/buildfragments/locations.ent">
@@ -18,7 +17,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.116 2002/09/13 19:17:34 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.117 2002/09/14 06:38:39 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -60,7 +59,10 @@
      | should contain module specific configuration elements.
    -->
 
-  <target name="configure" unless="configure.disable">
+  &libraries;
+  &xdoclet;
+
+  <target name="configure" depends="libraries, xdoclet" unless="configure.disable">
 
     <!-- =================== -->
     <!-- Basic Configuration -->
@@ -74,8 +76,6 @@
     <!-- ========= -->
     <!-- Libraries -->
     <!-- ========= -->
-    &libraries-jmx;
-    &libraries;
 
     <!-- The combined library classpath -->
     <path id="library.classpath">
@@ -152,7 +152,6 @@
     <property name="junit.batchtest.todir" value="${build.reports}"/>
     <property name="junit.jvm.options" value="-Ddummy"/>
 
-    &xdoclet;
 
     <!-- default.type.mapping is used in standardjaws.xml and standardjbosscmp-jdbc.xml-->
     <property name="default.type.mapping" value="Hypersonic SQL"/>
@@ -230,7 +229,6 @@
 
   <!-- Compile mbeans with XDoclet -->
   <target name="compile-mbean-sources" depends="init">
-    <taskdef name="jmxdoclet" classname="xdoclet.modules.jmx.JMXDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.gen-src}"/>
     <jmxdoclet destdir="${build.gen-src}"
@@ -253,7 +251,6 @@
 
   <!-- Compile EJB beans with XDoclet -->
   <target name="compile-bean-sources" depends="init">
-    <taskdef name="ejbdoclet" classname="xdoclet.modules.ejb.EjbDocletTask" classpathref="xdoclet.task.classpath"/>
 
     <mkdir dir="${build.gen-src}"/>
     <mkdir dir="${build.resources}/ejbadaptor/META-INF"/>
