@@ -118,7 +118,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.15 $
+@version $Revision: 1.16 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -176,7 +176,9 @@ implements AbstractWebContainerMBean
          // the context
          if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData) 
          {
-            J2eeApplicationMetaData app = (J2eeApplicationMetaData) di.metaData;
+            J2eeApplicationMetaData app = (J2eeApplicationMetaData) di.parent.metaData;
+
+	    System.out.println("[0] DEBUG:"+app);
             
             J2eeModuleMetaData mod;
             Iterator it = app.getModules();
