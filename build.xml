@@ -28,8 +28,9 @@
     -->
   <property name="work.dir" value="." />
 
-  <property name="tomcat.build" value="${work.dir}/build/tomcat"/>
-  <property name="tomcat.dist" value="${work.dir}/dist/tomcat"/>
+  <!-- append basedir since jtc will need a full path for tomcat33.home -->
+  <property name="tomcat.build" value="${basedir}/${work.dir}/build/tomcat"/>
+  <property name="tomcat.dist" value="${basedir}/${work.dir}/dist/tomcat"/>
 
   <!-- Location where various binaries are installed.
        It can be "c:\Program Files" or /usr/share/java or
@@ -58,6 +59,9 @@
   <property name="ant.home" location="${install.dir}/jakarta-ant"/>
   <property name="ant.bin" location="${ant.home}/bin"/>
   <property name="ant.lib" location="${ant.home}/lib"/>
+  <property name="ant.jar" location="${ant.home}/lib/ant.jar"/>
+  <property name="optional.jar" location="${ant.home}/lib/optional.jar"/>
+  <property name="ant-optional.jar" location="${ant.home}/lib/ant-optional.jar"/>
 
   <property name="jaxp.home" location="bin" />
 
@@ -96,6 +100,13 @@
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
 
   <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
+  <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
+  
+  <!-- xalan is required by MX4J HTTP adaptor -->
+  <property name="xalan.home" location="${install.dir}/xalan"/>
+  <property name="xalan.lib" location="${xalan.home}/bin"/>
+  <property name="xalan.jar" location="${xalan.lib}/xalan.jar"/>
+  <property name="xml-apis.jar" location="${xalan.lib}/xml-apis.jar"/>
 
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
@@ -120,12 +131,28 @@
                file="${jaxp.home}/jaxp.jar" />
     <available property="jmx-present"
                file="${jmx.jar}" />
+    <available property="jmxtools-present"
+               file="${jmxtools.jar}" />
+    <available property="xalan-present"
+               file="${xalan.jar}" />
     <available property="jaxp10-present"
                file="${jaxp.home}/parser.jar" />
     <available property="jaxp11-present"
                file="${jaxp.home}/crimson.jar" />
     <available property="xerces-present"
                file="${jaxp.home}/xerces.jar" />
+    <condition property="xerces2-present">
+      <and>
+        <available file="${xerces2.home}/xercesImpl.jar" />
+        <available file="${xerces2.home}/xmlParserAPIs.jar" />
+      </and>
+    </condition>
+    <condition property="xml-parser-present">
+      <and> 
+        <available file="${xml-parser-impl.jar}" />
+        <available file="${xml-parser-apis.jar}" />
+      </and>
+    </condition>
     <available property="jtc-present"
                file="${jakarta-tomcat-connectors}" />
     <condition property="commons-dbcp.complete">
@@ -135,12 +162,64 @@
         <available file="${commons-collections.jar}" />
       </and>
     </condition>
+
+  <!-- Some IDE like Eclipse didn't export ant and xml api  -->
+  <!-- jars so javac will faild at compile time             -->
+  <!-- To fix that, create some path ref which will be used -->
+  
+  <path id="ant.class.path">
+    <pathelement location="${ant.jar}/"/>
+    <pathelement location="${optional.jar}"/>
+    <pathelement location="${ant-optional.jar}"/>
+  </path>
+
+  <path id="xml-apis.class.path">
+    <pathelement location="${jaxp.home}/jaxp.jar"/>
+    <pathelement location="${xerces2.home}/xmlParserAPIs.jar"/>
+    <pathelement location="${xml-parser-apis.jar}"/>
+  </path>
+
+  <path id="tomcat_util.class.path">
+    <pathelement location="${tomcat-util.jar}"/>
+	<pathelement location="${commons-logging.jar}" />
+  </path>
+
+  <path id="crypto.class.path">
+    <pathelement location="${jcert.jar}"/>
+    <pathelement location="${jnet.jar}"/>
+    <pathelement location="${jsse.jar}"/>
+    <pathelement location="${puretls.jar}"/>
+  </path>
+
+  <path id="jdk.class.path">
+    <fileset dir="${java.home}/..">
+      <include name="lib/tools.jar"/>
+    </fileset>
+    <fileset dir="${java.home}">
+      <include name="lib/classes.zip"/>
+    </fileset>
+  </path>
+
+  <path id="javadoc.classpath">
+    <pathelement location="${servlet22.jar}"/>
+    <pathelement location="${jmx.jar}"/>
+    <path refid="ant.class.path"/>
+    <path refid="crypto.class.path"/>
+    <path refid="jdk.class.path"/>
+    <path refid="tomcat_util.class.path"/>
+    <path refid="xml-apis.class.path"/>
+  </path>
+
   </target>
 
   <target name="uptodate">
     <uptodate property="tomcat-util.is.uptodate" targetfile="${tomcat-util.jar}">
       <srcfiles dir="${jtc.util.home}" includes="java/**,build.xml"/>
     </uptodate>
+  </target>
+
+  <target name="msg.ant15" if="ant15-present" >
+    <echo message="Detected Ant 1.5" />
   </target>
 
   <target name="msg.jdk12" if="jdk12.present" >
@@ -153,6 +232,10 @@
 
   <target name="msg.jmx" if="jmx-present" >
     <echo message="Detected JMX"/>
+  </target>
+
+  <target name="msg.jmxtools" if="jmxtools-present" >
+    <echo message="Detected JMX TOOLS"/>
   </target>
 
   <target name="msg.puretls" if="puretls.present">
@@ -172,7 +255,7 @@
   </target>
 
   <target name="init"
-          depends="detect,uptodate,msg.jdk12,msg.jsse,msg.jmx,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util" >
+          depends="detect,uptodate,msg.ant15,msg.jdk12,msg.jsse,msg.jmx,msg.jmxtools,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
@@ -205,7 +288,23 @@
           file="${jaxp.home}/jaxp.jar"/>
   </target>
   
-  <target name="prepare.jaxp" depends="prepare.jaxp101,prepare.jaxp11,prepare.xerces" />
+  <target name="prepare.xerces2" depends="detect" if="xerces2-present" >
+    <echo message="Installing XERCES-2"/>
+    <copy tofile="${tomcat.build}/lib/container/"
+          file="${xerces2.home}/xercesImpl.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/"
+          file="${xerces2.home}/xmlParserAPIs.jar"/>
+  </target>
+
+  <target name="prepare.xml-parser" depends="detect" if="xml-parser-present" >
+    <echo message="Installing XML-PARSER ${xml-parser-impl.jar} and ${xml-parser-apis.jar}"/>
+    <copy tofile="${tomcat.build}/lib/container/"
+          file="${xml-parser-impl.jar}"/>
+    <copy tofile="${tomcat.build}/lib/container/"
+          file="${xml-parser-apis.jar}"/>
+  </target>
+
+  <target name="prepare.jaxp" depends="prepare.jaxp101,prepare.jaxp11,prepare.xerces,prepare.xerces2,prepare.xml-parser" />
 
   <!-- ==================== Copy static files ==================== -->
 
@@ -291,13 +390,13 @@
 
   <target name="deps" description="Build repositoried that depends on. To be called before main" >
         <ant dir="${jakarta-tomcat-connectors}/coyote">
-            <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+            <property name="tomcat33.home" value="${tomcat.build}"/>
         </ant>
         
         <ant dir="${jakarta-tomcat-connectors}/http11" inheritAll="false" />
             
         <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
-            <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+            <property name="tomcat33.home" value="${tomcat.build}"/>
         </ant>
   </target>
 
@@ -313,9 +412,11 @@
            deprecation="off"
            srcdir="src/share">
       <classpath>
-        <pathelement location="${tomcat-util.jar}"/>
-	<pathelement location="${commons-logging.jar}" />
+        <path refid="ant.class.path"/>
+        <path refid="xml-apis.class.path"/>
+        <path refid="tomcat_util.class.path"/>
       </classpath>
+      
       <include name="org/apache/tomcat/util/**"/>
 
       <exclude name="**/util/compat/Jdk12Support.java"
@@ -428,7 +529,7 @@
            deprecation="off"
            srcdir="src/share">
       <classpath>
-        <pathelement location="${tomcat-util.jar}"/>
+        <path refid="tomcat_util.class.path"/>
         <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
       </classpath>
       <include name="org/apache/tomcat/core/**"/>
@@ -455,6 +556,7 @@
            deprecation="off"
            srcdir="src/share">
       <classpath>
+        <path refid="xml-apis.class.path"/>
         <pathelement location="${tomcat-util.jar}"/>
         <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
         <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
@@ -478,8 +580,9 @@
            deprecation="off"
            srcdir="src/facade22">
       <classpath>
-        <pathelement location="${servlet22.jar}"/>
-        <pathelement location="${tomcat-util.jar}"/>
+        <path refid="tomcat_util.class.path"/>
+        <path refid="xml-apis.class.path"/>
+	    <pathelement location="${servlet22.jar}"/>
         <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
         <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
@@ -507,15 +610,30 @@
     <copy file="${commons-collections.jar}" todir="${tomcat.build}/lib/container"/>
   </target>
 
+  <target name="jmx.prepare" depends="prepare" if="jmx-present" >
+    <echo message="copying JMX for JMX support"/>
+    <copy tofile="${tomcat.build}/lib/container"
+          file="${jmx.jar}"/>
+  </target>
+  
+  <target name="jmxtools.prepare" depends="prepare" if="jmxtools-present" >
+    <echo message="copying JMX tools jar for JMX HTTP Adapter support"/>
+    <copy tofile="${tomcat.build}/lib/container"
+          file="${jmxtools.jar}"/>
+    <copy tofile="${tomcat.build}/lib/container"
+          file="${xalan.jar}"/>
+  </target>
+
   <!-- ====================  "Standard" interceptors  ========== -->
-  <target name="tomcat_modules" depends="prepare,commons-prepare">
+  <target name="tomcat_modules" depends="prepare,commons-prepare,jmx.prepare,jmxtools.prepare">
     <javac destdir="${tomcat.build}/classes"
            srcdir="src/share"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off">
       <classpath>
-        <pathelement location="${tomcat-util.jar}"/>
+        <path refid="tomcat_util.class.path"/>
+        <path refid="xml-apis.class.path"/>
         <pathelement location="${jmx.jar}"/>
         <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
         <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
@@ -530,7 +648,6 @@
       <exclude
           name="org/apache/tomcat/modules/config/MxInterceptor.java"
           unless="jmx-present"/>
-
       <exclude
           name="org/apache/tomcat/modules/aaa/PooledJDBCRealm.java"
           unless="commons-dbcp.complete"/>
@@ -554,7 +671,7 @@
     <!-- This can't be compiled while j-t-c is built - tomcat is built
          after, so files depending on 3.3 are ignored -->
     <ant dir="${jakarta-tomcat-connectors}/coyote" target="compile.tomcat33" >
-        <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+        <property name="tomcat33.home" value="${tomcat.build}"/>
     </ant>
 
     <copy tofile="${tomcat.build}/lib/common/tomcat33-resource.jar"
@@ -583,8 +700,9 @@
            optimize="${optimize}"
            deprecation="off">
       <classpath>
+        <path refid="xml-apis.class.path"/>
+        <path refid="tomcat_util.class.path"/>
         <pathelement location="${servlet22.jar}"/>
-        <pathelement location="${tomcat-util.jar}"/>
       </classpath>
       <include name="org/apache/jasper/**"/>
       <exclude name="org/apache/jasper/servlet/JasperLoader12.java"
@@ -638,9 +756,7 @@
            destdir="${tomcat.build}/classes" >
        <include name="org/apache/tomcat/ant/*.java" />
        <classpath>
-          <pathelement path="${ant.lib}/ant.jar" />
-          <pathelement path="${ant.lib}/optional.jar" />
-          <pathelement path="${ant.lib}/ant-optional.jar" />
+        <path refid="ant.class.path"/>
        </classpath>
     </javac>
     <mkdir dir="${tomcat.build}/ant" />
@@ -700,15 +816,21 @@
       <fileset dir="src/admin"/>
     </copy>
     <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar"
-          file="${ant.lib}/ant.jar"/>
+          file="${ant.jar}"/>
     <jar jarfile="${tomcat.build}/webapps/admin/WEB-INF/lib/tomcat_util_test.jar"
          basedir="${tomcat.build}/classes">
       <include name="org/apache/tomcat/util/**"/>
     </jar>
     <javac srcdir="src/admin/WEB-INF/classes"
            optimize="${optimize}"
-           destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
-           classpath="${tomcat.build}/classes;${servlet22.jar};${tomcat-util.jar}"/>
+           destdir="${tomcat.build}/webapps/admin/WEB-INF/classes">
+           <classpath>
+             <path refid="ant.class.path"/>           
+             <pathelement location="${tomcat.build}/classes"/>
+             <pathelement location="${servlet22.jar}"/>
+             <pathelement location="${tomcat-util.jar}"/>
+           </classpath>
+    </javac>
 
   </target>
 
@@ -784,10 +906,7 @@
            deprecation="off"
            srcdir="${jtc.util.home}/java">
       <classpath>
-        <pathelement location="${jsse.jar}"/>
-        <pathelement location="${jnet.jar}"/>
-        <pathelement location="${jcert.jar}"/>
-        <pathelement location="${puretls.jar}" />
+        <path refid="crypto.class.path"/>
         <pathelement location="${servlet22.jar}"/>
       </classpath>
       <include name="org/apache/**"/>
@@ -865,26 +984,6 @@
     <chmod perm="+x" file="${tomcat.dist}/bin/startup"/>
     <chmod perm="+x" file="${tomcat.dist}/bin/shutdown"/>
   </target>
-
-  <path id="javadoc.classpath">
-    <pathelement location="${servlet22.jar}"/>
-    <pathelement location="${tomcat-util.jar}"/>
-    <fileset dir="${jaxp.home}">
-      <include name="jaxp.jar"/>
-      <include name="parser.jar"/>
-      <include name="crimson.jar"/>
-      <include name="xerces.jar"/>
-    </fileset>
-    <fileset dir="${java.home}/..">
-      <include name="lib/tools.jar"/>
-    </fileset>
-    <fileset dir="${java.home}">
-      <include name="lib/classes.zip"/>
-    </fileset>
-    <fileset dir="${ant.home}">
-      <include name="lib/ant.jar"/>
-    </fileset>
-  </path>
 
   <target name="javadoc" depends="main,webapps,tomcat-jars">
     <!-- Add Tomcat internal javadoc -->
