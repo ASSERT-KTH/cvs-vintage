@@ -36,10 +36,10 @@ table, th, td	{
  margin-top: .4em
  }
 .app h3 {
-	background: #036 url(images/nw_min.gif) no-repeat;
+	background: #036 url(../images/nw_min.gif) no-repeat;
  }
 .app h4 {	
- background: #999 url(images/nw_min.gif) no-repeat;
+ background: #999 url(../images/nw_min.gif) no-repeat;
 	color: #fff;
 	}
 .app h3, .app h4, .functnbar	 {
