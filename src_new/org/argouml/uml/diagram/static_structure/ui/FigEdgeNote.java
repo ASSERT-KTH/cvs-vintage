@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.10 2004/12/09 19:09:11 mvw Exp $
+// $Id: FigEdgeNote.java,v 1.11 2004/12/21 22:29:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,8 +75,8 @@ public class FigEdgeNote
     }      
     
     /**
-     * Constructor that hooks the Fig to a UML element
-     * @param theOwner the UML element
+     * Constructor that hooks the Fig to a CommentEdge
+     * @param theOwner the CommentEdge
      * @param theLayer the layer (ignored)
      */
     public FigEdgeNote(Object theOwner, Layer theLayer) {

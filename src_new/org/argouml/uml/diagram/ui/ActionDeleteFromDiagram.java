@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.9 2004/09/29 17:02:52 mvw Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.10 2004/12/21 22:29:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,8 +40,10 @@ import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.kernel.ProjectManager;
 
 
-/** deletes an modelelement from the diagram, but not from the model.
- *  @stereotype singleton
+/** 
+ * Removes an modelelement from the diagram, but not from the model.
+ * 
+ * @stereotype singleton
  */
 public class ActionDeleteFromDiagram extends UMLChangeAction {
 
