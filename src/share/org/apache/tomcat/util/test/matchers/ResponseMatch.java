@@ -127,7 +127,10 @@ public class ResponseMatch extends Matcher {
 	    boolean match=responseBody.indexOf( responseMatch ) >= 0; 
 	    if( match != testCondition ) {
 		responseStatus = false;
-		log("ERROR: expecting match on " + responseMatch);
+		if( testCondition )
+		    log("ERROR: expecting match on " + responseMatch);
+		else
+		    log("ERROR: expecting no match on " + responseMatch);
 		log("GOT: " );
 		log(responseBody );
 	    }

@@ -124,8 +124,11 @@ public class HttpStatusMatch extends Matcher {
 			     responseLine.indexOf(returnCode) > -1);
 	    if( match != testCondition ) {
 		responseStatus = false;
-		log("    Expecting: " + returnCode );
-		log("    Got      : " + responseLine);
+		if( testCondition )
+		    log("    Expecting    : " + returnCode );
+		else
+		    log("    Not Expecting: " + returnCode );
+		log("    Got          : " + responseLine);
 	    }
 	}
 
