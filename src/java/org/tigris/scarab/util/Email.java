@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.6 2002/09/17 23:24:46 jmcnally Exp $
+ * @version $Id: Email.java,v 1.7 2002/09/30 15:57:49 jmcnally Exp $
  */
 public class Email
 {
@@ -103,7 +103,82 @@ public class Email
             vs.setEventCartridgeEnabled(false);
 
             boolean success = true;
-            TemplateEmail te = new TemplateEmail();
+
+            TemplateEmail te = getTemplateEmail(context,  module, fromUser, 
+                replyToUser, subject, template);
+
+            Iterator iter = toUsers.iterator();
+            while ( iter.hasNext() ) 
+            {
+                ScarabUser toUser = (ScarabUser)iter.next();
+                te.addTo(toUser.getEmail(),
+                         toUser.getFirstName() + " " + toUser.getLastName());
+            }
+            
+            if (ccUsers != null)
+            {
+                iter = ccUsers.iterator();
+                while ( iter.hasNext() ) 
+                {
+                    ScarabUser ccUser = (ScarabUser)iter.next();
+                    te.addCc(ccUser.getEmail(),
+                             ccUser.getFirstName() + " " + ccUser.getLastName());
+                }
+            }
+            
+            try
+            {
+                te.sendMultiple();
+
+                // Now send again, but to the archive. Do the multiple sends
+                // to allow people who are getting to the previous email
+                // to distinguish and filter out the archive email                              
+                String archiveEmail = module.getArchiveEmail();
+                if (archiveEmail != null && archiveEmail.trim().length() > 0)
+                {
+                    te = getTemplateEmail(context,  module, fromUser, 
+                                          replyToUser, subject, template);
+                    te.setTo(null, archiveEmail);
+                    te.send();
+                }
+            }
+            catch (SendFailedException e)
+            {
+                success = false;
+            }
+            return success;
+        }
+        finally
+        {
+            if (vs != null)
+            {
+                vs.setEventCartridgeEnabled(true);
+            }
+        }
+    }
+
+    /**
+     * Single user recipient.
+     */ 
+    public static boolean sendEmail( TemplateContext context, Module module,
+                                     Object fromUser, Object replyToUser, 
+                                     ScarabUser toUser, 
+                                     String subject, String template )
+        throws Exception
+    {
+        List toUsers = new LinkedList();
+        toUsers.add(toUser);
+        return sendEmail( context, module, fromUser, replyToUser, toUsers, 
+                          null, subject, template );
+    }
+
+    private static TemplateEmail getTemplateEmail( 
+                                     TemplateContext context, Module module, 
+                                     Object fromUser, Object replyToUser,
+                                     String subject, String template )
+        throws Exception
+    {
+        TemplateEmail te = new TemplateEmail();
             if ( context == null ) 
             {
                 context = new DefaultTemplateContext();
@@ -172,30 +247,6 @@ public class Email
                 te.setTemplate(template);
             }
             
-            Iterator iter = toUsers.iterator();
-            while ( iter.hasNext() ) 
-            {
-                ScarabUser toUser = (ScarabUser)iter.next();
-                te.addTo(toUser.getEmail(),
-                         toUser.getFirstName() + " " + toUser.getLastName());
-            }
-            
-            if (ccUsers != null)
-            {
-                iter = ccUsers.iterator();
-                while ( iter.hasNext() ) 
-                {
-                    ScarabUser ccUser = (ScarabUser)iter.next();
-                    te.addCc(ccUser.getEmail(),
-                             ccUser.getFirstName() + " " + ccUser.getLastName());
-                }
-            }
-            
-            String archiveEmail = module.getArchiveEmail();
-            if (archiveEmail != null && archiveEmail.trim().length() > 0)
-            {
-                te.addCc(archiveEmail, null);
-            }
 
             String charset = Turbine.getConfiguration()
                 .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY); 
@@ -203,38 +254,7 @@ public class Email
             {
                 te.setCharset(charset);                
             }
-            
-            try
-            {
-                te.sendMultiple();
-            }
-            catch (SendFailedException e)
-            {
-                success = false;
-            }
-            return success;
-        }
-        finally
-        {
-            if (vs != null)
-            {
-                vs.setEventCartridgeEnabled(true);
-            }
-        }
-    }
 
-    /**
-     * Single user recipient.
-     */ 
-    public static boolean sendEmail( TemplateContext context, Module module,
-                                     Object fromUser, Object replyToUser, 
-                                     ScarabUser toUser, 
-                                     String subject, String template )
-        throws Exception
-    {
-        List toUsers = new LinkedList();
-        toUsers.add(toUser);
-        return sendEmail( context, module, fromUser, replyToUser, toUsers, 
-                          null, subject, template );
+            return te;
     }
 }
