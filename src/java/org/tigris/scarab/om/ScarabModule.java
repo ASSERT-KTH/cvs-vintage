@@ -98,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.79 2001/12/06 17:36:22 kminshull Exp $
+ * @version $Id: ScarabModule.java,v 1.80 2001/12/17 17:06:46 kminshull Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -238,13 +238,13 @@ public class ScarabModule
             }
             grant (UserManager.getInstance(getOwnerId()), 
                    TurbineSecurity.getRole("Project Owner"));
+        
+            setInitialAttributesAndIssueTypes();
         }
         else
         {
             super.save(dbCon);
         }
-        
-        setInitialAttributesAndIssueTypes();
     }
 
     // *******************************************************************
@@ -365,3 +365,4 @@ public class ScarabModule
         return name;
     }
 }
+
