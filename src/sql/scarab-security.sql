@@ -39,13 +39,14 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
     VALUES (14, 'Domain | Admin');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (17, 'Module | Configure');
-
 /*
  * User with this permission is allowed to approve roles requested by other
  * users.
  */
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (18, 'User | Approve Roles');
+INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
+    VALUES (19, 'Issue | Move');
 
 /*
  * Create an account for system administrator (also used for initial
@@ -125,6 +126,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
            and TURBINE_PERMISSION.PERMISSION_NAME in (
                 'Module | Add',
                 'Issue | Edit',
+                'Issue | Move',
                 'Issue | Assign')
 ;
 
