@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.123 2003/04/02 01:45:26 spestov Exp $
+ * @version $Id: jEdit.java,v 1.124 2003/04/05 22:18:01 spestov Exp $
  */
 public class jEdit
 {
@@ -134,7 +134,7 @@ public class jEdit
 				{
 					try
 					{
-						level = Integer.parseInt(arg.substring("log=".length()));
+						level = Integer.parseInt(arg.substring("-log=".length()));
 					}
 					catch(NumberFormatException nf)
 					{

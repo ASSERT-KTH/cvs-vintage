@@ -101,7 +101,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.64 2003/04/04 19:51:13 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.65 2003/04/05 22:18:01 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -913,6 +913,19 @@ public class DockableWindowManager extends JPanel
 			});
 			popup.add(cloneMenuItem);
 
+			popup.addSeparator();
+
+			JMenuItem closeMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-close"));
+
+			closeMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent evt)
+				{
+					removeDockableWindow(dockable);
+				}
+			});
+			popup.add(closeMenuItem);
+
 			if(!(clone || currentPos.equals(FLOATING)))
 			{
 				JMenuItem undockMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-undock"));
@@ -955,7 +968,7 @@ public class DockableWindowManager extends JPanel
 			System.err.println(dockable);
 
 			String newPosition = jEdit.getProperty(dockable
-				+ ".dock-position");
+				+ ".dock-position",FLOATING);
 			if(FLOATING.equals(newPosition)
 				&& FLOATING.equals(entry.position))
 			{

@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.61 2003/04/02 18:26:21 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.62 2003/04/05 22:18:01 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -878,8 +878,11 @@ public class PanelWindowContainer implements DockableWindowContainer
 						canDrag = true;
 				} //}}}
 
-				setCursor(Cursor.getPredefinedCursor(
-					getAppropriateCursor()));
+				if(canDrag)
+				{
+					wm.setCursor(Cursor.getPredefinedCursor(
+						getAppropriateCursor()));
+				}
 			} //}}}
 
 			//{{{ mouseDragged() method
@@ -891,7 +894,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 				if(dragStart == null) // can't happen?
 					return;
 
-				setCursor(Cursor.getPredefinedCursor(
+				wm.setCursor(Cursor.getPredefinedCursor(
 					getAppropriateCursor()));
 
 				//{{{ Top...
@@ -923,7 +926,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 			//{{{ mouseExited() method
 			public void mouseExited(MouseEvent evt)
 			{
-				setCursor(Cursor.getPredefinedCursor(
+				wm.setCursor(Cursor.getPredefinedCursor(
 					Cursor.DEFAULT_CURSOR));
 			} //}}}
 
