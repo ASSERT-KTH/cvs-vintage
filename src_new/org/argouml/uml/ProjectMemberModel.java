@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.20 2004/08/16 16:57:35 mvw Exp $
+// $Id: ProjectMemberModel.java,v 1.21 2004/08/27 20:14:36 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,9 +107,9 @@ public class ProjectMemberModel extends ProjectMember {
      */
     public void load() throws java.io.IOException, org.xml.sax.SAXException {
         LOG.info("Reading " + getURL());
-        XMIParser.SINGLETON.readModels(getProject(), getURL());
-        _model = XMIParser.SINGLETON.getCurModel();
-        getProject().setUUIDRefs(XMIParser.SINGLETON.getUUIDRefs());
+        XMIParser.getSingleton().readModels(getProject(), getURL());
+        _model = XMIParser.getSingleton().getCurModel();
+        getProject().setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
         LOG.info("Done reading " + getURL());
     }
 

@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.15 2004/08/27 15:51:58 mvw Exp $
+// $Id: XMIParser.java,v 1.16 2004/08/27 20:14:36 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class XMIParser {
     /** logger */
     private static final Logger LOG = Logger.getLogger(XMIParser.class);
 
-    public static XMIParser singleton = new XMIParser();
+    private static XMIParser singleton = new XMIParser();
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -146,4 +146,10 @@ public class XMIParser {
         }
     }
 
+    /**
+     * @return Returns the singleton.
+     */
+    public static XMIParser getSingleton() {
+        return singleton;
+    }
 } /* end class XMIParser */
