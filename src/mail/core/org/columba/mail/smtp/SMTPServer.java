@@ -317,7 +317,7 @@ public class SMTPServer {
 			if (!cancel) {
 
 				// authenticate
-				POP3Protocol pop3Connection = new POP3Protocol();
+				POP3Protocol pop3Connection = new POP3Protocol(accountItem.getPopItem().get("host"), accountItem.getPopItem().getInteger("port"));
 				// open socket, query for host
 				pop3Connection.openPort();
 

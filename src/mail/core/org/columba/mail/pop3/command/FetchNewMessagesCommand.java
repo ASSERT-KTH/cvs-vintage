@@ -18,6 +18,7 @@ package org.columba.mail.pop3.command;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -86,21 +87,11 @@ public class FetchNewMessagesCommand extends Command {
 			// login and get # of messages on server
 			totalMessageCount = server.getMessageCount();
 
-			// fetch UID list from server
-			List newUIDList = fetchUIDList(totalMessageCount);
-
-			// fetch message size list from server
-			List messageSizeList = fetchMessageSizes();
-
 			// synchronize local UID list with server UID list
-			List newMessagesUIDList = synchronize(newUIDList);
+			List newMessagesUidList = synchronize();
 
 			// only download new messages
-			downloadNewMessages(
-				newUIDList,
-				messageSizeList,
-				newMessagesUIDList,
-				worker);
+			downloadNewMessages(newMessagesUidList, worker);
 
 			// logout cleanly
 			logout();
@@ -150,31 +141,23 @@ public class FetchNewMessagesCommand extends Command {
 	}
 
 	public void downloadMessage(
-		int index,
-		int size,
 		Object serverUID,
 		Worker worker)
 		throws Exception {
 		// server message numbers start with 1
 		// whereas List numbers start with 0
 		//  -> always increase fetch number
-		ColumbaMessage message = server.getMessage(index + 1, serverUID);
+		ColumbaMessage message = server.getMessage(serverUID);
 		if (message == null) {
 
 			ColumbaLogger.log.error(
 				"Message with UID="
 					+ serverUID
-					+ " and index="
-					+ (index + 1)
 					+ " isn't on the server.");
 			return;
 		}
 
-		message.getHeader().set(
-			"columba.size",
-			new Integer(Math.round(size / 1024)));
 		message.getHeader().getFlags().setSeen(false);
-		
 
 		//get inbox-folder from pop3-server preferences
 		Folder inboxFolder = server.getFolder();
@@ -188,40 +171,28 @@ public class FetchNewMessagesCommand extends Command {
 
 	}
 
-	protected int calculateTotalSize(
-		List newUIDList,
-		List messageSizeList,
-		List newMessagesUIDList) {
+	protected int calculateTotalSize( List uidList) throws Exception {
 		int totalSize = 0;
-
-		for (int i = 0; i < newMessagesUIDList.size(); i++) {
-			Object serverUID = newMessagesUIDList.get(i);
-
-			//ColumbaLogger.log.info("fetch message with UID=" + serverUID);
-
-			//int index = ( (Integer) result.get(serverUID) ).intValue();
-			int index = newUIDList.indexOf(serverUID);
-			//ColumbaLogger.log.info("List index=" + index + " server index=" + (index + 1));
-
-			int size = Integer.parseInt((String) messageSizeList.get(index));
-			//size = Math.round(size / 1024);
-
-			totalSize += size;
+			
+		Iterator it = uidList.iterator();
+	
+		while( it.hasNext() ) {
+			totalSize += server.getMessageSize(it.next());
 		}
-
-		return totalSize;
+		
+		// return kB
+		return totalSize / 1024;
 	}
 
 	public void downloadNewMessages(
-		List newUIDList,
-		List messageSizeList,
+
 		List newMessagesUIDList,
 		Worker worker)
 		throws Exception {
 		ColumbaLogger.log.info(
 			"need to fetch " + newMessagesUIDList.size() + " messages.");
-		int totalSize =
-			calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList);
+
+		int totalSize = calculateTotalSize(newMessagesUIDList);
 
 		worker.setProgressBarMaximum(totalSize);
 		worker.setProgressBarValue(0);
@@ -243,13 +214,7 @@ public class FetchNewMessagesCommand extends Command {
 						new Integer(i + 1),
 						new Integer(newMessageCount)}));
 
-			// lookup index of message 
-			int index = newUIDList.indexOf(serverUID);
-			ColumbaLogger.log.info(
-				"List index=" + index + " server index=" + (index + 1));
-
-			int size = Integer.parseInt((String) messageSizeList.get(index));
-			size = Math.round(size / 1024);
+			int size = server.getMessageSize(serverUID);
 
 			if (server
 				.getAccountItem()
@@ -269,8 +234,6 @@ public class FetchNewMessagesCommand extends Command {
 
 			// now download the message
 			downloadMessage(
-				index,
-				Integer.parseInt((String) messageSizeList.get(index)),
 				serverUID,
 				worker);
 
@@ -290,51 +253,27 @@ public class FetchNewMessagesCommand extends Command {
 				//  -> always increase delete number
 
 				// delete message with <index>==index from server
-				server.deleteMessage(index + 1);
+				server.deleteMessage(serverUID);
 
 				ColumbaLogger.log.info(
-					"deleted message with index=" + (index + 1));
+					"deleted message with uid=" + serverUID);
 			}
 		}
 	}
 
-	public List synchronize(List newUIDList) throws Exception {
-		ColumbaLogger.log.info(
-			"synchronize local UID-list with remote UID-list");
-		// synchronize local UID-list with server 		
-		List newMessagesUIDList = server.synchronize(newUIDList);
-
-		return newMessagesUIDList;
-	}
-
-	public List fetchMessageSizes() throws Exception {
-
-		log(
-			MailResourceLoader.getString(
-				"statusbar",
-				"message",
-				"fetch_size_list"));
-		// fetch message-size list
-		List messageSizeList = server.getMessageSizeList();
-		ColumbaLogger.log.info(
-			"fetched message-size-list capacity=" + messageSizeList.size());
-		return messageSizeList;
-	}
-
-	public List fetchUIDList(int totalMessageCount) throws Exception {
-		// fetch UID list 
-
+	public List synchronize() throws Exception {
 		log(
 			MailResourceLoader.getString(
 				"statusbar",
 				"message",
 				"fetch_uid_list"));
 
-		List newUIDList = server.getUIDList(totalMessageCount);
 		ColumbaLogger.log.info(
-			"fetched UID-list capacity=" + newUIDList.size());
+			"synchronize local UID-list with remote UID-list");
+		// synchronize local UID-list with server 		
+		List newMessagesUIDList = server.synchronize();
 
-		return newUIDList;
+		return newMessagesUIDList;
 	}
 
 	public void logout() throws Exception {

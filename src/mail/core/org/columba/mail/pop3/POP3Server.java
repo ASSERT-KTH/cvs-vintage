@@ -18,7 +18,6 @@
 package org.columba.mail.pop3;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -94,15 +93,7 @@ public class POP3Server {
 	}
 
 	public void forceLogout() throws Exception {
-		getStore().close();
-	}
-
-	public List getUIDList(int totalMessageCount) throws Exception {
-		return getStore().fetchUIDList(totalMessageCount);
-	}
-
-	public List getMessageSizeList() throws Exception {
-		return getStore().fetchMessageSizeList();
+		getStore().logout();
 	}
 
 	protected boolean existsLocally(Object uid, HeaderList list)
@@ -140,44 +131,46 @@ public class POP3Server {
 		return false;
 	}
 
-	public List synchronize(List newList) throws Exception {
-
+	public List synchronize() throws Exception {		
+		// Get the uids from the headercache
 		LinkedList headerUids = new LinkedList();
 		Enumeration keys = headerCache.getHeaderList().keys();
+		
 		while (keys.hasMoreElements()) {
 			headerUids.add(keys.nextElement());
 		}
-		LinkedList newUids = new LinkedList(newList);
+		
+		// Get the list of the uids on the server
+		List newUids = store.getUIDList();
 
+		// substract the uids that we already downloaded ->
+		// newUids contains all uids to fetch from the server
 		ListTools.substract(newUids, headerUids);
 
-		ListTools.substract(headerUids, new ArrayList(newList));
+		// substract the uids on the server from the downloaded uids ->
+		// headerUids are the uids that have been removed from the server
+		ListTools.substract(headerUids, store.getUIDList());
 		Iterator it = headerUids.iterator();
+		// update the cache 
 		while (it.hasNext()) {
 			headerCache.getHeaderList().remove(it.next());
 		}
 
+		// return the uids that are new
 		return newUids;
-
 	}
 
-	public void deleteMessages(int[] indexes) throws Exception {
-		for (int i = 0; i < indexes.length; i++) {
-			store.deleteMessage(indexes[i]);
-		}
-	}
-
-	public void deleteMessage(int index) throws Exception {
-		store.deleteMessage(index);
+	public void deleteMessage(Object uid) throws Exception {
+		store.deleteMessage(uid);
 	}
 
 	public int getMessageCount() throws Exception {
-		return getStore().fetchMessageCount();
+		return getStore().getMessageCount();
 	}
 
-	public ColumbaMessage getMessage(int index, Object uid) throws Exception {
+	public ColumbaMessage getMessage(Object uid) throws Exception {
 
-		ColumbaMessage message = getStore().fetchMessage(index);
+		ColumbaMessage message = getStore().fetchMessage(uid);
 
 		if (message == null)
 			return null;
@@ -199,6 +192,10 @@ public class POP3Server {
 		headerCache.getHeaderList().add(header, uid);
 
 		return message;
+	}
+
+	public int getMessageSize(Object uid) throws Exception {
+		return store.getSize(uid);
 	}
 
 	public String getFolderName() {

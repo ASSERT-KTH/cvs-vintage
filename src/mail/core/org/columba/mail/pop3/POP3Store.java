@@ -17,7 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.io.IOException;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -37,12 +39,12 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
-import org.columba.ristretto.pop3.parser.SizeListParser;
-import org.columba.ristretto.pop3.parser.UIDListParser;
+import org.columba.ristretto.pop3.protocol.POP3Exception;
 import org.columba.ristretto.pop3.protocol.POP3Protocol;
+import org.columba.ristretto.pop3.protocol.ScanListEntry;
+import org.columba.ristretto.pop3.protocol.UidListEntry;
 
 /**
  * @author freddy
@@ -67,6 +69,10 @@ public class POP3Store {
 	private Hashtable filterCache;
 
 	private StatusObservableImpl observable;
+	
+	private UidListEntry[] uidMap;
+	
+	private ScanListEntry[] sizes;
 
 	/**
 	 * Constructor for POP3Store.
@@ -76,12 +82,7 @@ public class POP3Store {
 		this.popItem = popItem;
 
 		protocol =
-			new POP3Protocol(
-				popItem.get("user"),
-				popItem.get("password"),
-				popItem.get("host"),
-				popItem.getInteger("port"),
-				popItem.getBoolean("enable_ssl", false));
+			new POP3Protocol(popItem.get("host"), popItem.getInteger("port"));
 
 		// add status information observable
 		observable = new StatusObservableImpl();
@@ -123,44 +124,55 @@ public class POP3Store {
 		this.state = state;
 	}
 
-	public List fetchUIDList(int totalMessageCount) throws Exception {
-
+	public List getUIDList() throws Exception {
 		isLogin();
+				
+		uidMap = protocol.uidl();
+		//Delete the old sizes
+		sizes = null;
+		
+		LinkedList list = new LinkedList();
+		for( int i=0; i<uidMap.length; i++) {
+			list.add( uidMap[i].getUid());
+		}
 
-		String str = protocol.fetchUIDList(totalMessageCount);
-
-		// need to parse here
-		List v = UIDListParser.parse(str);
-
-		return v;
+		return list;
 	}
 
-	public List fetchMessageSizeList() throws Exception {
-
-		isLogin();
-
-		String str = protocol.fetchMessageSizes();
-
-		// need to parse here
-		List v = SizeListParser.parse(str);
-
-		return v;
+	public int getSize( Object uid  ) throws Exception {
+		int index = getIndex(uid);
+		
+		fetchMessageSizeList();
+		
+		for( int i=0; i<sizes.length; i++) {
+			if( sizes[i].getIndex() == index ) {
+				return sizes[i].getSize();
+			}
+		}		
+		
+		return protocol.list(index).getSize();		
 	}
 
-	public int fetchMessageCount() throws Exception {
+	protected void fetchMessageSizeList() throws Exception {
+		if( sizes == null ) {
+			isLogin();
+			sizes = protocol.list();
+		}
+	}
+
+	public int getMessageCount() throws Exception {
 		isLogin();
 
-		int messageCount = protocol.fetchMessageCount();
+		int[] stat = protocol.stat();
 
-		return messageCount;
+		return stat[0];
 
 	}
 
-	public boolean deleteMessage(int index) throws Exception {
-
+	public boolean deleteMessage(Object uid) throws Exception {
 		isLogin();
 
-		return protocol.deleteMessage(index);
+		return protocol.dele(getIndex(uid));
 	}
 
 	/**
@@ -236,27 +248,33 @@ public class POP3Store {
 
 	}
 
-	public ColumbaMessage fetchMessage(int index) throws Exception {
+	protected int getIndex( Object uid ) throws IOException, POP3Exception, CommandCancelledException {		
+		for( int i=0; i<uidMap.length; i++  ) {
+			if( uidMap[i].getUid().equals(uid)) return uidMap[i].getIndex();
+		}
+		
+		throw new POP3Exception("No message with uid "+ uid +" on server.");
+	}
+
+	public ColumbaMessage fetchMessage(Object uid) throws Exception {
 		isLogin();
 
-		String rawString = protocol.fetchMessage(new Integer(index).toString());
-		if (rawString.length() == 0)
-			return null;
+		Source source = protocol.retr(getIndex(uid));
 
 		// pipe through preprocessing filter
-		if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
-			rawString = modifyMessage(rawString);
-
-		Source source = new CharSequenceSource(rawString);
+		//if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
+		//	rawString = modifyMessage(rawString);
+		//TODO: Activate PreProcessor again with Source instead of String
 
 		Header header = HeaderParser.parse(source);
 
 		ColumbaMessage m = new ColumbaMessage(header);
 		ColumbaHeader h = (ColumbaHeader) m.getHeader();
 
-		m.setStringSource(rawString);
+		m.setSource(source);
 		h.getAttributes().put("columba.host", popItem.get("host"));
 		h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
+		h.getAttributes().put("columba.size", new Integer( source.length() / 1024 ));
 
 		//h.set("columba.pop3uid", (String) uids.get(number - 1));
 
@@ -264,15 +282,10 @@ public class POP3Store {
 	}
 
 	public void logout() throws Exception {
-		boolean b = protocol.logout();
-
-		protocol.close();
-
-		state = STATE_NONAUTHENTICATE;
-	}
-
-	public void close() throws Exception {
-		protocol.close();
+		protocol.quit();
+		
+		uidMap = null;
+		sizes = null;
 
 		state = STATE_NONAUTHENTICATE;
 	}
@@ -292,7 +305,7 @@ public class POP3Store {
 	 * 
 	 * Bug number 619290 fixed.
 	 */
-	public void login() throws Exception {
+	public void login() throws IOException, POP3Exception, CommandCancelledException   {
 		PasswordDialog dialog;
 		boolean login = false;
 
@@ -333,24 +346,23 @@ public class POP3Store {
 
 			}
 
-			protocol.setLoginMethod(popItem.get("login_method"));
-			ColumbaLogger.log.debug("try to login");
-			login = protocol.login(popItem.get("user"), password);
-			ColumbaLogger.log.debug("login=" + login);
-
-			if (!login) {
-				String answer = protocol.answer;
-
+			method = popItem.get("login_method");
+			ColumbaLogger.log.debug("try to login with " + method);			
+			
+			try {
+				login = protocol.userPass(popItem.get("user"), password);
+			} catch (POP3Exception e) {
 				JOptionPane.showMessageDialog(
 					null,
-					answer,
+					e.getMessage(),
 					"Authorization failed!",
 					JOptionPane.ERROR_MESSAGE);
 
 				popItem.set("password", "");
 				state = STATE_NONAUTHENTICATE;
-
-			}
+			}			
+			
+			ColumbaLogger.log.debug("login=" + login);
 
 		}
 
@@ -366,7 +378,7 @@ public class POP3Store {
 		}
 	}
 
-	public boolean isLogin() throws Exception {
+	public boolean isLogin() throws IOException, POP3Exception, CommandCancelledException   {
 		if (state == STATE_AUTHENTICATE)
 			return true;
 		else {

@@ -63,11 +63,7 @@ public class CheckForNewMessagesCommand extends Command {
 		try {
 			int totalMessageCount = server.getMessageCount();
 
-			List newUIDList = command.fetchUIDList(totalMessageCount);
-
-			List messageSizeList = command.fetchMessageSizes();
-
-			List newMessagesUIDList = command.synchronize(newUIDList);
+			List newMessagesUIDList = command.synchronize();
 
 			int newMessagesCount = newMessagesUIDList.size();
 			if ((newMessagesCount > 0)
@@ -82,8 +78,6 @@ public class CheckForNewMessagesCommand extends Command {
 				.getPopItem()
 				.getBoolean("automatically_download_new_messages"))
 				command.downloadNewMessages(
-					newUIDList,
-					messageSizeList,
 					newMessagesUIDList,
 					worker);
 
