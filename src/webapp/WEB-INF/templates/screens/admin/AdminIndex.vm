@@ -15,6 +15,12 @@
 #if ($link.isAllowed("admin,GlobalAttributeShow.vm"))
  <li>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("$l10n.GlobalAttributes")</li>
 #end
+#if ($link.isAllowed("admin,GlobalEmailSettings.vm"))
+ <li>$link.setPage("admin,GlobalEmailSettings.vm").setLabel("$l10n.EmailConfiguration")</li>
+#end
+#if ($link.isAllowed("admin,AppConfigurationSettings.vm"))
+ <li>$link.setPage("admin,AppConfigurationSettings.vm").setLabel("$l10n.AppConfiguration")</li>
+#end
 #if ($link.isAllowed("admin,UpdateSearchIndex.vm"))
  <li>$link.setPage("admin,UpdateSearchIndex.vm").setLabel("$l10n.UpdateSearchIndex")</li>
 #end
