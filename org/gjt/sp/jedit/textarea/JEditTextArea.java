@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.21 2001/10/29 05:11:27 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.22 2001/11/05 07:56:45 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -562,11 +562,8 @@ public class JEditTextArea extends JComponent
 		boolean changed = false;
 
 		int _firstLine = (firstLine == 0 ? 0 : firstLine + electricScroll);
-		if(_lastLine >= lineCount - 1)
-			_lastLine = lineCount - 1;
-		else
-			_lastLine -= electricScroll;
-		if(virtualCaretLine > _firstLine && virtualCaretLine < _lastLine)
+		if(virtualCaretLine > _firstLine && (virtualCaretLine < _lastLine
+			|| firstLine + visibleLines >= lineCount))
 		{
 			// vertical scroll position is correct already
 		}

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.8 2001/10/17 12:14:12 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.9 2001/11/05 07:56:44 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -136,7 +136,7 @@ public class HelpViewer extends JFrame implements EBComponent
 
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		getRootPane().setPreferredSize(new Dimension(800,400));
+		getRootPane().setPreferredSize(new Dimension(800,500));
 
 		pack();
 		GUIUtilities.loadGeometry(this,"helpviewer");

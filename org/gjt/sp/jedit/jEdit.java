@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.18 2001/10/29 05:11:27 spestov Exp $
+ * @version $Id: jEdit.java,v 1.19 2001/11/05 07:56:44 spestov Exp $
  */
 public class jEdit
 {
@@ -2261,7 +2261,16 @@ public class jEdit
 		EditPlugin[] plugins = getPlugins();
 		for(int i = 0; i < plugins.length; i++)
 		{
-			plugins[i].stop();
+			try
+			{
+				plugins[i].stop();
+			}
+			catch(Throwable t)
+			{
+				Log.log(Log.ERROR,jEdit.class,"Error while "
+					+ "stopping plugin:");
+				Log.log(Log.ERROR,jEdit.class,t);
+			}
 		}
 
 		// Send EditorExiting
