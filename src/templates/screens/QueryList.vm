@@ -86,9 +86,19 @@
 #foreach ( $query in $module.GlobalQueries )
 
          #rows ()
-        <td><input type="checkbox" name="action_$query.QueryId"/></td>
-        <td>#if ($query.isUserSubscribed($user.UserId)) y #else n #end</td>
-        <td> 
+        <td>#if ($user.UserId)
+          <input type="checkbox" name="action_$query.QueryId"/></td>
+            #else
+               &nbsp;
+            #end
+        </td>
+        <td>#if ($user.UserId)
+               #if ($query.isUserSubscribed($user.UserId)) y #else n #end</td>
+            #else
+               &nbsp;
+            #end
+        </td>
+        <td>#if ($user.UserId)
            #if ($query.isUserSubscribed($user.UserId))
               #set ($id = $query.getSubscription($user.UserId).SubscriptionFrequency)
            #else
@@ -96,7 +106,11 @@
            #end
         <select name="frequency_$query.QueryId">
         #frequencySelectBox ($query $id)
-        </select></td>
+        </select>
+            #else
+               &nbsp;
+            #end
+         </td>
         #if ($security.hasPermission("Item | Approve"))
         <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
         #else
