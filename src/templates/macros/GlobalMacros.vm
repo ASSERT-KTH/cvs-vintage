@@ -373,7 +373,6 @@
 #end
 
 #macro (resultsPerPageRadioSelect $resultsPerPage $showAll)
-
 #if (!$resultsPerPage || $resultsPerPage == 0) 
   #set ($resultsPerPage = 25)
 #end
@@ -383,20 +382,18 @@
 #if ($showAll.toString().equals("true"))
  <input type="radio" value="-1" name="resultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
 #end
-
 #end
-
 
 #macro (paginate $resultsPerPage $pageNum $sortColumn $sortPolarity)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
   #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
-  <a href="$prevLink">&laquo; previous</a> |
+  <a href="$prevLink">$l10n.PaginatePrevious</a> |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
   #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
-  | <a href="$nextLink">next &raquo;</a>
+  | <a href="$nextLink">$l10n.PaginateNext</a>
  #end
  </p>
 #end
@@ -407,12 +404,12 @@
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
   #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("headingtype","$headingType").setPathInfo("id", "$singleIssueId").setPathInfo("cancelTemplate", $cancelTemplate))
-  <a href="$prevLink">&laquo; previous</a> |
+  <a href="$prevLink">$l10n.PaginatePrevious</a> |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
   #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("headingtype","$headingType").setPathInfo("id", "$singleIssueId").setPathInfo("cancelTemplate", "$cancelTemplate"))
-  | <a href="$nextLink">&raquo; next</a>
+  | <a href="$nextLink">$l10n.PaginateNext</a>
  #end
  </p>
 #end
@@ -429,7 +426,7 @@
  #foreach ($prevNextId in $data.Parameters.getStrings("issueList"))
     #set ($dummy = $prevLink.addPathInfo("issueList", $prevNextId))
  #end
-  <a href="$prevLink">&laquo; $l10n.Previous</a> |
+  <a href="$prevLink">$l10n.PaginatePrevious</a> |
  #end
 $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #set ($nextIssue=$scarabR.NextIssue)
@@ -438,7 +435,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  #foreach ($prevNextId in $data.Parameters.getStrings("issueList"))
     #set ($dummy = $nextLink.addPathInfo("issueList", $prevNextId))
  #end
-  | <a href="$nextLink">$l10n.Next &raquo;</a>
+  | <a href="$nextLink">$l10n.PaginateNext</a>
  #end
  </p>
 #end
