@@ -1,4 +1,4 @@
-// $Id: ActionAutoResize.java,v 1.4 2003/01/23 03:21:47 mkl Exp $
+// $Id: ActionAutoResize.java,v 1.5 2003/06/29 23:47:01 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class ActionAutoResize extends UMLAction {
     private static boolean _autoResize = false;
   
     public ActionAutoResize() {
-        super(Argo.localize(Argo.MENU_BUNDLE,"Toggle Auto Resizing"), 
+        super(Argo.localize(Argo.MENU_BUNDLE, "Toggle Auto Resizing"), 
               NO_ICON);
     }
 

@@ -1,3 +1,4 @@
+// $Id: SimpleCodePiece.java,v 1.3 2003/06/29 23:47:19 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,9 +67,9 @@ public class SimpleCodePiece extends CodePiece
     public SimpleCodePiece(antlr.Token token)
     {
 	this(new StringBuffer(token.getText()),
-	     token.getLine()-1,
-	     token.getColumn()-1,
-	     token.getColumn()+token.getText().length()-1);
+	     token.getLine() - 1,
+	     token.getColumn() - 1,
+	     token.getColumn() + token.getText().length() - 1);
     }
 
     /**

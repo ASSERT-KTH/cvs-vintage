@@ -1,4 +1,4 @@
-// $Id: TargetException.java,v 1.2 2003/04/29 19:25:07 kataka Exp $
+// $Id: TargetException.java,v 1.3 2003/06/29 23:47:03 linus Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,21 +31,21 @@ package org.argouml.ui.targetmanager;
  */
 public class TargetException extends RuntimeException {
 
-	/**
-	 * 
-	 */
-	public TargetException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * 
+     */
+    public TargetException() {
+	super();
+	// TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @param message
-	 */
-	public TargetException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param message
+     */
+    public TargetException(String message) {
+	super(message);
+	// TODO Auto-generated constructor stub
+    }
 
 	
 

@@ -1,3 +1,4 @@
+// $Id: PerspectiveSupport.java,v 1.3 2003/06/29 23:47:02 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,12 +34,12 @@ import org.argouml.application.api.Argo;
  * Helper class for tree models that provides help building perspectives
  * out of gorules.
  *
- * <p>$Id: PerspectiveSupport.java,v 1.2 2003/04/28 08:18:50 kataka Exp $
+ * <p>$Id: PerspectiveSupport.java,v 1.3 2003/06/29 23:47:02 linus Exp $
  *
  * @author  alexb
  * @since 0.13.5, Created on 15 April 2003
  */
-public class PerspectiveSupport{
+public class PerspectiveSupport {
     
     /**
      * The go rules that this Tree model uses to build child nodes.
@@ -51,7 +52,7 @@ public class PerspectiveSupport{
     /** list of all possible rules in the collection Todolist specific */
     protected static Vector _rules = new Vector();
         
-    protected PerspectiveSupport() {}
+    protected PerspectiveSupport() { }
     
     /** Creates a new instance of PerspectiveSupport */
     public PerspectiveSupport(String name) {

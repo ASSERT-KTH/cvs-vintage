@@ -1,4 +1,5 @@
-// Copyright (c) 1996-99,2002 The Regents of the University of California. All
+// $Id: DisplayTextTree.java,v 1.31 2003/06/29 23:47:02 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -61,7 +62,7 @@ import org.tigris.gef.presentation.Fig;
  * // naming for extension points in convertValueToText.
  * </pre>
  *
- * $Id: DisplayTextTree.java,v 1.30 2003/05/30 05:50:29 mkl Exp $
+ * $Id: DisplayTextTree.java,v 1.31 2003/06/29 23:47:02 linus Exp $
  */
 public class DisplayTextTree extends JTree implements TargetListener {
 
@@ -294,7 +295,7 @@ public class DisplayTextTree extends JTree implements TargetListener {
             // (it is never displayed in the tree(package parspective)), therefore
             // this method will not work unless we get its statemachine
             // and set that as the 'changed' object.
-            if(ModelFacade.isAStateVertex(changed)){
+            if (ModelFacade.isAStateVertex(changed)) {
                 changed = UmlHelper.getHelper().getStateMachines().getStateMachine(changed);
             }
             

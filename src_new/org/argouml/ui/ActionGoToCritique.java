@@ -1,3 +1,4 @@
+// $Id: ActionGoToCritique.java,v 1.4 2003/06/29 23:47:01 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: ActionGoToCritique.java
 // Classes: ActionGoToCritique
 // Original Author: agauthie
-// $Id: ActionGoToCritique.java,v 1.3 2003/04/29 19:25:07 kataka Exp $
+// $Id: ActionGoToCritique.java,v 1.4 2003/06/29 23:47:01 linus Exp $
 
 package org.argouml.ui;
 
@@ -35,17 +36,17 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.ui.UMLAction;
 
 public class ActionGoToCritique extends UMLAction {
-  ToDoItem _item = null;
+    ToDoItem _item = null;
 
-  public ActionGoToCritique(ToDoItem item) {
-    super(item.getHeadline(), NO_ICON);
-    _item = item;
-  }
+    public ActionGoToCritique(ToDoItem item) {
+	super(item.getHeadline(), NO_ICON);
+	_item = item;
+    }
 
-  public void actionPerformed(ActionEvent ae) {
-    ProjectBrowser.getInstance().getTodoPane().selectItem(_item);
-  }
+    public void actionPerformed(ActionEvent ae) {
+	ProjectBrowser.getInstance().getTodoPane().selectItem(_item);
+    }
 
-  public boolean shouldBeEnabled() { return true; }
+    public boolean shouldBeEnabled() { return true; }
 
 } /* end class ActionGoToCritique */

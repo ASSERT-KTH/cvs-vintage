@@ -1,4 +1,5 @@
-// Copyright (c) 1996-02 The Regents of the University of California. All
+// $Id: CrMultipleRealization.java,v 1.3 2003/06/29 23:47:19 linus Exp $
+// Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +27,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.2 2002/08/19 08:18:17 kataka Exp $
+// $Id: CrMultipleRealization.java,v 1.3 2003/06/29 23:47:19 linus Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -47,21 +48,21 @@ import org.argouml.uml.MMUtil;
  */
 public class CrMultipleRealization extends CrUML {
 
-  public CrMultipleRealization() {
-    setHeadline("Interface cannot realize another interface");
-    addSupportedDecision(CrUML.decINHERITANCE);
-    addSupportedDecision(CrUML.decCODE_GEN);
-    addTrigger("generalization");
-  }
+    public CrMultipleRealization() {
+	setHeadline("Interface cannot realize another interface");
+	addSupportedDecision(CrUML.decINHERITANCE);
+	addSupportedDecision(CrUML.decCODE_GEN);
+	addTrigger("generalization");
+    }
 
-  public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof MInterface)) return NO_PROBLEM;
-    MInterface inter = (MInterface) dm;
+    public boolean predicate2(Object dm, Designer dsgr) {
+	if (!(dm instanceof MInterface)) return NO_PROBLEM;
+	MInterface inter = (MInterface) dm;
    
-    Collection realize = UmlHelper.getHelper().getCore().getSpecifications(inter);
+	Collection realize = UmlHelper.getHelper().getCore().getSpecifications(inter);
 
-    if (realize != null && realize.size()>0) return PROBLEM_FOUND;
-    return NO_PROBLEM;
-  }
+	if (realize != null && realize.size() > 0) return PROBLEM_FOUND;
+	return NO_PROBLEM;
+    }
 } /* end class CrMultipleRealization.java */
 

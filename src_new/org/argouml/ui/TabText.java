@@ -1,3 +1,4 @@
+// $Id: TabText.java,v 1.13 2003/06/29 23:47:02 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written

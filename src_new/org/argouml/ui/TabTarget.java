@@ -1,3 +1,4 @@
+// $Id: TabTarget.java,v 1.4 2003/06/29 23:47:02 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,31 +32,31 @@ import org.argouml.ui.targetmanager.TargetListener;
  * An interface for JPanels that are in the DetailsPane, and that
  * change target based on the selections made in the gui/views.
  *
- * $Id: TabTarget.java,v 1.3 2003/06/08 21:48:10 kataka Exp $
+ * $Id: TabTarget.java,v 1.4 2003/06/29 23:47:02 linus Exp $
  *
  * @since 0.13.4
- * @author $Author: kataka $
+ * @author $Author: linus $
  */
 public interface TabTarget extends TargetListener {
     
-  /**
-   *
-   */  
-  public void setTarget(Object target);
+    /**
+     *
+     */  
+    public void setTarget(Object target);
   
-  /**
-   *
-   */
-  public Object getTarget();
+    /**
+     *
+     */
+    public Object getTarget();
   
-  /**
-   * Refreshes the tab IN TOTAL
-   */
-  public void refresh();
+    /**
+     * Refreshes the tab IN TOTAL
+     */
+    public void refresh();
     
   
-  /**
-   * Returns true if the tab should be enabled with the given target
-   */
-  public boolean shouldBeEnabled(Object target);
+    /**
+     * Returns true if the tab should be enabled with the given target
+     */
+    public boolean shouldBeEnabled(Object target);
 }

@@ -1,3 +1,4 @@
+// $Id: TreeModelComposite.java,v 1.16 2003/06/29 23:47:02 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +36,7 @@ import org.apache.log4j.Category;
  * that determine how to link parents to children in the tree. Those
  * rules can now be found in PerspectiveSupport.
  *
- * <p>$Id: TreeModelComposite.java,v 1.15 2003/05/05 06:47:44 kataka Exp $
+ * <p>$Id: TreeModelComposite.java,v 1.16 2003/06/29 23:47:02 linus Exp $
  */
 public class TreeModelComposite extends TreeModelSupport implements TreeModel {
 
@@ -73,7 +74,7 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
 
         int nSubs = _goRules.size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel)_goRules.elementAt(i);     
+            TreeModel tm = (TreeModel) _goRules.elementAt(i);     
             int childCount = tm.getChildCount(parent);
             if (index < childCount) {              
                 return tm.getChild(parent, index);
@@ -89,7 +90,7 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
         int childCount = 0;
         int nSubs = _goRules.size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel)_goRules.elementAt(i);
+            TreeModel tm = (TreeModel) _goRules.elementAt(i);
             childCount += tm.getChildCount(parent);
         }
         return childCount;
@@ -101,7 +102,7 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
         int childCount = 0;
         int nSubs = _goRules.size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel)_goRules.elementAt(i);           
+            TreeModel tm = (TreeModel) _goRules.elementAt(i);           
             int childIndex = tm.getIndexOfChild(parent, child);
             if (childIndex != -1) {               
                 return childIndex + childCount;
@@ -128,7 +129,7 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
     public boolean isLeaf(Object node) {
         int nSubs = _goRules.size();
         for (int i = 0; i < nSubs; i++) {
-            TreeModel tm = (TreeModel)_goRules.elementAt(i);
+            TreeModel tm = (TreeModel) _goRules.elementAt(i);
             if (!tm.isLeaf(node))
                 return false;
         }
@@ -146,7 +147,7 @@ public class TreeModelComposite extends TreeModelSupport implements TreeModel {
      * @param path path to the node that the user has altered.
      * @param newValue the new value from the TreeCellEditor.
      */
-    public void valueForPathChanged(TreePath path, Object newValue) {}
+    public void valueForPathChanged(TreePath path, Object newValue) { }
 
     ////////////////////////////////////////////////////////////////
     // other methods
