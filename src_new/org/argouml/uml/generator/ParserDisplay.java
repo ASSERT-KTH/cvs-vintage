@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.129 2004/11/05 16:39:19 mvw Exp $
+// $Id: ParserDisplay.java,v 1.130 2004/11/05 18:42:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1600,10 +1600,13 @@ public class ParserDisplay extends Parser {
     /**
      * Parse user input for state bodies and assign the individual lines to
      * according actions or transistions. The user input consists of multiple
-     * lines like: action-label / action-expression or the format of a regular
-     * transition - see parseTransition(). "action-label" stands for one of
-     * "entry", "do" and "exit". The words "entry", "do" and "exit" are
-     * case-independent.
+     * lines like:<br>
+     *   action-label / action-expression 
+     * <br> or the format of a regular
+     * transition - see parseTransition(). <p>
+     * 
+     * "action-label" stands for one of "entry", "do" and "exit". 
+     * The words "entry", "do" and "exit" are case-independent.
      * 
      * @param st  The State object.
      * @param s   The string to parse.
@@ -1730,11 +1733,12 @@ public class ParserDisplay extends Parser {
     }
 
     /**
-     * Parse a transition description line of the form: "event-signature
-     * [guard-condition] / action-expression". <p> 
+     * Parse a transition description line of the form:<br>
+     *    "event-signature [guard-condition] / action-expression". <p> 
      * 
      * If the last character of this line
-     * is a ";", then it is ignored. 
+     * is a ";", then it is ignored.<p>
+     *  
      * The "event-signature" may be one of the 4
      * formats:<p> 
      *      ChangeEvent: "when(condition)"   <br> 
@@ -3517,16 +3521,17 @@ public class ParserDisplay extends Parser {
      * Update an existing Action with a new Script.
      * 
      * @author MVW
-     * @param old
-     *            the Action
-     * @param s
-     *            a string representing a new Script for the ActionExpression
+     * @param old the Action
+     * @param s   a string representing a new Script for the ActionExpression
      */
     private void updateAction(Object old, String s) {
-        Object ae = ModelFacade.getScript(old);
-        String language = "java";
-        if (ae != null)
+        Object ae = ModelFacade.getScript(old); // the ActionExpression
+        String language = "Java";
+        if (ae != null) {
             language = ModelFacade.getLanguage(ae);
+            String body = (String) ModelFacade.getBody(ae);
+            if (body.equals(s)) return;
+        }
         ae = UmlFactory.getFactory().getDataTypes().createActionExpression(
                 language, s);
         ModelFacade.setScript(old, ae);
