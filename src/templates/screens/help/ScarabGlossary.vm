@@ -1,122 +1,101 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+  <div class="docs" id="scarabglossary">
+   <h2>Glossary</h2>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
- <head>
+   <div id="toc">
+    <ul>
+     <li>
+      Scarab Help 
 
+      <ul>
+       <li><a href="$link.setPage(">Introduction to Scarab</a></li>
 
-  <title>Glossary</title>
- </head>
+       <li><a href="$link.setPage(">Managing Issues</a></li>
 
- <body>
-<div class="docs" id="scarabglossary"> 
-  <h2>Glossary</h2>
-  <div id="toc"> 
+       <li><a href="$link.setPage(">Searching the database</a></li>
 
-  <ul>
-      <li>Scarab Help 
-        <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to 
-            Scarab</a></li>
-          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
-          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Reports</a></li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
-          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
-          <li><strong>Glossary</strong></li>
-        </ul>
-      </li>
+       <li><a href="$link.setPage(">Reports</a></li>
+
+       <li><a href="$link.setPage(">Scarab guidelines</a></li>
+
+       <li><a href="$link.setPage(">FAQ</a></li>
+
+       <li>Glossary</li>
+      </ul>
+     </li>
     </ul>
-  </div>
-   
-  <h3>Glossary</h3>
-  <p>The following is a short list of terms found in the Scarab interface.</p>
-  <table width="75%" border="1" cellspacing="2" cellpadding="2">
-    <tr valign="top"> 
-      <td width="21%"><strong>Term</strong></td>
-      <td width="79%"><strong>Definition</strong></td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Active/inactive</strong></td>
-      <td width="79%">parameter that determines if an item is available for use</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Assign</strong></td>
-      <td width="79%">associating a user with an issue through the &quot;assign&quot; 
-        user attribute</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Attachment</strong></td>
-      <td width="79%">files can be attached directly to issues</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Attribute</strong></td>
-      <td width="79%">Attributes are associated with issue types within projects 
-        and are used to define issues. </td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Attribute Group</strong></td>
-      <td width="79%">Attributes associated with an issue are organized within 
-        attribute groups. </td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Comparative analysis report</strong></td>
-      <td width="79%">a report that provides a snap shot of a single point in 
-        time</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Defect</strong></td>
-      <td width="79%">issues identified within existing feature/functionality</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Feature</strong></td>
-      <td width="79%">new functionality to be incorporated into the project </td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Global attributes</strong></td>
-      <td width="79%">a set of predefined attributes available for association 
-        with all projects</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%" height="34"> 
-        <p><strong>Issue type</strong></p>
-      </td>
-      <td width="79%" height="34">All scarab processes are performed within the 
-        realm of an issue type. Issue types are comprised of a unique set of attributes, 
-        attribute options, issues, templates, queries and reports. </td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Rate of change report</strong></td>
-      <td width="79%">a report that tracks changes to issues over a period of 
-        time</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Report</strong></td>
-      <td width="79%">to track the progress of your project</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Primary filter attribute</strong></td>
-      <td width="79%">defines the subset of issues from which the report is drawn</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Query</strong></td>
-      <td width="79%">allows you to search for issues within the database</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>Template</strong></td>
-      <td width="79%">a set of values for quick access and use while creating 
-        issues</td>
-    </tr>
-    <tr valign="top"> 
-      <td width="21%"><strong>User attributes</strong></td>
-      <td width="79%">User attributes are used to associate users with issues 
-      </td>
-    </tr>
-  </table>
+   </div>
 
-  <div class="courtesylinks">
-    <p><a href="#toc">Top</a>
+   <h3>Glossary</h3>
+
+   <p>The following is a short list of terms found in the Scarab interface.</p>
+
+   <dl>
+    <dt>Active/inactive</dt>
+
+    <dd>parameter that determines if an item is available for use</dd>
+
+    <dt>Assign</dt>
+
+    <dd>associating a user with an issue through the "assign" user attribute</dd>
+
+    <dt>Attachment</dt>
+
+    <dd>files can be attached directly to issues</dd>
+
+    <dt>Attribute</dt>
+
+    <dd>Attributes are associated with issue types within projects and are used to define issues.</dd>
+
+    <dt>Attribute Group</dt>
+
+    <dd>Attributes associated with an issue are organized within attribute groups.</dd>
+
+    <dt>Comparative analysis report</dt>
+
+    <dd>a report that provides a snap shot of a single point in time</dd>
+
+    <dt>Defect</dt>
+
+    <dd>issues identified within existing feature/functionality</dd>
+
+    <dt>Feature</dt>
+
+    <dd>new functionality to be incorporated into the project</dd>
+
+    <dt>Global attributes</dt>
+
+    <dd>a set of predefined attributes available for association with all projects</dd>
+
+    <dt>Issue type</dt>
+
+    <dd>All scarab processes are performed within the realm of an issue type. Issue types are comprised of a unique set of attributes, attribute options, issues, templates, queries and reports.</dd>
+
+    <dt>Rate of change report</dt>
+
+    <dd>a report that tracks changes to issues over a period of time</dd>
+
+    <dt>Report</dt>
+
+    <dd>to track the progress of your project</dd>
+
+    <dt>Primary filter attribute</dt>
+
+    <dd>defines the subset of issues from which the report is drawn</dd>
+
+    <dt>Query</dt>
+
+    <dd>allows you to search for issues within the database</dd>
+
+    <dt>Template</dt>
+
+    <dd>a set of values for quick access and use while creating issues</dd>
+
+    <dt>User attributes</dt>
+
+    <dd>User attributes are used to associate users with issues</dd>
+   </dl>
+
+   <div class="courtesylinks">
+    <p><a href="#toc">Top</a></p>
    </div>
   </div>
- </body>
-</html>
