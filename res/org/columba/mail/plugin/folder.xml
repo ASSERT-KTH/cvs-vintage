@@ -2,11 +2,11 @@
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
 <folderlist>
- <folder name="Root" class="org.columba.mail.folder.Root"/>
- <folder name="LocalRootFolder" class="org.columba.mail.folder.LocalRootFolder"/>
- <folder name="IMAPRootFolder" class="org.columba.mail.folder.imap.IMAPRootFolder"/>
- <folder name="MHFolder" class="org.columba.mail.folder.mh.CachedMHFolder"/>
- <folder name="IMAPFolder" class="org.columba.mail.folder.imap.IMAPFolder"/>
- <folder name="VirtualFolder" class="org.columba.mail.folder.virtual.VirtualFolder"/>
- <folder name="OutboxFolder" class="org.columba.mail.folder.outbox.OutboxFolder"/>
+ <folder name="Root" group="root" class="org.columba.mail.folder.Root"/>
+ <folder name="LocalRootFolder" group="local" class="org.columba.mail.folder.LocalRootFolder"/>
+ <folder name="IMAPRootFolder" group="imap" class="org.columba.mail.folder.imap.IMAPRootFolder"/>
+ <folder name="MHFolder" group="local" possible_parents="local" class="org.columba.mail.folder.mh.CachedMHFolder"/>
+ <folder name="IMAPFolder" group="imap" possible_parents="imap" class="org.columba.mail.folder.imap.IMAPFolder"/>
+ <folder name="VirtualFolder" group="virtual" class="org.columba.mail.folder.virtual.VirtualFolder"/>
+ <folder name="OutboxFolder" group="local" class="org.columba.mail.folder.outbox.OutboxFolder"/>
 </folderlist>
