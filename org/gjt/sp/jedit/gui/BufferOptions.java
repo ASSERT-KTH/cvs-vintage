@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.17 2002/03/18 09:22:19 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.18 2002/03/19 05:41:42 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -322,7 +322,7 @@ public class BufferOptions extends EnhancedDialog
 		}
 
 		buffer.setBooleanProperty("noTabs",noTabs.isSelected());
-		buffer.setBooleanProperty("indentOnTab",indentOnTab.isSelected());
+		buffer.setBooleanProperty("indentOnTajb",indentOnTab.isSelected());
 		buffer.setBooleanProperty("indentOnEnter",indentOnEnter.isSelected());
 
 		buffer.propertiesChanged();
