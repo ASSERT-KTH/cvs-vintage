@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.27 2004/02/28 12:29:41 linus Exp $
+// $Id: ProjectManager.java,v 1.28 2004/03/03 01:10:06 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public final class ProjectManager {
     public static final String SAVE_STATE_PROPERTY_NAME = "saveState";
 
     /** logger */
-    private static Logger cat = Logger.getLogger(ProjectManager.class);
+    private static final Logger LOG = Logger.getLogger(ProjectManager.class);
 
     /**
      * The singleton instance of this class
@@ -196,7 +196,7 @@ public final class ProjectManager {
      */
     public Project makeEmptyProject() {
         _creatingCurrentProject = true;
-        cat.info("making empty project");
+        LOG.info("making empty project");
         Project p = new Project();
         // the following line should not normally be here,
         // but is necessary for argouml start up.
@@ -303,7 +303,7 @@ public final class ProjectManager {
         } catch (IOException e) {
             // exception can occur both due to argouml code as to J2SE
             // code, so lets log it
-            cat.error(e);
+            LOG.error(e);
             throw e;
         }
         // read the xmi
@@ -322,13 +322,13 @@ public final class ProjectManager {
 
             XMIReader xmiReader = null;
             try {
-                xmiReader = new org.argouml.xml.xmi.XMIReader();
+                xmiReader = new XMIReader();
             } catch (SAXException se) { // duh, this must be catched and handled
-                cat.error(se);
+                LOG.error(se);
                 throw se;
             } catch (ParserConfigurationException pc) {
 		// duh, this must be catched and handled
-                cat.error(pc);
+                LOG.error(pc);
                 throw pc;
             }
 //            Object mmodel = null;
@@ -347,7 +347,7 @@ public final class ProjectManager {
                             + url.toString()
                             + " could not be "
                             + "parsed.");
-                    cat.error(
+                    LOG.error(
                         "XMI file "
                             + url.toString()
                             + " could not be "
@@ -364,7 +364,7 @@ public final class ProjectManager {
         } catch (IOException e) {
             // exception can occur both due to argouml code as to J2SE
             // code, so lets log it
-            cat.error(e);
+            LOG.error(e);
             throw e;
         }
         p.loadZippedProjectMembers(url);
