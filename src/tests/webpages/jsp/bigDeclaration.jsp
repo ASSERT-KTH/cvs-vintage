@@ -10,6 +10,18 @@
 <body>
 <%!
 
+// The following declarations have been moved out out of the respective
+// classes as JDK 1.1 does not support static objects in inner classes.
+
+public static final int Cell_VALUE = 0;
+public static final int Cell_LABEL = 1;
+public static final int Cell_URL   = 2;
+public static final int Cell_FORMULA = 3;
+
+public static final int Node_OP = 0;
+public static final int Node_VALUE = 1;
+public static final int Node_CELL = 2;
+
 public class SpreadSheet 
     extends Applet
     implements MouseListener, KeyListener {
@@ -103,7 +115,7 @@ public class SpreadSheet
     public void destroy() {
 	for (int i=0; i < rows; i++) {
 	    for (int j=0; j < columns; j++) {
-		if (cells[i][j].type == Cell.URL) {
+		if (cells[i][j].type == Cell_URL) {
 		    cells[i][j].updaterThread.stop();
 		}
 	    }
@@ -144,7 +156,7 @@ public class SpreadSheet
 	//System.out.println("SpreadSheet.recalculate");
 	for (i=0; i < rows; i++) {
 	    for (j=0; j < columns; j++) {
-		if (cells[i][j] != null && cells[i][j].type == Cell.FORMULA) {
+		if (cells[i][j] != null && cells[i][j].type == Cell_FORMULA) {
 		    cells[i][j].setRawValue(evaluateFormula(cells[i][j].parseRoot));
 		    cells[i][j].needRedisplay = true;
 		}
@@ -163,7 +175,7 @@ public class SpreadSheet
 	    return val;
 	}
 	switch (n.type) {
-	  case Node.OP:
+	  case Node_OP:
 	    val = evaluateFormula(n.left);
 	    switch (n.op) {
 	      case '+':
@@ -180,10 +192,10 @@ public class SpreadSheet
 		break;
 	    }
 	    break;
-	  case Node.VALUE:
+	  case Node_VALUE:
 	    //System.out.println("=>" + n.value);
 	    return n.value;
-	  case Node.CELL:
+	  case Node_CELL:
 	    if (n == null) {
 		//System.out.println("NULL at 192");
 	    } else {
@@ -400,16 +412,12 @@ class CellUpdater extends Thread {
 }
 
 class Cell {
-    public static final int VALUE = 0;
-    public static final int LABEL = 1;
-    public static final int URL   = 2;
-    public static final int FORMULA = 3;
     
     Node	parseRoot;
     boolean	needRedisplay;
     boolean selected = false;
     boolean transientValue = false;
-    public int	type = Cell.VALUE;
+    public int	type = Cell_VALUE;
     String	valueString = "";
     String	printString = "v";
     float	value;
@@ -444,7 +452,7 @@ class Cell {
     public void setValue(float f) {
 	setRawValue(f);
 	printString = "v" + valueString;
-	type = Cell.VALUE;
+	type = Cell_VALUE;
 	paused = false;
 	app.recalculate();
 	needRedisplay = true;
@@ -460,16 +468,16 @@ class Cell {
     public void setUnparsedValue(String s) {
 	switch (s.charAt(0)) {
 	  case 'v':
-	    setValue(Cell.VALUE, s.substring(1));
+	    setValue(Cell_VALUE, s.substring(1));
 	    break;
 	  case 'f':
-	    setValue(Cell.FORMULA, s.substring(1));
+	    setValue(Cell_FORMULA, s.substring(1));
 	    break;
 	  case 'l':
-	    setValue(Cell.LABEL, s.substring(1));
+	    setValue(Cell_LABEL, s.substring(1));
 	    break;
 	  case 'u':
-	    setValue(Cell.URL, s.substring(1));
+	    setValue(Cell_URL, s.substring(1));
 	    break;
 	}
     }
@@ -529,7 +537,7 @@ class Cell {
 		node.left = left;
 		node.right = right;
 		node.op = op;
-		node.type = Node.OP;
+		node.type = Node_OP;
 		//node.print(3);
 		return subformula;
 	    } else {
@@ -582,7 +590,7 @@ class Cell {
 		//System.out.println("Failed (number format error)");
 		return formula;
 	    }
-	    node.type = Node.VALUE;
+	    node.type = Node_VALUE;
 	    node.value = value;
 	    //node.print(3);
 	    restFormula = formula.substring(i);
@@ -604,7 +612,7 @@ class Cell {
 	    //System.out.println("row = " + row + " column = " + column);
 	    node.row = row - 1;
 	    node.column = column;
-	    node.type = Node.CELL;
+	    node.type = Node_CELL;
 	    //node.print(3);
 	    if (i == restFormula.length()) {
 		restFormula = null;
@@ -622,7 +630,7 @@ class Cell {
 
     public void setValue(int type, String s) {
 	paused = false;
-	if (this.type == Cell.URL) {
+	if (this.type == Cell_URL) {
 	    updaterThread.stop();
 	    updaterThread = null;
 	}
@@ -631,18 +639,18 @@ class Cell {
 	this.type = type;
 	needRedisplay = true;
 	switch (type) {
-	  case Cell.VALUE:
+	  case Cell_VALUE:
 	    setValue(Float.valueOf(s).floatValue());
 	    break;
-	  case Cell.LABEL:
+	  case Cell_LABEL:
 	    printString = "l" + valueString;
 	    break;
-	  case Cell.URL:
+	  case Cell_URL:
 	    printString = "u" + valueString;
 	    updaterThread = new CellUpdater(this);
 	    updaterThread.start();
 	    break;
-	  case Cell.FORMULA:
+	  case Cell_FORMULA:
 	    parseFormula(valueString, parseRoot = new Node());
 	    printString = "f" + valueString;
 	    break;
@@ -677,14 +685,14 @@ class Cell {
 	g.fillRect(x, y, width - 1, height);
 	if (valueString != null) {
 	    switch (type) {
-	      case Cell.VALUE:
-	      case Cell.LABEL:
+	      case Cell_VALUE:
+	      case Cell_LABEL:
 		g.setColor(fgColor);
 		break;
-	      case Cell.FORMULA:
+	      case Cell_FORMULA:
 		g.setColor(Color.red);
 		break;
-	      case Cell.URL:
+	      case Cell_URL:
 		g.setColor(Color.blue);
 		break;
 	    }
@@ -704,9 +712,6 @@ class Cell {
 }
 
 class Node {
-    public static final int OP = 0;
-    public static final	int VALUE = 1;
-    public static final int CELL = 2;
 
     int		type;
     Node 	left;
@@ -723,7 +728,7 @@ class Node {
 	row = -1;
 	column = -1;
 	op = 0;
-	type = Node.VALUE;
+	type = Node_VALUE;
     }
     public Node(Node n) {
 	left = n.left;
@@ -745,14 +750,14 @@ class Node {
 	System.out.println("NODE type=" + type);
 	indent(indentLevel);
 	switch (type) {
-	  case Node.VALUE:
+	  case Node_VALUE:
 	    System.out.println(" value=" + value);
 	    break;
-	  case Node.CELL:
+	  case Node_CELL:
 	    l[0] = (char)((int)'A' + column);
 	    System.out.println(" cell=" + new String(l) + (row+1));
 	    break;
-	  case Node.OP:
+	  case Node_OP:
 	    System.out.println(" op=" + op);
 	    left.print(indentLevel + 3);
 	    right.print(indentLevel + 3);
@@ -886,13 +891,13 @@ class SpreadSheetInput
 	    }
 	    break;
 	  case 'l':
-	    ((SpreadSheet)app).setCurrentValue(Cell.LABEL, sval.substring(1));
+	    ((SpreadSheet)app).setCurrentValue(Cell_LABEL, sval.substring(1));
 	    break;
 	  case 'u':
-	    ((SpreadSheet)app).setCurrentValue(Cell.URL, sval.substring(1));
+	    ((SpreadSheet)app).setCurrentValue(Cell_URL, sval.substring(1));
 	    break;
 	  case 'f':
-	    ((SpreadSheet)app).setCurrentValue(Cell.FORMULA, sval.substring(1));
+	    ((SpreadSheet)app).setCurrentValue(Cell_FORMULA, sval.substring(1));
 	    break;
 	}
     }
