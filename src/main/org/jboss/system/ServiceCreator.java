@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -82,17 +82,30 @@ public class ServiceCreator
       log.info("About to create the bean"+name);
 		
       // Create the MBean instance
-      ObjectInstance instance = 
-         server.createMBean(code,
-                            name,
-                            loader,
-                            constructor.params,
-                            constructor.signature);
+      try 
+      {
+         ObjectInstance instance =  server.createMBean(code,
+                                                       name,
+                                                       loader,
+                                                       constructor.params,
+                                                       constructor.signature);
+         log.info("Created the bean"+name);
 		
-      log.info("Created the bean"+name);
-		
-      return instance;
+         return instance;
 	
+      } 
+      catch (Exception e) 
+      {
+         //didn't work, unregister in case the jmx agent is screwed.
+         try 
+         {
+            server.unregisterMBean(name);
+         } catch (Exception othere) 
+         { } // end of try-catch
+         
+         throw e;
+      } // end of try-catch
+      
    }	
 	
    /**
