@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.28 2002/03/22 02:54:34 larryi Exp $
- * $Revision: 1.28 $
- * $Date: 2002/03/22 02:54:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.29 2002/07/04 04:09:30 billbarker Exp $
+ * $Revision: 1.29 $
+ * $Date: 2002/07/04 04:09:30 $
  *
  * ====================================================================
  *
@@ -358,7 +358,6 @@ public final class HttpServletResponseFacade  implements HttpServletResponse
 	} catch (MalformedURLException e) {
 	    return (false);
 	}
-
 	// Does this URL match down to (and including) the context path?
 	if (!request.scheme().equalsIgnoreCase(url.getProtocol()))
 	    return (false);
@@ -414,10 +413,7 @@ public final class HttpServletResponseFacade  implements HttpServletResponse
 	    url = new URL(location);
 	} catch (MalformedURLException e1) {
 	    Request request = response.getRequest();
-	    HttpServletRequestFacade reqF=(HttpServletRequestFacade)request.
-		getFacade();
-	    String requrl =
-		HttpUtils.getRequestURL(reqF).toString();
+	    String requrl = getRequestURL(request);
 	    try {
 		url = new URL(new URL(requrl), location);
 	    } catch (MalformedURLException e2) {
@@ -427,6 +423,26 @@ public final class HttpServletResponseFacade  implements HttpServletResponse
 	return (url.toExternalForm());
 
     }
+
+    /**
+     * Return the requested URL.
+     * Should be moved to util.
+     */
+    private String getRequestURL(Request req) {
+	StringBuffer sb = new StringBuffer();
+	int port = req.getServerPort();
+	String scheme = req.scheme().toString();
+	sb.append(scheme).append("://");
+	sb.append(req.serverName().toString());
+	if(("http".equalsIgnoreCase(scheme) && port != 80) ||
+	   ("https".equalsIgnoreCase(scheme) && port != 443)) {
+	    sb.append(':').append(port);
+	}
+	sb.append(req.requestURI().toString());
+	return sb.toString();
+    }
+
+	
 
 
     /**
