@@ -15,6 +15,29 @@ import org.jboss.security.RunAsIdentity;
  */
 public class SecurityActions
 {
+   private static class GetTCLAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetTCLAction();
+      public Object run()
+      {
+         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+         return loader;
+      }
+   }
+   private static class SetTCLAction implements PrivilegedAction
+   {
+      ClassLoader loader;
+      SetTCLAction(ClassLoader loader)
+      {
+         this.loader = loader;
+      }
+      public Object run()
+      {
+         Thread.currentThread().setContextClassLoader(loader);
+         loader = null;
+         return null;
+      }
+   }
    private static class GetSubjectAction implements PrivilegedAction
    {
       static PrivilegedAction ACTION = new GetSubjectAction();
@@ -86,6 +109,17 @@ public class SecurityActions
          RunAsIdentity principal = SecurityAssociation.popRunAsIdentity();
          return principal;
       }
+   }
+
+   static ClassLoader getContextClassLoader()
+   {
+      ClassLoader loader = (ClassLoader) AccessController.doPrivileged(GetTCLAction.ACTION);
+      return loader;
+   }
+   static void setContextClassLoader(ClassLoader loader)
+   {
+      PrivilegedAction action = new SetTCLAction(loader);
+      AccessController.doPrivileged(action);
    }
 
    static Subject getSubject()
