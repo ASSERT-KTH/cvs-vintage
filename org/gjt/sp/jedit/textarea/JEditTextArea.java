@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.79 2002/02/01 07:40:23 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.80 2002/02/03 06:37:56 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -260,6 +260,8 @@ public class JEditTextArea extends JComponent
 
 			if(this.buffer != null)
 			{
+				setFirstLine(0);
+
 				selectNone();
 				caretLine = caret = 0;
 				bracketLine = bracketPosition = -1;
@@ -273,8 +275,6 @@ public class JEditTextArea extends JComponent
 			bufferHandlerInstalled = true;
 
 			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
-
-			maxHorizontalScrollWidth = 0;
 
 			chunkCache.setFirstLine(0);
 			physFirstLine = foldVisibilityManager.virtualToPhysical(0);
