@@ -59,7 +59,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTypePeer.java,v 1.27 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: IssueTypePeer.java,v 1.28 2003/04/07 19:50:00 elicia Exp $
  */
 public class IssueTypePeer 
     extends org.tigris.scarab.om.BaseIssueTypePeer
@@ -199,8 +199,8 @@ public class IssueTypePeer
             for (int i =0; i<types.size();i++)
             {
                 IssueType it = (IssueType)types.get(i);
-                if (id != null && !it.getIssueTypeId().equals(id)
-                    && it.getName().trim().equalsIgnoreCase(name.trim()))
+                if ((id == null ||  (id != null && !it.getPrimaryKey().equals(id)))
+                    && it.getName().trim().toLowerCase().equals(name.trim().toLowerCase()))
                 {
                     unique = false;
                 }
