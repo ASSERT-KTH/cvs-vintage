@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.7 2004/09/22 09:33:42 tdiesler Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.8 2004/11/20 08:31:50 starksm Exp $
 
 import org.jboss.ejb.ContainerMBean;
 import org.jboss.logging.Logger;
@@ -50,7 +50,6 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
 
    // The service attributes
    private ObjectName dataSource;
-   private String tableName;
    private String dbpPluginClassName;
 
    // The transaction manager, to suspend the current Tx during delete
@@ -85,7 +84,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
 
       // init the plugin
-      dbpPlugin.init(server, dataSource, tableName);
+      dbpPlugin.init(server, dataSource);
 
       // create the table if needed
       dbpPlugin.createTableIfNotExists();
@@ -146,7 +145,8 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       {
          log.warn("Unable to delete timer", e);
       }
-      finally {
+      finally
+      {
          // resume the Tx
          resumeTransaction(threadTx);
       }
@@ -241,22 +241,6 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    public void setDataSource(ObjectName dataSource)
    {
       this.dataSource = dataSource;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getTableName()
-   {
-      return tableName;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setTableName(String tableName)
-   {
-      this.tableName = tableName;
    }
 
    /**

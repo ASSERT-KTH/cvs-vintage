@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: OracleDatabasePersistencePlugin.java,v 1.2 2004/09/22 09:52:24 tdiesler Exp $
+// $Id: OracleDatabasePersistencePlugin.java,v 1.3 2004/11/20 08:31:50 starksm Exp $
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.logging.Logger;
@@ -46,8 +46,8 @@ public class OracleDatabasePersistencePlugin extends GeneralPurposeDatabasePersi
       {
          con = ds.getConnection();
 
-         String sql = "insert into " + tableName + " " +
-                 "(" + TIMERID + "," + TARGETID + "," + INITIALDATE + "," + INTERVAL + "," + INSTANCEPK + "," + INFO + ") " +
+         String sql = "insert into " + getTableName() + " " +
+                 "(" + getColumnTimerID() + "," + getColumnTargetID() + "," + getColumnInitialDate() + "," + getColumnTimerInterval() + "," + getColumnInstancePK() + "," + getColumnInfo() + ") " +
                  "values (?,?,?,?,?,?)";
          st = con.prepareStatement(sql);
 
@@ -105,17 +105,17 @@ public class OracleDatabasePersistencePlugin extends GeneralPurposeDatabasePersi
          List list = new ArrayList();
 
          st = con.createStatement();
-         rs = st.executeQuery("select * from " + tableName);
+         rs = st.executeQuery("select * from " + getTableName());
          while (rs.next())
          {
-            String timerId = rs.getString(TIMERID);
-            TimedObjectId targetId = TimedObjectId.parse(rs.getString(TARGETID));
-            Date initialDate = rs.getTimestamp(INITIALDATE);
-            long interval = rs.getLong(INTERVAL);
+            String timerId = rs.getString(getColumnTimerID());
+            TimedObjectId targetId = TimedObjectId.parse(rs.getString(getColumnTargetID()));
+            Date initialDate = rs.getTimestamp(getColumnInitialDate());
+            long interval = rs.getLong(getColumnTimerInterval());
 
-            InputStream isPk = rs.getBinaryStream(INSTANCEPK);
+            InputStream isPk = rs.getBinaryStream(getColumnInstancePK());
             Serializable pKey = (Serializable)deserialize(isPk);
-            InputStream isInfo = rs.getBinaryStream(INFO);
+            InputStream isInfo = rs.getBinaryStream(getColumnInfo());
             Serializable info = (Serializable)deserialize(isInfo);
 
             targetId = new TimedObjectId(targetId.getContainerId(), pKey);

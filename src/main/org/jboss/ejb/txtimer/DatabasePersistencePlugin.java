@@ -6,10 +6,10 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePlugin.java,v 1.1 2004/09/22 09:33:42 tdiesler Exp $
+// $Id: DatabasePersistencePlugin.java,v 1.2 2004/11/20 08:31:50 starksm Exp $
 
-import javax.management.ObjectName;
 import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
@@ -24,16 +24,8 @@ import java.util.List;
  */
 public interface DatabasePersistencePlugin
 {
-   // Column names
-   static final String TIMERID = "TIMERID";
-   static final String TARGETID = "TARGETID";
-   static final String INITIALDATE = "INITIALDATE";
-   static final String INTERVAL = "INTERVAL";
-   static final String INSTANCEPK = "INSTANCEPK";
-   static final String INFO = "INFO";
-
    /** Initialize the plugin */
-   void init(MBeanServer server, ObjectName dataSource, String tableName) throws SQLException;
+   void init(MBeanServer server, ObjectName dataSource) throws SQLException;
 
    /** Create the timers table if it does not exist already */
    void createTableIfNotExists() throws SQLException;
@@ -51,5 +43,26 @@ public interface DatabasePersistencePlugin
 
    /** Clear all persisted timers */
    void clearTimers() throws SQLException;
+
+   /** Get the timer table name */
+   String getTableName();
+
+   /** Get the timer ID column name */
+   String getColumnTimerID();
+
+   /** Get the target ID column name */
+   String getColumnTargetID();
+
+   /** Get the initial date column name */
+   String getColumnInitialDate();
+
+   /** Get the timer interval column name */
+   String getColumnTimerInterval();
+
+   /** Get the instance PK column name */
+   String getColumnInstancePK();
+
+   /** Get the info column name */
+   String getColumnInfo();
 }
 
