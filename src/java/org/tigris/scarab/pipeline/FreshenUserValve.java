@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.26 2003/08/21 00:10:24 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.27 2003/08/21 01:10:32 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -221,8 +221,11 @@ public class FreshenUserValve
             try
             {
                 issueType = IssueTypeManager.getInstance(new Integer(key));
-                System.out.println("setting issue type: " + 
-                                   issueType.getName() + " based on curit");
+                if (Log.get().isDebugEnabled()) 
+                {
+                    Log.get().debug("setting issue type: " + 
+                         issueType.getName() + " based on curit");        
+                }
             }
             catch (NumberFormatException noIssueType)
             {
@@ -244,12 +247,15 @@ public class FreshenUserValve
                     issueType = templateType.getIssueTypeForTemplateType();
                     parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE,
                                          issueType.getQueryKey());
-                    System.out.println("setting issue type: " + 
-                        issueType.getName() + " based on template");
+                    if (Log.get().isDebugEnabled()) 
+                    {
+                        Log.get().debug("setting issue type: " + 
+                            issueType.getName() + " based on template");
+                    }
                 }
                 catch (Exception e)
                 {
-                    Log.get().debug("'templateId' parameter was available, "
+                    Log.get().warn("'templateId' parameter was available, "
                         + parameters.getString("templateId") +
                         ", but invalid.", e);
                 }

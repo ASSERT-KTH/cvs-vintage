@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.89 2003/08/21 00:10:24 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.90 2003/08/21 01:10:32 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -944,7 +944,6 @@ public abstract class AbstractScarabUser
             .add(IssueTypePeer.PARENT_ID, 0)
             .add(IssueTypePeer.DELETED, false);
         addCurrentMITListExclusion(crit);
-        Log.get().info(crit);
         return RModuleIssueTypePeer.doSelect(crit);
     }
 
