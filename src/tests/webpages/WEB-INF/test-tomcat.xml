@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.42 $" />  
+     <property name="revision" value="$Revision: 1.43 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -1400,7 +1400,7 @@ mod_webapp into mod_jk )
 
 
    <!-- ==================== All targets ====================  -->
-   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk,aaa">
+   <target name="client" depends="file,params,writer,dispatch,get,requestMap,post,wrong_request,restricted,jsp,unavailable,headers,security_chk,aaa,mangler">
    </target>
 
    <!-- ==================== Aux targets ==================== -->
