@@ -1,11 +1,7 @@
 #set ($canAddComment = $canEdit)
 #set ($canEditComments = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
 #set ($isEditComments = $canEditComments && $data.Parameters.getBoolean("edit_comments"))
-#if ($fullComments.equals("true"))
-  #set ($comments = $currentIssue.getComments(true))
-#else
-  #set ($comments = $currentIssue.getComments(false))
-#end
+#set ($comments = $currentIssue.getComments($fullComments.equals("true")))
 
 <h3>$l10n.Comments</h3>
 #if ($comments.isEmpty() && !$canAddComment)
