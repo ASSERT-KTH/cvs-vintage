@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.21 2003/04/17 23:40:01 dlr Exp $</h4>
+<h4>$Id: faq.html,v 1.22 2003/04/17 23:40:42 dlr Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -595,12 +595,12 @@ invalidates a user and forces them to log in again?
 In your build.properties, define the following by removing the #:
 </p>
 
-<blockquote><code><pre>
+<pre>
 # This is the timeout in seconds for sessions. If the value is 
 # left commented out, the servlet container's default timeout 
 # will be left as is.
 scarab.session.timeout = # session.timeout = 1800
-</pre></code></blockquote>
+</pre>
 
 <p>
 If you want to disable logging people off, just set the value to 
