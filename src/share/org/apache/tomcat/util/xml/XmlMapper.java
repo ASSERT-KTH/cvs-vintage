@@ -195,14 +195,6 @@ public class XmlMapper
 	System.out.println("XmlMapper: " + msg);
     }
 
-    static boolean jaxp=false;
-    static {
-	try {
-	    Class.forName( "javax.xml.parsers.SAXParserFactory" );
-	    jaxp=true;
-	} catch(Throwable ex ) {
-	}
-    }
     /** read an XML file, construct and return the object hierarchy
      */
     public Object readXml(File xmlFile, Object root)
@@ -214,26 +206,12 @@ public class XmlMapper
 	    st.push( root );
 	}
 	try {
-	    if( jaxp ) {
-		SAXParser parser=null;
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setNamespaceAware(false);
-		factory.setValidating(validating);
-		parser = factory.newSAXParser();
-		parser.parse(xmlFile, this);
-	    } else {
-		org.xml.sax.Parser saxparser=null;
-		if(System.getProperty("org.xml.sax.parser") != null )
-		    saxparser=ParserFactory.makeParser();
-		else
-		    saxparser=ParserFactory.
-			makeParser("com.sun.xml.parser.Parser");
-
-		saxparser.setDocumentHandler( this );
-		saxparser.setEntityResolver( this );
-		saxparser.setDTDHandler( this );
-		saxparser.parse(new InputSource( new FileReader( xmlFile)));
-	    }
+	    SAXParser parser=null;
+	    SAXParserFactory factory = SAXParserFactory.newInstance();
+	    factory.setNamespaceAware(false);
+	    factory.setValidating(validating);
+	    parser = factory.newSAXParser();
+	    parser.parse(xmlFile, this);
 
 	    return root;
 	    // assume the stack is in the right position.
