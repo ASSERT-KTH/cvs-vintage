@@ -1,0 +1,89 @@
+<?xml version="1.0"?> 
+<project name="Log4jHelper" default="main" basedir=".">
+
+  <!-- Compilation properties -->
+
+  <property name="optimize" value="false"/>
+  <property name="debug" value="on"/>
+
+  <!-- Directories -->
+  <property name="ws" value="../../.."/> 
+  <property name="work.dir" value="${ws}/jakarta-tomcat"/> 
+
+  <property name="tomcat.build" value="${ws}/jakarta-tomcat/build/tomcat"/>
+  <property name="tomcat.dist" value="${ws}/jakarta-tomcat/dist/tomcat"/>
+
+  <property name="tomcat.build.modules" value="${tomcat.build}/modules"/>
+  <property name="tomcat.dist.modules" value="${tomcat.dist}/modules"/>
+
+  <property name="log4j.jar" location="${ws}/log4j/log4j.jar" />
+
+  <property name="tomcat.classes.dir" location="${tomcat.build}/classes"/>
+  <property name="tomcat.classes" value="${tomcat.classes.dir}"/>
+
+  <!-- ==================== Initialization - check if build and dist present ========== -->
+  <target name="init">
+    <available property="build.modules.available" file="${tomcat.build.modules}"/>
+    <available property="dist.modules.available" file="${tomcat.dist.modules}"/>
+  </target>
+
+  <!-- ==================== Preparation ==================== -->
+
+  <target name="prepare" depends="init">
+  </target>
+
+  <target name="build.modules.check" depends="prepare" unless="build.modules.available">
+    <echo message="You must build Tomcat first!"/>
+  </target>
+
+  <target name="dist.modules.check" depends="prepare" unless="dist.modules.available">
+    <echo message="You must build the Tomcat distribution first!"/>
+  </target>
+
+  <!-- ==================== Build the Password Prompter sample add-on ================== -->
+
+  <target name="log4j.support" depends="prepare" if="build.modules.available">
+
+    <mkdir dir="${tomcat.build.modules}/Log4jHelper"/>
+    <copy todir="${tomcat.build.modules}/Log4jHelper">
+            <fileset dir="${work.dir}/proposals/Log4jHelper" excludes="build.xml"/>
+    </copy>
+
+    <javac srcdir="${tomcat.build.modules}/Log4jHelper/WEB-INF/classes" 
+	   optimize="${optimize}"
+           debug="${debug}"
+       destdir="${tomcat.build.modules}/Log4jHelper/WEB-INF/classes">
+       <classpath path="${tomcat.classes}"/>
+       <classpath location="${log4j.jar}"/>
+    </javac>
+
+    <mkdir dir="${tomcat.build.modules}/Log4jHelper/WEB-INF/lib"/>
+
+
+    <jar jarFile="${tomcat.build.modules}/Log4jHelper/WEB-INF/lib/Log4jHelper.jar"
+         basedir="${tomcat.build.modules}/Log4jHelper/WEB-INF/classes"/>
+
+    <delete dir="${tomcat.build.modules}/Log4jHelper/WEB-INF/classes"/>
+
+  </target>
+
+  <!-- ==================== Build the Password Prompter sample add-on WAR ================== -->
+
+  <target name="log4j.support.war"
+          depends="build.modules.check,dist.modules.check,log4j.support"
+          if="dist.modules.available">
+    <jar jarFile="${tomcat.dist.modules}/Log4jHelper.war"
+         baseDir="${tomcat.build.modules}/Log4jHelper"/>
+  </target> 
+
+  <!-- ==================== Admin & agreagate ==================== -->
+   
+  <target name="clean" depends="init">
+    <delete dir="${tomcat.build.modules}/Log4jHelper"/>
+    <delete dir="${tomcat.dist.modules}/Log4jHelper"/>
+    <delete file="${tomcat.dist.modules}/Log4jHelper.war"/>
+  </target>
+  
+  <target name="main" depends="build.modules.check,log4j.support"/>
+
+</project>
