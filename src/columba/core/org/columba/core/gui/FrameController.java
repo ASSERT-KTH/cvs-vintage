@@ -18,7 +18,7 @@ package org.columba.core.gui;
 import java.awt.event.MouseAdapter;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.menu.*;
+import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -34,15 +34,17 @@ public abstract class FrameController {
 	protected MouseAdapter mouseTooltipHandler;
 	protected String id;
 	protected ViewItem item;
-	protected FrameModel model;
+	protected DefaultFrameModel model;
 	protected FrameView view;
 	protected SelectionManager selectionManager;
 	
 	
 	/**
 	 * Constructor for FrameController.
+	 * 
+	 * Warning: Never do any inits in the constructor -> use init() instead!
 	 */
-	public FrameController( String id, FrameModel model ) {
+	public FrameController( String id, DefaultFrameModel model ) {
 		this.id = id;
 		this.model =model;	
 		statusBar = new StatusBar( MainInterface.processor.getTaskManager() );
@@ -52,14 +54,18 @@ public abstract class FrameController {
 		model.register(id, this);
 
 		selectionManager = new SelectionManager();
+		init();
 				
 		view = createView();
-		registerSelectionHandlers();
 		
 		initInternActions();
 	}
-
-	protected abstract void registerSelectionHandlers();
+	
+	/**
+	 * - create all additional controllers
+	 * - register SelectionHandlers
+	 */
+	protected abstract void init();
 
 	protected abstract void initInternActions();
 

@@ -23,7 +23,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,7 +31,8 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
-import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.FrameController;
+import org.columba.core.gui.FrameView;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -40,24 +40,17 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * view for message composer dialog
  */
-public class ComposerView extends JFrame{
+public class ComposerView extends FrameView {
 
-	
-	ComposerInterface composerInterface;
 	
 	private JSplitPane rightSplitPane;
 	private JSplitPane mainSplitPane;
 	private Container editorPane;
 
-	public ComposerView(ComposerInterface ci)
+	public ComposerView(FrameController controller)
 	{
-		super(MailResourceLoader.getString("dialog","composer","composerview_title")); //$NON-NLS-1$
-		this.setIconImage( ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
-
-		this.composerInterface = ci;	
-		
-		
-		initComponents();
+		super(controller);
+		setTitle(MailResourceLoader.getString("dialog","composer","composerview_title")); //$NON-NLS-1$
 	}
 	
 	
@@ -84,12 +77,15 @@ public class ComposerView extends JFrame{
 	}
 	
 	
-	protected void initComponents()
+	public void init()
 	{
+		//super.init();
 		Container contentPane;
 		
 		contentPane = getContentPane();
 		
+		ComposerController controller = (ComposerController)frameController;
+		/*
 		setJMenuBar( new ComposerMenu(composerInterface) );
 		
 		contentPane.setLayout(new BorderLayout());
@@ -101,16 +97,15 @@ public class ComposerView extends JFrame{
 		toolbarPanel.add( new ComposerToolbar(composerInterface), BorderLayout.NORTH );
 		toolbarPanel.add( composerInterface.identityInfoPanel, BorderLayout.CENTER );
 		contentPane.add(toolbarPanel, BorderLayout.NORTH);
-		
+		*/
 		
 		
 		rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rightSplitPane.setBorder(null);
-		rightSplitPane.add( composerInterface.headerController.view, JSplitPane.LEFT);
-		rightSplitPane.add( composerInterface.attachmentController.view, JSplitPane.RIGHT );
+		rightSplitPane.add( controller.getHeaderController().view, JSplitPane.LEFT);
+		rightSplitPane.add( controller.getAttachmentController().view, JSplitPane.RIGHT );
 		rightSplitPane.setDividerSize(5);
 		rightSplitPane.setDividerLocation(400);
-		
 		
 		JPanel topPanel = new JPanel();
 		topPanel.setBorder( BorderFactory.createEmptyBorder(0,5,0,0) );
@@ -141,8 +136,8 @@ public class ComposerView extends JFrame{
 
 		c.gridx = 1;
 		c.weightx = 1.0;
-		gridbag.setConstraints(composerInterface.accountController.view, c);
-		topPanel.add(composerInterface.accountController.view);
+		gridbag.setConstraints(controller.getAccountController().view, c);
+		topPanel.add(controller.getAccountController().view);
 
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		c.gridx = 2;
@@ -152,8 +147,8 @@ public class ComposerView extends JFrame{
 
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 3;
-		gridbag.setConstraints(composerInterface.priorityController.view, c);
-		topPanel.add(composerInterface.priorityController.view);
+		gridbag.setConstraints(controller.getPriorityController().view, c);
+		topPanel.add(controller.getPriorityController().view);
 
 		c.gridx = 0;
 		c.gridy = 1;
@@ -166,14 +161,14 @@ public class ComposerView extends JFrame{
 		c.gridy = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.weightx = 1.0;
-		gridbag.setConstraints(composerInterface.subjectController.view, c);
-		topPanel.add(composerInterface.subjectController.view);
+		gridbag.setConstraints(controller.getSubjectController().view, c);
+		topPanel.add(controller.getSubjectController().view);
 		
 		
 		JPanel editorPanel = new JPanel();
 		editorPanel.setBorder(null);
 		editorPanel.setLayout( new BorderLayout() );
-		JScrollPane scrollPane = new JScrollPane(composerInterface.editorController.view);
+		JScrollPane scrollPane = new JScrollPane(controller.getEditorController().view);
 		editorPanel.add( scrollPane, BorderLayout.CENTER );
 		
 		JPanel centerPanel = new JPanel();
@@ -202,7 +197,6 @@ public class ComposerView extends JFrame{
 		statusBar.setBorder(new CompoundBorder(margin, border));
 
 		contentPane.add(statusBar, BorderLayout.SOUTH);
-		
 		pack();
 		
 		setSize( new Dimension(580,640) );

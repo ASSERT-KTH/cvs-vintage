@@ -18,8 +18,9 @@ package org.columba.mail.gui.frame;
 import java.util.Enumeration;
 
 import org.columba.core.gui.FrameController;
-import org.columba.core.gui.FrameModel;
+import org.columba.core.gui.MultiViewFrameModel;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.table.TableChangedEvent;
 
 /**
@@ -30,13 +31,14 @@ import org.columba.mail.gui.table.TableChangedEvent;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class MailFrameModel extends FrameModel {
+public class MailFrameModel extends MultiViewFrameModel {
 
-	
+	private ComposerModel composerModel;	
 
 	public MailFrameModel(XmlElement viewList) {
 		super(viewList);
-
+		
+		composerModel = new ComposerModel();
 	}
 
 	public FrameController createInstance(String id) {
@@ -101,6 +103,13 @@ public class MailFrameModel extends FrameModel {
 				(MailFrameController) controllers.get(key);
 			frame.getMenu().updatePopServerMenu();
 		}
+	}
+
+	/**
+	 * @return ComposerModel
+	 */
+	public ComposerModel getComposerModel() {
+		return composerModel;
 	}
 
 }

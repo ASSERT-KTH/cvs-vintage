@@ -47,7 +47,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class HeaderController
 	implements TableModelListener, KeyListener, DropTargetListener {
-	ComposerModel model;
+	
+	ComposerController controller;
 	HeaderView view;
 
 	DropTarget dropTarget = null;
@@ -55,16 +56,15 @@ public class HeaderController
 
 	boolean acceptDrop = true;
 
-	public HeaderController(ComposerModel model) {
-		this.model = model;
+	public HeaderController(ComposerController controller) {
+		this.controller = controller;
 
-		view = new HeaderView(model);
+		view = new HeaderView(this);
 
 		view.getTable().addKeyListener(this);
 
 		dropTarget = new DropTarget(view.getTable(), this);
 		dropTarget2 = new DropTarget(view, this);
-
 	}
 
 	public boolean checkState() {
@@ -146,23 +146,17 @@ public class HeaderController
 
 			view.getAddressbookTableModel().setHeaderList(null);
 
-			Vector v = model.getToList();
-			addVectorToTable(v, 0);
+			addVectorToTable(controller.getToList(), 0);
 
-			v = model.getCcList();
-			addVectorToTable(v, 1);
+			addVectorToTable(controller.getCcList(), 1);
 
-			v = model.getBccList();
-			addVectorToTable(v, 2);
+			addVectorToTable(controller.getBccList(), 2);
 
 			appendRow();
 		} else {
-			Vector to = model.getToList();
-			to.clear();
-			Vector cc = model.getCcList();
-			cc.clear();
-			Vector bcc = model.getBccList();
-			bcc.clear();
+			controller.getToList().clear();
+			controller.getToList().clear();
+			controller.getToList().clear();
 
 			for (int i = 0; i < view.table.getRowCount(); i++) {
 				HeaderItem item =
@@ -172,16 +166,16 @@ public class HeaderController
 
 				if (field == null) {
 					item.add("field", "To");
-					to.add(item);
+					controller.getToList().add(item);
 					continue;
 				}
 
 				if (field.equals("To")) {
-					to.add(item);
+					controller.getToList().add(item);
 				} else if (field.equals("Cc")) {
-					cc.add(item);
+					controller.getCcList().add(item);
 				} else if (field.equals("Bcc")) {
-					bcc.add(item);
+					controller.getBccList().add(item);
 				}
 			}
 		}
@@ -216,11 +210,11 @@ public class HeaderController
 	}
 
 	public void setHeaderItemLists(HeaderItemList[] lists) {
-		model.setToList(lists[0].getVector());
+		controller.setToList(lists[0].getVector());
 
-		model.setCcList(lists[1].getVector());
+		controller.setCcList( lists[1].getVector() );
 
-		model.setBccList(lists[2].getVector());
+		controller.setBccList(  lists[2].getVector() );
 
 		updateComponents(true);
 	}
@@ -233,7 +227,7 @@ public class HeaderController
 		String columnName = model.getColumnName(column);
 		Object data = model.getValueAt(row, column);
 		*/
-
+/*
 		model.getToList().clear();
 		model.getCcList().clear();
 		model.getBccList().clear();
@@ -251,6 +245,7 @@ public class HeaderController
 				model.getBccList().add(item);
 			}
 		}
+		*/
 
 	}
 

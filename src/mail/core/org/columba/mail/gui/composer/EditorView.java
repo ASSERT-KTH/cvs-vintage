@@ -34,14 +34,14 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * Window>Preferences>Java>Code Generation.
  */
 public class EditorView extends JTextPane  {
-	ComposerModel model;
 
+	private EditorController controller;
 	private UndoDocument message;
 
-	public EditorView(ComposerModel model, UndoDocument m) {
+	public EditorView(EditorController controller, UndoDocument m) {
 		super();
-
-		this.model = model;
+		
+		this.controller = controller;
 
 		message = m;
 

@@ -38,18 +38,14 @@ import org.columba.mail.config.IdentityItem;
  */
 public class AccountView extends JComboBox {
 	
-	ComposerModel model;
+	AccountController controller;	
 	
-	public AccountView(ComposerModel model )
+	public AccountView(AccountController controller )
 	{
 		super();
-		
-		this.model = model;
+		this.controller = controller;
 		
 		setRenderer(new AccountListRenderer());
-		
-		
-			
 	}
 		
 }

@@ -28,16 +28,15 @@ import org.columba.core.xml.XmlElement;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class FrameModel {
+public abstract class MultiViewFrameModel extends DefaultFrameModel {
 
-	protected Hashtable controllers;
 	protected XmlElement viewList;
-	protected int nextId = 0;
 
-	public FrameModel(XmlElement viewList) {
+
+	public MultiViewFrameModel(XmlElement viewList) {
+		super();
 
 		this.viewList = viewList;
-		controllers = new Hashtable();
 
 		for (int i = 0; i < viewList.count(); i++) {
 			XmlElement view = viewList.getElement(i);
@@ -53,40 +52,6 @@ public abstract class FrameModel {
 	}
 
 
-	public abstract FrameController createInstance(String id);
-
-	public void openView() {
-
-		int id = nextId++;
-		/*
-		MailFrameController c =
-			new MailFrameController(new Integer(id).toString());
-		*/
-		FrameController c = createInstance(new Integer(id).toString());
-
-		c.getView().setVisible(true);
-		//c.getView().loadWindowPosition(new ViewItem(child));
-	}
-
-	/**
-	 * Registers the View
-	 * @param view
-	 */
-	void register(String id, FrameController controller) {
-		controllers.put(id, controller);
-		controller.setItem(getViewItem(id));
-	}
-
-	protected ViewItem getViewItem( String id ) {
-		XmlElement viewElement = getChild(id);
-		if( viewElement == null ) {
-			viewElement = createDefaultConfiguration(id);
-			viewList.addElement(viewElement);
-		}
-		
-		return new ViewItem(viewElement);
-	}
-
 	protected XmlElement createDefaultConfiguration(String key) {
 		XmlElement child; // = getChild(new Integer(key).toString());
 
@@ -100,18 +65,6 @@ public abstract class FrameModel {
 		window.addAttribute("height", "700");
 		window.addAttribute("maximized", "true");
 		child.addElement(window);
-		/*
-		XmlElement toolbars = new XmlElement("toolbars");
-		toolbars.addAttribute("show_main", "true");
-		toolbars.addAttribute("show_filter", "true");
-		toolbars.addAttribute("show_folderinfo", "true");
-		child.addElement(toolbars);
-		XmlElement splitpanes = new XmlElement("splitpanes");
-		splitpanes.addAttribute("main", "200");
-		splitpanes.addAttribute("header", "200");
-		splitpanes.addAttribute("attachment", "100");
-		child.addElement(splitpanes);
-		*/
 
 		return child;
 	}
@@ -126,32 +79,16 @@ public abstract class FrameModel {
 		saveAndExit();
 		*/
 	}
+
 	/**
-		 * Unregister the View from the Model
+		 * Registers the View
 		 * @param view
-		 * @return boolean true if there are no more views for the model
 		 */
-
-	void unregister(String id) {
-		FrameController controller = (FrameController) controllers.get(id);
-		if (controllers.size() == 1) {
-			// last window closed
-			//  close application
-			
-			//viewList.removeAllElements();
-			//ensureViewConfigurationExists(id);
-			//saveWindowPosition(id);
-			controllers.remove(id);
-
-			MainInterface.shutdownManager.shutdown();
-
-			/*
-			saveAndExit();
-			*/
-		} else {
-			controllers.remove(id);
-		}
+	protected void register(String id, FrameController controller) {
+		controllers.put(id, controller);
+		controller.setItem(getViewItem(id));
 	}
+
 
 	protected XmlElement getChild(String id) {
 		for (int i = 0; i < viewList.count(); i++) {
@@ -162,5 +99,43 @@ public abstract class FrameModel {
 		}
 		return null;
 	}
+
+
+	protected ViewItem getViewItem(String id) {
+		XmlElement viewElement = getChild(id);
+		if( viewElement == null ) {
+			viewElement = createDefaultConfiguration(id);
+			viewList.addElement(viewElement);
+		}
+		
+		return new ViewItem(viewElement);
+	}
+
+	/**
+			 * Unregister the View from the Model
+			 * @param view
+			 * @return boolean true if there are no more views for the model
+			 */
+	protected void unregister(String id) {
+		FrameController controller = (FrameController) controllers.get(id);
+		if (controllers.size() == 1) {
+			// last window closed
+			//  close application
+			
+			//viewList.removeAllElements();
+			//ensureViewConfigurationExists(id);
+			//saveWindowPosition(id);
+			controllers.remove(id);
+	
+			MainInterface.shutdownManager.shutdown();
+	
+			/*
+			saveAndExit();
+			*/
+		} else {
+			controllers.remove(id);
+		}
+	}
+
 
 }

@@ -34,16 +34,15 @@ import org.columba.mail.gui.composer.util.AddressbookTableView;
  */
 public class HeaderView extends JScrollPane {
 	
-	ComposerModel model;
-
 	AddressbookTableView table;
-	
+
+	HeaderController controller;	
 	
 
-	public HeaderView(ComposerModel model) {
+	public HeaderView(HeaderController controller) {
 		super();
-
-		this.model = model;
+		
+		this.controller = controller;
 		
 		table = new AddressbookTableView();
 

@@ -17,98 +17,72 @@ package org.columba.mail.gui.composer;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Enumeration;
 import java.util.Vector;
 
-import org.columba.addressbook.AddressBookIC;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.parser.AddressParser;
-import org.columba.addressbook.parser.ListParser;
-import org.columba.core.config.WindowItem;
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.DefaultFrameModel;
+import org.columba.core.gui.FrameController;
+import org.columba.core.gui.FrameView;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MessageComposer;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.composer.action.ComposerActionListener;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-import org.columba.mail.util.AddressCollector;
+import org.columba.mail.message.Message;
 
 /**
  * @author frd
  *
  * controller for message composer dialog
  */
-public class ComposerController
+public class ComposerController extends FrameController
 	implements CharsetListener, ComponentListener, WindowListener {
-
-	public ComposerInterface composerInterface;
+		
+	private IdentityInfoPanel identityInfoPanel;
+	private AttachmentController attachmentController;
+	private SubjectController subjectController;
+	private PriorityController priorityController;
+	private AccountController accountController;
+	private EditorController editorController;
+	private HeaderController headerController; 
+	private MessageComposer messageComposer;
+	private CharsetManager charsetManager;
+	private ComposerSpellCheck composerSpellCheck;
 	
-	ComposerView view;
-	ComposerModel model;
+	Message message;
+	AccountItem accountItem;
+	String bodytext;
+	String charsetName;
+	
+	Vector attachments;
 
-	public ComposerController() {
-		composerInterface = new ComposerInterface();
-		composerInterface.composerController = this;
-		
+	Vector toList;
+	Vector ccList;
+	Vector bccList;
 
-		composerInterface.composerActionListener =
-			new ComposerActionListener(composerInterface);
-
-		composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
-		
-		
-		model = new ComposerModel(composerInterface);
-
-		composerInterface.identityInfoPanel = new IdentityInfoPanel();
-		composerInterface.attachmentController =
-			new AttachmentController(model);
-		composerInterface.subjectController = new SubjectController(model);
-		composerInterface.priorityController = new PriorityController(model);
-		composerInterface.accountController = new AccountController(composerInterface,model);
-		composerInterface.editorController = new EditorController(model);
-		composerInterface.headerController = new HeaderController(model);
-
-		composerInterface.messageComposer = new MessageComposer(this);
-
-		//composerInterface.composerFolder = new TempFolder();
-
-		composerInterface.charsetManager = new CharsetManager();
-		composerInterface.charsetManager.addCharsetListener(this);
-
-		view = new ComposerView(composerInterface);
-
-		composerInterface.composerFrame = view;
-
-		composerInterface.composerSpellCheck =
-			new ComposerSpellCheck(composerInterface);
-
-		
-		composerInterface.addressbookFrame =
-			AddressBookIC.createAddressbookListFrame(composerInterface);
-
-		composerInterface.addressbookFrame.addComponentListener(this);
-		
-		
-		composerInterface.composerFrame.addComponentListener(this);
-
-		//view.setVisible(true);	
-
-		registerWindowListener();
-
-		int count = MailConfig.getAccountList().count();
-		if ( count != 0 ) loadWindowPosition();
+	boolean signMessage;
+	boolean encryptMessage;
+	
+	public ComposerController(String id, DefaultFrameModel model)  {
+		this(id,model, new Message());
 	}
+
+	public ComposerController(String id, DefaultFrameModel model, Message message)  {
+		super(id,model);
+
+		this.message  = message;
+		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
+		
+	}
+	
 
 	public void charsetChanged(CharsetEvent e) {
-		model.setCharsetName(e.getValue());
+		//((ComposerModel)getModel()).setCharsetName(e.getValue());
 	}
+
+	/*
 
 	public boolean checkState() {
 		// update ComposerModel based on user-changes in ComposerView
@@ -270,16 +244,6 @@ public class ComposerController
 		return output;
 	}
 
-	public void componentHidden(ComponentEvent e) {
-	}
-
-	public void componentMoved(ComponentEvent e) {
-		
-		if (composerInterface.addressbookFrame.isVisible()) {
-			updateAddressbookFrame();
-		}
-		
-	}
 
 	protected void updateAddressbookFrame() {
 
@@ -308,6 +272,18 @@ public class ComposerController
 				- composerInterface.addressbookFrame.getSize().width,
 			view.getLocation().y);
 
+	}*/
+
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	public void componentMoved(ComponentEvent e) {
+		
+		/*		
+		if (composerInterface.addressbookFrame.isVisible()) {
+			updateAddressbookFrame();
+		}*/
+		
 	}
 
 	public void componentResized(ComponentEvent e) {
@@ -335,6 +311,266 @@ public class ComposerController
 	}
 
 	public void windowOpened(WindowEvent e) {
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#createView()
+	 */
+	protected FrameView createView() {
+		ComposerView view =  new ComposerView(this);
+		
+		view.init();
+		
+		return view;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#initInternActions()
+	 */
+	protected void initInternActions() {
+
+	}
+
+
+	/**
+	 * @return AccountController
+	 */
+	public AccountController getAccountController() {
+		return accountController;
+	}
+
+	/**
+	 * @return AttachmentController
+	 */
+	public AttachmentController getAttachmentController() {
+		return attachmentController;
+	}
+
+	/**
+	 * @return CharsetManager
+	 */
+	public CharsetManager getCharsetManager() {
+		return charsetManager;
+	}
+
+	/**
+	 * @return ComposerSpellCheck
+	 */
+	public ComposerSpellCheck getComposerSpellCheck() {
+		return composerSpellCheck;
+	}
+
+	/**
+	 * @return EditorController
+	 */
+	public EditorController getEditorController() {
+		return editorController;
+	}
+
+	/**
+	 * @return HeaderController
+	 */
+	public HeaderController getHeaderController() {
+		return headerController;
+	}
+
+	/**
+	 * @return IdentityInfoPanel
+	 */
+	public IdentityInfoPanel getIdentityInfoPanel() {
+		return identityInfoPanel;
+	}
+
+	/**
+	 * @return MessageComposer
+	 */
+	public MessageComposer getMessageComposer() {
+		return messageComposer;
+	}
+
+	/**
+	 * @return PriorityController
+	 */
+	public PriorityController getPriorityController() {
+		return priorityController;
+	}
+
+	/**
+	 * @return SubjectController
+	 */
+	public SubjectController getSubjectController() {
+		return subjectController;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#init()
+	 */
+	protected void init() {
+		identityInfoPanel = new IdentityInfoPanel();
+		
+		attachmentController =
+			new AttachmentController(this);
+
+		headerController = new HeaderController(this);
+		
+		subjectController = new SubjectController(this);
+
+		priorityController = new PriorityController(this);
+
+		accountController = new AccountController(this);
+
+		editorController = new EditorController(this);
+
+		//messageComposer = new MessageComposer(this);
+
+
+		//composerInterface.composerFolder = new TempFolder();
+
+		charsetManager = new CharsetManager();
+		charsetManager.addCharsetListener(this);
+
+		
+		/*
+		composerSpellCheck =
+			new ComposerSpellCheck();
+
+		
+		composerInterface.addressbookFrame =
+			AddressBookIC.createAddressbookListFrame(composerInterface);
+
+		composerInterface.addressbookFrame.addComponentListener(this);
+			*/
+		
+		/*
+		getView().addComponentListener(this);
+
+		//view.setVisible(true);	
+
+		registerWindowListener();
+
+		int count = MailConfig.getAccountList().count();
+		if ( count != 0 ) loadWindowPosition();*/
+
+	}
+
+	/**
+	 * @return Vector
+	 */
+	public Vector getAttachments() {
+		return attachments;
+	}
+
+	/**
+	 * @return Vector
+	 */
+	public Vector getBccList() {
+		return bccList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getBodytext() {
+		return bodytext;
+	}
+
+	/**
+	 * @return Vector
+	 */
+	public Vector getCcList() {
+		return ccList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getCharsetName() {
+		return charsetName;
+	}
+
+	/**
+	 * Sets the attachments.
+	 * @param attachments The attachments to set
+	 */
+	public void setAttachments(Vector attachments) {
+		this.attachments = attachments;
+	}
+
+	/**
+	 * Sets the bccList.
+	 * @param bccList The bccList to set
+	 */
+	public void setBccList(Vector bccList) {
+		this.bccList = bccList;
+	}
+
+	/**
+	 * Sets the bodytext.
+	 * @param bodytext The bodytext to set
+	 */
+	public void setBodytext(String bodytext) {
+		this.bodytext = bodytext;
+	}
+
+	/**
+	 * Sets the ccList.
+	 * @param ccList The ccList to set
+	 */
+	public void setCcList(Vector ccList) {
+		this.ccList = ccList;
+	}
+
+	/**
+	 * Sets the charsetName.
+	 * @param charsetName The charsetName to set
+	 */
+	public void setCharsetName(String charsetName) {
+		this.charsetName = charsetName;
+	}
+
+	/**
+	 * @return Vector
+	 */
+	public Vector getToList() {
+		return toList;
+	}
+
+	/**
+	 * Sets the toList.
+	 * @param toList The toList to set
+	 */
+	public void setToList(Vector toList) {
+		this.toList = toList;
+	}
+	
+	public String getHeaderField(String key) {
+		return (String) message.getHeader().get(key);
+	}
+
+
+	public void setHeaderField(String key, String value) {
+		message.getHeader().set(key, value);
+	}
+	
+	public String getPriority() {
+		if (message.getHeader().get("X-Priority") == null)
+			return "Normal";
+		else
+			return (String) message.getHeader().get("X-Priority");
+	}
+
+
+	public void setPriority(String s) {
+		message.getHeader().set("X-Priority", s);
+	}
+
+	public void setAccount(AccountItem item) {
+		identityInfoPanel.set(item);
+		accountItem = item;
+	}
+	
+	public AccountItem getAccount() {
+		return accountItem;	
 	}
 
 }

@@ -23,7 +23,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.FileNameMap;
 import java.net.URLConnection;
-import java.util.Vector;
 
 import javax.swing.JFileChooser;
 
@@ -42,18 +41,17 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class AttachmentController implements KeyListener {
 	AttachmentView view;
-	ComposerModel model;
+	ComposerController controller;
 
 	AttachmentActionListener actionListener;
 	AttachmentMenu menu;
 
 	private JFileChooser fileChooser;
 
-	public AttachmentController(ComposerModel model) {
-		this.model = model;
+	public AttachmentController(ComposerController controller) {
+		this.controller = controller;
 
-		view = new AttachmentView(model);
-
+		view = new AttachmentView(this);
 
 		actionListener = new AttachmentActionListener(this);
 
@@ -75,31 +73,26 @@ public class AttachmentController implements KeyListener {
 
 	public void updateComponents(boolean b) {
 		if (b == true) {
-			Vector attachments = model.getAttachments();
-
-			for (int i = 0; i < attachments.size(); i++) {
-				MimePart p = (MimePart) attachments.get(i);
+			for (int i = 0; i < controller.getAttachments().size(); i++) {
+				MimePart p = (MimePart) controller.getAttachments().get(i);
 				view.add( p);
 			}
 		}
 		else
 		{
-			Vector attachments= model.getAttachments();
-			attachments.clear();
+			controller.getAttachments().clear();
 			
 			for ( int i=0; i<view.count(); i++ )
 			{
 				MimePart mp = view.get(i);
-				attachments.add(mp);
+				controller.getAttachments().add(mp);
 			}
 		}
 	}
 
 	public void add(MimePart part) {
-
 		view.add(part);
-
-		model.addMimePart(part);
+		controller.getAttachments().add(part);
 	}
 
 	public void removeSelected() {

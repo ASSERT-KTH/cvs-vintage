@@ -32,12 +32,12 @@ import org.columba.mail.util.MailResourceLoader;
 public class SubjectController implements DocumentListener {
 
 	SubjectView view;
-	ComposerModel model;
+	ComposerController controller;
 
-	public SubjectController(ComposerModel model) {
-		this.model = model;
+	public SubjectController(ComposerController controller) {
+		this.controller = controller;
 
-		view = new SubjectView(model);
+		view = new SubjectView(this);
 	}
 
 	public void installListener() {
@@ -46,14 +46,14 @@ public class SubjectController implements DocumentListener {
 
 	public void updateComponents(boolean b) {
 		if (b == true) {
-			view.setText(model.getHeaderField("Subject"));
+			view.setText(controller.getHeaderField("Subject"));
 		} else {
-			model.setHeaderField("Subject", view.getText());
+			controller.setHeaderField("Subject", view.getText());
 		}
 	}
 
 	public boolean checkState() {
-		String subject = model.getHeaderField("Subject");
+		String subject = controller.getHeaderField("Subject");
 
 		if (subject.length() == 0) {
 			subject = new String(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
@@ -63,7 +63,7 @@ public class SubjectController implements DocumentListener {
 			if (dialog.success() == true)
 				subject = dialog.getSubject();
 
-			model.setHeaderField("Subject", subject);
+			controller.setHeaderField("Subject", subject);
 		}
 		
 		return true;

@@ -23,7 +23,6 @@ import javax.swing.JCheckBoxMenuItem;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.PGPItem;
 
 /**
  * @author frd
@@ -35,17 +34,15 @@ import org.columba.mail.config.PGPItem;
  */
 public class AccountController implements ItemListener {
 	AccountView view;
-	ComposerModel model;
-	ComposerInterface composerInterface;
+	ComposerController controller;
 
 	JCheckBoxMenuItem signMenuItem;
 	JCheckBoxMenuItem encryptMenuItem;
 
-	public AccountController(ComposerInterface ci, ComposerModel model) {
-		this.model = model;
-		this.composerInterface = ci;
-
-		view = new AccountView(model);
+	public AccountController(ComposerController controller) {
+		this.controller = controller;
+		
+		view = new AccountView(this);
 		
 		AccountList config = MailConfig.getAccountList();
 
@@ -53,13 +50,14 @@ public class AccountController implements ItemListener {
 			view.addItem(config.get(i));
 			if (i == 0) {
 				view.setSelectedItem(config.get(i));
-				composerInterface.identityInfoPanel.set(config.get(i));
+				controller.setAccount(config.get(i));
 			}
 		}
 
 		view.addItemListener(this);
 	}
 
+	/*
 	public void setSecurityMenuItems(
 		JCheckBoxMenuItem signItem,
 		JCheckBoxMenuItem encryptItem) {
@@ -77,30 +75,40 @@ public class AccountController implements ItemListener {
 			model.setEncryptMessage(pgpItem.getBoolean("always_encrypt"));
 		}
 	}
+*/
 
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
+			updateComponents(false);
+			/*
 			AccountItem item = (AccountItem) view.getSelectedItem();
 			composerInterface.identityInfoPanel.set(item);
-
+			
 			PGPItem pgpItem = item.getPGPItem();
 			signMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
 			signMenuItem.setSelected(pgpItem.getBoolean("always_sign"));
 
 			encryptMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
 			encryptMenuItem.setSelected(pgpItem.getBoolean("always_encrypt"));
+			*/
 		}
 	}
 
 	public void updateComponents(boolean b) {
 		if (b == true) {
-			view.setSelectedItem(model.getAccountItem());
+			view.setSelectedItem(controller.getAccount());
+			
+			/*
 			encryptMenuItem.setSelected(model.isEncryptMessage());
 			signMenuItem.setSelected(model.isSignMessage());
+			*/
 		} else {
-			model.setAccountItem((AccountItem) view.getSelectedItem());
+			controller.setAccount((AccountItem) view.getSelectedItem());
+			
+			/*
 			model.setSignMessage(signMenuItem.isSelected());
 			model.setEncryptMessage(encryptMenuItem.isSelected());
+			*/
 		}
 	}
 

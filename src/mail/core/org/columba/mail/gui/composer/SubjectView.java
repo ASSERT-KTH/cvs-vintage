@@ -29,15 +29,13 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SubjectView extends JTextField {
 	
-	ComposerModel model;
-	
-	public SubjectView( ComposerModel model )
+	SubjectController controller;
+		
+	public SubjectView( SubjectController controller )
 	{
 		super(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
 		
-		this.model = model;
-		
-		
+		this.controller = controller;				
 	}
 	
 	public void installListener( SubjectController controller )

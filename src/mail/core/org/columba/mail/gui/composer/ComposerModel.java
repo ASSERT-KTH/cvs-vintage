@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import java.util.Observable;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
+import org.columba.core.gui.DefaultFrameModel;
+import org.columba.core.gui.FrameController;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.Message;
@@ -31,7 +32,7 @@ import org.columba.mail.message.MimePart;
  * Model for message composer dialog
  * 
  */
-public class ComposerModel extends Observable {
+public class ComposerModel extends DefaultFrameModel {
 
 	Message message;
 	AccountItem accountItem;
@@ -47,22 +48,11 @@ public class ComposerModel extends Observable {
 	boolean signMessage;
 	boolean encryptMessage;
 
-	ComposerInterface composerInterface;
-
-	public ComposerModel(ComposerInterface ci) {
-		this.composerInterface = ci;
-		message = new Message();
-		toList = new Vector();
-		ccList = new Vector();
-		bccList = new Vector();
-		
-		attachments = new Vector();
-		
-		charsetName = "auto";
+	public ComposerModel() {
+		this(new Message());
 	}
-
-	public ComposerModel(ComposerInterface ci, Message message) {
-		this.composerInterface = ci;
+	
+	public ComposerModel(Message message) {
 		this.message = message;
 
 		toList = new Vector();
@@ -74,10 +64,6 @@ public class ComposerModel extends Observable {
 		charsetName = "auto";
 	}
 
-	public void notifyListeners() {
-		setChanged();
-		notifyObservers();
-	}
 
 	public void setTo(String s) {
 		if (s == null)
@@ -148,8 +134,6 @@ public class ComposerModel extends Observable {
 
 	public void setMessage(Message message) {
 		this.message = message;
-
-		notifyListeners();
 	}
 
 	public Message getMessage() {
@@ -189,25 +173,6 @@ public class ComposerModel extends Observable {
 
 	public void setSubject(String s) {
 		message.getHeader().set("Subject", s);
-	}
-
-	public String getPriority() {
-		if (message.getHeader().get("X-Priority") == null)
-			return "Normal";
-		else
-			return (String) message.getHeader().get("X-Priority");
-	}
-
-	public void setPriority(String s) {
-		message.getHeader().set("X-Priority", s);
-	}
-
-	public String getHeaderField(String key) {
-		return (String) message.getHeader().get(key);
-	}
-
-	public void setHeaderField(String key, String value) {
-		message.getHeader().set(key, value);
 	}
 
 	public Vector getAttachments() {
@@ -270,6 +235,13 @@ public class ComposerModel extends Observable {
 	 */
 	public void setEncryptMessage(boolean encryptMessage) {
 		this.encryptMessage = encryptMessage;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameModel#createInstance(java.lang.String)
+	 */
+	public FrameController createInstance(String id) {
+		return new ComposerController(id,this);
 	}
 
 }

@@ -20,9 +20,9 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.Menu;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
@@ -36,10 +36,13 @@ import org.columba.mail.util.MailResourceLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ComposerMenu extends JMenuBar{
+public class ComposerMenu extends Menu {
 
 	public ComposerMenu( ComposerInterface composerInterface )
 	{
+		super();
+		
+		/*
 		JMenu fileMenu =
 			new JMenu(MailResourceLoader.getString("menu","mainframe", "menu_file")); //$NON-NLS-1$ //$NON-NLS-2$
 		fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -284,6 +287,6 @@ public class ComposerMenu extends JMenuBar{
 		add(messageMenu);
 		add(securityMenu);
 
-		
+		*/
 	}
 }

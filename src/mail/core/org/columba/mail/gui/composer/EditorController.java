@@ -29,18 +29,18 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * Window>Preferences>Java>Code Generation.
  */
 public class EditorController implements DocumentListener {
-	ComposerModel model;
 	EditorView view;
+	ComposerController controller;
 	
 	private UndoDocument document;
 	
-	public EditorController(ComposerModel model)
+	public EditorController(ComposerController controller)
 	{
-		this.model = model;
+		this.controller = controller;
 	
 		document = new UndoDocument();
 		
-		view = new EditorView(model, document);
+		view = new EditorView(this, document);
 		
 	}
 	
@@ -58,13 +58,13 @@ public class EditorController implements DocumentListener {
 	{
 		if ( b == true )
 		{
-			if ( model.getBodyText() != null )
-				view.setText( model.getBodyText() );
+			if ( controller.getBodytext() != null )
+				view.setText( controller.getBodytext() );
 		}
 		else
 		{
 			if ( view.getText() != null )
-				model.setBodyText( view.getText() );
+				controller.setBodytext( view.getText() );
 		}
 	}
 	

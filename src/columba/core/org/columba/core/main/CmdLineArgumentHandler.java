@@ -100,6 +100,7 @@ public class CmdLineArgumentHandler {
 			}
 		}
 
+		/*
 		if (composer != null) {
 			Boolean bool = (Boolean) composer;
 
@@ -142,7 +143,7 @@ public class CmdLineArgumentHandler {
 				controller.showComposerWindow();
 			}
 		}
-
+*/
    		MainInterface.DEBUG = debug != null ? (Boolean) debug : Boolean.FALSE;
 	}
 }

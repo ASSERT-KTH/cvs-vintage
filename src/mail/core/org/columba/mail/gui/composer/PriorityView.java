@@ -36,14 +36,14 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class PriorityView extends JComboBox {
-
-	ComposerModel model;
+	
+	PriorityController controller;
 
 	private static final String[] priorities = { MailResourceLoader.getString("dialog", "composer", "highest"), MailResourceLoader.getString("dialog","composer", "high"), MailResourceLoader.getString("dialog","composer", "normal"), MailResourceLoader.getString("dialog","composer", "low"), MailResourceLoader.getString("dialog","composer", "lowest")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-	public PriorityView(ComposerModel model) {
+	public PriorityView(PriorityController controller) {
 		super(priorities);
-		this.model = model;
+		this.controller = controller;
 
 		setRenderer(new ComboBoxRenderer());
 

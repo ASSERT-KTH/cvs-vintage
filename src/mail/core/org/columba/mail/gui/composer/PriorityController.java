@@ -29,13 +29,13 @@ import java.awt.event.ItemListener;
 public class PriorityController implements ItemListener{
 	
 	PriorityView view;
-	ComposerModel model;
-	
-	public PriorityController(ComposerModel model)
-	{
-		this.model = model;
+	ComposerController controller;
 		
-		view = new PriorityView( model );
+	public PriorityController(ComposerController controller)
+	{
+		this.controller = controller;
+		
+		view = new PriorityView( this );
 		
 	
 	}
@@ -54,14 +54,14 @@ public class PriorityController implements ItemListener{
 		}
 		else
 		{
-			model.setPriority( (String) view.getSelectedItem() );
+			controller.setPriority( (String) view.getSelectedItem() );
 			//model.setHeaderField("X-Priority",(String) view.getSelectedItem());
 		}
 	}
 	
 	public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-           model.setPriority( (String) view.getSelectedItem() );
+           controller.setPriority( (String) view.getSelectedItem() );
 
         } 
     }

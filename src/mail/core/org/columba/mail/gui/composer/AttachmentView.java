@@ -42,17 +42,17 @@ import org.columba.mail.message.MimePart;
  */
 public class AttachmentView extends JScrollPane implements ListDataListener {
 
-	private ComposerModel model;
-
+	private AttachmentController controller;
+		
 	//private IconPanel attachment;
 	private DefaultListModel listModel;
 
 	private JList list;
 
-	public AttachmentView(ComposerModel model) {
+	public AttachmentView(AttachmentController controller) {
 		super();
 
-		this.model = model;
+		this.controller = controller;
 
 		listModel = new DefaultListModel();
 
