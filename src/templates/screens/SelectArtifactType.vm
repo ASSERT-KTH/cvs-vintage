@@ -1,4 +1,11 @@
+#if ($nextTemplate && $nextTemplate.length() > 0)
+#set ($tmpNext = $nextTemplate)
+#else
+#set ($tmpNext = "SelectModule.vm")
+#end
+
 $page.setTitle("Select Artifact Type")
+
 
      <div class="app" id="divselect_module">
         <h3>Artifact types: The "x" project</h3>
@@ -10,10 +17,11 @@ $page.setTitle("Select Artifact Type")
         </tr>
 
 
+
 #foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
          
         #rows() 
-        <td><a href="$link.setPage("SelectIssueType.vm").setAction("SelectIssueType").addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></td>
+        <td><a href="$link.setPage("SelectIssueType.vm").setAction("SelectIssueType").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$tmpNext").addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></td>
         <td>$!issueType.Description&#160</td>
         </tr>        
 #end        
