@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.3 2000/02/27 02:01:24 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/27 02:01:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.4 2000/02/29 13:43:26 shachor Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/29 13:43:26 $
  *
  * ====================================================================
  *
@@ -75,32 +75,69 @@ import java.io.*;
  */
 public class ThreadPool  {
 
+    /*
+     * Default values ...
+     */
     public static final int MAX_THREADS = 50;
     public static final int MAX_SPARE_THREADS = 25;
     public static final int MIN_SPARE_THREADS = 10;
     public static final int WORK_WAIT_TIMEOUT = 60*1000;
 
+    /*
+     * Where the threads are held.
+     */
     protected Vector pool;
 
+    /*
+     * A monitor thread that monitors the pool for idel threads.
+     */
+    protected MonitorRunnable monitor;
+
+
+    /*
+     * Max number of threads that you can open in the pool.
+     */
     protected int maxThreads;
+
+    /*
+     * Min number of idel threads that you can leave in the pool.
+     */
     protected int minSpareThreads;
+
+    /*
+     * Max number of idel threads that you can leave in the pool.
+     */
     protected int maxSpareThreads;
 
+    /*
+     * Number of threads in the pool.
+     */
     protected int currentThreadCount;
-    protected int currentThreadsUsed;
+
+    /*
+     * Number of busy threads in the pool.
+     */
+    protected int currentThreadsBusy;
+
+    /*
+     * Flag that the pool should terminate all the threads and stop.
+     */
+    protected boolean stopThePool;
 
     public ThreadPool() {
         maxThreads      = MAX_THREADS;
         maxSpareThreads = MAX_SPARE_THREADS;
         minSpareThreads = MIN_SPARE_THREADS;
         currentThreadCount  = 0;
-        currentThreadsUsed  = 0;
+        currentThreadsBusy  = 0;
+        stopThePool = false;
     }
 
     public synchronized void start() {
         adjustLimits();
 
         openThreads(minSpareThreads);
+        monitor = new MonitorRunnable(this);
     }
 
     public void setMaxThreads(int maxThreads) {
@@ -127,60 +164,90 @@ public class ThreadPool  {
         return maxSpareThreads;
     }
 
-    public synchronized void runIt(Runnable r) {
+    //
+    // You may wonder what you see here ... basically I am trying
+    // to maintain a stack of threads. This way locality in time
+    // is kept and there is a better chance to find residues of the
+    // thread in memory next time it runs.
+    //
+
+    /**
+     * Executes a given Runnable on a thread in the pool, block if needed.
+     */
+    public void runIt(Runnable r) {
 
         if(null == r) {
             throw new NullPointerException();
         }
 
-        if(0 == currentThreadCount) {
+        if(0 == currentThreadCount || stopThePool) {
             throw new IllegalStateException();
         }
-	//	System.out.print("K");
-        if(currentThreadsUsed == currentThreadCount) {
-            if(currentThreadCount < maxThreads) {
-                int toOpen = currentThreadCount + minSpareThreads;
-                openThreads(toOpen);
-            } else {
-                while(currentThreadsUsed == currentThreadCount) {
-                    try {
-                        wait();
-                    } catch(Throwable t) {
-                        t.printStackTrace();
-                    }
-                    if(0 == currentThreadCount) {
-                        throw new IllegalStateException();
+
+        ControlRunnable c = null;
+
+        // Obtain a free thread from the pool.
+        synchronized(this) {
+            if(currentThreadsBusy == currentThreadCount) {
+                 // All threads are busy
+                if(currentThreadCount < maxThreads) {
+                    // Not all threads were open,
+                    // Open new threads up to the max number of idel threads
+                    int toOpen = currentThreadCount + minSpareThreads;
+                    openThreads(toOpen);
+                } else {
+                    // Wait for a thread to become idel.
+                    while(currentThreadsBusy == currentThreadCount) {
+                        try {
+                            this.wait();
+                        } catch(Throwable t) {
+                            t.printStackTrace();
+                        }
+
+                        // Pool was stopped. Get away of the pool.
+                        if(0 == currentThreadCount || stopThePool) {
+                            throw new IllegalStateException();
+                        }
                     }
                 }
             }
-        }
-	//System.out.print("L");
 
-        ControlRunnable c = (ControlRunnable)pool.lastElement();
-        pool.removeElement(c);
-        currentThreadsUsed++;
+            // If we are here it means that there is a free thred. Take it.
+            c = (ControlRunnable)pool.lastElement();
+            pool.removeElement(c);
+            currentThreadsBusy++;
+        }
         c.runIt(r);
     }
 
-    /*
-     * You may wonder what you see here ... basically I am trying
-     * to maintain a stack of threads. This way locality in time
-     * is kept and there is a better chance to find residues of the
-     * thread in memory next time it runs.
+    /**
+     * Stop the thread pool
      */
     public synchronized void shutdown() {
-        for(int i = 0 ; i < currentThreadCount ; i++) {
-            ((ControlRunnable)(pool.elementAt(i))).terminate();
+        if(!stopThePool) {
+            stopThePool = true;
+            monitor.terminate();
+            monitor = null;
+            for(int i = 0 ; i < currentThreadCount ; i++) {
+                ((ControlRunnable)(pool.elementAt(i))).terminate();
+            }
+            currentThreadsBusy = currentThreadCount = 0;
+            pool = null;
+            notifyAll();
         }
-        currentThreadsUsed = currentThreadCount = 0;
-        pool = null;
-        notifyAll();
     }
 
+    /**
+     * Called by the monitor thread to harvest idel threads.
+     */
     protected synchronized void checkSpareControllers() {
-        if((currentThreadCount - currentThreadsUsed) > maxSpareThreads) {
+
+        if(stopThePool) {
+            return;
+        }
+        if((currentThreadCount - currentThreadsBusy) > maxSpareThreads) {
             int toFree = currentThreadCount -
-                         currentThreadsUsed -
+                         currentThreadsBusy -
                          maxSpareThreads;
 
             for(int i = 0 ; i < toFree ; i++) {
@@ -192,14 +259,18 @@ public class ThreadPool  {
         }
     }
 
+    /**
+     * Returns the thread to the pool.
+     * Called by threads as they are becoming idel.
+     */
     protected synchronized void returnController(ControlRunnable c) {
 
-        if(0 == currentThreadCount) {
+        if(0 == currentThreadCount || stopThePool) {
             c.terminate();
             return;
         }
 
-        currentThreadsUsed--;
+        currentThreadsBusy--;
         pool.addElement(c);
         notify();
     }
@@ -240,6 +311,46 @@ public class ThreadPool  {
         currentThreadCount = toOpen;
     }
 
+    class MonitorRunnable implements Runnable {
+        ThreadPool p;
+        Thread     t;
+        boolean    shouldTerminate;
+
+        MonitorRunnable(ThreadPool p) {
+            shouldTerminate = false;
+            this.p = p;
+            t = new Thread(this);
+            t.start();
+        }
+
+        public void run() {
+            while(true) {
+                try {
+                    // Sleep for a while.
+                    synchronized(this) {
+                        this.wait(WORK_WAIT_TIMEOUT);
+                    }
+
+                    // Check if should terminate.
+                    // termination happens when the pool is shutting down.
+                    if(shouldTerminate) {
+                        break;
+                    }
+
+                    // Harvest idel threads.
+                    p.checkSpareControllers();
+
+                } catch(Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+        }
+
+        public synchronized void terminate() {
+            shouldTerminate = true;
+            this.notify();
+        }
+    }
 
     class ControlRunnable implements Runnable {
         ThreadPool p;
@@ -260,16 +371,14 @@ public class ThreadPool  {
         public void run() {
             while(true) {
                 try {
-                    boolean checkSpare = false;
+                    // Wait for work.
                     synchronized(this) {
                         if(!shouldRun && !shouldTerminate) {
-                            this.wait(WORK_WAIT_TIMEOUT);
-                        }
-                        if(!shouldRun && !shouldTerminate) {
-                            checkSpare = true;
+                            this.wait();
                         }
                     }
 
+                    // Check if should execute a runnable.
                     try {
                         if(shouldRun) {
                             toRun.run();
@@ -277,16 +386,16 @@ public class ThreadPool  {
                     } finally {
                         if(shouldRun) {
                             shouldRun = false;
+
+                            // Notify the pool that the thread is now idel.
                             p.returnController(this);
                         }
                     }
 
+                    // Check if should terminate.
+                    // termination happens when the pool is shutting down.
                     if(shouldTerminate) {
                         break;
-                    }
-
-                    if(checkSpare) {
-                        p.checkSpareControllers();
                     }
 
                 } catch(Throwable t) {
@@ -303,6 +412,7 @@ public class ThreadPool  {
 
         public synchronized void terminate() {
             shouldTerminate = true;
+            this.notify();
         }
     }
 }
