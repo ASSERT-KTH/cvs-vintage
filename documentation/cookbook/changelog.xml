@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.3 2004/08/02 08:34:47 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.4 2004/08/17 05:59:02 linus Exp $ -->
 
 <preface id="changelog">
   <title>Change Log</title>
@@ -30,6 +30,30 @@ Change to XXX.
         </row>
       </tbody>
       -->
+
+      <tbody valign="top">
+        <row>
+          <entry>2004-08-17</entry>
+          <entry>
+Deemphasized the layers and instead describe the subsystems in
+groups according to the MVC-pattern.
+(See <xref linkend="subsystems"/> and <xref linkend="inside_subsystems"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
+
+      <tbody valign="top">
+        <row>
+          <entry>2004-08-17</entry>
+          <entry>
+Change to the definition of the priorities.
+Now they are defined in terms of how much release blocker they are.
+(See <xref linkend="issue_priorities"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
 
       <tbody valign="top">
         <row>

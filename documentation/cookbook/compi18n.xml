@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compi18n.xml,v 1.13 2004/06/29 06:04:31 linus Exp $ -->
+<!-- $Id: compi18n.xml,v 1.14 2004/08/17 05:59:02 linus Exp $ -->
 
   <sect1 id="internationalization">
     <title>Internationalization</title>
@@ -37,8 +37,8 @@ and partly in
 - all files for a specific language.
 </para>
       <para>
-The Internationalization is a Layer 0 subsystem. 
-See <xref linkend="layer0"></xref>.
+The Internationalization is an Infrastructure subsystem. 
+See <xref linkend="infrastructure_subsystems"></xref>.
 </para>
 
       <indexterm>
