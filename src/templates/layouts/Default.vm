@@ -2,7 +2,7 @@
     "$staticLink.setPath("/style/tigris_transitional.dtd")">
 <html>
  <head>
-  <title>Scarab: $!title</title>
+  <title>${l10n.ScarabWordMark}#if ($title): ${title}#end</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
   #if ($updateFrequency && $updateFrequency.length() > 0)
   <meta http-equiv="refresh" content="$updateFrequency" />
