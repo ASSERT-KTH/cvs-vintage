@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.5 2003/09/15 21:25:44 linus Exp $
+// $Id: TestAgainstUmlModel.java,v 1.6 2003/11/23 08:54:21 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public class TestAgainstUmlModel extends TestCase {
      */
     private static void printInconclusiveMessage(String message)
     {
-	System.out.println("warning: INCONCLUSIVE TEST!");
+	System.out.println("WARNING: INCONCLUSIVE TEST!");
 	System.out.println(message);
 	System.out.println("You will have to fetch the model using the command"
 			   + " ant junit-get-model");
