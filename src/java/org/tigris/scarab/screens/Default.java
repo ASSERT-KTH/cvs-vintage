@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.30 2001/11/18 21:22:05 jon Exp $
+ * @version $Id: Default.java,v 1.31 2001/11/29 16:17:14 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -115,11 +115,12 @@ public class Default extends TemplateSecureScreen
             if (perm != null)
             {
                 if (! user.hasLoggedIn() 
-                    && !user.hasPermission(perm, currentModule))
+                    || !user.hasPermission(perm, currentModule))
                 {
                     data.setMessage("Please log in with an account " +
                                     "that has permissions to " +
-                                    "access this page.");
+                                    "access this page." + perm +
+" " + user.hasPermission(perm, currentModule));
                     setTargetLogin(data);
                     return false;
                 }
