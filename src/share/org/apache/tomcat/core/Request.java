@@ -562,20 +562,23 @@ public class Request {
 
     public String getRemoteUser() {
 	if( notAuthenticated ) {
-	    notAuthenticated=false;
+	    Context ctx = getContext();
+	    if( ctx != null ) {
+		notAuthenticated=false;
 
-	    // Call all authentication callbacks. If any of them is able to
-	    // 	identify the user it will set the principal in req.
-	    int status=0;
-	    BaseInterceptor reqI[]= getContext().getContainer().
-		getInterceptors(Container.H_authenticate);
-	    for( int i=0; i< reqI.length; i++ ) {
-		status=reqI[i].authenticate( this, response );
-		if ( status != BaseInterceptor.DECLINED ) {
-		    break;
+		// Call all authentication callbacks. If any of them is able to
+		// 	identify the user it will set the principal in req.
+		int status=0;
+		BaseInterceptor reqI[]= ctx.getContainer().
+		    getInterceptors(Container.H_authenticate);
+		for( int i=0; i< reqI.length; i++ ) {
+		    status=reqI[i].authenticate( this, response );
+		    if ( status != BaseInterceptor.DECLINED ) {
+			break;
+		    }
 		}
+		//context.log("Auth " + remoteUser );
 	    }
-	    //context.log("Auth " + remoteUser );
 	}
 	return remoteUser;
     }
