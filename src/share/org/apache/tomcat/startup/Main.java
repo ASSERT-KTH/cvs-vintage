@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.34 2001/06/11 11:36:06 larryi Exp $
+/* $Id: Main.java,v 1.35 2001/06/13 21:28:28 mmanders Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -109,7 +109,7 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.34 $ $Date: 2001/06/11 11:36:06 $
+	@version $Revision: 1.35 $ $Date: 2001/06/13 21:28:28 $
  */
 public class Main{
 
@@ -338,7 +338,7 @@ public class Main{
                 cp = url.getFile();
         }
         if( cp != null)
-            System.setProperty("tc_path_add",cp);
+            System.getProperties().put("tc_path_add",cp);
     }
 
 }
