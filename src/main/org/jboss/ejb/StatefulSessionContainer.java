@@ -20,6 +20,7 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBMetaData;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
+import javax.ejb.Timer;
 import javax.management.ObjectName;
 
 import org.jboss.invocation.Invocation;
@@ -33,7 +34,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version <tt>$Revision: 1.66 $</tt>
+ * @version <tt>$Revision: 1.67 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -432,6 +433,16 @@ public class StatefulSessionContainer
       }
 
       homeMapping = map;
+   }
+
+   /**
+    * Invokes the ejbTimeout method on the TimedObject with the given id.
+    * @param timedObjectId The id of the TimedObject
+    * @param timer the Timer that is passed to ejbTimeout
+    */
+   public void invokeTimedObject(String timedObjectId, Timer timer)
+   {
+
    }
 
    protected Interceptor createContainerInterceptor()

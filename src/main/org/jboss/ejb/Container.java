@@ -8,36 +8,18 @@
 package org.jboss.ejb;
 
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import javax.ejb.EJBException;
-import javax.ejb.Timer;
-import javax.ejb.TimerService;
-import javax.ejb.TimedObject;
-import javax.management.MalformedObjectNameException;
-import javax.management.MBeanException;
-import javax.management.ObjectName;
-import javax.naming.*;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.WebserviceClientDeployer;
-import org.jboss.ejb.BeanLockManager;
-import org.jboss.ejb.timer.ContainerTimerService;
-import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
+import org.jboss.ejb.timer.ContainerTimer;
+import org.jboss.ejb.timer.ContainerTimerService;
+import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.InvocationStatistics;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.LocalEJBInvocation;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -46,15 +28,36 @@ import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.mx.util.ObjectNameConverter;
+import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
-import org.jboss.security.SecurityAssociation;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
-import org.jboss.mx.util.ObjectNameFactory;
-import org.jboss.mx.util.ObjectNameConverter;
+
+import javax.ejb.EJBException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
+import javax.management.MBeanException;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.LinkRef;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -76,13 +79,13 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.136 $
+ * @version $Revision: 1.137 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public abstract class Container
         extends ServiceMBeanSupport
-        implements ContainerMBean
+        implements ContainerMBean, TimedObjectInvoker
 {
    public final static String BASE_EJB_CONTAINER_NAME =
            "jboss.j2ee:service=EJB";
@@ -183,9 +186,7 @@ public abstract class Container
    /** Time statistics for the invoke(Invocation) methods */
    protected InvocationStatistics invokeStats = new InvocationStatistics();
 
-   /**
-    * Timer Service for this Container
-    **/
+   /** Timer Service for this Container. Note, this is not used by the EJBTimerServiceTx */
    public HashMap timerServices = new HashMap();
 
    /** A reference to {@link TimedObject#ejbTimeout}. */
@@ -206,12 +207,6 @@ public abstract class Container
          throw new ExceptionInInitializerError(e);
       }
    }
-
-   /**
-    * boolean <code>started</code> indicates if this container is currently
-    * started. if not, calls to non lifecycle methods will raise exceptions.
-    */
-   private boolean started = false;
 
    // Public --------------------------------------------------------
 
@@ -594,10 +589,8 @@ public abstract class Container
    /**
     * Creates the single Timer Servic for this container if not already created
     *
-    * @param pContext Context of the EJB
-    *
+    * @param pKey Bean id
     * @return Container Timer Service
-    *
     * @throws IllegalStateException If the type of EJB is not allowed to use the timer service
     *
     * @see javax.ejb.EJBContext#getTimerService
@@ -608,34 +601,57 @@ public abstract class Container
            throws IllegalStateException
    {
       if (this instanceof StatefulSessionContainer)
+         throw new IllegalStateException("Statefull Session Beans are not allowed to access the TimerService");
+
+      TimerService timerService = null;
+      try
       {
-         throw new IllegalStateException("Statefull Session Beans are not allowed to access Timer Service");
+         // Try the transactional EJBTimerServiceTx
+         ObjectName oname = new ObjectName("jboss:service=EJBTimerServiceTx");
+         if (server.isRegistered(oname))
+         {
+            // Try to get an already existing TimerService
+            String timedObjectId = getJmxName().getCanonicalName() + (pKey != null ? "#" + pKey : "");
+            timerService = (TimerService) server.invoke(oname, "getTimerService",
+                    new Object[]{timedObjectId}, new String[]{"java.lang.String"});
+
+            // No, then create a TimerService
+            if (timerService == null)
+            {
+               timerService = (TimerService) server.invoke(oname, "createTimerService",
+                       new Object[]{timedObjectId, this},
+                       new String[]{"java.lang.String", "org.jboss.ejb.txtimer.TimedObjectInvoker"});
+            }
+         }
+
+         // Fall back to the non transactional EJBTimerService
+         else
+         {
+            timerService = (TimerService) timerServices.get((pKey == null ? "null" : pKey));
+            if (timerService == null)
+            {
+               timerService = (TimerService) server.invoke(new ObjectName("jboss:service=EJBTimerService"),
+                       "createTimerService",
+                       new Object[]{getJmxName().toString(), this, pKey},
+                       new String[]{String.class.getName(), Container.class.getName(), Object.class.getName()});
+               timerServices.put((pKey == null ? "null" : pKey),
+                       timerService);
+            }
+         }
       }
-      TimerService timerService = (TimerService) timerServices.get(
-              (pKey == null ? "null" : pKey)
-      );
-      if (timerService == null)
+      catch (Exception e)
       {
-         try
-         {
-            timerService = (TimerService) server.invoke(
-                    new ObjectName("jboss:service=EJBTimerService"),
-                    "createTimerService",
-                    new Object[]{getJmxName().toString(), this, pKey},
-                    new String[]{String.class.getName(), Container.class.getName(), Object.class.getName()}
-            );
-            timerServices.put(
-                    (pKey == null ? "null" : pKey),
-                    timerService
-            );
-         }
-         catch (Exception e)
-         {
-            throw new RuntimeException("Could not create timer service: " + e);
-         }
+         throw new RuntimeException("Could not create timer service: " + e);
       }
       return timerService;
    }
+
+   /**
+    * Invokes the ejbTimeout method on the TimedObject with the given id.
+    * @param timedObjectId The id of the TimedObject
+    * @param timer the Timer that is passed to ejbTimeout
+    */
+   public abstract void invokeTimedObject(String timedObjectId, Timer timer);
 
    /**
     * Stops all the timers created by beans of this container
@@ -757,7 +773,6 @@ public abstract class Container
    {
       // Setup "java:comp/env" namespace
       setupEnvironment();
-      started = true;
       localProxyFactory.start();
    }
 
@@ -768,7 +783,6 @@ public abstract class Container
     */
    protected void stopService() throws Exception
    {
-      started = false;
       localProxyFactory.stop();
       teardownEnvironment();
    }
@@ -825,14 +839,6 @@ public abstract class Container
     * This method is called when a method call comes
     * in on an EJBObject.  The Container forwards this call to the interceptor
     * chain for further processing.
-    *
-    * @param id        the id of the object being invoked. May be null
-    *                  if stateless
-    * @param method    the method being invoked
-    * @param args      the parameters
-    * @return          the result of the invocation
-    *
-    * @throws Exception
     */
    public abstract Object internalInvoke(Invocation mi)
            throws Exception;
@@ -1077,8 +1083,6 @@ public abstract class Container
       // Bind Local EJB references
       {
          Iterator enum = beanMetaData.getEjbLocalReferences();
-         // unique key name
-         String localJndiName = beanMetaData.getLocalJndiName();
          while (enum.hasNext())
          {
             EjbLocalRefMetaData ref = (EjbLocalRefMetaData) enum.next();
@@ -1351,10 +1355,5 @@ public abstract class Container
       public void resetStatistic()
       {
       }
-
    }
 }
-
-/*
-vim:ts=3:sw=3:et
-*/

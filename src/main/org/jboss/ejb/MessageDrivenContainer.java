@@ -28,6 +28,7 @@ import javax.management.ObjectName;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.txtimer.TimedObjectInvoker;
 import org.jboss.util.NullArgumentException;
 import org.jboss.metadata.MessageDrivenMetaData;
 
@@ -40,7 +41,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -125,6 +126,16 @@ public class MessageDrivenContainer
    {
       //throw new Error("HomeClass not valid for MessageDriven beans");
       return null;
+   }
+
+   /**
+    * Invokes the ejbTimeout method on the TimedObject with the given id.
+    * @param timedObjectId The id of the TimedObject
+    * @param timer the Timer that is passed to ejbTimeout
+    */
+   public void invokeTimedObject(String timedObjectId, Timer timer)
+   {
+
    }
 
    public Class getRemoteClass()

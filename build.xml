@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.157 2004/03/30 02:05:41 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.158 2004/04/08 15:03:45 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -273,6 +273,7 @@
         <include name="org/jboss/ejb/timer/AbstractTimerSource.java"/>
         <include name="org/jboss/ejb/timer/FilePersistenceManager.java"/>
         <include name="org/jboss/ejb/timer/SchedulerTimerSource.java"/>
+        <include name="org/jboss/ejb/txtimer/EJBTimerServiceTx.java"/>
         <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/jms/**/*.java"/>
         <include name="org/jboss/jmx/**/*.java"/>
