@@ -151,11 +151,9 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 
 	DependManager dm=(DependManager)context.getContainer().
 	    getNote("DependManager");
-	//context.getDependManager();
+
 	if( dm==null ) {
-	    dm=new DependManager();
-	    context.getContainer().setNote("DependManager", dm);
-	    //setDependManager( dm );
+	    // No depend manager - that means no ReloadInterceptor.
 	}
 
 	ClassLoader parent=null;
@@ -166,22 +164,30 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	else
 	    parent=this.getClass().getClassLoader();
 
-	// Construct a class loader. Use URLClassLoader if Java2,
-	// replacement ( SimpleClassLoader ) if not
-	//	SimpleClassLoader loader=new SimpleClassLoader(classP, parent);
 	ClassLoader loader=jdk11Compat.newClassLoaderInstance( classP, parent);
-	DependClassLoader dcl=new DependClassLoader( dm, loader);
 	if( debug > 0 )
 	    log("Loader " + loader.getClass().getName() + " " + parent);
-	context.setClassLoader( dcl );
+
+	if( dm != null ) {
+	    // If depend manager is present, create a wrapper loader
+	    // that will add dependencies for reloading ( using depentManager)
+	    loader=new DependClassLoader( dm, loader);
+	}
+	// If another reloading scheme is implemented, you'll
+	// have to plug it in here.
+	
+	context.setClassLoader( loader );
+
 	// support for jasper and other applications
-	context.setAttribute( "org.apache.tomcat.classloader",
-			      context.getClassLoader());
+	context.setAttribute( "org.apache.tomcat.classloader",loader);
     }
 
     public void reload( Request req, Context context) throws TomcatException {
 	log( "Reload event " + context.getPath() );
 	
+	DependManager dm=(DependManager)context.getContainer().
+	    getNote("DependManager");
+
 	ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
 	if( debug>5 ) {
@@ -190,9 +196,11 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 		log("    " + urls[i].toString() );
 	}
 
-	DependManager dm=new DependManager();
-	context.getContainer().setNote("DependManager", dm);
-	//setDependManager( dm );
+	if( dm!=null ) {
+	    // we are using a util.depend for reloading
+	    dm.reset();
+	}
+	// construct a new loader
 	ClassLoader oldLoader=context.getClassLoader();
 	int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
 					"oldLoader");
@@ -210,10 +218,11 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	// replacement ( SimpleClassLoader ) if not
 	//	SimpleClassLoader loader=new SimpleClassLoader(urls, parent);
 	ClassLoader loader=jdk11Compat.newClassLoaderInstance( urls, parent);
-	DependClassLoader dcl=new DependClassLoader( dm, loader);
-	context.setClassLoader( dcl );
-	context.setAttribute( "org.apache.tomcat.classloader",
-			      ctx.getClassLoader());
+
+	if( dm!=null ) 
+	    loader=new DependClassLoader( dm, loader);
+	context.setClassLoader( loader );
+	context.setAttribute( "org.apache.tomcat.classloader", loader);
     }
 
     // --------------------
