@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public class TxManager
    implements TransactionManager
@@ -200,7 +200,7 @@ public class TxManager
 
 
 	// Public --------------------------------------------------------
-	protected void commit(Transaction tx)
+	public void commit(Transaction tx)
 	throws RollbackException,
 	HeuristicMixedException,
 	HeuristicRollbackException,
@@ -220,20 +220,20 @@ public class TxManager
 		}
 	}
 	
-   protected boolean delistResource(Transaction tx, XAResource xaRes, int flag)
+   public boolean delistResource(Transaction tx, XAResource xaRes, int flag)
    {
 	   // Look up the txCapsule and delegate
 	   return ((TxCapsule) txCapsules.get(tx)).delistResource(xaRes, flag);
    }
 
-   protected boolean enlistResource(Transaction tx, XAResource xaRes)
+   public boolean enlistResource(Transaction tx, XAResource xaRes)
       throws RollbackException
    {
    		// Look up the txCapsule and delegate
 	   return ((TxCapsule) txCapsules.get(tx)).enlistResource(xaRes);
    }
 
-   protected int getStatus(Transaction tx)
+   public int getStatus(Transaction tx)
               throws SystemException
    {
       // Look up the txCapsule and delegate
@@ -241,13 +241,13 @@ public class TxManager
       return txCap == null ? Status.STATUS_NO_TRANSACTION : txCap.getStatus();
    }
 
-   protected void registerSynchronization(Transaction tx, Synchronization s)
+   public void registerSynchronization(Transaction tx, Synchronization s)
    {
       // Look up the txCapsule and delegate
 	  ((TxCapsule) txCapsules.get(tx)).registerSynchronization(s);
    }
 
-   protected void rollback(Transaction tx)
+   public void rollback(Transaction tx)
               throws java.lang.IllegalStateException,
                      java.lang.SecurityException,
                      SystemException
@@ -264,7 +264,7 @@ public class TxManager
 		}
 	}
 	
-   protected void setRollbackOnly(Transaction tx)
+   public void setRollbackOnly(Transaction tx)
                      throws java.lang.IllegalStateException,
                             SystemException
    {
