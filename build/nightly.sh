@@ -31,7 +31,6 @@ sleep 5
 echo "---------------------------------"
 }
 
-
 echo "Runbox update started: "
 date
 
@@ -41,15 +40,22 @@ SCARAB=".."
 CVSUPDATE=1
 DEPBUILD=0
 
+case "$OSTYPE" in
+    darwin*)
+        DARWIN=1
+    ;;
+    *)
+        DARWIN=0
+    ;;
+esac
+
 DIR=`pwd`
 MYSQL=/usr/local/mysql/bin
 WGET=/usr/bin/wget
 
 ## Environment variables
 if [ -z ${JAVA_HOME} ] ; then
-    if [ ${OSTYPE} = "macos" -o ${OSTYPE} = "darwin1.0" \
-         -o ${OSTYPE} = "darwin" -o ${OSTYPE} = "darwin1.4" \
-         -o ${VENDOR} = "apple" ] ; then
+    if [ ${DARWIN} -gt 0 ] ; then
         JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
     elif [ ${OSTYPE} = "linux" ] ; then
         JAVA_HOME="/usr/local/java"
