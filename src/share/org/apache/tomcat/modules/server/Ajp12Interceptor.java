@@ -64,14 +64,21 @@
 */
 package org.apache.tomcat.modules.server;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.net.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.http.HttpMessages;
 import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.net.TcpConnection;
+import org.apache.tomcat.util.net.TcpConnectionHandler;
 
 /* 
  */

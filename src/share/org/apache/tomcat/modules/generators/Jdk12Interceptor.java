@@ -59,12 +59,14 @@
 
 package org.apache.tomcat.modules.generators;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.compat.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 
 /**
  *  JDK1.2 specific options. Fix the class loader, etc.

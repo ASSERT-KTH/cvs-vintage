@@ -58,21 +58,22 @@
  */
 package org.apache.tomcat.modules.config;
 
-import java.beans.*;
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.*;
-import java.net.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.util.compat.*;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.IntrospectionUtils;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.modules.server.*;
-import org.apache.tomcat.util.log.*;
-import org.xml.sax.*;
+import org.apache.tomcat.util.compat.Jdk11Compat;
+import org.apache.tomcat.util.xml.SaxContext;
+import org.apache.tomcat.util.xml.XmlAction;
+import org.apache.tomcat.util.xml.XmlMapper;
+import org.xml.sax.AttributeList;
 
 /**
  * This module can be used to specify groups of modules and

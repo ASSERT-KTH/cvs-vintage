@@ -60,11 +60,9 @@
 package org.apache.tomcat.modules.server;
 
 import java.io.IOException;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
-import java.util.Vector;
-import java.io.File;
+
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
 
 public class JNIRequestAdapter extends Request {
     JNIConnectionHandler h;

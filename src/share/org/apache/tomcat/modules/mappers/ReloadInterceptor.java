@@ -59,12 +59,20 @@
 
 package org.apache.tomcat.modules.mappers;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.depend.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.depend.DependClassLoader;
+import org.apache.tomcat.util.depend.DependManager;
+import org.apache.tomcat.util.depend.Dependency;
 
 /**
  * This interceptor deals with context reloading.

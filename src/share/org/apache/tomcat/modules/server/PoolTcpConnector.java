@@ -59,12 +59,16 @@
 
 package org.apache.tomcat.modules.server;
 
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.net.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.net.InetAddress;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.net.PoolTcpEndpoint;
+import org.apache.tomcat.util.net.SSLImplementation;
+import org.apache.tomcat.util.net.ServerSocketFactory;
 
 
 /* Similar with MPM module in Apache2.0. Handles all the details related with

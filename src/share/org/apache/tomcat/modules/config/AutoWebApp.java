@@ -59,13 +59,15 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
-import org.apache.tomcat.util.xml.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 
 /**
  * Automatically add all the web applications from a directory.

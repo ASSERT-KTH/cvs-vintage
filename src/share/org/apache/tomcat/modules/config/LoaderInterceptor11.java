@@ -59,13 +59,21 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.compat.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.security.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.compat.Jdk11Compat;
+import org.apache.tomcat.util.compat.SimpleClassLoader;
 
 /**
  * Set class loader based on WEB-INF/classes, lib.

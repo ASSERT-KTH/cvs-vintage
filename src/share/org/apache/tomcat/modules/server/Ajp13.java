@@ -60,20 +60,17 @@
 package org.apache.tomcat.modules.server;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Enumeration;
-import java.io.ByteArrayInputStream;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.compat.*;
-import org.apache.tomcat.util.http.MimeHeaders;
-import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.core.OutputBuffer;
+import org.apache.tomcat.core.Request;
 import org.apache.tomcat.util.aaa.SimplePrincipal;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 import org.apache.tomcat.util.http.HttpMessages;
+import org.apache.tomcat.util.http.MimeHeaders;
 
 /* Frozen, bug fixes only: all active development goes in
      jakarta-tomcat-connectors/jk/org/apache/ajp/Ajp14*

@@ -59,10 +59,10 @@
 
 package org.apache.tomcat.modules.server;
 
-import java.util.*;
-import java.io.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * Handle incoming JNI connections. This class will be called from

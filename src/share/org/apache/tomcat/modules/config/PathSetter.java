@@ -59,16 +59,17 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.security.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
 
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.log.Log;
-import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  * Set ( and guess ) the paths to absolute ( and canonical ) directories.

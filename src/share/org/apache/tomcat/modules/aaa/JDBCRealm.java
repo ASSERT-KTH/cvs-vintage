@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.9 2001/10/08 04:58:19 larryi Exp $
- * $Revision: 1.9 $
- * $Date: 2001/10/08 04:58:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.10 2003/09/22 09:18:38 hgomez Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/22 09:18:38 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -61,16 +61,17 @@
 
 package org.apache.tomcat.modules.aaa;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.aaa.*;
-import java.security.*;
 import java.security.Principal;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Vector;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.sql.*;
+
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.aaa.SimplePrincipal;
 
 /**
  * Implmentation of <b>Realm</b> that works with any JDBC supported database.

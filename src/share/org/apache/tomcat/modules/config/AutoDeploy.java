@@ -59,14 +59,18 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.depend.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Hashtable;
 
-import org.apache.tomcat.util.xml.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.depend.DependManager;
+import org.apache.tomcat.util.depend.Dependency;
+import org.apache.tomcat.util.io.FileUtil;
 
 /**
  * Will manage a repository of .war files, expanding them automatically

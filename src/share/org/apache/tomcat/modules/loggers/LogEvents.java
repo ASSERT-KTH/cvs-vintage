@@ -59,12 +59,15 @@
 
 package org.apache.tomcat.modules.loggers;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.hooks.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.hooks.Hooks;
 
 /** Log all hook events during tomcat execution.
  *  Use debug>0 to log addContainer ( since this generates a lot of

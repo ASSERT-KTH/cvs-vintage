@@ -59,12 +59,15 @@
 
 package org.apache.tomcat.modules.session;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.ServerSession;
+import org.apache.tomcat.util.http.ServerCookie;
 
 /**
  * Extract the session ID from the request using cookies and

@@ -59,12 +59,12 @@
 
 package org.apache.tomcat.modules.server;
 
-import java.io.IOException;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.http.*;
-import java.util.Vector;
 import java.io.File;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 
 // we'll use the system.out/err until the code is stable, then
 // try to logger. Since this is a normal interceptor everything should

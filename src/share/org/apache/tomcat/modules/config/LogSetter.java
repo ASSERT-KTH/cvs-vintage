@@ -59,13 +59,17 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.qlog.*;
+import java.io.File;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.io.FileUtil;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.log.LogManager;
+import org.apache.tomcat.util.qlog.LogDaemon;
+import org.apache.tomcat.util.qlog.QueueLogger;
 
 /*
   Logging in Tomcat is quite flexible; we can either have a log

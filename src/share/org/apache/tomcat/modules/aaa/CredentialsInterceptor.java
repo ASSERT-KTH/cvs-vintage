@@ -58,13 +58,14 @@
  */ 
 package org.apache.tomcat.modules.aaa;
 
-import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.ServerSession;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.buf.Base64;
-import org.apache.tomcat.util.xml.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.xml.sax.*;
 
 /**
  *  Extract user/password credentials from a request.

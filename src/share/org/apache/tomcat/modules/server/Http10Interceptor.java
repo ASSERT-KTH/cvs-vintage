@@ -60,18 +60,24 @@
 
 package org.apache.tomcat.modules.server;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.buf.*;
-import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.util.net.*;
-import org.apache.tomcat.util.net.ServerSocketFactory;
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.compat.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.util.buf.DateTool;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.HttpMessages;
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.net.SSLSupport;
+import org.apache.tomcat.util.net.TcpConnection;
+import org.apache.tomcat.util.net.TcpConnectionHandler;
 
 /** Standalone http.
  *

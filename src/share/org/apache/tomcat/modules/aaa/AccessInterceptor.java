@@ -59,12 +59,21 @@
 
 package org.apache.tomcat.modules.aaa;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.buf.*;
+import java.io.File;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.ServerSession;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.buf.Ascii;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.Parameters;
 import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.http.*;
-import java.util.*;
-import java.io.*;
 
 // XXX maybe it's a good idea to use a different model for adding secuirty
 // constraints - we use Container now because we want to generalize all

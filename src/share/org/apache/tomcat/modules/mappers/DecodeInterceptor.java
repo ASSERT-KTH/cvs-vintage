@@ -59,11 +59,19 @@
 
 package org.apache.tomcat.modules.mappers;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.buf.*;
-import org.apache.tomcat.util.http.*;
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.ServerSession;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.buf.ByteChunk;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.ContentType;
+import org.apache.tomcat.util.http.MimeHeaders;
 
 /**
  * Default actions after receiving the request: get charset, unescape,

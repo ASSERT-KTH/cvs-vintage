@@ -60,16 +60,19 @@
 
 package org.apache.tomcat.modules.aaa;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.util.aaa.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
 import java.security.Principal;
-import org.xml.sax.*;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.aaa.SimplePrincipal;
+import org.apache.tomcat.util.xml.SaxContext;
+import org.apache.tomcat.util.xml.XmlAction;
+import org.apache.tomcat.util.xml.XmlMapper;
+import org.xml.sax.AttributeList;
 
 /**
  *  Memory based realm - will authenticate an user and password against

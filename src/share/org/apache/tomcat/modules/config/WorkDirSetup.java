@@ -59,12 +59,15 @@
 
 package org.apache.tomcat.modules.config;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.io.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.net.URLEncoder;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.io.FileUtil;
 
 /**
  * Handles work dir setup/removal.

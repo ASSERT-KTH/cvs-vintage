@@ -58,17 +58,14 @@
  */ 
 package org.apache.tomcat.modules.session;
 
-import java.io.*;
-import java.util.Random;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.compat.*;
-import org.apache.tomcat.util.threads.*;
-import org.apache.tomcat.core.*;
-import java.util.*;
-import org.apache.tomcat.util.collections.SimplePool;
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.buf.*;
-import java.security.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.ServerSession;
+import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.buf.TimeStamp;
+import org.apache.tomcat.util.threads.Expirer;
 
 
 /**

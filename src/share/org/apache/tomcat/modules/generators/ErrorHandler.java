@@ -59,18 +59,24 @@
 
 package org.apache.tomcat.modules.generators;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.qlog.Logger;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.http.HttpMessages;
 import org.apache.tomcat.util.http.LocaleToCharsetMap;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.security.*;
-import java.lang.reflect.*;
-
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.qlog.Logger;
+import org.apache.tomcat.util.res.StringManager;
 
 /**
  * Handle errors - this is the default handler, you can replace it

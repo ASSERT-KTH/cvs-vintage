@@ -60,14 +60,15 @@
 
 package org.apache.tomcat.modules.server;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.util.buf.*;
-import org.apache.tomcat.util.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.MimeHeaders;
+import org.apache.tomcat.util.io.RecycleBufferedInputStream;
 import org.apache.tomcat.util.log.Log;
-import java.io.*;
-import java.net.*;
-import java.util.*;
 
 public class Http10 {
     private Socket socket;

@@ -59,11 +59,15 @@
 
 package org.apache.tomcat.modules.loggers;
 
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.Response;
+import org.apache.tomcat.core.TomcatException;
 
 /**
  * Time counting. 

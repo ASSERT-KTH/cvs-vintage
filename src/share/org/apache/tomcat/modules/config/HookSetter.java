@@ -58,21 +58,12 @@
  */
 package org.apache.tomcat.modules.config;
 
-import java.beans.*;
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.Hashtable;
-import java.util.*;
-import java.net.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.io.FileUtil;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.modules.server.*;
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.hooks.*;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.IntrospectionUtils;
-import org.xml.sax.*;
+import org.apache.tomcat.util.hooks.Hooks;
 
 /**
  * Keep hook chains to minimal, using introspection.

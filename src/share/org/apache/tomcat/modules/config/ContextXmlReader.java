@@ -58,19 +58,21 @@
  */
 package org.apache.tomcat.modules.config;
 
-import java.beans.*;
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.*;
-import java.net.*;
-import org.apache.tomcat.util.res.StringManager;
-import org.apache.tomcat.util.xml.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.modules.server.*;
+import java.util.Vector;
+
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.util.IntrospectionUtils;
-import org.apache.tomcat.util.log.Log;
-import org.xml.sax.*;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.xml.SaxContext;
+import org.apache.tomcat.util.xml.XmlAction;
+import org.apache.tomcat.util.xml.XmlMapper;
+import org.xml.sax.AttributeList;
 
 /**
  * This is a configuration module that will read context configuration files,

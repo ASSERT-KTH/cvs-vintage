@@ -58,10 +58,12 @@
  */ 
 package org.apache.tomcat.modules.generators;
 
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.core.*;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.apache.tomcat.core.BaseInterceptor;
+import org.apache.tomcat.core.Container;
+import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.Handler;
+import org.apache.tomcat.core.Request;
+import org.apache.tomcat.core.TomcatException;
 
 /**
  *

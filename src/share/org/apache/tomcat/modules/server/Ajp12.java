@@ -64,12 +64,14 @@
 */
 package org.apache.tomcat.modules.server;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.net.*;
-import org.apache.tomcat.util.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import org.apache.tomcat.core.ContextManager;
+import org.apache.tomcat.core.Request;
 import org.apache.tomcat.util.aaa.SimplePrincipal;
 
 class Ajp12 {
