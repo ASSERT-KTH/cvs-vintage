@@ -267,13 +267,35 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    {
       Connection c = null;
       PreparedStatement ps = null;
+      boolean throwRuntimeExceptions = entity.getMetaData().getThrowRuntimeExceptions();
+
+      // if metadata is true, the getconnection is done inside 
+      // its own try catch block to throw a runtime exception (EJBException)
+      if (throwRuntimeExceptions)
+      {
+          try 
+          {
+              c = entity.getDataSource().getConnection();
+          } 
+          catch (SQLException sqle) 
+          {
+              javax.ejb.EJBException ejbe = new javax.ejb.EJBException("Could not get a connection; " + sqle);
+              ejbe.initCause(sqle);
+              throw ejbe;
+          } 
+      }
+     
       try
       {
          if(debug)
             log.debug("Executing SQL: " + insertSQL);
 
-         DataSource dataSource = entity.getDataSource();
-         c = dataSource.getConnection();
+
+         // if metadata is false, the getconnection is done inside this try catch block
+         if ( ! throwRuntimeExceptions)
+         {
+             c = entity.getDataSource().getConnection();
+         }
          ps = prepareStatement(c, insertSQL, ctx);
 
          // set the parameters

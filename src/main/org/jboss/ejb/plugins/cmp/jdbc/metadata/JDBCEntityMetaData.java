@@ -35,7 +35,7 @@ import javax.management.MBeanServer;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public final class JDBCEntityMetaData
 {
@@ -235,6 +235,12 @@ public final class JDBCEntityMetaData
    private final Class qlCompiler;
 
    /**
+    * throw runtime exception metadata
+    */
+   private final boolean throwRuntimeExceptions;
+
+
+   /**
     * Constructs jdbc entity meta data defined in the jdbcApplication and
     * with the data from the entity meta data which is loaded from the
     * ejb-jar.xml file.
@@ -376,6 +382,7 @@ public final class JDBCEntityMetaData
       readTimeOut = -1;
       tablePostCreateCmd = null;
       qlCompiler = null;
+      throwRuntimeExceptions = false;
 
       // build the metadata for the cmp fields now in case there is
       // no jbosscmp-jdbc.xml
@@ -699,6 +706,18 @@ public final class JDBCEntityMetaData
             throw new DeploymentException("Failed to load compiler implementation: " + compiler);
          }
       }
+
+      // throw runtime exceptions ?  If not provided, keep default.
+      String throwRuntimeExceptionsStr = MetaData.getOptionalChildContent(element, "throw-runtime-exceptions");
+      if(throwRuntimeExceptionsStr != null)
+      {
+          throwRuntimeExceptions = Boolean.valueOf(throwRuntimeExceptionsStr).booleanValue();
+      }
+      else
+      {
+          throwRuntimeExceptions = defaultValues.getThrowRuntimeExceptions();
+      }
+
 
       //
       // cmp fields
@@ -1452,6 +1471,26 @@ public final class JDBCEntityMetaData
    {
       return qlCompiler;
    }
+
+   /**
+    * Is the throw-runtime-exceptions meta data for this entity is true.
+    *
+    * @return the throw-runtime-exceptions meta data for this entity.
+    */
+   public boolean isThrowRuntimeExceptions()
+   {
+      return throwRuntimeExceptions;
+   }
+   /**
+    * Gets the throw-runtime-exceptions meta data for this entity.
+    *
+    * @return the throw-runtime-exceptions meta data for this entity.
+    */
+   public boolean getThrowRuntimeExceptions()
+   {
+      return throwRuntimeExceptions;
+   }
+   
 
    public boolean isCleanReadAheadOnLoad()
    {

@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -171,6 +171,25 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       Connection con = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
+      final JDBCEntityBridge entityBridge = (JDBCEntityBridge)selectManager.getEntityBridge();
+      boolean throwRuntimeExceptions = entityBridge.getMetaData().getThrowRuntimeExceptions();
+
+      // if metadata is true, the getconnection is done inside 
+      // its own try catch block to throw a runtime exception (EJBException)
+      if (throwRuntimeExceptions)
+      {
+          try 
+          {
+              con = entityBridge.getDataSource().getConnection();
+          } 
+          catch (SQLException sqle) 
+          {
+              javax.ejb.EJBException ejbe = new javax.ejb.EJBException("Could not get a connection; " + sqle);
+              ejbe.initCause(sqle);
+              throw ejbe;
+          } 
+      }
+
 
       try
       {
@@ -184,9 +203,11 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
             }
          }
 
-         // get the connection
-         final JDBCEntityBridge entityBridge = (JDBCEntityBridge)selectManager.getEntityBridge();
-         con = entityBridge.getDataSource().getConnection();
+         // if metadata is false, the getconnection is done inside this try catch block
+         if ( ! throwRuntimeExceptions)
+         {
+             con = entityBridge.getDataSource().getConnection();             
+         }
          ps = con.prepareStatement(sql);
 
          // Set the fetch size of the statement

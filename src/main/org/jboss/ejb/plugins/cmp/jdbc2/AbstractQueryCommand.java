@@ -30,7 +30,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public abstract class AbstractQueryCommand implements QueryCommand
 {
@@ -105,6 +105,23 @@ public abstract class AbstractQueryCommand implements QueryCommand
       Connection con = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
+      boolean throwRuntimeExceptions = entity.getMetaData().getThrowRuntimeExceptions();
+
+      // if metadata is true, the getconnection is done inside 
+      // its own try catch block to throw a runtime exception (EJBException)
+      if (throwRuntimeExceptions)
+      {
+          try 
+          {
+              con = entity.getDataSource().getConnection();
+          } 
+          catch (SQLException sqle) 
+          {
+              javax.ejb.EJBException ejbe = new javax.ejb.EJBException("Could not get a connection; " + sqle);
+              ejbe.initCause(sqle);
+              throw ejbe;
+          } 
+      }
       try
       {
          if(log.isDebugEnabled())
@@ -112,7 +129,11 @@ public abstract class AbstractQueryCommand implements QueryCommand
             log.debug("executing: " + sql);
          }
 
-         con = entity.getDataSource().getConnection();
+         // if metadata is false, the getconnection is done inside this try catch block
+         if ( ! throwRuntimeExceptions)
+         {
+             con = entity.getDataSource().getConnection();
+         }
          ps = con.prepareStatement(sql);
 
          if(params != null)
@@ -156,6 +177,23 @@ public abstract class AbstractQueryCommand implements QueryCommand
       Connection con = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
+      boolean throwRuntimeExceptions = entity.getMetaData().getThrowRuntimeExceptions();
+
+      // if metadata is true, the getconnection is done inside 
+      // its own try catch block to throw a runtime exception (EJBException)
+      if (throwRuntimeExceptions)
+      {
+          try 
+          {
+              con = entity.getDataSource().getConnection();
+          } 
+          catch (SQLException sqle) 
+          {
+              javax.ejb.EJBException ejbe = new javax.ejb.EJBException("Could not get a connection; " + sqle);
+              //ejbe.initCause(sqle); only for JBoss 4 and +
+              throw ejbe;
+          } 
+      }
       try
       {
          if(log.isDebugEnabled())
@@ -163,7 +201,11 @@ public abstract class AbstractQueryCommand implements QueryCommand
             log.debug("executing: " + sql);
          }
 
-         con = entity.getDataSource().getConnection();
+         // if metadata is false, the getconnection is done inside this try catch block
+         if ( ! throwRuntimeExceptions)
+         {
+             con = entity.getDataSource().getConnection();
+         }
          ps = con.prepareStatement(sql);
 
          if(params != null)

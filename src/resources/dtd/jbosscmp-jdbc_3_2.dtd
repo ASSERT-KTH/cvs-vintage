@@ -22,7 +22,7 @@ entities, and relationships.
          alter-table?, remove-table?, post-table-create?, read-only?, read-time-out?,
          row-locking?, pk-constraint?, fk-constraint?,
          preferred-relation-mapping?, read-ahead?, list-cache-max?, clean-read-ahead-on-load?,
-         fetch-size?, unknown-pk?, entity-command?, ql-compiler?)>
+         fetch-size?, unknown-pk?, entity-command?, ql-compiler?, throw-runtime-exceptions?)>
 
 <!--
 The optional datasource element contains the jndi-name used to lookup
@@ -211,6 +211,16 @@ Specifies the number of entities to read in one round-trip to
 the underlying datastore.
 -->
 <!ELEMENT fetch-size (#PCDATA)>
+
+
+<!--
+Should runtime exceptions be thrown when unexpected exception occurs ?
+
+The throw-runtime-exceptions element must be one of the two following:
+         <throw-runtime-exceptions>true</throw-runtime-exceptions>
+         <throw-runtime-exceptions>false</throw-runtime-exceptions>
+-->
+<!ELEMENT throw-runtime-exceptions (#PCDATA)>
 
 
 <!--
