@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: NoopPersistencePolicy.java,v 1.4 2004/09/10 21:51:04 tdiesler Exp $
+// $Id: NoopPersistencePolicy.java,v 1.5 2004/09/21 12:15:59 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -47,8 +47,9 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
     * Removes the timer from persistent storage.
     *
     * @param timerId The timer id
+    * @param timedObjectId The id of the timed object
     */
-   public void deleteTimer(String timerId)
+   public void deleteTimer(String timerId, TimedObjectId timedObjectId)
    {
       log.debug("Noop on destroyTimer");
    }

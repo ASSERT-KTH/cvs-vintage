@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: PersistencePolicy.java,v 1.4 2004/09/10 21:51:04 tdiesler Exp $
+// $Id: PersistencePolicy.java,v 1.5 2004/09/21 12:15:59 tdiesler Exp $
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,8 +38,9 @@ public interface PersistencePolicy
     * Deletes a timer from persistent storage.
     *
     * @param timerId The timer id
+    * @param timedObjectId The id of the timed object
     */
-   void deleteTimer(String timerId);
+   void deleteTimer(String timerId, TimedObjectId timedObjectId);
 
    /**
     * Clear the persisted timers

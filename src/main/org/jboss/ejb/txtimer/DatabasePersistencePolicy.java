@@ -6,10 +6,12 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.4 2004/09/10 21:51:04 tdiesler Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.5 2004/09/21 12:15:59 tdiesler Exp $
 
 import org.jboss.ejb.ContainerMBean;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanProxy;
 import org.jboss.mx.util.ObjectNameFactory;
@@ -30,6 +32,11 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import java.io.Serializable;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -57,19 +64,20 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    // The service attributes
    private ObjectName dataSource;
    private String tableName;
-   private String timerIdColumn;
-   private String targetIdColumn;
-   private String initialDateColumn;
-   private String intervalColumn;
-   private String instancePkColumn;
-   private String infoColumn;
-   private String createTableDDL;
+   private static final String timerIdColumn = "TIMERID";
+   private static final String targetIdColumn = "TARGETID";
+   private static final String initialDateColumn = "INITIALDATE";
+   private static final String intervalColumn = "INTERVAL";
+   private static final String instancePkColumn = "INSTANCEPK";
+   private static final String infoColumn = "INFO";
 
    private TransactionManager tm;
    // The data source the timers will be persisted to
    private DataSource ds;
    // True when the table has been created
    private boolean tableCreated;
+   // datasource meta data
+   private ObjectName dataSourceMetaData;
 
    /**
     * Initializes this service.
@@ -88,6 +96,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          tm = TxManager.getInstance();
       }
 
+      // Get the DataSource from JNDI
       try
       {
          String dsJndiTx = (String)server.getAttribute(dataSource, "BindName");
@@ -97,6 +106,12 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       {
          throw new Exception("Failed to lookup data source: " + dataSource);
       }
+
+      // Get the DataSource meta data
+      String dsName = dataSource.getKeyProperty("name");
+      dataSourceMetaData = ObjectName.getInstance("jboss.jdbc:datasource=" + dsName + ",service=metadata");
+      if (server.isRegistered(dataSourceMetaData) == false)
+         throw new IllegalStateException("Canno find datasource meta data: " + dataSourceMetaData);
 
       // create the table if needed
       createTableIfNotExists();
@@ -145,12 +160,12 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
     *
     * @param timerId The timer id
     */
-   public void deleteTimer(String timerId)
+   public void deleteTimer(String timerId, TimedObjectId timedObjectId)
    {
       try
       {
          createTableIfNotExists();
-         doDeleteTimer(timerId);
+         doDeleteTimer(timerId, timedObjectId);
       }
       catch (SQLException e)
       {
@@ -254,54 +269,6 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    /**
     * @jmx.managed-attribute
     */
-   public String getTimerIdColumn()
-   {
-      return timerIdColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setTimerIdColumn(String timerIdColumn)
-   {
-      this.timerIdColumn = timerIdColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getInitialDateColumn()
-   {
-      return initialDateColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setInitialDateColumn(String initialDateColumn)
-   {
-      this.initialDateColumn = initialDateColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getIntervalColumn()
-   {
-      return intervalColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setIntervalColumn(String intervalColumn)
-   {
-      this.intervalColumn = intervalColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
    public String getTableName()
    {
       return tableName;
@@ -313,70 +280,6 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    public void setTableName(String tableName)
    {
       this.tableName = tableName;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getTargetIdColumn()
-   {
-      return targetIdColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setTargetIdColumn(String targetIdColumn)
-   {
-      this.targetIdColumn = targetIdColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getInfoColumn()
-   {
-      return infoColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setInfoColumn(String infoColumn)
-   {
-      this.infoColumn = infoColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getInstancePkColumn()
-   {
-      return instancePkColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setInstancePkColumn(String instancePkColumn)
-   {
-      this.instancePkColumn = instancePkColumn;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public String getCreateTableDDL()
-   {
-      return createTableDDL;
-   }
-
-   /**
-    * @jmx.managed-attribute
-    */
-   public void setCreateTableDDL(String createTableDDL)
-   {
-      this.createTableDDL = createTableDDL;
    }
 
    // private **********************************************************************************************************
@@ -397,6 +300,21 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
 
             if (!rs.next())
             {
+               JDBCTypeMappingMetaData typeMapping = (JDBCTypeMappingMetaData)server.getAttribute(dataSourceMetaData, "TypeMappingMetaData");
+               String dateType = typeMapping.getTypeMappingMetaData(Timestamp.class).getSqlType();
+               String objectType = typeMapping.getTypeMappingMetaData(Object.class).getSqlType();
+               String longType = typeMapping.getTypeMappingMetaData(Long.class).getSqlType();
+
+               String createTableDDL = "create table " + tableName + " (" +
+                       "  " + timerIdColumn + " varchar(80) not null," +
+                       "  " + targetIdColumn + " varchar(80) not null," +
+                       "  " + initialDateColumn + " " + dateType + " not null," +
+                       "  " + intervalColumn + " " + longType + "," +
+                       "  " + instancePkColumn + " " + objectType + "," +
+                       "  " + infoColumn + " " + objectType + "," +
+                       "  constraint " + tableName + "_PK primary key (" + timerIdColumn + "," + targetIdColumn + ")" +
+                       ")";
+
                log.debug("Executing DDL: " + createTableDDL);
 
                st = con.createStatement();
@@ -404,6 +322,14 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
             }
 
             tableCreated = true;
+         }
+         catch (SQLException e)
+         {
+            throw e;
+         }
+         catch (Exception e)
+         {
+            log.error("Cannot create timer table", e);
          }
          finally
          {
@@ -433,8 +359,8 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          st.setString(2, timedObjectId.toString());
          st.setTimestamp(3, new Timestamp(initialExpiration.getTime()));
          st.setLong(4, intervalDuration);
-         st.setObject(5, timedObjectId.getInstancePk());
-         st.setObject(6, info);
+         st.setBytes(5, serialize(timedObjectId.getInstancePk()));
+         st.setBytes(6, serialize(info));
 
          int rows = st.executeUpdate();
          if (rows != 1)
@@ -467,8 +393,8 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
             TimedObjectId targetId = TimedObjectId.parse(rs.getString(targetIdColumn));
             Date initialDate = rs.getTimestamp(initialDateColumn);
             long interval = rs.getLong(intervalColumn);
-            Serializable pKey = (Serializable)rs.getObject(instancePkColumn);
-            Serializable info = (Serializable)rs.getObject(infoColumn);
+            Serializable pKey = (Serializable)deserialize(rs.getBytes(instancePkColumn));
+            Serializable info = (Serializable)deserialize(rs.getBytes(infoColumn));
 
             targetId = new TimedObjectId(targetId.getContainerId(), pKey);
             TimerHandleImpl handle = new TimerHandleImpl(timerId, targetId, initialDate, interval, info);
@@ -485,7 +411,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
    }
 
-   private void doDeleteTimer(String timerId)
+   private void doDeleteTimer(String timerId, TimedObjectId timedObjectId)
            throws SQLException
    {
       Connection con = null;
@@ -499,10 +425,11 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       {
          con = ds.getConnection();
 
-         String sql = "delete from " + tableName + " where " + timerIdColumn + "=?";
+         String sql = "delete from " + tableName + " where " + timerIdColumn + "=? and " + targetIdColumn + "=?";
          st = con.prepareStatement(sql);
 
          st.setString(1, timerId);
+         st.setString(2, timedObjectId.toString());
 
          int rows = st.executeUpdate();
          if (rows != 1)
@@ -575,6 +502,44 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       NotificationFilterSupport filter = new NotificationFilterSupport();
       filter.enableType(Server.START_NOTIFICATION_TYPE);
       server.addNotificationListener(ObjectNameFactory.create("jboss.system:type=Server"), this, filter, null);
+   }
+
+
+   private byte[] serialize(Object obj) {
+
+      if (obj == null)
+         return null;
+
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+      try
+      {
+         ObjectOutputStream oos = new ObjectOutputStream(baos);
+         oos.writeObject(obj);
+         oos.close();
+      }
+      catch (IOException e)
+      {
+         log.error("Cannot serialize: " + obj, e);
+      }
+      return baos.toByteArray();
+   }
+
+   private Object deserialize(byte[] bytes) {
+
+      if (bytes == null)
+         return null;
+
+      ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+      try
+      {
+         ObjectInputStream oos = new ObjectInputStream(bais);
+         return oos.readObject();
+      }
+      catch (Exception e)
+      {
+         log.error("Cannot deserialize", e);
+         return null;
+      }
    }
 }
 
