@@ -1,0 +1,23 @@
+#macro (enterIssueTab $pageTitle )
+ <div id="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+    #if ($pageTitle.equals("Enter Issue")
+     <th><small>1:</small> Summary info</th>
+    #else
+     <td><small>1:</small> <a href="Wizard1.vm" title="view summary information">Summary info</a></td>
+    #end
+    #if ($pageTitle.equals("Identified as duplicate")
+     <th><small>2:</small> Duplicate check</th>
+    #else
+     <td><small>2:</small> <a href="Wizard2.vm" title="">Duplicate check</a></td>
+    #end
+    #if ($pageTitle.equals("Enter issue verbose")
+     <th><small>3:</small> Verbose info</th>
+    #else
+     <td><small>3:</small> <a href="Wizard3.vm" title="view verbose information">Verbose info</a></td>
+    #end
+   </tr>
+  </table>
+ </div>
+#end
