@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.37 2003/02/07 04:05:39 jon Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.38 2003/02/10 23:57:58 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -82,49 +82,56 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
      * Used on GlobalAttributeEdit.vm to modify Attribute Name/Description/Type
      * Use doSaveoptions to modify the options.
      */
-    public void doSaveattributedata(RunData data, TemplateContext context)
+    public boolean doSaveattributedata(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        boolean success = true;
 
         if (intake.isAllValid())
         {
             Attribute attr = scarabR.getAttribute();
             Group attrGroup = null;
+            boolean isDupe = false;
+            String attributeName = null;
             if (attr.getAttributeId() == null)
             {
                 // new attribute
-
-                // Check for duplicate attribute names.
                 attrGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-                String attributeName = attrGroup.get("Name").toString();
-                if (Attribute.checkForDuplicate(attributeName))
-                {
-                    scarabR.setAlertMessage(
-                        l10n.get("CannotCreateDuplicateAttribute"));
-                    return;
-                }
-                else
-                {
-                    attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
-                    attr.setCreatedDate(new Date());
-                }
+                attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
+                attr.setCreatedDate(new Date());
+                attributeName = attrGroup.get("Name").toString();
+                isDupe = Attribute.checkForDuplicate(attributeName);
             }
             else
             {
                 attrGroup = intake.get("Attribute", attr.getQueryKey());
+                attributeName = attrGroup.get("Name").toString();
+                isDupe = Attribute.checkForDuplicate(attributeName, attr);
             }
-
-            attrGroup.setProperties(attr);
-            attr.save();
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+         
+            // Check for duplicate attribute names.
+            if (isDupe)
+            {
+                scarabR.setAlertMessage(
+                    l10n.get("CannotCreateDuplicateAttribute"));
+                success = false;
+            }
+            else
+            {
+                attrGroup.setProperties(attr);
+                attr.save();
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            }
         }
         else
         {
+          success = false;
           scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
+        return success;
     }
 
     /**
@@ -314,12 +321,15 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
-        doSaveattributedata(data, context);
+        boolean success = doSaveattributedata(data, context);
         if (getScarabRequestTool(context).getAttribute().isOptionAttribute())
         {
             doSaveoptions(data, context);
         }
-        doCancel(data, context);
+        if (success)
+        {
+            doCancel(data, context);
+        }
     }
     
     /*
