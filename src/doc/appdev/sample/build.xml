@@ -10,7 +10,7 @@
      defined by your TOMCAT_HOME environment variable.
 -->
 
-  <property name="app.name"       value="myapp"
+  <property name="app.name"       value="myapp"/>
   <property name="deploy.home"    value="${tomcat.home}/webapps/${app.name}"/>
   <property name="dist.home"      value="${deploy.home}"/>
   <property name="dist.src"       value="${app.name}.jar"/>
