@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.53 $" />  
+     <property name="revision" value="$Revision: 1.54 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -1252,15 +1252,12 @@ mod_webapp into mod_jk )
       <httpClient unless="not.standalone" >
           <httpRequest path="/test/jsp/ShowPathInfo.jsp/." 
 		      method="GET" />
-          <httpStatusMatch match="200"/>
-          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+          <httpStatusMatch match="404"/>
       </httpClient>
       <httpClient unless="not.standalone" >
           <httpRequest path="/test/jsp/ShowPathInfo.jsp/foo/.." 
 		      method="GET" />
-          <httpStatusMatch match="200"/>
-          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
-          <responseMatch match="getPathInfo: null"/>
+          <httpStatusMatch match="404"/>
       </httpClient>
       <httpClient >
           <httpRequest path="/test/ShowPathInfo.jsp/./" 
