@@ -2,7 +2,7 @@
 
 <h2>$page.Title</h2>
 
-<p>New users,
+<p>$l10n.NewUsers,
   <strong>$link.setPage("Register.vm").setLabel("register here")</strong>.</p>
 <p>Forgot your password,
   <strong>$link.setPage("ForgotPassword.vm").setLabel("click here")</strong>.</p>
