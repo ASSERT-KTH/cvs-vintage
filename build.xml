@@ -2,14 +2,13 @@
 <!DOCTYPE project SYSTEM "./ant.dtd">
 
 <project name="columba" default="build" basedir=".">
-
 	<property name="src" value="."/>
 	<property name="build" value="build"/>
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.11"/>
 	<property name="dest" value="../columba-${version}"/>
-  <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar:${src}/ext/junit.jar"/>
+	<property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar:${src}/ext/junit.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
@@ -28,8 +27,8 @@
 								ignoreWhitespace="true"
 								ignoreCastWhitespace="true"
 								failOnViolation="false"> 
-     <fileset dir="${src}" includes="**/*.java"/>
-    </checkstyle>
+		<fileset dir="${src}" includes="**/*.java"/>
+		</checkstyle>
 	</target>
 
 	<!-- creating the destination directory -->
@@ -73,7 +72,7 @@
 	<!-- compile the classes -->
 	<target name="compile" depends="init,copy-required">
 		<echo message="the classes are going to ${dest} "/> 
-		<javac srcdir="${src}" destdir="${dest}"	classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
+		<javac srcdir="${src}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
@@ -94,7 +93,7 @@
 			<exclude name="run_source.sh"/>
 			<exclude name="run_source_jdk13.bat"/>
 			<exclude name="run_source_jdk13.sh"/>
-      <exclude name="**/*.zip"/>
+			<exclude name="**/*.zip"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
 				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar ext/jython.jar ext/junit.jar"/>
@@ -172,7 +171,6 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- this is also the release target ;-0 -->
 	<target name="release" depends="zip-bin,zip-source"/>
 
-
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
 
@@ -188,7 +186,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 						 use="true"
 						 package="true"
 						 windowtitle="columba API documentation">
-    <doctitle><![CDATA[<h1>columba API documentation</h1>]]></doctitle>
+    			<doctitle><![CDATA[<h1>columba API documentation</h1>]]></doctitle>
 		</javadoc>
 	</target>
 	
@@ -203,5 +201,4 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<target name="clean">
 		<delete dir="${dest}"/>
 	</target>
-		
 </project>
