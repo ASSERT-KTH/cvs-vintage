@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.8 2001/09/08 17:16:00 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.9 2001/09/08 19:32:23 d_jencks Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -51,11 +51,9 @@
 	 javax.servlet.jar,
 	 javax-sasl.jar,
 	 jaxp.jar,
-	 jbosscx.jar,
 	 jbossha.jar,
 	 jboss-j2ee.jar,
 	 jboss.jar,
-	 jbossmq.jar,
 	 jbossmx.jar,
 	 jbosspool.jar,
 	 jbosssx.jar,
@@ -170,13 +168,6 @@
   <!-- to ConnectionFactoryLoader                                           -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.jdbc.JdbcProvider" 
-	 name="JBOSS-SYSTEM:service=JdbcProvider">
-     <attribute name="Drivers">
-	  org.hsql.jdbcDriver
-	  </attribute>
-  </mbean>
-
   <mbean code="org.jboss.jdbc.HypersonicDatabase" 
 	 name="JBOSS-SYSTEM:service=Hypersonic">
     <attribute name="Port">1476</attribute>
@@ -186,204 +177,7 @@
   </mbean>
 
 
-  <!-- ==================================================================== -->
-  <!-- JBossCX setup, for J2EE connector architecture support               -->
-  <!-- The RARDeployer and three Connection Manager Factories are parts of  -->
-  <!-- JBoss and do not need further configuration.                         -->
-  <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.resource.RARDeployer" 
-	 name="JCA:service=RARDeployer">
-  </mbean>
-
-  <!-- 
-     | Minerva no transaction connection manager factory.
-     |
-     | Use this for resource adapters that don't support transactions.
-   -->
-  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
-         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory">
-    <attribute name="FactoryName">MinervaNoTransCMFactory</attribute>
-    <attribute name="FactoryClass">
-      org.jboss.pool.connector.jboss.MinervaNoTransCMFactory
-    </attribute>
-    <attribute name="Properties"></attribute>
-  </mbean>
-
-  <!-- 
-     | Minerva local transaction connection manager factory.
-     |
-     | Use this for resource adapters that support "local" transactions.
-   -->
-  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
-         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory">
-    <attribute name="FactoryName">MinervaSharedLocalCMFactory</attribute>
-    <attribute name="FactoryClass">
-      org.jboss.pool.connector.jboss.MinervaSharedLocalCMFactory
-    </attribute>
-    <attribute name="Properties"></attribute>
-  </mbean>
-
-  <!-- 
-     | Minerva XA transaction connection manager factory
-     |
-     | Use this for resource adapters that support "xa" transactions.
-   -->
-  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
-         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory">
-    <attribute name="FactoryName">MinervaXACMFactory</attribute>
-    <attribute name="FactoryClass">
-      org.jboss.pool.connector.jboss.MinervaXACMFactory
-    </attribute>
-    <attribute name="Properties"></attribute>
-  </mbean>
-
-  <!-- 
-     | Example database connections using resource adapters.  
-     | The first is incomplete.
-   -->
-
-  <!-- 
-     | This is an example of using a resource adapter that supports XA
-     | transactions. The Minerva XA resource adapter requires an
-     | XADataSource to be in JNDI somewhere. JBoss doesn't include a
-     | database with an XA-compliant JDBC driver, so this will need to
-     | be configured to use whatever XADataSource implementation you
-     | have.
-     |
-  <mbean code="org.jboss.resource.ConnectionFactoryLoader"
-         name="JCA:service=ConnectionFactoryLoader,name=XAMinervaDS">
-    <attribute name="FactoryName">XAMinervaDS</attribute>
-    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
-    <attribute name="ResourceAdapterName">
-      Minerva JDBC XA Resource Adapter
-    </attribute>
-    <attribute name="Properties">
-      XADataSourceClass=YourXADataSourceClassNameHere
-      SomeOtherPropertySuchAsURL=url=urltomydatabase
-    </attribute>
-
-    <attribute name="ConnectionManagerFactoryName">
-      MinervaXACMFactory
-    </attribute>
-    <attribute name="ConnectionManagerProperties">
-      # Pool type - uncomment to force, otherwise it is the default
-      #PoolConfiguration=per-factory
-
-      # Connection pooling properties - see
-      # org.jboss.pool.PoolParameters
-      MinSize=0
-      MaxSize=10
-      Blocking=true
-      GCEnabled=false
-      IdleTimeoutEnabled=false
-      InvalidateOnError=false
-      TrackLastUsed=false
-      GCIntervalMillis=120000
-      GCMinIdleMillis=1200000
-      IdleTimeoutMillis=1800000
-      MaxIdleTimeoutPercent=1.0
-    </attribute>
-
-    <attribute name="PrincipalMappingClass">
-      org.jboss.resource.security.ManyToOnePrincipalMapping
-    </attribute>
-    <attribute name="PrincipalMappingProperties">
-      userName=sa
-      password=
-    </attribute>
-  </mbean>
-  -->
-
-
-  <!-- ==================================================================== -->
-  <!-- JDBC - showing the conversion of XADataSourceLoader                  -->
-  <!-- to ConnectionFactoryLoader                                           -->
-  <!-- ==================================================================== -->
-
-  <!-- 
-     | XADataSourceLoader is now deprecated.  
-     | It now converts to ConnectionFactoryLoader mbeans.  See below for brief
-     | instructions.
-     |
-
-  <mbean code="org.jboss.jdbc.XADataSourceLoader" name="JBOSS-SYSTEM:service=XADataSource,name=DefaultDS">
-    <attribute name="PoolName">DefaultDS</attribute>
-    <attribute name="DataSourceClass">org.jboss.pool.jdbc.xa.wrapper.XADataSourceImpl</attribute>
-    <attribute name="Properties"></attribute>
-    <attribute name="URL">jdbc:HypersonicSQL:hsql://localhost:1476</attribute>
-    <attribute name="GCMinIdleTime">1200000</attribute>
-    <attribute name="JDBCUser">sa</attribute>
-    <attribute name="MaxSize">10</attribute>
-    <attribute name="Password" />
-    <attribute name="GCEnabled">false</attribute>
-    <attribute name="InvalidateOnError">false</attribute>
-    <attribute name="TimestampUsed">false</attribute>
-    <attribute name="Blocking">true</attribute>
-    <attribute name="GCInterval">120000</attribute>
-    <attribute name="IdleTimeout">1800000</attribute>
-    <attribute name="IdleTimeoutEnabled">false</attribute>
-    <attribute name="LoggingEnabled">false</attribute>
-    <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
-    <attribute name="MinSize">0</attribute>
-  </mbean>
---> 
-
-  <!-- 
-     | This ConnectionFactoryLoader configuration was generated from the 
-     | preceding XADataSourceLoader configuration with the "migration" 
-     | XADataSourceLoader.  To convert your XADataSourceLoaders, follow these
-     | steps:
-     |
-     | 1. Make sure the resource adapter mbeans rardeployer and the three 
-     | ConnectionManagerFactoryLoaders are in this file before any 
-     | XADataSourceLoaders, as in this particular file.
-     |
-     | 2. Start jboss.
-     |
-     | 3. Make sure there is a jboss-auto.jcml file in conf/default (or 
-     |    wherever you are running from)
-     |
-     | 4. Using the ConfigurationService mbean display (port 8082) press the 
-     |    SaveConfiguration button.  This will save your configuration 
-     |    including the converted mbeans to jboss-auto.jcml.
-     |
-     | 5. Look through jboss-auto.jcml and copy the ConnectionFactoryLoader 
-     |    mbeans corresponding to your XADataSourceLoader mbeans to this file.
-     |    Clean up the indentation and comment out or remove the 
-     |    XADataSourceLoader mbeans.
-     |
-     | You can keep running with your XADataSourceLoader mbeans... 
-     | but they will go away in a future jboss release.  Why not convert now?
-   -->
-	 <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
-	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
-    <attribute name="Properties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476</attribute>
-    <attribute name="FactoryName">DefaultDS</attribute>
-    <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
-    <attribute name="ResourceAdapterName">Minerva JDBC LocalTransaction ResourceAdapter</attribute>
-    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
-    <attribute name="ConnectionManagerFactoryName">MinervaSharedLocalCMFactory</attribute>
-    <attribute name="ConnectionManagerProperties">#
-      #Wed Aug 15 16:17:29 EDT 2001
-      InvalidateOnError=false
-      Blocking=true
-      IdleTimeoutMillis=1800000
-      MaxSize=10
-      TimestampUsed=false
-      IdleTimeoutEnabled=false
-      GCIntervalMillis=120000
-      MinSize=0
-      GCMinIdleMillis=1200000
-      GCEnabled=false
-      MaxIdleTimeoutPercent=1.0
-    </attribute>
-    <attribute name="PrincipalMappingClass">
-      org.jboss.resource.security.ManyToOnePrincipalMapping
-   </attribute>
-    <attribute name="PrincipalMappingProperties">userName=sa</attribute>
-  </mbean>
-  
 
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
@@ -421,150 +215,6 @@
     <attribute name="WebDefault">../conf/default/webdefault.xml</attribute>
     <attribute name="UnpackWars">true</attribute>
     <attribute name="PublishMBeans">true</attribute>
-  </mbean>
-
-  <!-- ==================================================================== -->
-  <!-- JBossMQ                                                              -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.mq.server.JBossMQService"
-	 name="JBossMQ:service=Server"/>
-
-  <!-- 
-     | The StateManager is used to keep JMS perisitent state data.
-     | For example: what durable subscriptions are active. 
-   -->
-  <mbean code="org.jboss.mq.server.StateManager" 
-	 name="JBossMQ:service=StateManager">
-    <attribute name="StateFile">conf/default/jbossmq-state.xml</attribute>
-  </mbean>
-
-  <!-- The PersistenceManager is used to store messages to disk. -->
-  <mbean code="org.jboss.mq.pm.file.PersistenceManager"
-	 name="JBossMQ:service=PersistenceManager">
-    <attribute name="DataDirectory">db/jbossmq/</attribute>
-  </mbean>
-
-  <!-- 
-     | InvocationLayers are the different transport methods that can 
-     | be used to access the server.
-   -->
-  <mbean code="org.jboss.mq.il.jvm.JVMServerILService"
-	 name="JBossMQ:service=InvocationLayer,type=JVM">
-    <attribute name="ConnectionFactoryJNDIRef">java:/ConnectionFactory</attribute>
-    <attribute name="XAConnectionFactoryJNDIRef">java:/XAConnectionFactory</attribute>
-  </mbean>
-
-  <mbean code="org.jboss.mq.il.rmi.RMIServerILService"
-	 name="JBossMQ:service=InvocationLayer,type=RMI"> 
-    <attribute name="ConnectionFactoryJNDIRef">RMIConnectionFactory</attribute>
-    <attribute name="XAConnectionFactoryJNDIRef">RMIXAConnectionFactory</attribute>
-  </mbean>
-
-  <mbean code="org.jboss.mq.il.oil.OILServerILService"
-	 name="JBossMQ:service=InvocationLayer,type=OIL">
-    <attribute name="ConnectionFactoryJNDIRef">ConnectionFactory</attribute>
-    <attribute name="XAConnectionFactoryJNDIRef">XAConnectionFactory</attribute>
-  </mbean>
-
-  <mbean code="org.jboss.mq.il.uil.UILServerILService"
-	 name="JBossMQ:service=InvocationLayer,type=UIL">
-    <attribute name="ConnectionFactoryJNDIRef">UILConnectionFactory</attribute>
-    <attribute name="XAConnectionFactoryJNDIRef">UILXAConnectionFactory</attribute>
-  </mbean>
-
-  <!-- 
-     | The following three line create 3 topics named: 
-     |
-     |   testTopic, example, bob
-   -->
-  <mbean code="org.jboss.mq.server.TopicManager"
-	 name="JBossMQ:service=Topic,name=testTopic"/>
-  <mbean code="org.jboss.mq.server.TopicManager"
-	 name="JBossMQ:service=Topic,name=example"/>
-  <mbean code="org.jboss.mq.server.TopicManager" 
-	 name="JBossMQ:service=Topic,name=bob"/>
-
-  <!-- 
-     | The following 9 line create 9 topics named: 
-     |
-     |   testQueue, controlQueue, A, B, C, D, E, F, ex
-   -->
-  <mbean code="org.jboss.mq.server.QueueManager" 
-	 name="JBossMQ:service=Queue,name=testQueue"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=controlQueue"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=A"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=B"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=C"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=D"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=E"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=F"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=ex"/>
-  <mbean code="org.jboss.mq.server.QueueManager"
-	 name="JBossMQ:service=Queue,name=DLQ"/>
-
-  <!-- The JMS provider loader -->
-  <mbean code="org.jboss.jms.jndi.JMSProviderLoader"
-	 name=":service=JMSProviderLoader,name=JBossMQProvider">
-    <attribute name="ProviderName">DefaultJMSProvider</attribute>
-    <attribute name="ProviderAdapterClass">
-      org.jboss.jms.jndi.JBossMQProvider
-    </attribute>
-    <attribute name="QueueFactoryRef">java:/XAConnectionFactory</attribute>
-    <attribute name="TopicFactoryRef">java:/XAConnectionFactory</attribute>
-  </mbean>
-
-  <!-- The server session pool for Message Driven Beans -->
-  <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader"
-	 name=":service=ServerSessionPoolMBean,name=StdJMSPool">
-    <attribute name="PoolName">StdJMSPool</attribute>
-    <attribute name="PoolFactoryClass">
-      org.jboss.jms.asf.StdServerSessionPoolFactory
-    </attribute>
-  </mbean>
-
-  <!-- JMS XA Resource adapter, use this to get transacted JMS in beans -->
-  <mbean code="org.jboss.resource.ConnectionFactoryLoader"
-         name="JCA:service=ConnectionFactoryLoader,name=JmsXA">
-    <attribute name="FactoryName">JmsXA</attribute>
-    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
-    <attribute name="ResourceAdapterName">JMS Adapter</attribute>
-    <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
-    <!-- See the documentation for the specific connection manager
-         implementation you are using for the properties you can set -->
-    <attribute name="ConnectionManagerProperties">
-      # Pool type - uncomment to force, otherwise it is the default
-      #PoolConfiguration=per-factory
-
-      # Connection pooling properties - see
-      # org.jboss.pool.PoolParameters
-      MinSize=0
-      MaxSize=10
-      Blocking=true
-      GCEnabled=false
-      IdleTimeoutEnabled=false
-      InvalidateOnError=false
-      TrackLastUsed=false
-      GCIntervalMillis=120000
-      GCMinIdleMillis=1200000
-      IdleTimeoutMillis=1800000
-      MaxIdleTimeoutPercent=1.0
-    </attribute>
-
-    <!-- Principal mapping configuration -->
-    <attribute name="PrincipalMappingClass">
-      org.jboss.resource.security.ManyToOnePrincipalMapping
-    </attribute>
-    <attribute name="PrincipalMappingProperties">
-    </attribute>
   </mbean>
 
 
@@ -606,9 +256,8 @@
 
   <mbean code="org.jboss.deployment.AutoDeployer" name="JBOSS-SYSTEM:service=AutoDeployer">
     <attribute name="Deployers">
-      JCA:service=RARDeployer;
-		JBOSS-SYSTEM:service=ServiceDeployer;
-	   J2EE:service=J2eeDeployer
+      JBOSS-SYSTEM:service=ServiceDeployer;
+      J2EE:service=J2eeDeployer
     </attribute>
     <attribute name="URLs">
       ../deploy/lib,
