@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource J2EE webOS
+ * JBoss, the OpenSource EJB server
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -28,7 +28,7 @@ import javax.management.loading.*;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.41 $
+ *   @version $Revision: 1.42 $
  */
 public class Main
 {
@@ -39,144 +39,145 @@ public class Main
 
    // Static --------------------------------------------------------
    public static void main(final String[] args)
-      throws Exception
+   throws Exception
    {
-      /* 
-       *  Set a jboss.home property from the location of the Main.class jar
-       *  if the property does not exist.
-       *  marcf: we don't use this property at all for now 
-       *  it should be used for all the modules that need a file "anchor"
-       *  it should be moved to an "FileSystemAnchor" MBean
-       */
-      if( System.getProperty("jboss.home") == null )
-      {
-         String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-         File runJar = new File(path);
-         // Home dir should be the parent of the dir containing run.jar
-         File homeDir = new File(runJar.getParent(), "..");
-         System.setProperty("jboss.home", homeDir.getCanonicalPath());
-      }
-      System.out.println("jboss.home = "+System.getProperty("jboss.home"));
-      
-      String installURL = "file://" + System.getProperty("jboss.home")+File.separatorChar;
-      String configDir = "default"; // Default configuration name is "default", i.e. all conf files are in "/conf/default"
-      String patchDir = "";
-      
-      // Given conf name
-      
+      String cn = "default"; // Default configuration name is "default", i.e. all conf files are in "/conf/default"
+      String patchDir = null;
+      // Given conf name?
+      if (args.length == 1)
+         cn = args[0];
       for(int a = 0; a < args.length; a ++)
       {
-         
-         if( args[a].startsWith("--patch-dir") || args[a].startsWith("-p"))
-            patchDir = args[a+1];
-         
-         else if( args[a].startsWith("--net-install") || args[a].startsWith("-n"))
-         {           
-            installURL = args[a+1].startsWith("http://") ?  args[a+1] : "http://"+args[a+1] ;
-            if (!installURL.endsWith("/"))
-               installURL = installURL+"/";
-         }
-         
-         else if(args[a].startsWith("--conf-dir") || args[a].startsWith("-c"))
-            configDir = args[a+1];
+          if( args[a].startsWith("-p") )
+              patchDir = args[a+1];
       }
-      
-      configDir = installURL + (installURL.startsWith("http:") ? "conf/"+configDir+"/" : "conf"+ File.separatorChar+ configDir+ File.separatorChar);
-      
-      final String iURL = installURL;
-      final String cDir = configDir;
-      //final String lDir = loadDir;
-      final String pDir = patchDir;
-      
-            // Start server - Main does not have the proper permissions
-      AccessController.doPrivileged(new PrivilegedAction()      
+      final String confName = cn;
+      final String patchDirName = patchDir;
+
+      // Load system properties
+      URL jbossProps = Main.class.getClassLoader().getResource(confName+"/jboss.properties");
+      InputStream propertiesIn = Main.class.getClassLoader().getResourceAsStream(confName+"/jboss.properties");
+      if ( propertiesIn == null )
+      {
+         throw new IOException("jboss.properties missing");
+      }
+
+      System.getProperties().load(propertiesIn);
+
+      /* Set a jboss.home property from the location of the Main.class jar
+         if the property does not exist.
+      */
+      if( System.getProperty("jboss.home") == null )
+      {
+          String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+          File runJar = new File(path);
+          // Home dir should be the parent of the dir containing run.jar
+          File homeDir = new File(runJar.getParent(), "..");
+          System.setProperty("jboss.home", homeDir.getCanonicalPath());
+      }
+      System.out.println("jboss.home = "+System.getProperty("jboss.home"));
+
+      // Set the JAAS login config file if not already set
+      if( System.getProperty("java.security.auth.login.config") == null )
+      {
+          URL loginConfig = Main.class.getClassLoader().getResource(confName+"/auth.conf");
+          if( loginConfig != null )
+          {
+              System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
+              System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
+          }
+          else
+          {
+              System.out.println("Warning: no auth.conf found in config="+confName);
+          }
+      }
+
+      // Set security
+      URL serverPolicy = Main.class.getClassLoader().getResource(confName+"/server.policy");
+
+      if ( serverPolicy == null )
+      {
+         throw new IOException("server.policy missing");
+      }
+
+      System.setProperty("java.security.policy", serverPolicy.getFile());
+
+      // Set security manager
+      // Optional for better performance
+      if (System.getProperty("java.security.manager") != null)
+         System.setSecurityManager((SecurityManager)Class.forName(System.getProperty("java.security.manager")).newInstance());
+
+      // Start server - Main does not have the proper permissions
+      AccessController.doPrivileged(new PrivilegedAction()
+      {
+         public Object run()
          {
-            public Object run()
-            {
-               new Main(iURL, cDir, pDir);
-               return null;
-            }
-         });
+            new Main(confName, patchDirName);
+            return null;
+         }
+      });
    }
-   
+
    // Constructors --------------------------------------------------
-   public Main(String installURL, String confDir, String patchDir)
+   public Main(String confName, String patchDir)
    {
-      Date startTime = new Date();
-      
+   	  Date startTime = new Date();
+
       try
       {
-         
-         System.out.println("Using configuration \""+confDir+"\"");
-         if (patchDir != null && patchDir != "") 
-            System.out.println("with patch directory \""+patchDir+"\"");
-         
-         final PrintStream err = System.err;
-         
-         System.setProperty("jboss.system.installURL", installURL);
-         System.setProperty("jboss.system.confDir", confDir);
-         System.setProperty("jboss.system.patchDir", patchDir);
-         System.setProperty("jboss.system.version", versionIdentifier);
-         
+         System.out.println("Using configuration \""+confName+"\"");
+
+            final PrintStream err = System.err;
+
          com.sun.management.jmx.Trace.parseTraceProperties();
-         
-         // Give feedback about from where jndi.properties is read
-         URL jndiLocation = this.getClass().getResource("/jndi.properties");
-         if (jndiLocation instanceof URL) {
-            System.out.println("Please make sure the following is intended (check your CLASSPATH):");
-            System.out.println(" jndi.properties is read from "+jndiLocation);
-         }
-         
+
+	 // Give feedback about from where jndi.properties is read
+	 URL jndiLocation = this.getClass().getResource("/jndi.properties");
+	 if (jndiLocation instanceof URL) {
+	     System.out.println("Please make sure the following is intended (check your CLASSPATH):");
+	     System.out.println(" jndi.properties is read from "+jndiLocation);
+	 }
+
          // Create MBeanServer
-         final MBeanServer server = MBeanServerFactory.createMBeanServer("JBOSS-SYSTEM");
-         
+         final MBeanServer server = MBeanServerFactory.createMBeanServer();
+
          // Add configuration directory to MLet
-         URL confDirectory = new URL(confDir);
+         URL confDirectory = new File("../conf/"+confName).getCanonicalFile().toURL();
          URL[] urls = {confDirectory};
-         
          // Add any patch jars to the MLet so they are seen ahead of the JBoss jars
-         if( patchDir != null && patchDir != "" )
+         if( patchDir != null )
          {
-            // The patchDir can only be a File one, local
-            File dir = new File(patchDir);
-            ArrayList tmp = new ArrayList();
-            File[] jars = dir.listFiles(new java.io.FileFilter()
-               {
-                  public boolean accept(File pathname)
-                  {
-                     String name = pathname.getName();
-                     return name.endsWith(".jar") || name.endsWith(".zip");
-                  }
-               }
-                                        );
-            // Add the normal configuration directory
-            tmp.add(confDirectory);
-            
-            // Add the local file patch directory
-            tmp.add(patchDir);
-            
-            for(int j = 0; jars != null && j < jars.length; j ++)
-            {
-               File jar = jars[j];
-               URL u = jar.getCanonicalFile().toURL();
-               tmp.add(u);
-            }
-            urls = new URL[tmp.size()];
-            tmp.toArray(urls);
+             File dir = new File(patchDir);
+             ArrayList tmp = new ArrayList();
+             File[] jars = dir.listFiles(new java.io.FileFilter()
+                 {
+                     public boolean accept(File pathname)
+                     {
+                         String name = pathname.getName();
+                         return name.endsWith(".jar") || name.endsWith(".zip");
+                     }
+                 }
+             );
+             tmp.add(confDirectory);
+             for(int j = 0; jars != null && j < jars.length; j ++)
+             {
+                 File jar = jars[j];
+                 URL u = jar.getCanonicalFile().toURL();
+                 tmp.add(u);
+             }
+             urls = new URL[tmp.size()];
+             tmp.toArray(urls);
          }
-         
-         // Create MLet, the MLet loads first from the local patch dir then from the global configuration
+
+         // Create MLet
          MLet mlet = new MLet(urls);
          server.registerMBean(mlet, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
-         
+
          // Set MLet as classloader for this app
          Thread.currentThread().setContextClassLoader(mlet);
-         
-         // Initialize Configuration Service
-         
-         //URL mletConf = mlet.getResource("boot.jmx");
-         URL mletConf = new URL(confDir+"boot.jmx");
-         
+
+         // Load configuration
+         URL mletConf = mlet.getResource("jboss.conf");
          Set beans = (Set)mlet.getMBeansFromURL(mletConf);
          Iterator enum = beans.iterator();
          while (enum.hasNext())
@@ -195,14 +196,18 @@ public class Main
             else if (obj instanceof Throwable)
                ((Throwable)obj).printStackTrace(err);
          }
-         
-         // install, configure, init and start MBeans from the services.xml file    
-         server.invoke(
-            new ObjectName("JBOSS-SYSTEM:service=ServiceController"),
-            "deploy", 
-            new Object[] {"services.xml"},
-            new String[] {"java.lang.String"});
-      
+
+         // Load configuration
+         server.invoke(new ObjectName(":service=Configuration"), "loadConfiguration", new Object[0], new String[0]);
+
+         // Store configuration
+         // This way, the config will always contain a complete mirror of what's in the server
+         server.invoke(new ObjectName(":service=Configuration"), "saveConfiguration", new Object[0] , new String[0]);
+
+         // Init and Start MBeans
+         server.invoke(new ObjectName(":service=ServiceControl"), "init", new Object[0] , new String[0]);
+         server.invoke(new ObjectName(":service=ServiceControl"), "start", new Object[0] , new String[0]);
+
       }
       catch (RuntimeOperationsException e)
       {
@@ -226,7 +231,7 @@ public class Main
       {
          e.printStackTrace();
       }
-      
+
       // Done
       Date stopTime = new Date();
       Date lapsedTime = new Date(stopTime.getTime()-startTime.getTime());
@@ -234,51 +239,3 @@ public class Main
    }
 }
 
-
-/*
-  // Setup security
-  // XXX marcf: what are the reason that would prevent us from making this an MBean
-  // Set the JAAS login config file if not already set
-  if( System.getProperty("java.security.auth.login.config") == null )
-  {
-  URL loginConfig = mlet.getResource("auth.conf");
-  if( loginConfig != null )
-  {
-  System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-  System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
-  }
-  else
-  {
-  System.out.println("Warning: no auth.conf found in config="+confName);
-  }
-  }
-
-  // Set security using the mlet, if a patch was passed it will look in that path first
-  URL serverPolicy = mlet.getResource("server.policy");
-
-  if ( serverPolicy == null )
-  {
-  throw new IOException("server.policy missing");
-  }
-
-  System.setProperty("java.security.policy", serverPolicy.getFile());
-
-// Set security manager
-// Optional for better performance
-if (System.getProperty("java.security.manager") != null)
-System.setSecurityManager((SecurityManager)Class.forName(System.getProperty("java.security.manager")).newInstance());
-*/
-
-/*
- *   Revisions:
- *   20010618 marcf: 
- *     - Removed the jboss.properties, fully deprecated the use of properties
- *     - Moved security properties to the main body to take advantage of patch dir
- *     - Removed storage of initial configuration... useless!
- *     - Moved to addConfiguration call with explicit services.xml arguments
- *     - New signature support --net-install --patch-dir --conf-dir and [-n -p -c]   
- *     - Support for http based installations added
- *     - Got rid of wildcard imports 
- *     - Moved lib structure to lib 
- *
- */
