@@ -28,7 +28,7 @@
 #set ($magSize = $moduleAttributeGroups.size())
 
 #if ($magSize > 0)
-functionBar()
+#functionBar("")
 #end
 
 #if ($magSize == 0)
@@ -127,7 +127,7 @@ $link.setPage("TemplateList.vm").setLabel("View all $scarabR.CurrentIssueType.Na
 </div>
 
 #if ($magSize > 0)
-functionBar("2")
+#functionBar("2")
 #end
 
 $intake.declareGroups()
