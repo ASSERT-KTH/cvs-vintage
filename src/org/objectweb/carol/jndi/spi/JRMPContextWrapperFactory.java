@@ -13,6 +13,7 @@ import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
 import org.objectweb.carol.jndi.ns.JRMPRegistry;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 /**
  * @author riviereg
@@ -31,7 +32,8 @@ public class JRMPContextWrapperFactory implements InitialContextFactory {
 	 * @throws NamingException if a naming exception is encountered
 	 */
 	public Context getInitialContext(Hashtable env) throws NamingException {
-		if (JRMPRegistry.isLocal()) {
+		boolean localO=new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false")).booleanValue();					  	
+		if ((JRMPRegistry.isLocal()) && (localO)) {
 			return JRMPLocalContext.getSingleInstance(
 				JRMPRegistry.registry,
 				env);
