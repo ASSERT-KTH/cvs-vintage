@@ -67,7 +67,9 @@ import java.util.Vector;
  */
 public class Queue {
     private Vector vector = new Vector();
-
+    private boolean stopWaiting=false;
+    private boolean waiting=false;
+    
     /** 
      * Put the object into the queue.
      * 
@@ -78,17 +80,29 @@ public class Queue {
 	vector.addElement(object);
 	notify();
     }
+
+    /** Break the pull(), allowing the calling thread to exit
+     */
+    public synchronized void stop() {
+	stopWaiting=true;
+	// just a hack to stop waiting 
+	if( waiting ) notify();
+    }
     
     /**
      * Pull the first object out of the queue. Wait if the queue is
      * empty.
      */
     public synchronized Object pull() {
-	while (isEmpty())
+	while (isEmpty()) {
 	    try {
+		waiting=true;
 		wait();
 	    } catch (InterruptedException ex) {
 	    }
+	    waiting=false;
+	    if( stopWaiting ) return null;
+	}
 	return get();
     }
 
