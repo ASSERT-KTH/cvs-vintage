@@ -4,23 +4,21 @@
 #set($search = $scarabR.Search)
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) ) 
 
-	<h3>Search Results</h3>
 	
 	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 	
-<form name="IssueListForm" action="$action" method="post">
-<input type="hidden" name="queryString" value="$queryString">
-      <div class="functnbar">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
-        <tr>
-         <td><input type="submit" name="eventSubmit_doEditissues" value="bulk edit selected issues" class="buttonfunc" />&#160;<input type="submit" value="bulk reassign" class="buttonfunc" />&#160;<input type="submit" value="save query" class="buttonfunc" name="eventSubmit_doSavequery"/></td>
-        </tr>
-       </table>
-      </div>
-	
-<P>
 
 	<div class="misc"><a href="#">&laquo;</a> <a href="#">previous</a> | 3 of 5 | <a href="#">next</a> <a href="#">&raquo;</a> (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
+
+<form name="IssueListForm" action="$action" method="post">
+<input type="hidden" name="queryString" value="$queryString">
+
+<p class="functnbar"><input type="submit" value="view selected (verbose)" />&#160;<input type="submit" value="view all (verbose)" /></p>
+
+<p class="functnbar"><input type="submit" value="reassign selected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" />&#160;<sup>|</sup>&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" /></p>
+	
+	<h3>Search Results</h3>
+
 
 
 	<div class="datatable">
@@ -45,7 +43,15 @@
 		<td><input type="checkbox" /></td>
 		<td><a href="$issueLink">$issue.UniqueId</a></td>
 #foreach( $userAttribute in $user.getAttributesForIssueList($module))
-    <td><a href="$issueLink">$issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value</a></td>
+    <td>
+       #set ($value = "" )
+       #set ( $value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value )
+       #if ( !$value.equals("") )
+         $value
+       #else
+         Not set
+       #end
+    </td>
 #end
 		</tr>
 		
@@ -53,12 +59,11 @@
 		</table>
 	</div>
 	<div class="misc">issues per page:&#160; <input type="radio" name="issue_limit" value="25"/> 25 <input type="radio" name="issue_limit" value="50"/> 50 <input type="radio" name="issue_limit" value="50"/> 75 <input type="radio" name="issue_limit" value="100"/> 100&nbsp; <input type="submit" name="eventSubmit_doSearch" value="Refresh"></div>
-	<div class="functnbar">
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
-		<tr>
-		<td><input type="submit" value="bulk edit selected issues" class="button" name="eventSubmit_doEditissues"/>&nbsp;<input type="submit" value="bulk reassign" class="button" /></td>
-		</tr>
-		</table>
-	</div>
+
+<p class="functnbar"><input type="submit" value="view selected (verbose)" />&#160;<input type="submit" value="view all (verbose)" /></p>
+
+<p class="functnbar"><input type="submit" value="reassign selected" />&#160;<sup>|</sup>&#160;<input type="submit" value="reassign all" />&#160;<sup>|</sup>&#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" /></p>
+	
+	<div class="misc"><a href="#">&laquo;</a> <a href="#">previous</a> | 3 of 5 | <a href="#">next</a> <a href="#">&raquo;</a> (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 $intake.declareGroups()
 </form>
