@@ -47,6 +47,7 @@ package org.tigris.scarab.actions.admin;
  */ 
 
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -64,6 +65,7 @@ import org.tigris.scarab.om.AttributeTypePeer;
 import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -72,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.7 2002/02/15 23:29:38 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.8 2002/02/19 21:20:37 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -262,27 +264,42 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     }
     
     /*
-     * Manages clicking of the AllDone button
+     * Manages clicking of the cancel button
      */
     public void doCancel( RunData data, TemplateContext context )
         throws Exception
     {
-        // If they came from the AttributeGroup page,
+        // If they came from the manage module page,
         // Add the attribute and return there.
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         String lastTemplate = data.getParameters().getString("lastTemplate");
-        if (lastTemplate != null && 
-            lastTemplate.equals("admin,AttributeSelect.vm"))
-        {
-            String groupId = data.getParameters().getString("groupId");
-            if (groupId != null)
+        Attribute attribute = scarabR.getAttribute();
+        if (lastTemplate != null && !lastTemplate.equals("global")
+            && attribute.getAttributeId() != null)
+        { 
+            // Add attribute to group
+            if (lastTemplate.equals("admin,AttributeGroupEdit.vm"))
             {
-                ScarabRequestTool scarabR = getScarabRequestTool(context);
-                scarabR.getAttributeGroup(groupId)
-                       .addAttribute(scarabR.getAttribute());
-                 data.setMessage("The attribute has been added.");
-                super.doCancel(data, context);
+                // Add attribute to group
+                String groupId = data.getParameters().getString("groupId");
+                if (groupId != null)
+                {
+                    scarabR.getAttributeGroup(groupId).addAttribute(attribute);
+                }
             }
+            else
+            {
+                // Add user attribute to module
+                scarabR.getCurrentModule()
+                       .addRModuleAttribute(scarabR.getIssueType(), attribute);
+            }
+            data.setMessage("The attribute has been added.");
+            cancelBackTo( data, context, lastTemplate);
         }
-        super.doCancel(data, context);
+        else
+        {
+            super.doCancel(data, context);
+        }
     }
+
 }

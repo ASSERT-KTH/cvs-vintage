@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.10 2002/02/14 02:04:14 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.11 2002/02/19 21:20:37 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -373,23 +373,13 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
  
         if (attribute.getAttributeId() == null)
         { 
-            data.setMessage("Please select an attrubute.");
+            data.setMessage("Please select an attribute.");
         }
         else
         {        
             // add module-attribute groupings
             RModuleAttribute rma = module.addRModuleAttribute(issueType, 
-                                                              "user");
-            Group rmaGroup = intake.get("RModuleAttribute", 
-                                         IntakeTool.DEFAULT_KEY);
-            rmaGroup.setProperties(rma);
-            rma.setAttributeId(attribute.getAttributeId());
-            rma.save();
-
-            // add module-attribute mappings to template type
-            RModuleAttribute rma2 = module.addRModuleAttribute(templateType);
-            rma2.setAttributeId(attribute.getAttributeId());
-            rma2.save();
+                                                              attribute);
             doCancel(data, context);
        }      
 
