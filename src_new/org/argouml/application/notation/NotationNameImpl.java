@@ -1,4 +1,4 @@
-// $Id: NotationNameImpl.java,v 1.13 2003/06/29 23:53:42 linus Exp $
+// $Id: NotationNameImpl.java,v 1.14 2003/09/05 15:31:52 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,10 +90,17 @@ public class NotationNameImpl
      *  in a combo box or other such visual location.
      */
     public String getTitle() {
-        // TODO:  Currently this does not
-	//                   differentiate from the configuration
-	//                   value.
-        return getNotationNameString(_name, _version);
+        String name = _name;
+        if (name.equalsIgnoreCase("uml")) {
+            name = name.toUpperCase();
+        }
+
+        if (_version == null || _version.equals("")) {
+            return name;
+        }
+        else {
+            return name + " " + _version;
+        }
     }
 
     /** Returns an icon for the notation, or null if no icon is available.
@@ -107,7 +114,7 @@ public class NotationNameImpl
     }
 
     public String toString() {
-        return getNotationNameString(_name, _version);
+        return getTitle();
     }
 
     /*public String toString() {
