@@ -85,6 +85,7 @@ public class AutoWebApp extends BaseInterceptor {
     String appsD="webapps";
     String defaultHost=null; 
     boolean flat=true;
+    boolean ignoreDot=true;
 
     // encoding scheme - XXX review, customize, implement
     char hostSeparator='@'; // if support for vhost configuration is enabled
@@ -117,6 +118,12 @@ public class AutoWebApp extends BaseInterceptor {
 	defaultHost=h;
     }
 
+    /** Ignore directories starting with a "."
+     */
+    public void setIngoreDot( boolean b ) {
+	ignoreDot=b;
+    }
+    
 
     /** Not implemented - default is true. If flat==false, virtual
 	hosts will be configured using the hierarchy in webapps.
@@ -166,6 +173,8 @@ public class AutoWebApp extends BaseInterceptor {
 	if( flat ) {
 	    for (int i = 0; i < list.length; i++) {
 		String name = list[i];
+		if( ignoreDot && name.startsWith( "." ))
+		    continue;
 		File f=new File( webappD, name );
 		if( f.isDirectory() ) {
 		    String appHost=defaultHost;
@@ -188,7 +197,10 @@ public class AutoWebApp extends BaseInterceptor {
 		String name = list[i];
 		File f=new File( webappD, name );
 		if( f.isDirectory() ) {
-		    addVHost( cm, webappD, name );
+		    if( ignoreDot && name.statsWith("." )) {
+			continue;
+		    } else
+			addVHost( cm, webappD, name );
 		}
 	    }
 	}
