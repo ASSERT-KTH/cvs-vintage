@@ -194,14 +194,14 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		if (bodyPart != null) {
 			MimePart bodyParent = bodyPart.getParent();
 
-			if (bodyParent != null) {
-				if (bodyParent.getHeader().getMimeType().getSubtype().equals(
-						"alternative")) {
-					List bodyParts = bodyParent.getChilds();
-					displayedMimeParts.removeAll(bodyParts);
-				} else {
-					displayedMimeParts.remove(bodyPart);
-				}
+			// remove the bodypart from the mimeparts
+			// that are added to the attachment viewer
+			if (bodyParent != null && bodyParent.getHeader().getMimeType().getSubtype().equals(
+			"alternative")) {
+				List bodyParts = bodyParent.getChilds();
+				displayedMimeParts.removeAll(bodyParts);
+			}  else {
+				displayedMimeParts.remove(bodyPart);
 			}
 
 			Iterator it = displayedMimeParts.iterator();
