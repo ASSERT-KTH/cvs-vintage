@@ -46,9 +46,12 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.model.Group;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -64,7 +67,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.26 2003/02/02 23:51:07 jon Exp $
+ * @version $Id: GlobalAttributes.java,v 1.27 2003/02/08 00:04:44 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -81,6 +84,24 @@ public class GlobalAttributes extends RequireLoginFirstAction
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         scarabR.setAttribute(AttributeManager.getInstance());
+    }
+
+    public void doSave(RunData data, TemplateContext context)
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        List userAttrs = AttributePeer.getAttributes("user");
+        for (int i=0; i<userAttrs.size(); i++)
+        {
+            Attribute attr = (Attribute)userAttrs.get(i);
+            Group attrGroup = intake.get("Attribute", attr.getQueryKey());
+            if (attrGroup != null)
+            { 
+                attrGroup.setProperties(attr);
+                attr.save();
+            }
+        }
+        getScarabRequestTool(context).setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
     }
 
     public void doCopy(RunData data, TemplateContext context)
