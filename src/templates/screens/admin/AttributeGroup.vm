@@ -68,8 +68,12 @@ $page.setTitle("Add/Edit attribute group")
    #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
    #set ($maxNum = $group.Attributes.size())
  #indexedRows($velocityCount)
- <td>-&nbsp;<input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
- <td><a href="#">$attribute.Name</a></td>
+ <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
+ #if ($security.hasPermission("Domain | Edit"))
+ <td><a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attribute.AttributeId")">$attribute.Name</a></td>
+ #else
+ <td>$attribute.Name</td>
+ #end
  <td><input type="text" size="15" value="$rmaGroup.DisplayValue" /></td>
  <td>#booleanCheckbox ($rmaGroup.Active)</td>
  <td>#booleanCheckbox ($rmaGroup.Required)</td>
