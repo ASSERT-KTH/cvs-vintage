@@ -18,6 +18,15 @@
 // 02111-1307, USA.
 package org.columba.mail.gui.charset;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.Hashtable;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButtonMenuItem;
+
 import org.columba.core.action.IMenu;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
@@ -25,76 +34,74 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CMenu;
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-
-
 /**
- * Creates a menu containing submenus with different charsets from which
- * the user can choose.
+ * Creates a menu containing submenus with different charsets from which the
+ * user can choose.
  */
 public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
-    CharsetListener {
+        CharsetListener {
+
     // String definitions for the charsetnames
     // NOTE: these are also used to look up the
-    // menuentries from the resourceloader  
+    // menuentries from the resourceloader
     private static final String[] charsets = {
-        
-        // Global # 1
-        "UTF-8", "UTF-16", "US-ASCII",
-        
 
-        // West Europe # 4
-        "windows-1252", "ISO-8859-1", "ISO-8859-15", "IBM850", "MacRoman",
-        "ISO-8859-7", "MacGreek", "windows-1253", "MacIceland", "ISO-8859-3",
-        
+    // Global # 1
+            "UTF-8", "UTF-16", "US-ASCII",
 
-        // East Europe # 14
-        "ISO-8859-4", "ISO-8859-13", "windows-1257", "IBM852", "ISO-8859-2",
-        "MacCentralEurope", "MacCroatian", "IBM855", "ISO-8859-5", "KOI8-R",
-        "MacCyrillic", "windows-1251", "IBM866", "MacUkraine", "MacRomania",
-        
+            // West Europe # 4
+            "windows-1252", "ISO-8859-1", "ISO-8859-15", "IBM850", "MacRoman",
+            "ISO-8859-7", "MacGreek", "windows-1253", "MacIceland",
+            "ISO-8859-3",
 
-        // East Asian # 29
-        "GB2312", "GBK", "GB18030", "Big5", "Big5-HKSCS", "EUC-TW", "EUC-JP",
-        "Shift_JIS", "ISO-2022-JP", "MS932", "EUC-KR", "JOHAB", "ISO-2022-KR",
-        
+            // East Europe # 14
+            "ISO-8859-4", "ISO-8859-13", "windows-1257", "IBM852",
+            "ISO-8859-2", "MacCentralEurope", "MacCroatian", "IBM855",
+            "ISO-8859-5", "KOI8-R", "MacCyrillic", "windows-1251", "IBM866",
+            "MacUkraine", "MacRomania",
 
-        // West Asian # 42
-        "TIS620", "IBM857", "ISO-8859-9", "MacTurkish", "windows-1254",
-        "windows-1258"
-    };
-    private static final String[] groups = {
-        "global", "westeurope", "easteurope", "eastasian", "seswasian"
-    };
-    private static final int[] groupOffset = { 0, 3, 13, 28, 41, 47 };
+            // East Asian # 29
+            "GB2312", "GBK", "GB18030", "Big5", "Big5-HKSCS", "EUC-TW",
+            "EUC-JP", "Shift_JIS", "ISO-2022-JP", "MS932", "EUC-KR", "JOHAB",
+            "ISO-2022-KR",
 
-    /**
- * The menu item showing the currently selected charset.
- */
-    protected CharsetMenuItem selectedMenuItem = new CharsetMenuItem(null);
+            // West Asian # 42
+            "TIS620", "IBM857", "ISO-8859-9", "MacTurkish", "windows-1254",
+            "windows-1258"};
+
+    private static final String[] groups = { "global", "westeurope",
+            "easteurope", "eastasian", "seswasian"};
+
+    private static final int[] groupOffset = { 0, 3, 13, 28, 41, 47};
+
+    private ButtonGroup group;
+
+    private Hashtable hashtable;
 
     /**
- * Creates a new menu for choosing charsets. The passed FrameMediator
- * instance needs to implement CharsetOwnerInterface.
- */
+     * The menu item showing the currently selected charset.
+     */
+    //protected CharsetMenuItem selectedMenuItem = new CharsetMenuItem(null);
+    /**
+     * Creates a new menu for choosing charsets. The passed FrameMediator
+     * instance needs to implement CharsetOwnerInterface.
+     */
     public CharacterEncodingSubMenu(FrameMediator controller) {
-        super(controller,
-            MailResourceLoader.getString("menu", "mainframe",
+        super(controller, MailResourceLoader.getString("menu", "mainframe",
                 "menu_view_charset"));
 
         setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
 
         ((CharsetOwnerInterface) controller).addCharsetListener(this);
 
-        add(selectedMenuItem);
-        addSeparator();
+        group = new ButtonGroup();
+
+        hashtable = new Hashtable();
+
+        //add(selectedMenuItem);
+        //addSeparator();
 
         add(createMenuItem(null));
 
@@ -103,12 +110,13 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
 
         for (int i = 0; i < groups.length; i++) {
             subsubMenu = new CMenu(MailResourceLoader.getString("menu",
-                        "mainframe", "menu_view_charset_" + groups[i]));
+                    "mainframe", "menu_view_charset_" + groups[i]));
             add(subsubMenu);
 
             for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {
                 try {
-                    subsubMenu.add(createMenuItem(Charset.forName(charsets[j])));
+                    subsubMenu
+                            .add(createMenuItem(Charset.forName(charsets[j])));
                 } catch (UnsupportedCharsetException ex) {
                     //ignore this
                 }
@@ -121,27 +129,41 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
     }
 
     /**
- * Creates a menu item and registers action and mouse listeners.
- */
+     * Creates a menu item and registers action and mouse listeners.
+     */
     protected CharsetMenuItem createMenuItem(Charset charset) {
         CharsetMenuItem menuItem = new CharsetMenuItem(charset);
+        group.add(menuItem);
         menuItem.addMouseListener(controller.getMouseTooltipHandler());
         menuItem.addActionListener(this);
+        if (charset != null) hashtable.put(charset, menuItem);
 
         return menuItem;
     }
 
     /**
- * Called when a charset is chosen from the menu.
- */
+     * Called when a charset is chosen from the menu.
+     */
     public void actionPerformed(ActionEvent e) {
-        ((CharsetOwnerInterface) controller).setCharset(((CharsetMenuItem) e.getSource()).getCharset());
+        ((CharsetOwnerInterface) controller).setCharset(((CharsetMenuItem) e
+                .getSource()).getCharset());
     }
 
     /**
- * Updates the selectedMenuItem according to the chosen charset.
- */
+     * Updates the selectedMenuItem according to the chosen charset.
+     */
     public void charsetChanged(CharsetEvent e) {
-        selectedMenuItem.setCharset(e.getCharset());
+        //selectedMenuItem.setCharset(e.getCharset());
+        if (e.getCharset() == null) {
+            JRadioButtonMenuItem item = (JRadioButtonMenuItem) getMenuComponent(0);
+            item.setSelected(true);
+            
+        } else {
+            if (hashtable.containsKey(e.getCharset())) {
+                CharsetMenuItem menuItem = (CharsetMenuItem) hashtable.get(e
+                        .getCharset());
+                menuItem.setSelected(true);
+            }
+        }
     }
 }

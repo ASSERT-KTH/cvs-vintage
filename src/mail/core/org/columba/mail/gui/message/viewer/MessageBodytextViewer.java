@@ -193,9 +193,11 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
                     .getAddress());
         }
 
-        //      Which Charset shall we use ?
+        // Which Charset shall we use ?
         Charset charset = ((CharsetOwnerInterface) mediator).getCharset();
 
+        // no charset specified -> automatic mode
+        // -> try to determine charset based on content parameter
         if (charset == null) {
             String charsetName = bodyPart.getHeader().getContentParameter(
                     "charset");
@@ -206,11 +208,10 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
                 charsetName = System.getProperty("file.encoding");
             }
 
-            if (charsetName != null) {
-                charset = Charset.forName(charsetName);
+            charset = Charset.forName(charsetName);
 
-                ((CharsetOwnerInterface) mediator).setCharset(charset);
-            }
+            //((CharsetOwnerInterface) mediator).setCharset(charset);
+
         }
 
         // Shall we use the HTML-Viewer?

@@ -18,17 +18,16 @@
 // 02111-1307, USA.
 package org.columba.mail.gui.charset;
 
-import org.columba.core.gui.menu.CMenuItem;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.nio.charset.Charset;
+
+import org.columba.core.gui.menu.CRadioButtonMenuItem;
+import org.columba.mail.util.MailResourceLoader;
 
 
 /**
  * A menu item for displaying charsets.
  */
-public class CharsetMenuItem extends CMenuItem {
+public class CharsetMenuItem extends CRadioButtonMenuItem {
     protected Charset charset;
 
     /**
