@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.132 2002/11/14 21:16:30 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.133 2002/12/04 22:43:52 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -821,22 +821,25 @@ public class ModifyIssue extends BaseModifyIssue
                 {
                     activitySet = 
                         issue.doDeleteDependency(activitySet, depend, user);
-                    intake.remove(group);
                 }
-                else
+                else if (! oldDependType.equals(newDependType))
                 {
                     // make the changes
                     activitySet = 
                         issue.doChangeDependencyType(activitySet, depend, 
-                                                     oldDependType, newDependType, user);
-                    intake.remove(group);
+                                                     newDependType, oldDependType, user);
                 }
+                intake.remove(group);
             }
             // something changed...
             if (activitySet != null)
             {
                 scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
                 sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
+            }
+            else // nothing changed
+            {
+                scarabR.setInfoMessage(l10n.get(NO_CHANGES_MADE));
             }
         }
         else
