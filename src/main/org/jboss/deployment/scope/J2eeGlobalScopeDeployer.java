@@ -1,0 +1,513 @@
+/*
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
+package org.jboss.deployment.scope;
+
+import org.jboss.deployment.Deployment;
+import org.jboss.mgt.Application;
+import org.jboss.deployment.J2eeDeploymentException;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Collection;
+import java.util.Set;
+import java.io.IOException;
+import javax.management.ObjectName;
+import javax.management.MBeanException;
+import javax.management.RuntimeMBeanException;
+import javax.management.RuntimeErrorException;
+import javax.management.JMException;
+
+
+/**
+ * This is an example deployer that uses the J2ee application scoping facility and
+ * implements a proper (re-)deployment procedure.
+ * In this case, we introduce a global scope.
+ * @author  cgjung
+ * @version 0.8
+ */
+
+public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
+    
+    /** the global scope */
+    protected Scope globalScope=null;
+    
+    /** Creates new J2eeDependencyDeployer */
+    public J2eeGlobalScopeDeployer() {
+    }
+    
+    /** starts the service by first creating
+     * a new scope
+     * @throws Exception to indicate
+     * that either superclass or scope creation
+     * went wrong.
+     */
+    public void startService() throws Exception {
+        globalScope=createScope();
+        super.startService();
+    }
+    
+    /** factory method to create a new scope, May throw a general exception
+     * if this very basic enterprise fails.
+     * @throws Exception May throw any exception to indicate
+     * instantiation problems of the scope (probably
+     * because initial meta-data could not be found,
+     * is corrupt, etc.)
+     * @return a freshly instantiated and preconfigured scope.
+     *
+     */
+    protected Scope createScope() throws Exception {
+        return new Scope(log);
+    }
+    
+    /** stops the service by freeing
+     * scope afterwards
+     */
+    public void stopService() {
+        super.stopService();
+        globalScope=null;
+    }
+    
+    
+    /**
+     * creates an application class loader for this deployment
+     * this class loader will be shared between jboss and
+     * tomcat via the contextclassloader
+     * we include all ejb and web-modules at this level
+     * to also be able to connect flat ejb-jars to each other
+     * @param deployment the deployment that is about to be made,
+     * but is already installed
+     *
+     * @throws J2eeDeploymentException to indicate
+     * problems with instantiating the classloader
+     * (maybe if reading some meta-data did not work properly)
+     */
+    protected void createContextClassLoader(Deployment deployment) throws J2eeDeploymentException {
+        
+        try{
+            // get urls we want all classloaders of this application to share
+            Set allUrls=new java.util.HashSet();
+            
+            // first we add the common urls (as does our parent)
+            Iterator allCommonUrls=deployment.getCommonUrls().iterator();
+            
+            while(allCommonUrls.hasNext())
+                allUrls.add(allCommonUrls.next());
+            
+            // then the ejbmodules urls
+            Iterator allEjbModules=deployment.getEjbModules().iterator();
+            
+            while(allEjbModules.hasNext()) {
+                Iterator allLocalUrls=((Deployment.Module) allEjbModules.next()).getLocalUrls().iterator();
+                while(allLocalUrls.hasNext())
+                    allUrls.add(allLocalUrls.next());
+            }
+            
+            // then the web modules urls
+            Iterator allWebModules=deployment.getWebModules().iterator();
+            
+            while(allWebModules.hasNext()) {
+                Iterator allLocalUrls=((Deployment.Module) allWebModules.next()).getLocalUrls().iterator();
+                while(allLocalUrls.hasNext())
+                    allUrls.add(allLocalUrls.next());
+            }
+            
+            // create classloader with parent from context
+            ClassLoader parent = Thread.currentThread().getContextClassLoader();
+            // using the factory method
+            ScopedURLClassLoader appCl = createScopedContextClassLoader((URL[]) allUrls.toArray(new URL[allUrls.size()]),parent,deployment);
+            
+            // set the result loader as the context class
+            // loader for the deployment thread
+            Thread.currentThread().setContextClassLoader(appCl);
+        } catch(Exception e) {
+            throw new J2eeDeploymentException("could not construct context classloader",e);
+        }
+    }
+    
+    /** factory method for scoped url classloaders factored out. May throw a general
+     * exception if this enterprise fails.
+     * @param urls the urls for which the scoped
+     * classloader should be generated
+     *
+     * @param parent the parent loader
+     *
+     * @param deployment the deployment to which this classloader is
+     * associated.
+     *
+     * @throws Exception to indicate
+     * problems in constructing the
+     * classloader (maybe because
+     * meta-data was corrupt).
+     *
+     * @return a freshly instantiated and configured class loader
+     *
+     */
+    protected ScopedURLClassLoader createScopedContextClassLoader(URL[] urls,ClassLoader parent,Deployment deployment) throws Exception {
+        return new ScopedURLClassLoader(urls,parent,deployment,globalScope);
+    }
+    
+    /** Overrides the normal (re-)deploy method in order to
+     * take dependent applications into account.
+     *
+     * @param _url the url (file or http) to the archiv to deploy
+     * @throws MalformedURLException in case of a malformed url
+     * @throws J2eeDeploymentException if something went wrong...
+     * @throws IOException if trouble while file download occurs
+     */
+    public void deploy(String _url) throws MalformedURLException, IOException, J2eeDeploymentException {
+        URL url = new URL(_url);
+        
+        ObjectName lCollector = null;
+        try {
+            lCollector = new ObjectName( "Management", "service", "Collector" );
+        }
+        catch( Exception e ) {
+        }
+        
+        // initialise teared down deployments just in case that nothing
+        // is teared down
+        List allTearedDown=new java.util.ArrayList();
+        
+        // undeploy first if it is a redeploy
+        try {
+            // use modified undeploy in order to tear down
+            // dependent apps as well
+            undeployWithDependencies(_url,allTearedDown,url);
+            // Remove application data by its id
+            server.invoke(
+            lCollector,
+            "removeApplication",
+            new Object[] { _url },
+            new String[] { "java.lang.String" }
+            );
+        } catch (Exception _e) {
+            // fresh deployment case
+            allTearedDown.add(url);
+        }
+        
+        // now we (re-)deploy the whole bunch that was teared down
+        // with us
+        Iterator allDeployments=allTearedDown.iterator();
+        
+        while(allDeployments.hasNext()) {
+            URL nextUrl=(URL) allDeployments.next();
+            // maybe this deployment has already been made as
+            // a side effect
+            Deployment d = installer.findDeployment(nextUrl.toString());
+            
+            if(d==null) {
+                log.log("(Re-)Deploy J2EE application: " + nextUrl);
+                d=installApplication(nextUrl);
+                
+                try {
+                    startApplication(d);
+                    log.log("J2EE application: " + nextUrl + " is (re-)deployed.");
+                    try {
+                        // Now the application is deployed add it to the server data collector
+                        Application lApplication = convert2Application( _url, d );
+                        server.invoke(
+                        lCollector,
+                        "saveApplication",
+                        new Object[] {
+                            _url,
+                            lApplication
+                        },
+                        new String[] {
+                            "java.lang.String",
+                            lApplication.getClass().getName()
+                        }
+                        );
+                    }
+                    catch( Exception e ) {
+                        log.log("Report of deployment of J2EE application: " + _url + " could not be reported.");
+                    }
+                } catch (Exception _e) {
+                    try {
+                        stopApplication(d);
+                    }
+                    catch (Exception _e2) {
+                        log.error("unable to stop application "+d.getName()+": "+_e2);
+                    }
+                    finally {
+                        try {
+                            uninstallApplication(_url);
+                        }
+                        catch (Exception _e3) {
+                            log.error("unable to uninstall application "+d.getName()+": "+_e3);
+                        }
+                    }
+                    
+                    if (_e instanceof J2eeDeploymentException) {
+                        throw (J2eeDeploymentException)_e;
+                    }
+                    else {
+                        log.exception(_e);
+                        throw new J2eeDeploymentException("fatal error: "+_e);
+                    }
+                }
+            }
+        }
+    }
+    
+    /** A new stop method that stops a running deployment
+     * and its dependent applications and that logs their
+     * urls (where the current deployment will be redeployed under newUrl)
+     * in a set for redeployment.
+     *
+     * @param _d deployment to stop
+     *
+     * @param redeployUrls collects the sourceUrls of the
+     * undeployed apps
+     *
+     * @param newUrl the url under which the current deployment should be redeployed, if at all
+     *
+     * @throws J2eeDeploymentException  to
+     * indicate problems in undeployment.
+     */
+    protected void stopApplication(Deployment _d, List redeployUrls, URL newUrl) throws J2eeDeploymentException {
+        // synchronize on the scope
+        synchronized(globalScope.classLoaders) {
+            
+            // find out the corresponding classloader
+            ScopedURLClassLoader source=(ScopedURLClassLoader)
+            globalScope.classLoaders.get(_d.getLocalUrl());
+            
+            // its still here, so the thing is not already stopped
+            if(source!=null) {
+                
+                try{
+                    log.log("About to stop application "+_d.getName());
+                
+                // add it to the stopped list
+                redeployUrls.add(newUrl);
+                // get dependency information
+                Iterator allDependencies=globalScope.getDependentClassLoaders(source).
+                iterator();
+                // deregister classloader
+                globalScope.deRegisterClassLoader(source);
+                
+                // first stop the dependent stuff
+                while(allDependencies.hasNext()) {
+                    ScopedURLClassLoader dependentLoader=(ScopedURLClassLoader) allDependencies.next();
+                    
+                    stopApplication(dependentLoader.deployment,redeployUrls,dependentLoader.deployment.getSourceUrl());
+                }
+                
+                } finally {
+                    
+                    try{
+                        // now we do the real stopping
+                        super.stopApplication(_d);
+                
+                        // and leave a last message to the classloader to
+                        // tear down meta-data or such
+                        source.onUndeploy();
+                    } finally {
+                        try{
+                            uninstallApplication(_d);
+                        } catch(IOException e) {
+                            log.error("could not properly uninstall "+_d.getName());
+                        }
+                    }
+                }
+                
+            } // if
+        } // sync
+        
+    }
+    
+    /**  Overrides the proper stop in order to
+     *   be redirected to the dependency stopper
+     *   @param _d the deployment to stop
+     *   @throws J2eeDeploymentException if an error occures for one of these
+     *           modules
+     */
+    protected void stopApplication(Deployment _d) throws J2eeDeploymentException {
+        stopApplication(_d,new java.util.ArrayList(),_d.getSourceUrl());
+    }
+    
+    /** Undeploys the given URL (if it is deployed) and returns an array
+     * of deployments that have been teared down
+     * Actually only the file name is of interest, so it dont has to be
+     * an URL to be undeployed, the file name is ok as well.
+     * @param _app the stirng spec of the app to tear down
+     *
+     * @param allTearedDown collection of deployments that have been teared down as a result.
+     *
+     * @param newUrl url under which the application is to be redeployed, if at all
+     *
+     * @throws J2eeDeploymentException if something went wrong (but should have removed all files)
+     * @throws IOException if file removement fails
+     */
+    public void undeployWithDependencies(String _app, List allTearedDown, URL newUrl) throws IOException, J2eeDeploymentException {
+        // find currect deployment
+        Deployment d = installer.findDeployment(_app);
+        
+        if (d == null)
+            throw new J2eeDeploymentException("The application \""+name+"\" has not been deployed.");
+        
+        try {
+            // use dependency stopper
+            stopApplication(d, allTearedDown, newUrl);
+        }
+        catch (J2eeDeploymentException _e) {
+            throw _e;
+        }
+        
+    }
+    
+    /** Starts the successful downloaded deployment. <br>
+     * Means the modules are deployed by the responsible container deployer
+     * This version of the method does indeed start necessary
+     * other applications as well.
+     * @param dep the deployment to start
+     *
+     * @throws J2eeDeploymentException if an error occures for one of these
+     *          modules
+     */
+    protected void startApplication(Deployment dep) throws J2eeDeploymentException {
+        // here we collect all the started deployments (not only dep)
+        // indexed by the sourceUrl
+        Collection deployments=new java.util.ArrayList();
+        
+        startApplication(dep, deployments);
+        
+        Iterator allDeployments=deployments.iterator();
+        
+        while(allDeployments.hasNext()) {
+            
+            Deployment _d=(Deployment) allDeployments.next();
+            
+            // save the old classloader
+            ClassLoader oldCl = Thread.currentThread().
+            getContextClassLoader();
+            
+            // find out the corresponding classloader
+            ScopedURLClassLoader source=(ScopedURLClassLoader)
+            globalScope.classLoaders.get(_d.getLocalUrl());
+            
+            Thread.currentThread().setContextClassLoader(source);
+            
+            // redirect all modules to the responsible deployers
+            Deployment.Module m = null;
+            String moduleName = null;
+            String message;
+            try {
+                // Tomcat
+                Iterator it = _d.getWebModules().iterator();
+                if (it.hasNext() && !warDeployerAvailable())
+                    throw new J2eeDeploymentException("application contains war files but no web container available");
+                
+                
+                while (it.hasNext()) {
+                    m = (Deployment.Module)it.next();
+                    moduleName = m.getName();
+                    log.log("Starting module " + moduleName);
+                    
+                    // Call the TomcatDeployer that is loaded in the JMX server
+                    server.invoke(warDeployer, "deploy",
+                    new Object[] { m.getWebContext(), m.getLocalUrls().firstElement().toString()}, new String[] { "java.lang.String", "java.lang.String" });
+                    
+                    // since tomcat changes the context classloader...
+                    Thread.currentThread().setContextClassLoader(source);
+                }
+                
+                // JBoss
+                // gather the ejb module urls and deploy the application
+                moduleName = _d.getName();
+                Collection tmp = new java.util.Vector();
+                for( it = _d.getEjbModules().iterator(); it.hasNext(); ) {
+                    m = (Deployment.Module) it.next();
+                    tmp.add( m.getLocalUrls().firstElement().toString() );
+                }
+                String[] jarUrls = new String[ tmp.size() ];
+                tmp.toArray( jarUrls );
+                // Call the ContainerFactory that is loaded in the JMX server
+                server.invoke(jarDeployer, "deploy",
+                new Object[]{ _d.getLocalUrl().toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
+            }
+            catch (MBeanException _mbe) {
+                log.error("Starting "+moduleName+" failed!");
+                throw new J2eeDeploymentException("Error while starting "+moduleName+": " + _mbe.getTargetException().getMessage(), _mbe.getTargetException());
+            }
+            catch (RuntimeErrorException e) {
+                log.error("Starting "+moduleName+" failed!");
+                e.getTargetError().printStackTrace();
+                throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetError().getMessage(), e.getTargetError());
+            }
+            catch (RuntimeMBeanException e) {
+                log.error("Starting "+moduleName+" failed!");
+                e.getTargetException().printStackTrace();
+                throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
+            }
+            catch (JMException _jme) {
+                log.error("Starting failed!");
+                throw new J2eeDeploymentException("Fatal error while interacting with deployer MBeans... " + _jme.getMessage());
+            }
+            finally {
+                Thread.currentThread().setContextClassLoader(oldCl);
+            }
+        }
+        
+    }
+    
+    /** Starts the successful downloaded deployment. <br>
+     * Means the modules are deployed by the responsible container deployer
+     * <comment author="cgjung">better be protected for subclassing </comment>
+     * @param alreadyMarked the deployments that have already been installed and
+     * that  must be properly deployed afterwards.
+     * @param _d the deployment to start
+     * @throws J2eeDeploymentException if an error occures for one of these
+     *          modules
+     */
+    protected void startApplication(Deployment _d, Collection alreadyMarked) throws J2eeDeploymentException {
+        
+        ClassLoader parent=Thread.currentThread().getContextClassLoader();
+        
+        // set the context classloader for this application
+        createContextClassLoader(_d);
+        
+        // save the application classloader for later
+        ScopedURLClassLoader appCl = (ScopedURLClassLoader)
+        Thread.currentThread().getContextClassLoader();
+        
+        alreadyMarked.add(_d);
+        
+        String[] dependentStuff=appCl.getDependingApplications();
+        
+        for(int count=0;count<dependentStuff.length;count++) {
+
+            // reinstall parent 
+            Thread.currentThread().setContextClassLoader(parent);
+            
+            try{
+                URL absoluteUrl=new URL(_d.getSourceUrl(),dependentStuff[count]);
+                
+                Deployment newD=installer.findDeployment(absoluteUrl.toString());
+                
+                if(newD==null) {
+                    newD = installApplication(absoluteUrl);
+              
+                    startApplication(newD,alreadyMarked);
+                }
+            } catch(MalformedURLException e) {
+                throw new J2eeDeploymentException("could not construct url for dependent application "+dependentStuff[count],e);
+            } catch(IOException e) {
+                throw new J2eeDeploymentException("io problem when trying to access dependent application "+dependentStuff[count],e);
+            } 
+            
+            
+        } // for
+        
+        // reinstall parent 
+            Thread.currentThread().setContextClassLoader(parent);
+            
+    }
+}
