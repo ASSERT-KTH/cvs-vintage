@@ -1,5 +1,4 @@
-Included servlet error: 500
-java.lang.IllegalStateException: getOutputStream() has already been called
+java.lang.IllegalStateException: getOutputStream()
 !=
 PreInclude
 PostInclude
