@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.3 1999/12/03 17:01:24 harishp Exp $
+# $Id: tomcat.sh,v 1.4 1999/12/15 00:30:23 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -11,6 +11,38 @@
 
 #jre -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Startup $*
 #java -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Startup $*
+
+if [ -f $HOME/.tomcatrc ] ; then 
+  . $HOME/.tomcatrc
+fi
+
+if [ "$TOMCAT_HOME" = "" ] ; then
+  # try to find tomcat
+  if [ -d ${HOME}/opt/tomcat ] ; then 
+    TOMCAT_HOME=${HOME}/opt/tomcat
+  fi
+
+  if [ -d /opt/tomcat ] ; then 
+    TOMCAT_HOME=/opt/tomcat
+  fi
+
+  ## resolve links - $0 may be a link to ant's home
+  PRG=$0
+  progname=`basename $0`
+  
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '.*/.*' > /dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname $PRG`/$link"
+    fi
+  done
+  
+  TOMCAT_HOME=`dirname "$PRG"`
+
+fi
 
 baseDir=`dirname $0`
 
@@ -53,6 +85,10 @@ if [ "$cp" != "" ]; then
     export CLASSPATH
 fi
 
+if [ ! -f server.xml ] ; then 
+   # Probably we are in a wrong directory, use tomcat_home
+   cd ${TOMCAT_HOME}
+fi
 
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window

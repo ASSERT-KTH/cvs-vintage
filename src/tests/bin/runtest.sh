@@ -1,11 +1,16 @@
 #! /bin/ksh
 #
-# $Id: runtest.sh,v 1.5 1999/12/08 16:36:28 harishp Exp $
+# $Id: runtest.sh,v 1.6 1999/12/15 00:30:23 costin Exp $
 
 # Shell script to run test harness
- 
+
+if [ "$1" = "" ] ; then
+   port=8080
+else 
+   port=$1
+fi
+
 host=localhost
-port=8080
 test=testlist.txt
 
 cp=$CLASSPATH
