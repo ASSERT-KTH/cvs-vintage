@@ -1,4 +1,4 @@
-// $Id: LookAndFeelMgr.java,v 1.12 2003/10/22 12:52:14 bobtarling Exp $
+// $Id: LookAndFeelMgr.java,v 1.13 2003/11/24 16:34:59 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -362,8 +362,13 @@ public class LookAndFeelMgr {
     }
 
     public Font getSmallFont() {
-        Font font = UIManager.getDefaults().getFont("TextField.font");
-        return font.deriveFont(font.getSize2D() - 2f);
+        Font font = getStandardFont();
+        if (font.getSize2D() >= 12f) {
+            return font.deriveFont(font.getSize2D() - 2f);
+        }
+        else {
+            return font;            
+        }
     }
     
     /**
