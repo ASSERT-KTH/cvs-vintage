@@ -20,7 +20,19 @@ import java.io.*;
 
 import org.columba.core.main.MainInterface;
 
+/**
+ * Contains the logic necessary to search for running Columba sessions and
+ * pass command line arguments to it or to start a new session.
+ */
 public class SessionController {
+    
+    /**
+     * Tries to connect to a running ColumbaServer using a new ColumbaClient.
+     * If this works, the given command line arguments are passed to the
+     * running server and the startup process is terminated.
+     * If this doesn't work, a new ColumbaServer instance is created and
+     * the startup process isn't terminated.
+     */
     public static void passToRunningSessionAndExit(String[] args) {
         //create new client and try to connect to server
         ColumbaClient client = new ColumbaClient();
@@ -45,6 +57,9 @@ public class SessionController {
         }
     }
     
+    /**
+     * Reads a stored port number from the file ".auth" in the config directory.
+     */
     protected static int deserializePortNumber() throws IOException {
         File file = new File(MainInterface.config.getConfigDirectory(), ".auth");
         BufferedReader reader = null;
@@ -59,6 +74,10 @@ public class SessionController {
         }
     }
     
+    /**
+     * Stores the given port number in the file ".auth" in the config directory.
+     * If the passed port number is -1, the existing file is deleted.
+     */
     protected static void serializePortNumber(int port) throws IOException {
         File file = new File(MainInterface.config.getConfigDirectory(), ".auth");
         if (port == -1) {

@@ -21,13 +21,9 @@ import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.shutdown.ShutdownManager;
+import org.columba.core.util.GlobalResourceLoader;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -38,6 +34,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
+
+import javax.swing.JOptionPane;
 
 /**
  * Opens a server socket to manage multiple sessions of Columba
@@ -51,6 +49,8 @@ import java.util.StringTokenizer;
  * @author fdietz
  */
 public class ColumbaServer {
+    
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
     
     /**
      * The anonymous user for single-user systems without user name.
@@ -100,6 +100,7 @@ public class ColumbaServer {
                 }
                 try {
                     serverSocket.close();
+                    //cleanup: remove port number file
                     SessionController.serializePortNumber(-1);
                 } catch (IOException ioe) {}
                 serverSocket = null;
@@ -107,6 +108,7 @@ public class ColumbaServer {
         }, "ColumbaServer");
         thread.setDaemon(true);
         
+        //stop server when shutting down
         ShutdownManager.getShutdownManager().register(new Runnable() {
             public void run() {
                 stop();
@@ -120,12 +122,32 @@ public class ColumbaServer {
     public synchronized void start() throws IOException {
         if (!isRunning()) {
             int port;
+            int count = 0;
             while (serverSocket == null) {
+                //create random port number within range
                 port = random.nextInt(65536 - LOWEST_PORT) + LOWEST_PORT;
                 try {
                     serverSocket = new ServerSocket(port);
+                    //store port number in file
                     SessionController.serializePortNumber(port);
-                } catch (SocketException se) {}
+                } catch (SocketException se) { //port is in use, try next
+                    count++;
+                    if (count == 10) { //something is very wrong here
+                        JOptionPane.showMessageDialog(null, 
+                                GlobalResourceLoader.getString(
+                                        RESOURCE_PATH,
+                                        "session",
+                                        "err_10se_msg"),
+                                GlobalResourceLoader.getString(
+                                        RESOURCE_PATH,
+                                        "session",
+                                        "err_10se_title"),
+                                JOptionPane.ERROR_MESSAGE);
+                        //this is save because the only shutdown plugin
+                        //to stop this server, the configuration isn't touched
+                        System.exit(1);
+                    }
+                }
             }
             serverSocket.setSoTimeout(2000);
             thread.start();
