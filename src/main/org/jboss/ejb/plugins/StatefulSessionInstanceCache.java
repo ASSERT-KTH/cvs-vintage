@@ -9,6 +9,10 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
+
+import javax.transaction.Status;
+import javax.transaction.SystemException;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
@@ -18,7 +22,8 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  * Cache for stateful session beans. 
  *      
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @version $Revision: 1.2 $
  */
 public class StatefulSessionInstanceCache 
 	extends EnterpriseInstanceCache
@@ -79,7 +84,15 @@ public class StatefulSessionInstanceCache
 		{
 			if (ctx.getTransaction() != null) 
 			{
-				return false;
+            try 
+            {
+               return (ctx.getTransaction().getStatus() == Status.STATUS_NO_TRANSACTION);
+            }
+            catch (SystemException e) 
+            {
+               // SA FIXME: not sure what to do here 
+               return false;
+            }
 			}
 		}
 		return true;
