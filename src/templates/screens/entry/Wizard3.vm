@@ -65,8 +65,12 @@ $page.setTitle("Enter issue")
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
         #set ($attVal = $scarabR.getNewAttributeValue($att, $issue))
-        #set ($templAttVal = "")
-        #set ($templAttVal = $templ.getAttributeValue($att))
+        ## If templAttVal is null, set to ""
+        #if ( $templ.getAttributeValue($att))   
+            #set ($templAttVal = $templ.getAttributeValue($att))
+        #else
+            #set ($templAttVal = "")
+        #end
         #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
         #if ($attVal.Attribute.AttributeType.ValidationKey)
            #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
