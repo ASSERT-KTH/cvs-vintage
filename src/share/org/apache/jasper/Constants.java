@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.1 1999/10/09 00:20:34 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.2 1999/10/14 04:06:22 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/14 04:06:22 $
  *
  * ====================================================================
  * 
@@ -122,8 +122,6 @@ public class Constants {
      */
     public static final int K = 1024;
     public static final int DEFAULT_BUFFER_SIZE = 8*K;
-
-    //    public static final String SERVLET_VERSION = "JSP";
 
     /**
      * The query parameter that causes the JSP engine to just
