@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.65 2003/03/17 03:05:49 spestov Exp $
+ * @version $Id: View.java,v 1.66 2003/03/23 18:44:35 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -883,7 +883,7 @@ public class View extends JFrame implements EBComponent
 		for(int i = 0; i < editPanes.length; i++)
 		{
 			if(editPanes[i].getTextArea() != textArea)
-				editPanes[i].getTextArea()._setFirstLine(firstLine);
+				editPanes[i].getTextArea().setFirstLine(firstLine);
 		}
 	} //}}}
 
@@ -903,7 +903,7 @@ public class View extends JFrame implements EBComponent
 		for(int i = 0; i < editPanes.length; i++)
 		{
 			if(editPanes[i].getTextArea() != textArea)
-				editPanes[i].getTextArea()._setHorizontalOffset(horizontalOffset);
+				editPanes[i].getTextArea().setHorizontalOffset(horizontalOffset);
 		}
 	} //}}}
 

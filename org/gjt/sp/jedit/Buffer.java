@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.139 2003/03/23 01:31:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.140 2003/03/23 18:44:35 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3596,7 +3596,12 @@ loop:		for(int i = 0; i < seg.count; i++)
 			offsetMgr.lineInfoChangedFrom(0);
 
 			int collapseFolds = getIntegerProperty("collapseFolds",0);
-			offsetMgr.expandFolds(collapseFolds);
+			if(collapseFolds == 0)
+			{
+				// all visible by default after load!
+			}
+			else
+				offsetMgr.expandFolds(collapseFolds);
 		}
 
 		// Create marker positions
