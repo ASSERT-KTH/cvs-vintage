@@ -123,11 +123,6 @@ public  class MITListItem
         return getModuleId() == null;
     }
 
-    public boolean isUseCurrentIssueType()
-    {
-        return getIssueTypeId() == null;
-    }
-
     public String getQueryKey()
     {
         String key = super.getQueryKey();
