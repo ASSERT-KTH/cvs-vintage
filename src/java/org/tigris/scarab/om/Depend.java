@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.16 2002/12/08 21:22:25 jon Exp $
+ * @version $Id: Depend.java,v 1.17 2002/12/09 05:49:37 jon Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -117,7 +117,7 @@ public class Depend
     public Attachment getDescriptionAsAttachment(ScarabUser user, Issue issue)
         throws Exception
     {
-        if (description == null)
+        if (description == null || description.length() == 0)
         {
             return null;
         }
