@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.17 2002/09/09 23:59:27 d00mst Exp $
+// $Id: PropPanelAttribute.java,v 1.18 2002/10/09 20:03:58 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -77,11 +77,8 @@ public class PropPanelAttribute extends PropPanelModelElement {
 	addLinkField(ownerScroll,4,0,0);
 
 	addCaption(Argo.localize("UMLMenu", "label.type"),0,1,0);
-        UMLTypeModel typeModel = new UMLTypeModel(this,"isAcceptibleType",
-            "type","getType","setType",false,MClassifier.class,
-	    MAttribute.class,true);
         addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-class"),
-            new UMLComboBox(typeModel)),0,1,0);
+            new UMLTypeComboBox(this)),0,1,0);
 
         addCaption("Initial Value:",1,1,0);
         addField(new UMLInitialValueComboBox(this),1,1,0);
@@ -148,10 +145,6 @@ public class PropPanelAttribute extends PropPanelModelElement {
 		MAttribute attr = UmlFactory.getFactory().getCore().buildAttribute(owner);
                 navigateTo(attr);
             }
-            // 2002-07-15
-            // Jaap Branderhorst
-            // Force an update of the navigation pane to solve issue 323
-            ProjectBrowser.TheInstance.getNavPane().forceUpdate();
         }
     }
 
