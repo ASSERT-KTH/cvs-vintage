@@ -78,6 +78,15 @@ h3, .functnbar	{
 h3 {	background: #369 url(../images/nw_min.gif) no-repeat;
 }
 
+h4 {	background: #999 url(../images/nw_min.gif) no-repeat;
+	padding: 5px;
+color: #fff;
+	margin-right: 2px;
+	margin-left: 2px;
+
+}
+
+
 code, pre {
 	font-family:	'Andale Mono', monospace;
 	}

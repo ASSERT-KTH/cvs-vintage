@@ -19,10 +19,10 @@ th, td {
  text-align: left;
  vertical-align: top 
  }
-td.right, th.right {
+.right {
 	text-align:	right;
 	}
-td.center, th.center {
+.center {
 	text-align:	center;
 	}
 #globalnav { 
@@ -49,7 +49,6 @@ th {
 	.datatablechild tr.a td {
 	background: #cf9;
 	}
-
 .axial th {
 	background: #efefef;
 	text-align: right;
@@ -65,3 +64,4 @@ th {
 .mtb	{
 	margin-top: 2em;
 	}
+.note { font-weight: normal }
