@@ -15,6 +15,7 @@
                 <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
                 <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
+                <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
             </container-interceptors>
 			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
 			<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
@@ -41,7 +42,7 @@
 				<MaximumSize>100</MaximumSize>
 				<MinimumSize>10</MinimumSize>
 			</container-pool-conf>
-			<commit-option>A</commit-option>
+			<commit-option>B</commit-option>
       </container-configuration>
 
 		<container-configuration>
