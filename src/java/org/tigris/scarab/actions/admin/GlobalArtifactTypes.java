@@ -67,7 +67,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.29 2002/11/16 01:26:54 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.30 2003/01/22 23:37:33 elicia Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -133,6 +133,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         throws Exception
     {
         Object[] keys = data.getParameters().getKeys();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String key;
         String id;
         IssueType issueType;
@@ -144,9 +145,20 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             {
                id = key.substring(7);
                issueType = IssueTypePeer
-                      .retrieveByPK(new NumberKey(id));
-               issueType.setDeleted(true);
-               issueType.save();
+                       .retrieveByPK(new NumberKey(id));
+               if (issueType.hasIssues())
+               {
+                   Group group = getIntakeTool(context).get("IssueType", issueType.getQueryKey());
+                   Field field = group.get("Name");
+                   getScarabRequestTool(context).setAlertMessage(l10n.get("CannotDeleteIssueTypesWithIssues"));
+                   field.setMessage("IssueTypeHasIssues");
+               }
+               else 
+               {
+                   issueType.setDeleted(true);
+                   issueType.save();
+                   getScarabRequestTool(context).setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
+               }
              }
          }
      }
@@ -169,6 +181,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                       .retrieveByPK(new NumberKey(id));
                issueType.setDeleted(false);
                issueType.save();
+               getScarabRequestTool(context).setConfirmMessage(getLocalizationTool(context).get("GlobalIssueTypesUnDeleted"));
              }
          }
      }

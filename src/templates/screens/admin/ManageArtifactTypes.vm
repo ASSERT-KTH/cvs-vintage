@@ -78,7 +78,7 @@
     #set ($label = $rmit.IssueType.Name)
   #end
 
-  <td>$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId).setLabel("$label")</td>
+  <td>#fieldErrorMsg($rmitGroup.DisplayName "")$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId).setLabel("$label")</td>
   <td>#booleanCheckbox($rmitGroup.Active)</td>
   <td>#booleanCheckbox($rmitGroup.Display)</td>
   <td>

@@ -2,7 +2,8 @@
 #set ($issueType = $currentIssue.IssueType)
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 #set ($fullComments = $data.Parameters.getString("fullcomments",""))
-#set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
+#set ($rmit = $module.getRModuleIssueType($issueType))
+#set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module) && $rmit.Active)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
 #set ($moveToModules = $data.User.getMoveToModules($module))
@@ -23,6 +24,9 @@
 </div>
 
 #asterisk()
+#if ($rmit.Active.toString().equals("false"))
+<div class="colbar">This issue is read-only because its issue type has been marked as no longer active.</div>
+#end
 
 ## PRIMARY INFO
 #if ($tab.equals("1") || $tab.equals("all"))

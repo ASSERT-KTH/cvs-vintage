@@ -48,11 +48,11 @@
 <th>$l10n.Default</th>
 </tr>
 #foreach ($issueType in $nondeletedIssueTypes)
+    #set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
-<td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
+<td>#fieldErrorMsg($group.Name "")<a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
-    #set ($group = $intake.IssueType.mapTo($issueType))
 <td>#booleanCheckbox($group.Locked)</td>
 <td>#booleanCheckbox($group.Isdefault)</td>
 </tr>
