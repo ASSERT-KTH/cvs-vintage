@@ -50,7 +50,6 @@ package org.tigris.scarab.om;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.List;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -77,7 +76,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.32 2001/10/05 00:45:29 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.33 2001/10/20 00:51:05 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute

@@ -45,13 +45,13 @@ package org.tigris.scarab.attribute;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-import java.util.Vector;
 
+//import java.util.Vector;
 
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.7 $ $Date: 2001/08/02 07:11:37 $
+ * @version $Revision: 1.8 $ $Date: 2001/10/20 00:51:05 $
  */
 public abstract class SelectOneAttribute extends OptionAttribute
 {

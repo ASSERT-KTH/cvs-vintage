@@ -64,7 +64,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.29 2001/10/19 20:43:48 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.30 2001/10/20 00:51:05 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -170,6 +170,9 @@ public interface ModuleEntity
     public Issue getNewIssue()
         throws Exception;
 
+    public Vector getRModuleIssueTypes()
+        throws Exception;
+        
     public List getRModuleOptions(Attribute attribute)
         throws Exception;
 

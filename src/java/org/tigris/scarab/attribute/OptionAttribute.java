@@ -45,22 +45,16 @@ package org.tigris.scarab.attribute;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-import java.util.Vector;
-import java.util.Hashtable;
-
-import org.apache.torque.om.ObjectKey;
-import org.apache.turbine.Log;
 
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.RModuleOption;
 
-
 /**
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.15 $ $Date: 2001/09/14 00:06:38 $
+ * @version $Revision: 1.16 $ $Date: 2001/10/20 00:51:05 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {
@@ -88,5 +82,4 @@ public abstract class OptionAttribute extends AttributeValue
     public void setResources(Object resources)
     {
     }
-
 }

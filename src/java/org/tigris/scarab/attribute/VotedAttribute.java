@@ -56,12 +56,12 @@ import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
 
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.15 $ $Date: 2001/09/24 21:29:45 $
+ * @version $Revision: 1.16 $ $Date: 2001/10/20 00:51:05 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -90,7 +90,7 @@ public abstract class VotedAttribute extends OptionAttribute
         AttributeVote vote;
         Criteria crit = new Criteria();
         crit.add(AttributeVotePeer.VALUE_ID, getValueId());
-        Vector res = AttributeVotePeer.doSelect(crit);
+        List res = AttributeVotePeer.doSelect(crit);
         for (i=0; i<res.size(); i++)
         {
             vote = (AttributeVote)res.get(i);

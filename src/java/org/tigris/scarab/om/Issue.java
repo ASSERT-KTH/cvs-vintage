@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.Vector;
 import java.util.Date;
 import java.sql.Connection;
 
@@ -719,7 +718,7 @@ public class Issue
      * Returns a list of Attachment objects with type "Comment"
      * That are associated with this issue.
      */
-    public Vector getComments(boolean full) throws Exception
+    public List getComments(boolean full) throws Exception
     {
         Criteria crit = new Criteria()
             .add(AttachmentPeer.ISSUE_ID, getIssueId())
@@ -732,14 +731,14 @@ public class Issue
         {
             crit.setLimit(getCommentsLimit());
         }
-        return  AttachmentPeer.doSelect(crit);
+        return (List) AttachmentPeer.doSelect(crit);
     }
 
     /**
      * Returns a list of Attachment objects with type "URL"
      * That are associated with this issue.
      */
-    public Vector getUrls() throws Exception
+    public List getUrls() throws Exception
     {
         Criteria crit = new Criteria()
             .add(AttachmentPeer.ISSUE_ID, getIssueId())
@@ -748,7 +747,7 @@ public class Issue
             .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 
                                     Attachment.URL__PK)
             .add(AttachmentPeer.DELETED, 0);
-        return  AttachmentPeer.doSelect(crit);
+        return (List) AttachmentPeer.doSelect(crit);
     }
 
     /**
@@ -789,7 +788,7 @@ public class Issue
     /**
      * Returns list of Activity objects associated with this Issue.
      */
-    public Vector getActivity() throws Exception  
+    public List getActivity() throws Exception  
     {
         return getActivity(false, getHistoryLimit());
     }
@@ -797,7 +796,7 @@ public class Issue
     /**
      * Returns limited list of Activity objects associated with this Issue.
      */
-    public Vector getActivity(int limit) throws Exception  
+    public List getActivity(int limit) throws Exception  
     {
         return getActivity(false, limit);
     }
@@ -807,7 +806,7 @@ public class Issue
      * If fullHistory is false, it limits it,
      * (this is the default)
      */
-    public Vector getActivity(boolean fullHistory) throws Exception  
+    public List getActivity(boolean fullHistory) throws Exception  
     {
         return getActivity(fullHistory, getHistoryLimit());
     }
@@ -815,7 +814,7 @@ public class Issue
     /**
      * Returns full list of Activity objects associated with this Issue.
      */
-    private Vector getActivity(boolean fullHistory, int limit) throws Exception  
+    private List getActivity(boolean fullHistory, int limit) throws Exception  
     {
         Criteria crit = new Criteria()
             .add(ActivityPeer.ISSUE_ID, getIssueId())
@@ -824,7 +823,7 @@ public class Issue
         {
             crit.setLimit(limit);
         }
-        return ActivityPeer.doSelect(crit);
+        return (List) ActivityPeer.doSelect(crit);
     }
 
     /**
@@ -836,7 +835,7 @@ public class Issue
         ArrayList children = new ArrayList();
         Criteria crit = new Criteria()
             .add(DependPeer.OBSERVED_ID, getIssueId());
-        Vector depends = DependPeer.doSelect(crit);
+        List depends = (List) DependPeer.doSelect(crit);
         for ( int i=0; i<depends.size(); i++ ) 
         {
             Depend depend = (Depend) depends.get(i); 
@@ -856,7 +855,7 @@ public class Issue
         ArrayList parents = new ArrayList();
         Criteria crit = new Criteria()
             .add(DependPeer.OBSERVER_ID, getIssueId());
-        Vector depends = DependPeer.doSelect(crit);
+        List depends = (List) DependPeer.doSelect(crit);
         for ( int i=0; i<depends.size(); i++ ) 
         {
             Depend depend = (Depend) depends.get(i); 
@@ -871,7 +870,7 @@ public class Issue
      * Returns list of all types of dependencies an issue can have
      * On another issue.
      */
-    public Vector getAllDependencyTypes() throws Exception
+    public List getAllDependencyTypes() throws Exception
     {
         return DependTypePeer.doSelect(new Criteria());
     }
@@ -886,17 +885,21 @@ public class Issue
         Criteria crit = new Criteria(2)
             .add(DependPeer.OBSERVED_ID, getIssueId() )        
             .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );
-        Vector depends = DependPeer.doSelect(crit);
+        List depends = (List) DependPeer.doSelect(crit);
 
         Criteria crit2 = new Criteria(2)
             .add(DependPeer.OBSERVER_ID, getIssueId() )        
             .add(DependPeer.OBSERVED_ID, childIssue.getIssueId() );
-        Vector depends2 = DependPeer.doSelect(crit2);
+        List depends2 = (List) DependPeer.doSelect(crit2);
 
         if (depends.size() > 0 )
+        {
             depend = (Depend)depends.get(0);
+        }
         else if (depends2.size() > 0 )
+        {
             depend = (Depend)depends2.get(0);
+        }
         return depend;
     }
 

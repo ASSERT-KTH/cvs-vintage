@@ -48,7 +48,6 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.Date;
-import java.util.Vector;
 import java.util.HashMap;
 
 // Turbine Stuff 
@@ -96,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.42 2001/10/18 00:34:40 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.43 2001/10/20 00:51:04 jon Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {

@@ -47,7 +47,8 @@ package org.tigris.scarab.services;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.turbine.Log;
 
@@ -72,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.10 2001/09/29 01:57:18 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.11 2001/10/20 00:51:05 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -85,10 +86,10 @@ public class ScarabDBSecurityService extends DBSecurityService
     public GroupSet getGroups( Criteria criteria )
         throws DataBackendException
     {
-        Vector groups = new Vector(0);
+        List groups = (List) new ArrayList(0);
         try
         {
-            groups = ScarabModulePeer.doSelect(criteria);
+            groups = (List) ScarabModulePeer.doSelect(criteria);
         }
         catch(Exception e)
         {

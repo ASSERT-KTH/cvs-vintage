@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.51 2001/10/20 00:12:11 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.52 2001/10/20 00:51:05 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -493,7 +493,7 @@ public class ScarabModule
     public Vector getRModuleAttributes(Criteria crit)
         throws Exception
     {
-        Vector rModAtts = null;
+        List rModAtts = null;
         ModuleEntity module = this;
         ModuleEntity prevModule = null;
         do
@@ -505,10 +505,10 @@ public class ScarabModule
         while ( rModAtts.size() == 0 &&
                !ROOT_ID.equals(prevModule.getModuleId()));
 
-        return rModAtts;
+        return (Vector) rModAtts;
     }
 
-    private Vector superRModuleAttributes(Criteria crit)
+    private List superRModuleAttributes(Criteria crit)
         throws Exception
     {
         return super.getRModuleAttributes(crit);
@@ -888,7 +888,6 @@ try{
     public Vector getRModuleIssueTypes()
         throws Exception
     {
-        List rmits = null;
         Criteria crit = new Criteria();
         crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
         .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
@@ -939,24 +938,24 @@ try{
     /**
      * Returns list of queries needing approval.
      */
-    public Vector getUnapprovedQueries() throws Exception
+    public List getUnapprovedQueries() throws Exception
     {
         Criteria crit = new Criteria(3);
         crit.add(QueryPeer.APPROVED, 0)
            .add(QueryPeer.DELETED, 0);
-        return QueryPeer.doSelect(crit);
+        return (List) QueryPeer.doSelect(crit);
     }
 
     /**
      * Returns list of enter issue templates needing approval.
      */
-    public Vector getUnapprovedTemplates() throws Exception
+    public List getUnapprovedTemplates() throws Exception
     {
         Criteria crit = new Criteria(3);
         crit.add(IssueTemplateInfoPeer.APPROVED, 0)
             .addJoin(IssuePeer.ISSUE_ID, IssueTemplateInfoPeer.ISSUE_ID)
             .add(IssuePeer.DELETED, 0);
-        return IssuePeer.doSelect(crit);
+        return (List) IssuePeer.doSelect(crit);
     }
 
     /**

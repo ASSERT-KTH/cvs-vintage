@@ -46,14 +46,14 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.om.AttributeOption;
+//import org.tigris.scarab.om.AttributeOption;
 
-import java.util.Enumeration;
-import java.util.Vector;
+//import java.util.Enumeration;
+
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.9 $ $Date: 2001/09/24 21:29:45 $
+ * @version $Revision: 1.10 $ $Date: 2001/10/20 00:51:05 $
  */
 public class VotedAverageAttribute extends VotedAttribute 
 {

@@ -46,7 +46,8 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 // Turbine Stuff 
 import org.apache.turbine.RunData;
@@ -70,7 +71,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.18 2001/09/11 03:41:45 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.19 2001/10/20 00:51:04 jon Exp $
 */
 public class ModifyAttributes extends RequireLoginFirstAction
 {
@@ -146,8 +147,8 @@ public class ModifyAttributes extends RequireLoginFirstAction
                     .getRModuleAttribute().getAttribute();
 
             AttributeOption option = null;
-            Vector attributeOptions = (Vector)attribute
-                .getAttributeOptions().clone(); 
+            List attributeOptions = new ArrayList (attribute
+                .getAttributeOptions());
             // go in reverse because we may be removing from the list
             for (int i=attributeOptions.size()-1; i>=0; i--) 
             {

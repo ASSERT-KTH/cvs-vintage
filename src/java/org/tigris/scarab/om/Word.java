@@ -46,8 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-// JDK classes
-import java.util.Vector;
+import java.util.List;
 
 // Turbine classes
 import org.apache.torque.om.Persistent;
@@ -83,7 +82,7 @@ public class Word
      */
     public void updateRating() throws Exception
     {
-        Vector v = BasePeer.executeQuery(query + getWordId());
+        List v = (List) BasePeer.executeQuery(query + getWordId());
         Record rec = (Record)v.get(0);
         setRating(
             ScarabConstants.MAX_WORD_RATING /

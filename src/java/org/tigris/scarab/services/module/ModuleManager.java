@@ -45,7 +45,6 @@ package org.tigris.scarab.services.module;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-import java.util.Vector;
 
 import org.tigris.scarab.om.ScarabModulePeer;
 
@@ -60,7 +59,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.14 2001/10/14 01:21:29 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.15 2001/10/20 00:51:05 jon Exp $
  */
 public abstract class ModuleManager
 {

@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -80,7 +79,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.8 2001/08/10 23:54:20 jmcnally Exp $
+ * @version $Id: Vocabulary.java,v 1.9 2001/10/20 00:51:05 jon Exp $
  */
 public class Vocabulary
     implements SearchIndex
@@ -117,7 +116,7 @@ public class Vocabulary
         ignoredWords = new HashSet();
         try
         {
-            Vector v = WordPeer.doSelect(crit);
+            List v = (List) WordPeer.doSelect(crit);
             for(int i=0; i<v.size(); i++)
             {
                 ignoredWords.add(((Word)v.get(i)).getWord());

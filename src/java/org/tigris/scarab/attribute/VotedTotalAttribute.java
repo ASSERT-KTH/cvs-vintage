@@ -48,14 +48,14 @@ package org.tigris.scarab.attribute;
 
 import org.tigris.scarab.om.AttributeOption;
 
-import java.util.Enumeration;
-import java.util.Vector;
+//import java.util.Enumeration;
+//import java.util.Vector;
 
 /**
  *  This is a Bugzilla-style attribute. The result is the sum of all votes.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.8 $ $Date: 2001/09/24 21:29:45 $
+ * @version $Revision: 1.9 $ $Date: 2001/10/20 00:51:05 $
  */
 public class VotedTotalAttribute extends VotedAttribute
 {
