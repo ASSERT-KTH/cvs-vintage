@@ -90,7 +90,7 @@ public class AttributeValuePeer
     public static Class getOMClass(Record record, int offset) 
         throws Exception
     {
-        NumberKey attId = new NumberKey(record.getValue(offset-1 + 2)
+        NumberKey attId = new NumberKey(record.getValue(offset-1 + 3)
                                         .asString());
         Attribute attribute = Attribute.getInstance(attId);
         String className = attribute.getAttributeType().getJavaClassName(); 
