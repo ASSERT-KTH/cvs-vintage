@@ -510,6 +510,10 @@ public abstract class MessageFolder extends AbstractFolder implements
                 if (!flags.getSeen()) {
                     getMessageFolderInfo().decUnseen();
                 }
+                
+                if (flags.getRecent()) {
+                    getMessageFolderInfo().decRecent();
+                }
 
                 flags.setSeen(true);
                 flags.setRecent(false);
