@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.16 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.17 2004/07/23 17:20:04 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
      * @see java.lang.Object#Object()
      */
     public PropPanelAssociationEndRole() {
-        super("AssociationEndRoleRole", ConfigLoader.getTabPropsOrientation());
+        super("AssociationEndRole", ConfigLoader.getTabPropsOrientation());
         setAssociationLabel(Translator.localize("UMLMenu", "label.association-role"));
         createControls((Class)ModelFacade.ASSOCIATION_END_ROLE);
         positionStandardControls();
