@@ -163,7 +163,7 @@ public class HttpInterceptor extends BaseInterceptor  implements  TcpConnectionH
     public void setKeystore( String k ) {
 	keystore=k;
     }
-    public void getKeystore() {
+    public String getKeystore() {
 	return keystore;
     }
     
