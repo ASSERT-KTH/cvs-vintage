@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.63 2003/06/30 21:59:33 linus Exp $
+// $Id: ParserDisplay.java,v 1.64 2003/07/18 18:28:21 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.63 2003/06/30 21:59:33 linus Exp $
+// $Id: ParserDisplay.java,v 1.64 2003/07/18 18:28:21 d00mst Exp $
 
 
 
@@ -426,13 +426,11 @@ public class ParserDisplay extends Parser {
 	String token;
 
 	try {
-	    st = new MyTokenizer(text, " ,\t,<<,>>,::,.");
+	    st = new MyTokenizer(text, "<<,>>,::,.");
 	    while (st.hasMoreTokens()) {
 		token = st.nextToken();
 
-		if (" ".equals(token) || "\t".equals(token)) {
-		    ; // Do nothing
-		} else if ("<<".equals(token)) {
+		if ("<<".equals(token)) {
 		    if (stereotype != null)
 			throw new ParseException("Element cannot have " +
 						 "two stereotypes",
@@ -446,7 +444,10 @@ public class ParserDisplay extends Parser {
 			stereotype += token;
 		    }
 		} else if ("::".equals(token) || ".".equals(token)) {
-		    if (name == null && path != null)
+		    if (name != null)
+		        name = name.trim();
+
+		    if (path != null && (name == null || "".equals(name)))
 			throw new ParseException("Element cannot have " +
 						 "anonymous qualifiers",
 						 st.getTokenIndex());
@@ -472,7 +473,10 @@ public class ParserDisplay extends Parser {
 	    throw pre;
 	}
 
-	if (path != null && name == null)
+	if (name != null)
+	    name = name.trim();
+
+	if (path != null && (name == null || "".equals(name)))
 	    throw new ParseException("Qualified names must end with a name", 0);
 
 	if (name != null)
