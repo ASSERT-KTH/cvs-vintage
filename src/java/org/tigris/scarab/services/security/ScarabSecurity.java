@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.6 2001/12/07 21:36:43 dr Exp $
+ * @version $Id: ScarabSecurity.java,v 1.7 2001/12/07 23:18:15 dr Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -188,6 +188,7 @@ public class ScarabSecurity
             tmpPerms.add(ITEM__APPROVE);
             tmpPerms.add(ITEM__DELETE);
             tmpPerms.add(USER__EDIT_PREFERENCES);
+            tmpPerms.add(DOMAIN__ADMIN);
             tmpPerms.add(DOMAIN__EDIT);
             tmpPerms.add(MODULE__EDIT);
             tmpPerms.add(MODULE__ADD);
