@@ -23,8 +23,8 @@ import junit.framework.TestCase;
 
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.frappucino.treetable.Tree;
-import org.frappucino.treetable.TreeTable;
+import org.frapuccino.treetable.Tree;
+import org.frapuccino.treetable.TreeTable;
 
 /**
  * @author fdietz

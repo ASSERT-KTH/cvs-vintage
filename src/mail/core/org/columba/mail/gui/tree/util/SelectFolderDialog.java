@@ -48,8 +48,8 @@ import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.command.CreateAndSelectSubFolderCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.frappucino.swing.SortedJTree;
-import org.frappucino.swing.SortedTreeModelDecorator;
+import org.frapuccino.swing.SortedJTree;
+import org.frapuccino.swing.SortedTreeModelDecorator;
 
 /**
  * Select folder dialog.

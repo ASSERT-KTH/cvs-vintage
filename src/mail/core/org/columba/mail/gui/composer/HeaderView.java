@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
 import org.columba.mail.gui.composer.util.FocusAddressComboBox;
-import org.frappucino.addresscombobox.AddressComboBox;
+import org.frapuccino.addresscombobox.AddressComboBox;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;

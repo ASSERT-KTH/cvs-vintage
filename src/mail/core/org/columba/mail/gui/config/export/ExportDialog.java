@@ -62,8 +62,8 @@ import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.mail.util.MailResourceLoader;
-import org.frappucino.checkabletree.CheckableItem;
-import org.frappucino.checkabletree.CheckableTree;
+import org.frapuccino.checkabletree.CheckableItem;
+import org.frapuccino.checkabletree.CheckableTree;
 
 /**
  * ExportDialog lets you select a number of folders for exporting messages into

@@ -50,8 +50,8 @@ import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.util.MailResourceLoader;
-import org.frappucino.swing.SortedJTree;
-import org.frappucino.swing.SortedTreeModelDecorator;
+import org.frapuccino.swing.SortedJTree;
+import org.frapuccino.swing.SortedTreeModelDecorator;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

@@ -68,7 +68,7 @@
 			<pathelement path="${lib.jhall}"/>
 			<pathelement path="${lib.ristretto}"/>
 			<pathelement path="${lib.macchiato}"/>
-			<pathelement path="${lib.frappucino}"/>
+			<pathelement path="${lib.frapuccino}"/>
 			<pathelement path="${lib.lucene}"/>			
 			<pathelement path="${lib.plastic}"/>			
 			<pathelement path="${lib.jniwrap}"/>
@@ -128,7 +128,7 @@
 			<include name="${lib.jwizz}"/>
 			<include name="${lib.ristretto}"/>
 			<include name="${lib.macchiato}"/>
-			<include name="${lib.frappucino}"/>
+			<include name="${lib.frapuccino}"/>
 			<include name="${lib.lucene}"/>			
 			<include name="${lib.plastic}"/>			
 			<include name="${lib.jniwraplib}"/>
@@ -235,7 +235,7 @@
 			<exclude name="native/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main" />
-				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frappucino} ${lib.winpack} ${lib.jniwrap} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
+				<attribute name="Class-Path" value=" ${manual.jar} ${lib.junit} ${lib.lucene} ${lib.jargs} ${lib.jwizz} ${lib.plastic} ${lib.jhall} ${lib.forms} ${lib.ristretto} ${lib.jscf} ${lib.macchiato} ${lib.frapuccino} ${lib.winpack} ${lib.jniwrap} ${lib.jdom} ${lib.jpim} ${lib.je}"/>
 				<attribute name="Sealed" value="false"/>
 			</manifest>
 		</jar>
@@ -293,7 +293,7 @@
 				<include name="${lib.jhall}"/>
 				<include name="${lib.ristretto}"/>
 				<include name="${lib.macchiato}"/>
-				<include name="${lib.frappucino}"/>
+				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
@@ -325,7 +325,7 @@
 				<include name="${lib.jhall}"/>
 				<include name="${lib.ristretto}"/>
 				<include name="${lib.macchiato}"/>
-				<include name="${lib.frappucino}"/>
+				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
@@ -417,7 +417,7 @@
 				<include name="${lib.jhall}"/>
 				<include name="${lib.ristretto}"/>
 				<include name="${lib.macchiato}"/>
-				<include name="${lib.frappucino}"/>
+				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
@@ -449,7 +449,7 @@
 			<replacefilter token="@forms@" value="${lib.forms}"/>			
 			<replacefilter token="@jscf@" value="${lib.jscf}"/>			
 			<replacefilter token="@jdom@" value="${lib.jdom}"/>			
-			<replacefilter token="@frappucino@" value="${lib.frappucino}"/>			
+			<replacefilter token="@frapuccino@" value="${lib.frapuccino}"/>			
 			<replacefilter token="@lucene@" value="${lib.lucene}"/>			
 			<replacefilter token="@jpim@" value="${lib.jpim}"/>				
 			<replacefilter token="@macchiato@" value="${lib.macchiato}"/>			
@@ -520,7 +520,7 @@
 				<include name="${lib.jhall}"/>
 				<include name="${lib.ristretto}"/>
 				<include name="${lib.macchiato}"/>
-				<include name="${lib.frappucino}"/>
+				<include name="${lib.frapuccino}"/>
 				<include name="${lib.lucene}"/>			
 				<include name="${lib.plastic}"/>			
 				<include name="${lib.jdom}"/>			
@@ -561,7 +561,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frappucino}" />
+			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -583,7 +583,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frappucino}" />
+			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -614,7 +614,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frappucino}" />
+			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />
@@ -637,7 +637,7 @@
 			<arg value="/dMACCHIATO=${lib.macchiato}" />
 			<arg value="/dWINPACK=${lib.winpack}" />
 			<arg value="/dJNIWRAP=${lib.jniwrap}" />
-			<arg value="/dFRAPPUCINO=${lib.frappucino}" />
+			<arg value="/dFRAPPUCINO=${lib.frapuccino}" />
 			<arg value="/dJSCF=${lib.jscf}" />
 			<arg value="/dJARGS=${lib.jargs}" />
 			<arg value="/dLUCENE=${lib.lucene}" />

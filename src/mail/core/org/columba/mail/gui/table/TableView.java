@@ -34,8 +34,8 @@ import org.columba.mail.gui.table.plugins.BasicRenderer;
 import org.columba.mail.gui.table.plugins.BooleanHeaderRenderer;
 import org.columba.mail.gui.table.plugins.DefaultLabelRenderer;
 import org.columba.mail.plugin.TableRendererPluginHandler;
-import org.frappucino.treetable.CustomTreeTableCellRenderer;
-import org.frappucino.treetable.TreeTable;
+import org.frapuccino.treetable.CustomTreeTableCellRenderer;
+import org.frapuccino.treetable.TreeTable;
 
 /**
  * This widget is a mix between a JTable and a JTree ( we need the JTree for the

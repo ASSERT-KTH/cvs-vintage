@@ -55,7 +55,7 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.frappucino.checkabletree.CheckableTree;
+import org.frapuccino.checkabletree.CheckableTree;
 
 /**
  * Subscribe dialog used by IMAP accounts.

@@ -60,7 +60,7 @@ import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
-import org.frappucino.swing.MultipleTransferHandler;
+import org.frapuccino.swing.MultipleTransferHandler;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;

@@ -26,8 +26,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.mail.message.HeaderList;
-import org.frappucino.treetable.AbstractTreeTableModel;
-import org.frappucino.treetable.CustomTreeTableCellRenderer;
+import org.frapuccino.treetable.AbstractTreeTableModel;
+import org.frapuccino.treetable.CustomTreeTableCellRenderer;
 
 /**
  * 

@@ -19,8 +19,8 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
-import org.frappucino.treetable.Tree;
-import org.frappucino.treetable.TreeTable;
+import org.frapuccino.treetable.Tree;
+import org.frapuccino.treetable.TreeTable;
 
 /**
  * TreeTable component responsible for displaying plugins in a categorized way.

@@ -19,7 +19,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.frappucino.checkabletree.CheckableItemImpl;
+import org.frapuccino.checkabletree.CheckableItemImpl;
 
 
 public class ListInfoTreeNode extends CheckableItemImpl {

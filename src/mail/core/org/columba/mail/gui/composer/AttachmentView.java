@@ -25,7 +25,7 @@ import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeType;
-import org.frappucino.iconpanel.IconPanel;
+import org.frapuccino.iconpanel.IconPanel;
 
 /**
  * Attachment view. Used in the composer to show a list of attachments. Is part

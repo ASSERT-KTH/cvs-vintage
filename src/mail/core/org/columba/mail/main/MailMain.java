@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.core.config.Config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;

@@ -25,7 +25,7 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.frappucino.iconpanel.IconPanel;
+import org.frapuccino.iconpanel.IconPanel;
 
 
 /**

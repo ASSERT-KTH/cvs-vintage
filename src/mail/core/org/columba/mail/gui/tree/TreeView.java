@@ -37,7 +37,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.tree.comparator.FolderComparator;
-import org.frappucino.swing.SortedJTree;
+import org.frapuccino.swing.SortedJTree;
 
 
 /**

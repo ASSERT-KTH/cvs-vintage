@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.plugin.PluginManager;
-import org.frappucino.treetable.AbstractTreeTableModel;
+import org.frapuccino.treetable.AbstractTreeTableModel;
 
 
 /**

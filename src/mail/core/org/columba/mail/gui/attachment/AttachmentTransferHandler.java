@@ -20,8 +20,8 @@ import java.awt.datatransfer.DataFlavor;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
-import org.frappucino.swing.DynamicFileFactory;
-import org.frappucino.swing.DynamicFileTransferHandler;
+import org.frapuccino.swing.DynamicFileFactory;
+import org.frapuccino.swing.DynamicFileTransferHandler;
 
 /**
  * Transfer handler for the attachment view.

@@ -57,7 +57,7 @@ import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-import org.frappucino.treetable.Tree;
+import org.frapuccino.treetable.Tree;
 
 /**
  * Shows the message list. By default, this is the read/unread state if a

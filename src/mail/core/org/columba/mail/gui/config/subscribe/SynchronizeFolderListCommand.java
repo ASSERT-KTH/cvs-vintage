@@ -36,7 +36,7 @@ import org.columba.mail.imap.IMAPServer;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.Namespace;
 import org.columba.ristretto.imap.NamespaceCollection;
-import org.frappucino.checkabletree.CheckableItemImpl;
+import org.frapuccino.checkabletree.CheckableItemImpl;
 
 public class SynchronizeFolderListCommand extends Command {
 	private Pattern delimiterPattern;

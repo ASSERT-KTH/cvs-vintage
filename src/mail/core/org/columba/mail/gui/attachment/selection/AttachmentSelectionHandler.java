@@ -31,7 +31,7 @@ import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-import org.frappucino.iconpanel.IconPanelSelectionListener;
+import org.frapuccino.iconpanel.IconPanelSelectionListener;
 
 public class AttachmentSelectionHandler extends SelectionHandler implements
 		IconPanelSelectionListener, SelectionListener {

@@ -31,7 +31,7 @@ import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.command.SaveAttachmentTemporaryCommand;
 import org.columba.ristretto.message.MimeTree;
-import org.frappucino.swing.DynamicFileFactory;
+import org.frapuccino.swing.DynamicFileFactory;
 
 /**
  * This class shows the attachmentlist

@@ -23,7 +23,7 @@ import javax.swing.event.CaretListener;
 
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.frappucino.addresscombobox.AddressComboBox;
+import org.frapuccino.addresscombobox.AddressComboBox;
 
 /**
  * Add focus handling including the Edit->Cut/Copy/Paste actions
