@@ -75,7 +75,7 @@
       <property name="client.class.name" value=""/>
       <property name="client.properties.file.name" value="jrmp_carol.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="name.server.option" value="1099"/>
       <property name="test.name"          value="sunjrmp1.1"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
@@ -87,7 +87,7 @@
       <property name="stub.jar.name" value="sunjrmp1.2.jar"/>
       <property name="client.properties.file.name" value="jrmp_carol.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="name.server.option" value="1099"/>
       <property name="test.name"          value="sunjrmp1.2"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
@@ -122,7 +122,7 @@
       <property name="stub.jar.name" value="sunjrmp1.1.jar"/>
       <property name="client.properties.file.name" value="jrmp_carol_nons.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol_nons.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.name"          value="sunjrmp1.1.nons"/>
     </ant>
@@ -133,7 +133,7 @@
       <property name="stub.jar.name" value="sunjrmp1.2.jar"/>
       <property name="client.properties.file.name" value="jrmp_carol_nons.properties"/>
       <property name="server.properties.file.name" value="jrmp_carol_nons.properties"/>
-      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/"/>
       <property name="test.name"          value="sunjrmp1.2.nons"/>
     </ant>
@@ -168,7 +168,7 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="name.server.option1" value="1099"/>
       <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
@@ -187,7 +187,7 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="name.server.option1" value="1099"/>
       <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
@@ -206,7 +206,7 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun2_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="name.server.option1" value="1099"/>
       <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
@@ -225,7 +225,7 @@
       <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
       <property name="client.properties.file.name2" value="iiop_carol.properties"/>
       <property name="server.properties.file.name" value="multisun2_carol.properties"/>
-      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManagableRegistry"/>
+      <property name="name.server.class.name1" value="org.objectweb.carol.jndi.registry.ManageableRegistry"/>
       <property name="name.server.option1" value="1099"/>
       <property name="name.server.class.name2" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
       <property name="name.server.option2"  value="-ORBInitialPort 2000"/>
