@@ -1,0 +1,137 @@
+	Using the Java SecurityManager with Tomcat
+
+Why use a SecurityManager?
+--------------------------
+
+The Java SecurityManager is what allows your browser to run an applet
+in its own sandbox to prevent untrusted code from accessing files
+on your local system, connecting to a host other than the one the
+applet was loaded from, etc.
+
+In the same way the SecurityManager protects you from an untrusted
+applet running in your browser, use of a SecurityManager while running
+Tomcat can protect your server from trojan servlets, JSP's, JSP beans,
+and tag libraries.  Or even inadvertant mistakes.
+
+Imagine if someone who is authorized to publish JSP's on your site
+invadvertantly included the following in their JSP:
+
+<% System.exit(1); %>
+
+Everytime that JSP was executed by Tomcat, Tomcat would exit.
+
+Using the Java SecurityManager is just one more line of defense
+a system administrator can use to keep the server secure and reliable.
+
+System Requirements
+-------------------
+
+Use of the SecurityManager requires a JVM that supports JDK 1.2.
+
+Precautions
+-----------
+
+Implementation of a SecurityManager in Tomcat has not been fully
+tested to ensure the security of Tomcat.  No special Permissions
+have been created to prevent access to internal Tomcat classes
+by JSP's, web applications, servlets, beans, and tag libraries.
+Make sure that you are satisfied with your SecurityManager
+configuration before allowing untrusted users to publish
+web applications, JSP's, servlets, beans, or tag-libraries.
+
+Still, running with a SecurityManager is definitely better than
+running without one.
+
+Types of Permissions
+--------------------
+
+Permission classes are used to define what Permissions
+a class loaded by Tomcat will have.  There are a number
+of Permission classes as part of the JDK and you can even
+create your own Permission class for use in your own
+web applications.
+
+This is just a short summary of the System SecurityManager
+Permission classes applicable to Tomcat.  Please refer to
+the JDK documenation for more information on using the below
+Permissions.
+
+java.util.PropertyPermission
+
+Controls read/write access to JVM properties such as java.home.
+
+java.lang.RuntimePermission
+
+Controls use of some System/Runtime functions like exit() and exec().
+
+java.io.FilePermission
+
+Controls read/write/execute access to files and directories.
+
+java.net.SocketPermission
+
+Controls use of network sockets.
+
+java.net.NetPermission
+
+Controls use of multicast network connections.
+
+java.lang.reflect.ReflectPermission
+
+Controls use of reflection to do class introspection.
+
+java.security.SecurityPermission
+
+Controls access to Security methods.
+
+java.security.AllPermission
+
+Allows access to all permissions, just as if you were running
+Tomcat without a SecurityManager.
+
+Configuring Tomcat for use with a SecurityManager
+-------------------------------------------------
+
+conf/tomcat.policy
+
+Used to configure global Permissions for java packages installed
+in classpaths searchable by the JVM and for specifying default
+Permissions for classes loaded from other sources.  This is not
+where Permissions are configured for web application Context's.
+
+There should be entries with a codeBase of "file:${java.home}/lib/ext/-"
+and "file:${tomcat.home}/lib/-" which grant AllPermissions.
+
+And a default grant entry with no codeBase which has very
+restrictive Permissions configured.
+
+If tomcat generates an AccessControlException when you try to
+start it with -security you need to edit the conf/tomcat.policy
+file and replace ${tomcat.home} with the path to your Tomcat home directory.
+
+By default read access on webapp dir and write in workdir is
+granted to a web application.
+
+The tomcat.policy file has an example of how to configure 
+additional permissions for a web application.
+
+The tomcat.policy file replaces any system java.policy file.
+
+conf/server.xml
+
+Uncomment out the entry in server.xml for the ContextInterceptor
+which defines the PolicyInterceptor.
+
+Starting Tomcat with a SecurityManager
+--------------------------------------
+
+Once you have configured the tomcat.policy and server.xml
+files for use with a SecurityManager, Tomcat can be started
+with the SecurityManager in place by using the "-security"
+opton to bin/startup.bat or bin/startup.sh.
+
+What happens when the SecurityManager detects a Security violation?
+-------------------------------------------------------------------
+
+The JVM will throw an AccessControlException or a SecurityException
+when the SecurityManager detects a security policy violation.
