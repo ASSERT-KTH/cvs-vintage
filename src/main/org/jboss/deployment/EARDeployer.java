@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -181,13 +181,39 @@ implements EARDeployerMBean
    
    protected void startService() throws Exception
    {
-      log.info("EARDeployer online");
+      try
+      {
+         // Register with the main deployer
+         server.invoke(
+            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            "addDeployer",
+            new Object[] {this},
+            new String[] {"org.jboss.deployment.DeployerMBean"});
+      }
+      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+  
+      log.info("EARDeployer started");
    }
+   
+   
+      
    
    /** undeploys all deployments */
    protected void stopService()
    {
-      log.info("EARDeployer offline");
+      log.info("EARDeployer stopped");
+      
+      try
+      {
+         // Register with the main deployer
+         server.invoke(
+            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            "removeDeployer",
+            new Object[] {this},
+            new String[] {"org.jboss.deployment.DeployerMBean"});
+      }
+      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+  
    }
    
    // Private -------------------------------------------------------
