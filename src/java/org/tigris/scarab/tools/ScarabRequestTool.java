@@ -2276,9 +2276,8 @@ e.printStackTrace();
         try 
         {
             list = getCurrentModule().getUsers(name, userName, mitList,
-                                               (pageNum - 1) * resultsPerPage,
-                                               resultsPerPage, sortColumn,
-                                               sortPolarity,
+                                               pageNum, resultsPerPage, 
+                                               sortColumn, sortPolarity,
                                                includeCommitters);
         } 
         catch (Exception e)

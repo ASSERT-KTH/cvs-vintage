@@ -51,7 +51,7 @@ import java.util.List;
 /*
  *
  * @author <a href="mailto:tenersen@collab.net">Todd Enersen</a>
- * @version $Id: ScarabPaginatedList.java,v 1.3 2003/04/16 19:16:52 elicia Exp $
+ * @version $Id: ScarabPaginatedList.java,v 1.4 2003/08/26 17:54:35 elicia Exp $
  */
 public class ScarabPaginatedList
 {
@@ -129,7 +129,7 @@ public class ScarabPaginatedList
      */
     public int getPageNumber()
     {
-        return currentPageNumber + 1;
+        return currentPageNumber;
     }
 
     /**
