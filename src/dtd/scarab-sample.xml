@@ -25,6 +25,11 @@ ID_CODE, not the primary key column.
 -->
 
 <scarab>
+    <user>
+        <firstname>Jon</firstname>
+        <lastname>Stevens</lastname>
+        <email>jon@latchkey.com</email>
+    </user>
     <module id="6" parent="3">
         <name>Source</name>
         <code>TBNS</code>
@@ -51,14 +56,17 @@ ID_CODE, not the primary key column.
                 <name>My cool file</name>
                 <type>ATTACHMENT</type>
                 <path>file://server/path/to/file.txt</path>
+                <data></data>
                 <mimetype>text/plain</mimetype>
-                <modified-date>2001-01-01</modified-date>
+                <created-date format="yyyy-MM-dd">2001-01-01</created-date>
+                <modified-date format="yyyy-MM-dd">2001-01-01</modified-date>
                 <created-by>jon@latchkey.com</created-by>
                 <modified-by>jon@latchkey.com</modified-by>
             </attachment>
 
             <transaction id="7">
                 <type>Edit Issue</type>
+                <committed-by>jon@latchkey.com</committed-by>
                 <activity>
                     <activity-attribute>
                         <name>Priority</name>
