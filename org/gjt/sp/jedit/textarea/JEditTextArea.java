@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.186 2003/02/20 01:55:12 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.187 2003/02/21 22:19:20 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6463,8 +6463,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			int x = evt.getX();
 			int dot = xyToOffset(x,
 				Math.max(0,Math.min(painter.getHeight(),evt.getY())),
-				!(painter.isBlockCaretEnabled()
-				|| isOverwriteEnabled()));
+				(!painter.isBlockCaretEnabled()
+				&& !isOverwriteEnabled())
+				|| quickCopyDrag);
 			int dotLine = buffer.getLineOfOffset(dot);
 			int extraEndVirt = 0;
 
