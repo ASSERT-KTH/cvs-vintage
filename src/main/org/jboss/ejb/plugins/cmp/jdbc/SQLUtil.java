@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class SQLUtil {
    public static String fixTableName(String tableName, DataSource dataSource) 
@@ -639,6 +639,41 @@ public class SQLUtil {
          buf.append(fromIdentifier).append(columnNames[i]);
          buf.append(" = ");
          buf.append(toIdentifier).append(columnNames[i]);
+      }
+      return buf.toString();
+   }   
+
+   public static String getSelfCompareWhereClause(
+         JDBCFieldBridge fromField, JDBCFieldBridge toField,
+         String fromIdentifier, String toIdentifier) {
+
+      return getSelfCompareWhereClause(
+            fromField.getJDBCType(), toField.getJDBCType(),
+            fromIdentifier, toIdentifier);
+   }
+
+   public static String getSelfCompareWhereClause(
+         JDBCType fromType, JDBCType toType,
+         String fromIdentifier, String toIdentifier) {
+
+      if(fromIdentifier.length() > 0) {
+         fromIdentifier += ".";
+      }
+      if(toIdentifier.length() > 0) {
+         toIdentifier += ".";
+      }
+      
+      String[] fromColumnNames = fromType.getColumnNames();
+      String[] toColumnNames = toType.getColumnNames();
+
+      StringBuffer buf = new StringBuffer();
+      for(int i=0; i<fromColumnNames.length; i++) {
+         if(i!=0) {
+            buf.append(" AND ");
+         }
+         buf.append(fromIdentifier).append(fromColumnNames[i]);
+         buf.append(" = ");
+         buf.append(toIdentifier).append(toColumnNames[i]);
       }
       return buf.toString();
    }   
