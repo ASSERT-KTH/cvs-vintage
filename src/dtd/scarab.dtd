@@ -21,6 +21,7 @@
 <!ELEMENT issue ( id, artifact-type, activity-sets, dependencies* ) >
 <!ELEMENT issues ( issue+ ) >
 <!ELEMENT mimetype ( #PCDATA ) >
+<!ELEMENT modified-by ( #PCDATA ) >
 <!ELEMENT modified-date ( format, timestamp ) >
 <!ELEMENT module ( id, parent-id, name, owner, description, url, domain, code ) >
 <!ELEMENT name ( #PCDATA ) >
