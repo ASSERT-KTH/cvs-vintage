@@ -106,7 +106,7 @@ $l10n.Click
   #if ($canDeleteAtLeastOne)
    &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletequeries" />
   #end
-   &#160;<input type="submit" value="$l10n.CreateNewQuery" name="eventSubmit_doNewquery" />
+   &#160;<input type="submit" value="$l10n.CreateNewQuery" name="eventSubmit_doGotoadvancedquery" />
 </div>
 
 #end
