@@ -14,7 +14,7 @@
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
 <p>
-Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
+Go to the $link.setPage("QueryList.vm").setLabel("Saved query list").
 </p>
 
 <h3>Saved query information</h3>
