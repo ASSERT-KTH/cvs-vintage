@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.1 2001/09/02 05:37:20 spestov Exp $
+ * @version $Id: EditServer.java,v 1.2 2001/10/29 05:11:26 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -167,7 +167,9 @@ public class EditServer extends Thread
 
 			if(restore)
 			{
-				if(jEdit.getFirstBuffer() == null)
+				if(jEdit.getFirstBuffer() == null
+					|| (jEdit.getFirstBuffer().isUntitled()
+					&& jEdit.getBufferCount() == 1))
 					splitConfig = jEdit.restoreOpenFiles();
 				else if(jEdit.getBooleanProperty("restore.cli"))
 				{
@@ -178,7 +180,9 @@ public class EditServer extends Thread
 
 			// if session file is empty or -norestore specified,
 			// we need an initial buffer
-			if(jEdit.getFirstBuffer() == null)
+			if(jEdit.getFirstBuffer() == null
+					|| (jEdit.getFirstBuffer().isUntitled()
+                                        && jEdit.getBufferCount() == 1))
 				buffer = jEdit.newFile(null);
 
 			if(splitConfig != null)

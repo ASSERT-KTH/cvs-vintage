@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.8 2001/10/25 07:35:25 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.9 2001/10/29 05:11:27 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -153,7 +153,7 @@ public class FoldVisibilityManager
 			if(line < 0 || line >= buffer.getLineCount())
 				throw new ArrayIndexOutOfBoundsException(String.valueOf(line));
 
-			while(!buffer._isLineVisible(line,index))
+			while(!buffer._isLineVisible(line,index) && line > 0)
 				line--;
 
 			if(lastPhysical == line)
@@ -709,14 +709,17 @@ public class FoldVisibilityManager
 	public void _linesInserted(int startLine, int numLines)
 	{
 		//{{{ Find fold start of this line
-		boolean visible = true;
 		int foldLevel = buffer.getFoldLevel(startLine);
-		for(int i = startLine - 1; i >= 0; i--)
+		boolean visible = true;
+		if(startLine != 0)
 		{
-			if(buffer.isFoldStart(i) && buffer.getFoldLevel(i) < foldLevel)
+			for(int i = startLine; i > 0; i--)
 			{
-				visible = buffer._isLineVisible(i,index);
-				break;
+				if(buffer.isFoldStart(i - 1) && buffer.getFoldLevel(i) <= foldLevel)
+				{
+					visible = buffer._isLineVisible(i,index);
+					break;
+				}
 			}
 		} //}}}
 
@@ -727,17 +730,18 @@ public class FoldVisibilityManager
 		int newVirtualLineCount = virtualLineCount;
 
 		boolean seenVisibleLine = (startLine != 0);
+		int threshold = Math.max(foldLevel + 1,collapseFolds);
 		for(int i = startLine; i < startLine + numLines; i++)
 		{
 			boolean _visible;
 			if(collapseFolds == 0)
 				_visible = visible;
-			else if(buffer.getFoldLevel(i) >= collapseFolds)
+			else if(buffer.getFoldLevel(i) >= threshold)
 				_visible = false;
 			else
 				_visible = visible;
 
-			if(!seenVisibleLine && !visible)
+			if(!seenVisibleLine && !_visible)
 				_visible = true;
 
 			if(_visible)

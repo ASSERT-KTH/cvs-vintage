@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.17 2001/10/24 08:18:09 spestov Exp $
+ * @version $Id: jEdit.java,v 1.18 2001/10/29 05:11:27 spestov Exp $
  */
 public class jEdit
 {
@@ -232,6 +232,8 @@ public class jEdit
 
 			String logPath = MiscUtilities.constructPath(
 				settingsDirectory,"activity.log");
+
+			backupSettingsFile(new File(logPath));
 
 			try
 			{

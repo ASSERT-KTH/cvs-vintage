@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.8 2001/10/25 07:35:24 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.9 2001/10/29 05:11:27 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -226,7 +226,9 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				setMessage(null);
+				// so if view is closed in the meantime...
+				if(isShowing())
+					setMessage(null);
 			}
 		});
 
