@@ -40,7 +40,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.73 $
+ * @version $Revision: 1.74 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -327,7 +327,8 @@ public abstract class BeanMetaData
    {
       if (localJndiName == null)
       {
-         localJndiName = "local/" + ejbName;
+         // Generate a unique name based on ejbName + identityHashCode
+         localJndiName = "local/" + ejbName + '@' + System.identityHashCode(ejbName);
       }
       return localJndiName;
    }
