@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.12 2002/01/15 21:09:49 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.13 2002/01/17 00:26:22 maartenc Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1284,6 +1284,7 @@ try{
                 ag1 = (AttributeGroup)attributeGroups.get(j);
                 ag2 = ag1.copy();
                 ag2.setModuleId(newModuleId);
+                ag2.getRAttributeAttributeGroups().clear();    // are saved later
                 ag2.save();
                 
                 List attributes = ag1.getAttributes();
@@ -1298,6 +1299,7 @@ try{
                     raag2.setGroupId(ag2.getAttributeGroupId());
                     raag2.setAttributeId(raag1.getAttributeId());
                     raag2.setOrder(raag1.getOrder());
+                    raag2.save();
                     
                     // set module-attribute defaults
                     rma1 = parentModule
