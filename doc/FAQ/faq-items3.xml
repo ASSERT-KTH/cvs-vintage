@@ -4,7 +4,7 @@
 <!-- jEdit FAQ									                        -->
 <!-- Copyright (C) 2002 John Gellene                    -->
 
-<!-- $Id: faq-items3.xml,v 1.5 2002/01/18 18:52:13 jgellene Exp $
+<!-- $Id: faq-items3.xml,v 1.6 2002/01/20 13:37:28 jgellene Exp $
 -->
 
 <sect1 id="working-files"><title>Working with Files</title>
@@ -510,6 +510,8 @@ of spaces, tabs, and other whitespace characters.
 
 </sect1>
 
+<!--  Additional sections to be added
+
 <sect1 id="shortcuts"><title>Shortcuts</title>
 <para>
   [Introduction, followed by question and answer set]
@@ -522,3 +524,5 @@ of spaces, tabs, and other whitespace characters.
 </para>
 </sect1>
 
+
+-->
