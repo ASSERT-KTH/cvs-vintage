@@ -16,12 +16,15 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Insets;
-import java.io.StringReader;
+import java.io.File;
+import java.net.URL;
 
 import javax.swing.JTextPane;
-import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.columba.core.io.DiskIO;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.TempFileStore;
 import org.columba.mail.gui.message.util.DocumentParser;
 
 /**
@@ -50,49 +53,34 @@ public class BodyTextViewer extends JTextPane {
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		parser = new DocumentParser();	
-		
+		parser = new DocumentParser();
+
 		setContentType("text/html");
 	}
-
-	
 
 	public void setBodyText(String bodyText, boolean html) {
 		if (html) {
 			try {
-				
-				String validated = parser.validateHTMLString(bodyText);
 
-				/*
+				String validated = parser.validateHTMLString(bodyText);
+				ColumbaLogger.log.debug("validated bodytext:\n" + validated);
+
 				File tempFile = TempFileStore.createTempFileWithSuffix("html");
 				DiskIO.saveStringInFile(tempFile, validated);
-				
-				URL url = tempFile.toURL();
-				
-				setPage( url );
-				*/
-				
-				//htmlEditorKit.write(new StringReader(validated),getDocument(),0,validated.length());
-				//setText(validated);
 
-				
-				
-				//getDocument().remove(0,getDocument().getLength()-1);
-				
-				
-				
-				
+				URL url = tempFile.toURL();
+
+				setPage(url);
+
+				/*
+				getDocument().remove(0,getDocument().getLength()-1);
+								
 				((HTMLDocument) getDocument()).getParser().parse(
 					new StringReader(validated),
 					((HTMLDocument) getDocument()).getReader(0),
 					true);
-				
-				
-				//htmlEditorKit.read(new StringReader(validated), getDocument(),0);
-				
-				//setText(validated);
-				//setText(bodyText);
-				
+				*/
+
 				setCaretPosition(0);
 
 			} catch (Exception e) {
@@ -106,6 +94,9 @@ public class BodyTextViewer extends JTextPane {
 			try {
 				String r = parser.substituteURL(buf.toString());
 				r = parser.substituteEmailAddress(r);
+
+				ColumbaLogger.log.debug("validated bodytext:\n" + r);
+
 				setText(r);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -118,7 +109,6 @@ public class BodyTextViewer extends JTextPane {
 	protected void transformToHTML(StringBuffer buf) {
 		buf.insert(0, "<HTML><HEAD>" + CSS + "</HEAD><BODY ><PRE>");
 
-		
 		int pos = 0;
 		boolean preformat = false;
 		while (pos < buf.length()) {
@@ -128,16 +118,14 @@ public class BodyTextViewer extends JTextPane {
 
 				buf.replace(pos, pos + 1, "<br>");
 
-				pos+=3;
+				pos += 3;
 			}
 
 			pos++;
 		}
-		
+
 		buf.append("</PRE></BODY></HTML>");
 
 	}
-
-
 
 }
