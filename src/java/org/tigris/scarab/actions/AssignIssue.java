@@ -103,7 +103,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.54 2002/07/15 18:36:39 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.55 2002/07/15 18:52:36 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -119,23 +119,23 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
-        List tempList = getTempList(data, context);
-        ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
-        {
-            String key = keys[i].toString();
-            if (key.startsWith("add_user"))
+            List tempList = getTempList(data, context);
+            ValueParser params = data.getParameters();
+            Object[] keys =  params.getKeys();
+            for (int i =0; i<keys.length; i++)
             {
-                List pair = new ArrayList();
-                String userId = key.substring(9);
-                String attrId = params.get("user_attr_" + userId);
-                pair.add(attrId);
-                pair.add(userId);
-                tempList.add(pair);
+                String key = keys[i].toString();
+                if (key.startsWith("add_user"))
+                {
+                    List pair = new ArrayList();
+                    String userId = key.substring(9);
+                    String attrId = params.get("user_attr_" + userId);
+                    pair.add(attrId);
+                    pair.add(userId);
+                    tempList.add(pair);
+                }
             }
-        }
-        context.put("tempList", tempList);
+            context.put("tempList", tempList);
         }
         else 
         {
@@ -156,23 +156,23 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
-        List tempList = getTempList(data, context);
-        ValueParser params = data.getParameters();
-        Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
-        {
-            String key = keys[i].toString();
-            if (key.startsWith("remove_user"))
+            List tempList = getTempList(data, context);
+            ValueParser params = data.getParameters();
+            Object[] keys =  params.getKeys();
+            for (int i =0; i<keys.length; i++)
             {
-                List pair = new ArrayList();
-                String userId = key.substring(12);
-                String attrId = params.get("temp_user_attr_" + userId);
-                pair.add(attrId);
-                pair.add(userId);
-                tempList.remove(pair);
+                String key = keys[i].toString();
+                if (key.startsWith("remove_user"))
+                {
+                    List pair = new ArrayList();
+                    String userId = key.substring(12);
+                    String attrId = params.get("temp_user_attr_" + userId);
+                    pair.add(attrId);
+                    pair.add(userId);
+                    tempList.remove(pair);
+                }
             }
-        }
-        context.put("tempList", tempList);
+            context.put("tempList", tempList);
         }
         else 
         {
@@ -193,6 +193,20 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
+            commitAssigneeChanges(data, context, scarabR);
+        }
+        else 
+        {
+            data.setTarget(user.getHomePage());
+            scarabR.setAlertMessage(
+                "Insufficient permissions to assign users.");
+        }
+    }
+
+    private void commitAssigneeChanges(RunData data, TemplateContext context,
+                                       ScarabRequestTool scarabR)
+        throws Exception
+    {
         List issues = scarabR.getIssues();
         List tempList = getTempList(data, context);
         String othersAction = null;
@@ -311,15 +325,7 @@ public class AssignIssue extends BaseModifyIssue
             data.getParameters().add("id", issue.getUniqueId());
         }
         doCancel(data, context);
-        }
-        else 
-        {
-            data.setTarget(user.getHomePage());
-            scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
-        }
-    }
-
+}
 
     /**
      * Gets temporary working list of assigned users.
