@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.6 2002/11/26 22:38:15 elicia Exp $
+$Id: recording-issues.txt,v 1.7 2002/12/08 21:18:36 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -136,67 +136,132 @@ Move/Copy Issue
             AttachmentId = null (see above requirement)
 
 
-
-
 Dependencies:
 
     Create:
     
         One ActivitySet
             TYPE_ID = 2
-            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
+            AttachmentId = (Can be null if there is no reason)
+                ATTACHMENT_TYPE_ID = 2 (comment)
+                ATTACHMENT_NAME = 'comment'
+                ATTACHMENT_DATA =  user-provided reason
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing create
+                MODIFIED_DATE = Set to cre date
+                CREATED_DATE = SET to cre date
+                DELETED = 0
         
         Activity 1
             IssueId = SCB1 (100)
             AttributeId = 0
             TransactionId = ActivitySetId
+            DEPEND_ID = 31
             OLD_VALUE = NULL
-            NEW_VALUE = 'SCB2' (issue id)
+            NEW_VALUE = NULL
             DESCRIPTION = 'Added 'blocking' child dependency on issue SCB2'
-            AttachmentId = null (see above requirement)
+            AttachmentId = null
 
         Activity 2
             IssueId = SCB2 (101)
             AttributeId = 0
             TransactionId = ActivitySetId
+            DEPEND_ID = 31
             OLD_VALUE = NULL
-            NEW_VALUE = 'SCB1' (issue id)
+            NEW_VALUE = NULL
             DESCRIPTION = 'Added 'blocking' parent dependency on issue SCB1'
-            AttachmentId = null (see above requirement)
+            AttachmentId = null
 
         Scarab_DEPEND
-        
+            DEPEND_ID = 31
             OBSERVED_ID = 100
             OBSERVER_ID = 101
             DEPEND_TYPE_ID = 1 (blocking)
+            DELETED = 0
+
+    Update:
+
+        One ActivitySet
+            TYPE_ID = 2
+            AttachmentId = (Can be null if there is no reason)
+                ATTACHMENT_TYPE_ID = 2 (comment)
+                ATTACHMENT_NAME = 'comment'
+                ATTACHMENT_DATA =  user-provided reason
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing create
+                MODIFIED_DATE = Set to cre date
+                CREATED_DATE = SET to cre date
+                DELETED = 0
+        
+        Activity 1
+            IssueId = SCB1 (100)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            DEPEND_ID = 31
+            OLD_VALUE = blocking
+            NEW_VALUE = non-blocking
+            DESCRIPTION = 'On issue PACS1, the dependency type for issue PACS2 changed from blocking to non-blocking'
+            AttachmentId = null
+
+        Activity 2
+            IssueId = SCB2 (101)
+            AttributeId = 0
+            TransactionId = ActivitySetId
+            DEPEND_ID = 31
+            OLD_VALUE = blocking
+            NEW_VALUE = non-blocking
+            DESCRIPTION = 'On issue PACS1, the dependency type for issue PACS2 changed from blocking to non-blocking'
+            AttachmentId = null
+
+        Scarab_DEPEND
+            DEPEND_ID = 31
+            OBSERVED_ID = 100
+            OBSERVER_ID = 101
+            DEPEND_TYPE_ID = 3 (non-blocking)
             DELETED = 0
 
     Delete:
     
         One ActivitySet
             TYPE_ID = 2
-            AttachmentId = (FIXME: future, Need to add a UI box to allow user to describe the change.)
+            AttachmentId = (Can be null if there is no reason)
+                ATTACHMENT_TYPE_ID = 2 (comment)
+                ATTACHMENT_NAME = 'comment'
+                ATTACHMENT_DATA =  user-provided reason
+                ATTACHMENT_FILE_PATH = null
+                ATTACHMENT_MIME_TYPE = text/plain
+                MODIFIED_BY = NULL
+                CREATED_BY = user doing update
+                MODIFIED_DATE = Set to up date
+                CREATED_DATE = SET to up date
+                DELETED = 0
         
         Activity 1
             IssueId = SCB1 (100)
             AttributeId = 0
             TransactionId = ActivitySetId
-            OLD_VALUE = 'SCB2' (issue id)
-            NEW_VALUE = NULL (issue id)
+            DEPEND_ID = 31
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
             DESCRIPTION = 'Removed 'blocking' child dependency on issue SCB2'
-            AttachmentId = null (see above requirement)
+            AttachmentId = null
 
         Activity 2
             IssueId = SCB2 (101)
             AttributeId = 0
             TransactionId = ActivitySetId
-            OLD_VALUE = 'SCB1' (issue id)
-            NEW_VALUE = NULL (issue id)
+            DEPEND_ID = 31
+            OLD_VALUE = NULL
+            NEW_VALUE = NULL
             DESCRIPTION = 'Removed 'blocking' parent dependency on issue SCB1'
-            AttachmentId = null (see above requirement)
+            AttachmentId = null
 
         Scarab_DEPEND
-        
+            DEPEND_ID = 31
             OBSERVED_ID = 100
             OBSERVER_ID = 101
             DEPEND_TYPE_ID = 1 (blocking)
