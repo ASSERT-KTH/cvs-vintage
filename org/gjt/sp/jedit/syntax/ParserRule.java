@@ -29,7 +29,7 @@ import org.gjt.sp.jedit.search.RESearchMatcher;
 /**
  * A parser rule.
  * @author mike dillon, Slava Pestov
- * @version $Id: ParserRule.java,v 1.9 2002/08/20 18:39:21 spestov Exp $
+ * @version $Id: ParserRule.java,v 1.10 2003/01/31 02:19:55 spestov Exp $
  */
 public class ParserRule
 {
@@ -201,7 +201,7 @@ public class ParserRule
 		boolean excludeMatch, boolean ignoreCase)
 		throws REException
 	{
-		int ruleAction = EOL_SPAN |
+		int ruleAction = EOL_SPAN | REGEXP |
 			((atLineStart) ? AT_LINE_START : 0) |
 			((atWhitespaceEnd) ? AT_WHITESPACE_END : 0) |
 			((atWordStart) ? AT_WORD_START : 0) |
@@ -209,7 +209,8 @@ public class ParserRule
 			| NO_LINE_BREAK;
 
 		return new ParserRule(ruleAction, hashChar,
-			null, new RE("\\A" + seq,(ignoreCase ? RE.REG_ICASE : 0)), null,
+			null, new RE("\\A" + seq,(ignoreCase ? RE.REG_ICASE : 0),
+			RESearchMatcher.RE_SYNTAX_JEDIT), null,
 			delegate, id);
 	} //}}}
 
