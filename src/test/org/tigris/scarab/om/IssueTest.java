@@ -49,13 +49,16 @@ package org.tigris.scarab.om;
 import java.util.HashMap;
 
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.apache.torque.om.NumberKey;
+
 
 /**
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.8 2002/01/18 22:26:17 jon Exp $
+ * @version $Id: IssueTest.java,v 1.9 2002/03/09 01:30:24 elicia Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -76,12 +79,24 @@ public class IssueTest extends BaseTestCase
     protected void runTest()
         throws Throwable
     {
-        Issue issue = new Issue();
-        issue.setModule(getModule());
-
-        testGetAllAttributeValuesMap(issue);
-        testGetUniqueId(issue);
-        testGetEligibleAssignees(issue); 
+        // loops thru module and issue type combinations
+        for (int i = 1;i<8;i++)
+        {
+            for (int j = 1;j<6;j++)
+            {
+                Issue issue = new Issue();
+                ModuleEntity module = (ModuleEntity) ScarabModulePeer
+                    .retrieveByPK(new NumberKey(Integer.toString(i)));
+                System.out.println("MODULE=" + module.getName());
+                issue.setModule(module);
+                IssueType issueType = (IssueType)IssueTypePeer
+                    .retrieveByPK(new NumberKey(Integer.toString(j)));
+                System.out.println("ISSUE TYPE = " + issueType.getName());
+                issue.setIssueType(issueType);
+                testGetAllAttributeValuesMap(issue);
+                testGetUniqueId(issue);
+            }
+        }
     }
     
     private void testGetAllAttributeValuesMap(Issue issue) throws Exception
@@ -89,12 +104,25 @@ public class IssueTest extends BaseTestCase
         System.out.println ("testGetAllAttributeValuesMap()");
         HashMap map = issue.getAllAttributeValuesMap();
         System.out.println ("getAllAttributeValuesMap().size(): " + map.size());
-        assertEquals (map.size(), 11);  
+        int expectedSize = 11;
+        switch (Integer.parseInt(issue.getTypeId().toString()))
+        {
+            case 1: expectedSize = 11;break;
+            case 2: expectedSize = 11;break;
+            case 3: expectedSize = 10;break;
+            case 4: expectedSize = 10;break;
+            case 5: expectedSize = 8;break;
+            case 6: expectedSize = 8;break;
+            case 7: expectedSize = 8;break;
+            case 8: expectedSize = 8;break;
+            case 9: expectedSize = 8;break;
+            case 10: expectedSize = 8;
+        }
+        assertEquals (expectedSize, map.size());
     }
 
     private void testGetUniqueId(Issue issue) throws Exception
     {
-        System.out.println ("testGetUniqueId()");
 
         String strUniqueID = null;
         strUniqueID = issue.getUniqueId();
