@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
 
 
 /**
- * Format selected text as bold "<b>"
+ * Format selected text as bold "&lt;b&gt;"
  *
  * @author fdietz
  */

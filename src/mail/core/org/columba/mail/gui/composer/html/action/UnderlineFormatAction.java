@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
 
 
 /**
- * Format selected text as underline "<u>"
+ * Format selected text as underline "&lt;u&gt;"
  *
  * @author fdietz
  */

@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 
 
 /**
- * Format selected text as strike out "<strike>" btw "<s>"
+ * Format selected text as strike out "&lt;strike&gt;" btw "&lt;s&gt;"
  *
  * @author fdietz
  */

@@ -39,7 +39,7 @@ import javax.swing.KeyStroke;
 
 
 /**
- * Format selected text as italic "<i>"
+ * Format selected text as italic "&lt;i&gt;"
  *
  * @author fdietz
  */

@@ -38,7 +38,7 @@ import javax.swing.KeyStroke;
 
 
 /**
- * Format selected text as teletyper "<tt>"
+ * Format selected text as teletyper "&lt;tt&gt;"
  *   *
  * @author fdietz
  */
