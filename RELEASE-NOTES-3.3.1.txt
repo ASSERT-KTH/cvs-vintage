@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.23 2002/01/22 04:23:54 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.24 2002/01/25 00:00:13 bojan Exp $
 
 
 This document describes the changes that have been made since the
@@ -114,6 +114,8 @@ Bug No.  Description
          Fixed problem with JSP page names that match a Windows DOS device
          name, such as aux.jsp.  Instead of potentially hanging the thread
          that services the request, these requests now return "404 Not Found".
+
+5994     Fix seconds calculation problem in DateTool
 
 4418     Ported Tomcat 3.2.x fix for race condition in ServerSocketFactory.
 
