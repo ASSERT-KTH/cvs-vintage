@@ -1,4 +1,4 @@
-// $Id: FigMNode.java,v 1.23 2004/08/04 20:52:48 mvw Exp $
+// $Id: FigMNode.java,v 1.24 2004/11/01 16:10:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.23 2004/08/04 20:52:48 mvw Exp $
+// $Id: FigMNode.java,v 1.24 2004/11/01 16:10:54 mvw Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -116,6 +116,24 @@ public class FigMNode extends FigNodeModelElement {
 
     ////////////////////////////////////////////////////////////////
     // acessors
+
+    
+    /**
+     * Build a collection of menu items relevant for a right-click popup menu.
+     *
+     * @param     me     a mouse event
+     * @return           a collection of menu items
+     *
+     * @see org.tigris.gef.ui.PopupGenerator#getPopUpActions(java.awt.event.MouseEvent)
+     */
+    public Vector getPopUpActions(MouseEvent me) {
+        Vector popUpActions = super.getPopUpActions(me);
+        // Modifiers ...
+        popUpActions.insertElementAt(
+                buildModifierPopUp(ABSTRACT | LEAF | ROOT),
+                popUpActions.size() - POPUP_ADD_OFFSET);
+        return popUpActions;
+    }    
 
     /**
      * @see org.tigris.gef.presentation.Fig#setLineColor(java.awt.Color)

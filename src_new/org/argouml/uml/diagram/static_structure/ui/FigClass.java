@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.117 2004/11/01 10:58:33 mvw Exp $
+// $Id: FigClass.java,v 1.118 2004/11/01 16:10:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -295,80 +295,30 @@ public class FigClass extends FigNodeModelElement
         } else if (!isAttributesVisible() && !isOperationsVisible()) {
             showMenu.add(ActionCompartmentDisplay.showAllCompartments());
         }
-
         if (isAttributesVisible()) {
             showMenu.add(ActionCompartmentDisplay.hideAttrCompartment());
         } else {
             showMenu.add(ActionCompartmentDisplay.showAttrCompartment());
         }
-
         if (isOperationsVisible()) {
             showMenu.add(ActionCompartmentDisplay.hideOperCompartment());
         } else {
             showMenu.add(ActionCompartmentDisplay.showOperCompartment());
         }
-
         showMenu.add(ActionEdgesDisplay.getShowEdges());
         showMenu.add(ActionEdgesDisplay.getHideEdges());
-
         popUpActions.insertElementAt(showMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
 
         // Modifiers ...
-        Object mclass = /*(MClass)*/ getOwner();
-        ArgoJMenu modifierMenu = new ArgoJMenu("menu.popup.modifiers");
-
-        modifierMenu.addCheckItem(
-		new ActionModifier(Translator.localize("checkbox.abstract-uc"),
-				   "isAbstract", "isAbstract", "setAbstract",
-				   mclass));
-        modifierMenu.addCheckItem(
-		new ActionModifier(Translator.localize("checkbox.final-uc"),
-				   "isLeaf", "isLeaf", "setLeaf", mclass));
-        modifierMenu.addCheckItem(
-		new ActionModifier(Translator.localize("checkbox.root-uc"),
-				   "isRoot", "isRoot", "setRoot", mclass));
-        modifierMenu.addCheckItem(
-		new ActionModifier(Translator.localize("checkbox.active-uc"),
-				   "isActive", "isActive", "setActive",
-				   mclass));
-
-        popUpActions.insertElementAt(modifierMenu,
-            popUpActions.size() - POPUP_ADD_OFFSET);
-       
-        // Visibility ...
-        ArgoJMenu visibilityMenu = new ArgoJMenu("menu.popup.visibility");
-
-        ActionModifier a = new ActionModifier(
-                Translator.localize("checkbox.visibility.public-uc"),
-                "visibility", "getVisibility", "setVisibility",
-                mclass,
-                (Class) ModelFacade.VISIBILITYKIND,
-                ModelFacade.PUBLIC_VISIBILITYKIND,
-                null);
-        /*MVW: Strange, but doing this for this one item, 
-         * makes the other 2 default correctly... */
-        a.putValue("SELECTED", new Boolean(ModelFacade.PUBLIC_VISIBILITYKIND
-                .equals(ModelFacade.getVisibility(mclass))));
-        visibilityMenu.addCheckItem(a);
-
-        visibilityMenu.addCheckItem( new ActionModifier(
-                Translator.localize("checkbox.visibility.protected-uc"),
-                "visibility", "getVisibility", "setVisibility",
-                mclass,
-                (Class) ModelFacade.VISIBILITYKIND,
-                ModelFacade.PROTECTED_VISIBILITYKIND,
-                null)); 
-        visibilityMenu.addCheckItem( new ActionModifier(
-                Translator.localize("checkbox.visibility.private-uc"),
-                "visibility", "getVisibility", "setVisibility",
-                mclass,
-                (Class) ModelFacade.VISIBILITYKIND,
-                ModelFacade.PRIVATE_VISIBILITYKIND,
-                null)); 
-        popUpActions.insertElementAt(visibilityMenu,
+        popUpActions.insertElementAt(
+                buildModifierPopUp(ABSTRACT | LEAF | ROOT | ACTIVE),
                 popUpActions.size() - POPUP_ADD_OFFSET);
 
+        // Visibility ...
+        popUpActions.insertElementAt(buildVisibilityPopUp(),
+                popUpActions.size() - POPUP_ADD_OFFSET);
+           
         return popUpActions;
     }
 

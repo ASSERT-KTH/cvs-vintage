@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.47 2004/10/19 05:40:06 linus Exp $
+// $Id: FigUseCase.java,v 1.48 2004/11/01 16:10:55 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -404,31 +404,9 @@ public class FigUseCase extends FigNodeModelElement {
 
         // Modifier menu. Placed one before last, so the "Properties" entry is
         // always last.
-
-        ArgoJMenu modifierMenu = new ArgoJMenu("menu.popup.modifiers");
-
-        Object useCase = /*(MUseCase)*/ getOwner();
-
-        modifierMenu.addCheckItem(new ActionModifier("Abstract",
-						     "isAbstract",
-						     "isAbstract",
-						     "setAbstract",
-						     useCase));
-
-        modifierMenu.addCheckItem(new ActionModifier("Leaf",
-						     "isLeaf",
-						     "isLeaf",
-						     "setLeaf",
-						     useCase));
-
-        modifierMenu.addCheckItem(new ActionModifier("Root",
-						     "isRoot",
-						     "isRoot",
-						     "setRoot",
-						     useCase));
-
-        popUpActions.insertElementAt(modifierMenu,
-            popUpActions.size() - POPUP_ADD_OFFSET);
+        popUpActions.insertElementAt(
+                buildModifierPopUp(LEAF | ROOT),
+                popUpActions.size() - POPUP_ADD_OFFSET);
 
         return popUpActions;
     }
