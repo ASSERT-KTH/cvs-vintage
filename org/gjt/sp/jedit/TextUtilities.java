@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.22 2002/01/17 10:37:54 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.23 2002/02/01 07:40:22 spestov Exp $
  */
 public class TextUtilities
 {
@@ -337,10 +337,10 @@ loop:		for(int i = pos; i >= 0; i--)
 				else
 				{
 					// next word?
-					if(seenWhiteSpace)
-						return i + 1;
-					else
-						break;
+					//if(seenWhiteSpace)
+						return i;
+					//else
+					//	break;
 				} //}}}
 			}
 		}
@@ -445,10 +445,10 @@ loop:		for(int i = pos; i < line.length(); i++)
 				else
 				{
 					// next word?
-					if(seenWhiteSpace)
-						return i;
-					else
-						break;
+					// if(seenWhiteSpace)
+						return i + 1;
+					// else
+					//	break;
 				} //}}}
 			}
 		}

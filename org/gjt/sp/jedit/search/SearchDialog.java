@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.12 2002/01/30 08:06:41 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.13 2002/02/01 07:40:23 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -298,6 +298,13 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		label.setDisplayedMnemonic(jEdit.getProperty("search.find.mnemonic")
 			.charAt(0));
 		find = new HistoryTextField("find");
+
+		// don't want it to be too wide due to long strings
+		Dimension size = find.getPreferredSize();
+		size.width = find.getFontMetrics(find.getFont())
+			.charWidth('a') * 25;
+		find.setPreferredSize(size);
+
 		find.addActionListener(actionHandler);
 		label.setLabelFor(find);
 		label.setBorder(new EmptyBorder(12,0,2,0));

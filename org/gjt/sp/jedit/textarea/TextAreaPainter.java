@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.41 2002/01/31 05:35:49 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.42 2002/02/01 07:40:23 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -828,7 +828,9 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 			if(!lineInfo.lastSubregion)
 			{
-				gfx.drawString(":",Math.max(x,textArea.wrapMargin),
+				gfx.drawString(":",Math.max(x,
+					textArea.getHorizontalOffset()
+					+ textArea.wrapMargin),
 					baseLine);
 				x += textArea.charWidth;
 			}

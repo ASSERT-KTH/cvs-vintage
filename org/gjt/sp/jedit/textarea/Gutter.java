@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.20 2002/01/22 08:17:36 spestov Exp $
+ * @version $Id: Gutter.java,v 1.21 2002/02/01 07:40:23 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -729,7 +729,14 @@ public class Gutter extends JComponent implements SwingConstants
 		//{{{ mousePressed() method
 		public void mousePressed(MouseEvent e)
 		{
-			if(e.getX() < getWidth() - borderWidth * 2)
+			if(GUIUtilities.isPopupTrigger(e)
+				|| e.getX() >= getWidth() - borderWidth * 2)
+			{
+				e.translatePoint(-getWidth(),0);
+				textArea.mouseHandler.mousePressed(e);
+				drag = true;
+			}
+			else
 			{
 				Buffer buffer = textArea.getBuffer();
 
@@ -795,12 +802,6 @@ public class Gutter extends JComponent implements SwingConstants
 						}
 					}
 				} //}}}
-			}
-			else
-			{
-				e.translatePoint(-getWidth(),0);
-				textArea.mouseHandler.mousePressed(e);
-				drag = true;
 			}
 		} //}}}
 

@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Buffer-specific options dialog.
  * @author Slava Pestov
- * @version $Id: BufferOptions.java,v 1.12 2002/01/20 09:10:41 spestov Exp $
+ * @version $Id: BufferOptions.java,v 1.13 2002/02/01 07:40:22 spestov Exp $
  */
 public class BufferOptions extends EnhancedDialog
 {
@@ -340,6 +340,15 @@ public class BufferOptions extends EnhancedDialog
 		buffer.setBooleanProperty("indentOnEnter",indentOnEnter.isSelected());
 
 		buffer.propertiesChanged();
+		View[] views = jEdit.getViews();
+		for(int i = 0; i < views.length; i++)
+		{
+			EditPane[] panes = views[i].getEditPanes();
+			for(int j = 0; j < panes.length; j++)
+			{
+				panes[j].getTextArea().propertiesChanged();
+			}
+		}
 
 		dispose();
 	} //}}}

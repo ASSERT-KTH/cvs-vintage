@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.78 2002/01/31 05:35:48 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.79 2002/02/01 07:40:23 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5904,23 +5904,25 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		//{{{ doTripleDrag() method
 		private void doTripleDrag(MouseEvent evt, boolean rect)
 		{
-			int offset = xyToOffset(evt.getX(),evt.getY());
+			int offset = xyToOffset(evt.getX(),evt.getY(),false);
 			int mouseLine = getLineOfOffset(offset);
 			int mark;
 			int mouse;
 			if(dragStartLine > mouseLine)
 			{
 				mark = getLineEndOffset(dragStartLine) - 1;
-				if(offset == getLineLength(mouseLine))
-					mouse = getLineEndOffset(mouseLine) - 1;
+				if(offset == getLineEndOffset(mouseLine) - 1)
+					mouse = offset;
 				else
 					mouse = getLineStartOffset(mouseLine);
 			}
 			else
 			{
 				mark = getLineStartOffset(dragStartLine);
-				if(offset == 0)
-					mouse = getLineStartOffset(mouseLine);
+				if(offset == getLineStartOffset(mouseLine))
+					mouse = offset;
+				else if(offset == getLineEndOffset(mouseLine) - 1)
+					mouse = getLineEndOffset(mouseLine);
 				else
 					mouse = getLineEndOffset(mouseLine) - 1;
 			}
