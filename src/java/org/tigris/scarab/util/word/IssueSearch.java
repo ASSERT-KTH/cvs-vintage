@@ -1035,8 +1035,13 @@ public class IssueSearch
         throws Exception
     {
         NumberKey[] matchingIssueIds = null;
-        SearchIndex searchIndex = SearchFactory.getInstance(); 
-        if ( getSearchWords() != null && getSearchWords().length() != 0 ) 
+        SearchIndex searchIndex = SearchFactory.getInstance();
+        if (searchIndex == null)
+        {
+            // Check your configuration.
+            throw new Exception("No index available to search");
+        }
+        if ( getSearchWords() != null && getSearchWords().length() != 0 )
         {
             searchIndex.addQuery(getTextScope(), getSearchWords());
             matchingIssueIds = searchIndex.getRelatedIssues();    
