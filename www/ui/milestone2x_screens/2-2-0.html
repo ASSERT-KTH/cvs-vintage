@@ -62,24 +62,6 @@
         </tr>
 
         <tr>
-         <th width="120">state change query:</th>
-
-         <td><select>
-          <option>
-           choice 1
-          </option>
-
-          <option>
-           choice 2
-          </option>
-
-          <option>
-           choice 3
-          </option>
-         </select> </td>
-        </tr>
-
-        <tr>
          <th width="120">votes:</th>
 
          <td><input type="text" size="25" value="" /></td>
@@ -263,224 +245,100 @@
 
          <td><input type="text" size="25" value="http://" /></td>
         </tr>
+      </table>
+	</div>
+ 
+       <h3>State change query</h3>
+	<div class="axial">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
 
         <tr>
-         <th width="120">boolean search:</th>
+         <th width="120">state change query:</th>
 
-         <td>
-          <select>
-           <option value="noop">
-            ---
-           </option>
+         <td><select>
+          <option>
+           unreported
+          </option>
+          
+          <option>
+           open / unassigned
+          </option>
 
-           <option value="groupset">
-            groupset
-           </option>
+          <option>
+           open / assigned
+          </option>
 
-           <option value="everconfirmed">
-            everconfirmed
-           </option>
+          <option>
+           open / reassigned
+          </option>
 
-           <option value="bug_id">
-            Bug #
-           </option>
+          <option>
+           closed
+          </option>
 
-           <option value="short_desc">
-            Summary
-           </option>
+          <option>
+           reopened / unassigned
+          </option>
+          
+          <option>
+           reopened / assigned
+          </option>          
 
-           <option value="product">
-            Product
-           </option>
+          
+          <option>
+           reopened / reassigned
+          </option> 
 
-           <option value="version">
-            Version
-           </option>
 
-           <option value="rep_platform">
-            Platform
-           </option>
+         </select> to <select>
+          <option>
+           open / unassigned
+          </option>
 
-           <option value="bug_file_loc">
-            URL
-           </option>
+          <option>
+           open / assigned
+          </option>
 
-           <option value="op_sys">
-            OS/Version
-           </option>
+          <option>
+           open / reassigned
+          </option>
 
-           <option value="bug_status">
-            Status
-           </option>
+          <option>
+           closed
+          </option>
 
-           <option value="status_whiteboard">
-            Status Whiteboard
-           </option>
+          <option>
+           reopened / unassigned
+          </option>
+          
+          <option>
+           reopened / assigned
+          </option>          
 
-           <option value="keywords">
-            Keywords
-           </option>
+          
+          <option>
+           reopened / reassigned
+          </option> 
 
-           <option value="resolution">
-            Resolution
-           </option>
+         </select>
 
-           <option value="bug_severity">
-            Severity
-           </option>
+          </td>
+        </tr>  
+        
+        <tr>
+         <th width="120">date range:</th>
 
-           <option value="priority">
-            Priority
-           </option>
-
-           <option value="component">
-            Component
-           </option>
-
-           <option value="assigned_to">
-            AssignedTo
-           </option>
-
-           <option value="reporter">
-            ReportedBy
-           </option>
-
-           <option value="votes">
-            Votes
-           </option>
-
-           <option value="qa_contact">
-            QAContact
-           </option>
-
-           <option value="cc">
-            CC
-           </option>
-
-           <option value="dependson">
-            BugsThisDependsOn
-           </option>
-
-           <option value="blocked">
-            OtherBugsDependingOnThis
-           </option>
-
-           <option value="attachments.description">
-            Attachment description
-           </option>
-
-           <option value="attachments.thedata">
-            Attachment data
-           </option>
-
-           <option value="attachments.mimetype">
-            Attachment mime type
-           </option>
-
-           <option value="attachments.ispatch">
-            Attachment is patch
-           </option>
-
-           <option value="target_milestone">
-            Target Milestone
-           </option>
-
-           <option value="delta_ts">
-            Last changed date
-           </option>
-
-           <option value="(to_days(now()) - to_days(bugs.delta_ts))">
-            Days since bug changed
-           </option>
-
-           <option value="longdesc">
-            Comment
-           </option>
-          </select> <select>
-           <option value="noop">
-            ---
-           </option>
-
-           <option value="equals">
-            equal to
-           </option>
-
-           <option value="notequals">
-            not equal to
-           </option>
-
-           <option value="casesubstring">
-            contains (case-sensitive) substring
-           </option>
-
-           <option value="substring">
-            contains (case-insensitive) substring
-           </option>
-
-           <option value="notsubstring">
-            does not contain (case-insensitive) substring
-           </option>
-
-           <option value="allwordssubstr">
-            all words as (case-insensitive) substrings
-           </option>
-
-           <option value="anywordssubstr">
-            any words as (case-insensitive) substrings
-           </option>
-
-           <option value="regexp">
-            contains regexp
-           </option>
-
-           <option value="notregexp">
-            does not contain regexp
-           </option>
-
-           <option value="lessthan">
-            less than
-           </option>
-
-           <option value="greaterthan">
-            greater than
-           </option>
-
-           <option value="anywords">
-            any words
-           </option>
-
-           <option value="allwords">
-            all words
-           </option>
-
-           <option value="nowords">
-            none of the words
-           </option>
-
-           <option value="changedbefore">
-            changed before
-           </option>
-
-           <option value="changedafter">
-            changed after
-           </option>
-
-           <option value="changedto">
-            changed to
-           </option>
-
-           <option value="changedby">
-            changed by
-           </option>
-          </select> <input type="text" size="25" value="" /> 
-
-          <p>
-           <input type="submit" value="and" />&#160;<input type="submit" value="or" />&#160;<input type="submit" value="add additional boolean search" />
-          </p>
-         </td>
+         <td>          
+          
+          
+		  <input type="text" size=9 value="XX/XX/XXXX">&nbsp;<input type="text" size=4 value="00:00"> to <input type="text" size=9 value="XX/XX/XXXX">&nbsp;<input type="text" size=4 value="00:00">
+		  </td>
         </tr>
+
        </table>
-	</div>
+      </div>
+
+ 
       <h3>search results view prefs</h3>
 	<div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
