@@ -61,7 +61,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -87,6 +87,10 @@ import org.jboss.util.WorkerQueue;
  * <p><b>2001/12/03: billb</b>
  * <ol>
  *   <li>Make sure ctx.getID() is non-null when received from unschedulePassivation.
+ * </ol>
+ * <p><b>2001/01/29: billb</b>
+ * <ol>
+ *   <li>Do not grab a BeanLock reference when ctx is inserted into cache.  This has memory leakage issues
  * </ol>
  */
 public abstract class AbstractInstanceCache
@@ -264,9 +268,6 @@ public abstract class AbstractInstanceCache
             // run without having acquired the cache lock via getCacheLock()
             throw new IllegalStateException("INSERTING AN ALREADY EXISTING BEAN, ID = " + key);
          }
-         //Create a lock in the lock manager, as long as there an instance in cache we keep
-         // the lock in the manager, since get will increase the ref count on the lock
-         getContainer().getLockManager().getLock(key);
       }
    }
    /* From InstanceCache interface */
@@ -302,9 +303,6 @@ public abstract class AbstractInstanceCache
          if (getCache().peek(id) != null)
          {
             getCache().remove(id);
-            // When we introduced the bean in the cache we used the get to increase the lock count
-            // now we decrease it and if the count is zero the manager will release the object from memory
-            getContainer().getLockManager().removeLockRef(id);
          }
       }
    }
