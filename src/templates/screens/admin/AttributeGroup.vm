@@ -39,6 +39,7 @@
 <input type="submit" value="Delete" name="eventSubmit_doDeleteattributes" />&#160;
 <!-- FIXME: <input type="submit" value="Resort" /> -->
 </td>
+</tr>
 </table>
 </div>
 #end
