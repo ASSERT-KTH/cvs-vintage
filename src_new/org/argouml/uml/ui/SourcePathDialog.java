@@ -1,4 +1,4 @@
-// $Id: SourcePathDialog.java,v 1.14 2004/11/23 10:47:45 bobtarling Exp $
+// $Id: SourcePathDialog.java,v 1.15 2004/11/23 19:29:32 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,24 +26,19 @@ package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
-import javax.swing.JButton;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.ListSelectionModel;
-import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ProjectBrowser;
-import org.argouml.uml.generator.Generator2;
 
 /**
  * This dialog appears when selecting 
@@ -166,14 +161,16 @@ public class SourcePathDialog extends ArgoDialog implements ActionListener {
         }
         
         int res = JOptionPane.showConfirmDialog(this, 
-            msg.toString(), Translator.localize("dialog.title.source-path-del"), 
+            msg.toString(), 
+            Translator.localize("dialog.title.source-path-del"), 
             JOptionPane.OK_CANCEL_OPTION);
         
         if (res == JOptionPane.OK_OPTION) {
             // procede with the deletion in the model
             int firstSel = rowSM.getMinSelectionIndex();
             for (int i = 0; i < selectedIndexes.length && firstSel != -1; i++) {
-                srcPathCtrl.deleteSourcePath(srcPathTableModel.getModelElement(firstSel));
+                srcPathCtrl.deleteSourcePath(srcPathTableModel
+                        .getModelElement(firstSel));
                 srcPathTableModel.removeRow(firstSel);
                 firstSel = rowSM.getMinSelectionIndex();
             }
