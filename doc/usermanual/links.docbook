@@ -17,6 +17,10 @@
 	<primaryie><ulink url="http://www.objectweb.org/jonathan">JONATHAN</ulink></primaryie>
 	<secondaryie>JONATHAN ObjectWeb web site</secondaryie>
       </indexentry>
+      <indexentry>
+	<primaryie><ulink url="http://www.objectweb.org/monolog">Monolog</ulink></primaryie>
+	<secondaryie>Monolog ObjectWeb web site</secondaryie>
+      </indexentry>
     </indexdiv>  
     <indexdiv>
       <title>SUN web sites</title>
