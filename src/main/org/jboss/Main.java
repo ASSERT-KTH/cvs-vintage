@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.54 $
+* @version $Revision: 1.55 $
 *
 * <b>Revisions:</b>
 * <p>
@@ -58,6 +58,11 @@ import gnu.getopt.LongOpt;
 * <ul>
 *   <li>Replaced custom command line option parsing with gnu.getopt.
 *   <li>Added -D option to set system properties
+* </ul>
+* <b>20011030 marcf:</b>
+* <ul>
+*   <li>Replaced net-install by net-boot.  Net-install should be reserved for installation 
+*       that really duplicate the code on the local machines. net-boot doesn't and just runs in VM
 * </ul>
 */
 public class Main
@@ -209,31 +214,7 @@ public class Main
          {
             re.getTargetException().printStackTrace();
          }
-         
-         /*
-         * URL mletConf = mlet.getResource("boot.jmx");
-         * URL mletConf = new URL(confDir+"boot.jmx");
-         *
-         * Set beans = mlet.getMBeansFromURL(mletConf);
-         *
-         * Iterator enum = beans.iterator();
-         * while (enum.hasNext())
-         * {
-         * Object obj = enum.next();
-         * if (obj instanceof RuntimeOperationsException)
-         * ((RuntimeOperationsException)obj).getTargetException().printStackTrace(err);
-         * else if (obj instanceof RuntimeErrorException)
-         * ((RuntimeErrorException)obj).getTargetError().printStackTrace(err);
-         * else if (obj instanceof MBeanException)
-         * ((MBeanException)obj).getTargetException().printStackTrace(err);
-         * else if (obj instanceof RuntimeMBeanException)
-         * ((RuntimeMBeanException)obj).getTargetException().printStackTrace(err);
-         * else if (obj instanceof ReflectionException)
-         * ((ReflectionException)obj).getTargetException().printStackTrace(err);
-         * else if (obj instanceof Throwable)
-         * ((Throwable)obj).printStackTrace(err);
-         * }
-         */
+
       }
       catch (Exception e)
       {
@@ -309,7 +290,7 @@ public class Main
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
          new LongOpt("help-examples", LongOpt.NO_ARGUMENT, null, 10),
          new LongOpt("patch-dir", LongOpt.REQUIRED_ARGUMENT, null, 'p'),
-         new LongOpt("net-install", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
+         new LongOpt("net-boot", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
          new LongOpt("configuration", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
       };
       
@@ -343,7 +324,7 @@ public class Main
                System.out.println("    --                            Stop processing options");
                System.out.println("    -D<name>[=<value>]            Set a system property");
                System.out.println("    -p, --patch-dir <dir>         Set the patch directory, takes an absolute file name");
-               System.out.println("    -n, --net-install <url>       Set the network install url");
+               System.out.println("    -n, --net-boot <url>          Boot from net with the given url as base");
                System.out.println("    -c, --configuration <name>    Set the server configuration name");
                System.out.println();               
                System.exit(0);
@@ -367,7 +348,7 @@ public class Main
             
             case 10:
                // show help examples
-               System.out.println("example: " + programName + " --net-install http://www.jboss.org/jboss --configuration jboxx --patch-dir /tmp/dir");
+               System.out.println("example: " + programName + " --net-boot http://www.jboss.org/jboss --configuration jboxx --patch-dir /tmp/dir");
                System.out.println("will download from the webserver and run the the configuration called jboxx, it will uses jar patches found in /tmp/dir");
                System.out.println();
                System.exit(0);
@@ -379,7 +360,7 @@ public class Main
             break;
             
             case 'n':
-               // set the net install url
+               // set the net boot url
                arg = getopt.getOptarg();
                installURL = arg.startsWith("http://") ? arg : "http://" + arg;
                

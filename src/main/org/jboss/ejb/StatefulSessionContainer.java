@@ -34,13 +34,13 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * <p><b>Revisions</b>
  * <p><b>20010704</b>
  * <ul>
  * <li>Throw an exception when removing a bean in transaction (in remove)?
- *     (I dissagree)
+ *     (I dissagree) (marcf: who is the person writing this comment? please sign)
  * </ul>
  */
 public class StatefulSessionContainer
