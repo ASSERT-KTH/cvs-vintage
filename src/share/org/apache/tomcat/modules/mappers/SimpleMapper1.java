@@ -486,10 +486,12 @@ class PrefixMapper  {
     SimpleHashtable vhostMaps=new SimpleHashtable();
     // host -> PrefixMapper for virtual hosts with leading '*'
     // host key has '*' removed
-    SimpleHashtable vhostMapsWC=new SimpleHashtable();
+    // Can't use SimpleHashtable, more than a thread will use keys()
+    Hashtable vhostMapsWC=new Hashtable();
+    boolean hasWCMap=false; // to avoid getting the Enumeration
 
-    SimpleHashtable prefixMappedServlets;
-    SimpleHashtable exactMappedServlets;
+    Hashtable prefixMappedServlets;
+    Hashtable exactMappedServlets;
 
         // Cache the most recent mappings
     // Disabled by default ( since we haven't implemented
@@ -510,8 +512,8 @@ class PrefixMapper  {
     boolean ignoreCase=false;
     
     public PrefixMapper() {
-	prefixMappedServlets=new SimpleHashtable();
-	exactMappedServlets=new SimpleHashtable();
+	prefixMappedServlets=new Hashtable();
+	exactMappedServlets=new Hashtable();
 	mapCache=new SimpleHashtable();
     }
 
@@ -588,6 +590,7 @@ class PrefixMapper  {
             if( host.startsWith( "*" ) ) {
                 maps=vhostMapsWC;
                 host=host.substring( 1 );
+		hasWCMap=true;
             } else {
                 maps=vhostMaps;
             }
@@ -626,6 +629,7 @@ class PrefixMapper  {
             if( host.startsWith( "*" ) ) {
                 maps = vhostMapsWC;
                 host=host.substring( 1 );
+		hasWCMap=true;
             } else {
                 maps = vhostMaps;
             }
@@ -668,7 +672,7 @@ class PrefixMapper  {
 		myMap=(PrefixMapper)vhostMaps.get( host.toLowerCase() );
 	    }
         }
-        if( myMap==null ) {
+        if( myMap==null && hasWCMap ) {
             // Check host against virtual hosts that began with '*'
             Enumeration vhosts = vhostMapsWC.keys();
             while(vhosts.hasMoreElements()) {
