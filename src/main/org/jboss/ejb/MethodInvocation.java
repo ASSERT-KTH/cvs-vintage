@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class MethodInvocation
 {
@@ -69,6 +69,15 @@ public class MethodInvocation
       return args;
    }
 	
+	/*
+	* setTransaction()
+	*
+	* This method sets the transaction associated with the method 
+	* Note that this doesn't mean that the transaction is associated 
+	* with the thread.  In fact this is the only place it exists until 
+	* the TxInterceptor logic.  Notably it might be the case that the 
+    * tx associated here is different than the one on the target instance.
+	*/
 	public void setTransaction(Transaction tx)
 	{
 		
@@ -113,9 +122,15 @@ public class MethodInvocation
 		this.ctx = ctx;
 		
 		//Set the transaction
-		ctx.setTransaction(tx);
+		// MF FIXME: wrong decision. Setting the context is just an assocation of the
+		// the Method invocation to the instance.  Decisions on the transaction association
+		// should be done elsewhere (new interceptor)
+		//ctx.setTransaction(tx);
 		
 		// Set the principal
+		// MF FIXME: a warning really.  The association of the context variables (tx, principal)
+		// to the enterprise Context should not be done here but by the final interceptor in the
+		// container, it will signify that the instance is indeed ready for calling
 		ctx.setPrincipal(identity);
 	}
 
