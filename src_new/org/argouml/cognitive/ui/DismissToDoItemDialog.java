@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.10 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: DismissToDoItemDialog.java,v 1.11 2003/10/14 19:49:15 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
 import org.argouml.cognitive.UnresolvableException;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
 
 public class DismissToDoItemDialog extends JDialog {
@@ -185,6 +186,7 @@ public class DismissToDoItemDialog extends JDialog {
 	ToDoList list = Designer.TheDesigner.getToDoList();
 	try {
 	    list.explicitlyResolve(_target, _explaination.getText());
+        ProjectManager.getManager().getCurrentProject().setNeedsSave(true);
 	} catch (UnresolvableException ure) {
 	    cat.error("Resolve failed (ure): " + ure);
 	    // TODO: Should be internationalized

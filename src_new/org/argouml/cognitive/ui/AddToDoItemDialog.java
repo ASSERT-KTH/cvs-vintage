@@ -1,4 +1,4 @@
-// $Id: AddToDoItemDialog.java,v 1.16 2003/06/30 18:00:17 linus Exp $
+// $Id: AddToDoItemDialog.java,v 1.17 2003/10/14 19:49:15 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import javax.swing.JTextField;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ProjectBrowser;
@@ -129,6 +130,7 @@ public class AddToDoItemDialog extends ArgoDialog {
         ToDoItem item =
 	    new ToDoItem(designer, headline, priority, desc, moreInfoURL);
         designer.getToDoList().addElement(item); //? inform()
+        ProjectManager.getManager().getCurrentProject().setNeedsSave(true);
     }
 
 
