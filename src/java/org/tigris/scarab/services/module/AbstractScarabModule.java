@@ -127,7 +127,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.39 2002/03/02 02:33:00 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.40 2002/03/02 04:17:55 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -146,14 +146,6 @@ public abstract class AbstractScarabModule
         "getAttributeGroup";
     private static final String GET_SAVED_REPORTS = 
         "getSavedReports";
-    private static final String GET_PRIVATE_QUERIES = 
-        "getPrivateQueries";
-    private static final String GET_GLOBAL_QUERIES = 
-        "getGlobalQueries";
-    private static final String GET_PRIVATE_TEMPLATES = 
-        "getPrivateTemplates";
-    private static final String GET_GLOBAL_TEMPLATES = 
-        "getGlobalTemplates";
     private static final String GET_DEFAULT_RMODULE_USERATTRIBUTES = 
         "getDefaultRModuleUserAttributes";
     private static final String GET_ISSUE_TYPES = 
@@ -556,139 +548,6 @@ public abstract class AbstractScarabModule
             reports = (List)obj;
         }
         return reports;
-    }
-
-
-    /**
-     * List of private queries associated with this module.
-     * Created by this user.
-     */
-    public List getPrivateQueries(ScarabUser user, IssueType issueType)
-        throws Exception
-    {
-        List queries = null;
-        Object obj = ScarabCache.get(this, GET_PRIVATE_QUERIES, 
-                                     user, issueType); 
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria()
-                .add(QueryPeer.MODULE_ID, getModuleId())
-                .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-                .add(QueryPeer.DELETED, 0)
-                .add(QueryPeer.USER_ID, user.getUserId())
-                .add(QueryPeer.SCOPE_ID, Scope.PERSONAL__PK);
-            queries = QueryPeer.doSelect(crit);
-            ScarabCache.put(queries, this, GET_PRIVATE_QUERIES, 
-                            user, issueType);
-        }
-        else 
-        {
-            queries = (List)obj;
-        }
-        return queries;
-    }
-
-
-    /**
-     * List of global Query objects associated with this module.
-     */
-    public List getGlobalQueries(IssueType issueType)
-        throws Exception
-    {
-        List queries = null;
-        Object obj = ScarabCache.get(this, GET_GLOBAL_QUERIES, issueType); 
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria()
-                .add(QueryPeer.MODULE_ID, getModuleId())
-                .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
-                .add(QueryPeer.DELETED, 0)
-                .add(QueryPeer.SCOPE_ID, Scope.GLOBAL__PK);
-            queries = QueryPeer.doSelect(crit);
-            ScarabCache.put(queries, this, GET_GLOBAL_QUERIES, issueType);
-        }
-        else 
-        {
-            queries = (List)obj;
-        }
-
-        return queries;
-    }
-
-
-    /**
-     * List of all queries for this user.
-     */
-    public List getAllUserQueries(ScarabUser user, IssueType issueType)
-        throws Exception
-    {
-        List allQueries = new ArrayList();
-        allQueries.addAll(getPrivateQueries(user, issueType));
-        allQueries.addAll(getGlobalQueries(issueType));
-        return allQueries;
-    }
-
-
-    /**
-     * List of Issue Template objects associated with this module.
-     * And issue type.
-     */
-    public List getPrivateTemplates(ScarabUser user, IssueType issueType)
-        throws Exception
-    {
-        List templates = null;
-        Object obj = ScarabCache.get(this, GET_PRIVATE_TEMPLATES, 
-                                     user, issueType); 
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria()
-                .add(IssuePeer.MODULE_ID, getModuleId())
-                .add(IssuePeer.DELETED, 0)
-                .addJoin(TransactionPeer.TRANSACTION_ID, 
-                         ActivityPeer.TRANSACTION_ID) 
-                .add(TransactionPeer.CREATED_BY, user.getUserId())
-                .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
-                .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
-                         IssuePeer.ISSUE_ID)
-                .add(IssueTemplateInfoPeer.SCOPE_ID, Scope.PERSONAL__PK);
-            crit.setDistinct();
-            templates = IssuePeer.doSelect(crit);
-            ScarabCache.put(templates, this, GET_PRIVATE_TEMPLATES, 
-                            user, issueType);
-        }
-        else 
-        {
-            templates = (List)obj;
-        }
-        return templates;
-    }
-
-
-    /**
-     * List of global Issue Template objects associated with this module.
-     */
-    public List getGlobalTemplates(IssueType issueType)
-        throws Exception
-    {
-        List templates = null;
-        Object obj = ScarabCache.get(this, GET_GLOBAL_TEMPLATES, issueType); 
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria()
-                .add(IssuePeer.MODULE_ID, getModuleId())
-                .add(IssuePeer.DELETED, 0)
-                .add(IssuePeer.TYPE_ID, issueType.getTemplateId())
-                .addJoin(IssueTemplateInfoPeer.ISSUE_ID,
-                         IssuePeer.ISSUE_ID)
-                .add(IssueTemplateInfoPeer.SCOPE_ID, Scope.GLOBAL__PK);
-            templates = IssuePeer.doSelect(crit);
-            ScarabCache.put(templates, this, GET_GLOBAL_TEMPLATES, issueType);
-        }
-        else 
-        {
-            templates = (List)obj;
-        }
-        return templates;
     }
 
 
@@ -1933,29 +1792,29 @@ try{
                 rma2.setAttributeId(rma1.getAttributeId());
                 rma2.setIssueTypeId(rma1.getIssueTypeId());
                 rma2.save();
-            }
                         
-            // set module-option mappings
-            Attribute attribute = rma1.getAttribute();
-            if (attribute.isOptionAttribute())
-            {
-                List rmos = parentModule.getRModuleOptions(attribute,
-                                                           issueType);
-                for (int m=0; m<rmos.size(); m++)
+                // set module-option mappings
+                Attribute attribute = rma1.getAttribute();
+                if (attribute.isOptionAttribute())
                 {
-                    RModuleOption rmo1 = (RModuleOption)rmos.get(m);
-                    RModuleOption rmo2 = rmo1.copy();
-                    rmo2.setOptionId(rmo1.getOptionId());
-                    rmo2.setModuleId(newModuleId);
-                    rmo2.setIssueTypeId(issueType.getIssueTypeId());
-                    rmo2.save();
+                    List rmos = parentModule.getRModuleOptions(attribute,
+                                                               issueType);
+                    for (int m=0; m<rmos.size(); m++)
+                    {
+                        RModuleOption rmo1 = (RModuleOption)rmos.get(m);
+                        RModuleOption rmo2 = rmo1.copy();
+                        rmo2.setOptionId(rmo1.getOptionId());
+                        rmo2.setModuleId(newModuleId);
+                        rmo2.setIssueTypeId(issueType.getIssueTypeId());
+                        rmo2.save();
 
-                    // Save module-option mappings for template types
-                    RModuleOption rmo3 = rmo1.copy();
-                    rmo3.setOptionId(rmo1.getOptionId());
-                    rmo3.setModuleId(newModuleId);
-                    rmo3.setIssueTypeId(issueType.getTemplateId());
-                   rmo3.save();
+                        // Save module-option mappings for template types
+                        RModuleOption rmo3 = rmo1.copy();
+                        rmo3.setOptionId(rmo1.getOptionId());
+                        rmo3.setModuleId(newModuleId);
+                        rmo3.setIssueTypeId(issueType.getTemplateId());
+                        rmo3.save();
+                    }
                 }
             }
         }
