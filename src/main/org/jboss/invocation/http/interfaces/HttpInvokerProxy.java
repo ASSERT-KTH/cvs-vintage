@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.ServerException;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationException;
@@ -27,7 +28,7 @@ import org.jboss.logging.Logger;
  externalURL.
 
 * @author Scott.Stark@jboss.org
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 */
 public class HttpInvokerProxy
    implements Invoker, Externalizable
@@ -111,6 +112,10 @@ public class HttpInvokerProxy
          else if (t instanceof Error)
             throw (Error) t;
          throw new InvocationTargetException(t);
+      }
+      catch (IOException e)
+      {
+         throw new ServerException("IOE", e);
       }
    }
 
