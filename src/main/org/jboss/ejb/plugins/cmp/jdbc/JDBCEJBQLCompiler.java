@@ -73,9 +73,9 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.31 $
- *
- * TODO: collecting join paths needs rewrite
+ * @version $Revision: 1.32 $
+ *          <p/>
+ *          TODO: collecting join paths needs rewrite
  */
 public final class JDBCEJBQLCompiler extends BasicVisitor
 {
@@ -113,20 +113,23 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    private Object selectObject;
    private List inputParameters = new ArrayList();
 
-   /** deep read ahead for cmrs */
+   /**
+    * deep read ahead for cmrs
+    */
    private List leftJoinCMRList = new ArrayList();
    private StringBuffer onFindCMRJoin;
+
+   private boolean countCompositePk;
 
    public JDBCEJBQLCompiler(Catalog catalog)
    {
       this.catalog = catalog;
    }
 
-   public void compileEJBQL(
-      String ejbql,
-      Class returnType,
-      Class[] parameterTypes,
-      JDBCReadAheadMetaData readAhead) throws Exception
+   public void compileEJBQL(String ejbql,
+                            Class returnType,
+                            Class[] parameterTypes,
+                            JDBCReadAheadMetaData readAhead) throws Exception
    {
       // reset all state variables
       reset();
@@ -226,6 +229,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       offsetValue = 0;
       leftJoinCMRList.clear();
       onFindCMRJoin = null;
+      countCompositePk = false;
    }
 
    public String getSQL()
@@ -303,8 +307,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    {
       this.typeFactory = typeFactory;
       this.typeMapping = typeFactory.getTypeMapping();
-      aliasManager = new AliasManager(
-         typeMapping.getAliasHeaderPrefix(),
+      aliasManager = new AliasManager(typeMapping.getAliasHeaderPrefix(),
          typeMapping.getAliasHeaderSuffix(),
          typeMapping.getAliasMaxLength());
       subquerySupported = typeMapping.isSubquerySupported();
@@ -590,6 +593,12 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          }
       }
 
+      // todo: ...
+      if(countCompositePk)
+      {
+         buf.insert(0, "SELECT COUNT(*) FROM (").append(") t_count");
+      }
+
       return buf;
    }
 
@@ -769,22 +778,20 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       }
    }
 
-   private void createThetaJoin(
-      ASTPath path,
-      int i,
-      Set joinedAliases,
-      StringBuffer buf)
+   private void createThetaJoin(ASTPath path,
+                                int i,
+                                Set joinedAliases,
+                                StringBuffer buf)
    {
       String childAlias = aliasManager.getAlias(path.getPath(i));
       createThetaJoin(path, i, joinedAliases, childAlias, buf);
    }
 
-   private void createThetaJoin(
-      ASTPath path,
-      int i,
-      Set joinedAliases,
-      String childAlias,
-      StringBuffer buf)
+   private void createThetaJoin(ASTPath path,
+                                int i,
+                                Set joinedAliases,
+                                String childAlias,
+                                StringBuffer buf)
    {
       if(!path.isCMRField(i) || joinedAliases.contains(childAlias))
       {
@@ -811,8 +818,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          SQLUtil.getRelationTableJoinClause(cmrField, parentAlias, relationTableAlias, buf)
             .append(SQLUtil.AND);
          // child to relation table
-         SQLUtil.getRelationTableJoinClause(
-            cmrField.getRelatedCMRField(), childAlias, relationTableAlias, buf);
+         SQLUtil.getRelationTableJoinClause(cmrField.getRelatedCMRField(), childAlias, relationTableAlias, buf);
       }
 
       joinedAliases.add(childAlias);
@@ -903,52 +909,13 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          }
          else
          {
-            JDBCEntityBridge selectEntity = (JDBCEntityBridge)path.getEntity();
-
             // set the select object
+            JDBCEntityBridge selectEntity = (JDBCEntityBridge)path.getEntity();
             setTypeFactory(selectEntity.getManager().getJDBCTypeFactory());
             selectManager = selectEntity.getManager();
             selectObject = selectEntity;
-            StringBuffer columnNamesClause = new StringBuffer(200);
-            addJoinPath(path);
-            String alias = aliasManager.getAlias(path.getPath());
 
-            // get a list of all fields to be loaded
-            // get the identifier for this field
-            SQLUtil.getColumnNamesClause(
-               selectEntity.getPrimaryKeyFields(),
-               alias,
-               columnNamesClause);
-
-            if(readAhead.isOnFind())
-            {
-               String eagerLoadGroupName = readAhead.getEagerLoadGroup();
-               boolean[] loadGroupMask = selectEntity.getLoadGroupMask(eagerLoadGroupName);
-               SQLUtil.appendColumnNamesClause(
-                  selectEntity.getTableFields(),
-                  loadGroupMask,
-                  alias,
-                  columnNamesClause
-               );
-
-               try
-               {
-                  leftJoinCMRList = JDBCAbstractQueryCommand.getLeftJoinCMRNodes(
-                     selectEntity, path.getPath(), readAhead.getLeftJoins());
-               }
-               catch(DeploymentException e)
-               {
-                  throw new IllegalStateException(e.getMessage());
-               }
-
-               if(!leftJoinCMRList.isEmpty())
-               {
-                  onFindCMRJoin = new StringBuffer(100);
-                  JDBCAbstractQueryCommand.leftJoinCMRNodes(alias, leftJoinCMRList, aliasManager, onFindCMRJoin);
-                  JDBCAbstractQueryCommand.appendLeftJoinCMRColumnNames(leftJoinCMRList, aliasManager, columnNamesClause);
-               }
-            }
-            buf.append(columnNamesClause);
+            selectEntity(path, buf);
          }
       }
       else
@@ -985,7 +952,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Generates where clause without the "WHERE" keyword. */
+   /**
+    * Generates where clause without the "WHERE" keyword.
+    */
    public Object visit(ASTWhere node, Object data)
    {
       node.jjtGetChild(0).jjtAccept(this, data);
@@ -1049,7 +1018,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Compare entity */
+   /**
+    * Compare entity
+    */
    public Object visit(ASTMemberOf node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1062,8 +1033,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       JDBCEntityBridge toChildEntity = (JDBCEntityBridge)toPath.getEntity();
 
       String pathStr = toPath.getPath(toPath.size() - 2);
-      String toParentAlias = aliasManager.getAlias(
-         pathStr);
+      String toParentAlias = aliasManager.getAlias(pathStr);
       String toChildAlias = aliasManager.getAlias(toPath.getPath());
       String relationTableAlias = null;
       if(toCMRField.getRelationMetaData().isTableMappingStyle())
@@ -1142,9 +1112,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          else
          {
             buf.append(SQLUtil.SELECT);
-            SQLUtil.getColumnNamesClause(
-               toCMRField.getRelatedCMRField().getTableKeyFields(), relationTableAlias, buf
-            )
+            SQLUtil.getColumnNamesClause(toCMRField.getRelatedCMRField().getTableKeyFields(), relationTableAlias, buf)
                .append(SQLUtil.FROM)
                .append(toCMRField.getTableName())
                .append(' ')
@@ -1162,17 +1130,14 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          // compre pk to pk
          if(relationTableAlias == null)
          {
-            SQLUtil.getSelfCompareWhereClause(
-               toChildEntity.getPrimaryKeyFields(),
+            SQLUtil.getSelfCompareWhereClause(toChildEntity.getPrimaryKeyFields(),
                toChildAlias,
                fromAlias,
-               buf
-            );
+               buf);
          }
          else
          {
-            SQLUtil.getRelationTableJoinClause(
-               toCMRField.getRelatedCMRField(),
+            SQLUtil.getRelationTableJoinClause(toCMRField.getRelatedCMRField(),
                fromAlias,
                relationTableAlias,
                buf);
@@ -1181,8 +1146,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       else
       {
          // add the parameters
-         inputParameters.addAll(QueryParameter.createParameters(
-            fromParamNumber - 1,
+         inputParameters.addAll(QueryParameter.createParameters(fromParamNumber - 1,
             toChildEntity));
 
          // compare pk to parameter
@@ -1192,8 +1156,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          }
          else
          {
-            SQLUtil.getWhereClause(
-               toCMRField.getRelatedCMRField().getTableKeyFields(),
+            SQLUtil.getWhereClause(toCMRField.getRelatedCMRField().getTableKeyFields(),
                relationTableAlias,
                buf);
          }
@@ -1259,7 +1222,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return (not ? buf.append(')') : buf).append(')');
    }
 
-   /** compreEntity(arg0, arg1) */
+   /**
+    * compreEntity(arg0, arg1)
+    */
    public Object visit(ASTEntityComparison node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1276,7 +1241,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTConcat node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1289,7 +1256,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTSubstring node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1303,7 +1272,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTLCase node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1315,7 +1286,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTUCase node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1327,7 +1300,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTLength node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1339,7 +1314,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTLocate node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1362,7 +1339,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTAbs node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1374,7 +1353,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTMod node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1388,7 +1369,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** Type-mapping function translation */
+   /**
+    * Type-mapping function translation
+    */
    public Object visit(ASTSqrt node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1416,14 +1399,19 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          final JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
          if(pkFields.length > 1)
          {
-            throw new IllegalStateException("COUNT(entity) is not allowed for entity beans with composite primary key.");
+            countCompositePk = true;
+            forceDistinct = node.distinct.length() > 0;
+            selectEntity(cntPath, buf);
+            return buf;
          }
+         else
+         {
 
-         final String alias = aliasManager.getAlias(cntPath.getPath());
-         StringBuffer keyColumn = new StringBuffer(20);
-         SQLUtil.getColumnNamesClause(pkFields[0], alias, keyColumn);
-
-         args = new Object[]{node.distinct, keyColumn.toString()};
+            final String alias = aliasManager.getAlias(cntPath.getPath());
+            StringBuffer keyColumn = new StringBuffer(20);
+            SQLUtil.getColumnNamesClause(pkFields[0], alias, keyColumn);
+            args = new Object[]{node.distinct, keyColumn.toString()};
+         }
       }
 
       return JDBCTypeMappingMetaData.COUNT_FUNC.getFunctionSql(args, buf);
@@ -1469,7 +1457,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return JDBCTypeMappingMetaData.SUM_FUNC.getFunctionSql(args, buf);
    }
 
-   /** tableAlias.columnName */
+   /**
+    * tableAlias.columnName
+    */
    public Object visit(ASTPath node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1502,7 +1492,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
          "Should have been handled at a higher level.");
    }
 
-   /** ? */
+   /**
+    * ?
+    */
    public Object visit(ASTParameter node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1518,8 +1510,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
             "parameter node. Should have been handled at a higher level.");
       }
 
-      QueryParameter param = new QueryParameter(
-         node.number - 1,
+      QueryParameter param = new QueryParameter(node.number - 1,
          false, // isPrimaryKeyParameter
          null, // field
          null, // parameter
@@ -1529,7 +1520,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       return buf;
    }
 
-   /** typeMapping.get<True/False>Mapping() */
+   /**
+    * typeMapping.get<True/False>Mapping()
+    */
    public Object visit(ASTBooleanLiteral node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
@@ -1613,7 +1606,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    /**
     * Wrap a node with a class that when ever toString is called visits the
     * node.  This is used by the function implmentations, for parameters.
-    *
+    * <p/>
     * Be careful with this class because it visits the node for each call of
     * toString, which could have undesireable result if called multiple times.
     */
@@ -1634,8 +1627,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    /**
     * Recursively searches for ASTPath among children.
-    * @param selectFunction  a node implements SelectFunction
-    * @return  ASTPath child or null if there was no child of type ASTPath
+    *
+    * @param selectFunction a node implements SelectFunction
+    * @return ASTPath child or null if there was no child of type ASTPath
     */
    private ASTPath getPathFromChildren(Node selectFunction)
    {
@@ -1658,7 +1652,8 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    /**
     * Checks whether the path passed in is already in the SELECT clause.
-    * @param path  the path to check.
+    *
+    * @param path the path to check.
     * @return true  if the path is already in the SELECT clause.
     */
    private boolean isSelected(ASTPath path)
@@ -1698,6 +1693,48 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
       }
 
       return selected;
+   }
+
+   private void selectEntity(ASTPath path, StringBuffer buf)
+   {
+      JDBCEntityBridge selectEntity = (JDBCEntityBridge)path.getEntity();
+
+      StringBuffer columnNamesClause = new StringBuffer(200);
+      addJoinPath(path);
+      String alias = aliasManager.getAlias(path.getPath());
+
+      // get a list of all fields to be loaded
+      // get the identifier for this field
+      SQLUtil.getColumnNamesClause(selectEntity.getPrimaryKeyFields(),
+         alias,
+         columnNamesClause);
+
+      if(readAhead.isOnFind())
+      {
+         String eagerLoadGroupName = readAhead.getEagerLoadGroup();
+         boolean[] loadGroupMask = selectEntity.getLoadGroupMask(eagerLoadGroupName);
+         SQLUtil.appendColumnNamesClause(selectEntity.getTableFields(),
+            loadGroupMask,
+            alias,
+            columnNamesClause);
+
+         try
+         {
+            leftJoinCMRList = JDBCAbstractQueryCommand.getLeftJoinCMRNodes(selectEntity, path.getPath(), readAhead.getLeftJoins());
+         }
+         catch(DeploymentException e)
+         {
+            throw new IllegalStateException(e.getMessage());
+         }
+
+         if(!leftJoinCMRList.isEmpty())
+         {
+            onFindCMRJoin = new StringBuffer(100);
+            JDBCAbstractQueryCommand.leftJoinCMRNodes(alias, leftJoinCMRList, aliasManager, onFindCMRJoin);
+            JDBCAbstractQueryCommand.appendLeftJoinCMRColumnNames(leftJoinCMRList, aliasManager, columnNamesClause);
+         }
+      }
+      buf.append(columnNamesClause);
    }
 
    private void addJoinPath(ASTPath path)
