@@ -243,6 +243,7 @@
         <filter token="ADMIN_LASTNAME" value="${scarab.user.lastname}"/>
         <filter token="ADMIN_EMAIL" value="${scarab.user.email}"/>
         <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
+        <filter token="DATABASE_TYPE" value="${scarab.database.type}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
