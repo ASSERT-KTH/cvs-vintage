@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociation.java,v 1.4 2003/06/30 21:59:33 linus Exp $
+// $Id: ActionAddAssociation.java,v 1.5 2003/09/01 23:13:20 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,7 @@
 package org.argouml.uml.diagram.ui;
 
 
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.data_types.MAggregationKind;
+import org.argouml.model.ModelFacade;
 
 import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.ModeCreatePolyEdge;
@@ -53,9 +52,9 @@ public class ActionAddAssociation extends CmdSetMode {
      *        association
      * @param name the action description
      */
-    public ActionAddAssociation(MAggregationKind aggregation, boolean unidirectional, String name) {
-        super(ModeCreatePolyEdge.class, "edgeClass", MAssociation.class, name);
-        _modeArgs.put("aggregation", aggregation);
+    public ActionAddAssociation(Object aggregationKind, boolean unidirectional, String name) {
+        super(ModeCreatePolyEdge.class, "edgeClass", (Class)ModelFacade.ASSOCIATION, name);
+        _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));
     }
 }

@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.63 2003/08/31 11:09:56 alexb Exp $
+// $Id: CoreHelper.java,v 1.64 2003/09/01 23:13:20 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -973,7 +973,13 @@ public class CoreHelper {
      * @param relation
      * @return MModelElement
      */
-    public MModelElement getSource(MRelationship relation) {
+    public MModelElement getSource(Object relationship) {
+        
+        if(!(relationship instanceof MRelationship))
+            throw new IllegalArgumentException();
+        
+        MRelationship relation = (MRelationship)relationship;
+        
         if (relation instanceof MAssociation) {
             MAssociation assoc = (MAssociation) relation;
             List conns = assoc.getConnections();
@@ -1022,7 +1028,13 @@ public class CoreHelper {
      * @param relation
      * @return MModelElement
      */
-    public MModelElement getDestination(MRelationship relation) {
+    public MModelElement getDestination(Object relationship) {
+        
+        if(!(relationship instanceof MRelationship))
+            throw new IllegalArgumentException();
+        
+        MRelationship relation = (MRelationship)relationship;
+        
         if (relation instanceof MAssociation) {
             MAssociation assoc = (MAssociation) relation;
             List conns = assoc.getConnections();

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.102 2003/09/01 21:49:21 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.103 2003/09/01 23:13:20 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,6 +252,9 @@ public class ModelFacade {
         MVisibilityKind.PRIVATE;
     public static final Object PROTECTED_VISIBILITYKIND =
         MVisibilityKind.PROTECTED;
+    
+    public static final Object COMPOSITE_AGGREGATIONKIND =
+        MAggregationKind.COMPOSITE;
 
 
     /** Constructor that forbids instantiation.

@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.17 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.18 2003/09/01 23:13:20 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.17 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.18 2003/09/01 23:13:20 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -57,8 +57,6 @@ import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.Handle;
-
-import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 /** A Mode to interpret user input while creating an edge.  Basically
  *  mouse down starts creating an edge from a source port Fig, mouse
@@ -387,7 +385,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             Collection conns = ModelFacade.getConnections(_newEdge);
             Iterator iter = conns.iterator();
             Object associationEnd0 = iter.next();
-            ModelFacade.setAggregation(associationEnd0, MAggregationKind.COMPOSITE);
+            ModelFacade.setAggregation(associationEnd0,
+                    ModelFacade.COMPOSITE_AGGREGATIONKIND);
         }
     }
 
