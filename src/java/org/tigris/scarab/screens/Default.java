@@ -57,6 +57,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 
@@ -68,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.71 2003/03/28 00:00:52 jon Exp $
+ * @version $Id: Default.java,v 1.72 2003/04/01 17:09:58 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -170,6 +171,7 @@ public class Default extends TemplateSecureScreen
                 }
                 else if (currentModule == null)
                 {
+                    Log.get().debug("Current module is null");
                     scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
                     setTargetSelectModule(data);
                     return false;
@@ -181,6 +183,12 @@ public class Default extends TemplateSecureScreen
             else if (currentModule != null && 
                      !user.hasAnyRoleIn(currentModule))
             {
+                if (Log.get().isDebugEnabled()) 
+                {
+                    Log.get().debug("User (" + user.getUserId() + 
+                        ") did not have any roles in current module" + 
+                        currentModule.getName());
+                }                
                 scarabR.setCurrentModule(null);
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
                 scarabR.setAlertMessage(l10n.get("NoPermissionInModule"));
