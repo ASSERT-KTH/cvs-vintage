@@ -113,7 +113,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.10 2002/01/10 07:11:09 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.11 2002/01/11 01:48:48 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -438,7 +438,8 @@ public abstract class AbstractScarabModule
         for ( int i=0; i<attributes.length; i++ )
         {
             Attribute att = attributes[i];
-            if (att.isUserAttribute() )
+            RModuleAttribute modAttr = getRModuleAttribute(att, issueType);
+            if (att.isUserAttribute() && modAttr.getActive())
             {
                 userAttributes.add(att);
             }
