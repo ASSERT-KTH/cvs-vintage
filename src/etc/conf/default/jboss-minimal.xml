@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-minimal.xml,v 1.9 2004/09/04 14:15:28 starksm Exp $ -->
+<!-- $Id: jboss-minimal.xml,v 1.10 2004/09/04 14:55:06 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -53,6 +53,10 @@
 
    <mbean code="org.jboss.naming.NamingService"
       name="jboss:service=Naming">
+      <!-- The call by value mode. true if all lookups are unmarshalled using
+      the caller's TCL, false if in VM lookups return the value by reference.
+      -->
+      <attribute name="CallByValue">false</attribute>
       <!-- The listening port for the bootstrap JNP service. Set this to -1
         to run the NamingService without the JNP invoker listening port.
       -->
