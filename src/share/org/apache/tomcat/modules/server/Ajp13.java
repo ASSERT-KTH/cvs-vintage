@@ -69,6 +69,7 @@ import java.util.Enumeration;
 import org.apache.tomcat.core.Request;
 import org.apache.tomcat.util.MimeHeaders;
 import org.apache.tomcat.util.MessageBytes;
+import org.apache.tomcat.util.http.HttpMessages;
 
 /**
  * Represents a single, persistent connection between the web server and
@@ -84,6 +85,9 @@ import org.apache.tomcat.util.MessageBytes;
  * (e.g. doWrite) to the correct packets to send to the web server.
  *
  * @see Ajp13Interceptor 
+ *
+ * @author Dan Milstein [danmil@shore.net]
+ * @author Keith Wannamaker [Keith@Wannamaker.org]
  */
 public class Ajp13
 {
@@ -389,7 +393,7 @@ public class Ajp13
 		return -1;
 	    }
         }
-        return bodyBuff[pos++];
+        return (char) bodyBuff[pos++];
     }
     
     /**
@@ -486,7 +490,7 @@ public class Ajp13
 	outBuf.reset();
         outBuf.appendByte(JK_AJP13_SEND_HEADERS);
         outBuf.appendInt(status);
-        outBuf.appendString(""); // Http Status Message -- broken.
+        outBuf.appendString(HttpMessages.getMessage( status ));
         
 	int numHeaders = headers.size();
         outBuf.appendInt(numHeaders);
