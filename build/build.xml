@@ -80,7 +80,7 @@
             <fileset dir="${tomcat.dist.dir}/"/>
         </copy>
 
-        <chmod dir="${build.dir.scarab}/bin" perm="ug+rx" includes="**/*.sh" />
+        <chmod dir="${build.dir.scarab}" perm="ug+rx" includes="**/*.sh" />
 
         <mkdir dir="${build.dir.scarab}/logs"/>
         <mkdir dir="${build.dir.scarab}/work"/>
