@@ -1,22 +1,20 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 //
 package org.columba.core.print;
-
-import org.columba.core.logging.ColumbaLogger;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -26,6 +24,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.swing.JTextPane;
 import javax.swing.text.Document;
@@ -43,6 +42,9 @@ import javax.swing.text.html.HTMLEditorKit;
  *
  */
 public class cHTMLPart extends cPrintObject {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.print");
+
     /** Container holding the HTML to be printed (used to control layout etc. */
     private JTextPane mPane = null;
 
@@ -105,7 +107,7 @@ public class cHTMLPart extends cPrintObject {
      * when printing anything but the first page. This bookkeeping is usually done
      * internally when creating pagebreaks using the method breakBlock.
      * Therefore this method has not been made public.
-     * @param        pos                Starting position in y-direction
+     * @param        y                Starting position in y-direction
      */
     protected void setStartY(cUnit y) {
         mStartY = new cCmUnit(y);
@@ -245,7 +247,7 @@ public class cHTMLPart extends cPrintObject {
         h.setPoints(height); // height of content
         h.addI(topMargin); // + top margin
         h.addI(bottomMargin); // + bottom margin
-        h.setPoints(h.getPoints() * scale); // height corrected for scaling		
+        h.setPoints(h.getPoints() * scale); // height corrected for scaling
 
         return new cSize(w, h);
     }
@@ -264,7 +266,7 @@ public class cHTMLPart extends cPrintObject {
         mPane.validate(); // ensure contents is layed out properly
 
         if (!mScaleAllowed) {
-            ColumbaLogger.log.info("Scaling not active - returning scale=1.0");
+            LOG.info("Scaling not active - returning scale=1.0");
 
             return 1.0;
         } else {
@@ -278,7 +280,7 @@ public class cHTMLPart extends cPrintObject {
                 scale = 1.0; // do not scale up, i.e. no scale factor above 1.0
             }
 
-            ColumbaLogger.log.info("Returning scale=" + scale);
+            LOG.info("Returning scale=" + scale);
 
             return scale;
         }
@@ -309,8 +311,8 @@ public class cHTMLPart extends cPrintObject {
 
         // define allocation rectangle (startY is used to compensate for
         // different start point if printing shall not start from the top)
-        Rectangle allocation = new Rectangle(0, -startY, width, height +
-                startY);
+        Rectangle allocation = new Rectangle(0, -startY, width, height
+                + startY);
 
         // set initial value for height where this print object should be broken
         double breakHeight = maxHeight.getPoints() / scale; // in points, without scale
@@ -378,8 +380,8 @@ public class cHTMLPart extends cPrintObject {
             double allocMaxY = allocation.getBounds().getMaxY();
             double allocHeight = allocation.getBounds().getHeight();
 
-            if ((allocY >= 0) && (allocY < actBreakHeight) &&
-                    (allocMaxY > actBreakHeight)) {
+            if ((allocY >= 0) && (allocY < actBreakHeight)
+                    && (allocMaxY > actBreakHeight)) {
                 // view starts on page and exceeds it
 
                 /*
@@ -396,7 +398,7 @@ public class cHTMLPart extends cPrintObject {
                 if (allocY < (actBreakHeight * 0.01)) {
                     return actBreakHeight; // unchanged, i.e. no breaks before this view
                 } else {
-                    // view can be broken 
+                    // view can be broken
                     if (allocY < actBreakHeight) {
                         return allocY; // break before start of view
                     } else {

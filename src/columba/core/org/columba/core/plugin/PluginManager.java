@@ -16,7 +16,6 @@
 package org.columba.core.plugin;
 
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -31,6 +30,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 
 /**
@@ -56,6 +56,9 @@ import java.util.Vector;
  * @author fdietz
  */
 public class PluginManager {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.plugin");
+
     Map elements;
 
     /**
@@ -99,7 +102,7 @@ public class PluginManager {
             return null;
         }
 
-        ColumbaLogger.log.fine("registering plugin: " + folder);
+        LOG.fine("registering plugin: " + folder);
 
         // load plugin.xml file
         // skip if it doesn't exist
@@ -109,7 +112,7 @@ public class PluginManager {
             return null;
         }
 
-        if (xmlFile.exists() == false) {
+        if (!xmlFile.exists()) {
             return null;
         }
 
@@ -139,10 +142,10 @@ public class PluginManager {
             jarFiles.put(id, new File(folder, jar));
         }
 
-        ColumbaLogger.log.info("id: " + id);
+        LOG.fine("id: " + id);
 
         //ColumbaLogger.log.info("type: " + type);
-        ColumbaLogger.log.info("jar: " + jar);
+        LOG.fine("jar: " + jar);
 
         XmlElement extension;
         String extensionPoint;
@@ -164,11 +167,11 @@ public class PluginManager {
                         File file = null;
                         file = folder;
 
-                        ColumbaLogger.log.fine("debug: " + file.toString());
+                        LOG.fine("debug: " + file.toString());
 
                         handler.addExtension(id, extension);
                     } catch (Exception ex) {
-                        ColumbaLogger.log.severe(ex.getMessage());
+                        LOG.severe(ex.getMessage());
                     }
                 }
             }
@@ -220,7 +223,7 @@ public class PluginManager {
         if (pluginHandlers.containsKey(id)) {
             return (AbstractPluginHandler) pluginHandlers.get(id);
         } else {
-            ColumbaLogger.log.severe("PluginHandler not found: " + id);
+            LOG.severe("PluginHandler not found: " + id);
 
             throw new PluginHandlerNotFoundException(id);
         }
@@ -248,20 +251,20 @@ public class PluginManager {
             // try all possible version of readme files...
             File infoFile = new File(pluginDirectory, "readme.html");
 
-            if (infoFile.exists() == false) {
+            if (!infoFile.exists()) {
                 infoFile = new File(pluginDirectory, "readme.txt");
             }
 
-            if (infoFile.exists() == false) {
+            if (!infoFile.exists()) {
                 infoFile = new File(pluginDirectory, "Readme.html");
             }
 
-            if (infoFile.exists() == false) {
+            if (!infoFile.exists()) {
                 infoFile = new File(pluginDirectory, "Readme.txt");
             }
 
             if (infoFile.exists()) {
-                ColumbaLogger.log.info("infofile-URL=" + infoFile.toURL());
+                LOG.fine("infofile-URL=" + infoFile.toURL());
 
                 return infoFile.toURL();
             }
@@ -347,7 +350,7 @@ public class PluginManager {
      * @param b
      */
     public void setEnabled(String id, boolean b) {
-        //	get directory of plugin
+        //get directory of plugin
         File folder = getFolder(id);
 
         // get plugin.xml of plugin
@@ -357,7 +360,7 @@ public class PluginManager {
             XmlIO io = new XmlIO(configFile.toURL());
             io.load();
 
-            //	get xml tree node
+            //get xml tree node
             XmlElement e = io.getRoot().getElement("/plugin");
 
             if (e == null) {

@@ -16,7 +16,6 @@
 package org.columba.core.plugin;
 
 import org.columba.core.loader.ExternalClassLoader;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.scripting.AbstractInterpreter;
 
@@ -26,6 +25,7 @@ import java.net.URL;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 
 /**
@@ -38,12 +38,14 @@ import java.util.Vector;
  *
  *  @author freddy
  */
-public class PluginLoader {
+public final class PluginLoader {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.plugin");
+
     /**
      * Constructor for PluginLoader.
      */
-    public PluginLoader() {
-        super();
+    private PluginLoader() {
     }
 
     /**
@@ -61,7 +63,7 @@ public class PluginLoader {
         }
 
         if (MainInterface.DEBUG) {
-            ColumbaLogger.log.info("loading.. " + className);
+            LOG.fine("loading.. " + className);
         }
 
         if (type.equals("java") || type.equals("jar")) {
@@ -98,7 +100,7 @@ public class PluginLoader {
                 url[i] = (URL) urlList.get(i);
             }
 
-            ColumbaLogger.log.info("url=" + newURL);
+            LOG.fine("url=" + newURL);
 
             return new ExternalClassLoader(url).instanciate(className, args);
         }
@@ -111,10 +113,10 @@ public class PluginLoader {
         if (instance != null) {
             AbstractInterpreter ip = (AbstractInterpreter) instance;
 
-            String pythonFile = file.toString() + "/" + className.toString();
+            String pythonFile = file.toString() + "/" + className;
 
-            String pythonClass = className.toString().substring(0,
-                    className.toString().length() - 3);
+            String pythonClass = className.substring(0,
+                    className.length() - 3);
 
             Object i = ip.instanciate(pythonFile, pythonClass, args, "test");
 

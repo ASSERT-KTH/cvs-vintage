@@ -1,21 +1,19 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.xml;
-
-import org.columba.core.logging.ColumbaLogger;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -37,6 +35,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -45,6 +44,9 @@ import javax.xml.parsers.SAXParserFactory;
 
 
 public class XmlIO extends DefaultHandler {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.xml");
+
     private static final String ROOT_XML_ELEMENT_NAME = "__COLUMBA_XML_TREE_TOP__";
 
     // List of sub-elements
@@ -136,27 +138,21 @@ public class XmlIO extends DefaultHandler {
 
             saxParser.parse(input, this);
         } catch (javax.xml.parsers.ParserConfigurationException ex) {
-            ColumbaLogger.log.severe(
-                "XML config error while attempting to read from the input stream \n'" +
-                input + "'");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("XML config error while attempting to read from the input stream \n'" + input + "'");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (SAXException ex) {
             // Error
-            ColumbaLogger.log.severe(
-                "XML parse error while attempting to read from the input stream \n'" +
-                input + "'");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("XML parse error while attempting to read from the input stream \n'" + input + "'");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (IOException ex) {
-            ColumbaLogger.log.severe(
-                "I/O error while attempting to read from the input stream \n'" +
-                input + "'");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("I/O error while attempting to read from the input stream \n'" + input + "'");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
@@ -186,27 +182,21 @@ public class XmlIO extends DefaultHandler {
 
             saxParser.parse(inputURL.toString(), this);
         } catch (javax.xml.parsers.ParserConfigurationException ex) {
-            ColumbaLogger.log.severe(
-                "XML config error while attempting to read XML file \n'" +
-                inputURL + "'");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("XML config error while attempting to read XML file \n'" + inputURL + "'");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (SAXException ex) {
             // Error
-            ColumbaLogger.log.severe(
-                "XML parse error while attempting to read XML file \n'" +
-                inputURL + "'");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("XML parse error while attempting to read XML file \n'" + inputURL + "'");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
         } catch (IOException ex) {
-            ColumbaLogger.log.severe(
-                "I/O error while attempting to read XML file \n'" + inputURL +
-                "'");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("I/O error while attempting to read XML file \n'" + inputURL + "'");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
 
             return (false);
@@ -254,8 +244,8 @@ public class XmlIO extends DefaultHandler {
                 }
             }
         } catch (java.lang.NullPointerException ex) {
-            ColumbaLogger.log.severe("Null!!!");
-            ColumbaLogger.log.severe(ex.toString());
+            LOG.severe("Null!!!");
+            LOG.severe(ex.toString());
             ex.printStackTrace();
         }
     }
@@ -328,8 +318,7 @@ public class XmlIO extends DefaultHandler {
 
         for (Enumeration e = element.getAttributeNames(); e.hasMoreElements();) {
             String K = (String) e.nextElement();
-            out.write(" " + K + "=\"" +
-                TextUtils.escapeText(element.getAttribute(K)) + "\"");
+            out.write(" " + K + "=\"" + TextUtils.escapeText(element.getAttribute(K)) + "\"");
         }
 
         out.write(">");
@@ -351,8 +340,7 @@ public class XmlIO extends DefaultHandler {
             out.write("\n");
 
             for (Iterator it = subElements.iterator(); it.hasNext();) {
-                _writeSubNode(out, (XmlElement) it.next(), indent +
-                    writeIndent);
+                _writeSubNode(out, (XmlElement) it.next(), indent + writeIndent);
 
                 // for (int i = 0; i < subElements.size(); i++) {
                 // _writeSubNode(

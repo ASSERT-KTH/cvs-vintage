@@ -20,7 +20,6 @@ package org.columba.core.plugin;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.loader.DefaultClassLoader;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -35,10 +34,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
 
-
 /**
- *
- *
  *
  * Every entrypoint is represented by this abstract handler class
  * <p>
@@ -73,6 +69,9 @@ import java.util.Vector;
  *
  */
 public abstract class AbstractPluginHandler implements PluginHandlerInterface {
+
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger("org.columba.core.plugin");
+
     protected String id;
     protected XmlElement parentNode;
     protected PluginListConfig pluginListConfig;
@@ -83,15 +82,15 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
     protected Hashtable transformationTable;
 
     /**
- * associate extension with plugin which owns the extension
- */
+    * associate extension with plugin which owns the extension
+    */
     protected Map pluginMap;
     protected List externalPlugins;
 
     /**
- * @param id
- * @param config
- */
+    * @param id
+    * @param config
+    */
     public AbstractPluginHandler(String id, String config) {
         super();
         this.id = id;
@@ -105,45 +104,44 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
         pluginMap = new HashMap();
 
-        ColumbaLogger.log.info("initialising plugin-handler: " + id);
+        LOG.info("initialising plugin-handler: " + id);
     }
 
     /**
- * @return
- */
+     * @return
+     */
     protected PluginListConfig getConfig() {
         return pluginListConfig;
     }
 
     /**
- * @return
- */
+     * @return
+     */
     public String getId() {
         return id;
     }
 
     /**
- *
- * Returns an instance of the plugin
- *
- * example plugin constructor:
- *
- * public Action(JFrame frame, String text) { .. do anything .. }
- *
- * --> arguments:
- *
- * Object[] args = { frame, text };
- *
- * @param name
- *            name of plugin
- * @param args
- *            constructor arguments needed to instanciate the plugin
- * @return instance of plugin class
- *
- * @throws Exception
- */
-    public Object getPlugin(String name, Object[] args)
-        throws Exception {
+     *
+     * Returns an instance of the plugin
+     *
+     * example plugin constructor:
+     *
+     * public Action(JFrame frame, String text) { .. do anything .. }
+     *
+     * --> arguments:
+     *
+     * Object[] args = { frame, text };
+     *
+     * @param name
+     *            name of plugin
+     * @param args
+     *            constructor arguments needed to instanciate the plugin
+     * @return instance of plugin class
+     *
+     * @throws Exception
+     */
+    public Object getPlugin(String name, Object[] args) throws Exception {
         String className = getPluginClassName(name, "class");
 
         if (className == null) {
@@ -153,9 +151,10 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
             // if className isn't specified show error dialog
             NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog("Error while trying to instantiate plugin " +
-                name +
-                ".\n Classname wasn't found. This probably means that plugin.xml is broken or incomplete.");
+            dialog.showDialog(
+                "Error while trying to instantiate plugin "
+                    + name
+                    + ".\n Classname wasn't found. This probably means that plugin.xml is broken or incomplete.");
 
             return null;
         }
@@ -164,14 +163,13 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
     }
 
     /**
- * @param name
- * @param className
- * @param args
- * @return @throws
- *         Exception
- */
-    protected Object getPlugin(String name, String className, Object[] args)
-        throws Exception {
+     * @param name
+     * @param className
+     * @param args
+     * @return @throws
+     *         Exception
+     */
+    protected Object getPlugin(String name, String className, Object[] args) throws Exception {
         try {
             return loadPlugin(className, args);
         } catch (ClassNotFoundException ex) {
@@ -182,8 +180,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
             String type = pluginManager.getPluginType(pluginId);
             File pluginDir = pluginManager.getJarFile(pluginId);
 
-            return PluginLoader.loadExternalPlugin(className, type, pluginDir,
-                args);
+            return PluginLoader.loadExternalPlugin(className, type, pluginDir, args);
         } catch (InvocationTargetException ex) {
             new ExceptionDialog(ex.getTargetException());
 
@@ -193,12 +190,12 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
     }
 
     /**
- * @param name
- *            example: "org.columba.example.TextPlugin"
- * @param id
- *            this is usually just "class"
- * @return
- */
+     * @param name
+     *            example: "org.columba.example.TextPlugin"
+     * @param id
+     *            this is usually just "class"
+     * @return
+     */
     protected String getPluginClassName(String name, String id) {
         int count = parentNode.count();
 
@@ -208,26 +205,26 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
             String s = action.getAttribute("name");
 
             /*
- * if (transformationTable.contains(id)) { // this is an external
- * plugin
- *  // -> extract the correct id // example original id:
- * org.columba.mail.SpamAssassin$spamassassin // example result:
- * spamassassin
- *
- * s = s.substring(s.indexOf('$'));
- * System.out.println("class-id="+s); }
- */
+            * if (transformationTable.contains(id)) { // this is an external
+            * plugin
+            *  // -> extract the correct id // example original id:
+            * org.columba.mail.SpamAssassin$spamassassin // example result:
+            * spamassassin
+            *
+            * s = s.substring(s.indexOf('$'));
+            * System.out.println("class-id="+s); }
+            */
 
             // FIXME
 
             /*
-if (s.indexOf('$') != -1) {
-        // this is an external plugin
-        // -> extract the correct id
-        s = s.substring(s.indexOf('$')+1);
-        System.out.println("class-id="+s);
-}
-*/
+            if (s.indexOf('$') != -1) {
+            // this is an external plugin
+            // -> extract the correct id
+            s = s.substring(s.indexOf('$')+1);
+            System.out.println("class-id="+s);
+            }
+            */
             if (name.equals(s)) {
                 String clazz = action.getAttribute(id);
 
@@ -239,15 +236,15 @@ if (s.indexOf('$') != -1) {
     }
 
     /**
- *
- * return value of xml attribute of specific plugin
- *
- * @param name
- *            name of plugin
- * @param attribute
- *            key of xml attribute
- * @return value of xml attribute
- */
+     *
+     * return value of xml attribute of specific plugin
+     *
+     * @param name
+     *            name of plugin
+     * @param attribute
+     *            key of xml attribute
+     * @return value of xml attribute
+     */
     public String getAttribute(String name, String attribute) {
         int count = parentNode.count();
 
@@ -262,13 +259,13 @@ if (s.indexOf('$') != -1) {
             }
 
             /*
-if (s.indexOf('$') != -1) {
-        // this is an external plugin
-        // -> extract the correct id
-        s = s.substring(0, s.indexOf('$'));
-
-}
-*/
+            if (s.indexOf('$') != -1) {
+            // this is an external plugin
+            // -> extract the correct id
+            s = s.substring(0, s.indexOf('$'));
+            
+            }
+            */
             if (name.equals(s)) {
                 String value = action.getAttribute(attribute);
 
@@ -280,10 +277,10 @@ if (s.indexOf('$') != -1) {
     }
 
     /**
- * Return array of enabled plugins.
- *
- * @return array of enabled plugins
- */
+     * Return array of enabled plugins.
+     *
+     * @return array of enabled plugins
+     */
     public String[] getPluginIdList() {
         int count = parentNode.count();
 
@@ -330,7 +327,7 @@ if (s.indexOf('$') != -1) {
     }
 
     public boolean exists(String id) {
-        ColumbaLogger.log.info("id=" + id);
+        LOG.fine("id=" + id);
 
         String[] list = getPluginIdList();
 
@@ -339,15 +336,15 @@ if (s.indexOf('$') != -1) {
             String searchId = plugin;
 
             /*
-int index = plugin.indexOf("$");
-String searchId;
-if (index != -1)
-        searchId = plugin.substring(0, plugin.indexOf("$"));
-else
-        searchId = plugin;
-*/
-            ColumbaLogger.log.info(" - plugin id=" + plugin);
-            ColumbaLogger.log.info(" - search id=" + searchId);
+            int index = plugin.indexOf("$");
+            String searchId;
+            if (index != -1)
+            searchId = plugin.substring(0, plugin.indexOf("$"));
+            else
+            searchId = plugin;
+            */
+            LOG.fine(" - plugin id=" + plugin);
+            LOG.fine(" - search id=" + searchId);
 
             if (searchId.equals(id)) {
                 return true;
@@ -362,26 +359,25 @@ else
     }
 
     /**
- * @return
- */
+     * @return
+     */
     public PluginManager getPluginManager() {
         return pluginManager;
     }
 
     /**
- * @param className
- * @param args
- * @return @throws
- *         Exception
- */
-    protected Object loadPlugin(String className, Object[] args)
-        throws Exception {
+     * @param className
+     * @param args
+     * @return @throws
+     *         Exception
+     */
+    protected Object loadPlugin(String className, Object[] args) throws Exception {
         return new DefaultClassLoader().instanciate(className, args);
     }
 
     /**
- * @param pluginManager
- */
+     * @param pluginManager
+     */
     public void setPluginManager(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
     }
@@ -411,11 +407,11 @@ else
     }
 
     /**
- * Register plugin at this extension point.
- *
- * @param id
- * @param extension
- */
+     * Register plugin at this extension point.
+     *
+     * @param id
+     * @param extension
+     */
     public void addExtension(String id, XmlElement extension) {
         // add external plugin to list
         // --> this is used to distinguish internal/external plugins
@@ -432,24 +428,24 @@ else
             pluginMap.put(action.getAttribute("name"), id);
 
             /*
-String newName = id + '$' + action.getAttribute("name");
-String userVisibleName = action.getAttribute("name");
-
-// associate id with newName for later reference
-transformationTable.put(id, newName);
-
-action.addAttribute("name", newName);
-action.addAttribute("uservisiblename", userVisibleName);
-*/
+            String newName = id + '$' + action.getAttribute("name");
+            String userVisibleName = action.getAttribute("name");
+            
+            // associate id with newName for later reference
+            transformationTable.put(id, newName);
+            
+            action.addAttribute("name", newName);
+            action.addAttribute("uservisiblename", userVisibleName);
+            */
             parentNode.addElement(action);
         }
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.core.plugin.PluginHandlerInterface#getParent()
- */
+     * (non-Javadoc)
+     *
+     * @see org.columba.core.plugin.PluginHandlerInterface#getParent()
+     */
     public XmlElement getParent() {
         return parentNode;
     }

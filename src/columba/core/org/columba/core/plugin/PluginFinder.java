@@ -1,27 +1,27 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 import java.io.File;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 
 /**
@@ -30,11 +30,14 @@ import java.util.Vector;
  *
  * @author fdietz
  */
-public class PluginFinder {
+public final class PluginFinder {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.plugin");
+
     /**
      * Constructor for PluginFinder.
      */
-    public PluginFinder() {
+    private PluginFinder() {
         super();
     }
 
@@ -53,22 +56,22 @@ public class PluginFinder {
         if (programFolder.exists()) {
             programList = programFolder.listFiles();
         } else {
-            ColumbaLogger.log.fine("Folder \"plugins\" doesn't exist.");
+            LOG.fine("Folder \"plugins\" doesn't exist.");
         }
 
         File configFolder = new File(MainInterface.config.getConfigDirectory(),
                 "plugins");
 
-        if (configFolder.exists() == false) {
+        if (!configFolder.exists()) {
             configFolder.mkdir();
         }
 
-        ColumbaLogger.log.info("config-folder path=" + configFolder.getPath());
+        LOG.info("config-folder path=" + configFolder.getPath());
 
         if (configFolder.exists()) {
             configList = configFolder.listFiles();
         } else {
-            ColumbaLogger.log.fine("Folder \"plugins\" doesn't exist.");
+            LOG.info("Folder \"plugins\" doesn't exist.");
         }
 
         if ((programList != null) && (configList != null)) {

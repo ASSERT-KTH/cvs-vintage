@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.gui.menu;
@@ -19,13 +19,13 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
@@ -38,6 +38,9 @@ import javax.swing.JPopupMenu;
  * Generation>Code and Comments
  */
 public class PopupMenuGenerator extends AbstractMenuGenerator {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.gui.menu");
+
     /**
      * @param frameMediator
      * @param path
@@ -85,7 +88,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                                     "action"), frameController);
 
                         if (action != null) {
-                            //							use our custom CMenuItem here
+                            //use our custom CMenuItem here
                             // -> in order to support JavaHelp support
                             // -> @see CMenuItem for more details
                             CMenuItem tmp = new CMenuItem(action);
@@ -97,13 +100,12 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                         }
                     } catch (Exception e) {
                         NotifyDialog dialog = new NotifyDialog();
-                        dialog.showDialog("Error while loading plugin " +
-                            next.getAttribute("action") +
-                            ". This probably means that the class wasn't found. Compile the plugin to create it.");
+                        dialog.showDialog("Error while loading plugin "
+                                + next.getAttribute("action")
+                                + ". This probably means that the class wasn't found. Compile the plugin to create it.");
 
                         if (MainInterface.DEBUG) {
-                            ColumbaLogger.log.severe(e + ": " +
-                                next.getAttribute("action"));
+                            LOG.severe(e + ": " + next.getAttribute("action"));
                             e.printStackTrace();
                         }
                     }
@@ -119,7 +121,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                         menu.add(menuitem);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        ColumbaLogger.log.severe(e.getMessage());
+                        LOG.severe(e.getMessage());
                     }
                 } else if (next.getAttribute("imenu") != null) {
                     try {
@@ -128,7 +130,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                                 next.getAttribute("imenu"), frameController));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        ColumbaLogger.log.severe(e.getMessage());
+                        LOG.severe(e.getMessage());
                     }
                 }
             } else if (name.equals("separator")) {

@@ -1,21 +1,19 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.io;
-
-import org.columba.core.logging.ColumbaLogger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,23 +26,33 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 
 /**
  * The startup default for installation directory is the system propertry "user.dir".
  *
  */
-public class DiskIO {
+public final class DiskIO {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.core.io");
+
     private static String installationDirectory = System.getProperties()
                                                         .getProperty("user.dir");
     private static String resourceFolder = "";
+
+    /**
+     * Private constructor for utility class.
+     */
+    private DiskIO() {
+    }
 
     /** Ensures the existence of the directory specified by the parameter. If the
      *  directory does not exist, an attempt is performed to create it including all
      *  necessary parent directories that may be implied by the specification.
      *  ### HELPME : against what should a relative pathname be made absolute? ###
      *  ### We need to set the installation directory somewhere! ####
-     *  @param path String specifying the intended directory name; if the specified
+     *  @param dir File specifying the intended directory name; if the specified
      *  name is a relative path, it is always made absolute against the program's
      *  <b>installationDirectory</b>.
      *  @return <b>true</b> if and only if the specified file exists and
@@ -69,11 +77,9 @@ public class DiskIO {
             success = !dir.isFile() && dir.mkdirs();
 
             if (success) {
-                ColumbaLogger.log.info("created directory: " + dir.toString());
+                LOG.info("Created directory: " + dir.toString());
             } else {
-                ColumbaLogger.log.severe(
-                    "failed while trying to create directory: " +
-                    dir.toString());
+                LOG.severe("failed while trying to create directory: " + dir.toString());
             }
         }
 
@@ -165,16 +171,14 @@ public class DiskIO {
             if ((f = files[i]).isDirectory()) {
                 deleteDirectory(f);
             } else if (!f.delete()) {
-                ColumbaLogger.log.severe("*** failed to delete file " +
-                    f.getAbsolutePath());
+                LOG.severe("*** failed to delete file " + f.getAbsolutePath());
             }
         }
 
         success = dir.delete();
 
         if (!success) {
-            ColumbaLogger.log.severe("*** failed to delete directory " +
-                dir.getAbsolutePath());
+            LOG.severe("*** failed to delete directory " + dir.getAbsolutePath());
         }
 
         return success;
@@ -209,7 +213,7 @@ public class DiskIO {
         boolean success;
 
         if (!(success = f.delete())) {
-            ColumbaLogger.log.severe("*** failed to delete file " + path);
+            LOG.severe("*** failed to delete file " + path);
         }
 
         return success;
@@ -261,7 +265,7 @@ public class DiskIO {
         url = DiskIO.class.getResource("/" + path);
 
         if (url == null) {
-            ColumbaLogger.log.severe("*** failed locating resource: " + path);
+            LOG.severe("*** failed locating resource: " + path);
 
             return null;
         }
@@ -307,14 +311,14 @@ public class DiskIO {
             out = new FileOutputStream(outputFile);
             in = new FileInputStream(inputFile);
 
-            while ((len = in.read(buffer)) != -1)
+            while ((len = in.read(buffer)) != -1) {
                 out.write(buffer, 0, len);
+            }
 
             in.close();
             out.close();
         } catch (IOException e) {
-            ColumbaLogger.log.info("*** error during file copy " +
-                outputFile.getAbsolutePath() + ": " + e.getMessage());
+            LOG.info("*** error during file copy " + outputFile.getAbsolutePath() + ": " + e.getMessage());
             throw e;
         }
     }
@@ -346,16 +350,17 @@ public class DiskIO {
 
             out = new FileOutputStream(outputFile);
 
-            while ((len = in.read(buffer)) != -1)
+            while ((len = in.read(buffer)) != -1) {
                 out.write(buffer, 0, len);
+            }
 
             out.close();
             in.close();
 
-            ColumbaLogger.log.fine("created : " + outputFile.getAbsolutePath());
+            LOG.fine("created : " + outputFile.getAbsolutePath());
         } catch (IOException e) {
-            ColumbaLogger.log.severe("*** error during resource file copy " +
-                outputFile.getAbsolutePath() + ": " + e.getMessage());
+            LOG.severe("*** error during resource file copy "
+                    + outputFile.getAbsolutePath() + ": " + e.getMessage());
             throw e;
         }
 
