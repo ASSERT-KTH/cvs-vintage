@@ -60,25 +60,10 @@ import org.tigris.scarab.om.RModuleOption;
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.14 $ $Date: 2001/09/13 22:37:03 $
+ * @version $Revision: 1.15 $ $Date: 2001/09/14 00:06:38 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {
-    public void setValue(String value)
-    {
-        // would throw exception if allowed, but will throw and log to 
-        // help track down error
-        try
-        {
-            throw new Exception(
-                "setValue was called on an OptionAttribute");
-        }
-        catch (Exception e)
-        {
-            Log.error(e);
-        }
-    }
-
     public void setOption(RModuleOption option)
         throws Exception
     {
