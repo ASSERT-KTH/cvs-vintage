@@ -152,7 +152,8 @@ public class Ajp13
         "COPY",
         "MOVE",
         "LOCK",
-        "UNLOCK"
+        "UNLOCK",
+        "ACL"
     };
     
     // Translates integer codes to request header names
