@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.32 2004/02/23 02:08:54 billbarker Exp $
- * $Revision: 1.32 $
- * $Date: 2004/02/23 02:08:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.33 2004/02/23 06:06:13 billbarker Exp $
+ * $Revision: 1.33 $
+ * $Date: 2004/02/23 06:06:13 $
  *
  *
  *  Copyright 1999-2004 The Apache Software Foundation
@@ -15,7 +15,8 @@
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language 
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
 
