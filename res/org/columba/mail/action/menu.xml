@@ -23,6 +23,8 @@
 		<menuitem imenu="SortMessagesMenu"/>
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
+		<separator/>
+		<menuitem action="ViewMessageSource"/>
 	</menu>
 	
 	<menu name="menu_folder">

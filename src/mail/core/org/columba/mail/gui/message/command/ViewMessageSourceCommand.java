@@ -15,13 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
+import java.io.File;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameController;
+import org.columba.core.io.DiskIO;
+import org.columba.core.util.TempFileStore;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.message.MimeHeader;
 
 /**
  * @author freddy
@@ -34,6 +40,7 @@ import org.columba.mail.gui.frame.MailFrameController;
 public class ViewMessageSourceCommand extends FolderCommand {
 
 	String source;
+	File tempFile;
 
 	/**
 	 * Constructor for ViewMessageSourceCommand.
@@ -50,14 +57,10 @@ public class ViewMessageSourceCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		(
-			(
-				MailFrameController) frameController)
-					.messageController
-					.showMessageSource(
-			source);
+		MimeTypeViewer viewer = new MimeTypeViewer();
+		MimeHeader header = new MimeHeader();
+		viewer.open(header, tempFile);
 
-		
 	}
 
 	/**
@@ -77,5 +80,13 @@ public class ViewMessageSourceCommand extends FolderCommand {
 		Object uid = uids[0];
 		source = folder.getMessageSource(uid, worker);
 
+		try {
+
+			tempFile = TempFileStore.createTempFile();
+			DiskIO.saveStringInFile(tempFile, source);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+
+		}
 	}
 }
