@@ -548,8 +548,17 @@ public class Issue
     {
         List associatedUsersIds = new ArrayList();
         List associatedUsers = new ArrayList();
-        associatedUsersIds.add(getCreatedBy().getUserId());
-        associatedUsersIds.add(getModifiedBy().getUserId());
+        
+        ScarabUser tmp = getCreatedBy();
+        if (tmp != null)
+        {
+            associatedUsersIds.add(tmp.getUserId());
+        }
+        tmp = getModifiedBy();
+        if (tmp != null)
+        {
+            associatedUsersIds.add(tmp.getUserId());
+        }
 
         Iterator iter =  getAssigneeAttributeValues().iterator();   
         while ( iter.hasNext() ) 
@@ -559,15 +568,13 @@ public class Issue
 
         for ( int i=0; i<associatedUsersIds.size(); i++ ) 
         {
-            ScarabUser user = (ScarabUser) ScarabUserImplPeer
-                              .retrieveByPK((NumberKey)associatedUsersIds
-                                                      .get(i));
+            ScarabUser user = UserManager
+                        .getInstance((NumberKey)associatedUsersIds.get(i));
             if (!associatedUsers.contains(user))
             {
                 associatedUsers.add(user);
             }
         }
-            
         return associatedUsers;
     }
 
@@ -665,7 +672,6 @@ public class Issue
                 user = getCreatedBy();
             }
         }
-        
         return user;
     }
 
