@@ -43,6 +43,7 @@ import org.columba.ristretto.imap.parser.FlagsParser;
 import org.columba.ristretto.imap.parser.IMAPHeader;
 import org.columba.ristretto.imap.parser.IMAPHeaderlistParser;
 import org.columba.ristretto.imap.parser.ListInfo;
+import org.columba.ristretto.imap.parser.ListInfoParser;
 import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
 import org.columba.ristretto.imap.parser.MessageSet;
 import org.columba.ristretto.imap.parser.MessageSourceParser;
@@ -495,8 +496,7 @@ public class IMAPStore {
 					"fetch_folder_list"));
 			IMAPResponse[] responses = getProtocol().list("", "");
 
-			ListInfo listInfo = new ListInfo();
-			listInfo.parse(responses[0]);
+			ListInfo listInfo = ListInfoParser.parse(responses[0]);
 
 			return listInfo.getDelimiter();
 		} catch (BadCommandException ex) {
@@ -535,10 +535,11 @@ public class IMAPStore {
 				if (responses[i] == null) {
 					continue;
 				}
-
-				ListInfo listInfo = new ListInfo();
-				listInfo.parse(responses[i]);
-				v.add(listInfo);
+				
+				if( responses[i].getResponseSubType().equals("LSUB") ) {
+					ListInfo listInfo = ListInfoParser.parse(responses[i]);
+					v.add(listInfo);
+				}
 			}
 
 			if (v.size() > 0) {
