@@ -17,12 +17,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import java.util.List;
-import java.util.Vector;
-
 import javax.swing.AbstractListModel;
 
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
 

@@ -26,7 +26,6 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.model.Group;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;

@@ -23,7 +23,6 @@ import java.lang.reflect.Method;
 import org.columba.mail.folder.IMAPTstFactory;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
-import org.columba.mail.folder.TempFolderFactory;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

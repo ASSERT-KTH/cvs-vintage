@@ -15,14 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
-import java.util.Iterator;
-
-import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
-import org.columba.addressbook.model.HeaderItem;
-
 /**
  * JCombox includes autocomplete feature.
  * <p>

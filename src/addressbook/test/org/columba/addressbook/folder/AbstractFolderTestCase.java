@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.columba.mail.folder.FolderTstHelper;
-import org.columba.mail.folder.MessageFolder;
 
 import junit.framework.TestCase;
 

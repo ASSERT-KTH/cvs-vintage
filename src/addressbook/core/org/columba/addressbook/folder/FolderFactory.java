@@ -19,7 +19,6 @@ package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Group;
 import org.columba.core.xml.XmlElement;
 

@@ -25,7 +25,6 @@ import junit.framework.TestCase;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.mh.CachedMHFolder;
 
 /**
  * Base class for all filter tests.

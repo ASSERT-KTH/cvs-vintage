@@ -24,7 +24,6 @@ import java.io.OutputStreamWriter;
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
-import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.MessageFolder;
 

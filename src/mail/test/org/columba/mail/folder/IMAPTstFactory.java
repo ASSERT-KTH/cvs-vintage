@@ -21,7 +21,6 @@ import org.columba.core.xml.XmlIO;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
 
 public class IMAPTstFactory implements MailboxTstFactory {
 	
