@@ -19,8 +19,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Enumeration;
 import java.util.Vector;
 
+import org.columba.addressbook.parser.AddressParser;
+import org.columba.addressbook.parser.ListParser;
 import org.columba.core.gui.DefaultFrameModel;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.FrameView;
@@ -37,25 +40,29 @@ import org.columba.mail.message.Message;
  *
  * controller for message composer dialog
  */
-public class ComposerController extends FrameController
+public class ComposerController
+	extends FrameController
 	implements CharsetListener, ComponentListener, WindowListener {
-		
+
 	private IdentityInfoPanel identityInfoPanel;
 	private AttachmentController attachmentController;
 	private SubjectController subjectController;
 	private PriorityController priorityController;
 	private AccountController accountController;
 	private EditorController editorController;
-	private HeaderController headerController; 
+	private HeaderController headerController;
 	private MessageComposer messageComposer;
 	private CharsetManager charsetManager;
 	private ComposerSpellCheck composerSpellCheck;
-	
+
+	//private ComposerModel composerModel;
+
+	/*
 	Message message;
 	AccountItem accountItem;
 	String bodytext;
 	String charsetName;
-	
+
 	Vector attachments;
 
 	Vector toList;
@@ -64,73 +71,82 @@ public class ComposerController extends FrameController
 
 	boolean signMessage;
 	boolean encryptMessage;
+	*/
 	
-	public ComposerController(String id, DefaultFrameModel model)  {
-		this(id,model, new Message());
-	}
-
-	public ComposerController(String id, DefaultFrameModel model, Message message)  {
-		super(id,model);
-
-		this.message  = message;
-		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
+	public ComposerController(String id, DefaultFrameModel model) {
+		this(id, model, new Message());
 		
+		//composerModel = new ComposerModel();
 	}
+
+	public ComposerController(
+		String id,
+		DefaultFrameModel model,
+		Message message) {
+		super(id, model);
+		
+		((ComposerModel)model).setMessage(message);
+
+		//this.message = message;
+		//composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
+		//composerModel = new ComposerModel();
+	}
+
 	
 
 	public void charsetChanged(CharsetEvent e) {
 		//((ComposerModel)getModel()).setCharsetName(e.getValue());
 	}
 
-	/*
-
+	
+	
 	public boolean checkState() {
 		// update ComposerModel based on user-changes in ComposerView
 		updateComponents(false);
-
-		boolean b = composerInterface.subjectController.checkState();
+	
+		boolean b = subjectController.checkState();
 		if (b == false)
 			return false;
-
-		b = composerInterface.headerController.checkState();
+	
+		b = headerController.checkState();
 		if (b == false)
 			return false;
-
+	
 		return true;
 	}
-
+	/*
 	public void saveWindowPosition() {
-
+	
 		java.awt.Dimension d = view.getSize();
-
+	
 		WindowItem windowItem = composerInterface.viewItem.getWindowItem();
 		
 		windowItem.set("x", 0);
 		windowItem.set("y", 0);
 		windowItem.set("width", d.width);
 		windowItem.set("height", d.height);
-
+	
 		composerInterface.viewItem.set("splitpanes","main",
 			view.getMainDividerLocation());
 		composerInterface.viewItem.set("splitpanes","header",
 			view.getRightDividerLocation());
-
+	
 	}
-
+	
 	public void loadWindowPosition() {
 		WindowItem windowItem = composerInterface.viewItem.getWindowItem();
 		
 		java.awt.Point point = windowItem.getPoint();
 		java.awt.Dimension dim = windowItem.getDimension();
-
+	
 		view.setSize(dim);
-
+	
 		view.setMainDividerLocation(
 			composerInterface.viewItem.getInteger("splitpanes","main"));
 		view.setRightDividerLocation(
 		composerInterface.viewItem.getInteger("splitpanes","header"));
 	}
-
+	
 	protected void registerWindowListener() {
 		view.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -138,52 +154,55 @@ public class ComposerController extends FrameController
 				hideComposerWindow();
 			}
 		});
-
+	
 	}
-
+	
 	public ComposerModel getModel() {
 		return model;
 	}
-
+	*/
+	
 	public void updateComponents(boolean b) {
-		composerInterface.subjectController.updateComponents(b);
-
-		composerInterface.editorController.updateComponents(b);
-		composerInterface.priorityController.updateComponents(b);
-		composerInterface.accountController.updateComponents(b);
-		composerInterface.attachmentController.updateComponents(b);
-
-		composerInterface.headerController.updateComponents(b);
-
+		subjectController.updateComponents(b);
+	
+		editorController.updateComponents(b);
+		priorityController.updateComponents(b);
+		accountController.updateComponents(b);
+		attachmentController.updateComponents(b);
+	
+		headerController.updateComponents(b);
+	
 	}
-
+	
+	/*
+	
 	public void showComposerWindow() {
-
+	
 		updateComponents(true);
-
+	
 		composerInterface.editorController.installListener();
 		composerInterface.subjectController.installListener();
 		composerInterface.priorityController.installListener();
 		//composerInterface.accountController.installListener();
 		composerInterface.attachmentController.installListener();
-
+	
 		//composerInterface.headerController.installListener();
-
+	
 		composerInterface.headerController.view.getTable().initFocus(
 			composerInterface.subjectController.view);
 			
 		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true )
 			showAddressbookWindow();
-
+	
 		view.setVisible(true);
-
+	
 		
 		initAddressCompletion();
 		
 		
 		composerInterface.headerController.appendRow();
 	}
-
+	
 	protected void initAddressCompletion() {
 		AddressCollector.clear();
 		
@@ -207,46 +226,47 @@ public class ComposerController extends FrameController
 			if ( item.contains("email;internet") ) AddressCollector.addAddress( (String) item.get("email;internet"), item ); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-
+	
 	public void hideComposerWindow() {
-
+	
 		saveWindowPosition();
 		
 		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true)
 			hideAddressbookWindow();
-
+	
 		view.setVisible(false);
 	}
-
+	
 	public void showAddressbookWindow() {
 		updateAddressbookFrame();
-
+	
 		composerInterface.addressbookFrame.setVisible(true);
 	}
-
+	
 	public void hideAddressbookWindow() {
 		composerInterface.addressbookFrame.setVisible(false);
 	}
-
+	*/
+	
 	public Vector getRCPTVector() {
 		Vector output = new Vector();
 		Enumeration aktEnum;
 		Object aktAdress;
-
-		Vector v = ListParser.parseVector(getModel().getToList());
+	
+		Vector v = ListParser.parseVector(((ComposerModel)getModel()).getToList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.parseVector(getModel().getCcList());
+		v = ListParser.parseVector(((ComposerModel)getModel()).getCcList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.parseVector(getModel().getBccList());
+		v = ListParser.parseVector(((ComposerModel)getModel()).getBccList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
-
+	
 		
 		return output;
 	}
-
-
+	
+	/*
 	protected void updateAddressbookFrame() {
-
+	
 		if ((view.getLocation().x
 			- composerInterface.addressbookFrame.getSize().width
 			< 0)
@@ -255,35 +275,35 @@ public class ComposerController extends FrameController
 				view.getLocation().x
 					- composerInterface.addressbookFrame.getSize().width;
 			int y = view.getLocation().y;
-
+	
 			if (x <= 0)
 				x = 0;
 			if (y <= 0)
 				y = 0;
-
+	
 			view.setLocation(
 				x + composerInterface.addressbookFrame.getSize().width,
 				y);
-
+	
 		}
-
+	
 		composerInterface.addressbookFrame.setLocation(
 			view.getLocation().x
 				- composerInterface.addressbookFrame.getSize().width,
 			view.getLocation().y);
-
+	
 	}*/
 
 	public void componentHidden(ComponentEvent e) {
 	}
 
 	public void componentMoved(ComponentEvent e) {
-		
+
 		/*		
 		if (composerInterface.addressbookFrame.isVisible()) {
 			updateAddressbookFrame();
 		}*/
-		
+
 	}
 
 	public void componentResized(ComponentEvent e) {
@@ -317,10 +337,10 @@ public class ComposerController extends FrameController
 	 * @see org.columba.core.gui.FrameController#createView()
 	 */
 	protected FrameView createView() {
-		ComposerView view =  new ComposerView(this);
-		
+		ComposerView view = new ComposerView(this);
+
 		view.init();
-		
+
 		return view;
 	}
 
@@ -330,7 +350,6 @@ public class ComposerController extends FrameController
 	protected void initInternActions() {
 
 	}
-
 
 	/**
 	 * @return AccountController
@@ -407,12 +426,11 @@ public class ComposerController extends FrameController
 	 */
 	protected void init() {
 		identityInfoPanel = new IdentityInfoPanel();
-		
-		attachmentController =
-			new AttachmentController(this);
+
+		attachmentController = new AttachmentController(this);
 
 		headerController = new HeaderController(this);
-		
+
 		subjectController = new SubjectController(this);
 
 		priorityController = new PriorityController(this);
@@ -421,156 +439,36 @@ public class ComposerController extends FrameController
 
 		editorController = new EditorController(this);
 
-		//messageComposer = new MessageComposer(this);
-
+		messageComposer = new MessageComposer(this);
 
 		//composerInterface.composerFolder = new TempFolder();
 
 		charsetManager = new CharsetManager();
 		charsetManager.addCharsetListener(this);
 
-		
 		/*
 		composerSpellCheck =
 			new ComposerSpellCheck();
-
+		
 		
 		composerInterface.addressbookFrame =
 			AddressBookIC.createAddressbookListFrame(composerInterface);
-
+		
 		composerInterface.addressbookFrame.addComponentListener(this);
 			*/
-		
+
 		/*
 		getView().addComponentListener(this);
-
+		
 		//view.setVisible(true);	
-
+		
 		registerWindowListener();
-
+		
 		int count = MailConfig.getAccountList().count();
 		if ( count != 0 ) loadWindowPosition();*/
 
 	}
 
-	/**
-	 * @return Vector
-	 */
-	public Vector getAttachments() {
-		return attachments;
-	}
-
-	/**
-	 * @return Vector
-	 */
-	public Vector getBccList() {
-		return bccList;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getBodytext() {
-		return bodytext;
-	}
-
-	/**
-	 * @return Vector
-	 */
-	public Vector getCcList() {
-		return ccList;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getCharsetName() {
-		return charsetName;
-	}
-
-	/**
-	 * Sets the attachments.
-	 * @param attachments The attachments to set
-	 */
-	public void setAttachments(Vector attachments) {
-		this.attachments = attachments;
-	}
-
-	/**
-	 * Sets the bccList.
-	 * @param bccList The bccList to set
-	 */
-	public void setBccList(Vector bccList) {
-		this.bccList = bccList;
-	}
-
-	/**
-	 * Sets the bodytext.
-	 * @param bodytext The bodytext to set
-	 */
-	public void setBodytext(String bodytext) {
-		this.bodytext = bodytext;
-	}
-
-	/**
-	 * Sets the ccList.
-	 * @param ccList The ccList to set
-	 */
-	public void setCcList(Vector ccList) {
-		this.ccList = ccList;
-	}
-
-	/**
-	 * Sets the charsetName.
-	 * @param charsetName The charsetName to set
-	 */
-	public void setCharsetName(String charsetName) {
-		this.charsetName = charsetName;
-	}
-
-	/**
-	 * @return Vector
-	 */
-	public Vector getToList() {
-		return toList;
-	}
-
-	/**
-	 * Sets the toList.
-	 * @param toList The toList to set
-	 */
-	public void setToList(Vector toList) {
-		this.toList = toList;
-	}
 	
-	public String getHeaderField(String key) {
-		return (String) message.getHeader().get(key);
-	}
-
-
-	public void setHeaderField(String key, String value) {
-		message.getHeader().set(key, value);
-	}
-	
-	public String getPriority() {
-		if (message.getHeader().get("X-Priority") == null)
-			return "Normal";
-		else
-			return (String) message.getHeader().get("X-Priority");
-	}
-
-
-	public void setPriority(String s) {
-		message.getHeader().set("X-Priority", s);
-	}
-
-	public void setAccount(AccountItem item) {
-		identityInfoPanel.set(item);
-		accountItem = item;
-	}
-	
-	public AccountItem getAccount() {
-		return accountItem;	
-	}
 
 }

@@ -93,6 +93,15 @@ public class ComposerModel extends DefaultFrameModel {
 
 	}
 	
+	public void setHeaderField(String key, String value)
+	{
+		message.getHeader().set(key, value);
+	}
+	
+	public String getHeaderField(String key) {
+			return (String) message.getHeader().get(key);
+		}
+	
 	public void setToList( Vector v )
 	{
 		this.toList = v;
@@ -236,12 +245,21 @@ public class ComposerModel extends DefaultFrameModel {
 	public void setEncryptMessage(boolean encryptMessage) {
 		this.encryptMessage = encryptMessage;
 	}
+	
+	public String getPriority() {
+			if (message.getHeader().get("X-Priority") == null)
+				return "Normal";
+			else
+				return (String) message.getHeader().get("X-Priority");
+		}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameModel#createInstance(java.lang.String)
-	 */
+	public void setPriority(String s)
+	{
+		message.getHeader().set("X-Priority", s);
+	}
+	
 	public FrameController createInstance(String id) {
 		return new ComposerController(id,this);
 	}
-
+	
 }

@@ -135,4 +135,11 @@ public abstract class FrameController {
 		this.selectionManager = selectionManager;
 	}
 
+	/**
+	 * @return DefaultFrameModel
+	 */
+	public DefaultFrameModel getModel() {
+		return model;
+	}
+
 }

@@ -50,7 +50,7 @@ public class AccountController implements ItemListener {
 			view.addItem(config.get(i));
 			if (i == 0) {
 				view.setSelectedItem(config.get(i));
-				controller.setAccount(config.get(i));
+				((ComposerModel)controller.getModel()).setAccountItem(config.get(i));
 			}
 		}
 
@@ -96,14 +96,14 @@ public class AccountController implements ItemListener {
 
 	public void updateComponents(boolean b) {
 		if (b == true) {
-			view.setSelectedItem(controller.getAccount());
+			view.setSelectedItem(((ComposerModel)controller.getModel()).getAccountItem());
 			
 			/*
 			encryptMenuItem.setSelected(model.isEncryptMessage());
 			signMenuItem.setSelected(model.isSignMessage());
 			*/
 		} else {
-			controller.setAccount((AccountItem) view.getSelectedItem());
+			((ComposerModel)controller.getModel()).setAccountItem((AccountItem) view.getSelectedItem());
 			
 			/*
 			model.setSignMessage(signMenuItem.isSelected());

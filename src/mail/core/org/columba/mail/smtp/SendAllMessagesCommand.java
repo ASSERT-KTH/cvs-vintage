@@ -87,10 +87,13 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 			if (message.getAccountUid() != actAccountUid) {
 
+				// doesn't make any sense here
+				/*
 				if (sentList.size() != 0) {
 
 					sentList.clear();
 				}
+				*/
 
 				actAccountUid = message.getAccountUid();
 
@@ -123,7 +126,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 		if (sentList.size() > 0) {
 			moveToSentFolder(sentList, sentFolder);
-
+			sentList.clear();
 		}
 	}
 

@@ -8,8 +8,9 @@ package org.columba.mail.gui.composer.action;
 
 import java.awt.event.ActionEvent;
 
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.FrameController;
 import org.columba.core.util.SwingWorker;
-import org.columba.mail.action.ComposerAction;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.util.MailResourceLoader;
@@ -20,7 +21,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ExternalEditorAction extends ComposerAction {
+public class ExternalEditorAction extends FrameAction {
 
 	/**
 	 * @param composerController
@@ -33,9 +34,9 @@ public class ExternalEditorAction extends ComposerAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ExternalEditorAction(ComposerController composerController) {
+	public ExternalEditorAction(FrameController frameController) {
 		super(
-			composerController,
+			frameController,
 			MailResourceLoader.getString(
 				"menu",
 				"composer",
@@ -63,21 +64,23 @@ public class ExternalEditorAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
+		final ComposerController composerController = (ComposerController ) getFrameController();
+		
 		final SwingWorker worker = new SwingWorker() {
 			public Object construct() {
 				//composerInterface.composerFrame.setCursor(Cursor.WAIT_CURSOR);
-				composerInterface.composerFrame.setEnabled(false);
-				composerInterface.editorController.getView().setEnabled(false);
+				composerController.getView().setEnabled(false);
+				composerController.getEditorController().getView().setEnabled(false);
 				ExternalEditor Ed = new ExternalEditor();
 				Ed.startExternalEditor(
-					composerInterface.editorController.getView());
+				composerController.getEditorController().getView());
 				return Ed;
 			}
 
 			//Runs on the event-dispatching thread.
 			public void finished() {
-				composerInterface.composerFrame.setEnabled(true);
-				composerInterface.editorController.getView().setEnabled(true);
+				composerController.getView().setEnabled(true);
+				composerController.getEditorController().getView().setEnabled(true);
 				//composerInterface.composerFrame.setCursor(Cursor.DEFAULT_CURSOR);
 			}
 		};

@@ -29,7 +29,7 @@ public class ToolbarButton extends JButton {
 	String buttonText;
 
 	static boolean WITH_ICON = true;
-	static boolean WITH_TEXT = true;
+	static boolean WITH_TEXT = false;
 	static boolean ALIGNMENT = true;
 
 	public ToolbarButton()

@@ -363,7 +363,8 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 			if (accountItem.isPopAccount())
 			{
 				// update pop3 fetch menu
-				MainInterface.frameModel.updatePop3Menu();
+				// TODO
+				//MainInterface.frameModel.updatePop3Menu();
 
 				int uid = accountItem.getUid();
 				POP3ServerController c = MainInterface.popServerCollection.uidGet(uid);

@@ -33,12 +33,13 @@ public class CopyAction extends FrameAction {
 			controller,
 			MailResourceLoader.getString("menu", "mainframe", "menu_edit_copy"),
 			MailResourceLoader.getString("menu", "mainframe", "menu_edit_copy"),
+			MailResourceLoader.getString("menu", "mainframe", "menu_edit_copy"),
 			"COPY_FOR_FUN",
 			ImageLoader.getSmallImageIcon("stock_copy-16.png"),
 			ImageLoader.getImageIcon("stock_copy.png"),
 			'C',
-			KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK)
-			);
+			KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK),
+			false);
 	}
 
 }

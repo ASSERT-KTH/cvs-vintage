@@ -28,6 +28,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 
 /**
  * @author freddy
@@ -57,12 +58,12 @@ public class SendMessageCommand extends FolderCommand {
 
 		ComposerController composerController = r[0].getComposerController();
 
-		AccountItem item = composerController.getModel().getAccountItem();
+		AccountItem item = ((ComposerModel)composerController.getModel()).getAccountItem();
 		Folder sentFolder =
 			(Folder) MainInterface.treeModel.getFolder(
 				item.getSpecialFoldersItem().getInteger("sent"));
 		SendableMessage message =
-			composerController.composerInterface.messageComposer.compose(
+			composerController.getMessageComposer().compose(
 				worker);
 
 		SMTPServer server = new SMTPServer(item);
@@ -73,7 +74,7 @@ public class SendMessageCommand extends FolderCommand {
 			try {
 				server.sendMessage(message, worker);
 
-				composerController.hideComposerWindow();
+				composerController.close();
 
 				FolderCommandReference[] ref = new FolderCommandReference[1];
 				ref[0] = new FolderCommandReference(sentFolder);

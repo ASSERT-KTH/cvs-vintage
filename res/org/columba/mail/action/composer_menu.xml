@@ -2,6 +2,50 @@
 
 <menubar>
 	<menu name="menu_file">
-		<menuitem action="SendAll"/>	
+		<menuitem action="NewMessage"/>	
+		<separator/>
+		<menuitem action="SaveMessage"/>	
+		<menuitem action="SaveAsDraft"/>	
+		<menuitem action="SaveAsTemplate"/>	
+		<separator/>
+		<menuitem action="Send"/>	
+		<menuitem action="SendLater"/>	
+		<separator/>
+		<menuitem action="PrintMessage"/>	
+		<separator/>
+		<menuitem action="Close"/>			
+	</menu>
+	<menu name="menu_edit">
+		<menuitem action="Undo"/>	
+		<menuitem action="Redo"/>
+		<separator/>
+		<menuitem action="Cut"/>		
+		<menuitem action="Copy"/>	
+		<menuitem action="Paste"/>	
+		<menuitem action="Delete"/>	
+		<separator/>
+		<menuitem action="SelectAll"/>	
+		<separator/>
+		<menuitem action="Find"/>	
+		<menuitem action="FindAgain"/>	
+		<separator/>
+		<menuitem action="ExternalEditor"/>	
+		<separator/>
+		<menuitem action="GlobalOptions"/>	
+	</menu>
+	<menu name="menu_view">
+		<menu name="menu_view_show_hide"> 
+			<menuitem checkboxaction="ViewToolbar"/>
+			<menuitem checkboxaction="ViewAccountInfo"/>			
+		</menu>
+		<menuitem checkboxaction="ViewAddressbook"/>
+	</menu>
+	<menu name="menu_message">
+		<menuitem action="AttachFile"/>	 
+		<menuitem action="Spellcheck"/>	
+	</menu>
+	<menu name="menu_security">
+		<menuitem checkboxaction="SignMessage"/>	
+		<menuitem checkboxaction="EncryptMessage"/>	
 	</menu>
 </menubar>

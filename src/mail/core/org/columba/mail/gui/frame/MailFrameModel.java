@@ -33,12 +33,12 @@ import org.columba.mail.gui.table.TableChangedEvent;
  */
 public class MailFrameModel extends MultiViewFrameModel {
 
-	private ComposerModel composerModel;	
+		
 
 	public MailFrameModel(XmlElement viewList) {
 		super(viewList);
 		
-		composerModel = new ComposerModel();
+		
 	}
 
 	public FrameController createInstance(String id) {
@@ -105,11 +105,6 @@ public class MailFrameModel extends MultiViewFrameModel {
 		}
 	}
 */
-	/**
-	 * @return ComposerModel
-	 */
-	public ComposerModel getComposerModel() {
-		return composerModel;
-	}
+	
 
 }

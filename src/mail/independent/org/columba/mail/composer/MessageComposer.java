@@ -45,7 +45,7 @@ public class MessageComposer {
 
 	public MessageComposer(ComposerController controller) {
 		this.controller = controller;
-		model = controller.getModel();
+		model = (ComposerModel)controller.getModel();
 	}
 
 	protected SendableHeader initHeader() {
@@ -72,7 +72,7 @@ public class MessageComposer {
 		} catch (UnsupportedEncodingException e) {
 		}
 
-		AccountItem item = controller.getModel().getAccountItem();
+		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
 
 		header.set("From", identity.get("address"));
@@ -115,7 +115,7 @@ public class MessageComposer {
 			"Columba v" + org.columba.core.main.MainInterface.version);
 
 		// shortFrom
-		String shortFrom = controller.getModel().getHeaderField("From");
+		String shortFrom = model.getHeaderField("From");
 		if (shortFrom != null) {
 			if (shortFrom.indexOf("<") != -1) {
 				shortFrom = shortFrom.substring(0, shortFrom.indexOf("<"));
@@ -225,7 +225,7 @@ public class MessageComposer {
 
 		String body = model.getBodyText();
 
-		AccountItem item = controller.getModel().getAccountItem();
+		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
 		boolean appendSignature = identity.getBoolean("attach_signature");
 

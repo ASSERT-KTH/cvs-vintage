@@ -2,9 +2,17 @@
 <!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
 
 <toolbar visible="true">
-    <button action="NewMessage"></button>
+    <button action="Send"/>
+	<button action="AttachFile"/>
 	<separator></separator>
-	<button action="AttachFile"></button>
-	<separator></separator>
-	<button action="Cancel"></button>
+	<button action="Undo"/>
+	<button action="Redo"/>
+	<button action="Cut"/>
+	<button action="Copy"/>
+	<button action="Paste"/>
+	<separator/>
+	<button action="Spellcheck"/>
+	<button action="Addressbook"/>
+	<separator/>
+	<button action="Cancel"/>
 </toolbar>    

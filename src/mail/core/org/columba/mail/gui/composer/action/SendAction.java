@@ -11,9 +11,10 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.action.ComposerAction;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
@@ -26,7 +27,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SendAction extends ComposerAction {
+public class SendAction extends FrameAction {
 
 	/**
 	 * @param composerController
@@ -39,9 +40,9 @@ public class SendAction extends ComposerAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public SendAction(ComposerController composerController) {
+	public SendAction(FrameController frameController) {
 		super(
-			composerController,
+			frameController,
 			MailResourceLoader.getString("menu", "composer", "menu_file_send"),
 			MailResourceLoader.getString("menu", "composer", "menu_file_send"),
 			MailResourceLoader.getString(
@@ -63,7 +64,9 @@ public class SendAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		if (composerInterface.composerController.checkState() == false)
+		final ComposerController composerController = (ComposerController ) getFrameController();
+		
+		if (composerController.checkState() == false)
 			return;
 
 		/*
@@ -82,7 +85,7 @@ public class SendAction extends ComposerAction {
 		ComposerCommandReference[] r = new ComposerCommandReference[1];
 		r[0] =
 			new ComposerCommandReference(
-				composerInterface.composerController,
+				composerController,
 				outboxFolder);
 
 		SendMessageCommand c = new SendMessageCommand(r);

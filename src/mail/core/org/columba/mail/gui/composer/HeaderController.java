@@ -148,17 +148,17 @@ public class HeaderController
 
 			view.getAddressbookTableModel().setHeaderList(null);
 
-			addVectorToTable(controller.getToList(), 0);
+			addVectorToTable(((ComposerModel)controller.getModel()).getToList(), 0);
 
-			addVectorToTable(controller.getCcList(), 1);
+			addVectorToTable(((ComposerModel)controller.getModel()).getCcList(), 1);
 
-			addVectorToTable(controller.getBccList(), 2);
+			addVectorToTable(((ComposerModel)controller.getModel()).getBccList(), 2);
 
 			appendRow();
 		} else {
-			controller.getToList().clear();
-			controller.getToList().clear();
-			controller.getToList().clear();
+			((ComposerModel)controller.getModel()).getToList().clear();
+			((ComposerModel)controller.getModel()).getToList().clear();
+			((ComposerModel)controller.getModel()).getToList().clear();
 
 			for (int i = 0; i < view.table.getRowCount(); i++) {
 				HeaderItem item =
@@ -168,16 +168,16 @@ public class HeaderController
 
 				if (field == null) {
 					item.add("field", "To");
-					controller.getToList().add(item);
+					((ComposerModel)controller.getModel()).getToList().add(item);
 					continue;
 				}
 
 				if (field.equals("To")) {
-					controller.getToList().add(item);
+					((ComposerModel)controller.getModel()).getToList().add(item);
 				} else if (field.equals("Cc")) {
-					controller.getCcList().add(item);
+					((ComposerModel)controller.getModel()).getCcList().add(item);
 				} else if (field.equals("Bcc")) {
-					controller.getBccList().add(item);
+					((ComposerModel)controller.getModel()).getBccList().add(item);
 				}
 			}
 		}
@@ -212,11 +212,11 @@ public class HeaderController
 	}
 
 	public void setHeaderItemLists(HeaderItemList[] lists) {
-		controller.setToList(lists[0].getVector());
+		((ComposerModel)controller.getModel()).setToList(lists[0].getVector());
 
-		controller.setCcList( lists[1].getVector() );
+		((ComposerModel)controller.getModel()).setCcList( lists[1].getVector() );
 
-		controller.setBccList(  lists[2].getVector() );
+		((ComposerModel)controller.getModel()).setBccList(  lists[2].getVector() );
 
 		updateComponents(true);
 	}

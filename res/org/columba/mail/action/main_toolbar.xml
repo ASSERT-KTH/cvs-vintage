@@ -2,9 +2,15 @@
 <!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
 
 <toolbar visible="true">
-    	<button action="NewMessage"></button>
-	<separator></separator>
-	<button action="ReceiveSend"></button>
-	<separator></separator>
-	<button action="Cancel"></button>
+    <button action="NewMessage"/>
+	<separator/>
+	<button action="ReceiveSend"/>
+	<separator/>
+	<button action="Reply"/>
+	<button action="Forward"/>
+	<separator/>
+	<button action="CopyMessage"/>
+	<button action="MoveMessage"/>
+	<button action="DeleteMessage"/>
+	<button action="Cancel"/>
 </toolbar>    

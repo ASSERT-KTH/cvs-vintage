@@ -14,6 +14,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.action.ComposerAction;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -56,8 +57,7 @@ public class NewMessageAction extends ComposerAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		ComposerController controller = new ComposerController();
-		controller.showComposerWindow();
+		new ComposerModel().openView();
 	}
 
 }
