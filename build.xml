@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.170 2004/08/06 01:57:48 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.171 2004/08/11 11:41:36 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -463,7 +463,7 @@
         <include name="org/jboss/invocation/MarshalledInvocation.class"/>
         <include name="org/jboss/invocation/MarshalledValue.class"/>
         <include name="org/jboss/invocation/MarshalledValueInputStream.class"/>
-        <include name="org/jboss/invocation/MarshalledValueOutputStream.class"/>
+        <include name="org/jboss/invocation/MarshalledValueOutputStream*.class"/>
         <include name="org/jboss/invocation/http/interfaces/*"/>
         <include name="org/jboss/invocation/jrmp/interfaces/*"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
