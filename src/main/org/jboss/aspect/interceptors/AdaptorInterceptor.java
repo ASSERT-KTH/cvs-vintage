@@ -29,43 +29,6 @@ import org.jboss.util.Classes;
  * clashes.
  * 
  * 
- * <p>
- * Sample:
- * <code>
- * ...
- * <aspect name="MyAspect">
- *   <interceptor class="AdaptorInterceptor">
- *      <attribute name="adaptor" value="java.lang.Runnable"/>
- *      <attribute name="implementation" value="Bar"/>
- *   </interceptor>
- *   <interceptor class="AdaptorInterceptor">
- *      <attribute name="adaptor" value="org.foo.Killable"/>
- *      <attribute name="implementation" value="Fiz"/>
- *   </interceptor>
- * </aspect>
- * ....
- * 
- * class Bar implements Runnable {
- *    ...
- * }
- * </code>
- * 
- * later you can do:
- * 
- * <code>
- * 
- * AspectFactory af = new AspectFactory().configure();
- * Adaptor adaptor = (Adaptor)af.createAspect("MyAspect", someObject);
- * 
- * Runnable r = (Runnable)adaptor.getAdapter(Runnable.class); 
- * r.run();
- * 
- * org.foo.Killable k = (org.foo.Killable)adaptor.getAdapter(org.foo.Killable.class); 
- * if( k != null )
- *    // do something with k
- * 
- * </code>
- * 
  * This interceptor uses the following configuration attributes:
  * <ul>
  * <li>adaptor  - The interface that the implementation object is exposing 

@@ -12,10 +12,8 @@ import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.transaction.Transaction;
 
@@ -47,45 +45,43 @@ public class JMXInvokerInterceptor implements AspectInterceptor
     public static final QName ATTR_MBEAN = new QName("mbean", NAMESPACE);
     public static final QName ELEM_EXPOSE_INTERFACE = new QName("expose-interface", NAMESPACE);
     public static final QName ATTR_CLASS = new QName("class", NAMESPACE);
-	
-	public static final Object TRANSACTION_KEY = "tx";
-	public static final Object PRINCIPLE_KEY = "principle";
-	public static final Object CREDENTIAL_KEY = "principle";
 
-	MBeanServer server;
-	ObjectName  mbean;
-	Class exposedInterfaces[];
- 
- 	public JMXInvokerInterceptor() {}
- 	
- 	public JMXInvokerInterceptor(MBeanServer server,ObjectName  mbean) {
- 		this.server = server;
- 		this.mbean = mbean;
- 	}
- 
+    public static final Object TRANSACTION_KEY = "tx";
+    public static final Object PRINCIPLE_KEY = "principle";
+    public static final Object CREDENTIAL_KEY = "principle";
+
+    MBeanServer server;
+    ObjectName mbean;
+    Class exposedInterfaces[];
+
+    public JMXInvokerInterceptor()
+    {
+    }
+
+    public JMXInvokerInterceptor(MBeanServer server, ObjectName mbean)
+    {
+        this.server = server;
+        this.mbean = mbean;
+    }
+
     /**
      * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
      */
     public Object invoke(AspectInvocation invocation) throws Throwable
     {
-    	if( server == null )
-        	server = MBeanServerLocator.locate();
-    	
-    	// I think that we will eventuraly get the following values out
-    	// of ThreadLocals instead of the DP attachments.
-    	Transaction tx = (Transaction)invocation.attachments.get(TRANSACTION_KEY);
-    	Principal principle = (Principal)invocation.attachments.get(PRINCIPLE_KEY);
-    	Object credentials = (Object)invocation.attachments.get(CREDENTIAL_KEY);
-    	
-    	// Convert the AspectInvocation into a JBoss Invocation
-    	Invocation jmxInvocation = new Invocation( 
-    					invocation.targetObject, 
-    					invocation.method,
-    					invocation.args,
-    					tx,
-    					principle,
-    					credentials);
-    					
+        if (server == null)
+            server = MBeanServerLocator.locate();
+
+        // I think that we will eventuraly get the following values out
+        // of ThreadLocals instead of the DP attachments.
+        Transaction tx = (Transaction) invocation.attachments.get(TRANSACTION_KEY);
+        Principal principle = (Principal) invocation.attachments.get(PRINCIPLE_KEY);
+        Object credentials = (Object) invocation.attachments.get(CREDENTIAL_KEY);
+
+        // Convert the AspectInvocation into a JBoss Invocation
+        Invocation jmxInvocation =
+            new Invocation(invocation.targetObject, invocation.method, invocation.args, tx, principle, credentials);
+
         return server.invoke(mbean, "", new Object[] { jmxInvocation }, Invocation.INVOKE_SIGNATURE);
     }
 
@@ -98,20 +94,21 @@ public class JMXInvokerInterceptor implements AspectInterceptor
     {
         try
         {
-        	ClassLoader cl = Classes.getContextClassLoader();
+            ClassLoader cl = Classes.getContextClassLoader();
             String mbean = xml.attribute(ATTR_MBEAN).getValue();
             this.mbean = new ObjectName(mbean);
-            
+
             ArrayList al = new ArrayList();
             Iterator i = xml.elementIterator(ELEM_EXPOSE_INTERFACE);
-            while( i.hasNext() ) {
-            	Element iXML = (Element)i.next();
-            	String s = iXML.attribute(ATTR_CLASS).getValue();
-           		al.add( cl.loadClass(s) );
+            while (i.hasNext())
+            {
+                Element iXML = (Element) i.next();
+                String s = iXML.attribute(ATTR_CLASS).getValue();
+                al.add(cl.loadClass(s));
             }
-         	exposedInterfaces = new Class[ al.size() ];
-         	al.toArray(exposedInterfaces);
-            
+            exposedInterfaces = new Class[al.size()];
+            al.toArray(exposedInterfaces);
+
         }
         catch (Exception e)
         {

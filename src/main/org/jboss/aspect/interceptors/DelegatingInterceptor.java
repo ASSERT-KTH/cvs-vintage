@@ -29,6 +29,9 @@ import org.jboss.util.Classes;
  * another class, the delegate, instead of sending method calls 
  * to the base class.
  * 
+ * The delegate object is layz loaded the first time a method is 
+ * invoked on the delegate.
+ * 
  * This Interceptor will add all the interfaces of the delegate to
  * the aspect object.
  * 
