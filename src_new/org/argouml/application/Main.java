@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.101 2004/10/08 09:14:03 mkl Exp $
+// $Id: Main.java,v 1.102 2004/10/16 16:40:50 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -229,10 +229,10 @@ public class Main {
 
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 
-	performCommands(commands);
-	commands = null;
-
 	if (batch) {
+	    performCommands(commands);
+	    commands = null;
+
 	    System.out.println("Exiting because we are running in batch.");
 	    ActionExit.SINGLETON.actionPerformed(null);
 	    return;
@@ -319,6 +319,9 @@ public class Main {
             splash.dispose();
             splash = null;
         }
+
+        performCommands(commands);
+        commands = null;
 
         st.mark("start critics");
         Runnable startCritics = new StartCritics();

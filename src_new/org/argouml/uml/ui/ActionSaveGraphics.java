@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.23 2004/09/23 20:53:09 mvw Exp $
+// $Id: ActionSaveGraphics.java,v 1.24 2004/10/16 16:40:49 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,6 +233,13 @@ public class ActionSaveGraphics
 
     /**
      * Execute this action from the command line.
+     *
+     * TODO: The underlying GEF library relies on Acme that doesn't allow 
+     * us to create these files unless there is a window showing. For this
+     * reason I have had to split the performing of commands in 
+     * {@link org.argouml.application.Main#main(String[])} so that we can,
+     * by not supplying the -batch option, run these commands
+     * with the window showing. Hopefully this can eventually be fixed. 
      *
      * @see org.argouml.application.api.CommandLineInterface#doCommand(String)
      * @param argument is the file name that we save to.
