@@ -184,6 +184,11 @@
                 <sql-type>NUMBER(38,7)</sql-type>
             </mapping>
             <mapping>
+                <java-type>java.math.BigDecimal</java-type>
+                <jdbc-type>DECIMAL</jdbc-type>
+                <sql-type>NUMBER(38,15)</sql-type>
+            </mapping>
+            <mapping>
                 <java-type>java.lang.Double</java-type>
                 <jdbc-type>DOUBLE</jdbc-type>
                 <sql-type>NUMBER(38,15)</sql-type>
