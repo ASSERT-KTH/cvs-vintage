@@ -43,12 +43,12 @@ public class FolderTreeCellRenderer
 
 	private ImageIcon image1,
 		image2,
-		image3,
-		image4,
-		image5,
-		image6,
-		image7,
-		image8,
+//		image3,
+//		image4,
+//		image5,
+//		image6,
+//		image7,
+//		image8,
 		image9,
 		image10;
 
@@ -86,7 +86,6 @@ public class FolderTreeCellRenderer
 
 		
 		FolderTreeNode treeNode = (FolderTreeNode) value;
-		TreePath path = treeNode.getSelectionTreePath();
 
 		/*
 		FolderTreeNode selection = treeController.getSelected();
@@ -142,15 +141,13 @@ public class FolderTreeCellRenderer
 		FolderItem item = folder.getFolderItem();
 
 		if (item != null) {
-			int uid = item.getInteger("uid");
+			//int uid = item.getInteger("uid");
 
 			String name;
 
 			//name = folder.getName();
 
 			name = item.get("property", "name");
-
-			
 
 			MessageFolderInfo info = ((Folder) folder).getMessageFolderInfo();
 			if (folder != null) {
@@ -165,20 +162,18 @@ public class FolderTreeCellRenderer
 				setToolTipText(buf.toString());
 
 			} else {
-
 				setToolTipText("");
 			}
 
 			setText(name);
 
-			if (expanded == true) {
+			if (expanded) {
 				setIcon(folder.getExpandedIcon());
 			} else {
 				setIcon(folder.getCollapsedIcon());
 			}
 			
-			if ( item.getBoolean("selectable",true) == false )
-			{
+			if (!item.getBoolean("selectable",true)) {
 				setFont( italicFont );
 				setForeground(Color.darkGray);
 			}
