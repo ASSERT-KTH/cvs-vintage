@@ -1,5 +1,4 @@
-
-// $Id: GoStimulusToAction.java,v 1.5 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: GoStimulusToAction.java,v 1.6 2003/09/13 11:00:11 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStimulusToAction.java,v 1.5 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: GoStimulusToAction.java,v 1.6 2003/09/13 11:00:11 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -34,14 +33,12 @@ import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.common_behavior.MStimulus;
-
 public class GoStimulusToAction extends AbstractGoRule {
 
     public Collection getChildren(Object parent) {
         if (!(org.argouml.model.ModelFacade.isAStimulus(parent)))
             return null;
-        MStimulus ms = (MStimulus) parent;
+        Object ms = /*(MStimulus)*/ parent;
         Object action = ModelFacade.getDispatchAction(ms);
         Vector vector = new Vector();
         vector.addElement(action);

@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.3 2003/09/09 19:19:58 thierrylach Exp $
+// $Id: TestAgainstUmlModel.java,v 1.4 2003/09/13 11:00:11 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,6 +64,10 @@ public class TestAgainstUmlModel extends TestCase {
     static Hashtable refs = null;
  
     public TestAgainstUmlModel(String n) { super(n); }
+
+    public static void main(java.lang.String[] args) {
+        junit.textui.TestRunner.run(suite());
+    }
 
     public void testDataModel()
     throws SAXException,
@@ -304,6 +308,7 @@ public class TestAgainstUmlModel extends TestCase {
         }
         catch (Exception e) {
             e.printStackTrace();
+            fail(e.toString());
         }
         assertNotNull("Cannot parse document", doc);
         NodeList list = doc.getElementsByTagName("Model:Class");

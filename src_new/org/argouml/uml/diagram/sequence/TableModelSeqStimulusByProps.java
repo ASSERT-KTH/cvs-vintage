@@ -1,5 +1,4 @@
-
-// $Id: TableModelSeqStimulusByProps.java,v 1.7 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelSeqStimulusByProps.java,v 1.8 2003/09/13 11:00:11 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +26,12 @@
 // File: TableModelSeqStimulusByProps.java
 // Classes: TableModelSeqStimulusByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelSeqStimulusByProps.java,v 1.7 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelSeqStimulusByProps.java,v 1.8 2003/09/13 11:00:11 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence;
+
+import org.argouml.model.ModelFacade;
 
 import java.util.*;
 import java.beans.*;
@@ -80,19 +81,19 @@ public class TableModelSeqStimulusByProps extends TableModelComposite {
 		Object figure = contents.elementAt(i);
 		if (figure instanceof FigSeqStimulus) {
 		    FigSeqStimulus figSti = (FigSeqStimulus) figure;
-		    MStimulus sti = (MStimulus) figSti.getOwner();
+		    Object sti = /*(MStimulus)*/ figSti.getOwner();
 		    res.addElement(sti);
 		}
 	    }
 	    return res;
 	}
 	else {
-	    MLink ml = (MLink) t;
+	    Object ml = /*(MLink)*/ t;
 	    Vector res = new Vector();
-	    Collection stimuli = ml.getStimuli();
+	    Collection stimuli = ModelFacade.getStimuli(ml);
 	    Iterator it = stimuli.iterator();
 	    while (it.hasNext()) {
-		MStimulus sti = (MStimulus) it.next();
+		Object sti = /*(MStimulus)*/ it.next();
 		res.addElement(sti);
 	    }
 	    return res;

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.20 2003/06/30 18:00:20 linus Exp $
+// $Id: CommonBehaviorFactory.java,v 1.21 2003/09/13 11:00:11 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,7 +214,7 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
      *  
      *  @return an initialized UML LinkEnd instance.
      */
-    public MLinkEnd createLinkEnd() {
+    public Object createLinkEnd() {
         MLinkEnd modelElement = MFactory.getDefaultFactory().createLinkEnd();
         super.initialize(modelElement);
         return modelElement;
@@ -353,14 +353,14 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
      */
     public MLink buildLink(MInstance fromInstance, MInstance toInstance) {
         MLink link = UmlFactory.getFactory().getCommonBehavior().createLink();
-        MLinkEnd le0 =
+        Object/*MLinkEnd*/ le0 =
             UmlFactory.getFactory().getCommonBehavior().createLinkEnd();
-        le0.setInstance(fromInstance);
-        MLinkEnd le1 =
+        ModelFacade.setInstance(le0, fromInstance);
+        Object/*MLinkEnd*/ le1 =
             UmlFactory.getFactory().getCommonBehavior().createLinkEnd();
-        le1.setInstance(toInstance);
-        link.addConnection(le0);
-        link.addConnection(le1);
+        ModelFacade.setInstance(le1, toInstance);
+        ModelFacade.addConnection(link, le0);
+        ModelFacade.addConnection(link, le1);
         return link;
     }
 
