@@ -46,7 +46,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.9 $</tt>
  */
 public class EntityTable
    implements Table
@@ -919,6 +919,7 @@ public class EntityTable
 
       public void beforeCompletion()
       {
+         /* There is no sense in the current impl of lock-for-update.
          if(cacheUpdates != null)
          {
             Row cursor = cacheUpdates;
@@ -943,6 +944,7 @@ public class EntityTable
                cursor = cursor.nextCacheUpdate;
             }
          }
+         */
       }
 
       public void committed()
@@ -953,8 +955,8 @@ public class EntityTable
 
             while(cursor != null)
             {
-               if(cursor.lockedForUpdate)
-               {
+               //if(cursor.lockedForUpdate)
+               //{
                   cache.lock(cursor.pk);
                   try
                   {
@@ -983,8 +985,8 @@ public class EntityTable
                   {
                      cache.unlock(cursor.pk);
                   }
-                  cursor.lockedForUpdate = false;
-               }
+                  //cursor.lockedForUpdate = false;
+               //}
                cursor = cursor.nextCacheUpdate;
             }
          }
@@ -992,6 +994,7 @@ public class EntityTable
 
       public void rolledback()
       {
+         /* There is no sense in the current impl of lock-for-update.
          if(cacheUpdates != null)
          {
             Row cursor = cacheUpdates;
@@ -1018,6 +1021,7 @@ public class EntityTable
                cursor = cursor.nextCacheUpdate;
             }
          }
+          */
       }
    }
 
@@ -1035,7 +1039,7 @@ public class EntityTable
 
       private boolean cacheUpdateScheduled;
       private Row nextCacheUpdate;
-      private boolean lockedForUpdate;
+      //private boolean lockedForUpdate;
 
       public Row(EntityTable.View view)
       {
