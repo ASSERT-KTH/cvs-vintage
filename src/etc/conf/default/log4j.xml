@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.5 2002/03/05 01:18:11 user57 Exp $ -->
+<!-- $Id: log4j.xml,v 1.6 2002/05/13 06:14:03 user57 Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -60,7 +60,6 @@
   <!-- ============================== -->
 
   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    <param name="Threshold" value="INFO"/>
     <param name="Target" value="System.out"/>
 
     <layout class="org.apache.log4j.PatternLayout">
@@ -112,17 +111,9 @@
   <!-- Limit categories -->
   <!-- ================ -->
 
-  <!-- Limit JBoss categories to INFO
   <category name="org.jboss">
     <priority value="INFO"/>
   </category>
-  -->
-
-  <!-- Increase the priority threshold for the DefaultDS category
-  <category name="DefaultDS">
-    <priority value="FATAL"/>
-  </category>
-  -->
 
   <!-- Decrease the priority threshold for the org.jboss.varia category
   <category name="org.jboss.varia">

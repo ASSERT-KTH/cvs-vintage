@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.87 2002/05/10 01:06:09 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.88 2002/05/13 06:14:03 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -700,7 +700,6 @@
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/rmi/**"/>
         <include name="org/jboss/system/Service**"/>
-        <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
 
         <!-- why ? AS Because it allows the user to test the JAR file by "java -jar" -->
@@ -715,12 +714,8 @@
         <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
         <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
-        <include name="org/jboss/jmx/connector/notification/RMI**"/>
-        <include name="org/jboss/jmx/connector/notification/JMSNotificationListener.class"/>
+        <include name="org/jboss/jmx/connector/notification/*"/>
         <include name="org/jboss/jmx/connector/rmi/**"/>
-        <include name="org/jboss/system/Service.class"/>
-        <include name="org/jboss/system/ServiceMBean*.class"/>
-        <include name="org/jboss/logging/**"/>
       </fileset>
     </jar>
 
@@ -730,9 +725,26 @@
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
         <include name="org/jboss/jmx/connector/TestClient*.class"/>
-        <include name="org/jboss/system/Service.class"/>
-        <include name="org/jboss/system/ServiceMBean*.class"/>
-        <include name="org/jboss/logging/**"/>
+      </fileset>
+    </jar>
+
+    <!-- Unjar getopt better packaging (but slower builds) -->
+    <mkdir dir="${build.gen}/getopt"/>
+    <unjar src="${gnu.getopt.lib}/getopt.jar" dest="${build.gen}/getopt"/>
+
+    <!-- Build deployer.jar -->
+    <jar jarfile="${build.lib}/deployer.jar" manifest="${build.etc}/manifest/deployer.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/service/Deployer*.class"/>
+      </fileset>
+      <fileset dir="${build.resources}">
+        <include name="log4j.properties"/>
+        <include name="jndi.properties"/>
+      </fileset>
+
+      <!-- Include getopt -->
+      <fileset dir="${build.gen}/getopt">
+        <include name="**"/>
       </fileset>
     </jar>
 
