@@ -4,9 +4,71 @@
 //                                                                          //
 /// ====================================================================== ///
 
-// $Id: server.policy,v 1.2 2001/08/11 21:32:45 user57 Exp $
+// $Id: server.policy,v 1.3 2003/06/19 09:10:54 ejort Exp $
 
+// FIXME: It doesn't want to parse urls correctly, it is too clever for its own good
+//        e.g. grant codebase="${jboss.home.url}bin/run.jar" doesn't work
+//             but replacing the system value with the property value works fine
+//        Using hardwired file:/ is not acceptable for netboot
+
+// TODO: Replace this file with some hot deployable xml
+// TODO: Allow codebases to reference subdeployments
+
+// Spec defined permissions
 grant {
-   // Allow everything for now
+   permission java.net.SocketPermission "localhost:1024","listen";
+   permission java.util.PropertyPermission "*","read";
+};
+
+// Grant the boot code all permissions
+grant codebase "file:/${jboss.home.dir}/bin/run.jar" {
+   permission java.security.AllPermission;
+};
+
+// Grant the kernel all permissions
+grant codebase "file:/${jboss.home.dir}/lib/*" {
+   permission java.security.AllPermission;
+};
+
+// Grant the server/${jboss.server.name}/lib all permissions
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/conf/jboss-service.xml" {
+   permission java.security.AllPermission;
+};
+
+// Grant jboss server deployment in server/${jboss.server.name}/deploy all permissions
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/console-mgr.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jboss-jca.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jboss-local-jdbc.rar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jboss-net.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jboss-xa-jdbc.rar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jbossdo.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jbossha-httpsession.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jbossweb.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jms-ra.rar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jmx-ejb-connector-server.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/jmx-rmi-adaptor.sar" {
+   permission java.security.AllPermission;
+};
+grant codebase "file:/${jboss.home.dir}/server/${jboss.server.name}/deploy/object-copier.sar" {
    permission java.security.AllPermission;
 };

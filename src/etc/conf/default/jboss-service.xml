@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.86 2003/06/16 02:01:40 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.87 2003/06/19 09:10:54 ejort Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -10,26 +10,15 @@
 
 <server>
 
-
-
   <!-- Load all jars from the JBOSS_DIST/server/<config>/lib directory. This
     can be restricted to specific jars by specifying them in the archives
     attribute.
    -->
   <classpath codebase="lib" archives="*"/>
 
-  <mbean code="org.jboss.aop.deployment.AspectManagerService"
-	 name="jboss.aop:service=AspectManager">
-     <attribute name="MethodFilter">ALL</attribute>
-     <attribute name="FieldFilter">ALL</attribute>
-     <attribute name="ConstructorFilter">ALL</attribute>
-     <attribute name="ConvertAll">true</attribute>
-  </mbean>
- 
-  <mbean code="org.jboss.aop.deployment.AspectDeployer"
-       name="jboss.aop:service=AspectDeployer">
-  </mbean>
-
+  <!-- ==================================================================== -->
+  <!-- Property Editors                                                     -->
+  <!-- ==================================================================== -->
 
   <!-- Preload all custom editors for VMs that don't use the thread
        context class loader when searching for PropertyEditors. Uncomment
@@ -52,6 +41,35 @@
     </attribute>
   </mbean>
   -->
+
+  <!-- ==================================================================== -->
+  <!-- Java Security Manager                                                -->
+  <!-- ==================================================================== -->
+
+  <!-- Uncomment to enable the security manager with the policy in
+       server/${jboss.server.name}/conf/server.policy
+  <mbean code="org.jboss.security.JavaSecurityManagerService"
+         name="jboss.system:service=JavaSecurityManagerService">
+     <attribute name="SecurityManagerClassName">java.lang.SecurityManager</attribute>
+     <attribute name="SecurityPolicyURL" replace="true">${jboss.server.config.url}server.policy</attribute>
+  </mbean>
+  -->
+
+  <!-- ==================================================================== -->
+  <!-- Aspect Management                                                    -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.aop.deployment.AspectManagerService"
+	 name="jboss.aop:service=AspectManager">
+     <attribute name="MethodFilter">ALL</attribute>
+     <attribute name="FieldFilter">ALL</attribute>
+     <attribute name="ConstructorFilter">ALL</attribute>
+     <attribute name="ConvertAll">true</attribute>
+  </mbean>
+ 
+  <mbean code="org.jboss.aop.deployment.AspectDeployer"
+       name="jboss.aop:service=AspectDeployer">
+  </mbean>
 
   <!-- ==================================================================== -->
   <!-- Log4j Initialization                                                 -->
