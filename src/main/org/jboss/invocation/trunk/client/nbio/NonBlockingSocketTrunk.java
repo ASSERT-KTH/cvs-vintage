@@ -9,23 +9,24 @@
 
 package org.jboss.invocation.trunk.client.nbio;
 
+
+
+
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-
 import javax.resource.spi.work.WorkException;
-
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.Compression;
 import org.jboss.invocation.trunk.client.ICommTrunk;
-import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TrunkRequest;
+import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.logging.Logger;
-
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import javax.resource.NotSupportedException;
 
 /**
  * The Non Blocking implementation of the ICommTrunk interface.  This guy is 
@@ -449,13 +450,17 @@ public class NonBlockingSocketTrunk implements ICommTrunk
 
                            TrunkRequest newRequest = new TrunkRequest();
                            newRequest.deserialize(data);
-                              trunkRamp.deliverTrunkRequest(newRequest);
+                           trunkRamp.deliverTrunkRequest(newRequest);
                         }
                         catch (ClassNotFoundException e)
                         {
                            log.info("Communications error:", e);
                         } 
                         catch (WorkException e)
+                        {
+                           log.info("Could not process request:", e);
+                        }
+                        catch (NotSupportedException e)
                         {
                            log.info("Could not process request:", e);
                         }
