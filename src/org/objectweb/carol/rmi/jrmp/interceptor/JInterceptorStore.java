@@ -100,7 +100,7 @@ public class JInterceptorStore {
 		JInitInfo jrmpInfo = new JRMPInitInfoImpl();
 		String [] ins = getJRMPInitializers();
 		for (int i = 0; i < ins.length ; i ++) {
-		    JInitializer jinit = (JInitializer) Class.forName(ins[i]).newInstance();
+		    JInitializer jinit = (JInitializer) Thread.currentThread().getContextClassLoader().loadClass(ins[i]).newInstance();
 		    jinit.pre_init(jrmpInfo);
 		    jinit.post_init(jrmpInfo);
 		}	    

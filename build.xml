@@ -102,7 +102,9 @@
     </rmic>     
   </target>
 
-  <target name="compile.iiop">       
+  <target name="compile.iiop"> 
+    
+     <!-- for sun iiop -->     
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
       <classpath refid="carol.classpath"/>
@@ -111,6 +113,29 @@
       classname="org.objectweb.carol.jndi.iiop.IIOPReferenceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic>
+     
+     <!-- for open orb   
+    <java classname="org.openorb.rmi.compiler.JavaToIdl" fork="true" failonerror="true">
+      <arg value="-tie"/>
+      <arg value="-stub"/>
+      <arg value="-noidl"/>
+      <arg line="-d"/>
+      <arg path="${src}"/>
+      <arg value="org.objectweb.carol.jndi.iiop.IIOPReferenceWrapper"/>
+      <classpath refid="carol.classpath"/>
+    </java> 
+    
+    <javac 
+      srcdir="${src}"
+      destdir="${build}/classes"
+      deprecation="${deprecation}"
+      debug="${compile.debug}"
+      nowarn="${compile.nowarn}"
+      optimize="${compile.optimize}">
+      <classpath refid="carol.classpath"/>
+      <include name="**/org/objectweb/carol/jndi/iiop/_*.java"/>
+    </javac> --> 
+    
   </target>
 
   <target name="compile.jonathan" if="jonathan.jar.present">

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Specification-Title: "carol shell"
-Specification-Version: "1.5.0"
+Specification-Version: "1.5.1"
 Specification-Vendor: "ObjectWeb"
 Implementation-Title: "org.objectweb.carol.util.bootstrap"
-Implementation-Version: "1.5.0"
+Implementation-Version: "1.5.1"
 Implementation-Vendor: "INRIA"
 Main-Class: org.objectweb.carol.util.bootstrap.RemoteShell
 Class-Path: carol.jar commons-cli.jar

@@ -76,22 +76,23 @@ public class LmiInitialContext implements Context {
      * Lmi Name Parser 
      */
     private static NameParser lmiParser = new LmiNameParser();
-
+    
     /**
      * Resolve a Remote Object: 
      * If this object is a reference return the reference 
      *
      * @param o the object to resolve
+     * @param n the name of this object
      * @return a <code>Referenceable</code> if o is a Reference
      *         and the inititial object o if else
      */
-    private Object resolveObject(Object o) {
+    private Object resolveObject(Object o, Name name) {
 	try {
 	    if (o instanceof Reference) {
 		// build of the Referenceable object with is Reference
 		Reference objRef = (Reference)o;
-		ObjectFactory objFact = (ObjectFactory)(Class.forName(objRef.getFactoryClassName())).newInstance(); 
-		return (Referenceable)objFact.getObjectInstance(objRef,null,null,null);
+		ObjectFactory objFact = (ObjectFactory)(Thread.currentThread().getContextClassLoader().loadClass(objRef.getFactoryClassName())).newInstance(); 
+		return objFact.getObjectInstance(objRef,name,this,this.getEnvironment());
 	    } else {
 		return o;
 	    }
@@ -112,14 +113,17 @@ public class LmiInitialContext implements Context {
     private Object encodeObject(Object o) throws NamingException {
 	try {
 	    if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
-		return ((Referenceable)o).getReference();
+		      return ((Referenceable)o).getReference();
+	    } else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
+	    	 return (Reference)o;
 	    } else {
-		return o;
+		     return o;
 	    }
 	} catch (Exception e) {
 	    throw new NamingException("" +e);
 	}
     }
+
 
    /**
      * Constructor,
@@ -157,7 +161,7 @@ public class LmiInitialContext implements Context {
         }
 	Object o = bindings.get(name);
 	if (o!=null) {
-	    return  resolveObject(o);
+	    return  resolveObject(o, new CompositeName(name));
 	} else {
 	    throw new NameNotFoundException(name + " not found");
 	} 

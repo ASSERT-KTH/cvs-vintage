@@ -65,7 +65,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
      */
     public JeremiePRODelegate() throws Exception {
 	// class for name
-	unicastClass = Class.forName(className);
+	unicastClass = Thread.currentThread().getContextClassLoader().loadClass(className);
 	this.port=new Integer(System.getProperty(CarolDefaultValues.PORT_NUMBER_PROPERTY, "0")).intValue();
     }
 
