@@ -31,29 +31,29 @@ public class SortingStateObservable extends Observable {
     private boolean order;
 
     /**
-     *
-     */
+ *
+ */
     public SortingStateObservable() {
         super();
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public String getColumn() {
         return column;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public boolean isOrder() {
         return order;
     }
 
     /**
-     * @param string
-     */
+ * @param string
+ */
     public void setSortingState(String string, boolean order) {
         column = string;
         this.order = order;

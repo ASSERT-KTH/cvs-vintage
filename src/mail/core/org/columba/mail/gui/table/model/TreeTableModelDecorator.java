@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.model;
 
 import org.columba.mail.message.HeaderList;
@@ -23,6 +22,7 @@ import java.util.Map;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
+
 
 /**
  * @author frd
@@ -111,29 +111,29 @@ public class TreeTableModelDecorator implements TableModel,
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+ */
     public void modify(Object[] uids) {
         getRealModel().modify(uids);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+ */
     public void remove(Object[] uids) {
         getRealModel().remove(uids);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
+ */
     public void set(HeaderList headerList) {
         getRealModel().set(headerList);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#update()
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#update()
+ */
     public void update() {
         getRealModel().update();
     }

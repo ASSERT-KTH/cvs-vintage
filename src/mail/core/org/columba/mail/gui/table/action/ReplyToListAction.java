@@ -37,7 +37,8 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ReplyToListAction extends AbstractColumbaAction implements SelectionListener {
+public class ReplyToListAction extends AbstractColumbaAction
+    implements SelectionListener {
     public ReplyToListAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

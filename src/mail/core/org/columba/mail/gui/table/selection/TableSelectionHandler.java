@@ -66,8 +66,8 @@ public class TableSelectionHandler extends SelectionHandler
     private FolderCommandReference[] local;
 
     /**
-     * @param id
-     */
+ * @param id
+ */
     public TableSelectionHandler(TableView view) {
         super("mail.table");
         this.view = view;
@@ -80,8 +80,8 @@ public class TableSelectionHandler extends SelectionHandler
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionHandler#getSelection()
-     */
+ * @see org.columba.core.gui.util.SelectionHandler#getSelection()
+ */
     public DefaultCommandReference[] getSelection() {
         if (useLocalSelection == true) {
             return local;
@@ -95,8 +95,8 @@ public class TableSelectionHandler extends SelectionHandler
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
-     */
+ * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
+ */
     public void setSelection(DefaultCommandReference[] selection) {
         FolderCommandReference ref = (FolderCommandReference) selection[0];
 
@@ -106,9 +106,9 @@ public class TableSelectionHandler extends SelectionHandler
     }
 
     /**
-     * Sets the folder.
-     * @param folder The folder to set
-     */
+ * Sets the folder.
+ * @param folder The folder to set
+ */
     public void setFolder(Folder folder) {
         this.folder = folder;
     }
@@ -127,8 +127,8 @@ public class TableSelectionHandler extends SelectionHandler
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-     */
+ * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+ */
     public void valueChanged(ListSelectionEvent e) {
         useLocalSelection = false;
 

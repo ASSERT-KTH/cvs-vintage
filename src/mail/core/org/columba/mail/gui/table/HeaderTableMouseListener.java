@@ -13,8 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
+import org.columba.mail.gui.table.action.ViewMessageAction;
+import org.columba.mail.gui.table.model.MessageNode;
 
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -22,11 +27,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
-import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.gui.table.model.MessageNode;
 
 /**
  * Mouse listener used to handle the table selection and the popup
@@ -36,75 +36,66 @@ import org.columba.mail.gui.table.model.MessageNode;
  * @author fdietz
  */
 public class HeaderTableMouseListener extends MouseAdapter {
-	private TableController headerTableViewer;
-	private ViewMessageAction viewMessageAction;
+    private TableController headerTableViewer;
+    private ViewMessageAction viewMessageAction;
 
-	public HeaderTableMouseListener(TableController headerTableViewer) {
-		super();
-		this.headerTableViewer= headerTableViewer;
-		viewMessageAction=
-			new ViewMessageAction(headerTableViewer.getMailFrameController());
-	}
+    public HeaderTableMouseListener(TableController headerTableViewer) {
+        super();
+        this.headerTableViewer = headerTableViewer;
+        viewMessageAction = new ViewMessageAction(headerTableViewer.getMailFrameController());
+    }
 
-	protected void processPopup(final MouseEvent event) {
-		int selectedRows= headerTableViewer.getView().getSelectedRowCount();
+    protected void processPopup(final MouseEvent event) {
+        int selectedRows = headerTableViewer.getView().getSelectedRowCount();
 
-		if (selectedRows <= 1) {
-			// select node
-			int row=
-				headerTableViewer.getView().rowAtPoint(
-					new Point(event.getX(), event.getY()));
-			headerTableViewer.getView().setRowSelectionInterval(row, row);
-		}
+        if (selectedRows <= 1) {
+            // select node
+            int row = headerTableViewer.getView().rowAtPoint(new Point(
+                        event.getX(), event.getY()));
+            headerTableViewer.getView().setRowSelectionInterval(row, row);
+        }
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				headerTableViewer.getPopupMenu().show(
-					event.getComponent(),
-					event.getX(),
-					event.getY());
-			}
-		});
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    headerTableViewer.getPopupMenu().show(event.getComponent(),
+                        event.getX(), event.getY());
+                }
+            });
+    }
 
-	public void mousePressed(MouseEvent event) {
-		if (event.isPopupTrigger()) {
-			processPopup(event);
-		}
-	}
+    public void mousePressed(MouseEvent event) {
+        if (event.isPopupTrigger()) {
+            processPopup(event);
+        }
+    }
 
-	public void mouseClicked(MouseEvent event) {
-		if (event.getClickCount() == 2) {
-			processDoubleClick();
-		} else {
-			if ( SwingUtilities.isLeftMouseButton(event) ) {
-			//if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
-				int row= headerTableViewer.getView().getSelectedRow();
-				MessageNode node=
-					(MessageNode) headerTableViewer.getView().getValueAt(
-						row,
-						0);
-					
-				FolderCommandReference[] ref=
-					headerTableViewer
-						.getMailFrameController()
-						.getTableSelection();
-				((Folder) ref[0].getFolder()).setLastSelection(node.getUid());
-				viewMessageAction.actionPerformed(null);
-			}
-		}
-	}
+    public void mouseClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            processDoubleClick();
+        } else {
+            if (SwingUtilities.isLeftMouseButton(event)) {
+                //if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
+                int row = headerTableViewer.getView().getSelectedRow();
+                MessageNode node = (MessageNode) headerTableViewer.getView()
+                                                                  .getValueAt(row,
+                        0);
 
-	protected void processDoubleClick() {
-		// open message in new message-frame
-		new OpenMessageWithMessageFrameAction(
-			headerTableViewer.getMailFrameController()).actionPerformed(
-			null);
-	}
+                FolderCommandReference[] ref = headerTableViewer.getMailFrameController()
+                                                                .getTableSelection();
+                ((Folder) ref[0].getFolder()).setLastSelection(node.getUid());
+                viewMessageAction.actionPerformed(null);
+            }
+        }
+    }
 
-	public void mouseReleased(MouseEvent event) {
-		if (event.isPopupTrigger()) {
-			processPopup(event);
-		}
-	}
+    protected void processDoubleClick() {
+        // open message in new message-frame
+        new OpenMessageWithMessageFrameAction(headerTableViewer.getMailFrameController()).actionPerformed(null);
+    }
+
+    public void mouseReleased(MouseEvent event) {
+        if (event.isPopupTrigger()) {
+            processPopup(event);
+        }
+    }
 }

@@ -73,17 +73,17 @@ public class MessageNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * Returns the hasRecentChildren.
-     * @return boolean
-     */
+ * Returns the hasRecentChildren.
+ * @return boolean
+ */
     public boolean isHasRecentChildren() {
         return hasRecentChildren;
     }
 
     /**
-     * Sets the hasRecentChildren.
-     * @param hasRecentChildren The hasRecentChildren to set
-     */
+ * Sets the hasRecentChildren.
+ * @param hasRecentChildren The hasRecentChildren to set
+ */
     public void setHasRecentChildren(boolean hasRecentChildren) {
         this.hasRecentChildren = hasRecentChildren;
     }

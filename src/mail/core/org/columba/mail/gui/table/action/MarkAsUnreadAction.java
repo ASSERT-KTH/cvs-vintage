@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -37,20 +36,21 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+
 /**
  * @author frd
  *
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MarkAsUnreadAction extends AbstractColumbaAction implements SelectionListener {
+public class MarkAsUnreadAction extends AbstractColumbaAction
+    implements SelectionListener {
     /**
      * @param frameMediator
      */
     public MarkAsUnreadAction(FrameMediator frameMediator) {
-        super(frameMediator, MailResourceLoader.getString(
-                "menu",
-                "mainframe",
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
                 "menu_message_markasunread"));
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("mail-new.png"));

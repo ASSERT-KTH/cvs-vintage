@@ -72,39 +72,40 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
     }
 
     /**
-     *
-     * sort the table
-     *
-     * use selected column and sorting order
-     *
-     */
+ *
+ * sort the table
+ *
+ * use selected column and sorting order
+ *
+ */
     public void sort() {
         String str = getSortingColumn();
 
         /*
-        if (str.equals("In Order Received")) {
-            // do not sort the table, just use
-            MessageNode rootNode = getRootNode();
-        } else {
-        */
-            MessageNode rootNode = getRootNode();
+if (str.equals("In Order Received")) {
+    // do not sort the table, just use
+    MessageNode rootNode = getRootNode();
+} else {
+*/
+        MessageNode rootNode = getRootNode();
 
-            // get a list of MessageNode objects of the first
-            // hierachy level	
-            List v = rootNode.getVector();
+        // get a list of MessageNode objects of the first
+        // hierachy level	
+        List v = rootNode.getVector();
 
-            // do the sorting
-            Collections.sort(v,
-                new MessageHeaderComparator(getRealModel().getColumnNumber(getSortingColumn()),
-                    getSortingOrder()));
+        // do the sorting
+        Collections.sort(v,
+            new MessageHeaderComparator(getRealModel().getColumnNumber(getSortingColumn()),
+                getSortingOrder()));
+
         //}
     }
 
     /**
-     * sort the table
-     *
-     * @param column        index of column
-     */
+ * sort the table
+ *
+ * @param column        index of column
+ */
     public void sort(int column) {
         String c = getColumnName(column);
 
@@ -123,10 +124,10 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
     }
 
     /**
-     *
-     *
-     * @return        index of selected column
-     */
+ *
+ *
+ * @return        index of selected column
+ */
     public int getSortInt() {
         return getRealModel().getColumnNumber(getSortingColumn());
     }
@@ -223,12 +224,10 @@ public class BasicTableModelSorter extends TreeTableModelDecorator {
                     result = -1;
                 } else if ((item1 == null) && (item2 == null)) {
                     result = 0;
-                }
-                else if (item1 instanceof String) {
+                } else if (item1 instanceof String) {
                     result = collator.compare((String) item1, (String) item2);
-                   
-                } else if ( item1 instanceof Boolean) {
-                	result = collator.compare((Boolean) item1, (Boolean) item2);
+                } else if (item1 instanceof Boolean) {
+                    result = collator.compare((Boolean) item1, (Boolean) item2);
                 }
             }
 

@@ -34,100 +34,94 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+
 /**
  * Creates a menu with a list of colors to select.
  *
  * @author fdietz
  */
-public class ColorMessageMenu
-	extends IMenu
-	implements ActionListener, SelectionListener {
-	// TODO: add central place, which keeps a list of all possible
-	//       colors, and provides a custom color configuration possibility
-	public static String[] items=
-		{ "Blue", "Gray", "Green", "Red", "Yellow", "Custom" };
-	public static Color[] colors=
-		{
-			Color.blue,
-			Color.gray,
-			Color.green,
-			Color.red,
-			Color.yellow,
-			Color.black };
+public class ColorMessageMenu extends IMenu implements ActionListener,
+    SelectionListener {
+    // TODO: add central place, which keeps a list of all possible
+    //       colors, and provides a custom color configuration possibility
+    public static String[] items = {
+        "Blue", "Gray", "Green", "Red", "Yellow", "Custom"
+    };
+    public static Color[] colors = {
+        Color.blue, Color.gray, Color.green, Color.red, Color.yellow,
+        Color.black
+    };
 
-	/**
-	 * @param controller
-	 * @param caption
-	 */
-	public ColorMessageMenu(FrameMediator controller) {
-		super(controller, "Color Message");
+    /**
+ * @param controller
+ * @param caption
+ */
+    public ColorMessageMenu(FrameMediator controller) {
+        super(controller, "Color Message");
 
-		createSubMenu();
+        createSubMenu();
 
-		(
-			(
-				AbstractMailFrameController) controller)
-					.registerTableSelectionListener(
-			this);
-	}
+        ((AbstractMailFrameController) controller).registerTableSelectionListener(this);
+    }
 
-	protected void createSubMenu() {
-		// TODO: implement custom menuitem renderer
-		JMenuItem item= new JMenuItem("None");
-		item.setActionCommand("NONE");
-		item.addActionListener(this);
-		add(item);
-		addSeparator();
-		for (int i= 0; i < items.length; i++) {
-			item= new JMenuItem(items[i]);
-			item.setActionCommand(items[i]);
-			item.addActionListener(this);
-			add(item);
-		}
-	}
+    protected void createSubMenu() {
+        // TODO: implement custom menuitem renderer
+        JMenuItem item = new JMenuItem("None");
+        item.setActionCommand("NONE");
+        item.addActionListener(this);
+        add(item);
+        addSeparator();
 
-	public void actionPerformed(ActionEvent e) {
-		String action= e.getActionCommand();
+        for (int i = 0; i < items.length; i++) {
+            item = new JMenuItem(items[i]);
+            item.setActionCommand(items[i]);
+            item.addActionListener(this);
+            add(item);
+        }
+    }
 
-		// get current message list selection
-		FolderCommandReference[] r=
-			((AbstractMailFrameController) getController()).getTableSelection();
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		if (action.equals("NONE")) {
-			// remove color
-			//			add color selection to reference
-			for (int i= 0; i < r.length; i++) {
-				r[i].setColorValue(0);
-			}
+        // get current message list selection
+        FolderCommandReference[] r = ((AbstractMailFrameController) getController()).getTableSelection();
 
-			// pass command to scheduler
-			MainInterface.processor.addOp(new ColorMessageCommand(r));
-		} else {
-			// which menuitem was selected?
-			int result= -1;
-			for (int i= 0; i < items.length; i++) {
-				if (action.equals(items[i])) {
-					result= i;
+        if (action.equals("NONE")) {
+            // remove color
+            //			add color selection to reference
+            for (int i = 0; i < r.length; i++) {
+                r[i].setColorValue(0);
+            }
 
-					break;
-				}
-			}
+            // pass command to scheduler
+            MainInterface.processor.addOp(new ColorMessageCommand(r));
+        } else {
+            // which menuitem was selected?
+            int result = -1;
 
-			// add color selection to reference
-			for (int i= 0; i < r.length; i++) {
-				r[i].setColorValue(colors[result].getRGB());
-			}
+            for (int i = 0; i < items.length; i++) {
+                if (action.equals(items[i])) {
+                    result = i;
 
-			// pass command to scheduler
-			MainInterface.processor.addOp(new ColorMessageCommand(r));
-		}
-	}
+                    break;
+                }
+            }
 
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TableSelectionChangedEvent) e).getUids().length > 0) {
-			setEnabled(true);
-		} else {
-			setEnabled(false);
-		}
-	}
+            // add color selection to reference
+            for (int i = 0; i < r.length; i++) {
+                r[i].setColorValue(colors[result].getRGB());
+            }
+
+            // pass command to scheduler
+            MainInterface.processor.addOp(new ColorMessageCommand(r));
+        }
+    }
+
+    public void selectionChanged(SelectionChangedEvent e) {
+        if (((TableSelectionChangedEvent) e).getUids().length > 0) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 }

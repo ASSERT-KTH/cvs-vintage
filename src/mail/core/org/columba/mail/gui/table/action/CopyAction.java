@@ -21,8 +21,6 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.TableController;
 
 import java.awt.event.ActionEvent;
 

@@ -36,16 +36,16 @@ public class TableModelUpdateManager {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+ */
     public void modify(Object[] uids) {
         // just send an update event to the TableModel
         decorator.modify(uids);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+ */
     public void remove(Object[] uids) {
         decorator.remove(uids);
     }

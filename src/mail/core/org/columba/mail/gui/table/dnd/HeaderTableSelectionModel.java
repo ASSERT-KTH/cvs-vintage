@@ -34,16 +34,16 @@ public class HeaderTableSelectionModel extends DefaultListSelectionModel {
     }
 
     /**
-     * @return boolean
-     */
+ * @return boolean
+ */
     public boolean isGestureStarted() {
         return gestureStarted;
     }
 
     /**
-     * Sets the gestureStarted.
-     * @param gestureStarted The gestureStarted to set
-     */
+ * Sets the gestureStarted.
+ * @param gestureStarted The gestureStarted to set
+ */
     public void setGestureStarted(boolean gestureStarted) {
         this.gestureStarted = gestureStarted;
     }

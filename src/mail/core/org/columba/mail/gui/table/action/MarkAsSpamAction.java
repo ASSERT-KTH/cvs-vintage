@@ -36,7 +36,8 @@ import java.awt.event.ActionEvent;
  *
  * @author fdietz
  */
-public class MarkAsSpamAction extends AbstractColumbaAction implements SelectionListener {
+public class MarkAsSpamAction extends AbstractColumbaAction
+    implements SelectionListener {
     public MarkAsSpamAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

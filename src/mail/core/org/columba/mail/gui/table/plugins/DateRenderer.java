@@ -75,14 +75,14 @@ public class DateRenderer extends DefaultLabelRenderer {
         }
 
         /*
-        if (!(value instanceof Date)) {
-        setText("");
-        return this;
-        }
+if (!(value instanceof Date)) {
+setText("");
+return this;
+}
 
-        if (value instanceof String)
-        return this;
-        */
+if (value instanceof String)
+return this;
+*/
         Date date = (Date) ((MessageNode) value).getHeader().get("columba.date");
 
         if (date == null) {

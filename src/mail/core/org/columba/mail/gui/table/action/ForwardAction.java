@@ -24,12 +24,12 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -48,8 +48,8 @@ import javax.swing.KeyStroke;
  *
  * @author fdietz
  */
-public class ForwardAction extends AbstractColumbaAction implements SelectionListener,
-    Observer {
+public class ForwardAction extends AbstractColumbaAction
+    implements SelectionListener, Observer {
     private XmlElement forward;
     private String forwardStyle;
 
@@ -81,7 +81,7 @@ public class ForwardAction extends AbstractColumbaAction implements SelectionLis
         ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
 
         XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
-                                               .getRoot().getElement("/options");
+                                                         .getRoot().getElement("/options");
 
         forward = composerOptions.getElement("forward");
 

@@ -41,7 +41,8 @@ import java.awt.event.ActionEvent;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MoveMessageAction extends AbstractColumbaAction implements SelectionListener {
+public class MoveMessageAction extends AbstractColumbaAction
+    implements SelectionListener {
     public MoveMessageAction(FrameMediator frameMediator) {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",

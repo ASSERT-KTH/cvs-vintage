@@ -17,27 +17,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.table.TableColumnModel;
-
-import org.columba.core.config.DefaultItem;
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
 import org.columba.core.config.WindowItem;
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.message.HeaderList;
 
+import java.util.Vector;
+
+
 /**
- * 
+ *
  *
  * Extends <class>BasicTableModelSorter</class> with Columba specific stuff.
  * <p>
@@ -62,17 +54,15 @@ public class TableModelSorter extends BasicTableModelSorter {
         String c = item.get("sorting_column");
         if ( c == null ) c = "Date";
         */
-        
         setSortingColumn("Date");
 
         //setSortingOrder(item.getBoolean("sorting_order", false));
         setSortingOrder(true);
-        
+
         // observable connects the sorting table with the sort menu (View->Sort
         // Messages)
         sortingStateObservable = new SortingStateObservable();
-        sortingStateObservable.setSortingState(
-            getSortingColumn(),
+        sortingStateObservable.setSortingState(getSortingColumn(),
             getSortingOrder());
     }
 
@@ -87,10 +77,10 @@ public class TableModelSorter extends BasicTableModelSorter {
     public void saveConfig() {
         TableItem tableItem = (TableItem) MailInterface.config.getMainFrameOptionsConfig()
                                                     .getTableItem();
-    
+
         boolean ascending = getSortingOrder();
         String sortingColumn = getSortingColumn();
-    
+
         tableItem.set("ascending", ascending);
         tableItem.set("selected", sortingColumn);
     }
@@ -104,36 +94,33 @@ public class TableModelSorter extends BasicTableModelSorter {
      * @return array of visible columns
      */
     public Object[] getColumns() {
-        
         XmlElement tableElement = FolderItem.getGlobalOptions();
-        
-        
+
         XmlElement columns = tableElement.getElement("columns");
 
         Vector v = new Vector();
+
         for (int i = 0; i < columns.count(); i++) {
             XmlElement column = columns.getElement(i);
 
             String name = column.getAttribute("name");
             v.add(name);
         }
-        
 
         /*
         TableItem tableItem = (TableItem) MailInterface.config.getMainFrameOptionsConfig()
                                                     .getTableItem();
-        
+
         Vector v = new Vector();
-        
+
         for (int i = 0; i < tableItem.count(); i++) {
             HeaderItem headerItem = tableItem.getHeaderItem(i);
-        
+
             if (headerItem.getBoolean("enabled")) {
                 v.add((String) headerItem.get("name"));
             }
         }
         */
-
         Object[] result = new String[v.size()];
         result = v.toArray();
 

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -34,6 +33,7 @@ import org.columba.mail.util.MailResourceLoader;
 import java.awt.event.ActionEvent;
 
 import java.nio.charset.Charset;
+
 
 /**
  * @author frd

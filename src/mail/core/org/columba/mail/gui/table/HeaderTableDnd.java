@@ -108,36 +108,36 @@ public class HeaderTableDnd implements DragGestureListener, DragSourceListener,
     /********************* DropTargetListener ***************************/
 
     /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
-     */
+ * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
+ */
     public void dragEnter(DropTargetDragEvent arg0) {
         // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
-     */
+ * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
+ */
     public void dragExit(DropTargetEvent arg0) {
         // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
-     */
+ * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
+ */
     public void dragOver(DropTargetDragEvent arg0) {
         // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
-     */
+ * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
+ */
     public void drop(DropTargetDropEvent arg0) {
         // TODO Auto-generated method stub
     }
 
     /* (non-Javadoc)
-     * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
-     */
+ * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
+ */
     public void dropActionChanged(DropTargetDragEvent arg0) {
         // TODO Auto-generated method stub
     }

@@ -30,15 +30,15 @@ public class TableSelectionChangedEvent extends SelectionChangedEvent {
     }
 
     /**
-     * @return Folder
-     */
+ * @return Folder
+ */
     public Folder getFolder() {
         return folder;
     }
 
     /**
-     * @return Object[]
-     */
+ * @return Object[]
+ */
     public Object[] getUids() {
         return uids;
     }

@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import org.columba.mail.command.FolderCommandReference;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
 import java.io.IOException;
-
-import org.columba.mail.command.FolderCommandReference;
 
 
 /**
@@ -34,8 +34,8 @@ public class MessageReferencesTransfer implements Transferable {
 
     static {
         try {
-            FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType
-                    + "-" + MessageReferencesTransfer.class.getName());
+            FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +
+                    "-" + MessageReferencesTransfer.class.getName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -44,25 +44,25 @@ public class MessageReferencesTransfer implements Transferable {
     private FolderCommandReference[] references;
 
     /**
-     * Creates a message transferable
-     * @param ref message references.
-     */
+ * Creates a message transferable
+ * @param ref message references.
+ */
     public MessageReferencesTransfer(FolderCommandReference[] ref) {
         super();
         references = ref;
     }
 
     /**
-     * Returns the message references for this transfer.
-     * @return the message references for this transfer.
-     */
+ * Returns the message references for this transfer.
+ * @return the message references for this transfer.
+ */
     public FolderCommandReference[] getFolderReferences() {
         return references;
     }
 
     /** {@inheritDoc} */
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[] {FLAVOR};
+        return new DataFlavor[] { FLAVOR };
     }
 
     /** {@inheritDoc} */
@@ -71,8 +71,8 @@ public class MessageReferencesTransfer implements Transferable {
     }
 
     /** {@inheritDoc} */
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
-    {
+    public Object getTransferData(DataFlavor flavor)
+        throws UnsupportedFlavorException, IOException {
         if (!isDataFlavorSupported(flavor)) {
             throw new UnsupportedFlavorException(flavor);
         }

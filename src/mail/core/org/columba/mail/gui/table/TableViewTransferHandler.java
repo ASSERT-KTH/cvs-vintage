@@ -15,18 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import org.columba.core.command.CompoundCommand;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.ExpungeFolderCommand;
+import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
-import org.columba.core.command.CompoundCommand;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.ExpungeFolderCommand;
-import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
 
 /**
  * A transfer handler for the TableView control.
@@ -37,13 +39,12 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
  * @author redsolo
  */
 public class TableViewTransferHandler extends TransferHandler {
-
     private AbstractMailFrameController mailFrameController;
 
     /**
-     * Creates a TransferHandle for a table view.
-     * @param cont the fram controller, its used to get the selected messages.
-     */
+ * Creates a TransferHandle for a table view.
+ * @param cont the fram controller, its used to get the selected messages.
+ */
     public TableViewTransferHandler(AbstractMailFrameController cont) {
         mailFrameController = cont;
     }
@@ -56,19 +57,20 @@ public class TableViewTransferHandler extends TransferHandler {
     /** {@inheritDoc} */
     protected Transferable createTransferable(JComponent c) {
         Transferable transferable = null;
+
         if (c instanceof TableView) {
             transferable = new MessageReferencesTransfer(mailFrameController.getTableSelection());
         }
+
         return transferable;
     }
 
     /** {@inheritDoc} */
     protected void exportDone(JComponent source, Transferable data, int action) {
-        if ((action == TransferHandler.MOVE)
-            && (data instanceof MessageReferencesTransfer)
-            && (source instanceof TableView)) {
+        if ((action == TransferHandler.MOVE) &&
+                (data instanceof MessageReferencesTransfer) &&
+                (source instanceof TableView)) {
             // Remove the moved messages.
-
             MessageReferencesTransfer messageTransfer = (MessageReferencesTransfer) data;
             FolderCommandReference[] messageRefs = messageTransfer.getFolderReferences();
 
@@ -87,9 +89,11 @@ public class TableViewTransferHandler extends TransferHandler {
     /** {@inheritDoc} */
     public int getSourceActions(JComponent c) {
         int action = TransferHandler.NONE;
+
         if (c instanceof TableView) {
             action = TransferHandler.COPY_OR_MOVE;
         }
+
         return action;
     }
 }

@@ -56,8 +56,8 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
     private boolean isBordered = true;
 
     /**
-     * Constructor for DefaultLabelRenderer.
-     */
+ * Constructor for DefaultLabelRenderer.
+ */
     public DefaultLabelRenderer() {
         super();
 
@@ -71,8 +71,8 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
     }
 
     /**
-     * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
-     */
+ * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+ */
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
         if (isBordered) {
@@ -142,33 +142,33 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
     }
 
     /**
-     * Returns the background.
-     * @return Color
-     */
+ * Returns the background.
+ * @return Color
+ */
     public Color getBackground() {
         return background;
     }
 
     /**
-     * Returns the foreground.
-     * @return Color
-     */
+ * Returns the foreground.
+ * @return Color
+ */
     public Color getForeground() {
         return foreground;
     }
 
     /**
-     * Sets the background.
-     * @param background The background to set
-     */
+ * Sets the background.
+ * @param background The background to set
+ */
     public void setBackground(Color background) {
         this.background = background;
     }
 
     /**
-     * Sets the foreground.
-     * @param foreground The foreground to set
-     */
+ * Sets the foreground.
+ * @param foreground The foreground to set
+ */
     public void setForeground(Color foreground) {
         this.foreground = foreground;
     }
@@ -179,18 +179,18 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
     //  -> comment the following lines
 
     /*
-    public void paint(Graphics g) {
-            ui.update(g, this);
-    }
-    public void repaint() {
-    }
-    */
+public void paint(Graphics g) {
+        ui.update(g, this);
+}
+public void repaint() {
+}
+*/
     /*
-    protected void firePropertyChange(
-            String propertyName,
-            Object oldValue,
-            Object newValue) {
-            // this is only needed when using HTML text labels
-    }
-    */
+protected void firePropertyChange(
+        String propertyName,
+        Object oldValue,
+        Object newValue) {
+        // this is only needed when using HTML text labels
+}
+*/
 }

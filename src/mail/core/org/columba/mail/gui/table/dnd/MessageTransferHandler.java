@@ -93,9 +93,9 @@ public class MessageTransferHandler extends TransferHandler {
         }
 
         /*
-        if (source.equals(target))
-                return true;
-        */
+if (source.equals(target))
+        return true;
+*/
 
         // do the work here
         Folder destFolder = (Folder) target.getSelectionPath()

@@ -22,6 +22,7 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
@@ -52,8 +53,8 @@ public class ViewHeaderListCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         // notify table selection handler 
         ((TableSelectionHandler) frameMediator.getSelectionManager().getHandler("mail.table")).setFolder(folder);
@@ -67,9 +68,10 @@ public class ViewHeaderListCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
         folder = (Folder) r[0].getFolder();

@@ -46,8 +46,8 @@ public class TableHeaderMouseListener extends MouseAdapter {
     private ImageIcon descending = new DescendingIcon();
 
     /**
-     *
-     */
+ *
+ */
     public TableHeaderMouseListener(TableView view, TableModelSorter sorter) {
         this.view = view;
         this.sorter = sorter;
@@ -62,10 +62,9 @@ public class TableHeaderMouseListener extends MouseAdapter {
         TableColumnModel columnModel = view.getColumnModel();
         int viewColumn = columnModel.getColumnIndexAtX(e.getX());
         int column = viewColumn;
-        
+
         //int column = view.convertColumnIndexToModel(viewColumn);
         //int column2 = view.convertColumnIndexToView(viewColumn);
-        
         if (column != -1) {
             ImageIcon icon = null;
 

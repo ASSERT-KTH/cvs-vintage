@@ -54,7 +54,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
     }
 
     /************** filter view *********************/
-    public void setDataFiltering(boolean b){
+    public void setDataFiltering(boolean b) {
         dataFiltering = b;
     }
 
@@ -78,7 +78,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return answeredFlag;
     }
 
-    public void setFlaggedFlag(boolean b){
+    public void setFlaggedFlag(boolean b) {
         flaggedFlag = b;
     }
 
@@ -94,7 +94,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
         return expungedFlag;
     }
 
-    public void setAttachmentFlag(boolean b)  {
+    public void setAttachmentFlag(boolean b) {
         attachmentFlag = b;
     }
 

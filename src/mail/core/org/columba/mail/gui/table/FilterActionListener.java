@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.gui.table.model.TableModelFilter;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,52 +36,53 @@ public class FilterActionListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
+
         /*
-        try {
-            if (action.equals("ALL")) {
-                TableModelFilter model = tableController.getTableModelFilteredView();
+try {
+    if (action.equals("ALL")) {
+        TableModelFilter model = tableController.getTableModelFilteredView();
 
-                model.setNewFlag(false);
+        model.setNewFlag(false);
 
-                //model.setOldFlag( true );
-                model.setAnsweredFlag(false);
-                model.setFlaggedFlag(false);
-                model.setExpungedFlag(false);
-                model.setAttachmentFlag(false);
-                model.setPatternString("");
+        //model.setOldFlag( true );
+        model.setAnsweredFlag(false);
+        model.setFlaggedFlag(false);
+        model.setExpungedFlag(false);
+        model.setAttachmentFlag(false);
+        model.setPatternString("");
 
-                model.setDataFiltering(false);
-                tableController.getUpdateManager().update();
+        model.setDataFiltering(false);
+        tableController.getUpdateManager().update();
 
-                FilterToolbar toolbar = tableController.getFilterToolbar();
+        FilterToolbar toolbar = tableController.getFilterToolbar();
 
-                // FIXME
-                //toolbar.newButton.setSelected(false);
-            } else if (action.equals("UNREAD")) {
-                TableModelFilter model = tableController.getTableModelFilteredView();
+        // FIXME
+        //toolbar.newButton.setSelected(false);
+    } else if (action.equals("UNREAD")) {
+        TableModelFilter model = tableController.getTableModelFilteredView();
 
-                model.setNewFlag(true);
+        model.setNewFlag(true);
 
-                //model.setOldFlag( false );
-                model.setAnsweredFlag(false);
-                model.setFlaggedFlag(false);
-                model.setExpungedFlag(false);
-                model.setAttachmentFlag(false);
-                model.setPatternString("");
+        //model.setOldFlag( false );
+        model.setAnsweredFlag(false);
+        model.setFlaggedFlag(false);
+        model.setExpungedFlag(false);
+        model.setAttachmentFlag(false);
+        model.setPatternString("");
 
-                model.setDataFiltering(true);
+        model.setDataFiltering(true);
 
-                tableController.getUpdateManager().update();
+        tableController.getUpdateManager().update();
 
-                FilterToolbar toolbar = tableController.getFilterToolbar();
+        FilterToolbar toolbar = tableController.getFilterToolbar();
 
-                // FIXME
-                //toolbar.newButton.setSelected(true);
-                //toolbar.oldButton.setSelected(false);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        */
+        // FIXME
+        //toolbar.newButton.setSelected(true);
+        //toolbar.oldButton.setSelected(false);
+    }
+} catch (Exception ex) {
+    ex.printStackTrace();
+}
+*/
     }
 }

@@ -15,6 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
+
+import org.columba.mail.gui.table.model.TableModelSorter;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
@@ -24,58 +29,48 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-import org.columba.mail.gui.table.model.TableModelSorter;
 
 public class BasicHeaderRenderer extends DefaultTableCellRenderer {
-	private TableModelSorter sorter;
+    private TableModelSorter sorter;
+    private ImageIcon ascending = new AscendingIcon();
+    private ImageIcon descending = new DescendingIcon();
+    private String name;
 
-	private ImageIcon ascending= new AscendingIcon();
-	private ImageIcon descending= new DescendingIcon();
+    public BasicHeaderRenderer(String name, TableModelSorter sorter) {
+        super();
 
-	private String name;
+        this.name = name;
+        this.sorter = sorter;
 
-	public BasicHeaderRenderer(String name, TableModelSorter sorter) {
-		super();
+        setHorizontalAlignment(SwingConstants.LEFT);
+        setHorizontalTextPosition(SwingConstants.LEFT);
+    }
 
-		this.name= name;
-		this.sorter= sorter;
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (table != null) {
+            JTableHeader header = table.getTableHeader();
 
-		setHorizontalAlignment(SwingConstants.LEFT);
-		setHorizontalTextPosition(SwingConstants.LEFT);
-	}
+            if (header != null) {
+                setForeground(header.getForeground());
+                setBackground(header.getBackground());
+                setFont(header.getFont());
+            }
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
-		if (table != null) {
-			JTableHeader header= table.getTableHeader();
+        setText((value == null) ? "" : value.toString());
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 
-			if (header != null) {
-				setForeground(header.getForeground());
-				setBackground(header.getBackground());
-				setFont(header.getFont());
-			}
-		}
+        if (sorter.getSortingColumn().equals(name)) {
+            if (sorter.getSortingOrder()) {
+                setIcon(descending);
+            } else {
+                setIcon(ascending);
+            }
+        } else {
+            setIcon(null);
+        }
 
-		setText((value == null) ? "" : value.toString());
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-
-		if (sorter.getSortingColumn().equals(name)) {
-			if (sorter.getSortingOrder()) {
-				setIcon(descending);
-			} else {
-				setIcon(ascending);
-			}
-		} else {
-			setIcon(null);
-		}
-
-		return this;
-	}
+        return this;
+    }
 }

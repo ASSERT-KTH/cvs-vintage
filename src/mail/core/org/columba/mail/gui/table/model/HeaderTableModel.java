@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.core.config.TableItem;
-
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 
@@ -27,25 +25,24 @@ import java.util.Enumeration;
 
 public class HeaderTableModel extends BasicHeaderTableModel
     implements TreeTableModelInterface {
-        
     public HeaderTableModel() {
-        super();    
+        super();
     }
-    
+
     public HeaderTableModel(String[] columns) {
         super(columns);
     }
 
     /**
-     * ***************************** implements TableModelModifier
-     * ******************
-     */
+ * ***************************** implements TableModelModifier
+ * ******************
+ */
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+ */
     public void modify(Object[] uids) {
         for (int i = 0; i < uids.length; i++) {
             MessageNode node = (MessageNode) map.get(uids[i]);
@@ -61,10 +58,10 @@ public class HeaderTableModel extends BasicHeaderTableModel
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+ */
     public void remove(Object[] uids) {
         if (uids != null) {
             for (int i = 0; i < uids.length; i++) {
@@ -129,10 +126,10 @@ public class HeaderTableModel extends BasicHeaderTableModel
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
-     */
+ * (non-Javadoc)
+ *
+ * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
+ */
     public void set(HeaderList headerList) {
         this.headerList = headerList;
 

@@ -131,48 +131,48 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
 
     /*
-    protected String parseSubject( String subject )
-    {
-        String result = subject;
+protected String parseSubject( String subject )
+{
+    String result = subject;
 
-        if ( result == null ) return new String("");
+    if ( result == null ) return new String("");
 
-        if ( result.length() == 0 ) return result;
+    if ( result.length() == 0 ) return result;
 
 
-        while ( result.toLowerCase().indexOf("re:") != -1)
+    while ( result.toLowerCase().indexOf("re:") != -1)
+        {
+
+            if ( result.toLowerCase().startsWith("re:") )
             {
-
-                if ( result.toLowerCase().startsWith("re:") )
-                {
-                    // delete only the leading 3 char
-                    result = result.substring( 3, result.length() );
-                    result = result.trim();
-                }
-                else
-                {
-                    // maybe there es a [nautilus] in front of the re:
-                    int index = result.toLowerCase().indexOf("re:");
-                    result = result.substring( index+3, result.length() );
-                    result = result.trim();
-                }
-
+                // delete only the leading 3 char
+                result = result.substring( 3, result.length() );
+                result = result.trim();
+            }
+            else
+            {
+                // maybe there es a [nautilus] in front of the re:
+                int index = result.toLowerCase().indexOf("re:");
+                result = result.substring( index+3, result.length() );
+                result = result.trim();
             }
 
-        if ( result.startsWith("[") )
-        {
-            if ( result.endsWith("]") ) return result;
-
-            int index = result.indexOf("]");
-            result = result.substring( index+1, result.length() );
-            result = result.trim();
         }
 
+    if ( result.startsWith("[") )
+    {
+        if ( result.endsWith("]") ) return result;
 
-
-        return result;
+        int index = result.indexOf("]");
+        result = result.substring( index+1, result.length() );
+        result = result.trim();
     }
-    */
+
+
+
+    return result;
+}
+*/
     protected String[] parseReferences(String references) {
         //System.out.println("references: "+ references );
         StringTokenizer tk = new StringTokenizer(references, ">");
@@ -268,17 +268,17 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
             hashtable.put(id, node);
 
             /*
-            String subject = (String) header.get("Subject");
-            //System.out.println("subject: "+ subject);
-            subject = parseSubject(subject);
-            node.setParsedSubject(subject);
-            */
+String subject = (String) header.get("Subject");
+//System.out.println("subject: "+ subject);
+subject = parseSubject(subject);
+node.setParsedSubject(subject);
+*/
         }
 
         /* for each element in the message-header-reference or in-reply-to headerfield:
-            - find a container whose message-id matches and add message
-               otherwise create empty container
-        */
+    - find a container whose message-id matches and add message
+       otherwise create empty container
+*/
         for (int i = 0; i < rootNode.getChildCount(); i++) {
             MessageNode node = (MessageNode) rootNode.getChildAt(i);
             boolean result = add(node, rootNode);
@@ -294,40 +294,40 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         //
         // use parsed subject for grouping
         /*
-        for ( int i=0; i<rootNode.getChildCount(); i++ )
+for ( int i=0; i<rootNode.getChildCount(); i++ )
+{
+    MessageNode node = (MessageNode) rootNode.getChildAt( i );
+    String parsedSubject = node.getParsedSubject();
+
+
+    // do not use vector
+    boolean alreadyDec = false;
+
+    for ( int j=0; j<rootNode.getChildCount(); j++ )
+    {
+        if ( j==i ) continue;
+
+        MessageNode node2 = (MessageNode) rootNode.getChildAt( j );
+        String subject2 = node2.getParsedSubject();
+        String subject = (String) node2.getMessage().getHeader().get("Subject");
+
+        if ( parsedSubject.equals( subject2 ) )
         {
-            MessageNode node = (MessageNode) rootNode.getChildAt( i );
-            String parsedSubject = node.getParsedSubject();
-
-
-            // do not use vector
-            boolean alreadyDec = false;
-
-            for ( int j=0; j<rootNode.getChildCount(); j++ )
+            if ( subject.toLowerCase().indexOf("re:") == -1 )
             {
-                if ( j==i ) continue;
-
-                MessageNode node2 = (MessageNode) rootNode.getChildAt( j );
-                String subject2 = node2.getParsedSubject();
-                String subject = (String) node2.getMessage().getHeader().get("Subject");
-
-                if ( parsedSubject.equals( subject2 ) )
+                //node.insert( node2, node.getChildCount() );
+                node2.add( node );
+                if ( alreadyDec == false )
                 {
-                    if ( subject.toLowerCase().indexOf("re:") == -1 )
-                    {
-                        //node.insert( node2, node.getChildCount() );
-                        node2.add( node );
-                        if ( alreadyDec == false )
-                        {
-                            i--;
-                            alreadyDec = true;
-                        }
-                    }
+                    i--;
+                    alreadyDec = true;
                 }
             }
-
         }
-        */
+    }
+
+}
+*/
         // go through whole tree and sort the siblings after date
         sort(rootNode);
     }
@@ -337,40 +337,40 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         MessageNode parent = null;
 
         /*
-        MessageNode child = null;
-        for ( int index=i; index<referenceList.length; index++ )
+MessageNode child = null;
+for ( int index=i; index<referenceList.length; index++ )
+{
+
+    if ( hashtable.containsKey( referenceList[index].trim() ) == true )
+    {
+        //System.out.println("reference is in hashtable: "+index);
+        parent = (MessageNode) hashtable.get( referenceList[index].trim() );
+        continue;
+    }
+    else
+    {
+        Message message = new Message();
+        message.getHeader().set("Message-ID", referenceList[index].trim() );
+        message.getHeader().set("Subject", node.getParsedSubject()+ " (message not available)" );
+        child = new MessageNode( message, null );
+        child.enableDummy(true);
+        hashtable.put( referenceList[index].trim(), child );
+
+        if ( parent != null )
         {
-
-            if ( hashtable.containsKey( referenceList[index].trim() ) == true )
-            {
-                //System.out.println("reference is in hashtable: "+index);
-                parent = (MessageNode) hashtable.get( referenceList[index].trim() );
-                continue;
-            }
-            else
-            {
-                Message message = new Message();
-                message.getHeader().set("Message-ID", referenceList[index].trim() );
-                message.getHeader().set("Subject", node.getParsedSubject()+ " (message not available)" );
-                child = new MessageNode( message, null );
-                child.enableDummy(true);
-                hashtable.put( referenceList[index].trim(), child );
-
-                if ( parent != null )
-                {
-                   parent.add( child );
-                }
-                else
-                {
-                    int pos = rootNode.getIndex( node );
-                    rootNode.insert( child, pos );
-                    //rootNode.add( child );
-                }
-
-                parent = child;
-            }
+           parent.add( child );
         }
-        */
+        else
+        {
+            int pos = rootNode.getIndex( node );
+            rootNode.insert( child, pos );
+            //rootNode.add( child );
+        }
+
+        parent = child;
+    }
+}
+*/
         if (hashtable.containsKey(
                     referenceList[referenceList.length - 1].trim())) {
             //System.out.println("reference is in hashtable: "+index);
@@ -382,11 +382,11 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
 
     /**
-     *
-     * sort all children after date
-     *
-     * @param node        root MessageNode
-     */
+ *
+ * sort all children after date
+ *
+ * @param node        root MessageNode
+ */
     protected void sort(MessageNode node) {
         for (int i = 0; i < node.getChildCount(); i++) {
             MessageNode child = (MessageNode) node.getChildAt(i);
@@ -425,41 +425,41 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
 
     /*
-    public boolean manipulateModel(int mode) {
-            //System.out.println("threading enabled: "+ isEnabled() );
+public boolean manipulateModel(int mode) {
+        //System.out.println("threading enabled: "+ isEnabled() );
 
-            if (!isEnabled())
-                    return false;
+        if (!isEnabled())
+                return false;
 
-            switch (mode) {
-                    case TableModelPlugin.STRUCTURE_CHANGE :
-                            {
+        switch (mode) {
+                case TableModelPlugin.STRUCTURE_CHANGE :
+                        {
 
-                                    //System.out.println("starting to thread");
+                                //System.out.println("starting to thread");
 
-                                    MessageNode rootNode = getHeaderTableModel().getRootNode();
+                                MessageNode rootNode = getHeaderTableModel().getRootNode();
 
-                                    //Vector v = new Vector();
+                                //Vector v = new Vector();
 
-                                    thread(rootNode);
+                                thread(rootNode);
 
-                                    //System.out.println("finished threading");
+                                //System.out.println("finished threading");
 
-                                    return true;
-                            }
+                                return true;
+                        }
 
-                    case TableModelPlugin.NODES_INSERTED :
-                            {
-                                    // FIXME
+                case TableModelPlugin.NODES_INSERTED :
+                        {
+                                // FIXME
 
-                                    return true;
-                            }
+                                return true;
+                        }
 
-            }
+        }
 
-            return false;
-    }
-    */
+        return false;
+}
+*/
     public MessageNode addItem(MessageNode child) {
         MessageNode rootNode = getRealModel().getRootNode();
         ColumbaHeader childHeader = child.getHeader();
@@ -482,82 +482,82 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         add(child, rootNode);
 
         /*
-        // we did not find a parent, just group message with subject
-        String childSubject = (String) childHeader.get("Subject");
-        childSubject = parseSubject( childSubject );
-        child.setParsedSubject( childSubject );
+// we did not find a parent, just group message with subject
+String childSubject = (String) childHeader.get("Subject");
+childSubject = parseSubject( childSubject );
+child.setParsedSubject( childSubject );
 
-        // group everything together
-        for ( int i=0; i<rootNode.getChildCount(); i++ )
-        {
-            MessageNode node = (MessageNode) rootNode.getChildAt( i );
-            String subject = node.getParsedSubject();
-            if ( subject == null )
-            {
-                Message message = (Message) node.getUserObject();
-                Rfc822Header header = message.getHeader();
-                subject = (String) header.get("Subject");
+// group everything together
+for ( int i=0; i<rootNode.getChildCount(); i++ )
+{
+    MessageNode node = (MessageNode) rootNode.getChildAt( i );
+    String subject = node.getParsedSubject();
+    if ( subject == null )
+    {
+        Message message = (Message) node.getUserObject();
+        Rfc822Header header = message.getHeader();
+        subject = (String) header.get("Subject");
 
-                if ( subject.equals( childSubject ) ) return node;
-            }
-        }
-        */
+        if ( subject.equals( childSubject ) ) return node;
+    }
+}
+*/
         return rootNode;
 
         /*
-        Message childMessage = (Message) child.getUserObject();
-        Rfc822Header childHeader = childMessage.getHeader();
-        String childSubject = (String) childHeader.get("Subject");
+Message childMessage = (Message) child.getUserObject();
+Rfc822Header childHeader = childMessage.getHeader();
+String childSubject = (String) childHeader.get("Subject");
 
-        childSubject = parseSubject( childSubject );
-        child.setParsedSubject( childSubject );
+childSubject = parseSubject( childSubject );
+child.setParsedSubject( childSubject );
 
-        // group everything together
-        for ( int i=0; i<rootNode.getChildCount(); i++ )
-        {
+// group everything together
+for ( int i=0; i<rootNode.getChildCount(); i++ )
+{
 
-            MessageNode node = (MessageNode) rootNode.getChildAt( i );
-            String subject = node.getParsedSubject();
-            if ( subject == null )
-            {
-                Message message = (Message) node.getUserObject();
-                Rfc822Header header = message.getHeader();
-                subject = (String) header.get("Subject");
+    MessageNode node = (MessageNode) rootNode.getChildAt( i );
+    String subject = node.getParsedSubject();
+    if ( subject == null )
+    {
+        Message message = (Message) node.getUserObject();
+        Rfc822Header header = message.getHeader();
+        subject = (String) header.get("Subject");
 
-                if ( subject == null )
-                   subject = new String("");
-                else
-                   subject = parseSubject( subject );
+        if ( subject == null )
+           subject = new String("");
+        else
+           subject = parseSubject( subject );
 
-                node.setParsedSubject( subject );
-            }
+        node.setParsedSubject( subject );
+    }
 
 
-            if ( childSubject.equals( subject ) ) return node;
+    if ( childSubject.equals( subject ) ) return node;
 
-        }
-        */
+}
+*/
     }
 
     /******************************* implements TableModelModifier *******************/
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+ */
     public void modify(Object[] uids) {
         super.modify(uids);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+ */
     public void remove(Object[] uids) {
         super.remove(uids);
     }
 
     /* (non-Javadoc)
-             * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-             */
+         * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
+         */
     public void set(HeaderList headerList) {
         super.set(headerList);
 
@@ -565,8 +565,8 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#update()
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#update()
+ */
     public void update() {
         super.update();
 
@@ -576,28 +576,28 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
     }
 
     /*
-    public MessageNode getChildAtRow( int row, JTree tree )
+public MessageNode getChildAtRow( int row, JTree tree )
+{
+    int index = 0;
+
+    MessageNode rootNode = getHeaderTableModel().getRootNode();
+
+    for ( int i=0; i<rootNode.getChildCount(); i++ )
     {
-        int index = 0;
+        MessageNode node = (MessageNode) rootNode.getChildAt( i );
 
-        MessageNode rootNode = getHeaderTableModel().getRootNode();
 
-        for ( int i=0; i<rootNode.getChildCount(); i++ )
+        if ( node.isLeaf() == true )
         {
-            MessageNode node = (MessageNode) rootNode.getChildAt( i );
-
-
-            if ( node.isLeaf() == true )
-            {
-
-            }
-
 
         }
 
-        return rootNode;
+
     }
-    */
+
+    return rootNode;
+}
+*/
     class MessageHeaderComparator implements Comparator {
         protected int column;
         protected boolean ascending;
@@ -647,8 +647,7 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
                     result = -1;
                 } else if ((item1 == null) && (item2 == null)) {
                     result = 0;
-                }
-                else if (item1 instanceof String) {
+                } else if (item1 instanceof String) {
                     result = collator.compare((String) item1, (String) item2);
                 }
             }

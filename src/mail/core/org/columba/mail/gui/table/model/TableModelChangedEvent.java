@@ -39,8 +39,8 @@ public class TableModelChangedEvent {
     protected HeaderList headerList;
 
     /**
-     * Constructor for TableChangedEvent.
-     */
+ * Constructor for TableChangedEvent.
+ */
     public TableModelChangedEvent(int eventType) {
         this.eventType = eventType;
     }
@@ -73,41 +73,41 @@ public class TableModelChangedEvent {
     }
 
     /**
-     * Returns the markVariant.
-     * @return int
-     */
+ * Returns the markVariant.
+ * @return int
+ */
     public int getMarkVariant() {
         return markVariant;
     }
 
     /**
-     * Returns the srcFolder.
-     * @return FolderTreeNode
-     */
+ * Returns the srcFolder.
+ * @return FolderTreeNode
+ */
     public FolderTreeNode getSrcFolder() {
         return srcFolder;
     }
 
     /**
-     * Returns the uids.
-     * @return Object[]
-     */
+ * Returns the uids.
+ * @return Object[]
+ */
     public Object[] getUids() {
         return uids;
     }
 
     /**
-     * Returns the eventType.
-     * @return int
-     */
+ * Returns the eventType.
+ * @return int
+ */
     public int getEventType() {
         return eventType;
     }
 
     /**
-     * Returns the headerList.
-     * @return HeaderInterface[]
-     */
+ * Returns the headerList.
+ * @return HeaderInterface[]
+ */
     public HeaderList getHeaderList() {
         return headerList;
     }

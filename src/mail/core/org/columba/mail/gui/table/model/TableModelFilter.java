@@ -37,21 +37,21 @@ public class TableModelFilter extends BasicTableModelFilter {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#add(org.columba.mail.message.HeaderInterface[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#add(org.columba.mail.message.HeaderInterface[])
+ */
 
     /******************************* implements TableModelModifier *******************/
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+ */
     public void modify(Object[] uids) {
         super.modify(uids);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
+ * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+ */
     public void remove(Object[] uids) {
         super.remove(uids);
     }
@@ -87,8 +87,8 @@ public class TableModelFilter extends BasicTableModelFilter {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-     */
+ * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
+ */
     public void set(HeaderList headerList) {
         super.set(headerList);
         update();

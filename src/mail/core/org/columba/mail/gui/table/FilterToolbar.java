@@ -17,6 +17,21 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTextField;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.ToolbarToggleButton;
+
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.table.model.TableModelFilter;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,23 +44,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-
-import org.columba.core.config.DefaultItem;
-import org.columba.core.config.OptionsSerializer;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CTextField;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.ToolbarToggleButton;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.table.model.TableModelFilter;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 
 public class FilterToolbar extends JPanel implements ActionListener {
@@ -259,38 +257,28 @@ public class FilterToolbar extends JPanel implements ActionListener {
             ex.printStackTrace();
         }
     }
-    
-    
- 
-    
-    public void enableNew(boolean b )
-    {
+
+    public void enableNew(boolean b) {
         newButton.setSelected(b);
     }
-    
-    public void enableAnswered(boolean b)
-    {
+
+    public void enableAnswered(boolean b) {
         answeredButton.setSelected(b);
     }
-    
-    public void enableFlagged(boolean b)
-    {
+
+    public void enableFlagged(boolean b) {
         flaggedButton.setSelected(b);
     }
-    
-    public void enableAttachment(boolean b)
-    {
+
+    public void enableAttachment(boolean b) {
         attachmentButton.setSelected(b);
     }
-    
-    public void enableExpunged(boolean b)
-    {
+
+    public void enableExpunged(boolean b) {
         expungedButton.setSelected(b);
     }
-    
-    public void setPattern(String pattern)
-    {
+
+    public void setPattern(String pattern) {
         textField.setText(pattern);
     }
-
 }

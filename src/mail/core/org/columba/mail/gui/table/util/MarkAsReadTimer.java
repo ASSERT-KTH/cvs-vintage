@@ -22,10 +22,10 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.main.MailInterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

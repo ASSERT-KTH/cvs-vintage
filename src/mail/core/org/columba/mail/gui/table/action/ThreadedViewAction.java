@@ -13,8 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
+
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -22,21 +36,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folderoptions.FolderOptionsController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
-import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -46,42 +45,30 @@ import org.columba.mail.util.MailResourceLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ThreadedViewAction
-    extends AbstractSelectableAction
+public class ThreadedViewAction extends AbstractSelectableAction
     implements SelectionListener {
     /**
      * Constructor for ThreadedViewAction.
      * @param frameMediator
      */
     public ThreadedViewAction(FrameMediator frameMediator) {
-        super(
-            frameMediator,
-            MailResourceLoader.getString(
-                "menu",
-                "mainframe",
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
                 "menu_view_viewthreaded"));
 
         // tooltip text
-        putValue(
-            SHORT_DESCRIPTION,
-            MailResourceLoader
-                .getString(
-                    "menu",
-                    "mainframe",
-                    "menu_view_viewthreaded_tooltip")
-                .replaceAll("&", ""));
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_viewthreaded_tooltip").replaceAll("&", ""));
 
         // shortcut key
-        putValue(
-            ACCELERATOR_KEY,
+        putValue(ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
         ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 
         setEnabled(true);
     }
-
-  
 
     public void actionPerformed(ActionEvent e) {
         if (!(frameMediator instanceof TableViewOwner)) {
@@ -90,10 +77,7 @@ public class ThreadedViewAction
 
         JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
 
-        FolderCommandReference[] r =
-            (FolderCommandReference[])
-                ((AbstractMailFrameController) frameMediator)
-                .getTreeSelection();
+        FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
         Folder folder = (Folder) r[0].getFolder();
 
@@ -103,7 +87,6 @@ public class ThreadedViewAction
         folder.getFolderItem().set("property", "enable_threaded_view",
             enableThreadedView);
         */
-
         updateTable(enableThreadedView);
     }
 
@@ -112,40 +95,33 @@ public class ThreadedViewAction
             return;
         }
 
-        ((TableViewOwner) frameMediator)
-            .getTableController()
-            .getTableModelThreadedView()
-            .setEnabled(enableThreadedView);
+        ((TableViewOwner) frameMediator).getTableController()
+         .getTableModelThreadedView().setEnabled(enableThreadedView);
 
-        ((TableViewOwner) frameMediator)
-            .getTableController()
-            .getHeaderTableModel()
-            .enableThreadedView(enableThreadedView);
+        ((TableViewOwner) frameMediator).getTableController()
+         .getHeaderTableModel().enableThreadedView(enableThreadedView);
 
-        ((TableViewOwner) frameMediator)
-            .getTableController()
-            .getView()
-            .enableThreadedView(enableThreadedView);
+        ((TableViewOwner) frameMediator).getTableController().getView()
+         .enableThreadedView(enableThreadedView);
 
-        ((TableViewOwner) frameMediator)
-            .getTableController()
-            .getUpdateManager()
-            .update();
+        ((TableViewOwner) frameMediator).getTableController().getUpdateManager()
+         .update();
     }
 
     /**
      * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
-        FolderTreeNode[] selection =
-            ((TreeSelectionChangedEvent) e).getSelected();
-            
-        if (!( selection[0] instanceof Folder)) return;
-        
+        FolderTreeNode[] selection = ((TreeSelectionChangedEvent) e).getSelected();
+
+        if (!(selection[0] instanceof Folder)) {
+            return;
+        }
+
         if (selection.length == 1) {
-            XmlElement threadedview =
-			((MailFrameMediator) getFrameMediator()).getFolderOptionsController().getConfigNode(
-                    (Folder) selection[0], "ThreadedViewOptions");
+            XmlElement threadedview = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
+                                       .getConfigNode((Folder) selection[0],
+                    "ThreadedViewOptions");
             String attribute = threadedview.getAttribute("enabled");
             setState(Boolean.valueOf(attribute).booleanValue());
         }
