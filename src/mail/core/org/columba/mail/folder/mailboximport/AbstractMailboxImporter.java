@@ -17,14 +17,15 @@
 package org.columba.mail.folder.mailboximport;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+
 import org.columba.mail.folder.MessageFolder;
+
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
 
@@ -140,7 +141,17 @@ public abstract class AbstractMailboxImporter {
             try {
                 importMailboxFile(listing[i], worker, getDestinationFolder());
             } catch (Exception ex) {
-                new ExceptionDialog(ex);
+                //TODO: i18n
+                int result = JOptionPane.showConfirmDialog(
+                    MainInterface.frameModel.getActiveFrame(),
+                    "An error occured while importing a message. Try again?",
+                    "Retry message import?", 
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    i--;
+                } else if (result == JOptionPane.CANCEL_OPTION) {
+                    worker.cancel();
+                }
             }
         }
     }
