@@ -1,6 +1,6 @@
 #! /bin/ksh
 #
-# $Id: runtest.sh,v 1.3 1999/11/02 00:46:46 costin Exp $
+# $Id: runtest.sh,v 1.4 1999/11/23 23:03:23 costin Exp $
 
 # Shell script to run test harness
  
@@ -30,7 +30,7 @@ echo Using classpath: ${CLASSPATH}
 echo
 
 java org.apache.tomcat.shell.Startup "$@" &
-sleep 5
+sleep 15
 java -Dtest.hostname=$host -Dtest.port=$port org.apache.tools.moo.Main \
     -testfile $test -debug
 java org.apache.tomcat.shell.Shutdown "$@"
