@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.66 2002/05/13 07:34:48 spestov Exp $
+ * @version $Id: jEdit.java,v 1.67 2002/05/13 10:10:37 spestov Exp $
  */
 public class jEdit
 {
@@ -766,6 +766,33 @@ public class jEdit
 	{
 		setProperty(name,String.valueOf(value));
 	} //}}}
+
+	//{{{ setDoubleProperty() method
+	public static final void setDoubleProperty(String name, double value)
+	{
+		setProperty(name,String.valueOf(value));
+	}
+	//}}}
+
+	//{{{ getDoubleProperty() method
+	public static double getDoubleProperty(String name, double def)
+	{
+		String value = getProperty(name);
+		if(value == null)
+			return def;
+		else
+		{
+			try
+			{
+				return Double.parseDouble(value);
+			}
+			catch(NumberFormatException nf)
+			{
+				return def;
+			}
+		}
+	}
+	//}}}
 
 	//{{{ setFontProperty() method
 	/**
