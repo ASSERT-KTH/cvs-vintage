@@ -27,20 +27,20 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class CancelAction extends FrameAction implements WorkerListChangeListener {
 
 	public CancelAction(AbstractFrameController controller) {
 		super(
 			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_file_cancel"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
+			GlobalResourceLoader.getString(
+				null,
+				null,
 				"menu_file_cancel"),
 			"",
 			"CANCEL_ACTION",
@@ -64,8 +64,6 @@ public class CancelAction extends FrameAction implements WorkerListChangeListene
 	 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
 	 */
 	public void workerListChanged(WorkerListChangedEvent e) {
-		if( e.getNewValue() != 0) setEnabled(true);
-		else setEnabled(false);
+		setEnabled(e.getNewValue() != 0);
 	}
-
 }
