@@ -29,21 +29,23 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.EncodedWordEncoder;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.MessageIDGenerator;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
+import org.columba.mail.pgp.PGPController;
 import org.columba.mail.util.RFC822Date;
 
 public class MessageComposer {
 	private ComposerModel model;
-	
+
 	private int accountUid;
 
-	public MessageComposer( ComposerModel model) {
-		
+	public MessageComposer(ComposerModel model) {
+
 		this.model = model;
 	}
 
@@ -52,8 +54,6 @@ public class MessageComposer {
 		EncodedWordEncoder encoder = new EncodedWordEncoder();
 
 		// RFC822 - Header
-
-				
 
 		if (model.getToList().size() > 0)
 			header.set("To", ListParser.parse(model.getToList()));
@@ -66,14 +66,13 @@ public class MessageComposer {
 
 		// TODO : Add EncodedWord-Support to TO,CC,FROM -> like Subject!
 		// FIXME : this is responsible for the strange subject line
-		
+
 		try {
 			header.set(
 				"Subject",
 				encoder.encode(model.getSubject(), model.getCharsetName()));
 		} catch (UnsupportedEncodingException e) {
 		}
-		
 
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
@@ -131,7 +130,7 @@ public class MessageComposer {
 							shortFrom.substring(0, shortFrom.length() - 1);
 				}
 
-			} 
+			}
 
 			header.set("columba.from", shortFrom);
 		} else {
@@ -155,9 +154,9 @@ public class MessageComposer {
 
 		return false;
 	}
-	
+
 	protected String getSignature(IdentityItem item) {
-		
+
 		File file = new File(item.get("signature_file"));
 		StringBuffer strbuf = new StringBuffer();
 		try {
@@ -182,42 +181,58 @@ public class MessageComposer {
 		}
 
 		try {
-			return new String(strbuf.toString().getBytes(),  model.getCharsetName());
+			return new String(
+				strbuf.toString().getBytes(),
+				model.getCharsetName());
 		} catch (UnsupportedEncodingException e) {
 		}
-		
+
 		return null;
 	}
 
-
-/*
-	protected String getSignature(IdentityItem item) {
-		
-		File file = new File(item.getSignatureFile());
-		StringBuffer strbuf = new StringBuffer();
-		try {
-			//BufferedReader in = new BufferedReader(new FileReader(file));
-			BufferedReader in =
-				new BufferedReader(
-					new InputStreamReader(
-						new FileInputStream(file),
-						model.getCharsetName()));
-			String str;
-
-			while ((str = in.readLine()) != null) {
-				strbuf.append(str + "\n");
+	/*
+		protected String getSignature(IdentityItem item) {
+			
+			File file = new File(item.getSignatureFile());
+			StringBuffer strbuf = new StringBuffer();
+			try {
+				//BufferedReader in = new BufferedReader(new FileReader(file));
+				BufferedReader in =
+					new BufferedReader(
+						new InputStreamReader(
+							new FileInputStream(file),
+							model.getCharsetName()));
+				String str;
+	
+				while ((str = in.readLine()) != null) {
+					strbuf.append(str + "\n");
+				}
+	
+				in.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+				return "";
 			}
-
-			in.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			return "";
+	
+			return strbuf.toString();
+	
 		}
-
-		return strbuf.toString();
-
+	*/
+	/** Gives a signature as String back for the given PGPItem and the message-body. The Messagebody in this case
+	 * is signed. The signature is biuld over the whole messagebody without convertion. The Messagebody must be in
+	 * a form that can be signed how it is described in RFC3156
+	 * @param pgpItem The PGPItem has all Information about the pgp-program-path, the identity and the passphrase
+	 * @param body the body to be signed. The body must have a format that can be signed how it is described in RFC3156
+	 * @return The Sign-String. This String should be append to the mail as a new Mimepart.
+	 * TODO I don't know if we must convert the singed-String-characters to the current-model characters. But i think this
+	 * schould be done by gpg?
+	 */
+	protected String getSignature(PGPItem pgpItem, String body) {
+		// new PGPController
+		PGPController pgpContr = PGPController.getInstance();
+		return pgpContr.sign(body, pgpItem);
 	}
-*/
+
 	private MimePart composeTextMimePart() {
 		MimePart bodyPart = new MimePart();
 		// Init Mime-Header with Default-Values (text/plain)	
@@ -229,11 +244,13 @@ public class MessageComposer {
 		String body = model.getBodyText();
 
 		AccountItem item = model.getAccountItem();
+		PGPItem pgpItem = item.getPGPItem();
 		IdentityItem identity = item.getIdentityItem();
 		boolean appendSignature = identity.getBoolean("attach_signature");
 
 		if (appendSignature == true) {
-			String signature = getSignature(identity);
+			//String signature = getSignature(identity);
+			String signature = getSignature(pgpItem, body);
 
 			if (signature != null) {
 				body = body + "\n\n" + signature;
@@ -264,13 +281,13 @@ public class MessageComposer {
 		StringBuffer composedMessage = new StringBuffer();
 
 		SendableHeader header = initHeader();
-		MimePart root=null;
+		MimePart root = null;
 
 		List mimeParts = model.getAttachments();
 
 		MimePart body = composeTextMimePart();
 		if (body != null)
-			mimeParts.add(0,body);
+			mimeParts.add(0, body);
 
 		// Create Multipart/Mixed if necessary
 		if (mimeParts.size() > 1) {
@@ -302,9 +319,10 @@ public class MessageComposer {
 
 		composedMessage.append(header.getHeader());
 
-		composedMessage.append(renderer.renderMimePart(root, workerStatusController));
+		composedMessage.append(
+			renderer.renderMimePart(root, workerStatusController));
 
-		message.setSource( composedMessage.toString());
+		message.setSource(composedMessage.toString());
 
 		// size
 		int size = composedMessage.length() / 1024;
@@ -317,78 +335,78 @@ public class MessageComposer {
 		return message;
 	}
 
-/*
-	private String createBoundary() {
-		StringBuffer bound = new StringBuffer();
-
-		bound.append("-----");
-		bound.append(System.currentTimeMillis());
-		bound.append(model.getHeaderField("From"));
-
-		return bound.toString();
-	}
-
-	private String createMimeMultipart(Vector input) {
-		StringBuffer output = new StringBuffer();
-		bound = createBoundary();
-		MimeHeader multiHeader = new MimeHeader("multipart", "mixed");
-		multiHeader.contentParameter.put(
-			"boundary",
-			new String("\"" + bound + "\""));
-
-		output.append(multiHeader.getHeader());
-		output.append(
-			"\n\tThis is a Mime Multipart Message sent with Columba\n");
-
-		int count = input.size();
-
-		for (int i = 0; i < count; i++) {
-			output.append("\n--" + bound + "\n");
-			//output.append(((MimePart)input.get(i)).composeToString());
+	/*
+		private String createBoundary() {
+			StringBuffer bound = new StringBuffer();
+	
+			bound.append("-----");
+			bound.append(System.currentTimeMillis());
+			bound.append(model.getHeaderField("From"));
+	
+			return bound.toString();
 		}
-
-		output.append("\n--" + bound + "--");
-
-		return output.toString();
-	}
-
-	private String createEncryptedMimePart(MimePartTree input) {
-		if (input.count() > 1)
-			return createEncryptedMimeMultipart(input);
-
-		StringBuffer output = new StringBuffer();
-		MimePart actPart = input.get(0);
-
-		//return actPart.composeToString();
-		return null;
-	}
-
-	private String createEncryptedMimeMultipart(MimePartTree input) {
-
-		StringBuffer output = new StringBuffer();
-		MimeHeader multiHeader = new MimeHeader("multipart", "encrypted");
-		multiHeader.contentParameter.put(
-			"protocol",
-			"\"application/pgp-encrypted\"");
-		bound = bound.substring(2, bound.length());
-		multiHeader.contentParameter.put(
-			"boundary",
-			new String("\"" + bound + "\""));
-
-		output.append(multiHeader.getHeader());
-		output.append(
-			"\n\tThis is a Mime Multipart Message sent with Columba\n");
-
-		int count = input.count();
-
-		for (int i = 0; i < count; i++) {
-			output.append("\n--" + bound + "\n");
-			//output.append(input.get(i).composeToString());
+	
+		private String createMimeMultipart(Vector input) {
+			StringBuffer output = new StringBuffer();
+			bound = createBoundary();
+			MimeHeader multiHeader = new MimeHeader("multipart", "mixed");
+			multiHeader.contentParameter.put(
+				"boundary",
+				new String("\"" + bound + "\""));
+	
+			output.append(multiHeader.getHeader());
+			output.append(
+				"\n\tThis is a Mime Multipart Message sent with Columba\n");
+	
+			int count = input.size();
+	
+			for (int i = 0; i < count; i++) {
+				output.append("\n--" + bound + "\n");
+				//output.append(((MimePart)input.get(i)).composeToString());
+			}
+	
+			output.append("\n--" + bound + "--");
+	
+			return output.toString();
 		}
-
-		output.append("\n--" + bound + "--");
-
-		return output.toString();
-	}
-*/
+	
+		private String createEncryptedMimePart(MimePartTree input) {
+			if (input.count() > 1)
+				return createEncryptedMimeMultipart(input);
+	
+			StringBuffer output = new StringBuffer();
+			MimePart actPart = input.get(0);
+	
+			//return actPart.composeToString();
+			return null;
+		}
+	
+		private String createEncryptedMimeMultipart(MimePartTree input) {
+	
+			StringBuffer output = new StringBuffer();
+			MimeHeader multiHeader = new MimeHeader("multipart", "encrypted");
+			multiHeader.contentParameter.put(
+				"protocol",
+				"\"application/pgp-encrypted\"");
+			bound = bound.substring(2, bound.length());
+			multiHeader.contentParameter.put(
+				"boundary",
+				new String("\"" + bound + "\""));
+	
+			output.append(multiHeader.getHeader());
+			output.append(
+				"\n\tThis is a Mime Multipart Message sent with Columba\n");
+	
+			int count = input.count();
+	
+			for (int i = 0; i < count; i++) {
+				output.append("\n--" + bound + "\n");
+				//output.append(input.get(i).composeToString());
+			}
+	
+			output.append("\n--" + bound + "--");
+	
+			return output.toString();
+		}
+	*/
 }
