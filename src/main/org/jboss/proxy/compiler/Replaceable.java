@@ -8,12 +8,12 @@
 package org.jboss.proxy.compiler;
 
 import java.io.Serializable;
-
+import java.io.ObjectStreamException;
 /**
  * ???
  *      
  * @author Unknown
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface Replaceable 
    extends Serializable
