@@ -37,7 +37,6 @@
 		<menuitem action="ReplyAsAttachment"/>
 		<menuitem action="Forward" />
 		<menuitem action="ForwardInline" />
-		<menuitem action="Bounce" />
 		<separator />
 		<menuitem action="CopyMessage" />
 		<menuitem action="MoveMessage" />
