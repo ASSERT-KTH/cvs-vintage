@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.55 2002/12/19 21:25:48 slaboure Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.56 2003/01/16 09:30:43 starksm Exp $ -->
 <jboss>
   <invoker-proxy-bindings>
     <invoker-proxy-binding>
@@ -306,11 +306,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>B</commit-option>
     </container-configuration>
@@ -358,11 +353,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>B</commit-option>
     </container-configuration>
@@ -409,11 +399,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>A</commit-option>
     </container-configuration>
@@ -460,11 +445,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>B</commit-option>
     </container-configuration>
@@ -510,11 +490,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>A</commit-option>
     </container-configuration>
@@ -561,11 +536,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>A</commit-option>
     </container-configuration>
@@ -594,11 +564,6 @@
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
     </container-configuration>
     <container-configuration>
@@ -627,11 +592,6 @@
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
     </container-configuration>
     <container-configuration>
@@ -673,11 +633,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
     </container-configuration>
     <container-configuration>
@@ -721,11 +676,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
     </container-configuration>
     <container-configuration>
@@ -770,11 +720,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>A</commit-option>
     </container-configuration>
@@ -821,11 +766,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>A</commit-option>
     </container-configuration>
@@ -871,11 +811,6 @@
       </container-cache-conf>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
       <commit-option>B</commit-option>
     </container-configuration>
@@ -902,11 +837,6 @@
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <container-pool-conf>
         <MaximumSize>100</MaximumSize>
-        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
-        <feeder-policy-conf>
-          <increment>10</increment>
-          <period>500</period>
-        </feeder-policy-conf>
       </container-pool-conf>
     </container-configuration>
   </container-configurations>
