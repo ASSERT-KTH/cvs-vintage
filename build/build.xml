@@ -383,7 +383,6 @@
     <!-- ================================================================== -->
     <target name="sql-current-db" depends="prepare">
         <!-- Generate the Torque files for the specified database type -->
-        <antcall target="torque-copy-all-schema" />
         <antcall target="sql-specific-db">
             <param name="generatesql.database.type"
                    value="${scarab.database.type}"/>
@@ -469,10 +468,6 @@
     <target name="create-db-schema" depends="db-type-check,prepare,sql-current-db" 
             if="auto.create.db">
         <!-- Generate the Torque files for the specified database type -->
-        <antcall target="sql-specific-db">
-            <param name="generatesql.database.type"
-                   value="${scarab.database.type}"/>
-        </antcall>
         
         <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
               todir="${build.src.scarab}"
