@@ -46,6 +46,8 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Date;
+
 // Turbine classes
 import org.apache.torque.util.Criteria; 
 import org.apache.commons.util.ObjectUtils;
@@ -71,9 +73,11 @@ public class Transaction
     /**
      * Populates a new transaction object.
      */
-    public void create(ScarabUser user) throws Exception
+    public void create(ScarabUser user) 
+        throws Exception
     {
-        setCreatedBy(Integer.parseInt(user.getUserId().toString()));
+        setCreatedBy(user.getUserId());
+        setCreatedDate(new Date());
         save();
     }
 }
