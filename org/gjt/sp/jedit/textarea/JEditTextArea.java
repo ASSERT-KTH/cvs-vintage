@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.327 2004/10/30 18:21:44 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.328 2004/10/30 19:58:51 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4890,7 +4890,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			invalidateScreenLineCounts = true;
 		}
 
-		if(invalidateScreenLineCounts && displayManager != null)
+		if(invalidateScreenLineCounts && displayManager != null
+			&& buffer.isLoaded())
 			displayManager.invalidateScreenLineCounts();
 
 		chunkCache.invalidateAll();
