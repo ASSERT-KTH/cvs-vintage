@@ -29,7 +29,7 @@
  </tr>
 
  #foreach ($moduleAttribute in $moduleAttributes)
-  #set ($checked = "")
+  #set ($checked = false)
   #set ($attribute = $moduleAttribute.Attribute)
   #set ($userAttribute = $user.getRModuleUserAttribute($module, $attribute, $issueType))
 
@@ -45,13 +45,14 @@
   #set ($order = 1)
   #foreach ($moduleUserAttribute in $rmuas)
    #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
-    #set ($checked = 'checked="checked"')
+    #set ($checked = true)
     #set ($order = $moduleUserAttribute.Order)
    #end
   #end
 
   <tr class="a">
-   <td><input type="checkbox" name="selected_$attribute.AttributeId" $checked /></td>
+   <td><input type="checkbox"#checked($checked) 
+        name="selected_$attribute.AttributeId" /></td>
    <td>$attribute.Name</td>
    <td>
     #numericSelect ($intakeUserAttr.Order.Key 1 $maxNum $order 1)

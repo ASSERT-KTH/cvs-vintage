@@ -240,11 +240,11 @@
       #if ($canEdit)
         <select name="parent_depend_type_id_$parent.IssueId" class="select">
         #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-          #set ($selected = "")
+          #set ($selected = false)
           #if ($parent.getDependency($currentIssue).TypeId.equals($dependType.DependTypeId))
-            #set ($selected = ' selected="selected"')
+            #set ($selected = true)
           #end
-          <option$selected value="$dependType.DependTypeId">
+          <option#selected($selected) value="$dependType.DependTypeId">
                 $dependType.Name</option>
           #end
           <option value="none">Remove dependency</option>
@@ -288,11 +288,11 @@
       <select name="child_depend_type_id_$child.IssueId" class="select">
       <option>Choose dependency type</option>
       #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-        #set ($selected = "")
+        #set ($selected = false)
         #if ($currentIssue.getDependency($child).TypeId.equals($dependType.DependTypeId))
-          #set ($selected = ' selected="selected"')
+          #set ($selected = true)
         #end
-          <option$selected value="$dependType.DependTypeId">
+          <option#selected($selected) value="$dependType.DependTypeId">
              $dependType.Name</option>
       #end
       <option value="none">Remove dependency </option>

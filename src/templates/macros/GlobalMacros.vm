@@ -12,21 +12,22 @@
   #end
   #if ($module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
   #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
-    #set ($selected = "")
+    #set ($selected = false)
     #if ($values)   
        #if ($multiple.toString().equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
-               #set ($selected="selected")
+               #set ($selected=true)
             #end
          #end
        #else
          #if ($values.equals($option.OptionId))
-           #set ($selected="selected")
+           #set ($selected=true)
           #end
        #end
     #end
-    <option value="$option.OptionId" $selected>$option.DisplayValue</option>
+    <option value="$option.OptionId"#selected($selected)>
+        $option.DisplayValue</option>
   #end
   #end
 </select>
@@ -48,7 +49,6 @@
   <option value="">Choose...</option>
   #end
   #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
-    #set ($selected = "")
     #if ($currentValue && $option.OptionId == $currentValue)
       <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
     #else
@@ -62,7 +62,6 @@
 <select name="$type_depend_type_id_$childIssue.IssueId">
   <option>Choose dependency type</option>
   #foreach ($dependType in $currentIssue.getAllDependencyTypes())
-    #set ($selected = "")
     #if ($currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()))
     <option selected="selected" value="$dependType.DependTypeId">$dependType.Name</option>
     #else
@@ -109,21 +108,21 @@
   <option value="">Choose...</option>
   #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
-    #set ($selected = "")
+    #set ($selected = false)
     #if ($values)   
        #if ($multiple.toString().equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
-               #set ($selected="selected")
+               #set ($selected=true)
             #end
          #end
        #else
          #if ($values.equals($option.OptionId))
-           #set ($selected="selected")
+           #set ($selected=true)
           #end
        #end
     #end
-    <option $selected value="$option.OptionId">
+    <option value="$option.OptionId"#selected($selected)>
 #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
           $option.DisplayValue</option>
   #end
@@ -216,7 +215,6 @@
  <option value="">Choose...</option>
  #end
    #foreach ($user in $module.getUsers($attr.Permission))
-   #set ($selected = "") $user.PrimaryKey
    #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
    <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>
    #else
@@ -248,7 +246,6 @@
  <option value="">Choose...</option>
  #end
    #foreach ($user in $module.getUsers($attr.Permission))
-   #set ($selected = "") 
    #if ($user.PrimaryKey.toString().equals($currentValue.toString()))
    <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>
    #else
@@ -320,6 +317,10 @@
 
 #macro (selected $boolean)
 #if ($boolean) selected="selected"#end
+#end
+
+#macro (checked $boolean)
+#if ($boolean) checked="checked"#end
 #end
 
 

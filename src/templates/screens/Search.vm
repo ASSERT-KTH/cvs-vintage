@@ -33,26 +33,26 @@ $page.setTitle("Custom Search")
     ## default to first attribute if none was selected previously
     #if ($searchGroup.TextScope.isSet())
       #set ($selectedIds = $searchGroup.TextScope.Value)
-      #set ($selected = "")
+      #set ($selected = false)
     #else
-      #set ($selected = 'selected="selected"')
+      #set ($selected = true)
     #end
     <select name="$searchGroup.TextScope.Key" size="5" multiple>
     #if ($searchTextAttributes.size() > 4)
-      <option value="$search.ALL_TEXT" $selected>Search all</option>
-      #set ($selected = "")
+      <option value="$search.ALL_TEXT"#selected($selected)>Search all</option>
+      #set ($selected = false)
     #end
 
 #foreach ($att in $searchTextAttributes)
   #if ($selectedIds)
     #foreach ($id in $selectedIds)
       #if ($id == $att.PrimaryKey)
-        #set ($selected = 'selected="selected"')
+        #set ($selected = true)
       #end
     #end
   #end
-  <option value="$att.QueryKey" $selected>$att.Name</option>
-  #set ($selected = "")
+  <option value="$att.QueryKey"#selected($selected)>$att.Name</option>
+  #set ($selected = false)
 #end
    </select>
    </td>

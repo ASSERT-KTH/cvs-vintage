@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.14 2002/02/02 03:06:54 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.15 2002/02/02 19:24:40 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -48,6 +48,12 @@
                 <li>Correctly getting list of all users that have permissions that allow them to be assigned to a project, on AssignIssue (EWD) 
                 <li>Since wizard1 of Enter Issue was converted to using one form, a bug was introduced where template Id was always getting passed to next screen in wizard. Fixed.(EWD) 
                 <li>Brought Save/Edit Template screen in line with the new UI-- added attribute groups, new button. (EWD) 
+                <li>Fixed Report select boxes so that &nbsp; shows up as a 
+                    space. (JDM)</li>
+                <li>A construct which was used in several places to choose the
+                    selected option was invalid due to cross-site scripting
+                    prevention algorithm.  This has been fixed in Search, 
+                    AdvancedSearch, ConfigureIssueList, ViewIssue. (JDM)</li>
             </ul>
         </td>
     </tr>

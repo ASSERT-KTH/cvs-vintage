@@ -119,17 +119,17 @@ from:&#160;<input type="text" size="20"
   <td>
    <select name="user_attr_$userId" size="" >
       <option value="any"
-         #if ($selectedAttr.equals("any")) "selected" #end
+         #if ($selectedAttr.equals("any")) selected="selected" #end
          >Any</option>
       <option value="created_by"
-         #if ($selectedAttr.equals("created_by")) "selected" #end
+         #if ($selectedAttr.equals("created_by")) selected="selected" #end
          >Committed by:</option>
     #foreach ($selectUserAttr in $userAttrs)
-       #set ($selected = "")
+       #set ($selected = false)
        #if ($selectedAttr.equals($selectUserAttr.AttributeId.toString())) 
-          #set ($selected="selected")
+          #set ($selected=true)
        #end
-      <option value="$selectUserAttr.AttributeId" $selected>$selectUserAttr.Name:</option>
+      <option value="$selectUserAttr.AttributeId"#selected($selected)>$selectUserAttr.Name:</option>
     #end
    </select>
   </td>
@@ -174,12 +174,12 @@ from:&#160;<input type="text" size="20"
     #set ( $attVal = $attrValues.get($attKey) )
     #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
         #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-        #set ( $selected = "" )
-        #if ( $searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )
-      #set ( $selected = ' selected="selected"' )
+        #set ( $selected = false )
+        #if ($searchGroup.StateChangeAttributeId.Value == $attVal.AttributeId )
+            #set ( $selected = true )
             #set ( $selectedAttribute = $attVal.Attribute )
-     #end
-    <option$selected value="$attVal.AttributeId">
+        #end
+    <option#selected($selected) value="$attVal.AttributeId">
         $attVal.RModuleAttribute.DisplayValue
                 </option>
     #end
@@ -192,33 +192,33 @@ from:&#160;<input type="text" size="20"
  <th width="120">State change query</th>
  <td>
   <select name="$searchGroup.StateChangeFromOptionId.Key">
-    #set ( $selected = "" )
+    #set ( $selected = false )
     #if ( !$searchGroup.StateChangeFromOptionId.Value )
-  #set ( $selected = ' selected="selected"' )
+  #set ( $selected = true )
  #end
-    <option$selected value="">any value</option>
+    <option#selected($selected) value="">any value</option>
 #foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
-    #set ( $selected = "" )
+    #set ( $selected = false )
     #if ( $searchGroup.StateChangeFromOptionId.Value && $option.OptionId == $searchGroup.StateChangeFromOptionId.Value )
-  #set ( $selected = ' selected="selected"' )
+  #set ( $selected = true )
  #end
-    <option$selected value="$option.OptionId">
+    <option#selected($selected) value="$option.OptionId">
         $option.DisplayValue
                 </option>
 #end
   </select> to
   <select name="$searchGroup.StateChangeToOptionId.Key">
-    #set ( $selected = "" )
+    #set ( $selected = false )
     #if ( !$searchGroup.StateChangeToOptionId.Value )
-  #set ( $selected = ' selected="selected"' )
- #end
-    <option$selected value="">any value</option>
+      #set ( $selected = true )
+    #end
+    <option#selected($selected) value="">any value</option>
 #foreach ($option in $module.getLeafRModuleOptions($selectedAttribute, $scarabR.CurrentIssueType))
-    #set ( $selected = "" )
+    #set ( $selected = false )
     #if ( $searchGroup.StateChangeToOptionId.Value && $option.OptionId == $searchGroup.StateChangeToOptionId.Value )
-  #set ( $selected = ' selected="selected"' )
- #end
-    <option$selected value="$option.OptionId">
+        #set ( $selected = true )
+    #end
+    <option#selected($selected) value="$option.OptionId">
         $option.DisplayValue
                 </option>
 #end
