@@ -32,12 +32,12 @@ import org.jboss.invocation.MarshalledInvocation;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Ã–berg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.60 $</tt>
+ * @version <tt>$Revision: 1.61 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -606,7 +606,27 @@ public class StatefulSessionContainer
          String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
          throw new IllegalStateException(msg);
       }
-      return (EJBObject) ci.getStatefulSessionEJBObject(mi.getArguments()[0]);
+
+      Object id = mi.getArguments()[0];
+      if (id == null)
+         throw new IllegalStateException("Cannot get a session interface with a null id");
+
+      // Does the session still exist?
+      InstanceCache cache = getInstanceCache();
+      BeanLock lock = getLockManager().getLock(id);
+      lock.sync();
+      try
+      {
+         if (cache.get(id) == null)
+            throw new RemoteException("Session no longer exists: " + id);
+      }
+      finally
+      {
+         lock.releaseSync();
+      }
+
+      // Ok lets create the proxy
+      return (EJBObject) ci.getStatefulSessionEJBObject(id);
    }
 
 
