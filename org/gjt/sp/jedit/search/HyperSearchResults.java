@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.14 2002/10/21 19:37:15 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.15 2002/10/21 20:08:18 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
@@ -295,6 +295,9 @@ public class HyperSearchResults extends JPanel implements EBComponent
 		//{{{ mousePressed() method
 		public void mousePressed(MouseEvent evt)
 		{
+			if(evt.isConsumed())
+				return;
+
 			TreePath path1 = resultTree.getPathForLocation(
 				evt.getX(),evt.getY());
 			if(path1 == null)
