@@ -98,6 +98,15 @@ public class TomcatLogger extends Logger {
 	    return TomcatLogger.this.sink;
 	}
 
+	private String throwableToString( Throwable t ) {
+	    StringWriter sw = new StringWriter();
+	    PrintWriter w = new PrintWriter(sw);
+
+	    if (t != null)
+		t.printStackTrace(w);
+	    return sw.toString();
+	}
+	
 	/**
 	 * Format the log message nicely into a string.
 	 */
@@ -105,7 +114,7 @@ public class TomcatLogger extends Logger {
 
 	    // custom output - do nothing
 	    if( TomcatLogger.this.custom )
-		return message;
+		return (t==null) ? message : message + " " + throwableToString( t );
 	    
 	    StringWriter sw = new StringWriter();
 	    PrintWriter w = new PrintWriter(sw);

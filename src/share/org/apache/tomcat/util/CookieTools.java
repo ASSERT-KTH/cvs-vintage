@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.1 1999/10/09 00:20:55 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.2 2000/04/05 02:52:16 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/04/05 02:52:16 $
  *
  * ====================================================================
  *
@@ -192,6 +192,8 @@ public class CookieTools {
 	    String pattern = "EEE, dd-MMM-yyyyy HH:mm:ss z";
 	    Locale loc = Locale.US;
 	    SimpleDateFormat df = new SimpleDateFormat(pattern, loc);
+	    TimeZone zone = TimeZone.getTimeZone("GMT");
+	    df.setTimeZone(zone);
 	    String str = df.format(calendar.getTime());
 	    buf.append(str);
 	}

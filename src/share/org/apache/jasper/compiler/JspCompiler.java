@@ -322,6 +322,7 @@ class ClassFileData {
      */
     private void findClassName() {
         try {
+	    //	    System.out.println("XXX Extracting class name from class");
             className = ClassName.getClassName(classFile);
         } catch( JasperException ex) {
             // ops, getClassName should throw something

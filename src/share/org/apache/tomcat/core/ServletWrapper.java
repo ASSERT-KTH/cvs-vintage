@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.37 2000/03/31 20:58:35 costin Exp $
- * $Revision: 1.37 $
- * $Date: 2000/03/31 20:58:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.38 2000/04/05 02:52:14 costin Exp $
+ * $Revision: 1.38 $
+ * $Date: 2000/04/05 02:52:14 $
  *
  * ====================================================================
  *
@@ -293,8 +293,10 @@ public class ServletWrapper {
 		
 		servletClass=context.getServletLoader().loadClass( servletClassName);
 	    }
-	    
+
+	    if( servletClass==null ) throw new ServletException("Error loading servlet " + servletClassName );
 	    servlet = (Servlet)servletClass.newInstance();
+	    if( servlet==null ) throw new ServletException("Error insantiating servlet "  + servletClassName );
 	    //	System.out.println("Loading " + servletClassName + " " + servlet );
 	    
 	    config.setServletClassName(servlet.getClass().getName());
@@ -447,6 +449,7 @@ public class ServletWrapper {
 		contextM.handleError( req, res, null,  404 );
 		return;
 	    } catch( Exception ex ) {
+		context.log("Exception in init servlet " + ex.getMessage(), ex );
 		// any other exception will be set in unavailable - no need to do anything
 	    }
 	}
@@ -466,6 +469,13 @@ public class ServletWrapper {
 	    contextM.handleError( req, res, null, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
 	    return;
 	}
+
+	if( servlet == null ) {
+	    context.log( "Can't find servet " + getServletName() );
+	    res.setStatus( 404 );
+	    contextM.handleError( req, res, null,  404 );
+	    return;
+	}
 	
 	try {
 	    originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
@@ -482,7 +492,7 @@ public class ServletWrapper {
 	    for( int i=0; i<cI.length; i++ ) {
 		cI[i].preService( req, res ); // ignore the error - like in the original code
 	    }
-	    
+
 	    if (servlet instanceof SingleThreadModel) {
 		synchronized(servlet) {
 		    servlet.service(req.getFacade(), res.getFacade());

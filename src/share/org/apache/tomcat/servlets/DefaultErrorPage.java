@@ -121,7 +121,8 @@ public class DefaultErrorPage extends HttpServlet {
 	buf.append( sc + "</h1>\r\n");
 	// More info - where it happended"
 	buf.append("<h2>Location: " + request.getRequestURI() + "</h2>");
-	buf.append(msg + "\r\n");
+
+	if( msg!= null ) buf.append(msg + "\r\n");
 
 	if( response.isUsingStream() ) {
 	    ServletOutputStream out = response.getOutputStream();
