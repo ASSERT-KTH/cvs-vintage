@@ -6,10 +6,6 @@
  */
 package org.jboss.system;
 
-
-
-
-
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.StringWriter;
@@ -33,6 +29,7 @@ import org.jboss.logging.Logger;
 import org.jboss.util.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
@@ -41,7 +38,7 @@ import org.w3c.dom.Text;
  *
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -200,7 +197,12 @@ public class ServiceConfigurator
             if (attributeElement.hasChildNodes())
             {
                // Get the attribute value
-               String attributeValue = ((Text)attributeElement.getFirstChild()).getData().trim();
+               Node n = attributeElement.getFirstChild();
+               String attributeText = null;
+               if( n instanceof Text )
+               {
+                  attributeText = ((Text)n).getData().trim();
+               }
                
                for (int k = 0; k < attributes.length; k++)
                {
@@ -227,10 +229,10 @@ public class ServiceConfigurator
                         NodeList nl = attributeElement.getChildNodes();
                         for (int i=0; i < nl.getLength(); i++)
                         {
-                           org.w3c.dom.Node n = nl.item(i);
-                           if (n.getNodeType() == n.ELEMENT_NODE)
+                           n = nl.item(i);
+                           if (n.getNodeType() == Node.ELEMENT_NODE)
                            {
-                              value = (Element)n;
+                              value = (Element) n;
                               break;
                            }
                         }
@@ -239,11 +241,11 @@ public class ServiceConfigurator
                      if (value == null)
                      {
                         PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
-                        editor.setAsText(attributeValue);
+                        editor.setAsText(attributeText);
                         value = editor.getValue();
                      }
                      
-                     log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
+                     log.debug(attributeName + " set to " + value + " in " + objectName);
                      server.setAttribute(objectName, new Attribute(attributeName, value));
                      
                      break attrfound;
