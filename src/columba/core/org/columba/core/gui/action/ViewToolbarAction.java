@@ -16,16 +16,26 @@
 package org.columba.core.gui.action;
 
 import org.columba.core.action.CheckBoxAction;
+import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.gui.frame.MailFrameView;
 
 import java.awt.event.ActionEvent;
 
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JCheckBoxMenuItem;
 
+/**
+ * Columba action for hiding/showing the toolbar action.
+ */
 public class ViewToolbarAction extends CheckBoxAction implements Observer {
+    /**
+     * Creates a view toolbar action.
+     * @param controller the frame controller
+     */
     public ViewToolbarAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_view_showtoolbar"));
@@ -36,11 +46,28 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer {
                                 .replaceAll("&", ""));
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+    /**
+     * Shows the toolbar.
+     * @param evt the event
      */
     public void actionPerformed(ActionEvent evt) {
         frameMediator.getView().showToolbar();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected boolean getInitState() {
+        return frameMediator.isToolbarEnabled(MailFrameView.MAIN_TOOLBAR);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem, AbstractFrameView frameView) {
+        super.setCheckBoxMenuItem(checkBoxMenuItem);
+
+        getCheckBoxMenuItem().setSelected(getInitState());
     }
 
     /**
