@@ -55,7 +55,7 @@ import org.apache.velocity.*;
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
-import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.18 2001/06/27 23:43:41 elicia Exp $
+    @version $Id: ReportIssue.java,v 1.19 2001/06/29 01:55:58 jon Exp $
 */
 public class ReportIssue extends VelocityAction
 {

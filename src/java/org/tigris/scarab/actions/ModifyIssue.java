@@ -56,6 +56,7 @@ import org.apache.velocity.context.*;
 // Turbine Stuff 
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
@@ -74,7 +75,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.2 2001/06/28 01:08:25 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.3 2001/06/29 01:55:58 jon Exp $
 */
 public class ModifyIssue extends VelocityAction
 {
