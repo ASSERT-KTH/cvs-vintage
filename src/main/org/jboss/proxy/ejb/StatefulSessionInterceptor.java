@@ -25,7 +25,7 @@ import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 /**
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class StatefulSessionInterceptor
    extends GenericEJBInterceptor
@@ -70,7 +70,7 @@ public class StatefulSessionInterceptor
       else if (m.equals(EQUALS))
       {
          Object[] args = invocation.getArguments();
-         String argsString = args[0].toString();
+         String argsString = args[0] != null ? args[0].toString() : "";
          String thisString = toString(ctx);
          return new Boolean(thisString.equals(argsString));
       }

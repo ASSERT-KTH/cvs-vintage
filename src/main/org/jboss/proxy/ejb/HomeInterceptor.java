@@ -26,7 +26,7 @@ import org.jboss.invocation.InvocationType;
  * The client-side proxy for an EJB Home object.
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class HomeInterceptor
    extends GenericEJBInterceptor
@@ -55,8 +55,10 @@ public class HomeInterceptor
    /** {@link EJBObject#remove} method reference. */
    protected static final Method REMOVE_OBJECT;
    
-   static {
-      try {
+   static
+   {
+      try
+      {
          final Class empty[] = {};
          final Class type = EJBHome.class;
          
@@ -99,54 +101,63 @@ public class HomeInterceptor
    * @throws Throwable    Any exception or error thrown while processing.
    */
    public Object invoke(Invocation invocation)
-   throws Throwable
+      throws Throwable
    {
       InvocationContext ctx = invocation.getInvocationContext();
-
+      
       Method m = invocation.getMethod();
-
+      
       // Implement local methods
-      if (m.equals(TO_STRING)) {
+      if (m.equals(TO_STRING))
+      {
          return ctx.getValue(InvocationKey.JNDI_NAME).toString() + "Home";
       }
-      else if (m.equals(EQUALS)) {
+      else if (m.equals(EQUALS))
+      {
          // equality of the proxy home is based on names...
-         return new Boolean(invocation.getArguments()[0].toString().equals(
-                  ctx.getValue(InvocationKey.JNDI_NAME).toString() + "Home"));
+         Object[] args = invocation.getArguments();
+         String argsString = args[0] != null ? args[0].toString() : "";
+         String thisString = ctx.getValue(JNDI_NAME).toString() + "Home";
+         return new Boolean(thisString.equals(argsString));
       }
-      else if (m.equals(HASH_CODE)) {
+      else if (m.equals(HASH_CODE))
+      {
          return new Integer(this.hashCode());
       }
       
       // Implement local EJB calls
-      else if (m.equals(GET_HOME_HANDLE)) {
+      else if (m.equals(GET_HOME_HANDLE))
+      {
          return new HomeHandleImpl(
-               (String)ctx.getValue(InvocationKey.JNDI_NAME));
+         (String)ctx.getValue(InvocationKey.JNDI_NAME));
       }
-      else if (m.equals(GET_EJB_META_DATA)) {
+      else if (m.equals(GET_EJB_META_DATA))
+      {
          return ctx.getValue(InvocationKey.EJB_METADATA);
       }
-      else if (m.equals(REMOVE_BY_HANDLE)) {
+      else if (m.equals(REMOVE_BY_HANDLE))
+      {
          // First get the EJBObject
-         EJBObject object = 
-               ((Handle) invocation.getArguments()[0]).getEJBObject();
-
+         EJBObject object =
+         ((Handle) invocation.getArguments()[0]).getEJBObject();
+         
          // remove the object from here
          object.remove();
-
+         
          // Return Void
          return Void.TYPE;
       }
-      else if (m.equals(REMOVE_BY_PRIMARY_KEY)) {
+      else if (m.equals(REMOVE_BY_PRIMARY_KEY))
+      {
          // Session beans must throw RemoveException (EJB 1.1, 5.3.2)
          if(((EJBMetaData)ctx.getValue(InvocationKey.EJB_METADATA)).isSession())
             throw new RemoveException("Session beans cannot be removed " +
-                  "by primary key.");
-
+            "by primary key.");
+         
          // The trick is simple we trick the container in believe it
          // is a remove() on the instance
          Object id = invocation.getArguments()[0];
-
+         
          // Just override the Invocation going out
          invocation.setId(id);
          invocation.setType(InvocationType.REMOTE);
@@ -154,13 +165,14 @@ public class HomeInterceptor
          invocation.setArguments(EMPTY_ARGS);
          return getNext().invoke(invocation);
       }
-
+      
       // If not taken care of, go on and call the container
-      else {
+      else
+      {
          
          invocation.setType(InvocationType.HOME);
          // Create an Invocation
          return getNext().invoke(invocation);
-     }
+      }
    }
 }

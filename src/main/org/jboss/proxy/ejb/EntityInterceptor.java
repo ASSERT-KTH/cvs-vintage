@@ -24,7 +24,7 @@ import org.jboss.proxy.ejb.handle.EntityHandleImpl;
 /**
  * An EJB entity bean proxy class.
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class EntityInterceptor
 extends GenericEJBInterceptor
@@ -72,7 +72,7 @@ extends GenericEJBInterceptor
       else if (m.equals(EQUALS))
       {
          Object[] args = invocation.getArguments();
-         String argsString = args[0].toString();
+         String argsString = args[0] != null ? args[0].toString() : "";
          String thisString = toString(ctx);
          return new Boolean(thisString.equals(argsString));
       }

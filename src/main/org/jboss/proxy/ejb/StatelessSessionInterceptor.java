@@ -20,7 +20,7 @@ import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
  * An EJB stateless session bean proxy class.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class StatelessSessionInterceptor
    extends GenericEJBInterceptor
@@ -68,7 +68,7 @@ public class StatelessSessionInterceptor
       else if (m.equals(EQUALS))
       {
          Object[] args = invocation.getArguments();
-         String argsString = args[0].toString();
+         String argsString = args[0] != null ? args[0].toString() : "";
          String thisString = toString(ctx);
          return new Boolean(thisString.equals(argsString));
       }
