@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.16 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.16 $
- * $Date: 2000/06/11 21:41:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.17 2000/06/14 22:51:50 mandar Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/06/14 22:51:50 $
  *
  * ====================================================================
  * 
@@ -683,7 +683,7 @@ public class JspParseEventListener extends BaseJspListener {
             String uri = (String) attrs.get("uri");
             String prefix = (String) attrs.get("prefix");
             try {
-                TagLibraryInfoImpl tl = new TagLibraryInfoImpl(ctxt, 
+                TagLibraryInfo tl = new TagLibraryInfoImpl(ctxt, 
                                                                prefix, 
                                                                uri);
                 libraries.addTagLibrary(prefix, tl);
@@ -880,13 +880,13 @@ public class JspParseEventListener extends BaseJspListener {
     }
     
     public void handleTagBegin(Mark start, Mark stop, Hashtable attrs, String prefix, 
-			       String shortTagName, TagLibraryInfoImpl tli, 
+			       String shortTagName, TagLibraryInfo tli, 
 			       TagInfo ti)
 	throws JasperException
     {
         Generator gen
             = new GeneratorWrapper(new TagBeginGenerator(start, prefix, shortTagName, attrs,
-							 tli, ti),
+							 tli, ti, libraries),
                                    start, stop);
 
 	addGenerator(gen);
@@ -894,11 +894,12 @@ public class JspParseEventListener extends BaseJspListener {
 
     public void handleTagEnd(Mark start, Mark stop, String prefix, 
 			     String shortTagName, Hashtable attrs, 
-                             TagLibraryInfoImpl tli, TagInfo ti)
+                             TagLibraryInfo tli, TagInfo ti)
 	throws JasperException
     {
         Generator gen
-            = new GeneratorWrapper(new TagEndGenerator(prefix, shortTagName, attrs, tli, ti),
+            = new GeneratorWrapper(new TagEndGenerator(prefix, shortTagName, attrs,
+						       tli, ti, libraries),
                                    start, stop);
 
 	addGenerator(gen);

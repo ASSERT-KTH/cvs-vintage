@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.20 2000/06/11 19:08:54 mandar Exp $
- * $Revision: 1.20 $
- * $Date: 2000/06/11 19:08:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.21 2000/06/14 22:51:53 mandar Exp $
+ * $Revision: 1.21 $
+ * $Date: 2000/06/14 22:51:53 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -103,8 +103,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
     Document tld;
 
     Hashtable jarEntries;
-    Hashtable tagCaches = new Hashtable();
-    
+
     JspCompilationContext ctxt;
 
     
@@ -519,11 +518,4 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
             out.write(buf, 0, nRead);
     }
 
-    TagCache getTagCache(String shortTagName) {
-        return (TagCache) tagCaches.get(shortTagName);
-    }
-
-    void putTagCache(String shortTagName, TagCache tc) {
-        tagCaches.put(shortTagName, tc);
-    }
 }

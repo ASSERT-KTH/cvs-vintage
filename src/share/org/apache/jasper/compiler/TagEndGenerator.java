@@ -75,19 +75,21 @@ public class TagEndGenerator
     implements ServiceMethodPhase
 {
     String prefix, shortTagName;
-    TagLibraryInfoImpl tli;
+    TagLibraryInfo tli;
     TagInfo ti;
     Hashtable attrs;
+    TagLibraries libraries;
 
     public TagEndGenerator(String prefix, String shortTagName, 
-                           Hashtable attrs, TagLibraryInfoImpl tli, 
-                           TagInfo ti) 
+                           Hashtable attrs, TagLibraryInfo tli, 
+                           TagInfo ti, TagLibraries libraries) 
     {
         this.prefix = prefix;
         this.shortTagName = shortTagName;
         this.tli = tli;
         this.ti = ti;
         this.attrs = attrs;
+	this.libraries = libraries;
     }
     
     public void generate(ServletWriter writer, Class phase) {
@@ -97,7 +99,8 @@ public class TagEndGenerator
         
         VariableInfo[] vi = ti.getVariableInfo(new TagData(attrs));
 
-        Class tagHandlerClass = tli.getTagCache(shortTagName).getTagHandlerClass();
+        Class tagHandlerClass =
+	    libraries.getTagCache(prefix, shortTagName).getTagHandlerClass();
         boolean implementsBodyTag = BodyTag.class.isAssignableFrom(tagHandlerClass);
 	
 	writer.popIndent();

@@ -85,17 +85,18 @@ public class TagBeginGenerator
     String prefix;
     String shortTagName;
     Hashtable attrs;
-    TagLibraryInfoImpl tli;
+    TagLibraryInfo tli;
     TagInfo ti;
     TagAttributeInfo[] attributes;
     String baseVarName, thVarName;
     TagCache tc;
     TagData tagData;
     Mark start;
+    TagLibraries libraries;
 
     
     public TagBeginGenerator(Mark start, String prefix, String shortTagName, Hashtable attrs,
-			     TagLibraryInfoImpl tli, TagInfo ti) 
+			     TagLibraryInfo tli, TagInfo ti, TagLibraries libraries) 
         throws JasperException
     {
         this.prefix = prefix;
@@ -107,11 +108,12 @@ public class TagBeginGenerator
 	this.baseVarName = getTagVarName(prefix, shortTagName);
 	this.thVarName = "_jspx_th_"+baseVarName;
 	this.start = start;
+	this.libraries = libraries;
     }
 
     public void init(JspCompilationContext ctxt) throws JasperException {
         validate();
-        tc = tli.getTagCache(shortTagName);
+        tc = libraries.getTagCache(prefix, shortTagName);
         if (tc == null) {
             tc = new TagCache(shortTagName);
 
@@ -128,7 +130,7 @@ public class TagBeginGenerator
                                                               ));
             }
             tc.setTagHandlerClass(clz);
-            tli.putTagCache(shortTagName, tc);
+            libraries.putTagCache(prefix, shortTagName, tc);
         }
     }
     

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.5 2000/02/25 19:45:38 mandar Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/25 19:45:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.6 2000/06/14 22:51:51 mandar Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/06/14 22:51:51 $
  *
  * ====================================================================
  * 
@@ -107,11 +107,11 @@ public interface ParseEventListener {
      * stop: can be null if the body contained JSP tags... 
      */
     void handleTagBegin(Mark start, Mark stop, Hashtable attrs, String prefix, String shortTagName,
-			TagLibraryInfoImpl tli, TagInfo ti) 
+			TagLibraryInfo tli, TagInfo ti) 
 	throws JasperException;
 
     void handleTagEnd(Mark start, Mark stop, String prefix, String shortTagName,
-		      Hashtable attrs, TagLibraryInfoImpl tli, TagInfo ti)
+		      Hashtable attrs, TagLibraryInfo tli, TagInfo ti)
 	throws JasperException;
 
     void handleForward(Mark start, Mark stop, Hashtable attrs, Hashtable param)
@@ -121,3 +121,4 @@ public interface ParseEventListener {
 
     void endPageProcessing() throws JasperException;
 }
+
