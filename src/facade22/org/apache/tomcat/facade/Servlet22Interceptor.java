@@ -169,9 +169,13 @@ public final class Servlet22Interceptor
      */
     public int sessionState( Request req, ServerSession sess, int newState)
     {
+	if( debug > 0 )
+	    log("sessionState " + sess.getId() + " " + newState + " " + sess.getState());
 	if( newState==ServerSession.STATE_SUSPEND ||
 	    newState==ServerSession.STATE_EXPIRED )   {
-	    
+
+	    if( debug > 0 )
+		log("Unbinding variables ");
 	    // generate "unbould" events when the session is suspended or
 	    // expired
 	    HttpSession httpSess=(HttpSession)sess.getFacade();

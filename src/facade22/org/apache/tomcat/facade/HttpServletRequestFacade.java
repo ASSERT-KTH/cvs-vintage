@@ -148,7 +148,16 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public String getCharacterEncoding() {
-	return request.getCharacterEncoding();
+	String enc=request.getCharacterEncoding();
+
+	// Source is set if we are sure about the encoding,
+	// we've got it from header or session or some
+	// well-defined mechanism. No source means the default
+	// is used.
+	Object o=request.getNote( "req.encodingSource" );
+	if( o==null ) return null;
+	
+	return enc;
     }
 
     public int getContentLength() {
@@ -332,9 +341,6 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 
 	// XXX  provide recycleable objects
 	String encoding = request.getCharacterEncoding();
-        if (encoding == null) {
-            encoding = "8859_1"; // that's the default in HTTP and servlet spec
-        }
 	
 	InputStreamReader r =
             new InputStreamReader(isFacade, encoding);
@@ -347,7 +353,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getRemoteHost() {
-		String remoteHost = request.remoteHost().toString();
+	String remoteHost = request.remoteHost().toString();
 
         // AJP12 defaults to empty string, AJP13 defaults to null
         if(remoteHost != null && remoteHost.length() != 0)
