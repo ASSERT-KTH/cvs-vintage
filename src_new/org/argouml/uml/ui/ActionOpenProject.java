@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.27 2003/11/15 11:45:17 alexb Exp $
+// $Id: ActionOpenProject.java,v 1.28 2003/11/23 23:01:09 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -263,7 +263,7 @@ public class ActionOpenProject extends UMLAction {
             else if (oldProject != null) {
                 // if p equals oldProject there was an exception and we do
                 // not have to gc the old project
-                if( !p.equals(oldProject)) {
+                if( p!= null && !p.equals(oldProject)) {
                 
                 	//prepare the old project for gc
 	                ProjectManager.getManager().removeProject(oldProject);
