@@ -196,6 +196,24 @@ public class XmlMapper
 	root=o;
     }
 
+    // -------------------- Support for ${prop} replacement ----------
+
+    Object propSource;
+
+    public void setPropertySource( Object src ) {
+	this.propSource=src;
+    }
+
+    public Object getPropertySource() {
+	return propSource;
+    }
+
+    public String replaceProperties( String k ) {
+	if( propSource==null ) return k;
+	return IntrospectionUtils.replaceProperties( k, propSource);
+    }
+
+    
     // -------------------- Utils --------------------
     // Debug ( to be replaced with the real thing )
     public void setDebug( int level ) {
@@ -233,7 +251,7 @@ public class XmlMapper
     public Object getVariable( String name ) {
 	return variables.get( name );
     }
-    
+
     public XmlMapper getMapper() {
 	return this;
     }
@@ -526,14 +544,21 @@ public class XmlMapper
 
     /** Set object properties using XML attributes
      */
-    public XmlAction setProperties(  ) {
+    public XmlAction setProperties() {
 	return new SetProperties();
     }
 
     /** Set a variable varName using the value of an attribute
      */
-    public XmlAction setVariable( String varName, String attName ) {
-	return new SetVariable( varName, attName );
+    public XmlAction setVar( String varName, String attName ) {
+	return new SetVar( varName, attName );
+    }
+
+    /** Set a variable varName using the value of an attribute
+     */
+    public XmlAction setVar( String varName, String nameAtt,
+				  String valueAtt, boolean reset) {
+	return new SetVar(varName, nameAtt, valueAtt, reset);
     }
 
     /** For the last 2 objects in stack, create a parent-child
@@ -679,19 +704,23 @@ class ObjectCreate extends XmlAction {
 /** Set object properties using XML attribute list
  */
 class SetProperties extends XmlAction {
-
     public SetProperties() {
     }
 
     public void start( SaxContext ctx ) {
 	Object elem=ctx.currentObject();
 	AttributeList attributes = ctx.getCurrentAttributes();
-
+	XmlMapper xh=ctx.getMapper();
+	
 	for (int i = 0; i < attributes.getLength (); i++) {
 	    String type = attributes.getType (i);
 	    String name=attributes.getName(i);
 	    String value=attributes.getValue(i);
 
+	    String value1=xh.replaceProperties( value );
+	    if( !value1.equals(value) && ctx.getDebug() > -1 )
+		ctx.log( "Replace " + value + " " + value1 );
+		
 	    IntrospectionUtils.setProperty( elem, name, value );
 	}
     }
@@ -886,29 +915,48 @@ class PopStack extends XmlAction {
 
 /**
  */
-class SetVariable extends XmlAction {
+class SetVar extends XmlAction {
     String varName;
-    String attributeN;
+    String nameAtt;
+    String valAtt;
+    boolean reset=false;
     
-    public SetVariable(String varName, String attributeN) {
+    public SetVar(String varName, String attributeN) {
 	super();
 	this.varName=varName;
-	this.attributeN=attributeN;
+	this.valAtt=attributeN;
+	reset=true;
+    }
+    
+    public SetVar(String varName, String nameAtt, String valueAtt,
+		       boolean reset) {
+	super();
+	this.varName=varName;
+	this.nameAtt=nameAtt;
+	this.valAtt=valueAtt;
+	this.reset=reset;
     }
     
     public void start( SaxContext ctx) throws Exception {
 	AttributeList attributes = ctx.getCurrentAttributes();
-	ctx.setVariable( varName,
-			 attributes.getValue(attributeN));
+	String n=varName;
+	if( n==null )
+	    n=attributes.getValue( nameAtt );
+	String v=attributes.getValue( valAtt );
+	
+	if( n!=null && v!=null )
+	    ctx.setVariable( n, v);
+
 	if( ctx.getDebug() > 0 )
-	    ctx.log("setVariable " + varName + " " + attributeN + " " +
-		    attributes.getValue( attributeN ));
+	    ctx.log("setVariable " + n + " " + v );
     }
 
     public void cleanup( SaxContext ctx) {
-	ctx.setVariable( varName, null);
+	if( ! reset ) return;
+	if(varName!=null)
+	    ctx.setVariable( varName, null);
+	// for name="foo" val="bar" - we don't reset it 
 	if( ctx.getDebug() > 0 )
-	    ctx.log("setVariable " + varName + " " + attributeN + " " +
-		    "null");
+	    ctx.log("setVariable " + varName + " null");
     }
 }
