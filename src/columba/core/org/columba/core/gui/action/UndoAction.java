@@ -41,7 +41,8 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 			ImageLoader.getSmallImageIcon("stock_undo-16.png"),
 			ImageLoader.getImageIcon("stock_undo.png"),
 			'T',
-			KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK),
+			false);
 			
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
 	}

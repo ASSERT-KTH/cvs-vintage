@@ -41,7 +41,8 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 			ImageLoader.getSmallImageIcon("stock_redo-16.png"),
 			ImageLoader.getImageIcon("stock_redo.png"),
 			'T',
-			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK),
+			false);
 			
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
 	}

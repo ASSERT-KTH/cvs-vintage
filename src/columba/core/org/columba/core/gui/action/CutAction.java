@@ -42,11 +42,16 @@ public class CutAction extends FrameAction {
 				"action",
 				"mainframe",
 				"menu_edit_cut"),
+			MailResourceLoader.getString(
+				"action",
+				"mainframe",
+				"menu_edit_cut"),
 			"CUT_FOR_FUN",
 			ImageLoader.getSmallImageIcon("stock_cut-16.png"),
 			ImageLoader.getImageIcon("stock_cut.png"),
 			'T',
-			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK),
+			false);
 	}
 
 }

@@ -47,7 +47,8 @@ public class CancelAction extends FrameAction implements WorkerListChangeListene
 			ImageLoader.getSmallImageIcon("stock_stop-16.png"),
 			ImageLoader.getImageIcon("stock_stop.png"),
 			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
+			KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0),
+			false);
 		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
 	}

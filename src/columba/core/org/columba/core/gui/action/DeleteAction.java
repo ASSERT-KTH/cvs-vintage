@@ -38,11 +38,16 @@ public class DeleteAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_edit_delete"),
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_edit_delete"),
 			"DELETE",
 			ImageLoader.getImageIcon("stock_delete-16.png"),
 			ImageLoader.getImageIcon("stock_delete.png"),
 			'D',
-			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+			false);
 	}
 
 }

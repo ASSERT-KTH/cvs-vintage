@@ -39,11 +39,16 @@ public class PasteAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_edit_paste"),
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_edit_paste"),
 			"PASTE",
 			ImageLoader.getImageIcon("stock_paste-16.png"),
 			ImageLoader.getImageIcon("stock_paste.png"),
 			'V',
-			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
+			false);
 	}
 
 }

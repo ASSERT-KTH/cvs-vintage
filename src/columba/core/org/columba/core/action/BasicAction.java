@@ -130,4 +130,11 @@ public class BasicAction extends JAbstractAction {
 		this.showToolbarText = showToolbarText;
 	}
 
+	/**
+	 * @return boolean
+	 */
+	public boolean isShowToolbarText() {
+		return showToolbarText;
+	}
+
 }

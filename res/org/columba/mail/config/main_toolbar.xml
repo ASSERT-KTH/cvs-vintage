@@ -12,5 +12,6 @@
 	<button action="CopyMessage"/>
 	<button action="MoveMessage"/>
 	<button action="DeleteMessage"/>
+	<separator/>
 	<button action="Cancel"/>
 </toolbar>    
