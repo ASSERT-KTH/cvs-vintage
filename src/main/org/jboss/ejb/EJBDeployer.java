@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.14 $ 
+* @version $Revision: 1.15 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -374,7 +374,8 @@ implements EJBDeployerMBean
       NDC.pop();
       
       // Create application
-      String urlname = di.url.toString().replace(':', '%');
+      //remove reserved object name letters.  Let's hope no one takes advantage of the ambiguity.
+      String urlname = di.url.toString().replace(':', '%').replace('*', '%').replace('?', '%').replace(',', '%');
       ObjectName ejbModule = ObjectNameFactory.create(EjbModule.BASE_EJB_MODULE_NAME + ",url=" + urlname);
 
       try
