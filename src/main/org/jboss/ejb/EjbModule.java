@@ -84,9 +84,6 @@ import org.w3c.dom.Element;
  * <p>The beans may use the EjbModule to access other beans within the same
  *    deployment unit.
  *
- * <p>The beans may use the EjbModule to access other beans within the same
- *    deployment package (e.g. an ear) using findContainer(String).
- *      
  * @see Container
  * @see EJBDeployer
  * 
@@ -95,7 +92,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -265,34 +262,6 @@ public class EjbModule
    public ClassLoader getClassLoader()
    {
       return classLoader;
-   }
-
-   /**
-    * Find a container from this deployment package, used to process ejb-link
-    *
-    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
-    *          the same deployment package
-    * @return  container for the named bean, or null if the container was
-    *          not found   
-    */
-   public Container findContainer(String name)
-      throws DeploymentException
-   {
-      // Quick check
-      Container result = (Container)containers.get(name);
-      if (result != null)
-      {
-         //It is in this module
-         return result;
-      }
-      // Does the name include a path?
-      if (name.indexOf('#') != -1) 
-      {
-         return locateContainerByPath(name);
-      } // end of if ()
-      
-      // Ok, we have to walk the tree
-      return locateContainer(name);
    }
 
    /**
@@ -471,135 +440,6 @@ public class EjbModule
          container = new EntityContainer();
       }
       return container;
-   }
-
-   /**
-    * Find a container from this deployment package, used to process ejb-link
-    *
-    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
-    *          the same deployment package
-    * @return  container for the named bean, or null if the container was
-    *          not found   
-    */
-   private Container locateContainer(String name)
-   {
-      // Get the top level deployment
-      DeploymentInfo info = deploymentInfo;
-      while (info.parent != null)
-         info = info.parent;
-
-      // Start a recursive walk through the deployment tree
-      return locateContainer(info, name);
-   }
-
-   /**
-    * Find a container from this deployment package, used to process ejb-link<p>
-    * 
-    * Checks the passed deploymentinfo, then all its subdeployments
-    *
-    * @param   info  the current deploymentinfo
-    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
-    *          the same deployment package
-    * @return  container for the named bean, or null if the container was
-    *          not found   
-    */
-   private Container locateContainer(DeploymentInfo info, String name)
-   {
-      // Try the current EjbModule
-      Container result = getContainerByDeploymentInfo(info, name);
-      if (result != null)
-      {
-         return result;
-      }
-
-      // Try the subpackages
-      for (Iterator iterator = info.subDeployments.iterator(); iterator.hasNext(); )
-      {
-         result = locateContainer((DeploymentInfo) iterator.next(), name);
-         if (result != null)
-         {
-            return result;
-         }
-      }
-
-      // Nothing found
-      return null;
-   }
-
-   /**
-    * Find a container from this deployment package, used to process ejb-link
-    * that is a relative path<p>
-    * 
-    * Determines the path based on the url.
-    *
-    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
-    *          the same deployment package
-    * @return  container for the named bean, or null if the container was
-    *          not found   
-    */
-   private Container locateContainerByPath(String name)
-      throws DeploymentException
-   {
-      String path = name.substring(0, name.indexOf('#'));
-      String ejbName = name.substring(name.indexOf('#') + 1);
-      String us = deploymentInfo.url.toString();
-      //remove our jar name
-      String ourPath = us.substring(0, us.lastIndexOf('/'));
-      for (StringTokenizer segments = new StringTokenizer(path, "/"); segments.hasMoreTokens(); )
-      {
-         String segment = segments.nextToken();
-         //kind of silly, but takes care of ../s1/s2/../s3/myjar.jar
-         if (segment.equals("..")) 
-         {
-            ourPath = ourPath.substring(0, ourPath.lastIndexOf('/'));
-         } // end of if ()
-         else
-         {
-            ourPath += "/" + segment;
-         } // end of else
-      }
-      URL target = null;
-      try 
-      {
-         target = new URL(ourPath);
-      }
-      catch (MalformedURLException mfue)
-      {
-         throw new DeploymentException("could not construct URL for: " + ourPath);
-      } // end of try-catch
-      DeploymentInfo targetInfo = null;
-      try 
-      {
-         targetInfo = (DeploymentInfo)server.invoke(MainDeployerMBean.OBJECT_NAME,
-                                                    "getDeployment",
-                                                    new Object[] {target},
-                                                    new String[] {URL.class.getName()});
-
-      }
-      catch (Exception e)
-      {
-         throw new DeploymentException("could not get DeploymentInfo for URL: " + target, e);
-      } // end of try-catch
-      if (targetInfo == null) 
-      {
-         throw new DeploymentException("cannot locate deployment info: " + target);
-      } // end of if ()
-      Container found = getContainerByDeploymentInfo(targetInfo, ejbName);
-      if (found == null) 
-      {
-         throw new DeploymentException("cannot locate container: " + name + " in package at: " + target);
-      } // end of if ()
-      return found;
-   }
-
-   private Container getContainerByDeploymentInfo(DeploymentInfo info, String name)
-   {
-      EjbModule module = (EjbModule) ejbModulesByDeploymentInfo.get(info);
-      if (module != null)
-      {
-         return module.getContainer(name);
-      }
-      return null;
    }
 
 }

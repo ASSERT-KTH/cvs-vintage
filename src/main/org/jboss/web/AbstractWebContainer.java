@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -41,8 +42,10 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.deployment.J2eeModuleMetaData;
+import org.jboss.deployment.MainDeployerMBean;
 import org.jboss.deployment.SubDeployer;
 import org.jboss.deployment.SubDeployerSupport;
+import org.jboss.ejb.EjbUtil;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
@@ -157,7 +160,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.55 $
+@version $Revision: 1.56 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -524,7 +527,7 @@ public abstract class AbstractWebContainer
 
    protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
       throws NamingException
-   {      
+   {
       while( resourceRefs.hasNext() )
       {
          ResourceRefMetaData ref = (ResourceRefMetaData) resourceRefs.next();
@@ -551,87 +554,9 @@ public abstract class AbstractWebContainer
       }
    }
 
-   /** 
-    * A method that walks through the DeploymentInfo hiearchy looking
-    * for the ejb-name that corresponds to the given ejb-link value.
-    *
-    * @param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
-    * descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
-    * @return The deployment JNDI name of the ejb home to which the ejbLink
-    * refers if it is found, null if no such ejb exists.
-    */
-   public String findEjbLink(DeploymentInfo parent, String ejbLink)
-   {
-      // Walk up to the topmost DeploymentInfo
-      DeploymentInfo top = parent;
-      while( top != null && top.parent != null )
-         top = top.parent;
-      if( top == null )
-         return null;
-      // Search from the top for a matching ejb
-      return findEjbLink(top, ejbLink, false);
-   }
-
-   /** 
-    * A method that walks through the DeploymentInfo hiearchy looking
-    * for the ejb-name that corresponds to the given ejb-link value.
-    *
-    * @param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
-    * descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
-    * @return The deployment JNDI name of the ejb local home to which the ejbLink
-    * refers if it is found, null if no such ejb exists.
-    */
-   public String findEjbLocalLink(DeploymentInfo parent, String ejbLink)
-   {
-      // Walk up to the topmost DeploymentInfo
-      DeploymentInfo top = parent;
-      while( top != null && top.parent != null )
-         top = top.parent;
-      if( top == null )
-         return null;
-      // Search from the top for a matching ejb
-      return findEjbLink(top, ejbLink, true);
-   }
-
-   /** 
-    * Recursively search the DeploymentInfo looking for ApplicationMetaData
-    * nodes that may contain a BeanMetaData keyed by the ejbLink value.
-    *
-    * @param isLocal, a flag indicating if the JNDI name requested is for the
-    * local home vs the remote home.
-    */
-   private static String findEjbLink(DeploymentInfo parent, String ejbLink,
-      boolean isLocal)
-   {
-      String ejbName = null;
-      // Search the parent if it has ApplicationMetaData
-      if( parent.metaData instanceof ApplicationMetaData )
-      {
-         ApplicationMetaData appMD = (ApplicationMetaData) parent.metaData;
-         BeanMetaData beanMD = appMD.getBeanByEjbName(ejbLink);
-         if( beanMD != null )
-         {
-            if( isLocal == true )
-               ejbName = beanMD.getLocalJndiName();
-            else
-               ejbName = beanMD.getJndiName();
-            return ejbName;
-         }
-      }
-      // Search each subcontext
-      Iterator iter = parent.subDeployments.iterator();
-      while( iter.hasNext() && ejbName == null )
-      {
-         DeploymentInfo child = (DeploymentInfo) iter.next();
-         ejbName = findEjbLink(child, ejbLink, isLocal);
-      }
-      return ejbName;
-   }
-
-
    protected void linkEjbRefs(Iterator ejbRefs, Context envCtx, DeploymentInfo di)
       throws NamingException
-   {      
+   {
       while( ejbRefs.hasNext() )
       {
          EjbRefMetaData ejb = (EjbRefMetaData) ejbRefs.next();
@@ -641,7 +566,7 @@ public abstract class AbstractWebContainer
          if( jndiName == null )
          {
             // Search the DeploymentInfo for a match
-            jndiName = findEjbLink(di, linkName);
+            jndiName = EjbUtil.findEjbLink( server, di, linkName );
             if( jndiName == null )
                throw new NamingException("ejb-ref: "+name+", no ejb-link match, use jndi-name in jboss-web.xml");
          }
@@ -658,7 +583,7 @@ public abstract class AbstractWebContainer
          EjbLocalRefMetaData ejb = (EjbLocalRefMetaData) ejbRefs.next();
          String name = ejb.getName();
          String linkName = ejb.getLink();
-         String jndiName = findEjbLocalLink(di, linkName);
+         String jndiName = EjbUtil.findLocalEjbLink( server, di, linkName );
 
          if( jndiName == null )
             throw new NamingException("ejb-local-ref: "+name+", target not found, add valid ejb-link");
@@ -967,3 +892,6 @@ public abstract class AbstractWebContainer
       }
    }
 }
+/*
+vim:ts=3:sw=3:et
+*/

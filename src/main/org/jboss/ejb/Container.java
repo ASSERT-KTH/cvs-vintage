@@ -106,7 +106,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.106 $
+ * @version $Revision: 1.107 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an 
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -1316,17 +1316,12 @@ public abstract class Container extends ServiceMBeanSupport
                   log.debug("Binding "+ref.getName()+
                         " to internal JNDI source: "+ref.getLink());
                }
-               
-               Container refContainer = ejbModule.findContainer(ref.getLink());
-               if (refContainer == null) {
-                  throw new DeploymentException("Bean "+ref.getLink()+
-                        " not found within this application.");
-               }
-               
+               String jndiName = EjbUtil.findEjbLink( server, di, ref.getLink() );
+
                Util.bind(
                      envCtx, 
                      ref.getName(), 
-                     new LinkRef(refContainer.getBeanMetaData().getJndiName()));
+                     new LinkRef(jndiName));
                
             }
             else
@@ -1401,16 +1396,13 @@ public abstract class Container extends ServiceMBeanSupport
             {
                // Internal link
                log.debug("Binding "+refName+" to bean source: "+ref.getLink());
-               Container refContainer = ejbModule.findContainer(ref.getLink());
-               if (refContainer == null)
-               {
-                  throw new DeploymentException("Bean "+ref.getLink()+
-                        " not found within this application.");
-               }
-               
+
+               String jndiName = EjbUtil.findLocalEjbLink( server, di,
+                  ref.getLink() );
+
                Util.bind(envCtx,
                      ref.getName(),
-                     new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
+                     new LinkRef(jndiName));
             }
             else
             {
