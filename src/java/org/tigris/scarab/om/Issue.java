@@ -74,6 +74,7 @@ import org.apache.torque.util.BasePeer;
 // Scarab classes
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.om.ScarabUserManager;
@@ -1966,6 +1967,37 @@ public class Issue
     {
          Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
          return getOrphanAttributeValuesList(module);
+    }
+
+    /**
+     */
+    public void assignUser(ScarabUser assignee, ScarabUser assigner,
+                           String attachmentText, Attribute attribute,
+                           String reason)
+        throws Exception
+    {                
+        UserAttribute attVal = new UserAttribute();
+
+        // Save attachment
+        Attachment attachment = new Attachment();
+        attachment.setTextFields(assignee, this,
+                                 Attachment.MODIFICATION__PK);
+        attachment.setName(attachmentText);
+        attachment.setDataAsString(reason);
+        attachment.save();
+
+        // Save transaction record
+        Transaction transaction = new Transaction();
+        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                       assigner, attachment);
+        attVal.startTransaction(transaction);
+
+        // Save user attribute values
+        attVal.setIssue(this);
+        attVal.setAttributeId(attribute.getAttributeId());
+        attVal.setUserId(assignee.getUserId());
+        attVal.setValue(assignee.getUserName());
+        attVal.save();
     }
 
     /**
