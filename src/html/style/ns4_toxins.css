@@ -15,13 +15,13 @@ html>body, html>body th, html>body td, html>body input, html>body select, html>b
 	font-size: small;
 	}
 	
-small, div#footer, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select {
+small, div#footer, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .functnbar td, .functnbar2 td {
 	font-size: xx-small !important;
 	voice-family: "\"}\"";
 	voice-family: inherit;
 	font-size: x-small !important;
 	}
-html>body small, html>body div#footer, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select  {
+html>body small, html>body div#footer, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .functnbar td, html>body .functnbar2 td {
 	font-size: x-small !important;
 	}
 p, ul, ol, dl {
@@ -32,17 +32,12 @@ p, ul, ol, dl {
 table, th, td	{
 	border: none;
 	}
-.app h3, .functnbar	{
+.app h3	{
 	padding: 5px;
 	color: white;
 	margin-right: 2px;
 	margin-left: 2px;
 	}
-.functnbar {
-	padding: 3px;
-	font-weight: bold;
-	background: #000
-		}
 .app h3 {
 	background: #369 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
 	border-bottom: 1px solid #333;
@@ -154,20 +149,27 @@ ul.tasks li {
 .functnbar2 {
 	background: #666 url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
 	}
+.functnbar, .functnbar2 {
+ padding: 2px;
+	margin-top: .67em;
+	margin-bottom: .67em;
+	}
+.functnbar td, .functnbar2 td {
+	color: #fff;
+	border-left: 2px groove #ccc;
+	}
+.functnbar td a, .functnbar2 td a {
+	color: #fff;
+	text-decoration: underline;
+	}
+.functnbar td.firstchild, .functnbar2 td.firstchild {
+	border-left: none;
+	}
 #topmodule {
 	border-top: 1px solid white;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #999; 
+	border-right: 1px solid #999; 
+	margin-top: -8px;
 	}
-.tabs { border-bottom: 1em #999 solid }
-.tabs th {
-	background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
-	border-right: 1px solid #666;
-	}
-.tabs td {
-	background: #ccc url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
-	border-bottom: 1px solid #666;
-	border-right: 1px solid #666;
-	}
-#topmodule { margin-top: -8px; }
-/* Scarab/App - styles end here */
 
+/* Scarab/App - styles end here */
