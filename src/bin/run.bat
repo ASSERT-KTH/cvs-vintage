@@ -47,6 +47,6 @@ REM and all libraries that are used by them here
 set CLASSPATH=%CLASSPATH%;..\lib\jdbc2_0-stdext.jar;..\lib\jboss-jaas.jar
 
 
-java -classpath "%CLASSPATH%" -Dtomcat.home=%TOMCAT_HOME% -Djava.security.auth.login.config==../conf/auth.conf org.jboss.Main
+java -classpath "%CLASSPATH%" -Dtomcat.home=%TOMCAT_HOME% org.jboss.Main
 
 pause
