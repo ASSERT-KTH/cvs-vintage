@@ -14,7 +14,7 @@
 <div class="app" id="div3-0-2-0">
 <h2>$page.Title</h2>
 
-<p>$i10n.GlobalAttributes </p>
+<p>$l10n.GlobalAttributes </p>
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
