@@ -6,6 +6,7 @@ $page.setTitle("Copy/move issue")
 
 #set ($moveIssueGroup = $intake.MoveIssue.Default)
 #set ($issueId = $moveIssueGroup.IssueId)
+#set ($issue = $scarabR.getIssue("$issueId"))
 
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
@@ -14,13 +15,12 @@ $page.setTitle("Copy/move issue")
 
 #else
 
-#if ($selectAction.equals("move") )
+#if ($selectAction.equals("move"))
  #set ($actionText = "Move")
 #else
  #set ($actionText = "Copy")
 #end
 
-#set ($issue = $scarabR.getIssue("$issueId"))
 #set ($selectAction = $moveIssueGroup.Action)
 #set ($moduleId = $moveIssueGroup.ModuleId)
 #set ($module = $scarabR.CurrentModule)
