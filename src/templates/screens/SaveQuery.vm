@@ -5,7 +5,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($queryString = $data.Parameters.getString("queryString"))
 
-      <h2>Save Query</h2>
 
    
 <form method="post" action="$action" >
@@ -54,7 +53,7 @@
 $intake.declareGroups()
 
 #else
-  <p class="alert">No query to save. Please <a href="AdvancedQuery.vm">enter a query.</a>
+  <p class="alert">No query to save. Please <a href="$link.setPage("AdvancedQuery.vm")">enter a query.</a>
 #end
 
 
