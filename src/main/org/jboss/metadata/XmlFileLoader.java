@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
 import org.jboss.ejb.DeploymentException;
-import org.jboss.logging.Logger;
+//import org.jboss.logging.Logger;
 
 /**
  *   <description>
@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -81,7 +81,7 @@ public class XmlFileLoader {
 			throw new DeploymentException("no ejb-jar.xml found");
 		}
 
-		Logger.debug("Loading ejb-jar.xml : " + ejbjarUrl.toString());
+//		Logger.debug("Loading ejb-jar.xml : " + ejbjarUrl.toString());
 		Document ejbjarDocument = getDocument(ejbjarUrl);
 
 		// the url may be used to report errors
@@ -98,7 +98,7 @@ public class XmlFileLoader {
 			throw new DeploymentException("no standardjboss.xml found");
 		}
 
-		Logger.debug("Loading standardjboss.xml : " + defaultJbossUrl.toString());
+//		Logger.debug("Loading standardjboss.xml : " + defaultJbossUrl.toString());
 		Document defaultJbossDocument = getDocument(defaultJbossUrl);
 
 		metaData.setUrl(defaultJbossUrl);
@@ -109,7 +109,7 @@ public class XmlFileLoader {
 		URL jbossUrl = getClassLoader().getResource("META-INF/jboss.xml");
 
 		if (jbossUrl != null) {
-			Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
+//			Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
 			Document jbossDocument = getDocument(jbossUrl);
 
 			metaData.setUrl(jbossUrl);
