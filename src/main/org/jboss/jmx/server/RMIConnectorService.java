@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.jmx.server;
 
 import java.io.File;
@@ -32,8 +32,8 @@ import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
-*   <description> 
-*      
+*   <description>
+*
 * @author Rickard Öberg (rickard.oberg@telkel.com)
 * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
 **/
@@ -47,42 +47,63 @@ public class RMIConnectorService
 	public static String JNDI_NAME = "jmx:rmi";
 	public static String JMX_NAME = "jmx";
 	public static String PROTOCOL_NAME = "rmi";
-	
+
 	// Attributes ----------------------------------------------------
 	private MBeanServer server;
 	private RMIConnectorImpl adaptor;
 	private String mHost;
-	
+    private String mName;
+
 	// Static --------------------------------------------------------
-	
+
 	// Constructors --------------------------------------------------
-	
+    public RMIConnectorService() {
+        mName = null;
+    }
+
+    public RMIConnectorService(
+        String name
+    ) {
+        mName = name;
+    }
+
 	// Public --------------------------------------------------------
 	public ObjectName getObjectName(
-		MBeanServer server, 
+		MBeanServer server,
 		ObjectName name
 	) throws javax.management.MalformedObjectNameException {
 		this.server = server;
 		return new ObjectName( OBJECT_NAME );
 	}
-	
+
 	public String getName() {
 		return "JMX RMI Connector";
 	}
-	
+
+    public String getJNDIName() {
+        if (mName != null)
+        {
+            return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME + ":" + mName;
+        }
+        else
+        {
+            return JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME;
+        }
+    }
+
 	// Protected -----------------------------------------------------
 	protected void initService() throws Exception {
 		mHost = InetAddress.getLocalHost().getHostName();
 		adaptor = new RMIConnectorImpl( server );
 	}
-	
+
 	protected void startService() throws Exception {
-		new InitialContext().bind( JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME, adaptor );
+		new InitialContext().bind( getJNDIName(), adaptor );
 	}
-	
+
 	protected void stopService() {
 		try {
-			new InitialContext().unbind( JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME );
+			new InitialContext().unbind( getJNDIName() );
 		}
 		catch( Exception e )	{
 			log.exception( e );
