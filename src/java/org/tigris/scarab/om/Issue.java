@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Date;
+import java.util.Locale;
 import java.sql.Connection;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -71,6 +72,7 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
 import org.apache.torque.util.BasePeer;
+import org.apache.fulcrum.localization.Localization;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
@@ -94,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.198 2002/10/09 01:31:40 jon Exp $
+ * @version $Id: Issue.java,v 1.199 2002/10/14 19:14:57 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2586,7 +2588,7 @@ public class Issue
      * is being switched; second string: message to everyone else associated
      * to the issue).
      */
-    public String[] doChangeUserAttributeValue(ScarabUser assignee, 
+    public String doChangeUserAttributeValue(ScarabUser assignee, 
                                                ScarabUser assigner, 
                                                AttributeValue oldAttVal, 
                                                Attribute newUserAttribute, 
@@ -2603,19 +2605,15 @@ public class Issue
         String newAttrDisplayName = this.getModule()
              .getRModuleAttribute(newUserAttribute, this.getIssueType())
              .getDisplayValue();
-        StringBuffer buf1 = new StringBuffer("You have been "
-               + "switched from attribute ");
-        buf1.append(oldAttrDisplayName).append(" to ");
-        buf1.append(newAttrDisplayName).append('.');
-        String userAction = buf1.toString();
 
-        StringBuffer buf2 = new StringBuffer();
-        buf2.append("User " + assigner.getUserName());
-        buf2.append(" has switched user ");
-        buf2.append(assignee.getUserName()).append(" from ");
-        buf2.append(oldAttrDisplayName).append(" to ");
-        buf2.append(newAttrDisplayName + '.');
-        String othersAction = buf2.toString();
+        Object[] args = {
+            assigner.getUserName(), assignee.getUserName(),
+            oldAttrDisplayName, newAttrDisplayName
+        };
+        String action = Localization.format(
+            ScarabConstants.DEFAULT_BUNDLE_NAME,
+            Locale.getDefault(),
+            "AssignIssueEmailChangedUserAttributeAction", args);
 
         if (reason != null && reason.length() > 0)
         {
@@ -2638,10 +2636,7 @@ public class Issue
         oldAttVal.setAttributeId(newUserAttribute.getAttributeId());
         oldAttVal.save();
         
-        String[] results = new String[2];
-        results[0] = userAction;
-        results[1] = othersAction;
-        return results;
+        return action;
     }
 
     /**
