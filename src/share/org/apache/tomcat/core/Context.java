@@ -102,6 +102,9 @@ public class Context {
     private String path = "";
     private String docBase;
 
+    // Absolute path to docBase if file-system based
+    private String absPath; 
+
     // internal state / related objects
     private ContextManager contextM;
     private ServletContextFacade contextFacade;
@@ -220,6 +223,23 @@ public class Context {
 
     public String getDocBase() {
 	return docBase;
+    }
+
+    /** Return the absolute path for the docBase, if we are file-system
+     *  based, null otherwise.
+    */
+    public String getAbsolutePath() {
+	if( absPath!=null) return absPath;
+
+	if (FileUtil.isAbsolute( docBase ) )
+	    absPath=docBase;
+	else
+	    absPath = contextM.getHome() + File.separator + docBase;
+	try {
+	    absPath = new File(absPath).getCanonicalPath();
+	} catch (IOException npe) {
+	}
+	return absPath;
     }
 
     // -------------------- Tomcat specific properties
@@ -496,6 +516,16 @@ public class Context {
 	containers.put( path, map );
     }
 
+    /** Will add a new security constraint:
+	For all paths:
+	if( match(path) && match(method) && match( transport ) )
+	then require("roles")
+
+	This is equivalent with adding a Container with the path,
+	method and transport. If the container will be matched,
+	the request will have to pass the security constraints.
+	
+    */
     public void addSecurityConstraint( String path[], String methods[],
 				       String roles[], String transport)
 	throws TomcatException
@@ -696,75 +726,6 @@ public class Context {
 	return rD;
     }
 
-    /** Implements getResource() - use a sub-request to let interceptors do the job.
-     */
-    public URL getResource(String rpath) throws MalformedURLException {
-        URL url = null;
-
-	String absPath=getDocBase();
-
-	if (FileUtil.isAbsolute( docBase ) )
-	    absPath=docBase;
-	else
-	    absPath = contextM.getHome() + File.separator + docBase;
-
-	try {
-	    absPath = new File(absPath).getCanonicalPath();
-	} catch (IOException npe) {
-	}
-
-	if ("".equals(rpath))
-	    return new URL( "file", null, 0, absPath );
-
-        if (rpath == null)
-	    return null;
-
-	if ( ! rpath.startsWith("/")) {
-	    rpath="/" + rpath;
-	}
-
-	// Create a Sub-Request, do the request processing stage
-	// that will take care of aliasing and set the paths
-	Request lr=contextM.createRequest( this, rpath );
-	getContextManager().processRequest(lr);
-
-	String mappedPath = lr.getMappedPath();
-
-	// XXX workaround for mapper bugs
-	if( mappedPath == null ) {
-	    mappedPath=lr.getPathInfo();
-	}
-	if(mappedPath == null ) {
-	    String pI=lr.getPathInfo();
-	    if( pI == null ) 
-		mappedPath=lr.getServletPath();
-	    else
-		mappedPath=lr.getServletPath() + pI;
-	}
-
-
-	try {
-	    String contextHome=new File( docBase ).getCanonicalPath();
-	    String realPath=contextHome + mappedPath;
-
-	    //   System.out.println("XXX " + realPath + " " + new File(realPath).getCanonicalPath() + " "  + contextHome );
-	    if( ! new File(realPath).getCanonicalPath().startsWith(contextHome) ) {
-		// no access to files in a different context.
-		// XXX needs a better design - it should be in an interceptor,
-		// in order to support non-file based repositories.
-		return null;
-	    }
-            url=new URL("file", null,
-                        0,
-                        absPath + mappedPath);
-	    if( debug>9) log( "getResourceURL=" + url + " request=" + lr );
-	    return url;
-	} catch( IOException ex ) {
-	    ex.printStackTrace();
-	    return null;
-	}
-    }
-
 
     Context getContext(String path) {
 	if (! path.startsWith("/")) {
@@ -779,45 +740,84 @@ public class Context {
         return lr.getContext();
     }
 
-    /**
-     *
+    /** Implements getResource()
+     *  See getRealPath(), it have to be local to the current Context -
+     *  and can't go to a sub-context. That means we don't need any overhead.
+     */
+    public URL getResource(String rpath) throws MalformedURLException {
+        if (rpath == null) return null;
+
+        URL url = null;
+	String absPath=getAbsolutePath();
+
+	if ("".equals(rpath))
+	    return new URL( "file", null, 0, absPath );
+
+
+	if ( ! rpath.startsWith("/")) {
+	    rpath="/" + rpath;
+	}
+
+	String realPath=absPath + rpath;
+	try {
+	    if( ! new File(realPath).getCanonicalPath().startsWith(absPath) ) {
+		// no access to files in a different context.
+		// XXX needs a better design - it should be in an interceptor,
+		// in order to support non-file based repositories.
+		return null;
+	    }
+	    
+            url=new URL("file", null, 0,realPath );
+	    if( debug>9) log( "getResourceURL=" + url + " request=" + rpath );
+	    return url;
+	} catch( IOException ex ) {
+	    ex.printStackTrace();
+	    return null;
+	}
+    }
+
+
+    /**   According to Servlet 2.2 the real path is interpreted as
+     *    relative to the current web app and _cannot_ go outside the 
+     *    box. If your intention is different or want the "other" behavior 
+     *    you'll have to first call getContext(path) and call getRealPath()
+     *    on the result context ( if any - the server may disable that from
+     *    security reasons !).
+     *    XXX find out how can we find the context path in order to remove it
+     *    from the path - that's the only way a user can do that unless he have
+     *    prior knowledge of the mappings !
      */
     String getRealPath( String path) {
-	//	Real Path is the same as PathTranslated for a new request
+	// No need for a sub-request, that's a great simplification
+	// in servlet space.
+
+	// Important: that's different from what some people might
+	// expect and how other server APIs work, but that's how it's
+	// specified in 2.2. From a security point of view that's very
+	// good, it keeps inter-webapp communication under control.
+
+	// XXX Everything can/should be abstracted out as soon as we
+	// are ready to support non-file-based servers.
 	String normP=FileUtil.normPath(path);
 
-	Request req=contextM.createRequest( this , normP );
-	contextM.processRequest(req);
-
-	String mappedPath = req.getMappedPath();
-
-	// XXX workaround - need to fix mapper to return mapped path
-	if( mappedPath == null )
-	    mappedPath=req.getPathInfo();
-	if(mappedPath == null ) {
-	    String pI=req.getPathInfo();
-	    if( pI == null ) 
-		mappedPath=req.getServletPath();
-	    else
-		mappedPath=req.getServletPath() + pI;
-	}
-	
-	// All paths have to be relative to the context - it's not so
-	// logical ( IMHO - costin ), but that's the spec.
-	// 
-	// Strip off URI path that brought us to this context.
-	//  	if (0 == mappedPath.indexOf(this.getPath())) {
-	// 	    mappedPath = mappedPath.substring(this.getPath().length());
-	// 	}
-
-	Context targetContext=req.getContext();
-	String realPath= targetContext.getDocBase() + mappedPath;
-
-	if (!FileUtil.isAbsolute(realPath))
-	    realPath = contextM.getHome() + "/" + realPath;
+	String absPath=getAbsolutePath();
+	String realPath= absPath + normP;
 
 	// Probably not needed - it will be used on the local FS
 	realPath = FileUtil.patch(realPath);
+
+	// extra-extra safety check, ( but slow )
+	try {
+	    if( ! new File(realPath).getCanonicalPath().startsWith(absPath) ) {
+		// no access to files in a different context.
+		// XXX needs a better design - it should be in an interceptor,
+		// in order to support non-file based repositories.
+		return null;
+	    }
+	} catch( IOException ex ) {
+	    ex.printStackTrace();
+	    return null;
+	}
 
 	if( debug>5) log("Get real path " + path + " " + realPath + " " + normP );
 	return realPath;
