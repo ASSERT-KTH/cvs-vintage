@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.5 2005/02/05 18:49:26 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.6 2005/02/06 21:49:39 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1424,6 +1424,7 @@ public class NSUMLModelFacade implements Facade {
         Object stereo = null;
         Iterator iter = getStereotypes(operation).iterator();
         while (iter.hasNext()) {
+            stereo = iter.next();
             if (nsmodel.getExtensionMechanismsHelper().isStereotypeInh(
                     stereo,
                     "create",
