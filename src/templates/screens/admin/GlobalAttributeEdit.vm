@@ -188,7 +188,7 @@ Options because you can quickly end up with a mess.</small></p>
 
 #end
 
-<div class="functnbar">
+<div class="functnbar2">
 #if ($createNew.equals("false"))
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
 #end
