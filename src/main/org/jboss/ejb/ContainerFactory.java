@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.48 $
+*   @version $Revision: 1.49 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -462,7 +462,7 @@ public class ContainerFactory
 
                    try
                    {
-                     RealmMapping rM = (RealmMapping)new InitialContext().lookup("SimpleRealmMapping");
+                     RealmMapping rM = (RealmMapping)new InitialContext().lookup(roleMappingManagerJNDIName);
                      container.setRealmMapping( rM );
                    }
                    catch (NamingException ne)
