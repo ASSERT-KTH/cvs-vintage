@@ -40,6 +40,7 @@ import javax.naming.NamingException;
 import javax.naming.StringRefAddr;
 import javax.naming.RefAddr;
 import javax.naming.NameNotFoundException;
+import javax.transaction.Transaction; // tmp
 import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
@@ -67,17 +68,17 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *
  * <p>The ContainerFactory creates instances of subclasses of this class
  *    and calls the appropriate initialization methods.
- *    
+ *
  * <p>A Container does not perform any significant work, but instead delegates
  *    to the plugins to provide for all kinds of algorithmic functionality.
  *
  * @see ContainerFactory
- * 
+ *
  * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  *
  * <p><b>Revisions:</b>
  *
@@ -172,7 +173,7 @@ public abstract class Container
    
    /** ObjectName of the JSR-77 EJB representation **/
    protected String mEJBObjectName;
-   
+
    /** 
     * The name of the Remote invoker dedicated to this container, 
     * the type is set through deployment
@@ -422,7 +423,7 @@ public abstract class Container
          localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
       if (metaData.getLocal() != null)
          localInterface = classLoader.loadClass(metaData.getLocal());
-      
+
       localContainerInvoker.setContainer( this );
       localContainerInvoker.create();
       if (localHomeInterface != null)
@@ -572,7 +573,7 @@ public abstract class Container
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
             
-            }   
+            }
             // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
             else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
             {
@@ -585,61 +586,79 @@ public abstract class Container
                   // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                   log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
                }
+
+               // TEMP FIXME HACK This makes user transactions on the server work until
+               // local invocations stop going through Marshalled Invocation
+               Transaction hack = mi.getTransaction();
+
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                //Serialize deserialize
                mi = (Invocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
-               
+
+               // TEMP FIXME HACK This makes user transactions on the server work until
+               // local invocations stop going through Marshalled Invocation
+               mi.setTransaction(hack);
+
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-               
+
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                return new MarshalledObject(invoke(mi));
             }
-            
+
             value = invoke(mi);
          }
-         
+
          else if( actionName.equals("local") )
          {
             throw new MBeanException(new UnsupportedOperationException("local is not supported yet"));
          }
          else if( actionName.equals("home") )
          {
-            
-            if (mi instanceof MarshalledInvocation) 
+
+            if (mi instanceof MarshalledInvocation)
             {
-               
+
                ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-               
+
                if (log.isDebugEnabled())
                   // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-            
-            }     
+
+            }
             // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
             else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
             {
-               
+
                if (log.isDebugEnabled())
                {
                   // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                   log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-                  
+
                   // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                   log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
                }
+
+               // TEMP FIXME HACK This makes user transactions on the server work until
+               // local invocations stop going through Marshalled Invocation
+               Transaction hack = mi.getTransaction();
+
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                //Serialize deserialize
                mi = (MarshalledInvocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
-               
+
+               // TEMP FIXME HACK This makes user transactions on the server work until
+               // local invocations stop going through Marshalled Invocation
+               mi.setTransaction(hack);
+
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-               
+
                // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
                return new MarshalledObject(invokeHome(mi));
-            
+
             }
-            
+
             value = invokeHome(mi);
          }
          else if( actionName.equals("localHome") )
