@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.11 2001/08/26 22:27:56 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.12 2001/08/27 04:47:22 user57 Exp $ -->
 
 <project default="main">
 
@@ -46,18 +46,8 @@
   <property name="module.release" value="${module.output}"/>
   <property file="${module.root}/local.properties"/>
 
-  <!-- 
-     |  Initialize the build system.
-     |
-     |  o Sets the timestamp and build.number properties
-     |  o Installs property defaults
-     |  o Displays some module information
-     |  o Resolves properties for psuedo late-binding
-     |  o Installs filters for each property
-     |
-     |  This target will not run once the initialized-already property is set.
-    -->
-  <target name="init" unless="initialized-already">
+  <!-- Initialize the build system. -->
+  <target name="init" unless="initialized-already" depends="init-buildlog">
     <tstamp>
       <format property="build.number" pattern="yyyyMMddHHmm"/>
     </tstamp>
@@ -70,6 +60,10 @@
     <resolver force="${buildmagic.resolveproperties.force}"/>
     <propertyfilter all="${buildmagic.propertyfilter.all}"/>
     <property name="initialized-already" value="true"/>
+  </target>
+
+  <target name="init-buildlog" unless="buildlog-disabled">
+    <record name="${basedir}/build.log" append="no" loglevel="info"/>
   </target>
 
 

@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.3 2001/08/26 07:00:31 user57 Exp $
+# $Id: build.sh,v 1.4 2001/08/27 04:47:22 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -105,6 +105,11 @@ main() {
 	    die "Ant version $ANT_VERSION is required to build."
 	fi
     fi
+
+    # change to the directory where the script lives so folks do not have
+    # to be in the same dir to run the build without specifying the build
+    # file. 
+    cd $DIRNAME
 
     export ANT ANT_HOME
     exec $ANT $ANT_OPTIONS "$@"
