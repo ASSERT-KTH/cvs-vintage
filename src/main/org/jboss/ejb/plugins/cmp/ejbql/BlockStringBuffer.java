@@ -18,7 +18,7 @@ import java.util.LinkedList;
  * StringBuffer are append, length, and toString.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public final class BlockStringBuffer {
    private LinkedList list = new LinkedList();
@@ -181,7 +181,7 @@ public final class BlockStringBuffer {
       return length;
    }
 
-   public String toString() {
+   public StringBuffer toStringBuffer() {
       // use a string buffer because it will share the final buffer
       // with the string object which avoids an allocate and copy
       StringBuffer buf = new StringBuffer(length);
@@ -189,6 +189,10 @@ public final class BlockStringBuffer {
       for(Iterator iter = list.iterator(); iter.hasNext(); ) {
          buf.append( (String)iter.next() );
       }
-      return buf.toString();
+      return buf;
+   }
+
+   public String toString() {
+      return toStringBuffer().toString();
    }
 }
