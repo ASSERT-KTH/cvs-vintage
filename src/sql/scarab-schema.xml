@@ -2,30 +2,35 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.35 2001/08/17 22:03:12 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.36 2001/08/18 00:08:49 jmcnally Exp $ -->
 
 <app-data>
 <database>
 <!--
     History of changes made to the attributes of an issue.
 -->
-<table name="SCARAB_ACTIVITY" idMethod="none" javaName="Activity">
+<table name="SCARAB_ACTIVITY" idMethod="idbroker" javaName="Activity">
+    <!--
+        PK.
+    -->
+    <column name="ACTIVITY_ID" primaryKey="true" required="true" 
+        type="INTEGER"/>
     <!--
         Issue attribute of which has been modified.
     -->
-    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ISSUE_ID" required="true" type="INTEGER"></column>
     <!--
         Attribute that has been modified.
     -->
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ATTRIBUTE_ID" required="true" type="INTEGER"/>
     <!--
         Transaction to which the attribute modification belongs.
     -->
-    <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="TRANSACTION_ID" required="true" type="INTEGER"/>
     <!--
         Comment added to modification.
     -->
-    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"></column>
+    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"/>
     <!--
         Value of option attribute before modification.
     -->

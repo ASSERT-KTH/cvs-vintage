@@ -1,3 +1,4 @@
+insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_ACTIVITY', 100, 10);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_ATTACHMENT', 100, 10);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_ATTRIBUTE_CLASS', 100, 10);
 insert into ID_TABLE (table_name, next_id, quantity) VALUES ('SCARAB_ATTRIBUTE_OPTION', 100, 10);
