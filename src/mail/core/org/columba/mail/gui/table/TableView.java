@@ -366,7 +366,8 @@ public class TableView extends TreeTable implements OptionsSerializer {
             }
 
             // changing the selection to the specified row
-            changeSelection(row, 0, true, false);
+            //changeSelection(row, 0, true, false);
+            changeSelection(row, 0, false, false);
 
             // getting the node
             MessageNode selectedNode = (MessageNode) getValueAt(row, 0);

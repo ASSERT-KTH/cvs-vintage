@@ -275,6 +275,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 *            array of message UIDs
 	 */
 	public void setSelected(Object[] uids) {
+		
+		// select nodes
 		MessageNode[] nodes = new MessageNode[uids.length];
 
 		for (int i = 0; i < uids.length; i++) {

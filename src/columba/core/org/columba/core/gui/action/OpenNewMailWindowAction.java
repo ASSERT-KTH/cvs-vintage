@@ -17,6 +17,7 @@ package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.util.GlobalResourceLoader;
@@ -31,6 +32,9 @@ public class OpenNewMailWindowAction extends AbstractColumbaAction {
     public OpenNewMailWindowAction(FrameMediator controller) {
         super(controller,
             GlobalResourceLoader.getString(null, null, "menu_file_new_mail"));
+        
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
+        
     }
 
     /*

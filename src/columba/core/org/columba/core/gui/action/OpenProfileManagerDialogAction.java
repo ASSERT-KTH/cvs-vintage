@@ -34,7 +34,7 @@ public class OpenProfileManagerDialogAction extends AbstractColumbaAction {
    */
   public OpenProfileManagerDialogAction(FrameMediator frameMediator) {
       super(frameMediator,
-          "Open Profile Manager...");
+          "Profile Manager...");
   }
 
   /* (non-Javadoc)

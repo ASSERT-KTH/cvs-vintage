@@ -41,7 +41,7 @@
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>
 		
-		<!--
+		
 		<menu name="menu_view_next">
 			<menuitem action="NextMessage" />
 			<menuitem action="NextUnreadMessage" />
@@ -51,7 +51,7 @@
 			<menuitem action="PreviousUnreadMessage" />
 		</menu>
 		<separator/>
-		-->
+		
 		<menuitem imenu="CharacterEncodingMenu" />
 		<separator/>
 		<menuitem action="ViewMessageSource"/>

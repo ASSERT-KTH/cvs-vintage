@@ -24,51 +24,81 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
- * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Select previous unread message in message list.
+ * 
+ * @author fdietz
  */
 public class PreviousUnreadMessageAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public PreviousUnreadMessageAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_prevunreadmessage"));
+		implements SelectionListener {
+	public PreviousUnreadMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_view_prevunreadmessage"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_prevunreadmessage_tooltip").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_view_prevunreadmessage_tooltip").replaceAll(
+				"&", ""));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
+		// shortcut key
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_BRACELEFT, 0));
 
-        setEnabled(false);
+		//setEnabled(false);
 
-        // uncomment to enable action
+		// uncomment to enable action
 
-        /*
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-        */
-    }
+		/*
+		 * ((MailFrameMediator)
+		 * frameMediator).registerTableSelectionListener(this);
+		 */
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        // TODO implement action
-    }
+	/**
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
+		TableController table = ((TableViewOwner) getFrameMediator())
+				.getTableController();
 
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+		if (r == null)
+			return;
+
+		MessageNode[] nodes = table.getView().getSelectedNodes();
+		if (nodes.length == 0)
+			return;
+
+		MessageNode node = nodes[0];
+		MessageNode previousNode = node;
+		boolean seen = true;
+		while (seen) {
+			previousNode = (MessageNode) previousNode.getPreviousNode();
+			if (previousNode == null)
+				return;
+
+			ColumbaHeader h = previousNode.getHeader();
+			seen = h.getFlags().getSeen();
+		}
+
+		table.setSelected(new Object[] { previousNode.getUid() });
+	}
+
+	/**
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }

@@ -16,9 +16,6 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -33,80 +30,71 @@ import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-
 /**
- * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Select next message in message list.
+ * 
+ * @author fdietz
  */
-public class NextMessageAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public NextMessageAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_nextmessage"));
+public class NextMessageAction extends AbstractColumbaAction implements
+		SelectionListener {
+	public NextMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_view_nextmessage"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_view_nextmessage_tooltip").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_view_nextmessage_tooltip").replaceAll("&",
+				""));
 
-        // icons
-        putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("next-message.png"));
+		// icons
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("next-message.png"));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
+		// shortcut key
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
 
-        // disable toolbar text
-        setShowToolBarText(false);
+		// disable toolbar text
+		setShowToolBarText(false);
 
-        setEnabled(false);
+		//setEnabled(false);
 
-        // uncomment to enable action
+		// uncomment to enable action
 
-        /*
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-        */
-    }
+		/*
+		 * ((MailFrameMediator)
+		 * frameMediator).registerTableSelectionListener(this);
+		 */
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
+	/**
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference r = ((MailFrameMediator) getFrameMediator())
+				.getTableSelection();
 
-        // TODO: fix next-message action
-        if (r != null) {
-            FolderCommandReference ref = r;
-            TableController table = ((TableViewOwner) getFrameMediator()).getTableController();
-            MessageNode node = table.getView().getSelectedNodes()[0];
+		TableController table = ((TableViewOwner) getFrameMediator())
+				.getTableController();
+		
+		if (r == null)
+			return;
 
-            if (node == null) {
-                return;
-            }
+		MessageNode[] nodes = table.getView().getSelectedNodes();
+		if (nodes.length == 0)
+			return;
 
-            /*
-            MessageNode nextNode = (MessageNode) node.getNextNode();
-            Object nextUid = nextNode.getUid();
+		MessageNode node = nodes[0];
+		MessageNode nextNode = (MessageNode) node.getNextNode();
+		if ( nextNode == null ) return;
+		
+		table.setSelected(new Object[] { nextNode.getUid() });
+	}
 
-            Object[] uids = new Object[1];
-            uids[0] = nextUid;
-            ref.setUids(uids);
-
-            ((MailFrameMediator) getFrameController()).setTableSelection(r);
-            table.setSelected(uids);
-
-            MainInterface.processor.addOp(
-                    new ViewMessageCommand(getFrameController(), r));
-            */
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+	/**
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }
