@@ -382,7 +382,7 @@ public class CarolConfiguration {
             }
         }
 
-        if( multiRMI ) {
+   //     if( multiRMI ) {
             // Set the system properties
             if (startRMI) {
                 jvmProps.setProperty("javax.rmi.CORBA.PortableRemoteObjectClass", CarolDefaultValues.MULTI_PROD);
@@ -391,20 +391,19 @@ public class CarolConfiguration {
             if (startJNDI) {
 				jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
             }
-        } else {
-            // Set the system properties for only one protocol
-            if (startRMI) {
-                jvmProps.setProperty(
-                    "javax.rmi.CORBA.PortableRemoteObjectClass",
-                    ((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getPro());
-            }
-            // Set the system properties for only one protocol
-            if (startJNDI) {
-                //jvmProps.putAll(((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getJndiProperties());
-				jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
-            }
-
-        }
+//        } else {
+//            // Set the system properties for only one protocol
+//            if (startRMI) {
+//                jvmProps.setProperty(
+//                    "javax.rmi.CORBA.PortableRemoteObjectClass",
+//                    ((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getPro());
+//            }
+//            // Set the system properties for only one protocol
+//            if (startJNDI) {
+//                //jvmProps.putAll(((RMIConfiguration) rmiConfigurationTable.get(defaultRMI)).getJndiProperties());
+//				jvmProps.setProperty("java.naming.factory.initial", CarolDefaultValues.MULTI_JNDI);
+//            }
+//    }
 
         // add the jvm properties in the jvm 
         System.setProperties(jvmProps);
