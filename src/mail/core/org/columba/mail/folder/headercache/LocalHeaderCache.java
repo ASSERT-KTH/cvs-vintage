@@ -112,7 +112,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		//System.out.println("Number of Messages : " + capacity);
 
 		if (worker != null)
-			worker.setDisplayText("Loading headers from cache...");
+			worker.setDisplayText(folder.getName()+": Loading headers from cache...");
 
 		if (worker != null)
 			worker.setProgressBarMaximum(capacity);
@@ -215,7 +215,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		 */
 	public void sync(WorkerStatusController worker) throws Exception {
 		if (worker != null) {
-			worker.setDisplayText("Syncing headercache...");
+			worker.setDisplayText(folder.getName()+": Syncing headercache...");
 		}
 		DataStorageInterface ds =
 			((LocalFolder) folder).getDataStorageInstance();
