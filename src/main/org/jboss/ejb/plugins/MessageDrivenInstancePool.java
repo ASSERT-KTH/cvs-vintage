@@ -13,7 +13,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
 /**
  * A message driven bean instance pool.
  *
- * @version <tt>$Revision: 1.12 $<//t>
+ * @version <tt>$Revision: 1.13 $<//t>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
@@ -43,7 +43,6 @@ public class MessageDrivenInstancePool
    protected EnterpriseContext create(Object instance)
       throws Exception
    {
-      mInstantiate.add();
       return new MessageDrivenEnterpriseContext(instance, getContainer());
    }
 }

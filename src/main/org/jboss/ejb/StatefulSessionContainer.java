@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
 
@@ -31,7 +32,7 @@ import org.jboss.invocation.MarshalledInvocation;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.49 $</tt>
+ * @version <tt>$Revision: 1.50 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
@@ -589,6 +590,21 @@ public class StatefulSessionContainer
       throw new Error("Not Yet Implemented");
    }
    
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
+      // Loop through all Interceptors and add statistics
+      getInterceptor().retrieveStatistics( container, reset );
+/* AS Method is not implemented in StatefulSessionPersistenceManager
+      if( !( getPersistenceManager() instanceof Interceptor ) ) {
+         getPersistenceManager().retrieveStatistics( container, reset );
+      }
+*/
+      if( !( getInstancePool() instanceof Interceptor ) ) {
+         getInstancePool().retrieveStatistics( container, reset );
+      }
+   }
+   
    // Private -------------------------------------------------------
    
    protected void setupHomeMapping() throws Exception
@@ -842,6 +858,9 @@ public class StatefulSessionContainer
 
          // We will never get this far, but the compiler does not know that
          throw new org.jboss.util.UnreachableStatementException();         
+      }
+      
+      public void retrieveStatistics( List container, boolean reset ) {
       }
    }
 }

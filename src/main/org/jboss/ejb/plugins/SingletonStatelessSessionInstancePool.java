@@ -7,8 +7,7 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.List;
 
 import javax.ejb.EJBException;
 
@@ -29,7 +28,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -53,13 +52,6 @@ public class SingletonStatelessSessionInstancePool
    EnterpriseContext ctx;
    boolean inUse = false;
    boolean isSynchronized = true;
-
-   /** Counter of all the Bean instantiated within the Pool **/
-   protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
-   /** Counter of all the Bean destroyed within the Pool **/
-   protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
-   /** Counter of all the ready Beans within the Pool (which are not used now) **/
-   protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
 
    // Static --------------------------------------------------------
 
@@ -116,7 +108,6 @@ public class SingletonStatelessSessionInstancePool
       {
          try
          {
-            mInstantiate.add();
             ctx = create(con.createBeanClassInstance(), con);
          } catch (InstantiationException e)
          {
@@ -125,10 +116,6 @@ public class SingletonStatelessSessionInstancePool
          {
             throw new EJBException("Could not instantiate bean", e);
          }
-      }
-      else
-      {
-         mReadyBean.remove();
       }
 
       // Lock and return instance
@@ -150,7 +137,6 @@ public class SingletonStatelessSessionInstancePool
       // Notify waiters
       inUse = false;
       this.notifyAll();
-      mReadyBean.add();
    }
 
    public void discard(EnterpriseContext ctx)
@@ -158,8 +144,6 @@ public class SingletonStatelessSessionInstancePool
       // Throw away
       try
       {
-         mDestroy.add();
-         mReadyBean.remove();
          ctx.discard();
       } catch (RemoteException e)
       {
@@ -185,21 +169,11 @@ public class SingletonStatelessSessionInstancePool
       return 1;
    }
 
-   public Map retrieveStatistic()
-   {
-      Map lStatistics = new HashMap();
-      lStatistics.put( "InstantiationCount", mInstantiate );
-      lStatistics.put( "DestroyCount", mDestroy );
-      lStatistics.put( "ReadyBeanCount", mReadyBean );
-      return lStatistics;
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
    }
-   public void resetStatistic()
-   {
-      mInstantiate.reset();
-      mDestroy.reset();
-      mReadyBean.reset();
-   }
-
+   
    public int getMaxSize()
    {
       return 1;

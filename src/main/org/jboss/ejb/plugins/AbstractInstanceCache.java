@@ -13,6 +13,7 @@ import java.rmi.NoSuchObjectException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Element;
@@ -48,7 +49,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -129,14 +130,12 @@ public abstract class AbstractInstanceCache
          }
       }
    }
-   public Map retrieveStatistic()
-   {
-      return null;
+   
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
    }
-   public void resetStatistic()
-   {
-   }
-
+   
    // Public --------------------------------------------------------
    public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}
    public boolean isJMSMonitoringEnabled() {return m_jmsMonitoring;}

@@ -6,16 +6,19 @@
  */
 package org.jboss.ejb;
 
-import org.jboss.invocation.Invocation;
-import org.w3c.dom.Element;
+import java.util.Set;
 
+import org.jboss.invocation.Invocation;
+import org.jboss.monitor.StatisticsProvider;
+
+import org.w3c.dom.Element;
 
 /**
  * Provides the interface for all container interceptors.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  *<p><b>20011219 marc fleury:</b>
  * <ul>
@@ -23,7 +26,7 @@ import org.w3c.dom.Element;
  *</ul>
  */
 public interface Interceptor
-   extends ContainerPlugin
+   extends ContainerPlugin, StatisticsProvider
 {
 
    void setConfiguration(Element config);

@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.rmi.RemoteException;
 
 import javax.ejb.Handle;
@@ -34,7 +35,7 @@ import org.jboss.invocation.MarshalledInvocation;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  * 
  * <p><b>2001219 marc fleury</b>
  * <ul>
@@ -429,6 +430,16 @@ public class StatelessSessionContainer
       return null;
    }
    
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
+      // Loop through all Interceptors and add statistics
+      getInterceptor().retrieveStatistics( container, reset );
+      if( !( getInstancePool() instanceof Interceptor ) ) {
+         getInstancePool().retrieveStatistics( container, reset );
+      }
+   }
+   
    // Protected  ----------------------------------------------------
    
    protected void setupHomeMapping()
@@ -613,6 +624,9 @@ public class StatelessSessionContainer
 
          // We will never get this far, but the compiler does not know that
          throw new org.jboss.util.UnreachableStatementException();         
+      }
+      
+      public void retrieveStatistics( List container, boolean reset ) {
       }
    }
 }

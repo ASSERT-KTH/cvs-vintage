@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Collection;
+import java.util.List;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -39,7 +40,6 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
 
-import javax.management.j2ee.CountStatistic;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRolledbackException;
 
@@ -47,6 +47,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
+import org.jboss.management.j2ee.SampleData;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.collection.SerializableEnumeration;
 import org.jboss.metadata.EntityMetaData;
@@ -64,7 +65,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.80 $
+ * @version $Revision: 1.81 $
  *
  * <p><b>Revisions:</b>
  *
@@ -772,19 +773,16 @@ public class EntityContainer
    
    // StatisticsProvider implementation ------------------------------------
    
-   public Map retrieveStatistic()
-   {
+   public void retrieveStatistics( List container, boolean reset ) {
       // Loop through all Interceptors and add statistics
-      Map lStatistics = new HashMap();
-      StatisticsProvider lProvider = (StatisticsProvider) getPersistenceManager();
-      lStatistics.putAll( lProvider.retrieveStatistic() );
-      lProvider = (StatisticsProvider) getInstancePool();
-      lStatistics.putAll( lProvider.retrieveStatistic() );
-      return lStatistics;
-   }
-   
-   public void resetStatistic()
-   {
+      getInterceptor().retrieveStatistics( container, reset );
+      if( !( getPersistenceManager() instanceof Interceptor ) ) {
+         getPersistenceManager().retrieveStatistics( container, reset );
+      }
+      if( !( getInstancePool() instanceof Interceptor ) ) {
+         getInstancePool().retrieveStatistics( container, reset );
+      }
+      log.info( "retrieveStatistics(), ended with container: " + container );
    }
    
    // Private -------------------------------------------------------
@@ -1101,6 +1099,9 @@ public class EntityContainer
 
          // We will never get this far, but the compiler does not know that
          throw new org.jboss.util.UnreachableStatementException();
+      }
+      
+      public void retrieveStatistics( List container, boolean reset ) {
       }
    }
 }

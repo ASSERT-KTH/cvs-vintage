@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
@@ -30,8 +30,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.management.j2ee.CountStatistic;
-import org.jboss.management.j2ee.TimeStatistic;
+import org.jboss.management.j2ee.SampleData;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -42,7 +41,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.43 $
+*  @version $Revision: 1.44 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -83,14 +82,12 @@ implements EntityPersistenceManager
    HashMap postCreateMethods = new HashMap();
    HashMap finderMethods = new HashMap();
    private int commitOption;
-
-   private CountStatistic mCreate = new CountStatistic( "Create", "", "EJBs created" );
-   private CountStatistic mRemove = new CountStatistic( "Remove", "", "EJBs removed" );
-   private CountStatistic mActiveBean = new CountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
-   private TimeStatistic mActivate = new TimeStatistic( "Activation", "ms", "Activation Time" );
-   private TimeStatistic mPassivate = new TimeStatistic( "Passivation", "ms", "Passivation Time" );
-   private TimeStatistic mLoad = new TimeStatistic( "Load", "ms", "Load Time" );
-   private TimeStatistic mStore = new TimeStatistic( "Store", "ms", "Load Time" );
+   
+   private SampleData createCount = new SampleData( "CreateCount", SampleData.COUNT );
+   private SampleData removeCount = new SampleData( "RemoveCount", SampleData.COUNT );
+   private SampleData readyRange = new SampleData( "ReadyCount", SampleData.RANGE );
+   private SampleData pooledRange = new SampleData( "PooledCount", SampleData.RANGE );
+   
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -273,6 +270,7 @@ implements EntityPersistenceManager
       {
          ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
+      createCount.add();
    }
 
    public void postCreateEntity(
@@ -383,7 +381,6 @@ implements EntityPersistenceManager
    public void activateEntity(EntityEnterpriseContext ctx)
    throws RemoteException
    {
-      long lStart = System.currentTimeMillis();
       try
       {
          ejbActivate.invoke(ctx.getInstance(), new Object[0]);
@@ -410,15 +407,11 @@ implements EntityPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
-      finally {
-         mActivate.add( System.currentTimeMillis() - lStart );
-      }
    }
 
    public void loadEntity(EntityEnterpriseContext ctx)
    throws RemoteException
    {
-      long lStart = System.currentTimeMillis();
       try
       {
          ejbLoad.invoke(ctx.getInstance(), new Object[0]);
@@ -445,9 +438,6 @@ implements EntityPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
-      finally {
-         mLoad.add( System.currentTimeMillis() - lStart );
-      }
    }
 
    public boolean isModified(EntityEnterpriseContext ctx) throws Exception 
@@ -465,7 +455,6 @@ implements EntityPersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
    throws RemoteException
    {
-      long lStart = System.currentTimeMillis();
       //DEBUG       Logger.debug("Store entity");
       try
       {
@@ -493,15 +482,11 @@ implements EntityPersistenceManager
             throw new EJBException((Exception)e);
          }
       }
-      finally {
-         mStore.add( System.currentTimeMillis() - lStart );
-      }
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)
    throws RemoteException
    {
-      long lStart = System.currentTimeMillis();
       try
       {
          ejbPassivate.invoke(ctx.getInstance(), new Object[0]);
@@ -527,9 +512,6 @@ implements EntityPersistenceManager
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
          }
-      }
-      finally {
-         mPassivate.add( System.currentTimeMillis() - lStart );
       }
    }
 
@@ -568,34 +550,25 @@ implements EntityPersistenceManager
          }
       }
       finally {
-         mRemove.add();
+         removeCount.add();
       }
    }
 
-   public Map retrieveStatistic()
-   {
-      // Loop through all Interceptors and add Statistic
-      Map lStatistics = new HashMap();
-      lStatistics.put( "CreateCount", mCreate );
-      lStatistics.put( "RemoveCount", mRemove );
-      lStatistics.put( "ActiveBeanCount", mActiveBean );
-      lStatistics.put( "ActivationTime", mActivate );
-      lStatistics.put( "PassivationTime", mPassivate );
-      lStatistics.put( "LoadTime", mLoad );
-      lStatistics.put( "StoreTime", mStore );
-      return lStatistics;
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
+      container.add( createCount );
+      container.add( removeCount );
+      container.add( readyRange );
+      container.add( pooledRange );
+      if( reset ) {
+         createCount.reset();
+         removeCount.reset();
+         readyRange.reset();
+         pooledRange.reset();
+      }
    }
-   public void resetStatistic()
-   {
-      mCreate.reset();
-      mRemove.reset();
-      mActiveBean.reset();
-      mActivate.reset();
-      mPassivate.reset();
-      mLoad.reset();
-      mStore.reset();
-   }
-
+   
    // Z implementation ----------------------------------------------
 
    // Package protected ---------------------------------------------

@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins;
 
+import java.util.List;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
@@ -18,7 +19,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -85,6 +86,10 @@ public abstract class AbstractInterceptor
    public Object invoke(final Invocation mi) throws Exception {
       // assert mi != null;
       return getNext().invoke(mi);
+   }
+   
+   public void retrieveStatistics( List container, boolean reset ) {
+      getNext().retrieveStatistics( container, reset );
    }
    
    // Protected -----------------------------------------------------

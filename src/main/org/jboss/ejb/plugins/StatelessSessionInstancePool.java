@@ -13,7 +13,7 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
 /**
  * A stateless session bean instance pool.
  *      
- * @version <tt>$Revision: 1.13 $</tt>
+ * @version <tt>$Revision: 1.14 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
@@ -42,7 +42,6 @@ public class StatelessSessionInstancePool
    protected EnterpriseContext create(Object instance)
       throws Exception
    {
-      mInstantiate.add();
       return new StatelessSessionEnterpriseContext(instance, getContainer());
    }
 }

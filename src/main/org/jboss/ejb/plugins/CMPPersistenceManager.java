@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.ejb.EntityBean;
 import javax.ejb.EJBObject;
@@ -31,8 +31,7 @@ import org.jboss.metadata.EntityMetaData;
 
 import org.jboss.util.Sync;
 
-import org.jboss.management.j2ee.CountStatistic;
-import org.jboss.management.j2ee.TimeStatistic;
+import org.jboss.management.j2ee.SampleData;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -47,7 +46,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010621 Bill Burke:</b>
@@ -90,13 +89,11 @@ public class CMPPersistenceManager
    HashMap postCreateMethods = new HashMap();
    private int commitOption;
 
-   private CountStatistic mCreate = new CountStatistic( "Create", "", "EJBs created" );
-   private CountStatistic mRemove = new CountStatistic( "Remove", "", "EJBs removed" );
-   private CountStatistic mActiveBean = new CountStatistic( "ActiveBean", "", "Numbers of active EJBs" );
-   private TimeStatistic mActivation = new TimeStatistic( "Activation", "ms", "Activation Time" );
-   private TimeStatistic mPassivation = new TimeStatistic( "Passivation", "ms", "Passivation Time" );
-   private TimeStatistic mLoad = new TimeStatistic( "Load", "ms", "Load Time" );
-   private TimeStatistic mStore = new TimeStatistic( "Store", "ms", "Load Time" );
+   private SampleData createCount = new SampleData( "CreateCount", SampleData.COUNT );
+   private SampleData removeCount = new SampleData( "CreateCount", SampleData.COUNT );
+   private SampleData readyRange = new SampleData( "CreateCount", SampleData.RANGE );
+   private SampleData pooledRange = new SampleData( "CreateCount", SampleData.RANGE );
+   
    
    // Static --------------------------------------------------------
    
@@ -270,6 +267,7 @@ public class CMPPersistenceManager
       {
          ctx.setEJBLocalObject(con.getLocalProxyFactory().getEntityEJBLocalObject(cacheKey));
       }
+      createCount.add();
    }
 
    public void postCreateEntity(
@@ -393,22 +391,18 @@ public class CMPPersistenceManager
          }
       }
       
-      long lStart = System.currentTimeMillis();
       // The implementation of the call can be left absolutely empty, the 
       // propagation of the call is just a notification for stores that would
       // need to know that an instance is being activated
       store.activateEntity(ctx);
-      mActivation.add( System.currentTimeMillis() - lStart );
    }
 
    public void loadEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
       
-      long lStart = System.currentTimeMillis();
       // Have the store load the fields of the instance
       store.loadEntity(ctx);
-      mLoad.add( System.currentTimeMillis() - lStart );
       
       invokeLoad(ctx);
    }
@@ -453,10 +447,8 @@ public class CMPPersistenceManager
          }
       }
       
-      long lStart = System.currentTimeMillis();
       // Have the store deal with storing the fields of the instance
       store.storeEntity(ctx);
-      mStore.add( System.currentTimeMillis() - lStart );
       
    }
    
@@ -494,9 +486,7 @@ public class CMPPersistenceManager
          }
       }
 
-      long lStart = System.currentTimeMillis();
       store.passivateEntity(ctx);
-      mPassivation.add( System.currentTimeMillis() - lStart );
    }
 
    public void removeEntity(EntityEnterpriseContext ctx)
@@ -538,9 +528,8 @@ public class CMPPersistenceManager
          }
       }
       
-      long lStart = System.currentTimeMillis();
       store.removeEntity(ctx);
-      mRemove.add();
+      removeCount.add();
    }
 
    protected void invokeLoad(EntityEnterpriseContext ctx) throws RemoteException
@@ -577,28 +566,19 @@ public class CMPPersistenceManager
       }
    }
 
-   public Map retrieveStatistic()
-   {
-      // Loop through all Interceptors and add Statistic
-      Map lStatistics = new HashMap();
-      lStatistics.put( "CreateCount", mCreate );
-      lStatistics.put( "RemoveCount", mRemove );
-      lStatistics.put( "ActiveBeanCount", mActiveBean );
-      lStatistics.put( "ActivationTime", mActivation );
-      lStatistics.put( "PassivationTime", mPassivation );
-      lStatistics.put( "LoadTime", mLoad );
-      lStatistics.put( "StoreTime", mStore );
-      return lStatistics;
-   }
-   public void resetStatistic()
-   {
-      mCreate.reset();
-      mRemove.reset();
-      mActiveBean.reset();
-      mActivation.reset();
-      mPassivation.reset();
-      mLoad.reset();
-      mStore.reset();
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
+      container.add( createCount );
+      container.add( removeCount );
+      container.add( readyRange );
+      container.add( pooledRange );
+      if( reset ) {
+         createCount.reset();
+         removeCount.reset();
+         readyRange.reset();
+         pooledRange.reset();
+      }
    }
    
    // Z implementation ----------------------------------------------

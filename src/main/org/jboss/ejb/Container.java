@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJBException;
@@ -62,6 +63,7 @@ import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.monitor.StatisticsProvider;
 import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
@@ -91,11 +93,11 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.98 $
+ * @version $Revision: 1.99 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
-   implements MBeanRegistration, DynamicMBean
+   implements MBeanRegistration, DynamicMBean, StatisticsProvider
 {
    public final static String BASE_EJB_CONTAINER_NAME = 
          "jboss.j2ee:service=EJB";
@@ -741,6 +743,11 @@ public abstract class Container
                   "Exception in service lifecyle operation: " + ignored);
          }
       }
+      else if (params != null && params.length == 2 && params[0] instanceof List && params[1] instanceof Boolean)
+      {
+         retrieveStatistics( (List) params[0], ( (Boolean) params[1] ).booleanValue() );
+         return null;
+      }
       else
       {
          throw new IllegalArgumentException(
@@ -772,6 +779,17 @@ public abstract class Container
                "method", 
                Invocation.class.getName(), 
                "Invocation data")
+      };
+      
+      MBeanParameterInfo[] miStatisticsParams = new MBeanParameterInfo[] {
+         new MBeanParameterInfo(
+               "container", 
+               List.class.getName(), 
+               "Statitic Data Container"),
+         new MBeanParameterInfo(
+               "reset", 
+               Boolean.TYPE.getName(), 
+               "If true reset statisitcs data")
       };
       
       MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
@@ -826,6 +844,12 @@ public abstract class Container
          new MBeanOperationInfo("destroy",
                                 "destroy service lifecycle operation",
                                 noParams,
+                                "void",
+                                MBeanOperationInfo.ACTION),
+                                
+         new MBeanOperationInfo("retrieveStatistics",
+                                "retrieve the performance statistics",
+                                miStatisticsParams,
                                 "void",
                                 MBeanOperationInfo.ACTION)
       };

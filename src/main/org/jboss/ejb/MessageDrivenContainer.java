@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -39,7 +40,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class MessageDrivenContainer
    extends Container
@@ -356,6 +357,16 @@ public class MessageDrivenContainer
       return new ContainerInterceptor();
    }
 
+   // StatisticsProvider implementation ------------------------------------
+   
+   public void retrieveStatistics( List container, boolean reset ) {
+      // Loop through all Interceptors and add statistics
+      getInterceptor().retrieveStatistics( container, reset );
+      if( !( getInstancePool() instanceof Interceptor ) ) {
+         getInstancePool().retrieveStatistics( container, reset );
+      }
+   }
+   
    /**
     * This is the last step before invocation - all interceptors are done
     */
@@ -399,6 +410,9 @@ public class MessageDrivenContainer
 
          // We will never get this far, but the compiler does not know that
          throw new org.jboss.util.UnreachableStatementException();         
+      }
+      
+      public void retrieveStatistics( List container, boolean reset ) {
       }
    }
 }
