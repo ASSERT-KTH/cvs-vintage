@@ -158,6 +158,11 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 	String base = context.getDocBase();
 	File dir = new File(base + "/WEB-INF/classes");
+        if (!dir.isAbsolute()) {
+            // evaluate repository path relative to the context's home directory
+            ContextManager cm = context.getContextManager();
+	    dir = new File(cm.getHome(), base + "/WEB-INF/classes");
+        }
 	loader.addRepository( dir );
 
 	File f =  new File(base + "/WEB-INF/lib");

@@ -30,8 +30,12 @@ public class WebXmlReader extends BaseInterceptor {
 
 	// read default web.xml
 	try {
-	    processFile(ctx, ctx.getContextManager().getHome() + "/conf/web.xml");
-	    processFile(ctx, ctx.getDocBase() + "/WEB-INF/web.xml");
+            String home = ctx.getContextManager().getHome();
+	    processFile(ctx, home + "/conf/web.xml");
+            File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
+            if (!inf_xml.isAbsolute())
+                inf_xml = new File(home, inf_xml.toString());
+	    processFile(ctx, inf_xml.toString());
 	    XmlMapper xh=new XmlMapper();
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
@@ -42,9 +46,9 @@ public class WebXmlReader extends BaseInterceptor {
 
     void processFile( Context ctx, String file) {
 	try {
-	    File f=new File(file);
+	    File f=new File(FileUtil.patch(file));
 	    if( ! f.exists() ) {
-		ctx.log( "File not found, using defaults " + file );
+		ctx.log( "File not found, using defaults " + f );
 		return;
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
