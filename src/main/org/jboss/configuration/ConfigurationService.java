@@ -45,7 +45,7 @@ import org.jboss.util.XmlHelper;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  Scott_Stark@displayscape.com
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -102,14 +102,10 @@ public class ConfigurationService
             {
                 Element mbeanElement = (Element)nl.item(i);
 
-                String name = mbeanElement.getAttribute("name");
-
-                if (name == null)
-                  continue; // MBean ObjectName must be given
-
-                ObjectName objectName = new ObjectName(name);
-
+                // get the name of the mbean 
+                ObjectName objectName = parseObjectName(mbeanElement);
                 MBeanInfo info;
+
                 try
                 {
                     info = server.getMBeanInfo(objectName);
@@ -148,7 +144,7 @@ public class ConfigurationService
                                 editor.setAsText(attributeValue);
                                 Object value = editor.getValue();
 
-                                log.debug(attributeName +" set to "+attributeValue+" in "+name);
+                                log.debug(attributeName +" set to "+attributeValue+" in "+objectName);
                                 server.setAttribute(objectName, new Attribute(attributeName, value));
 
                                 break;
@@ -303,71 +299,93 @@ public class ConfigurationService
 
     // Protected -----------------------------------------------------
 
-    /**
-     * Provides a wrapper around the information about which constructor 
-     * that MBeanServer should use to construct a MBean.
-     *
-     * <p>XML syntax for contructor:
-     *   <pre>
-     *      <constructor>
-     *         <arg type="xxx" value="yyy"/>
-     *         ...
-     *         <arg type="xxx" value="yyy"/>
-     *      </constructor>
-     *   </pre>
-     */
-    protected static class ConstructorInfo
-    {
-       public static final Object EMPTY_PARAMS[] = {};
-       public static final String EMPTY_SIGNATURE[] = {};
+   /**
+    * Parse an object name from the given element attribute 'name'.
+    *
+    * @param element    Element to parse name from.
+    * @return           Object name.
+    * 
+    * @throws ConfigurationException   Missing attribute 'name'
+    *                                  (thrown if 'name' is null or "").
+    * @throws MalformedObjectNameException
+    */
+   protected ObjectName parseObjectName(final Element element) 
+      throws ConfigurationException, MalformedObjectNameException
+   {
+      String name = element.getAttribute("name");
+      if (name == null || name.trim().equals("")) {
+         throw new ConfigurationException
+            ("MBean attribute 'name' must be given.");
+      }
 
-       /** The constructor signature. */
-       public String[] signature = EMPTY_SIGNATURE;
+      return new ObjectName(name);
+   }
 
-       /** The constructor parameters. */
-       public Object[] params = EMPTY_PARAMS;
+   /**
+    * Provides a wrapper around the information about which constructor 
+    * that MBeanServer should use to construct a MBean.
+    *
+    * <p>XML syntax for contructor:
+    *   <pre>
+    *      <constructor>
+    *         <arg type="xxx" value="yyy"/>
+    *         ...
+    *         <arg type="xxx" value="yyy"/>
+    *      </constructor>
+    *   </pre>
+    */
+   protected static class ConstructorInfo
+   {
+      public static final Object EMPTY_PARAMS[] = {};
+      public static final String EMPTY_SIGNATURE[] = {};
+
+      /** The constructor signature. */
+      public String[] signature = EMPTY_SIGNATURE;
+
+      /** The constructor parameters. */
+      public Object[] params = EMPTY_PARAMS;
        
-       /**
-        * Create a ConstructorInfo object for the given configuration.
-        *
-        * @param element   The element to build info for.
-        * @return          A constructor information object.
-        *
-        * @throws ConfigurationException   Failed to create info object.
-        */
-       public static ConstructorInfo create(Element element)
-          throws ConfigurationException
-       {
-          ConstructorInfo info = new ConstructorInfo();
+      /**
+       * Create a ConstructorInfo object for the given configuration.
+       *
+       * @param element   The element to build info for.
+       * @return          A constructor information object.
+       *
+       * @throws ConfigurationException   Failed to create info object.
+       */
+      public static ConstructorInfo create(Element element)
+         throws ConfigurationException
+      {
+         ConstructorInfo info = new ConstructorInfo();
 
-          NodeList list = element.getElementsByTagName("constructor");
-          if (list.getLength() > 1) {
-             throw new ConfigurationException
-                ("only one <constructor> element may be defined");
-          }
-          else if (list.getLength() == 1) {
-             element = (Element)list.item(0);
+         NodeList list = element.getElementsByTagName("constructor");
+         if (list.getLength() > 1) {
+            throw new ConfigurationException
+               ("only one <constructor> element may be defined");
+         }
+         else if (list.getLength() == 1) {
+            element = (Element)list.item(0);
              
-             // get all of the "arg" elements
-             list = element.getElementsByTagName("arg");
-             int length = list.getLength();
-             info.params = new Object[length];
-             info.signature = new String[length];
+            // get all of the "arg" elements
+            list = element.getElementsByTagName("arg");
+            int length = list.getLength();
+            info.params = new Object[length];
+            info.signature = new String[length];
              
-             // decode the values into params & signature
-             for (int j=0; j<length; j++) {
-                Element arg = (Element)list.item(j);
-                //
-                // NOTE: should coerce value to the correct type??
-                //
-                info.signature[j] = arg.getAttribute("type");
-                info.params[j] = arg.getAttribute("value");
-             }
-          }
+            // decode the values into params & signature
+            for (int j=0; j<length; j++) {
+               Element arg = (Element)list.item(j);
+               //
+               // NOTE: should coerce value to the correct type??
+               //
+               info.signature[j] = arg.getAttribute("type");
+               info.params[j] = arg.getAttribute("value");
+            }
+         }
           
-          return info;
-       }
-    }
+         return info;
+      }
+   }
 
     protected void create(Document configuration)
         throws Exception
@@ -380,12 +398,8 @@ public class ConfigurationService
             {
                 Element mbeanElement = (Element)nl.item(i);
 
-                String name = mbeanElement.getAttribute("name");
-
-                if (name == null)
-                  continue; // MBean ObjectName must be given
-
-                ObjectName objectName = new ObjectName(name);
+                // get the name of the mbean 
+                ObjectName objectName = parseObjectName(mbeanElement);
 
                 MBeanInfo info;
                 try {
@@ -417,16 +431,9 @@ public class ConfigurationService
                         info = server.getMBeanInfo(instance.getObjectName());
                      } catch (Throwable ex)
                      {
-                        log.error("Could not create MBean "+name+"("+code+")");
-                        if (ex instanceof RuntimeMBeanException)
-                           ex = ((RuntimeMBeanException)ex).getTargetException();
-                        if (ex instanceof RuntimeOperationsException)
-                           ex = ((RuntimeOperationsException)ex).getTargetException();
-                        else if (ex instanceof MBeanException)
-                           ex = ((MBeanException)ex).getTargetException();
-                        else if (ex instanceof ReflectionException)
-                        	ex = ((ReflectionException)ex).getTargetException();
-                        log.exception(ex);
+                        log.error("Could not create MBean "+objectName+"("+code+")");
+                        logException(ex);
+
                         // Ah what the heck.. skip it
                         continue;
                      }
@@ -612,37 +619,27 @@ public class ConfigurationService
         }
     }
 
-    /** Go through the myriad of nested JMX exception to pull out the
-        true exception if possible and log it.
+   /** 
+    * Go through the myriad of nested JMX exception to pull out the
+    * true exception if possible and log it.
     */
-    void logException(Exception e)
-    {
-        if( e instanceof RuntimeErrorException )
-        {
-            Throwable t = ((RuntimeErrorException)e).getTargetError();
-            log.exception(t);
-        }
-        else if( e instanceof RuntimeMBeanException)
-        {
-            Throwable t = ((RuntimeMBeanException)e).getTargetException();
-            log.exception(t);
-        }
-        else if( e instanceof RuntimeOperationsException)
-        {
-            Throwable t = ((RuntimeOperationsException)e).getTargetException();
-            log.exception(t);
-        }
-        else if( e instanceof MBeanException)
-        {
-            Throwable t = ((MBeanException)e).getTargetException();
-            log.exception(t);
-        }
-        else if( e instanceof ReflectionException)
-        {
-            Throwable t = ((ReflectionException)e).getTargetException();
-            log.exception(t);
-        }
-        else
-            log.exception(e);
-    }
+   protected void logException(Throwable e) {
+      if (e instanceof RuntimeErrorException) {
+         e = ((RuntimeErrorException)e).getTargetError();
+      }
+      else if (e instanceof RuntimeMBeanException) {
+         e = ((RuntimeMBeanException)e).getTargetException();
+      }
+      else if (e instanceof RuntimeOperationsException) {
+         e = ((RuntimeOperationsException)e).getTargetException();
+      }
+      else if (e instanceof MBeanException) {
+         e = ((MBeanException)e).getTargetException();
+      }
+      else if (e instanceof ReflectionException) {
+         e = ((ReflectionException)e).getTargetException();
+      }
+
+      log.exception(e);
+   }
 }
