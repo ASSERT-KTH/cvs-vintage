@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.20 2001/10/16 05:02:57 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.21 2001/10/16 06:35:51 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -198,9 +198,12 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-
         String issueTypeId = data.getParameters().getString("issueTypeId");
-
+        if (issueTypeId == null || issueTypeId.length() == 0)
+        {
+            data.setMessage("Please select an Issue type.");
+            return;
+        }
         RModuleIssueType rmit = new RModuleIssueType();
         rmit.setModuleId(scarabR.getCurrentModule().getModuleId());
         rmit.setIssueTypeId(issueTypeId);
@@ -208,6 +211,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         rmit.setDisplay(false);
         rmit.save();
 
+        data.setMessage("The Issue type has been added to the module.");
         setTarget(data, "admin,ManageArtifactTypes.vm");            
     }
 
@@ -374,6 +378,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String issueTypeId;
         Vector rmits = module.getRModuleIssueTypes();
 
+        boolean foundOne = false;
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
@@ -427,8 +432,20 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                     {
                         data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                     }
+                    foundOne = true;
                 }
             }
+        }
+
+        if (!foundOne)
+        {
+            data.setMessage("Please select an Issue Type " + 
+                "to delete from the module.");
+        }
+        else
+        {
+            data.setMessage("The selected Issue Types have " + 
+                "been removed from the module.");
         }
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
@@ -664,17 +681,21 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     }
 
     /**
-        This manages clicking the cancel button
-    */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+     *   This manages clicking the cancel button
+     */
+    public void doCancel( RunData data, TemplateContext context )
+        throws Exception
     {
         data.setMessage("Changes were not saved!");
+        setTarget(data, getCancelTemplate(data, 
+            "admin,ManageArtifactTypes.vm"));
     }
     
     /**
-        does nothing.
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+     *   does nothing.
+     */
+    public void doPerform( RunData data, TemplateContext context )
+        throws Exception
     {
         doCancel(data, context);
     }
