@@ -63,7 +63,7 @@ public class ColumbaServer implements Runnable {
     /**
      * server port
      */
-    private static int port;
+    private static int port = COLUMBA_PORT;
 
     /**
      * file in the users-home directory containing the
@@ -104,7 +104,6 @@ public class ColumbaServer implements Runnable {
     private void openSocket() {
         try {
             // just increment the server port
-            port = COLUMBA_PORT;
             port += 1;
 
             // init server socket
