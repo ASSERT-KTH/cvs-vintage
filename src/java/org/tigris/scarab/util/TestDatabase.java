@@ -17,9 +17,9 @@ public class TestDatabase
     {
         try
         {
-            TurbineResourceService
-            .setPropertiesFileName(
-            "e:\\projects\\scarab\\sandbox\\webapps\\scarab\\WEB-INF\\conf\\TurbineResources.properties");
+//            TurbineResourceService
+//            .setPropertiesFileName(
+//            "e:\\projects\\scarab\\sandbox\\webapps\\scarab\\WEB-INF\\conf\\TurbineResources.properties");
             
 //            String out = ModuleManager.getProjectsAsHtml().toString();
 //            System.out.println (out);
