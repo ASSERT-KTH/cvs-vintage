@@ -3,17 +3,20 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
-
 #if (!$user.UserId)
 <P>   If you wish to see your personal queries or to edit your subscriptions to a query, please log in.
+#if ($module)
    #if ( $module.GlobalQueries.isEmpty() )
      #set ($noQueries = "true")
    #end
+#else
+    #set ($noQueries = "true")
+#end
 #elseif ( ($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
    #set ($noQueries = "true")
 #end
 
-#if ($noQueries.equals("true") || ! $module)
+#if ($noQueries.equals("true"))
     <div class="alert">There are no stored queries.</div>
 #else
 
