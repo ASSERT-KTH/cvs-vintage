@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.xml.utils.WrappedRuntimeException;
 import org.jboss.aspect.AspectRuntimeException;
 
 /**
@@ -28,6 +29,13 @@ import org.jboss.aspect.AspectRuntimeException;
  */
 final public class AspectInvocation
 {
+	
+	public static class WrappedRuntimeException extends RuntimeException {
+		public Throwable original;
+		WrappedRuntimeException(Throwable original) {
+			this.original=original;
+		}
+	}
 
     /** the aspect definition of the aspect */
     final public AspectInterceptorHolder[] interceptors;
@@ -66,9 +74,31 @@ final public class AspectInvocation
         this.args = args;
     }
 
+	/**
+	 * Used to get the current AspectInvocation that is being called.
+	 */
     public static AspectInvocation getContextAspectInvocation()
     {
         return AspectObject.getContextAspectInvocation();
+    }
+
+	/**
+     * Passes the method invocation to the next Interceptor
+     * in the interceptor list.  Any exception that is thrown
+     * is wrapped in a RuntimeException which will be unwrapped
+     * later at the AspectObject.
+     * 
+     * This method has higher overhead than calling invokeNext() directly
+     * but it is handy if an interceptor method calling the next interceptor
+     * does not delcare it throws Throwable.
+	 * 
+	 */
+    public Object invokeNextAndWrapException() {
+    	try {
+    		return invokeNext();
+    	} catch (Throwable e ) {
+    		throw new WrappedRuntimeException(e);
+    	}
     }
 
     /**

@@ -86,7 +86,11 @@ final public class AspectObject implements InvocationHandler, Serializable
         {
             invocationStack.push(invocation);
             return invocation.invokeNext();
-        }
+        } 
+        catch ( AspectInvocation.WrappedRuntimeException e ) 
+        {
+        	throw e.original;
+        } 
         finally
         {
             invocationStack.pop();
