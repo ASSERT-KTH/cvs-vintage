@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.46 2004/12/20 14:12:28 mvw Exp $
+// $Id: UMLComboBoxModel2.java,v 1.47 2004/12/20 23:11:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,8 +48,10 @@ import ru.novosoft.uml.MElementListener;
 /**
  * ComboBoxmodel for UML modelelements. This implementation does not use 
  * reflection and seperates Model, View and Controller better then does
- * UMLComboBoxModel. In the future UMLComboBoxModel and UMLComboBox will be
- * replaced with this implementation to improve performance.
+ * the former UMLComboBoxModel. <p>
+ * 
+ * This combobox allows selecting no value, if so indicated 
+ * at construction time of this class. I.e. it is "clearable".
  */
 public abstract class UMLComboBoxModel2
     extends AbstractListModel
