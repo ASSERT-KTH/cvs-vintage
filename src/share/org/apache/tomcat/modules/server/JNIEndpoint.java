@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.3 2001/08/23 15:02:42 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2001/08/23 15:02:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.4 2001/08/24 01:15:18 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/08/24 01:15:18 $
  *
  * ====================================================================
  *
@@ -76,7 +76,7 @@ import org.apache.tomcat.util.*;
  */
 public class JNIEndpoint {
 
-    JNIConnectionHandler handler;
+    JniHandler handler;
 
     boolean running = false;
 
@@ -90,10 +90,11 @@ public class JNIEndpoint {
     // -------------------- Configuration --------------------
 
     // Called back when the server is initializing the handler
-    public void setConnectionHandler(JNIConnectionHandler handler ) {
+    public void setConnectionHandler(JniHandler handler ) {
 	this.handler=handler;
 	// the handler is no longer useable
     	if( handler==null ) {
+	    System.out.println("Shutting down, handler==null ...");
 	    running=false;
             synchronized(this) {
                 notify();
@@ -107,6 +108,19 @@ public class JNIEndpoint {
             notify();
         }
     }
+    
+    // We can have a single active JNIEndpoint.
+    static JNIEndpoint ep;
+
+    public static void setEndpoint(JNIEndpoint jniep)
+    {
+        ep = jniep;
+    }
+
+    public static JNIEndpoint getEndpoint() {
+	return ep;
+    }
+
 
     // -------------------- JNI Entry points
 
@@ -116,6 +130,11 @@ public class JNIEndpoint {
                        String stdout,
                        String stderr)
     {
+	if( ep != null ) {
+	    System.err.println("ALREADY STARTED, this is the second call to STARTUP ");
+	    return 1;
+	}
+	System.err.println("Mod_jk calling startup() ");
         try {
             if(null != stdout) {
                 System.setOut(new PrintStream(new FileOutputStream(stdout)));
@@ -129,24 +148,23 @@ public class JNIEndpoint {
 	// We need to make sure tomcat did start successfully and
 	// report this back.
         try {
-            JNIConnectionHandler.setEndpoint(this);
+            JNIEndpoint.setEndpoint(this);
 	    // it will call back setHandler !!
-            StartupThread startup = new StartupThread(cmdLine,
-                                                      this);
+            StartupThread startup = new StartupThread(cmdLine);
+	    System.err.println("Starting up StartupThread");
             startup.start();
-	    System.out.println("Starting up StartupThread");
             synchronized (this) {
                 wait(60*1000);
             }
-	    System.out.println("End waiting");
+	    System.err.println("End waiting");
         } catch(Throwable t) {
         }
 
         if(running) {
-	    System.out.println("Running fine ");
+	    System.err.println("Running fine ");
             return 1;
         }
-	System.out.println("Error - why doesn't run ??");
+	System.err.println("Error - why doesn't run ??");
         return 0;
     }
 
@@ -172,6 +190,10 @@ public class JNIEndpoint {
     {
         System.out.println("JNI In shutdown");
     }
+
+    public static interface JniHandler {
+	public void processConnection( long s, long l );
+    }
 }
 
 /** Tomcat is started in a separate thread. It may be loaded on demand,
@@ -182,12 +204,8 @@ public class JNIEndpoint {
  */
 class StartupThread extends Thread {
     String []cmdLine = null;
-    JNIEndpoint jniEp = null;
 
-    public StartupThread(String cmdLine,
-                         JNIEndpoint jniEp) {
-        this.jniEp = jniEp;
-
+    public StartupThread(String cmdLine) {
         if(null == cmdLine) {
         	this.cmdLine = new String[0];
         } else {
@@ -204,16 +222,15 @@ class StartupThread extends Thread {
     public void run() {
         boolean failed = true;
         try {
-	    System.out.println("Calling main" );
+	    System.err.println("Calling main" );
             org.apache.tomcat.startup.Main.main(cmdLine);
-	    System.out.println("Main returned" );
+	    System.err.println("Main returned" );
             failed = false;
         } catch(Throwable t) {
             t.printStackTrace(); // OK
         } finally {
             if(failed) {
-		System.out.println("Failed ??");
-		// stopEndpoint();
+		System.err.println("Failed ??");
             }
         }
     }

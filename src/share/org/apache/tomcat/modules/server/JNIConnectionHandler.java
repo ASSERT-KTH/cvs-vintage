@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.11 2001/08/16 00:26:14 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2001/08/16 00:26:14 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -83,25 +79,15 @@ import java.io.File;
  *
  * @author Gal Shachor <shachor@il.ibm.com>
  */
-public class JNIConnectionHandler extends BaseInterceptor {
+public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint.JniHandler {
 
     public JNIConnectionHandler() {
-    }
-
-    // JNIEndpoint was called to start tomcat
-    // Hack used to set the handler in JNIEndpoint.
-    // This works - if we have problems we may take the time
-    // and implement a better mechanism
-    static JNIEndpoint ep;
-
-    public static void setEndpoint(JNIEndpoint jniep)
-    {
-        ep = jniep;
     }
 
     // -------------------- Config -------------------- 
     boolean nativeLibLoaded=false;
     String lib;
+    boolean exitOnError=true;
     
     /** Location of the jni library
      */
@@ -109,14 +95,24 @@ public class JNIConnectionHandler extends BaseInterceptor {
 	this.lib=lib;
     }
 
+    public void setExitIfNoLib(boolean b) {
+	exitOnError=b;
+    }
+
+    JNIEndpoint ep=null;
+    
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-	if( ep==null ) return;
+	ep= JNIEndpoint.getEndpoint();
+	if(ep==null ) return;
 	super.engineInit( cm );
 
 	if(! nativeLibLoaded ) {
 	    initLibrary();
+	    if( ! nativeLibLoaded && exitOnError) {
+		System.exit(2);
+	    }
 	}
 	try {
 	    // notify the jni side that jni is set up corectly
@@ -201,7 +197,7 @@ public class JNIConnectionHandler extends BaseInterceptor {
 	}
 
 	if( lib==null ) {
-	    lib="jni_connector.";
+	    lib="jni_connect.";
 	    String os = System.getProperty("os.name").toLowerCase();
 	    if(os.indexOf("windows")>=0){
 		lib+="dll";
@@ -232,23 +228,23 @@ public class JNIConnectionHandler extends BaseInterceptor {
 	if( ! libF.isAbsolute() ) {
 	    File f1=new File(cm.getInstallDir());
 	    // XXX should it be "libexec" ???
-	    File f2=new File( f1, "bin" + File.pathSeparator + "native" );
+	    File f2=new File( f1, "bin" + File.separator + "native" );
 	    libF=new File( f2, lib );
 	}
 
 	if( ! libF.exists() ) {
 	    throw new TomcatException( "Native library doesn't exist " + libF );
 	}
-	
+
         // Loading from the library path failed
         // Try to load assuming lib is a complete pathname.
         try {
-	    System.load(lib);
+	    System.load(libF.getAbsolutePath());
 	    nativeLibLoaded=true;
-	    System.out.println("Library " + lib + " loaded");
+	    System.out.println("Library " + libF.getAbsolutePath() + " loaded");
             return;
         } catch(UnsatisfiedLinkError usl) {
-            System.err.println("Failed to load() " + lib);
+            System.err.println("Failed to load() " + libF.getAbsolutePath());
             if( debug > 0 )
 		usl.printStackTrace();
         }        
