@@ -53,5 +53,5 @@
  </extension>
  
  
- <runtime type="java" jar="SpamAssassin.jar"/>
+ <runtime type="java" jar="SpamAssassinPlugin.jar"/>
 </plugin>
