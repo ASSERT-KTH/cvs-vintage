@@ -72,7 +72,8 @@ public class FilterList extends DefaultItem {
                 "class",
                 "org.columba.mail.filter.action.MarkMessageAsReadFilterAction");
         */
-        action.addAttribute("type", "Mark as Read");
+        action.addAttribute("type", "Mark Message");
+        action.addAttribute("markvariant", "read");
 
         actionList.addElement(action);
         filter.addElement(actionList);
@@ -172,7 +173,10 @@ public class FilterList extends DefaultItem {
         if ((filterIndex >= 0) && (filterIndex < count())) {
             XmlElement filterXML = getRoot().getElement(filterIndex);
             int newFilterIndex = filterIndex + nrOfPositions;
-            newFilterIndex = ((newFilterIndex < 0) ? 0 : newFilterIndex);
+
+            if (newFilterIndex < 0) {
+                newFilterIndex = 0;
+            }
 
             getRoot().removeElement(filterIndex);
 
