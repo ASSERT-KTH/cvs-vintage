@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.35 2002/03/09 02:42:11 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.36 2002/03/11 01:34:17 reverbel Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -116,6 +116,18 @@
 	 name="jboss:service=ClientUserTransaction">
   </mbean>
 
+  <!-- ==================================================================== -->
+  <!-- RMI/IIOP                                                             -->
+  <!-- ==================================================================== -->
+  <!-- Uncomment to use the iiop module with JacORB
+  <mbean code="org.jboss.iiop.CorbaORBService"
+         name="jboss:service=CorbaORB">
+    <attribute name="ORBClass">org.jacorb.orb.ORB</attribute>
+    <attribute name="ORBSingletonClass">org.jacorb.orb.ORBSingleton</attribute>
+    <attribute name="IIOPPort">5000</attribute>
+    <attribute name="PortableInterceptorInitializerClass">org.jboss.ejb.plugins.iiop.server.CodebaseInterceptorInitializer</attribute>
+  </mbean>
+  -->
 
   <!-- ==================================================================== -->
   <!-- The deployers...                                                     -->
