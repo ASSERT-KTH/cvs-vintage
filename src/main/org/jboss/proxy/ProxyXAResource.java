@@ -23,7 +23,6 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.PayloadKey;
-import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.tm.XAResourceFactory;
 
@@ -37,7 +36,7 @@ import org.jboss.tm.XAResourceFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @version
  *
- * @jmx.mbean extends="ServiceMBean"
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 
 public class ProxyXAResource 

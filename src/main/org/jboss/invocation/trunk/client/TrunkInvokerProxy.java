@@ -21,7 +21,6 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.logging.Logger;
 import org.jboss.proxy.ProxyXAResource;
-import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.invocation.ServerID;
 
@@ -32,11 +31,11 @@ import org.jboss.invocation.ServerID;
  *
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  *
- * @jmx.mbean extends="ServiceMBean"
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public final class TrunkInvokerProxy 
    extends ServiceMBeanSupport
-   implements java.io.Serializable, Invoker, ServiceMBean, TrunkInvokerProxyMBean
+   implements java.io.Serializable, Invoker, TrunkInvokerProxyMBean
 {
    private final static Logger log = Logger.getLogger(TrunkInvokerProxy.class);
 

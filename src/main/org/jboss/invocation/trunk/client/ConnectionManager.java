@@ -21,7 +21,6 @@ import org.jboss.invocation.trunk.client.bio.BlockingClient;
 import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
 
-import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import javax.management.ObjectName;
 
@@ -39,7 +38,7 @@ import javax.management.ObjectName;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @version
  *
- * @jmx.mbean extends="ServiceMBean"
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public class ConnectionManager
    extends ServiceMBeanSupport
