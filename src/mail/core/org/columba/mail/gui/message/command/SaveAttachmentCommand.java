@@ -38,6 +38,7 @@ import org.columba.ristretto.message.MimeHeader;
  * @author freddy
  */
 public abstract class SaveAttachmentCommand extends Command {
+    protected static File lastDir = null;
 
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.message.attachment.command");

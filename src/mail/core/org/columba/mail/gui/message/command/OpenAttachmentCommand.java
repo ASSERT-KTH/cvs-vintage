@@ -21,17 +21,21 @@ import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.ICommandReference;
+import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.util.cFileChooser;
+import org.columba.core.util.cFileFilter;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -104,7 +108,11 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 				JOptionPane.showMessageDialog(null, GlobalResourceLoader
 						.getString("dialog", "error", "no_viewer"), "Error",
 						JOptionPane.ERROR_MESSAGE);
+				
+				File saveToFile = getDestinationFile(header);
 
+				if( saveToFile.exists() ) saveToFile.delete();
+				tempFile.renameTo(saveToFile);
 			}
 		}
 	}
@@ -121,8 +129,12 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
 		header = folder.getMimePartTree(uids[0]).getFromAddress(address)
 				.getHeader();
+		
+		worker.setDisplayText("Opening "+header.getFileName());
 
 		InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
+		// wrap with observable stream for progress bar updates
+		bodyStream = new ProgressObservedInputStream(bodyStream, worker);
 
 		if (header.getMimeType().getType().equals("message")) {
 
@@ -169,8 +181,46 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 		}
 	}
 
-	/** {@inheritDoc} */
-	protected File getDestinationFile(MimeHeader header) {
-		return null;
-	}
+    protected File getDestinationFile(MimeHeader header) {
+        cFileChooser fileChooser;
+
+        if (lastDir == null) {
+            fileChooser = new cFileChooser();
+        } else {
+            fileChooser = new cFileChooser(lastDir);
+        }
+
+        cFileFilter fileFilter = new cFileFilter();
+        fileFilter.acceptFilesWithProperty(cFileFilter.FILEPROPERTY_FILE);
+
+        fileChooser.setDialogTitle("Save Attachment as ...");
+
+        String fileName = getFilename(header);
+        if (fileName != null) {
+            fileChooser.forceSelectedFile(new File(fileName));
+        }
+
+        fileChooser.setSelectFilter(fileFilter);
+        File tempFile = null;
+
+        while (true) {
+            if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+                return null;
+            }
+
+            tempFile = fileChooser.getSelectedFile();
+            lastDir = tempFile.getParentFile();
+
+            if (tempFile.exists()) {
+                if (JOptionPane.showConfirmDialog(null, "Overwrite File?",
+                            "Warning", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+        return tempFile;
+    }
 }

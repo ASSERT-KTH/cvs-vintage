@@ -31,7 +31,6 @@ import org.columba.ristretto.message.MimeHeader;
  * @author freddy
  */
 public class SaveAttachmentAsCommand extends SaveAttachmentCommand {
-    private static File lastDir = null;
 
     /**
      * Constructor for SaveAttachmentCommand.

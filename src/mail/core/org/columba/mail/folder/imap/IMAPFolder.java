@@ -220,6 +220,18 @@ public class IMAPFolder extends AbstractRemoteFolder {
 					getImapItem().get("host") + ": " + message);
 		}
 	}
+	
+	protected void setProgress(int progress) {
+		if (getObservable() != null) {
+			getObservable().setCurrent(progress);
+		}		
+	}
+
+	protected void setMaximum(int progress) {
+		if (getObservable() != null) {
+			getObservable().setMax(progress);
+		}		
+	}
 
 	/**
 	 * @throws Exception
@@ -316,6 +328,9 @@ public class IMAPFolder extends AbstractRemoteFolder {
 
 			// If we have new messages add them to the headerlist
 			if (newMessages > 0) {
+				printStatusMessage(MailResourceLoader.getString("statusbar",
+						"message", "fetch_new_headers"));
+				
 				IMAPFlags[] newFlags = getServer().fetchFlagsListStartFrom(
 						largestLocalUidIndex + 1, this);
 				List newUids = new ArrayList(newFlags.length);
@@ -991,7 +1006,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.AbstractFolder#supportsAddFolder()
 	 */
-	public boolean supportsAddFolder(IMailFolder folder) {
+	public boolean supportsAddFolder(String folder) {
 		return true;
 	}
 
