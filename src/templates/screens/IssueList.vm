@@ -195,7 +195,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
        <th>$l10n.MaxPerPage</td>
  <td>
      #resultsPerPageRadioSelect($resultsPerPage)
-     <input type="submit" name="eventSubmit_doSearch" value="$l10n.Refresh" />
+     <input type="submit" name="eventSubmit_doRefresh" value="$l10n.Refresh" />
  </td>
    </tr>
   </table>
