@@ -6,7 +6,6 @@ $page.setTitle("User Attributes")
 #set ($module = $scarabR.CurrentModule)
 #set ($userAttrs = $scarabG.UserAttributes)
 
-<!--
 <div class="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
     <tr>
@@ -15,7 +14,6 @@ $page.setTitle("User Attributes")
     </tr>
     </table>
 </div>
--->
 
 <form action="$link.setPage("admin,GlobalUserAttributes.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
@@ -48,7 +46,7 @@ $page.setTitle("User Attributes")
   <td>$attr.Description</td>
   <td>
     #fieldErrorMsg($attgroup.Action "")
-    <select name="$attgroup.Action.Key" size="">
+    <select name="$attgroup.Action.Key" size="1">
     <option value="">Select...</option>
     <option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>None</option>
     <option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>To:</option>
