@@ -96,9 +96,9 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().lookup(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.lookup(String name) fail"; 
-	    TraceCarol.error(msg,e);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
 	    throw new NamingException(msg);
 	}
 	
@@ -110,10 +110,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().lookup(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.lookup(Name name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
     
@@ -128,10 +128,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).bind(name, obj);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.bind(String name, Object obj) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
     
@@ -146,10 +146,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).bind(name, obj);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.bind(Name name, Object obj) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
 
@@ -164,10 +164,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).rebind(name, obj);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.rebind(String name, Object obj) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
 
@@ -182,10 +182,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).rebind(name, obj);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.rebind(Name name, Object obj) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}	
     }
     
@@ -200,10 +200,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).unbind(name);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.unbind(String name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}	
     }
 
@@ -218,10 +218,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).unbind(name);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.unbind(Name name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}	
     }
 
@@ -236,10 +236,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).rename(oldName, newName);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.rename(String oldName, String newName) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}	
     }
 
@@ -254,10 +254,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).rename(oldName, newName);	
 		pcur.setDefault();
 	    }
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.rename(Name oldName, Name newName) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}	
     }
     
@@ -267,10 +267,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().list(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.list(String name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
     
@@ -280,10 +280,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().list(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.list(Name name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
     
@@ -294,10 +294,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().listBindings(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.listBindings(String name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
     
@@ -308,10 +308,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().listBindings(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.listBindings(Name name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
 
@@ -326,10 +326,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).destroySubcontext(name);	
 		pcur.setDefault();
 	    } 
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.destroySubcontext(String name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}   
     }
 
@@ -344,11 +344,11 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).destroySubcontext(name);	
 		pcur.setDefault();
 	    }  
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.destroySubcontext(Name name) fail"; 
-	    TraceCarol.error(msg,e);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
 	    
-	    throw new NamingException(msg);
+	    throw e;
 	} 
     }
     
@@ -358,10 +358,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().createSubcontext(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg ="MultiOrbInitialContext.createSubcontext(String name) fail" ; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
     
@@ -371,11 +371,11 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().createSubcontext(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.createSubcontext(Name name) fail"; 
-	    TraceCarol.error(msg,e);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
 	    
-	    throw new NamingException(msg);
+	    throw e;
 	}
     }
     
@@ -385,10 +385,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().lookupLink(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.lookupLink(String name) fail"; 
-	    TraceCarol.error(msg,e);
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+	    throw e;
 	}
     }
 
@@ -398,10 +398,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().lookupLink(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.lookupLink(Name name) fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
 
@@ -411,10 +411,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().getNameParser(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.getNameParser(String name) fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     } 
     
@@ -424,10 +424,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().getNameParser(name);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.getNameParser(Name name) fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
     
@@ -443,13 +443,7 @@ public class MultiOrbInitialContext implements Context {
 	if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("MultiOrbInitialContext.composeName(\""+name+","+prefix+"\")/rmi name=\""+pcur.getCurrentRMIName()+"\"");
         }
-	try {
-	    return (Name)name.clone();
-	} catch (Exception e) {
-	    String msg = "MultiOrbInitialContext.omposeName(Name name, Name prefix) fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
-	}
+	return (Name)name.clone();
     }
 
     public Object addToEnvironment(String propName, Object propVal) 
@@ -459,10 +453,10 @@ public class MultiOrbInitialContext implements Context {
             TraceCarol.debugJndiCarol("MultiOrbInitialContext.addToEnvironment(\""+propName+"\","+simpleClass(propVal.getClass().getName())+" object)");
         }
 	    return pcur.getCurrentInitialContext().addToEnvironment(propName, propVal);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.addToEnvironment(String propName, Object propVal)  fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
     
@@ -473,10 +467,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().removeFromEnvironment(propName);
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.removeFromEnvironment(String propName) fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
     
@@ -486,10 +480,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().getEnvironment();
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.getEnvironment() fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
     
@@ -504,10 +498,10 @@ public class MultiOrbInitialContext implements Context {
 		((Context)activesInitialsContexts.get(rmiName)).close();	
 		pcur.setDefault();
 	    } 
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.close() fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
     
@@ -517,10 +511,10 @@ public class MultiOrbInitialContext implements Context {
         }
 	try {
 	    return pcur.getCurrentInitialContext().getNameInNamespace();
-	} catch (Exception e) {
+	} catch (NamingException e) {
 	    String msg = "MultiOrbInitialContext.getNameInNamespace() fail"; 
-	    TraceCarol.error(msg,e);	    
-	    throw new NamingException(msg);
+	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);	    
+	    throw e;
 	}
     }
 
