@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.18 2002/02/27 00:11:04 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.19 2002/02/27 06:46:48 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -918,7 +918,7 @@
          </mapping>
          <mapping>
             <java-type>java.util.Date</java-type>
-            <jdbc-type>DATE</jdbc-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
             <sql-type>DATETIME</sql-type>
          </mapping>
          <mapping>
