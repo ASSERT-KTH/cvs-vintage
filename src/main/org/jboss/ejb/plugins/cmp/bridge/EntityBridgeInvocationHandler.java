@@ -38,7 +38,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    private final EntityContainer container;
@@ -91,7 +91,8 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
             } else {
                tx = container.getTransactionManager().getTransaction();
             }
-            EntityContainer.synchronizeEntitiesWithinTransaction(tx);
+            if (!container.getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+               EntityContainer.synchronizeEntitiesWithinTransaction(tx);
             return selector.execute(args);
          }
       } catch(RuntimeException e) {

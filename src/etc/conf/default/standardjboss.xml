@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.49 2002/08/15 03:27:58 schaefera Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.50 2002/09/18 03:01:18 patriot1burke Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -273,6 +273,7 @@
       <container-configuration>
 	 <container-name>Standard CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -318,6 +319,7 @@
       <container-configuration>
 	 <container-name>Clustered CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
@@ -364,6 +366,7 @@
       <container-configuration>
 	 <container-name>Instance Per Transaction CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -409,6 +412,7 @@
       <container-configuration>
 	 <container-name>Standard CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -453,6 +457,7 @@
       <container-configuration>
 	 <container-name>Clustered CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
@@ -654,6 +659,7 @@
       <container-configuration>
 	 <container-name>Standard BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -698,6 +704,7 @@
       <container-configuration>
 	 <container-name>Clustered BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
@@ -743,6 +750,7 @@
       <container-configuration>
 	 <container-name>Instance Per Transaction BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
+	 <sync-on-commit-only>false</sync-on-commit-only>
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>

@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.32 $
+ *   @version $Revision: 1.33 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -83,7 +83,7 @@ public class ConfigurationMetaData extends MetaData
    private byte commitOption;
    private long optionDRefreshRate = 30000;
    private boolean callLogging;
-   private boolean readOnlyGetMethods;
+   private boolean syncOnCommitOnly = false;
 
    private String securityDomain;
    private String authenticationModule;
@@ -128,11 +128,11 @@ public class ConfigurationMetaData extends MetaData
 
    public boolean getCallLogging() { return callLogging; }
 
+   public boolean getSyncOnCommitOnly() { return syncOnCommitOnly; }
+
    public byte getCommitOption() { return commitOption; }
 
    public long getOptionDRefreshRate() { return optionDRefreshRate; }
-
-   public boolean getReadOnlyGetMethods() { return readOnlyGetMethods; }
 
    public Collection getDepends() 
    {
@@ -147,8 +147,8 @@ public class ConfigurationMetaData extends MetaData
       // set call logging
       callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"), String.valueOf(callLogging))).booleanValue();
 
-      // set read-only get methods
-      readOnlyGetMethods = Boolean.valueOf(getElementContent(getOptionalChild(element, "read-only-get-methods"))).booleanValue();
+      // set synchronize on commit only
+      syncOnCommitOnly = Boolean.valueOf(getElementContent(getOptionalChild(element, "sync-on-commit-only"), String.valueOf(syncOnCommitOnly))).booleanValue();
 
       // set the instance pool
       instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);

@@ -65,7 +65,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.81 $
+ * @version $Revision: 1.82 $
  *
  * <p><b>Revisions:</b>
  *
@@ -489,7 +489,8 @@ public class EntityContainer
    {
       // synchronize entities with the datastore before the bean is removed
       // this will write queued updates so datastore will be consistent before removal
-      synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+         synchronizeEntitiesWithinTransaction(mi.getTransaction());
       
       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
@@ -591,7 +592,8 @@ public class EntityContainer
        * As per the spec 9.6.4, entities must be synchronized with the datastore
        * when an ejbFind<METHOD> is called.
        */
-      synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+         synchronizeEntitiesWithinTransaction(mi.getTransaction());
       
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getLocalClass()))
@@ -643,7 +645,8 @@ public class EntityContainer
        * As per the spec 9.6.4, entities must be synchronized with the datastore
        * when an ejbFind<METHOD> is called.
        */
-      synchronizeEntitiesWithinTransaction(mi.getTransaction());
+      if (!getBeanMetaData().getContainerConfiguration().getSyncOnCommitOnly())
+         synchronizeEntitiesWithinTransaction(mi.getTransaction());
       
       EJBProxyFactory ci = getProxyFactory();
       if (ci == null) {
