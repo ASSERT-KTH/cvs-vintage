@@ -923,12 +923,14 @@ static int jk_handler(request_rec *r)
                                       &is_recoverable_error);
                 
                     if (s.content_read < s.content_length || 
+
 			(s.is_chunked && ! s.no_more_chunks)) {
                         /*
                          * If the servlet engine didn't consume all of the
                          * request data, consume and discard all further
                          * characters left to read from client 
                          */
+
 
                         char *buff = ap_palloc(r->pool, 2048);
                         if (buff != NULL) {
