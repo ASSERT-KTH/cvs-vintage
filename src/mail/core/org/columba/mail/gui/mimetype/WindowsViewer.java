@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.OSInfo;
 import org.columba.mail.message.MimeHeader;
 
@@ -46,15 +47,10 @@ public class WindowsViewer extends AbstractViewer {
 				String[] cmd =
 					new String[] { "cmd.exe", "/C", "start", url.toString()};
 				Runtime rt = Runtime.getRuntime();
-				System.out.println(
-					"Executing "
-						+ cmd[0]
-						+ " "
-						+ cmd[1]
-						+ " "
-						+ cmd[2]
-						+ " "
-						+ cmd[3]);
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info("Executing " + cmd[0]
+						+ " " + cmd[1] + " " + cmd[2] + " " + cmd[3]);
+				}
 				proc = rt.exec(cmd);
 				// any error message?
 				StreamGobbler errorGobbler =
@@ -67,7 +63,9 @@ public class WindowsViewer extends AbstractViewer {
 
 				// any error?
 				int exitVal = proc.waitFor();
-				System.out.println("ExitValue: " + exitVal);
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info("ExitValue: " + exitVal);
+				}
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -88,42 +86,49 @@ public class WindowsViewer extends AbstractViewer {
 			if (OSInfo.isWinNT()) {
 				String[] cmd = new String[] { "cmd.exe", "/C", filename };
 				Runtime rt = Runtime.getRuntime();
-				System.out.println(
-					"Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info("Executing " + cmd[0]
+						 + " " + cmd[1] + " " + cmd[2]);
+				}
 				proc = rt.exec(cmd);
 			} else if (OSInfo.isWin95() || OSInfo.isWin98() || OSInfo.isWinME()) {
 				String[] cmd = new String[] { "start", filename };
 				Runtime rt = Runtime.getRuntime();
-				System.out.println("Executing " + cmd[0] + " " + cmd[1]);
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info("Executing " + cmd[0] + " " + cmd[1]);
+				}
 				proc = rt.exec(cmd);
 			} else if (OSInfo.isWin2K() || OSInfo.isWinXP()){
-				// this includes Windows XP
-				
+
 				/*
 				 * *20030526, karlpeder* fixing bug #739277 by:
 				 * Changing cmd line from "cmd.exe /C ..." to "cmd.exe /C start ..."
 				 * So program execution is not blocked until viewer terminates.
 				 * NB: WinNT, Win95, Win98, WinME not considered (not able to try it out)
-				 * 
+				 *
 				 * *20030713, karlpeder* fixing bug #763211 by moving first " in filename
 				 * and adding extra parameter to the "start" command = title of
 				 * dos window (which is not shown here - but is necessary).
 				 */
-				
+
 				String[] cmd = new String[] {
 						"cmd.exe", "/C", "start", "\"dummy\"", "\"" + filename + "\""
 						};
 
 				Runtime rt = Runtime.getRuntime();
-				ColumbaLogger.log.info("Executing " + 
-						cmd[0] + " " + cmd[1] + " " + cmd[2] + " " + 
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info("Executing " +
+						cmd[0] + " " + cmd[1] + " " + cmd[2] + " " +
 						cmd[3] + " " + cmd[4]);
+				}
 				proc = rt.exec(cmd);
 			}
-                        
+
                         if (proc == null) {
-                                //unhandled windows version
-                                return;
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.debug("The underlying Windows version is unknown.");
+				}
+				return;
                         }
 
 			// any error message?
@@ -137,7 +142,9 @@ public class WindowsViewer extends AbstractViewer {
 
 			// any error?
 			int exitVal = proc.waitFor();
-			System.out.println("ExitValue: " + exitVal);
+			if (MainInterface.DEBUG) {
+				ColumbaLogger.log.info("ExitValue: " + exitVal);
+			}
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
