@@ -46,14 +46,28 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.41 $
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @version $Revision: 1.42 $
  *
- * Revisions:
- * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
- * done directly by the finder.
- * 20010709 Andreas Schaefer: added statistics gathering
- * 20011201 Dain Sundstrom: moved createBeanInstance and initEntity back into
- * the persistence store.
+ *  <p><b>Revisions:</b>
+ *  <p><b>20010621 Bill Burke:</b>
+ *  <ul>
+ *  <li>- removed loadEntities call because CMP read-ahead is now
+ *        done directly by the finder.
+ *  </ul>
+ *  <p><b>20010709 Andreas Schaefer:</b>
+ *  <ul>
+ *  <li>- added statistics gathering
+ *  </ul>
+ *  <p><b>20011201 Dain Sundstrom:</b>
+ *  <ul>
+ *  <li>- moved createBeanInstance and initEntity back into
+ *        the persistence store.
+ *  </ul>
+ *  <p><b>20020413 dain sundstrom:</b>
+ *  <ul>
+ *  <li>- Moved ejbPostCreate call to postCreateEntity method
+ *  </ul>
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -197,16 +211,13 @@ public class CMPPersistenceManager
    public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws Exception
    {
-      // Get methods
-      Method createMethod = (Method)createMethods.get(m);
-      Method postCreateMethod = (Method)postCreateMethods.get(m);
-      
       // Deligate initialization of bean to persistence store
       store.initEntity(ctx);
 
       // Call ejbCreate on the target bean
       try
       {
+         Method createMethod = (Method)createMethods.get(m);
          createMethod.invoke(ctx.getInstance(), args);
       }
       catch (IllegalAccessException e)
@@ -259,9 +270,17 @@ public class CMPPersistenceManager
       {
          ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
       }
-      
+   }
+
+   public void postCreateEntity(
+         Method m, 
+         Object[] args, 
+         EntityEnterpriseContext ctx)
+      throws Exception
+   {
       try
       {
+         Method postCreateMethod = (Method)postCreateMethods.get(m);
          postCreateMethod.invoke(ctx.getInstance(), args);
       }
       catch (IllegalAccessException e)

@@ -35,13 +35,14 @@ import org.jboss.management.j2ee.TimeStatistic;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
-*   <description>
+*  Persistence manager for BMP entites.  All calls are simply deligated
+*  to the entity implementation class.
 *
-*  @see <related>
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.39 $
+*  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+*  @version $Revision: 1.40 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -51,6 +52,10 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  <p><b>20010801 marc fleury:</b>
 *  <ul>
 *  <li>- insertion in cache upon create in now done in the instance interceptor
+*  </ul>
+*  <p><b>20020413 dain sundstrom:</b>
+*  <ul>
+*  <li>- Moved ejbPostCreate call to postCreateEntity method
 *  </ul>
 */
 public class BMPPersistenceManager
@@ -201,113 +206,120 @@ implements EntityPersistenceManager
    {
    }
 
-   public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+   public void createEntity(
+         Method m, 
+         Object[] args, 
+         EntityEnterpriseContext ctx) 
    throws Exception
    {
-      try {
+      Object id = null;
+      try
+      {
+         // Call ejbCreate<METHOD)
          Method createMethod = (Method)createMethods.get(m);
-         Method postCreateMethod = (Method)postCreateMethods.get(m);
-
-         Object id = null;
-         try
+         id = createMethod.invoke(ctx.getInstance(), args);
+      } catch (IllegalAccessException e)
+      {
+         // Throw this as a bean exception...(?)
+         throw new EJBException(e);
+      } catch (InvocationTargetException ite)
+      {
+         Throwable e = ite.getTargetException();
+         if (e instanceof CreateException)
          {
-            // Call ejbCreate<METHOD)
-            id = createMethod.invoke(ctx.getInstance(), args);
-         } catch (IllegalAccessException e)
-         {
-            // Throw this as a bean exception...(?)
-            throw new EJBException(e);
-         } catch (InvocationTargetException ite)
-         {
-            Throwable e = ite.getTargetException();
-            if (e instanceof CreateException)
-            {
-               // Rethrow exception
-               throw (CreateException)e;
-            }
-            else if (e instanceof RemoteException)
-            {
-               // Rethrow exception
-               throw (RemoteException)e;
-            }
-            else if (e instanceof EJBException)
-            {
-               // Rethrow exception
-               throw (EJBException)e;
-            }
-            else if (e instanceof RuntimeException)
-            {
-               // Wrap runtime exceptions
-               throw new EJBException((Exception)e);
-            }
-            else if(e instanceof Exception)
-            {
-               throw (Exception)e;
-            }
-            else
-            {
-               throw (Error)e;
-            }
+            // Rethrow exception
+            throw (CreateException)e;
          }
-
-         // set the id
-         ctx.setId(id);
-
-         // Create a new CacheKey
-         Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
-
-         // Give it to the context
-         ctx.setCacheKey(cacheKey);
-
-         // Create EJBObject
-           // Create EJBObject
-        if (con.getContainerInvoker() != null)
-         ctx.setEJBObject((EJBObject) con.getContainerInvoker().getEntityEJBObject(cacheKey));
-        if (con.getLocalHomeClass() != null)
-         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
-
-         try
+         else if (e instanceof RemoteException)
          {
-            postCreateMethod.invoke(ctx.getInstance(), args);
-         } catch (IllegalAccessException e)
+            // Rethrow exception
+            throw (RemoteException)e;
+         }
+         else if (e instanceof EJBException)
          {
-            // Throw this as a bean exception...(?)
-            throw new EJBException(e);
-         } catch (InvocationTargetException ite)
+            // Rethrow exception
+            throw (EJBException)e;
+         }
+         else if (e instanceof RuntimeException)
          {
-            Throwable e = ite.getTargetException();
-            if (e instanceof CreateException)
-            {
-               // Rethrow exception
-               throw (CreateException)e;
-            }
-            else if (e instanceof RemoteException)
-            {
-               // Rethrow exception
-               throw (RemoteException)e;
-            }
-            else if (e instanceof EJBException)
-            {
-               // Rethrow exception
-               throw (EJBException)e;
-            }
-            else if (e instanceof RuntimeException)
-            {
-               // Wrap runtime exceptions
-               throw new EJBException((Exception)e);
-            }
-            else if(e instanceof Exception)
-            {
-               throw (Exception)e;
-            }
-            else
-            {
-               throw (Error)e;
-            }
+            // Wrap runtime exceptions
+            throw new EJBException((Exception)e);
+         }
+         else if(e instanceof Exception)
+         {
+            throw (Exception)e;
+         }
+         else
+         {
+            throw (Error)e;
          }
       }
-      finally {
-         mCreate.add();
+
+      // set the id
+      ctx.setId(id);
+
+      // Create a new CacheKey
+      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
+
+      // Give it to the context
+      ctx.setCacheKey(cacheKey);
+
+      // Create EJBObject
+      if (con.getContainerInvoker() != null)
+      {
+         ctx.setEJBObject((EJBObject) con.getContainerInvoker().getEntityEJBObject(cacheKey));
+      }
+      if (con.getLocalHomeClass() != null)
+      {
+         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
+      }
+   }
+
+   public void postCreateEntity(
+         Method m, 
+         Object[] args, 
+         EntityEnterpriseContext ctx) 
+   throws Exception
+   {
+      try
+      {
+         Method postCreateMethod = (Method)postCreateMethods.get(m);
+         postCreateMethod.invoke(ctx.getInstance(), args);
+      } catch (IllegalAccessException e)
+      {
+         // Throw this as a bean exception...(?)
+         throw new EJBException(e);
+      } catch (InvocationTargetException ite)
+      {
+         Throwable e = ite.getTargetException();
+         if (e instanceof CreateException)
+         {
+            // Rethrow exception
+            throw (CreateException)e;
+         }
+         else if (e instanceof RemoteException)
+         {
+            // Rethrow exception
+            throw (RemoteException)e;
+         }
+         else if (e instanceof EJBException)
+         {
+            // Rethrow exception
+            throw (EJBException)e;
+         }
+         else if (e instanceof RuntimeException)
+         {
+            // Wrap runtime exceptions
+            throw new EJBException((Exception)e);
+         }
+         else if(e instanceof Exception)
+         {
+            throw (Exception)e;
+         }
+         else
+         {
+            throw (Error)e;
+         }
       }
    }
 
