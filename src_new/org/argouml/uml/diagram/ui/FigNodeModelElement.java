@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.45 2002/12/27 10:08:02 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.46 2002/12/29 13:01:01 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -705,6 +705,7 @@ public abstract class FigNodeModelElement
             String nameStr =
                     Notation.generate(this, ((MModelElement) getOwner()).getName());
             _name.setText(nameStr);
+            updateBounds();
         }
     }
 
