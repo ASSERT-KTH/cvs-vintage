@@ -59,6 +59,7 @@ import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.ParameterParser;
+import org.apache.fulcrum.security.util.TurbineSecurityException;
 
 // Scarab Stuff
 import org.tigris.scarab.om.Attribute;
@@ -69,17 +70,17 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
-    This class is responsible for the user configuration of the issue list.
-    @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.30 2002/10/23 21:18:55 jon Exp $
-*/
+ * This class is responsible for the user configuration of the issue list.
+ *
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: ConfigureIssueList.java,v 1.31 2002/11/01 00:58:16 jon Exp $
+ */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
-
     public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabRequestTool scarab = getScarabRequestTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         // Add user's new selection of attributes
@@ -87,7 +88,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         String[] ids = params.getStrings("attid");
         if (ids == null || ids.length == 0) 
         {
-            scarab.setAlertMessage(l10n.get("MustSelectAtLeastOneAttribute"));
+            scarabR.setAlertMessage(l10n.get("MustSelectAtLeastOneAttribute"));
         }
         else
         {
@@ -119,20 +120,24 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                     }
                 };
             Collections.sort(attributes, c);
-            ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
-            
-            data.setMessage(l10n.get(DEFAULT_MSG));
+            try
+            {
+                ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            }
+            catch (TurbineSecurityException tse)
+            {
+                scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            }
         }
     }
 
     /**
-        Resets back to default values for module.
-    */
+     * Resets back to default values for module.
+     */
     public void doUsedefaults( RunData data, TemplateContext context ) 
         throws Exception
     {
         data.getParameters().add("usedefaults", "true"); 
     }
-        
-
 }
