@@ -93,7 +93,6 @@ public abstract class UMLPlainTextDocument extends PlainDocument
      */
     public void targetChanged() {
         setTarget(_container.getTarget());
-        handleEvent();   
     }
 
     /**
@@ -101,7 +100,6 @@ public abstract class UMLPlainTextDocument extends PlainDocument
      */
     public void targetReasserted() {
         setTarget(_container.getTarget());
-        handleEvent();  
     }
 
     /**
@@ -158,7 +156,9 @@ public abstract class UMLPlainTextDocument extends PlainDocument
             if (_target != null)
                 UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, getEventName());
             _target = target;
+            UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, getEventName());
             UmlModelEventPump.getPump().addModelEventListener(this, (MBase)_target, getEventName());
+            handleEvent();
         }
     }
 
@@ -168,12 +168,14 @@ public abstract class UMLPlainTextDocument extends PlainDocument
     public void insertString(int offset, String str, AttributeSet a)
         throws BadLocationException {
         super.insertString(offset, str, a);
-        if (!isFiring()) {
-            setEditing(true); 
+        if (isFiring()) {
+            setFiring(false);
             setProperty(getText(0, getLength()));    
-            setEditing(false);
-        } else
-            setProperty(getText(0, getLength()));             
+            setFiring(true);
+        } 
+        
+        
+             
     }
 
     /**
@@ -181,13 +183,11 @@ public abstract class UMLPlainTextDocument extends PlainDocument
      */
     public void remove(int offs, int len) throws BadLocationException {
         super.remove(offs, len);
-        if (!isFiring()) {
-            setEditing(true); 
-        }
-        setProperty(getText(0, getLength()));     
-        if (!isFiring()) {
-            setEditing(false);
-        }
+        if (isFiring()) {
+            setFiring(false);
+            setProperty(getText(0, getLength()));    
+            setFiring(true);
+        } 
     }
     
     protected abstract void setProperty(String text);
@@ -205,10 +205,8 @@ public abstract class UMLPlainTextDocument extends PlainDocument
     private final void handleEvent() {
         try {
             setFiring(false);
-            if (!isEditing()) {
-                super.remove(0, getLength());
-                insertString(0, getProperty(), null);
-            }
+            super.remove(0, getLength());
+            super.insertString(0, getProperty(), null);
         } catch (BadLocationException b) {
             cat.error("A BadLocationException happened\n" +
                 "The string to set was: " +

@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.15 2002/11/03 20:11:17 kataka Exp $
+// $Id: Critic.java,v 1.16 2002/11/04 07:39:05 kataka Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -477,7 +477,7 @@ public class Critic implements Poster, Serializable {
    *  Critic encapsulates some information you may need to override
    *  this method. */
   public boolean isRelevantToDecisions(Designer dsgr) {
-      cat.info(this);
+      cat.debug(this);
     Enumeration enum = getSupportedDecisions().elements();
     while (enum.hasMoreElements()) {
       Decision d = (Decision) enum.nextElement();
