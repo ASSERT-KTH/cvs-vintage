@@ -130,7 +130,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	    throw new IllegalStateException(sm.getString("rdi.forward.ise"));
 
 	// the strange case in a separate method.
-	if( name!=null) forwardNamed( request, response );
+	if( name!=null) {
+	    forwardNamed( request, response );
+	    return;
+	}
 	
 	// from strange spec reasons, forward and include are very different in
 	// the way they process the request - if you don't understand the code
@@ -168,7 +171,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
 
 	// the strange case in a separate method
-	if( name!=null) includeNamed( request, response );
+	if( name!=null) {
+	    includeNamed( request, response );
+	    return;
+	}
 	
 	// Implement the spec that "no changes in response, only write"
 	// can also be done by setting the response to 0.9 mode ( as Apache does!)
