@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 *
 *
 */
@@ -247,7 +247,7 @@ implements MainDeployerMBean, Runnable
       try 
       {
          // Scan diretories for new deployments 
-         Iterator newDeployments = scanNew().iterator();
+         Iterator newDeployments = scanNew().listIterator();
          
          while (newDeployments.hasNext())
          {
@@ -255,7 +255,7 @@ implements MainDeployerMBean, Runnable
          }
          
          // Undeploy and redeployto the modified ones
-         Iterator modified = scanModified().iterator();
+         Iterator modified = scanModified().listIterator();
          
          while (modified.hasNext())
          {
@@ -312,7 +312,7 @@ implements MainDeployerMBean, Runnable
             
          // remove from local maps
          deployments.remove(di.url);
-         deploymentsList.remove(deploymentsList.lastIndexOf(di));
+         if (deploymentsList.lastIndexOf(di) != -1) deploymentsList.remove(deploymentsList.lastIndexOf(di));
          
          // Nuke my stuff, this includes the class loader
          di.cleanup(log);
@@ -398,12 +398,14 @@ implements MainDeployerMBean, Runnable
          deployment.lastDeployed = System.currentTimeMillis();
          
          //watch it, it will be picked up as modified below, deployments is a map duplicates are ok
-         //don't add if part of the directories
          deployments.put(deployment.url, deployment);
-         deploymentsList.add(deployment);
          
-         if (log.isDebugEnabled()) log.debug("Watching new file: " + deployment.url);  
-         
+         // Do we watch it?
+         if (!deployment.url.toString().startsWith("file:"+System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy"))
+         {
+            deploymentsList.add(deployment);
+            if (log.isDebugEnabled()) log.debug("Watching new file: " + deployment.url);  
+         }
       }
    }
    
@@ -446,7 +448,7 @@ implements MainDeployerMBean, Runnable
    *
    * ScanNew scans the directories that are given to it and returns a Set with the new deployments
    */
-   protected Set scanNew()
+   protected ArrayList scanNew()
    {
       
       try 
@@ -471,7 +473,7 @@ implements MainDeployerMBean, Runnable
             }   
          }
          
-         return newDeployments;
+         return sortURLs(newDeployments);
       }
       catch (Exception ignored) { ignored.printStackTrace();log.error(ignored); return null;}
    }
@@ -481,7 +483,7 @@ implements MainDeployerMBean, Runnable
    *
    * scanModified scans the existing deployments and return a Set with the modified deployments
    */
-   protected Set scanModified()
+   protected ArrayList scanModified()
    {
       try
       {
@@ -515,7 +517,7 @@ implements MainDeployerMBean, Runnable
                modified.add(deployment);
          }
          
-         return modified;
+         return sortDeployments(modified);
       }
       catch (ConcurrentModificationException cme) {cme.printStackTrace(); return null;}
       
@@ -559,7 +561,7 @@ implements MainDeployerMBean, Runnable
          // Make sure the name is flat no directory structure in subs name
          // example war's WEBINF/lib/myjar.jar appears as myjar.jar in the tmp directory
          if (name.lastIndexOf("/") != -1)  
-            name = name.substring(name.lastIndexOf("/"));
+            name = name.substring(name.lastIndexOf("/")+1);
          
          // Everything that is not 
          // a- an XML file
@@ -579,8 +581,7 @@ implements MainDeployerMBean, Runnable
                
                
                // We use the name of the entry as the name of the file under deploy 
-               // (marcf note: I don't think we need the getNextID, not important)
-               File outFile = new File(localCopyDir, name);
+               File outFile = new File(localCopyDir, getNextID ()+"."+name);
                
                // Copy in and out 
                OutputStream out = new FileOutputStream(outFile); 
@@ -756,6 +757,59 @@ implements MainDeployerMBean, Runnable
          }
       }
    }   
+   
+   public ArrayList sortURLs(Set urls)
+   {
+      ArrayList list = new ArrayList(urls.size());
+      
+      String[] order = {"sar", "service.xml", "rar", "ear",  "jar", "zip","war"};
+      
+      for (int i = 0 ; i < order.length ; i++)
+      {
+         Iterator it = urls.iterator();
+         while (it.hasNext()) 
+         {
+            URL url = (URL) it.next();
+            
+            if (url.toString().endsWith(order[i]))
+            {      
+               list.add(url); it.remove();
+            
+            }         
+         }
+      }
+      
+      // Unknown types deployed at the end
+      list.addAll(urls);
+      
+      return list;
+   }
+   
+   public ArrayList sortDeployments(Set urls)
+   {
+      ArrayList list = new ArrayList(urls.size());
+      
+      String[] order = {"sar", "service.xml", "rar", "ear", "war", "jar", "zip"};
+      
+      for (int i = 0 ; i < order.length ; i++)
+      {
+         Iterator it = urls.iterator();
+         while (it.hasNext()) 
+         {
+            DeploymentInfo di = (DeploymentInfo) it.next();
+            
+            if (di.url.toString().endsWith(order[i]))
+            {      
+               list.add(di); it.remove();
+            }         
+         }
+      }
+      
+      // Unknown types deployed at the end
+      list.addAll(urls);
+      
+      return list;
+   }
    
    public boolean isDeployed(String url) 
    throws MalformedURLException

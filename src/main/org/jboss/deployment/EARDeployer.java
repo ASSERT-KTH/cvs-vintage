@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -97,6 +97,8 @@ implements EARDeployerMBean
    {
       try
       {
+         log.info("Init J2EE application: " + di.url);
+         
          InputStream in = di.localCl.getResourceAsStream("META-INF/application.xml");
          XmlFileLoader xfl = new XmlFileLoader();
          Element root = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
