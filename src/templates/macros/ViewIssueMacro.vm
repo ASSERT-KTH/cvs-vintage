@@ -4,7 +4,7 @@
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-     <input type="submit" value="Move Issue" name="eventSubmit_doGotomoveissue" />
+     <input type="submit" value="Move Issue" name="eventSubmit_doGotoothertemplate" />
      <input type="hidden" value="moveIssueTemplate" name="MoveIssue.vm" />
   </td>
  </tr>
@@ -103,7 +103,7 @@
  <tr>
   <th>Committed by</th>
   #set ($createdUser = $currentIssue.CreatedBy)
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+  <td>$createdUser <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
  </tr>
  <tr>
   <th>Assignee(s)</th>
@@ -244,12 +244,12 @@
     #foreach ($parent in $currentIssue.Parents)
       #indexedRows($velocityCount)
       <td>
-      <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.IssueId)">$parent.UniqueId</a>
+      <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId)">$parent.UniqueId</a>
       </td>
       #set ($parentAttrValues = $parent.AllAttributeValuesMap)
       #set ($attVal = $parentAttrValues.get("SUMMARY"))
       <td>
-      <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.IssueId)">$attVal.Value</a>
+      <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId)">$attVal.Value</a>
       </td>
       <td>
       #if ($canEdit)
@@ -297,12 +297,12 @@
    #foreach ($child in $currentIssue.Children)
     #indexedRows($velocityCount)
     <td>
-    <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.IssueId)">$child.UniqueId</a>
+    <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId)">$child.UniqueId</a>
     </td>
     #set ($childAttrValues = $child.AllAttributeValuesMap)
     #set ($attVal = $childAttrValues.get("SUMMARY"))
     <td>
-    <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.IssueId)">$attVal.Value</a>
+    <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId)">$attVal.Value</a>
     </td>
     <td>
     #if ($canEdit)
@@ -395,7 +395,7 @@
 
 #if ($currentIssue.isCommentsLong())
   #if ($fullComments.equals("true"))
-    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "false"))
+    #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("fullcomments", "false"))
     <p><a href="$commentsLink">Hide complete comment list</a></p>
   #else
     #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true"))
@@ -458,8 +458,8 @@
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-     <input type="submit" value="Move Issue" name="eventSubmit_doGotomoveissue" />
-     <input type="hidden" value="moveIssueTemplate" name="MoveIssue.vm" />
+     <input type="submit" value="Move Issue" name="eventSubmit_doGotoothertemplate" />
+     <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
   </td>
  </tr>
 </table>
