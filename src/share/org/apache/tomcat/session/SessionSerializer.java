@@ -59,7 +59,6 @@
 
 package org.apache.tomcat.session;
 
-import org.apache.tomcat.core.*;
 import java.io.*;
 import java.util.*;
 import javax.servlet.http.*;
@@ -83,7 +82,7 @@ public final class SessionSerializer
 	/**
 		This is the method that does the serialization.
 	*/
-	public static final void doSerialization(ClassLoader cl, SessionManager sessionM) {
+	public static final void doSerialization(ClassLoader cl, StandardManager sessionM) {
 		// get the hashtable of sessions
 		Hashtable sessions = sessionM.getSessions();
 		

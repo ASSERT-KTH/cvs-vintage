@@ -97,7 +97,6 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 	return 0;
     }
 
-
     public int preService(Request request, Response response) {
 	return 0;
     }
@@ -106,6 +105,10 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 	return 0;
     }
 
+    public int newSessionRequest( Request request, Response response) {
+	return 0;
+    }
+    
     public int beforeCommit( Request request, Response response) {
 	return 0;
     }
@@ -162,6 +165,11 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     /** Called when a context is removed from a CM
      */
     public void removeContext( ContextManager cm, Context ctx ) throws TomcatException {
+    }
+
+    public void reload( Context ctx)
+	throws TomcatException
+    {
     }
 
     /** Servlet Init  notification

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.8 2000/06/10 18:54:50 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/06/10 18:54:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.9 2000/06/10 21:55:31 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/06/10 21:55:31 $
  *
  * ====================================================================
  *
@@ -71,10 +71,6 @@ import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.apache.tomcat.core.*;
-
 
 /**
  * Standard implementation of the <b>Manager</b> interface that provides
@@ -105,9 +101,9 @@ import org.apache.tomcat.core.*;
  * @author Craig R. McClanahan
  * @author costin@eng.sun.com
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.8 $ $Date: 2000/06/10 18:54:50 $
+ * @version $Revision: 1.9 $ $Date: 2000/06/10 21:55:31 $
  */
-public final class StandardManager implements Runnable, SessionManager {
+public final class StandardManager implements Runnable  {
     // ----------------------------------------------------- Instance Variables
     /**
      * The distributable flag for Sessions created by this Manager.  If this
@@ -291,7 +287,10 @@ public final class StandardManager implements Runnable, SessionManager {
     public HttpSession findSession(String id) {
 	if (id == null)
 	    return (null);
-	return ((HttpSession) sessions.get(id));
+	HttpSession s=((HttpSession) sessions.get(id));
+	if( s==null ) return s;
+	access( s );
+	return s;
     }
 
     /**

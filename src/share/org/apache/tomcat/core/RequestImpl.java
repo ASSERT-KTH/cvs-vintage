@@ -411,6 +411,7 @@ public class RequestImpl  implements Request {
     }
 
     public void setSession(HttpSession serverSession) {
+	//	context.log("RequestImpl: set session ! ");
 	this.serverSession = serverSession;
     }
 
@@ -422,9 +423,13 @@ public class RequestImpl  implements Request {
 	
 	if( ! create ) return null;
 	
-	SessionManager sM=context.getSessionManager();
-	// no session exists, create flag
-	serverSession =sM.getNewSession( );
+	//	context.log("RequestImpl:  created new session!");
+	contextM.doNewSessionRequest( this, response );
+	if ( serverSession == null ) {
+	    context.log("RequestImpl: no session created!");
+	    return null;
+	}
+	
 	reqSessionId = serverSession.getId();
 	response.setSessionId( reqSessionId );
 

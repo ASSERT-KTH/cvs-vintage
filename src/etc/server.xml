@@ -20,8 +20,9 @@
          -->
 
     <Logger name="tc_log" 
-            path="logs/tomcat.log"
             customOutput="yes" />
+     <!-- add this back if you don't want messages on screen 
+         path="logs/tomcat.log" -->
 
     <Logger name="servlet_log" 
             path="logs/servlet.log"
@@ -57,6 +58,11 @@
              the server.
           -->
         <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper1" debug="0" />
+
+        <!-- Plug a session manager. This should be per-context ( easy to do, but nobody asked
+             for it yet )
+          -->
+        <RequestInterceptor className="org.apache.tomcat.session.StandardSessionInterceptor" />
 
         <!-- Check if the request requires an authenticated role  -->
         <RequestInterceptor className="org.apache.tomcat.request.AccessInterceptor" debug="0" />

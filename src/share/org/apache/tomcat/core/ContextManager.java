@@ -325,6 +325,8 @@ public class ContextManager {
 	    SimpleMapper1 smap=new SimpleMapper1();
 	    smap.setContextManager( this );
 	    addRequestInterceptor(smap);
+
+	    addRequestInterceptor(new org.apache.tomcat.session.StandardSessionInterceptor());
 	}
     }
      
@@ -492,6 +494,18 @@ public class ContextManager {
 	shutdownContext( context );
 	contextsV.removeElement(context);
     }
+
+    void doReload( Context context ) throws TomcatException {
+	if( context==null ) return;
+	
+	if( debug>0 ) log( "Reloading context " + context.toString());
+
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].reload(  context );
+	}
+    }
+
 
     /** Notify interceptors that a new container was added.
      */
@@ -706,6 +720,13 @@ public class ContextManager {
 	}
 	return 0;
     }
+    
+    int doNewSessionRequest( Request req, Response res ) {
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).newSessionRequest( req, res );
+	}
+	return 0;
+    }
 
     /** Call afterBody callbacks. It is called after the servlet finished sending the
 	response ( either closeing the stream or ending ). You can deal with connection
@@ -717,7 +738,7 @@ public class ContextManager {
 	}
 	return 0;
     }
-    
+
     // -------------------- Sub-Request mechanism --------------------
 
     /** Create a new sub-request in a given context, set the context "hint"

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.49 2000/06/10 18:54:49 costin Exp $
- * $Revision: 1.49 $
- * $Date: 2000/06/10 18:54:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.50 2000/06/10 21:55:29 costin Exp $
+ * $Revision: 1.50 $
+ * $Date: 2000/06/10 21:55:29 $
  *
  * ====================================================================
  *
@@ -392,7 +392,7 @@ public class ServletWrapper {
     // XXX ugly - should find a better way to deal with invoker
     // The problem is that we are just clearing up invoker, not
     // the class loaded by invoker.
-    void handleReload() {
+    void handleReload() throws TomcatException {
 		// That will be reolved after we reset the context - and many
 		// other conflicts.
 		if( isReloadable && ! "invoker".equals( getServletName())) {
@@ -405,11 +405,8 @@ public class ServletWrapper {
 					initialized=false;
 					loader.reload();
 					
-					// re-serialize the sessions with a new classloader
-					SessionManager sM=context.getSessionManager();
-					// this is called after the new loader was set.
-
-					sM.handleReload(loader.getClassLoader());
+					ContextManager cm=context.getContextManager();
+					cm.doReload( context );
 					
 					servlet=null;
 					servletClass=null;
@@ -488,9 +485,13 @@ public class ServletWrapper {
 	contextM.handleStatus( req, res,  404 );
     }
 
-    public void handleRequest(Request req, Response res)
+    public void handleRequest(Request req, Response res) 
     {
-	handleReload();
+	try {
+	    handleReload();
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();// what to do ?
+	}
 
 	// <servlet><jsp-file> case
 	if( path!=null ) {

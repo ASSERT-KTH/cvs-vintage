@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.9 2000/02/16 05:44:34 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/02/16 05:44:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.10 2000/06/10 21:55:28 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/06/10 21:55:28 $
  *
  * ====================================================================
  *
@@ -106,6 +106,12 @@ public interface ContextInterceptor {
      *  in with all the informations from web.xml.
      */
     public void contextInit(Context ctx) throws TomcatException;
+
+    /** Reload notification - called whenever a reload is done.
+	This can be used to serialize sessions, log the event,
+	remove any resource that was class-loader dependent.
+     */
+    public void reload( Context ctx) throws TomcatException;
 
 
     /** Called when a context is stoped, before removeContext. You must free all resources.

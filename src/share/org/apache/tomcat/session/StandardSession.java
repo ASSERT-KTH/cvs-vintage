@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.11 2000/05/23 00:44:56 jon Exp $
- * $Revision: 1.11 $
- * $Date: 2000/05/23 00:44:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.12 2000/06/10 21:55:31 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/06/10 21:55:31 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.11 $ $Date: 2000/05/23 00:44:56 $
+ * @version $Revision: 1.12 $ $Date: 2000/06/10 21:55:31 $
  */
 
 final class StandardSession
@@ -231,12 +231,12 @@ final class StandardSession
     public void setId(String id) {
 
 	if ((this.id != null) && (manager != null))
-	    ((StandardManager) manager).remove(this);
+	    manager.remove(this);
 
 	this.id = id;
 
 	if ((manager != null) )
-	    ((StandardManager) manager).add(this);
+	    manager.add(this);
 
     }
 
@@ -355,8 +355,8 @@ final class StandardSession
     public void expire() {
 
 	// Remove this session from our manager's active sessions
-	if ((manager != null) && (manager instanceof StandardManager))
-	    ((StandardManager) manager).remove(this);
+	if (manager != null) 
+	    manager.remove(this);
 
 	// Unbind any objects associated with this session
 	Vector results = new Vector();
@@ -394,8 +394,8 @@ final class StandardSession
 	isValid = false;
 
 	// Tell our Manager that this Session has been recycled
-	if ((manager != null) && (manager instanceof StandardManager))
-	    ((StandardManager) manager).recycle(this);
+	if (manager != null)
+	    manager.recycle(this);
 
     }
 

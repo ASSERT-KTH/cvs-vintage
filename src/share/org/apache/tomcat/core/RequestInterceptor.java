@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.9 2000/04/17 21:02:27 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/04/17 21:02:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.10 2000/06/10 21:55:28 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/06/10 21:55:28 $
  *
  * ====================================================================
  *
@@ -114,7 +114,14 @@ public interface RequestInterceptor {
      */
     public int preService(Request request, Response response);
 
-    
+    /** New Session notification - called when the servlet
+	asks for a new session. You can do all kind of stuff with
+	this notification - the most important is create a session
+	object. This will be the base for controling the
+	session allocation.
+    */
+    public int newSessionRequest( Request request, Response response);
+
     /** Called before the first body write, and before sending
      *  the headers. The interceptor have a chance to change the
      *  output headers. 

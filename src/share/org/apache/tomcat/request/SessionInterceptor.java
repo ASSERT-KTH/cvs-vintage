@@ -155,11 +155,7 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	    }
 	}
 
-	// "access" it and set HttpSession if valid
-	sessionId=request.getRequestedSessionId();
-	validateSessionId(request, sessionId);
-
-	return 0;
+ 	return 0;
     }
 
     /** Fix the session id. If the session is not valid return null.
@@ -178,37 +174,6 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	    }
 	}
 	return sessionId;
-    }
-
-    /** Validate and fix the session id. If the session is not valid return null.
-     *  It will also clean up the session from load-balancing strings.
-     * @return sessionId, or null if not valid
-     */
-    private void validateSessionId(Request request, String sessionId){
-
-	if (sessionId != null && sessionId.length()!=0) {
-	    // GS, We are in a problem here, we may actually get
-	    // multiple Session cookies (one for the root
-	    // context and one for the real context... or old session
-	    // cookie. We must check for validity in the current context.
-	    Context ctx=request.getContext();
-	    SessionManager sM = ctx.getSessionManager();    
-	    HttpSession sess= sM.findSession( sessionId );
-	    if(null != sess) {
-		sM.access( sess );
-		request.setSession( sess );
-	    }
-	}
-    }
-
-    public int postService(  Request rrequest, Response response ) {
-	Context ctx=rrequest.getContext();
-	if( ctx==null ) return 0;
-	SessionManager sm=ctx.getSessionManager();
-	HttpSession sess=rrequest.getSession(false);
-	if( sess == null ) return 0;
-	sm.release( sess );
-	return 0;
     }
 
     public int beforeBody( Request rrequest, Response response ) {
@@ -249,35 +214,5 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
     	return 0;
     }
 
-    /** Init session management stuff for this context
-     */
-    public void contextInit(Context ctx) throws TomcatException {
-	// Defaults !!
-	if( ctx.getSessionManager() == null ) {
-	    SessionManager sm=new org.apache.tomcat.session.StandardManager();
-	    ctx.setSessionManager(sm);
-	}
-
-	SessionManager sm=ctx.getSessionManager();
-	try {
-	    sm.start();
-	} catch(IllegalStateException ex ) {
-	    throw new TomcatException( ex );
-	}
-    }
-    
-    /** Notification of context shutdown
-     */
-    public void contextShutdown( Context ctx )
-	throws TomcatException
-    {
-	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
-	SessionManager sm=ctx.getSessionManager();
-	try {
-	    sm.stop();
-	} catch(IllegalStateException ex ) {
-	    throw new TomcatException( ex );
-	}
-    }
 
 }

@@ -130,16 +130,12 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     /** Set the context manager. To keep it simple we don't support
      *  dynamic add/remove for this interceptor. 
      */
-    public void setContextManager( ContextManager cm ) {
+    public void engineInit( ContextManager cm )
+	throws TomcatException
+    {
 	this.cm=cm;
-	
 	// set-up a per/container note for maps
-	try {
-	    ctExtMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE, "map.extension");
-	} catch( TomcatException ex ) {
-	    ex.printStackTrace();
-	    throw new RuntimeException( "Invalid state ");
-	}
+	ctExtMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE, "map.extension");
     }
 
     /** Called when a context is added.

@@ -111,7 +111,6 @@ public class Context {
     private ContextManager contextM;
     private ServletContext contextFacade;
 
-    private SessionManager sessionManager;
     private ServletLoader servletL;
     boolean reloadable=true; // XXX change default to false after testing
 
@@ -424,9 +423,6 @@ public class Context {
 
     public void setDistributable(boolean isDistributable) {
         this.isDistributable = isDistributable;
-	if(null != sessionManager) {
-	    sessionManager.setDistributable( isDistributable );
-	}
     }
 
 
@@ -436,9 +432,6 @@ public class Context {
 
     public void setSessionTimeOut(int sessionTimeOut) {
         this.sessionTimeOut = sessionTimeOut;
-        if(null != sessionManager) {
-            sessionManager.setSessionTimeOut(sessionTimeOut);
-        }
     }
 
     public FileNameMap getMimeMap() {
@@ -648,19 +641,6 @@ public class Context {
     }
 
     // -------------------- Loading and sessions --------------------
-    public SessionManager getSessionManager() {
-	return sessionManager;
-    }
-
-    public void setSessionManager( SessionManager manager ) {
-    	sessionManager= manager;
-        if(null != sessionManager) {
-            sessionManager.setSessionTimeOut(sessionTimeOut);
-	    sessionManager.setDistributable( isDistributable );
-        }
-    }
-
-
     public void setServletLoader(ServletLoader loader ) {
 	this.servletL=loader;
     }
