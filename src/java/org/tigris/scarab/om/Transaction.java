@@ -85,6 +85,7 @@ public class Transaction
 
     /**
      * The Attachment associated with this Transaction
+        // FIXME: (JSS) is this needed?
      */
     private Attachment aAttachment = null;                 
 
@@ -148,6 +149,7 @@ public class Transaction
         
         // add data to context
         context.put("issue", issue);
+        // FIXME: (JSS) is this needed?
         context.put("attachment", aAttachment);
         context.put("activityList", getActivityList());
         
