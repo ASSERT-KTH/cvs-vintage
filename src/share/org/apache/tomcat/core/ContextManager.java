@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.1 1999/10/09 00:30:02 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.2 1999/10/12 06:41:33 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/12 06:41:33 $
  *
  * ====================================================================
  *
@@ -73,6 +73,12 @@ import java.util.*;
 
 
 /**
+ * A collection class representing the Contexts associated with a particular
+ * Server.  The managed Contexts can be accessed directly by name, or
+ * indirectly by requesting the Context responsible for processing a
+ * particular path.  One particular Context can be distinguished as the
+ * default Context, which is selected to process paths for which no other
+ * Context is responsible.
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -81,22 +87,71 @@ import java.util.*;
 
 public class ContextManager  implements Server {
 
+    /**
+     * The string constants for this ContextManager.
+     */
+
     private StringManager sm =
         StringManager.getManager(Constants.Package);
 
+
+    /**
+     * The default Context used to process paths not associated with
+     * any other Context.
+     */
+
     private Context defaultContext;
+
+    /**
+     * The set of Contexts associated with this ContextManager,
+     * keyed by context name.
+     */
+
     private Hashtable contexts = new Hashtable();
+
+
+    /**
+     * The set of Contexts associated with this ContextManager,
+     * keyed by the path prefix to be processed by this Context.
+     */
+
     private Hashtable contextMaps = new Hashtable();
+
+
+    /**
+     * The server information string to be returned by the server
+     * associated with this ContextManager.
+     */
+
     private String serverInfo = null;
 
+
+    /**
+     * The virtual host name for the Server this ContextManager
+     * is associated with.
+     * XXX Why is this here instead of in the Server?
+     */
     // Used by Contexts
     String hostname;
+
+    /**
+     * The port number being listed to by the Server this ContextManager
+     * is associated with.
+     * XXX Why is this here instead of in the Server?
+     */
+
     int port;
+
+
+    /**
+     * Construct a new ContextManager instance with default values.
+     */
 
     public ContextManager() {
 
     }
     
+
     /**
      * Gets the server info string for this server
      */
@@ -108,60 +163,86 @@ public class ContextManager  implements Server {
 
     }
 
+
     /**
      * Sets the server info string for this server. This string must
      * be of the form <productName>/<productVersion> [(<optionalInfo>)]
+     *
+     * @param serverInfo The new server information string
      */
 
     public void setServerInfo(String serverInfo) {
         this.serverInfo = serverInfo;
     }
 
+
+    /**
+     * Gets the document base of the default context for this server.
+     */
+
     public URL getDocumentBase() {
 	return defaultContext.getDocumentBase();
     }
 
+
     /**
      * Sets the document base of the default context for this server.
+     *
+     * @param docBase The new document base
      */
 
     public void setDocumentBase(URL docBase) {
 	defaultContext.setDocumentBase(docBase);
     }
+
     
     /**
-     * Gets the default Context for this server
+     * Gets the default Context for this server.
      */
+
     public Context getDefaultContext() {
         return defaultContext;
     }
 
+
     /**
-     * Gets the default Context for this server
+     * Sets the default Context for this server.
+     *
+     * @param ctx The new default Context
      */
+
     public void setDefaultContext(Context ctx) {
         defaultContext=ctx;
     }
 
+
     /**
-     * Get the names of all the contexts in the system.
+     * Get the names of all the contexts in this server.
      */
     
     public Enumeration getContextNames() {
         return contexts.keys();
     }
 
+
     /**
-     * Get a context by it's name
+     * Gets a context by it's name, or <code>null</code> if there is
+     * no such context.
+     *
+     * @param name Name of the requested context
      */
     
     public Context getContext(String name) {
 	return (Context)contexts.get(name);
     }
 
+
     /**
      * Gets the context that is responsible for requests for a
-     * particular path.
+     * particular path.  If no specifically assigned Context can be
+     * identified, returns the default Context.
+     *
+     * @param path The path for which a Context is requested
      */
     
     public Context getContextByPath(String path) {
@@ -195,6 +276,16 @@ public class ContextManager  implements Server {
 
 	return ctx;
     }
+
+
+    /**
+     * Adds a new Context to the set managed by this ContextManager.
+     * XXX Why is there no context name argument?
+     * XXX Should this be synchronized?
+     *
+     * @param path Path prefix to be processed by this Context
+     * @param docBase Document base URL for this Context
+     */
 
     public Context addContext(String path, URL docBase) {
         if (path == null) {
@@ -246,8 +337,12 @@ public class ContextManager  implements Server {
 	return context;
     }
 
+
     /**
-     * Removes a context from service
+     * Removes a context from service.
+     * XXX Should this be synchronized?
+     *
+     * @param name Name of the Context to be removed
      */
     
     public void removeContext(String name) {
@@ -265,21 +360,46 @@ public class ContextManager  implements Server {
 	}
     }
 
+
+    /**
+     * Sets the port number on which this server listens.
+     *
+     * @param port The new port number
+     */
+
     public void setPort(int port) {
 	this.port=port;
     }
+
+
+    /**
+     * Gets the port number on which this server listens.
+     */
 
     public int getPort() {
 	return port;
     }
 
+
+    /**
+     * Sets the virtual host name of this server.
+     *
+     * @param host The new virtual host name
+     */
+
     public void setHostName( String host) {
 	this.hostname=host;
     }
 
+
+    /**
+     * Gets the virtual host name of this server.
+     */
+
     public String getHostName() {
 	return hostname;
     }
+
 
     /** Common for all connectors, needs to be shared in order to avoid
 	code duplication
