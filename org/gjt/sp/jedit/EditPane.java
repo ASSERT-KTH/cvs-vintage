@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.25 2002/05/14 11:20:41 spestov Exp $
+ * @version $Id: EditPane.java,v 1.26 2002/05/29 09:53:13 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -508,19 +508,6 @@ public class EditPane extends JPanel implements EBComponent
 				textArea.getPainter().repaint();
 			}
 		}
-		else if(msg.getWhat() == BufferUpdate.DIRTY_CHANGED)
-		{
-			if(_buffer == buffer)
-			{
-				if(bufferSwitcher != null)
-				{
-					if(buffer.isDirty())
-						bufferSwitcher.repaint();
-					else
-						bufferSwitcher.updateBufferList();
-				}
-			}
-		}
 		else if(msg.getWhat() == BufferUpdate.LOADED)
 		{
 			if(_buffer == buffer)
@@ -542,20 +529,23 @@ public class EditPane extends JPanel implements EBComponent
 			}
 
 		}
+		else if(msg.getWhat() == BufferUpdate.DIRTY_CHANGED)
+		{
+			if(_buffer == buffer)
+			{
+				if(bufferSwitcher != null)
+				{
+					if(buffer.isDirty())
+						bufferSwitcher.repaint();
+					else
+						bufferSwitcher.updateBufferList();
+				}
+			}
+		}
 		else if(msg.getWhat() == BufferUpdate.MARKERS_CHANGED)
 		{
 			if(_buffer == buffer)
 				textArea.getGutter().repaint();
-		}
-		else if(msg.getWhat() == BufferUpdate.MODE_CHANGED)
-		{
-			if(_buffer == buffer)
-			{
-				textArea.propertiesChanged();
-
-				if(view.getEditPane() == this)
-					view.getStatus().updateBufferStatus();
-			}
 		}
 		else if(msg.getWhat() == BufferUpdate.PROPERTIES_CHANGED)
 		{

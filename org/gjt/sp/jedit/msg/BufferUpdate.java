@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a buffer-related change occurs.
  * @author Slava Pestov
- * @version $Id: BufferUpdate.java,v 1.6 2002/05/14 11:20:41 spestov Exp $
+ * @version $Id: BufferUpdate.java,v 1.7 2002/05/29 09:53:14 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -66,11 +66,6 @@ public class BufferUpdate extends EBMessage
 	public static final Object MARKERS_CHANGED = "MARKERS_CHANGED";
 
 	/**
-	 * Buffer mode changed.
-	 */
-	public static final Object MODE_CHANGED = "MODE_CHANGED";
-
-	/**
 	 * Buffer saving.
 	 */
 	public static final Object SAVING = "SAVING";
@@ -86,6 +81,11 @@ public class BufferUpdate extends EBMessage
 	 * @since jEdit 4.1pre1
 	 */
 	public static final Object PROPERTIES_CHANGED = "PROPERTIES_CHANGED";
+
+	/**
+	 * Mode changed.
+	 */
+	public static final Object MODE_CHANGED = "MODE_CHANGED";
 	//}}}
 
 	//{{{ BufferUpdate constructor
