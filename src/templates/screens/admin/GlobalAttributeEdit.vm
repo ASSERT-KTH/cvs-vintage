@@ -18,7 +18,7 @@
    $l10n.ConfirmDeleteAttribute
    #if ($attribute.hasModuleMappings())
        $l10n.AttrMappedToModules
-   #elseif ($attribute.hasIssueTypeMappings())
+   #elseif ($attribute.hasGlobalIssueTypeMappings())
        $l10n.AttrMappedToIssueTypes
    #end
    <p><input type="submit" value="$l10n.ConfirmDelete"  name="eventSubmit_doDeleteattribute" /></p>

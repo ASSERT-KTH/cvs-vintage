@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.56 2003/06/17 04:00:30 irk_tpt Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.57 2003/07/02 16:58:10 dlr Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -143,7 +143,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 // With modules or issue types, give confirmation.
                 if (!attr.getDeleted() && 
                     attrGroup.get("Deleted").toString().equals("true") &&
-                    (attr.hasModuleMappings() || attr.hasIssueTypeMappings()))
+                    (attr.hasModuleMappings() ||
+                     attr.hasGlobalIssueTypeMappings()))
                 {
                     context.put("deleting", "deleting");
                     confirmDelete=true;
@@ -504,7 +505,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                 currentModule.getModuleId());
                 }
                 // Add user attribute to module
-                if(!attribute.hasMapping(currentModule,issueType))
+                if (!attribute.hasMapping(currentModule, issueType))
                 {
                       currentModule.addRModuleAttribute(issueType,attribute);
                       scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
@@ -521,7 +522,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                                 + issueType.getIssueTypeId());
                 }
                 // Add user attribute to issue type
-                if(!attribute.hasMapping(issueType))
+                if (!attribute.hasGlobalMapping(issueType))
                 {
                    issueType.addRIssueTypeAttribute(attribute);
                    scarabR.setConfirmMessage(l10n.get("AttributeAdded"));

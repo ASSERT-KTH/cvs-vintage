@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.68 2003/06/17 04:00:31 irk_tpt Exp $
+  * @version $Id: Attribute.java,v 1.69 2003/07/02 16:58:10 dlr Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -708,70 +708,80 @@ public class Attribute
         return newAttribute;
     }
             
-    /* 
-     * Returns true if this attribute is mapped to any modules.
+    /**
+     * @return Whether this attribute is mapped to any modules.
      */
     public boolean hasModuleMappings()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(RModuleAttributePeer.ATTRIBUTE_ID,
-                 getAttributeId());
-        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
-        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
-            .getValue(1).asInt() > 0;
-    }
- 
-    /*
-     * Returns true if this attribute is mapped to any issue types.
-     */
-    public boolean hasIssueTypeMappings()
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID,
-                 getAttributeId());
-        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
-        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
-            .getValue(1).asInt() > 0;
+        return hasMapping((Module) null, (IssueType) null);
     }
 
-    /*
-     * Returns true if this attribute is already mapped to the module and issue type.
+    /**
+     * @param module <code>null</code> to ignore this criterion.
+     * @param issueType <code>null</code> to ignore this criterion.
+     * @return Whether this attribute is already mapped to the
+     * specified {@link Module} and {@link IssueType}.
      */
-
     public boolean hasMapping(Module module, IssueType issueType)
         throws Exception
     {
         Criteria crit = new Criteria();
         crit.add(RModuleAttributePeer.ATTRIBUTE_ID,
                  getAttributeId());
-        crit.add(RModuleAttributePeer.MODULE_ID,
-                 module.getModuleId());
-        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID,
-                 issueType.getIssueTypeId());
+        if (module != null)
+        {
+            crit.add(RModuleAttributePeer.MODULE_ID,
+                     module.getModuleId());
+        }
+        if (issueType != null)
+        {
+            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID,
+                     issueType.getIssueTypeId());
+        }
         crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
         return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
             .getValue(1).asInt() > 0;
     }
-
-    /*
-     * Returns true if this attribute is already mapped to the issue type.
+ 
+    /**
+     * Refers to global issue types.
+     *
+     * @return Whether this attribute is mapped to any issue types.
+     * @see #hasMapping(IssueType)
      */
+    public boolean hasGlobalIssueTypeMappings()
+        throws Exception
+    {
+        return hasGlobalMapping((IssueType) null);
+    }
 
-    public boolean hasMapping(IssueType issueType)
+    /**
+     * Refers to global issue types.
+     *
+     * @param issueType A specific {@link IssueType} to find
+     * associated attributes for, or <code>null</code> to ignore this
+     * criterion.
+     * @return Whether there are any mappings for this attribute.
+     */
+    public boolean hasGlobalMapping(IssueType issueType)
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add(RModuleAttributePeer.ATTRIBUTE_ID,
+        crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID,
                  getAttributeId());
-        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID,
-                 issueType.getIssueTypeId());
-        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
+        if (issueType != null)
+        {
+            crit.add(RIssueTypeAttributePeer.ISSUE_TYPE_ID,
+                     issueType.getIssueTypeId());
+        }
+        crit.addSelectColumn("count(" + RIssueTypeAttributePeer.ATTRIBUTE_ID
+                             + ')');
         return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
             .getValue(1).asInt() > 0;
     }
-    /* 
+
+    /**
      * Delete mappings with all modules and issue types.
      */
     public void deleteModuleMappings()
@@ -801,7 +811,7 @@ public class Attribute
         ScarabCache.clear();
     }
 
-    /* 
+    /**
      * Delete mappings with global issue types.
      */
     public void deleteIssueTypeMappings(ScarabUser user)
