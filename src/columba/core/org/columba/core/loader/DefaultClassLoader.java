@@ -17,8 +17,6 @@ package org.columba.core.loader;
 
 import java.lang.reflect.Constructor;
 
-import org.columba.core.logging.ColumbaLogger;
-
 /**
  * @author freddy
  *
