@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-
 import javax.swing.JFrame;
 
 import org.columba.addressbook.gui.ISelectAddressDialog;
@@ -25,10 +24,27 @@ import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.model.IHeaderItemList;
 
 /**
+ * Provides reusable dialogs.
+ * 
  * @author fdietz
- *
  */
 public interface IDialogFacade {
-	 ISelectFolderDialog getSelectFolderDialog();
-	 ISelectAddressDialog getSelectAddressDialog(JFrame frame, IHeaderItemList[] listArray);
+
+	/**
+	 * Get select folder dialog. User is prompted for a 
+	 * folder using a JTree widget.
+	 * 
+	 * @return		select folder dialog
+	 */
+	ISelectFolderDialog getSelectFolderDialog();
+
+	/**
+	 * Get recipient list editor dialog.
+	 * 
+	 * @param frame			parent frame
+	 * @param listArray		array of To:, Cc:, Bcc: HeaderItemList
+	 * @return				recipient list editor dialog
+	 */
+	ISelectAddressDialog getSelectAddressDialog(JFrame frame,
+			IHeaderItemList[] listArray);
 }

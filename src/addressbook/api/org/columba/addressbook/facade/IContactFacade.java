@@ -18,27 +18,41 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
-import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
-import org.columba.mail.message.IHeaderList;
 
 /**
+ * Provides high-level contact management methods.
+ * 
  * @author fdietz
- *
  */
 public interface IContactFacade {
-
-	void addContact(int uid, String address);
-	void addContactToCollectedAddresses(String address);
-	IAddressCollector getAddressCollector();
 	
-	IHeaderItemList createHeaderItemList();
-	IHeaderItem createHeaderItem();
-	IContactItem createContactItem();
-	IGroupItem createGroupItem();
-	IContact createContact();
-	IHeaderList createHeaderList();
+	/**
+	 * Add new contact to addressbook.
+	 * 
+	 * @param uid		addressbook unique id
+	 * @param address	new email address
+	 */
+	void addContact(int uid, String address);
+
+	/**
+	 * Add new contact to "Collected Addresses".
+	 * 
+	 * @param address	new email address
+	 */
+	void addContactToCollectedAddresses(String address);
+
+	/**
+	 * Add new contact to "Personal Addressbook".
+	 * 
+	 * @param address	new email address
+	 */
+	void addContactToPersonalAddressbook(String address);
+	
+	/**
+	 * Get address collector used for autocompletion.
+	 * 
+	 * @return		address collector
+	 */
+	IAddressCollector getAddressCollector();
+
 }

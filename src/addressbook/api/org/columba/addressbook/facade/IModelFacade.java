@@ -17,20 +17,30 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-/**
- * Provides a list of all available services.
- * 
- * @author fdietz
- */
-public interface AddressbookServiceProvider {
+import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IGroupItem;
+import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IHeaderItemList;
+import org.columba.mail.message.IHeaderList;
 
-	public static final String PACKAGE = "org.columba.addressbook.facade";
-	
-	public static final String CONTACT = PACKAGE+"IContactFacade";
-	public static final String CONFIG = PACKAGE+"IConfigFacade";
-	public static final String FOLDER = PACKAGE+"IFolderFacade";
-	public static final String PARSER = PACKAGE+"IParserFacade";
-	public static final String DIALOG = PACKAGE+"IDialogFacade";
-	public static final String MODEL = PACKAGE+"IModelFacade";
-	
+/**
+ * Builder for creating contact models.
+ * 
+ * @author fdietz 
+ */
+public interface IModelFacade {
+
+	IHeaderItemList createHeaderItemList();
+
+	IHeaderItem createHeaderItem();
+
+	IContactItem createContactItem();
+
+	IGroupItem createGroupItem();
+
+	IContact createContact();
+
+	IHeaderList createHeaderList();
+
 }

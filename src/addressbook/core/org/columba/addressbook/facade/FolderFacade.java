@@ -22,30 +22,21 @@ import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 
 /**
- * Contact folder-related functionality.
+ * Provides access to contact and group folders.
  * 
  * @author fdietz
  */
 public class FolderFacade implements IFolderFacade {
 
 	/**
-	 * 
-	 * Return a Folder object
-	 * 
-	 * @param uid
-	 *            id of folder
-	 * @return Folder
+	 * @see org.columba.addressbook.facade.IFolderFacade#getFolder(int)
 	 */
 	public IFolder getFolder(int uid) {
 		return (IFolder) AddressbookTreeModel.getInstance().getFolder(uid);
 	}
 
 	/**
-	 * 
-	 * Returns a reference to the system addressbook which automatically
-	 * collects addresses
-	 * 
-	 * @return Folder
+	 * @see org.columba.addressbook.facade.IFolderFacade#getCollectedAddresses()
 	 */
 	public IContactFolder getCollectedAddresses() {
 		AddressbookTreeModel model = AddressbookTreeModel.getInstance();

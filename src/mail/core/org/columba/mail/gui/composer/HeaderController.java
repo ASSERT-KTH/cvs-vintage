@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.columba.addressbook.facade.IContactFacade;
+import org.columba.addressbook.facade.IModelFacade;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
@@ -157,7 +158,7 @@ public class HeaderController {
 		
 		IHeaderItemList list=null;
 		try {
-			IContactFacade c = ServiceConnector.getContactFacade();
+			IModelFacade c = ServiceConnector.getModelFacade();
 			list = c.createHeaderItemList();
 		} catch (ServiceNotFoundException e1) {
 			e1.printStackTrace();
@@ -199,7 +200,7 @@ public class HeaderController {
 			if (item == null) {
 				
 				try {
-					IContactFacade c = ServiceConnector.getContactFacade();
+					IModelFacade c = ServiceConnector.getModelFacade();
 					item = c.createContactItem();
 					item.setDisplayName(s);
 					item.setHeader(header);

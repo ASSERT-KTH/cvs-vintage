@@ -27,8 +27,9 @@ import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
 import org.columba.addressbook.model.IHeaderItemList;
 
 /**
+ * Provides reusable dialogs.
+ * 
  * @author fdietz
- *
  */
 public class DialogFacade implements IDialogFacade{
 

@@ -22,17 +22,18 @@ import org.columba.addressbook.facade.IConfigFacade;
 import org.columba.addressbook.facade.IContactFacade;
 import org.columba.addressbook.facade.IDialogFacade;
 import org.columba.addressbook.facade.IFolderFacade;
+import org.columba.addressbook.facade.IModelFacade;
 import org.columba.core.services.ServiceManager;
 import org.columba.core.services.ServiceNotFoundException;
 
 /**
+ * Provides access to internal functionality for external components.
+ * 
  * @author fdietz
- *  
  */
-public class ServiceConnector {
+public final class ServiceConnector {
 
-	private ServiceConnector() {
-	}
+	private ServiceConnector() {}
 
 	public static IContactFacade getContactFacade()
 			throws ServiceNotFoundException {
@@ -56,6 +57,11 @@ public class ServiceConnector {
 			throws ServiceNotFoundException {
 		return (IDialogFacade) ServiceManager.getInstance().createService(
 				AddressbookServiceProvider.DIALOG);
+	}
+
+	public static IModelFacade getModelFacade() throws ServiceNotFoundException {
+		return (IModelFacade) ServiceManager.getInstance().createService(
+				AddressbookServiceProvider.MODEL);
 	}
 
 }

@@ -22,41 +22,27 @@ import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.GroupItem;
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IContact;
-import org.columba.addressbook.model.IContactItem;
-import org.columba.addressbook.model.IGroupItem;
-import org.columba.addressbook.model.IHeaderItem;
-import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.Main;
-import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
 /**
- * Provides contact management helper methods.
+ * Provides high-level contact management methods.
  * 
- * @author fdietz   
+ * @author fdietz
  */
-public final class ContactFacade implements IContactFacade{
+public final class ContactFacade implements IContactFacade {
 
-	
 	/**
-	 * Add contact to selected addressbook.
-	 * 
-	 * @param uid		selected addressbook	
-	 * @param address	email address
+	 * @see org.columba.addressbook.facade.IContactFacade#addContact(int, java.lang.String)
 	 */
 	public void addContact(int uid, String address) {
 		if (address == null) {
-            return;
-        }
-		
+			return;
+		}
+
 		if (address.length() == 0)
 			return;
 
@@ -64,39 +50,38 @@ public final class ContactFacade implements IContactFacade{
 		try {
 			adr = Address.parse(address);
 		} catch (ParserException e1) {
-			if ( Main.DEBUG)
-			e1.printStackTrace();
+			if (Main.DEBUG)
+				e1.printStackTrace();
 			return;
 		}
-		
+
 		System.out.println("address:" + address);
 
-		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel.getInstance()
-				.getFolder(uid);
+		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel
+				.getInstance().getFolder(uid);
 		try {
 			if (selectedFolder.exists(adr.getMailAddress()) == null) {
 				IContact card = new Contact();
 
 				String fn = adr.getShortAddress();
-				
+
 				card.set(VCARD.FN, fn);
 				card.set(VCARD.DISPLAYNAME, fn);
-				card.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET, adr.getMailAddress());
+				card.set(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET, adr
+						.getMailAddress());
 				card.fillFullName(fn);
 				selectedFolder.add(card);
 
 			}
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	/**
-	 * Add contact to "Collected Addresses" addressbook
-	 * 
-	 * @param address		email address
+	 * @see org.columba.addressbook.facade.IContactFacade#addContactToCollectedAddresses(java.lang.String)
 	 */
 	public void addContactToCollectedAddresses(String address) {
 		addContact(102, address);
@@ -110,45 +95,10 @@ public final class ContactFacade implements IContactFacade{
 	}
 
 	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#createHeaderItemList()
+	 * @see org.columba.addressbook.facade.IContactFacade#addContactToPersonalAddressbook(java.lang.String)
 	 */
-	public IHeaderItemList createHeaderItemList() {
-		return new HeaderItemList();
-	}
-
-	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#createHeaderItem()
-	 */
-	public IHeaderItem createHeaderItem() {
-		return new HeaderItem();
-	}
-
-	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#createContact()
-	 */
-	public IContact createContact() {
-		return new Contact();
-	}
-
-	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#createHeaderList()
-	 */
-	public IHeaderList createHeaderList() {
-		return new HeaderList();
-	}
-
-	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#createContactItem()
-	 */
-	public IContactItem createContactItem() {
-		return new ContactItem();
-	}
-
-	/**
-	 * @see org.columba.addressbook.facade.IContactFacade#createGroupItem()
-	 */
-	public IGroupItem createGroupItem() {
-		return new GroupItem();
+	public void addContactToPersonalAddressbook(String address) {
+		addContact(101, address);
 	}
 
 }

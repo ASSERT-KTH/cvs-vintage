@@ -20,10 +20,23 @@ package org.columba.addressbook.facade;
 import org.columba.core.xml.XmlElement;
 
 /**
+ * Provides access to addressbook configuration.
+ * 
  * @author fdietz
- *
  */
 public interface IConfigFacade {
 	
+	 /**
+	  * Get root node of configuration file. 
+	  * <p>
+	  * This currently includes:
+	  * <ul>
+	  *  <li>options</li>
+	  *  <li>tree</li>
+	  * </ul>
+	  * 
+	  * @param configName	name of configuration file, without suffix
+	  * @return				xml root node
+	  */
 	 public XmlElement getConfigElement(String configName);
 }

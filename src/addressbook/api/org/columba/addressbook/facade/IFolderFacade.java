@@ -21,32 +21,42 @@ import org.columba.addressbook.folder.IContactFolder;
 import org.columba.addressbook.folder.IFolder;
 
 /**
+ * Provides access to contact and group folders.
+ * 
  * @author fdietz
- *
  */
 public interface IFolderFacade {
+
 	/**
+	 * Get a Folder object
 	 * 
-	 * Return a Folder object
-	 * 
-	 * @param uid
-	 *            id of folder
-	 * @return Folder
+	 * @param uid 		unique id of folder
+	 * @return Folder	selected folder
 	 */
 	IFolder getFolder(int uid);
 
 	/**
-	 * 
-	 * Returns a reference to the system addressbook which automatically
+	 * Get a reference to the system addressbook which automatically
 	 * collects addresses
 	 * 
-	 * @return Folder
+	 * @return Folder		collected address contact store
 	 */
 	IContactFolder getCollectedAddresses();
 	
+	
+	/**
+	 * Get "Personal Addressbook" folder.
+	 * 
+	 * @return	local addressbook folder
+	 */
 	IContactFolder getLocalAddressbook();
-	
+
+	/**
+	 * Get folder with <code>name</code>.
+	 * 
+	 * @param name		name of folder
+	 * @return			selected folder
+	 */
 	IFolder getFolder(String name);
-	
 
 }

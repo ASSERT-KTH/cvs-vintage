@@ -96,6 +96,8 @@ public class AddressbookMain implements IComponentPlugin {
 		ServiceManager.getInstance().register(
 				AddressbookServiceProvider.DIALOG,
 				"org.columba.addressbook.facade.DialogFacade");
+		ServiceManager.getInstance().register(AddressbookServiceProvider.MODEL,
+				"org.columba.addressbook.facade.ModelFacade");
 	}
 
 	/**
