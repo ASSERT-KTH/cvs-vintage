@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JEREMIEContext.java,v 1.7 2005/02/18 08:50:14 benoitf Exp $
+ * $Id: JEREMIEContext.java,v 1.8 2005/03/03 16:09:05 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -47,8 +47,7 @@ import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 /**
- * @author riviereg To change the template for this generated type comment go to
- *         Window - Preferences - Java - Code Generation - Code and Comments
+ * @author Guillaume Rivière
  */
 public class JEREMIEContext implements Context {
 
@@ -71,18 +70,17 @@ public class JEREMIEContext implements Context {
 
     /**
      * Constructs an JEREMIE Wrapper context
-     * @param jeremieContext the inital JEREMIE context
-     * @throws NamingException if a naming exception is encountered
+     * @param jeremieCtx the inital JEREMIE context
      */
-    private JEREMIEContext(Context jeremieCtx) throws NamingException {
+    private JEREMIEContext(Context jeremieCtx) {
         jeremieContext = jeremieCtx;
-
     }
 
     /**
      * @param o
      * @param name
-     * @return @throws NamingException
+     * @return
+     * @throws NamingException
      */
     public static Context getSingleInstance(Hashtable env) throws NamingException {
         String key = null;
@@ -107,7 +105,7 @@ public class JEREMIEContext implements Context {
      */
     private Object unwrapObject(Object o, Name name) throws NamingException {
         try {
-            //TODO: May we can do a narrow ?
+            // TODO: May we can do a narrow ?
             if (o instanceof JNDIRemoteResource) {
                 return ((JNDIRemoteResource) o).getResource();
             } else {
