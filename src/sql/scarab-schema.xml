@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.17 2001/05/16 05:15:15 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.18 2001/05/24 02:17:25 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -356,7 +356,7 @@
         This field could be null for the normal instance where the issue
         is local to this database.
     -->
-    <column name="ID_INSTANCE"  type="VARCHAR" size="15"/>
+    <column name="ID_DOMAIN"  type="VARCHAR" size="15"/>
     <!--
         Module that issue relates to.
     -->
@@ -385,10 +385,10 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="CREATED_BY" foreign="USER_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="MODIFIED_BY" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -454,7 +454,7 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -506,7 +506,7 @@
     <!--
         The instance name of scarab the module is located within.
     -->
-    <column name="INSTANCE"  type="VARCHAR" size="15"/>
+    <column name="DOMAIN"  type="VARCHAR" size="15"/>
     <!--
         Abbreviation whose primary use to identify related issues.
     -->
@@ -542,10 +542,10 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="PARENT_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="OWNER_ID" foreign="USER_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="QA_CONTACT_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -720,7 +720,7 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 
@@ -773,7 +773,7 @@
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="TURBINE_USER">
+    <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
@@ -832,9 +832,10 @@
     name. Then, all you need to do is regenerate the OR code to use the new 
     table name.
 -->
-<table name="TURBINE_USER" javaName="ScarabUser" skipSql="true"
+<table name="SCARAB_USER" javaName="ScarabUser" skipSql="true"
       baseClass="org.apache.turbine.om.security.TurbineUser"
-      basePeer="org.apache.turbine.om.security.peer.TurbineUserPeer">
+      basePeer="org.apache.turbine.om.security.peer.TurbineUserPeer"
+      idMethod="idbroker">
     <!--
         Unique identifier.
     -->

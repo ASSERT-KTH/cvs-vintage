@@ -14,9 +14,9 @@ INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (1, 'turbine_root');
 # Remeber to set a good password for this user in a production system!
 
 INSERT INTO TURBINE_USER 
-    (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME) 
+    (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, CONFIRM_VALUE) 
     VALUES
-    (0, 'turbine', 'turbine', 'turbine', 'turbine');
+    (0, 'turbine@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'turbine', 'turbine', 'CONFIRMED');
 
 # Assign the user 'turbine' a system-wide role 'turbine_root'
 
