@@ -55,6 +55,7 @@ import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
+import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
@@ -68,13 +69,13 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.31 2003/03/27 23:52:15 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.32 2003/04/17 22:52:13 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
     private static final String[] EMAIL_PARAMS = 
-        {GlobalParameterManager.EMAIL_ENABLED, 
-         GlobalParameterManager.EMAIL_INCLUDE_ISSUE_DETAILS};
+        {GlobalParameter.EMAIL_ENABLED, 
+         GlobalParameter.EMAIL_INCLUDE_ISSUE_DETAILS};
 
     /**
      * Process Update button which updates a Module
@@ -147,7 +148,7 @@ public class ModifyModule extends RequireLoginFirstAction
 
                 // Set email overrides
                 if (GlobalParameterManager.getBoolean(
-                        GlobalParameterManager.EMAIL_ALLOW_MODULE_OVERRIDE)) 
+                        GlobalParameter.EMAIL_ALLOW_MODULE_OVERRIDE)) 
                 {
                     ParameterParser pp = data.getParameters();
                     String name;

@@ -52,22 +52,24 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
+import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.GlobalParameterPeer;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
  * Action for the GlobalEmailSettings form
+ *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: GlobalEmailSettings.java,v 1.3 2003/03/15 21:56:57 jon Exp $
-*/
+ * @version $Id: GlobalEmailSettings.java,v 1.4 2003/04/17 22:52:47 jon Exp $
+ */
 public class GlobalEmailSettings 
     extends RequireLoginFirstAction
 {
     private static final String[] NAMES = 
-        {GlobalParameterManager.EMAIL_ENABLED, 
-         GlobalParameterManager.EMAIL_INCLUDE_ISSUE_DETAILS,
-         GlobalParameterManager.EMAIL_ALLOW_MODULE_OVERRIDE};
+        {GlobalParameter.EMAIL_ENABLED, 
+         GlobalParameter.EMAIL_INCLUDE_ISSUE_DETAILS,
+         GlobalParameter.EMAIL_ALLOW_MODULE_OVERRIDE};
 
     public void doSave(RunData data, TemplateContext context)
         throws Exception
@@ -79,7 +81,7 @@ public class GlobalEmailSettings
             name = NAMES[i];
             GlobalParameterManager.setBoolean(name, pp.getBoolean(name));
         }
-        // Note: name = GlobalParameterManager.EMAIL_ALLOW_MODULE_OVERRIDE
+        // Note: name = GlobalParameter.EMAIL_ALLOW_MODULE_OVERRIDE
         if (!GlobalParameterManager.getBoolean(name)) 
         {
             // need to delete module overrides

@@ -52,10 +52,21 @@ import org.apache.torque.om.Persistent;
  * This class represents a Global Parameter.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: GlobalParameter.java,v 1.3 2003/04/16 00:21:24 jon Exp $
+ * @version $Id: GlobalParameter.java,v 1.4 2003/04/17 22:55:31 jon Exp $
  */
 public  class GlobalParameter 
     extends org.tigris.scarab.om.BaseGlobalParameter
     implements Persistent
 {
+    // Email parameters
+    public static final String EMAIL_ENABLED = "email-enabled"; 
+    public static final String EMAIL_INCLUDE_ISSUE_DETAILS = 
+        "email-include-issue-details"; 
+    public static final String EMAIL_ALLOW_MODULE_OVERRIDE = 
+        "email-allow-module-overrides"; 
+
+    // Domain parameters
+    public static final String MODULE_DOMAIN = "module-domain";
+    public static final String MODULE_PORT = "module-port";
+    public static final String MODULE_SCHEME = "module-scheme";    
 }
