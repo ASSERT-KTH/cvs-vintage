@@ -28,7 +28,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.5 2002/10/20 21:11:15 linus Exp $
+// $Id: CrEmptyPackage.java,v 1.6 2002/11/01 06:11:56 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,8 +42,7 @@ import ru.novosoft.uml.model_management.*;
 import org.apache.log4j.Category;
 import org.argouml.cognitive.*;
 
-/** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
+/** A critic whether a package/subsystem/model is empty. */
 
 public class CrEmptyPackage extends CrUML {
     protected static Category cat = Category.getInstance(CrEmptyPackage.class);
@@ -57,8 +56,8 @@ public class CrEmptyPackage extends CrUML {
 
   public boolean predicate2(Object dm, Designer dsgr) {
     cat.debug("predicate2 on " + dm);
-    if (!(dm instanceof MModel)) return NO_PROBLEM;
-    MModel mod = (MModel) dm;
+    if (!(dm instanceof MPackage)) return NO_PROBLEM;
+    MPackage mod = (MPackage) dm;
     Collection elms = mod.getOwnedElements();
     if (elms == null || elms.size() == 0) return PROBLEM_FOUND;
     return NO_PROBLEM;
