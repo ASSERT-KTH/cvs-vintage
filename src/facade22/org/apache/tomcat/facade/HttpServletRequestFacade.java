@@ -265,7 +265,10 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getQueryString() {
-        return request.queryString().toString();
+        String qS=request.queryString().toString();
+	if( "".equals(qS) )
+	    return null;
+	return qS;
     }
 
     public String getRemoteUser() {
