@@ -124,21 +124,20 @@ public class ServerXmlReader extends BaseInterceptor {
 	if (configFile == null)
 	    configFile=DEFAULT_CONFIG;
 
-	if( configFile.startsWith( "/" ) ) 
-	    f=new File(configFile);
-	else
-	    f=new File( cm.getHome(), "/" + configFile);
+        f=new File(configFile);
+        if ( !f.isAbsolute())
+	    f=new File( cm.getHome(), File.separator + configFile);
 
-	if( f.exists() )
+	if( f.exists() ){
 	    loadConfigFile(xh,f,cm);
-
-	// load server-*.xml
-	Vector v = getUserConfigFiles(f);
-	for (Enumeration e = v.elements();
-	     e.hasMoreElements() ; ) {
-	    f = (File)e.nextElement();
-	    loadConfigFile(xh,f,cm);
-	}
+            // load server-*.xml
+            Vector v = getUserConfigFiles(f);
+            for (Enumeration e = v.elements();
+                 e.hasMoreElements() ; ) {
+                f = (File)e.nextElement();
+                loadConfigFile(xh,f,cm);
+            }
+        }
     }
 
     // -------------------- Xml reading details --------------------

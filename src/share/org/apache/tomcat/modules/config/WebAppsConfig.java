@@ -94,22 +94,20 @@ public class WebAppsConfig extends BaseInterceptor {
     }
 
     //-------------------- Implementation --------------------
-    
-    /** 
+
+    /**
      */
     public void engineInit(ContextManager cm) throws TomcatException {
 	Enumeration loadedCtx=cm.getContexts();
 	while( loadedCtx.hasMoreElements() ) {
 	    addExistingCtx( (Context)loadedCtx.nextElement());
 	}
-	
+
 	String home=cm.getHome();
-	File webappD;
-	
-	if( hostsD.startsWith( "/" ) ) 
-	    webappD=new File(hostsD);
-	else
-	    webappD=new File(home + "/" + hostsD);
+	File webappD=new File(hostsD);
+
+	if( ! webappD.isAbsolute() )
+	    webappD=new File(home + File.separator + hostsD);
 	
 	if (! webappD.exists() || ! webappD.isDirectory()) {
 	    log("No autoconf directory " + webappD );
