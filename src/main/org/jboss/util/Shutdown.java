@@ -19,7 +19,7 @@ import javax.management.*;
  * provides the ability to handle user shutdown requests.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class Shutdown
    implements MBeanRegistration, ShutdownMBean
@@ -31,7 +31,7 @@ public class Shutdown
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private final Category log = Category.getInstance(ClassPathExtension.class);
+   private final Category log = Category.getInstance(Shutdown.class);
    
    List mbeans = new ArrayList();
    MBeanServer server;
