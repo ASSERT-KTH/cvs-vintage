@@ -8,28 +8,24 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th>Issues</th>
+ <th>$l10n.Issues</th>
  <td>
   <input name="exportissues" value="$!exportissues" type="text" size="50" />
   <p><small>
-  Specify a comma separated list of issues and/or issue ranges.  A range
-  is a starting issue followed by a &quot;-&quot; and finally the end
-  issue. Example: PACS1-PACS5, PACS10, 20. Note: For security reasons,
-  it is only possible to export issues from the currently selected
-  module.</small></p>
+  $l10n.SpecifyACommaSepparatedList</small></p>
  </td>
 </tr>
 <tr>
- <th>Options</th>
+ <th>$l10n.Options</th>
  <td>
-<input type="radio" name="downloadtype" value="0" #if (!$data.Parameters.downloadtype || $data.Parameters.downloadtype=="0") checked="checked" #end /> Export as downloadable file
-<input type="radio" name="downloadtype" value="1" #if ($data.Parameters.downloadtype=="1") checked="checked" #end /> Export to browser window
+<input type="radio" name="downloadtype" value="0" #if (!$data.Parameters.downloadtype || $data.Parameters.downloadtype=="0") checked="checked" #end /> $l10n.ExportAsDownloadable
+<input type="radio" name="downloadtype" value="1" #if ($data.Parameters.downloadtype=="1") checked="checked" #end /> $l10n.ExportToBrowser
  </td>
 </tr>
 <tr>
- <th>Filename</th>
+ <th>$l10n.Filename</th>
  <td>
-<p>Save downloaded file as...</p> 
+<p>$l10n.SaveDownloadedAs</p> 
 #if ($data.Parameters.filename && $data.Parameters.filename.length() > 0)
 #set ($filename = $data.Parameters.filename)
 #else
@@ -43,7 +39,7 @@
 </div>
 
 <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doXmlissues" value="Export" />&#160;
+  <input type="submit" name="eventSubmit_doXmlissues" value="$l10n.Export" />&#160;
 </div>
 
 <script>

@@ -4,28 +4,24 @@
 
 <form action="$link.setPage("admin,ViewXMLExportSettings.vm")" method="post">
 
-<p>
-This screen allows you to export all of the global settings and currently
-selected module settings (optionally including the user data) into an XML
-file. This file can either be saved to disk (with the given name) or exported
-into your browser window and saved.
+<p>$l10n.XMLExportSettingsScreen
 </p>
 
 <p>
-<input type="radio" name="downloadtype" value="0" checked="checked" /> Export as downloadable file
-<input type="radio" name="downloadtype" value="1" /> Export to browser window
+<input type="radio" name="downloadtype" value="0" checked="checked" /> $l10n.ExportAsDownloadable
+<input type="radio" name="downloadtype" value="1" /> $l10n.ExportToBrowser
 </p>
 
 <p>
-<input type="checkbox" name="includeusers" value="1" /> Export user information
+<input type="checkbox" name="includeusers" value="1" /> $l10n.ExportUserInfo
 </p>
 
 <p>
-Save downloaded file as... <input type="text" size="50" name="filename" value="scarab-settings-export.xml" />
+$l10n.SaveDownloadedAs<input type="text" size="50" name="filename" value="scarab-settings-export.xml" />
 </p>
 
 <div class="functnbar2">
-  <input type="submit" name="export" value="Export" />
+  <input type="submit" name="export" value="$l10n.Export" />
 </div>
 
 </form>
