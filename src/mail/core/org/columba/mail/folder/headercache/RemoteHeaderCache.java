@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.headercache;
 
 import java.io.ObjectInputStream;
@@ -21,10 +22,12 @@ import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author freddy
@@ -45,18 +48,25 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 	}
 
 	public void load(WorkerStatusController worker) throws Exception {
-		ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+                }
 		headerList = new HeaderList();
 
 		ObjectInputStream p = openInputStream();
 
 		int capacity = p.readInt();
-		ColumbaLogger.log.info("capacity=" + capacity);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + capacity);
+                }
 
-		worker.setDisplayText("Loading headers from cache...");
-
-		if (worker != null)
+		if (worker != null) {
+                        worker.setDisplayText(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "load_headers"));
 			worker.setProgressBarMaximum(capacity);
+                }
 
 		for (int i = 1; i <= capacity; i++) {
 			if (worker != null)
@@ -67,12 +77,10 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 			loadHeader(p, h);
 
 			headerList.add(h, (String) h.get("columba.uid"));
-
 		}
 
 		// close stream
 		closeInputStream();
-
 	}
 
 	public void save(WorkerStatusController worker) throws Exception {
@@ -80,7 +88,9 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 		if (!isHeaderCacheLoaded())
 			return;
 
-		ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+                }
 
 		ObjectOutputStream p = openOutputStream();
 
@@ -127,5 +137,4 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
 		super.saveHeader(p, h);
 	}
-
 }
