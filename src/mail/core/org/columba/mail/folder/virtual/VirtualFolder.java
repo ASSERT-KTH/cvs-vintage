@@ -116,8 +116,6 @@ public class VirtualFolder extends Folder {
 
 		applySearch(worker);
 
-		addSearchToHistory();
-
 		return headerList;
 
 	}
