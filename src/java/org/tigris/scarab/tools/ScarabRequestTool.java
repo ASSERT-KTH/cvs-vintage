@@ -46,6 +46,9 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+import java.util.ArrayList;
+
 // Turbine
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
@@ -58,7 +61,7 @@ import org.apache.fulcrum.pool.Recyclable;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
@@ -258,7 +261,7 @@ try{
             {
                 pk = (ObjectKey)new NumberKey(id.toString());
             }
-            su = (ScarabUser)ScarabUserImplPeer.retrieveScarabUserImplByPK(pk);
+            su = UserManager.getInstance(pk);
         }
         catch (Exception e)
         {
@@ -531,6 +534,47 @@ try{
 
         return issue;
     }
+
+    /**
+     * Get a list of Issue objects.
+     *
+     * @return a <code>Issue</code> value
+     */
+    public List getIssues()
+        throws Exception
+    {
+        List issues = null;
+
+        Group issueGroup = getIntakeTool()
+            .get("Issue", IntakeTool.DEFAULT_KEY, false);
+        if ( issueGroup != null ) 
+        {            
+            NumberKey[] issueIds =  (NumberKey[])
+                issueGroup.get("Ids").getValue();
+            if ( issueIds != null ) 
+            {            
+                issues = new ArrayList(issueIds.length);
+                for ( int i=0; i<issueIds.length; i++ ) 
+                {
+                    issues.add(IssuePeer.retrieveByPK(issueIds[i]));
+                }
+            }
+        }
+        else if ( data.getParameters().getString("issue_ids") != null ) 
+        {                
+            String[] issueIdStrings = data.getParameters()
+                .getStrings("issue_ids");
+            issues = new ArrayList(issueIdStrings.length);
+            for ( int i=0; i<issueIdStrings.length; i++ ) 
+            {
+                issues.add(IssuePeer
+                           .retrieveByPK(new NumberKey(issueIdStrings[i])));
+            }
+        }
+        
+        return issues;
+    }
+
 
     /**
      * Get a new SearchIssue object. 
