@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.158 2004/04/08 15:03:45 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.159 2004/04/08 15:23:55 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -269,6 +269,7 @@
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
         <include name="org/jboss/ejb/plugins/keygenerator/hilo/HiLoKeyGeneratorFactory.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
+        <include name="org/jboss/ejb/plugins/inflow/JBossMessageEndpointFactory.java"/>
         <include name="org/jboss/ejb/plugins/jms/JMSContainerInvoker.java"/>
         <include name="org/jboss/ejb/timer/AbstractTimerSource.java"/>
         <include name="org/jboss/ejb/timer/FilePersistenceManager.java"/>
