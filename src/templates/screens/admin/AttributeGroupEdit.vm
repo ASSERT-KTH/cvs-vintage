@@ -33,10 +33,11 @@
  <tr>
  <th>$l10n.Name</th>
  <td>
+      #fieldErrorMsg($agGroup.Name "")
     #if ($issueType.Locked)
         $group.Name
     #else
-        <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
+           * <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
     #end
  </td>
  </tr>
