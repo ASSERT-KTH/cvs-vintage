@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.10 2000/07/11 07:29:19 alex Exp $
- * $Revision: 1.10 $
- * $Date: 2000/07/11 07:29:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.11 2000/07/27 18:43:07 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/07/27 18:43:07 $
  *
  * ====================================================================
  *
@@ -233,10 +233,10 @@ public class PoolTcpEndpoint extends Logger.Helper  { // implements Endpoint {
 		}
 	    }
 	} catch( IOException ex ) {
-	    log("couldn't start endpoint", ex, Logger.DEBUG);
+	    //	    log("couldn't start endpoint", ex, Logger.DEBUG);
             throw ex;
 	} catch( InstantiationException ex1 ) {
-	    log("couldn't start endpoint", ex1, Logger.DEBUG);
+	    //	    log("couldn't start endpoint", ex1, Logger.DEBUG);
             throw ex1;
 	}
 	if(isPool) {
