@@ -48,6 +48,8 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.math.BigDecimal;
 
 // Turbine Stuff 
@@ -89,7 +91,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.6 2001/08/15 04:42:40 jon Exp $
+    @version $Id: AssignIssue.java,v 1.7 2001/08/15 06:37:55 jon Exp $
 */
 public class AssignIssue extends TemplateAction
 {
@@ -116,9 +118,12 @@ public class AssignIssue extends TemplateAction
         ScarabLink actionLink = 
             getActionLink(data, eligibleUserIds, assigneeIds);
 
+        // re-populate addedusers
         populateLink(actionLink, ASSIGNEES, newAssigneeIds);
         addToParameters(data, ASSIGNEES, newAssigneeIds);
+        // remove removedusers
         data.getParameters().remove(ELIGIBLE_USERS);
+        // re-populate removedusers
         addToParameters(data, ELIGIBLE_USERS, eligibleUserIds);
         context.put("actionLink", actionLink);
 
@@ -195,11 +200,19 @@ public class AssignIssue extends TemplateAction
     {
         if ( ids != null ) 
         {        
-            for ( int i=0; i<ids.length; i++ ) 
+            // quickly remove duplicate ids by sticking in a Map
+            Map idMap = new HashMap(ids.length);
+            for ( int i=0; i<ids.length; i++ )
             {
-                if ( ids[i] != null ) 
+                idMap.put (ids[i], null);
+            }
+            for ( Iterator iterator = 
+                    idMap.keySet().iterator(); iterator.hasNext() ; ) 
+            {
+                String id = (String) iterator.next();
+                if ( id != null ) 
                 {
-                    link.addPathInfo(key, ids[i]);
+                    link.addPathInfo(key, id);
                 }
             }   
         }
@@ -208,14 +221,22 @@ public class AssignIssue extends TemplateAction
     private void addToParameters(RunData data, String key, String[] ids)
     {
         if ( ids != null ) 
-        {        
-            for ( int i=0; i<ids.length; i++ ) 
+        {
+            // quickly remove duplicate ids by sticking in a Map
+            Map idMap = new HashMap(ids.length);
+            for ( int i=0; i<ids.length; i++ )
             {
-                if ( ids[i] != null ) 
+                idMap.put (ids[i], null);
+            }
+            for ( Iterator iterator = 
+                    idMap.keySet().iterator(); iterator.hasNext() ; ) 
+            {
+                String id = (String) iterator.next();
+                if ( id != null ) 
                 {
-                    data.getParameters().add(key, ids[i]);
+                    data.getParameters().add(key, id);
                 }
-            }   
+            }
         }
     }
 
