@@ -35,7 +35,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
  */
 public class ThreePaneMailFrameController
 	extends AbstractMailFrameController
-	implements TableOwnerInterface {
+	implements TableOwner {
 
 	public TreeController treeController;
 	public TableController tableController;

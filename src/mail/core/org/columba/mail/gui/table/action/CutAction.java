@@ -22,7 +22,7 @@ import org.columba.core.gui.ClipboardManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.TableController;
 
 /**
@@ -39,7 +39,7 @@ public class CutAction extends JAbstractAction {
 	public CutAction(AbstractMailFrameController frameController) {
 		super();
 		this.tableController =
-			((TableOwnerInterface) frameController).getTableController();
+			((TableOwner) frameController).getTableController();
 		this.frameController = frameController;
 
 	}

@@ -65,7 +65,7 @@ public class TableUpdater {
 	 * 
 	 * @param frameController		frame controller with table component
 	 */
-	public static void add(TableOwnerInterface frameController) {
+	public static void add(TableOwner frameController) {
 		list.add(frameController);
 	}
 

@@ -25,7 +25,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.TableController;
 
 /**
@@ -42,7 +42,7 @@ public class PasteAction extends JAbstractAction {
 	public PasteAction(AbstractMailFrameController frameController) {
 		super();
 		this.tableController =
-			((TableOwnerInterface) frameController).getTableController();
+			((TableOwner) frameController).getTableController();
 		this.frameController = frameController;
 
 	}

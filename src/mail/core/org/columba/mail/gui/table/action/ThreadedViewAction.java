@@ -32,7 +32,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -125,7 +125,7 @@ public class ThreadedViewAction
 
 	public void actionPerformed(ActionEvent e) {
 
-		if ((frameController instanceof TableOwnerInterface) == false)
+		if ((frameController instanceof TableOwner) == false)
 			return;
 
 		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
@@ -149,20 +149,20 @@ public class ThreadedViewAction
 
 	protected void updateTable(boolean enableThreadedView) {
 
-		if ((frameController instanceof TableOwnerInterface) == false)
+		if ((frameController instanceof TableOwner) == false)
 			return;
 
-		((TableOwnerInterface) frameController)
+		((TableOwner) frameController)
 			.getTableController()
 			.getView()
 			.enableThreadedView(enableThreadedView);
 
-		((TableOwnerInterface) frameController)
+		((TableOwner) frameController)
 			.getTableController()
 			.getTableModelThreadedView()
 			.toggleView(enableThreadedView);
 
-		((TableOwnerInterface) frameController)
+		((TableOwner) frameController)
 			.getTableController()
 			.getUpdateManager()
 			.update();

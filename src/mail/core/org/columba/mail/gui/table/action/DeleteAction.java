@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.JAbstractAction;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.TableController;
 
 /**
@@ -36,7 +36,7 @@ public class DeleteAction extends JAbstractAction {
 	public DeleteAction(AbstractMailFrameController frameController) {
 		super();
 		this.tableController =
-			((TableOwnerInterface) frameController).getTableController();
+			((TableOwner) frameController).getTableController();
 		this.frameController = frameController;
 
 	}

@@ -27,7 +27,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -50,7 +50,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 				"menu_view_sort"));		
 		
 		// register as Observer
-		TableOwnerInterface table = (TableOwnerInterface) getController();
+		TableOwner table = (TableOwner) getController();
 		observable = table.getTableController().getTableModelSorter().getSortingStateObservable();
 		observable.addObserver(this);
 		
@@ -59,7 +59,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 
 	protected void createSubMenu() {
 
-		TableOwnerInterface table = (TableOwnerInterface) getController();
+		TableOwner table = (TableOwner) getController();
 
 		Object[] items =
 			table.getTableController().getTableModelSorter().getColumns();
@@ -106,7 +106,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		TableOwnerInterface table = (TableOwnerInterface) getController();
+		TableOwner table = (TableOwner) getController();
 
 		if (action.equals("Ascending")) {
 			table.getTableController().getTableModelSorter().setSortingOrder(

@@ -28,7 +28,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.TableOwnerInterface;
+import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.message.HeaderList;
 
@@ -64,7 +64,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 			folder);
 
 		// this should be called from TableController instead
-		((TableOwnerInterface) frameController).getTableController().showHeaderList(folder, headerList);
+		((TableOwner) frameController).getTableController().showHeaderList(folder, headerList);
 
 		MainInterface.treeModel.nodeChanged(folder);
 
