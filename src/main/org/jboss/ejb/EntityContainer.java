@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.71 $
+* @version $Revision: 1.72 $
 *
 * <p><b>Revisions:</b>
 *
@@ -780,7 +780,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             }
             else if (isEJB1x == false && methodName.startsWith("create"))
             {
-               map.put(m[i], this.getClass().getMethod("createHome", new Class[] { Invocation.class }));
+               map.put(m[i], this.getClass().getMethod(methodName+append, new Class[] { Invocation.class }));
             }
             else
             {
