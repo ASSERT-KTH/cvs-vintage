@@ -8,7 +8,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.4 2001/08/27 04:47:22 user57 Exp $
+# $Id: build.sh,v 1.5 2001/08/28 00:55:54 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
@@ -30,6 +30,10 @@ ANT_OPTIONS="-find $ANT_BUILD_FILE"
 
 # don't check versions (too slow)
 ANT_VERSION=""
+
+# specify the jaxp parsers to use
+JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
+JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
 
 #
 # Helper to complain.
@@ -105,6 +109,11 @@ main() {
 	    die "Ant version $ANT_VERSION is required to build."
 	fi
     fi
+
+    # Specify the JAXP parser impls to use
+    ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
+    ANT_OPTS="$ANT_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
+    export ANT_OPTS
 
     # change to the directory where the script lives so folks do not have
     # to be in the same dir to run the build without specifying the build
