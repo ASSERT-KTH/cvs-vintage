@@ -1,4 +1,4 @@
-// $Id: SettingsTabModules.java,v 1.5 2005/01/09 14:58:07 linus Exp $
+// $Id: SettingsTabModules.java,v 1.6 2005/02/18 21:17:15 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,7 +202,7 @@ public class SettingsTabModules extends SettingsTabHelper {
     }
 
     /**
-     * @see SettingsTabPanel#handleSettingsTabRefresh()
+     * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabRefresh()
      */
     public void handleSettingsTabRefresh() {
         table.setModel(new ModuleTableModel());
@@ -210,7 +210,7 @@ public class SettingsTabModules extends SettingsTabHelper {
     }
 
     /**
-     * @see SettingsTabPanel#handleSettingsTabSave()
+     * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabSave()
      */
     public void handleSettingsTabSave() {
         if (elements != null) {
@@ -225,7 +225,7 @@ public class SettingsTabModules extends SettingsTabHelper {
     }
 
     /**
-     * @see SettingsTabPanel#handleSettingsTabCancel()
+     * @see org.argouml.application.api.SettingsTabPanel#handleSettingsTabCancel()
      */
     public void handleSettingsTabCancel() {
         // Do nothing!
