@@ -6,30 +6,27 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import org.w3c.dom.Element;
-
-import org.jboss.logging.Logger;
+import javax.sql.DataSource;
 import org.jboss.ejb.DeploymentException;
-
-import org.jboss.metadata.XmlLoadable;
-import org.jboss.metadata.MetaData;
+import org.jboss.logging.Logger;
+import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
-import org.jboss.metadata.ApplicationMetaData;
-
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.RelationMetaData;
+import org.jboss.metadata.XmlLoadable;
+import org.w3c.dom.Element;
 
 /** 
  *      
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -59,10 +56,16 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 	
 	// the type mapping to use with the specified database
 	private JDBCTypeMappingMetaData typeMapping;
-	
+
+	/**
+	 * Map of relations in this application by name.
+	 * Items are instance of JDBCRelationMetaData.
+	 */
+	private HashMap relationships = new HashMap();
+
 	// all the available dependent value classes (by javaType)
 	private HashMap valueClasses = new HashMap();
-	
+		
 	
 	// Static --------------------------------------------------------
 	
@@ -94,6 +97,14 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 				}
 			}
 		}
+		
+		// relationships
+		Iterator iterator = applicationMetaData.getRelationships();
+		while(iterator.hasNext()) {
+			RelationMetaData relation = (RelationMetaData) iterator.next();
+			JDBCRelationMetaData jdbcRelation = new JDBCRelationMetaData(relation, this);
+			relationships.put(jdbcRelation.getRelationName(), jdbcRelation);
+		}		
 	}
 	
 	
@@ -108,6 +119,14 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 
 	public JDBCTypeMappingMetaData getTypeMapping() {
 		return typeMapping;
+	}
+	
+	/**
+	 * Get the container managed relations in this application.
+	 * Items are instance of JDBCRelationMetaData.
+	 */
+	public Iterator getRelationships() {
+		return relationships.values().iterator();
 	}
 	
 	public Iterator getValueClasses() {
@@ -217,6 +236,26 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 			}
 		}
 		
+		// relationships
+		// get the beans data (only in jbosscmp-jdbc.xml)
+		Element relationshipsElement = getOptionalChild(element, "relationships");
+		if(relationshipsElement != null) {
+			iterator = getChildrenByTagName(relationshipsElement, "ejb-relation");				
+			while(iterator.hasNext()) {
+				Element relationElement = (Element)iterator.next();
+
+				// get the bean's data, gaurenteed to work because we create
+				// a metadata object for each bean in the constructor.
+				String relationName = getElementContent(getUniqueChild(relationElement, "ejb-relation-name"));
+				JDBCRelationMetaData relation = (JDBCRelationMetaData)relationships.get(relationName);					
+				if(relation != null) {
+					relation.importXml(relationElement);
+				} else {
+					Logger.warning("Warning: data found in jbosscmp-jdbc.xml for relation " + relationName + " but relation is not a jbosscmp-jdbc-managed relation in ejb-jar.xml"); 
+				}
+			}
+		}
+				
 		// dependent-value-objects
 		Element valueClassesElement = getOptionalChild(element, "dependent-value-classes");
 		if(valueClassesElement != null) {

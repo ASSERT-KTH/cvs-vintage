@@ -28,7 +28,7 @@ import org.jboss.metadata.XmlLoadable;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -48,10 +48,10 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 	// the implementation class of the bean
 	private Class entityClass;
 	
-	// the implementation class of the bean
+	// the home class of the bean
 	private Class homeClass;
 	
-	// the implementation class of the bean
+	// the local home class of the bean
 	private Class localHomeClass;
 	
 	// the name of the table to use for this bean
@@ -92,6 +92,9 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 	
 	// used to create query meta data
 	private JDBCQueryMetaDataFactory queryFactory;
+	
+	// all relationship roles for this entity
+	private ArrayList relationshipRoles;
 
 	// Static --------------------------------------------------------
    
@@ -128,7 +131,7 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 			throw new DeploymentException("home class not found: " + home);
 		}
 
-		String localHome = entity.getHome();
+		String localHome = entity.getLocalHome();
 		try {
 			if(localHome != null) {
 				localHomeClass = classLoader.loadClass(localHome);
@@ -173,6 +176,9 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 						queryFactory.createJDBCQueryMetaData(queryData, methods[i]));
 			}
 		}
+		
+		// Create no relationship roles for this entity, will be added by the relation meta data
+		relationshipRoles = new ArrayList();
 	}
 	
 	// Public --------------------------------------------------------
@@ -436,6 +442,21 @@ public class JDBCEntityMetaData extends MetaData implements XmlLoadable {
 	
 	public Iterator getQueries() {
 		return queries.values().iterator();
+	}
+	
+	/**
+	 * Get the relationsip roles of this entity. 
+	 * Items are instance of JDBCRelationshipRoleMetaData.
+	 */
+	public Iterator getRelationshipRoles() {
+		return relationshipRoles.iterator();
+	}
+	
+	/**
+	 * Adds a new relationsip roles to this entity. 
+	 */
+	public void addRelationshipRole(JDBCRelationshipRoleMetaData role) {
+		relationshipRoles.add(role);
 	}
 	
 	public Class getPrimaryKeyClass() {
