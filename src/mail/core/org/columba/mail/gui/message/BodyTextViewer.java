@@ -92,7 +92,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
         smilies = messageviewer.getElement("smilies");
 
         if (smilies == null) {
-            smilies = gui.addSubElement("smilies");
+            smilies = messageviewer.addSubElement("smilies");
         }
 
         // register as configuration change listener
