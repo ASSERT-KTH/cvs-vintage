@@ -23,7 +23,8 @@ New features:
 - cleanup of the frame package, removed all circular dependencies, simplified design, 
   using only one level of inheritance now. This makes adding new frames very easy. 
   Also introduced the paradigm of a container which encapsulates views. (fdietz)
-  
+- speedup of IMAP mailbox selection and auto-check (tstich)
+
 Fixed bugs:
 - #773118 é in name of Directory (tstich)
 - #1014346 IMAP rename problems (tstich)
@@ -50,7 +51,8 @@ Fixed bugs:
 - shutdown-thread could be started twice times, which lead to 
   config-file corruption, etc. (fdietz) 
 - do not try to disable internal plugin, its not possible anyway! (fdietz)
- 
+- #1056686 Exception during IMAP auto-check (tstich)
+
 Columba v1.0 RC1-final
 
 New features:

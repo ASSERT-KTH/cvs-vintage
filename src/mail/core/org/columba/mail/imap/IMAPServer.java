@@ -624,11 +624,16 @@ public class IMAPServer implements IMAPListener {
 			IMAPException, CommandCancelledException {
 		
 		if( selectedFolder != null && selectedFolder.equals(folder)) {
-			// This noop is necessary to check
-			// if the mailbox has changed
-			protocol.noop();			
+			try {
+				// This noop is necessary to check
+				// if the mailbox has changed
+				protocol.noop();
+
+				return selectedStatus;
+			}  catch (IMAPDisconnectedException e1) {
+				//Do nothing special here
+			}			
 			
-			return selectedStatus;
 		}
 		
 		try {
