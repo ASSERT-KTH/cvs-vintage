@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.42 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.43 2003/02/05 06:59:22 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -114,7 +114,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         {
             scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
             displayName.setMessage("intake_FieldRequired");
-            success = false;
+            return false;
         }
         return success;
     }
@@ -135,7 +135,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
-            return false;
+            success = false;
         }
 
         Module module = scarabR.getCurrentModule();
@@ -269,27 +269,27 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
 
         Module module = scarabR.getCurrentModule();
-            List userAttributes = module.getUserAttributes(issueType, false);
-            for (int i=0; i < userAttributes.size(); i++)
+        List userAttributes = module.getUserAttributes(issueType, false);
+        for (int i=0; i < userAttributes.size(); i++)
+        {
+            // Set properties for module-attribute mapping
+            Attribute attribute = (Attribute)userAttributes.get(i);
+            RModuleAttribute rma = module
+                    .getRModuleAttribute(attribute, issueType);
+            Group rmaGroup = intake.get("RModuleAttribute", 
+                             rma.getQueryKey(), false);
+            // if attribute gets set to inactive, delete dependencies
+            String newActive = rmaGroup.get("Active").toString();
+            String oldActive = String.valueOf(rma.getActive());
+            if (newActive.equals("false") && oldActive.equals("true"))
             {
-                // Set properties for module-attribute mapping
-                Attribute attribute = (Attribute)userAttributes.get(i);
-                RModuleAttribute rma = module
-                        .getRModuleAttribute(attribute, issueType);
-                Group rmaGroup = intake.get("RModuleAttribute", 
-                                 rma.getQueryKey(), false);
-                // if attribute gets set to inactive, delete dependencies
-                String newActive = rmaGroup.get("Active").toString();
-                String oldActive = String.valueOf(rma.getActive());
-                if (newActive.equals("false") && oldActive.equals("true"))
-                {
-                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                                  attribute, module, issueType);
-                }
-                rmaGroup.setProperties(rma);
-                rma.save();
+                WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
+                                              attribute, module, issueType);
             }
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            rmaGroup.setProperties(rma);
+            rma.save();
+        }
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
     }
 
     /**

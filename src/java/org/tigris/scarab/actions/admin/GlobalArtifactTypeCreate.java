@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.30 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.31 2003/02/05 06:59:22 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -81,9 +81,10 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * creates or edits global artifact type
      */
-    public void doSave(RunData data, TemplateContext context)
+    public boolean doSaveinfo(RunData data, TemplateContext context)
         throws Exception
     {
+        boolean success = true;
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -129,16 +130,19 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         else
         {
             scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            success = false;
         }
+        return success;
     }
 
 
     /**
      * Adds or modifies an issue type's attribute groups.
      */
-    public void doSavegroups (RunData data, TemplateContext context)
+    public boolean doSavegroups (RunData data, TemplateContext context)
         throws Exception
     {
+        boolean success = true;
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -228,8 +232,9 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         else
         {
             scarabR.setAlertMessage(l10n.get(errorMsg));
-            return;
+            success = false;
         }
+        return success;
     }
 
     /**
@@ -412,4 +417,18 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         }
     }
 
+    /*
+     * Manages clicking of the AllDone button
+     */
+    public void doDone(RunData data, TemplateContext context)
+        throws Exception
+    {
+        boolean infoSuccess = doSaveinfo(data, context);
+        boolean groupSuccess = doSavegroups(data, context);
+        doSaveuserattributes(data, context);
+        if (infoSuccess && groupSuccess)
+        {
+            doCancel(data, context);
+        }
+    }
 }

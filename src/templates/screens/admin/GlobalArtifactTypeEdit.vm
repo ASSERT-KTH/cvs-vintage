@@ -71,7 +71,7 @@
 </div>
 
 <div class="functnbar3">
-      <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+      <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
 </div>
 
 #asterisk()
@@ -118,7 +118,7 @@
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSavegroups" />
 </div>
 
 
