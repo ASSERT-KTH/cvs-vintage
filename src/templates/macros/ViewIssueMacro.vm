@@ -198,7 +198,7 @@
   #indexedRows($velocityCount)
 <td>#booleanCheckbox($dependGroup.Deleted)</td>
 <td> $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
-<td> parent </td>
+<td> Parent </td>
 <td>
 #if ($canEdit)
 <select name="$dependGroup.TypeId.Key" class="select">
@@ -224,7 +224,7 @@
   #indexedRows($velocityCount)
 <td>#booleanCheckbox($dependGroup.Deleted)</td>
 <td> $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
-<td> child </td>
+<td> Child </td>
 <td> 
 #if ($canEdit)
 <select name="$dependGroup.TypeId.Key" class="select">
