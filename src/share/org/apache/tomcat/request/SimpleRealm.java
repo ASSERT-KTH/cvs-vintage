@@ -93,7 +93,6 @@ public class SimpleRealm extends  BaseInterceptor {
     public void contextInit(Context ctx)
 	throws TomcatException
     {
-        super.contextInit(ctx);
         setContextManager(ctx.getContextManager());
         init(cm,ctx);
         try {
@@ -176,13 +175,11 @@ public class SimpleRealm extends  BaseInterceptor {
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-//        super.engineInit(cm);
         init(cm,null);
     }
 
     void init(ContextManager cm,Context ctx) {
 	if( memoryRealm==null) {
-            System.out.println(cm);
 	    memoryRealm = new MemoryRealm(filename,cm.getHome());
 	    try {
 		memoryRealm.readMemoryRealm();
@@ -213,7 +210,7 @@ public class SimpleRealm extends  BaseInterceptor {
         }
 
         public void addUser(String name, String pass, String groups ) {
-            if( debug > 0 )  log( "Add user " + name + " " + pass + " " + groups );
+            if( getDebug() > 0 )  log( "Add user " + name + " " + pass + " " + groups );
             passwords.put( name, pass );
             groups += ",";
             while (true) {
@@ -243,7 +240,7 @@ public class SimpleRealm extends  BaseInterceptor {
 
         public boolean checkPassword( String user, String pass ) {
             if( user==null ) return false;
-            if( debug > 0 ) log( "check " + user+ " " + pass + " " + passwords.get( user ));
+            if( getDebug() > 0 ) log( "check " + user+ " " + pass + " " + passwords.get( user ));
             return pass.equals( (String)passwords.get( user ) );
         }
 
@@ -259,7 +256,7 @@ public class SimpleRealm extends  BaseInterceptor {
 
         public boolean userInRole( String user, String role ) {
             Vector users=(Vector)roles.get(role);
-            if( debug > 0 ) log( "check role " + user+ " " + role + " "  );
+            if( getDebug() > 0 ) log( "check role " + user+ " " + role + " "  );
             if(users==null) return false;
             return users.indexOf( user ) >=0 ;
         }
@@ -297,4 +294,3 @@ public class SimpleRealm extends  BaseInterceptor {
     }
 
 }
-
