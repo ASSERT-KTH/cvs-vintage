@@ -29,33 +29,54 @@ import java.util.Map;
  * Entities are stored in an ArrayList to ensure specific ordering. 
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class GlobalTxEntityMap
 {
 
    private final Logger log = Logger.getLogger(getClass());
 
-   protected final Map m_map = new HashMap();
+   protected final Map txToEntitiesMap = new HashMap();
     
    /**
     * associate entity with transaction
     */
-   public synchronized void associate(
+   public void associate(
          Transaction tx,
          EntityEnterpriseContext entity)
       throws RollbackException, SystemException
    {
-      ArrayList entityList = (ArrayList)m_map.get(tx);
-      if (entityList == null)
+      Collection entityList;
+      synchronized (txToEntitiesMap)
       {
-         entityList = new ArrayList();
-         m_map.put(tx, entityList);
-         tx.registerSynchronization(new GlobalTxEntityMapCleanup(this, tx));
+         entityList = (Collection)txToEntitiesMap.get(tx);
+         if (entityList == null)
+         {
+            entityList = new ArrayList();
+            txToEntitiesMap.put(tx, entityList);
+            tx.registerSynchronization(new GlobalTxEntityMapCleanup(this, tx));
+         }
       }
+      //Release lock on txToEntitiesMap to avoid waiting for possibly long scans of 
+      //entityList.
+
+      //if all tx only modify one or two entities, the two synchs here will be 
+      //slower than doing all work in one synch block on txToEntityMap.  
+      //However, I (david jencks) think the risk of waiting for scans of long 
+      //entityLists is greater than the risk of waiting for 2 synchs.
+
+      //There should be only one thread associated with this tx at a time.
+      //Therefore we should not need to synchronize on entityList to ensure exclusive
+      //access.  EntityList is correct since it was obtained in a synch block.
+
       if (!entityList.contains(entity))
       {
-         entityList.add(entity);
+         //We do have to modify entityList in a synch block to ensure changes are 
+         //written to main memory before any other thread can work on this tx.
+         synchronized(entityList)
+         {
+            entityList.add(entity);
+         }
       }
    }
 
@@ -66,10 +87,13 @@ public class GlobalTxEntityMap
    public void syncEntities(Transaction tx) 
    {
       Collection entities = null;
-      synchronized (m_map)
+      synchronized (txToEntitiesMap)
       {
-         entities = (Collection)m_map.remove(tx);
+         entities = (Collection)txToEntitiesMap.remove(tx);
       }
+      //There should be only one thread associated with this tx at a time.
+      //Therefore we should not need to synchronize on entityList to ensure exclusive
+      //access.  EntityList is correct since it was obtained in a synch block.
 
       // if there are there no entities associated with this tx we are done
       if (entities == null) 
