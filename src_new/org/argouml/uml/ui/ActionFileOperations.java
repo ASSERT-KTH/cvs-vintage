@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.4 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.5 2004/12/24 17:20:45 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,7 +162,7 @@ public abstract class ActionFileOperations extends UMLAction {
                     throw new IllegalStateException("Filename " + url.getFile() 
                             + " is not of a known file type");
                 }
-                p = persister.loadProject(url);
+                p = persister.doLoad(url);
                 
                 ProjectBrowser.getInstance().showStatus(
                         MessageFormat.format(Translator.localize(

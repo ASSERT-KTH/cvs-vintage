@@ -1,4 +1,4 @@
-// $Id: ProjectFilePersister.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: ProjectFilePersister.java,v 1.2 2004/12/24 17:20:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,9 +43,17 @@ public interface ProjectFilePersister {
     public void save(Project project, File file) throws SaveException;
     
     /**
+     * @param file the file of the project to load
+     * @return the Project 
+     * @throws OpenException when we fail to open from this url
+     */
+    public Project doLoad(File file) throws OpenException;
+    
+    /**
      * @param url the url of the project to load
      * @return the Project 
      * @throws OpenException when we fail to open from this url
      */
-    public Project loadProject(URL url) throws OpenException;
+    public Project doLoad(URL url) throws OpenException;
+    
 }

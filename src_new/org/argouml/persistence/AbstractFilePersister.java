@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: AbstractFilePersister.java,v 1.2 2004/12/24 17:20:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -218,4 +219,16 @@ public abstract class AbstractFilePersister extends FileFilter
      */
     protected abstract void doSave(Project project, File file)
         throws SaveException;
+    
+    /**
+     * @see org.argouml.persistence.ProjectFilePersister#loadProject(File)
+     */
+    public Project doLoad(File file) throws OpenException {
+        try {
+            return doLoad(file.toURL());
+        } catch (MalformedURLException e) {
+            LOG.error("MalformedURLException", e);
+            throw new OpenException(e);
+        }
+    }
 }

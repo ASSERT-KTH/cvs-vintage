@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.2 2004/12/24 17:20:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,7 +159,7 @@ public class XmiFilePersister extends AbstractFilePersister {
      *
      * @see org.argouml.persistence.ProjectFilePersister#loadProject(java.net.URL)
      */
-    public Project loadProject(URL url) throws OpenException {
+    public Project doLoad(URL url) throws OpenException {
         try {
             Project p = new Project();
             XMIParser.getSingleton().readModels(p, url);

@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.2 2004/12/24 17:20:44 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
@@ -198,7 +199,7 @@ public class UmlFilePersister extends AbstractFilePersister {
     /**
      * @see org.argouml.persistence.ProjectFilePersister#loadProject(java.net.URL)
      */
-    public Project loadProject(URL url) throws OpenException {
+    public Project doLoad(URL url) throws OpenException {
         try {
             XmlInputStream inputStream =
                         new XmlInputStream(url.openStream(), "argo");
