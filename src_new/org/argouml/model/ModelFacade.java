@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.172 2004/02/04 21:07:35 linus Exp $
+// $Id: ModelFacade.java,v 1.173 2004/02/06 12:24:46 sz9 Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4739,6 +4739,14 @@ public class ModelFacade {
             ((MMethod) m).setBody((MProcedureExpression) expr);
             return;
         }
+
+        if (m != null
+            && m instanceof MConstraint
+            && (expr == null || expr instanceof MBooleanExpression)) {
+            ((MConstraint) m).setBody((MBooleanExpression) expr);
+            return;
+        }
+
         if (m instanceof MExpression) {
             MExpression expression = (MExpression) m;
             MExpressionEditor expressionEditor =
