@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.6 2000/03/04 06:29:10 shemnon Exp $
- * $Revision: 1.6 $
- * $Date: 2000/03/04 06:29:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.7 2000/03/06 23:59:36 shemnon Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/03/06 23:59:36 $
  *
  * ====================================================================
  * 
@@ -340,8 +340,13 @@ public class JspC implements Options { //, JspCompilationContext {
 
             targetClassName = null;
             if (mapout != null) {
-                String thisServletName = clc.getPackageName()
+                String thisServletName;
+		if  (clc.getPackageName == null) {
+		    thisServletName = clc.getClassName();
+		 } else {
+		    thisServletName = clc.getPackageName()
                         + '.' + clc.getClassName();
+		};
                 mapout.write("\n\t<servlet>\n\t\t<servlet-name>");
                 mapout.write(thisServletName);
                 mapout.write("</servlet-name>\n\t\t<servlet-class>");
