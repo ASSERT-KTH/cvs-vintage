@@ -16,24 +16,46 @@
 
 package org.columba.core.gui.statusbar;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.command.*;
+import org.columba.core.command.TaskManager;
+import org.columba.core.command.TaskManagerEvent;
+import org.columba.core.command.TaskManagerListener;
+import org.columba.core.command.Worker;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
-
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-
-import javax.swing.*;
 
 /**
  * Dialog showing all running tasks.
@@ -46,8 +68,9 @@ public class TaskManagerDialog extends JDialog
 		implements
 			TaskManagerListener,
 			ActionListener,
-			WorkerStatusChangeListener {
+			WorkerStatusChangeListener, ListSelectionListener {
 
+	
 	private static TaskManagerDialog instance;
 
 	private TaskManager taskManager;
@@ -85,7 +108,8 @@ public class TaskManagerDialog extends JDialog
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 		getContentPane().add(mainPanel);
 
-		cancelButton = new ButtonWithMnemonic("Cancel");
+		cancelButton = new ButtonWithMnemonic("Cancel &Task");
+		cancelButton.setEnabled(false);
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
 
@@ -107,12 +131,15 @@ public class TaskManagerDialog extends JDialog
 		gridBagLayout.setConstraints(cancelButton, c);
 		eastPanel.add(cancelButton);
 
+		// disabled Kill button, because feature is not supported
+		/*
 		Component strut1 = Box.createRigidArea(new Dimension(30, 6));
 		gridBagLayout.setConstraints(strut1, c);
 		eastPanel.add(strut1);
 
 		gridBagLayout.setConstraints(killButton, c);
 		eastPanel.add(killButton);
+		*/
 
 		Component glue = Box.createVerticalGlue();
 		glue = Box.createVerticalGlue();
@@ -131,6 +158,7 @@ public class TaskManagerDialog extends JDialog
 		}
 		list = new JList(model);
 		list.setCellRenderer(new TaskRenderer());
+		list.getSelectionModel().addListSelectionListener(this);
 
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
@@ -235,6 +263,19 @@ public class TaskManagerDialog extends JDialog
 
 			}
 		});
+
+	}
+	
+	/**
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	public void valueChanged(ListSelectionEvent ev) {
+		if ( ev.getValueIsAdjusting() ) return;
+		
+		if ( list.getSelectedIndex() != -1) 
+			cancelButton.setEnabled(true);
+		else
+			cancelButton.setEnabled(false);
 
 	}
 }
