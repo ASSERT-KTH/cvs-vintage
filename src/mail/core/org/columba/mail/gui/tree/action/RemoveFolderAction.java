@@ -54,11 +54,6 @@ public class RemoveFolderAction
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
-		
-		// shortcut key
-		setAcceleratorKey(
-				KeyStroke.getKeyStroke(
-					KeyEvent.VK_D, ActionEvent.ALT_MASK));
 					
 		setEnabled(false);
 		(
@@ -86,7 +81,17 @@ public class RemoveFolderAction
 				null,
 				"Your can only remove leaf folders!");
 			return;
-		}
+		} else {
+		    // warn user in any other cases
+            int n = JOptionPane.showConfirmDialog(
+                    null,
+                    MailResourceLoader.getString("tree", "tree",  "folder_warning"),
+                    MailResourceLoader.getString("tree", "tree",  "folder_warning_title"),
+                    JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
 
 		MainInterface.processor.addOp(new RemoveFolderCommand(r));
 	}
