@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Iterator;
 import org.apache.torque.TorqueException;
@@ -346,6 +347,18 @@ public  class AttributeGroup
         raag.save();          
         getAttributes().add(attribute);
 
+        List allOptions = attribute.getAttributeOptions(false);
+        // remove duplicate options
+        ArrayList options = new ArrayList();
+        for (int i=0; i<allOptions.size(); i++)
+        {
+            AttributeOption option = (AttributeOption)allOptions.get(i);
+            if (!options.contains(option))
+            {
+                options.add(option);
+            }
+        }
+
         if (isGlobal())
         {
             // this is a global attribute group
@@ -353,7 +366,6 @@ public  class AttributeGroup
             issueType.addRIssueTypeAttribute(attribute);
 
             // add issueType-attributeoption mappings
-            List options = attribute.getAttributeOptions(false);
             for (int j=0;j < options.size();j++)
             {
                 AttributeOption option = (AttributeOption)options.get(j);
@@ -373,7 +385,6 @@ public  class AttributeGroup
             module.addRModuleAttribute(issueType, attribute);
 
             // add module-attributeoption mappings
-            List options = attribute.getAttributeOptions();
             for (int j=0;j < options.size();j++)
             {
                 AttributeOption option = (AttributeOption)options.get(j);
