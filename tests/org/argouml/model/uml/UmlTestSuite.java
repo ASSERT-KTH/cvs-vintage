@@ -1,4 +1,4 @@
-// $Id: UmlTestSuite.java,v 1.3 2003/09/09 18:11:53 thierrylach Exp $
+// $Id: UmlTestSuite.java,v 1.4 2003/09/09 22:46:57 thierrylach Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,13 @@ public class UmlTestSuite {
         suite.addTestSuite(TestUml.class);
         suite.addTestSuite(TestCopyHelper.class);
         suite.addTestSuite(TestUmlModelEventPump.class);
+
+		suite.addTest(new TestSuite(TestUmlModelElement.class));
+		suite.addTest(new TestSuite(TestUmlNamespace.class));
+		suite.addTest(new TestSuite(TestUmlModel.class));
+		suite.addTest(new TestSuite(TestUmlUseCase.class));
+		suite.addTest(new TestSuite(TestUmlActor.class));
+
         return suite;
     }
 
