@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabModulePeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.14 2001/08/13 20:38:18 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.15 2001/08/14 23:41:59 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -192,7 +192,7 @@ public class TurbineDBScarabSecurity
         try
         {
             List scarabModules = ScarabModulePeer.doSelect(crit);
-            modules = new ModuleEntity[modules.length];
+            modules = new ModuleEntity[scarabModules.size()];
             for ( int i=scarabModules.size()-1; i>=0; i--) 
             {
                 modules[i] = (ModuleEntity)scarabModules.get(i);
