@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.244 2005/01/09 00:33:04 spestov Exp $
+ * @version $Id: jEdit.java,v 1.245 2005/01/21 01:38:24 spestov Exp $
  */
 public class jEdit
 {
@@ -3083,7 +3083,8 @@ public class jEdit
 
 		actionContext.addActionSet(builtInActionSet);
 
-		DockableWindowManager.loadDockableWindows(null,
+		DockableWindowFactory.getInstance()
+			.loadDockableWindows(null,
 			jEdit.class.getResource("dockables.xml"),
 			null);
 

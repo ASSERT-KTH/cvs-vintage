@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.zip.*;
 import org.gjt.sp.jedit.browser.VFSBrowser;
 import org.gjt.sp.jedit.buffer.*;
-import org.gjt.sp.jedit.gui.DockableWindowManager;
+import org.gjt.sp.jedit.gui.DockableWindowFactory;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.48 2004/09/01 23:20:37 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.49 2005/01/21 01:38:24 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -804,7 +804,8 @@ public class PluginJAR
 			if(browserActions != null)
 				VFSBrowser.getActionContext().removeActionSet(browserActions);
 
-			DockableWindowManager.unloadDockableWindows(this);
+			DockableWindowFactory.getInstance()
+				.unloadDockableWindows(this);
 			ServiceManager.unloadServices(this);
 
 			jEdit.removePluginProps(properties);
@@ -900,7 +901,8 @@ public class PluginJAR
 			&& cache.cachedDockableActionFlags != null)
 		{
 			dockablesURI = cache.dockablesURI;
-			DockableWindowManager.cacheDockableWindows(this,
+			DockableWindowFactory.getInstance()
+				.cacheDockableWindows(this,
 				cache.cachedDockableNames,
 				cache.cachedDockableActionFlags);
 		}
@@ -1097,7 +1099,8 @@ public class PluginJAR
 
 		if(dockablesURI != null)
 		{
-			DockableWindowManager.loadDockableWindows(this,
+			DockableWindowFactory.getInstance()
+				.loadDockableWindows(this,
 				dockablesURI,cache);
 		}
 

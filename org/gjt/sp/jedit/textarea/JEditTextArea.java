@@ -65,7 +65,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.337 2005/01/20 04:45:27 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.338 2005/01/21 01:38:24 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4794,13 +4794,14 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		boolean invalidateScreenLineCounts = false;
 
 		int oldWrapMargin = wrapMargin;
+		String oldWrap = wrap;
 
 		wrap = buffer.getStringProperty("wrap");
 		hardWrap = wrap.equals("hard");
 		softWrap = wrap.equals("soft");
 		setMaxLineLength(buffer.getIntegerProperty("maxLineLen",0));
 
-		if(oldWrapMargin != wrapMargin || !wrap.equals(this.wrap))
+		if(oldWrapMargin != wrapMargin || !wrap.equals(oldWrap))
 		{
 			if(displayManager != null && !bufferChanging)
 			{
