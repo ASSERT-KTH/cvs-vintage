@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.10 2001/03/02 06:56:19 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2001/03/02 06:56:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.11 2001/03/31 22:06:16 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2001/03/31 22:06:16 $
  *
  * ====================================================================
  * 
@@ -124,6 +124,10 @@ public class JspFactoryImpl extends JspFactory {
 
     public void releasePageContext(PageContext pc) {
 	if( pc==null ) return;
+	JspWriterImpl out=(JspWriterImpl)pc.getOut();
+	if( out!=null ) {
+	    out.flushBuffer();
+	}
 	pc.release();
 	if( usePool) {
 	    pool.put( pc );
