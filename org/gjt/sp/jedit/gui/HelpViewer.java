@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.22 2002/08/21 18:44:56 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.23 2002/09/08 21:03:11 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -122,15 +122,11 @@ public class HelpViewer extends JFrame implements EBComponent
 			jEdit.getProperty("helpviewer.back.icon")));
 		back.setToolTipText(jEdit.getProperty("helpviewer.back.label"));
 		back.addActionListener(actionListener);
-		back.setRequestFocusEnabled(false);
-		back.setMargin(new Insets(0,0,0,0));
 		toolBar.add(back);
 		forward = new RolloverButton(GUIUtilities.loadIcon(
 			jEdit.getProperty("helpviewer.forward.icon")));
 		forward.addActionListener(actionListener);
 		forward.setToolTipText(jEdit.getProperty("helpviewer.forward.label"));
-		forward.setRequestFocusEnabled(false);
-		forward.setMargin(new Insets(0,0,0,0));
 		toolBar.add(forward);
 		back.setPreferredSize(forward.getPreferredSize());
 

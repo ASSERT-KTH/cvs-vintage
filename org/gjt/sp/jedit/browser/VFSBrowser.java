@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.57 2002/08/29 22:09:26 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.58 2002/09/08 21:03:10 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -1071,8 +1071,6 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 		button.setToolTipText(jEdit.getProperty(prefix + name + ".label"));
 
-		button.setRequestFocusEnabled(false);
-		button.setMargin(new Insets(0,0,0,0));
 		button.addActionListener(new ActionHandler());
 
 		return button;

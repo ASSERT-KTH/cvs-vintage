@@ -23,6 +23,7 @@
 package org.gjt.sp.jedit;
 
 import java.util.Vector;
+import java.util.zip.ZipFile;
 import org.gjt.sp.jedit.gui.OptionsDialog;
 import org.gjt.sp.util.Log;
 
@@ -30,7 +31,7 @@ import org.gjt.sp.util.Log;
  * The interface between jEdit and a plugin.
  *
  * @author Slava Pestov
- * @version $Id: EditPlugin.java,v 1.7 2002/08/28 20:51:28 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.8 2002/09/08 21:03:10 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -131,6 +132,11 @@ public abstract class EditPlugin
 		public String getPath()
 		{
 			return path;
+		}
+
+		public ZipFile getZipFile()
+		{
+			return classLoader.getZipFile();
 		}
 
 		public JARClassLoader getClassLoader()

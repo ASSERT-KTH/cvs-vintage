@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Tool bar editor.
  * @author Slava Pestov
- * @version $Id: ToolBarOptionPane.java,v 1.8 2002/09/04 20:44:06 spestov Exp $
+ * @version $Id: ToolBarOptionPane.java,v 1.9 2002/09/08 21:03:11 spestov Exp $
  */
 public class ToolBarOptionPane extends AbstractOptionPane
 {
@@ -435,6 +435,7 @@ class ToolBarEditDialog extends EnhancedDialog
 
 		list = new JList();
 		list.setVisibleRowCount(8);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		actionPanel.add(BorderLayout.CENTER,new JScrollPane(list));
 
 		// Icon selection
