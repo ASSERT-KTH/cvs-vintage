@@ -23,8 +23,7 @@
 package org.gjt.sp.jedit;
 
 import com.microstar.xml.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 import org.gjt.sp.util.Log;
@@ -81,7 +80,7 @@ import org.gjt.sp.util.Log;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceManager.java,v 1.6 2003/05/09 23:42:24 spestov Exp $
+ * @version $Id: ServiceManager.java,v 1.7 2003/05/10 00:43:19 spestov Exp $
  */
 public class ServiceManager
 {
@@ -104,7 +103,7 @@ public class ServiceManager
 			parser.setHandler(dh);
 			in = new BufferedReader(
 				new InputStreamReader(
-				uri.openStream()))
+				uri.openStream()));
 			parser.parse(null, null, in);
 			if(cache != null)
 				cache.cachedServices = dh.getCachedServices();
