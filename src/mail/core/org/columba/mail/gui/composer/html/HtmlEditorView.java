@@ -37,6 +37,7 @@ import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLDocument;
 import org.columba.mail.gui.composer.html.util.ExtendedHTMLEditorKit;
+import org.columba.mail.gui.composer.html.util.HTMLUtilities;
 
 
 /**
@@ -175,6 +176,7 @@ public class HtmlEditorView extends JTextPane
 	 * @param	formatTag	Defines which format to set (H1, P etc.) 
 	 */
 	public void setFormatOfSelectedText(HTML.Tag formatTag) {
+
 		// Is the requested format supported?
 		if (!supportedFormats.contains(formatTag)) {
 			ColumbaLogger.log.error("Format not set - <" + formatTag + 
@@ -200,9 +202,18 @@ public class HtmlEditorView extends JTextPane
 		int caretOffset = getSelectionStart();
 		select(caretOffset, caretOffset + textLength);
 		setCharacterAttributes(sasText, false);
+
+		/*
+		 * This hack forces the content to refresh properly.
+		 * Without it, paragraph formats are applied nested,
+		 * e.g. <p><h1><h3>abc</h3></h1></p>, which is not
+		 * what we want.
+		 */
+		this.setText(this.getText());
 		
 		// reselect text
 		select(caretOffset, caretOffset + textLength);
+
 	}
 
 	/** 

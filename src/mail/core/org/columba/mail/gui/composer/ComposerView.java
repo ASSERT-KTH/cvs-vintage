@@ -29,6 +29,7 @@ import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.composer.html.*;
 import org.columba.mail.gui.composer.menu.ComposerMenu;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.MailResourceLoader;

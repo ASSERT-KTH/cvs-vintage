@@ -83,8 +83,7 @@ public class UnderlineFormatAction extends CheckBoxAction implements Observer {
 		
 		// check if current text is bold or not - and set state accordingly
 		FormatInfo info = (FormatInfo) arg1;
-		AttributeSet attr = info.getTextAttributes();
-		boolean isUnderline = StyleConstants.isUnderline(attr);		
+		boolean isUnderline = info.isUnderline();		
 
 		// notify all observers to change their selection state
 		getObservable().setSelected(isUnderline);

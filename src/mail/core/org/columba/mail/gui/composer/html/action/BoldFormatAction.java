@@ -21,6 +21,7 @@ import java.util.Observer;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.html.HTML;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -82,9 +83,8 @@ public class BoldFormatAction extends CheckBoxAction implements Observer {
 		
 		// check if current text is bold or not - and set state accordingly
 		FormatInfo info = (FormatInfo) arg1;
-		AttributeSet attr = info.getTextAttributes();
-		boolean isBold = StyleConstants.isBold(attr);		
-
+		boolean isBold = info.isBold();
+		
 		// notify all observers to change their selection state
 		getObservable().setSelected(isBold);
 

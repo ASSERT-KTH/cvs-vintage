@@ -82,8 +82,7 @@ public class ItalicFormatAction extends CheckBoxAction implements Observer {
 		
 		// check if current text is bold or not - and set state accordingly
 		FormatInfo info = (FormatInfo) arg1;
-		AttributeSet attr = info.getTextAttributes();
-		boolean isItalic = StyleConstants.isItalic(attr);		
+		boolean isItalic = info.isItalic();		
 
 		// notify all observers to change their selection state
 		getObservable().setSelected(isItalic);

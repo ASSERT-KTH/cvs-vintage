@@ -145,6 +145,7 @@ public class HtmlEditorController
 		view.insertBreak();
 	}
 
+
 	/****************** FocusOwner implementation *****************************/
 
 	// the following lines add cut/copy/paste/undo/redo/selectall
@@ -378,24 +379,15 @@ public class HtmlEditorController
 		}
 		
 		// get attributes, i.e. formatting information
-		int pos = e.getDot() - 1;	// -1 necessary for some reason!?
-		AttributeSet attr = view.getHtmlDoc().
-				getCharacterElement(pos).getAttributes();
+		int pos = e.getDot();
 		
 		// notify observers (typically formatting actions).
 		setChanged();
-		notifyObservers(new FormatInfo(attr, textSelected));	
+		notifyObservers(new FormatInfo(
+				view.getHtmlDoc(), pos, textSelected));
 
-/*
-		boolean bool = false;
-		if (view.getSelectedText() == null) {
-			bool = false;
-		} else if (view.getSelectedText().length() > 0) {
-			bool = true;
-		}
-		setChanged();
-		notifyObservers(new Boolean(bool));
-*/
+
+
 	}
 
 }
