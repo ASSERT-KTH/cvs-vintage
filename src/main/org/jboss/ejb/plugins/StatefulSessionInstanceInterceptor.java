@@ -24,6 +24,7 @@ import javax.transaction.Status;
 import javax.transaction.Synchronization;
 
 import javax.ejb.EJBException;
+import javax.ejb.EJBObject;
 
 
 /**
@@ -32,7 +33,7 @@ import javax.ejb.EJBException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -43,7 +44,25 @@ extends AbstractInterceptor
 	protected StatefulSessionContainer container;
 	
 	// Static -------------------------------------------------------
-	
+    private static Method getEJBHome;
+    private static Method getHandle;
+    private static Method getPrimaryKey;
+    private static Method isIdentical;
+    private static Method remove;
+    static 
+    {
+       try 
+       {
+         Class[] noArg = new Class[0];
+         getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
+         getHandle = EJBObject.class.getMethod("getHandle", noArg);
+         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
+         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
+         remove = EJBObject.class.getMethod("remove", noArg);
+       }
+       catch (Exception x) {x.printStackTrace();}
+    }
+    
 	// Constructors -------------------------------------------------
 	
 	// Public -------------------------------------------------------
@@ -120,17 +139,21 @@ extends AbstractInterceptor
 	public Object invoke(MethodInvocation mi)
 	throws Exception
 	{
-		// Get context
-		EnterpriseContext ctx = container.getInstanceCache().get(mi.getId());
-		
-		// Associate it with the method invocation
-		mi.setEnterpriseContext(ctx);
-		
+		EnterpriseInstanceCache cache = (EnterpriseInstanceCache)container.getInstanceCache();
+		Object id = mi.getId();
+		EnterpriseContext ctx = null;
+		Object mutex = cache.getLock(id);
 		
 		// We synchronize the locking logic (so we can be reentrant)
-		synchronized (ctx) 
+		synchronized (mutex) 
 		{
-			
+			// Get context
+			ctx = container.getInstanceCache().get(mi.getId());
+		
+			// Associate it with the method invocation
+			mi.setEnterpriseContext(ctx);
+		
+		
 			// BMT beans will lock and replace tx no matter what, CMT do work on transaction
 			if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx()) {
 				
@@ -157,8 +180,15 @@ extends AbstractInterceptor
 				ctx.lock();  
 			} else 
 			{
-				// Calls must be in the same transaction
-				throw new RemoteException("Application Error: no concurrent calls on stateful beans");
+				if (!isCallAllowed(mi))
+				{
+					// Calls must be in the same transaction
+					throw new RemoteException("Application Error: no concurrent calls on stateful beans");
+				}
+				else 
+				{
+					ctx.lock();
+				}
 			}
 		} 
 		
@@ -192,22 +222,38 @@ extends AbstractInterceptor
 			if (ctx != null)
 			{
 				// Still a valid instance
-				
-				// release it
-				ctx.unlock();
-				
-				// if removed, remove from cache
-				if (ctx.getId() == null)
+				synchronized (mutex) 
 				{
-					// Remove from cache
-					container.getInstanceCache().remove(mi.getId());
+					// release it
+					ctx.unlock();
+				
+					// if removed, remove from cache
+					if (ctx.getId() == null)
+					{
+						// Remove from cache
+						container.getInstanceCache().remove(mi.getId());
+					}
 				}
 			}
 		}
 	}
 	
-	// Inner classes -------------------------------------------------
+    private boolean isCallAllowed(MethodInvocation mi) 
+    {
+		Method m = mi.getMethod();
+		if (m.equals(getEJBHome) ||
+			m.equals(getHandle) ||
+			m.equals(getPrimaryKey) ||
+			m.equals(isIdentical) ||
+			m.equals(remove))
+		{
+			return true;
+		}
+		return false;
+    }
 	
+	// Inner classes -------------------------------------------------
+
 	private class InstanceSynchronization
 	implements Synchronization
 	{
