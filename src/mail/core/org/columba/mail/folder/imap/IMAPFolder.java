@@ -256,9 +256,10 @@ public class IMAPFolder extends RemoteFolder {
 
 		// if available -> fetch new headers
 		if (result.size() > 0) {
-
-			getStore().fetchHeaderList(headerList, result, getImapPath());
+			getStore().fetchHeaderList(headerList, result, getImapPath());			
 		}
+
+		messageFolderInfo = getStore().getSelectedFolderMessageFolderInfo();
 
 		updateFlags(flags);
 
@@ -287,9 +288,9 @@ public class IMAPFolder extends RemoteFolder {
 			
 			IMAPFlags flags = (IMAPFlags) flagsList[i];
 			
-			Object uid = flags.getUid();
+			Integer uid = (Integer) flags.getUid();
 				
-			ColumbaHeader header = (ColumbaHeader) headerList.get(uid);
+			ColumbaHeader header = (ColumbaHeader) headerList.get(uid.toString());
 			
 			// if the parser didn't return a complete flags object
 			// the UID in the flags object is totally wrong

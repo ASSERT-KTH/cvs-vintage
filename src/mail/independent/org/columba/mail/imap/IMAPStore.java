@@ -406,13 +406,8 @@ public class IMAPStore {
 			}
 			IMAPResponse[] responses = getProtocol().select(path);
 
-			StringBuffer buf = new StringBuffer();
-			for (int i = 0; i < responses.length; i++) {
-				buf.append(responses[i].getSource() + "\n");
-			}
-
 			messageFolderInfo =
-				MessageFolderInfoParser.parseMessageFolderInfo(buf.toString());
+				MessageFolderInfoParser.parse(responses);
 
 			ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
 
@@ -1363,6 +1358,13 @@ public class IMAPStore {
 		buf.append(")");
 
 		return buf.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	public MessageFolderInfo getSelectedFolderMessageFolderInfo() {
+		return messageFolderInfo;
 	}
 
 }
