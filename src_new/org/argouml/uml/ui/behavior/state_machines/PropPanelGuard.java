@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.29 2004/11/24 21:57:05 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.30 2004/11/27 21:56:27 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,12 +29,14 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionNavigateTransition;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
-import org.argouml.uml.ui.UMLExpressionModel;
+import org.argouml.uml.ui.UMLExpressionBodyField;
+import org.argouml.uml.ui.UMLExpressionExpressionModel;
+import org.argouml.uml.ui.UMLExpressionLanguageField;
+import org.argouml.uml.ui.UMLExpressionModel2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
@@ -45,9 +47,6 @@ import org.argouml.util.ConfigLoader;
  * properties as defined in the UML 1.3 spec.
  * @since Dec 14, 2002
  * @author jaap.branderhorst@xs4all.nl
- *
- * TODO: this property panel needs refactoring to remove dependency on
- *       old gui components
  */
 public class PropPanelGuard extends PropPanelModelElement {
 
@@ -67,24 +66,24 @@ public class PropPanelGuard extends PropPanelModelElement {
 
         JList transitionList = new UMLLinkedList(
                 new UMLGuardTransitionListModel());
+        // MVW: TODO: Why is this is list? There's only one!
         addField(Translator.localize("label.transition"), 
                 new JScrollPane(transitionList));
 
         addSeperator();
 
-        UMLExpressionModel expressionModel = new UMLExpressionModel(this, 
-                (Class) ModelFacade.GUARD, "expression",
-		(Class) ModelFacade.BOOLEAN_EXPRESSION, "getExpression", 
-                "setExpression");
-        //UMLExpressionModel2 expressionModel = 
-        //    new UMLConditionExpressionModel(this, "expression")
-        //addField(Translator.localize("UMLMenu", "label.expression"), 
-        //    new JScrollPane(new UMLExpressionBodyField(expressionModel, true),
-        //    JScrollPane.VERTICAL_SCROLLBAR_NEVER, 
-        // JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-        
-        //addField(Translator.localize("UMLMenu", "label.language"), 
-        // new UMLExpressionLanguageField(expressionModel, true));
+//        UMLExpressionModel expressionModel = new UMLExpressionModel(this, 
+//                (Class) ModelFacade.GUARD, "expression",
+//		(Class) ModelFacade.BOOLEAN_EXPRESSION, "getExpression", 
+//                "setExpression");
+        UMLExpressionModel2 expressionModel = 
+            new UMLExpressionExpressionModel(this, "expression");
+        addField(Translator.localize("label.expression"), 
+            new JScrollPane(new UMLExpressionBodyField(expressionModel, true),
+            JScrollPane.VERTICAL_SCROLLBAR_NEVER, 
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+        addField(Translator.localize("label.language"), 
+                new UMLExpressionLanguageField(expressionModel, true));
 
 	new PropPanelButton(this,
             ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
