@@ -18,6 +18,8 @@ package org.columba.core.gui.view;
 
 import org.columba.core.gui.frame.FrameMediator;
 
+import javax.swing.JFrame;
+
 /**
  *
  * This interface provides methods and static data
@@ -57,4 +59,28 @@ public interface AbstractView {
      * @param model a model object that this view will present to the user.
      */
 //    void setModel(Object model);
+
+    /**
+     * Loads stored information about the previous size and
+     * location of the view.
+     */
+    void loadPositions();
+
+    /**
+     * Saves information about the current size and location
+     * of the view
+     */
+    void savePositions();
+    
+    /**
+     * Provides access to the container displaying the View.
+     * Container is needed (as JFrame) by methods in some classes
+     * that create JDialogs.
+     */
+    public JFrame getFrame();
+
+     /**
+     * Specify parent continer of the view.
+     */
+    public void setFrame(JFrame frame);
 }
