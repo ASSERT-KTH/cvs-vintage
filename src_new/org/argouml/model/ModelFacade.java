@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.112 2003/09/06 01:43:57 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.113 2003/09/06 07:33:17 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,6 +320,11 @@ public class ModelFacade {
      * @returns true if handle is an Association
      */
     public static boolean isAAssociation(Object handle) {
+	// Suggestion for how to make ModelFacade handle JMI
+	// if (handle instanceof javax.jmi.model.Association)
+	//     return true;
+	// It seems that not all NSUML UML 1.3 objects are JMI interfaces.
+	// This might not be as easy as I thought. /Linus
         return handle instanceof MAssociation;
     }
 
