@@ -1,597 +1,256 @@
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
- <tr>
-  <td>
-<!-- top nav bar -->
-   <table border="0" cellpadding="2" cellspacing="0">
-    <tr>
-     <td nowrap class="NavHeader">SCARAB:</td>
-     <td nowrap class="NavHeader"><a href="/">My Bugs</a></td>
-     <td class="NavHeader">|</td>
-     <td nowrap class="NavHeader"><a href="/">Report</a></td>
-     <td class="NavHeader">|</td>
-     <td nowrap class="NavHeader"><a href="/">Browse</a></td>
-     <td class="NavHeader">|</td>
-     <td nowrap class="NavHeader"><a href="/">Assign (8)</a>&nbsp;</td>
-     <td class="NavHeaderOn" bgcolor="#cccccc">&nbsp;</td>
-     <td class="NavHeaderOn" nowrap bgcolor="#cccccc">Search</td>
-     <td class="NavHeaderOn" bgcolor="#cccccc">&nbsp;</td>
-     <td nowrap class="NavHeader">&nbsp;<a href="/">Admin</a></td>
-     <td class="NavHeader">|</td>
-     <td class="NavHeader"><a href="/">Help</a></td>
-     <td class="NavHeader">|</td>
-     <td class="NavHeader"><a href="/">Prefs</a></td>
-     <td class="NavHeader">|</td>
-     <td nowrap class="NavHeader"><a href="/">Log Out</a></td>
-    </tr>
-   </table>
-<!-- end top nav bar -->
-  </td>
- </tr>
- <tr>
-  <td height="1" bgcolor="#000000"><spacer type="block" height="1"></td>
- </tr>
-</table>
-<p>
-<!-- current project and login -->
-  <table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-      <td bgcolor="#FFFFFF" height="1"><spacer height="1" type="block"></td>
-      <td nowrap valign="right" class="PlainText">Logged in: <a href="/">jon 123</a></td>
-    </tr>
-  </table>
-<!-- end current project and login -->
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
 
-<!-- enter info -->
-  <table border="0" cellpadding="2" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap class="Header" bgcolor="#999999">ADVANCED SEARCH</td>
-    </tr>
-    <tr>
-      <td nowrap class="SectionHeader" bgcolor="#cccccc">
-        <a href="">Quick Search</a> | <a href="">Metrics</a>
-      </td>
-    </tr>
-  </table>
-<p>
-
-<form method="post" action="searchResults.html" name="QueryForm">
-<input type="hidden" name="action" value="Query">
-
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap colspan="5" class="SectionHeader" bgcolor="#CCCCCC">Search by Attribute
-      </td>
-    </tr>
-<tr>
-<td align="left" class="InputHeader"><a href="bug_status.html">Status</a>:</td>
-<td align="left" class="InputHeader"><a href="bug_status.html">Resolution</a>:</td>
-<td align="left" class="InputHeader"><a href="bug_status.html#rep_platform">Platform</a>:</td>
-<td align="left" class="InputHeader"><a href="bug_status.html#op_sys">OpSys</a>:</td>
-<td align="left" class="InputHeader"><a href="bug_status.html#severity">Severity</a>:</td>
-</tr>
-<tr>
-<td align="left" valign="top">
-
-<select name="issue_status" multiple size="7">
-<option value="UNCONFIRMED">UNCONFIRMED
-<option selected value="NEW">NEW
-<option selected value="ASSIGNED">ASSIGNED
-<option selected value="REOPENED">REOPENED
-<option value="RESOLVED">RESOLVED
-<option value="VERIFIED">VERIFIED
-<option value="CLOSED">CLOSED
-</select>
-</td>
-<td align="left" valign="top">
-<select name="resolution" multiple size="7">
-<option value="FIXED">FIXED
-<option value="INVALID">INVALID<option value="WONTFIX">WONTFIX
-<option value="LATER">LATER
-<option value="REMIND">REMIND
-<option value="DUPLICATE">DUPLICATE
-<option value="WORKSFORME">WORKSFORME
-<option value="MOVED">MOVED
-<option value="---">---
-</select>
-</td>
-<td align="left" valign="top">
-<select name="rep_platform" multiple size="7">
-<option value="All">All
-<option value="DEC">DEC
-<option value="HP">HP
-<option value="Macintosh">Macintosh
-<option value="PC">PC
-<option value="SGI">SGI
-<option value="Sun">Sun
-<option value="Other">Other
-</select>
-</td>
-<td align="left" valign="top">
-<select name="op_sys" multiple size="7">
-<option value="All">All
-<option value="Windows 3.1">Windows 3.1
-<option value="Windows 95">Windows 95
-<option value="Windows 98">Windows 98
-<option value="Windows ME">Windows ME
-<option value="Windows 2000">Windows 2000
-<option value="Windows NT">Windows NT
-<option value="Mac System 7">Mac System 7
-<option value="Mac System 7.5">Mac System 7.5
-<option value="Mac System 7.6.1">Mac System 7.6.1
-<option value="Mac System 8.0">Mac System 8.0
-<option value="Mac System 8.5">Mac System 8.5
-<option value="Mac System 8.6">Mac System 8.6
-<option value="Mac System 9.0">Mac System 9.0
-<option value="Linux">Linux
-<option value="BSDI">BSDI
-<option value="FreeBSD">FreeBSD
-<option value="NetBSD">NetBSD
-<option value="OpenBSD">OpenBSD
-<option value="AIX">AIX
-<option value="BeOS">BeOS
-<option value="HP-UX">HP-UX
-<option value="IRIX">IRIX
-<option value="Neutrino">Neutrino
-<option value="OpenVMS">OpenVMS
-<option value="OS/2">OS/2
-<option value="OSF/1">OSF/1
-<option value="Solaris">Solaris
-<option value="SunOS">SunOS
-<option value="other">other
-</select>
-</td>
-<td align="left" valign="top">
-<select name="issue_severity" multiple size="7">
-<option value="blocker">blocker
-<option value="critical">critical
-<option value="major">major
-<option value="normal">normal
-<option value="minor">minor
-<option value="trivial">trivial
-<option value="enhancement">enhancement
-</select>
-</td>
-</tr>
-</table>
-<p>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap colspan="5" class="SectionHeader" bgcolor="#CCCCCC">Search by Email</td>
-    </tr>
-</table>
-  <table border="0" cellpadding="1" cellspacing="0">
-    <tr>
- <td>
- <span class="InputHeader">Email</span>
- <select name="compare">
- <option value="contains">contains
- <option value="username">username is
- <option value="domain">domain name is
- </select>
- <input type="text" size="15" name="email1" value="$email1">
- </td>
-</tr>
-<tr><td height="2"><spacer type="block" height="2"></td></tr>
-<tr>
- <td valign="top">
-<span class="InputHeader">Match selected fields:</span><br>
-<input type="checkbox" name="emailassigned_to1" value="1" checked>Assigned
- To 
-<input type="checkbox" name="emailreporter1" value="1"><span class="PlainText">Reporter</span>
-<input type="checkbox" name="emailqa_contact1" value="1"><span class="PlainText">QA Contact</span>
-<input type="checkbox" name="emailcc1" value="1"><span class="PlainText">CC</span>
-<input type="checkbox" name="emaillongdesc1" value="1"><span class="PlainText">Added comment</span>
- </td>
-    </tr>
-</table>
-<p>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap colspan="5" class="SectionHeader" bgcolor="#CCCCCC">Search by Issue Attributes
-      </td>
-    </tr>
-</table>
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
- <td valign="top" colspan="3">
- <select name="inclusive">
- <option value="4.0.1">Only
- <option value="4.0.2">Excluding
- <option value="4.1">Including
- </select>
-<span class="InputHeader">issues numbered:</span>
- <input type="text" size="15">
- </td>
-    </tr>
-    <tr>
-      <td valign="top" colspan="3">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-    <tr>
- <td colspan="3" valign="top" class="InputHeader">Changed in the last
- <input type="text" size="3" name="changedInDays" value="$changedInDays">
- days.
- </td>
-    </tr>
-    <tr>
-      <td valign="top" colspan="3">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-    <tr>
- <td colspan="3" valign="top" class="InputHeader">At least
- <input type="text" size="3" name="leastVotes" value="$leastVotes">
- votes.
- </td>
-    </tr>
-    <tr>
-      <td valign="top" colspan="3">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-    <tr>
- <td valign="top" nowrap class="InputHeader">Where the field(s)</td>  
- <td><select name="inclusive" multiple size="4">
- <option value="4.0.1">[Issue creation]
- <option value="4.0.2">assigned_to
- <option value="4.1">issue_file_loc
- <option value="4.1">issue_severity
- </select></td>   
-  <td valign="top" width="100%" class="InputHeader">changed.
- </td>
-    </tr>
-    <tr>
-      <td valign="top" colspan="3">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-    <tr>
- <td colspan="3" valign="top" class="InputHeader">From dates
- <input type="text" size="5" name="startDate" value="$startDate">
- to 
- <input type="text" size="5" name="endDate" value="$endDate">
- </td>
-    </tr>
-    <tr>
-      <td valign="top" colspan="3">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-    <tr>
- <td colspan="3" valign="top" class="InputHeader">Changed to value 
- <input type="text" size="5" name="changedToValue" value="$changedToValue">
- (optional)
- </td>
-    </tr>
-    <tr>
-      <td valign="top" colspan="5">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-<tr>
-<td class="InputHeader">Summary:</td>
-<td><input name="short_desc" size="15" value="$short_desc"></td>
-<td>
-<select name="short_desc_type">
-<option value="substring" selected>case-insensitive substring
-<option value="casesubstring">case-sensitive substring
-<option value="allwords">all words
-<option value="anywords">any words
-<option value="regexp">regular expression
-<option value="notregexp">not ( regular expression )
-</select></td>
-</tr>
-<tr>
-<td class="InputHeader">A description entry:</td>
-<td><input name="long_desc" size="15" value="$long_desc"></td>
-<td>
-<select name="long_desc_type">
-<option value="substring" selected>case-insensitive substring
-<option value="casesubstring">case-sensitive substring
-<option value="allwords">all words
-<option value="anywords">any words
-<option value="regexp">regular expression
-<option value="notregexp">not ( regular expression )
-</select></td>
-</tr>
-<tr>
-<td class="InputHeader">URL:</td>
-<td><input name="issue_file_loc" size="15" value="$issue_file_loc"></td>
-<td>
-<select name="issue_file_loc_type">
-<option value="substring" selected>case-insensitive substring
-<option value="casesubstring">case-sensitive substring
-<option value="allwords">all words
-<option value="anywords">any words
-<option value="regexp">regular expression
-<option value="notregexp">not ( regular expression )
-</select></td>
-</tr>
-<tr>
-<td class="InputHeader">Status whiteboard:</td>
-<td><input name="status_whiteboard" size="15" value="$status_whiteboard"></td>
-<td>
-<select name="status_whiteboard_type">
-<option value="substring" selected>case-insensitive substring
-<option value="casesubstring">case-sensitive substring
-<option value="allwords">all words
-<option value="anywords">any words
-<option value="regexp">regular expression
-<option value="notregexp">not ( regular expression )
-</select></td>
-</tr>
-<tr> 
-<td class="InputHeader">
-<a href="describekeywords.cgi">Keywords</a>:</td>
-<td><input name="keywords" size="15" value="$keywords"></td>
-<td>
-<select name="keywords_type"><option value="anywords">Any of the listed keywords set
-<option value="allwords">All of the listed keywords set
-<option value="nowords">None of the listed keywords set
-</select></td></tr>
-</table>
-<p>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap colspan="5" class="SectionHeader" bgcolor="#CCCCCC">Search by Project Specifications
-      </td>
-    </tr>
-</table>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-<tr>
-<td align="left" valign="bottom" class="InputHeader">Program:</td>
-<td align="left" valign="bottom" class="InputHeader">Version:</td>
-<td align="left" valign="bottom" class="InputHeader"><a href="describecomponents.cgi">Component:</a></td>
-<td align="left" valign="bottom" class="InputHeader">Target Milestone:</td>
-</tr>
-<tr>
-
-<td align="left" valign="top">
-<select name="product" multiple size=5 onchange="selectProduct(this.form);">
-<option value="Browser">Browser
-<option value="Calendar">Calendar
-<option value="CCK">CCK
-<option value="Derivatives">Derivatives
-<option value="Directory">Directory
-<option value="Grendel">Grendel
-<option value="MailNews">MailNews
-<option value="mozilla.org">mozilla.org
-<option value="NSPR">NSPR
-<option value="NSS">NSS
-<option value="PSM">PSM
-<option value="Rhino">Rhino
-<option value="Webtools">Webtools
-</select>
-</td>
-
-<td align="left" valign="top">
-<select name="version" multiple size=5>
-<option value="1.01">1.01
-<option value="1.1">1.1
-<option value="1.2">1.2
-<option value="1.3">1.3
-<option value="1998-03-31">1998-03-31
-<option value="1998-04-08">1998-04-08
-<option value="1998-04-29">1998-04-29
-<option value="1998-06-03">1998-06-03
-<option value="1998-07-28">1998-07-28
-<option value="1998-09-04">1998-09-04
-<option value="2.0">2.0
-<option value="2.1">2.1
-<option value="3.0">3.0
-<option value="3.0.1">3.0.1
-<option value="3.1">3.1
-<option value="3.1.1">3.1.1
-<option value="3.1.2">3.1.2
-<option value="3.1.3">3.1.3
-<option value="3.2">3.2
-<option value="3.5">3.5
-<option value="3.5.1">3.5.1
-<option value="4.0">4.0
-<option value="4.0.1">4.0.1
-<option value="4.0.2">4.0.2
-<option value="other">other
-<option value="unspecified">unspecified
-</select>
-</td>
-
-<td align="left" valign="top">
-<select name="component" multiple size=5>
-<option value="Account Manager">Account Manager
-<option value="ActiveX Wrapper">ActiveX Wrapper
-<option value="Address Book">Address Book
-<option value="AS-Whitebox">AS-Whitebox
-<option value="Aurora/RDF BE">Aurora/RDF BE
-<option value="Aurora/RDF FE">Aurora/RDF FE
-<option value="Autofill">Autofill
-<option value="Berkeley DB">Berkeley DB
-<option value="Bonsai">Bonsai
-<option value="Bookmarks">Bookmarks
-<option value="Bosnian/bs-BA">Bosnian/bs-BA
-<option value="Browser Hooks">Browser Hooks
-<option value="Browser-General">Browser-General
-<option value="Issuezilla">Issuezilla
-<option value="Build">Build
-<option value="Build Config">Build Config
-<option value="CCK-CDLayout">CCK-CDLayout
-<option value="CCK-CustomShell">CCK-CustomShell
-<option value="CCK-Shell">CCK-Shell
-<option value="CCK-Whitebox">CCK-Whitebox
-</select>
-</td>
-<td>
-<select name="target_milestone" multiple size=5>
-<option value="---">---
-<option value="Future">Future
-<option value="M1">M1
-<option value="M2">M2
-<option value="M3">M3
-<option value="M4">M4
-<option value="M5">M5
-<option value="M6">M6
-<option value="M7">M7
-<option value="M8">M8
-<option value="M9">M9
-<option value="M10">M10
-<option value="M11">M11
-<option value="M12">M12
-<option value="M13">M13
-<option value="M14">M14
-<option value="M15">M15
-<option value="M16">M16
-<option value="M17">M17
-<option value="M18">M18
-<option value="M19">M19
-<option value="M20">M20
-<option value="M21">M21
-<option value="M22">M22
-<option value="M23">M23
-<option value="M24">M24
-<option value="M25">M25
-<option value="M26">M26
-<option value="M27">M27
-<option value="M28">M28
-<option value="M29">M29
-<option value="M30">M30
-<option value="3.0">3.0
-<option value="3.0.1">3.0.1
-<option value="3.1">3.1
-<option value="3.1.1">3.1.1
-<option value="3.1.2">3.1.2
-<option value="3.1.3">3.1.3
-<option value="3.2">3.2
-<option value="3.5">3.5
-<option value="3.5.1">3.5.1
-<option value="4.0">4.0
-<option value="4.0.1">4.0.1
-<option value="4.0.2">4.0.2
-<option value="4.1">4.1
-</select>
-</td> 
-</tr>
-</table>
-<p>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap class="SectionHeader" bgcolor="#CCCCCC">Boolean Search
-      </td>
-    </tr>
-</table>
-  <table border="0" cellpadding="1" cellspacing="0">
-<tr><td valign="top">
-<select name="field0-0-0">
-<option value="noop">---
-<option value="groupset">groupset
-<option value="everconfirmed">everconfirmed
-<option value="issue_id">Issue #
-<option value="short_desc">Summary
-<option value="product">Product
-<option value="version">Version
-<option value="rep_platform">Platform
-<option value="issue_file_loc">URL
-<option value="op_sys">OS/Version
-<option value="issue_status">Status
-<option value="status_whiteboard">Status Whiteboard
-<option value="keywords">Keywords
-<option value="resolution">Resolution
-<option value="issue_severity">Severity
-<option value="priority">Priority
-<option value="component">Component
-<option value="assigned_to">AssignedTo
-<option value="reporter">ReportedBy
-<option value="votes">Votes
-<option value="qa_contact">QAContact
-<option value="cc">CC
-<option value="dependson">IssuesThisDependsOn
-<option value="blocked">OtherIssuesDependingOnThis
-<option value="attachments.description">Attachment description
-<option value="attachments.thedata">Attachment data
-<option value="attachments.mimetype">Attachment mime type
-<option value="attachments.ispatch">Attachment is patch
-<option value="target_milestone">Target Milestone
-<option value="delta_ts">Last changed date
-<option value="(to_days(now()) - to_days(issues.delta_ts))">Days since issue changed
-<option value="longdesc">Comment
-</select>
-<br>
-<select name="type0-0-0"><option value="noop">---
-<option value="equals">equal to
-<option value="notequals">not equal to
-<option value="casesubstring">contains (case-sensitive) substring
-<option value="substring">contains (case-insensitive) substring
-<option value="notsubstring">does not contain (case-insensitive) substring
-<option value="regexp">contains regexp
-<option value="notregexp">does not contain regexp
-<option value="lessthan">less than
-<option value="greaterthan">greater than
-<option value="anywords">any words
-<option value="allwords">all words
-<option value="nowords">none of the words
-<option value="changedbefore">changed before
-<option value="changedafter">changed after
-<option value="changedto">changed to
-<option value="changedby">changed by
-</select>
-<br>
-<input type="text" name="value0-0-0" value="$value0-0-0"></td>
-</tr>
-<tr> 
-<td valign="top">
-<input type="submit" value="Or" name="cmd-add0-0-1" onclick="document.forms[0].action='query.cgi#chart'; document.forms[0].method='POST' ; return 1;"></td>
-</tr><tr>
-<td valign="top">
-<input type="submit" value="And" name="cmd-add0-1-0" onclick="document.forms[0].action='query.cgi#chart'; document.forms[0].method='POST' ; return 1;">
-</td>
-</tr><tr>
-<td valign="top"><input type="submit" value="Add another boolean chart" name="cmd-add1-0-0" onclick="document.forms[0].action='query.cgi#chart'; document.forms[0].method='POST' ; return 1;">
-</td>
-<td valign="top" class="PlainText">
-<nobr><a href="booleanchart.html">What is this stuff?</a></nobr>
-</td>
-</tr>
-</table>
-<input type="hidden" name="cmdtype" value="doit">
-
-<p>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td nowrap class="SectionHeader" bgcolor="#CCCCCC">Sort By
-      </td>
-    </tr>
-</table>
- <table border="0" cellpadding="1" cellspacing="0" width="100%">
-<tr><td>
-<span class="InputHeader">Sort By:</b>
-<select name="order">
-<option value="Issue Number">Issue Number
-<option selected value="'Importance'">'Importance'
-<option value="Assignee">Assignee
-</select></nobr>
-</td></tr>
-</table>
-  <table border="0" cellpadding="1" cellspacing="0" width="100%">
-    <tr>
-      <td valign="top" colspan="5">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tr><td bgcolor="#CCCCCC" height="1"><spacer height="1" type="block"></td></tr></table>
-      </td>
-    </tr>
-</table>
-
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
-<tr><td>
-<input type="submit" name="eventSubmit_doSubmitQuery" value="Submit Query">
-<input type="reset" name="eventReset_doReset" value="Reset back to the default query">
-</td></tr>
-</table> 
+	<h3>Advanced Query (2.2.0)</h3>
+	
+	<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
 
-  </form> 
-<!-- end report an issue-->
+        <form action="$link.setPage("Search.vm")" method="GET">
+        <input type="hidden" name="nextTemplate" value="IssueList.vm" />
+        <input type="hidden" name="action" value="Search" />
+	
+	<div class="functnbar">
+		<table width="100%" cellpadding="3" cellspacing="2" border="1">
+		<tr>
+		<td>
+            <input type="submit" name="eventSubmit_doSearch" 
+                value="Search" class="button" />&#160;
+            <input type="reset" value="Reset" class="button" />
+           $intake.declareGroups()
+        </form>
+        </td>
+		</tr>
+		</table>
+	</div>
+	
+	<h4>Search the Scarab Knowledge Base</h4>
+	<div class="listtable">
+		<table width="100%" cellpadding="3" cellspacing="2" border="1">
+		<tr>
+		<th width="120">issue ID# range:</th>
+		<td>from:&nbsp;<input type="text" size="20" class="text" value="" />&nbsp;&nbsp;to:&nbsp;<input type="text" size="20" class="text" value="" /></td>
+		</tr>
+		
+		<tr>
+		<th width="120">issue creation date range:</th>
+		<td>from:&nbsp;<input type="text" size="20" class="text" value="" />&nbsp;&nbsp;to:&nbsp;<input type="text" size="20" class="text" value="" /></td>
+		</tr>
+		
+		<tr>
+		<th width="120">state change query:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">votes:</th>
+		<td><input type="text" size="25" class="text" value="" /></td>
+		</tr>
+		
+		<tr>
+		<th width="120">summary:</th>
+		<td><input type="text" size="25" class="text" value="" /></td>
+		</tr>
+		
+		<tr>
+		<th width="120">description:</th>
+		<td><textarea rows="4" cols="40" class="text"></textarea></td>
+		</tr>
+		
+		<tr>
+		<th width="120">version:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">platform:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">os:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">found during:</th>
+		<td>
+			<select class="select">
+			<option>normal use</option>
+			<option>QA</option>
+			<option>Beta</option>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">issue type:</th>
+		<td>	
+			<select class="select">
+			<option>change requirements</option>
+			<option>bug</option>
+			<option>enhancement</option>
+			<option>documentation change</option>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">functional area:</th>
+		<td><input type="checkbox" /> UI <input type="checkbox" />setup <input type="checkbox" />help</td>
+		</tr>
+		
+		<tr>
+		<th width="120">severity:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">priority:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">URL:</th>
+		<td><input type="text" size="25" class="text" value="http://" /></td>
+		</tr>
+		
+		<tr>
+		<th width="120">boolean search:</th>
+		<td>
+			<select class="select">
+			<option value="noop">---</option>
+			<option value="groupset">groupset</option>
+			<option value="everconfirmed">everconfirmed</option>
+			<option value="bug_id">Bug #</option>
+			<option value="short_desc">Summary</option>
+			<option value="product">Product</option>
+			<option value="version">Version</option>
+			<option value="rep_platform">Platform</option>
+			<option value="bug_file_loc">URL</option>
+			<option value="op_sys">OS/Version</option>
+			<option value="bug_status">Status</option>
+			<option value="status_whiteboard">Status Whiteboard</option>
+			<option value="keywords">Keywords</option>
+			<option value="resolution">Resolution</option>
+			<option value="bug_severity">Severity</option>
+			<option value="priority">Priority</option>
+			<option value="component">Component</option>
+			<option value="assigned_to">AssignedTo</option>
+			<option value="reporter">ReportedBy</option>
+			<option value="votes">Votes</option>
+			<option value="qa_contact">QAContact</option>
+			<option value="cc">CC</option>
+			<option value="dependson">BugsThisDependsOn</option>
+			<option value="blocked">OtherBugsDependingOnThis</option>
+			<option value="attachments.description">Attachment description</option>
+			<option value="attachments.thedata">Attachment data</option>
+			<option value="attachments.mimetype">Attachment mime type</option>
+			<option value="attachments.ispatch">Attachment is patch</option>
+			<option value="target_milestone">Target Milestone</option>
+			<option value="delta_ts">Last changed date</option>
+			<option value="(to_days(now()) - to_days(bugs.delta_ts))">Days since bug changed</option>
+			<option value="longdesc">Comment</option>
+			</select>
+			
+			<select class="select">
+			<option value="noop">---</option>
+			<option value="equals">equal to</option>
+			<option value="notequals">not equal to</option>
+			<option value="casesubstring">contains (case-sensitive) substring</option>
+			<option value="substring">contains (case-insensitive) substring</option>
+			<option value="notsubstring">does not contain (case-insensitive) substring</option>
+			<option value="allwordssubstr">all words as (case-insensitive) substrings</option>
+			<option value="anywordssubstr">any words as (case-insensitive) substrings</option>
+			<option value="regexp">contains regexp</option>
+			<option value="notregexp">does not contain regexp</option>
+			<option value="lessthan">less than</option>
+			<option value="greaterthan">greater than</option>
+			<option value="anywords">any words</option>
+			<option value="allwords">all words</option>
+			<option value="nowords">none of the words</option>
+			<option value="changedbefore">changed before</option>
+			<option value="changedafter">changed after</option>
+			<option value="changedto">changed to</option>
+			<option value="changedby">changed by</option>
+			</select>
+			
+			<input type="text" size="25" class="text" value="" />
+			<div class="misc"><input type="submit" value="and" class="button" />&nbsp;<input type="submit" value="or" class="button" />&nbsp;<input type="submit" value="add additional boolean search" class="button" /></div>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">sort by:</th>
+		<td>
+			<select class="select">
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select>
+		</td>
+		</tr>
+		
+		<tr>
+		<th width="120">issues per page:</th>
+		<td><input type="radio" name="foo" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100</td>
+		</tr>
+		</table>
+	</div>
+	
+	<div class="functnbar">
+		<table width="100%" cellpadding="3" cellspacing="2" border="1">
+		<tr>
+		<td>
+            <input type="submit" name="eventSubmit_doSearch" 
+                value="Search" class="button" />&#160;
+            <input type="reset" value="Reset" class="button" />
+        </td>
+		</tr>
+		</table>
+	</div>
+           
+$intake.declareGroups()
+</form>
