@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Mon May 22 15:00:15 2000">
+<kawaproject timestamp="Tue May 23 12:42:03 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -627,7 +627,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\deployment\jBossEnterpriseBeans.java"</relativepath>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
@@ -1012,7 +1012,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jaws\JAWSPersistenceManager.java"</relativepath>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>

@@ -15,6 +15,7 @@
     <property name="bin.dir" value="${basedir}/bin"/>
     <property name="src.bin.dir" value="${basedir}/src/bin"/>
     <property name="src.dir" value="${basedir}/src/main"/>
+    <property name="src.client.dir" value="${basedir}/src/client"/>
     <property name="src.resources" value="${basedir}/src/resources"/>
     <property name="db.dir" value="${basedir}/db"/>
     <property name="lib.dir" value="${basedir}/lib"/>
@@ -106,19 +107,20 @@
          excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/ejb/plugins/jaws/deployment/**"
     />
          
-    <jar jarfile="${build.lib.dir}/ext/jboss-client.jar"
+    <mkdir dir="${build.dir}/client"/>
+    <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
          includes="org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**"
     />
 	 
-    <jar jarfile="${build.bin.dir}/deploy.jar"
+    <jar jarfile="${build.dir}/client/deploy.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/deploy.mf"
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
     />
 	 
-    <jar jarfile="${build.bin.dir}/stop.jar"
+    <jar jarfile="${build.dir}/client//stop.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/stop.mf"
          includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Stop.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"
@@ -154,6 +156,7 @@
      <mkdir dir="${dist.dir}/log"/>
      <mkdir dir="${dist.dir}/db"/>
      <mkdir dir="${dist.dir}/conf"/>
+     <mkdir dir="${dist.dir}/client"/>
 
      <copyfile src="${lib.dir}/jmxri.jar" dest="${dist.dir}/lib/jmxri.jar"/>
      <copyfile src="${etc.dir}/jboss.conf" dest="${dist.dir}/conf/jboss.conf"/>
@@ -165,6 +168,8 @@
      <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext"/>
      <copydir src="${build.bin.dir}" dest="${dist.dir}/bin"/>
      <copydir src="${build.lib.dir}/ext" dest="${dist.dir}/lib/ext"/>
+     <copydir src="${build.dir}/client" dest="${dist.dir}/client"/>
+     <copydir src="${src.client.dir}" dest="${dist.dir}/client"/>
   </target>
 
   <!-- =================================================================== -->
