@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.26 2005/02/16 23:47:21 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.27 2005/02/23 00:06:26 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -159,6 +159,7 @@ public abstract class ActionFileOperations extends AbstractAction {
                             + file.getName()
                             + " is not of a known file type");
                 }
+                System.gc();
                 p = persister.doLoad(file);
 
                 ProjectBrowser.getInstance().showStatus(
@@ -171,6 +172,17 @@ public abstract class ActionFileOperations extends AbstractAction {
                 success = false;
                 reportError(ex.getMessage(), showUI);
                 p = oldProject;
+            } catch (OutOfMemoryError ex) {
+                p = oldProject;
+                System.gc();
+                LOG.error("Out of memory while loading project", ex);
+                success = false;
+                reportError(
+                    "Could not load the project "
+                    + file.getName()
+                    + " because the JVM ran out of memory.\n"
+                    + "Rerun ArgoUML with the heap size increased.",
+                    showUI);
             } catch (Exception ex) {
                 LOG.error("Exception while loading project", ex);
                 success = false;
@@ -226,6 +238,7 @@ public abstract class ActionFileOperations extends AbstractAction {
                 Designer.enableCritiquing();
             }
         }
+        System.gc();
         return success;
     }
 

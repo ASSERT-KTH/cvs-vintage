@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.58 2005/01/16 22:18:45 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.59 2005/02/23 00:06:25 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.persistence.PersistenceManager;
-import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
 import org.tigris.gef.base.Globals;
@@ -63,7 +62,6 @@ public class ActionOpenProject extends ActionFileOperations
      * Constructor for this action.
      */
     public ActionOpenProject() {
-        // this is not a "global" action, since it is never downlighted...
         super(Translator.localize("action.open-project"), ResourceLoaderWrapper
                 .lookupIconResource(Translator.getImageBinding("OpenProject"),
                         Translator.localize("OpenProject")));
@@ -95,15 +93,14 @@ public class ActionOpenProject extends ActionFileOperations
             if (p != null && p.getURL() != null) {
                 File file = new File(p.getURL().getFile());
                 if (file.getParentFile() != null) {
-                    chooser = 
-                        FileChooserFactory.getFileChooser(file.getParent());
+                    chooser = new JFileChooser(file.getParent());
                 }
             } else {
-                chooser = FileChooserFactory.getFileChooser();
+                chooser = new JFileChooser();
             }
 
             if (chooser == null) {
-                chooser = FileChooserFactory.getFileChooser();
+                chooser = new JFileChooser();
             }
 
             chooser.setDialogTitle(
