@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.26 2001/07/12 02:02:35 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.27 2001/07/17 02:04:37 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -425,17 +425,21 @@
 <!--
     Actual attribute of the issue with its value.
 -->
-<table name="SCARAB_ISSUE_ATTRIBUTE_VALUE" idMethod="none" 
+<table name="SCARAB_ISSUE_ATTRIBUTE_VALUE" idMethod="idbroker" 
         javaName="AttributeValue">
+    <!--
+        PK.
+    -->
+    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER" />
     <!--
         Issue that attribute belongs to.
     -->
-    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ISSUE_ID" required="true" type="INTEGER"></column>
     <!--
         Attribute.
     -->
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" 
-            type="INTEGER" inheritance="single"></column>
+    <column name="ATTRIBUTE_ID" required="true" 
+            type="INTEGER" inheritance="single" />
     <!--
         Option that is the value of the attribute if attribute is option based.
     -->
@@ -817,13 +821,9 @@
 <table name="SCARAB_ISSUE_ATTRIBUTE_VOTE" idMethod="none" 
         javaName="AttributeVote">
     <!--
-        Issue.
+        AttributeValue.
     -->
-    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
-    <!--
-        Attribute.
-    -->
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Person that cast vote.
     -->
@@ -836,8 +836,7 @@
         <reference local="OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_ATTRIBUTE_VALUE">
-        <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
-        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
+        <reference local="VALUE_ID" foreign="VALUE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
@@ -868,9 +867,7 @@
 <!-- This table holds info on words' ocurrences in attribute values -->
 <table name="SCARAB_R_ATTRIBUTE_VALUE_WORD" idMethod="none" javaName="RIssueWord">
     <!-- AttributeValue (Issue and Attribute) -->
-    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"/>
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" 
-            type="INTEGER"/>
+    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!-- Word -->
     <column name="WORD_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!-- Number of ocuurences of the word in this issue. increases relevance.-->
@@ -878,8 +875,7 @@
     <!-- position of the first word's ocuurence in the issue. The smaller it is the higher is relevance. -->
     <column name="POSITION" required="true" type="INTEGER"/>
     <foreign-key foreignTable="SCARAB_ISSUE_ATTRIBUTE_VALUE">
-        <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
-        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
+        <reference local="VALUE_ID" foreign="VALUE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_WORD">
         <reference local="WORD_ID" foreign="WORD_ID"/>
@@ -899,8 +895,8 @@
     table name.
 -->
 <table name="SCARAB_USER" javaName="ScarabUserImpl" alias="TurbineUser" 
-      baseClass="TurbineTorqueUser"
-      basePeer="org.apache.turbine.om.security.TurbineUserPeer">
+    baseClass="org.apache.turbine.services.security.impl.db.entity.TurbineUser"
+    basePeer="org.apache.turbine.services.security.impl.db.entity.TurbineUserPeer">
     <!--
         Unique identifier.
     -->

@@ -114,23 +114,23 @@ AND TURBINE_ROLE.ROLE_NAME = 'Developer';
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (1, 5, 'PACD', 1);
 
 /* description */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 'Documents are not as current as they should be.');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 1, 'Documents are not as current as they should be.');
 /* summary */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 11, 'Docs are out of date.');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (2, 1, 11, 'Docs are out of date.');
 /* assigned to visitor id 1 */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (1, 2, 1, 'jon');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (3, 1, 2, 1, 'jon');
 /* status is New */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 3, 2, 'New');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (4, 1, 3, 2, 'New');
 /* resolution is verified */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 4, 6, 'verified');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (5, 1, 4, 6, 'verified');
 /* platform is SGI */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 5, 21, 'SGI');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (6, 1, 5, 21, 'SGI');
 /* os is Linux */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 6, 38, 'Linux');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (7, 1, 6, 38, 'Linux');
 /* priority is p3 */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 7, 56, 'Low');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (8, 1, 7, 56, 'Low');
 /* severity is major */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (1, 9, 66, 'major');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (9, 1, 9, 66, 'major');
 
 /* sample data for activities and attachments for this issue */
 insert into  SCARAB_ACTIVITY values (1, 4, 1, 1, 8,9);
@@ -142,23 +142,23 @@ insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, atta
 
 insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (2, 2, 'PACS', 1);
 /* description */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (2, 1, 'Items do not display correctly.');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (10, 2, 1, 'Items do not display correctly.');
 /* summary */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (2, 11, 'Dates display in long form instead of short form.');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, VALUE) values (11, 2, 11, 'Dates display in long form instead of short form.');
 /* assigned to visitor id 1 */
-#insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (2, 2, 1, 'jon');
+#insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, USER_ID, VALUE) values (12, 2, 2, 1, 'jon');
 /* status is New */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 3, 2, 'New');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (13, 2, 3, 2, 'New');
 /* resolution is verified */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 4, 6, 'verified');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (14, 2, 4, 6, 'verified');
 /* platform is SGI */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 5, 20, 'PC');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (15, 2, 5, 20, 'PC');
 /* os is OpenVMS */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 6, 75, 'Windows');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (16, 2, 6, 75, 'Windows');
 /* priority is p3 */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 7, 58, 'High');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (17, 2, 7, 58, 'High');
 /* severity is major */
-insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (2, 9, 65, 'normal');
+insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(VALUE_ID, ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALUE) values (18, 2, 9, 65, 'normal');
 
 /* sample data for activities and attachments for this issue */
 insert into  SCARAB_ACTIVITY values (2, 9, 2, 2, 65,67);
