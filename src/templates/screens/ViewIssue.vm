@@ -2,16 +2,8 @@ $page.setTitle("View Issue")
 
 <div class="app" id="viewissue">
 
-#if ($data.Parameters.getString("unique_id"))
-  #set ($currentIssueId = $data.Parameters.getString("unique_id"))
-  #set ($currentIssue = $scarabR.IssueByUniqueId)
-#elseif ($data.Parameters.getString("issue_id"))
-  #set ($currentIssueId = $data.Parameters.getString("issue_id"))
-  #set ($currentIssue = $scarabR.getIssue($currentIssueId))
-#else
-  #set ($currentIssueId = $data.Parameters.getString("id"))
-  #set ($currentIssue = $scarabR.getIssue($currentIssueId))
-#end
+#set ($currentIssueId = $data.Parameters.getString("id"))
+#set ($currentIssue = $scarabR.getIssue($currentIssueId))
 
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 #set ($fullComments = $data.Parameters.getString("fullcomments",""))
