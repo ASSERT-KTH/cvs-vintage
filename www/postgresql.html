@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Postgresql</h2>
-<h4>$Id: postgresql.html,v 1.4 2002/09/18 20:03:02 jon Exp $</h4>
+<h4>$Id: postgresql.html,v 1.5 2003/01/31 23:02:49 jon Exp $</h4>
 
 <p>
 Scarab has been developed with database independence in mind, however
@@ -22,6 +22,27 @@ document will help improve things for others.
 <p>
 <strong>NOTE: Scarab requires Postgresql version 7.2.1 and higher.</strong>
 </p>
+
+<p>
+NOTE: If you are seeing this exception:
+</p>
+
+<pre>
+  java.lang.StringIndexOutOfBoundsException: String index out of range: 23
+	at java.lang.String.charAt(String.java:460)
+	at org.postgresql.jdbc2.ResultSet.toTimestamp(ResultSet.java:1653)
+	at org.postgresql.jdbc2.ResultSet.getTimestamp(ResultSet.java:398)
+</pre>
+
+<p>
+It is because you are using an older JDBC.jar with a newer version of Postgresql. 
+Please upgrade your .jar file by copying a newer Postgresql
+.jar file as scarab/lib/postgresql-7.X.jar and removing the one in 
+scarab/target/webapps/scarab/WEB-INF/lib/postgres*.jar Once you have done that,
+you just need to rebuild.
+</p>
+
+<hr noshade="true" size="1" />
 
 <p>
 In order to get Torque to generate the right Scarab .sql files for
