@@ -19,6 +19,21 @@
         </select>
 #end
 
+#macro ( dependTypeLeafSelect $childIssue $type)
+        <select name="$type_depend_type_id_$childIssue.IssueId" class="select">
+            <option>Choose dependency type</option>
+            #foreach ($dependType in $currentIssue.getAllDependencyTypes())
+              #set ( $selected = "" )
+              #if ( $currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()) )
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$dependType.DependTypeId">
+                  $dependType.Name</option>
+            #end
+            <option value="none">remove dependency </option>
+        </select>
+#end
+
 #macro ( attrValueText $attrValue $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
     <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
@@ -109,7 +124,6 @@
             #if ($size.length() == 0)
             <option value="">Choose...</option>
             #end
-
             #foreach ($user in $security.getUsers($attr.Permission, $module))
               #set ( $selected = "" )
               #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
