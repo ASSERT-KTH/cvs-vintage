@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  *
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  * Revisions:
  *
@@ -295,12 +295,14 @@ public class XmlFileLoader
       {
          log.error( e.getMessage() + ":" +e.getColumnNumber() + ":" +
             e.getLineNumber(), e );
-         throw new DeploymentException(e.getMessage(), e);
+         throw new DeploymentException( "Invalid XML: file='" + inPath +
+            "' - " + e.getMessage(), e);
       }
       catch( SAXException e )
       {
          log.error( e.getException() );
-         throw new DeploymentException(e.getMessage(), e);
+         throw new DeploymentException( "Invalid XML: file='" + inPath +
+            "' - " + e.getMessage(), e);
       }
       catch( Exception e )
       {
