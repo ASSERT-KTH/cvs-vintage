@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -237,7 +237,7 @@ public class JDBCEntityBridge implements EntityBridge
          auditField = auditMetaData.getUpdatedPrincipalField();
          if(auditField != null)
          {
-            updatedPrincipalField = getCMPFieldByName(auditField.getColumnName());
+            updatedPrincipalField = getCMPFieldByName(auditField.getFieldName());
             if(updatedPrincipalField == null)
             {
                updatedPrincipalField = new JDBCCMP2xUpdatedPrincipalFieldBridge(manager, auditField);
