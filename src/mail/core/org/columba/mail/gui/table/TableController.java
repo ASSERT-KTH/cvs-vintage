@@ -132,7 +132,7 @@ public class TableController {
 
 		getView().setTransferHandler(new MessageTransferHandler(this));
 
-		getView().setDragEnabled(true);
+		getView().setDragEnabled(false);
 
 	}
 
