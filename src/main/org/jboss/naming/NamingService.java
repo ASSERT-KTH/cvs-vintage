@@ -17,9 +17,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.MalformedObjectNameException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.RefAddr;
@@ -39,7 +36,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -86,6 +83,16 @@ public class NamingService
       naming.setBindAddress(host);
    }
 
+   public String getRmiBindAddress()
+   {
+      return naming.getRmiBindAddress();
+   }
+
+   public void setRmiBindAddress(String host) throws UnknownHostException
+   {
+      naming.setRmiBindAddress(host);
+   }
+
    public int getBacklog()
    {
       return naming.getBacklog();
@@ -94,6 +101,15 @@ public class NamingService
    public void setBacklog(int backlog)
    {
       naming.setBacklog(backlog);
+   }
+
+   public boolean getInstallGlobalService()
+   {
+      return naming.getInstallGlobalService();
+   }
+   public void setInstallGlobalService(boolean flag)
+   {
+      naming.setInstallGlobalService(flag);
    }
 
    public String getClientSocketFactory()
@@ -122,12 +138,6 @@ public class NamingService
       throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
       naming.setJNPServerSocketFactory(factoryClassName);
-   }
-
-   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
-   {
-      return name == null ? OBJECT_NAME : name;
    }
 
    protected void startService()
@@ -209,15 +219,20 @@ public class NamingService
       log.debug("JNP server stopped");
    }
 
-   public void postRegister( Boolean pRegistrationDone )
+   /**
+    * The <code>getNamingServer</code> method makes this class
+    * extensible, but it is a hack.  The NamingServer should be
+    * exposed directly as an xmbean, and the startup logic put in
+    * either an interceptor, the main class itself, or an auxilliary
+    * mbean (for the enc).
+    *
+    * @return a <code>Main</code> value
+    */
+   protected Main getNamingServer()
    {
-      super.postRegister( pRegistrationDone );
-   }
+      return naming;
+   } // end of main()
 
-   public void postDeregister() 
-   {
-      super.postDeregister();
-   }
 
    /** Expose the Naming service interface mapping as a read-only attribute
     *
@@ -260,7 +275,7 @@ public class NamingService
       {
          Throwable t = e.getTargetException();
          if( t instanceof Exception )
-            throw (Exception) e;
+            throw (Exception) t;
          else
             throw new UndeclaredThrowableException(t, method.toString());
       }
