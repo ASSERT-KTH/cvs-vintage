@@ -1,4 +1,4 @@
-// $Id: PredNotInstanceOf.java,v 1.4 2003/10/15 20:04:13 alexb Exp $
+// $Id: PredNotInstanceOf.java,v 1.5 2003/11/10 12:14:01 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,8 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.kernel;
-
-import org.tigris.gef.util.*;
 
 /**
  * Predicate to test if an Object is <B>NOT</B> an instance of a class.

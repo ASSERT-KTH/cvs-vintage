@@ -1,4 +1,4 @@
-// $Id: NotationComboBox.java,v 1.6 2003/06/29 23:47:19 linus Exp $
+// $Id: NotationComboBox.java,v 1.7 2003/11/10 12:14:19 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.language.ui;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.*;
 import org.argouml.application.events.*;
 
@@ -39,6 +40,9 @@ import javax.swing.*;
 public class NotationComboBox
     extends JComboBox
     implements ArgoNotationEventListener {
+
+    /** logger */
+    private static Logger cat = Logger.getLogger(NotationComboBox.class);
 
     private static NotationComboBox SINGLETON = null;
 
@@ -64,11 +68,11 @@ public class NotationComboBox
 
     public void notationChanged(ArgoNotationEvent event) {
         //Notation.cat.debug("NotationComboBox.notationChanged(" + event + ")");
-        //Argo.log.info("NotationComboBox.notationChanged(" + event + ")");
+        //cat.info("NotationComboBox.notationChanged(" + event + ")");
         refresh();
     }
     public void notationAdded(ArgoNotationEvent event) {
-        //Argo.log.info("NotationComboBox.notationAdded(" + event + ")");
+        //cat.info("NotationComboBox.notationAdded(" + event + ")");
         refresh();
     }
     public void notationRemoved(ArgoNotationEvent event) {
@@ -90,7 +94,7 @@ public class NotationComboBox
                     NotationName nn = (NotationName) iterator.next();
                     addItem(nn);
                 } catch (Exception e) {
-                    Argo.log.error("Unexpected exception", e);
+                    cat.error("Unexpected exception", e);
                 }
             }
             setVisible(true);

@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.13 2003/09/16 00:08:30 bobtarling Exp $
+// $Id: XMIParser.java,v 1.14 2003/11/10 12:18:36 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.argouml.application.api.Argo;
+import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
 import org.argouml.model.ModelFacade;
 import org.xml.sax.InputSource;
@@ -52,7 +52,10 @@ public class XMIParser {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    public static XMIParser SINGLETON = new XMIParser();
+	/** logger */
+	private static Logger cat = Logger.getLogger(XMIParser.class);
+
+	public static XMIParser SINGLETON = new XMIParser();
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -87,8 +90,8 @@ public class XMIParser {
 
         _proj = p;
 
-        Argo.log.info("=======================================");
-        Argo.log.info("== READING MODEL " + url);
+        cat.info("=======================================");
+        cat.info("== READING MODEL " + url);
         try {
             XMIReader reader = new XMIReader();
             InputSource source = new InputSource(url.openStream());
@@ -117,7 +120,7 @@ public class XMIParser {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        Argo.log.info("=======================================");
+        cat.info("=======================================");
 
         
 	_proj.addModel(_curModel);

@@ -1,4 +1,4 @@
-// $Id: Tools.java,v 1.11 2003/09/13 18:16:33 alexb Exp $
+// $Id: Tools.java,v 1.12 2003/11/10 12:18:37 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,11 +30,15 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Locale;
 import javax.xml.parsers.SAXParserFactory;
-import org.argouml.application.api.Argo;
+
+import org.apache.log4j.Logger;
 
 public class Tools {
 
-    static String packageList[] = new 
+	/** logger */
+	private static Logger cat = Logger.getLogger(Tools.class);
+
+	static String packageList[] = new 
         String[]{"org.argouml.application", "ru.novosoft.uml", "org.tigris.gef.base", "org.xml.sax", "java.lang", "org.apache.log4j"};
 
     private static void getComponentVersionInfo(StringBuffer sb, String pn) 
@@ -138,7 +142,7 @@ public class Tools {
             while (true) {
                 String s = r.readLine();
                 if (s == null) break;
-                Argo.log.info(s);
+                cat.info(s);
             }
         }
         catch (IOException ioe) { }

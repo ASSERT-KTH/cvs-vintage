@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.38 2003/11/05 01:01:23 thierrylach Exp $
+// $Id: Notation.java,v 1.39 2003/11/10 12:13:13 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.38 2003/11/05 01:01:23 thierrylach Exp $
+// $Id: Notation.java,v 1.39 2003/11/10 12:13:13 jhraigniac Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -503,52 +503,52 @@ public final class Notation implements PropertyChangeListener {
 
         //added to support association roles
         if (ModelFacade.isAAssociationRole(o)) {
-            return SINGLETON.generateAssociationRole(nn, (MAssociationRole) o);
+            return SINGLETON.generateAssociationRole(nn, o);
         }
 
         // Added to support extension points
         if (org.argouml.model.ModelFacade.isAExtensionPoint(o)) {
-            return SINGLETON.generateExtensionPoint(nn, (MExtensionPoint) o);
+            return SINGLETON.generateExtensionPoint(nn, o);
         }
 
         if (org.argouml.model.ModelFacade.isAOperation(o))
-            return SINGLETON.generateOperation(nn, (MOperation) o, false);
+            return SINGLETON.generateOperation(nn, o, false);
         if (org.argouml.model.ModelFacade.isAAttribute(o))
-            return SINGLETON.generateAttribute(nn, (MAttribute) o, false);
+            return SINGLETON.generateAttribute(nn, o, false);
         if (org.argouml.model.ModelFacade.isAParameter(o))
-            return SINGLETON.generateParameter(nn, (MParameter) o);
+            return SINGLETON.generateParameter(nn, o);
         if (org.argouml.model.ModelFacade.isAPackage(o))
-            return SINGLETON.generatePackage(nn, (MPackage) o);
+            return SINGLETON.generatePackage(nn, o);
         if (org.argouml.model.ModelFacade.isAClassifier(o))
-            return SINGLETON.generateClassifier(nn, (MClassifier) o);
+            return SINGLETON.generateClassifier(nn, o);
         if (org.argouml.model.ModelFacade.isAExpression(o))
-            return SINGLETON.generateExpression(nn, (MExpression) o);
+            return SINGLETON.generateExpression(nn, o);
         if (o instanceof String)
             return SINGLETON.generateName(nn, (String) o);
         // if (o instanceof String)
         //   return SINGLETON.generateUninterpreted(nn,(String) o);
         if (org.argouml.model.ModelFacade.isAStereotype(o))
-            return SINGLETON.generateStereotype(nn, (MStereotype) o);
+            return SINGLETON.generateStereotype(nn, o);
         if (org.argouml.model.ModelFacade.isATaggedValue(o))
-            return SINGLETON.generateTaggedValue(nn, (MTaggedValue) o);
+            return SINGLETON.generateTaggedValue(nn, o);
         if (org.argouml.model.ModelFacade.isAAssociation(o))
-            return SINGLETON.generateAssociation(nn, (MAssociation) o);
+            return SINGLETON.generateAssociation(nn, o);
         if (org.argouml.model.ModelFacade.isAAssociationEnd(o))
-            return SINGLETON.generateAssociationEnd(nn, (MAssociationEnd) o);
+            return SINGLETON.generateAssociationEnd(nn, o);
         if (org.argouml.model.ModelFacade.isAMultiplicity(o))
-            return SINGLETON.generateMultiplicity(nn, (MMultiplicity) o);
+            return SINGLETON.generateMultiplicity(nn, o);
         if (org.argouml.model.ModelFacade.isAState(o))
-            return SINGLETON.generateState(nn, (MState) o);
+            return SINGLETON.generateState(nn, o);
         if (org.argouml.model.ModelFacade.isATransition(o))
-            return SINGLETON.generateTransition(nn, (MTransition) o);
+            return SINGLETON.generateTransition(nn, o);
         if (ModelFacade.isAAction(o))
             return SINGLETON.generateAction(nn, o);
         if (org.argouml.model.ModelFacade.isACallAction(o))
             return SINGLETON.generateAction(nn, o);
         if (org.argouml.model.ModelFacade.isAGuard(o))
-            return SINGLETON.generateGuard(nn, (MGuard) o);
+            return SINGLETON.generateGuard(nn, o);
         if (org.argouml.model.ModelFacade.isAMessage(o))
-            return SINGLETON.generateMessage(nn, (MMessage) o);
+            return SINGLETON.generateMessage(nn, o);
 
         if (org.argouml.model.ModelFacade.isAModelElement(o))
             return SINGLETON.generateName(nn, org.argouml.model.ModelFacade.getName(o));

@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.9 2003/09/04 20:18:12 thierrylach Exp $
+// $Id: ArgoEventPump.java,v 1.10 2003/11/10 12:13:13 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.apache.log4j.*;
  */
 public class ArgoEventPump {
 
-    Logger cat = Logger.getLogger(ArgoEventPump.class.getName());
+    Logger cat = Logger.getLogger(ArgoEventPump.class);
 
     private ArrayList _listeners = null;
 
@@ -122,7 +122,7 @@ public class ArgoEventPump {
 	    break;
 
 	default :
-	    Argo.log.error("Invalid event:" + event.getEventType());
+	    cat.error("Invalid event:" + event.getEventType());
 	    break;
         }
     }
@@ -152,7 +152,7 @@ public class ArgoEventPump {
 	    break;
 
 	default :
-	    Argo.log.error("Invalid event:" + event.getEventType());
+	    cat.error("Invalid event:" + event.getEventType());
 	    break;
         }
     }

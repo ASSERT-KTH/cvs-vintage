@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.28 2003/10/27 21:10:49 alexb Exp $
+// $Id: Critic.java,v 1.29 2003/11/10 12:13:37 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.28 2003/10/27 21:10:49 alexb Exp $
+// $Id: Critic.java,v 1.29 2003/11/10 12:13:37 jhraigniac Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -59,6 +59,8 @@ import org.tigris.gef.util.VectorSet;
  *  define_critic</a>. */
 
 public class Critic implements Poster, Serializable {
+	/** logger */
+	private static Logger cat = Logger.getLogger(Critic.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
@@ -115,19 +117,6 @@ public class Critic implements Poster, Serializable {
 
     ////////////////////////////////////////////////////////////////
     // instance variables
-
-    /** log4j generic critic logging category
-     *
-     *  @since 0.9.4
-     */
-    public static final Logger cat = 
-	Logger.getLogger("org.argouml.cognitive.critics");
-    // TODO:  JDK 1.2 seems to not return the package name if
-    // not running from a jar.
-    //
-    // public final static Logger cat = 
-    // Logger.getLogger(Critic.class.getPackage().getName());
-
 
     /** The email address of the author/maintainer of this critic. */
     private String _emailAddr;
@@ -557,7 +546,7 @@ public class Critic implements Poster, Serializable {
 		return w;
 	    }
 	    catch (Exception ex) {
-		Argo.log.error("Could not make wizard: " + item, ex);
+		cat.error("Could not make wizard: " + item, ex);
 	    }
 	}
 	return null;

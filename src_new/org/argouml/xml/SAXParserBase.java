@@ -1,4 +1,4 @@
-// $Id: SAXParserBase.java,v 1.15 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: SAXParserBase.java,v 1.16 2003/11/10 12:18:36 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.xml.sax.AttributeList;
 import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
@@ -46,8 +45,8 @@ import org.xml.sax.SAXException;
 
 public abstract class SAXParserBase extends HandlerBase {
     
-    protected Logger cat = 
-        Logger.getLogger(SAXParserBase.class);
+    /** logger */
+    private static Logger cat = Logger.getLogger(SAXParserBase.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
@@ -111,7 +110,7 @@ public abstract class SAXParserBase extends HandlerBase {
 	    end = System.currentTimeMillis();
 	    _parseTime = end - start;
 	    if (_stats) {
-		Argo.log.info("Elapsed time: " + (end - start) + " ms");
+		cat.info("Elapsed time: " + (end - start) + " ms");
 	    }
 	}
 	catch (ParserConfigurationException e) {

@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.4 2003/08/30 20:43:35 alexb Exp $
+// $Id: StartBrowser.java,v 1.5 2003/11/10 12:18:37 jhraigniac Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,18 @@ package org.argouml.util.osdep;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import org.argouml.application.api.Argo;
+
+import org.apache.log4j.Logger;
 
 
 /**
  * @stereotype utility
  */
-public class StartBrowser
-{
-    /**
+public class StartBrowser {
+	/** logger */
+	private static Logger cat = Logger.getLogger(StartBrowser.class);
+
+	/**
      * Open an Url in the system's default browser.
      * <P>
      * This will probably not be perfect for everyone but hopefully it is a
@@ -60,8 +63,8 @@ public class StartBrowser
 		    };
 		    m.invoke(c.newInstance(), args);
 		} catch (Exception cnfe) {
-		    Argo.log.error(cnfe);
-		    Argo.log.info("Trying a default browser (netscape)");
+		    cat.error(cnfe);
+		    cat.info("Trying a default browser (netscape)");
 		    String[] commline = {
 			"netscape", url 
 		    };
@@ -84,6 +87,6 @@ public class StartBrowser
 	    // Didn't work.
 	}	    
 
-	Argo.log.error("Could not open url: " + url);
+	cat.error("Could not open url: " + url);
     }
 }

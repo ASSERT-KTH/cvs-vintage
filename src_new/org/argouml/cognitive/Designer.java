@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: Designer.java,v 1.20 2003/11/10 12:13:37 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,12 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.19 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: Designer.java,v 1.20 2003/11/10 12:13:37 jhraigniac Exp $
 
 package org.argouml.cognitive;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;

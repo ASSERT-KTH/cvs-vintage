@@ -1,4 +1,4 @@
-// $Id: ConfigurationFactory.java,v 1.6 2003/09/07 18:00:59 bobtarling Exp $
+// $Id: ConfigurationFactory.java,v 1.7 2003/11/10 12:13:13 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,6 @@ public class ConfigurationFactory
     /** Private constructor to not allow instantiation.
      */
     private ConfigurationFactory() {
-	// Argo.log.debug("Constructor");
     }
 
     /** Returns the instance of the singleton.

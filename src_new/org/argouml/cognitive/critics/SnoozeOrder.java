@@ -1,4 +1,4 @@
-// $Id: SnoozeOrder.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
+// $Id: SnoozeOrder.java,v 1.7 2003/11/10 12:13:37 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +25,14 @@
 // File: SnoozeOrder.java
 // Classes: SnoozeOrder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SnoozeOrder.java,v 1.6 2003/08/30 20:09:52 alexb Exp $
+// $Id: SnoozeOrder.java,v 1.7 2003/11/10 12:13:37 jhraigniac Exp $
 
 package org.argouml.cognitive.critics;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.apache.log4j.Logger;
 
 /** A Critic can be disabled for a certain amount of time by giving it
  *  the snooze command.  Whereas most ControlMech's activate or deactivate
@@ -42,6 +44,8 @@ import java.util.Date;
  *  mind that is not worth making explicit. */
 
 public class SnoozeOrder implements Serializable {
+	/** logger */
+	private static Logger cat = Logger.getLogger(SnoozeOrder.class);
     ////////////////////////////////////////////////////////////////
     // constants
     /** The initial sleeping time. */
@@ -96,8 +100,7 @@ public class SnoozeOrder implements Serializable {
 	long now = (getNow()).getTime();
 	_snoozeUntil.setTime(now + _interval);
 	_snoozeAgain.setTime(now + _interval + _initialIntervalMS);
-	Critic.cat.info("Setting snooze order to: " +
-			_snoozeUntil.toString());
+	cat.info("Setting snooze order to: " + _snoozeUntil.toString());
     }
 
     public void unsnooze() {

@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.6 2003/09/04 20:18:14 thierrylach Exp $
+// $Id: TodoParser.java,v 1.7 2003/11/10 12:18:36 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -526,7 +526,7 @@ public class TodoParser extends SAXParserBase {
 	    {
 		if (i2 > i1)
 		    sb.append(str.substring(i1, i2));
-		sb.append("%" + Integer.toString((int) c) + ";");
+		sb.append("%" + Integer.toString(c) + ";");
 		i1 = i2 + 1;
 	    }
 	}

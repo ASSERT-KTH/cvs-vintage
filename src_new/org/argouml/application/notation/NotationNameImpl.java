@@ -1,4 +1,4 @@
-// $Id: NotationNameImpl.java,v 1.15 2003/09/17 21:29:03 thierrylach Exp $
+// $Id: NotationNameImpl.java,v 1.16 2003/11/10 12:13:13 jhraigniac Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.application.notation;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.*;
 import org.argouml.application.events.*;
 import java.util.*;
@@ -41,6 +42,8 @@ import javax.swing.*;
 public class NotationNameImpl
     implements NotationName, ArgoModuleEventListener
 {
+	/** logger */
+	private static Logger cat = Logger.getLogger(NotationNameImpl.class);
 
     String _name = null;
     String _version = null;
@@ -166,7 +169,7 @@ public class NotationNameImpl
 		}
 	    }
 	    catch (Exception e) {
-	        Argo.log.error ("Unexpected exception", e);
+	        cat.error ("Unexpected exception", e);
 	    }
 	}
 	return null;
@@ -191,7 +194,7 @@ public class NotationNameImpl
     }
 
     public void moduleLoaded(ArgoModuleEvent event) {
-        Argo.log.info ("notation.moduleLoaded(" + event + ")");
+        cat.info ("notation.moduleLoaded(" + event + ")");
     }
 
     public void moduleUnloaded(ArgoModuleEvent event) {

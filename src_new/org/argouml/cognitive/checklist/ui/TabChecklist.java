@@ -1,4 +1,4 @@
-// $Id: TabChecklist.java,v 1.18 2003/11/05 22:03:11 linus Exp $
+// $Id: TabChecklist.java,v 1.19 2003/11/10 12:13:37 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -290,7 +290,7 @@ class TableModelChecklist extends AbstractTableModel
     public Object getValueAt(int row, int col) {
 	Checklist cl = CheckManager.getChecklistFor(_target);
 	if (cl == null) return "no checklist";
-	CheckItem ci = (CheckItem) cl.elementAt(row);
+	CheckItem ci = cl.elementAt(row);
 	if (col == 0) {
 	    ChecklistStatus stat = CheckManager.getStatusFor(_target);
 	    return (stat.contains(ci)) ? Boolean.TRUE : Boolean.FALSE;
@@ -309,7 +309,7 @@ class TableModelChecklist extends AbstractTableModel
 	boolean val = ((Boolean) aValue).booleanValue();
 	Checklist cl = CheckManager.getChecklistFor(_target);
 	if (cl == null) return;
-	CheckItem ci = (CheckItem) cl.elementAt(rowIndex);
+	CheckItem ci = cl.elementAt(rowIndex);
 	if (columnIndex == 0) {
 	    ChecklistStatus stat = CheckManager.getStatusFor(_target);
 	    if (val) stat.addItem(ci);

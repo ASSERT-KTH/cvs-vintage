@@ -1,6 +1,6 @@
 
 
-// $Id: WizDescription.java,v 1.12 2003/08/25 23:57:42 bobtarling Exp $
+// $Id: WizDescription.java,v 1.13 2003/11/10 12:13:37 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.text.MessageFormat;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Goal;
@@ -41,6 +42,8 @@ import org.argouml.cognitive.critics.Critic;
 
 
 public class WizDescription extends WizStep {
+	/** logger */
+	private static Logger cat = Logger.getLogger(WizDescription.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -50,7 +53,7 @@ public class WizDescription extends WizStep {
 
     public WizDescription() {
 	super();
-	Argo.log.info("making WizDescription");
+	cat.info("making WizDescription");
 
 	_description.setLineWrap(true);
 	_description.setWrapStyleWord(true);
