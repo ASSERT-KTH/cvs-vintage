@@ -31,7 +31,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -129,7 +128,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.36 2003/05/02 14:01:51 kataka Exp $
+ * $Id: NavigatorPane.java,v 1.37 2003/05/03 07:14:57 kataka Exp $
  */
 public class NavigatorPane
     extends JPanel
