@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.256 2003/01/21 14:06:03 jon Exp $
+ * @version $Id: Issue.java,v 1.257 2003/01/27 01:45:06 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -529,7 +529,7 @@ public class Issue
         String desc = Localization.getString(
             ScarabConstants.DEFAULT_BUNDLE_NAME,
             Locale.getDefault(),
-            "AddComment");
+            "AddedCommentToIssue");
         int total = 248 - desc.length();
         if (comment.length() > total)
         {
