@@ -22,7 +22,7 @@ public class WebXmlReader extends BaseInterceptor {
     public static final String defaultWelcomeList[]={"index.jsp", "index.html", "index.htm"};
     public static final int DEFAULT_SESSION_TIMEOUT=30;
 
-    private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
+    private static StringManager sm =StringManager.getManager("org.apache.tomcat.resources");
     boolean validate=true;
 
     public WebXmlReader() {

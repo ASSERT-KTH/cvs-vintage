@@ -22,7 +22,9 @@
     <!-- if you don't want messages on screen, add
          path="logs/tomcat.log" -->
     <Logger name="tc_log" 
-            customOutput="yes" />
+            customOutput="yes" 
+            verbosityLevel = "INFORMATION" 
+            timestamp="no" />
 
     <Logger name="servlet_log" 
             path="logs/servlet.log"

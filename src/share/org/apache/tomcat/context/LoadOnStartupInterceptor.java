@@ -74,7 +74,7 @@ import java.util.*;
  */
 public class LoadOnStartupInterceptor extends BaseInterceptor {
     private static StringManager sm =
-	StringManager.getManager("org.apache.tomcat.context");
+	StringManager.getManager("org.apache.tomcat.resources");
     
     public LoadOnStartupInterceptor() {
     }
