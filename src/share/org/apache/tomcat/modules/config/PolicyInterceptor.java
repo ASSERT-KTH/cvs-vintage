@@ -27,6 +27,7 @@ import java.security.PermissionCollection;
 import java.security.Permissions;
 import java.security.Policy;
 import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 import java.util.Enumeration;
 import java.util.PropertyPermission;
 
@@ -199,7 +200,7 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	try {	
 	    File dir = new File(base);
 	    URL url = new URL("file:" + dir.getAbsolutePath());
-	    CodeSource cs = new CodeSource(url,null);
+	    CodeSource cs = new CodeSource(url,(Certificate [])null);
 	    
 	    /* We'll construct permissions for Jasper. 
 	       Tomcat uses normal policy and URLClassLoader.
