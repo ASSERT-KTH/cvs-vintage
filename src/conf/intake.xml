@@ -289,7 +289,7 @@
     </field>
 </group>
 
-<group name="IssueTemplate" key="template" mapToObject="om.IssueTemplate">
+<group name="IssueTemplate" key="isstemp" mapToObject="om.IssueTemplate">
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
