@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -101,8 +101,8 @@ public class JAWSPersistenceManager
    ArrayList pkColumns = new ArrayList(); // String's
    String pkColumnList; // Comma-separated list of column names
    String pkColumnWhereList; // Comma-separated list of column names (for WHERE clauses)
-   ArrayList cmpFields = new ArrayList(); // Field's
-   ArrayList CMPFields = new ArrayList(); // CMPField's
+   ArrayList cmpFields = new ArrayList(); // The fields from the actual Bean 
+   ArrayList CMPFields = new ArrayList(); // The JawsCMPField representation
    ArrayList jdbcTypes = new ArrayList(); // Integer's
    ArrayList pkJdbcTypes = new ArrayList(); // Integer's describing pk
    ArrayList ejbRefs = new ArrayList(); // EJB-references
@@ -154,7 +154,7 @@ public class JAWSPersistenceManager
       beanCtx.add(Beans.instantiate(getClass().getClassLoader(), "com.dreambean.ejx.xml.ProjectX"));
       beanCtx.add(jfm);
       
-      // Load XML
+      // Load XML, if the URL doesn't have default information the filemanager uses defaults
       JawsEjbJar jar = jfm.load(container.getApplication().getURL());
       
       // Extract meta-info
@@ -163,10 +163,12 @@ public class JAWSPersistenceManager
       while (fields.hasNext())
       {
          JawsCMPField field = (JawsCMPField)fields.next();
+		 
          CMPFields.add(field);
          cmpFields.add(container.getBeanClass().getField(field.getFieldName()));
          // Identify JDBC-type
-         jdbcTypes.add(new Integer(getJDBCType(field.getJdbcType())));
+		 
+		 jdbcTypes.add(new Integer(getJDBCType(field.getJdbcType())));
          
          // EJB-reference
          if (field.getJdbcType().equals("REF"))
@@ -984,7 +986,7 @@ public class JAWSPersistenceManager
          CMPField field = CMPFields[i];
          if (field.getJdbcType().equals("REF"))
          {
-            String[] pk = getPkColumn(field);
+            String[] pk = getPkColumn(field);                                         
             fieldSql += (fieldSql.equals("") ? "":",")+pk[0]+"=?";
          } else
          {
@@ -1019,6 +1021,9 @@ public class JAWSPersistenceManager
    {
       try
       {
+		 System.out.println("Name"+name);
+		 Exception e = new Exception();
+		
          Integer constant = (Integer)Types.class.getField(name).get(null);
          return constant.intValue();
       } catch (Exception e)
