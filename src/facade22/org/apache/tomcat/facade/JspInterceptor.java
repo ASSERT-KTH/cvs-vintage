@@ -214,6 +214,14 @@ public class JspInterceptor extends BaseInterceptor {
 	args.put( "jspCompilerPlugin", type );
     }
 
+    int pageContextPoolSize=JspFactoryImpl.DEFAULT_POOL_SIZE;
+    /** Set the PageContext pool size for jasper factory.
+	0 will disable pooling of PageContexts.
+     */
+    public void setPageContextPoolSize(int i) {
+	pageContextPoolSize=i;
+    }
+    
     // -------------------- Hooks --------------------
 
     /**
@@ -222,7 +230,9 @@ public class JspInterceptor extends BaseInterceptor {
     public void addContext(ContextManager cm, Context ctx)
 	throws TomcatException 
     {
-	JspFactory.setDefaultFactory(new JspFactoryImpl());
+	JspFactoryImpl factory=new JspFactoryImpl(pageContextPoolSize);
+	
+	JspFactory.setDefaultFactory(factory);
 
 	// jspServlet uses it's own loader. We need to add workdir
 	// to the context classpath to use URLLoader and normal

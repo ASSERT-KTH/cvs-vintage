@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.12 2001/03/31 22:30:38 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2001/03/31 22:30:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.13 2001/04/21 19:54:34 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2001/04/21 19:54:34 $
  *
  * ====================================================================
  * 
@@ -78,8 +78,9 @@ import org.apache.tomcat.util.log.*;
  * @author Anil K. Vijendran
  */
 public class JspFactoryImpl extends JspFactory {
-    private SimplePool pool=new SimplePool( 100 );
-    private static final boolean usePool=true;
+    public static final int DEFAULT_POOL_SIZE=100;
+    private SimplePool pool;
+    private boolean usePool=true;
     static String lineSeparator;
     static {
 	try {
@@ -92,7 +93,22 @@ public class JspFactoryImpl extends JspFactory {
 	// without it we would need a priviledged action.
 	JspWriterImpl.lineSeparator=lineSeparator;
     }
+
+    public JspFactoryImpl() {
+	pool=new SimplePool( DEFAULT_POOL_SIZE );
+	usePool=true;
+    }
+
+    public JspFactoryImpl( int size ) {
+	if( size==0 ) {
+	    pool=null;
+	    usePool=false;
+	} else {
+	    pool=new SimplePool( size );
+	}
+    }
     
+
     Log loghelper = Log.getLog("JASPER_LOG", "JspFactoryImpl");
     
     public PageContext getPageContext(Servlet servlet, ServletRequest request,
