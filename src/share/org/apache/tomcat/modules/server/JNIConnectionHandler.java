@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.8 2001/02/07 07:01:27 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2001/02/07 07:01:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.9 2001/02/27 02:55:41 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/02/27 02:55:41 $
  *
  * ====================================================================
  *
@@ -306,8 +306,8 @@ class JNIRequestAdapter extends Request {
     		methodMB.setString( env[0] );
     		uriMB.setString( env[1] );
     		queryMB.setString( env[2] );
-    		remoteAddr  = env[3];
-    		remoteHost  = env[4];
+    		remoteAddrMB.setString( env[3] );
+    		remoteHostMB.setString( env[4] );
     		serverNameMB.setString( env[5] );
             serverPort  = Integer.parseInt(env[6]);
             authType    = env[7];

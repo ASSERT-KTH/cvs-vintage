@@ -149,8 +149,8 @@ class Ajp12 {
 		    req.pathInfo().setString( readString(ajpin, null));               		    //Apache parsed path-translated XXX Bug in mod_jserv !!!!!
 		    dummy = readString(ajpin, null);
 		    req.queryString().setString( readString(ajpin, null));  
-		    req.setRemoteAddr(readString(ajpin, ""));
-		    req.setRemoteHost( readString(ajpin, ""));
+		    req.remoteAddr().setString(readString(ajpin, ""));
+		    req.remoteHost().setString( readString(ajpin, ""));
                     if (isTomcatAuthentication())
                         dummy=readString(ajpin, null);
                     else req.setRemoteUser( readString(ajpin, null));
