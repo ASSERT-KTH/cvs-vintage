@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.2 2000/01/09 17:24:41 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/09 17:24:41 $
  *
  * ====================================================================
  *
@@ -173,7 +173,15 @@ public class MessageBytes extends Ascii {
      * Returns the message bytes as a String object.
      */
     public String toString() {
-	return bytes != null ? new String(bytes, offset, length) : null;
+        if (null == bytes) {
+            return null;
+        }
+
+        try {
+            return new String(bytes, offset, length, Constants.CharacterEncoding.Default);
+        } catch (java.io.UnsupportedEncodingException e) {
+            return null;        // could return something - but why?
+        }
     }
 
     /**

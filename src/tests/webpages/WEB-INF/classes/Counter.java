@@ -1,5 +1,5 @@
 /*
- * $Id: Counter.java,v 1.2 2000/01/08 21:31:43 rubys Exp $
+ * $Id: Counter.java,v 1.3 2000/01/09 17:24:42 rubys Exp $
  */
 
 import javax.servlet.*;
@@ -67,7 +67,7 @@ public class Counter extends HttpServlet {
         res.setContentType(mimeType);
 
         ServletOutputStream out = res.getOutputStream();
-        byte[] b = Integer.toString(count).getBytes("UTF");
+        byte[] b = Integer.toString(count).getBytes("UTF8");
 
         try {
             out.write(b);

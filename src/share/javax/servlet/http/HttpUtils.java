@@ -214,10 +214,6 @@ public class HttpUtils {
     static public Hashtable parsePostData(int len, 
 					  ServletInputStream in)
     {
-	int inputLen, offset;
-	byte[] postedBytes = null;
-	String postedBody;
-
 	// XXX
 	// should a length of 0 be an IllegalArgumentException
 	
@@ -228,34 +224,39 @@ public class HttpUtils {
 	    throw new IllegalArgumentException();
 	}
 	
-	try {
-	    //
-	    // Make sure we read the entire POSTed body.
-	    //
-	    postedBytes = new byte [len];
-	    offset = 0;
+	//
+	// Make sure we read the entire POSTed body.
+	//
+        byte[] postedBytes = new byte [len];
+        try {
+            int offset = 0;
+       
 	    do {
-		inputLen = in.read (postedBytes, offset, len - offset);
+		int inputLen = in.read (postedBytes, offset, len - offset);
 		if (inputLen <= 0) {
 		    String msg = lStrings.getString("err.io.short_read");
-		    throw new IOException (msg);
+		    throw new IllegalArgumentException (msg);
 		}
 		offset += inputLen;
 	    } while ((len - offset) > 0);
 
 	} catch (IOException e) {
-	    return nullHashtable;
+	    throw new IllegalArgumentException(e.getMessage());
 	}
 
+        // XXX we shouldn't assume that the only kind of POST body
+        // is FORM data encoded using ASCII or ISO Latin/1 ... or
+        // that the body should always be treated as FORM data.
+        //
+
         try {
-            postedBody = new String(postedBytes, 0, len, "8859_1");
+            String postedBody = new String(postedBytes, 0, len, "8859_1");
+            return parseQueryString(postedBody);
         } catch (java.io.UnsupportedEncodingException e) {
             // XXX function should accept an encoding parameter & throw this
             // exception.  Otherwise throw something expected.
             throw new IllegalArgumentException(e.getMessage());
         }
-	
-	return parseQueryString(postedBody); 
     }
 
 
