@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.51 2002/01/20 15:14:10 mnf999 Exp $ -->
+<!-- $Id: build.xml,v 1.52 2002/01/28 23:42:21 mnf999 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -509,6 +509,7 @@
      -->
     <jar jarfile="${build.lib}/jboss-boot.jar">
       <fileset dir="${build.classes}">
+        <include name="org/jboss/Version.class"/>
         <include name="org/jboss/system/BootstrapLogger.class"/>
         <include name="org/jboss/system/UnifiedClassLoader.class"/>
         <include name="org/jboss/system/UnifiedClassLoaderMBean.class"/>
@@ -516,6 +517,10 @@
         <include name="org/jboss/system/MBeanClassLoaderMBean.class"/>
         <include name="org/jboss/system/ServiceLibraries.class"/>
         <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
+        <include name="org/jboss/system/Server.class"/>
+        <include name="org/jboss/system/Server**.class"/>
+        <include name="org/jboss/system/ServerMBean.class"/>
+        <include name="org/jboss/system/ServerConfig.class"/>
         <include name="org/jboss/deployment/DeploymentException.class"/>
       </fileset>
       <fileset dir="${build.resources}">
