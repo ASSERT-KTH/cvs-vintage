@@ -63,8 +63,8 @@ package org.apache.tomcat.session;
 import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
-import org.apache.tomcat.catalina.*;
 import org.apache.tomcat.core.Context;
+import org.apache.tomcat.core.TomcatException;
 import org.apache.tomcat.core.Request;
 import org.apache.tomcat.core.Response;
 import org.apache.tomcat.core.SessionManager;
@@ -105,14 +105,12 @@ public final class StandardSessionManager
      */
     public StandardSessionManager() {
 
-	manager = new StandardManager();
-	if (manager instanceof Lifecycle) {
-	    try {
-		((Lifecycle) manager).configure(null);
-		((Lifecycle) manager).start();
-	    } catch (LifecycleException e) {
+	try {
+	    manager = new StandardManager();
+	    manager.configure(null);
+	    manager.start();
+	} catch (TomcatException e) {
 		throw new IllegalStateException("" + e);
-	    }
 	}
 
     }
@@ -124,7 +122,7 @@ public final class StandardSessionManager
     /**
      * The Manager implementation we are actually using.
      */
-    private Manager manager = null;
+    private StandardManager manager = null;
 
 
     // --------------------------------------------------------- Public Methods
@@ -139,8 +137,8 @@ public final class StandardSessionManager
     public void accessed(Context ctx, Request req, String id) {
 	HttpSession session=findSession(ctx, id);
 	if( session == null) return;
-	if (session instanceof Session)
-	    ((Session) session).access();
+	if (session instanceof StandardSession)
+	    ((StandardSession) session).access();
 
 	// cache the HttpSession - avoid another find
 	req.setSession( session );
@@ -149,7 +147,7 @@ public final class StandardSessionManager
     // XXX should we throw exception or just return null ??
     public HttpSession findSession( Context ctx, String id ) {
 	try {
-	    Session session = manager.findSession(id);
+	    StandardSession session =(StandardSession)manager.findSession(id);
 	    if(session!=null)
 		return session.getSession();
 	} catch (IOException e) {
@@ -158,7 +156,7 @@ public final class StandardSessionManager
     }
 
     public HttpSession createSession(Context ctx) {
-	return  manager.createSession().getSession();
+	return  ((StandardSession)manager.createSession()).getSession();
     }
 
     /**
@@ -172,12 +170,10 @@ public final class StandardSessionManager
 	// contexts, we just want to remove the sessions of ctx!
 	// The manager will still run after that ( i.e. keep database
 	// connection open
-	if (manager instanceof Lifecycle) {
-	    try {
-		((Lifecycle) manager).stop();
-	    } catch (LifecycleException e) {
-		throw new IllegalStateException("" + e);
-	    }
+	try {
+	    manager.stop();
+	} catch (TomcatException e) {
+	    throw new IllegalStateException("" + e);
 	}
 
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.7 2000/05/12 01:28:15 jon Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/12 01:28:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.8 2000/05/12 02:31:59 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/12 02:31:59 $
  *
  * ====================================================================
  *
@@ -77,7 +77,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.servlet.http.HttpSessionContext;
-import org.apache.tomcat.catalina.*;
 import org.apache.tomcat.util.StringManager;
 
 
@@ -93,11 +92,11 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.7 $ $Date: 2000/05/12 01:28:15 $
+ * @version $Revision: 1.8 $ $Date: 2000/05/12 02:31:59 $
  */
 
 final class StandardSession
-    implements HttpSession, Session, Serializable {
+    implements HttpSession, Serializable {
 
 
     // ----------------------------------------------------------- Constructors
@@ -108,7 +107,7 @@ final class StandardSession
      *
      * @param manager The manager with which this Session is associated
      */
-    public StandardSession(Manager manager) {
+    public StandardSession(StandardManager manager) {
 
 	super();
 	this.manager = manager;
@@ -153,7 +152,7 @@ final class StandardSession
     /**
      * The Manager with which this Session is associated.
      */
-    private Manager manager = null;
+    private StandardManager manager = null;
 
 
     /**
@@ -230,14 +229,13 @@ final class StandardSession
      */
     public void setId(String id) {
 
-	if ((this.id != null) && (manager != null) &&
-	  (manager instanceof ManagerBase))
-	    ((ManagerBase) manager).remove(this);
+	if ((this.id != null) && (manager != null))
+	    ((StandardManager) manager).remove(this);
 
 	this.id = id;
 
-	if ((manager != null) && (manager instanceof ManagerBase))
-	    ((ManagerBase) manager).add(this);
+	if ((manager != null) )
+	    ((StandardManager) manager).add(this);
 
     }
 
@@ -270,7 +268,7 @@ final class StandardSession
     /**
      * Return the Manager within which this Session is valid.
      */
-    public Manager getManager() {
+    public StandardManager getManager() {
 
 	return (this.manager);
 
@@ -282,7 +280,7 @@ final class StandardSession
      *
      * @param manager The new Manager
      */
-    public void setManager(Manager manager) {
+    public void setManager(StandardManager manager) {
 
 	this.manager = manager;
 
@@ -356,8 +354,8 @@ final class StandardSession
     public void expire() {
 
 	// Remove this session from our manager's active sessions
-	if ((manager != null) && (manager instanceof ManagerBase))
-	    ((ManagerBase) manager).remove(this);
+	if ((manager != null) && (manager instanceof StandardManager))
+	    ((StandardManager) manager).remove(this);
 
 	// Unbind any objects associated with this session
 	Vector results = new Vector();
@@ -395,8 +393,8 @@ final class StandardSession
 	isValid = false;
 
 	// Tell our Manager that this Session has been recycled
-	if ((manager != null) && (manager instanceof ManagerBase))
-	    ((ManagerBase) manager).recycle(this);
+	if ((manager != null) && (manager instanceof StandardManager))
+	    ((StandardManager) manager).recycle(this);
 
     }
 
@@ -468,7 +466,7 @@ final class StandardSession
     public HttpSessionContext getSessionContext() {
 
 	if (sessionContext == null)
-	    sessionContext = new StandardSessionContext();
+	    sessionContext = new SessionContextImpl();
 	return (sessionContext);
 
     }
@@ -816,57 +814,31 @@ final class StandardSession
 
 }
 
-
-// -------------------------------------------------------------- Private Class
-
-
 /**
- * This class is a dummy implementation of the <code>HttpSessionContext</code>
- * interface, to conform to the requirement that such an object be returned
- * when <code>HttpSession.getSessionContext()</code> is called.
- *
- * @author Craig R. McClanahan
- *
- * @deprecated As of Java Servlet API 2.1 with no replacement.  The
- *  interface will be removed in a future version of this API.
+ * 
+ * @author duncan@eng.sun.com
  */
 
-final class StandardSessionContext implements HttpSessionContext {
-
-
-    private Vector dummy = new Vector();
+ class SessionContextImpl implements HttpSessionContext {
 
     /**
-     * Return the session identifiers of all sessions defined
-     * within this context.
      *
-     * @deprecated As of Java Servlet API 2.1 with no replacement.
-     *  This method must return an empty <code>Enumeration</code>
-     *  and will be removed in a future version of the API.
+     * @deprecated
      */
+    
+    public HttpSession getSession(String sessionId) {
+        return null;
+    }
+
+    /**
+     *
+     * @deprecated
+     */
+
     public Enumeration getIds() {
+        // cheap hack to get an empty enum
+        Vector v = new Vector();
 
-	return (dummy.elements());
-
+        return v.elements();
     }
-
-
-    /**
-     * Return the <code>HttpSession</code> associated with the
-     * specified session identifier.
-     *
-     * @param id Session identifier for which to look up a session
-     *
-     * @deprecated As of Java Servlet API 2.1 with no replacement.
-     *  This method must return null and will be removed in a
-     *  future version of the API.
-     */
-    public HttpSession getSession(String id) {
-
-	return (null);
-
-    }
-
-
-
 }

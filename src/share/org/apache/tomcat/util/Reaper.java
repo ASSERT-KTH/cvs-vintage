@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Logger.java,v 1.1 2000/01/26 17:45:08 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/26 17:45:08 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,85 +58,58 @@
  */ 
 
 
-package org.apache.tomcat.catalina;
+package org.apache.tomcat.util;
 
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
 
 /**
- * A <b>Logger</b> is a generic interface for the message and exception
- * logging methods of the ServletContext interface.  Loggers can be
- * attached at any Container level, but will typically only be attached
- * to a Context, or higher level, Container.
- *
- * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
+ * The reaper is a background thread with which ticks every minute
+ * and calls registered objects to allow reaping of old session
+ * data.
+ * 
+ * @author James Duncan Davidson [duncan@eng.sun.com]
  */
 
-public interface Logger {
+public class Reaper extends Thread {
 
+    private static Reaper reaper;
+    
+    static {
+	reaper = new Reaper();
+    }
+    
+    static Reaper getReaper() {
+	return reaper;
+    }
 
-    // ------------------------------------------------------------- Properties
+    private int interval = 1000 * 60; //ms    
+    //XXX    private ServerSessionManager serverSessionMgr;
+    
+    private Reaper() {
+	this.setDaemon(true);
+    }
+    
+//XXX     void setServerSessionManager(ServerSessionManager serverSessionMgr) {
+// 	this.serverSessionMgr = serverSessionMgr;
+//     }
+    
+    public void run() {
 
+	// XXX
+	// eventually, to be nice, this should know when everything
+	// goes down so that it's not continuing to tick in the background
 
-    /**
-     * Return the Container with which this Logger has been associated.
-     */
-    public Container getContainer();
+	while (true) {
+	    try {
+		this.sleep(interval);
+	    } catch (InterruptedException ie) {
+		// sometimes will happen
+	    }
 
-
-    /**
-     * Set the Container with which this Logger has been associated.
-     *
-     * @param container The associated Container
-     */
-    public void setContainer(Container container);
-
-
-    /**
-     * Return descriptive information about this Logger implementation and
-     * the corresponding version number, in the format
-     * <code>&lt;description&gt;/&lt;version&gt;</code>.
-     */
-    public String getInfo();
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    /**
-     * Writes the specified message to a servlet log file, usually an event
-     * log.  The name and type of the servlet log is specific to the
-     * servlet container.
-     *
-     * @param msg A <code>String</code> specifying the message to be written
-     *  to the log file
-     */
-    public void log(String msg);
-
-
-    /**
-     * Writes the specified exception, and message, to a servlet log file.
-     * The implementation of this method should call
-     * <code>log(msg, exception)</code> instead.  This method is deprecated
-     * in the ServletContext interface, but not deprecated here to avoid
-     * many useless compiler warnings.
-     *
-     * @param exception An <code>Exception</code> to be reported
-     * @param msg The associated message string
-     */
-    public void log(Exception exception, String msg);
-
-
-    /**
-     * Writes an explanatory message and a stack trace for a given
-     * <code>Throwable</code> exception to the servlet log file.  The name
-     * and type of the servlet log file is specific to the servlet container,
-     * usually an event log.
-     *
-     * @param message A <code>String</code> that describes the error or
-     *  exception
-     * @param throwable The <code>Throwable</code> error or exception
-     */
-    public void log(String message, Throwable throwable);
-
-
+	    //XXX     if (serverSessionMgr != null) {
+	    // 		serverSessionMgr.reap();
+	    //     }
+	}
+    }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.3 2000/02/14 04:59:41 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/14 04:59:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.4 2000/05/12 02:31:58 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/12 02:31:58 $
  *
  * ====================================================================
  *
@@ -68,12 +68,12 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tomcat.catalina.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
-import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.util.*;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.apache.tomcat.core.*;
 
 
 /**
@@ -103,12 +103,226 @@ import org.w3c.dom.Node;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2000/02/14 04:59:41 $
+ * @version $Revision: 1.4 $ $Date: 2000/05/12 02:31:58 $
  */
 
-public final class StandardManager
-    extends ManagerBase
-    implements Lifecycle, Runnable {
+public final class StandardManager implements Runnable {
+    // ----------------------------------------------------- Instance Variables
+
+
+    /**
+     * The Container with which this Manager is associated.
+     */
+    protected Container container;
+
+
+    /**
+     * The distributable flag for Sessions created by this Manager.  If this
+     * flag is set to <code>true</code>, any user attributes added to a
+     * session controlled by this Manager must be Serializable.
+     */
+    protected boolean distributable;
+
+
+    /**
+     * The descriptive information string for this implementation.
+     */
+    private static final String info = "ManagerBase/1.0";
+
+
+    /**
+     * The default maximum inactive interval for Sessions created by
+     * this Manager.
+     */
+    protected int maxInactiveInterval = 60;
+
+
+    /**
+     * The set of previously recycled Sessions for this Manager.
+     */
+    protected Vector recycled = new Vector();
+
+
+    /**
+     * The set of currently active Sessions for this Manager, keyed by
+     * session identifier.
+     */
+    protected Hashtable sessions = new Hashtable();
+
+
+    // ------------------------------------------------------------- Properties
+
+
+    /**
+     * Return the Container with which this Manager is associated.
+     */
+    public Container getContainer() {
+
+	return (this.container);
+
+    }
+
+
+    /**
+     * Set the Container with which this Manager is associated.
+     *
+     * @param container The newly associated Container
+     */
+    public void setContainer(Container container) {
+
+	this.container = container;
+
+    }
+
+
+    /**
+     * Return the distributable flag for the sessions supported by
+     * this Manager.
+     */
+    public boolean getDistributable() {
+
+	return (this.distributable);
+
+    }
+
+
+    /**
+     * Set the distributable flag for the sessions supported by this
+     * Manager.  If this flag is set, all user data objects added to
+     * sessions associated with this manager must implement Serializable.
+     *
+     * @param distributable The new distributable flag
+     */
+    public void setDistributable(boolean distributable) {
+
+	this.distributable = distributable;
+
+    }
+
+
+    /**
+     * Return descriptive information about this Manager implementation and
+     * the corresponding version number, in the format
+     * <code>&lt;description&gt;/&lt;version&gt;</code>.
+     */
+    public String getInfo() {
+
+	return (this.info);
+
+    }
+
+
+    /**
+     * Return the default maximum inactive interval (in seconds)
+     * for Sessions created by this Manager.
+     */
+    public int getMaxInactiveInterval() {
+
+	return (this.maxInactiveInterval);
+
+    }
+
+
+    /**
+     * Set the default maximum inactive interval (in seconds)
+     * for Sessions created by this Manager.
+     *
+     * @param interval The new default value
+     */
+    public void setMaxInactiveInterval(int interval) {
+
+	this.maxInactiveInterval = interval;
+
+    }
+
+
+    // --------------------------------------------------------- Public Methods
+
+
+    /**
+     * Return the active Session, associated with this Manager, with the
+     * specified session id (if any); otherwise return <code>null</code>.
+     *
+     * @param id The session id for the session to be returned
+     *
+     * @exception ClassNotFoundException if a deserialization error occurs
+     *  while processing this request
+     * @exception IllegalStateException if a new session cannot be
+     *  instantiated for any reason
+     * @exception IOException if an input/output error occurs while
+     *  processing this request
+     */
+    public HttpSession findSession(String id) throws IOException {
+
+	if (id == null)
+	    return (null);
+	return ((HttpSession) sessions.get(id));
+
+    }
+
+
+    /**
+     * Return the set of active Sessions associated with this Manager.
+     * If this Manager has no active Sessions, a zero-length array is returned.
+     */
+    public HttpSession[] findSessions() {
+
+	synchronized (sessions) {
+	    Vector keys = new Vector();
+	    Enumeration ids = sessions.keys();
+	    while (ids.hasMoreElements()) {
+		String id = (String) ids.nextElement();
+		keys.addElement(id);
+	    }
+	    HttpSession results[] = new HttpSession[keys.size()];
+	    for (int i = 0; i < results.length; i++) {
+		String key = (String) keys.elementAt(i);
+		results[i] = (HttpSession) sessions.get(key);
+	    }
+	    return (results);
+	}
+
+    }
+
+
+    // -------------------------------------------------------- Package Methods
+
+
+    /**
+     * Add this Session to the set of active Sessions for this Manager.
+     *
+     * @param session Session to be added
+     */
+    void add(StandardSession session) {
+
+	sessions.put(session.getId(), session);
+
+    }
+
+
+    /**
+     * Add this Session to the recycle collection for this Manager.
+     *
+     * @param session Session to be recycled
+     */
+    void recycle(StandardSession session) {
+
+	recycled.addElement(session);
+
+    }
+
+
+    /**
+     * Remove this Session from the active Sessions for this Manager.
+     *
+     * @param session Session to be removed
+     */
+    void remove(StandardSession session) {
+
+	sessions.remove(session.getId());
+
+    }
+
 
 
     // ----------------------------------------------------- Instance Variables
@@ -125,11 +339,6 @@ public final class StandardManager
      */
     private boolean configured = false;
 
-
-    /**
-     * The descriptive information about this implementation.
-     */
-    private static final String info = "StandardManager/1.0";
 
 
     /**
@@ -194,17 +403,6 @@ public final class StandardManager
     }
 
 
-    /**
-     * Return descriptive information about this Manager implementation and
-     * the corresponding version number, in the format
-     * <code>&lt;description&gt;/&lt;version&gt;</code>.
-     */
-    public String getInfo() {
-
-	return (this.info);
-
-    }
-
 
     /**
      * Return the maximum number of active Sessions allowed, or -1 for
@@ -243,15 +441,33 @@ public final class StandardManager
      * @exception IllegalStateException if a new session cannot be
      *  instantiated for any reason
      */
-    public Session createSession() {
+    public HttpSession createSession() {
 
 	if ((maxActiveSessions >= 0) &&
 	  (sessions.size() >= maxActiveSessions))
 	    throw new IllegalStateException
 		(sm.getString("standardManager.createSession.ise"));
 
-	return (super.createSession());
+	// Recycle or create a Session instance
+	StandardSession session = null;
+	synchronized (recycled) {
+	    int size = recycled.size();
+	    if (size > 0) {
+		session = (StandardSession) recycled.elementAt(size - 1);
+		recycled.removeElementAt(size - 1);
+	    }
+	}
+	if (session == null)
+	    session = new StandardSession(this);
 
+	// Initialize the properties of the new session and return it
+	session.setNew(true);
+	session.setValid(true);
+	session.setCreationTime(System.currentTimeMillis());
+	session.setMaxInactiveInterval(this.maxInactiveInterval);
+	session.setId(SessionUtil.generateSessionId());
+
+	return (session);
     }
 
 
@@ -269,15 +485,15 @@ public final class StandardManager
      *
      * @exception IllegalStateException if this component has already been
      *  configured and/or started
-     * @exception LifecycleException if this component detects a fatal error
+     * @exception TomcatException if this component detects a fatal error
      *  in the configuration parameters it was given
      */
     public void configure(Node parameters)
-	throws LifecycleException {
+	throws TomcatException {
 
 	// Validate and update our current component state
 	if (configured)
-	    throw new LifecycleException
+	    throw new TomcatException
 		(sm.getString("standardManager.alreadyConfigured"));
 	configured = true;
 	if (parameters == null)
@@ -328,17 +544,17 @@ public final class StandardManager
      *  configured (if required for this component)
      * @exception IllegalStateException if this component has already been
      *  started
-     * @exception LifecycleException if this component detects a fatal error
+     * @exception TomcatException if this component detects a fatal error
      *  that prevents this component from being used
      */
-    public void start() throws LifecycleException {
+    public void start() throws TomcatException {
 
 	// Validate and update our current component state
 	if (!configured)
-	    throw new LifecycleException
+	    throw new TomcatException
 		(sm.getString("standardManager.notConfigured"));
 	if (started)
-	    throw new LifecycleException
+	    throw new TomcatException
 		(sm.getString("standardManager.alreadyStarted"));
 	started = true;
 
@@ -356,14 +572,14 @@ public final class StandardManager
      * @exception IllegalStateException if this component has not been started
      * @exception IllegalStateException if this component has already
      *  been stopped
-     * @exception LifecycleException if this component detects a fatal error
+     * @exception TomcatException if this component detects a fatal error
      *  that needs to be reported
      */
-    public void stop() throws LifecycleException {
+    public void stop() throws TomcatException {
 
 	// Validate and update our current component state
 	if (!started)
-	    throw new LifecycleException
+	    throw new TomcatException
 		(sm.getString("standardManager.notStarted"));
 	started = false;
 
@@ -371,7 +587,7 @@ public final class StandardManager
 	threadStop();
 
 	// Expire all active sessions
-	Session sessions[] = findSessions();
+	HttpSession sessions[] = findSessions();
 	for (int i = 0; i < sessions.length; i++) {
 	    StandardSession session = (StandardSession) sessions[i];
 	    if (!session.isValid())
@@ -391,7 +607,7 @@ public final class StandardManager
     private void processExpires() {
 
 	long timeNow = System.currentTimeMillis();
-	Session sessions[] = findSessions();
+	HttpSession sessions[] = findSessions();
 
 	for (int i = 0; i < sessions.length; i++) {
 	    StandardSession session = (StandardSession) sessions[i];
