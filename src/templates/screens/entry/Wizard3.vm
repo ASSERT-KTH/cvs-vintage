@@ -76,7 +76,7 @@ $page.setTitle("Enter issue")
   #else
         #set ($field = "Value")
   #end
-  #if (!$attVal.isSet())
+  ##if (!$attVal.isSet())
         <tr>
             <th>
     #if ($attVal.isRequired())*#end
@@ -109,7 +109,7 @@ $page.setTitle("Enter issue")
     #end
             </td>
         </tr>
-  #end
+  ##end
  ##end
 #end
         </table>
