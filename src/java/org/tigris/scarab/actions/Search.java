@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.95 2002/10/28 18:57:20 elicia Exp $
+ * @version $Id: Search.java,v 1.96 2002/10/29 21:05:07 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -206,13 +206,9 @@ public class Search extends RequireLoginFirstAction
     public void doEditstoredquery(RunData data, TemplateContext context)
          throws Exception
     {        
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Query query = scarabR.getQuery();
-        Group queryGroup = intake.get("Query", 
-                                      query.getQueryKey());
         String newValue = getQueryString(data);
-        queryGroup.setProperties(query);
         query.setValue(newValue);
         query.saveAndSendEmail((ScarabUser)data.getUser(), 
                  scarabR.getCurrentModule(), context);
@@ -419,6 +415,7 @@ public class Search extends RequireLoginFirstAction
     public void doDone(RunData data, TemplateContext context)  
         throws Exception
     {
+        doEditqueryinfo(data, context);
         doEditstoredquery(data, context);
         doCancel(data, context);
     }
