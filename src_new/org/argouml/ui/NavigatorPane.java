@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.74 2004/11/21 18:57:03 mvw Exp $
+// $Id: NavigatorPane.java,v 1.75 2004/12/09 19:20:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,22 +163,6 @@ public class NavigatorPane
 
     ////////////////////////////////////////////////////////////////
     // methods
-
-    /**
-     * Does nothing.
-     *
-     * Notification from Argo that the model has changed and
-     * the Tree view needs updating.
-     *
-     * TODO: More specific information needs to be provided, it is 
-     * expesive to update the whole tree.
-     *
-     * @see org.argouml.uml.ui.ActionRemoveFromModel
-     * @see org.argouml.uml.ui.ActionAddDiagram
-     * @see org.argouml.uml.ui.foundation.core.PropPanelGeneralization
-     */
-    public void forceUpdate() {
-    }
 
     /**
      * @see java.awt.Component#getMinimumSize()
