@@ -68,20 +68,18 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * the user to confirm their registration by going to the Confirm.vm page.
  *       
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RegisterConfirm.java,v 1.24 2001/10/25 23:54:45 jmcnally Exp $
+ * @version $Id: RegisterConfirm.java,v 1.25 2002/01/16 01:29:21 jon Exp $
  */
 public class RegisterConfirm extends ScarabTemplateAction
 {
     /**
         This manages clicking the Register confirm button
     */
-    public void doConfirmregistration( RunData data, TemplateContext context )
+    public void doConfirmregistration(RunData data, TemplateContext context)
         throws Exception
     {
-        String template = data.getParameters()
-                        .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters()
-                        .getString(ScarabConstants.NEXT_TEMPLATE, template );
+        String template = getCurrentTemplate(data);
+        String nextTemplate = getNextTemplate(data);
 
         try
         {
@@ -92,13 +90,22 @@ public class RegisterConfirm extends ScarabTemplateAction
             {
                 // assign the template to the cancel template, not the 
                 // current template
-                template = data.getParameters()
-                    .getString(ScarabConstants.CANCEL_TEMPLATE, "Register.vm");
+                template = getCancelTemplate(data, "Register.vm");
                 throw new Exception(
                     "Unable to retrive user object from session.");
             }
-            // attempt to create a new user!
-            su.createNewUser();
+
+            try
+            {
+                // attempt to create a new user!
+                su.createNewUser();
+            }
+            catch (org.apache.fulcrum.security.util.EntityExistsException e)
+            {
+                setTarget(data, "Confirm.vm");
+                return;
+            }
+
             // grab the ScarabRequestTool object so that we can populate the  
             // User object for redisplay of the form data on the screen
             ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -143,7 +150,7 @@ public class RegisterConfirm extends ScarabTemplateAction
     /**
         returns you to Register.vm
     */
-    public void doBack( RunData data, TemplateContext context ) 
+    public void doBack(RunData data, TemplateContext context) 
         throws Exception
     {
         // set the template to the template that we should be going back to
@@ -154,7 +161,7 @@ public class RegisterConfirm extends ScarabTemplateAction
     /**
         calls doRegisterConfirm()
     */
-    public void doPerform( RunData data, TemplateContext context ) 
+    public void doPerform(RunData data, TemplateContext context) 
         throws Exception
     {
         doConfirmregistration(data, context);

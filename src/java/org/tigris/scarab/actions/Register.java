@@ -65,7 +65,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.15 2002/01/11 00:42:47 elicia Exp $
+ * @version $Id: Register.java,v 1.16 2002/01/16 01:29:21 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -95,6 +95,16 @@ public class Register extends ScarabTemplateAction
             {
                 register = intake.get("Register",
                     IntakeTool.DEFAULT_KEY, false);
+            }
+
+            // not quite sure why this happens, but it does, so case
+            // for it and deal with it.
+            if (register == null)
+            {
+                setTarget(data,"Register.vm");
+                data.setMessage("Sorry! There is an error in your session. " + 
+                "Please close your browser and start over.");
+                return;
             }
 
             String password = register.get("Password").toString();

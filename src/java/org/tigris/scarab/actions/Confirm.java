@@ -76,7 +76,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Confirm.java,v 1.27 2002/01/11 01:19:03 jmcnally Exp $
+ * @version $Id: Confirm.java,v 1.28 2002/01/16 01:29:21 jon Exp $
  */
 public class Confirm extends ScarabTemplateAction
 {
@@ -132,7 +132,7 @@ public class Confirm extends ScarabTemplateAction
             }
             username = usernameField.toString();
             confirm = confirmField.toString();
-            
+
             // This reference to ScarabUserImpl is ok because this action
             // is specific to use with that implementation.
             if (ScarabUserImpl.checkConfirmationCode(username, confirm))
@@ -143,14 +143,22 @@ public class Confirm extends ScarabTemplateAction
                     // NO PROBLEMS! :-)
                     ScarabUser confirmedUser = (ScarabUser)
                                     TurbineSecurity.getUser(username);
-                    confirmedUser.setHasLoggedIn(Boolean.TRUE);
+                    // we set this to false and make people login again
+                    // because of this issue:
+                    // http://scarab.tigris.org/issues/show_bug.cgi?id=115
+                    // there may be a better way, but given that on the confirm
+                    // screen, we aren't asking for a password and checkConfirmationCode
+                    // will return true if someone is already confirmed, 
+                    // we need to do this for security purposes.
+                    confirmedUser.setHasLoggedIn(Boolean.FALSE);
                     data.setUser(confirmedUser);
                     data.save();
     
                     data.setMessage(
-                        "Your account has been confirmed. Welcome to Scarab!");
+                        "Your account has been confirmed. Welcome to Scarab! " + 
+                        "Please login now.");
                     setTarget(data, nextTemplate);
-                    
+
                     // FIXME: Hack to give every new account a Developer Role
                     // within every Group (ie: Module). This is a major major
                     // major major major hole. The point however is to allow 
