@@ -399,6 +399,14 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Build our version of Commons-Sandbox-Util easily                   -->
+    <!-- There is a dependency on stuff in here in fulcrum                  -->
+    <!-- ================================================================== -->
+    <target name="build-commons-sandbox-util">
+        <exec executable="ant" dir="${commons-sandbox-util.dir}"/>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our version of Turbine easily                              -->
     <!-- ================================================================== -->
     <target name="upgrade-turbine" depends="build-turbine">
@@ -447,10 +455,27 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Sandbox-Util easily                 -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-sandbox-util" depends="build-commons-sandbox-util">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-util*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-sandbox-util.dir}">
+                <include name="**/commons-util*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our version of Fulcrum, Torque and Turbine easily          -->
     <!-- ================================================================== -->
     <target name="upgrade-jakarta" 
-            depends="upgrade-fulcrum,upgrade-torque,upgrade-turbine">
+            depends="upgrade-fulcrum,upgrade-torque,upgrade-turbine,
+                     upgrade-commons-sandbox-util">
     </target>
 
     <!-- ================================================================== -->
