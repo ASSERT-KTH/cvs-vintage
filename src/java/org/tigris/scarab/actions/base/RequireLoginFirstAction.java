@@ -62,7 +62,7 @@ import org.tigris.scarab.screens.Default;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.13 2001/10/17 20:48:32 jon Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.14 2001/11/02 22:49:45 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -170,4 +170,22 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public abstract void doPerform( RunData data, TemplateContext context )
         throws Exception;
+
+    public void doGotocancel( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getCancelTemplate(data));            
+    }
+
+    public void doRefresh( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getCurrentTemplate(data));            
+    }
+        
+    public void doGonext( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getNextTemplate(data));            
+    }
 }
