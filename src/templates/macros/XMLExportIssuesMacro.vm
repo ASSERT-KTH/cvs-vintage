@@ -1,10 +1,9 @@
 #if($renderedFromScreen) #XMLExportIssues($issueIdList) #end
-
 #macro (XMLExportIssues $issueIdList)
 #set ($module = $scarabR.CurrentModule)
 
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
+##<!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
 <scarab-issues>
   <import-type>update-same-db</import-type>
   <module>
