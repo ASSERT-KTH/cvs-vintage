@@ -32,7 +32,7 @@ import org.jboss.Version;
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 */
 public class Server
 implements ServerMBean
@@ -138,7 +138,7 @@ implements ServerMBean
       // Deployer
       ObjectName mainDeployer = 
       server.createMBean("org.jboss.deployment.MainDeployer",
-         null,
+         new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
          loaderName).getObjectName();
       
       // SAR Deployer
