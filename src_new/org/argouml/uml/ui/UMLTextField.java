@@ -23,7 +23,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.16 2002/09/05 16:07:13 kataka Exp $
+// $Id: UMLTextField.java,v 1.17 2002/09/08 13:09:07 kataka Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -113,6 +113,11 @@ public class UMLTextField
         addFocusListener(this);
         // update();
     }
+    
+	/**
+	 * Called when an UMLTextField is entered.
+	 * @see org.argouml.uml.ui.UMLUserInterfaceComponent#targetChanged()
+	 */
     public void targetChanged() {
         _property.targetChanged();
         update();
