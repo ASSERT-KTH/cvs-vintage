@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.333 2003/01/13 19:37:37 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.334 2003/01/13 21:22:49 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.333 2003/01/13 19:37:37 jmcnally Exp $
+Last updated: $Id: changes.html,v 1.334 2003/01/13 21:22:49 jmcnally Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -294,6 +294,13 @@ Last updated: $Id: changes.html,v 1.333 2003/01/13 19:37:37 jmcnally Exp $
                <li>Multivalued attributes (such as user attributes) were causing
                    issues to show up multiple times in a query result list.
                    For more information see #<a href="http://issues.whichever.com/issues/id/SCB480">SCB480</a> (JDM)</li>
+               <li>Hitting Refresh button on the query results (IssueList.vm)
+                   resulted in a loss of query criteria, if issues had been
+                   sorted or page navigation had been used.
+                   For more information see #<a href="http://issues.whichever.com/issues/id/SCB476">SCB476</a> (JDM)</li>
+               <li>Check for previously added items, when adding new 
+                   module/issuetypes to the list used for a query. 
+                   For more information see #<a href="http://issues.whichever.com/issues/id/SCB354">SCB354</a> (JDM)</li>
             </ul>
         </td>
     </tr>
