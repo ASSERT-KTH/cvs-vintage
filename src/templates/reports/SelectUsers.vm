@@ -54,7 +54,9 @@
 
 #reportFunctionBar("functnbar2" $report)
 
-#userList($mitList false false)
+#set ($param = ["headingtype", "1"])
+#set($booldummy = $parameters.add($param))
+#userList($mitList false false $parameters)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />

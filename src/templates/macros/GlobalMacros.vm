@@ -403,17 +403,27 @@
  </p>
 #end
 
-#macro (paginateWithSearch $resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
-#set ($singleIssueId = $data.Parameters.getString("id", ""))
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE","ViewIssue.vm"))
+#macro (paginateWithSearch $resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.PrevPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("headingtype","$headingType").setPathInfo("id", "$singleIssueId").setPathInfo("cancelTemplate", $cancelTemplate))
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").addPathInfo("pageNum", "$scarabR.PrevPage").addPathInfo("sortColumn", "$sortColumn").addPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).addPathInfo("searchString", $searchString).addPathInfo("searchField", $searchField))
+ #foreach ($parameter in $parameters)
+   #set ($paramKey = $parameter.get(0))
+   #if ($paramKey.length() > 0)
+       #set ($dummy = $prevLink.addPathInfo($paramKey, $parameter.get(1)))
+   #end
+ #end
   <a href="$prevLink">$l10n.PaginatePrevious</a> |
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("headingtype","$headingType").setPathInfo("id", "$singleIssueId").setPathInfo("cancelTemplate", "$cancelTemplate"))
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").addPathInfo("pageNum", "$scarabR.NextPage").addPathInfo("sortColumn", "$sortColumn").addPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).addPathInfo("searchString", $searchString).addPathInfo("searchField", $searchField))
+ #foreach ($parameter in $parameters)
+   #set ($paramKey = $parameter.get(0))
+   #if ($paramKey.length() > 0)
+     #set ($dummy = $nextLink.addPathInfo($paramKey, $parameter.get(1)))
+   #end
+ #end
   | <a href="$nextLink">$l10n.PaginateNext</a>
  #end
  </p>
@@ -533,18 +543,36 @@ selected the radio button.
 #end
 #end
 
-#macro (userSort $shortName $longName $linkPage)
+#macro (userSort $shortName $longName $linkPage $parameters)
   #if (!$resultsPerPage) #set ($resultsPerPage = 25) #end
   #if ($sortColumn.equals($shortName))
     #if ($sortPolarity.equals("desc"))
       #set ($arrowLink = $link.setPage($linkPage).setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+      #foreach ($parameter in $parameters)
+        #set ($paramKey = $parameter.get(0))
+        #if ($paramKey.length() > 0)
+          #set ($dummy = $arrowLink.setPathInfo($paramKey, $parameter.get(1)))
+        #end
+      #end
       <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
     #else
       #set ($arrowLink = $link.setPage($linkPage).setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+      #foreach ($parameter in $parameters)
+        #set ($paramKey = $parameter.get(0))
+        #if ($paramKey.length() > 0)
+          #set ($dummy = $arrowLink.setPathInfo($paramKey, $parameter.get(1)))
+        #end
+      #end
       <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
     #end $longName
   #else
     #set ($sortLink = $link.setPage($linkPage).setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+    #foreach ($parameter in $parameters)
+        #set ($paramKey = $parameter.get(0))
+        #if ($paramKey.length() > 0)
+          #set ($dummy = $sortLink.setPathInfo($paramKey, $parameter.get(1)))
+        #end
+    #end
     <a href="$sortLink">$longName</a>
   #end
 #end
@@ -608,7 +636,7 @@ selected the radio button.
 <p><small>"<strong>*</strong>" $l10n.RequiredFields</small></p>
 #end
 
-#macro (userList $mitList $includeAny $includeCommittedBy)
+#macro (userList $mitList $includeAny $includeCommittedBy $parameters)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
 #set ($modules = $mitList.Modules)
 
@@ -620,7 +648,6 @@ selected the radio button.
 ## if results exceed limit, get subset list
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-#set ($headingType = $data.Parameters.getInt("headingtype", 1))
 
 ## USER SEARCH
 <h3><a name="add">$l10n.Users</a></h3> 
@@ -657,7 +684,7 @@ selected the radio button.
 
 #set ($paginated = ($resultsPerPage > 0 && $searchResultsSize > $resultsPerPage))
 #if ($paginated)
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
 #end
 
 #if (!$searchResultsList || $searchResultsList.isEmpty()) 
@@ -668,8 +695,9 @@ selected the radio button.
    <tr>
     <th nowrap="nowrap">$l10n.Select</th>
   #set ($linkPage = $scarabG.replace($data.Target, '/', ','))
-    <th>#userSort ("username" "$l10n.Username" $linkPage)</th>
-    <th>#userSort ("name" "$l10n.FullName" $linkPage)</th>
+
+    <th>#userSort ("username" "$l10n.Username" $linkPage $parameters)</th>
+    <th>#userSort ("name" "$l10n.FullName" $linkPage $parameters)</th>
     <th>$l10n.Association</th>
    </tr>
    #foreach ($user in $searchResultsList)
@@ -695,7 +723,7 @@ selected the radio button.
    </table>
 
 #if ($paginated)
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">

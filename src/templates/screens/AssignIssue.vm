@@ -87,12 +87,19 @@
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "ViewIssue.vm")" />
+#set ($parameters = [])
 #if ($singleIssue)
-  <input type="hidden" name="id" value="$singleIssueId" />
+  #set ($idParameter = ["id", "$singleIssueId"])
+  #set($booldummy = $parameters.add($idParameter))
 #end
 #foreach ($issue in $issueList)
-  <input type="hidden" name="issue_ids" value="$issue.UniqueId" />
+  #set ($idParameter = ["issue_ids", "$issue.UniqueId"])
+  #set($booldummy = $parameters.add($idParameter))
 #end
+#foreach ($parameter in $parameters)
+  <input type="hidden" name="$parameter.get(0)" value="$parameter.get(1)" />
+#end
+
 <div class="functnbar">
 <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
@@ -130,7 +137,7 @@
 </div>
 
 #set ($mitList = $scarabR.getMITList($issueList))
-#userList($mitList false false)
+#userList($mitList false false $parameters)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />

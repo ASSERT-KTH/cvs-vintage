@@ -34,6 +34,9 @@
 <form method="get" action="$link.setPage("reports,AxisConfiguration.vm")">
 <input type="hidden" name="action" value="ConfigureReport"/>
 <input type="hidden" name="axis" value="$axisIndex"/>
+#set ($parameters = [])
+#set ($param = ["axis", "$axisIndex"])
+#set($booldummy = $parameters.add($param))
 
 #set ($headingIndex = $data.Parameters.getInt("heading", -1))
 #set ($headings = $reportDefn.getAxis($axisIndex).ReportHeadings)
@@ -63,12 +66,16 @@
         <th>$l10n.HeadingLevel</th>
     #end
         <th>$l10n.HeadingSummary</th>
-      </tr>
+     </tr>
   #foreach ($heading in $headings)
     #set ($index = $velocityCount - 1)
     #if ($headingIndex == $index)
       #set ($selectedHeading = $heading)
+      #set ($param = ["prevheading", "$headingIndex"])
+      #set($booldummy = $parameters.add($param))
       <input type="hidden" name="prevheading" value="$headingIndex" />
+      #set ($param = ["heading", "$headingIndex"])
+      #set($booldummy = $parameters.add($param))
     #end
     #indexedRows($velocityCount)
     #if ($multiHeading)
@@ -102,6 +109,8 @@
   </div>
 #elseif ($singleHeading)
     #set ($headingIndex = 0)
+    #set ($param = ["heading", "0"])
+    #set($booldummy = $parameters.add($param))
     <input type="hidden" name="heading" value="0" />
     #set ($selectedHeading = $headings.get(0))
   #if ($isNotDateAxis && $selectedHeading.size() > 0)

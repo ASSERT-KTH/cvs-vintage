@@ -23,12 +23,19 @@
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="Search" />
-<input type="hidden" name="refine" value="true"/>
 <input type="hidden" name="sortPolarity" value="$data.Parameters.getString("sortPolarity","")"/>
 <input type="hidden" name="sortColumn" value="$data.Parameters.getString("sortColumn","")"/>
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+#set ($parameters = [])
+#set ($param = ["refine", "true"])
+#set($booldummy = $parameters.add($param))
+#set ($param = ["$scarabG.Constant.CANCEL_TEMPLATE", "$cancelTemplate"])
+#set($booldummy = $parameters.add($param))
 #if ($queryId)
-<input type="hidden" name="queryId" value="$queryId" />
+  #set( $param = ["queryId", "$queryId"])
+  #set($booldummy = $parameters.add($param))
+#end
+#foreach ($parameter in $parameters)
+  <input type="hidden" name="$parameter.get(0)" value="$parameter.get(1)" />
 #end
   
 <div class="functnbar">
@@ -99,7 +106,7 @@
 </div>
   #end
 
-#userList($mitList true true)
+#userList($mitList true true $parameters)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAddusers" value="$l10n.AddAssignee" />
