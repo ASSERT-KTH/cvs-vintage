@@ -62,8 +62,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
     protected JButton helpButton;
     protected CheckBoxWithMnemonic markCheckBox;
     protected JSpinner markSpinner;
-    protected LabelWithMnemonic preferLabel;
-    protected JComboBox preferComboBox;    
+    protected CheckBoxWithMnemonic preferHtmlCheckBox;        protected CheckBoxWithMnemonic disableHtmlCheckBox;
     protected CheckBoxWithMnemonic enableSmiliesCheckBox;
     protected CheckBoxWithMnemonic quotedColorCheckBox;
     protected JButton quotedColorButton;
@@ -138,19 +137,11 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             quotedColorButton.setBackground(new Color(c));
             */
             XmlElement html = options.getElement("html");
-            if (html == null) {
-           		html = options.addSubElement("html");
-            }
-            
-            String htmlStyle = html.getAttribute("style", "html");
-            if (htmlStyle.equals("html")) {
-            	preferComboBox.setSelectedIndex(0);
-            } else if (htmlStyle.equals("text")) {
-            	preferComboBox.setSelectedIndex(1);
-            } else {
-            	preferComboBox.setSelectedIndex(2);
-            }
 
+            boolean preferhtml = Boolean.valueOf(html.getAttribute("prefer"))
+                                        .booleanValue();
+            preferHtmlCheckBox.setSelected(preferhtml);            
+            boolean disablehtml = Boolean.valueOf(html.getAttribute("disable"))										.booleanValue();            disableHtmlCheckBox.setSelected(disablehtml);            
             XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                              .getRoot()
                                                              .getElement("/options");
@@ -245,14 +236,12 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
             XmlElement html = options.getElement("html");
 
-            if (preferComboBox.getSelectedIndex() == 0) {
-	            html.addAttribute("style", "html");
-	        } else if (preferComboBox.getSelectedIndex() == 1) {
-		        html.addAttribute("style", "text");
-		    } else {
-			    html.addAttribute("style", "strip");
-			}
-
+            if (preferHtmlCheckBox.isSelected()) {
+                html.addAttribute("prefer", Boolean.TRUE.toString());
+            } else {
+                html.addAttribute("prefer", Boolean.FALSE.toString());
+            }                        //            preferHtmlCheckBox.notifyObservers();            
+            if (disableHtmlCheckBox.isSelected()) {                html.addAttribute("disable", Boolean.TRUE.toString());            } else {                html.addAttribute("disable", Boolean.FALSE.toString());            }//            disableHtmlCheckBox.notifyObservers();                        
             XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                              .getRoot()
                                                              .getElement("/options");
@@ -322,19 +311,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
         quotedColorButton.setActionCommand("COLOR");
         quotedColorButton.addActionListener(this);
 
-        preferLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-        			"dialog", "general", "prefer_as"));        
-        
-        String[] htmlItems = {
-    	        MailResourceLoader.getString("dialog", "general",
-    	        "prefer_html"),
-    	        MailResourceLoader.getString("dialog", "general",
-    	        "prefer_text"),
-    	        MailResourceLoader.getString("dialog", "general",
-    	        "prefer_strip")
-   	    };    	    
-   	    preferComboBox = new JComboBox(htmlItems);
-
+        preferHtmlCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "general", "prefer_html"));        
+        disableHtmlCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(                "dialog", "general", "disable_html"));
         // composer
         emptySubjectCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
                     "dialog", "general", "ask_on_empty_subject"));
@@ -400,9 +379,9 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                 "general", "general"));
         builder.nextLine();
 
-        builder.append(preferLabel, preferComboBox);
+        builder.append(preferHtmlCheckBox, 4);
         builder.nextLine();
-
+        builder.append(disableHtmlCheckBox, 4);        builder.nextLine();
         builder.append(enableSmiliesCheckBox, 4);
         builder.nextLine();
 

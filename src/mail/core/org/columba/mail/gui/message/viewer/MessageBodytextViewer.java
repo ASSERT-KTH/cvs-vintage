@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -112,7 +113,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		setContentType("text/html");	
+		setContentType("text/html");
 
 		XmlElement gui = MailInterface.config.get("options").getElement(
 				"/options/gui");
@@ -172,23 +173,22 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		initStyleSheet();
 	}
 
-	private boolean hasHtmlPart(MimePart mimeTypes)
-	{
-	
-	  if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
-	    return true; //exit immediately
-	  
-	  java.util.List children = mimeTypes.getChilds();
+	private boolean hasHtmlPart(MimePart mimeTypes) {
 
-	  for(int i=0;i<children.size();i++)
-	  {
-	    if (hasHtmlPart(mimeTypes.getChild(i)))
-	      return true;
-	  }
-	  
-	  return false;
-	  
+		if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
+			return true; //exit immediately
+
+		java.util.List children = mimeTypes.getChilds();
+
+		for (int i = 0; i < children.size(); i++) {
+			if (hasHtmlPart(mimeTypes.getChild(i)))
+				return true;
+		}
+
+		return false;
+
 	}
+
 	/**
 	 * @see org.columba.mail.gui.message.viewer.Viewer#getViewer(org.columba.mail.folder.Folder,
 	 *      java.lang.Object)
@@ -202,28 +202,22 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
-		// Which Bodypart shall be shown? (html/plain)
-
-		
-		String htmlStyle = html.getAttribute("style", "html");
-		boolean htmlViewer = false;
-		boolean stripHtml = false;
 
 		//ensure that there is an HTML part in the email, otherwise JTextPanel
 		//throws a RuntimeException
-		
-		if (htmlStyle.equals("html") && 
-		    hasHtmlPart(mimePartTree.getRootMimeNode())) {
-		  
+
+		// Which Bodypart shall be shown? (html/plain)
+		if ((Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
+				&& hasHtmlPart(mimePartTree.getRootMimeNode())) {
 			bodyPart = mimePartTree.getFirstTextPart("html");
-			htmlViewer = true;
 		} else {
 			bodyPart = mimePartTree.getFirstTextPart("plain");
-			if (htmlStyle.equals("strip")) {
-				stripHtml = true;
-			}		
 		}
-		
+
+		// Shall we use the HTML-Viewer?
+		htmlMessage = bodyPart.getHeader().getMimeType().getSubtype().equals(
+				"html");
+
 		if (bodyPart == null) {
 			bodyStream = new ByteArrayInputStream("<No Message-Text>"
 					.getBytes());
@@ -288,7 +282,15 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			next = bodyStream.read();
 		}
 
-		setBodyText(text.toString(), htmlViewer, stripHtml);
+		// if HTML stripping is enabled
+		if (Boolean.valueOf(html.getAttribute("disable")).booleanValue()) {
+			// strip HTML message -> remove all HTML tags
+			setBodyText(HtmlParser.stripHtmlTags(text.toString(), true), false);
+			
+			htmlMessage = false;
+		} else {
+			setBodyText(text.toString(), htmlMessage);
+		}
 
 		bodyStream.close();
 
@@ -312,26 +314,26 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 				+ ".quoting {color:#949494;}; --></style>";
 	}
 
-	protected void setBodyText(String bodyText, boolean viewHtml, boolean stripHtml) {
-		if (stripHtml) {
-			bodyText = HtmlParser.stripHtmlTags(bodyText, true);
-		}
-		
+	protected void setBodyText(String bodyText, boolean viewHtml) {
+
 		if (viewHtml) {
 			try {
 				// this is a HTML message
 
+				body = bodyText;
+
 				// try to fix broken html-strings
-				body = HtmlParser.validateHTMLString(bodyText);
-				LOG.info("validated bodytext:\n" + body);
+				//body = HtmlParser.validateHTMLString(body);
+				//LOG.info("validated bodytext:\n" + body);
 
 				// create temporary file
 				File inputFile = TempFileStore.createTempFileWithSuffix("html");
 				// save bodytext to file
-				DiskIO.saveStringInFile(inputFile, bodyText);
+				DiskIO.saveStringInFile(inputFile, body);
 				// get URL of file
 				url = inputFile.toURL();
-				setPage(url);
+
+				//setPage(url);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -440,12 +442,18 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 	 * @see org.columba.mail.gui.message.viewer.Viewer#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+
 		if (!htmlMessage) {
+			
+
 			// display bodytext
 			setText(body);
+		} else {
+			// this call has to happen in the awt-event dispatcher thread
+			setPage(url);
 		}
-
-		// setup base url in order to be able to display images
+		
+//		 setup base url in order to be able to display images
 		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 		LOG.info(baseUrl.toString());
