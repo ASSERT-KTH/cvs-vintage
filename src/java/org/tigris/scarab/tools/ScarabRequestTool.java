@@ -456,6 +456,10 @@ try{
     public ScarabUser getUser(Object id)
      throws Exception
     {
+        if (id == null)
+        {
+            return null;
+        }
         ScarabUser su = null;
         try
         {
