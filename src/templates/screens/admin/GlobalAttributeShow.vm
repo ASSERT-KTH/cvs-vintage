@@ -48,7 +48,7 @@ $l10n.PageForSelectingAttributes
 #set ($pageNum = $data.Parameters.getInt("pageNum",0))
 
 #if ($resultsPerPage == 0)
-  #set ($resultsPerPage = 2)
+  #set ($resultsPerPage = 25)
 #end
 
 #if ($pageNum == 0)
