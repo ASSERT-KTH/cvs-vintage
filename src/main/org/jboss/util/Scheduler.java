@@ -236,14 +236,14 @@ public class Scheduler
                      new Object[] {
                         "Schedule",
                         "Scheduler Notification",
-                        null,
+                        null,    // User Object
                         new Date( new Date().getTime() + 1000 ),
                         new Long( mActualSchedulePeriod ),
                         new Long( mRemainingRepetitions )
                      },
                      new String[] {
-                        "".getClass().getName(),
-                        "".getClass().getName(),
+                        String.class.getName(),
+                        String.class.getName(),
                         Object.class.getName(),
                         Date.class.getName(),
                         Long.TYPE.getName(),
@@ -259,7 +259,7 @@ public class Scheduler
                      new Object[] {
                         "Schedule",
                         "Scheduler Notification",
-                        null,
+                        null,    // User Object
                         new Date( new Date().getTime() + 1000 ),
                         new Long( mActualSchedulePeriod )
                      },
@@ -281,11 +281,13 @@ public class Scheduler
                   new Object[] {
                      "Schedule",
                      "Scheduler Notification",
+                     null,       // User Object
                      mStartDate
                   },
                   new String[] {
                      String.class.getName(),
                      String.class.getName(),
+                     Object.class.getName(),
                      Date.class.getName(),
                   }
                ) ).intValue();
@@ -622,13 +624,15 @@ public class Scheduler
                            new Object[] {
                               "Schedule",
                               "Scheduler Notification",
+                              null,    // User Object
                               new Date( new Date().getTime() + 1000 ),
                               new Long( mActualSchedulePeriod ),
                               new Long( getRemainingRepetitions() )
                            },
                            new String[] {
-                              "".getClass().getName(),
-                              "".getClass().getName(),
+                              String.class.getName(),
+                              String.class.getName(),
+                              Object.class.getName(),
                               Date.class.getName(),
                               Long.TYPE.getName(),
                               Long.TYPE.getName()
