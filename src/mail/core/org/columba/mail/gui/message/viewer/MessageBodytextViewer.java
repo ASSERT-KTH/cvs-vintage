@@ -108,12 +108,11 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
 
+		setDocument(new AsynchronousHTMLDocument());
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		setContentType("text/html");
-
-		setDocument(new AsynchronousHTMLDocument());
+		setContentType("text/html");	
 
 		XmlElement gui = MailInterface.config.get("options").getElement(
 				"/options/gui");
