@@ -29,7 +29,14 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.18 $
+ * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
+ *
+ * <p><b>2002/08/27: loubyansky</b>
+ * <ol>
+ *   <li>added checking for java.lang.Object primary key class and adding a new field for it</li>
+ * </ol>
+ *
+ * @version $Revision: 1.19 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -281,6 +288,19 @@ public final class JDBCEntityMetaData {
          if(!cmpField.isPrimaryKeyMember()) {
             nonPkFieldNames.add(cmpFieldName);
          }
+      }
+
+      // AL: add unknown primary key if primaryKeyClass is Object
+      // AL: this is set up only in this constructor
+      // AL: because, AFAIK, others are called with default value
+      // AL: produced by this one
+      if( (primaryKeyClass != null)
+         && (primaryKeyClass.getName().equals("java.lang.Object")) )
+      {
+         JDBCCMPFieldMetaData upkField =
+            new JDBCCMPFieldMetaData( this );
+         cmpFields.add( upkField );
+         cmpFieldsByName.put( upkField.getFieldName(), upkField );
       }
 
       // set eager load fields to all group.
