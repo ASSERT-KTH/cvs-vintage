@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.22 2003/09/22 09:18:37 hgomez Exp $
- * $Revision: 1.22 $
- * $Date: 2003/09/22 09:18:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.23 2003/09/25 15:33:06 hgomez Exp $
+ * $Revision: 1.23 $
+ * $Date: 2003/09/25 15:33:06 $
  *
  * ====================================================================
  *
@@ -335,6 +335,14 @@ public class Ajp13Interceptor extends PoolTcpConnector
 			continue;
 		    }
 		}
+
+		// special case - low level AJP13 packet, like
+		// PING/PONG ...
+		if( status == 999 )
+		{	
+			req.recycle();
+			continue; 
+		} 
 
 		// special case - invalid AJP13 packet, error 
 		// decoding packet ...

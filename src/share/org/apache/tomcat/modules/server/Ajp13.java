@@ -267,8 +267,10 @@ public class Ajp13
      * @param req An empty (newly-recycled) request object.
      * 
      * @return 200 in case of a successful read of a forwarded request, 500
-     * if there were errors in the reading of the request, and -2 if the
-     * server is asking the container to shut itself down.  
+     * if there were errors in the reading of the request, 999 if request
+     * is a low level request which has been processed by low layer and 
+     * -2 if the server is asking the container to shut itself down.
+     *   
      */
     public int receiveNextRequest(Request req) throws IOException 
     {
