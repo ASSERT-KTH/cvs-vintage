@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremiePRODelegate.java,v 1.12 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JeremiePRODelegate.java,v 1.13 2004/09/22 12:28:23 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -35,6 +35,7 @@ import java.rmi.RemoteException;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 /**
@@ -44,6 +45,11 @@ import org.objectweb.carol.util.configuration.CarolDefaultValues;
  * @version 1.0, 15/07/2002
  */
 public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
+
+    /**
+     * Extension of Jeremie Stubs
+     */
+    private final static String JEREMIE_STUB_EXTENSION = "_OWStub";
 
     /**
      * port number
@@ -61,6 +67,11 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     private static Class unicastClass = null;
 
     /**
+     * Number of protocols
+     */
+    private static int nbProtocols = 0;
+
+    /**
      * Empty constructor for instanciate this class
      */
     public JeremiePRODelegate() throws Exception {
@@ -75,6 +86,9 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException exporting remote object problem
      */
     public void exportObject(Remote obj) throws RemoteException {
+        if (!containsJeremieStub(obj)) {
+            return;
+        }
         try {
             Method exportO = unicastClass.getMethod("exportObject", new Class[] {Remote.class, Integer.TYPE});
             exportO.invoke(unicastClass, (new Object[] {obj, new Integer(port)}));
@@ -89,6 +103,9 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
+        if (!containsJeremieStub(obj)) {
+            return;
+        }
         try {
             Method unexportO = unicastClass.getMethod("unexportObject", new Class[] {Remote.class, Boolean.TYPE});
             unexportO.invoke(unicastClass, (new Object[] {obj, Boolean.TRUE}));
@@ -136,6 +153,34 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
         } catch (Exception e) {
             throw new NoSuchObjectException(e.toString());
         }
+    }
+
+    /**
+     * Check if the remote object contains the Jeremie stub in the case of
+     * multiprotocols. It can happen that a remote object calls the methods of
+     * this delegate object, For example if we try to bind a iiop object in an
+     * iiop context, this delegate object is called anyway.
+     * @param r remote object
+     * @return true if the jeremie stubs are found, else false
+     */
+    private boolean containsJeremieStub(Remote r) {
+
+        if (nbProtocols == 0) {
+            // need to init number of protocols
+            nbProtocols = CarolCurrentConfiguration.getCurrent().getPortableRemoteObjectHashtable().size();
+        }
+
+        // No check on single protocol
+        if (nbProtocols == 1) {
+            return true;
+        }
+
+        // Construct name of a jeremie stub of a remote object
+        String stubName = r.getClass().getName() + JEREMIE_STUB_EXTENSION;
+
+        // return true if found
+        return (Thread.currentThread().getContextClassLoader().getResource(stubName) != null);
+
     }
 
 }
