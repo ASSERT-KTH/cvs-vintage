@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JInterceptorStore.java,v 1.5 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JInterceptorStore.java,v 1.6 2005/03/11 13:55:52 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
@@ -46,7 +46,7 @@ public class JInterceptorStore {
     /**
      * Initilazer class prefix
      */
-    public static String INTIALIZER_PREFIX = "org.objectweb.PortableInterceptor.JRMPInitializerClass";
+    public static final String INTIALIZER_PREFIX = "org.objectweb.PortableInterceptor.JRMPInitializerClass";
 
     /**
      * private boolean for intialisation
