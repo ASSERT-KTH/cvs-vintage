@@ -15,6 +15,7 @@ $page.setTitle("Enter issue")
 
 <h2>$page.Title</h2>
 
+<p></p>
 ## Only show templates if user has not come through the wizard.
 #if (!$data.Parameters.getString("oldscreen"))
 <form method="post" action="$link.setPage("entry,Wizard3.vm")">
@@ -112,9 +113,6 @@ $page.setTitle("Enter issue")
   <table cellpadding="3" cellspacing="2" border="0">
     #set ($atch = $scarabR.Attachment)
     #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-    #if ( !$intakeAttachment.Name.isValid())
-        <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
-    #end
     #set ($reportingIssue = $scarabR.ReportingIssue)
     #set ($attachments = $reportingIssue.Attachments)
     #if ($attachments.size()>0)
@@ -132,7 +130,7 @@ $page.setTitle("Enter issue")
              </td>
              <td><a href="$file.File.FileName" 
                 onClick="fileWindow=window.open('','filewindow',
-                'resizable=yes,scrollbars=yes,height=450,width=700')" 
+                'resizable=yes, menubar=yes,scrollbars=yes,height=450,width=700')" 
                 target="filewindow">$file.File.FileName</a> 
              </td>
              <td>$file.Name</td>
@@ -140,7 +138,6 @@ $page.setTitle("Enter issue")
            #end
        #end
     #end
- 
     <tr>
       <th>Attachment path</th>
       <td>
@@ -153,11 +150,13 @@ $page.setTitle("Enter issue")
        rename files.</p>
       </td>
     </tr>
-     
     <tr>
       <th>Attachment description</th>
       <td>
        #textAreaMedium("$intakeAttachment.Name.Key" "")
+       #if ( !$intakeAttachment.Name.isValid())
+        <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
+       #end
       </td>
     </tr>    
   </table>

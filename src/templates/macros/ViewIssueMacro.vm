@@ -386,7 +386,7 @@
                   </td>
                   <td><a href="$file.FilePath" 
                     onClick="fileWindow=window.open('',
-                    'filewindow','resizable=yes,scrollbars=yes,height=450,width=700')" 
+                    'filewindow','resizable=yes,menubar=yes,scrollbars=yes,height=450,width=700')" 
                     target="filewindow">$file.FileName</a> 
                   </td>
                   <td>$file.Name</td>
@@ -404,7 +404,10 @@
             <tr>
                <th>Attachment description</th>
                <td>
-                #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
+                #textAreaMedium("$intakeAttachment.Name.Key" "")
+                #if ( !$intakeAttachment.Name.isValid())
+                    <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
+                #end
                </td>
             </tr>
        #end
