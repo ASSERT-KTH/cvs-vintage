@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.12 2002/08/22 06:06:47 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.13 2002/10/14 05:57:25 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -55,6 +55,9 @@ Bug No.  Description
 
 	 Fix Cookie case name problem under Windows for Session Cookie.
 
+	 Fix problems with URL normalization when the URL attempts to access
+	 a file above the ROOT.
+
 Jasper:
 
 Bug No.  Description
@@ -62,6 +65,7 @@ Bug No.  Description
 11463	 Fix PageContext.removeAttribute(String) to work for a page with
 	 session=false.
 
+13378	 Fix dependency on GenericServlet in the generated .java file.
 
 Configuration:
 
