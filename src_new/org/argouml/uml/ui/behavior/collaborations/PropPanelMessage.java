@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.30 2003/05/10 15:22:41 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.31 2003/06/20 06:44:34 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.30 2003/05/10 15:22:41 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.31 2003/06/20 06:44:34 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -35,8 +35,8 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFactory;
-
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLLinkedList;
@@ -46,7 +46,6 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
-import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.common_behavior.MCallAction;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
@@ -68,7 +67,7 @@ public class PropPanelMessage extends PropPanelModelElement {
     Class mclass = MMessage.class;
 
     Class[] namesToWatch = { MStereotype.class, MClassifierRole.class,
-        MAction.class };
+        (Class)ModelFacade.ACTION };
     setNameEventListening(namesToWatch);
 
     addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());

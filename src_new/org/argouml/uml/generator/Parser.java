@@ -24,7 +24,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.9 2003/06/19 21:19:54 kataka Exp $
+// $Id: Parser.java,v 1.10 2003/06/20 06:44:33 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -36,7 +36,6 @@ import java.text.ParseException;
 
 import org.argouml.model.uml.UmlFactory;
 
-import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.state_machines.MEvent;
 import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MState;

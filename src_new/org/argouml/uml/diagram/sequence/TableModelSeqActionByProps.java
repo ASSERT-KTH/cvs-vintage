@@ -25,7 +25,7 @@
 // File: TableModelSeqActionByProps.java
 // Classes: TableModelSeqActionByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelSeqActionByProps.java,v 1.1 2000/09/29 16:02:26 boger Exp $
+// $Id: TableModelSeqActionByProps.java,v 1.2 2003/06/20 06:44:33 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence;
@@ -36,7 +36,7 @@ import java.beans.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.common_behavior.*;
 
-import org.argouml.uml.*;
+import org.argouml.model.ModelFacade;import org.argouml.uml.*;
 import org.argouml.uml.diagram.sequence.ui.*;
 
 import org.tigris.gef.base.Editor;
@@ -69,7 +69,7 @@ public class TableModelSeqActionByProps extends TableModelComposite {
       if (figure instanceof FigSeqStimulus) {
         FigSeqStimulus figSti = (FigSeqStimulus) figure;
         MStimulus sti = (MStimulus) figSti.getOwner();
-        MAction act = sti.getDispatchAction();
+        Object act = ModelFacade.getDispatchAction(sti);
         res.addElement(act);
       }
     }

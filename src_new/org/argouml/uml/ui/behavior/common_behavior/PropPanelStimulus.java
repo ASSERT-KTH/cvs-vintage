@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.23 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.24 2003/06/20 06:44:34 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.23 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.24 2003/06/20 06:44:34 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -40,7 +40,6 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLList;
@@ -51,7 +50,6 @@ import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.behavior.common_behavior.MLink;
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
@@ -70,7 +68,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public PropPanelStimulus() {
         super("Stimulus Properties",_stimulusIcon, ConfigLoader.getTabPropsOrientation());
 
-        Class[] namesToWatch = { MAction.class};
+        Class[] namesToWatch = { (Class)ModelFacade.ACTION};
         setNameEventListening(namesToWatch);
 
         Class mclass = MStimulus.class;
