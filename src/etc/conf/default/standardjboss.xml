@@ -5,7 +5,7 @@
 <!--  Standard JBoss Configuration                                         -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.59 2003/03/23 22:42:36 dsundstrom Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.60 2003/03/26 17:35:45 dsundstrom Exp $ -->
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
   <invoker-proxy-bindings>
@@ -275,20 +275,27 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.CMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor manager='org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager'>
+          org.jboss.ejb.entity.CMPInterceptor
+        </interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
@@ -322,20 +329,27 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.CMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor manager='org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager'>
+          org.jboss.ejb.entity.CMPInterceptor
+        </interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
@@ -367,21 +381,28 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.cache.invalidation.triggers.EntityBeanCacheBatchInvalidatorInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.CMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.InvalidableEntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor manager='org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager'>
+          org.jboss.ejb.entity.CMPInterceptor
+        </interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
@@ -414,20 +435,27 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceSynchronizationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.CMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor manager='org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager'>
+          org.jboss.ejb.entity.CMPInterceptor
+        </interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy>
       <container-cache-conf>
@@ -599,19 +627,24 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
@@ -645,19 +678,24 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.entity.EntitySynchronizationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
@@ -690,19 +728,24 @@
         <interceptor>org.jboss.security.RunAsSecurityInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
         <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.EntityInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityMetaDataLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityCreationInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceSynchronizationInterceptor</interceptor>
-        <interceptor>org.jboss.ejb.entity.BaseEntityInterceptor</interceptor>
         @jca.connection.interceptor@
-        <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.EntityLifeCycleInterceptor</interceptor>
         <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
+      <persistence-manager>
+        <interceptor>org.jboss.ejb.entity.LifeCycleCallbackLoader</interceptor>
+        <interceptor>org.jboss.ejb.entity.FindByPrimaryKeyInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.entity.BMPInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.CallbackInterceptor</interceptor>
+      </persistence-manager>
       <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy>
       <container-cache-conf>
