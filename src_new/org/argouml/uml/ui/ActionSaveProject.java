@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.29 2004/08/15 11:44:00 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.30 2004/08/15 13:32:31 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,7 @@ public class ActionSaveProject extends UMLAction {
 	    pb.showStatus (sStatus);
 		
         ProjectFilePersister persister = null;
-        String name = project.getName();
+        String name = file.getName();
         if (name.endsWith("." + zargoPersister.getExtension())) {
             persister = zargoPersister;
         } else if (name.endsWith("." + argoPersister.getExtension())) {
