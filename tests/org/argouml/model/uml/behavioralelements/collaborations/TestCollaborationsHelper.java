@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsHelper.java,v 1.6 2004/08/26 20:27:18 mvw Exp $
+// $Id: TestCollaborationsHelper.java,v 1.7 2004/09/24 20:17:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,17 +44,23 @@ public class TestCollaborationsHelper extends TestCase {
 	super(arg0);
     }
 
+    /**
+     * Test for the metamodel name.
+     */
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
 			 CollaborationsFactory.getFactory(),
-			 TestCollaborationsFactory.allModelElements);
+			 TestCollaborationsFactory.getAllModelElements());
     }
 
+    /**
+     * Test if the stereotype is valid.
+     */
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,
 		      CollaborationsFactory.getFactory(),
-		      TestCollaborationsFactory.allModelElements);
+		      TestCollaborationsFactory.getAllModelElements());
     }
 }

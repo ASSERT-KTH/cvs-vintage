@@ -1,4 +1,4 @@
-// $Id: TestCollaborationsFactory.java,v 1.9 2004/02/24 08:28:17 linus Exp $
+// $Id: TestCollaborationsFactory.java,v 1.10 2004/09/24 20:17:25 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,9 +39,16 @@ import ru.novosoft.uml.behavior.collaborations.MInteraction;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 import ru.novosoft.uml.model_management.MModel;
 
+/**
+ * Test the collaborations factory.
+ *
+ */
 public class TestCollaborationsFactory extends TestCase {
 
-    static String[] allModelElements =
+    /**
+     * All the ModelElements we are going to test.
+     */
+    private static String[] allModelElements =
     {
 	"AssociationEndRole",
 	"AssociationRole",
@@ -51,10 +58,18 @@ public class TestCollaborationsFactory extends TestCase {
 	"Message",
     };
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name
+     */
     public TestCollaborationsFactory(String n) {
         super(n);
     }
 
+    /**
+     * Test if the CollaborationsFactory is really a singleton.
+     */
     public void testSingleton() {
 
         Object o1 = CollaborationsFactory.getFactory();
@@ -65,6 +80,9 @@ public class TestCollaborationsFactory extends TestCase {
 
     }
 
+    /**
+     * Test the creation of the elements.
+     */
     public void testCreates() {
 
         String[] objs = {
@@ -84,6 +102,9 @@ public class TestCollaborationsFactory extends TestCase {
 
     }
 
+    /**
+     * Test for deletion.
+     */
     public void testDeleteComplete() {
         CheckUMLModelHelper.deleteComplete(
             this,
@@ -91,10 +112,11 @@ public class TestCollaborationsFactory extends TestCase {
             allModelElements);
     }
 
-    /** test to check whether elements which are attached to a
-     *  ClassifierRole get deleted upon deletion of the 
-     *  ClassifierRole. These elements are Interaction, Message,
-     *  AssociationRole.
+    /** 
+     * Test to check whether elements which are attached to a
+     * ClassifierRole get deleted upon deletion of the 
+     * ClassifierRole. These elements are Interaction, Message,
+     * AssociationRole.
      */
     public void testDeleteClassifierRole() {
 
@@ -135,5 +157,12 @@ public class TestCollaborationsFactory extends TestCase {
         // assertNull("Interaction not removed", interwr.get());
         assertNull("Message not removed", meswr.get());
 
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesFactory.java,v 1.5 2004/02/24 08:28:18 linus Exp $
+// $Id: TestStateMachinesFactory.java,v 1.6 2004/09/24 20:17:26 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,13 @@ import junit.framework.TestCase;
 
 import org.argouml.util.CheckUMLModelHelper;
 
+/**
+ * Test the StateMachinesFactory class.
+ *
+ */
 public class TestStateMachinesFactory extends TestCase {
 
-    static String[] allModelElements =
+    private static String[] allModelElements =
     {
 	"CallEvent",
 	"ChangeEvent",
@@ -99,5 +103,12 @@ public class TestStateMachinesFactory extends TestCase {
 					   this,
 					   StateMachinesFactory.getFactory(),
 					   allModelElements);
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

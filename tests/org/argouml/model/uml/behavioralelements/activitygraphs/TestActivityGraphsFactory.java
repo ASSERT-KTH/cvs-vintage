@@ -1,4 +1,4 @@
-// $Id: TestActivityGraphsFactory.java,v 1.6 2004/02/24 08:28:17 linus Exp $
+// $Id: TestActivityGraphsFactory.java,v 1.7 2004/09/24 20:17:26 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,16 @@ import junit.framework.TestCase;
 import org.argouml.util.CheckUMLModelHelper;
 
 
+/**
+ * Test the ActivityGraphsFactory class.
+ *
+ */
 public class TestActivityGraphsFactory extends TestCase {
     
-    static String[] allModelElements = {
+    /**
+     * All the ModelElements we are going to test.
+     */
+    private static String[] allModelElements = {
         "ActivityGraph",
         "ActionState",
         "CallState",
@@ -41,14 +48,25 @@ public class TestActivityGraphsFactory extends TestCase {
         "SubactivityState",
     };   
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name
+     */
     public TestActivityGraphsFactory(String n) { super(n); }
 
+    /**
+     * Test the singleton pattern for the ActivityGraphsFactory class.
+     */
     public void testSingleton() {
 	Object o1 = ActivityGraphsFactory.getFactory();
 	Object o2 = ActivityGraphsFactory.getFactory();
 	assertTrue("Different singletons", o1 == o2);
     }
 
+    /**
+     * The test for creation.
+     */
     public void testCreates() {
 	String [] objs = {
 	    "ActionState",
@@ -66,9 +84,19 @@ public class TestActivityGraphsFactory extends TestCase {
 					     objs);
     }
     
+    /**
+     * The test for deletion.
+     */
     public void testDeleteComplete() {
         CheckUMLModelHelper.deleteComplete(this, 
 					   ActivityGraphsFactory.getFactory(), 
 					   allModelElements);
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

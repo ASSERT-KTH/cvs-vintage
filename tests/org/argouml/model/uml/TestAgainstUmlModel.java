@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.7 2004/02/24 08:28:17 linus Exp $
+// $Id: TestAgainstUmlModel.java,v 1.8 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Test against the UML model.
+ *
+ */
 public class TestAgainstUmlModel extends TestCase {
 
     /** List of element references and the factories that create them.
@@ -61,8 +65,18 @@ public class TestAgainstUmlModel extends TestCase {
      */
     private static Hashtable refs = null;
  
+    /**
+     * The constructor.
+     * 
+     * @param n the name
+     */
     public TestAgainstUmlModel(String n) { super(n); }
 
+    /**
+     * @throws SAXException when things go wrong with SAX
+     * @throws IOException when there's an IO error
+     * @throws ParserConfigurationException when the parser finds wrong syntax
+     */
     public void testDataModel()
 	throws SAXException,
 	       IOException,
@@ -311,6 +325,12 @@ public class TestAgainstUmlModel extends TestCase {
         assertNull("Still getting NavigatorPane", NavigatorPane.getInstance());
     }
 
+    /**
+     * @return the test suite
+     * @throws SAXException when things go wrong with SAX
+     * @throws IOException when there's an IO error
+     * @throws ParserConfigurationException when the parser finds wrong syntax
+     */
     public static Test suite()
 	throws SAXException,
 	       IOException,

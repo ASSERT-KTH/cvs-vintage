@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorHelper.java,v 1.6 2004/08/26 20:27:19 mvw Exp $
+// $Id: TestCommonBehaviorHelper.java,v 1.7 2004/09/24 20:17:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,17 +44,23 @@ public class TestCommonBehaviorHelper extends TestCase {
 	super(arg0);
     }
 
+    /**
+     * Test the metamodel name.
+     */
     public void testGetMetaModelName() {
 	CheckUMLModelHelper.metaModelNameCorrect(
 			 this,
 			 CommonBehaviorFactory.getFactory(),
-			 TestCommonBehaviorFactory.allModelElements);
+			 TestCommonBehaviorFactory.getAllModelElements());
     }
 
+    /**
+     * Test if the steareotype is valid.
+     */
     public void testIsValidStereoType() {
 	CheckUMLModelHelper.isValidStereoType(
 		      this,
 		      CommonBehaviorFactory.getFactory(),
-		      TestCommonBehaviorFactory.allModelElements);
+		      TestCommonBehaviorFactory.getAllModelElements());
     }
 }

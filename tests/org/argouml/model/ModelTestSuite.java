@@ -1,4 +1,4 @@
-// $Id: ModelTestSuite.java,v 1.5 2004/02/24 08:28:17 linus Exp $
+// $Id: ModelTestSuite.java,v 1.6 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,9 @@ import junit.framework.TestSuite;
  */
 public class ModelTestSuite {
 
+    /**
+     * @return the test suite
+     */
     public static Test suite() {
 	TestSuite suite =
 	    new TestSuite("Tests for "

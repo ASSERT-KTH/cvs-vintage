@@ -1,4 +1,4 @@
-// $Id: TestUmlModelElement.java,v 1.4 2003/11/20 10:48:51 linus Exp $
+// $Id: TestUmlModelElement.java,v 1.5 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,9 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture
 	validateTestClassIsGeneric(this);
     }
 
+    /**
+     * Legacy test for ModelElement creation.
+     */
     public void testModelElementLegacy() {
 	UmlFactory.getFactory().setJmiProxyCreated(false);
 	Object me = ModelFacade.create(Uml.OBJECT);
@@ -52,6 +55,9 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture
 	runTruthTests(me);
     }
 
+    /**
+     * Test the creation of a ModelElement.
+     */
     public void testModelElement() {
 	UmlFactory.getFactory().setJmiProxyCreated(true);
 	Object me = ModelFacade.create(Uml.OBJECT);
@@ -63,6 +69,9 @@ public class TestUmlModelElement extends GenericUmlObjectTestFixture
 	runTruthTests(me);
     }
 
+    /**
+     * @see org.argouml.model.uml.GenericUmlObjectTestFixture#initializeTruth()
+     */
     protected void initializeTruth() {
 	setShouldBe(Uml.ELEMENT);
 	setShouldBe(Uml.MODEL_ELEMENT);

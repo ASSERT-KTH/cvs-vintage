@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.5 2004/02/24 08:28:17 linus Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.6 2004/09/24 20:17:27 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,15 @@ import junit.framework.*;
 
 import org.argouml.util.*;
 
+/**
+ * Test the CommonBehaviorFactory.
+ */
 public class TestCommonBehaviorFactory extends TestCase {
 
-    static String[] allModelElements =
+    /**
+     * All the ModelElements that we will test.
+     */
+    private static String[] allModelElements =
     {
 	"Action",
 	"ActionSequence",
@@ -57,16 +63,27 @@ public class TestCommonBehaviorFactory extends TestCase {
 	"UninterpretedAction",
     };
 
+    /**
+     * The constructor.
+     * 
+     * @param n the name
+     */
     public TestCommonBehaviorFactory(String n) {
 	super(n);
     }
 
+    /**
+     * Test if the factory is really a singleton.
+     */
     public void testSingleton() {
 	Object o1 = CommonBehaviorFactory.getFactory();
 	Object o2 = CommonBehaviorFactory.getFactory();
 	assertTrue("Different singletons", o1 == o2);
     }
 
+    /**
+     * Test for creation.
+     */
     public void testCreates() {
 
 	String[] objs = {
@@ -102,10 +119,20 @@ public class TestCommonBehaviorFactory extends TestCase {
 
     }
 
+    /**
+     * Test for deletion.
+     */
     public void testDeleteComplete() {
 	CheckUMLModelHelper.deleteComplete(
 					   this,
 					   CommonBehaviorFactory.getFactory(),
 					   allModelElements);
+    }
+
+    /**
+     * @return Returns the allModelElements.
+     */
+    static String[] getAllModelElements() {
+        return allModelElements;
     }
 }

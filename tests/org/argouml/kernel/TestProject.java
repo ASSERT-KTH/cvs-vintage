@@ -1,4 +1,4 @@
-// $Id: TestProject.java,v 1.8 2004/02/24 08:28:16 linus Exp $
+// $Id: TestProject.java,v 1.9 2004/09/24 20:17:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,9 @@ public class TestProject extends TestCase {
         super(arg0);
     }
     
+    /**
+     * Test the makeUntitledProject() function.
+     */
     public void testMakeUntitledProject() {
         Project p = ProjectManager.getManager().getCurrentProject();
         assertEquals(2, p.getDiagrams().size());

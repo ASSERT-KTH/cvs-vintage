@@ -1,4 +1,4 @@
-// $Id: TestUml.java,v 1.5 2004/08/26 20:27:18 mvw Exp $
+// $Id: TestUml.java,v 1.6 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,9 @@ public class TestUml extends TestCase
     }
 
 
-// TODO: Rewrite this test using reflection against Uml class.
-
+    /**
+     * TODO: Rewrite this test using reflection against Uml class. 
+     */
     public void testUmlClassList() {
 //        for (Iterator i = Uml.getUmlClassList().iterator(); i.hasNext();) {
 //            UmlModelEntity type = (UmlModelEntity) i.next();

@@ -1,4 +1,4 @@
-// $Id: TestResolvedCritic.java,v 1.7 2004/09/08 19:31:38 mvw Exp $
+// $Id: TestResolvedCritic.java,v 1.8 2004/09/24 20:17:25 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,12 +32,24 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.tigris.gef.util.VectorSet;
 
+/**
+ * Test the ResolvedCritic class.
+ *
+ */
 public class TestResolvedCritic extends TestCase {
     
+    /**
+     * The constructor.
+     * 
+     * @param name the name of the test
+     */
     public TestResolvedCritic(String name) {
 	super(name);
     }
 
+    /**
+     * Test the constructors.
+     */
     public void testConstructors() {
         Object testmc = CoreFactory.getFactory().buildClass();
         Critic c = new Critic();
@@ -116,6 +128,9 @@ public class TestResolvedCritic extends TestCase {
         set.remove(testmc);
     }
 
+    /**
+     * Test the equals() method.
+     */
     public void testEquals() {
 	Critic c = new Critic();
 	ResolvedCritic rc1, rc2;

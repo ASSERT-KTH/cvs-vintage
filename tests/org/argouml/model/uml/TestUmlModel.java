@@ -1,4 +1,4 @@
-// $Id: TestUmlModel.java,v 1.4 2003/11/20 10:48:51 linus Exp $
+// $Id: TestUmlModel.java,v 1.5 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,9 @@ public class TestUmlModel extends GenericUmlObjectTestFixture
 	validateTestClassIsGeneric(this);
     }
 
+    /**
+     * Legacy test for creating a Namespace.
+     */
     public void testNamespaceLegacy() {
 	UmlFactory.getFactory().setJmiProxyCreated(false);
 	Object o = ModelFacade.create(Uml.MODEL);
@@ -51,6 +54,9 @@ public class TestUmlModel extends GenericUmlObjectTestFixture
 	runTruthTests(o);
     }
 
+    /**
+     * Test the creation of a namespace.
+     */
     public void testNamespace() {
 	UmlFactory.getFactory().setJmiProxyCreated(true);
 	Object o = ModelFacade.create(Uml.MODEL);
@@ -61,6 +67,9 @@ public class TestUmlModel extends GenericUmlObjectTestFixture
 	runTruthTests(o);
     }
 
+    /**
+     * @see org.argouml.model.uml.GenericUmlObjectTestFixture#initializeTruth()
+     */
     protected void initializeTruth() {
 	setTruth(Uml.ELEMENT, true);
 	setTruth(Uml.MODEL_ELEMENT, true);

@@ -1,4 +1,4 @@
-// $Id: TestModelFacade.java,v 1.12 2004/08/26 20:27:17 mvw Exp $
+// $Id: TestModelFacade.java,v 1.13 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,9 @@ public class TestModelFacade extends TestCase {
 	super(arg0);
     }
 
+    /**
+     * @return the test suite
+     */
     public static Test suite() {
 	TestSuite suite =
 	    new TestSuite("Tests for "

@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.12 2004/09/08 19:31:38 mvw Exp $
+// $Id: TestItemUID.java,v 1.13 2004/09/24 20:17:24 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,12 +63,24 @@ import org.argouml.uml.diagram.use_case.ui.FigUseCase;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 
 
+/**
+ * Test the ItemUID class.
+ *
+ */
 public class TestItemUID extends TestCase {
     
+    /**
+     * The constructor.
+     * 
+     * @param name the name of the test.
+     */
     public TestItemUID(String name) {
 	super(name);
     }
 
+    /**
+     * Test the constructors.
+     */
     public void testConstructors() {
 	String strs[] = {
 	    "a", "b", "c", "d", "e" 
@@ -101,6 +113,9 @@ public class TestItemUID extends TestCase {
 	}
     }
 
+    /**
+     * Test assigning IDs to objects.
+     */
     public void testAssignIDsToObjects() {
         Object testmc = CoreFactory.getFactory().buildClass();
         UMLActivityDiagram actdiag = new UMLActivityDiagram();
