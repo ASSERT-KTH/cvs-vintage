@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.40 2002/04/29 22:33:20 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.41 2002/04/30 22:31:32 patriot1burke Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -486,6 +486,7 @@
 	 <container-name>IIOP CMP 2.x EntityBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
@@ -530,6 +531,7 @@
 	 <container-name>IIOP CMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
@@ -573,6 +575,7 @@
 	 <container-name>IIOP Stateless SessionBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	    <!-- CMT -->
@@ -603,6 +606,7 @@
 	 <container-name>IIOP Stateful SessionBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <!-- CMT -->
 	    <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
@@ -647,6 +651,7 @@
 	 <container-name>IIOP BMP EntityBean</container-name>
 	 <call-logging>false</call-logging>
 	 <container-interceptors>
+	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
