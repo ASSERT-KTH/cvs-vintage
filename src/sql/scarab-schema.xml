@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.16 2001/05/11 00:45:43 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.17 2001/05/16 05:15:15 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -353,7 +353,7 @@
     <column name="ID_COUNT" type="INTEGER" size="10" required="true"/>
     <!--
         The instance of scarab the issue was originally reported to.
-        This field will be null for the normal instance where the issue
+        This field could be null for the normal instance where the issue
         is local to this database.
     -->
     <column name="ID_INSTANCE"  type="VARCHAR" size="15"/>
@@ -503,6 +503,10 @@
         Name.
     -->
     <column name="MODULE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        The instance name of scarab the module is located within.
+    -->
+    <column name="INSTANCE"  type="VARCHAR" size="15"/>
     <!--
         Abbreviation whose primary use to identify related issues.
     -->

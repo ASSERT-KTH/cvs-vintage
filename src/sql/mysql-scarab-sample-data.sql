@@ -12,10 +12,10 @@ insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
  * Sample Project
  */
 
-insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID, QA_CONTACT_ID) 
-    values(1, 'Pacman JVM', 'PAC', 'Sample project', '/PacmanJVM/', 0, 2, 2);
-insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID, QA_CONTACT_ID) 
-    values(3, 'Turbine', 'TBN', 'The Turbine Project', '/Turbine/', 0, 2, 2);
+insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, INSTANCE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID, QA_CONTACT_ID) 
+    values(1, 'Pacman JVM', 'PAC', 'testinst', 'Sample project', '/PacmanJVM/', 0, 2, 2);
+insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, INSTANCE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID, QA_CONTACT_ID) 
+    values(3, 'Turbine', 'TBN', 'testinst', 'The Turbine Project', '/Turbine/', 0, 2, 2);
 
 /*
  * Sample Component
