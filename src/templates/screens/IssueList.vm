@@ -49,20 +49,12 @@
 #queryFunctionBar("")
 
 <h3>
-$l10n.format("ForFollowingModulesIssueTypes", $page.Title)
-$l10n.format("IssueListCount", $totalCount)
-</h3>
+$page.Title
+<small>$l10n.format("IssueListCount", $totalCount)</small></h3>
 
-  <div class="colbar">
-  #set ($list = $user.CurrentMITList)
-  #if ($list.isModifiable())
-    #foreach ($item in $list.ExpandedMITListItems)
-      <div>$item.Module.Name $item.Module.getRModuleIssueType($item.IssueType).DisplayName</div>
-    #end
-  #else
-    <div>$list.Name</div>
-  #end
-  </div>
+<div class="colbar">
+$format.getNow("yyyy MMMM dd hh:mm a")
+</div>
 
 <div class="colbar">
 <small>
@@ -221,5 +213,25 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 
 #queryFunctionBar("2")
 
+#if ($mitlist)
+<h3>$l10n.QueryScope</h3>
+ #set ($list = $user.CurrentMITList)
+ #if ($list.isModifiable())
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>$l10n.ModuleName</th>
+   <th>$l10n.IssueType</th>
+  </tr>
+  #foreach ($item in $list.ExpandedMITListItems)
+   #indexedRows($velocityCount)
+   <td>$item.Module.Name </td><td>$item.Module.getRModuleIssueType($item.IssueType).DisplayName</td>  
+  #end
+</table>
+#else
+  <div>$list.Name</div>
+ #end
+</div>
+#end
+                              
 </form>
 </div>
