@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.15 2005/01/20 23:20:26 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.16 2005/01/25 05:51:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,10 +60,23 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+
+        Object classifier = Model.getCoreFactory().createClass();
+        Object collaboration =
+            Model.getCollaborationsFactory().buildCollaboration(classifier);
+
         elem = Model.getCollaborationsFactory().createAssociationEndRole();
         baseEnd = Model.getCoreFactory().createAssociationEnd();
         assocRole = Model.getCollaborationsFactory().createAssociationRole();
         baseAssoc = Model.getCoreFactory().createAssociation();
+
+        // Model.getCoreHelper().addOwnedElement(collaboration, elem);
+        Model.getCoreHelper().addOwnedElement(collaboration, baseEnd);
+        Model.getCoreHelper().addOwnedElement(collaboration, assocRole);
+        Model.getCoreHelper().addOwnedElement(collaboration, baseAssoc);
+
+        Model.getCoreHelper().setName(assocRole, "TestAssocRole");
+
         Model.getCoreHelper().setAssociation(elem, assocRole);
         Model.getCollaborationsHelper().setBase(assocRole, baseAssoc);
         Model.getCoreHelper().setAssociation(baseEnd, baseAssoc);
