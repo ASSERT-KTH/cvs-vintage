@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.4 2005/01/09 04:00:08 bobtarling Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.5 2005/01/09 19:09:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.ModelManagementHelper;
 
@@ -159,13 +157,8 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      * @param type is the class kind
      * @return Collection
      */
-    public Collection getAllModelElementsOfKind(Object type) {
+    public Collection getAllModelElementsOfKindWithModel(Object model, Object type) {
         Class kind = (Class) type;
-        if (kind == null) {
-            return Collections.EMPTY_LIST;
-        }
-        Project p = ProjectManager.getManager().getCurrentProject();
-        MNamespace model = (MModel) p.getRoot();
         Collection ret = getAllModelElementsOfKind(model, kind);
         if (kind.isAssignableFrom(model.getClass())) {
             ret = new ArrayList(ret);
@@ -186,12 +179,12 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      * @return Collection
      */
     public Collection getAllModelElementsOfKind(Object nsa, Object type) {
-        if (type instanceof String) {
-            return getAllModelElementsOfKind(nsa, (String) type);
-        }
         Class kind = (Class) type;
         if (nsa == null || kind == null) {
             return Collections.EMPTY_LIST;
+        }
+        if (type instanceof String) {
+            return getAllModelElementsOfKind(nsa, (String) type);
         }
 
         if (!ModelFacade.isANamespace(nsa)) {

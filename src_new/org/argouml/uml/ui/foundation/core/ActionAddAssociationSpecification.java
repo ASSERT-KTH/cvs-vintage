@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.13 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.14 2005/01/09 19:09:57 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,14 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.Vector;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
+
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  *
@@ -61,8 +66,10 @@ public class ActionAddAssociationSpecification
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
+            Project p = ProjectManager.getManager().getCurrentProject();
+            Object model = p.getRoot();
             ret.addAll(Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(ModelFacade.CLASSIFIER));
+                .getAllModelElementsOfKindWithModel(model, ModelFacade.CLASSIFIER));
         }
         return ret;
     }

@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.50 2005/01/03 23:29:10 bobtarling Exp $
+// $Id: UmlModelEventPump.java,v 1.51 2005/01/09 19:09:56 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.w3c.dom.Document;
@@ -202,9 +204,11 @@ public final class UmlModelEventPump implements MElementListener {
 	    String eventName) {
         // first register the listener for all elements allready in
         // the model modelClass = formatClass(modelClass);
+        Project p = ProjectManager.getManager().getCurrentProject();
+        Object model = p.getRoot();
         Collection col =
             Model.getModelManagementHelper()
-	        .getAllModelElementsOfKind(modelClass);
+	        .getAllModelElementsOfKindWithModel(model, modelClass);
 
         if (col == Collections.EMPTY_LIST) {
             col = new ArrayList();
@@ -341,9 +345,11 @@ public final class UmlModelEventPump implements MElementListener {
         // remove all registrations of this listener with all instances of
         // modelClass
         //modelClass = formatClass(modelClass);
+        Project p = ProjectManager.getManager().getCurrentProject();
+        Object model = p.getRoot();
         Iterator it =
             Model.getModelManagementHelper()
-	        .getAllModelElementsOfKind(modelClass)
+	        .getAllModelElementsOfKindWithModel(model, modelClass)
 	            .iterator();
         while (it.hasNext()) {
             MBase base = (MBase) it.next();

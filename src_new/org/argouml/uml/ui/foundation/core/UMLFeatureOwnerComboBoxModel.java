@@ -1,4 +1,4 @@
-// $Id: UMLFeatureOwnerComboBoxModel.java,v 1.16 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLFeatureOwnerComboBoxModel.java,v 1.17 2005/01/09 19:09:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,15 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
+
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * @since Nov 6, 2002
@@ -55,8 +60,10 @@ public class UMLFeatureOwnerComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
+        Project p = ProjectManager.getManager().getCurrentProject();
+        MNamespace model = (MModel) p.getRoot();
         setElements(Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(ModelFacade.CLASSIFIER));
+                .getAllModelElementsOfKindWithModel(model, ModelFacade.CLASSIFIER));
     }
 
     /**
