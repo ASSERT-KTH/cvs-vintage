@@ -101,6 +101,8 @@ public class JspReader {
      * @return The index of the now registered file.
      */
     protected int registerSourceFile(String file) {
+        if (sourceFiles.contains(file))
+            return -1;
 	sourceFiles.addElement(file);
 	this.size++;
 	return sourceFiles.size()-1;
@@ -146,6 +148,13 @@ public class JspReader {
 
 	// Register the file, and read its content:
 	int fileid    = registerSourceFile(file.getAbsolutePath());
+        if (fileid == -1)
+            throw new ParseException(Constants.getString("jsp.error.file.already.registered",
+                                                         new Object[] { 
+                                                             file 
+                                                         }));
+                                                         
+                                     
 	InputStreamReader reader = null;
 	try {
             if (context == null)

@@ -130,9 +130,13 @@ public class TagBeginGenerator
     }
     
     void validate() throws JasperException {
+
+        // Sigh! I wish I didn't have to clone here.
+        Hashtable attribs = (Hashtable) attrs.clone(); 
+
         // First make sure all required attributes are indeed present. 
         for(int i = 0; i < attributes.length; i++)
-            if (attributes[i].isRequired() && attrs.get(attributes[i].getName()) == null)
+            if (attributes[i].isRequired() && attribs.get(attributes[i].getName()) == null)
                 throw new JasperException(Constants.getString("jsp.error.missing_attribute",
                                                               new Object[] {
                                                                   attributes[i].getName(),
@@ -140,13 +144,17 @@ public class TagBeginGenerator
                                                               }
                                                               ));
         // Now make sure there are no invalid attributes... 
-        Enumeration e = attrs.keys();
+        Enumeration e = attribs.keys();
         while (e.hasMoreElements()) {
             String attr = (String) e.nextElement();
             boolean found = false;
             for(int i = 0; i < attributes.length; i++)
-                if (attr.equals(attributes[i].getName()))
+                if (attr.equals(attributes[i].getName())) {
                     found = true;
+                    if (attributes[i].canBeRequestTime())
+                        attribs.put(attr, TagData.REQUEST_TIME_VALUE);
+                }
+            
             if (!found)
                 throw new JasperException(Constants.getString("jsp.error.bad_attribute",
                                                               new Object[] {
@@ -155,7 +163,7 @@ public class TagBeginGenerator
                                                               ));
         }
 
-        tagData = new TagData(attrs);
+        tagData = new TagData(attribs);
         if (!ti.isValid(tagData))
             throw new JasperException(Constants.getString("jsp.error.invalid_attributes"));
     }

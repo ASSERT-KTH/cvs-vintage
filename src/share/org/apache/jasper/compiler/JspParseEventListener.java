@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.11 2000/02/25 19:48:16 mandar Exp $
- * $Revision: 1.11 $
- * $Date: 2000/02/25 19:48:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.12 2000/03/28 04:29:47 akv Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/03/28 04:29:47 $
  *
  * ====================================================================
  * 
@@ -861,7 +861,6 @@ public class JspParseEventListener extends BaseJspListener {
                                    start, stop);
 
 	addGenerator(gen);
-
     }
 
     public void handleTagEnd(Mark start, Mark stop, String prefix, 

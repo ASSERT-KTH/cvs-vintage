@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.3 2000/01/12 07:11:15 shemnon Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/12 07:11:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.4 2000/03/28 04:29:49 akv Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/03/28 04:29:49 $
  *
  * ====================================================================
  * 
@@ -135,9 +135,9 @@ public class JspRuntimeLibrary {
                 return new java.io.File(s);
             }
         } catch (Exception ex) {
-	    throw new JasperException (ex);
+            throw new JasperException (ex);
         }
-        return null;
+        return s;
     }
     // __end convertMethod
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.15 2000/03/24 22:48:47 akv Exp $
- * $Revision: 1.15 $
- * $Date: 2000/03/24 22:48:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.16 2000/03/28 04:29:48 akv Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/03/28 04:29:48 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -372,7 +372,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                     this.info = t.getData();
             } else if (tname.equals("tag"))
                 tagVector.addElement(createTagInfo(e));
-            else 
+            else
                 Constants.message("jsp.warning.unknown.element.in.TLD", 
                                   new Object[] {
                                       e.getTagName()

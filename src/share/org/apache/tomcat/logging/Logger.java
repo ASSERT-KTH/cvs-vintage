@@ -211,7 +211,10 @@ public abstract class Logger {
      * @param	path		The path to the log file. 
      */
     public void setPath(String path) {
-	this.path=path;
+        if (File.separatorChar == '/')
+            this.path = path.replace('\\', '/');
+        else if (File.separatorChar = '\\')
+            this.path = path.replace('/', '\\');
     }
 
     public String getPath() {
@@ -222,7 +225,8 @@ public abstract class Logger {
      *  You must open the logger before use, or it will write to System.err
      */
     public void open() {
-	if( path==null ) return;
+	if (path == null) 
+            return;
 	// use default sink == System.err
 	try {
 	    File file = new File(path);
