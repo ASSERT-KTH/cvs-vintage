@@ -131,7 +131,7 @@ public class FilterList extends DefaultItem {
 	 */
 	public void remove(Filter f) {
 		if ( f != null ) {
-			getRoot().removeElement(f.getRoot());
+			getRoot().getElements().remove(f.getRoot());
 		}
 	}
 	
@@ -216,11 +216,17 @@ public class FilterList extends DefaultItem {
 		return getChildCount();
 
 	}
-
-	public Filter get(int index) {
+	
+	/**
+	 * Returns the filter at the specified position in the list.
+	 * @param index the index
+	 * @return a Filter
+	 * @throws IndexOutOfBoundsException if the index is out of range (index
+     * 		  &lt; 0 || index &gt;= count()).
+	 */
+	public Filter get(int index) throws IndexOutOfBoundsException {
 
 		Filter filter = new Filter(getRoot().getElement(index));
-
 		return filter;
 	}
 
