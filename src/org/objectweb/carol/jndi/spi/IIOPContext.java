@@ -24,7 +24,7 @@ import javax.naming.spi.ObjectFactory;
 import org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper;
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
-import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 import com.sun.jndi.rmi.registry.RemoteReference;
 /**
@@ -132,7 +132,7 @@ public class IIOPContext implements Context {
 				JNDIReferenceWrapper irw =
 					new JNDIReferenceWrapper(
 						((Referenceable) o).getReference());
-				ProtocolCurrent
+				CarolCurrentConfiguration
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
 					.exportObject(
@@ -141,13 +141,13 @@ public class IIOPContext implements Context {
 					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
 							oldObj);
 					} else {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
@@ -160,7 +160,7 @@ public class IIOPContext implements Context {
 			} else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
 				JNDIReferenceWrapper irw =
 					new JNDIReferenceWrapper((Reference) o);
-				ProtocolCurrent
+				CarolCurrentConfiguration
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
 					.exportObject(
@@ -169,13 +169,13 @@ public class IIOPContext implements Context {
 					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
 							oldObj);
 					} else {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
@@ -189,7 +189,7 @@ public class IIOPContext implements Context {
 				(!(o instanceof Remote)) && (o instanceof Serializable)) {
 				JNDIResourceWrapper irw =
 					new JNDIResourceWrapper((Serializable) o);
-				ProtocolCurrent
+				CarolCurrentConfiguration
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
 					.exportObject(
@@ -198,13 +198,13 @@ public class IIOPContext implements Context {
 					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
 							oldObj);
 					} else {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
@@ -253,7 +253,7 @@ public class IIOPContext implements Context {
 		try {
 			iiopContext.unbind(name);
 			if (wrapperHash.containsKey(name)) {
-				ProtocolCurrent
+				CarolCurrentConfiguration
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
 					.unexportObject(

@@ -36,8 +36,8 @@ import java.util.Hashtable;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.TraceCarol;
-import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /*
  * Class <code>MultiPRODelegate</code> This is a proxy for multi orb portable remote object delegate 
@@ -69,7 +69,7 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
     /**
      * Current Protocol
      */
-     private static ProtocolCurrent pcur = null; 
+     private static CarolCurrentConfiguration cccf = null; 
 
     /*
      * constructor for this PortableRemoteObjectDelegateProxy
@@ -183,14 +183,14 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	if (TraceCarol.isDebugRmiCarol()) {
             TraceCarol.debugRmiCarol("MultiPRODelegate.narrow("+simpleClass(obj.getClass().getName()) + " obj,"
 				     +simpleClass(newClass.getName())
-				     +" class)/rmi name=\""+ pcur.getCurrentRMIName()+"\"");
+				     +" class)/rmi name=\""+ cccf.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) {
-		return pcur.getCurrentPortableRemoteObject().narrow(obj, newClass);
+		return cccf.getCurrentPortableRemoteObject().narrow(obj, newClass);
 	    } else {
 		initProtocols();
-		return pcur.getCurrentPortableRemoteObject().narrow(obj, newClass);
+		return cccf.getCurrentPortableRemoteObject().narrow(obj, newClass);
 	    }
 	} catch (Exception e) {
 	    String msg = "MultiPRODelegate.narrow(Object obj, Class newClass) fail";
@@ -208,14 +208,14 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
     public Remote toStub(Remote obj) throws NoSuchObjectException {
 	if (TraceCarol.isDebugRmiCarol()) {
             TraceCarol.debugRmiCarol("MultiPRODelegate.toStub(" +simpleClass(obj.getClass().getName())
-				     +" obj)/rmi name=\"" +pcur.getCurrentRMIName()+"\"");
+				     +" obj)/rmi name=\"" +cccf.getCurrentRMIName()+"\"");
         }
 	try {
 	    if (init) {
-		return pcur.getCurrentPortableRemoteObject().toStub(obj);
+		return cccf.getCurrentPortableRemoteObject().toStub(obj);
 	    } else {
 		initProtocols();
-		return pcur.getCurrentPortableRemoteObject().toStub(obj);
+		return cccf.getCurrentPortableRemoteObject().toStub(obj);
 	    }
 	} catch (Exception e) {
 	    String msg = "MultiPRODelegate.toStub(Remote obj) fail";
@@ -232,8 +232,8 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	if (TraceCarol.isDebugRmiCarol()) {
             TraceCarol.debugRmiCarol("MultiPRODelegate.initProtocols()");
 	}
-	pcur = ProtocolCurrent.getCurrent();
-	activesProtocols = pcur.getPortableRemoteObjectHashtable();
+	cccf = CarolCurrentConfiguration.getCurrent();
+	activesProtocols = cccf.getPortableRemoteObjectHashtable();
 	init = true;
     }
 

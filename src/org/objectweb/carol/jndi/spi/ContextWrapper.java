@@ -32,17 +32,20 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.TraceCarol;
-import org.objectweb.carol.util.multi.ProtocolCurrent;
 /*
  * Class <code>ContextWrapper</code> is the CAROL JNDI SPI Context for multi Context management.
  * 
@@ -84,7 +87,7 @@ public class ContextWrapper implements Context {
             envpar = env;
             isSingle = (env!=null);
             if (isSingle) {
-                String rmiName = CarolDefaultValues.getRMIProtocol(env.get(CarolDefaultValues.JNDI_URL_PREFIX));
+                String rmiName = CarolDefaultValues.getRMIProtocol((String)env.get(CarolDefaultValues.JNDI_URL_PREFIX));
                 Properties prop = (Properties)CarolCurrentConfiguration.getCurrent().getRMIProperties(rmiName);
                 env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX,prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
                 ac = new InitialContext(env);
@@ -534,12 +537,7 @@ public class ContextWrapper implements Context {
             TraceCarol.debugJndiCarol("ContextWrapper.close()");
         }
         try {
-            for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
-                rmiName =  (String)e.nextElement();
-                ac.setRMI(rmiName);	    
-                ((Context)activesInitialsContexts.get(rmiName)).close();	
-                ac.setDefault();
-            } 
+        	ac.close();
         } catch (NamingException e) {
             if (TraceCarol.isDebugJndiCarol()) {
                 String msg = "ContextWrapper.close() failed: " + e; 

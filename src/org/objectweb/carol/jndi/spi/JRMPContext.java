@@ -22,7 +22,7 @@ import javax.naming.Referenceable;
 
 import org.objectweb.carol.jndi.wrapping.JNDIRemoteResource;
 import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
-import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 /**
  * @author riviereg
@@ -119,7 +119,7 @@ public class JRMPContext implements Context {
 				&& (o instanceof Serializable)) {
 				JNDIResourceWrapper irw =
 					new JNDIResourceWrapper((Serializable) o);
-				ProtocolCurrent
+				CarolCurrentConfiguration
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
 					.exportObject(
@@ -128,13 +128,13 @@ public class JRMPContext implements Context {
 					(Remote) wrapperHash.put(name, irw);
 				if (oldObj != null) {
 					if (replace) {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
 							oldObj);
 					} else {
-						ProtocolCurrent
+						CarolCurrentConfiguration
 							.getCurrent()
 							.getCurrentPortableRemoteObject()
 							.unexportObject(
@@ -195,7 +195,7 @@ public class JRMPContext implements Context {
 		try {
 			jrmpContext.unbind(name);
 			if (wrapperHash.containsKey(name)) {
-				ProtocolCurrent
+				CarolCurrentConfiguration
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
 					.unexportObject(

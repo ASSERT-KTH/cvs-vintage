@@ -75,13 +75,13 @@ public class MultiContext implements Context {
      * load communication framework
      * and instaciate initial contexts
      */
-    public MultiContext (Hashtable env) throws NamingException {
+    public MultiContext () throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("MultiContext.MultiContext()");
         }
 	try {
 	    cccf = CarolCurrentConfiguration.getCurrent();
-	    activesInitialsContexts = cccf.getNewContextHashtable(env);
+	    activesInitialsContexts = cccf.getNewContextHashtable();
 	} catch (Exception e) {
 	    String msg = "MultiContext.MultiContext() failed: " + e; 
 	    throw new NamingException(msg);
@@ -127,7 +127,7 @@ public class MultiContext implements Context {
     
     public void bind(String name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
+            TraceCarol.debugJndiCarol("MultiContext.bind(String, Object)");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -138,7 +138,7 @@ public class MultiContext implements Context {
 	    }
 	} catch (NamingException e) {
 		if (TraceCarol.isDebugJndiCarol()) {
-	    String msg = "MultiContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object) failed: " + e; 
+	    String msg = "MultiContext.bind()"; 
 	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
 		}
 	    throw e;
@@ -147,7 +147,7 @@ public class MultiContext implements Context {
     
     public void bind(Name name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiContext.bind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
+            TraceCarol.debugJndiCarol("MultiContext.bind()");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -167,7 +167,7 @@ public class MultiContext implements Context {
 
     public void rebind(String name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiContext.rebind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
+            TraceCarol.debugJndiCarol("MultiContext.rebind()");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -187,7 +187,7 @@ public class MultiContext implements Context {
 
     public void rebind(Name name, Object obj) throws NamingException {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiContext.rebind(\""+name+"\","+simpleClass(obj.getClass().getName())+" object)");
+            TraceCarol.debugJndiCarol("MultiContext.rebind()");
         }
 	try {
 	    for (Enumeration e = activesInitialsContexts.keys() ; e.hasMoreElements() ;) {
@@ -497,7 +497,7 @@ public class MultiContext implements Context {
 	throws NamingException {
 	try {
 	if (TraceCarol.isDebugJndiCarol()) {
-            TraceCarol.debugJndiCarol("MultiContext.addToEnvironment(\""+propName+"\","+simpleClass(propVal.getClass().getName())+" object)");
+            TraceCarol.debugJndiCarol("MultiContext.addToEnvironment()");
         }
 	    return cccf.getCurrentInitialContext().addToEnvironment(propName, propVal);
 	} catch (NamingException e) {

@@ -30,7 +30,7 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 //java import
 import java.io.IOException;
 
-import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 /**
  * Class <code>ProtocolInterceptor</code> is the CAROL JRMP Client Interceptor For protocol propagation
@@ -68,7 +68,7 @@ public class ProtocolInterceptor implements  JServerRequestInterceptor {
      * @exception IOException if an exception occur with the ObjectOutput
      */
     public void receive_request(JServerRequestInfo jri) throws IOException {
-	ProtocolCurrent.getCurrent().setRMI("jrmp");
+	CarolCurrentConfiguration.getCurrent().setRMI("jrmp");
     }
 
     /**

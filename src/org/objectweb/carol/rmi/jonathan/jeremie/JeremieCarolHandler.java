@@ -27,8 +27,7 @@
  */
 package org.objectweb.carol.rmi.jonathan.jeremie;
 
-// jonathan import
-import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.david.apis.services.handler.Service;
 import org.objectweb.jonathan.apis.kernel.Context;
 import org.objectweb.jonathan.apis.kernel.JonathanException;
@@ -78,7 +77,7 @@ public class JeremieCarolHandler implements Service {
      * @param context   the service context of the request;
      */
     public void handleRequestContext(ServiceContext context, int id, boolean r, byte[] key, Context k) {
-	ProtocolCurrent.getCurrent().setRMI(name);
+	CarolCurrentConfiguration.getCurrent().setRMI(name);
 	
     }
     
