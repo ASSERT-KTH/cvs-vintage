@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.17 2003/04/03 04:37:02 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.18 2003/04/08 18:37:33 spestov Exp $
  */
 public class DisplayManager
 {
@@ -625,6 +625,7 @@ public class DisplayManager
 	//{{{ FirstLine class
 	class FirstLine extends OffsetManager.Anchor
 	{
+		int oldScrollLine;
 		int skew;
 
 		//{{{ FirstLine constructor
@@ -648,7 +649,25 @@ public class DisplayManager
 			if(skew >= screenLines)
 				skew = screenLines - 1;
 
-			textArea.chunkCache.setFirstLine(scrollLine,physicalLine,skew);
+			int visibleLines = textArea.getVisibleLines();
+
+			if(oldScrollLine == scrollLine)
+				/* do nothing */;
+			else if(scrollLine >= oldScrollLine + visibleLines
+				|| scrollLine <= oldScrollLine - visibleLines)
+			{
+				textArea.chunkCache.invalidateAll();
+			}
+			else if(scrollLine > oldScrollLine)
+			{
+				textArea.chunkCache.scrollDown(scrollLine - oldScrollLine);
+			}
+			else if(scrollLine < oldScrollLine)
+			{
+				textArea.chunkCache.scrollUp(oldScrollLine - scrollLine);
+			}
+
+			oldScrollLine = scrollLine;
 			textArea.updateScrollBars();
 			textArea.recalculateLastPhysicalLine();
 		} //}}}
