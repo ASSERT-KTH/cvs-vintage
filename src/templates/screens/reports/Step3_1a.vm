@@ -6,7 +6,7 @@
 <h2>$page.Title</h2>
 
 #wizardLinks("reports,Step3_1a.vm" $reportParameters $link)
-#subWizardLinks("reports,Step3_1a.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")
+#subWizardLinks("reports,Step3_1a.vm" $reportParameters $link "3a: Define row/column content type" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")
 
 <h3>Report content: Comparative analysis</h3>
 <form method="get" action="$link.setPage("reports,Step3_1a.vm")">
@@ -24,10 +24,10 @@
   </td>
 </tr>
 <tr>
-  <th>rows: criteria</th>
+  <th>rows: content types</th>
   <td>
     <select name="$intakeReport.Axis1Category.Key">
-      <option value="">select criteria</option>
+      <option value="">select...</option>
       #set ($options = $scarabR.Report.Axis1Categories)
       #foreach ( $option in $options )
         #option($option)
@@ -37,10 +37,10 @@
   </td>
 </tr>
 <tr>
-  <th>Columns: criteria</th>
+  <th>Columns: content types</th>
   <td>
     <select name="$intakeReport.Axis2Category.Key">
-      <option value="">select criteria</option>
+      <option value="">select...</option>
       #set ($options = $scarabR.Report.Axis2Categories)
       #foreach ( $option in $options )
         #option($option)

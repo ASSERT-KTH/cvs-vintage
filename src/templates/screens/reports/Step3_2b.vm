@@ -6,7 +6,7 @@
 <h2>$page.Title</h2>
 
 #wizardLinks("reports,Step3_2b.vm" $reportParameters $link)
-#subWizardLinks("reports,Step3_2b.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_2a.vm" "3b: Select row/column content" "reports,Step3_2b.vm")
+#subWizardLinks("reports,Step3_2b.vm" $reportParameters $link "3a: Define row/column content type" "reports,Step3_2a.vm" "3b: Select row/column content" "reports,Step3_2b.vm")
 
 <h3>Select row/column content</h3>
 

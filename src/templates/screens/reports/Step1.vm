@@ -51,12 +51,6 @@ later).</p>
 </div>
 
 <h3>Type of report</h3>
-<h4>Comparative analysis</h4>
-<p>map attributes, attribute options, to  attributes, attribute options,
-   or users for a single date/time</p>
-<h4>Rate of change</h4>
-<p>map attributes, attribute options, or users to multiple dates in an
-   array</p>
 
 <div class="axial">
  <table border="1" cellspacing="2" cellpadding="3">

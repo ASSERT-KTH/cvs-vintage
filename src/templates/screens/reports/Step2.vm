@@ -4,19 +4,14 @@
 <div class="app" id="div2-4-1-step2">
 <h2>$page.Title</h2>
 #wizardLinks("reports,Step2.vm" $reportParameters $link)
-#subWizardLinks("reports,Step2.vm" $reportParameters $link "2a: Select PFA(s)" "reports,Step2.vm" "2b: PFA display options" "reports,Step2b.vm")
+#subWizardLinks("reports,Step2.vm" $reportParameters $link "2a: Confine report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
 
-<h3>Select primary filter attribute(s)</h3>
-<h4>Primary filter attribute</h4>
-<p>This selection defines the subset of issues that this report will be drawn
-from. It is often useful (but not required) to set the primary filter
-attribute "state" or "status", limiting the report to options such as "open",
-"open unassigned", "open assigned", "closed", or a combination of several of
-these options.</p>
-<p><strong>Note:</strong> Selecting the attribute's name will select all
-options within that attribute. If you choose to "continue", without defining
-PFA groups, each selected Attribute and/or Attribute Option will appear as a
-seperate column (i.e. side-by-side comparison).</p>
+<h3>Confine report data-set</h3>
+<p>Selecting attribute(s) and option(s) from the following list defines a sub-set of data that will be used to generate this report.</p>
+<p>e.g. Selecting "Operating system;LINUX, Operating system;OSX" will limit the output of a report to only these options.</p>
+
+<p><strong>Note:</strong> Selecting an attribute's name will select all
+options within that attribute.</p>
 
 <form method="get" action="$link.setPage("reports,Step2.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
@@ -37,7 +32,7 @@ seperate column (i.e. side-by-side comparison).</p>
 
 <div class="functnbar2">
   <input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />&#160;
-  <input type="submit" value="Define PFA/Option(s) group(s)"
+  <input type="submit" value="Next"
          name="eventSubmit_doStep2agoto2b" />&#160;
   <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>

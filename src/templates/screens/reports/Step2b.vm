@@ -4,18 +4,14 @@
 <h2>$page.Title</h2>
 
 #wizardLinks("reports,Step2b.vm" $reportParameters $link)
-#subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Select PFA(s)" "reports,Step2.vm" "2b: PFA display options" "reports,Step2b.vm")
+#subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Confine report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
 
-<h3>Define PFA Groups</h3>
-<h4>Grouping PFA options</h4>
-<p>In cases where primary filter attribute options represent similar traits
-(e.g. for X attribute "state" the options "open unassigned", "open assigned",
-and "reopened unassigned" are all "open") it may be useful to calculate and
-display these options as an average. Thus, all options listed below and being
-the same "group" are averaged together, which is reflected in the report's
-output.</p>
-<p>If there are no groups, each PFA/option will appear as a separate
-column.</p>
+<h3>Group related data</h3>
+
+<p>After selecting to confine the data-set of this report, Scarab gives you the option of grouping related attributes and options together.</p>
+
+<p>e.g. If options "State; Open new, State; Open started" have both been selected as part of a confined data-set, these options could be grouped together as just "Open issues"</p>
+
 <form method="get" action="$link.setPage("reports,Step2b.vm")">
 <input type="hidden" name="action" value="GenerateReport"/>
 

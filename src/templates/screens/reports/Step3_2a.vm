@@ -4,7 +4,7 @@
 <div class="app" id="div2-4-1-step4b">
 <h2>$page.Title</h2>
 #wizardLinks("reports,Step3_2a.vm" $reportParameters $link)
-#subWizardLinks("reports,Step3_2a.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_2a.vm" "3b: Select row/column content" "reports,Step3_2b.vm")
+#subWizardLinks("reports,Step3_2a.vm" $reportParameters $link "3a: Define row/column content type" "reports,Step3_2a.vm" "3b: Select row/column content" "reports,Step3_2b.vm")
 
 <h3>Report content: Rate of change analysis</h3>
 
@@ -15,10 +15,10 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-   <th width="120">Rows: criteria</th>
+   <th width="120">Rows: content types</th>
    <td>
    <select name="$intakeReport.Axis1Category.Key">
-     <option value="">select criteria</option>
+     <option value="">select...</option>
      #foreach ($option in $scarabR.Report.Axis1Categories)
        #option($option)
      #end

@@ -9,7 +9,7 @@
 #if ($reports.size() > 0)
 <h3>Saved reports</h3>
 <select name="report_id">
-    <option value="">Choose...</option>
+    <option value="">Select...</option>
     #foreach ($report in $reports)
         #set ($isSelected = $data.Parameters.getString("report_id") && $report.ReportId.equals($data.Parameters.getString("report_id"))) 
         <option value="$report.ReportId"
@@ -57,9 +57,7 @@ Report
 </p>
 
 <div class="functnbar2">
-  <input type="submit" value="Save this report" name="eventSubmit_doSavereport" />&#160;
-<!--    <input type="submit" value="Print" name="eventSubmit_doPrint" />&#160; -->
-  <input type="submit" value="Done" name="eventSubmit_doCancel" />
+  <input type="submit" value="Save this report" name="eventSubmit_doSavereport" />
 </div>
 
 $intake.declareGroups()
