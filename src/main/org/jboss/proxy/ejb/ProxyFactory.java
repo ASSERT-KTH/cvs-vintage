@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  * @todo eliminate this class, at least in its present form.
  *
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/12/30: billb</b>
@@ -92,10 +92,15 @@ public class ProxyFactory
    
    // The objectName hash for the container
    protected int objectName;
+   protected String jmxName;
    
    // The name of the delegate invoker
    protected Invoker homeInvoker;
    protected Invoker beanInvoker;
+
+   protected ArrayList homeInterceptorClasses = new ArrayList();
+   protected ArrayList beanInterceptorClasses = new ArrayList();
+   protected ArrayList listEntityInterceptorClasses = new ArrayList();
    
    // A pointer to the container this proxy factory is dedicated to
    protected org.jboss.ejb.Container container;
@@ -112,9 +117,9 @@ public class ProxyFactory
       Context ctx = new InitialContext();
       
       jndiName = container.getBeanMetaData().getJndiName();
-      
+      jmxName = "jboss.j2ee:service=EJB,jndiName="+jndiName;
       // The objectName hashCode
-      ObjectName jmx = new ObjectName("jboss.j2ee:service=EJB,jndiName="+jndiName);
+      ObjectName jmx = new ObjectName(jmxName);
        
       // We keep the hashCode around for fast creation of proxies
       objectName = jmx.hashCode();
@@ -166,10 +171,13 @@ public class ProxyFactory
       
       if (log.isDebugEnabled())
          log.debug("Proxy Factory for "+jndiName+" initialized");
+
+      initInterceptorClasses();
+      setupInvokers();
       bindProxy();
    }
    
-   protected void checkInvokers() throws Exception
+   protected void setupInvokers() throws Exception
    {
       ObjectName oname;
       
@@ -186,13 +194,26 @@ public class ProxyFactory
    public void start() {}   
 
 
+   protected void initInterceptorClasses()
+   {
+      ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
+
+      Element homeInterceptorConf = configMetaData.getClientInterceptorConf(HOME_INTERCEPTOR);
+      loadInterceptorClasses(homeInterceptorClasses, homeInterceptorConf);
+
+      Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
+      loadInterceptorClasses(beanInterceptorClasses, beanInterceptorConf);
+
+      Element listEntityInterceptorConf = configMetaData.getClientInterceptorConf(LIST_ENTITY_INTERCEPTOR);
+      loadInterceptorClasses(listEntityInterceptorClasses, listEntityInterceptorConf);
+   }
+
    /**
-    * The <code>loadInterceptorChain</code> load an interceptor chain from configuration int the
-    * ClientContainer.
+    * The <code>loadInterceptorClasses</code> load an interceptor classes from configuration
     *
     * @exception Exception if an error occurs
     */
-   protected void loadInterceptorChain(ClientContainer client, Element interceptors)
+   protected void loadInterceptorClasses(ArrayList classes, Element interceptors)
    {
       try
       {
@@ -205,7 +226,28 @@ public class ProxyFactory
             String className = null;
             className = MetaData.getElementContent(ielement);
             Class clazz = loader.loadClass(className);
-            Interceptor interceptor = (Interceptor) clazz.newInstance();
+            classes.add(clazz);
+         }
+      }
+      catch (Exception ex)
+      {
+         log.error("failed to load client interceptor chain", ex);
+      }
+   }
+   /**
+    * The <code>loadInterceptorChain</code> create instances of interceptor chain
+    *
+    * @exception Exception if an error occurs
+    */
+   protected void loadInterceptorChain(ArrayList chain, ClientContainer client)
+   {
+      try
+      {
+         Interceptor last = null;
+         for (int i = 0; i < chain.size(); i++)
+         {
+            Class clazz = (Class)chain.get(i);
+            Interceptor interceptor = (Interceptor) clazz.newInstance(); 
             if (last == null)
             {
                last = interceptor;
@@ -233,8 +275,6 @@ public class ProxyFactory
    {
       try {
          
-         checkInvokers();
-         
          // Create a stack from the description (in the future) for now we hardcode it
          InvocationContext context = new InvocationContext();
       
@@ -246,9 +286,7 @@ public class ProxyFactory
          
          ClientContainer client = new ClientContainer(context);
       
-         ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
-         Element homeInterceptorConf = configMetaData.getClientInterceptorConf(HOME_INTERCEPTOR);
-         loadInterceptorChain(client, homeInterceptorConf);
+         loadInterceptorChain(homeInterceptorClasses, client);
          
          // Create the EJBHome
          this.home = 
@@ -260,27 +298,23 @@ public class ProxyFactory
                // The home proxy as invocation handler
                client);
             
-            
-         
-         // Create a stack from the description (in the future) for now we hardcode it
-         context = new InvocationContext();
-      
-         context.setObjectName(new Integer(objectName));
-         context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
-         // The behavior for home proxying should be isolated in an interceptor FIXME
-         context.setInvoker(homeInvoker);
-         
-         client = new ClientContainer(context);
-      
-         configMetaData = container.getBeanMetaData().getContainerConfiguration();
-         Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
-         loadInterceptorChain(client, beanInterceptorConf);
-    
          // Create stateless session object
          // Same instance is used for all objects
          if (!(container.getBeanMetaData() instanceof EntityMetaData) &&
              ((SessionMetaData)container.getBeanMetaData()).isStateless())
          {
+            // Create a stack from the description (in the future) for now we hardcode it
+            context = new InvocationContext();
+            
+            context.setObjectName(new Integer(objectName));
+            context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+            // The behavior for home proxying should be isolated in an interceptor FIXME
+            context.setInvoker(beanInvoker);
+            
+            client = new ClientContainer(context);
+            
+            loadInterceptorChain(beanInterceptorClasses, client);
+    
             this.statelessObject = 
                (EJBObject)Proxy.newProxyInstance(
                   // Correct CL         
@@ -360,9 +394,7 @@ public class ProxyFactory
       
       ClientContainer client = new ClientContainer(context);
       
-      ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
-      Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
-      loadInterceptorChain(client, beanInterceptorConf);
+      loadInterceptorChain(beanInterceptorClasses, client);
             
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
@@ -387,9 +419,7 @@ public class ProxyFactory
       
       ClientContainer client = new ClientContainer(context);
       
-      ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
-      Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
-      loadInterceptorChain(client, beanInterceptorConf);
+      loadInterceptorChain(beanInterceptorClasses, client);
             
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
@@ -433,9 +463,7 @@ public class ProxyFactory
       
             ClientContainer client = new ClientContainer(context);
       
-            ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
-            Element beanInterceptorConf = configMetaData.getClientInterceptorConf(LIST_ENTITY_INTERCEPTOR);
-            loadInterceptorChain(client, beanInterceptorConf);
+            loadInterceptorChain(listEntityInterceptorClasses, client);
             
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                                             new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
@@ -458,9 +486,7 @@ public class ProxyFactory
       
             ClientContainer client = new ClientContainer(context);
       
-            ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
-            Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
-            loadInterceptorChain(client, beanInterceptorConf);
+            loadInterceptorChain(beanInterceptorClasses, client);
             
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                                             new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
