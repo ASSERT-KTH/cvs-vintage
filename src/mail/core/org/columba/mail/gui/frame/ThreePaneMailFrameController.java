@@ -23,6 +23,7 @@ import org.columba.mail.gui.table.action.DownAction;
 import org.columba.mail.gui.table.action.UpAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 
 /**
@@ -56,18 +57,29 @@ public class ThreePaneMailFrameController
 	}
 
 	protected void initActions() {
-
+		// Register UP key so its easy to move through messages in the list
 		tableController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
 			"UP");
 		UpAction upAction = new UpAction(this);
 		tableController.getView().getActionMap().put("UP", upAction);
 
+		// Register DOWN key so its easy to move through messages in the list
 		tableController.getView().getInputMap().put(
 			KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
 			"DOWN");
 		DownAction downAction = new DownAction(this);
 		tableController.getView().getActionMap().put("DOWN", downAction);
+		
+		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
+		// Register F2 hotkey for renaming folder when the message panel has focus
+		tableController.getView().getActionMap().put("F2", renameFolderAction);
+		tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
+		
+		// Register F2 hotkey for renaming folder when the folder tree itself has focus
+		treeController.getView().getActionMap().put("F2", renameFolderAction);
+		treeController.getView().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
+		
 		//register the markasread timer as selection listener
 		tableController
 			.getMailFrameController()
