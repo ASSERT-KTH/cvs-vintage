@@ -16,7 +16,7 @@ $page.setTitle("User Administration")
 <h3>Add New User</h3>
 
 <form name="AddUserForm" action="$link.setPage("admin,AddUser.vm")" method="post">
-  <input type="hidden" name="action" value="admin.AddUser" />
+  <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AddUser.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AdminIndex.vm" />
   <input type="hidden" name="state" value="execadduser">

@@ -38,7 +38,7 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
   </tr>
 
   <form method="post" action="admin,EditUserRoles.vm">
-    <input type="hidden" name="action" value="admin.EditUserRoles">
+    <input type="hidden" name="action" value="admin.ManageUser">
 
   #foreach ($group in $scarabG.Groups)
   #indexedRows ($velocityCount)

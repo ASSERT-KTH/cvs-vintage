@@ -13,7 +13,7 @@ $page.setTitle("User Administration")
 <h3>$subHeaderTitle</h3>
 
 <form name="EditUserForm" action="$link.setPage("admin,EditUser.vm")" method="post">
-  <input type="hidden" name="action" value="admin.user.EditUser" />
+  <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,EditUser.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
   <input type="hidden" name="state" value="$nextState">
