@@ -9,8 +9,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.1//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_1.dtd">
 
-$Id: jboss_3_1.dtd,v 1.1 2002/07/14 18:37:21 starksm Exp $
-$Revision: 1.1 $
+$Id: jboss_3_1.dtd,v 1.2 2002/08/21 02:41:58 d_jencks Exp $
+$Revision: 1.2 $
 
 Overview of the architecture of jboss.xml
 
@@ -178,7 +178,7 @@ Overview of the architecture of jboss.xml
 
   Used in: enterprise-beans
 -->
-<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , clustered? , cluster-config?)>
+<!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , read-only? , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref* , method-attributes? , clustered? , cluster-config?)>
 
 <!--
   The session element holds information specific to jboss and not declared
@@ -309,6 +309,29 @@ Overview of the architecture of jboss.xml
   Used in: resource-env-ref
 -->
 <!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--
+  The method-attributes element can be used to specify which entity methods are read only 
+  or idempotent.  This is used to reduce the need for locks.
+-->
+<!ELEMENT method-attributes (method*)>
+
+<!--
+  The method element is used to specify attributes for one method or all those
+  matching a pattern startingstring*.
+-->
+<!ELEMENT method (method-name, read-only?, idempotent?)>
+
+<!--
+  The method-name element specifies a complete method name or a pattern consisting of an
+  initial match followed by '*'
+-->
+<!ELEMENT method-name (#PCDATA)>
+
+<!--
+  The idempotent element is used in method-attributes but I don't know what it is for
+-->
+<!ELEMENT idempotent (#PCDATA)>
 
 <!--
   The clustered element indicates if this bean will run in a cluster of JBoss instances.
