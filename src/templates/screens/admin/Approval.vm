@@ -1,0 +1,131 @@
+$page.setTitle("Admin Approval")
+#set ( $module = $scarabR.CurrentModule )
+
+  <div id="div2-6-0" class="app">
+       <h2>approve reject user submitted items</h2>
+
+<form action="$link.setPage("admin,Approval.vm")" method="get">
+<input type="hidden" name="action" value="admin.Approval"/>
+<input type="hidden" name="nextTemplate" value="admin,Approval.vm"/>
+
+#if( $module.UnapprovedQueries.isEmpty())
+  <div class="alert">There are no items to approve.</div>
+#else
+
+<p class="functnbar"><input type="submit" value="submit" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" />&#160;<input type="submit" value="clear form" /></p>
+
+
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th nowrap="nowrap">&nbsp;</th>
+
+         <th><a href="#" title="sort">date:</a></th>
+
+         <th><a href="#" title="sort">type:</a></th>
+
+         <th><a href="#" title="sort">submitted by:</a></th>
+         
+         <th><a href="#" title="sort">project:</a></th>
+         
+         <th><a href="#" title="sort">user role:</a></th>
+
+         <th><a href="#" title="sort">name:</a></th>
+
+         <th><a href="#" title="sort">description:</a></th>
+
+         <th>comments:</th>
+
+         <th>action:</th>
+        </tr>
+
+#foreach( $query in $module.UnapprovedQueries )
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+         <td><input type="checkbox" name="query_id_$query.QueryId" /></td>
+
+         <td>$query.CreatedDate</td>
+
+         <td>query</td>
+
+        #set ($createdUser = $scarabR.getUser($query.UserId))
+        #set ($module = $scarabR.getModule($query.ModuleId.toString()))
+       <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId">
+         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+
+         <td>$module.Name</td>
+         
+         <td>#set ($comma = "")
+             #foreach ($role in $security.getRoles($createdUser, $module))
+                   $role.Name$comma
+                   #set ($comma = ",")
+             #end
+         </td>
+         <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+
+         <td>#if ($query.Description) $query.Description #else &nbsp; #end</td>
+         
+         <td>
+<textarea rows="2" cols="20" name="query_comment_$query.QueryId"></textarea>
+         </td>
+         
+         <td><select name="query_action_$query.QueryId">
+                <option value="none">no action</option>
+                <option value="comment">comment only</option>
+                <option value="approve">approve</option>
+                <option value="reject" >reject</option>
+             </select>
+
+                </td>                  
+        </tr>
+#end
+
+<!--
+        <tr class="a">
+         <td><input type="checkbox" /></td>
+
+         <td>xx/xx/xxxx</td>
+
+         <td>enter issue template</td>
+
+         <td><a href="#">user@users.com</a></td>
+
+         <td>Project X.1</td>
+         
+         <td>role X</td>
+
+         <td><a href="#">template X</a></td>
+         
+         <td>description X</td>
+         
+         <td>
+<textarea rows="2" cols="20"></textarea>     
+         </td>
+         
+         <td><select>
+                <option>no action</option>
+                <option>comment only</option>
+                <option>approve</option>
+                        <option>reject</option>
+                        </select>
+                        
+                </td>
+        </tr>
+-->
+       </table>
+<div class="axial">
+                <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120"><small>comments<br>
+         (sent to selected submittees)</small></th>
+                 <td><textarea rows="4" cols="40" name="global_comment"></textarea></td>
+        </tr>
+       </table>
+</div>
+       
+       <p class="functnbar"><input type="submit" value="submit" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" />&#160;<input type="submit" value="clear form" /></p>
+
+</form>
+#end
