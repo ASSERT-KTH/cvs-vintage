@@ -131,7 +131,8 @@ public class SimpleMapper extends  BaseInterceptor  {
 	
 	// resolve the server that we are for
 	String path = rrequest.getRequestURI();
-
+	
+	//	System.out.println("XXX CM: " + path );
 	// strip session URL rewrite part which interferes processing
 	// XXX works only if ;jsessionid= is path param for the last component
 	// of the path! 
@@ -140,8 +141,10 @@ public class SimpleMapper extends  BaseInterceptor  {
 	if ((foundAt=path.indexOf(sig))!=-1){
 	    path=path.substring(0, foundAt);  
 	}
-	
+
+	//	System.out.println("XXX CM: " + path );
 	Context ctx= this.getContextByPath(path);
+	//	System.out.println("XXX CM: " + ctx);
 	rrequest.setContext(ctx);
 	
 	// final fix on response & request
@@ -149,12 +152,14 @@ public class SimpleMapper extends  BaseInterceptor  {
 	String ctxPath = ctx.getPath();
 	String lookupPath=rrequest.getLookupPath();
 
+	//	System.out.println("YYY " + lookupPath );
 	// do not set it if it is already set or we have no
 	// URI - the case of a sub-request generated internally
 	if( path!=null && lookupPath==null ) 
 	    lookupPath= path.substring(ctxPath.length(),
 				       path.length());
 
+	//	System.out.println("YYY " + lookupPath );
 	// check for ? string on lookuppath
 	int qindex = lookupPath.indexOf("?");
 	

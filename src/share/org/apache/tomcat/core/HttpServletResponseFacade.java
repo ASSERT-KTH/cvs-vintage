@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.5 2000/03/21 00:32:39 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/03/21 00:32:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.6 2000/03/21 01:27:08 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/03/21 01:27:08 $
  *
  * ====================================================================
  *
@@ -121,7 +121,8 @@ implements HttpServletResponse {
     public String encodeURL(String url) {
       Request request=response.getRequest();
       // if I have a session
-      //      System.out.println("XXX " + request.isRequestedSessionIdValid() +" " + request.isRequestedSessionIdFromCookie());
+      //      System.out.println("XXX " + request.isRequestedSessionIdValid() +" " + request.isRequestedSessionIdFromCookie() +
+      //		 " " + request.getRequestedSessionId();
       
       if (request.isRequestedSessionIdValid()){
 	  // if first time or cookie not returned
@@ -138,7 +139,7 @@ implements HttpServletResponse {
 	      sb.append(";jsessionid=").append(request.getRequestedSessionId());
 	      if( qry != null ) 
 		  sb.append("?").append( qry);
-	      //      System.out.println("RW " + url + " " + sb.toString());
+	      //	      System.out.println("RW " + url + " " + sb.toString());
 	      return sb.toString();              
 	  }
       }

@@ -80,13 +80,24 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
-
+    int debug=0;
+    ContextManager cm;
+    
     public SessionInterceptor() {
+    }
+
+    public void setDebug( int i ) {
+	System.out.println("Set debug to " + i);
+	debug=i;
+    }
+    
+    public void setContextManager( ContextManager cm ) {
+	this.cm=cm;
     }
 
     public int requestMap(Request request ) {
 	String sessionId = null;
-	
+
 	Cookie cookies[]=request.getCookies(); // assert !=null
 	
 	for( int i=0; i<cookies.length; i++ ) {
@@ -103,6 +114,7 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	
 	String sig=";jsessionid=";
 	int foundAt=-1;
+	if( debug>0 ) cm.log(" XXX RURI=" + request.getRequestURI());
 	if ((foundAt=request.getRequestURI().indexOf(sig))!=-1){
 	    sessionId=request.getRequestURI().substring(foundAt+sig.length());
 	    // rewrite URL, do I need to do anything more?
@@ -123,38 +135,43 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
      * @return sessionId, or null if not valid
      */
     private String validateSessionId(Request request, String sessionId){
-      // GS, We piggyback the JVM id on top of the session cookie
-      // Separate them ...
-      if (null != sessionId) {
-        int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
-        if(idex > 0) {
-         sessionId = sessionId.substring(0, idex);
-       }
-      }
+	// GS, We piggyback the JVM id on top of the session cookie
+	// Separate them ...
+
+	if( debug>0 ) cm.log(" Orig sessionId  " + sessionId );
+	if (null != sessionId) {
+	    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
+	    if(idex > 0) {
+		sessionId = sessionId.substring(0, idex);
+	    }
+	}
       
-      if (sessionId != null && sessionId.length()!=0) {
-       // GS, We are in a problem here, we may actually get
-       // multiple Session cookies (one for the root
-       // context and one for the real context... or old session
-       // cookie. We must check for validity in the current context.
-       Context ctx=request.getContext();
-       SessionManager sM = ctx.getSessionManager();    
-       if(null != sM.findSession(ctx, sessionId)) {
-         sM.accessed(ctx, request, sessionId );
-         request.setRequestedSessionId(sessionId);
-         return sessionId;
-       }
-      }
-      return null;
+	if (sessionId != null && sessionId.length()!=0) {
+	    // GS, We are in a problem here, we may actually get
+	    // multiple Session cookies (one for the root
+	    // context and one for the real context... or old session
+	    // cookie. We must check for validity in the current context.
+	    Context ctx=request.getContext();
+	    SessionManager sM = ctx.getSessionManager();    
+	    if(null != sM.findSession(ctx, sessionId)) {
+		sM.accessed(ctx, request, sessionId );
+		request.setRequestedSessionId(sessionId);
+		if( debug>0 ) cm.log(" Final session id " + sessionId );
+		return sessionId;
+	    }
+	}
+	return null;
     }
   
 
 
     public int beforeBody( Request rrequest, Response response ) {
     	String reqSessionId = response.getSessionId();
-	    if( reqSessionId==null)
-	        return 0;
+	if( debug>0 ) cm.log("Before Body " + reqSessionId );
+	if( reqSessionId==null)
+	    return 0;
 
+	
         // GS, set the path attribute to the cookie. This way
         // multiple session cookies can be used, one for each
         // context.
@@ -171,18 +188,18 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
             }
         }
 
-	    Cookie cookie = new Cookie("JSESSIONID",
-				                   reqSessionId);
+	Cookie cookie = new Cookie("JSESSIONID",
+				   reqSessionId);
     	cookie.setMaxAge(-1);
         cookie.setPath(sessionPath);
     	cookie.setVersion(1);
-
-	    response.addHeader( CookieTools.getCookieHeaderName(cookie),
-		            	    CookieTools.getCookieHeaderValue(cookie));
+	
+	response.addHeader( CookieTools.getCookieHeaderName(cookie),
+			    CookieTools.getCookieHeaderValue(cookie));
     	cookie.setVersion(0);
-	    response.addHeader( CookieTools.getCookieHeaderName(cookie),
-		            	    CookieTools.getCookieHeaderValue(cookie));
-
+	response.addHeader( CookieTools.getCookieHeaderName(cookie),
+			    CookieTools.getCookieHeaderValue(cookie));
+	
     	return 0;
     }
 

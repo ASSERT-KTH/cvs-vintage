@@ -745,11 +745,14 @@ public class ContextManager {
     }
 
     public void setDebug( int level ) {
-	
 	if( level != 0 ) System.out.println( "Setting level to " + level);
 	debug=level;
     }
 
+    public int getDebug() {
+	return debug;
+    }
+    
     public final void log(String msg) {
 	if( msg.startsWith( "<l:" ))
 	    doLog( msg );

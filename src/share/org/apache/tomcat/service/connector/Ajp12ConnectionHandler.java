@@ -164,6 +164,7 @@ class AJP12RequestAdapter extends RequestImpl {
     Ajpv12InputStream ajpin;
     ContextManager contextM;
     boolean shutdown=false;
+    boolean doLog;
 
     public int doRead() throws IOException {
 	return ajpin.read();
@@ -173,12 +174,17 @@ class AJP12RequestAdapter extends RequestImpl {
 	return ajpin.read(b,off,len);
     }
 
+    void log( String s ) {
+	contextM.log( s );
+    }
+    
     public AJP12RequestAdapter(ContextManager cm, Socket s) throws IOException {
 	this.socket = s;
 	this.contextM=cm;
 	sin = s.getInputStream();
 	in = new BufferedServletInputStream( this );
 	ajpin = new Ajpv12InputStream(sin);
+	doLog=contextM.getDebug() > 10;
     }
 
     protected void readNextRequest() throws IOException {
@@ -187,180 +193,187 @@ class AJP12RequestAdapter extends RequestImpl {
 	int signal;
 
 	try {
-            while (true) {
-	    marker = ajpin.read();
-	    switch (marker) {
-	    case 0:       //NOP marker useful for testing if stream is OK
-		break;
+	    boolean more=true;
+            while (more) {
+		marker = ajpin.read();
+		switch (marker) {
+		case 0:       //NOP marker useful for testing if stream is OK
+		    break;
+		    
+		case 1: //beginning of request
+		    method = ajpin.readString(null);              //Method
+		    
+		    contextPath = ajpin.readString(null);               //Zone
+		    // GS, the following commented line causes the Apache + Jserv + Tomcat
+		    // combination to hang with a 404!!!
+		    // if("ROOT".equals( contextPath ) ) contextPath="";
+		    if("ROOT".equalsIgnoreCase( contextPath ) ) contextPath=null;
+		    if( doLog ) log("AJP: CP=" + contextPath);
+		    
+		    if( contextPath!= null )
+			context=contextM.getContext( contextPath );
+		    if( doLog ) log("AJP: context=" + context );
+		    
+		    servletName = ajpin.readString(null);         //Servlet
+		    if( doLog ) log("AJP: servlet=" + servletName );
+		    
+		    serverName = ajpin.readString(null);            //Server hostname
+		    if( doLog ) log("AJP: serverName=" + serverName );
+		    
+		    dummy = ajpin.readString(null);               //Apache document root
+		    
+		    pathInfo = ajpin.readString(null);               //Apache parsed path-info
+		    if( doLog ) log("AJP: PI=" + pathInfo );
+		    
+		    // XXX Bug in mod_jserv !!!!!
+		    pathTranslated = ajpin.readString(null);               //Apache parsed path-translated
+		    if( doLog ) log("AJP: PT=" + pathTranslated );
+		    
+		    queryString = ajpin.readString(null);         //query string
+		    if( doLog ) log("AJP: QS=" + queryString );
+		    
+		    remoteAddr = ajpin.readString("");            //remote address
+		    if( doLog ) log("AJP: RA=" + remoteAddr );
+		    
+		    remoteHost = ajpin.readString("");            //remote host
+		    if( doLog ) log("AJP: RH=" + remoteHost );
+		    
+		    remoteUser = ajpin.readString(null);                 //remote user
+		    if( doLog ) log("AJP: RU=" + remoteUser);
+		    
+		    authType = ajpin.readString(null);                 //auth type
+		    if( doLog ) log("AJP: AT=" + authType);
+		    
+		    dummy = ajpin.readString(null);                 //remote port
+		    
+		    method = ajpin.readString(null);                //request method
+		    if( doLog ) log("AJP: Meth=" + method );
+		    
+		    requestURI = ajpin.readString("");             //request uri
+		    if( doLog ) log("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 
-	    case 1: //beginning of request
-		method = ajpin.readString(null);              //Method
-
-		contextPath = ajpin.readString(null);               //Zone
-		// GS, the following commented line causes the Apache + Jserv + Tomcat
-		// combination to hang with a 404!!!
-		// if("ROOT".equals( contextPath ) ) contextPath="";
-        if("ROOT".equalsIgnoreCase( contextPath ) ) contextPath=null;
-		// System.out.println("AJP: CP=" + contextPath);
-
-		if( contextPath!= null )
-		    context=contextM.getContext( contextPath );
-		// System.out.println("AJP: context=" + context );
-
-		servletName = ajpin.readString(null);         //Servlet
-		// System.out.println("AJP: servlet=" + servletName );
-
-		serverName = ajpin.readString(null);            //Server hostname
-		// System.out.println("AJP: serverName=" + serverName );
-
-		dummy = ajpin.readString(null);               //Apache document root
-
-		pathInfo = ajpin.readString(null);               //Apache parsed path-info
-		// System.out.println("AJP: PI=" + pathInfo );
-
-		// XXX Bug in mod_jserv !!!!!
-		pathTranslated = ajpin.readString(null);               //Apache parsed path-translated
-		// System.out.println("AJP: PT=" + pathTranslated );
-
-		queryString = ajpin.readString(null);         //query string
-        // System.out.println("AJP: QS=" + queryString );
-
-		remoteAddr = ajpin.readString("");            //remote address
-        // System.out.println("AJP: RA=" + remoteAddr );
-
-		remoteHost = ajpin.readString("");            //remote host
-        // System.out.println("AJP: RH=" + remoteHost );
-
-		remoteUser = ajpin.readString(null);                 //remote user
-		// System.out.println("AJP: RU=" + remoteUser);
-
-		authType = ajpin.readString(null);                 //auth type
-		// System.out.println("AJP: AT=" + authType);
-
-		dummy = ajpin.readString(null);                 //remote port
-
-		method = ajpin.readString(null);                //request method
-		// System.out.println("AJP: Meth=" + method );
-
-		requestURI = ajpin.readString("");             //request uri
-		// System.out.println("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
-
-		if(contextPath!=null && contextPath.length() >0 )
-		    lookupPath=requestURI.substring( contextPath.length() + 1 );
-		// System.out.println("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
-
-		dummy = ajpin.readString(null);                   //script filename
-		//		System.out.println("AJP: Script filen=" + dummy);
-
-		dummy = ajpin.readString(null);                   //script name
-		//		System.out.println("AJP: Script name=" + dummy);
-
-		serverName = ajpin.readString("");                //server name
-		// System.out.println("AJP: serverName=" + serverName );
-		try {
-		    serverPort = Integer.parseInt(ajpin.readString("80")); //server port
-		} catch (Exception any) {
-		    serverPort = 80;
-		}
-
-		dummy = ajpin.readString("");                     //server protocol
-		//		System.out.println("AJP: Server proto=" + dummy);
-		dummy = ajpin.readString("");                     //server signature
-		//		System.out.println("AJP: Server sign=" + dummy);
-		dummy = ajpin.readString("");                     //server software
-		//		System.out.println("AJP: Server softw=" + dummy);
-		jvmRoute = ajpin.readString("");                     //JSERV ROUTE
-		if(jvmRoute.length() == 0) {
-		    jvmRoute = null;
-		}
-		// System.out.println("AJP: Server jvmRoute=" + jvmRoute);
-
-
-                /**
-                 * The two following lines are commented out because we don't
-                 * want to depend on unreleased versions of the jserv module.
-                 *                                            - costin
-                 */
-                //		dummy = ajpin.readString("");                     //SSL_CLIENT_DN
-                //		dummy = ajpin.readString("");                     //SSL_CLIENT_IDN
-		// XXX all dummy fields will be used after core is changed to make use
-		// of them!
-
-		break;
-
-	    case 3: // Header
-		token1 = ajpin.readString(null);
-		token2 = ajpin.readString("");
-		headers.putHeader(token1.toLowerCase(), token2);
-		break;
-
-	    case 254: // Signal
-		signal = ajpin.read();
-
-		if (signal == 0) { // PING implemented as signal
+		    // XXX don't set lookup path - problems with URL rewriting.
+		    // need to be fixed.
+		    //		if(contextPath!=null && contextPath.length() >0 )
+		    //		    lookupPath=requestURI.substring( contextPath.length() + 1 );
+		    if( doLog ) log("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
+		    
+		    dummy = ajpin.readString(null);                   //script filename
+		    //		System.out.println("AJP: Script filen=" + dummy);
+		    
+		    dummy = ajpin.readString(null);                   //script name
+		    //		System.out.println("AJP: Script name=" + dummy);
+		    
+		    serverName = ajpin.readString("");                //server name
+		    if( doLog ) log("AJP: serverName=" + serverName );
 		    try {
-			// close the socket connection after we send reply
-			socket.getOutputStream().write(0); // PING reply
-			sin.close();
-		    } catch (IOException ignored) {
-			System.err.println(ignored);
+			serverPort = Integer.parseInt(ajpin.readString("80")); //server port
+		    } catch (Exception any) {
+			serverPort = 80;
 		    }
-		} else {
-		    try {
-			// close the socket connection before handling any signal
-			sin.close();
-			if ( signal== 15 ) {
-			    // Shutdown - probably apache was stoped with apachectl stop
-			    contextM.stop();
-			    // same behavior as in past, because it seems that
-			    // stopping everything doesn't work - need to figure
-			    // out what happens with the threads ( XXX )
-			    System.exit(0);
-
-			    shutdown=true;
-			    return;
+		    
+		    dummy = ajpin.readString("");                     //server protocol
+		    //		System.out.println("AJP: Server proto=" + dummy);
+		    dummy = ajpin.readString("");                     //server signature
+		    //		System.out.println("AJP: Server sign=" + dummy);
+		    dummy = ajpin.readString("");                     //server software
+		    //		System.out.println("AJP: Server softw=" + dummy);
+		    jvmRoute = ajpin.readString("");                     //JSERV ROUTE
+		    if(jvmRoute.length() == 0) {
+			jvmRoute = null;
+		    }
+		    if( doLog ) log("AJP: Server jvmRoute=" + jvmRoute);
+		    
+		    
+		    /**
+		     * The two following lines are commented out because we don't
+		     * want to depend on unreleased versions of the jserv module.
+		     *                                            - costin
+		     */
+		    //		dummy = ajpin.readString("");                     //SSL_CLIENT_DN
+		    //		dummy = ajpin.readString("");                     //SSL_CLIENT_IDN
+		    // XXX all dummy fields will be used after core is changed to make use
+		    // of them!
+		    
+		    break;
+		    
+		case 3: // Header
+		    token1 = ajpin.readString(null);
+		    token2 = ajpin.readString("");
+		    headers.putHeader(token1.toLowerCase(), token2);
+		    break;
+		    
+		case 254: // Signal
+		    signal = ajpin.read();
+		    
+		    if (signal == 0) { // PING implemented as signal
+			try {
+			    // close the socket connection after we send reply
+			    socket.getOutputStream().write(0); // PING reply
+			    sin.close();
+			} catch (IOException ignored) {
+			    System.err.println(ignored);
 			}
-		    } catch (Exception ignored) {
-			System.err.println(ignored);
+		    } else {
+			try {
+			    // close the socket connection before handling any signal
+			    sin.close();
+			    if ( signal== 15 ) {
+				// Shutdown - probably apache was stoped with apachectl stop
+				contextM.stop();
+				// same behavior as in past, because it seems that
+				// stopping everything doesn't work - need to figure
+				// out what happens with the threads ( XXX )
+				System.exit(0);
+
+				shutdown=true;
+				return;
+			    }
+			} catch (Exception ignored) {
+			    System.err.println(ignored);
+			}
+			System.err.println("Signal ignored: " + signal);
 		    }
-		    System.err.println("Signal ignored: " + signal);
-		}
-		return;
-
-	    case 4:
-	    case 255:
-		return;
-
-	    case -1:
-		throw new java.io.IOException("Stream closed prematurely");
-
-
-	    default:
-		throw new java.io.IOException("Stream broken");
-
-
-	    } // while
-            } // switch
+		    return;
+		    
+		case 4:
+		case 255:
+		    more=false;
+		    break;
+		    
+		case -1:
+		    throw new java.io.IOException("Stream closed prematurely");
+		    
+		    
+		default:
+		    throw new java.io.IOException("Stream broken");
+		    
+		    
+		} // switch
+            } // while
 	} catch (IOException ioe) {
 	    throw ioe;
         } catch (Exception e) {
 	    System.err.println("Uncaught exception" + e);
 	    e.printStackTrace();
         }
-
+	
 	// REQUEST_URI includes query string
-	int idQ= requestURI.indexOf("?");
-	if ( idQ > -1) {
-	    requestURI = requestURI.substring(0, idQ);
-        }
-
-
-	// 	System.out.println("Request: " + requestURI );
-	// 	System.out.println("Query: " + queryString );
-	// 	System.out.println("ENV: " + env_vars );
+	int indexQ=requestURI.indexOf("?");
+	int rLen=requestURI.length();
+	if ( (indexQ >-1) && ( indexQ  < rLen) ) {
+	    if(doLog) log("Orig QS " + queryString );
+	    queryString = requestURI.substring(indexQ + 1, requestURI.length());
+	    if(doLog) log("New QS " + queryString );
+	    requestURI = requestURI.substring(0, indexQ);
+	} 
+	
+	if( doLog ) log("Request: " + requestURI );
+	if( doLog ) log ("Query: " + queryString );
+	// System.out.println("ENV: " + env_vars );
 	// 	System.out.println("HEADERS: " + headers_in );
 	// 	System.out.println("PARAMETERS: " + parameters );
-
+	
 
 	//processCookies();
 
