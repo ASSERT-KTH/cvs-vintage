@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.103 2002/07/12 22:01:00 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.104 2002/07/30 02:28:06 thesitesman Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -440,7 +440,7 @@
       <homeinterface/>
       <session/>
       <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
-      <jboss xmlencoding="UTF-8" destdir="${build.beans}/ejbadaptor/META-INF"/>
+      <jboss xmlencoding="UTF-8" version="3.0" destdir="${build.beans}/ejbadaptor/META-INF"/>
     </xdoclet>
 
   </target>
