@@ -109,9 +109,9 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 		boldFont = boldFont.deriveFont(Font.BOLD);
 
 		plainFont = UIManager.getFont("Tree.font");
-		
+
 		underlinedFont = UIManager.getFont("Tree.font");
-		underlinedFont = underlinedFont.deriveFont( Font.ITALIC );
+		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
 	}
 
 	/**
@@ -167,10 +167,11 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 		}
 
 		if (header.getFlags() != null) {
-			if (header.getFlags().getRecent()) {
+			// mark as bold if message is unseen
+			if (!header.getFlags().getSeen()) {
 				if (!getFont().equals(boldFont))
 					setFont(boldFont);
-			} else if (messageNode.isHasRecentChildren())	{
+			} else if (messageNode.isHasRecentChildren()) {
 				if (!getFont().equals(underlinedFont))
 					setFont(underlinedFont);
 			} else if (!getFont().equals(plainFont)) {
@@ -219,7 +220,6 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 
 	/*************** optimization *****************/
 
-
 	// if graphics doesn't seem to work correctly
 	//  -> comment the following lines
 
@@ -230,7 +230,6 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 	public void repaint() {
 	}
 	*/
-	
 
 	/*
 	protected void firePropertyChange(

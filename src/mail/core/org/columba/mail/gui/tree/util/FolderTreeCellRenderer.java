@@ -24,7 +24,6 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
@@ -41,24 +40,22 @@ public class FolderTreeCellRenderer
 	boolean bool;
 	//TreeController treeController;
 
-	private ImageIcon image1,
-		image2,
-//		image3,
-//		image4,
-//		image5,
-//		image6,
-//		image7,
-//		image8,
-		image9,
-		image10;
+	private ImageIcon image1, image2,
+	//		image3,
+	//		image4,
+	//		image5,
+	//		image6,
+	//		image7,
+	//		image8,
+	image9, image10;
 
 	private Font plainFont, boldFont, italicFont;
 
-	public FolderTreeCellRenderer( boolean bool) {
+	public FolderTreeCellRenderer(boolean bool) {
 		super();
 
 		//this.treeController = treeController;
-		
+
 		this.bool = bool;
 
 		boldFont = UIManager.getFont("Tree.font");
@@ -84,7 +81,6 @@ public class FolderTreeCellRenderer
 		int row,
 		boolean hasFocus) {
 
-		
 		FolderTreeNode treeNode = (FolderTreeNode) value;
 
 		/*
@@ -97,7 +93,7 @@ public class FolderTreeCellRenderer
 			isSelected = false;
 		}
 		*/
-		
+
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -109,15 +105,6 @@ public class FolderTreeCellRenderer
 
 		Folder folder = null;
 
-		/*
-		if (value instanceof IMAPRootFolder) {
-			setText(((IMAPRootFolder) value).getName());
-			setIcon(image9);
-			return this;
-		
-		}
-		*/
-
 		try {
 			folder = (Folder) value;
 		} catch (Exception ex) {
@@ -128,7 +115,8 @@ public class FolderTreeCellRenderer
 
 		if (folder != null) {
 
-			if (((Folder) folder).getMessageFolderInfo().getRecent() > 0) {
+			// mark name bold if folder contains any unseen messages
+			if (((Folder) folder).getMessageFolderInfo().getUnseen() > 0) {
 
 				setFont(boldFont);
 			} else {
@@ -141,19 +129,18 @@ public class FolderTreeCellRenderer
 		FolderItem item = folder.getFolderItem();
 
 		if (item != null) {
-			//int uid = item.getInteger("uid");
-
 			String name;
-
-			//name = folder.getName();
 
 			name = item.get("property", "name");
 
 			MessageFolderInfo info = ((Folder) folder).getMessageFolderInfo();
 			if (folder != null) {
+
+				// append unseen count to folder name
 				if (info.getUnseen() > 0)
 					name = name + " (" + info.getUnseen() + ") ";
 
+				// set tooltip text
 				StringBuffer buf = new StringBuffer();
 				buf.append("<html><body>&nbsp;Total: " + info.getExists());
 				buf.append("<br>&nbsp;Unseen: " + info.getUnseen());
@@ -167,46 +154,20 @@ public class FolderTreeCellRenderer
 
 			setText(name);
 
+			// set icons
 			if (expanded) {
 				setIcon(folder.getExpandedIcon());
 			} else {
 				setIcon(folder.getCollapsedIcon());
 			}
-			
-			if (!item.getBoolean("selectable",true)) {
-				setFont( italicFont );
+
+			// important for imap
+			// is this folder selectable 
+			if (!item.getBoolean("selectable", true)) {
+				setFont(italicFont);
 				setForeground(Color.darkGray);
 			}
-			
-			
-			// FIXME
 
-			/*
-			if (item.getType().equals("virtual")) {
-				setIcon(image10);
-			
-			} else if (
-				item.getType().equals("imaproot") && !item.isMessageFolder()) {
-			
-				setIcon(image9);
-			} else if (item.getAccessRights().equals("system")) {
-				if (item.getUid() == 100)
-					setIcon(image2);
-				else
-					setIcon(image1);
-			
-			} else if (item.getType().equals("imap")) {
-				if (item.getMessageFolder().equals("false")) {
-					setForeground(Color.darkGray);
-					setFont(italicFont);
-			
-				}
-				setIcon(image1);
-			} else {
-			
-				setIcon(image1);
-			}
-			*/
 		}
 		return this;
 	}
