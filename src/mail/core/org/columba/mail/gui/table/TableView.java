@@ -322,6 +322,8 @@ public class TableView extends TreeTable {
 
 		for (int i = 0; i < rows.length; i++) {
 			TreePath treePath = getTree().getPathForRow(rows[i]);
+			if ( treePath == null ) continue;
+			
 			nodes[i] = (MessageNode) treePath.getLastPathComponent();
 
 		}
@@ -401,6 +403,9 @@ public class TableView extends TreeTable {
 	 */
 	public void selectRow(int row) {
 		if (getRowCount() > 0) {
+			if ( row<0 ) row = 0;
+			if ( row >= getRowCount() ) row = getRowCount() -1;
+			
 			// changing the selection to the specified row
 			changeSelection(row, 0, true, false);
 
