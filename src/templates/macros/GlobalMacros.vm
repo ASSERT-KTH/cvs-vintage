@@ -1,5 +1,5 @@
 
-#macro ( attrValueLeafSelect $attrValue $optionFieldName $size $multiple)
+#macro (attrValueLeafSelect $attrValue $optionFieldName $size $multiple)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
@@ -10,7 +10,7 @@
   #end
   #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
-    #if ( $attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
+    #if ($attrInput.get($optionFieldName).Value && $option.OptionId == $attrInput.get($optionFieldName).Value)
     <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
     #else
     <option value="$option.OptionId">$option.DisplayValue</option>
@@ -19,15 +19,15 @@
 </select>
 #end
 
-#macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size $multiple )
+#macro (templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size $multiple)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
   #if ($attrInput.get($optionFieldName).Value)
-    #set( $currentValue = $attrInput.get($optionFieldName).Value)
-  #elseif ( $templAttrInput.get($optionFieldName).Value)
-    #set( $currentValue = $templAttrInput.get($optionFieldName).Value)
+    #set($currentValue = $attrInput.get($optionFieldName).Value)
+  #elseif ($templAttrInput.get($optionFieldName).Value)
+    #set($currentValue = $templAttrInput.get($optionFieldName).Value)
   #end
 <select name="$attrInput.get($optionFieldName).Key"
   #if($size.length())size="$size"#end #if($multiple)multiple="multiple"#end>
@@ -36,7 +36,7 @@
   #end
   #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
     #set ($selected = "")
-    #if ( $currentValue && $option.OptionId == $currentValue)
+    #if ($currentValue && $option.OptionId == $currentValue)
       <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
     #else
       <option value="$option.OptionId">$option.DisplayValue</option>
@@ -45,12 +45,12 @@
 </select>
 #end
 
-#macro ( dependTypeLeafSelect $childIssue $type)
+#macro (dependTypeLeafSelect $childIssue $type)
 <select name="$type_depend_type_id_$childIssue.IssueId">
   <option>Choose dependency type</option>
   #foreach ($dependType in $currentIssue.getAllDependencyTypes())
     #set ($selected = "")
-    #if ( $currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()))
+    #if ($currentIssue.getDependency($childIssue).TypeId.toString().equals($dependType.DependTypeId.toString()))
     <option selected="selected" value="$dependType.DependTypeId">$dependType.Name</option>
     #else
     <option value="$dependType.DependTypeId">$dependType.Name</option>
@@ -60,7 +60,7 @@
 </select>
 #end
 
-#macro ( attrValueText $attrValue $size)
+#macro (attrValueText $attrValue $size)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
         #if ($attVal.Attribute.AttributeType.Name == "long-string")
            #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
@@ -69,7 +69,7 @@
         #end
 #end
 
-#macro ( templateAttrValueText $attrValue $size $value)
+#macro (templateAttrValueText $attrValue $size $value)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($currentValue = "")
 #if ($attrInput.Value.toString().length() > 0)
@@ -84,7 +84,7 @@
 #end
 #end
 
-#macro ( attrValueHierarchySelect $attrValue $optionFieldName $size)
+#macro (attrValueHierarchySelect $attrValue $optionFieldName $size)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
 #set ($module = $attrValue.Issue.Module)
@@ -105,9 +105,9 @@
 </select>
 #end
 
-#macro ( attrValueErrorMsg $attrValue $fieldName)
+#macro (attrValueErrorMsg $attrValue $fieldName)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
-#if ( !$attrInput.get($fieldName).isValid())
+#if (!$attrInput.get($fieldName).isValid())
 <p><strong class="alert">$attrInput.get($fieldName).Message</strong></p>
 #end
 #end
@@ -122,7 +122,7 @@
 #end
 
 #macro (fieldErrorMsg $field $br)
-#if ( !$field.isValid())
+#if ($field && $field.Message.length() > 0 && !$field.isValid())
 <p class="alert"><small><strong>Alert!</strong>&#160;$field.Message</small></p>$br
 #end
 #end
@@ -134,14 +134,14 @@
 #end
 
 #macro (stdIntakeMsg)
-#if ( !$intake.isAllValid())
+#if (!$intake.isAllValid())
 <p><strong class="alert">Please check your form fields for errors and resubmit.</strong></p>
 #end
 #end
 
 #macro (numericSelect $name $first $last $selected $size)
 <select name="$name" size="$size">
-#foreach ( $i in [$first..$last])
+#foreach ($i in [$first..$last])
 <option value="$i" #if ($i==$selected)selected="selected" #end>$i</option>
 #end
 </select>
@@ -161,7 +161,7 @@
 #end
 
 #macro (textField $field $size)
-#if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0)
+#if ($field.Validator.MaxLength && $field.Validator.MaxLength > 0)
 #set ($maxLength = $field.Validator.MaxLength)
 #end
 <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
@@ -197,11 +197,11 @@
 #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
 #set ($attr = $attrValue.Attribute)
 #set ($module = $attrValue.Issue.Module)
-  #set( $currentValue = "")
-  #if ($attrInput.UserId.toString().length() > 0 )
-    #set( $currentValue = $attrInput.UserId)
-  #elseif ( $templAttrInput.UserId.toString().length() > 0 )
-    #set( $currentValue = $templAttrInput.UserId)
+  #set($currentValue = "")
+  #if ($attrInput.UserId.toString().length() > 0)
+    #set($currentValue = $attrInput.UserId)
+  #elseif ($templAttrInput.UserId.toString().length() > 0)
+    #set($currentValue = $templAttrInput.UserId)
   #end
 #if ($multiple == "true" || $multiple == "multiple")
 <select name="$attrInput.UserId.Key"
@@ -228,7 +228,7 @@
   #set ($queryGroup = $intake.Query.mapTo($query))
   <select name="$queryGroup.ScopeId.Key">
   #foreach ($scope in $scarabR.getScopes())
-    <option value = "$scope.ScopeId" #if( $scope.ScopeId.equals("$query.ScopeId")) selected="selected" #end>
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.equals("$query.ScopeId")) selected="selected" #end>
     $scope.Name
     </option>
   #end
@@ -239,7 +239,7 @@
   #set ($group = $intake.IssueTemplateInfo.mapTo($templateInfo))
   <select name="$group.ScopeId.Key">
   #foreach ($scope in $scarabR.getScopes())
-    <option value = "$scope.ScopeId" #if( $scope.ScopeId.equals("$issue.ScopeId")) selected="selected" #end>
+    <option value = "$scope.ScopeId" #if($scope.ScopeId.equals("$issue.ScopeId")) selected="selected" #end>
     $scope.Name
     </option>
   #end
@@ -249,7 +249,7 @@
 #macro (frequencySelectBox $id)
 <option value="" >Choose</option>
   #foreach ($frequency in $scarabR.Frequencies)
-    <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end>
+    <option value = "$frequency.FrequencyId" #if($frequency.FrequencyId.equals($id)) selected="selected" #end>
     $frequency.Name
     </option>
   #end
