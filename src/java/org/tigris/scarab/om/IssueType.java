@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.36 2003/02/03 18:48:25 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.37 2003/02/03 23:39:54 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -127,7 +127,7 @@ public  class IssueType
     }        
 
     /**
-     * 
+     *  Returns true if the issue type has issues associated with it.
      */
     public boolean hasIssues()
         throws Exception
@@ -135,6 +135,23 @@ public  class IssueType
         boolean hasIssues = false;
         Criteria crit = new Criteria();
         crit.add(IssuePeer.TYPE_ID, getIssueTypeId());
+        if (IssuePeer.doSelect(crit).size() > 0)
+        {
+            hasIssues = true;
+        }
+        return hasIssues;
+    }        
+
+    /**
+     *  Returns true if the issue type/module has issues associated with it.
+     */
+    public boolean hasIssues(Module module)
+        throws Exception
+    {
+        boolean hasIssues = false;
+        Criteria crit = new Criteria();
+        crit.add(IssuePeer.TYPE_ID, getIssueTypeId());
+        crit.add(IssuePeer.MODULE_ID, module.getModuleId());
         if (IssuePeer.doSelect(crit).size() > 0)
         {
             hasIssues = true;

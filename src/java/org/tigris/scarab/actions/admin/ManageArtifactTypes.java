@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.25 2003/01/22 23:37:33 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.26 2003/02/03 23:39:54 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -210,7 +210,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                             //scarabR.setAlertMessage(l10n.get("LockedIssueType"));
                             field.setMessage("LockedIssueType");
                         }
-                        else if (issueType.hasIssues())
+                        else if (issueType.hasIssues(module))
                         {
                             scarabR.setAlertMessage(l10n.get("CannotDeleteIssueTypesWithIssues"));
                             field.setMessage("IssueTypeHasIssues");
