@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.6 2002/08/02 16:19:36 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.7 2002/08/09 19:47:09 spestov Exp $
  */
 public class Abbrevs
 {
@@ -196,8 +196,8 @@ public class Abbrevs
 				view.getStatus().setMessageAndClear(
 					jEdit.getProperty(
 					"view.status.incomplete-abbrev",
-					new Integer[] { new Integer(expand.posParamCount),
-					new Integer(pp.size()) }));
+					new Integer[] { new Integer(pp.size()),
+					new Integer(expand.posParamCount) }));
 			}
 
 			return true;

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.51 2002/08/02 17:31:58 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.52 2002/08/09 19:47:10 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -829,7 +829,16 @@ public class VFSBrowser extends JPanel implements EBComponent
 
 				// to notify listeners that any existing
 				// selection has been deactivated
-				filesSelected();
+
+				// turns out under some circumstances this
+				// method can switch the current buffer in
+				// BROWSER mode.
+
+				// in any case, this is only needed for the
+				// directory chooser (why?), so we add a
+				// check. otherwise poor Rick will go insane.
+				if(mode == CHOOSE_DIRECTORY_DIALOG)
+					filesSelected();
 			}
 		});
 	} //}}}
