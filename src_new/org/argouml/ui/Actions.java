@@ -1,5 +1,5 @@
 
-// $Id: Actions.java,v 1.58 2003/09/04 19:11:18 thierrylach Exp $
+// $Id: Actions.java,v 1.59 2003/09/15 06:54:39 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -519,7 +519,7 @@ class ActionSnooze extends ToDoItemAction {
  * System information dialog. 
  */
 class ActionSystemInfo extends UMLAction {
-    public ActionSystemInfo() { super("System Information", HAS_ICON); }
+    public ActionSystemInfo() { super("action.system-information", HAS_ICON); }
 
     public void actionPerformed(ActionEvent ae) {
 	JFrame jFrame = (JFrame) ActionUtilities.getActionRoot(ae);

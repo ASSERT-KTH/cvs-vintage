@@ -1,4 +1,4 @@
-// $Id: ConfigLoader.java,v 1.15 2003/09/08 13:39:20 bobtarling Exp $
+// $Id: ConfigLoader.java,v 1.16 2003/09/15 06:54:39 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,10 +36,16 @@ import java.util.Vector;
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.api.ConfigurationKey;
+import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientation;
-public class ConfigLoader {
-    private static Logger _Log = Logger.getLogger("org.argouml.util.ConfigLoader"); 
+import org.argouml.ui.SplashScreen;
 
+public class ConfigLoader {
+	
+    private static final String BUNDLE = "statusmsg";
+	
+    private static Logger _Log = Logger.getLogger("org.argouml.util.ConfigLoader"); 
+	
     ////////////////////////////////////////////////////////////////
     // static utility functions
 
@@ -156,6 +162,17 @@ public class ConfigLoader {
 		    _Log.error(e);
 		}
 		if (res != null) {
+		    if (SplashScreen.getDoSplash()) {
+		    	SplashScreen splash = SplashScreen.getInstance();
+			Object[] msgArgs = {
+			    tabName
+			};
+			splash.getStatusBar().showStatus(Translator.
+				messageFormat(BUNDLE, 
+					      "statusmsg.bar.making-project-browser", 
+					      msgArgs));
+			splash.getStatusBar().incProgress(2);
+		    }
                     // TODO This is a problem with non-gui calling GUI.
                     // I need to reimplement this with the splash panel
                     // as a listener to progress changes - Bob

@@ -1,5 +1,4 @@
-
-// $Id: ToDoPane.java,v 1.27 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: ToDoPane.java,v 1.28 2003/09/15 06:54:38 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +90,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.27 2003/09/04 20:11:48 thierrylach Exp $
+ * $Id: ToDoPane.java,v 1.28 2003/09/15 06:54:38 linus Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -104,6 +103,8 @@ public class ToDoPane extends JPanel
     
     ////////////////////////////////////////////////////////////////
     // constants
+    
+    private static final String BUNDLE = "statusmsg";
     
     public static final int WARN_THRESHOLD = 50;
     public static final int ALARM_THRESHOLD = 100;
@@ -208,8 +209,9 @@ public class ToDoPane extends JPanel
         
         if (doSplash) {
             SplashScreen splash = SplashScreen.getInstance();
-            splash.getStatusBar().showStatus("Making TodoPane: "
-					     + "Setting Perspectives");
+	    splash.getStatusBar().showStatus(
+		    Argo.localize(BUNDLE, 
+				  "statusmsg.bar.making-todopane"));
             splash.getStatusBar().showProgress(25);
         }
         

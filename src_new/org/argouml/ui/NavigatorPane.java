@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.55 2003/09/08 19:34:43 thierrylach Exp $
+// $Id: NavigatorPane.java,v 1.56 2003/09/15 06:54:39 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ import ru.novosoft.uml.MElementListener;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.55 2003/09/08 19:34:43 thierrylach Exp $
+ * $Id: NavigatorPane.java,v 1.56 2003/09/15 06:54:39 linus Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -119,6 +119,8 @@ public class NavigatorPane
 
     protected transient Logger cat = Logger.getLogger(this.getClass());
 
+    private static final String BUNDLE = "statusmsg";
+	
     public static final int MAX_HISTORY = 10;
 
     /** for collecting user statistics */
@@ -228,8 +230,9 @@ public class NavigatorPane
 
         if (doSplash) {
             SplashScreen splash = SplashScreen.getInstance();
-            splash.getStatusBar().showStatus("Making NavigatorPane: "
-					     + "Setting Perspectives");
+	    splash.getStatusBar().showStatus(Argo.localize(
+                    BUNDLE, 
+		    "statusmsg.bar.making-navigator-pane-perspectives"));
             splash.getStatusBar().showProgress(25);
         }
 
