@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.12 2003/05/01 08:49:40 kataka Exp $
+// $Id: UMLPlainTextDocument.java,v 1.13 2003/05/03 11:59:24 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
@@ -30,6 +30,9 @@ import javax.swing.text.PlainDocument;
 
 import org.apache.log4j.Category;
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.ui.targetmanager.TargetEvent;
+import org.argouml.ui.targetmanager.TargetListener;
+import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.MElementEvent;
@@ -43,28 +46,34 @@ import ru.novosoft.uml.MElementListener;
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public abstract class UMLPlainTextDocument extends PlainDocument
-    implements MElementListener, TargetChangedListener {
-        
-    public static Category cat = Category.getInstance(UMLPlainTextDocument.class);
-    
+public abstract class UMLPlainTextDocument
+    extends PlainDocument
+    implements MElementListener, TargetListener {
+
+    public static Category cat =
+        Category.getInstance(UMLPlainTextDocument.class);
+
     /**
-     * True if an event should be fired when the text of the document is changed     */
+     * True if an event should be fired when the text of the document is changed
+     */
     private boolean _firing = true;
-    
+
     /**
-     * True if an user edits the document directly (by typing in text)     */
+     * True if an user edits the document directly (by typing in text)
+     */
     private boolean _editing = false;
-    
+
     /**
-     * The target of the propertypanel that's behind this property.     */    
+     * The target of the propertypanel that's behind this property.
+     */
     private Object _target = null;
 
     /**
      * The name of the property set event that will change the property this document
-     * shows.     */
+     * shows.
+     */
     private String _eventName = null;
-    
+
     /**
      * Constructor for UMLPlainTextDocument. This takes a panel to set the
      * thirdpartyeventlistener to the given list of events to listen to.
@@ -72,7 +81,7 @@ public abstract class UMLPlainTextDocument extends PlainDocument
     public UMLPlainTextDocument(String eventName) {
         super();
         setEventName(eventName);
-    }    
+    }
 
     /**
      * @see ru.novosoft.uml.MElementListener#propertySet(ru.novosoft.uml.MElementEvent)
@@ -124,13 +133,20 @@ public abstract class UMLPlainTextDocument extends PlainDocument
      * @param target The target to set
      */
     public final void setTarget(Object target) {
-        
+        target = target instanceof Fig ? ((Fig)target).getOwner() : target;
+
         if (target instanceof MBase) {
             if (_target != null)
-                UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, getEventName());
+                UmlModelEventPump.getPump().removeModelEventListener(
+                    this,
+                    (MBase) _target,
+                    getEventName());
             _target = target;
             // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, getEventName());
-            UmlModelEventPump.getPump().addModelEventListener(this, (MBase)_target, getEventName());
+            UmlModelEventPump.getPump().addModelEventListener(
+                this,
+                (MBase) _target,
+                getEventName());
             handleEvent();
         }
     }
@@ -143,12 +159,10 @@ public abstract class UMLPlainTextDocument extends PlainDocument
         super.insertString(offset, str, a);
         if (isFiring()) {
             setFiring(false);
-            setProperty(getText(0, getLength()));    
+            setProperty(getText(0, getLength()));
             setFiring(true);
-        } 
-        
-        
-             
+        }
+
     }
 
     /**
@@ -158,43 +172,48 @@ public abstract class UMLPlainTextDocument extends PlainDocument
         super.remove(offs, len);
         if (isFiring()) {
             setFiring(false);
-            setProperty(getText(0, getLength()));    
+            setProperty(getText(0, getLength()));
             setFiring(true);
-        } 
+        }
     }
-    
+
     protected abstract void setProperty(String text);
-    
+
     protected abstract String getProperty();
-    
+
     private final void setFiring(boolean firing) {
         if (firing && _target != null)
-            UmlModelEventPump.getPump().addModelEventListener(this, (MBase)_target, _eventName);
+            UmlModelEventPump.getPump().addModelEventListener(
+                this,
+                (MBase) _target,
+                _eventName);
         else
-            UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _eventName);
+            UmlModelEventPump.getPump().removeModelEventListener(
+                this,
+                (MBase) _target,
+                _eventName);
         _firing = firing;
     }
-    
+
     private final boolean isFiring() {
         return _firing;
     }
-    
+
     private final void handleEvent() {
         try {
             setFiring(false);
             super.remove(0, getLength());
             super.insertString(0, getProperty(), null);
         } catch (BadLocationException b) {
-            cat.error("A BadLocationException happened\n" +
-                "The string to set was: " +
-                getProperty(), b);
-        }
-        finally {
+            cat.error(
+                "A BadLocationException happened\n"
+                    + "The string to set was: "
+                    + getProperty(),
+                b);
+        } finally {
             setFiring(true);
-        }      
+        }
     }
-    
-    
 
     /**
      * Returns the editing.
@@ -229,19 +248,23 @@ public abstract class UMLPlainTextDocument extends PlainDocument
     }
 
     /**
-     * @see org.argouml.uml.ui.TargetChangedListener#targetChanged(java.lang.Object)
-     */
-    public void targetChanged(Object newTarget) {
-        if (_target != newTarget)
-            setTarget(newTarget);
+    * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
+    */
+    public void targetAdded(TargetEvent e) {
     }
 
     /**
-     * @see org.argouml.uml.ui.TargetChangedListener#targetReasserted(java.lang.Object)
+     * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
-    public void targetReasserted(Object newTarget) {
-        if ((_target != newTarget))
-            setTarget(newTarget);
+    public void targetRemoved(TargetEvent e) {
+        setTarget(e.getNewTargets()[0]);
+    }
+
+    /**
+     * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
+     */
+    public void targetSet(TargetEvent e) {
+        setTarget(e.getNewTargets()[0]);
     }
 
 }
