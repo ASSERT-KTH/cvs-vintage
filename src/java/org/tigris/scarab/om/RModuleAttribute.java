@@ -65,7 +65,8 @@ public class RModuleAttribute
     implements Persistent
 {
     // need a local reference
-    private Attribute aAttribute;                 
+    private Attribute aAttribute = null;
+    
     public Attribute getAttribute() throws Exception
     {
         if ( aAttribute==null && (getAttributeId() != null) )
