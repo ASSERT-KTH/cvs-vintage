@@ -59,7 +59,7 @@
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  *              Dan Milstein <danmil@shore.net> 
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H
@@ -164,6 +164,13 @@ struct jk_ws_service {
     unsigned ssl_cert_len;
     char     *ssl_cipher;
     char     *ssl_session;
+
+    /*
+     * SSL extra information for Servlet 2.3 API
+     *
+     * ssl_key_size - ssl key size in use
+     */
+    int     ssl_key_size;
 
     /*
      * Headers, names and values.

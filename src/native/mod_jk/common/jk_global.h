@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -143,6 +143,14 @@ extern "C" {
     #define FILE_SEPERATOR          ('/')
     #define PATH_ENV_VARIABLE       ("LD_LIBRARY_PATH")
 #endif
+
+
+/* 
+ * JK options
+ */
+
+#define JK_OPT_FWDUNPARSED 0x0001
+#define JK_OPT_FWDKEYSIZE  0x0002
 
 #ifdef __cplusplus
 }

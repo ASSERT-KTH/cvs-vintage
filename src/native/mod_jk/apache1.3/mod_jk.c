@@ -124,7 +124,13 @@ typedef struct {
     char *https_indicator;
     char *certs_indicator;
     char *cipher_indicator;
-    char *sesion_indicator;
+    char *session_indicator;
+    char *key_size_indicator;
+
+    /*
+     * Jk Options
+     */
+    int options;
 
     /*
      * Environment variables support
@@ -433,11 +439,35 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->query_string = r->args;
     s->req_uri      = r->uri;
 
+    if (conf->options & JK_OPT_FWDUNPARSED) {
+    /*
+     * The 2.2 servlet spec errata says the uri from
+     * HttpServletRequest.getRequestURI() should remain encoded.
+     * [http://java.sun.com/products/servlet/errata_042700.html]
+     * 
+     * we follow spec in that case but can't use mod_rewrite
+     */
+        s->req_uri      = r->unparsed_uri;
+        if (s->req_uri != NULL) {
+            char *query_str = strchr(s->req_uri, '?');
+            if (query_str != NULL) {
+                *query_str = 0;
+            }
+        }
+    }
+    else {
+    /*
+     * we don't follow spec but we can use mod_rewrite
+     */
+        s->req_uri      = r->uri;
+    }
+
     s->is_ssl       = JK_FALSE;
     s->ssl_cert     = NULL;
     s->ssl_cert_len = 0;
     s->ssl_cipher   = NULL;
     s->ssl_session  = NULL;
+    s->ssl_key_size = -1;       /* required by Servlet 2.3 Api, added in jtc */
 
     if(conf->ssl_enable || conf->envvars_in_use) {
         ap_add_common_vars(r);
@@ -452,10 +482,16 @@ static int init_ws_service(apache_private_data_t *private_data,
                 if(s->ssl_cert) {
                     s->ssl_cert_len = strlen(s->ssl_cert);
                 }
-                s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, 
-                                                       conf->cipher_indicator);
-                s->ssl_session  = (char *)ap_table_get(r->subprocess_env, 
-                                                       conf->sesion_indicator);
+
+                /* Servlet 2.3 API */
+                s->ssl_cipher   = (char *)ap_table_get(r->subprocess_env, conf->cipher_indicator);
+                s->ssl_session  = (char *)ap_table_get(r->subprocess_env, conf->session_indicator);
+
+                /* Servlet 2.3 API */
+                ssl_temp = (char *)ap_table_get(r->subprocess_env, conf->key_size_indicator);
+                if (ssl_temp)
+                    s->ssl_key_size = atoi(ssl_temp);
+
             }
         }
 
@@ -555,7 +591,6 @@ static const char *jk_set_mountcopy(cmd_parms *cmd,
     
     /* Set up our value */
     conf->mountcopy = flag ? JK_TRUE : JK_FALSE;
-
     return NULL;
 }
 
@@ -634,7 +669,6 @@ static const char *jk_set_enable_ssl(cmd_parms *cmd,
     
     /* Set up our value */
     conf->ssl_enable = flag ? JK_TRUE : JK_FALSE;
-
     return NULL;
 }
 
@@ -646,8 +680,7 @@ static const char *jk_set_https_indicator(cmd_parms *cmd,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    conf->https_indicator = indicator;
-
+    conf->https_indicator = ap_pstrdup(cmd->pool,indicator);
     return NULL;
 }
 
@@ -659,8 +692,7 @@ static const char *jk_set_certs_indicator(cmd_parms *cmd,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    conf->certs_indicator = indicator;
-
+    conf->certs_indicator = ap_pstrdup(cmd->pool,indicator);
     return NULL;
 }
 
@@ -672,10 +704,15 @@ static const char *jk_set_cipher_indicator(cmd_parms *cmd,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    conf->cipher_indicator = indicator;
-
+    conf->cipher_indicator = ap_pstrdup(cmd->pool,indicator);
     return NULL;
 }
+
+/*
+ * JkSESSIONIndicator Directive Handling
+ *
+ * JkSESSIONIndicator SSL_SESSION_ID
+ */
 
 static const char *jk_set_session_indicator(cmd_parms *cmd, 
                                             void *dummy, 
@@ -685,11 +722,21 @@ static const char *jk_set_session_indicator(cmd_parms *cmd,
     jk_server_conf_t *conf =
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
-    conf->sesion_indicator = indicator;
-
+    conf->session_indicator = ap_pstrdup(cmd->pool,indicator);
     return NULL;
 }
 
+static const char *jk_set_key_size_indicator(cmd_parms *cmd,
+                                           void *dummy,
+                                           char *indicator)
+{
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    conf->key_size_indicator = ap_pstrdup(cmd->pool,indicator);
+    return NULL;
+}
 
 static const char *jk_set_log_level(cmd_parms *cmd, 
                                     void *dummy, 
@@ -700,10 +747,49 @@ static const char *jk_set_log_level(cmd_parms *cmd,
         (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
 
     conf->log_level = jk_parse_log_level(log_level);
-
     return NULL;
 }
 
+
+const char *jk_set_options(cmd_parms *cmd,
+                           void *dummy,
+                           const char *line)
+{
+    int  opt = 0;  
+    char action;
+    char *w;
+
+    server_rec *s = cmd->server;
+    jk_server_conf_t *conf =
+        (jk_server_conf_t *)ap_get_module_config(s->module_config, &jk_module);
+
+    while (line[0] != 0) {
+        w = ap_getword_conf(cmd->pool, &line);
+        action = 0;
+
+        if (*w == '+' || *w == '-') {
+            action = *(w++);
+        }
+
+        if (!strcasecmp(w, "ForwardUnparsedUri"))
+            opt = JK_OPT_FWDUNPARSED;
+        else if (!strcasecmp(w, "ForwardKeySize"))
+            opt = JK_OPT_FWDKEYSIZE;
+        else
+            return ap_pstrcat(cmd->pool, "JkOptions: Illegal option '", w, "'", NULL);
+
+        if (action == '-') {
+            conf->options &= ~opt;
+        }
+        else if (action == '+') {
+            conf->options |=  opt;
+        }
+        else {            /* for now +Opt == Opt */
+            conf->options |=  opt;
+        }
+    }
+    return NULL;
+}
 
 static const char *jk_add_env_var(cmd_parms *cmd, 
                                   void *dummy, 
@@ -782,10 +868,21 @@ static const command_rec jk_cmds[] =
      "Name of the Apache environment that contains SSL client cipher"},
     {"JkSESSIONIndicator", jk_set_session_indicator, NULL, RSRC_CONF, TAKE1,
      "Name of the Apache environment that contains SSL session"},
+    {"JkKEYSIZEIndicator", jk_set_key_size_indicator, NULL, RSRC_CONF, TAKE1,
+     "Name of the Apache environment that contains SSL key size in use"},
     {"JkExtractSSL", jk_set_enable_ssl, NULL, RSRC_CONF, FLAG,
      "Turns on SSL processing and information gathering by mod_jk"},     
 
-
+    /*
+     * Options to tune mod_jk configuration
+     * for now we understand :
+     * +ForwardUnparsed   => Forward URI as unparsed, spec compliant but broke mod_rewrite
+     * -ForwardUnparsed   => Forward URI normally, less spec compliant but mod_rewrite compatible
+     * +ForwardSSLKeySize => Forward SSL Key Size, to follow 2.3 specs but may broke old TC 3.2
+     * -ForwardSSLKeySize => Don't Forward SSL Key Size, will make mod_jk works with all TC release 
+     */
+    {"JkOptions", jk_set_options, NULL, RSRC_CONF, RAW_ARGS,
+     "Set one of more options to configure the mod_jk module"},     
     {"JkEnvVar", jk_add_env_var, NULL, RSRC_CONF, TAKE2,
      "Adds a name of environment variable that should be sent to Tomcat"},     
     {NULL}
@@ -889,6 +986,11 @@ static void *create_jk_config(ap_pool *p, server_rec *s)
     c->mountcopy   = JK_FALSE;
 
     /*
+     * No options by default
+     */
+    c->options     = 0;
+
+    /*
      * By default we will try to gather SSL info. 
      * Disable this functionality through JkExtractSSL
      */
@@ -906,7 +1008,8 @@ static void *create_jk_config(ap_pool *p, server_rec *s)
      * configuration directives to set them.
      *
     c->cipher_indicator = "HTTPS_CIPHER";
-    c->sesion_indicator = NULL;
+    c->session_indicator = NULL;
+    c->key_size_indicator = NULL;
      */
 
     /*
@@ -914,7 +1017,8 @@ static void *create_jk_config(ap_pool *p, server_rec *s)
      * are using another module (say apache_ssl) comment them out.
      */
     c->cipher_indicator = "SSL_CIPHER";
-    c->sesion_indicator = "SSL_SESSION_ID";
+    c->session_indicator = "SSL_SESSION_ID";
+    c->key_size_indicator = "SSL_CIPHER_USEKEYSIZE";
 
     if(!map_alloc(&(c->uri_to_context))) {
         jk_error_exit(APLOG_MARK, APLOG_EMERG, s, p, "Memory error");
@@ -943,7 +1047,8 @@ static void *merge_jk_config(ap_pool *p,
         overrides->https_indicator  = base->https_indicator;
         overrides->certs_indicator  = base->certs_indicator;
         overrides->cipher_indicator = base->cipher_indicator;
-        overrides->sesion_indicator = base->sesion_indicator;
+        overrides->session_indicator = base->session_indicator;
+        overrides->key_size_indicator = base->key_size_indicator;
     }
     
     if(overrides->mountcopy) {
