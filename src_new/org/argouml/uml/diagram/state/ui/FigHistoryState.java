@@ -24,7 +24,7 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigHistoryState.java,v 1.5 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigHistoryState.java,v 1.6 2002/12/25 10:22:28 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -109,7 +109,7 @@ public class FigHistoryState extends FigStateVertex {
 
   public void setOwner(Object node) {
     super.setOwner(node);
-    bindPort(node, _bigPort);
+    // bindPort(node, _bigPort);
   }
 
   /** History states are fixed size. */
