@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.54 2002/06/19 03:30:50 schaefera Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.55 2002/06/23 17:56:32 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -18,6 +18,28 @@
    -->
   <classpath codebase="lib" archives="*"/>
 
+  <!-- Binding service manager for port/host mapping. This is a sample
+    config that demonstrates a JBoss instances with a server name 'jboss1'
+    loading its bindings from an XML file using the ServicesStoreFactory
+    implementation returned by the XMLServicesStoreFactory.
+
+    ServerName: The unique name assigned to a JBoss server instance for
+      lookup purposes. This allows a single ServicesStore to handle mulitiple
+      JBoss servers.
+    StoreURL: The URL string passed to org.jboss.services.binding.ServicesStore
+      during initialization that specifies how to connect to the bindings store.
+    StoreFactory: The org.jboss.services.binding.ServicesStoreFactory interface
+      implementation to create to obtain the ServicesStore instance.
+
+  <mbean code="org.jboss.services.binding.ServiceBindingManager"
+    name="jboss.system:service=ServiceBindingManager">
+    <attribute name="ServerName">jboss1</attribute>
+    <attribute name="StoreURL">file:/etc/jboss-bindings.xml</attribute>
+    <attribute name="StoreFactoryClassName">
+      org.jboss.services.binding.XMLServicesStoreFactory
+    </attribute>
+  </mbean>
+-->
 
   <!-- ==================================================================== -->
   <!-- Log4j Initialization                                                 -->
@@ -68,17 +90,17 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.security.plugins.SecurityConfig"
-	 name="jboss.security:name=SecurityConfig">
+	 name="jboss.security:service=SecurityConfig">
     <attribute name="LoginConfig">jboss.security:name=XMLLoginConfig</attribute>
   </mbean>
   <mbean code="org.jboss.security.auth.login.XMLLoginConfig"
-	 name="jboss.security:name=XMLLoginConfig">
+	 name="jboss.security:service=XMLLoginConfig">
     <attribute name="ConfigResource">login-config.xml</attribute>
   </mbean>
 
   <!-- JAAS security manager and realm mapping -->
   <mbean code="org.jboss.security.plugins.JaasSecurityManagerService"
-	 name="jboss.security:name=JaasSecurityManager">
+	 name="jboss.security:service=JaasSecurityManager">
     <attribute name="SecurityManagerClassName">
       org.jboss.security.plugins.JaasSecurityManager
     </attribute>
