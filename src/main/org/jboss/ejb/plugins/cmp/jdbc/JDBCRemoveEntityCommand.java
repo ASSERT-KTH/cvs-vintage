@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -116,7 +116,7 @@ public class JDBCRemoveEntityCommand {
 
    private HashMap removeFromRelations(EntityEnterpriseContext context) {
       HashMap oldRelations = new HashMap();
-      
+
       // remove entity from all relations before removing from db
       for(Iterator cmrFields = entity.getCMRFields().iterator(); 
             cmrFields.hasNext();) { 
@@ -126,25 +126,16 @@ public class JDBCRemoveEntityCommand {
          if(cmrField.isCollectionValued()) {
             Collection c = 
                   (Collection)cmrField.getInstanceValue(context);
+
             if(!c.isEmpty()) {
                oldRelations.put(cmrField, new ArrayList(c));
-
-               // clear unless the related CMR is a foreign key
-               // that is a part of the primary key
-               if(!cmrField.getRelatedCMRField().isFkPartOfPk()) {
-                  c.clear();
-               }
+               c.clear();
             }
          } else {
             Object o = cmrField.getInstanceValue(context);
             if(o != null) {
                oldRelations.put(cmrField, Collections.singletonList(o));
-
-               // set to null unless the related CMR is a foreign key
-               // that is a part of the primary key
-               if(!cmrField.isFkPartOfPk()) {
-                  cmrField.setInstanceValue(context, null);
-               }
+               cmrField.setInstanceValue(context, null);
             }
          }
       }
