@@ -2,7 +2,6 @@ $page.setTitle("User Attributes")
 
 <div class="app" id=""div3-0-0-1"">
 <h2>$page.Title</h2>
-hi
 
 #set ($module = $scarabR.CurrentModule)
 
@@ -76,7 +75,7 @@ hi
 #foreach ($attr in $userAttrs)
   #set ($attgroup = $intake.Attribute.mapTo($attr))
   #indexedRows($velocityCount)
-  <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  <td><input type="checkbox" name="action_$attr.AttributeId"></td>
   <td>$link.setPage("admin,UserAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("$scarabG.Constant.LAST_TEMPLATE", "global").setLabel("$attr.Name")</td>
   <td>$attr.Description</td>
   <td>
@@ -109,7 +108,7 @@ hi
 <div class="functnbar3">
 <input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
-##<input type="submit" value="Copy selected" />&#160;
+<input type="submit" value="Copy selected"  name="eventSubmit_doCopy" />&#160;
 <input type="submit" value="Delete selected"  name="eventSubmit_doSave" />
 </div>
 

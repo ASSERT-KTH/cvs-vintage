@@ -107,7 +107,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
   #indexedRows($velocityCount)
-  <td><input type="checkbox" name="delete_group_$group.AttributeGroupId" /></td>
+  <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
   <td>$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId).setLabel("$group.Name")</td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
   <td>
@@ -123,7 +123,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <div class="functnbar3">
 <input type="submit" value="Save"  name="eventSubmit_doSave" />&#160;
 <input type="submit" value="Add new"  name="eventSubmit_doCreatenewgroup" />&#160;
-<input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeletegroup" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />
 </div>
@@ -175,7 +174,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <div class="functnbar3">
 <input type="submit" value="Save"  name="eventSubmit_doSaveuserattributes" />&#160;
 <input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeleteuserattribute" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSaveuserattributes" />
 </div>

@@ -78,7 +78,7 @@ Global attributes</th>
   #if (!$attribute.isUserAttribute()) 
     #set ($attgroup = $intake.Attribute.mapTo($attribute))
     #indexedRows($velocityCount)
-  <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  <td><input type="checkbox" name="action_$attribute.AttributeId"></td>
   <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
   <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
   <td>
@@ -99,8 +99,8 @@ Global attributes</th>
 
 <div class="functnbar3">
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
-##<input type="submit" value="Copy selected" />&#160;
-<input type="submit" value="Delete selected"  name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="Delete selected"  name="eventSubmit_doDelete" />&#160;
 <small>attribute(s)</small>&#160;
 </div>
 
