@@ -174,13 +174,94 @@ public final class ByteChunk implements Cloneable, Serializable {
 	    conversionBuff=new char[bytesLen];
 	}
 
-	int j=bytesOff;
-	for( int i=0; i< bytesLen; i++ ) {
-	    conversionBuff[i]=(char)bytes[j++];
-	}
-	return new String( conversionBuff, 0, bytesLen);
+	// 	int j=bytesOff;
+	// 	for( int i=0; i< bytesLen; i++ ) {
+	// 	    conversionBuff[i]=(char)bytes[j++];
+	// 	}
+	int charsLen=byte2charUTF8();
+	if( charsLen==-1) return null; // or throw exception
+	
+	return new String( conversionBuff, 0, charsLen);
     }
 
+
+    private int byte2charUTF8() {
+	if( conversionBuff==null || bytesLen > conversionBuff.length ) {
+	    conversionBuff=new char[bytesLen];
+	}
+	// source: xerces' UTF8Reader.copyMultiByteCharData() 
+	int j=bytesOff;
+	int charOff=0;
+	int end=j+bytesLen;
+	while( j< end ) {
+	    int b0=(int)bytes[j];
+	    
+	    if( b0 < 0x80 ) { 
+		conversionBuff[charOff]=(char)b0;
+		charOff++;
+		j++;
+		continue;
+	    }
+	    // 2 byte ?
+	    if( j++ >= end ) {
+		// ok, just ignore - we could throw exception
+		return -1;
+	    }
+	    int b1=(int)bytes[j];
+	    
+	    // ok, let's the fun begin - we're handling UTF8
+	    if ((0xe0 & b0) == 0xc0) { // 110yyyyy 10xxxxxx (0x80 to 0x7ff)
+		int ch = ((0x1f & b0)<<6) + (0x3f & b1);
+		conversionBuff[charOff]=(char)ch;
+		charOff++;
+		continue;
+	    }
+	    
+	    if( j++ >= end ) 
+		return -1;
+	    int b2=(int)bytes[j];
+	    
+	    if( (b0 & 0xf0 ) == 0xe0 ) {
+		if ((b0 == 0xED && b1 >= 0xA0) ||
+		    (b0 == 0xEF && b1 == 0xBF && b2 >= 0xBE)) {
+		    return -1;
+		}
+
+		int ch = ((0x0f & b0)<<12) + ((0x3f & b1)<<6) + (0x3f & b2);
+		conversionBuff[charOff]=(char)ch;
+		charOff++;
+		continue;
+	    }
+
+	    if( j++ >= end ) 
+		return -1;
+	    int b3=(int)bytes[j];
+
+	    if (( 0xf8 & b0 ) == 0xf0 ) {
+		if (b0 > 0xF4 || (b0 == 0xF4 && b1 >= 0x90))
+		    return -1;
+		int ch = ((0x0f & b0)<<18) + ((0x3f & b1)<<12) +
+		    ((0x3f & b2)<<6) + (0x3f & b3);
+
+		if (ch < 0x10000) {
+		    conversionBuff[charOff]=(char)ch;
+		    charOff++;
+		} else {
+		    conversionBuff[charOff]=(char)(((ch-0x00010000)>>10)+
+						   0xd800);
+		    charOff++;
+		    conversionBuff[charOff]=(char)(((ch-0x00010000)&0x3ff)+
+						   0xdc00);
+		    charOff++;
+		}
+		continue;
+	    } else {
+		return -1;
+	    }
+	}
+	return charOff;
+    }
+    
     public int getInt()
     {
 	return Ascii.parseInt(bytes, bytesOff,bytesLen);
