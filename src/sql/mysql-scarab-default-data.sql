@@ -183,45 +183,48 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUME
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
         values(53, 6, 'other', 30);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /* Priorities select-one */
-        values(54, 7, 'P1', 1);
+        values(54, 7, 'High', 1);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(55, 7, 'P2', 2);
+        values(55, 7, 'Medium', 2);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(56, 7, 'P3', 3);
+        values(56, 7, 'Low', 3);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(57, 7, 'P4', 4);
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(58, 7, 'P5', 5);
+        values(57, 7, 'Undecided', 4);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /* Priorities voted */
-        values(59, 8, 'P1', 1);
+        values(58, 8, 'High', 1);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(60, 8, 'P2', 2);
+        values(59, 8, 'Medium', 2);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(61, 8, 'P3', 3);
+        values(60, 8, 'Low', 3);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(62, 8, 'P4', 4);
-insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(63, 8, 'P5', 5);
+        values(61, 8, 'Undecided', 4);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /* Severities */
-        values(64, 9, 'blocker', 1);
+        values(62, 9, 'blocker', 1);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(65, 9, 'critical', 2);
+        values(63, 9, 'critical', 2);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(66, 9, 'major', 3);
+        values(64, 9, 'major', 3);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(67, 9, 'normal', 4);
+        values(65, 9, 'normal', 4);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(68, 9, 'minor', 5);
+        values(66, 9, 'minor', 5);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(69, 9, 'trivial', 6);
+        values(67, 9, 'trivial', 6);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(70, 9, 'enhancement', 7);
+        values(68, 9, 'enhancement', 7);
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
+        values(69, 9, 'cosmetic', 8);
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
+        values(70, 9, 'serious', 9);
+insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
+        values(71, 9, 'undecided', 10);
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /* Tracking options */
-        values(71, 10, 'never', 1); /* never send notification */
+        values(72, 10, 'never', 1); /* never send notification */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(72, 10, 'major', 2); /* send notification on major change */
+        values(73, 10, 'major', 2); /* send notification on major change */
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, DISPLAY_VALUE, NUMERIC_VALUE) /*  */
-        values(73, 10, 'any', 3); /* send notification on any change */
+        values(74, 10, 'any', 3); /* send notification on any change */
+
 /*
  *
  */
