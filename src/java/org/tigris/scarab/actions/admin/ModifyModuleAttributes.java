@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.38 2001/11/08 02:18:12 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.39 2001/11/08 19:25:54 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -269,8 +269,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         String attributeId = data.getParameters().getString("attributeid");
         String groupId = data.getParameters().getString("groupId");
-        Attribute attribute = (Attribute)AttributePeer.
-                               retrieveByPK(new NumberKey(attributeId));
+        Attribute attribute = Attribute.getInstance(new NumberKey(attributeId));
         AttributeGroup group = null;
 
         // FIXME: use intake for this stuff...
@@ -326,6 +325,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             rmo.save();
             // add module-attributeoption mappings to template type
             RModuleOption rmo2 = rmo.copy();
+            rmo2.setOptionId(rmo.getOptionId());
             rmo2.setModuleId(module.getModuleId());
             rmo2.setIssueTypeId(issueType.getTemplateId());
             rmo2.save();

@@ -82,7 +82,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.43 2001/11/08 02:17:25 elicia Exp $
+    @version $Id: Search.java,v 1.44 2001/11/08 19:25:54 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -104,10 +104,8 @@ public class Search extends RequireLoginFirstAction
         if ( intake.isAllValid() ) 
         {
             ScarabRequestTool scarabR = getScarabRequestTool(context);
-            ModuleEntity me = scarabR.getCurrentModule();
-            IssueType issueType = scarabR.getCurrentIssueType();
-         
-            IssueSearch search = new IssueSearch(me, issueType);
+            IssueSearch search = new IssueSearch(scarabR.getCurrentModule(), 
+                                                 scarabR.getCurrentIssueType());
             Group searchGroup = intake.get("SearchIssue", 
                                      scarabR.getSearch().getQueryKey() );
             searchGroup.setProperties(search);
