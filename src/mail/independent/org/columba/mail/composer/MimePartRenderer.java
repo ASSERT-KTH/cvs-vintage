@@ -119,7 +119,7 @@ public abstract class MimePartRenderer {
 		random.nextBytes(bytes);
 		
 		try {
-			return encoder.encode( new String( bytes ), null );	
+			return encoder.encode( new String( bytes ), "US-ASCII" );	
 		} catch (UnsupportedEncodingException e) {
 			// Can never be reached
 		}
