@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.15 2002/03/03 16:48:16 maartenc Exp $
+@version $Id: ManageUserSearch.vm,v 1.16 2002/03/04 21:17:51 maartenc Exp $
 *#
 
 $page.setTitle("User search")
@@ -42,7 +42,7 @@ $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
   <input type="hidden" name="searchCommand" value="search" />
   <input type="hidden" name="pageNum" value="$pageNum" />
 
-<table cellspacing="0" cellpadding="2">
+<table border="0" cellspacing="0" cellpadding="2">
 <tr>
 <td>
 <select name="searchField">
@@ -70,10 +70,10 @@ Order by: <select name="orderbyField">
 
 <p>
 Results per page: 
-<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.equals("25")) checked #end /> 25 &nbsp;
-<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked #end /> 50 &nbsp;
-<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked #end /> 75 &nbsp;
-<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.equals("100")) checked #end /> 100
+<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.equals("25")) checked="checked" #end /> 25 &nbsp;
+<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked="checked" #end /> 50 &nbsp;
+<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked="checked" #end /> 75 &nbsp;
+<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.equals("100")) checked="checked" #end /> 100
 </p>
 
 <div class="functnbar2">
@@ -95,13 +95,6 @@ Results per page:
 <form name="ManageUserSearchForm" action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
  <input type="hidden" name="action" value="admin.ManageUser" />
  <input type="hidden" name="state" value="" />
-
-<table cellspacing="0" cellpadding="2" width="100%">
- <tr>
-   <th>Select</th>
-   <th>Login name</th>
-   <th>Name</th>
- </tr>
 
 ## this is the results list stuff
 #if ($totalPages > 1)
@@ -125,13 +118,20 @@ Results per page:
  </p>
 #end
 
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+ <tr>
+   <th>Select</th>
+   <th>Login name</th>
+   <th>Name</th>
+ </tr>
+
 #foreach ($user in $userList)
   #indexedRows ($velocityCount)
    <td width="10">
-   <center><input type="radio" name="username" value="$!user.UserName" /></center>
+   <input type="radio" name="username" value="$!user.UserName" />
    </td>
    <td>$!user.UserName</td>
-   <td><a href=mailto:$!user.Email>$!user.FirstName $!user.LastName</a></td>
+   <td><a href="mailto:$!user.Email">$!user.FirstName $!user.LastName</a></td>
  </tr>
 #end
 
@@ -158,8 +158,8 @@ Results per page:
  <input type="submit" name="eventSubmit_doGotoeditroles" value="Edit roles" />&#160;
  <input type="submit" name="eventSubmit_doGotodeleteuser" value="Delete user" />
 </div>
+</form>
 #end
-
 
 #end
 </div>
