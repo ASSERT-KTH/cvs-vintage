@@ -112,51 +112,6 @@ public class Transaction
     }
 
     /**
-     * Gets the Attachment associated with this Transaction record
-     *
-     * This is necessary because a Transaction may have an attachment
-     * associated to it, which is the result of an issue modification.
-     * For example, when an issue has attributes modified, one can enter
-     * a comment. the comment is stored as an attachment and as part of
-     * the transaction for the changes.
-     */
-    public Attachment getAttachment() throws TorqueException
-    {
-        try
-        {
-            if ( aAttachment == null && getAttachmentId() != null )
-            {
-                aAttachment = AttachmentManager
-                    .getInstance(new NumberKey(getAttachmentId()), false);
-                
-                // make sure the parent attribute is in synch.
-                setAttachment(aAttachment);            
-            }
-        }
-        catch (Exception e)
-        {
-            aAttachment = null;
-        }
-        return aAttachment;
-    }
-
-    /**
-     * Sets the Attachment associated with this Transaction record
-     *
-     * This is necessary because a Transaction may have an attachment
-     * associated to it, which is the result of an issue modification.
-     * For example, when an issue has attributes modified, one can enter
-     * a comment. the comment is stored as an attachment and as part of
-     * the transaction for the changes.
-     */
-    public void setAttachment(Attachment v) throws TorqueException
-    {
-        aAttachment = v;
-        super.setAttachment(v);
-    }
-
-
-    /**
      * Returns a list of Activity objects associated with this Transaction.
      */
     public List getActivityList() throws Exception
