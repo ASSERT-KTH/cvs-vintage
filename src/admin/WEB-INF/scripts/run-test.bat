@@ -11,13 +11,12 @@ goto exit
 
 set _OLDCP=%CLASSPATH%
 
-set CLASSPATH=%TOMCAT_HOME%/lib/container/tomcat_util.jar
-set CLASSPATH=%TOMCAT_HOME%/lib/common/core_util.jar;%CLASSPATH%
-set CLASSPATH=%TOMCAT_HOME%/lib/container/parser.jar;%CLASSPATH%
+set CLASSPATH=%TOMCAT_HOME%/lib/container/parser.jar
 set CLASSPATH=%TOMCAT_HOME%/lib/container/crimson.jar;%CLASSPATH%
 set CLASSPATH=%TOMCAT_HOME%/lib/container/xerces.jar;%CLASSPATH%
 set CLASSPATH=%TOMCAT_HOME%/lib/container/jaxp.jar;%CLASSPATH%
 set CLASSPATH=%TOMCAT_HOME%/webapps/admin/WEB-INF/lib/ant.jar;%CLASSPATH%
+set CLASSPATH=%TOMCAT_HOME%/webapps/admin/WEB-INF/lib/tomcat_util_test.jar;%CLASSPATH%
 set CLASSPATH=%TOMCAT_HOME%/webapps/admin/WEB-INF/classes;%CLASSPATH%
 
 if "%_OLDCP%" == "" goto runant
