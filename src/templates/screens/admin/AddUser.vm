@@ -74,8 +74,8 @@
 <p>* Required field</p>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
- <input type="submit" name="eventSubmit_doAdduser" value="Add New User" />
+ <input type="submit" name="eventSubmit_doAdduser" value="Add New User" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 $intake.declareGroups()
