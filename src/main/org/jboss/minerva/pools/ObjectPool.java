@@ -16,7 +16,7 @@ import org.jboss.logging.Logger;
  * A generic object pool.  You must provide a PoolObjectFactory (or the class
  * of a Java Bean) so the pool knows what kind of objects to create.  It has
  * many configurable parameters, such as the minimum and maximum size of the
- * pool, whether to allow the pool to shrink, etc.  If the pooled objects
+ * pool, whether to enable idle timeouts, etc.  If the pooled objects
  * implement PooledObject, they will automatically be returned to the pool at
  * the appropriate times.
  * <P>In general, the appropriate way to use a pool is:</P>
@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -45,12 +45,12 @@ public class ObjectPool implements PoolEventListener {
     private HashSet deadObjects = null;
     private int minSize = 0;
     private int maxSize = 0;
-    private boolean shrinks = false;
+    private boolean idleTimeout = false;
     private boolean runGC = false;
-    private float shrinkPercent = 0.33f;             // reclaim 1/3 of stale objects
-    private long shrinkMinIdleMillis = 600000l; // must be unsued for 10 minutes
-    private long gcMinIdleMillis = 1200000l;    // must be idle for 20 minutes
-    private long gcIntervalMillis = 120000l;    // shrink & gc every 2 minutes
+    private float maxIdleShrinkPercent = 1.0f; // don't replace idle connections that timeout
+    private long idleTimeoutMillis = 1800000l; // must be idle in pool for 30 minutes
+    private long gcMinIdleMillis   = 1200000l; // must be unused by client for 20 minutes
+    private long gcIntervalMillis  =  120000l; // shrink & gc every 2 minutes
     private long lastGC = System.currentTimeMillis();
     private boolean blocking = false;
     private boolean trackLastUsed = false;
@@ -169,10 +169,9 @@ public class ObjectPool implements PoolEventListener {
     }
 
     /**
-     * Sets the minimum size of the pool.  The pool always starts with zero
-     * instances, but once running, it will never shrink below this size.  This
-     * parameter has no effect if shrinking is not enabled.  The default is
-     * zero.
+     * Sets the minimum size of the pool.  The pool will create this many
+     * instances at startup, and once running, it will never shrink below this
+     * size.  The default is zero.
      * @throws java.lang.IllegalStateException
      *    Occurs when you try to set the minimum size after the pool has been
      *    initialized.
@@ -221,40 +220,34 @@ public class ObjectPool implements PoolEventListener {
      * connections, file handles, etc) during periods of inactivity.  This runs
      * as often as garbage collection (even if garbage collection is disabled,
      * this uses the same timing parameter), but the required period of
-     * inactivity is different.  Also, you may choose to release only a fraction
-     * of the eligible objects to slow the shrinking further.  So the algorithm
-     * is:
-     * <UL>
-     *   <LI>Run every <I>n</I> milliseconds.</LI>
-     *   <LI>Count the number of connections that are not in use, and whose last
-     *     used time is greater than the period of inactivity.</LI>
-     *   <LI>Multiply this by the fraction of connections to release, but if the
-     *     last total was greater than one, this will always be at least one.</LI>
-     *   <LI>Attempt to release this many connections, of the ones identified
-     *     above.  Do not release any connection that has been marked as in use
-     *     while this runs, and do not allow the pool to shrink below the
-     *     specified minimum size.</LI>
-     * </UL>
+     * inactivity is different.  All objects that have been unused for more
+     * than the idle timeout are closed, but if you set the MaxIdleShrinkPercent
+     * parameter, the pool may recreate some objects so the total number of
+     * pooled instances doesn't shrink as rapidly. Also, under no circumstances
+     * will the number of pooled instances fall below the minimum size.</p>
      * <P>The default is disabled.</P>
      * @see #setGCInterval
-     * @see #setShrinkMinIdleTime
-     * @see #setShrinkPercent
+     * @see #setIdleTimeout
+     * @see #setMaxIdleTimeoutPercent
      * @see #setMinSize
      * @throws java.lang.IllegalStateException
-     *    Occurs when you try to set the shrinking state after the pool has been
-     *    initialized.
+     *    Occurs when you try to set the idle timeout state after the pool has
+     *    been initialized.
      */
-    public void setShrinkingEnabled(boolean allowShrinking) {
+    public void setIdleTimeoutEnabled(boolean enableTimeout) {
         if(objects != null)
             throw new IllegalStateException(INITIALIZED);
-        shrinks = allowShrinking;
+        idleTimeout = enableTimeout;
     }
 
     /**
-     * Gets whether shrinking of the pool is enabled.
-     * @see #setShrinkingEnabled
+     * Gets whether the pool releases instances that have not been used
+     * recently.  This is different than garbage collection, which returns
+     * instances to the pool if a client checked an instance out but has not
+     * used it and not returned it to the pool.
+     * @see #setIdleTimeoutEnabled
      */
-    public boolean isShrinkingEnabled() {return shrinks;}
+    public boolean isIdleTimeoutEnabled() {return idleTimeout;}
 
     /**
      * Sets whether garbage collection is enabled.  This is the process of
@@ -262,12 +255,12 @@ public class ObjectPool implements PoolEventListener {
      * but have not been used in a long periond of time.  This is meant to
      * reclaim resources, generally caused by unexpected failures on the part
      * of the pool client (which forestalled returning an object to the pool).
-     * This runs on the same schedule as shrinking (if enabled), but objects
-     * that were just garbage collected will not be eligible for shrinking
-     * immediately (after all, they presumably represented "active" clients).
-     * Connections that are garbage collected will be returned immediately if
-     * a client is blocking waiting for an object.  The deafult value is
-     * disabled.
+     * This runs on the same schedule as the idle timeout (if enabled), but
+     * objects that were just garbage collected will not be eligible for the
+     * idle timeout immediately (after all, they presumably represented "active"
+     * clients).  Objects that are garbage collected will be checked out again
+     * immediately if a client is blocking waiting for an object.  The default
+     * value is disabled.
      * @see #setGCMinIdleTime
      * @see #setGCInterval
      * @throws java.lang.IllegalStateException
@@ -287,57 +280,60 @@ public class ObjectPool implements PoolEventListener {
     public boolean isGCEnabled() {return runGC;}
 
     /**
-     * Sets the shrink percent as a fraction between 0 and 1.  This controls
-     * how many of the available connection which have been idle for too long
-     * will be released.  If set to 1, all eligible connections will be
-     * released (subject to the minimum size), and if set to 0, only one will
-     * be released each time (if any are eligible - see the algorithm in
-     * setShrinkingEnabled).  The default value is 33%.
-     * @see #setShrinkingEnabled
+     * Sets the idle timeout percent as a fraction between 0 and 1.  If a number
+     * of objects are determined to be idle, they will all be closed and
+     * removed from the pool.  However, if the ratio of objects released to
+     * objects in the pool is greater than this fraction, some new objects
+     * will be created to replace the closed objects.  This prevents the pool
+     * size from decreasing too rapidly.  Set to 0 to decrease the pool size by
+     * a maximum of 1 object per test, or 1 to never replace objects that have
+     * exceeded the idle timeout.  The pool will always replace enough closed
+     * connections to stay at the minimum size.
+     * @see #setIdleTimeoutEnabled
      * @throws java.lang.IllegalStateException
-     *    Occurs when you try to set the shrinking percent after the pool
+     *    Occurs when you try to set the idle timeout percent after the pool
      *    has been initialized.
      * @throws java.lang.IllegalArgumentException
      *    Occurs when the percent parameter is not between 0 and 1.
      */
-    public void setShrinkPercent(float percent) {
+    public void setMaxIdleTimeoutPercent(float percent) {
         if(objects != null)
             throw new IllegalStateException(INITIALIZED);
         if(percent < 0f || percent > 1f)
             throw new IllegalArgumentException("Percent must be between 0 and 1!");
-        shrinkPercent = percent;
+        maxIdleShrinkPercent = percent;
     }
 
     /**
-     * Gets the shrink percent as a fraction between 0 and 1.
-     * @see #setShrinkPercent
+     * Gets the idle timeout percent as a fraction between 0 and 1.
+     * @see #setMaxIdleTimeoutPercent
      */
-    public float getShrinkPercent() {return shrinkPercent;}
+    public float getMaxIdleTimeoutPercent() {return maxIdleShrinkPercent;}
 
     /**
-     * Sets the minimum idle time to make an object eligible for shrinking.  If
+     * Sets the minimum idle time to release an unused object from the pool.  If
      * the object is not in use and has not been used for this amount of time,
-     * it may be released from the pool.  If timestamps are enabled, the client
+     * it will be released from the pool.  If timestamps are enabled, the client
      * may update the last used time.  Otherwise, the last used time is only
      * updated when an object is acquired or released.  The default value is
-     * 10 minutes.
-     * @see #setShrinkingEnabled
+     * 30 minutes.
+     * @see #setIdleTimeoutEnabled
      * @param millis The idle time, in milliseconds.
      * @throws java.lang.IllegalStateException
-     *    Occurs when you try to set the shrinking idle time after the pool
+     *    Occurs when you try to set the idle timeout after the pool
      *    has been initialized.
      */
-    public void setShrinkMinIdleTime(long millis) {
+    public void setIdleTimeout(long millis) {
         if(objects != null)
             throw new IllegalStateException(INITIALIZED);
-        shrinkMinIdleMillis = millis;
+        idleTimeoutMillis = millis;
     }
 
     /**
-     * Gets the minimum idle time to make an object eligible for shrinking.
-     * @see #setShrinkMinIdleTime
+     * Gets the minimum idle time to release an unused object from the pool.
+     * @see #setIdleTimeout
      */
-    public long getShrinkMinIdleTime() {return shrinkMinIdleMillis;}
+    public long getIdleTimeout() {return idleTimeoutMillis;}
 
     /**
      * Sets the minimum idle time to make an object eligible for garbage
@@ -367,15 +363,14 @@ public class ObjectPool implements PoolEventListener {
     public long getGCMinIdleTime() {return gcMinIdleMillis;}
 
     /**
-     * Sets the length of time between garbage collection and shrinking runs.
+     * Sets the length of time between garbage collection and idle timeout runs.
      * This is inexact - if there are many pools with garbage collection and/or
-     * shrinking enabled, there will not be a thread for each one, and several
-     * nearby actions may be combined.  Likewise if the collection process is
-     * lengthy for certain types of pooled objects (not recommended), other
-     * actions may be delayed.  This is to prevend an unnecessary proliferation
-     * of threads (the total number of which may be limited by your OS, e.g. in
-     * a "native threads" VM implementation).  Note that this parameter controls
-     * both garbage collection and shrinking - and they will be performed
+     * the idle timeout enabled, there will not be a thread for each one, and
+     * several nearby actions may be combined.  Likewise if the collection
+     * process is lengthy for certain types of pooled objects (not recommended),
+     * other actions may be delayed.  This is to prevend an unnecessary
+     * proliferation of threads.  Note that this parameter controls
+     * both garbage collection and the idle timeout - and they will be performed
      * together if both are enabled.  The deafult value is 2 minutes.
      * @throws java.lang.IllegalStateException
      *    Occurs when you try to set the garbage collection interval after the
@@ -388,7 +383,7 @@ public class ObjectPool implements PoolEventListener {
     }
 
     /**
-     * Gets the length of time between garbage collection and shrinking runs.
+     * Gets the length of time between garbage collection and idle timeout runs.
      * @see #setGCInterval
      */
     public long getGCInterval() {return gcIntervalMillis;}
@@ -420,8 +415,8 @@ public class ObjectPool implements PoolEventListener {
     /**
      * Sets whether object clients can update the last used time.  If not, the
      * last used time will only be updated when the object is given to a client
-     * and returned to the pool.  This time is important if shrinking or
-     * garbage collection are enabled (particularly the latter).  The default
+     * and returned to the pool.  This time is important if the idle timeout or
+     * garbage collection is enabled (particularly the latter).  The default
      * is false.
      * @throws java.lang.IllegalStateException
      *    Occurs when you try to set the timestamp parameter after the
@@ -477,6 +472,9 @@ public class ObjectPool implements PoolEventListener {
         objects = new HashMap();
         factory.poolStarted(this, logWriter);
         lastGC = System.currentTimeMillis();
+        int max = Math.min(minSize, maxSize);
+        for(int i=0; i<max; i++)
+            createNewObject(false);
         collector.addPool(this);
     }
 
@@ -539,22 +537,9 @@ public class ObjectPool implements PoolEventListener {
                 }
             }
 
-            // Serialize creating new connections
-            synchronized(objects) {  // Don't let 2 threads add at the same time
-                if(maxSize == 0 || objects.size() < maxSize) {
-                    Object ob = factory.createObject();
-                    if (ob == null) // failure: factory cannot create object
-                        return null;
-                    ObjectRecord rec = new ObjectRecord(ob);
-                    objects.put(ob, rec);
-                    result = factory.prepareObject(ob);
-                    if(result != ob) rec.setClientObject(result);
-                    if(result instanceof PooledObject)
-                        ((PooledObject)result).addPoolEventListener(this);
-                    log("Pool "+this+" gave out new object: "+result);
-                    return result;
-                } else log("Pool "+poolName+" is full ("+objects.size()+"/"+maxSize+")!");
-            }
+            result = createNewObject(true);
+            if(result != null)
+                return result;
 
             if(blocking) {
                 log("Pool "+this+" waiting for a free object");
@@ -740,24 +725,24 @@ public class ObjectPool implements PoolEventListener {
                 }
             }
         }
-        if(shrinks) { // Shrinking the pool - remove objects from the pool if they have not been used in a long time
+        if(idleTimeout) { // Shrinking the pool - remove objects from the pool if they have not been used in a long time
              // Find object eligible for removal
             HashSet eligible = new HashSet();
             Iterator it = new HashSet(objects.values()).iterator();
             while(it.hasNext()) {
                 ObjectRecord rec = (ObjectRecord)it.next();
-                if(!rec.isInUse() && rec.getMillisSinceLastUse() > shrinkMinIdleMillis)
+                if(!rec.isInUse() && rec.getMillisSinceLastUse() > idleTimeoutMillis)
                     eligible.add(rec);
             }
-            // Calculate number of objects to remove
-            int count = Math.round(eligible.size() * shrinkPercent);
-            if(count == 0 && eligible.size() > 0) count = 1;
+            // Calculate max number of objects to remove without replacing
+            int max = Math.round(eligible.size() * maxIdleShrinkPercent);
+            if(max == 0 && eligible.size() > 0) max = 1;
+            int count = 0;
             // Attempt to remove that many objects
             it = eligible.iterator();
-            for(int i=0; i<count; i++) {
-                if(objects.size() <= minSize) break; // Don't fall below the minimum
-                if(!it.hasNext()) break; // If the objects have meanwhile been checked out, we're done
+            while(it.hasNext()) {
                 try {
+                    // Delete the object
                     ObjectRecord rec = (ObjectRecord)it.next();
                     rec.setInUse(true);  // Don't let someone use it while we destroy it
                     Object pooled = rec.getObject();
@@ -768,12 +753,48 @@ public class ObjectPool implements PoolEventListener {
                         log("Pool "+this+" factory ("+factory.getClass().getName()+" delete error: "+e);
                     }
                     rec.close();
+                    ++count;
+
+                    if(count > max || objects.size() < minSize)
+                        createNewObject(false);
                 } catch(ConcurrentModificationException e) {
-                    --i;
                 }
             }
         }
         lastGC = System.currentTimeMillis();
+    }
+
+    /**
+     * Creates a new Object.
+     * @param forImmediateUse If <b>true</b>, then the object is locked and
+     *          translated by the factory, and the resulting object
+     *          returned.  If <b>false</b>, then the object is left in the
+     *          pool unlocked.
+     */
+    private Object createNewObject(boolean forImmediateUse) {
+        Object ob = null;
+        String message = null;
+        // Serialize creating new objects
+        synchronized(objects) {  // Don't let 2 threads add at the same time
+            if(maxSize == 0 || objects.size() < maxSize) {
+                ob = factory.createObject();
+                if (ob != null) { // if factory can create object
+                    ObjectRecord rec = new ObjectRecord(ob, forImmediateUse);
+                    objects.put(ob, rec);
+                    if(forImmediateUse) {
+                        Object result = factory.prepareObject(ob);
+                        if(result != ob) rec.setClientObject(result);
+                        if(result instanceof PooledObject)
+                            ((PooledObject)result).addPoolEventListener(this);
+                        message = "Pool "+this+" gave out new object: "+result;
+                        ob = result;
+                    } else message = "Pool "+poolName+" created a new object: "+ob;
+                } else message = "Pool "+poolName+" factory "+factory+" unable to create new object!";
+            } else message = "Pool "+poolName+" is full ("+objects.size()+"/"+maxSize+")!";
+        }
+        if(message != null)
+            log(message);
+        return ob;
     }
 
     private void log(String message) {

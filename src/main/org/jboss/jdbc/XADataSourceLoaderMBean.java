@@ -35,12 +35,12 @@ public interface XADataSourceLoaderMBean extends ServiceMBean {
     public long getGCInterval();
     public void setGCMinIdleTime(long idleMillis);
     public long getGCMinIdleTime();
-    public void setShrinkingEnabled(boolean enabled);
-    public boolean isShrinkingEnabled();
-    public void setShrinkMinIdleTime(long idleMillis);
-    public long getShrinkMinIdleTime();
-    public void setShrinkPercent(float percent);
-    public float getShrinkPercent();
+    public void setIdleTimeoutEnabled(boolean enabled);
+    public boolean isIdleTimeoutEnabled();
+    public void setIdleTimeout(long idleMillis);
+    public long getIdleTimeout();
+    public void setMaxIdleTimeoutPercent(float percent);
+    public float getMaxIdleTimeoutPercent();
     public void setInvalidateOnError(boolean invalidate);
     public boolean isInvalidateOnError();
     public void setTimestampUsed(boolean timestamp);

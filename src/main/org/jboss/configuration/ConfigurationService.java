@@ -9,6 +9,8 @@ package org.jboss.configuration;
 
 import java.io.*;
 import java.beans.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -27,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -98,7 +100,7 @@ public class ConfigurationService
 
 				String name = mbeanElement.getAttribute("name");
 				ObjectName objectName = new ObjectName(name);
-				
+
 				MBeanInfo info;
 				try {
 					info = server.getMBeanInfo(objectName);
@@ -174,8 +176,10 @@ public class ConfigurationService
 			boolean hasAttributes = false;
 			for (int i = 0; i < attributes.length; i++)
 			{
-				if (attributes[i].isReadable() && attributes[i].isWritable())
+				if (attributes[i].isReadable() && isAttributeWriteable(server.getObjectInstance(name).getClassName(), attributes[i].getName(), attributes[i].getType()))
 				{
+                    if(!attributes[i].isWritable())
+                        log.error("Detected JMX Bug: Server reports attribute '"+attributes[i].getName()+"' is not writeable for MBean '"+name.getCanonicalName()+"'");
 					Element attributeElement = doc.createElement("attribute");
 					Object value = server.getAttribute(name, attributes[i].getName());
 
@@ -204,6 +208,43 @@ public class ConfigurationService
 		return out.toString();
    }
 
-   // Protected -----------------------------------------------------
+    // Protected -----------------------------------------------------
+    private boolean isAttributeWriteable(String className, String attribute, String type) {
+        Class arg = null;
+        Class cls = null;
+        try {
+            if(type.equals("int"))
+                arg = Integer.TYPE;
+            else if(type.equals("boolean"))
+                arg = Boolean.TYPE;
+            else if(type.equals("float"))
+                arg = Float.TYPE;
+            else if(type.equals("byte"))
+                arg = Byte.TYPE;
+            else if(type.equals("short"))
+                arg = Short.TYPE;
+            else if(type.equals("char"))
+                arg = Character.TYPE;
+            else if(type.equals("long"))
+                arg = Long.TYPE;
+            else if(type.equals("double"))
+                arg = Double.TYPE;
+            else arg = Class.forName(type);
+        } catch(ClassNotFoundException e) {
+            log.error("Unable to check parameter of type '"+type+"'");
+            return false;
+        }
+        try {
+            cls = Class.forName(className);
+        } catch(ClassNotFoundException e) {
+            log.error("Unable to check MBean of type '"+className+"'");
+            return false;
+        }
+        try {
+            Method m = cls.getMethod("set"+attribute, new Class[]{arg});
+            return m != null && Modifier.isPublic(m.getModifiers()) && !Modifier.isStatic(m.getModifiers()) && m.getReturnType().equals(Void.TYPE);
+        } catch(NoSuchMethodException e) {}
+        return false;
+    }
 }
 

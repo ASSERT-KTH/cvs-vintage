@@ -1,6 +1,14 @@
+<?xml version="1.0"?>
+
 <server>
      <mbean name="DefaultDomain:service=Logging,type=Console">
        <attribute name="Format">[{2}] {4}</attribute>
+     </mbean>
+     <mbean name="DefaultDomain:service=Logging,type=File">
+       <attribute name="LogName">server.log</attribute>
+     </mbean>
+     <mbean name="EJB:service=ContainerFactory">
+       <attribute name="VerifyDeployments">true</attribute>
      </mbean>
      <mbean name="DefaultDomain:service=Webserver">
        <attribute name="Port">8083</attribute>
@@ -14,37 +22,37 @@
        <attribute name="Properties"></attribute>
        <attribute name="URL">jdbc:HypersonicSQL:hsql://localhost</attribute>
        <attribute name="GCMinIdleTime">1200000</attribute>
-       <attribute name="LoggingEnabled">false</attribute>
+       <attribute name="JDBCUser">sa</attribute>
        <attribute name="MaxSize">10</attribute>
-       <attribute name="Password"></attribute>
-       <attribute name="ShrinkPercent">0.33</attribute>
+       <attribute name="Password" />
        <attribute name="GCEnabled">false</attribute>
+       <attribute name="InvalidateOnError">false</attribute>
        <attribute name="TimestampUsed">false</attribute>
        <attribute name="Blocking">false</attribute>
        <attribute name="GCInterval">120000</attribute>
-       <attribute name="JDBCUser">sa</attribute>
+       <attribute name="IdleTimeout">1800000</attribute>
+       <attribute name="IdleTimeoutEnabled">false</attribute>
+       <attribute name="LoggingEnabled">false</attribute>
+       <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
        <attribute name="MinSize">0</attribute>
-       <attribute name="ShrinkMinIdleTime">600000</attribute>
-       <attribute name="ShrinkingEnabled">false</attribute>
      </mbean>
      <mbean name="DefaultDomain:service=XADataSource,name=InstantDB">
        <attribute name="Properties"></attribute>
        <attribute name="URL">jdbc:idb:../conf/instantdb.properties</attribute>
        <attribute name="GCMinIdleTime">1200000</attribute>
-       <attribute name="LoggingEnabled">false</attribute>
+       <attribute name="JDBCUser" />
        <attribute name="MaxSize">10</attribute>
-       <attribute name="Password"></attribute>
-       <attribute name="ShrinkPercent">0.33</attribute>
+       <attribute name="Password" />
        <attribute name="GCEnabled">false</attribute>
+       <attribute name="InvalidateOnError">false</attribute>
        <attribute name="TimestampUsed">false</attribute>
        <attribute name="Blocking">false</attribute>
        <attribute name="GCInterval">120000</attribute>
-       <attribute name="JDBCUser"></attribute>
+       <attribute name="IdleTimeout">1800000</attribute>
+       <attribute name="IdleTimeoutEnabled">false</attribute>
+       <attribute name="LoggingEnabled">false</attribute>
+       <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
        <attribute name="MinSize">0</attribute>
-       <attribute name="ShrinkMinIdleTime">600000</attribute>
-       <attribute name="ShrinkingEnabled">false</attribute>
-     </mbean>
-     <mbean name="EJB:service=ContainerFactory">
-       <attribute name="VerifyDeployments">true</attribute>
      </mbean>
    </server>
+

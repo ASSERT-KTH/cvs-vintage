@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  * and XAConnectionFactory.
  * @see org.jboss.minerva.pools.ObjectPool
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactory {
@@ -108,14 +108,14 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
     public int getMaxSize() {return pool.getMaxSize();}
     public void setBlocking(boolean blocking) {pool.setBlocking(blocking);}
     public boolean isBlocking() {return pool.isBlocking();}
-    public void setShrinkingEnabled(boolean allowShrinking) {pool.setShrinkingEnabled(allowShrinking);}
-    public boolean isShrinkingEnabled() {return pool.isShrinkingEnabled();}
+    public void setIdleTimeoutEnabled(boolean allowShrinking) {pool.setIdleTimeoutEnabled(allowShrinking);}
+    public boolean isIdleTimeoutEnabled() {return pool.isIdleTimeoutEnabled();}
     public void setGCEnabled(boolean allowGC) {pool.setGCEnabled(allowGC);}
     public boolean isGCEnabled() {return pool.isGCEnabled();}
-    public void setShrinkPercent(float percent) {pool.setShrinkPercent(percent);}
-    public float getShrinkPercent() {return pool.getShrinkPercent();}
-    public void setShrinkMinIdleTime(long millis) {pool.setShrinkMinIdleTime(millis);}
-    public long getShrinkMinIdleTime() {return pool.getShrinkMinIdleTime();}
+    public void setMaxIdleTimeoutPercent(float percent) {pool.setMaxIdleTimeoutPercent(percent);}
+    public float getMaxIdleTimeoutPercent() {return pool.getMaxIdleTimeoutPercent();}
+    public void setIdleTimeout(long millis) {pool.setIdleTimeout(millis);}
+    public long getIdleTimeout() {return pool.getIdleTimeout();}
     public void setGCMinIdleTime(long millis) {pool.setGCMinIdleTime(millis);}
     public long getGCMinIdleTime() {return pool.getGCMinIdleTime();}
     public void setGCInterval(long millis) {pool.setGCInterval(millis);}

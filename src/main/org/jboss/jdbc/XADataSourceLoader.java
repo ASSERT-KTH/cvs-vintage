@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -196,28 +196,28 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         return source.getGCMinIdleTime();
     }
 
-    public void setShrinkingEnabled(boolean enabled) {
-        source.setShrinkingEnabled(enabled);
+    public void setIdleTimeoutEnabled(boolean enabled) {
+        source.setIdleTimeoutEnabled(enabled);
     }
 
-    public boolean isShrinkingEnabled() {
-        return source.isShrinkingEnabled();
+    public boolean isIdleTimeoutEnabled() {
+        return source.isIdleTimeoutEnabled();
     }
 
-    public void setShrinkMinIdleTime(long idleMillis) {
-        source.setShrinkMinIdleTime(idleMillis);
+    public void setIdleTimeout(long idleMillis) {
+        source.setIdleTimeout(idleMillis);
     }
 
-    public long getShrinkMinIdleTime() {
-        return source.getShrinkMinIdleTime();
+    public long getIdleTimeout() {
+        return source.getIdleTimeout();
     }
 
-    public void setShrinkPercent(float percent) {
-        source.setShrinkPercent(percent);
+    public void setMaxIdleTimeoutPercent(float percent) {
+        source.setMaxIdleTimeoutPercent(percent);
     }
 
-    public float getShrinkPercent() {
-        return source.getShrinkPercent();
+    public float getMaxIdleTimeoutPercent() {
+        return source.getMaxIdleTimeoutPercent();
     }
 
     public void setInvalidateOnError(boolean invalidate) {

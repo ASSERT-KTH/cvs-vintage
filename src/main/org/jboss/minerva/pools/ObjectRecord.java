@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Stores the properties of an object in a pool.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 class ObjectRecord {
@@ -26,9 +26,17 @@ class ObjectRecord {
      * creator by another thread.
      */
     public ObjectRecord(Object ob) {
+        this(ob, true);
+    }
+
+    /**
+     * Created a new record for the specified pooled object.  Sets the initial
+     * state to in use or not.
+     */
+    public ObjectRecord(Object ob, boolean inUse) {
         created = lastUsed = System.currentTimeMillis();
         object = ob;
-        inUse = true;
+        this.inUse = inUse;
     }
 
     /**
