@@ -62,10 +62,8 @@
   <ul>
     <li><a href="#s61">mod_jk Binaries</a></li>
     <li><a href="#s62">Building mod_jk</a></li>
-    <li><a href="#s63">Building mod_jk
-      for NT</a></li>
-    <li><a href="#s64">Building mod_jk
-      for Unix</a></li>
+    <li><a href="#s63">Building mod_jk for NT</a></li>
+    <li><a href="#s64">Building mod_jk for Unix</a></li>
   </ul>
 </li>
 <li><a href="#s7">Configuring Apache</a>
@@ -77,8 +75,7 @@
 <li><a href="#s8">Configuring Tomcat</a>
   <ul>
     <li><a href="#s81">Enabling Tomcat's Apache Auto-Config</a></li>
-    <li><a href="#s82">Configuring Tomcat to use the
-      AJPv13 Protocol</a></li>
+    <li><a href="#s82">Configuring Tomcat to use the AJPv13 Protocol</a></li>
     <li><a href="#s83">Defining Workers</a></li>
   </ul>
 </li>
@@ -509,9 +506,12 @@ configuration file, such as <tt>TOMCAT_HOME/conf/jk/mod_jk.conf-local</tt>.</p>
      Use mod_jk's <tt>JkWorkersFile</tt> configuration directive.</li>
  <li>You should specify a location where mod_jk is going to place its log file
      and a log level to be used. Use the <tt>JkLogFile</tt> and <tt>JkLogLevel</tt>
-     configuration directives. Possible log levels are <i>debug</i>, <i>warn</i>,
-     <i>error</i> and <i>emerg</i>, but <i>warn</i> should be your default
+     configuration directives. Possible log levels are <i>debug</i>, <i>info</i>,
+     <i>error</i> and <i>emerg</i>, but <i>info</i> should be your default
      selection.</li>
+ <li>The directive <tt>JkLogStampFormat</tt> will configure the date/time format
+     found on mod_jk logfile. Using <tt>strftime()</tt> format string it's set by
+     default to "[%a %b %d %H:%M:%S %Y] "</li> 
 </ul>
 A simple example would be to include the following lines in your <tt>httpd.conf</tt> file:
 <blockquote><pre>
@@ -519,7 +519,8 @@ LoadModule    jk_module  libexec/mod_jk.so
 AddModule     mod_jk.c
 JkWorkersFile /usr/local/jakarta-tomcat/conf/workers.properties
 JkLogFile     /usr/local/apache/logs/mod_jk.log
-JkLogLevel    warn
+JkLogLevel    info
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
 </pre></blockquote>
 </div>
 
@@ -739,7 +740,7 @@ AddModule     mod_jk.c
 #
 JkWorkersFile /usr/local/jakarta-tomcat/conf/jk/workers.properties
 JkLogFile     /usr/local/apache/logs/mod_jk.log
-JkLogLevel    warn
+JkLogLevel    info
 
 # First Virtual Host.
 #
