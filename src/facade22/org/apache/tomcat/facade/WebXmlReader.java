@@ -136,8 +136,13 @@ public class WebXmlReader extends BaseInterceptor {
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
+	    File v=new File( ctx.getWorkDir(), "webxmlval.txt" );
 	    if( validate ) {
-		xh.setValidating(true);
+		if( ! v.exists() || 
+		    v.lastModified() < f.lastModified() ) {
+		    ctx.log("Validating web.xml");
+		    xh.setValidating(true);
+		}
 		//	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
 	    }
 
@@ -226,6 +231,16 @@ public class WebXmlReader extends BaseInterceptor {
 	    addSecurity( xh );
 
 	    Object ctx1=xh.readXml(f, ctx);
+
+	    if( validate ) {
+		try {
+		    FileOutputStream fos=new FileOutputStream( v );
+		    fos.write( 1 );
+		    fos.close();
+		} catch(IOException ex ) {
+		    ctx.log( "Error creating validation mark ", ex );
+		}
+	    }
 	} catch(Exception ex ) {
 	    log("ERROR reading " + file, ex);
 	    // XXX we should invalidate the context and un-load it !!!

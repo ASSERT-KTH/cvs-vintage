@@ -135,7 +135,9 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 			} else {
 			    ((ServletHandler)result).init();
 			}
-		    } catch (Exception ee) {
+		    } catch (Throwable ee) {
+			// it can be ClassNotFound or other - servlet errors
+			// shouldn't stop initialization
 			String msg = sm.getString("context.loadServlet.e",
 						  servletName);
 			log(msg, ee);
