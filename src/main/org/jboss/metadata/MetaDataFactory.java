@@ -1,3 +1,9 @@
+/*
+ * jBoss, the OpenSource EJB server
+ *
+ * Distributable under GPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.metadata;
 
 import java.io.*;
@@ -5,7 +11,18 @@ import java.util.*;
 import org.jboss.metadata.aggregate.AggregateServer;
 import org.jboss.metadata.io.*;
 
+/**
+ * Serves as the global repository for metadata plugins, and can construct
+ * sets of metadata from the available plugins.  This does not handle a
+ * situation where some groups of plugins may be mutually exclusive.
+ * @see org.jboss.metadata.MetaDataPlugin
+ */
 public class MetaDataFactory {
+
+    /**
+     * Holds the class names and Class variables for primitives.  Used to set
+     * or decode properties that are stored in primitive variables.
+     */
     public final static HashMap primitives = new HashMap();
     static {
         primitives.put("int", Integer.TYPE);
@@ -19,14 +36,24 @@ public class MetaDataFactory {
     }
     private static MetaDataPlugin[] plugins = new MetaDataPlugin[0];
 
+    /**
+     * Gets the number of plugins that have registered.
+     */
     public static int getPluginCount() {
         return plugins.length;
     }
 
+    /**
+     * Gets the plugin at a specified index.  Once registered, a plugin will
+     * have the same index until the JVM is shut down.
+     */
     public static MetaDataPlugin getPlugin(int index) {
         return plugins[index];
     }
 
+    /**
+     * Registers a new plugin.
+     */
     public static void addPlugin(MetaDataPlugin plugin) {
         for(int i=0; i<plugins.length; i++)
             if(plugins[i].getClass().equals(plugin.getClass()))
@@ -36,6 +63,10 @@ public class MetaDataFactory {
         plugins = (MetaDataPlugin[])list.toArray(new MetaDataPlugin[list.size()]);
     }
 
+    /**
+     * Loads XML files from a specified directory.  Probably should be enhanced
+     * to handle URLs and JARs to be truly useful.
+     */
     public static ServerMetaData loadXMLFile(File directory) {
         ServerMetaData[] list = new ServerMetaData[plugins.length];
         for(int i=0; i<list.length; i++) {
@@ -52,6 +83,10 @@ public class MetaDataFactory {
         return new AggregateServer(list);
     }
 
+    /**
+     * Sample - you give it a directory, it loads XML files form there and
+     * dumps metadata to the console.
+     */
     public static void main(String params[]) {
         addPlugin(org.jboss.metadata.ejbjar.EJBPlugin.instance());
         addPlugin(org.jboss.metadata.jboss.JBossPlugin.instance());
