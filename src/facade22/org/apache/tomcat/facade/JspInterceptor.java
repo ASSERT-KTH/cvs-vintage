@@ -967,6 +967,38 @@ final class JspMangler implements Mangler{
 	return FileUtil.safePath( docBase, jspFile);
     }
 
+    private String fixInvalidChars(String className) {
+	// Fix for invalid characters. From CommandLineCompiler
+	StringBuffer modifiedClassName = new StringBuffer();
+	for (int i = 0; i < className.length(); i++) {
+	    char c=className.charAt(i);
+	    if (Character.isLetterOrDigit(c) == true ||
+		c=='_' ||
+		c=='/' )
+		modifiedClassName.append(className.substring(i,i+1));
+	    else
+		modifiedClassName.append(mangleChar(className.charAt(i)));
+	}
+	return modifiedClassName.toString();
+    }
+
+    private static final String mangleChar(char ch) {
+        if(ch == File.separatorChar) {
+	    ch = '/';
+	}
+	String s = Integer.toHexString(ch);
+	int nzeros = 5 - s.length();
+	char[] result = new char[6];
+	result[0] = '_';
+	for (int i = 1; i <= nzeros; i++)
+	    result[i] = '0';
+	for (int i = nzeros+1, j = 0; i < 6; i++, j++)
+	    result[i] = s.charAt(j);
+	return new String(result);
+    }
+
+
+    
     /** compute basic names - pkgDir and baseClassN
      */
     private void init() {
@@ -982,6 +1014,7 @@ final class JspMangler implements Mangler{
 	if( pkgDir!=null ) {
 	    pkgDir=JavaGeneratorTool.manglePackage(pkgDir);
 	    pkgDir=pkgDir.replace('.', '_');
+	    pkgDir=fixInvalidChars( pkgDir );
 	    classDir=workDir + "/" + pkgDir;
 	} else {
 	    classDir=workDir;
@@ -1002,6 +1035,8 @@ final class JspMangler implements Mangler{
 		baseClassN=jspFile.substring( 1, extIdx );
 	}
 
+	baseClassN=fixInvalidChars( baseClassN );
+	
 	//	System.out.println("XXXMangler: " + jspFile + " " +
 	// pkgDir + " " + baseClassN);
 
@@ -1010,7 +1045,7 @@ final class JspMangler implements Mangler{
 					      baseClassN);
 	if( version==-1 ) {
 	    version=0;
-	}
+	} 
 	updateVersionPaths();
     }
 
