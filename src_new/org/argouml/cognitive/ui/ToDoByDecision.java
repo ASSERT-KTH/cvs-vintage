@@ -1,4 +1,4 @@
-// $Id: ToDoByDecision.java,v 1.13 2005/03/05 10:37:21 mvw Exp $
+// $Id: ToDoByDecision.java,v 1.14 2005/03/11 08:55:32 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,12 +26,11 @@ package org.argouml.cognitive.ui;
 
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.cognitive.ToDoList;
 import org.argouml.cognitive.ToDoListEvent;
 import org.argouml.cognitive.ToDoListListener;
 
@@ -67,7 +66,7 @@ public class ToDoByDecision extends ToDoPerspective
 	Object[] path = new Object[2];
 	path[0] = Designer.theDesigner().getToDoList();
 
-	Vector decs = Designer.theDesigner().getDecisions();
+	Vector decs = Designer.theDesigner().getDecisionModel().getDecisions();
 	Enumeration elems = decs.elements();
 	while (elems.hasMoreElements()) {
 	    Decision dec = (Decision) elems.nextElement();
@@ -103,7 +102,7 @@ public class ToDoByDecision extends ToDoPerspective
 	Object[] path = new Object[2];
 	path[0] = Designer.theDesigner().getToDoList();
 
-	Vector decs = Designer.theDesigner().getDecisions();
+	Vector decs = Designer.theDesigner().getDecisionModel().getDecisions();
 	Enumeration elems = decs.elements();
 	while (elems.hasMoreElements()) {
 	    Decision dec = (Decision) elems.nextElement();
@@ -139,7 +138,7 @@ public class ToDoByDecision extends ToDoPerspective
 	Object[] path = new Object[2];
 	path[0] = Designer.theDesigner().getToDoList();
 
-	Vector decs = Designer.theDesigner().getDecisions();
+	Vector decs = Designer.theDesigner().getDecisionModel().getDecisions();
 	Enumeration elems = decs.elements();
 	while (elems.hasMoreElements()) {
 	    Decision dec = (Decision) elems.nextElement();

@@ -1,4 +1,4 @@
-// $Id: DecisionModel.java,v 1.10 2005/01/09 14:58:04 linus Exp $
+// $Id: DecisionModel.java,v 1.11 2005/03/11 08:55:27 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,20 +65,6 @@ public class DecisionModel extends Observable implements Serializable {
      */
     public Vector getDecisions() { return decisions; }
 
-    /**
-     * Reply true iff the Designer is considering the given decision.
-     *
-     * @param decision the given decision
-     * @return true if considered
-     */
-    public boolean isConsidering(String decision) {
-	Decision d = findDecision(decision);
-	if (null == d) {
-	    return false;
-	}
-	return d.getPriority() > 0;
-    }
-
 
     /**
      * This function sets the priority of an existing decision, or
@@ -116,15 +102,6 @@ public class DecisionModel extends Observable implements Serializable {
 	}
     }
 
-    /**
-     * The Designer has indicated that he is now interested in the
-     * given decision.
-     *
-     * @param decision the interesting decision
-     */
-    public void startConsidering(String decision) {
-	setDecisionPriority(decision, 1);
-    }
 
     /**
      * The Designer has indicated that he is now interested in the
@@ -137,15 +114,6 @@ public class DecisionModel extends Observable implements Serializable {
 	decisions.addElement(d);
     }
 
-    /**
-     * The Designer has indicated that he is not interested in the
-     * given decision right now.
-     *
-     * @param decision the uninteresting decision
-     */
-    public void stopConsidering(String decision) {
-	setDecisionPriority(decision, 0);
-    }
 
     /**
      * The Designer has indicated that he is not interested in the
