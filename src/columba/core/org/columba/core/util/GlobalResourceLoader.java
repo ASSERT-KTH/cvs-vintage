@@ -241,7 +241,21 @@ public class GlobalResourceLoader {
 						+ sBundlePath
 						+ "' could not be found.");
 			}
-			return FIX_ME;
+			
+			/*
+			 * Replaced FIX_ME string with resource ID here, this makes it
+			 * easier to track misspelled sID.
+			 * 
+			 * Also its makes the action plugins extending the menu work
+			 * without using a translation infrastructure.
+			 * 
+			 * This infrastructure will be added in the next few weeks,
+			 * then this isn't needed anymore.
+			 * 
+			 */
+			 
+			 return sID;
+			//return FIX_ME;
 		}
 	}
 
