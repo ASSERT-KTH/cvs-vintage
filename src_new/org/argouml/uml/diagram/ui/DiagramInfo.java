@@ -24,7 +24,7 @@
 // File: DiagramInfo.java
 // Classes: DiagramInfo
 // Original Author: jrobbins@ics.uci.edy
-// $Id: DiagramInfo.java,v 1.2 2002/03/14 04:02:13 mkl Exp $
+// $Id: DiagramInfo.java,v 1.3 2002/12/19 19:50:12 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -55,7 +55,7 @@ public class DiagramInfo extends JComponent {
   // instance variables
 
   protected Diagram _diagram = null;
-  protected JLabel _name = new JLabel("");
+    private JLabel _name = null;
 
   ////////////////////////////////////////////////////////////////
   // constructor
@@ -63,16 +63,22 @@ public class DiagramInfo extends JComponent {
   public DiagramInfo(Diagram d) {
     _diagram = d;
     //setBorder(new EtchedBorder());
-    setLayout(new BorderLayout());
-    _name.setFont(MetalLookAndFeel.getSubTextFont());
-    add(_name, BorderLayout.CENTER);
-    updateName();
   }
 
+    public JComponent getJComponent() {
+	_name = new JLabel("");
+	setLayout(new BorderLayout());
+	_name.setFont(MetalLookAndFeel.getSubTextFont());
+	add(_name, BorderLayout.CENTER);
+	return this;
+    }
 
   ////////////////////////////////////////////////////////////////
   // updates
   public void updateName() {
+      if (_name == null)
+	  return;
+
     String type = "Diagram";
     if (_diagram instanceof UMLClassDiagram)
       type = "Class Diagram";

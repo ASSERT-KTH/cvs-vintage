@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.16 2002/11/23 22:04:42 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.17 2002/12/19 19:50:12 linus Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -159,7 +159,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     _toolBar.add(_actionInk);
     _toolBar.addSeparator();
 
-    _toolBar.add(_diagramName);
+    _toolBar.add(_diagramName.getJComponent());
   }
 
 

@@ -26,7 +26,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.12 2002/11/23 22:04:42 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.13 2002/12/19 19:50:12 linus Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -173,7 +173,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
     _toolBar.add(_actionInk);
     _toolBar.addSeparator();
 
-    _toolBar.add(_diagramName);
+    _toolBar.add(_diagramName.getJComponent());
   }
 
   /** every stimulus has to become a path item of its link

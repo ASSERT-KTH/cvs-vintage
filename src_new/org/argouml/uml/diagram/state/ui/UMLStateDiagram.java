@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.19 2002/11/23 22:04:43 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.20 2002/12/19 19:50:12 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -220,7 +220,7 @@ public MStateMachine getStateMachine() {
     _toolBar.add(_actionInk);
     _toolBar.addSeparator();
 
-    _toolBar.add(_diagramName);
+    _toolBar.add(_diagramName.getJComponent());
   }
   
   protected static String getNewDiagramName() {

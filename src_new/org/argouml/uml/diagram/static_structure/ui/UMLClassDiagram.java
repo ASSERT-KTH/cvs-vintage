@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.14 2002/11/23 22:04:43 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.15 2002/12/19 19:50:12 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -197,7 +197,7 @@ public class UMLClassDiagram extends UMLDiagram {
     _toolBar.add(_actionInk);
     _toolBar.addSeparator();
 
-    _toolBar.add(_diagramName);
+    _toolBar.add(_diagramName.getJComponent());
   }
 
 } /* end class UMLClassDiagram */

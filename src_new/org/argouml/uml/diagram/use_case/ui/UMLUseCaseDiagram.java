@@ -24,7 +24,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.15 2002/11/26 19:52:22 kataka Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.16 2002/12/19 19:50:12 linus Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -305,7 +305,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
 
         // Finally the name of the diagram
 
-        _toolBar.add(_diagramName);
+        _toolBar.add(_diagramName.getJComponent());
     }
     
      protected static String getNewDiagramName() {
