@@ -139,8 +139,7 @@ public class ProcessesDaemon {
 	    registry = LocateRegistry.createRegistry(RJVM_PORT_NUMBER);
 	    registry.bind("proc", pmanager);
 	} catch (Exception e) {
-	    System.err.println("Can not start remote daemon"); 
-	    e.printStackTrace();
+	    System.err.println("Can not start remote daemon " + e); 
 	} 
 	System.out.println("Daemon server started on port: " + RJVM_PORT_NUMBER);
     }   

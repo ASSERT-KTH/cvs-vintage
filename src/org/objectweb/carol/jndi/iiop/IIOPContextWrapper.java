@@ -43,7 +43,8 @@ import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 // carol import 
-import  org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.multi.ProtocolCurrent;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /*
  * Class <code>IIOPRemoteContextWrapper</code> is the CAROL JNDI Context. This context make the 
@@ -94,8 +95,8 @@ public class IIOPContextWrapper implements Context {
 	    } else {
 		return o;
 	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
+	} catch (Exception e) {	    
+	    TraceCarol.error("IIOPContextWrapper.resolveObject()", e);
 	    return o;
 	}
     }

@@ -125,9 +125,16 @@ public class NameServiceManager {
 	for (Enumeration e = nsTable.keys() ; e.hasMoreElements() ;) {
 	    String k = (String)e.nextElement();
 	    NameService currentNS = (NameService)nsTable.get(k);
-	    currentNS.start();
+	    
+	    try {
+		currentNS.start();
+	    } catch (NameServiceException nse) {
+		// do nothing, just trace		    
+		if (TraceCarol.isDebugJndiCarol()) {
+		    TraceCarol.debugJndiCarol("NameServiceManager.startNonStartedNS() can not start name service: "+k);
+		}
+	    }
 	}
-	
     }
     
     /**

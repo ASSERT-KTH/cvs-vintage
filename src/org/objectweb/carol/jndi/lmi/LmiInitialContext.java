@@ -101,8 +101,8 @@ public class LmiInitialContext implements Context {
 	    } else {
 		return o;
 	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
+	} catch (Exception e) {	    
+	    TraceCarol.error("LmiInitialContext.resolveObject()", e);
 	    return o;
 	}
     }

@@ -33,6 +33,9 @@ import org.omg.PortableInterceptor.ORBInitializer;
 import org.omg.PortableInterceptor.ORBInitInfo; 
 import org.omg.CORBA.LocalObject;
 
+// carol import
+import org.objectweb.carol.util.configuration.TraceCarol;
+
 /**
  * Class <code>ProtocolInitializer</code> is the CAROL JNDI IIOP Interceptor initializer
  * this initializer add an interceptor for the multi rmi management 
@@ -51,8 +54,7 @@ public class ProtocolInitializer extends LocalObject implements ORBInitializer {
 	try {
 	    info.add_server_request_interceptor(new ProtocolInterceptor());
 	} catch (Exception e) {
-	    System.out.println("could'nt instantiate iiop Interceptor" + e);
-	    e.printStackTrace();
+	    TraceCarol.error("ProtocolInitializer.pre_init(ORBInitInfo info) could'nt instantiate iiop Interceptor", e);
 	}
     }
     

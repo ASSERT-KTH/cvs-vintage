@@ -47,6 +47,8 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
 import org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptor;
 
+// carol import
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>JrmpPRODelegate</code>  for the mapping between Rmi jrmp UnicastRemoteObject and PortableRemoteObject
@@ -85,8 +87,8 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
 	    sis = jrmpInfo.getServerRequestInterceptors();
 	    cis = jrmpInfo.getClientRequestInterceptors();
 	} catch ( Exception e) {
-	    e.printStackTrace();
 	    //we did not found the interceptor do nothing but a trace ?
+	    TraceCarol.error("JrmpPRODelegate(), No interceptors found", e);
 	}	
 
     }

@@ -27,6 +27,8 @@
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
+// carol import
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>ProtocolInterceptorInitializer</code> is a JRMP Interface for Interceptor initialisation
@@ -46,8 +48,7 @@ public class ProtocolInterceptorInitializer implements JInitializer{
 	try {
 	    info.add_server_request_interceptor(new ProtocolInterceptor());
 	} catch (Exception e) {
-	    System.out.println("could'nt instantiate Interceptor" + e);
-	    e.printStackTrace();
+	    TraceCarol.error("ProtocolInterceptorInitializer.pre_init(JInitInfo info) could'nt instantiate iiop Interceptor", e);
 	}
     }
     

@@ -138,8 +138,7 @@ public class RemoteShell {
 	    InitialContext in = new InitialContext(iprop);
 	    procServer = (RemoteProcessesManager)in.lookup("proc");
 	} catch (Exception e) {
-	    System.out.println("Can not start shell, can not contact rproc server");
-	    e.printStackTrace();
+	    System.out.println("Can not start shell, can not contact rproc server" +e );
 	}
 	
 	if (cmd.hasOption('c')) {
@@ -262,7 +261,7 @@ public class RemoteShell {
 		System.out.println("Process : " + skey + " command : " + (String)procHash.get(skey));
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    System.out.println("Error in printlist: "+e);
 	}
     }
  

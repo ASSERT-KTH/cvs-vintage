@@ -108,7 +108,7 @@ public class ProtocolCurrent {
 	    }
 	    
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    TraceCarol.error("ProtocolCurrent() Exception", e); 
 	}
     }
     

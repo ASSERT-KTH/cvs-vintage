@@ -651,7 +651,7 @@ public class ProcessesManager implements RemoteProcessesManager {
 		    cleanProcess(processID);
 		}
 	    } catch (Exception ie) {
-		ie.printStackTrace();
+		System.out.println("error in run " + ie);
 	    }
 	}
     }
