@@ -237,16 +237,23 @@ public  class AttributeGroup
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
             // Delete module-attribute mapping
-            Criteria c  = new Criteria()
+            IssueType issueType = IssueTypeManager
+               .getInstance(getIssueTypeId(), false);
+            Criteria crit  = new Criteria()
                 .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
                          RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
                 .add(RAttributeAttributeGroupPeer.GROUP_ID,
                          getAttributeGroupId())
                 .add(RModuleAttributePeer.MODULE_ID,
-                         getModuleId())
-                .add(RModuleAttributePeer.ISSUE_TYPE_ID,
-                         getIssueTypeId());
-            List results = RModuleAttributePeer.doSelect(c);
+                         getModuleId());
+                Criteria.Criterion critIssueType = crit.getNewCriterion(
+                        RModuleAttributePeer.ISSUE_TYPE_ID,
+                        getIssueTypeId(), Criteria.EQUAL);
+                critIssueType.or(crit.getNewCriterion(
+                        RModuleAttributePeer.ISSUE_TYPE_ID,
+                        issueType.getTemplateId(), Criteria.EQUAL));
+                crit.and(critIssueType);
+            List results = RModuleAttributePeer.doSelect(crit);
             for (int i=0; i<results.size(); i++)
             {
                  RModuleAttribute rma = (RModuleAttribute)results.get(i);
@@ -254,14 +261,14 @@ public  class AttributeGroup
             }
 
             // Delete attribute - attribute group mapping
-            c = new Criteria()
+            crit = new Criteria()
                 .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
-            RAttributeAttributeGroupPeer.doDelete(c);
+            RAttributeAttributeGroupPeer.doDelete(crit);
 
            // Delete the attribute group
-            c = new Criteria()
+            crit = new Criteria()
                 .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
-            AttributeGroupPeer.doDelete(c);
+            AttributeGroupPeer.doDelete(crit);
             List attrGroups = module.getAttributeGroups(getIssueType(), false);
             attrGroups.remove(this);
             attrGroups = module.getAttributeGroups(getIssueType(), true);
