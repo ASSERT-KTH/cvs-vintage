@@ -25,9 +25,8 @@ import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 
-import org.apache.log4j.Category;
-
 import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.logging.log4j.JBossCategory;
 
 /**
  * The AutoDeployer is used to automatically deploy applications or
@@ -44,10 +43,11 @@ import org.jboss.util.ServiceMBeanSupport;
  *    configured deployer to deploy it.
  *
  * @see org.jboss.deployment.J2eeDeployer
+ * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -58,42 +58,46 @@ public class AutoDeployer
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private Category log = Category.getInstance(this.getClass());
+   private JBossCategory log = (JBossCategory)
+      JBossCategory.getInstance(this.getClass());
    
-   // Callback to the JMX agent
+   /** Callback to the JMX agent. */
    MBeanServer server;
 
-   // in case more then one J2eeDeployers are available
+   /** In case more then one J2eeDeployers are available. */
    String deployerList = "";
 
    /** JMX names of the configured deployers */
    ObjectName[] deployerNames;
 
-   // The watch thread
+   /** The watch thread. */
    boolean running = false;
 
-   // Watch these directories for new files
+   /** Watch these directories for new files. */
    ArrayList watchedDirectories = new ArrayList();
 
-   // These URL's have been deployed. Check for new timestamp
+   /** These URL's have been deployed. Check for new timestamp. */
    HashMap deployedURLs = new HashMap();
 
-   // These URL's are being watched
+   /** These URL's are being watched. */
    ArrayList watchedURLs = new ArrayList();
    
-   // URL list
+   /** URL list. */
    String urlList = "";
 
-   // TimeOut that in case of big ears to deploy should be set high enough
+   /** TimeOut that in case of big ears to deploy should be set high enough. */
    int timeout = 3000;
 
-   /** Filters, one per configured deployer, to decide which files are
-       deployable and which should be ignored */
-   FilenameFilter[] deployableFilters = null;
+   /**
+    * Filters, one per configured deployer, to decide which files are
+    * deployable and which should be ignored.
+    */
+   FilenameFilter[] deployableFilters; // = null;
 
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
+
    public AutoDeployer()
    {
       this("");
@@ -101,7 +105,7 @@ public class AutoDeployer
 
    public AutoDeployer(String urlList)
    {
-      this ("J2EE:service=J2eeDeployer", urlList);
+      this("J2EE:service=J2eeDeployer", urlList);
    }
 
    public AutoDeployer(String _namedDeployer, String urlList)
@@ -141,6 +145,7 @@ public class AutoDeployer
    }
 
    // Public --------------------------------------------------------
+   
    public void run()
    {
       do
@@ -150,41 +155,21 @@ public class AutoDeployer
          {
             try
             {
-               if (log.isDebugEnabled()) log.debug("Wait for "+timeout / 1000 +" seconds");
+               if (log.isTraceEnabled()) {
+                  log.trace("Wait for "+timeout / 1000 +" seconds");
+               }
                Thread.sleep(timeout);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+               log.debug("interrupted; ignoring", e);
+            }
          }
 
          try
          {
             // Check directories - add new entries to list of files
-            for (int i = 0; i < watchedDirectories.size(); i++)
-            {
-               File dir = (File)watchedDirectories.get(i);
-               File[] files = dir.listFiles();
-               for (int idx = 0; idx < files.length; idx++)
-               {
-                  URL fileUrl = files[idx].toURL();
+            scanWatchedDirectories();
 
-                  // Check if it's a deployable file
-                  for (int j=0; j<deployerNames.length; ++j)
-                  {
-                     if (!deployableFilters[j].accept(null, fileUrl.getFile()))
-                        continue; // Was not deployable - skip it...
-
-                     if (deployedURLs.get(fileUrl) == null)
-                     {
-                        // This file has not been seen before
-                        // Add to list of files to deploy automatically
-                        watchedURLs.add(new Deployment(fileUrl));
-                        deployedURLs.put(fileUrl, fileUrl);
-                     }
-                  }
-               }
-            }
-
-
-            // undeploy removed jars
+            // Undeploy removed jars
             Iterator iterator = watchedURLs.iterator();
 
             while (iterator.hasNext()) {
@@ -208,7 +193,6 @@ public class AutoDeployer
                   iterator.remove();
                }
             }
-
 
             // Check watched URLs
             for (int i = 0; i < watchedURLs.size(); i++)
@@ -256,7 +240,7 @@ public class AutoDeployer
 
    public String getName()
    {
-      return "Auto deploy";
+      return "Auto Deployer";
    }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
@@ -337,8 +321,13 @@ public class AutoDeployer
                // for deployments
                try
                {
-                  watchedDirectories.add(urlFile.getCanonicalFile());
-                  log.info("Watching "+urlFile.getCanonicalFile());
+                  File dir = urlFile.getCanonicalFile();
+                  watchedDirectories.add(dir);
+                  log.info("Watching "+dir);
+                  
+                  // scan the directory now, so that the ordered deployments
+                  // will work, when only a base directory is specified
+                  scanDirectory(dir);
                } catch (IOException e)
                {
                   log.warn("failed to add watched directory", e);
@@ -368,15 +357,65 @@ public class AutoDeployer
          }
       }
 
-
-      run(); // Pre-deploy. This is done so that deployments available
-      		 // on start of container is deployed ASAP
+      // Pre-deploy. This is done so that deployments available
+      // on start of container is deployed ASAP
+      run(); 
 
       // Start auto deploy thread
       running = true;
-      new Thread(this, "Auto deploy").start();
+      new Thread(this, "AutoDeployer").start();
    }
 
+   // Protected -----------------------------------------------------
+
+   /**
+    * Scan the watched directories list, add new deployement entires for
+    * each that does not already exist in the watched urls map.
+    *
+    * @throws MalformedURLException
+    */
+   protected void scanWatchedDirectories()
+      throws MalformedURLException
+   {
+      for (int i = 0; i < watchedDirectories.size(); i++)
+      {
+         File dir = (File)watchedDirectories.get(i);
+         scanDirectory(dir);
+      }
+   }
+
+   /**
+    * Scan a single directory and add new deployment entries for each
+    * deployable file that does not already exist.
+    *
+    * @param dir    The directory to scan.
+    * 
+    * @throws MalformedURLException
+    */
+   protected void scanDirectory(final File dir)
+      throws MalformedURLException
+   {
+      File[] files = dir.listFiles();
+      for (int idx = 0; idx < files.length; idx++)
+      {
+         URL fileUrl = files[idx].toURL();
+         // Check if it's a deployable file
+         for (int j=0; j<deployerNames.length; ++j)
+         {
+            if (!deployableFilters[j].accept(null, fileUrl.getFile()))
+               continue; // Was not deployable - skip it...
+            
+            if (deployedURLs.get(fileUrl) == null)
+            {
+               // This file has not been seen before
+               // Add to list of files to deploy automatically
+               watchedURLs.add(new Deployment(fileUrl));
+               deployedURLs.put(fileUrl, fileUrl);
+            }
+         }
+      }
+   }
+   
    protected void stopService()
    {
    	// Stop auto deploy thread
@@ -388,7 +427,6 @@ public class AutoDeployer
       deployedURLs.clear();
    }
 
-   // Protected -----------------------------------------------------
    protected void deploy(String url, ObjectName deployerName)
       throws Exception
    {
@@ -399,8 +437,6 @@ public class AutoDeployer
                        new String[] { "java.lang.String" });
       } catch (RuntimeMBeanException e)
       {
-//          System.out.println("Caught a runtime MBean exception: "+e.getTargetException());
-//          e.getTargetException().printStackTrace();
           throw e.getTargetException();
       } catch (MBeanException e)
       {
@@ -430,7 +466,10 @@ public class AutoDeployer
 
    // Inner classes -------------------------------------------------
 
-	// This class holds info about a deployement, such as the URL and the last timestamp
+   /**
+    * This class holds info about a deployement, such as the URL and the
+    * last timestamp.
+    */
    class Deployment
    {
       long lastModified;
