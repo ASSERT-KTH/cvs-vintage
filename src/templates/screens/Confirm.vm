@@ -4,13 +4,13 @@
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ($user)
  #set ($regGroup = $intake.Register.mapTo($user))
- #set ($emailValue = $user.Email)
+ #set ($userNameValue = $user.UserName)
 #else
  #set ($regGroup = $intake.Register.Default)
- #set ($emailValue = $data.Parameters.Email)
- #if (!$emailValue || $emailValue.length() == 0)
+ #set ($userNameValue = $data.Parameters.UserName)
+ #if (!$userNameValue || $emailValue.length() == 0)
     ## coming from the Login page for a non-confirmed user
-    #set ($emailValue = $intake.Login.Default.Username)
+    #set ($userNameValue = $intake.Login.Default.Username)
  #end
 #end
 #set ($confirmValue = $data.Parameters.getString("confirm", ""))
@@ -43,10 +43,10 @@ Please enter the confirmation code that was sent to you in an email.
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>Email address</th>
+  <th>User name</th>
   <td>
-   <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue" tabindex="1" />
-   #fieldErrorMsg($regGroup.Email "")
+   <input type="text" size="25" name="$regGroup.UserName.Key" value="$!userNameValue" tabindex="1" />
+   #fieldErrorMsg($regGroup.UserName "")
   </td>
  </tr>
  <tr>

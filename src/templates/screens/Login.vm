@@ -24,7 +24,7 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>Email address</th>
+  <th>User name</th>
   <td>
   <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
   #fieldErrorMsg ($loginGroup.Username "")

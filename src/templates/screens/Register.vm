@@ -21,36 +21,44 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th>* First name</th>
+ <th width="130">* First name</th>
  <td>
-  <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" tabindex="1"/>
+  <input name="$regGroup.FirstName.Key" value="$regGroup.FirstName" type="text" size="25" tabindex="1" />
   #fieldErrorMsg($regGroup.FirstName "")
  </td>
 </tr>
 <tr>
  <th> *Last name</th>
  <td>
-  <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25"  tabindex="2"/>
+  <input name="$regGroup.LastName.Key" value="$regGroup.LastName" type="text" size="25" tabindex="2" />
   #fieldErrorMsg($regGroup.LastName "")
  </td>
 </tr>
 <tr>
  <th> *Email address</th>
  <td>
-  <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25"  tabindex="3"/>
+  <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25" tabindex="3" />
   #fieldErrorMsg($regGroup.Email "")
 <p><small>
  Note: Enter your valid email address - including your "@serviceprovider" domain.
- For example, if your AOL screen name is joe cool, your email address is joecool@aol.com.
+ For example, if your AOL screen name is joecool, your email address is joecool@aol.com.
  If you enter an invalid email address, you will not be able to log in and use the system.
 </small></p>
  </td>
 </tr>
 <tr>
+ <th> *User name</th>
+ <td>
+  <input name="$regGroup.UserName.Key" value="$regGroup.UserName" type="text" size="25" tabindex="4" />
+  #fieldErrorMsg($regGroup.UserName "")
+<p><small>Note: For convenience, your user name can be the same as your email address.</small></p>
+ </td>
+</tr>
+<tr>
  <th> *Password</th>
  <td>
-  <input name="$regGroup.Password.Key" type="password" value="$password" size="25"  tabindex="4"/>
-  #if ($password.Message) ## hack
+  <input name="$regGroup.Password.Key" type="password" value="$password" size="25" tabindex="5" />
+  #if ($password.Message)
   #fieldErrorMsg($password "")
   #end
  </td>
@@ -58,18 +66,18 @@
 <tr>
  <th> *Password confirm</th>
  <td>
-  <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25"  tabindex="5"/>
+  <input name="$regGroup.PasswordConfirm.Key" type="password" value="$regGroup.PasswordConfirm" size="25" tabindex="6" />
   #fieldErrorMsg($regGroup.PasswordConfirm "")
  </td>
 </tr>
 </table>
 </div>
 
-<p>* Required field</p>
+#asterisk()
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="6"/>&#160;
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="7"/>
+ <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="7" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="8" />
 </div>
 
 $intake.declareGroups()

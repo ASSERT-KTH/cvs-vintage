@@ -95,7 +95,7 @@ public class ChangePassword extends ScarabTemplateAction
                                  IntakeTool.DEFAULT_KEY, false);
             }
             
-            String username = register.get("Email").toString();
+            String username = register.get("UserName").toString();
             String oldPassword = register.get("OldPassword").toString();
             String password = register.get("Password").toString();
             String passwordConfirm = register.get("PasswordConfirm").toString();

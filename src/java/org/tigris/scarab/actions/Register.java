@@ -83,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.23 2002/05/07 17:51:49 jmcnally Exp $
+ * @version $Id: Register.java,v 1.24 2002/05/30 00:35:45 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -142,18 +142,16 @@ public class Register extends ScarabTemplateAction
             try
             {
                 register.setProperties(su);
-                // need to set this specially
-                su.setUserName(register.get("Email").toString());
             }
             catch (Exception e)
             {
                 setTarget(data, template);
-                getScarabRequestTool(context).setAlertMessage (e.getMessage());
+                getScarabRequestTool(context).setAlertMessage(e.getMessage());
                 return;
             }
 
             // check to see if the user already exists
-            if(ScarabUserImplPeer.checkExists(su))
+            if (ScarabUserImplPeer.checkExists(su))
             {
                 setTarget(data, template);
                 getScarabRequestTool(context).setAlertMessage(
@@ -241,7 +239,7 @@ public class Register extends ScarabTemplateAction
         catch (Exception e)
         {
             setTarget(data, template);
-            getScarabRequestTool(context).setAlertMessage (e.getMessage());
+            getScarabRequestTool(context).setAlertMessage(e.getMessage());
             Log.get().error(e);
             return;
         }
@@ -304,7 +302,7 @@ public class Register extends ScarabTemplateAction
             }
             String username = null;
             String confirm = null;
-            Field usernameField = register.get("Email");
+            Field usernameField = register.get("UserName");
             Field confirmField = register.get("Confirm");
             if (usernameField == null)
             {
@@ -398,7 +396,7 @@ public class Register extends ScarabTemplateAction
                     "Register group is null, please report this error.");
                 return;
             }
-            String username = register.get("Email").toString();
+            String username = register.get("UserName").toString();
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             try
             {

@@ -162,7 +162,5 @@ public class ForgotPassword extends ScarabTemplateAction
             return false;
         }
         return true;
-    }
-    
+    }    
 }
-

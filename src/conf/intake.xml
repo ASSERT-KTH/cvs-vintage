@@ -335,8 +335,7 @@
 
 <group name="Login" key="login">
     <field name="Username" key="u" type="String">
-        <rule name="required" value="true">Please enter an email address</rule>
-        <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+        <rule name="required" value="true">Please enter a username</rule>
     </field>
     <field name="Password" key="p" type="String">
         <rule name="required" value="true">Please enter a password</rule>
@@ -345,8 +344,7 @@
 
 <group name="ForgotPassword" key="fgtpwd">
     <field name="Username" key="u" type="String">
-        <rule name="required" value="true">Please enter an email address</rule>
-        <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+        <rule name="required" value="true">Please enter a username</rule>
     </field>
 </group>
 
@@ -380,9 +378,9 @@
         <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
         <rule name="maxLength" value="99">Your email address must be 99 characters or less in length</rule>
     </field>
-    <field name="UserName" key="u" type="String" mapToProperty="Email">
-        <rule name="required" value="true">Please enter an email address</rule>
-        <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+    <field name="UserName" key="u" type="String">
+        <rule name="required" value="true">Please enter a username</rule>
+        <rule name="maxLength" value="99">Your username must be 99 characters or less in length</rule>
     </field>
     <field name="OldPassword" key="op" type="String" mapToProperty="">
         <rule name="required" value="true">Please enter a password</rule>

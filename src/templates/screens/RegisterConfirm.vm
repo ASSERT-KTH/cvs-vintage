@@ -31,12 +31,16 @@ email cannot be sent to you.
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
+  <th>Full name</th>
+  <td>$user.Name</td>
+ </tr>
+ <tr>
   <th>Email address</th>
   <td>$user.Email</td>
  </tr>
  <tr>
-  <th>Full name</th>
-  <td>$user.Name</td>
+  <th>User name</th>
+  <td>$user.UserName</td>
  </tr>
 </table>
 </div>
