@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.34 2004/03/03 01:10:06 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.35 2004/07/18 14:53:02 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,28 +24,32 @@
 
 package org.argouml.uml.ui;
 
-import org.apache.log4j.Logger;
-import org.argouml.application.api.CommandLineInterface;
-import org.argouml.i18n.Translator;
-import org.argouml.kernel.Project;
-import org.argouml.kernel.*;
-import org.argouml.cognitive.Designer;
-import org.argouml.ui.*;
-import org.argouml.ui.menubar.GenericArgoMenuBar;
-import org.argouml.xml.argo.*;
-import org.argouml.util.*;
-import org.argouml.util.osdep.*;
-
-import org.tigris.gef.base.*;
-import org.xml.sax.SAXException;
-import javax.xml.parsers.ParserConfigurationException;
-
-import java.io.*;
-import java.net.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.Logger;
+import org.argouml.application.api.CommandLineInterface;
+import org.argouml.cognitive.Designer;
+import org.argouml.i18n.Translator;
+import org.argouml.kernel.IllegalFormatException;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
+import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.menubar.GenericArgoMenuBar;
+import org.argouml.util.FileFilters;
+import org.argouml.util.SuffixFilter;
+import org.argouml.util.osdep.OsUtil;
+import org.argouml.xml.argo.ArgoParser;
+import org.tigris.gef.base.Globals;
+import org.xml.sax.SAXException;
 
 /**
  * Action that loads the project.
