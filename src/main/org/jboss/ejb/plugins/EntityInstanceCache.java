@@ -14,15 +14,17 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.CacheKey;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.util.Sync;
 
 /**
  * Cache subclass for entity beans.
  * 
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class EntityInstanceCache
-	extends EnterpriseInstanceCache implements org.jboss.ejb.EntityInstanceCache
+	extends AbstractInstanceCache 
+	implements org.jboss.ejb.EntityCache
 {
 	// Constants -----------------------------------------------------
 
@@ -51,7 +53,7 @@ public class EntityInstanceCache
 	{
 		if (!(id instanceof CacheKey)) 
 		{
-			throw new IllegalArgumentException("cache.get for entity beans must have a CacheKey object as argument instead of " + id.getClass());
+			throw new IllegalArgumentException("cache.get for entity beans must have a CacheKey object as argument instead of " + id);
 		}
 		return super.get(id);
 	}
@@ -59,15 +61,15 @@ public class EntityInstanceCache
 	{
 		if (!(id instanceof CacheKey)) 
 		{
-			throw new IllegalArgumentException("cache.remove for entity beans must have a CacheKey object as argument instead of " + id.getClass());
+			throw new IllegalArgumentException("cache.remove for entity beans must have a CacheKey object as argument instead of " + id);
 		}
 		super.remove(id);
 	}
-	public synchronized Object getLock(Object id) 
+	public synchronized Sync getLock(Object id) 
 	{
 		if (!(id instanceof CacheKey)) 
 		{
-			throw new IllegalArgumentException("cache.getLock for entity beans must have a CacheKey object as argument instead of " + id.getClass());
+			throw new IllegalArgumentException("cache.getLock for entity beans must have a CacheKey object as argument instead of " + id);
 		}
 		return super.getLock(id);
 	}
@@ -75,7 +77,7 @@ public class EntityInstanceCache
 	{
 		if (!(id instanceof CacheKey)) 
 		{
-			throw new IllegalArgumentException("cache.removeLock for entity beans must have a CacheKey object as argument instead of " + id.getClass());
+			throw new IllegalArgumentException("cache.removeLock for entity beans must have a CacheKey object as argument instead of " + id);
 		}
 		super.removeLock(id);
 	}
