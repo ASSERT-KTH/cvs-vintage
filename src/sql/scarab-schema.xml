@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <!DOCTYPE database SYSTEM
-          "http://jakarta.apache.org/turbine/dtd/database.dtd">
+          "http://db.apache.org/torque/dtd/database_3_0_1.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.133 2003/06/05 17:41:38 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.134 2003/06/23 11:18:09 mpoeschl Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@" defaultJavaType="object">
 <!--

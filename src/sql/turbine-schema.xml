@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
-<!DOCTYPE database SYSTEM "http://jakarta.apache.org/turbine/dtd/database.dtd">
+<!DOCTYPE database SYSTEM "http://db.apache.org/torque/dtd/database_3_0_1.dtd">
 
 <!-- ==================================================================== -->
 <!--                                                                      -->
@@ -13,7 +13,7 @@
 <!-- users and security.                                                  -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>       -->
-<!-- @version $Id: turbine-schema.xml,v 1.3 2002/03/05 17:28:12 jmcnally Exp $     -->
+<!-- @version $Id: turbine-schema.xml,v 1.4 2003/06/23 11:18:09 mpoeschl Exp $     -->
 <!-- ==================================================================== -->
 
 <database name="@DATABASE_NAME@">
