@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.159 2003/05/07 03:35:31 spestov Exp $
+ * @version $Id: jEdit.java,v 1.160 2003/05/07 22:40:00 spestov Exp $
  */
 public class jEdit
 {
@@ -159,7 +159,7 @@ public class jEdit
 				else if(arg.startsWith("-background"))
 					background = true;
 				else if(arg.startsWith("-nobackground"))
-					background = true;
+					background = false;
 				else if(arg.equals("-gui"))
 					gui = true;
 				else if(arg.equals("-nogui"))
@@ -227,9 +227,16 @@ public class jEdit
 
 				String script;
 				if(quit)
-					script = "jEdit.exit(null,true);";
+				{
+					script = "socket.close();\n"
+						+ "jEdit.exit(null,true);\n";
+				}
 				else
-					script = makeServerScript(wait,restore,newView,newPlainView,args,scriptFile);
+				{
+					script = makeServerScript(wait,restore,
+						newView,newPlainView,args,
+						scriptFile);
+				}
 
 				out.writeUTF(script);
 
@@ -995,10 +1002,9 @@ public class jEdit
 	 * </ul>
 	 *
 	 * @param path The JAR file path
-	 * @return The new <code>PluginJAR</code> instance
 	 * @since jEdit 4.2pre1
 	 */
-	public static PluginJAR addPluginJAR(String path)
+	public static void addPluginJAR(String path)
 	{
 		// backwards compatibility...
 		PluginJAR jar = new EditPlugin.JAR(new File(path));
@@ -1006,9 +1012,8 @@ public class jEdit
 		jar.init();
 
 		EditBus.send(new PluginUpdate(jar,PluginUpdate.LOADED));
-		EditBus.send(new DynamicMenuChanged("plugins"));
-
-		return jar;
+		if(!isMainThread())
+			EditBus.send(new DynamicMenuChanged("plugins"));
 	} //}}}
 
 	//{{{ addPluginJARsFromDirectory() method
@@ -1075,7 +1080,8 @@ public class jEdit
 		}
 
 		EditBus.send(new PluginUpdate(jar,PluginUpdate.UNLOADED));
-		EditBus.send(new DynamicMenuChanged("plugins"));
+		if(!isMainThread() && !exit)
+			EditBus.send(new DynamicMenuChanged("plugins"));
 	} //}}}
 
 	//}}}

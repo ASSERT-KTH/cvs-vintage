@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.81 2003/04/29 22:31:14 spestov Exp $
+ * @version $Id: View.java,v 1.82 2003/05/07 22:40:00 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1362,7 +1362,7 @@ public class View extends JFrame implements EBComponent
 			else if(token.equals("buffer"))
 			{
 				int index = Integer.parseInt((String)stack.pop());
-				if(index < buffers.length && index > 0)
+				if(index < buffers.length && index >= 0)
 					buffer = buffers[index];
 				if(buffer == null)
 					buffer = jEdit.getFirstBuffer();

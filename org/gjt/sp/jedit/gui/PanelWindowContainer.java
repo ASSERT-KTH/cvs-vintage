@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.68 2003/05/07 03:19:58 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.69 2003/05/07 22:40:00 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -135,6 +135,30 @@ public class PanelWindowContainer implements DockableWindowContainer
 		dockables.remove(entry);
 		if(entry.win != null)
 			dockablePanel.remove(entry.win);
+
+		if(current == entry)
+		{
+			current = null;
+			show(null);
+		}
+		else
+		{
+			wm.revalidate();
+			dockablePanel.repaint();
+		}
+	} //}}}
+
+	//{{{ remove() method
+	public void remove(final DockableWindowManager.Entry entry)
+	{
+		if(entry.factory.name.equals(mostRecent))
+			mostRecent = null;
+
+		if(entry.win != null)
+		{
+			dockablePanel.remove(entry.win);
+			entry.win = null;
+		}
 
 		if(current == entry)
 		{
