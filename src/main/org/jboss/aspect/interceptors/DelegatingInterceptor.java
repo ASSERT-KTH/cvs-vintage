@@ -8,6 +8,8 @@
  ***************************************/
 package org.jboss.aspect.interceptors;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -42,17 +44,17 @@ import org.jboss.util.Classes;
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  * 
  */
-public class DelegatingInterceptor implements AspectInterceptor
+public class DelegatingInterceptor implements AspectInterceptor, Serializable
 {
 
     public static final Namespace NAMESPACE = Namespace.get(DelegatingInterceptor.class.getName());
     public static final QName ATTR_DELEGATE = new QName("delegate", NAMESPACE);
     public static final QName ATTR_SIGLETON = new QName("singleton", NAMESPACE);
 
-    public Object singeltonObject;
-    public Class[] interfaces;
     public Class implementingClass;
-    public Set exposedMethods;
+    transient public Object singeltonObject;
+    transient public Class[] interfaces;
+    transient public Set exposedMethods;
 
     /**
      * @see com.chirino.aspect.AspectInterceptor#invoke(AspectInvocation)
@@ -75,11 +77,14 @@ public class DelegatingInterceptor implements AspectInterceptor
                 attachments.put(this, delegate);
             }
         }
-        
-        try {
-	        return invocation.method.invoke(delegate, invocation.args);
-        } catch ( InvocationTargetException e ) {
-        	throw e.getTargetException();
+
+        try
+        {
+            return invocation.method.invoke(delegate, invocation.args);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw e.getTargetException();
         }
     }
 
@@ -119,6 +124,29 @@ public class DelegatingInterceptor implements AspectInterceptor
     public boolean isIntrestedInMethodCall(Method method)
     {
         return exposedMethods.contains(method);
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+    	out.writeObject(implementingClass);
+    	out.writeBoolean(singeltonObject!=null);
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+    	implementingClass = (Class)in.readObject();
+        interfaces = implementingClass.getInterfaces();
+        exposedMethods = AspectSupport.getExposedMethods(interfaces);
+		if( in.readBoolean() ) {
+            try
+            {
+                singeltonObject = implementingClass.newInstance();
+            }
+            catch (Exception e) 
+            {
+            	throw new IOException(e.getMessage());
+            }
+		}    	
     }
 
 }

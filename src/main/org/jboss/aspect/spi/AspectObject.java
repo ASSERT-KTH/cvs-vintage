@@ -8,6 +8,8 @@
  ***************************************/
 package org.jboss.aspect.spi;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -32,14 +34,14 @@ import java.util.Stack;
  * 
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-final public class AspectObject implements InvocationHandler
+final public class AspectObject implements InvocationHandler, Serializable
 {
 
     private final static ThreadLocal invocationContexThreadLocal = new ThreadLocal();
     AspectDefinition definition;
     Object targetObject;
-    Map attachments = new HashMap();
     InvocationHandler targetObjectIH = null;
+    Map attachments = new HashMap();
 
     public AspectObject(AspectDefinition composition, Object targetObject)
     {
@@ -154,5 +156,19 @@ final public class AspectObject implements InvocationHandler
 	        }
         }
     }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+    	out.writeObject(definition);
+    	out.writeObject(targetObject);
+    }
+    
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+    	definition = (AspectDefinition)in.readObject();
+    	setTargetObject(in.readObject());
+    	attachments = new HashMap();
+    }
+
 
 }

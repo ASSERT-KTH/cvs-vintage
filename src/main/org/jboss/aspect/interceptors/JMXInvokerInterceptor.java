@@ -70,6 +70,9 @@ public class JMXInvokerInterceptor implements AspectInterceptor
      */
     public Object invoke(AspectInvocation invocation) throws Throwable
     {
+    	if( server == null )
+        	server = MBeanServerLocator.locate();
+    	
     	// I think that we will eventuraly get the following values out
     	// of ThreadLocals instead of the DP attachments.
     	Transaction tx = (Transaction)invocation.attachments.get(TRANSACTION_KEY);
@@ -98,7 +101,6 @@ public class JMXInvokerInterceptor implements AspectInterceptor
         try
         {
         	ClassLoader cl = Classes.getContextClassLoader();
-        	server = MBeanServerLocator.locate();
             String mbean = xml.attribute(ATTR_MBEAN).getValue();
             this.mbean = new ObjectName(mbean);
             

@@ -8,6 +8,7 @@
  ***************************************/
 package org.jboss.aspect.interceptors;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -79,7 +80,7 @@ import org.jboss.util.Classes;
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  * 
  */
-public class AdaptorInterceptor implements AspectInterceptor
+public class AdaptorInterceptor implements AspectInterceptor, Serializable
 {
 
     public static final Namespace NAMESPACE = Namespace.get(AdaptorInterceptor.class.getName());
