@@ -35,6 +35,7 @@
     
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
+    <property name="torquedoc.destdir" value="${build.project}/docs"/>
     <property name="scarab.war.file" value="${build.webapps}/${scarab.context}.war"/>
 
     <!-- Build classpath -->
@@ -1624,6 +1625,22 @@ diff -u -r1.5 project.xml
     </target>
     -->
 
+    <!-- ================================================================== -->
+    <!-- Creates the Torque documentation                                   -->
+    <!-- ================================================================== -->
+    <target name="datadoc" depends="torque-init,sql">
+        <mkdir dir="${torquedoc.destdir}"/>
+        <ant antfile="build-torque.xml" dir="${torque.dir.scarab}"
+	     target="doc">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${build.project.webinf}/lib"/>
+            <property name="build.properties"
+                      value="${torque.dir.scarab}/build.properties"/> 
+            <property name="torque.doc.dir"
+                      value="${torquedoc.destdir}"/> 
+        </ant>
+    </target>
+    
 
     <!-- ================================================================== -->
     <!-- Dump data from DB into xml                                         -->
