@@ -155,23 +155,23 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	public void removeHeaderList(Object[] uids) {
 
-      if(uids != null){
-		if (uids.length > 100) { // recreate whole tablemodel
-			for (int i = 0; i < uids.length; i++) {
-				//headerList.remove(uids[i]);
-				uidList.remove(uids[i]);
-			}
+		if (uids != null) {
+			if (uids.length > 100) { // recreate whole tablemodel
+				for (int i = 0; i < uids.length; i++) {
+					//headerList.remove(uids[i]);
+					uidList.remove(uids[i]);
+				}
 
-			update();
-		} else { // single operation per message
-			for (int i = 0; i < uids.length; i++) {
-				//headerList.remove(uids[i]);
-				MessageNode node = (MessageNode) uidList.get(uids[i]);
-				if (node != null && node.getParent() != null)
-					removeNode(node);
+				update();
+			} else { // single operation per message
+				for (int i = 0; i < uids.length; i++) {
+					//headerList.remove(uids[i]);
+					MessageNode node = (MessageNode) uidList.get(uids[i]);
+					if (node != null && node.getParent() != null)
+						removeNode(node);
+				}
 			}
 		}
-      }
 	}
 
 	public void addHeaderList(HeaderInterface[] headerList) throws Exception {
@@ -258,20 +258,20 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 	}
 
 	public void update() {
-		setHeaderList(headerList);
-	}
+		//setHeaderList(headerList);
+		long start = System.currentTimeMillis();
+		System.out.println(start);
 
-	public void setHeaderList(HeaderList list) {
 		root.removeAllChildren();
-		headerList = list;
+
 		uidList.clear();
 
-		if (list == null) {
+		if (headerList == null) {
 			nodeStructureChanged(root);
 			return;
 		}
 
-		if (list.count() == 0) {
+		if (headerList.count() == 0) {
 			nodeStructureChanged(root);
 			return;
 		}
@@ -292,15 +292,41 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 			}
 
+			long middle = System.currentTimeMillis();
+			System.out.println(middle);
+
+			long diff = middle - start;
+			System.out.println("filling vector took (ms): " + diff);
+
 			getTableModelThreadedView().manipulateModel(
 				TableModelPlugin.STRUCTURE_CHANGE);
 			getTableModelSorter().manipulateModel(
 				TableModelPlugin.STRUCTURE_CHANGE);
+
+			long nearend = System.currentTimeMillis();
+			System.out.println(
+				"sorting and threading took (ms): " + (nearend - middle));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
+		long node_start = System.currentTimeMillis();
+		
 		nodeStructureChanged(root);
+		
+		long node_stop = System.currentTimeMillis();
+		System.out.println("node update takes (ms): " + (node_stop-node_start));
+
+		long end = System.currentTimeMillis();
+		System.out.println(end);
+
+		long diff = end - start;
+		System.out.println("complete task takes (ms): " + diff);
+	}
+
+	public void setHeaderList(HeaderList list) {
+		headerList = list;
+
 	}
 	/***************************** treemodel interface ********************************/ //
 	// The TreeModel interface
@@ -411,7 +437,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			//System.out.println("found message instance");
 			header = (ColumbaHeader) treeNode.getUserObject();
 		}
-
+		
 		if (header == null)
 			return "";
 		String column = getColumnName(col);
@@ -428,7 +454,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 				Date date = (Date) header.get("columba.date");
 				return date;
 			} else {
-
+		
 				return (String) header.get("columba.date");
 			}
 		} else if (column.equals("Attachment")) {
@@ -455,7 +481,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		*/
 	}
 
-	public MessageNode getMessageNode( Object uid ) {
+	public MessageNode getMessageNode(Object uid) {
 		return (MessageNode) uidList.get(uid);
 	}
 

@@ -21,7 +21,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.SelectiveGuiUpdateCommand;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
@@ -62,6 +61,20 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 				.getHandler(
 				"mail.table")).setFolder(
 			folder);
+
+		/*
+		boolean enableThreadedView =
+			folder.getFolderItem().getBoolean(
+				"property",
+				"enable_threaded_view",
+				false);
+				
+		((MailFrameController) frameController)
+					.tableController
+					.getView()
+					.enableThreadedView(enableThreadedView);
+		*/
+
 		((MailFrameController) frameController)
 			.tableController
 			.getHeaderTableModel()
@@ -72,19 +85,14 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 		MailFrameController.tableChanged(ev);
 
+		/*
 		boolean ascending =
 			((MailFrameController) frameController)
 				.tableController
 				.isAscending();
 		ColumbaLogger.log.debug("ascending=" + ascending);
-
+		*/
 		//scrollPane.repaint();
-
-		boolean enableThreadedView =
-			folder.getFolderItem().getBoolean(
-				"property",
-				"enable_threaded_view",
-				false);
 
 		((MailFrameController) frameController)
 			.tableController

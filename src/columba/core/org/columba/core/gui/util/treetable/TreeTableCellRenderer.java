@@ -81,6 +81,7 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
 	 * row will be drawn at 0,0.
 	 */
 	public void paint(Graphics g) {
+		
 		g.translate(0, -visibleRow * this.getRowHeight());
 		super.paint(g);
 	}
@@ -95,13 +96,16 @@ public class TreeTableCellRenderer extends JTree implements TableCellRenderer {
 		boolean hasFocus,
 		int row,
 		int column) {
+		
+		
+		
 		if (isSelected)
 			this.setBackground(table.getSelectionBackground());
 		else
 			this.setBackground(table.getBackground());
-
+		
 		visibleRow = row;
-
+		
 		return this;
 	}
 	

@@ -57,7 +57,9 @@ public class TableModelThreadedView extends TableModelPlugin {
 
 	public void toggleView( boolean b ) {
 		setEnabled(b);
+		/*
 		getHeaderTableModel().update();
+		*/
 	}
 
 	public boolean isEnabled() {

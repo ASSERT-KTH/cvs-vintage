@@ -153,7 +153,7 @@ public class TableView extends JTreeTable {
 					"headerTable->registerRenderer: " + ex.getMessage());
 			}
 
-			setTreeCellRenderer(new SubjectTreeCellRenderer(getTree()));
+			setTreeCellRenderer(new SubjectTreeCellRenderer());
 
 		} else {
 			//tree.setRootVisible(false);

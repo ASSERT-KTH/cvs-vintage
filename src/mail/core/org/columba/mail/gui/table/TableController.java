@@ -535,6 +535,7 @@ public class TableController
 			case TableChangedEvent.UPDATE :
 				{
 					getHeaderTableModel().update();
+					
 					/*
 					HeaderInterface[] headerList = event.getHeaderList();
 					

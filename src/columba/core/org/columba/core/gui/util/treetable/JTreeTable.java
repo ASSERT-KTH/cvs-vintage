@@ -46,9 +46,11 @@ public class JTreeTable extends JTable {
 	public JTreeTable(TreeTableModel treeTableModel) {
 		super();
 
+		
 		// Create the tree. It will be used as a renderer and editor.
 		tree = new TreeTableCellRenderer(this, treeTableModel);
-
+		
+		
 		// Install a tableModel representing the visible rows in the tree.
 		treeTableModelAdapter = new TreeTableModelAdapter(treeTableModel, tree);
 		super.setModel(treeTableModelAdapter);
@@ -70,6 +72,7 @@ public class JTreeTable extends JTable {
 		setDefaultEditor(
 			TreeTableModel.class,
 			new TreeTableCellEditor(this, tree));
+		
 		
 		// No grid.
 		setShowGrid(false);

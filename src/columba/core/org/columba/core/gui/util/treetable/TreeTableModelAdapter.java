@@ -42,6 +42,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
 		this.tree = tree;
 		this.treeTableModel = treeTableModel;
 
+		
 		tree.addTreeExpansionListener(new TreeExpansionListener() {
 			// Don't use fireTableRowsInserted() here; the selection model
 			// would get updated twice. 
