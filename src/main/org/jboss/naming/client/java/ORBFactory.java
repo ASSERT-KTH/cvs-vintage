@@ -6,7 +6,10 @@
  */
 package org.jboss.naming.client.java;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import org.jboss.logging.Logger;
 import org.omg.CORBA.ORB;
@@ -15,7 +18,7 @@ import org.omg.CORBA.ORB;
  * An object factory that creates an ORB on the client
  *  
  * @author Adrian Brock (adrian@jboss.com)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ORBFactory
 {
@@ -37,8 +40,24 @@ public class ORBFactory
       {
          if (orb == null)
          {
+            Properties properties;
+            try
+            {
+               properties = (Properties) AccessController.doPrivileged(new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     return System.getProperties();
+                  }
+               });
+            }
+            catch (SecurityException ignored)
+            {
+               properties = null;
+            }
+
             // Create the singleton ORB
-            orb = ORB.init(new String[0], System.getProperties());
+            orb = ORB.init(new String[0], properties);
             
             // Start the orb
             new Thread
