@@ -147,7 +147,7 @@ public class Container implements Cloneable {
     public ContextManager getContextManager() {
 	if( contextM==null ) {
 	    /* assert */ throw new RuntimeException( "Assert: container.contextM==null" );
-	    if(context!=null) contextM=context.getContextManager();
+	    //if(context!=null) contextM=context.getContextManager();
 	}
 	return contextM;
     }
@@ -260,7 +260,7 @@ public class Container implements Cloneable {
     public ServletWrapper getHandler() {
         if (handler == null) {
 	    /* assert */ throw new RuntimeException( "Assert: container.getHandler==null");
-	    handler=context.getDefaultServlet();
+	    //handler=context.getDefaultServlet();
 	}
 	return handler;
     }
