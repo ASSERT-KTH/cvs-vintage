@@ -1,4 +1,4 @@
-// $Id: FigTransition.java,v 1.35 2005/01/25 17:50:50 mvw Exp $
+// $Id: FigTransition.java,v 1.36 2005/01/27 18:24:10 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,7 +168,7 @@ public class FigTransition extends FigEdgeModelElement {
             // register the event (or trigger)
             Model.getPump().addModelEventListener(this,
                     e.getNewValue(), new String[] {
-                    	"parameter", "name", "operation", "signal"
+                    	"parameter", "name"
                         //TODO: How to listen to time/change expression?
             	    });
             updateNameText();
