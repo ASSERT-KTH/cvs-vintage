@@ -26,7 +26,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport
@@ -44,6 +44,8 @@ public abstract class ContainerConfiguration
    String instanceCache= "";
    String persistenceManager= "";
    String transactionManager= "";
+   String authenticationModule = "";
+   String realmManager = "";
    
    Object containerInvokerConfiguration;
    Object instancePoolConfiguration;
@@ -124,7 +126,7 @@ public abstract class ContainerConfiguration
 
    public void setInstanceCache(String ic) 
    { 
-      instanceCache = ic; 
+      instanceCache = ic;
       
       if (instanceCacheConfiguration != null)
       {
@@ -156,7 +158,13 @@ public abstract class ContainerConfiguration
    
    public void setTransactionManager(String tm) { transactionManager = tm; }
    public String getTransactionManager() { return transactionManager; }
-   
+
+   public void setAuthenticationModule(String am) { authenticationModule = am; }
+   public String getAuthenticationModule() { return authenticationModule; }
+
+   public void setRealmManager(String rm) { realmManager = rm; }
+   public String getRealmManager() { return realmManager; }
+
    public void setCallLogging(boolean cl) { callLogging = cl; }
    public boolean getCallLogging() { return callLogging; }
    
@@ -191,7 +199,9 @@ public abstract class ContainerConfiguration
       XMLManager.addElement(containerconfiguration,"instance-cache",getInstanceCache());
       XMLManager.addElement(containerconfiguration,"persistence-manager",getPersistenceManager());
       XMLManager.addElement(containerconfiguration,"transaction-manager",getTransactionManager());
-      
+      XMLManager.addElement(containerconfiguration,"authentication-module",getAuthenticationModule());
+      XMLManager.addElement(containerconfiguration,"realm-manager",getRealmManager());
+
       if (containerInvokerConfiguration != null)
 		{
 			if (containerInvokerConfiguration instanceof XmlExternalizable)
@@ -263,6 +273,12 @@ public abstract class ContainerConfiguration
             } else if (name.equals("transaction-manager"))
             {
                setTransactionManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("authentication-module"))
+            {
+               setAuthenticationModule(n.hasChildNodes() ? XMLManager.getString(n) : "");
+            } else if (name.equals("realm-manager"))
+            {
+               setRealmManager(n.hasChildNodes() ? XMLManager.getString(n) : "");
             } else if (name.equals("container-invoker-conf"))
             {
 					if (containerInvokerConfiguration instanceof XmlExternalizable)
