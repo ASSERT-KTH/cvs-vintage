@@ -128,7 +128,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
 	try {
-	    Method exportO = unicastClass.getMethod("exportObject",  new Class [] { Remote.class });
+	    Method exportO = unicastClass.getMethod("toStub",  new Class [] { Remote.class });
 	    return (Remote)exportO.invoke(unicastClass, (new Object[] { obj } ));
 	} catch (Exception e) {
 	    throw new NoSuchObjectException(e.toString());

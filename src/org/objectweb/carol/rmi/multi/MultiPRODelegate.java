@@ -104,14 +104,6 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }	    
 	} catch (Exception ex) {
 	    String msg = "MultiPRODelegate.exportObject(Remote obj) fail";
-	    // We first unexport all exported object
-	    for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
-		try {
-		    ((PortableRemoteObjectDelegate)e.nextElement()).unexportObject(obj);	    
-		} catch (Exception fake) {
-		    // we do nothing, this object was not exported
-		}
-	    }
 	    TraceCarol.error(msg,ex);
 	    throw new RemoteException(msg);	    
 	}
@@ -137,14 +129,6 @@ public class MultiPRODelegate implements PortableRemoteObjectDelegate {
 	    }	    
 	} catch (Exception ex) {
 	    String msg = "MultiPRODelegate.unexportObject(Remote obj) fail";
-	    // We first re-export all exported object
-	    for (Enumeration e = activesProtocols.elements(); e.hasMoreElements() ;) {
-		try {
-		    ((PortableRemoteObjectDelegate)e.nextElement()).exportObject(obj);	    
-		} catch (Exception fake) {
-		    // we do nothing, this object was not unexported
-		}
-	    }
 	    TraceCarol.error(msg,ex);
 	    throw new NoSuchObjectException(msg);	    
 	}	
