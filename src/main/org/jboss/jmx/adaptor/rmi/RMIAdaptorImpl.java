@@ -53,10 +53,12 @@ import org.jboss.jmx.connector.notification.RMINotificationListener;
  * is nearly the same as the MBeanServer Interface but
  * has an additional RemoteException.
  *
- * @version <tt>$Revision: 1.3 $</tt>
+ * @todo implement notifications
+ * @version <tt>$Revision: 1.4 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  **/
 public class RMIAdaptorImpl
    extends UnicastRemoteObject
@@ -270,6 +272,11 @@ public class RMIAdaptorImpl
       return mServer.getDefaultDomain();
    }
 
+   public String[] getDomains() throws RemoteException
+   {
+      return mServer.getDomains();
+   }
+
    public void addNotificationListener(ObjectName pName,
                                        ObjectName pListener,
                                        NotificationFilter pFilter,
@@ -294,6 +301,17 @@ public class RMIAdaptorImpl
    {
       mServer.removeNotificationListener(pName, pListener);
       mListeners.removeElement( pListener );
+   }
+
+   public void removeNotificationListener(ObjectName pName,
+                                          ObjectName pListener,
+                                          NotificationFilter filter,
+                                          Object handback)
+      throws InstanceNotFoundException,
+             ListenerNotFoundException,
+             RemoteException
+   {
+      throw new RuntimeException("NYI");
    }
 
    public MBeanInfo getMBeanInfo(ObjectName pName)

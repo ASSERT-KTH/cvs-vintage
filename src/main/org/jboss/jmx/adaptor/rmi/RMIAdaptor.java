@@ -44,10 +44,11 @@ import javax.management.ReflectionException;
  * is nearly the same as the MBeanServer Interface but
  * has an additional RemoteException.
  *
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  */
 public interface RMIAdaptor 
    extends Remote
@@ -177,6 +178,8 @@ public interface RMIAdaptor
 
    String getDefaultDomain() throws RemoteException;
 
+   String[] getDomains() throws RemoteException;
+
    void addNotificationListener(ObjectName pName,
                                 ObjectName pListener,
                                 NotificationFilter pFilter,
@@ -185,6 +188,12 @@ public interface RMIAdaptor
              RemoteException;
 
    void removeNotificationListener(ObjectName pName, ObjectName pListener)
+      throws InstanceNotFoundException,
+             ListenerNotFoundException,
+             RemoteException;
+
+   void removeNotificationListener(ObjectName pName, ObjectName pListener, 
+                                   NotificationFilter filter, Object handback)
       throws InstanceNotFoundException,
              ListenerNotFoundException,
              RemoteException;

@@ -67,7 +67,9 @@ import org.jboss.logging.Logger;
  *                value="null"
  * @ejb:transaction type="Supports"
  *
- * @version <tt>$Revision: 1.9 $</tt>
+ * @todo implement notifications
+ * @todo convert to mbeanserverconnection
+ * @version <tt>$Revision: 1.10 $</tt>
  * @author  Andreas Schaefer
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -360,6 +362,10 @@ public class EJBAdaptorBean
       return mServer.getDefaultDomain();
    }
 
+   public String[] getDomains() throws RemoteException
+   {
+      return mServer.getDomains();
+   }
    public void addNotificationListener(ObjectName pName,
                                        ObjectName pListener,
                                        NotificationFilter pFilter,
@@ -384,6 +390,17 @@ public class EJBAdaptorBean
    {
       mServer.removeNotificationListener(pName, pListener);
       mListeners.removeElement( pListener );
+   }
+
+   public void removeNotificationListener(ObjectName pName,
+                                       ObjectName pListener,
+                                       NotificationFilter pFilter,
+                                       Object pHandback)
+      throws InstanceNotFoundException,
+             ListenerNotFoundException,
+             RemoteException
+   {
+        throw new RuntimeException("NYI");
    }
 
    public MBeanInfo getMBeanInfo(ObjectName pName)
