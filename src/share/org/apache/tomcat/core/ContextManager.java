@@ -152,7 +152,12 @@ public class ContextManager implements LogAware{
 
     Container defaultContainer;
 
+    // the application loader. ContextManager is loaded with
+    // a class loader containing tomcat-specific classes,
+    // use parent loader to avoid polution
     ClassLoader parentLoader;
+    // tomcat classes ( used to load tomcat)
+    URL serverClassPath[];
     
     /**
      * Construct a new ContextManager instance with default values.
@@ -299,6 +304,15 @@ public class ContextManager implements LogAware{
 
     public ClassLoader getParentLoader() {
 	return parentLoader;
+    }
+
+    public URL[] getServerClassPath() {
+	if( serverClassPath==null ) return new URL[0];
+	return serverClassPath;
+    }
+    
+    public void setServerClassPath( URL urls[] ) {
+	serverClassPath=urls;
     }
     
     /** Get the name of the class to be used for generating random numbers by the

@@ -209,6 +209,8 @@ public class Main {
 	    
 	    File f = new File(base + file);
 	    String path = f.getCanonicalPath();
+	    if( f.isDirectory() )
+		path +="/";
 	    return new URL( "file", null, path );
         } catch (Exception ex) {
 	    ex.printStackTrace();
@@ -275,8 +277,9 @@ public class Main {
 	    Object proxy=instantiate( cl, 
 				      "org.apache.tomcat.task.StartTomcat");
 	    processArgs( proxy, args );
-	    setParentLoader( proxy, parentL );
-	    execute(  proxy );
+	    setAttribute( proxy, "parentClassLoader", parentL );
+	    setAttribute( proxy, "serverClassPath", urls );
+	    execute(  proxy, "execute" );
 	    return; 
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
@@ -290,32 +293,33 @@ public class Main {
 	return sXmlC.newInstance();
     }
 
-    /** If the proxy has a setParentClassLoader() method, use it
-	to allow it to access this class' loader
+    /** 
+	Call void setAttribute( String ,Object )
     */
-    void setParentLoader( Object proxy, ClassLoader cl) throws Exception {
+    void setAttribute( Object proxy, String n, Object v) throws Exception {
 	Method executeM=null;
 	Class c=proxy.getClass();
-	Class params[]=new Class[1];
-	params[0]= ClassLoader.class;
-	executeM=c.getMethod( "setParentClassLoader", params );
+	Class params[]=new Class[2];
+	params[0]= String.class;
+	params[1]= Object.class;
+	executeM=c.getMethod( "setAttribute", params );
 	if( executeM == null ) {
-	    log("No setParentClassLoader in " + proxy.getClass() );
+	    log("No setAttribute in " + proxy.getClass() );
 	    return;
 	}
-	log( "Setting parent loader " + cl);
-	executeM.invoke(proxy, new Object[] { cl });
+	log( "Setting " + n + "=" + v + "  in " + proxy);
+	executeM.invoke(proxy, new Object[] { n, v });
 	return; 
     }
 
     /** Call execute() - any ant-like task should work
      */
-    void execute( Object proxy  ) throws Exception {
+    void execute( Object proxy, String method  ) throws Exception {
 	Method executeM=null;
 	Class c=proxy.getClass();
 	Class params[]=new Class[0];
 	//	params[0]=args.getClass();
-	executeM=c.getMethod( "execute", params );
+	executeM=c.getMethod( method, params );
 	if( executeM == null ) {
 	    log("No execute in " + proxy.getClass() );
 	    return;
@@ -326,28 +330,44 @@ public class Main {
     }
 
     // -------------------- Command-line args processing --------------------
-    static class Arg {
-	String name;
-	String aliases[];
-	int args;
-
-	boolean task;
-
-
-    }
+    /* Later
+       static class Arg {
+       String name;
+       String aliases[];
+       int args;
+       
+       boolean task;
+       }
+    */
     String args0[]= { "help", "stop" };
     String args1[]= { "f", "config", "h", "home" };
 
     /** Read command line arguments and set properties in proxy,
 	using ant-like patterns
     */
-    void processArgs(Object proxy, String args[] ) {
+    void processArgs(Object proxy, String args[] )
+	throws Exception
+    {
 
 	for( int i=0; i< args.length; i++ ) {
 	    String arg=args[i];
+	    if( arg.startsWith("-"))
+		arg=arg.substring(1);
 
-
-	    
+	    for( int j=0; j< args0.length ; j++ ) {
+		if( args0[j].equalsIgnoreCase( arg )) {
+		    setAttribute( proxy, args0[j], "true");
+		    break;
+		}
+	    }
+	    for( int j=0; j< args1.length ; j++ ) {
+		if( args1[j].equalsIgnoreCase( arg )) {
+		    i++;
+		    if( i < args.length )
+			setAttribute( proxy, args1[j], args[i]);
+		    break;
+		}
+	    }
 	}
     }
  

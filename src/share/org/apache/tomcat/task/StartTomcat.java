@@ -80,8 +80,13 @@ import org.apache.tomcat.core.Constants;
  * @author costin@dnt.ro
  */
 public class StartTomcat {
+    // Passed to ContextManager - it have no other way
+    // to find out. ( since java.class.path represent what
+    // the VM knows, not what is used to load tomcat if
+    // embeded )
     ClassLoader parentLoader;
-
+    URL serverClassPath[];
+    
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
     Logger.Helper loghelper = new Logger.Helper("tc_log", "StartTomcat");
@@ -110,7 +115,8 @@ public class StartTomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	cm.setParentLoader( parentLoader );
-
+	cm.setServerClassPath( serverClassPath );
+	
 	ServerXmlHelper sxml=new ServerXmlHelper();
 	sxml.setHelper( xh );
 	sxml.setConnectorHelper( xh );
@@ -171,6 +177,10 @@ public class StartTomcat {
     public void setParentClassLoader( ClassLoader cl ) {
 	parentLoader=cl;
     }
+
+    public void setServerClassPath( URL urls[] ) {
+	serverClassPath=urls;
+    }
     
     /** This method will generate Server config files that
 	reflect the existing cm settings. It is called
@@ -203,7 +213,9 @@ public class StartTomcat {
 	System.out.println(sm.getString("tomcat.usage"));
     }
 
-    public void loadConfigFile(XmlMapper xh, File f, ContextManager cm) throws Exception {
+    public void loadConfigFile(XmlMapper xh, File f, ContextManager cm)
+	throws Exception
+    {
 	loghelper.log(sm.getString("tomcat.loading") + " " + f);
 	try {
 	    xh.readXml(f,cm);
@@ -214,6 +226,35 @@ public class StartTomcat {
 	loghelper.log(sm.getString("tomcat.loaded") + " " + f);
     }
 
+    // -------------------- setAttribute() --------------------
+
+    /** The normal configuration pattern in tomcat and for
+	ant tasks is using bean setters. In order to simplify the
+	launcher ( that should be minimal ) we do provide the
+	alternate setAttribute pattern.
+
+	XXX in future we may use a util/ that will do proper
+	introspection, etc
+
+	Attribute names are identical with the bean setter name.
+    */
+    public void setAttribute( String n, Object v ) {
+	if( "help".equals( n ) ) {
+	    setHelp( true );
+	} else if( "stop".equals( n ) ) {
+	    setHelp( true );
+	} else if( "parentClassLoader".equals( n ) ) {
+	    setParentClassLoader( (ClassLoader)v);
+	} else if( "serverClassPath".equals( n ) ) {
+	    setServerClassPath( (URL[])v);
+	} else if( "config".equals( n ) ||
+		   "f".equals(n) ) {
+	    setConfig( (String)v);
+	} else if( "home".equals( n ) ||
+		   "h".equals(n)) {
+	    setHome( (String)v);
+	}
+    }
 
     // -------------------- Command-line args processing --------------------
     // null means user didn't set one
@@ -243,12 +284,18 @@ public class StartTomcat {
     }
 
     public void setH( String h ) {
+	System.out.println("home : " + h);
 	System.getProperties().put("tomcat.home", h);
     }
 
     public void setHome( String h ) {
 	System.getProperties().put("tomcat.home", h);
     }
-    
+
+    // -------------------- Special method called to get help
+    public void help() {
+	System.out.println(sm.getString("tomcat.usage"));
+    }
+
 
 }

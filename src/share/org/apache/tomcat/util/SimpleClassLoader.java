@@ -118,6 +118,7 @@ public class SimpleClassLoader extends ClassLoader {
 	super(); // will check permissions 
 	this.urls=urls;
 	sm=System.getSecurityManager();
+	checkURLs();
     }
 
     public SimpleClassLoader( URL urls[], ClassLoader parent ) {
@@ -125,6 +126,7 @@ public class SimpleClassLoader extends ClassLoader {
 	this.urls=urls;
 	this.parent=parent;
 	sm=System.getSecurityManager();
+	checkURLs();
     }
 
     /** This is the prefered constructor to be used with this class loader
@@ -136,8 +138,28 @@ public class SimpleClassLoader extends ClassLoader {
 	this.parent=parent;
 	this.reserved=reserved;
 	sm=System.getSecurityManager();
+	checkURLs();
     }
 
+    private void checkURLs() {
+	int cnt=0;
+	for( int i=0; i<urls.length; i++ ) {
+	    URL cp = urls[i];
+            String fileN = cp.getFile();
+	    File file=new File( fileN );
+	    if( ! file.exists() )
+		urls[i]=null;
+	    if( file.isDirectory() &&
+		! fileN.endsWith("/") ) {
+		try {
+		    urls[i]=new URL("file", null,
+				    fileN + "/" );
+		} catch(MalformedURLException e ) {
+		}
+	    }
+	}
+    }
+    
     // debug only 
     void log( String s ) {
 	System.out.println("SimpleClassLoader: " + s );
@@ -429,6 +451,7 @@ public class SimpleClassLoader extends ClassLoader {
 	
 	for( int i=0; i<urls.length; i++ ) {
 	    URL cp = urls[i];
+	    if( cp==null ) continue;
             String fileN = cp.getFile();
 	    File file=new File( fileN );
 	    
@@ -454,6 +477,7 @@ public class SimpleClassLoader extends ClassLoader {
                     }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
+		    System.out.println("Name= " + name + " " + file );
                     return null;
                 }
             }   

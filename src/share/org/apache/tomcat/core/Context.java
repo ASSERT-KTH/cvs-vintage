@@ -437,11 +437,13 @@ public class Context implements LogAware {
 	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
 		String separator = System.getProperty("path.separator", ":");
 		StringBuffer cpath=new StringBuffer();
-		for(int i=0; i< classPath.size(); i++ ) {
-		    URL cp = (URL)classPath.elementAt(i);
+		URL classPaths[]=getClassPath();
+		for(int i=0; i< classPaths.length ; i++ ) {
+		    URL cp = classPaths[i];
 		    if (cpath.length()>0) cpath.append( separator );
 		    cpath.append(cp.getFile());
 		}
+		if( debug>9 ) log("Getting classpath " + cpath);
 		return cpath.toString();
 	    }
 	    if( name.equals( "org.apache.tomcat.protection_domain") ) {
@@ -793,9 +795,14 @@ public class Context implements LogAware {
 
     public URL[] getClassPath() {
 	if( classPath==null ) return new URL[0];
-	URL urls[]=new URL[classPath.size()];
-	for( int i=0; i<urls.length; i++ ) {
-	    urls[i]=(URL)classPath.elementAt( i );
+	URL serverCP[]=contextM.getServerClassPath();
+	URL urls[]=new URL[classPath.size() + serverCP.length];
+	int pos=0;
+	for( int i=0; i<serverCP.length; i++ ) {
+	    urls[pos++]=serverCP[i];
+	}
+	for( int i=0; i<classPath.size(); i++ ) {
+	    urls[pos++]=(URL)classPath.elementAt( i );
 	}
 	return urls;
     }
