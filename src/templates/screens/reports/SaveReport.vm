@@ -21,7 +21,7 @@
 </div>
 
 <p>
-Go to your $link.setPage("ReportList.vm").setLabel("Saved Reports List").
+Go to your $link.setPage("ReportList.vm").setLabel("Saved reports list").
 </p>
 
 <h3>Save Your Report</h3>
