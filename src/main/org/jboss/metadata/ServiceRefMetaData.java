@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.16 2004/06/16 18:49:29 starksm Exp $
+// $Id: ServiceRefMetaData.java,v 1.17 2004/06/19 14:04:30 starksm Exp $
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -242,17 +242,20 @@ public class ServiceRefMetaData implements Serializable
       while (iterator.hasNext())
       {
          Element portElement = (Element) iterator.next();
-         String name = MetaData.getUniqueChildContent(portElement, "service-endpoint-interface");
-         PortComponentRefMetaData pcrefMetaData = 
-            (PortComponentRefMetaData) portComponentRefs.get(name);
-         if( pcrefMetaData == null )
+         String name = MetaData.getOptionalChildContent(portElement, "service-endpoint-interface");
+         if( name != null )
          {
-            String msg = "Failed to find port-component-ref in jboss descriptor "
-               + "for service-endpoint-interface: "+name;
-            throw new DeploymentException(msg);
-         }
+            PortComponentRefMetaData pcrefMetaData = 
+               (PortComponentRefMetaData) portComponentRefs.get(name);
+            if( pcrefMetaData == null )
+            {
+               String msg = "Failed to find port-component-ref in jboss descriptor "
+                  + "for service-endpoint-interface: "+name;
+               throw new DeploymentException(msg);
+            }
 
-         pcrefMetaData.importJBossXml(portElement);         
+            pcrefMetaData.importJBossXml(portElement);
+         }
       }
 
       // Parse the call-property elements
