@@ -109,6 +109,8 @@ public class LearnMessageAsHamCommand extends FolderCommand {
                     if (worker.cancelled()) {
                         break;
                     }
+
+                    istream.close();
                 } catch (Exception e) {
                     new ExceptionDialog(e);
 

@@ -1,15 +1,23 @@
-/*
- * Created on 18.07.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
 package org.columba.mail.pop3.command;
 
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -36,34 +44,21 @@ import org.columba.ristretto.message.io.SourceInputStream;
  * The spam filter is executed on this message.
  * <p>
  * The Inbox filters are applied to the message.
- * 
+ *
  * @author fdietz
  */
 public class AddPOP3MessageCommand extends FolderCommand {
 
-    MessageFolder inboxFolder;
+    private MessageFolder inboxFolder;
 
     /**
-     * @param references
+     * @param references command arguments
      */
     public AddPOP3MessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
-    /**
-     * @param frame
-     * @param references
-     */
-    public AddPOP3MessageCommand(FrameMediator frame,
-            DefaultCommandReference[] references) {
-        super(frame, references);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
+    /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
@@ -72,8 +67,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
         ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
         // add message to folder
-        Object uid = inboxFolder.addMessage(new SourceInputStream(message
-                .getSource()), message.getHeader().getAttributes());
+        SourceInputStream messageStream = new SourceInputStream(message.getSource());
+        Object uid = inboxFolder.addMessage(messageStream, message.getHeader().getAttributes());
+        messageStream.close();
         inboxFolder.getFlags(uid).set(Flags.RECENT);
 
         inboxFolder.getMessageFolderInfo().incRecent();
@@ -89,7 +85,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
      * Apply spam filter engine on message.
      * <p>
      * Message is marked as ham or spam.
-     * 
+     *
      * @param uid
      *            message uid.
      * @throws Exception
@@ -100,11 +96,13 @@ public class AddPOP3MessageCommand extends FolderCommand {
         AccountItem item = CommandHelper.retrieveAccountItem(inboxFolder, uid);
 
         // if spam filter is not enabled -> return
-        if (item.getSpamItem().isEnabled() == false) return;
+        if (!item.getSpamItem().isEnabled()) {
+            return;
+        }
 
         // create reference
         FolderCommandReference[] r = new FolderCommandReference[1];
-        r[0] = new FolderCommandReference(inboxFolder, new Object[] { uid});
+        r[0] = new FolderCommandReference(inboxFolder, new Object[] {uid});
 
         // pass command to command scheduler
         new ScoreMessageCommand(r).execute(worker);
@@ -118,7 +116,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
                 // create reference
                 FolderCommandReference[] ref2 = new FolderCommandReference[2];
                 ref2[0] = new FolderCommandReference(inboxFolder,
-                        new Object[] { uid});
+                        new Object[] {uid});
                 ref2[1] = new FolderCommandReference(trash);
 
                 MainInterface.processor.addOp(new MoveMessageCommand(ref2));
@@ -131,7 +129,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
                 // create reference
                 FolderCommandReference[] ref2 = new FolderCommandReference[2];
                 ref2[0] = new FolderCommandReference(inboxFolder,
-                        new Object[] { uid});
+                        new Object[] {uid});
                 ref2[1] = new FolderCommandReference(destFolder);
                 MainInterface.processor.addOp(new MoveMessageCommand(ref2));
             }
@@ -140,7 +138,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 
     /**
      * Apply filters on new message.
-     * 
+     *
      * @param uid
      *            message uid
      */
@@ -151,7 +149,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
             Filter filter = list.get(j);
 
             Object[] result = inboxFolder.searchMessages(filter,
-                    new Object[] { uid});
+                    new Object[] {uid});
 
             if (result.length != 0) {
                 CompoundCommand command = filter
@@ -162,11 +160,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+    /** {@inheritDoc} */
     public void updateGUI() throws Exception {
         // update table viewer
         TableModelChangedEvent ev = new TableModelChangedEvent(

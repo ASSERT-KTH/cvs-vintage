@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -35,9 +35,9 @@ import javax.swing.JOptionPane;
  * This is the base class for mailbox importers.
  */
 public abstract class AbstractMailboxImporter {
-    public static int TYPE_FILE = 0;
-    public static int TYPE_DIRECTORY = 1;
-    
+    public static final int TYPE_FILE = 0;
+    public static final int TYPE_DIRECTORY = 1;
+
     protected MessageFolder destinationFolder;
     protected File[] sourceFiles;
     protected int counter = 0;
@@ -136,13 +136,11 @@ public abstract class AbstractMailboxImporter {
 
             try {
                 importMailboxFile(listing[i], worker, getDestinationFolder());
+            } catch (FileNotFoundException fnfe) {
+                NotifyDialog dialog = new NotifyDialog();
+                dialog.showDialog("Source File not found:");
             } catch (Exception ex) {
-                if (ex instanceof FileNotFoundException) {
-                    NotifyDialog dialog = new NotifyDialog();
-                    dialog.showDialog("Source File not found:");
-                } else {
-                    new ExceptionDialog(ex);
-                }
+                new ExceptionDialog(ex);
             }
         }
     }
@@ -160,6 +158,7 @@ public abstract class AbstractMailboxImporter {
         SourceInputStream in = new SourceInputStream(new CharSequenceSource(
                     rawString));
         destFolder.addMessage(in);
+        in.close();
 
         counter++;
 

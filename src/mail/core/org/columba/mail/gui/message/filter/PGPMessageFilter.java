@@ -227,6 +227,11 @@ public class PGPMessageFilter extends AbstractFilter {
 
         }
 
+        controlPart.close();
+        encryptedPart.close();
+        if (decryptedStream != null) {
+            decryptedStream.close();
+        }
     }
 
     /**
@@ -281,6 +286,8 @@ public class PGPMessageFilter extends AbstractFilter {
             pgpMode = SecurityInformationController.VERIFICATION_FAILURE;
         }
 
+        signedPart.close();
+        signature.close();
     }
 
 }

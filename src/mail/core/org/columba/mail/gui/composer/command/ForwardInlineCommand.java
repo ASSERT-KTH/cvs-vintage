@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -152,6 +150,7 @@ public class ForwardInlineCommand extends ForwardCommand {
         Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
+        String quotedBody;
         // Quote original message - different methods for text and html 
         if (model.isHtml()) {
             // Html: Insertion of text before and after original message
@@ -193,11 +192,14 @@ public class ForwardInlineCommand extends ForwardCommand {
                     "original_message_end"));
             buf.append("</p></body></html>");
 
-            return buf.toString();
+            quotedBody = buf.toString();
         } else {
             // Text: Addition of > before each line
-            return StreamUtils.readInString(new QuoteFilterInputStream(
+            quotedBody = StreamUtils.readInString(new QuoteFilterInputStream(
                     bodyStream)).toString();
         }
+
+        bodyStream.close();
+        return quotedBody;
     }
 }

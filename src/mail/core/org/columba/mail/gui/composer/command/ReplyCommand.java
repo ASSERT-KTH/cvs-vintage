@@ -9,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -51,7 +50,7 @@ import org.columba.ristretto.message.MimeTree;
  * Reply to message.
  * <p>
  * Bodytext is quoted.
- * 
+ *
  * @author fdietz
  */
 public class ReplyCommand extends FolderCommand {
@@ -69,7 +68,7 @@ public class ReplyCommand extends FolderCommand {
 
     /**
      * Constructor for ReplyCommand.
-     * 
+     *
      * @param frameMediator
      * @param references
      */
@@ -187,6 +186,7 @@ public class ReplyCommand extends FolderCommand {
             Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
+        String quotedBody;
         // Quote original message - different methods for text and html
         if (model.isHtml()) {
             // Html: Insertion of text before and after original message
@@ -228,19 +228,21 @@ public class ReplyCommand extends FolderCommand {
                     "original_message_end"));
             buf.append("</p></body></html>");
 
-            return buf.toString();
+            quotedBody = buf.toString();
         } else {
             // Text: Addition of > before each line
-            return StreamUtils.readInString(
-                    new QuoteFilterInputStream(bodyStream)).toString();
+            quotedBody = StreamUtils.readInString(new QuoteFilterInputStream(bodyStream)).toString();
         }
+
+        bodyStream.close();
+        return quotedBody;
     }
 
     /**
      * Get composer model.
      * <p>
      * Needed for testcases.
-     * 
+     *
      * @return Returns the model.
      */
     public ComposerModel getModel() {

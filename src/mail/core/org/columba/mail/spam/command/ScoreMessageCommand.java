@@ -252,6 +252,7 @@ public class ScoreMessageCommand extends FolderCommand {
 
         // only go on if all values are true
         result = result && checkAddressbook && !isInAddressbook;
+        istream.close();
         return result;
     }
 

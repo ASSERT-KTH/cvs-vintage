@@ -31,6 +31,7 @@ import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.logging.Logger;
 
 
@@ -97,7 +98,10 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
             tempFolder = MailInterface.treeModel.getTempFolder();
             try {
-                tempMessageUid = tempFolder.addMessage(part.getInputStream());
+
+                InputStream inputStream = part.getInputStream();
+                tempMessageUid = tempFolder.addMessage(inputStream);
+                inputStream.close();
             } catch (Exception e) {
                 LOG.warning("Could not create temporary email from the attachment.");
             }

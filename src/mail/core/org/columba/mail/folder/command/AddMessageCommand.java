@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -21,7 +19,6 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -31,7 +28,6 @@ import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.io.SourceInputStream;
 
 /**
@@ -43,19 +39,18 @@ import org.columba.ristretto.message.io.SourceInputStream;
  * @author fdietz
  */
 public class AddMessageCommand extends Command {
-    protected HeaderInterface[] headerList = new HeaderInterface[1];
-    protected MessageFolder folder;
+    private MessageFolder folder;
 
     /**
- * Constructor for AddMessageCommand.
- *
- * @param frameMediator
- * @param references
- */
+     * Constructor for AddMessageCommand.
+     *
+     * @param references command arguments.
+     */
     public AddMessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
+    /** {@inheritDoc} */
     public void updateGUI() throws Exception {
         // send update to message list
         TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
@@ -68,8 +63,8 @@ public class AddMessageCommand extends Command {
     }
 
     /**
- * @see org.columba.core.command.Command#execute(Worker)
- */
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get reference
@@ -85,6 +80,8 @@ public class AddMessageCommand extends Command {
         ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
         // add message to folder
-        Object uid = folder.addMessage(new SourceInputStream(message.getSource()));
+        SourceInputStream messageStream = new SourceInputStream(message.getSource());
+        folder.addMessage(messageStream);
+        messageStream.close();
     }
 }

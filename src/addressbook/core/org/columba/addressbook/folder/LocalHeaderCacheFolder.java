@@ -346,6 +346,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
             LOG.fine("Messagebox headercache-file is corrupted!");
 
             recreateIndex();
+            p.close();
 
             return;
         }
