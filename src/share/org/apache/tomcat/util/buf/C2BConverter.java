@@ -60,6 +60,8 @@
 
 package org.apache.tomcat.util.buf;
 
+import org.apache.tomcat.util.buf.*;
+
 import java.io.*;
 
 /** Efficient conversion of character to bytes.
@@ -72,11 +74,11 @@ import java.io.*;
 public final class C2BConverter {
     private IntermediateOutputStream ios;
     private WriteConvertor conv;
-    private ByteBuffer bb;
+    private ByteChunk bb;
 
     /** Create a converter, with bytes going to a byte buffer
      */
-    public C2BConverter(ByteBuffer output, String encoding) throws IOException {
+    public C2BConverter(ByteChunk output, String encoding) throws IOException {
 	this.bb=output;
 	ios=new IntermediateOutputStream( output );
 	conv=new WriteConvertor( ios, encoding );
@@ -85,16 +87,16 @@ public final class C2BConverter {
     /** Create a converter
      */
     public C2BConverter(String encoding) throws IOException {
-	this( new ByteBuffer(), encoding );
+	this( new ByteChunk(1024), encoding );
     }
 
-    public ByteBuffer getByteBuffer() {
+    public ByteChunk getByteChunk() {
 	return bb;
     }
 
-    public void setByteBuffer(ByteBuffer bb) {
+    public void setByteChunk(ByteChunk bb) {
 	this.bb=bb;
-	ios.setByteBuffer( bb );
+	ios.setByteChunk( bb );
     }
 
     /** Reset the internal state, empty the buffers.
@@ -209,10 +211,10 @@ public final class C2BConverter {
     not be called if recycling the converter and if data was not flushed.
 */
 final class IntermediateOutputStream extends OutputStream {
-    private ByteBuffer tbuff;
+    private ByteChunk tbuff;
     private boolean enabled=true;
     
-    public IntermediateOutputStream(ByteBuffer tbuff) {
+    public IntermediateOutputStream(ByteChunk tbuff) {
 	    this.tbuff=tbuff;
     }
     
@@ -239,7 +241,7 @@ final class IntermediateOutputStream extends OutputStream {
 
     // -------------------- Internal methods --------------------
 
-    void setByteBuffer( ByteBuffer bb ) {
+    void setByteChunk( ByteChunk bb ) {
 	tbuff=bb;
     }
     
