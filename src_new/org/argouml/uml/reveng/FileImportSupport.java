@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.3 2003/06/30 21:59:34 linus Exp $
+// $Id: FileImportSupport.java,v 1.4 2003/09/15 21:56:51 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.util.osdep.OsUtil;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.util.SuffixFilter;
+import org.argouml.ui.ProjectBrowser;
 
 import org.tigris.gef.base.Globals;
 
@@ -48,7 +49,7 @@ import java.util.Vector;
  * for other input sources.
  * 
  * @author Alexander Lepekhine
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 
@@ -195,6 +196,7 @@ public abstract class FileImportSupport implements PluggableImport {
 			}
 		    } else if (e.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
 			_import.disposeDialog();
+                        ProjectBrowser.getInstance().setEnabled(true);
 		    }
 		}
 	    });
