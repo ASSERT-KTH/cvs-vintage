@@ -1,4 +1,4 @@
-// $Id: ClassifierContext.java,v 1.8 2003/06/30 21:59:34 linus Exp $
+// $Id: ClassifierContext.java,v 1.9 2004/09/11 07:34:24 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ClassifierContext.java,v 1.8 2003/06/30 21:59:34 linus Exp $
+// $Id: ClassifierContext.java,v 1.9 2004/09/11 07:34:24 mvw Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -45,12 +45,12 @@ class ClassifierContext extends Context
        Create a new context from a classifier.
 
        @param base Based on this context.
-       @param mClassifier Represents this classifier.
+       @param classifier Represents this classifier.
     */
-    public ClassifierContext(Context base, Object mClassifier)
+    public ClassifierContext(Context base, Object classifier)
     {
 	super(base);
-	this.mClassifier = mClassifier;
+	this.mClassifier = classifier;
     }
 
     public Object getInterface(String name)
@@ -64,8 +64,8 @@ class ClassifierContext extends Context
 	}
 	else {
 	    // Continue the search through the rest of the model
-	    if (context != null) {
-		return context.getInterface(name);
+	    if (getContext() != null) {
+		return getContext().getInterface(name);
 	    }
 	    else {
 		return null;
@@ -88,8 +88,8 @@ class ClassifierContext extends Context
 	}
 	else {
 	    // Continue the search through the rest of the model
-	    if (context != null) {
-		return context.get(classifierName);
+	    if (getContext() != null) {
+		return getContext().get(classifierName);
 	    }
 	    else {
 		return null;

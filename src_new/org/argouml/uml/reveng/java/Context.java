@@ -1,4 +1,4 @@
-// $Id: Context.java,v 1.9 2004/08/09 05:48:36 linus Exp $
+// $Id: Context.java,v 1.10 2004/09/11 07:34:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: Context.java,v 1.9 2004/08/09 05:48:36 linus Exp $
+// $Id: Context.java,v 1.10 2004/09/11 07:34:24 mvw Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -42,7 +42,7 @@ import org.argouml.model.ModelFacade;
 abstract class Context
 {
     /** The succeding context. May be null. */
-    protected Context context;
+    private Context context;
 
     /**
        Create a new context.
@@ -87,6 +87,20 @@ abstract class Context
 	else {
 	    return "";
 	}
+    }
+
+    /**
+     * @param c The context to set.
+     */
+    protected void setContext(Context c) {
+        this.context = c;
+    }
+
+    /**
+     * @return Returns the context.
+     */
+    protected Context getContext() {
+        return context;
     }
 }
 

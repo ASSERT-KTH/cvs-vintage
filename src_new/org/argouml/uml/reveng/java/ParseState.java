@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.15 2004/06/24 06:25:45 linus Exp $
+// $Id: ParseState.java,v 1.16 2004/09/11 07:34:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,14 +123,14 @@ class ParseState
     }
 
     /**
-     *
+     * @param c the source file being parsed
      */
-    public void addComponent(Object component) {
-        this.component = component;
+    public void addComponent(Object c) {
+        this.component = c;
     }
     
     /**
-     *
+     * @return the source file being parsed
      */
     public Object getComponent() {
         return component;

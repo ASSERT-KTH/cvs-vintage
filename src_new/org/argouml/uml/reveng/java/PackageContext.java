@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.21 2004/08/09 05:48:36 linus Exp $
+// $Id: PackageContext.java,v 1.22 2004/09/11 07:34:24 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,13 +48,13 @@ class PackageContext extends Context
        Create a new context from a package.
 
        @param base Based on this context.
-       @param mPackage Represents this package.
+       @param thePackage Represents this package.
     */
-    public PackageContext(Context base, Object mPackage)
+    public PackageContext(Context base, Object thePackage)
     {
 	super(base);
-	this.mPackage = mPackage;
-	javaName = getJavaName(mPackage);
+	this.mPackage = thePackage;
+	javaName = getJavaName(thePackage);
     }
 
     public Object getInterface(String name)
@@ -116,9 +116,9 @@ class PackageContext extends Context
                 }
 	    }
 	}
-	if (mInterface == null && context != null) {
+	if (mInterface == null && getContext() != null) {
 	    // Continue the search through the rest of the model
-	    mInterface = context.getInterface(name);
+	    mInterface = getContext().getInterface(name);
         }
 	if (mInterface == null) {
 	    throw new ClassifierNotFoundException(name);
@@ -206,8 +206,8 @@ class PackageContext extends Context
 	}
 	if (mClassifier == null) {
 	    // Continue the search through the rest of the model
-	    if (context != null) {
-		mClassifier = context.get(name);
+	    if (getContext() != null) {
+		mClassifier = getContext().get(name);
 	    }
 	    else {
 		// Check for java data types

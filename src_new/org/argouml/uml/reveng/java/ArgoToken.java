@@ -1,4 +1,4 @@
-// $Id: ArgoToken.java,v 1.2 2003/06/29 23:53:01 linus Exp $
+// $Id: ArgoToken.java,v 1.3 2004/09/11 07:34:24 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,10 +36,10 @@ public class ArgoToken extends CommonToken {
     /**
      * Set the whitespaces for this token.
      * 
-     * @param ws The whitespaces for the buffer.
+     * @param whiteSpaces The whitespaces for the buffer.
      */
-    public void setWhitespace( String ws) {
-	this.ws = ws;
+    public void setWhitespace( String whiteSpaces) {
+	this.ws = whiteSpaces;
     }
 
     /**

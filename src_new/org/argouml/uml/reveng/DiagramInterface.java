@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.28 2004/08/15 22:39:24 bobtarling Exp $
+// $Id: DiagramInterface.java,v 1.29 2004/09/11 07:34:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,28 +58,28 @@ public class DiagramInterface {
     private static final Logger LOG =
         Logger.getLogger(DiagramInterface.class);
     
-    Editor _currentEditor = null;
+    private Editor currentEditor = null;
 
     /**
      * To know what diagrams we have to layout after the import,
      * we store them in this Vector.
      */
-    Vector _modifiedDiagrams = new Vector();
+    private Vector modifiedDiagrams = new Vector();
 
     /**
      * The current GraphModel of the current classdiagram.
      */
-    ClassDiagramGraphModel currentGM;
+    private ClassDiagramGraphModel currentGM;
     
     /**
      * The current Layer of the current classdiagram.
      */
-    LayerPerspective currentLayer;
+    private LayerPerspective currentLayer;
     
     /**
      * The current diagram for the isInDiagram method.
      */
-    ArgoDiagram currentDiagram;
+    private ArgoDiagram currentDiagram;
     
     /**
      * Creates a new DiagramInterface.
@@ -87,7 +87,7 @@ public class DiagramInterface {
      * @param editor The editor to operate on.
      */
     public DiagramInterface(Editor editor) {
-  	_currentEditor = editor;
+  	currentEditor = editor;
     }
 
     /**
@@ -96,7 +96,7 @@ public class DiagramInterface {
      * @return The current editor.
      */
     Editor getEditor() {
-	return _currentEditor;
+	return currentEditor;
     }
 
     /**
@@ -108,8 +108,8 @@ public class DiagramInterface {
      * @param diagram The diagram to mark as modified.
      */
     void markDiagramAsModified(Object diagram) {
-	if (!_modifiedDiagrams.contains(diagram)) {
-	    _modifiedDiagrams.add(diagram);       
+	if (!modifiedDiagrams.contains(diagram)) {
+	    modifiedDiagrams.add(diagram);       
 	}
     }
 
@@ -119,14 +119,14 @@ public class DiagramInterface {
      * @return The list of modified diagrams.
      */
     public Vector getModifiedDiagrams() {
-	return _modifiedDiagrams;
+	return modifiedDiagrams;
     }
 
     /**
      * Reset the list of modified diagrams.
      */
     void resetModifiedDiagrams() {
-	_modifiedDiagrams = new Vector();
+	modifiedDiagrams = new Vector();
     }
 
     /**
@@ -234,6 +234,8 @@ public class DiagramInterface {
      * Add a class to the current diagram.
      *
      * @param newClass The new class to add to the editor.
+     * @param minimise minimise the class fig by hiding compartiments 
+     *                 (of attributes and operations)
      */
     public void addClass(Object newClass, boolean minimise) {
         
@@ -274,6 +276,8 @@ public class DiagramInterface {
      * Add a interface to the current diagram.
      *
      * @param newInterface The interface to add.
+     * @param minimise minimise the class fig by hiding compartiments 
+     *                 (of attributes and operations)
      */
     public void addInterface(Object newInterface, boolean minimise) {
         
@@ -354,6 +358,8 @@ public class DiagramInterface {
         
     /**
      * selects a diagram without affecting the gui.
+     *
+     * @param diagram the diagram
      */
     public void setCurrentDiagram(ArgoDiagram diagram) {
         
