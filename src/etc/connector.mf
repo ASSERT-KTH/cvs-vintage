@@ -1,2 +1,2 @@
 Main-Class: test.jboss.jmx.TestClient
-Class-Path: ./ ../conf/ ./jmxri.jar ../lib/jmxri.jar ./jnp-client.jar ../lib/jnp-client.jar
+Class-Path: ./ ../conf/ ./jmxri.jar ../lib/jmxri.jar ./jnp-client.jar ../lib/jnp-client.jar ../lib/ext/log4j.jar
