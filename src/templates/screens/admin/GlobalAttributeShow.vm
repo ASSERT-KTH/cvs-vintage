@@ -22,12 +22,11 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 </div>
 
 <div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
 <h3>Global Attributes</h3>
-
-
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -75,8 +74,6 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 #end
 </table>
 
-$intake.declareGroups()
-
 <div class="functnbar3">
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
 <input type="submit" value="Copy selected" />&#160;
@@ -88,6 +85,8 @@ $intake.declareGroups()
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 </div>       
+
+$intake.declareGroups()
 
 </form>
 </div>

@@ -12,7 +12,9 @@ $page.setTitle("Manage artifact types")
 <h2>$page.Title</h2>
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;<small>changes</small>
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<small>changes</small>
 </div>
 
 <h3>Artifact types</h3>
@@ -50,11 +52,12 @@ $page.setTitle("Manage artifact types")
 <small>artifact type(s)</small>
 </div>
 
-
 <p>* Maximum of five Artifact types in left hand navigation (first four selected will appear).</p>
 
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;<small>changes</small>
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<small>changes</small>
 </div>
 
 $intake.declareGroups()

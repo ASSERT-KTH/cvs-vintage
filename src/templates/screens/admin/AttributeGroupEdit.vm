@@ -12,7 +12,8 @@
 <h2>$page.Title</h2>
 
 #if (!$groupId)
-<p class="alert">Group not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a> to proceed.</p>
+<p class="alert">Group not found. Please click 
+<a href="$link.setPage("admin,ManageArtifactTypes.vm")>here</a> to proceed.</p>
 #else
 
 <form method="post" action="$link.setPage("admin,AttributeGroupEdit.vm")">
@@ -22,7 +23,8 @@
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 
 <div class="functnbar">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 <h3>Attribute group details</h3>
@@ -89,11 +91,16 @@
 #end
 
 <div class="functnbar3">
-<input type="submit" value="save" name="eventSubmit_doSave" />&#160;<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="copy" />&#160;
+<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributes" />&#160;
+<input type="submit" value="resort" name="eventSubmit_doSave" />
 </div>
 
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()

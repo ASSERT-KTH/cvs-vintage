@@ -1,8 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B.Robertson</a>
-@version $Id: ManagePermissions.vm,v 1.1 2001/12/04 23:39:59 dr Exp $
+@version $Id: ManagePermissions.vm,v 1.2 2002/01/14 21:05:55 jon Exp $
 *#
-
 
 $page.setTitle("Permission Administration")
 
@@ -13,7 +12,7 @@ $page.setTitle("Permission Administration")
 <h3>Permission List</h3>
 
 <form action="admin%2CManagePermissions.vm" method="post">
-  <input type="hidden" name="action" value="admin.ManagePermissions">
+  <input type="hidden" name="action" value="admin.ManagePermissions" />
 
 <table cellspacing="0" cellpadding="2">
 <tr>
@@ -34,7 +33,7 @@ $page.setTitle("Permission Administration")
  <tr>
   <td class="firstchild">
    <input type="submit" name="eventSubmit_doGotodeletepermission" value="Delete Permission" />
-   &nbsp;&nbsp;&nbsp;
+   &#160;
    <input type="submit" name="eventSubmit_doGotoaddpermission" value="Add New Permission" />
   </td>
  </tr>
@@ -42,4 +41,3 @@ $page.setTitle("Permission Administration")
 </div>
 
 </form>
-

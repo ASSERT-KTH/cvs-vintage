@@ -10,7 +10,6 @@ $page.setTitle("User Administration")
 
 <div id="adduser" class="app">
 
-
 <h2>$page.Title</h2>
 
 <h3>User Roles</h3>
@@ -38,7 +37,7 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
   </tr>
 
   <form method="post" action="admin,EditUserRoles.vm">
-    <input type="hidden" name="action" value="admin.ManageUser">
+    <input type="hidden" name="action" value="admin.ManageUser" />
 
   #foreach ($group in $securityAdmin.Groups)
   #indexedRows ($velocityCount)
@@ -55,8 +54,8 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
     
     <td>
       <center>
-      <input type="checkbox" name="${group.Name}${role.Name}" $checked>
-      <input type="hidden" name="username" value="$user.UserName">
+      <input type="checkbox" name="${group.Name}${role.Name}" $checked />
+      <input type="hidden" name="username" value="$user.UserName" />
       </center>
     </td>
     #end    

@@ -1,6 +1,6 @@
 #** 
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditRole.vm,v 1.4 2001/12/04 15:59:30 dr Exp $
+@version $Id: EditRole.vm,v 1.5 2002/01/14 21:05:55 jon Exp $
 *#
 
 #set ($role = $securityAdmin.getRoleByName($data.Parameters.getString("name")))
@@ -11,8 +11,8 @@
 <h3>Edit Permissions [for the $role.Name role]</h3>
 
 <form method="post" action="admin%2CEditRole.vm">
-  <input type="hidden" name="action" value="admin.ManageRoles">
-  <input type="hidden" name="name" value="$role.Name">
+  <input type="hidden" name="action" value="admin.ManageRoles" />
+  <input type="hidden" name="name" value="$role.Name" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageRoles.vm" />
 
 <table cellpadding="2" cellspacing="0">
@@ -34,7 +34,7 @@
     
     <td>
       <center>
-      <input type="checkbox" name="${role.Name}${permission.Name}" $checked>
+      <input type="checkbox" name="${role.Name}${permission.Name}" $checked />
       </center>
     </td>
     
@@ -46,13 +46,11 @@
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel">
-   <input type="submit" name="eventSubmit_doEditrole" value="Update Permissions">
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+   <input type="submit" name="eventSubmit_doEditrole" value="Update Permissions" />
   </td>
  </tr>
 </table>
 </div>
     
 </form>
-
-

@@ -16,8 +16,11 @@ $page.setTitle("Scarab XML Export")
 <tr>
  <th> Issues</th>
  <td>
-  <input name="$xmlExportSelectGroup.FederatedIds.Key" value="$!xmlExportSelectGroup.FederatedIds.value" type="text" size="100" /><br>
-  Specify a comma separated list of issues and/or issue ranges.  A range is a starting issue followed by a &quot;-&quot; and finally the end issue.
+  <input name="$xmlExportSelectGroup.FederatedIds.Key" value="$!xmlExportSelectGroup.FederatedIds.value" type="text" size="100" />
+  <br />
+  Specify a comma separated list of issues and/or issue ranges.  A range
+  is a starting issue followed by a &quot;-&quot; and finally the end
+  issue.
   #fieldErrorMsg($xmlExportSelectGroup.FederatedIds "")
  </td>
 </tr>
@@ -47,4 +50,3 @@ $page.setTitle("Scarab XML Export")
 $intake.declareGroups()
 </form>
 </div>
-

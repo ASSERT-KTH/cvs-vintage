@@ -12,7 +12,8 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 
 <div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
 <h3>Issue Types</h3>

@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.5 2002/01/04 23:16:59 jmcnally Exp $
+@version $Id: ManageRoles.vm,v 1.6 2002/01/14 21:05:55 jon Exp $
 *#
 
 $page.setTitle("Role Administration")
@@ -12,7 +12,7 @@ $page.setTitle("Role Administration")
 <h3>Role List</h3>
 
 <form action="admin%2CManageRoles.vm" method="post">
-  <input type="hidden" name="action" value="admin.ManageRoles">
+  <input type="hidden" name="action" value="admin.ManageRoles" />
 
 <table cellspacing="0" cellpadding="2">
 <tr>
@@ -23,7 +23,7 @@ $page.setTitle("Role Administration")
 #foreach ($role in $securityAdmin.Roles)
 #indexedRows ($velocityCount)
   <td align="center">
-    <input type="radio" name="name" value="$role.Name">
+    <input type="radio" name="name" value="$role.Name" />
   </td>
   <td>
     $role.Name
@@ -55,4 +55,3 @@ $page.setTitle("Role Administration")
 </form>
 
 </div>
-
