@@ -1,64 +1,78 @@
-<!-- $Id: index.html,v 1.9 2001/02/10 00:51:31 jon Exp $ -->
+<!-- $Id: index.html,v 1.10 2001/02/19 23:00:39 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Scarab: Bug-Tracking Built for the Ages</title>
+<title>Scarab: Issue Tracking Built for the Ages</title>
 </head>
 <body bgcolor="#F0F0F0">
 <table border="0" cellpadding="2" width="98%" bgcolor="#ffffff" >
     <tr> 
-        <td width="100%" bgcolor="#cccc99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Scarab: 
-            Bug-Tracking Built for the Ages</font></b></td>
+        <td width="100%" bgcolor="#cccc99">
+            <b><font face="Arial, Helvetica, sans-serif" color="#000033">
+            Scarab: Issue Tracking Built for the Ages</font></b>
+        </td>
     </tr>
     <tr> 
-        <td bgcolor="#f0f0f0">The goal of the Scarab project is to build a bug tracking 
-            system that has the following features: 
+        <td bgcolor="#f0f0f0">
+            <p>
+            The goal of the Scarab project is to build an Issue Tracking
+            System that has the following features:
+            </p>
+            
             <ul>
-                <li> A full feature set similar to those found in other bug tracking 
-                    systems: data entry, queries, reports, notifications to interested 
+                <li>A full feature set similar to those found in other Issue Tracking 
+                    Systems: data entry, queries, reports, notifications to interested 
                     parties, collaborative accumulation of comments, dependency 
-                    tracking, collaborative prioritization (bug voting). 
-                <li> Built as a set of Java servlets for speed, scalability, maintainability, 
-                    and ease of installation. 
-                <li> Compatible with Bugzilla and other widely used bug tracking 
-                    system. Possibly via a bug report DTD. 
-                <li> Modular design that allows manageable integration of new features 
-                    over time. 
-                <li> Fully customizable through a set of administrative pages.</li>
+                    tracking, collaborative prioritization (voting).</li>
+                <li>Built using Java Servlet technology for speed, scalability, 
+                    maintainability, and ease of installation.</li> 
+                <li>Compatible with Bugzilla and other widely used bug tracking 
+                    system via a bug report DTD.</li>
+                <li>Modular design that allows manageable modifications of 
+                    existing and new features over time.</li>
+                <li>Fully customizable through a set of administrative pages.</li>
             </ul>
-            Although the final product will have a strong feature set, many of these 
-            features will be based on support in an underlying library of collaboration 
-            components. For example, Scarab will not implement its own notification 
-            system or localization system, that should be a reusable component of 
-            the underlying framework.</td>
+            
+            <p>
+            Although the final product will have a strong feature set,
+            many of these features will be based on support in an
+            underlying library of collaboration components. For example,
+            Scarab will not implement its own notification system or
+            localization system, that should be a reusable component of
+            the underlying framework.
+            </p>
+        </td>
     </tr>
 </table>
-<br>
+<br/>
 <table border="0" cellpadding="2" width="98%" bgcolor="#ffffff" >
     <tr> 
-        <td width="100%" bgcolor="#cccc99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">Project 
-            Status</font></b></td>
+        <td width="100%" bgcolor="#cccc99">
+            <b><font face="Arial, Helvetica, sans-serif" color="#000033">
+            Project Status</font></b></td>
     </tr>
     <tr> 
         <td bgcolor="#f0f0f0"> 
-            <p>User interface <a href="mockup/index.html">mockup</a> now in its 
-                <a href="mockup/four/index.html">fourth</a> reincarnation.</p>
-            <p>Database <a href="scarab-schema.html">schema</a> is annotated and 
-                reviewed.</p>
-            <p>Most of the work now is concentrating on preparing infrastracture 
-                for Scarab development. That includes reorganization of CVS repository 
-                and work on improvment of development tools used.</p>
+<!--            <p>User interface <a href="mockup/index.html">mockup</a> now
+               in its <a href="mockup/four/index.html">fourth</a>
+               reincarnation.</p> -->
+            <p>Database <a href="scarab-schema.html">schema</a> is
+               annotated and reviewed.</p>
+            <p>Most of the work has been concentrated on preparing the
+            infrastracture for Scarab development. That includes
+            improvment of development tools used.</p>
             </td>
     </tr>
 </table>
-<br>
+<br/>
 <table border="0" cellpadding="2" width="98%" >
     <tr> 
-        <td width="60%" bgcolor="#cccc99"><b><font face="Arial, Helvetica, sans-serif" color="#000033">News</font></b></td>
+        <td width="60%" bgcolor="#cccc99">
+        <b><font face="Arial, Helvetica, sans-serif" color="#000033">News</font></b></td>
         <td width="1%"></td>
         <td width="39%" bgcolor="#CCCC99"><strong><font color="#000033"
-face="Arial, Helvetica, sans-serif"> Get Involved </font></strong></td>
+           face="Arial, Helvetica, sans-serif"> Get Involved </font></strong></td>
     </tr>
     <tr> 
         <td valign="top" bgcolor="#f0f0f0"> 
@@ -66,52 +80,52 @@ face="Arial, Helvetica, sans-serif"> Get Involved </font></strong></td>
                 2/09/01 - Ignacio has volunteered to take on the creation of the 
                           Import/Export tool for Bugzilla (see the Tasks document)
                           for details.
-                <br>
+                <br/>
                 2/07/01 - Updated the <a href="scarab-tasks.html">Tasks</a>
                           document.
-                <br>
+                <br/>
                 12/18/00 - Scarab re-designed CVS tree is in place. It should be 
                 much easier to do development with Scarab now. We are using <a 
                 href="http://jakarta.apache.org/ant/">Ant 1.2</a> as the build 
                 platform and <a href="http://jakarta.apache.org/tomcat/">Tomcat 
                 4.0m5</a> as the container (however, any 2.0 and greater engine 
                 should work). We have also started the switch to Velocity.
-                <br>
+                <br/>
                 11/10/00 - Scarab is migrating to <a 
                 href="http://jakarta.apache.org/velocity/">Velocity</a>. 
-                <br>
+                <br/>
                 09/28/00 -<a href="scarab_sitemap.pdf"> Sitemap - 
-                pdf</a> (237kb) Requires Acrobat 4.0 <br>
+                pdf</a> (237kb) Requires Acrobat 4.0 <br/>
                 08/03/00 - <a href="scarab-tasks.html">Scarab Tasks Document</a> 
                 has been posted. Comments should be directed to the mailing list. 
-                <br>
+                <br/>
                 07/26/00 - <a href="scarab-design.html">Scarab Design Document</a> 
                 has been posted. Comments should be directed to the mailing list. 
-                <br>
-                06/05/00 - revised UI <a href="/mockup/">mockup</a> <br>
+                <br/>
+                06/05/00 - revised UI <a href="/mockup/">mockup</a> <br/>
                 05/23/00 - <a href="summit_meeting.html">Summit Meeting</a> Date 
-                Announced <br>
+                Announced <br/>
                 03/31/00 - Initial <a href="/scarab-schema.html">schema</a> 
                 added to CVS for comment reviews. Please see the <a href="project_status.html">Project 
-                Status</a> for more information. <br>
+                Status</a> for more information. <br/>
                 03/24/00 - <a href="project_status.html">Project Status</a> documentation 
-                added <br>
-                02/23/00 - Jon Stevens joins Scarab project <br>
-                02/02/00 - Tigris demonstrated at LinuxWorld <br>
+                added <br/>
+                02/23/00 - Jon Stevens joins Scarab project <br/>
+                02/02/00 - Tigris demonstrated at LinuxWorld <br/>
                 01/30/00 - Scarab project launched </font></p>
         </td>
         <td></td>
-        <td valign="top" bgcolor="#f0f0f0"> <font size="2"> Review <a href="scarab-schema.html">Database 
-            Schema</a> <br>
-            Join development <a href="project_mail.html">Mailing List</a><br>
-            Learn about <a href="project_development_tools_and_technology.html">development 
-            tools</a><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://java.apache.org/turbine/index.html">Turbine</a><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://jakarta.apache.org/velocity/">Velocity</a> 
-            <br>
-            <br>
-            Check out <a href="project_status.html">TODO</a> list for more...<br> 
-            </font> </td>
+        <td valign="top" bgcolor="#f0f0f0">
+            <font size="2">
+            <ul>
+            	<li>Review <a href="scarab-schema.html">Database Schema</a></li>
+            	<li>Join development <a href="project_mail.html">Mailing List</a></li>
+            	<li>Learn about the
+            	    <a href="project_development_tools_and_technology.html">development 
+                    tools</a></li>
+            	<li>Check out the <a href="scarab-tasks.html">Tasks</a> list.</li>
+            </font>
+        </td>
     </tr>
 </table>
 </body>
