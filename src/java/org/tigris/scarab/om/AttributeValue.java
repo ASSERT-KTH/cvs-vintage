@@ -70,7 +70,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.87 2003/02/01 01:54:12 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.88 2003/02/06 23:40:07 tenersen Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -331,6 +331,23 @@ Leaving here so that John can remove or fix.
             }
         }
         return b;
+    }
+
+    public int hashCode()
+    {
+        int retVal = 0;
+
+        if (getChainedValue() != null || getPrimaryKey() != null)
+        {
+            // get the hash code from the primary key
+            // field from BaseObject
+            retVal = super.hashCode(); 
+        }
+        else 
+        {
+            retVal = getAttributeId().hashCode() ^ getIssueId().hashCode();
+        }
+        return retVal;
     }
 
     public String toString()
