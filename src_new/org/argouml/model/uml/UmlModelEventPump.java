@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.28 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: UmlModelEventPump.java,v 1.29 2003/09/15 21:29:43 alexb Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.Logger;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
@@ -654,7 +653,31 @@ public final class UmlModelEventPump implements MElementListener {
     EventListenerHashMap getEventListenerMap() {
         return _listenerMap;
     }
+    
+    /**
+     * changes the NSUML event policy in order to stop udating the ui.
+     */
+    public void stopPumpingEvents() {
 
+	MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_DISABLED);
+    }
+    
+    /**
+     * changes the NSUML event policy in order to start udating the ui.
+     */
+    public void startPumpingEvents() {
+
+	MFactoryImpl.flushEvents();
+        MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
+    }
+    
+    /**
+     * changes the NSUML event policy to flush model events.
+     */
+    public void flushModelEvents() {
+
+	MFactoryImpl.flushEvents();
+    }
 }
 
 /**
@@ -1313,5 +1336,5 @@ class EventTreeDefinition {
         return null;
 
     }
-
+    
 }
