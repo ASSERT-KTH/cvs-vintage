@@ -6,17 +6,22 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc2.schema;
 
+
 import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public interface Cache
 {
    void lock();
 
+   void lock(Object key);
+
    void unlock();
+
+   void unlock(Object key);
 
    Object[] getFields(Object pk);
 
@@ -42,7 +47,15 @@ public interface Cache
       {
       }
 
+      public void lock(Object key)
+      {
+      }
+
       public void unlock()
+      {
+      }
+
+      public void unlock(Object key)
       {
       }
 

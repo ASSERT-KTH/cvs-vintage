@@ -18,9 +18,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCCMPFieldBridge2;
 import org.jboss.logging.Logger;
-import org.jboss.system.ServiceControllerMBean;
 import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxyExt;
+import org.jboss.system.ServiceControllerMBean;
 import org.w3c.dom.Element;
 
 import javax.naming.InitialContext;
@@ -30,8 +30,8 @@ import javax.ejb.DuplicateKeyException;
 import javax.ejb.ObjectNotFoundException;
 import javax.ejb.EJBException;
 import javax.transaction.Transaction;
-import javax.management.ObjectName;
 import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -44,7 +44,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class EntityTable
    implements Table
@@ -114,21 +114,24 @@ public class EntityTable
          .getContainerCacheConf();
       if(cacheConf == null)
       {
-         cache = new TableCache(500, 1000);
+         cache = new PartitionedTableCache(500, 1000, 10);
+         //cache = new TableCache(500, 1000);
       }
       else
       {
-         cache = new TableCache(cacheConf);
+         cache = new PartitionedTableCache(cacheConf);
+         //cache = new TableCache(cacheConf);
       }
 
       final MBeanServer server = MBeanServerLocator.locateJBoss();
       serviceController = (ServiceControllerMBean)
-               MBeanProxyExt.create(ServiceControllerMBean.class,
-                  ServiceControllerMBean.OBJECT_NAME,
-                  server);
+         MBeanProxyExt.create(ServiceControllerMBean.class,
+            ServiceControllerMBean.OBJECT_NAME,
+            server);
       try
       {
-         cacheName = new ObjectName("jboss.cmp:service=tablecache,ejbname=" + metadata.getName() + ",table=" + tableName);
+         cacheName =
+            new ObjectName("jboss.cmp:service=tablecache,ejbname=" + metadata.getName() + ",table=" + tableName);
          server.registerMBean(cache, cacheName);
          serviceController.create(cacheName);
       }
@@ -277,7 +280,7 @@ public class EntityTable
       serviceController.stop(cacheName);
       serviceController = null;
    }
-   
+
    public StringBuffer appendColumnNames(JDBCCMPFieldBridge2[] fields, String alias, StringBuffer buf)
    {
       for(int i = 0; i < fields.length; ++i)
@@ -720,7 +723,7 @@ public class EntityTable
             Object[] relations = null;
             try
             {
-               cache.lock();
+               cache.lock(pk);
 
                fields = cache.getFields(pk);
                if(fields != null && relationsTotal > 0)
@@ -734,7 +737,7 @@ public class EntityTable
             }
             finally
             {
-               cache.unlock();
+               cache.unlock(pk);
             }
 
             if(fields != null)
@@ -833,12 +836,12 @@ public class EntityTable
 
          try
          {
-            cache.lock();
+            cache.lock(row.pk);
             cache.put(tx, row.pk, row.fields, relations);
          }
          finally
          {
-            cache.unlock();
+            cache.unlock(row.pk);
          }
 
          return row;
@@ -866,12 +869,12 @@ public class EntityTable
          {
             try
             {
-               cache.lock();
+               cache.lock(id);
                has = cache.contains(tx, id);
             }
             finally
             {
-               cache.unlock();
+               cache.unlock(id);
             }
          }
          return has;
@@ -910,10 +913,11 @@ public class EntityTable
             {
                Row cursor = cacheUpdates;
 
-               cache.lock();
+               //cache.lock();
 
                while(cursor != null)
                {
+                  cache.lock(cursor.pk);
                   try
                   {
                      cache.lockForUpdate(tx, cursor.pk);
@@ -922,6 +926,10 @@ public class EntityTable
                   {
                      throw new EJBException("Table " + entity.getTableName() + ": " + e.getMessage());
                   }
+                  finally
+                  {
+                     cache.unlock(cursor.pk);
+                  }
 
                   cursor.lockedForUpdate = true;
                   cursor = cursor.nextCacheUpdate;
@@ -929,7 +937,7 @@ public class EntityTable
             }
             finally
             {
-               cache.unlock();
+               //cache.unlock();
             }
          }
       }
@@ -942,31 +950,39 @@ public class EntityTable
             {
                Row cursor = cacheUpdates;
 
-               cache.lock();
+               //cache.lock();
 
                while(cursor != null)
                {
                   if(cursor.lockedForUpdate)
                   {
-                     switch(cursor.state)
+                     cache.lock(cursor.pk);
+                     try
                      {
-                        case CLEAN:
-                           cache.put(tx, cursor.pk, cursor.fields, cursor.relations);
-                           break;
-                        case DELETED:
-                           try
-                           {
-                              cache.remove(tx, cursor.pk);
-                           }
-                           catch(Exception e)
-                           {
-                              log.warn(e.getMessage());
-                           }
-                           break;
-                        default:
-                           throw new IllegalStateException("Unexpected row state: table=" +
-                              entity.getTableName() +
-                              ", pk=" + cursor.pk + ", state=" + cursor.state);
+                        switch(cursor.state)
+                        {
+                           case CLEAN:
+                              cache.put(tx, cursor.pk, cursor.fields, cursor.relations);
+                              break;
+                           case DELETED:
+                              try
+                              {
+                                 cache.remove(tx, cursor.pk);
+                              }
+                              catch(Exception e)
+                              {
+                                 log.warn(e.getMessage());
+                              }
+                              break;
+                           default:
+                              throw new IllegalStateException("Unexpected row state: table=" +
+                                 entity.getTableName() +
+                                 ", pk=" + cursor.pk + ", state=" + cursor.state);
+                        }
+                     }
+                     finally
+                     {
+                        cache.unlock(cursor.pk);
                      }
                      cursor.lockedForUpdate = false;
                   }
@@ -975,7 +991,7 @@ public class EntityTable
             }
             finally
             {
-               cache.unlock();
+               //cache.unlock();
             }
          }
       }
@@ -988,12 +1004,13 @@ public class EntityTable
             {
                Row cursor = cacheUpdates;
 
-               cache.lock();
+               //cache.lock();
 
                while(cursor != null)
                {
                   if(cursor.lockedForUpdate)
                   {
+                     cache.lock(cursor.pk);
                      try
                      {
                         cache.releaseLock(tx, cursor.pk);
@@ -1002,6 +1019,10 @@ public class EntityTable
                      {
                         log.warn("Table " + entity.getTableName() + ": " + e.getMessage());
                      }
+                     finally
+                     {
+                        cache.unlock(cursor.pk);
+                     }
                      cursor.lockedForUpdate = false;
                   }
                   cursor = cursor.nextCacheUpdate;
@@ -1009,7 +1030,7 @@ public class EntityTable
             }
             finally
             {
-               cache.unlock();
+               //cache.unlock();
             }
          }
       }

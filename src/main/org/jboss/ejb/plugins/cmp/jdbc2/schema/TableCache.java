@@ -20,7 +20,7 @@ import java.util.HashMap;
  * Simple LRU cache. Items are evicted when maxCapacity is exceeded.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class TableCache
@@ -123,6 +123,11 @@ public class TableCache
       locked = true;
    }
 
+   public void lock(Object key)
+   {
+      lock();
+   }
+
    public synchronized void unlock()
    {
       if(!locked)
@@ -131,6 +136,11 @@ public class TableCache
       }
       locked = false;
       notify();
+   }
+
+   public void unlock(Object key)
+   {
+      unlock();
    }
 
    public Object[] getFields(Object pk)
