@@ -26,7 +26,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -45,6 +45,7 @@ public abstract class BeanMetaData extends MetaData {
     protected boolean messageDriven = false;
 	
 	private HashMap ejbReferences = new HashMap();
+        private HashMap ejbLocalReferences = new HashMap();
 	private ArrayList environmentEntries = new ArrayList();
     private ArrayList securityRoleReferences = new ArrayList();
 	private HashMap resourceReferences = new HashMap();
@@ -85,11 +86,17 @@ public abstract class BeanMetaData extends MetaData {
 	public String getEjbName() { return ejbName; }
 	
 	public Iterator getEjbReferences() { return ejbReferences.values().iterator(); }
+        
+        public Iterator getEjbLocalReferences() { return ejbLocalReferences.values().iterator(); }
 	
 	public EjbRefMetaData getEjbRefByName(String name) {
 		return (EjbRefMetaData)ejbReferences.get(name);
 	}
-	
+
+	public EjbLocalRefMetaData getEjbLocalRefByName(String name) {
+		return (EjbLocalRefMetaData)ejbLocalReferences.get(name);
+	}       
+        
 	public Iterator getEnvironmentEntries() { return environmentEntries.iterator(); }
 	
 	public Iterator getSecurityRoleReferences() { return securityRoleReferences.iterator(); }
@@ -215,7 +222,20 @@ public abstract class BeanMetaData extends MetaData {
 			ejbReferences.put(ejbRefMetaData.getName(), ejbRefMetaData);
 		}
 		
-		// set the security roles references
+		// set the ejb local references
+		iterator = getChildrenByTagName(element, "ejb-local-ref");
+		
+		while (iterator.hasNext()) {
+			Element ejbLocalRef = (Element) iterator.next();
+		    
+			EjbLocalRefMetaData ejbLocalRefMetaData = new EjbLocalRefMetaData();
+			ejbLocalRefMetaData.importEjbJarXml(ejbLocalRef);
+			
+			ejbLocalReferences.put(ejbLocalRefMetaData.getName(), 
+                           ejbLocalRefMetaData);
+		}
+
+                // set the security roles references
 		iterator = getChildrenByTagName(element, "security-role-ref");
 		
 		while (iterator.hasNext()) {
