@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.101 2002/08/16 18:02:18 spestov Exp $
+ * @version $Id: Buffer.java,v 1.102 2002/08/20 19:11:45 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1398,6 +1398,19 @@ public class Buffer implements EBComponent
 	public void removeBufferChangeListener(BufferChangeListener listener)
 	{
 		bufferListeners.removeElement(listener);
+	} //}}}
+
+	//{{{ getBufferChangeListeners() method
+	/**
+	 * Returns an array of registered buffer change listeners.
+	 * @param listener The listener
+	 * @since jEdit 4.1pre3
+	 */
+	public BufferChangeListener[] getBufferChangeListeners()
+	{
+		return (BufferChangeListener[])bufferListeners
+			.toArray(new BufferChangeListener[
+			bufferListeners.size()]);
 	} //}}}
 
 	//}}}

@@ -20,13 +20,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package org.gjt.sp.jedit.io;
+package org.gjt.sp.jedit.buffer;
 
 //{{{ Imports
 import javax.swing.text.Segment;
 import java.io.*;
 import java.util.zip.*;
 import java.util.Vector;
+import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.*;
 //}}}
@@ -34,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.29 2002/08/14 15:25:46 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.1 2002/08/20 19:11:46 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {

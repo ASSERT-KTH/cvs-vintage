@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.io.*;
 import java.util.*;
+import org.gjt.sp.jedit.buffer.BufferIORequest;
 import org.gjt.sp.jedit.msg.PropertiesChanged;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
@@ -39,7 +40,7 @@ import org.gjt.sp.util.Log;
  * Swing UI calls directly.
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.17 2002/06/23 01:23:16 spestov Exp $
+ * @author $Id: VFS.java,v 1.18 2002/08/20 19:11:47 spestov Exp $
  */
 public abstract class VFS
 {
