@@ -477,7 +477,7 @@
          $act.Transaction.Attachment.DataAsString
        #else Not provided. #end
      #elseif ($act.Transaction.TransactionType.Name.equals("Create Issue"))
-           Initial Entry
+           Initial entry
      #end
      </td>
      <td>
