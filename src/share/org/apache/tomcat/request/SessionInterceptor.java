@@ -95,11 +95,51 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	this.cm=cm;
     }
 
+    /** Extract the session id from the request.
+     * SessionInterceptor will have to be called _before_ mapper,
+     * to avoid coding session stuff inside the mapper.
+     *
+     * When we fix the interceptors we'll have to specify something
+     * similar with the priority in apache hooks, right now it's just
+     * a config issue.
+     */
+    public int contextMap(Request request ) {
+	if( request.getRequestedSessionId() != null ) {
+	    // probably Apache already did that for us
+	    return 0;
+	}
+
+	// fix URL rewriting
+	String sig=";jsessionid=";
+	int foundAt=-1;
+	String uri=request.getRequestURI();
+	String sessionId;
+	
+	if ((foundAt=uri.indexOf(sig))!=-1){
+	    sessionId=uri.substring(foundAt+sig.length()); // I hope the optimizer does it's job:-)
+
+	    // rewrite URL, do I need to do anything more?
+	    request.setRequestURI(uri.substring(0, foundAt));
+
+	    // No validate now - we just note that this is what the user
+	    // requested. 
+	    request.setRequestedSessionIdFromURL(true);
+	    request.setRequestedSessionId( sessionId );
+	}
+	return 0;
+    }
+
+    /** This happens after context map, so we know the context.
+     *  We can probably do it later too.
+     */
     public int requestMap(Request request ) {
 	String sessionId = null;
 
 	Cookie cookies[]=request.getCookies(); // assert !=null
+	boolean fromCookie=false;
 	
+	// Give priority to cookies. I don't know if that's part
+	// of the spec - XXX
 	for( int i=0; i<cookies.length; i++ ) {
 	    Cookie cookie = cookies[i];
 	    
@@ -108,20 +148,21 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 		sessionId=validateSessionId(request, sessionId);
 		if (sessionId!=null){
 		    request.setRequestedSessionIdFromCookie(true);
+		    fromCookie=true;
 		}
 	    }
 	}
-	
-	String sig=";jsessionid=";
-	int foundAt=-1;
-	if( debug>0 ) cm.log(" XXX RURI=" + request.getRequestURI());
-	if ((foundAt=request.getRequestURI().indexOf(sig))!=-1){
-	    sessionId=request.getRequestURI().substring(foundAt+sig.length());
-	    // rewrite URL, do I need to do anything more?
-	    request.setRequestURI(request.getRequestURI().substring(0, foundAt));
+
+	if( ! fromCookie ) {
+	    // we don't have the session id from cookie, maybe URL rewriting
+	    // was used ?
+	    sessionId=request.getRequestedSessionId();
 	    sessionId=validateSessionId(request, sessionId);
 	    if (sessionId!=null){
-		request.setRequestedSessionIdFromURL(true);
+		// it's already done in contextMap
+		// request.setRequestedSessionIdFromURL(true);
+		// set it with load balancing removed
+		request.setRequestedSessionId( sessionId );
 	    }
 	}
 	return 0;
@@ -163,7 +204,6 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	return null;
     }
   
-
 
     public int beforeBody( Request rrequest, Response response ) {
     	String reqSessionId = response.getSessionId();
