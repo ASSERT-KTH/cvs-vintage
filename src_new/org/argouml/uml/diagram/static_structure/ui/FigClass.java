@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.84 2003/12/26 16:27:52 alexb Exp $
+// $Id: FigClass.java,v 1.85 2003/12/27 13:31:43 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1167,6 +1167,7 @@ public class FigClass extends FigNodeModelElement {
         if (getOwner() != null) {
             updateAttributes();
             updateOperations();
+            updateAbstract();
         }
         super.renderingChanged();
     }
@@ -1241,21 +1242,6 @@ public class FigClass extends FigNodeModelElement {
         }
 
         super.updateListeners(newOwner);
-    }
-
-    /**
-     * FigClass sets the italic font for abstract classes here.
-     *
-     * @see org.tigris.gef.presentation.Fig#postLoad()
-     */
-    public void postLoad() {      
-        super.postLoad();
-        Object owner = getOwner();
-        if (owner != null && ModelFacade.isAbstract(owner)) {
-            Font font = _name.getFont();              
-            _name.setFont(font.deriveFont(Font.ITALIC));
-        }
-        
     }
 
 } /* end class FigClass */
