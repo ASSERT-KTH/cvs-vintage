@@ -12,7 +12,7 @@ The root element of JBossCMP-JDBC configuration files.
 -->
 <!ELEMENT jbosscmp-jdbc (defaults?, enterprise-beans?, relationships?,
           dependent-value-classes?, type-mappings?, entity-commands?,
-          user-type-mappings?)>
+          user-type-mappings? , reserved-words?)>
 
 <!--
 The optional defaults elements contains the default values for
@@ -804,3 +804,9 @@ Updated time, default is audit_updated_time
   Mapper class for user-type-mapping.
 -->
 <!ELEMENT mapper (#PCDATA)>
+
+<!--
+  Provide reserved words that should be escaped when generating tables
+-->
+<!ELEMENT reserved-words (word+)>
+<!ELEMENT word (#PCDATA)>

@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.60 2003/08/27 04:31:54 patriot1burke Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.61 2003/09/11 13:54:38 pilhuhn Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -40,7 +40,9 @@
       </unknown-pk>
 
       <entity-command name="default"/>
-
+      
+ 
+		
    </defaults>
 
    <type-mappings>
@@ -2413,4 +2415,31 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
                       class="org.jboss.ejb.plugins.cmp.jdbc.keygen.JDBC30GeneratedKeysCreateCommand"/>
    </entity-commands>
 
+   <!-- reserved words that should not be used as table names -->
+   <!-- JBoss will escape them by prepending a 'X' -->
+   <reserved-words>
+      	<word>create</word>
+      	<word>table</word>
+      	<word>alter</word>
+      	<word>on</word>
+      	<word>column</word>
+      	<word>index</word>
+      	<word>set</word>
+      	<word>select</word>
+      	<word>update</word>
+      	<word>delete</word>
+      	<word>from</word>
+      	<word>view</word>
+      	<word>trigger</word>
+      	<word>commit></word>
+      	<word>rollback</word>
+      	<word>drop</word>
+      	<word>grant</word>
+      	<word>revoke</word>
+      	<word>group</word>
+      	<word>between</word>
+      	<word>join</word>
+      	<word>unique</word>
+      	<word>primary</word>
+    </reserved-words>
 </jbosscmp-jdbc>
