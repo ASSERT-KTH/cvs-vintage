@@ -1,4 +1,4 @@
-// $Id: CrTooManyClasses.java,v 1.11 2004/11/02 10:12:04 mkl Exp $
+// $Id: CrTooManyClasses.java,v 1.12 2004/11/02 10:36:57 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,11 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrTooManyClasses.java
-// Classes: CrTooManyClasses
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.11 2004/11/02 10:12:04 mkl Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
@@ -36,9 +31,7 @@ import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
  * TODO: currently it checks for nodes (classes, interfaces, comments).
  * This critic should be rewritten to work with namespaces.
  */
-public class CrTooManyClasses extends CrUML {
-
-    private static final String THRESHOLD = "Threshold";
+public class CrTooManyClasses extends AbstractCrTooMany {
 
     /**
      * The constructor.
@@ -48,7 +41,7 @@ public class CrTooManyClasses extends CrUML {
 	// TODO: <ocl>self.name</ocl> is not expanded for diagram objects
 	setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
 	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
-	setArg(THRESHOLD, new Integer(20));
+	setThreshold(20);
     }
 
     /**
@@ -59,7 +52,7 @@ public class CrTooManyClasses extends CrUML {
 	if (!(dm instanceof UMLClassDiagram)) return NO_PROBLEM;
 	UMLClassDiagram d = (UMLClassDiagram) dm;
 
-	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
+	int threshold = getThreshold();
 	if (d.getGraphModel().getNodes().size() <= threshold) return NO_PROBLEM;
 	return PROBLEM_FOUND;
     }

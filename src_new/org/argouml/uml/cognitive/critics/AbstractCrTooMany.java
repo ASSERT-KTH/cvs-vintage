@@ -1,16 +1,16 @@
-// $Id: CrTooManyAssoc.java,v 1.12 2004/11/02 10:36:57 mkl Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: AbstractCrTooMany.java,v 1.1 2004/11/02 10:36:57 mkl Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
+// and this paragraph appear in all copies. This software program and
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
 // does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
 // UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
 // SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
 // ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -22,41 +22,27 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
+
 package org.argouml.uml.cognitive.critics;
 
-import java.util.Collection;
-import org.argouml.cognitive.Designer;
-import org.argouml.model.ModelFacade;
 
-/** A critic to detect when a classifier has too many associations.
+/**
+ * An abstract helper class for classes which require to set a threshold
+ * argument.
+ * @author mkl
+ *
  */
-public class CrTooManyAssoc extends AbstractCrTooMany {
+public abstract class AbstractCrTooMany extends CrUML {
 
-    /**
-     * The constructor.
-     * 
-     */
-    public CrTooManyAssoc() {
-	setHeadline("Reduce Associations on <ocl>self</ocl>");
-
-	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
-	setThreshold(7);
-	addTrigger("associationEnd");
+    private static final String THRESHOLD = "Threshold";
+    
+    public void setThreshold(int threshold) {
+        setArg(THRESHOLD, new Integer(threshold));
     }
-
-    /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
-     */
-    public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
-	Object cls = /*(MClassifier)*/ dm;
-	// TODO: consider inherited associations?
-	// TODO: self loops are double counted
-	int threshold = getThreshold();
-	Collection aes = ModelFacade.getAssociationEnds(cls);
-	if (aes == null || aes.size() <= threshold) return NO_PROBLEM;
-	return PROBLEM_FOUND;
+    
+    public int getThreshold() {
+        return ((Integer) getArg(THRESHOLD)).intValue();
     }
+    
 
-} /* end class CrTooManyAssoc */
+}

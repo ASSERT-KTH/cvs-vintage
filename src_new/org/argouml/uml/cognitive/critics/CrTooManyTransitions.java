@@ -1,4 +1,4 @@
-// $Id: CrTooManyTransitions.java,v 1.10 2004/11/02 10:12:04 mkl Exp $
+// $Id: CrTooManyTransitions.java,v 1.11 2004/11/02 10:36:57 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,21 +22,16 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrTooManyTransitions.java
-// Classes: CrTooManyTransitions
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyTransitions.java,v 1.10 2004/11/02 10:12:04 mkl Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-/** A critic to detect when a state has too many ingoing and outgoing transitions. */
 
-public class CrTooManyTransitions extends CrUML {
-
-    private static final String THRESHOLD = "Threshold";
+/** A critic to detect when a state has too many ingoing and 
+ * outgoing transitions. 
+ */
+public class CrTooManyTransitions extends AbstractCrTooMany {
 
     /**
      * The constructor.
@@ -45,7 +40,7 @@ public class CrTooManyTransitions extends CrUML {
     public CrTooManyTransitions() {
 	setHeadline("Reduce Transitions on <ocl>self</ocl>");
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
-	setArg(THRESHOLD, new Integer(10));
+	setThreshold(10);
 	addTrigger("incoming");
 	addTrigger("outgoing");
 
@@ -59,7 +54,7 @@ public class CrTooManyTransitions extends CrUML {
 	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	Object sv = /*(MStateVertex)*/ dm;
 
-	int threshold = ((Integer) getArg(THRESHOLD)).intValue();
+	int threshold = getThreshold();
 	Collection in = ModelFacade.getIncomings(sv);
 	Collection out = ModelFacade.getOutgoings(sv);
 	int inSize = (in == null) ? 0 : in.size();
