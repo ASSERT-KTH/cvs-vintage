@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.30 2002/12/31 02:48:02 spestov Exp $
+ * @version $Id: EditPane.java,v 1.31 2003/01/02 19:44:52 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -119,7 +119,7 @@ public class EditPane extends JPanel implements EBComponent
 			public void run()
 			{
 				loadCaretInfo();
-				buffer.checkModTime(view);
+				buffer.checkModTime(EditPane.this);
 			}
 		};
 

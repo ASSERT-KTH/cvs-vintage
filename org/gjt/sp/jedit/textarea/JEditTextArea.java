@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.161 2002/12/30 00:26:52 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.162 2003/01/02 19:44:52 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -234,7 +234,8 @@ public class JEditTextArea extends JComponent
 
 	//{{{ setBuffer() method
 	/**
-	 * Sets the buffer this text area is editing.
+	 * Sets the buffer this text area is editing. Do not call this method -
+	 * use <code>EditPane.setBuffer()</code> instead.
 	 * @param buffer The buffer
 	 */
 	public void setBuffer(Buffer buffer)
@@ -248,7 +249,8 @@ public class JEditTextArea extends JComponent
 
 			if(this.buffer != null)
 			{
-				setFirstLine(0);
+				// dubious?
+				//setFirstLine(0);
 
 				selectNone();
 				caretLine = caret = caretScreenLine = 0;
@@ -264,12 +266,21 @@ public class JEditTextArea extends JComponent
 
 			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
 
+			firstLine = 0;
+			maxHorizontalScrollWidth = 0;
 			physFirstLine = foldVisibilityManager.getFirstVisibleLine();
+			chunkCache.invalidateAll();
 			chunkCache.setFirstLine(0,physFirstLine);
+
+			painter.repaint();
+			gutter.repaint();
 
 			propertiesChanged();
 
 			recalculateLastPhysicalLine();
+
+			updateScrollBars();
+			fireScrollEvent(true);
 		}
 		finally
 		{

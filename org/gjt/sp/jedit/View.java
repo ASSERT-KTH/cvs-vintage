@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.40 2002/11/21 21:32:08 spestov Exp $
+ * @version $Id: View.java,v 1.41 2003/01/02 19:44:52 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1423,7 +1423,7 @@ public class View extends JFrame implements EBComponent
 					for(int i = 0; i < buffers.size(); i++)
 					{
 						((Buffer)buffers.elementAt(i))
-							.checkModTime(View.this);
+							.checkModTime(editPane);
 					}
 				}
 			});
