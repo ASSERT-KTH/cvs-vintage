@@ -1377,17 +1377,18 @@ diff -u -r1.5 project.xml
 
     <!-- ================================================================== -->
     <target name="clean" depends="prepare-build-dir">
-        <delete dir="${build.project}"/>
+        <delete dir="${build.project}" quiet="true"/>
     </target>
     <target name="clean-all" depends="prepare-build-dir">
-        <delete file="${scarab.log.file.turbine}"/>
-
-        <delete file="${scarab.log.file.torque}"/>
-        <delete file="${scarab.log.file.fulcrum}"/>
-        <delete file="${scarab.log.file.stratum}"/>
-        <delete file="${scarab.log.file.velocity}"/>
-        <delete dir="${build.dir}"/>
-        <delete>
+        <delete file="${scarab.log.file.scarab}" quiet="true"/>
+        <delete file="${scarab.log.file.turbine}" quiet="true"/>
+        <delete file="${scarab.log.file.torque}" quiet="true"/>
+        <delete file="${scarab.log.file.fulcrum}" quiet="true"/>
+        <delete file="${scarab.log.file.stratum}" quiet="true"/>
+        <delete file="${scarab.log.file.velocity}" quiet="true"/>
+        <delete file="${scarab.log.file.jcs}" quiet="true"/>
+        <delete dir="${build.dir}" quiet="true"/>
+        <delete quiet="true">
             <fileset dir="..">
                 <include name="${final.name}*"/>
             </fileset>
