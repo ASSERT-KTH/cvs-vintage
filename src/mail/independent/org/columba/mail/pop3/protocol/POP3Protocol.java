@@ -129,8 +129,8 @@ public class POP3Protocol {
     // 2) No mangling of the received bytes to be able to convert
     //    the received bytes to another charset
 
-    in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO8859_1"));
-    out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "ISO8859_1"));
+    in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"));
+    out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "ISO-8859-1"));
 
     //connected = true;
     security = null;

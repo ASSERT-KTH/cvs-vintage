@@ -37,8 +37,13 @@ public class MimeHeader {
 
 		contentType = new String("text");
 		contentSubtype = new String("plain");
-		contentTransferEncoding = new String("7bit");
-		contentParameter.put("charset", "ascii");
+		
+		// I changed this to give the greates
+		// chance of displaying the mails right
+		// and sacrificed RFC compatiblity :-(
+		
+		contentTransferEncoding = new String("8bit");		
+		//contentParameter.put("charset", "ascii");
 
 	}
 
@@ -48,7 +53,7 @@ public class MimeHeader {
 
 		contentType = type;
 		contentSubtype = subtype;
-		contentTransferEncoding = new String("7bit");
+		contentTransferEncoding = new String("8bit");
 	}
 
 	public void putContentParameter(String key, String value) {
