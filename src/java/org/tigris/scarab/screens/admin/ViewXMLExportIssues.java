@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.8 2003/01/25 00:45:02 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.9 2003/01/25 00:57:28 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -126,10 +126,9 @@ public class ViewXMLExportIssues extends Default
                 scarabR.setAlertMessage(e.getMessage());
                 return;
             }
-            Iterator itr = allIdList.iterator();
             List issueIdList = new ArrayList();
             List badIdList = new ArrayList();
-            while (itr.hasNext())
+            for (Iterator itr = allIdList.iterator(); itr.hasNext();)
             {
                 String tmp = (String) itr.next();
                 Issue issue = scarabR.getIssue(tmp);
