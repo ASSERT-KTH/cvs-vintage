@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.204 2003/11/02 21:16:37 spestov Exp $
+ * @version $Id: Buffer.java,v 1.205 2003/11/16 03:51:22 spestov Exp $
  */
 public class Buffer
 {
@@ -102,6 +102,12 @@ public class Buffer
 	 * @since jEdit 3.2pre4
 	 */
 	public static final String ENCODING = "encoding";
+
+	/**
+	 * Should jEdit try to set the encoding based on a UTF8, UTF16 or
+	 * XML signature at the beginning of the file?
+	 */
+	public static final String ENCODING_AUTODETECT = "encodingAutodetect";
 
 	/**
 	 * This property is set to 'true' if the file has a trailing newline.

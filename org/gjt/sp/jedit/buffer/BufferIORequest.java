@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.18 2003/11/02 21:16:37 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.19 2003/11/16 03:51:22 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -311,7 +311,9 @@ public class BufferIORequest extends WorkRequest
 		in = new BufferedInputStream(in);
 
 		String encoding = buffer.getStringProperty(Buffer.ENCODING);
-		if(in.markSupported())
+		if(!in.markSupported())
+			Log.log(Log.WARNING,this,"Mark not supported: " + in);
+		else if(buffer.getBooleanProperty(Buffer.ENCODING_AUTODETECT))
 		{
 			in.mark(XML_PI_LENGTH);
 			int b1 = in.read();
@@ -338,39 +340,48 @@ public class BufferIORequest extends WorkRequest
 				encoding = "UTF-8";
 				buffer.setProperty(Buffer.ENCODING,encoding);
 			}
-
-			byte[] _xmlPI = new byte[XML_PI_LENGTH];
-			int offset = 0;
-			int count;
-			while((count = in.read(_xmlPI,offset,
-				XML_PI_LENGTH - offset)) != -1)
+			else
 			{
-				offset += count;
-				if(offset == XML_PI_LENGTH)
-					break;
-			}
-
-			String xmlPI = new String(_xmlPI,0,offset,"ASCII");
-			if(xmlPI.startsWith("<?xml"))
-			{
-				int index = xmlPI.indexOf("encoding=");
-				if(index != -1 && index + 9 != xmlPI.length())
+				byte[] _xmlPI = new byte[XML_PI_LENGTH];
+				int offset = 0;
+				int count;
+				while((count = in.read(_xmlPI,offset,
+					XML_PI_LENGTH - offset)) != -1)
 				{
-					char ch = xmlPI.charAt(index + 9);
-					int endIndex = xmlPI.indexOf(ch,
-						index + 10);
-					encoding = xmlPI.substring(
-						index + 10,endIndex);
-
-					// for possible error messages, etc.
-					buffer.setProperty(Buffer.ENCODING,encoding);
+					offset += count;
+					if(offset == XML_PI_LENGTH)
+						break;
 				}
-			}
 
-			in.reset();
+				String xmlPI = new String(_xmlPI,0,offset,
+				"ASCII");
+				if(xmlPI.startsWith("<?xml"))
+				{
+					int index = xmlPI.indexOf("encoding=");
+					if(index != -1
+						&& index + 9 != xmlPI.length())
+					{
+						char ch = xmlPI.charAt(index
+						+ 9);
+						int endIndex = xmlPI.indexOf(ch,
+							index + 10);
+						encoding = xmlPI.substring(
+							index + 10,endIndex);
+	
+						if(Charset.isSupported(encoding))
+						{
+							buffer.setProperty(Buffer.ENCODING,encoding);
+						}
+						else
+						{
+							Log.log(Log.WARNING,this,"XML PI specifies unsupported encoding: " + encoding);
+						}
+					}
+				}
+
+				in.reset();
+			}
 		}
-		else
-			Log.log(Log.WARNING,this,"Mark not supported: " + in);
 
 		return new InputStreamReader(in,encoding);
 	} //}}}

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.48 2003/11/12 00:24:11 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.49 2003/11/16 03:51:23 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -796,9 +796,17 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		HistoryModel model = filter.getModel();
 		if(model.getSize() != 0)
 			filter.setText(model.getItem(0));
+		else
+		{
+			filter.setText("*" + MiscUtilities
+				.getFileExtension(view.getBuffer()
+				.getName()));
+		}
 		model = directory.getModel();
 		if(model.getSize() != 0)
 			directory.setText(model.getItem(0));
+		else
+			directory.setText(view.getBuffer().getDirectory());
 
 		if(fileset instanceof DirectoryListSet)
 		{

@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.99 2003/11/06 03:38:44 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.100 2003/11/16 03:51:22 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -168,6 +168,8 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 
 		currentEncoding = jEdit.getProperty("buffer.encoding",
 			System.getProperty("file.encoding"));
+		autoDetectEncoding = jEdit.getBooleanProperty(
+			"buffer.encodingAutodetect");
 
 		ActionHandler actionHandler = new ActionHandler();
 
@@ -817,8 +819,10 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 				{
 					Hashtable props = new Hashtable();
 					props.put(Buffer.ENCODING,currentEncoding);
-					_buffer = jEdit.openFile(null,null,file.path,
-						false,props);
+					props.put(Buffer.ENCODING_AUTODETECT,
+						Boolean.valueOf(autoDetectEncoding));
+					_buffer = jEdit.openFile(null,null,
+						file.path,false,props);
 				}
 				else if(doubleClickClose && canDoubleClickClose
 					&& this.mode != BROWSER_DIALOG
@@ -880,6 +884,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 	//{{{ Package-private members
 	String currentEncoding;
+	boolean autoDetectEncoding;
 
 	//{{{ pathsEqual() method
 	/**
