@@ -224,12 +224,13 @@ public class ScoreMessageCommand extends FolderCommand {
 		boolean checkAddressbook = item.getSpamItem().checkAddressbook();
 
 		boolean isInAddressbook = false;
-		if (checkAddressbook)
+		if (checkAddressbook) {
+			// check if sender is already in addressbook
 			isInAddressbook = new AddressbookFilter().process(srcFolder,
 					uids[j]);
-
-		// only go on if all values are true
-		result = result && checkAddressbook && !isInAddressbook;
+			
+			result = result && !isInAddressbook;
+		} 
 		
 		return result;
 	}
