@@ -96,7 +96,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.185 2004/06/04 22:08:41 dabbous Exp $
+ * @version $Id: ModifyIssue.java,v 1.186 2004/09/03 13:24:51 legout Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -355,6 +355,37 @@ public class ModifyIssue extends BaseModifyIssue
                 scarabR.setConfirmMessage(l10n.get("UrlSaved"));
             }
         }
+    }
+
+    /**
+     * Enable edition mode for the comment page.
+     */
+    public void doEditcommentpage(RunData data, TemplateContext context)
+         throws Exception
+    {
+        if (isCollision(data, context)) 
+        {
+            return;
+        }
+        ScarabUser user = (ScarabUser)data.getUser();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Issue issue = scarabR.getIssue();
+        if (issue == null)
+        {
+            // no need to set the message here as
+            // it is done in scarabR.getIssue()
+            return;
+        }
+        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
+                               issue.getModule()))
+        {
+            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            return;
+        }
+        data.getParameters().add("edit_comments", "true");
+        data.getParameters().add("fullcomments", data.getParameters().get("fullcomments"));
+        return;
     }
 
     /**
@@ -1076,6 +1107,8 @@ public class ModifyIssue extends BaseModifyIssue
             scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
         }
     }
+
+
 
     /**
      * Redirects to MoveIssue page with move action selected.
