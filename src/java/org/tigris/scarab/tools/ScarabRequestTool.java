@@ -401,7 +401,7 @@ public class ScarabRequestTool
      */
     public void setIssueType (IssueType issuetype)
     {
-        this.issueType = issueType;
+        this.issueType = issuetype;
     }
 
 
@@ -424,7 +424,7 @@ public class ScarabRequestTool
      */
     public void setParentChildAttributeOption(ParentChildAttributeOption roo)
     {
-        this.pcao = pcao;
+        this.pcao = roo;
     }
 
     /**
