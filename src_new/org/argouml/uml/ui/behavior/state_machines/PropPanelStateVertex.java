@@ -1,4 +1,4 @@
-// $Id: PropPanelStateVertex.java,v 1.26 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelStateVertex.java,v 1.27 2005/02/19 23:42:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,12 +72,16 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
         containerScroll = new JScrollPane(compositeList);
 
         addButton(new PropPanelButton2(new ActionNavigateNamespace()));
+        addExtraButtons();
         addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
         addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));;
     }
 
+    /** Overrule this to add extra buttons. */
+    protected void addExtraButtons() { }
+    
     /**
      * @return Returns the incomingScroll.
      */

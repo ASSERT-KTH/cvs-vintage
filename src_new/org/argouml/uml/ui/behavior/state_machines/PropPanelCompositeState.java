@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.25 2005/01/30 20:47:43 linus Exp $
+// $Id: PropPanelCompositeState.java,v 1.26 2005/02/19 23:42:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,8 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.ui.ActionAddConcurrentRegion;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.util.ConfigLoader;
 import org.tigris.swidgets.Orientation;
 
@@ -93,6 +95,14 @@ public class PropPanelCompositeState extends PropPanelState {
 
         addField(Translator.localize("label.subvertex"),
                 new JScrollPane(subverticesList));
+    }
+    
+    /**
+     * @see org.argouml.uml.ui.behavior.state_machines.PropPanelStateVertex#addExtraButtons()
+     */
+    protected void addExtraButtons() {
+        addButton(new PropPanelButton2(
+                ActionAddConcurrentRegion.getSingleton()));
     }
 
     /**
