@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.33 2002/01/04 00:09:54 user57 Exp $ ###
+### $Id: run.sh,v 1.34 2002/02/07 00:29:31 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -76,34 +76,6 @@ fi
 
 # Setup JBoss sepecific properties
 JAVA_OPTS="$JAVA_OPTS -Djboss.boot.loader.name=$PROGNAME"
-
-# Setup the JAXP parser to use
-if [ "x$JAXP" = "x" ]; then
-    # Default to crimson
-    JAXP="crimson"
-fi
-
-case "$JAXP" in
-    crimson)
-	JAXP_DOM_FACTORY="org.apache.crimson.jaxp.DocumentBuilderFactoryImpl"
-	JAXP_SAX_FACTORY="org.apache.crimson.jaxp.SAXParserFactoryImpl"
-	;;
-
-    xerces)
-	JAXP_DOM_FACTORY="org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"
-	JAXP_SAX_FACTORY="org.apache.xerces.jaxp.SAXParserFactoryImpl"
-	;;
-
-    *)
-	if [ "x$JAXP_DOM_FACTORY" = "x" ] &&
-	   [ "x$JAXP_SAX_FACTORY" = "x" ]; then
-	    die "Unsupported JAXP parser: $JAXP"
-	fi
-	;;
-esac
-
-JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.DocumentBuilderFactory=$JAXP_DOM_FACTORY"
-JAVA_OPTS="$JAVA_OPTS -Djavax.xml.parsers.SAXParserFactory=$JAXP_SAX_FACTORY"
 
 # Where we need to be to start the server
 startdir="$JBOSS_HOME/bin"

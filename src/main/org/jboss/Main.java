@@ -28,7 +28,7 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.64 $
+ * @version $Revision: 1.65 $
  */
 public class Main
    implements Runnable
@@ -78,11 +78,13 @@ public class Main
       }
       String systemHome = System.getProperty("jboss.system.home");
 
+      // Create a new server configuration object.  This object holds all
+      // of the required information to get the server up and running.
       ServerConfig config = new ServerConfig(new File(systemHome));
          
       // set this from a system property or default to jboss
       String programName = System.getProperty("jboss.boot.loader.name", "jboss");
-      String sopts = "-:hD:p:n:c:V";
+      String sopts = "-:hD:p:n:c:Vj:";
       LongOpt[] lopts = {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
          new LongOpt("help-examples", LongOpt.NO_ARGUMENT, null, 10),
@@ -90,6 +92,7 @@ public class Main
          new LongOpt("net-boot", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
          new LongOpt("configuration", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
          new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'V'),
+	 new LongOpt("jaxp", LongOpt.REQUIRED_ARGUMENT, null, 'j'),
       };
       
       Getopt getopt = new Getopt(programName, args, sopts, lopts);
@@ -121,10 +124,11 @@ public class Main
                System.out.println("    --help-examples               Show some command line examples");
                System.out.println("    --                            Stop processing options");
                System.out.println("    -D<name>[=<value>]            Set a system property");
-               System.out.println("    -p, --patch-dir <dir>         Set the patch directory, takes an absolute file name");
+               System.out.println("    -p, --patch-dir <dir>         Set the patch directory; Must be absolute");
                System.out.println("    -n, --net-boot <url>          Boot from net with the given url as base");
                System.out.println("    -c, --configuration <name>    Set the server configuration name");
                System.out.println("    -V, --version                 Show version information");
+               System.out.println("    -j, --jaxp=<type>             Set the JAXP impl type (ie. crimson)");
                System.out.println();               
                System.exit(0);
                break; // for completeness
@@ -187,7 +191,38 @@ public class Main
                System.out.println();
                System.exit(0);
                break; // for completness
-            
+
+            case 'j':
+	       // set the JAXP impl type
+	       arg = getopt.getOptarg().toLowerCase();
+	       String domFactoryType, saxFactoryType;
+
+	       if (arg.equals("crimson")) {
+		  domFactoryType = "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl";
+		  saxFactoryType = "org.apache.crimson.jaxp.SAXParserFactoryImpl";
+	       }
+	       else if (arg.equals("xerces")) {
+		  domFactoryType = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+		  saxFactoryType = "org.apache.xerces.jaxp.SAXParserFactoryImpl";
+	       }
+	       else {
+		  System.err.println("Invalid JAXP type: " + arg +
+				     " (Expected 'crimson' or 'xerces')");
+		  // don't continue, user needs to fix this!
+		  System.exit(1);
+
+		  // trick the compiler, so it does not complain that 
+		  // the above variables might not being set
+		  break;
+	       }
+
+	       // set the controlling properties
+	       System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+				  domFactoryType);
+	       System.setProperty("javax.xml.parsers.SAXParserFactory",
+				  saxFactoryType);
+	       break;
+
             default:
                // this should not happen,
                // if it does throw an error so we know about it
