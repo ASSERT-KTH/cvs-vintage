@@ -34,11 +34,12 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
-import org.columba.core.config.WindowItem;
+import org.columba.core.config.Config;
+import org.columba.core.config.GuiItem;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 
-public class GeneralPanel extends JPanel implements ActionListener
-{
+public class GeneralPanel extends JPanel implements ActionListener {
 	JLabel markLabel1, markLabel2;
 	JTextField markTextField;
 
@@ -51,160 +52,193 @@ public class GeneralPanel extends JPanel implements ActionListener
 
 	JComboBox toolbarComboBox;
 
-	public GeneralPanel()
-	{
+	public GeneralPanel() {
 		initComponent();
 	}
 
-	public void updateComponents( boolean b )
-	{
-		WindowItem item = MailConfig.getMainFrameOptionsConfig().getWindowItem();
+	public void updateComponents(boolean b) {
 
-		if (b == true)
-		{
-			// FIXME
-			/*
-			String delay =
-				Config.getOptionsConfig().getStringGuiOptions(
-					"markasreaddelay",
-					"2");
-			System.out.println("delay=" + delay);
-			
-			
-			
-			
+		if (b == true) {
+
+			XmlElement markasread =
+				MailConfig.get("options").getElement("/options/markasread");
+
+			String delay = markasread.getAttribute("delay", "2");
+
 			markTextField.setText(delay);
 
-			boolean preferhtml = MailConfig.getMainFrameOptionsConfig().getWindowItem().getHtmlViewer();
-			if ( preferhtml == true )
+			XmlElement html =
+				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+					"/options/html");
+
+			boolean preferhtml =
+				new Boolean(html.getAttribute("prefer")).booleanValue();
+			if (preferhtml == true)
 				preferHtmlCheckBox.setSelected(true);
 			else
 				preferHtmlCheckBox.setSelected(false);
 
-			toolbarComboBox.setSelectedIndex( item.getToolbarState() );
-			*/
-		}
-		else
-		{
-			// FIXME
-			/*
-			Config.getOptionsConfig().setStringGuiOption(
-				"markasreaddelay",
-		markTextField.getText());
+			GuiItem item = Config.getOptionsConfig().getGuiItem();
+			boolean withIcon = false;
+			if (item.getBoolean("toolbar", "enable_icon") == true)
+				withIcon = true;
+			boolean enableText = false;
+			if (item.getBoolean("toolbar", "enable_text") == true)
+				enableText = true;
+			boolean alignment = false;
+			if (item.getBoolean("toolbar", "text_position") == true)
+				alignment = true;
 
-			if ( preferHtmlCheckBox.isSelected() )
-				MailConfig.getMainFrameOptionsConfig().getWindowItem().setHtmlViewer(true);
+			int state = -1;
+			if ((withIcon == true) && (enableText == false))
+				state = 0;
+			else if ((withIcon == false) && (enableText == true))
+				state = 1;
+			else if ((withIcon == true) && (enableText == true)) {
+				if (alignment == true)
+					state = 2;
+				else
+					state = 3;
+			}
+
+			toolbarComboBox.setSelectedIndex(state);
+
+		} else {
+
+			XmlElement markasread =
+				MailConfig.get("options").getElement("/options/markasread");
+
+			markasread.addAttribute("delay", markTextField.getText());
+
+			XmlElement html =
+				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+					"/options/html");
+
+			if (preferHtmlCheckBox.isSelected())
+				html.addAttribute("prefer", "true");
 			else
-				MailConfig.getMainFrameOptionsConfig().getWindowItem().setHtmlViewer(false);
+				html.addAttribute("prefer", "false");
 
-			item.setToolbarState( toolbarComboBox.getSelectedIndex() );
-			*/
-			
+			GuiItem item = Config.getOptionsConfig().getGuiItem();
+
+			int state = toolbarComboBox.getSelectedIndex();
+
+			if (state == 0) {
+				item.set("toolbar", "enable_text", "false");
+				item.set("toolbar", "enable_icon", "true");
+			} else if (state == 1) {
+				item.set("toolbar", "enable_text", "true");
+				item.set("toolbar", "enable_icon", "false");
+			} else if (state >= 2) {
+				item.set("toolbar", "enable_text", "true");
+				item.set("toolbar", "enable_icon", "true");
+
+				if (state == 2)
+					item.set("toolbar", "text_position", "true");
+				else
+					item.set("toolbar", "text_position", "false");
+
+			}
+
 		}
 	}
 
-	protected void initComponent()
-	{
-		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
+	protected void initComponent() {
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		JPanel markPanel = new JPanel();
-		markPanel.setLayout( new FlowLayout(FlowLayout.LEFT) );
+		markPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		markPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//LOCALIZE
 		markLabel1 = new JLabel("Mark messages as read after");
-		markPanel.add( markLabel1 );
-		markTextField = new JTextField("2",3);
-		markPanel.add( markTextField );
+		markPanel.add(markLabel1);
+		markTextField = new JTextField("2", 3);
+		markPanel.add(markTextField);
 		markLabel2 = new JLabel("seconds");
-		markPanel.add( markLabel2 );
+		markPanel.add(markLabel2);
 		add(markPanel);
 		JPanel codepagePanel = new JPanel();
-		codepagePanel.setLayout( new FlowLayout(FlowLayout.LEFT) );
+		codepagePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		codepagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//LOCALIZE
 		codepageLabel = new JLabel("Default locale:");
-		codepagePanel.add( codepageLabel );
+		codepagePanel.add(codepageLabel);
 		codepageButton = new JButton(Locale.getDefault().getDisplayName());
 		codepageButton.setEnabled(false);
 		codepageButton.setActionCommand("CODEPAGE");
 		codepageButton.addActionListener(this);
 		codepageLabel.setLabelFor(codepageButton);
-		codepagePanel.add( codepageButton );
+		codepagePanel.add(codepageButton);
 		add(codepagePanel);
 		//LOCALIZE
 		emptyTrashCheckBox = new JCheckBox("Empty trash on exit");
 		emptyTrashCheckBox.setEnabled(false);
 		add(emptyTrashCheckBox);
 		//LOCALIZE
-		preferHtmlCheckBox = new JCheckBox("Prefer HTML messages, if available");
+		preferHtmlCheckBox =
+			new JCheckBox("Prefer HTML messages, if available");
 		add(preferHtmlCheckBox);
 		JPanel toolbarPanel = new JPanel();
-		toolbarPanel.setLayout( new FlowLayout(FlowLayout.LEFT) );
+		toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		toolbarPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		//LOCALIZE
 		JLabel toolbarLabel = new JLabel("Toolbar:");
-		toolbarPanel.add( toolbarLabel );
+		toolbarPanel.add(toolbarLabel);
 		//LOCALIZE
-		toolbarComboBox = new JComboBox(new String[]{"Icons only","Text only","Text below Icons","Text beside Icons"});
+		toolbarComboBox =
+			new JComboBox(
+				new String[] {
+					"Icons only",
+					"Text only",
+					"Text below Icons",
+					"Text beside Icons" });
 		toolbarLabel.setLabelFor(toolbarComboBox);
-		toolbarPanel.add( toolbarComboBox );
+		toolbarPanel.add(toolbarComboBox);
 		add(toolbarPanel);
 		add(Box.createVerticalGlue());
 	}
 
-	protected JMenu createSubMenu( Locale[] locales, int startIndex, int stopIndex )
-	{
+	protected JMenu createSubMenu(
+		Locale[] locales,
+		int startIndex,
+		int stopIndex) {
 		JMenu menu = new JMenu("more..");
 
-		for ( int i=startIndex; i<stopIndex; i++ )
-		{
-			JMenuItem item = new JMenuItem( locales[i].getDisplayName() );
-			menu.add( item );
+		for (int i = startIndex; i < stopIndex; i++) {
+			JMenuItem item = new JMenuItem(locales[i].getDisplayName());
+			menu.add(item);
 		}
 
 		return menu;
 	}
 
-	public void actionPerformed( ActionEvent ev )
-	{
+	public void actionPerformed(ActionEvent ev) {
 		String str = ev.getActionCommand();
 
-		if ( str.equals("CODEPAGE") )
-		{
+		if (str.equals("CODEPAGE")) {
 			JPopupMenu menu = new JPopupMenu();
-			JMenu selectedMenu=null;
+			JMenu selectedMenu = null;
 			Locale[] locales = Locale.getAvailableLocales();
 			int counter = 0;
 			boolean firstMenu = true;
-			for ( int i=0; i<locales.length; i++ )
-			{
+			for (int i = 0; i < locales.length; i++) {
 				Locale locale = (Locale) locales[i];
 
-				if ( firstMenu == true )
-				{
-					if ( counter < 10 )
-					{
-						JMenuItem item = new JMenuItem( locale.getDisplayName() );
-						menu.add( item );
-					}
-					else
-					{
+				if (firstMenu == true) {
+					if (counter < 10) {
+						JMenuItem item = new JMenuItem(locale.getDisplayName());
+						menu.add(item);
+					} else {
 						firstMenu = false;
 					}
-				}
-				else
-				{
-					if ( counter % 10 == 0 )
-					{
-						JMenu submenu = createSubMenu( locales, i-10, i );
-						if ( menu.getComponents().length <= 10 )
-						{
-							menu.add( submenu );
+				} else {
+					if (counter % 10 == 0) {
+						JMenu submenu = createSubMenu(locales, i - 10, i);
+						if (menu.getComponents().length <= 10) {
+							menu.add(submenu);
 							selectedMenu = submenu;
-						}
-						else
-						{
-							selectedMenu.add( submenu );
+						} else {
+							selectedMenu.add(submenu);
 							selectedMenu = submenu;
 						}
 
@@ -213,8 +247,6 @@ public class GeneralPanel extends JPanel implements ActionListener
 				}
 
 				counter++;
-
-
 
 				/*
 				System.out.println("locale name:"+locale.getDisplayName() );
@@ -227,12 +259,10 @@ public class GeneralPanel extends JPanel implements ActionListener
 				System.out.println("locale tostring:"+locale.toString() );
 				*/
 
-
-
 			}
 
-			JButton button  = (JButton) ev.getSource();
-			menu.show( button, button.getX(), button.getY() );
+			JButton button = (JButton) ev.getSource();
+			menu.show(button, button.getX(), button.getY());
 		}
 	}
 }

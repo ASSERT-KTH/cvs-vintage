@@ -22,4 +22,5 @@
   </table>
  </gui>
  <html prefer="true" />
+ <markasread delay="2" />
 </options>
