@@ -8,6 +8,8 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.mysql.MySQLCreateEntityCommand;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCCommandFactory creates all required CMP command and some JDBC 
@@ -17,13 +19,21 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.15 $
+ * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
+ * @version $Revision: 1.16 $
  */
 public class JDBCCommandFactory {
+
+   private Logger log;
    private JDBCStoreManager manager;
    
    public JDBCCommandFactory(JDBCStoreManager manager) throws Exception {
       this.manager = manager;      
+
+      log = Logger.getLogger(
+               this.getClass().getName() +
+               "." + 
+               manager.getContainer().getBeanMetaData().getEjbName());
    }
    
    public JDBCQueryCommand createFindByPrimaryKeyQuery(JDBCQueryMetaData q) {
@@ -109,8 +119,16 @@ public class JDBCCommandFactory {
       return new JDBCFindEntitiesCommand(manager);
    }
    
-   public JDBCCreateEntityCommand createCreateEntityCommand() {
-      return new JDBCCreateEntityCommand(manager);
+   public JDBCCreateEntityCommand createCreateEntityCommand()
+      throws InstantiationException, IllegalAccessException {
+
+      JDBCCreateEntityCommand cec = (JDBCCreateEntityCommand)
+         manager.getMetaData().getCreateEntityCommand().newInstance();
+      cec.init(manager);
+
+      log.debug("create-entity-command: " + cec.getClass().getName());
+
+      return cec;
    }
    
    public JDBCRemoveEntityCommand createRemoveEntityCommand() {
