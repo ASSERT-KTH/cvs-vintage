@@ -63,6 +63,9 @@ public class FilterDialog implements ActionListener {
 	private ActionList actionList;
 
 	private JComboBox condList;
+	
+	/** Boolean stating whetever the dialog was cancelled or not. Default value is <code>true</code>. */
+	private boolean dialogWasCancelled = true;
 
 	public FilterDialog(Filter filter) {
 		dialog = DialogStore.getDialog();
@@ -200,6 +203,12 @@ public class FilterDialog implements ActionListener {
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
+		ButtonWithMnemonic cancelButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
+		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+		cancelButton.addActionListener(this);
+		buttonPanel.add(cancelButton);
 		ButtonWithMnemonic helpButton =
 			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "help"));
@@ -213,7 +222,7 @@ public class FilterDialog implements ActionListener {
 		dialog.getRootPane().setDefaultButton(closeButton);
 		dialog.getRootPane().registerKeyboardAction(
 			this,
-			"CLOSE",
+			"CANCEL",
 			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		/*
@@ -267,6 +276,10 @@ public class FilterDialog implements ActionListener {
 			updateComponents(false);
 			dialog.setVisible(false);
 			//frame.listView.update();
+			dialogWasCancelled = false;
+		} else if (action.equals("CANCEL")) {
+			dialog.setVisible(false);
+			dialogWasCancelled = true;
 		} else if (action.equals("ADD_CRITERION")) {
 
 			criteriaList.add();
@@ -276,5 +289,15 @@ public class FilterDialog implements ActionListener {
 			actionList.add();
 
 		}
+	}
+	
+	/**
+	 * Returns if the dialog was cancelled or not.
+	 * The dialog is cancelled if the user presses the <code>Cancel</code> button
+	 * or presses the <code>Escape</code> key.
+	 * @return true if the user pressed the cancel button or escape; false otherwise.
+	 */
+	public boolean wasCancelled() {
+		return dialogWasCancelled;
 	}
 }
