@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
+import org.jboss.ejb.plugins.lock.NonentrantMessage;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
@@ -15,7 +16,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * JDBCRelationInterceptor.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface CMRMessage extends NonentrantMessage {
    public Object getRelatedId(EntityEnterpriseContext myCtx, JDBCCMRFieldBridge cmrField);
