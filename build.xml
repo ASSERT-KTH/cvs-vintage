@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.19 2001/08/30 07:03:58 rickardoberg Exp $ -->
+<!-- $Id: build.xml,v 1.20 2001/08/31 05:39:08 user57 Exp $ -->
 
 <project name="JBoss" default="main">
 
@@ -463,39 +463,41 @@
       </fileset>
     </jar>
 
-	<!-- Build the boot and spine.jar -->
-	 <jar jarfile="${build.jars}/jboss-boot.jar"
-         basedir="${build.classes}">
+    <!-- Build jboss-boot.jar -->
+    <jar jarfile="${build.jars}/jboss-boot.jar">
+      <fileset dir="${build.classes}">
         <include name="org/jboss/system/URLClassLoader.class"/>
-		  <include name="org/jboss/system/URLClassLoaderMBean.class"/>
+        <include name="org/jboss/system/URLClassLoaderMBean.class"/>
         <include name="org/jboss/system/MBeanClassLoader.class"/>
         <include name="org/jboss/system/MBeanClassLoaderMBean.class"/>
-		  <include name="org/jboss/system/ServiceLibraries.class"/>
-		  <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
-		  <include name="org/jboss/deployment/DeploymentException.class"/>
+        <include name="org/jboss/system/ServiceLibraries.class"/>
+        <include name="org/jboss/system/ServiceLibrariesMBean.class"/>
+        <include name="org/jboss/deployment/DeploymentException.class"/>
+      </fileset>
     </jar>
-	 <jar jarfile="${build.jars}/jboss-spine.jar"
-         basedir="${build.classes}">			
-		  <include name="org/jboss/logging/**"/>
-		  <include name="org/jboss/system/Service.class"/>
-		  <include name="org/jboss/system/ServiceMBean.class"/>
-		  <include name="org/jboss/system/ServiceMBeanSupport.class"/>
-		  <include name="org/jboss/system/ServiceController**.class"/>
-		  <include name="org/jboss/system/ServiceCreator**.class"/>
-		  <include name="org/jboss/system/ServiceConfigurator.class"/>
-		  <include name="org/jboss/system/ServiceControllerMBean.class"/>
-		  <include name="org/jboss/system/ConfigurationException.class"/>
-		  <include name="org/jboss/system/Info.class"/>
-		  <include name="org/jboss/system/InfoMBean.class"/>
-		  <include name="org/jboss/system/Shutdown*.class"/>
-		 
-		  <include name="org/jboss/deployment/ServiceDeployer.class"/>
-		  <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
-		  <include name="org/jboss/deployment/ServiceDeployer**.class"/>
-		  <include name="org/jboss/deployment/DeployerMBean.class"/>
-		  <include name="org/jboss/deployment/DeploymentException.class"/>
+
+    <!-- Build jboss-spine.jar -->
+    <jar jarfile="${build.jars}/jboss-spine.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/logging/**"/>
+        <include name="org/jboss/system/Service.class"/>
+        <include name="org/jboss/system/ServiceMBean.class"/>
+        <include name="org/jboss/system/ServiceMBeanSupport.class"/>
+        <include name="org/jboss/system/ServiceController**.class"/>
+        <include name="org/jboss/system/ServiceCreator**.class"/>
+        <include name="org/jboss/system/ServiceConfigurator.class"/>
+        <include name="org/jboss/system/ServiceControllerMBean.class"/>
+        <include name="org/jboss/system/ConfigurationException.class"/>
+        <include name="org/jboss/system/Info.class"/>
+        <include name="org/jboss/system/InfoMBean.class"/>
+        <include name="org/jboss/system/Shutdown*.class"/>
+        <include name="org/jboss/deployment/ServiceDeployer.class"/>
+        <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
+        <include name="org/jboss/deployment/ServiceDeployer**.class"/>
+        <include name="org/jboss/deployment/DeployerMBean.class"/>
+        <include name="org/jboss/deployment/DeploymentException.class"/>
+      </fileset>
     </jar>
-	 
 	 
     <!-- Build jboss-client.jar -->
     <jar jarfile="${build.jars}/jboss-client.jar"
