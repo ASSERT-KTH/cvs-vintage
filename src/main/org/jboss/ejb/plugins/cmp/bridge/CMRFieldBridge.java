@@ -20,11 +20,11 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * one per relationship (shared between two beans).		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public interface CMRFieldBridge {
 	public String getFieldName();
-	public Class getFieldType();
+//	public Class getFieldType();
 		
 	public Object getValue(EntityEnterpriseContext ctx);
    public void setValue(EntityEnterpriseContext ctx, Object value);

@@ -34,7 +34,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -89,7 +89,7 @@ public abstract class JDBCFinderCommand
       try {
 			Object[] pkRef = new Object[1];
 			while(rs.next()) {
-				pkRef[0] = entity.getPrimaryKeyClass().newInstance();
+				pkRef[0] = null;
 				entity.loadPrimaryKeyResults(rs, 1, pkRef);
 				result.add(pkRef[0]);
 			}

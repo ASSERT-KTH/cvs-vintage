@@ -33,9 +33,9 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
-public class JDBCCMP2xFieldBridge extends JDBCCMPFieldBridge {
+public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 	public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, Log log) throws DeploymentException {
 		super(manager, metadata, log);
 	}
@@ -108,8 +108,12 @@ public class JDBCCMP2xFieldBridge extends JDBCCMPFieldBridge {
 		return true;
 	}
 
-	private FieldState getFieldState(EntityEnterpriseContext ctx) {
-		Map fieldStates = ((CMPStoreManager.PersistenceContext)ctx.getPersistenceContext()).fieldState;
+	private CMPStoreManager.PersistenceContext getPersistenceContext(EntityEnterpriseContext ctx) {
+		return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
+	}
+	   
+	public FieldState getFieldState(EntityEnterpriseContext ctx) {
+		Map fieldStates = getPersistenceContext(ctx).fieldState;
       FieldState fieldState = (FieldState)fieldStates.get(this);
 		if(fieldState == null) {
 			fieldState = new FieldState();
@@ -118,10 +122,20 @@ public class JDBCCMP2xFieldBridge extends JDBCCMPFieldBridge {
 		return fieldState;
 	}
 
-	private static class FieldState {
-		Object value;
-		boolean isLoaded = false;
-		boolean isDirty = false;
-		long lastRead = -1;
+	public static class FieldState {
+		private Object value;
+		private boolean isLoaded = false;
+		private boolean isDirty = false;
+		private long lastRead = -1;
+		
+		public Object getValue() {
+			return value;
+		}
+		public boolean isLoaded() {
+			return isLoaded;
+		}
+		public boolean isDirty() {
+			return isDirty;
+		}
 	}
 }

@@ -30,7 +30,7 @@ import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindEntityCommand implements FindEntityCommand {
    // Attributes ----------------------------------------------------
@@ -47,12 +47,12 @@ public class JDBCFindEntityCommand implements FindEntityCommand {
    
 	// FindEntityCommand implementation ---------------------------
    
-		public Object execute(Method finderMethod,
+	public Object execute(Method finderMethod,
 						Object[] args,
 						EntityEnterpriseContext ctx)
 				throws RemoteException, FinderException {
 
-		if (finderMethod.getName().equals("findByPrimaryKey")) {
+		if(finderMethod.getName().equals("findByPrimaryKey")) {
 			return findByPrimaryKey(args[0]);
 		} else {
 			Collection result = (Collection)findEntitiesCommand.execute(finderMethod, args, ctx);

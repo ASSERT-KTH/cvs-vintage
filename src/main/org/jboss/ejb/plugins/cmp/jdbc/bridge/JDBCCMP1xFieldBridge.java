@@ -36,9 +36,9 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
-public class JDBCCMP1xFieldBridge extends JDBCCMPFieldBridge {
+public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
 	protected Field field;
  	
 	public JDBCCMP1xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, Log log) throws DeploymentException {

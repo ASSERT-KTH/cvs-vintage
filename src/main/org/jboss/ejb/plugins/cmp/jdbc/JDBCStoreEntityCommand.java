@@ -21,6 +21,7 @@ import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.StoreEntityCommand;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 
 /**
  * JDBCStoreEntityCommand updates the row with the new state.
@@ -34,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
@@ -67,9 +68,12 @@ public class JDBCStoreEntityCommand
 			if(es.fields.length > 0) {
 				jdbcExecute(es);			
 			} else {
-				log.debug(name + " command NOT executed bean is not dirty: id=" + ctx.getId());
+				if(debug) {
+					log.debug(name + " command NOT executed bean is not dirty: id=" + ctx.getId());
+				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ServerException("Store failed", e);
 		}
 	}

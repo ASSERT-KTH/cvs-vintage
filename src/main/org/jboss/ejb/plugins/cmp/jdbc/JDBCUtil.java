@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCUtil {
 	public static void safeClose(Connection con) {
@@ -109,10 +109,12 @@ public class JDBCUtil {
     * @throws SQLException if parameter setting fails.
     */
 	public static void setParameter(Log log, PreparedStatement ps, int index, int jdbcType, Object value) throws SQLException {
-		log.debug("Set parameter: " + 
-				"index=" + index + ", " +
-				"jdbcType=" + getJDBCTypeName(jdbcType) + ", " +
-				"value=" + ((value == null) ? "NULL" : value));
+		if(JDBCCommand.debug) {
+			log.debug("Set parameter: " + 
+					"index=" + index + ", " +
+					"jdbcType=" + getJDBCTypeName(jdbcType) + ", " +
+					"value=" + ((value == null) ? "NULL" : value));
+		}
 
 		if (value == null) {
 			ps.setNull(index, jdbcType);
@@ -154,17 +156,22 @@ public class JDBCUtil {
 	 * @param index index of the result column.
 	 * @param destination The class of the variable this is going into
 	 */
-	public static Object getResult(Log log, ResultSet rs, int index, Class destination) throws SQLException {
-				
+	public static Object getResult(Log log, ResultSet rs, int index, Class destination) throws SQLException {				
       Object[] returnValue = new Object[1];
 		if(getNonBinaryResult(rs, index, destination, returnValue)) {
-			log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", S value=" + returnValue[0]);
+			if(JDBCCommand.debug) {
+				log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", S value=" + returnValue[0]);
+			}
 			return returnValue[0];
 		} else if(getObjectResult(rs, index, destination, returnValue)) {
-			log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", O value=" + returnValue[0]);
+			if(JDBCCommand.debug) {
+				log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", O value=" + returnValue[0]);
+			}
 			return returnValue[0];
 		} else if(getBinaryResult(rs, index, destination, returnValue)) {
-			log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", B value=" + returnValue[0]);
+			if(JDBCCommand.debug) {
+				log.debug("Get result: index=" + index + ", javaType=" + destination.getName() + ", B value=" + returnValue[0]);
+			}
 			return returnValue[0];
 		}
 		throw new SQLException("Unable to load a ResultSet column into a variable of type '" + destination.getName() + "'");
@@ -178,6 +185,11 @@ public class JDBCUtil {
 				if(rs.wasNull()) {
 					returnValue[0] = null;
 				} else {
+					if(value instanceof String && 
+							(destination.isAssignableFrom(Character.class) ||
+							destination.isAssignableFrom(Character.TYPE) )) {
+						value = new Character(((String)value).charAt(0));
+					}
 					returnValue[0] = value;
 				}
 				return true;
@@ -398,16 +410,18 @@ public class JDBCUtil {
 			rsTypes.put(Boolean.TYPE.getName(),               ResultSet.class.getMethod("getBoolean", arg));
 			rsTypes.put(java.lang.Byte.class.getName(),       ResultSet.class.getMethod("getByte", arg));
 			rsTypes.put(Byte.TYPE.getName(),                  ResultSet.class.getMethod("getByte", arg));
-			rsTypes.put(java.lang.Double.class.getName(),     ResultSet.class.getMethod("getDouble", arg));
-			rsTypes.put(Double.TYPE.getName(),                ResultSet.class.getMethod("getDouble", arg));
-			rsTypes.put(java.lang.Float.class.getName(),      ResultSet.class.getMethod("getFloat", arg));
-			rsTypes.put(Float.TYPE.getName(),                 ResultSet.class.getMethod("getFloat", arg));
+			rsTypes.put(java.lang.Character.class.getName(),  ResultSet.class.getMethod("getString", arg));
+			rsTypes.put(Character.TYPE.getName(),             ResultSet.class.getMethod("getString", arg));
+			rsTypes.put(java.lang.Short.class.getName(),      ResultSet.class.getMethod("getShort", arg));
+			rsTypes.put(Short.TYPE.getName(),                 ResultSet.class.getMethod("getShort", arg));
 			rsTypes.put(java.lang.Integer.class.getName(),    ResultSet.class.getMethod("getInt", arg));
 			rsTypes.put(Integer.TYPE.getName(),               ResultSet.class.getMethod("getInt", arg));
 			rsTypes.put(java.lang.Long.class.getName(),       ResultSet.class.getMethod("getLong", arg));
 			rsTypes.put(Long.TYPE.getName(),                  ResultSet.class.getMethod("getLong", arg));
-			rsTypes.put(java.lang.Short.class.getName(),      ResultSet.class.getMethod("getShort", arg));
-			rsTypes.put(Short.TYPE.getName(),                 ResultSet.class.getMethod("getShort", arg));
+			rsTypes.put(java.lang.Float.class.getName(),      ResultSet.class.getMethod("getFloat", arg));
+			rsTypes.put(Float.TYPE.getName(),                 ResultSet.class.getMethod("getFloat", arg));
+			rsTypes.put(java.lang.Double.class.getName(),     ResultSet.class.getMethod("getDouble", arg));
+			rsTypes.put(Double.TYPE.getName(),                ResultSet.class.getMethod("getDouble", arg));
 		} catch(NoSuchMethodException e) {
 			// Should never happen
 			Logger.debug(e);

@@ -8,13 +8,16 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.rmi.RemoteException;
-
 import java.sql.PreparedStatement;
-
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import javax.ejb.EJBLocalObject;
 import javax.ejb.RemoveException;
-
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.RemoveEntityCommand;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 
 /**
  * JDBCRemoveEntityCommand executes a DELETE FROM table WHERE command.
@@ -24,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.RemoveEntityCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCRemoveEntityCommand
    extends JDBCUpdateCommand
@@ -32,8 +35,7 @@ public class JDBCRemoveEntityCommand
 {
    // Constructors --------------------------------------------------
    
-   public JDBCRemoveEntityCommand(JDBCStoreManager manager)
-   {
+   public JDBCRemoveEntityCommand(JDBCStoreManager manager) {
       super(manager, "Remove");
       
 		StringBuffer sql = new StringBuffer();
@@ -48,11 +50,43 @@ public class JDBCRemoveEntityCommand
    
 	public void execute(EntityEnterpriseContext context)
 			throws RemoteException, RemoveException {
-
+		
+		HashMap oldRelationMap = new HashMap();
+		
+		// remove entity from all relations before removing from db
+		JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
+		for(int i=0; i<cmrFields.length; i++) {
+			if(cmrFields[i].isCollectionValued()) {
+				Collection oldValue = (Collection)cmrFields[i].getValue(context);
+				oldRelationMap.put(cmrFields[i], new HashSet(oldValue));
+ 				oldValue.clear();
+			} else {
+				Object oldValue = cmrFields[i].getValue(context);
+				oldRelationMap.put(cmrFields[i], oldValue);
+				cmrFields[i].setValue(context, null);
+			}
+		}
+		
 		try {
 			jdbcExecute(context.getId());
 		} catch (Exception e) {
 			throw new RemoveException("Could not remove " + context.getId());
+		}
+		
+		for(int i=0; i<cmrFields.length; i++) {
+			if(cmrFields[i].getMetaData().getRelatedRole().isCascadeDelete()) {
+				Object oldRelation = oldRelationMap.get(cmrFields[i]);
+				if(oldRelation instanceof Collection) {
+					Iterator oldValues = ((Collection)oldRelation).iterator();
+					while(oldValues.hasNext()) {
+						EJBLocalObject oldValue = (EJBLocalObject)oldValues.next(); 
+						oldValue.remove();
+					}
+				} else {
+					EJBLocalObject oldValue = (EJBLocalObject)oldRelation; 
+					oldValue.remove();
+				}
+			}
 		}
 	}
    

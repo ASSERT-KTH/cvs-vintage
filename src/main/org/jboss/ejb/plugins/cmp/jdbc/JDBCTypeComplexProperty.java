@@ -6,9 +6,8 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.lang.reflect.Method;
-
 import javax.ejb.EJBException;
+import java.lang.reflect.Method;
 
 /**
  * JDBCTypeComplexProperty contins the mapping between a single Java Bean
@@ -22,7 +21,7 @@ import javax.ejb.EJBException;
  * the Java Bean.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCTypeComplexProperty {
 	private String propertyName;
@@ -82,68 +81,54 @@ public class JDBCTypeComplexProperty {
 		this.setters = setters;
 	}
 	
-	public Object getColumnValue(Object value) {
-		try {
-			Object[] noArgs = new Object[0];
-			
-			for(int i=0; i<getters.length; i++) {
-				if(value == null) {
-					return null;
-				}
-				value = getters[i].invoke(value, noArgs);
+	public Object getColumnValue(Object value) throws Exception {
+		Object[] noArgs = new Object[0];
+		
+		for(int i=0; i<getters.length; i++) {
+			if(value == null) {
+				return null;
 			}
-			return value;
-		} catch(Exception e) {
-			throw new EJBException("Error getting column value " + columnName, e);
+			value = getters[i].invoke(value, noArgs);
 		}
+		return value;
 	}
 
-	public Object setColumnValue(Object value, Object columnValue) {
-		try {
-			// if columnValue is null we are done
-			if(columnValue == null) {
-				return value;
-			}
+	public Object setColumnValue(Object value, Object columnValue) throws Exception {
+		// Used for invocation of get and set
+		Object[] noArgs = new Object[0];
+		Object[] singleArg = new Object[1];
+		
+		// save the first value to return
+		Object returnValue = value;
+
+		// get the second to last object in the chain
+		for(int i=0; i<getters.length-1; i++) {
+			// get the next object in chain
+			//Logger.debug("Calling " + getters[i].getName() + " on " + value.getClass().getName());
+			Object next = getters[i].invoke(value, noArgs);
 			
-			// Used for invocation of get and set
-			Object[] noArgs = new Object[0];
-			Object[] singleArg = new Object[1];
-			
-			// if we were not passed the first value create it
-			if(value == null) {
-				value = javaType.newInstance();
-			}
-			
-			// save the first value to return
-			Object returnValue = value;
-	
-			// get the second to last object in the chain
-			for(int i=0; i<getters.length-1; i++) {
-				// get the next object in chain
-				Object next = getters[i].invoke(value, noArgs);
+			// the next object is null creat it
+			if(next == null) {
+				// new type based on getter
+				next = getters[i].getReturnType().newInstance();
 				
-				// the next object is null creat it
-				if(next == null) {
-					// new type based on getter
-					next = getters[i].getReturnType().newInstance();
-					
-					// and set it into the current value
-					singleArg[0] = next;
-					setters[i].invoke(value, singleArg);
-				}
+				// and set it into the current value
+				singleArg[0] = next;
 				
-				// update value to the next in chain
-				value = next;
+				//Logger.debug("Calling " + setters[i].getName() + " on " + value.getClass().getName());
+				setters[i].invoke(value, singleArg);
 			}
 			
-			// value is now the object on which we need to set the column value
-			singleArg[0] = columnValue;
-			setters[setters.length].invoke(value, singleArg);
-			
-			// return the first object in call chain
-			return returnValue;
-		} catch(Exception e) {
-			throw new EJBException("Error setting column value " + columnName, e);
+			// update value to the next in chain
+			value = next;
 		}
+		
+		// value is now the object on which we need to set the column value
+		singleArg[0] = columnValue;
+		//Logger.debug("Calling " + setters[setters.length-1].getName() + " on " + value.getClass().getName());
+		setters[setters.length-1].invoke(value, singleArg);
+		
+		// return the first object in call chain
+		return returnValue;
 	}
 }

@@ -61,7 +61,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public abstract class CMPStoreManager 
    implements EntityPersistenceStore2
@@ -227,8 +227,6 @@ public abstract class CMPStoreManager
 
    public static class PersistenceContext {
 		public Map fieldState = new HashMap();
-      public Object[] state;
-      public long lastRead = -1;
    }
 }
 

@@ -35,7 +35,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 	// Attributes ----------------------------------------------------
@@ -88,7 +88,18 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 		//
 		// Automatic finders - The last resort
 		//
-		Method[] homeMethods = manager.getContainer().getHomeClass().getMethods();
+		Class homeClass = manager.getContainer().getHomeClass();
+		if(homeClass != null) {
+			addAutomaticFinders(manager, homeClass.getMethods());
+		}
+		
+		Class localHomeClass = manager.getContainer().getLocalHomeClass();
+		if(localHomeClass != null) {
+			addAutomaticFinders(manager, localHomeClass.getMethods());
+		}
+	}
+	
+	protected void addAutomaticFinders(JDBCStoreManager manager, Method[] homeMethods) {
 		for (int i = 0; i < homeMethods.length; i++) {
 			Method m = homeMethods[i];
 			
@@ -96,11 +107,11 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 				String name = m.getName();
 				if(name.equals("findAll")) {
 					JDBCQueryMetaData q = new JDBCQueryMetaData(m, manager.getMetaData());
-					knownFinderCommands.put(m, factory.createFindAllCommand(q));
+					knownFinderCommands.put(m, manager.getCommandFactory().createFindAllCommand(q));
 				} else if(name.startsWith("findBy")  && !name.equals("findByPrimaryKey")) {
 					try {
 						JDBCQueryMetaData q = new JDBCQueryMetaData(m, manager.getMetaData());
-						knownFinderCommands.put(m, factory.createFindByCommand(q));
+						knownFinderCommands.put(m, manager.getCommandFactory().createFindByCommand(q));
 					} catch (IllegalArgumentException e) {
 						manager.getLog().debug("Could not create the finder " + name +
 								", because no matching CMP field was found.");

@@ -43,7 +43,7 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {
@@ -100,7 +100,23 @@ public class JDBCCommandFactory implements CommandFactory
       return new JDBCFindByCommand(manager, q);
    }
    
-   // CommandFactory implementation ------------------------------
+	public JDBCFindByForeignKeyCommand createFindByForeignKeyCommand() {
+		return new JDBCFindByForeignKeyCommand(manager);
+	}
+
+	public JDBCLoadRelationCommand createLoadRelationCommand() {
+		return new JDBCLoadRelationCommand(manager);
+	}
+   
+	public JDBCDeleteRelationsCommand createDeleteRelationsCommand() {
+		return new JDBCDeleteRelationsCommand(manager);
+	}
+   
+	public JDBCInsertRelationsCommand createInsertRelationsCommand() {
+		return new JDBCInsertRelationsCommand(manager);
+	}
+   
+	// CommandFactory implementation ------------------------------
    
    // lifecycle commands
    

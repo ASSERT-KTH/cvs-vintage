@@ -19,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public interface CMPFieldBridge {
 	public String getFieldName();
@@ -33,6 +33,9 @@ public interface CMPFieldBridge {
 	public Object getPrimaryKeyValue(Object primaryKey) throws IllegalArgumentException;
    public Object setPrimaryKeyValue(Object primaryKey, Object value) throws IllegalArgumentException;
 
+	/**
+	* Set CMPFieldValue to Java default value (i.e., 0 or null).
+	*/
 	public void initInstance(EntityEnterpriseContext ctx);
 
 	/**

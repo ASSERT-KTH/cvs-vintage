@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
-
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 
 import org.jboss.proxy.Proxies;
 import org.jboss.proxy.InvocationHandler;
@@ -51,7 +51,7 @@ import org.jboss.logging.Log;
  *		One per cmp entity bean type. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -153,8 +153,24 @@ public class JDBCEntityBridge implements EntityBridge {
 		}
 	}
 	
-	protected void loadCMRFields(JDBCEntityMetaData metadata) {
-		cmrFields = new JDBCCMRFieldBridge[0];
+	protected void loadCMRFields(JDBCEntityMetaData metadata) throws DeploymentException {
+		ArrayList cmrFieldList = new ArrayList(metadata.getCMPFieldCount());
+
+      // create each field    
+		Iterator iter = metadata.getRelationshipRoles();
+		while(iter.hasNext()) {
+			JDBCRelationshipRoleMetaData relationshipRole = (JDBCRelationshipRoleMetaData)iter.next();
+			JDBCCMRFieldBridge cmrField = new JDBCCMRFieldBridge(this, manager, relationshipRole, log); 
+			cmrFieldList.add(cmrField);
+		}
+		
+		// save the cmr fields in the cmr field array
+		cmrFields = new JDBCCMRFieldBridge[cmrFieldList.size()];
+		cmrFields = (JDBCCMRFieldBridge[])cmrFieldList.toArray(cmrFields);
+		
+		for(int i=0; i<cmrFields.length; i++) {
+			cmrFields[i].initRelatedData();
+		}
 	}
 
 	protected void loadSelectors(JDBCEntityMetaData metadata) {
@@ -171,6 +187,17 @@ public class JDBCEntityBridge implements EntityBridge {
 	
 	public Class getPrimaryKeyClass() {
 		return metadata.getPrimaryKeyClass();
+	}
+	
+	public Object createPrimaryKeyInstance() {
+		if(metadata.getPrimKeyField() ==  null) {
+			try {
+				return getPrimaryKeyClass().newInstance();
+			} catch(Exception e) {
+				throw new EJBException("Error creating primary key instance: ", e);
+			}
+		}
+		return null;
 	}
 	
 	public CMPFieldBridge[] getPrimaryKeyFields() {
@@ -229,6 +256,9 @@ public class JDBCEntityBridge implements EntityBridge {
 		for(int i=0; i<cmpFields.length; i++) {
 			cmpFields[i].initInstance(ctx);
 		}
+		for(int i=0; i<cmrFields.length; i++) {
+			cmrFields[i].initInstance(ctx);
+		}
 	}
 
 	public void setClean(EntityEnterpriseContext ctx) {
@@ -239,18 +269,31 @@ public class JDBCEntityBridge implements EntityBridge {
 
 	public CMPFieldBridge[] getDirtyFields(EntityEnterpriseContext ctx) {
 		ArrayList dirtyFields = new ArrayList(cmpFields.length);
+		
+		// get dirty cmp fields
 		for(int i=0; i<cmpFields.length; i++) {
 			if(cmpFields[i].isDirty(ctx)) {
 				dirtyFields.add(cmpFields[i]);
 			}
 		}
+		
+		// get dirty cmr foreign key fields
+		for(int i=0; i<cmrFields.length; i++) {
+			if(cmrFields[i].hasForeignKey()) {
+				JDBCCMPFieldBridge[] foreignKeyFields = cmrFields[i].getForeignKeyFields();
+				for(int j=0; j<foreignKeyFields.length; j++) {
+					if(foreignKeyFields[j].isDirty(ctx)) {
+						dirtyFields.add(foreignKeyFields[j]);
+					}
+				}
+			}
+		}
+		
 		JDBCCMPFieldBridge[] dirtyFieldArray = new JDBCCMPFieldBridge[dirtyFields.size()];
 		return (JDBCCMPFieldBridge[])dirtyFields.toArray(dirtyFieldArray);
 	}
 	
 	public void initPersistenceContext(EntityEnterpriseContext ctx) {
-		log.debug("Initializing persistence context id="+ctx.getId());
-		
 		// If we have an EJB 2.0 dynaymic proxy,
 		// notify the handler of the assigned context.
 		Object instance = ctx.getInstance();
@@ -268,17 +311,17 @@ public class JDBCEntityBridge implements EntityBridge {
 	* This is only called in commit option B
 	*/
 	public void resetPersistenceContext(EntityEnterpriseContext ctx) {
-		log.debug("Reseting persistence context id="+ctx.getId());
-
 		for(int i=0; i<cmpFields.length; i++) {
 			cmpFields[i].resetPersistenceContext(ctx);
+		}
+
+		for(int i=0; i<cmrFields.length; i++) {
+			cmrFields[i].resetPersistenceContext(ctx);
 		}
 	}
 	
 
 	public void destroyPersistenceContext(EntityEnterpriseContext ctx) {
-		log.debug("Destroying persistence context id="+ctx.getId());
-		
 		// If we have an EJB 2.0 dynaymic proxy,
 		// notify the handler of the assigned context.
 		Object instance = ctx.getInstance();
@@ -331,6 +374,7 @@ public class JDBCEntityBridge implements EntityBridge {
 	}
 	      
 	public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) {
+		pkRef[0] = createPrimaryKeyInstance();
 		for(int i=0; i<primaryKeyFields.length; i++) {
 			parameterIndex = primaryKeyFields[i].loadPrimaryKeyResults(rs, parameterIndex, pkRef);
 		}
@@ -339,7 +383,7 @@ public class JDBCEntityBridge implements EntityBridge {
 	      
 	public Object extractPrimaryKeyFromInstance(EntityEnterpriseContext ctx) {
 		try {
-			Object pk = getPrimaryKeyClass().newInstance();
+			Object pk = null;
 			for(int i=0; i<primaryKeyFields.length; i++) {
 				Object fieldValue = primaryKeyFields[i].getInstanceValue(ctx);
 				

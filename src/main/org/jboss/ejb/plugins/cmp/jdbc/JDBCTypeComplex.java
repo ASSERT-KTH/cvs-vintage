@@ -7,6 +7,8 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
+import javax.ejb.EJBException;
+
 /**
  * JDBCTypeComplex provides the mapping between a Java Bean (not an EJB)
  * and a set of columns. This class has a flattened view of the Java Bean,
@@ -21,7 +23,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCTypeComplex implements JDBCType {
 	private JDBCTypeComplexProperty[] properties;
@@ -29,9 +31,11 @@ public class JDBCTypeComplex implements JDBCType {
 	private Class[] javaTypes;	
 	private int[] jdbcTypes;	
 	private String[] sqlTypes;
+	private Class fieldType;
 
-   public JDBCTypeComplex(JDBCTypeComplexProperty[] properties) {
+   public JDBCTypeComplex(JDBCTypeComplexProperty[] properties, Class fieldType) {
 		this.properties = properties;
+		this.fieldType = fieldType;
 		
 		columnNames = new String[properties.length];
 		for(int i=0; i<columnNames.length; i++) {
@@ -72,10 +76,28 @@ public class JDBCTypeComplex implements JDBCType {
 	}
 	
 	public Object getColumnValue(int index, Object value) {
-		return properties[index].getColumnValue(value);
+		try {
+			return properties[index].getColumnValue(value);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new EJBException("Error getting column value", e);
+		}
 	}
 
 	public Object setColumnValue(int index, Object value, Object columnValue) {
-		return properties[index].setColumnValue(value, columnValue);
+		if(value==null && columnValue==null) {
+			// nothing to do
+			return null;
+		}
+			
+		try {
+			if(value == null) {
+				value = fieldType.newInstance();
+			}
+			return properties[index].setColumnValue(value, columnValue);
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new EJBException("Error setting column value", e);
+		}
 	}
 }

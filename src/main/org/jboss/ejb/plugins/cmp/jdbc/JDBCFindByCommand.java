@@ -13,8 +13,6 @@ import java.sql.PreparedStatement;
 
 import java.util.Iterator;
 
-import org.jboss.logging.Logger;
-
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
@@ -28,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -51,7 +49,7 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       String cmpFieldName = Character.toLowerCase(finderName.charAt(6)) +
 				finderName.substring(7);
 
-      Logger.debug("Finder: " + cmpFieldName);
+      log.debug("Finder: " + cmpFieldName);
       
 		cmpField = (JDBCCMPFieldBridge)entity.getCMPFieldByName(cmpFieldName);
 		if(cmpField == null) {

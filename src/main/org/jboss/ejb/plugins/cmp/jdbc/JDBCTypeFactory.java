@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCTypeFactory {
 	// the type mapping to use with the specified database
@@ -122,7 +122,7 @@ public class JDBCTypeFactory {
 		}
 		
 		// return the new complex type
-		return new JDBCTypeComplex(properties);		
+		return new JDBCTypeComplex(properties, cmpField.getFieldType());		
 	}
 
 	protected ArrayList createComplexProperties(JDBCValueClassMetaData valueClass, PropertyStack propertyStack) {

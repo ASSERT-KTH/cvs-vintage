@@ -8,28 +8,24 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import javax.sql.DataSource;
-
 import org.jboss.ejb.DeploymentException;
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-
-import org.jboss.ejb.plugins.cmp.CMPStoreManager; 
+import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.CommandFactory;
- 
-import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler; 
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
-
-import org.jboss.logging.Log;
-
-import org.jboss.proxy.Proxy;
-
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
+import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.proxy.Proxy;
 
 /**
  * JDBCStoreManager manages storage of persistence data into a table.
@@ -46,7 +42,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public class JDBCStoreManager extends CMPStoreManager {
 	protected DataSource dataSource;
@@ -58,8 +54,14 @@ public class JDBCStoreManager extends CMPStoreManager {
 	protected JDBCEntityBridge entityBridge;
 	
 	protected JDBCLoadFieldCommand loadFieldCommand;
+	protected JDBCFindByForeignKeyCommand findByForeignKeyCommand;
+	protected JDBCLoadRelationCommand loadRelationCommand;
+	protected JDBCDeleteRelationsCommand deleteRelationsCommand;
+	protected JDBCInsertRelationsCommand insertRelationsCommand;
 	
    public void init() throws Exception {
+		initTxDataMap();
+		
 		metaData = loadJDBCEntityMetaData();
 		typeFactory = new JDBCTypeFactory(metaData.getJDBCApplication());
 		entityBridge = new JDBCEntityBridge(metaData, log, this);
@@ -67,6 +69,10 @@ public class JDBCStoreManager extends CMPStoreManager {
 		super.init();
 		
 		loadFieldCommand = getCommandFactory().createLoadFieldCommand();
+		findByForeignKeyCommand = getCommandFactory().createFindByForeignKeyCommand();
+		loadRelationCommand = getCommandFactory().createLoadRelationCommand();
+		deleteRelationsCommand = getCommandFactory().createDeleteRelationsCommand();
+		insertRelationsCommand = getCommandFactory().createInsertRelationsCommand();
 	}
 	
 	public JDBCEntityBridge getEntityBridge() {
@@ -97,7 +103,6 @@ public class JDBCStoreManager extends CMPStoreManager {
       loadFieldCommand.execute(field, ctx);
    }
    
-
  	/**
 	* Returns a new instance of a class which implemnts the bean class.
 	* 
@@ -121,9 +126,41 @@ public class JDBCStoreManager extends CMPStoreManager {
 		return dataSource.getConnection();
 	}
 	
-	//
-	// Remove this after metadata code is updated
-	//
+	public Set findByForeignKey(EntityEnterpriseContext ctx, JDBCCMPFieldBridge[] foreignKeyFields) {
+		return findByForeignKeyCommand.execute(ctx, foreignKeyFields);
+	}
+	
+	public Set loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {  
+		return loadRelationCommand.execute(cmrField, pk);
+	}
+
+	public void deleteRelations(RelationData relationData) {  
+		deleteRelationsCommand.execute(relationData);
+	}
+	
+	public void insertRelations(RelationData relationData) {  
+		insertRelationsCommand.execute(relationData);
+	}
+	
+	public Map getTxDataMap() {
+		ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+
+		// Get Tx Hashtable
+		return (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
+	}
+	
+	private void initTxDataMap() {
+		ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+
+		// Get Tx Hashtable
+		Map txDataMap = (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
+		if(txDataMap == null) {
+			// we are the first JDBC CMP manager to get to initTxDataMap.
+			txDataMap = Collections.synchronizedMap(new HashMap());
+			amd.addPluginData("CMP-JDBC-TX-DATA", txDataMap);
+		}
+	}
+	
 	private JDBCEntityMetaData loadJDBCEntityMetaData() throws DeploymentException {
 		ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
 
