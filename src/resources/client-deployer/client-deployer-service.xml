@@ -5,12 +5,13 @@
 <server>
    <mbean code="org.jboss.deployment.ClientDeployer"
       name="jboss.j2ee:service=ClientDeployer"
-      xmbean-dd="">
+      xmbean-dd="client-deployer-xmbean.xml" />
+      <!--
       <xmbean>
          <description>The J2EE Application Client Deployer</description>
          <class>org.jboss.deployment.ClientDeployer</class>
 
-         <!-- Attributes -->
+         <!- -  Attributes - ->
          <attribute access="read-only" getMethod="getStateString">
             <description>The service state name</description>
             <name>StateString</name>
@@ -22,7 +23,7 @@
             <type>int</type>
          </attribute>
 
-         <!-- Operations -->
+         <!- - Operations - ->
          <operation>
             <description>The create lifecycle operation</description>
             <name>create</name>
@@ -41,5 +42,6 @@
          </operation>
       </xmbean>
    </mbean>
+   -->
 </server>
 

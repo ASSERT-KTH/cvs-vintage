@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.148 2003/11/12 17:34:04 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.149 2003/11/22 19:35:38 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -434,11 +434,16 @@
         <!-- Exclude key factory stuff -->
         <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
       </fileset>
-      
+
       <fileset dir="${build.resources}">
         <include name="org/jboss/**"/>
         <exclude name="org/jboss/ejb/deployment/**"/>
         <exclude name="org/jboss/ejb/plugins/**"/>
+      </fileset>
+
+      <!-- Include external model mbean definition for ClientDeployer -->
+      <fileset dir="${build.resources}/client-deployer">
+        <include name="client-deployer-xmbean.xml"/>
       </fileset>
     </jar>
 
