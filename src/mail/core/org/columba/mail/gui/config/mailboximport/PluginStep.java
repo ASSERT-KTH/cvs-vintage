@@ -54,8 +54,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         }
 				
 	protected JComponent createComponent() {
-                JComponent component = new JPanel(new BorderLayout());
-		component.setLayout(new BorderLayout(0, 30));
+                JComponent component = new JPanel(new BorderLayout(0, 30));
 		component.add(new MultiLineLabel(MailResourceLoader.getString(
                                     "dialog",
                                     "mailboximport",
