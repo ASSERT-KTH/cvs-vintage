@@ -61,7 +61,6 @@
    #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
    #set ($raag = $group.getRAttributeAttributeGroup($attribute))
    #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
-   #set ($maxNum = $group.Attributes.size())
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
  #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
@@ -96,7 +95,7 @@
     N/A
 #end
 </td>
- <td>#numericSelect( "$raagGroup.Order.Key" 1 $maxNum $raagGroup.Order.Value 1 )</td>
+ <td>#numericSelect( "$raagGroup.Order.Key" 1 $group.HighestOrderedAttribute $raagGroup.Order.Value 1 )</td>
  </tr>
  </td>
  </tr>
