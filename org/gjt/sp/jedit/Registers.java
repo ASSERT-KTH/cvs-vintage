@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * jEdit's registers are an extension of the clipboard metaphor.
  *
  * @author Slava Pestov
- * @version $Id: Registers.java,v 1.6 2002/06/05 02:59:49 spestov Exp $
+ * @version $Id: Registers.java,v 1.7 2002/06/06 05:57:18 spestov Exp $
  */
 public class Registers
 {
@@ -207,21 +207,6 @@ public class Registers
 				Selection.Rect rect = new Selection.Rect(
 					caretLine,caret,caretLine,caret);
 				textArea.setSelectedText(rect,selection);
-
-				// move the caret down a line
-				if(!selection.endsWith("\n"))
-				{
-					Buffer buffer = textArea.getBuffer();
-					int col = rect.getStartColumn(buffer);
-					if(caretLine != buffer.getLineCount() - 1)
-					{
-						int offset = buffer.getOffsetOfVirtualColumn(
-							caretLine + 1,col,null);
-						textArea.moveCaretPosition(
-							buffer.getLineStartOffset(
-							caretLine + 1) + offset);
-					}
-				}
 			}
 			else
 				textArea.setSelectedText(selection);
