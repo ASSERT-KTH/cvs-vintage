@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.2 2000/05/24 16:34:20 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/24 16:34:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.3 2000/07/11 03:28:30 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/07/11 03:28:30 $
  *
  * ====================================================================
  *
@@ -110,18 +110,18 @@ public class DateTool {
 
     /** DateFormat to be used to format dates
      */
-    public final static SimpleDateFormat rfc1123Format =
+    public final static DateFormat rfc1123Format =
 	new SimpleDateFormat(RFC1123_PATTERN, LOCALE_US);
     
     /** DateFormat to be used to format old netscape cookies
      */
-    public final static SimpleDateFormat oldCookieFormat =
+    public final static DateFormat oldCookieFormat =
 	new SimpleDateFormat(OLD_COOKIE_PATTERN, LOCALE_US);
     
-    public final static SimpleDateFormat rfc1036Format =
+    public final static DateFormat rfc1036Format =
 	new SimpleDateFormat(rfc1036Pattern, LOCALE_US);
     
-    public final static SimpleDateFormat asctimeFormat =
+    public final static DateFormat asctimeFormat =
 	new SimpleDateFormat(asctimePattern, LOCALE_US);
     
     static {
